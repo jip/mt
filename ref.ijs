@@ -281,7 +281,9 @@ NB.     Performance. IBM J. Research & Development, Vol. 44,
 NB.     No. 4, 2000, pp 605-624.
 NB.     http://www.research.ibm.com/journal/rd/444/elmroth.pdf
 
-larftfc=: 3 : 0
+larftfc=: (        _1 &{) ([ * (EMPTY (((1 & (_1:})) @ (,&0) @ (]  ,.   (] mp (([ {. {)~ #)))) ^: (#@[))~ (               (* -)~ ((mp ct) {:)\  ))) (ct@(0&(        _1 })))
+
+larftfcr=: 3 : 0
   n=. c y
   if. 1=n do.
     _1 _1 {. y
@@ -289,21 +291,15 @@ larftfc=: 3 : 0
     k=. <. -: n
     Vl=. k {."1 y
     Vr=. k }."1 y
-    T00=. larftfc Vl
-    T11=. larftfc Vr
+    T00=. larftfcr Vl
+    T11=. larftfcr Vr
     (T00 ,. (- T00) mp ((ct 0 (_1}) Vl) mp Vr) mp T11) _1 append T11
   elseif. do.  NB. 0=n
     EMPTY
   end.
 )
 
-larftfct=: (_1 _1&{.)`(((0 & {::) (($:@[) ([ (({.~ #) ,. ]) ((-@mp (0 & {::)) , (1 {:: ]))) (((ct@(0 (_1}) [)) mp ]) (mp;]) ($:@]))) (1 & {::))@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
-
-larftfcti=: (_1 _1&{.)`(((($:@[) ([ (({.~ #) ,. ]) ((-@mp (0 & {::)) , (1 {:: ]))) (((ct@(0 (_1}) [)) mp ]) (mp;]) ($:@])))&>/)@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
-
-larftfcf=: (_1 _1&{.)`(((0 & {::) (0:`0:`(larftfcf@[)`]`[`((ct@(0(_1})[))mp])`[`(-@mp)`mp`(larftfcf@])`(({.~ #),.])`,`]`[`0: fork5) (1 & {::))@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
-
-larftfcfi=: (_1 _1&{.)`((0:`0:`(larftfcf@[)`]`[`((ct@(0(_1})[))mp])`[`(-@mp)`mp`(larftfcf@])`(({.~ #),.])`,`]`[`0: fork5)&>/@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
+larftfcf=: (_1 _1&{.)`((0:`0:`(larftfcf@[)`]`[`((ct@(0(_1})[))mp])`[`(-@mp)`mp`(larftfcf@])`(({.~ #),.])`,`]`[`0: fork5)&>/@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
 
 NB. ---------------------------------------------------------
 NB. larftfr
@@ -489,14 +485,12 @@ testlarft=: 3 : 0
   AC=: y=. 0 {:: y
   rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
-  ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
+NB.  ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
+NB.  ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftfc' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfct' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfcti' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfcr' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftfcf' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfcfi' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfr' tmonad (gelqf`]`(rcond"_)`(_."_)`(_."_))) y
+NB.  ('larftfr' tmonad (gelqf`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
 )

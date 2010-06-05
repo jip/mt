@@ -1,8 +1,8 @@
 NB. Extended forks
 NB.
-NB. fork3  Generalized fork with 3-depth execution tree
-NB. fork4  Generalized fork with 4-depth execution tree
-NB. fork5  Generalized fork with 5-depth execution tree
+NB. fork3  Generalized fork with 3-depth execution graph
+NB. fork4  Generalized fork with 4-depth execution graph
+NB. fork5  Generalized fork with 5-depth execution graph
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -21,27 +21,27 @@ NB. fork2
 NB.
 NB. Description:
 NB.   2-fork, the traditional fork with 2-depth execution
-NB.   tree
+NB.   graph
 NB.
 NB. Syntax:
 NB.   vapp=. a0`b`a1 fork2
 NB.   vapp=. a0`b`a1`:6
 NB.   vapp=. a0 b a1
 NB. where
-NB.   ax   - ambivalent verbs to define leaf nodes of
-NB.          execution tree
-NB.   b    - dyad to define root node of execution tree
+NB.   ax   - ambivalent verbs to define input nodes of
+NB.          execution graph
+NB.   b    - dyad to define output node of execution graph
 NB.   vapp - 2-fork, is evoked as:
 NB.            out=.   vapp y
 NB.            out=. x vapp y
 NB.
-NB. Execution tree:
+NB. Execution graph:
 NB.      b
 NB.     / \
-NB.   a0   a1
+NB.    a0  a1
 NB.
 NB. Notes:
-NB. - included for concept clafifying purpose only
+NB. - included just to eludicate generalized forks idea
 
 NB. fork2=: 1 : 0
 NB.   '`a0 b a1'=. m
@@ -59,20 +59,21 @@ NB. ---------------------------------------------------------
 NB. fork3
 NB.
 NB. Description:
-NB.   3-fork, generalized fork with 3-depth execution tree
+NB.   3-fork, generalized fork with 3-depth execution graph
 NB.
 NB. Syntax:
 NB.   vapp=. a0`b0`a1`c`b1`a2 fork3
 NB. where
-NB.   ax   - ambivalent verbs to define leaf nodes of
-NB.          execution tree
-NB.   bx   - dyads to define inner nodes of execution tree
-NB.   c    - dyad to define root node of execution tree
+NB.   ax   - ambivalent verbs to define input nodes of
+NB.          execution graph
+NB.   bx   - dyads to define intermediate nodes of execution
+NB.          graph
+NB.   c    - dyad to define output node of execution graph
 NB.   vapp - 3-fork, is evoked as:
 NB.            out=.   vapp y
 NB.            out=. x vapp y
 NB.
-NB. Execution tree:
+NB. Execution graph:
 NB.       c
 NB.      / \
 NB.     b0  b1
@@ -81,6 +82,8 @@ NB.   a0  a1  a2
 NB.
 NB. Notes:
 NB. - local nouns are re-used to reduce memory consumption
+NB. - another 2-fork compatible traverse order is possible:
+NB.     a0 b0 c b1 a2 a1
 
 fork3=: 1 : 0
   '`a0 b0 a1 c b1 a2'=. m
@@ -104,20 +107,21 @@ NB. ---------------------------------------------------------
 NB. fork4
 NB.
 NB. Description:
-NB.   4-fork, generalized fork with 4-depth execution tree
+NB.   4-fork, generalized fork with 4-depth execution graph
 NB.
 NB. Syntax:
 NB.   vapp=. a0`b0`a1`c0`b1`a2`d`c1`b2`a3 fork4
 NB. where
-NB.   ax    - ambivalent verbs to define leaf nodes of
-NB.           execution tree
-NB.   bx cx - dyads to define inner nodes of execution tree
-NB.   d     - dyad to define root node of execution tree
+NB.   ax    - ambivalent verbs to define input nodes of
+NB.           execution graph
+NB.   bx cx - dyads to define intermediate nodes of execution
+NB.           graph
+NB.   d     - dyad to define output node of execution graph
 NB.   vapp  - 4-fork, is evoked as:
 NB.            out=.   vapp y
 NB.            out=. x vapp y
 NB.
-NB. Execution tree:
+NB. Execution graph:
 NB.         d
 NB.        / \
 NB.       c0  c1
@@ -128,6 +132,8 @@ NB.   a0  a1  a2  a3
 NB.
 NB. Notes:
 NB. - local nouns are re-used to reduce memory consumption
+NB. - another 2-fork compatible traverse order is possible:
+NB.     a0 b0 c0 d c1 b2 a3 a1 b1 a2
 
 fork4=: 1 : 0
   '`a0 b0 a1 c0 b1 a2 d c1 b2 a3'=. m
@@ -159,21 +165,22 @@ NB. ---------------------------------------------------------
 NB. fork5
 NB.
 NB. Description:
-NB.   5-fork, generalized fork with 5-depth execution tree
+NB.   5-fork, generalized fork with 5-depth execution graph
 NB.
 NB. Syntax:
 NB.   vapp=. a0`b0`a1`c0`b1`a2`d0`c1`b2`a3`e`d1`c2`b3`a4 fork5
 NB. where
-NB.   axx      - ambivalent verbs to define leaf nodes of
-NB.              execution tree
-NB.   bx cx dx - dyads to define inner nodes of execution
-NB.              tree
-NB.   e        - dyad to define root node of execution tree
+NB.   axx      - ambivalent verbs to define input nodes of
+NB.              execution graph
+NB.   bx cx dx - dyads to define intermediate nodes of
+NB.              execution graph
+NB.   e        - dyad to define output node of execution
+NB.              graph
 NB.   vapp     - 5-fork, is evoked as:
 NB.                out=.   vapp y
 NB.                out=. x vapp y
 NB.
-NB. Execution tree:
+NB. Execution graph:
 NB.           e
 NB.          / \
 NB.         d0  d1
@@ -186,6 +193,8 @@ NB.   a0  a1  a2  a3  a4
 NB.
 NB. Notes:
 NB. - local nouns are re-used to reduce memory consumption
+NB. - another 2-fork compatible traverse order is possible:
+NB.     a0 b0 c0 d0 e d1 c2 b3 a4 a1 b1 c1 b2 a3 a2
 
 fork5=: 1 : 0
   '`a0 b0 a1 c0 b1 a2 d0 c1 b2 a3 e d1 c2 b3 a4'=. m

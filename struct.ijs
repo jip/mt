@@ -24,6 +24,21 @@ NB. setdiag   Assign value[s] to a solid part of diagonal
 NB. upddiag   Template adv. to make verbs to update a solid
 NB.           part of diagonal
 NB.
+NB. bdlpick   Zeroize elements located outside lower
+NB.           bidiagonal part of the matrix
+NB. bdupick   Zeroize elements located outside upper
+NB.           bidiagonal part of the matrix
+NB. hslpick   Zeroize elements located outside lower
+NB.           Hessenberg part of the matrix
+NB. hsupick   Zeroize elements located outside lower
+NB.           Hessenberg part of the matrix
+NB. tdpick    Zeroize elements located outside tridiagonal
+NB.           part of the matrix
+NB. trlpick   Zeroize elements located outside lower
+NB.           triangular part of the matrix
+NB. trupick   Zeroize elements located outside upper
+NB.           triangular part of the matrix
+NB.
 NB. idmat     Make identity matrix with units on solid part
 NB.           of diagonal
 NB. diagmat   Make diagonal matrix
@@ -51,8 +66,8 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Misc.
 
-NB. convert shape y to IOS differences table
-sh2id=: {. -~/&i. {:
+NB. convert table y to table of diagonals
+t2td=: 1 : '({. u/&i. {:)@$'
 
 NB. template conj. to extract rectangular matrix
 NB. circumscribing the triangular (trapezoidal) matrix
@@ -68,7 +83,84 @@ trlcut=: _1 1 trcut ((+ {.) ,. ])
 NB. template conj. to extract triangular (trapezoidal)
 NB. matrix starting from diagonal number x in the rectangular
 NB. circumscribing matrix y
-tr=: 2 : '0&$: : ([ (] * (u~ sh2id@$)) v)'
+tr=: 2 : '0&$: : ([ (] * (u~ (-~ t2td))) v)'
+
+NB. ---------------------------------------------------------
+NB. mxbstencil
+NB.
+NB. Description:
+NB.   Template adv. to make verbs returning
+NB.   [multi-][anti-]band stencil for rectangular matrix
+NB.
+NB. Syntax:
+NB.   vapp=. vmix mxbstencil
+NB. where
+NB.   vmix - dyad to mix lIOS x and y, is either (-~) for
+NB.          band, or (+) for anti-band stencils, is evoked
+NB.          as:
+NB.            mix=. lIOrow vmix lIOcolumn
+NB.   vapp - dyad to make multi-[anti-]band stencil, is
+NB.          evoked as:
+NB.            s=. bs vapp A
+NB.   bs   - k×2-matrix of (b)s, or single b, or d, defines
+NB.          [anti-]bands to stencil
+NB.   b    - 2-vector (h,t), defines one [anti-]band to
+NB.          stencil
+NB.   h    - integer in range [-∞,t], lIO heading
+NB.          [anti-]diagonal
+NB.   t    - integer in range [h,+∞], lIO tailing
+NB.          [anti-]diagonal
+NB.   d    - integer in range [-∞,+∞], lIO one
+NB.          [anti-]diagonal to stencil
+NB.   A    - m×n-matrix
+NB.   s    - m×n-matrix, boolean, having 1s on [anti-]band[s]
+NB.
+NB. Examples:
+NB. - see mbstencil, mabstencil
+
+mxbstencil=: 1 : '(+./^:(_2+(#@$))@:((1=I.)"1 2)~ (-&1 0"1))~ (u t2td)'
+
+NB. ---------------------------------------------------------
+NB. mbstencil
+NB. mabstencil
+NB.
+NB. Description:
+NB.   [Multi-]band and [multi-]anti-band stencils for
+NB.   rectangular matrix
+NB.
+NB. Syntax:
+NB.   s=. bs mbstencil  A
+NB.   s=. bs mabstencil A
+NB. where
+NB.   bs   - k×2-matrix of (b)s, or single b, or d, defines
+NB.          [anti-]bands to stencil
+NB.   A    - m×n-matrix
+NB.   s    - m×n-matrix, boolean, having 1s on [anti-]band[s]
+NB.   b    - 2-vector (h,t), defines one [anti-]band to
+NB.          stencil
+NB.   h    - integer in range [-∞,t], defines lIO heading
+NB.          [anti-]diagonal
+NB.   t    - integer in range [h,+∞], defines lIO tailing
+NB.          [anti-]diagonal
+NB.   d    - integer in range [-∞,+∞], defines one
+NB.          [anti-]diagonal to stencil
+NB.
+NB. Examples:
+NB.    2 mbstencil i. 3 5                    2 mabstencil i. 3 5
+NB. 0 0 1 0 0                             0 0 1 0 0
+NB. 0 0 0 1 0                             0 1 0 0 0
+NB. 0 0 0 0 1                             1 0 0 0 0
+NB.    2 3 mbstencil i. 3 5                  2 3 mabstencil i. 3 5
+NB. 0 0 1 1 0                             0 1 1 0 0
+NB. 0 0 0 1 1                             1 1 0 0 0
+NB. 0 0 0 0 1                             1 0 0 0 0
+NB.    (__ _1 ,: 2 3) mbstencil i. 3 5       (__ _1 ,: 2 3) mabstencil i. 3 5
+NB. 0 0 1 1 0                             0 1 1 0 0
+NB. 1 0 0 1 1                             1 1 0 0 1
+NB. 1 1 0 0 1                             1 0 0 1 1
+
+mbstencil=:                       -~ mxbstencil
+mabstencil=: ((|."1)@:-~ (<:@c)) (+  mxbstencil) ]
 
 NB. ---------------------------------------------------------
 NB. diaglios
@@ -102,7 +194,8 @@ NB. - the whole diagonal's size:
 NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
 NB.
 NB. Notes:
-NB. - (h,s) pair defines raveled rIOS of solid part within diagonal
+NB. - (h,s) pair defines raveled rIOS of solid part within
+NB.   diagonal
 NB.
 NB. TODO:
 NB. - eliminate cut
@@ -182,6 +275,10 @@ NB.    _20 _3 rt i. 3 4             __ _3 rt i. 3 4
 NB. 1  2  3                      1  2  3
 NB. 5  6  7                      5  6  7
 NB. 9 10 11                      9 10 11
+NB.
+NB. FIXME:
+NB.    $ _1 _1&rt 10 0 $ 0
+NB. 1 0
 
 rt=: ((({.~#)~$),:[)({.~(>|)/`(_,:{:)})~^:(((>+./@:*. _~:])|)/@[)]
 
@@ -390,6 +487,115 @@ upddiag=: 1 : 0
   e=. lios ({,) y
   (u e) (lios"_) } y
 )
+
+NB. ---------------------------------------------------------
+NB. bdlpick
+NB.
+NB. Description:
+NB.   Zeroize elements located outside lower bidiagonal part
+NB.   of the matrix
+NB.
+NB. Syntax:
+NB.   B=. bdlpick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   B - m×n-matrix, lower bidiagonal
+
+bdlpick=: * _1 0 & mbstencil
+
+NB. ---------------------------------------------------------
+NB. bdupick
+NB.
+NB. Description:
+NB.   Zeroize elements located outside upper bidiagonal part
+NB.   of the matrix
+NB.
+NB. Syntax:
+NB.   B=. bdupick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   B - m×n-matrix, upper bidiagonal
+
+bdupick=: * 0 1 & mbstencil
+
+NB. ---------------------------------------------------------
+NB. hslpick
+NB.
+NB. Description:
+NB.   Zeroize elements located outside lower Hessenberg part
+NB.   of the matrix
+NB.
+NB. Syntax:
+NB.   B=. hslpick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   B - m×n-matrix, lower Hessenberg
+
+hslpick=: * __ 1 & mbstencil
+
+NB. ---------------------------------------------------------
+NB. hsupick
+NB.
+NB. Description:
+NB.   Zeroize elements located outside upper Hessenberg part
+NB.   of the matrix
+NB.
+NB. Syntax:
+NB.   B=. hsupick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   B - m×n-matrix, upper Hessenberg
+
+hsupick=: * _1 _ & mbstencil
+
+NB. ---------------------------------------------------------
+NB. tdpick
+NB.
+NB. Description:
+NB.   Zeroize elements located outside tridiagonal part of
+NB.   the matrix
+NB.
+NB. Syntax:
+NB.   B=. tdpick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   B - m×n-matrix, tridiagonal
+
+tdpick=: * _1 1 & mbstencil
+
+NB. ---------------------------------------------------------
+NB. trlpick
+NB.
+NB. Description:
+NB.   Zeroize elements located outside lower triangular part
+NB.   of the matrix
+NB.
+NB. Syntax:
+NB.   B=. [d] trlpick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   d - integer in range [-∞,+∞], lIO last non-zero
+NB.       diagonal
+NB.   B - m×n-matrix, lower triangular
+
+trlpick=: (0&$:) : (((__ , [) mbstencil ]) * ])
+
+NB. ---------------------------------------------------------
+NB. trupick
+NB.
+NB. Description:
+NB.   Zeroize elements located outside upper triangular part
+NB.   of the matrix
+NB.
+NB. Syntax:
+NB.   B=. [d] trupick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   d - integer in range [-∞,+∞], lIO first non-zero
+NB.       diagonal
+NB.   B - m×n-matrix, upper triangular
+
+trupick=: (0&$:) : (((_ ,~ [) mbstencil ]) * ])
 
 NB. ---------------------------------------------------------
 NB. idmat

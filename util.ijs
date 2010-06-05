@@ -44,11 +44,15 @@ copysign=: condneg |               NB. if x<0 then -|y| else |y| endif
 prn=: '%-25S %-12g %-12g %-12g %-12g %12d' & printf
 
 dbg=: 2 : 0
-  smoutput 'dbg' ; (n , ' [MONAD]') ; 'y' ; ($ y) ; y
-  u y
+  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (($`($ L: 0) @. (0 < L.)) y) ; < y
+  o=. u y
+  smoutput 'dbg' ; (n , ' SUCCESS') ; (($`($ L: 0) @. (0 < L.)) o) ; < o
+  o
 :
-  smoutput 'dbg' ; 'x' ; ($ x) ; x ; (n , ' [DYAD]') ; 'y' ; ($ y) ; y
-  x u y
+  smoutput 'dbg' ; 'x' ; (($`($ L: 0) @. (0 < L.)) x) ; x ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (($`($ L: 0) @. (0 < L.)) y) ; < y
+  o=. x u y
+  smoutput 'dbg' ; (n , ' SUCCESS') ; (($`($ L: 0) @. (0 < L.)) o) ; < o
+  o
 )
 
 NB. ---------------------------------------------------------

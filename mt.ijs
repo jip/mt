@@ -64,8 +64,8 @@ require '~user/projects/mt/rot.ijs'     NB. rotate
 
 NB. mid-level
 require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
-require '~user/projects/mt/orf.ijs'     NB. orthogonal factorization
 require '~user/projects/mt/pow.ijs'     NB. integer powers
+require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization LQ QL QR RQ
 require '~user/projects/mt/trf.ijs'     NB. triangular factorization
 require '~user/projects/mt/tri.ijs'     NB. inverse
 require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via trf

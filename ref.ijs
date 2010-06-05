@@ -41,7 +41,6 @@ NB. - extract n-th cIOS cios from x, then extract by cfrom
 NB.   from y submatrix defined by cios
 NB. - apply u
 NB. - make imaginary
-
 cfuj=: 2 : 'j. @ u @ (n cfrom)'
 
 NB. update n-th from x (warning!: linear IOS) by (x u y)
@@ -66,11 +65,12 @@ NB.   v    - (n-1)-vector of v[1:n-1]; v[0]=1 is not stored
 NB.   τ    - scalar
 NB.
 NB. Notes:
+NB. - pre-ravel (β,v,τ)
 NB. - no check τ≠0
 NB. - assign v[0]=1
-NB. - pre-process τ
+NB. - pre-process τ by verb v
 
-larf=: 2 : '] - (v @ {: @ [) * ((u (1 & (0 }) @ }:))~)'
+larf=: 2 : '(([ - (v @ (_1 { ])) * ((u (1 & (0 }) @ }:)))) ,)~'
 
 NB. =========================================================
 NB. Interface
@@ -78,6 +78,7 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. larfg
 NB. larfp
+NB.
 NB. Generate an elementary reflector H of order n such that
 NB. H'*y = β*e1, where H=I-τ*v*v', H'*H=I
 NB.
@@ -85,8 +86,10 @@ NB. Syntax:
 NB.   z=. larfg y
 NB.   z=. larfp y
 NB. where
-NB.   y - n-vector (α,x[1:n-1]) to reflect, α ∊ ℂ, x ∊ ℂⁿ⁻¹
-NB.   z - (n+1)-vector (β,v[1:n-1],τ) of reflection result,
+NB.   y - n-vector or n×1-matrix (α,x[1:n-1]) to reflect,
+NB.       α ∊ ℂ, x ∊ ℂⁿ⁻¹
+NB.   z - (n+1)-vector or (n+1)×1-matrix (y and z ranks are
+NB.       match) (β,v[1:n-1],τ) of reflection result,
 NB.       β ∊ ℝ, (β≥0 for larfp only), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
 NB.
 NB. References:
@@ -101,9 +104,9 @@ NB. Notes:
 NB. - IEEE fp cfg features are implicitly encoded here
 NB. - larfg emulates LAPACK's xLARFG
 NB. - larfp emulates LAPACK's xLARFP
-NB. - both larfg and larfp provide: τ=2 ↔ ||x||_2 = 0
+NB. - both larfg (<-CHECKME) and larfp provide: τ=2 ↔ ||x||_2 = 0
 NB. - not zeroing v in larfp in case τ=2 (x≈0) relies on
-NB.   fact: 'comparison tolerance tol > 0'; otherwise
+NB.   fact: 'comparison tolerance tol>0'; otherwise
 NB.   (tol=0) x should be filled by zeros (see larf* gerf*)
 
 larfg=: 3 : 0
@@ -118,8 +121,8 @@ larfg=: 3 : 0
       y=. y % FP_SFMIN                                      NB. scale (α,x[1],...,x[n-1],β)
     end.
     tau=. ({: (- % [) {.) y                                 NB. τ=(β_scaled-α_scaled)/β_scaled
-    y=. (% ({. - {:)) y                                     NB. y=y/(α_scaled-β_scaled)
-    y=. (beta , tau) 0 _1 } y                               NB. replace in-place α_scaled by β_unscaled and β_scaled by τ
+    y=. (% ({. ({.@:-) {:)) y                               NB. y=y/(α_scaled-β_scaled)
+    y=. (beta , tau) (0 _1 " _) } y                         NB. replace α_scaled by β_unscaled and β_scaled by τ
   end.
 )
 
@@ -141,14 +144,14 @@ larfp=: 3 : 0
       tau=. ({: (- % [) {.) y                               NB. τ=(|β_scaled|-α_scaled)/|β_scaled|
     else.
       beta=. - beta                                         NB. |β_unscaled|
-      'realpha imalpha'=. +. {. y                           NB. Re(α_scaled) , Im(α_scaled)
-      gamma=. realpha + {: y                                NB. γ=Re(α_scaled)+|β_scaled|
+      'realpha imalpha'=. +. 0 ({,) y                       NB. Re(α_scaled) , Im(α_scaled)
+      gamma=. realpha + _1 ({,) y                           NB. γ=Re(α_scaled)+|β_scaled|
       delta=. (imalpha , xnorm) (- @ (+/) @ ([ * %)) gamma  NB. δ=-(Im(α_scaled)*(Im(α_scaled)/γ)+||x||_2*(||x||_2/γ))
       dzeta=. delta j. imalpha                              NB. ζ=δ+i*Im(α_scaled)
       tau=. - dzeta % {: y                                  NB. τ=-ζ/|β_scaled|
     end.
     y=. y % dzeta
-    y=. (beta , tau) 0 _1 } y                               NB. replace in-place α_scaled by |β_unscaled| and |β_scaled| by τ
+    y=. (beta , tau) (0 _1 " _) } y                         NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
   end.
 )
 
@@ -290,7 +293,7 @@ NB.   and submatrices R, L, respectively; then to apply larfr
 NB.   to submatrix R and then larfl to submatrix L:
 NB.     Aupd=. cios (1 3 4 larfRL) A
 
-larfRL=: 1 : '[ (larfl cupd2 (0 2{m)) (larfr cupd2 (0 1{m))'
+larfRL=: 1 : '[ ((0 2{m) larfL) ((0 1{m) larfR)'
 
 NB. ---------------------------------------------------------
 NB. larfLs
@@ -476,7 +479,7 @@ NB. Template conj. to make verbs to generate and
 NB. conditionally apply an elementary reflector to a matrix
 NB.
 NB. Syntax:
-NB.   vcondapp=. (vref`vapp) gerf02 ios
+NB.   vcondapp=. (vref`vapp) gerf0 ios
 NB. where
 NB.   ios      - 3-vector of integers (iosY,iosZ,iosT),
 NB.              indices in cIOS bundle (see layout below)
@@ -502,12 +505,12 @@ NB.   is cIOS bundle for vectors y, z, scalar τ, and
 NB.   submatrices R and L, respectively; vector y is stored
 NB.   vertically
 NB. - to reflect in the matrix A the vector y by larfg, then
-NB.   to apply vector v from the left (emulate inner loop of
+NB.   to apply vector v from the left (emulate main loop of
 NB.   xGEQR2 in LAPACK version 3.1.1):
 NB.     vapp=: 1 4 larfL                          NB. verb to apply v from the left to L
-NB.     Aupd=. cios (larfg gerf0 (1 4 larfL)) A   NB. apply gerund and ios to do the job
+NB.     Aupd=. cios ((larfg`vapp) gerf0 0 1 2) A  NB. apply gerund and ios to do the job
 NB. - to do the same as above, but apply v from the right,
-NB.   then from the left (emulate inner loop of xGEHD2 in
+NB.   then from the left (emulate main loop of xGEHD2 in
 NB.   LAPACK version 3.1.1):
 NB.     vapp=: 1 3 4 larfRL                       NB. verb to apply v from the right to R, then from the left to L
 NB.     Aupd=. cios ((larfg`vapp) gerf0 0 1 2) A  NB. apply gerund and ios to do the job
@@ -515,7 +518,7 @@ NB. - do the same as above, but with matrix shrinking:
 NB.     vapp=: 0 2 3 4 0 6 7 8 9 larfRLs          NB. verb to apply shrinked v from the right to shrinked R, then from the left to shrinked L
 NB.     Aupd=. cios ((larfg`vapp) gerf0 0 1 2) A  NB. apply gerund and ios to do the job
 
-gerf0=: 2 : '[ (((1{u)`:6) ^: (0 ~: ((2{n) cfrom))) (((0{u)`:6) cmap (0 1{n))'
+gerf0=: 2 : '[ (((1{u)`:6) ^: (0 ~: (0 ({,) ((2{n) cfrom)))) (((0{u)`:6) cmap (0 1{n))'
 
 NB. ---------------------------------------------------------
 NB. gerf02
@@ -557,7 +560,7 @@ NB.   vertically
 NB. - to reflect in the matrix A the vector y by larfp, then
 NB.   either to negate 1st row of submatrix L (if τ=2), or to
 NB.   apply shrinked vector v from the left (if τ≠0 and τ≠2)
-NB.   to the shrinked submatrix L (emulate inner loop of
+NB.   to the shrinked submatrix L (emulate main loop of
 NB.   xGEQR2 in LAPACK version 3.2):
 NB.     vneg=: 4 nfv 0                                  NB. verb to negate L's 1st row
 NB.     vapp=: 0 2 4 0 8 9 larfLs                       NB. verb to apply v from the left to L
@@ -567,7 +570,7 @@ NB.   either to negate 1st column of submatrix R and then to
 NB.   negate 1st row of submatrix L (if τ=2), or to apply
 NB.   shrinked vector v to the shrinked submatrix R from the
 NB.   right, then to the shrinked submatrix L from the left
-NB.   (if τ≠0 and τ≠2) (emulate inner loop of xGEHD2 in
+NB.   (if τ≠0 and τ≠2) (emulate main loop of xGEHD2 in
 NB.   LAPACK version 3.2):
 NB.     vneg=: [ (4 nfv 0) (3 nfv 1)                    NB. verb to negate R's 1st col, then L's 1st row
 NB.     vapp=: 0 2 3 4 0 6 7 8 9 larfRLs                NB. verb to apply shrinked v from the right to shrinked R, then from the left to shrinked L
@@ -578,7 +581,7 @@ NB.     vneg=: [ (4 nfv 0) (3 nfv 1)                    NB. verb to negate R's 1
 NB.     vapp=: 1 3 4 larfRL                             NB. verb to apply v from the right to R, then from the left to L
 NB.     Aupd=. cios ((larfp`vneg`vapp) gerf02 0 1 2) A  NB. apply gerund and ios to do the job
 
-gerf02=: 2 : '[ ((]`(}.u)) @. (0 2 i. ((2{n) cfrom))) (((0{u)`:6) cmap (0 1{n))'
+gerf02=: 2 : '[ ((]`(}.u)) @. (0 2 i. (0 ({,) ((2{n) cfrom)))) (((0{u)`:6) cmap (0 1{n))'
 
 NB. =========================================================
 NB. Test suite

@@ -17,7 +17,8 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. Difference between consequent cIOSs: cios[i+1]-cios[i]
+NB. Differences between cIOSs at consequent iterations:
+NB. cios(i+1)-cios(i)
 GEHD2UDCIOS=: 5 2 $ 1j_1 1 1j_1 1 0 1 0 1j_1 1j_1 1j_1
 
 NB. ---------------------------------------------------------
@@ -46,35 +47,35 @@ NB.
 NB. Syntax:
 NB.   'Ai1 ciosi1'=. dcios gehd2ustep (Ai ; ciosi)
 NB. where
-NB.   Ai    - n×n-matrix A[i] with isolated eigenvalues and
+NB.   Ai    - n×n-matrix A(i) with isolated eigenvalues and
 NB.           submatrix A11 to update (see gebal) before i-th
 NB.           iteration (i=f:f+s-2)
-NB.   ciosi - 5×2-matrix cios[i] of cIOSs (see struct.ijs)
+NB.   ciosi - 5×2-matrix cios(i) of cIOSs (see struct.ijs)
 NB.           for i-th iteration; rows (0:4) contains (let
 NB.           e=f+s):
-NB.             0 - (e-(i+1))-vector X=(α[i],x[i][1:e-(i+2)])
+NB.             0 - (e-(i+1))-vector Y=(α[i],x[i][1:e-(i+2)])
 NB.                 to reflect, is stored in A[i+1:e-1,i],
 NB.                 cIOS are:
 NB.                   ((i+1) j. (e-(i+1))) , (i j. 1)
-NB.             1 - (e-i)-vector V=(β[i],v[i][1:e-(i+2)],τ[i])
+NB.             1 - (e-i)-vector Z=(β[i],v[i][1:e-(i+2)],τ[i])
 NB.                 of reflection result, is stored in
 NB.                 A[i+1:e,i], cIOS are:
 NB.                   ((i+1) j. (e-i)) , (i j. 1)
 NB.             2 - scalar τ[i], is stored in A[e,i], cIOS
 NB.                 is:
 NB.                   (e j. 1) , (i j. 1)
-NB.             3 - e×(e-(i+1))-matrix to apply an elementary
-NB.                 reflector from the right, is stored in
-NB.                 A[0:e-1,i+1:e-1], cIOS are:
+NB.             3 - e×(e-(i+1))-matrix R to apply an
+NB.                 elementary reflector from the right, is
+NB.                 stored in A[0:e-1,i+1:e-1], cIOS are:
 NB.                   (0 j. e) , ((i+1) j. (e-(i+1)))
-NB.             4 - (e-(i+1))×(n-(i+1))-matrix to apply an
+NB.             4 - (e-(i+1))×(n-(i+1))-matrix L to apply an
 NB.                 elementary reflector from the left, is
 NB.                 stored in A[i+1:e-1,i+1:n-1], cIOS are:
 NB.                   ((i+1) j. (e-(i+1))) , ((i+1) j. (n-(i+1)))
-NB.   dcios - difference between consequent cIOSs:
-NB.           cios[i+1]-cios[i]
-NB.   Ai1   - n×n-matrix A[i+1] after i-th iteration
-NB.   ciosi - 5×2-matrix cios[i+1] of cIOSs for (i+1)-th
+NB.   dcios - difference between cIOSs at consequent
+NB.           iterations: cios(i+1)-cios(i)
+NB.   Ai1   - n×n-matrix A(i+1) after i-th iteration
+NB.   ciosi - 5×2-matrix cios(i+1) of cIOSs for (i+1)-th
 NB.           iteration
 
 gehd2ustep=: (< @ (+ (1&{::))) 1} (((1 {:: ]) (< @ ((larfg`(1 3 4 larfRL)) gerf0 0 1 2)) (0 {:: ])) 0} ])

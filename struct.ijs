@@ -110,9 +110,10 @@ ht2ios=: ] + (i. @ -)             NB. (x-y)-vector of integers from head y to ta
 hs2ios=: [ + ((] * i. @ *) sgn)~  NB. y-vector of integers from head x of size y, models verb's (u;.0) rIOS
 
 NB. converters
-cios2ios=: < " 1 @ (< @ ({. ^: (1 = #)) @ hs2ios/ " 1 @: +.)  NB. convert cIOS to IOS; side effects: 1-vector IOS is converted to scalar; output is incorrect for IOS with length less than array's rank
+cios2ios=: < " 1 @ (< @ hs2ios/ " 1 @: +.)  NB. convert cIOS to IOS; side effect: output is incorrect for IOS with length less than array's rank
 
 NB. explorers
+NB. FIXME: sink cios2ios to low-level individual selectors
 from=: 1 : '(m myx)~'                          NB. model indirect 'from': (m{x){y
 cfrom=: 1 : '(m from) cioswrap'                NB. model 'from' accepting cIOS
 upd=: 2 : '((u @ (n myx))~)`(n mx)`] }'        NB. update subarray by monad: (u ((n{x){y)) (n{x) } y
@@ -135,8 +136,8 @@ NB.
 NB. Syntax:
 NB.   vneg=. iocios nfv iovh
 NB. where
-NB.   iovh   - integer (-r:r-1), IO in cIOS (iocios{cios) to
-NB.            select axis to negate
+NB.   iovh   - integer ub rabge (-r:r-1), IO in cIOS
+NB.            (iocios{cios) to select axis to negate
 NB.   iocios - integer, IO in cIOS bundle (cios) to select
 NB.   vneg   - verb to negate, is called as: (cios vneg A),
 NB.            implements steps:

@@ -1,5 +1,5 @@
 NB. lyapunov.ijs
-NB. solve Luapunov equation
+NB. Solve Luapunov equation
 NB.
 NB. lyapchol  - solve continuous-time Lyapunov equation
 NB.             directly for Cholesky factor
@@ -18,10 +18,10 @@ NB. 2007-12-25 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 require '~system/packages/math/matutil.ijs'     NB. diag
 require '~user/projects/lapack/lapack.ijs'      NB. -> require '~addons/math/lapack/lapack.ijs'
-NB. need_jlapack_ 'gerqf gees geev potrf trtrs'
-require '~user/projects/lapack/gerqf.ijs'       NB. -> /dev/null
+NB. need_jlapack_ 'gees geev gerqf potrf trtrs'
 require '~user/projects/lapack/gees.ijs'        NB. -> /dev/null
 require '~user/projects/lapack/geev.ijs'        NB. -> /dev/null
+require '~user/projects/lapack/gerqf.ijs'       NB. -> /dev/null
 require '~user/projects/lapack/potrf.ijs'       NB. -> /dev/null
 require '~user/projects/lapack/trtrs.ijs'       NB. -> /dev/null
 

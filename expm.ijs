@@ -18,25 +18,12 @@ NB. Resources:
 NB. - http://www.jsoftware.com/jwiki/...
 NB. - http://www.dvgu.ru/forum/...
 NB.
-NB. Test:
-NB.    A=. 4 4 $ _0.0069 0.0558 0 _2.4525 _0.0226 _0.3149 3.6858 0 0.0062 _0.2151 _0.4282 0 0 0 0.2500 0
-NB.    B=. 4 1 $ 0
-NB.    Ts=. 0.1486
-NB.    MVPN=. prexpm_tau_ A;B
-NB.    ] 'Ad Bd'=. MVPN expm_tau_ Ts
-NB. ┌─────────────────────────────────────────────────┬─┐
-NB. │   0.998809   0.00806035 _0.00409042    _0.361715│0│
-NB. │_0.00303186     0.946446    0.516207  0.000551852│0│
-NB. │0.000936048   _0.0301219     0.93059 _0.000153388│0│
-NB. │ 1.56358e_5 _0.000537876   0.0358006      0.99984│0│
-NB. └─────────────────────────────────────────────────┴─┘
-NB.
 NB. TODO:
 NB. - consider s/@:/@/g when possible
 NB. - consider complex A or B => non-self-adjoined eigenvalues
 NB. - consider B is vector
 NB.
-NB. 2008-02-02 0.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. 2008-02-04 0.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 require '~user/projects/lapack/lapack.ijs'     NB. '~addons/math/lapack/lapack.ijs'
 NB. need_jlapack_ 'geev gels'
@@ -46,149 +33,29 @@ require '~user/projects/lapack/gels.ijs'       NB. '~addons/math/lapack/gels.ijs
 coclass 'tau'
 
 NB. ===========================================================================
-NB. prexpm
-NB. Prepare time-invariant parts for expm
-NB.
-NB. Syntax:
-NB.   'M V P Nx'=. A;B
-NB. where:
-NB.   A - Nx-by-Nx state matrix of LTI system
-NB.   B - Nx-by-Nu control input matrix of LTI system
-NB.   M - Nm-by-Ng matrix for equation M*A(t)=L(t), output of makeLtM
-NB.   V - (#vm)-by-5 matrix, prepared eigenvalues of G, output of prepV
-NB.   P - Ng-by-Ng-by-Ng matrix, powers 0..(Ng-1) of G, output of makeP
-NB.   G - Ng-by-Ng matrix, augmented LTI system, output of makeG
-NB.   Nm = +/ vm * (ic+1), see prepV
-NB.   Ng = Nx + Nu
-NB.   Nx >= 0
-NB.   Nu >= 0
+NB. Utilities
 
-prexpm=: (((0 & makeLtM ; ]) @ prepV @ (2b010 & geev_jlapack_)) , (< @ makeP)) @ makeG , (< @ getCols @ getA)
+getA=: 0 {:: ]        NB. extract A
+getB=: 1 {:: ]        NB. extract B
 
-NB. ---------------------------------------------------------
-NB. expm
-NB. Calculate matrix exponent
-NB.   exp(A*T)
-NB. and Cauchy integral
-NB.   Integral(exp(A*(T-t))*dt,t=0..T)*B
-NB. for sampling period T via Lagrange-Sylvester interpolation
-NB. polynome
-NB.
-NB. Syntax:
-NB.   'EA IE'=. MVPN expm T
-NB. where:
-NB.   MVPN - output of prexpm, being (M;V;P;Nx)
-NB.   T    - sampling period, T>0
-NB.   EA   - Nx-by-Nx matrix, matrix exponent
-NB.   IE   - Nx-by-Nu matrix, Cauchy intergal
-NB.   Nu   = (#P)-Nx
+getM=: 0 {:: [        NB. extract M
+getV=: 1 {:: [        NB. extract V
+getP=: 2 {:: [        NB. extract P
+getNx=: 3 {:: [       NB. extract Nx
 
-splitbyx=: {."1 ; }."1         NB. split table y at column x
-extract=: [ splitbyx {.        NB. extract 1st x rows from table y
-augsys=: +/ @ (getP * makeAt)  NB. find exponent of augmented system
-expm=: getNx extract augsys
+getli=: 0 { ]         NB. extract lambdai
+getic=: 1 { ]         NB. extract ic
+getmi=: 2 { ]         NB. extract mi
+getIOs=: 3 { ]        NB. extract IOs
+getNm=: 4 { ]         NB. extract Nm
+getk=: 5 { ]          NB. extract k
 
-NB. ===========================================================================
-NB. makeG
-NB. Build G matrix of augmented LTI system: G = ( A  B ) Nx
-NB.                                             ( 0  0 ) Nu
-NB.                                               Nx Nu
-NB. Syntax: G=: makeG A;B
-
-makeG=: getA ((+ & getCols) {. ,.) getB
-
-NB. ---------------------------------------------------------
-NB. makeP
-NB. Make report of G powers
-NB.
-NB. Syntax:
-NB.   P=. makeP G
-NB. where
-NB.   G - Ng-by-Ng matrix, augmented LTI system, output of makeG
-NB.   P - Ng-by-Ng-by-Ng matrix, powers 0..(Ng-1) of G
-NB.
-NB. Test:
-NB.    ;/ makeP_tau_ ? 3 3 $ 10
-NB. ┌─────┬─────┬────────┐
-NB. │1 0 0│5 5 0│70 25 25│
-NB. │0 1 0│9 0 5│50 75 35│
-NB. │0 0 1│1 6 7│66 47 79│
-NB. └─────┴─────┴────────┘
-NB.
-NB. Notes:
-NB. - powers are calculated via repeated squaring to
-NB.   reduce operations from O(Ng*Ng) to O(Ng*log Ng), see
-NB.   http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
-NB. - 0-th power (identity matrix) is substituted directly
-NB.   without calculation
-
-p2b=: < @ I. @ |.               NB. cvt bits of y to powers, then box it
-pows=: p2b"1 @ #: @ i.          NB. call p2b for each power y represented binary
-topow=: mp/ @ (mp~ @ ] ^: [)    NB. produce table y to powers from list x, then product all
-topows=: > @ (topow &. >)       NB. apply dyad topow under boxes, then open
-prepP=: (pows @ [) topows ]     NB. form boxed list of y ^ i. x
-repl0=: (idmat @ [)`0:`prepP }  NB. replace 0-th element in y by identity matrix of size x
-makeP=: # repl0 <               NB. call: (#G) repl0 (<G)
-
-NB. ---------------------------------------------------------
-NB. makeLtM
-NB. Calculate matrix M or vector L(t) for equation M*A(t)=L(t)
-NB.
-NB. Syntax:
-NB.   Lt=. T makeLtM V
-NB.   M=. 0 makeLtM V
-NB. where:
-NB.   V  - (#vm)-by-5 matrix, prepared eigenvalues of G, output of prepV
-NB.   T  - sampling period, T>0
-NB.   M  - Nm-by-Ng matrix for equation M*A(t)=L(t)
-NB.   Lt - Nm-vector, RHS L(t) for equation M*A(t)=L(t)
-NB.   Nm = +/ vm * (ic+1), see prepV
-NB.   Ng = #G
-NB.
-NB. Test:
-NB.    1.1 makeLtM prepV 4 4 3 2j2 2j_2 1j1 1j_1 1j1 1j_1
-NB. 81.4509 89.596 27.1126 _5.31123 _5.84235 7.29669 8.02636 1.36268 1.49895 1.64884 1.81372 2.67733 2.94507 3.23958 3.56353
-NB.    0 makeLtM prepV 4 4 3 2j2 2j_2 1j1 1j_1 1j1 1j_1
-NB. 1 4 16  64 256 1024 4096 16384  65536
-NB. 0 1  8  48 256 1280 6144 28672 131072
-NB. 1 3  9  27  81  243  729  2187   6561
-NB. 1 2  0 _16 _64 _128    0  1024   4096
-NB. 0 1  4   0 _64 _320 _768     0   8192
-NB. 0 2  8  16   0 _128 _512 _1024      0
-NB. 0 0  4  24  64    0 _768 _3584  _8192
-NB. 1 1  0  _2  _4   _4    0     8     16
-NB. 0 1  2   0  _8  _20  _24     0     64
-NB. 0 0  2   6   0  _40 _120  _168      0
-NB. 0 0  0   6  24    0 _240  _840  _1344
-NB. 0 1  2   2   0   _4   _8    _8      0
-NB. 0 0  2   6   8    0  _24   _56    _64
-NB. 0 0  0   6  24   40    0  _168   _448
-NB. 0 0  0   0  24  120  240     0  _1344
-
-Tpows=: [ (^ i.) getmi                NB. T ^ i. mi
-prepMi=: makeGi * makeTi              NB. prepare Mi=. Gi*Ti
-prepLti=: (^ @ ([ * getli)) * Tpows   NB. prepare L[i](t)
-prepLtMi=: prepLti`prepMi @. (0 = [)  NB. choose L[i](t) or M[i] to prepare
-makeLtMi=: getic (c2r ^: [) prepLtMi  NB. complete L[i](t) or M[i], realificate if required
-makeLtM=: ; @: (< @: makeLtMi " 1)    NB. make and merge all L[i](t) or M[i]
-
-NB. ---------------------------------------------------------
-NB. makeAt
-NB. Solve equation M*A(t)=L(t) for A(t)
-NB.
-NB. Syntax:
-NB.   At=. MVPN makeAt T
-NB. where:
-NB.   T    - sampling period, T>0
-NB.   MVPN - output of prexpm, being (M;V;P;Nx)
-NB.   At   - Nm-vector, solution A(t) of equation M*A(t)=L(t)
-NB.   Nm = +/ vm * (ic+1), see prepV
-NB.
-NB. Test:
-NB.    MVPN makeAt_tau_ Ts
-NB. 0.999842 0.147562 0.0104619 0.00040034 0.000429799
-
-makeAt=: gels_jlapack_ @: (getM ; ] makeLtM getV)
+getCols=: {: @ $      NB. get columns count of table y
+reim=: 9 11 o."0 _ ]  NB. extract Re(y) and Im(y) from complex y
+c2r=: ,/ @ reim       NB. realificate complex y
+idmat=: =@i.          NB. identity matrix of size y
+mp=: +/ .*            NB. matrix product of x and y
+shybyx=: (|.!.0)"0 1  NB. shift y with step x
 
 NB. ---------------------------------------------------------
 NB. makeGi
@@ -292,26 +159,173 @@ nnegim=: ] #~ 0 <: im           NB. filter out atoms with negative imaginary par
 prepV=: (~. ,. (cnt (] ,. ([ (* ([ ,. (IOs ,. (+/ @: *))) ]) (>: @ ]))) ic)) @ nnegim ,. #
 
 NB. ---------------------------------------------------------
-NB. Utilities
+NB. makeG
+NB. Build G matrix of augmented LTI system: G = ( A  B ) Nx
+NB.                                             ( 0  0 ) Nu
+NB.                                               Nx Nu
+NB. Syntax: G=: makeG A;B
 
-getA=: 0 {:: ]        NB. extract A
-getB=: 1 {:: ]        NB. extract B
+makeG=: getA ((+ & getCols) {. ,.) getB
 
-getM=: 0 {:: [        NB. extract M
-getV=: 1 {:: [        NB. extract V
-getP=: 2 {:: [        NB. extract P
-getNx=: 3 {:: [       NB. extract Nx
+NB. ---------------------------------------------------------
+NB. makeP
+NB. Make report of G powers
+NB.
+NB. Syntax:
+NB.   P=. makeP G
+NB. where
+NB.   G - Ng-by-Ng matrix, augmented LTI system, output of makeG
+NB.   P - Ng-by-Ng-by-Ng matrix, powers 0..(Ng-1) of G
+NB.
+NB. Test:
+NB.    ;/ makeP_tau_ ? 3 3 $ 10
+NB. ┌─────┬─────┬────────┐
+NB. │1 0 0│5 5 0│70 25 25│
+NB. │0 1 0│9 0 5│50 75 35│
+NB. │0 0 1│1 6 7│66 47 79│
+NB. └─────┴─────┴────────┘
+NB.
+NB. Notes:
+NB. - powers are calculated via repeated squaring to
+NB.   reduce operations from O(Ng*Ng) to O(Ng*log Ng), see
+NB.   http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
+NB. - 0-th power (identity matrix) is substituted directly
+NB.   without calculation
 
-getli=: 0 { ]         NB. extract lambdai
-getic=: 1 { ]         NB. extract ic
-getmi=: 2 { ]         NB. extract mi
-getIOs=: 3 { ]        NB. extract IOs
-getNm=: 4 { ]         NB. extract Nm
-getk=: 5 { ]          NB. extract k
+p2b=: < @ I. @ |.               NB. cvt bits of y to powers, then box it
+pows=: p2b"1 @ #: @ i.          NB. call p2b for each power y represented binary
+topow=: mp/ @ (mp~ @ ] ^: [)    NB. produce table y to powers from list x, then product all
+topows=: > @ (topow &. >)       NB. apply dyad topow under boxes, then open
+prepP=: (pows @ [) topows ]     NB. form boxed list of y ^ i. x
+repl0=: (idmat @ [)`0:`prepP }  NB. replace 0-th element in y by identity matrix of size x
+makeP=: # repl0 <               NB. call: (#G) repl0 (<G)
 
-getCols=: {: @ $      NB. get columns count of table y
-reim=: 9 11 o."0 _ ]  NB. extract Re(y) and Im(y) from complex y
-c2r=: ,/ @ reim       NB. realificate complex y
-idmat=: =@i.          NB. identity matrix of size y
-mp=: +/ .*            NB. matrix product of x and y
-shybyx=: (|.!.0)"0 1  NB. shift y with step x
+NB. ---------------------------------------------------------
+NB. makeLtM
+NB. Calculate matrix M or vector L(t) for equation M*A(t)=L(t)
+NB.
+NB. Syntax:
+NB.   Lt=. T makeLtM V
+NB.   M=. 0 makeLtM V
+NB. where:
+NB.   V  - (#vm)-by-5 matrix, prepared eigenvalues of G, output of prepV
+NB.   T  - sampling period, T>0
+NB.   M  - Nm-by-Ng matrix for equation M*A(t)=L(t)
+NB.   Lt - Nm-vector, RHS L(t) for equation M*A(t)=L(t)
+NB.   Nm = +/ vm * (ic+1), see prepV
+NB.   Ng = #G
+NB.
+NB. Test:
+NB.    1.1 makeLtM prepV 4 4 3 2j2 2j_2 1j1 1j_1 1j1 1j_1
+NB. 81.4509 89.596 27.1126 _5.31123 _5.84235 7.29669 8.02636 1.36268 1.49895 1.64884 1.81372 2.67733 2.94507 3.23958 3.56353
+NB.    0 makeLtM prepV 4 4 3 2j2 2j_2 1j1 1j_1 1j1 1j_1
+NB. 1 4 16  64 256 1024 4096 16384  65536
+NB. 0 1  8  48 256 1280 6144 28672 131072
+NB. 1 3  9  27  81  243  729  2187   6561
+NB. 1 2  0 _16 _64 _128    0  1024   4096
+NB. 0 1  4   0 _64 _320 _768     0   8192
+NB. 0 2  8  16   0 _128 _512 _1024      0
+NB. 0 0  4  24  64    0 _768 _3584  _8192
+NB. 1 1  0  _2  _4   _4    0     8     16
+NB. 0 1  2   0  _8  _20  _24     0     64
+NB. 0 0  2   6   0  _40 _120  _168      0
+NB. 0 0  0   6  24    0 _240  _840  _1344
+NB. 0 1  2   2   0   _4   _8    _8      0
+NB. 0 0  2   6   8    0  _24   _56    _64
+NB. 0 0  0   6  24   40    0  _168   _448
+NB. 0 0  0   0  24  120  240     0  _1344
+
+Tpows=: [ (^ i.) getmi                NB. T ^ i. mi
+prepMi=: makeGi * makeTi              NB. prepare Mi=. Gi*Ti
+prepLti=: (^ @ ([ * getli)) * Tpows   NB. prepare L[i](t)
+prepLtMi=: prepLti`prepMi @. (0 = [)  NB. choose L[i](t) or M[i] to prepare
+makeLtMi=: getic (c2r ^: [) prepLtMi  NB. complete L[i](t) or M[i], realificate if required
+makeLtM=: ; @: (< @: makeLtMi " 1)    NB. make and merge all L[i](t) or M[i]
+
+NB. ---------------------------------------------------------
+NB. makeAt
+NB. Solve equation M*A(t)=L(t) for A(t)
+NB.
+NB. Syntax:
+NB.   At=. MVPN makeAt T
+NB. where:
+NB.   T    - sampling period, T>0
+NB.   MVPN - output of prexpm, being (M;V;P;Nx)
+NB.   At   - Nm-vector, solution A(t) of equation M*A(t)=L(t)
+NB.   Nm = +/ vm * (ic+1), see prepV
+NB.
+NB. Test:
+NB.    MVPN makeAt_tau_ Ts
+NB. 0.999842 0.147562 0.0104619 0.00040034 0.000429799
+
+makeAt=: gels_jlapack_ @: (getM ; ] makeLtM getV)
+
+NB. ===========================================================================
+NB. prexpm
+NB. Prepare time-invariant parts for expm
+NB.
+NB. Syntax:
+NB.   'M V P Nx'=. prexpm A;B
+NB. where:
+NB.   A - Nx-by-Nx state matrix of LTI system
+NB.   B - Nx-by-Nu control input matrix of LTI system
+NB.   M - Nm-by-Ng matrix for equation M*A(t)=L(t), output of makeLtM
+NB.   V - (#vm)-by-5 matrix, prepared eigenvalues of G, output of prepV
+NB.   P - Ng-by-Ng-by-Ng matrix, powers 0..(Ng-1) of G, output of makeP
+NB.   G - Ng-by-Ng matrix, augmented LTI system, output of makeG
+NB.   Nm = +/ vm * (ic+1), see prepV
+NB.   Ng = Nx + Nu
+NB.   Nx >= 0
+NB.   Nu >= 0
+
+prexpm=: (((0 & makeLtM ; ]) @ prepV @ (2b010 & geev_jlapack_)) , (< @ makeP)) @ makeG , (< @ getCols @ getA)
+
+NB. ---------------------------------------------------------
+NB. expm
+NB. Calculate matrix exponent
+NB.   exp(A*T)
+NB. and Cauchy integral
+NB.   Integral(exp(A*(T-t))*dt,t=0..T)*B
+NB. for sampling period T via Lagrange-Sylvester interpolation
+NB. polynome
+NB.
+NB. Syntax:
+NB.   'EA IE'=. MVPN expm T
+NB. where:
+NB.   MVPN - output of prexpm, being (M;V;P;Nx)
+NB.   T    - sampling period, T>0
+NB.   EA   - Nx-by-Nx matrix, matrix exponent
+NB.   IE   - Nx-by-Nu matrix, Cauchy intergal
+NB.   Nu   = (#P)-Nx
+
+splitbyx=: {."1 ; }."1         NB. split table y at column x
+extract=: [ splitbyx {.        NB. extract 1st x rows from table y
+augsys=: +/ @ (getP * makeAt)  NB. find exponent of augmented system
+expm=: getNx extract augsys
+
+NB. ===========================================================================
+NB. Test suite
+
+NB. pass_result=: texpm A;B;T;EA;IE
+
+texpm=: 3 : 0
+match=. matchclean;;
+smoutput 'EA IE'=. ((prexpm @ (0 1 & {)) expm (2 & {::)) y
+smoutput a=. EA match 3 {:: y
+smoutput b=. IE match 4 {:: y
+(0 pick a) *. 0 pick b
+)
+
+NB. testexpm ''
+
+testexpm=: 3 : 0
+A=. 4 4 $ 0.8462 0.8381 0.8318 0.3046 0.5252 0.0196 0.5028 0.1897 0.2026 0.6813 0.7095 0.1934 0.6721 0.3795 0.4289 0.6822
+B=. 4 3 $ 0.3028 0.3784 0.4966 0.5417 0.8600 0.8998 0.1509 0.8537 0.8216 0.6979 0.5936 0.6449
+T0=. 1.0
+EA0=. 4 4 $ 3.4818 2.3874 2.8282 1.1815 1.2996 1.8528 1.4749 0.6245 1.0820 1.5227 2.8538 0.6937 2.0741 1.6433 1.9914 2.5156
+IE0=. 4 3 $ 1.4393 2.4832 2.7270 1.0422 1.8137 1.9133 0.8258 2.1815 2.2029 1.6991 2.2054 2.3720
+T1=. 0.35
+EA1=. 4 4 $ 1.415 0.4041 0.4353 0.1687 0.2383 1.071 0.2455 0.09722 0.1339 0.2975 1.333 0.1037 0.3373 0.2218 0.2581 1.302
+IE1=. 4 3 $ 0.1878 0.2837 0.3344 0.2219 0.3642 0.3825 0.1037 0.4019 0.394 0.3177 0.3173 0.3441
+texpm &> (< A;B;T0;EA0;IE0) , (< A;B;T1;EA1;IE1)
+)

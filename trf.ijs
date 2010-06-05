@@ -77,6 +77,7 @@ NB. - T would be sparse
 
 
 stitchrb=: [ ,. ({.~ (-@#))~
+xsh=: 1 : '{.~ (m+$)'
 
 NB. 'ip L1 T permA H'=. l0 hetf2pl A
 NB. 'ip L1 T permA H h'=. step (ip;L1;T;A;H;h)
@@ -84,7 +85,7 @@ NB. 'ip L1 T permA H h'=. step (ip;L1;T;A;H;h)
 hetf2pla=: 5 {. ((3 : 0) ^: (0>.(<: TRFNB)<.(<:@#@(3 & {::)))) @ ((i.@#@]);(,.@[);(1 1 {. ]);];(1 {."1 ]);(}.@({."1 @ ])))
   'ip L1 T A H h'=. y
   'n j'=. $ L1
-  l0=. ((j dhs2lios (_1&,)) (n-j)) ({,) L1
+  l0=. (n (] dhs2lios (_1,-)) j) ({,) L1
   l1=. h - l0 * (_1 ({,) T)
   q=. liofmax l1
   dip0=. 0 lios2cp q
@@ -106,64 +107,29 @@ hetf2pla=: 5 {. ((3 : 0) ^: (0>.(<: TRFNB)<.(<:@#@(3 & {::)))) @ ((i.@#@]);(,.@[
   ip ; L1 ; T ; A ; H ; (}. h)
 )
 
-xsh=: 1 : '{.~ (m+$)'
-
-NB. 'rawip L1 T permsubA H l0'=. l0 hetf2pl A
-NB. 'rawip L100 T permsubA H00 l0 h H10 L110'=. step (rawip;L100;T;A;H00;l0;h;H10;L110)
-
-hetf2plb=: 6 {. ((3 : 0) ^: (0>.(<: TRFNB)<.(#@(3 & {::)))) @ (0:;(1 1 $ [);(1 1 {. ]);(1 1 }. ]);(1 1 {. ]);(}.@[);(}.@:({."1)@]);(}.@(1 {."1 ]));(,.@}.@[))
-  'rawip L100 T A H00 l0 h H10 L110'=. y
+hetf2plb=: 5 {. ((3 : 0) ^: (0>.(<: TRFNB)<.(<:@#@(3 & {::)))) @ ((i.@#@]);(,.@[);(1 1 {. ]);];(1 {."1 ]);(}.@({."1 @ ])))
+  'ip L1 T A H h'=. y
+  'n j'=. $ L1
+  l0=. (n (] dhs2lios (_1,-)) j) ({,) L1
   l1=. h - l0 * (_1 ({,) T)
   q=. liofmax l1
-  dip=. 0 lios2cp q
-  l1=. dip C. l1
+  dip0=. 0 lios2cp q
+  dip=. j (+ &. >) dip0              NB. j ([ lios2cp +) q
+  l1=. dip0 C. l1
   A=. dip sp A
-  rawip=. rawip , q
-  l0=. dip C. l0
-  H10=. dip C. H10
-  L110=. dip C. L110
+  ip=. dip C. ip
+  l0=. dip0 C. l0
+  H=. dip C. H
+  L1=. dip C. L1
   t01=. + t10=. {. l1
   l1=. l1 % t10
-  h=. ({."1 A) - H10 mp (+ {. L110)
-  H10=. H10 ,. h
-  H00=. (t01 _1: } 0 1 xsh H00) , ({. H10)
-  H10=. }. H10
-  L110=. L110 ,. l1
-  L100=. ({. L110) _1 } 1 xsh L100
-  L110=. }. L110
+  h=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j { L1)
+  L1=. L1 stitchrb l1
+  H=. H stitchrb (t01 , h)
   h=. h - l0 * t01
   t11=. {. h
   T=. (t11,t10,t01) (_1 _2,(_1 - #@])) } 1 xsh T
-  rawip ; L100 ; T ; (1 1 }. A) ; H00 ; (}. l1) ; (}. h) ; H10 ; L110
-)
-
-hetf2plo=: 3 : 0
-  n=. # y
-  L1=. ($ y) {. 1              NB. 1st L1's column in Aasen method is e(1)-vector
-  T=. ($ {. (1 1 {. ])) y      NB. T[0,0]=A[0,0]
-  ip=. i. n
-  h=. i. 1                     NB. h[0:j-1]=H[0:j-1,j-1], may be defined arbitrary before the 1st iteration only
-  ios=. n th2lios 1            NB. j:n-1
-  for_j. (n <. TRFNB) th2lios 1 do.       NB. 1:min(n,NB)-1
-    a=. (< ios ; (<: j)) { y   NB. A[j:n-1,j-1]
-    lum=. (j (- , [) n) {. L1  NB. L1[j:n-1,0:j-1]
-    v=. a - lum mp h           NB. v[0:n-j-1]=A[j:n-1,j-1]-L1[j:n-1,0:j-1]*H[0:j-1,j-1]=L1[j:n-1,j]*T[j,j-1] non-pivoted yet
-    q=. liofmax v              NB. IO pivot from head
-    v=. (0 lios2cp q) C. v     NB. v[0]↔v[q]
-    dip=. q (+ lios2cp ]) j    NB. any[j]↔any[j+q]
-    y=. dip sp y               NB. A[j,j:n-1]↔A[j+q,j:n-1], A[j:n-1,j]↔A[j:n-1,j+q]
-    ip=. dip C. ip             NB. ip[j]↔ip[j+q]
-    to=. {. v                  NB. T[j,j-1]
-    lu=. q { lum               NB. L1[j,0:j-1] after pivoting
-    luecto=. to * + {: lu      NB. conj(L1[j,j-1])*T[j,j-1]
-    h=. to (((+ +)~ {:)`_1:`]) } ((2 # j) {. T) mp + lu   NB. h[0:j-1]=H[0:j-1,j]=T[0:j-1,0:j-1]*conj(L1[j,0:j-1])
-    L1=. (1 (0}) v % to) (< ios ; j) } dip C. L1          NB. L1[j,0:n-1]↔L1[j+q,0:n-1], L1[j:n-1,j]=v[0:n-j-1]/v[0], v[0] may be 0
-    td=. 9 o. ((< 2 # j) { y) - (luecto + lu mp h)        NB. T[j,j]=Re(A[j,j]-L1[j,0:j-1]*H[0:j-1,j]-conj(L1[j,j-1])*T[j,j-1])
-    T=. (td (,~ (, +)) to) (_2 <\ 0 _1 _1 0 0 0 + j) } T  NB. TODO: amend by lIOS NB. batch write diagonal and off-diagonal elements T[j,j-1] T[j-1,j] T[j,j]
-    h=. h , luecto + td        NB. h[0:j]=H[0:j,j]=T[0:J,0:J]*conj(L1[j,0:j])
-    ios=. }. ios               NB. j+1:n-1
-  end.
-  ip ; L1 ; T
+  ip ; L1 ; T ; A ; H ; (}. h)
 )
 
 NB. ---------------------------------------------------------

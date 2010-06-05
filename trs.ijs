@@ -529,7 +529,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
-  'conA conAh conAt'=. 3 # _. NB. (norm1 con (getrilu1p@getrflu1p))"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. (norm1 con (getrilu1p@getrflu1p))"2 (] , ct ,: |:) A
   'LU1ip ipL1U ipU1L UL1ip'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
 
   ('getrslu1px'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;LU1ip)
@@ -581,7 +581,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. 2 # _. NB. (norm1 con (hetripl@hetrfpl))"2 (] ,: |:) A
+  'conA conAt'=. (norm1 con (hetripl@hetrfpl))"2 (] ,: |:) A
   'ipL1D ipU1D'=. (hetrfpl ; <@hetrfpu) A
 
   ('hetrsplx'  tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (    A ;X;ipL1D)
@@ -616,7 +616,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testpotrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. 2 # _. NB. (norm1 con (potril@potrfl))"2 (] ,: |:) A
+  'conA conAt'=. (norm1 con (potril@potrfl))"2 (] ,: |:) A
   'L U'=. (potrfl ,: potrfu) A
 
   ('potrslx'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
@@ -655,7 +655,7 @@ NB. - A should be sparse
 
 testpttrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. 2 # _. NB. (norm1 con (pttril@pttrfl))"2 (,: |:) A
+  'conA conAt'=. (norm1 con pttril)"2 (,: |:) A
   'L1D U1D'=. (pttrfl ; <@pttrfu) A
 
   ('pttrslx'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (    A ;X;L1D)

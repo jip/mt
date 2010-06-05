@@ -1725,7 +1725,7 @@ NB. TODO:
 NB. - A should be sparse
 
 testpttrf=: 3 : 0
-  rcond=. _. NB. (norm1 con (pttril@pttrfl)) y
+  rcond=. (norm1 con pttril) y
 
   ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/)))) % (FP_EPS*((norm1*c)@[))))) y
   ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/)))) % (FP_EPS*((norm1*#)@[))))) y

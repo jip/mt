@@ -163,7 +163,7 @@ NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
 test=: 1 : 0
-  '%-25s %-12s %-12s %-12s %-12s %-12s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
+  '%-25s %-14s %-14s %-14s %-14s %-14s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
 
   NB. low-level algorithms
   (u testbak_mt_) y
@@ -176,7 +176,6 @@ test=: 1 : 0
   (u testsm_mt_) y
 
   NB. mid-level algorithms
-  (u testfri_mt_) y
   (u testhrd_mt_) y
   (u testqf_mt_) y
   (u testtrf_mt_) y

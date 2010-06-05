@@ -5,7 +5,7 @@ NB. getrixxxx  Inverse general matrix
 NB. hetripx    Inverse Hermitian (symmetric) matrix
 NB. potrix     Inverse Hermitian (symmetric) positive
 NB.            definite matrix
-NB. pttri      Inverse Hermitian (symmetric) positive
+NB. pttrix     Inverse Hermitian (symmetric) positive
 NB.            definite tridiagonal matrix
 NB.
 NB. testtrtri  Test trtrixx by triangular matrix given
@@ -14,7 +14,7 @@ NB. testhetri  Test hetripx by Hermitian (symmetric) matrix
 NB.            given
 NB. testpotri  Test potrix by Hermitian (symmetric) positive
 NB.            definite matrix given
-NB. testpttri  Test pttri by Hermitian (symmetric) positive
+NB. testpttri  Test pttrix by Hermitian (symmetric) positive
 NB.            definite tridiagonal matrix given
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
@@ -448,44 +448,6 @@ getripl1u=: 3 : 0
   ip (C.^:_1"1) 1 {:: getripl1ustep ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
 )
 
-NB. num_array3=: [num_value2] bool_IOS_table aamend num_value1
-NB.
-NB. Notes:
-NB. - the following definition:
-NB.     amend=: 1 : 0
-NB.     :
-NB.       y=. m } y ,: x
-NB.     )
-NB.   doesn't work, see http://www.jsoftware.com/pipermail/programming/2010-March/018944.html
-
-amend=: 1 : 0
-  y=. m } y ,: 0
-:
-  y=. m } y ,: x
-)
-getripl1ustep2=: 4 : 0
-  'n jj'=. $ y
-  j=. (n - jj) - TRINB
-  'L0i L1i'=. TRINB ({. ; }.) j }. x
-  (L0i trsmxl1 ((-j) trupick x) - y mp L1i) ,. y
-)
-getripl1u2=: 3 : 0
-  ip=. 0 {:: y
-  y=. (1 {:: y) (>/~ i. # ip) amend trtriu tru 1 {:: y
-  ip C.^:_1"1 > (getripl1ustep2&:>/) (({. @ ((0 _ ,. TRINB) & (<;._3))) , (<@((-~/@$) (trl1 trsmxl1 tru) ])@((-@(TRINB&|)@#) {."1 ]))) y
-)
-getripl1ustep3=: 4 : 0
-  'n jj'=. $ y
-  j=. (n - jj) - TRINB
-  'L0i L1i'=. TRINB ({. ; }.) j }. x
-  (L0i trsmxl1 (x (((i. n) - j) <:/ i. TRINB) amend 0) - y mp L1i) ,. y
-)
-getripl1u3=: 3 : 0
-  ip=. 0 {:: y
-  y=. (1 {:: y) (>/~ i. # ip) amend trtriu tru 1 {:: y
-  ip C.^:_1"1 > (getripl1ustep3&:>/) (({. @ ((0 _ ,. TRINB) & (<;._3))) , (<@((-~/@$) (trl1 trsmxl1 tru) ])@((-@(TRINB&|)@#) {."1 ]))) y
-)
-
 getripu1l=: 3 : 0
   'ip U1L'=. y
   n=. c U1L
@@ -530,9 +492,10 @@ NB.
 NB. Notes:
 NB. - is similar to LAPACK's xHETRI, but uses another
 NB.   factorization, see hetrfx
+NB. - calls to pttril and pttriu are interchangeable here
 
-hetripl=: (/: @ (0 & {::)) sp (pttri @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))
-hetripu=: (/: @ (0 & {::)) sp (pttri @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))
+hetripl=: (/: @ (0 & {::)) sp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))
+hetripu=: (/: @ (0 & {::)) sp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))
 
 NB. ---------------------------------------------------------
 NB. Verb:     Factorization used:          Syntax:
@@ -589,14 +552,16 @@ NB.     Applied Mathematics and Computation 204 (2008) 368–372
 NB.     http://dx.doi.org/10.1016/j.amc.2008.06.053
 NB.
 NB. TODO:
+NB. - pttriu
 NB. - A should be sparse
 
-
-pttri=: ((4 : 0) ^: (((0:`(+@])`(_1&diag)`,.`((-@,. (1&(|.!.0)))~ }.)`diag fork3)@])`(<:@#@])`((,. @ ((]`- ag) @ (*/\)&.|.) @ ((, (%@{:))&>/) @ ((_1&diag&.>)`(diag&.>) ag) @ pttrfl)@])))~
+pttril=: ($:~ pttrfl) : ((4 : 0) ^: (((0:`(+@])`(_1&diag)`,.`((-@,. (1&(|.!.0)))~ }.)`diag fork3)@])`(<:@#@])`((,. @ ((]`- ag) @ (*/\)&.|.) @ (((, (%@{:))~ +)~&>/) @ ((_1&diag&.>)`(diag&.>) ag) @ [))))
   io=. -c y
   pi=. io { x
   ((io (>: upd1) (+/"1) ((}. pi) (*"1) (2 {."1 y))) % ({. pi)) ,. y
 )
+
+pttriu=: [:
 
 NB. =========================================================
 NB. Test suite
@@ -656,8 +621,6 @@ testgetri=: 3 : 0
 
   ('getrilu1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrflu1p) y
   ('getripl1u' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpl1u) y
-  ('getripl1u2' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpl1u) y
-  ('getripl1u3' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpl1u) y
   ('getripu1l' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpu1l) y
   ('getriul1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrful1p) y
 
@@ -679,7 +642,7 @@ NB. Formula:
 NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testhetri=: 3 : 0
-  rcond=. _. NB. (norm1 con (hetripl@hetrfpl)) y
+  rcond=. (norm1 con (hetripl@hetrfpl)) y
 
   ('hetripl' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
   ('hetripu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpu) y
@@ -728,8 +691,7 @@ NB. Formula:
 NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpttri=: 3 : 0
-EMPTY return.
-  rcond=. (norm1 con pttri) y
+  rcond=. (norm1 con pttril) y
 
   ('pttril' tdyad ((pttrfl@])`]`]`(rcond"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
   ('pttriu' tdyad ((pttrfu@])`]`]`(rcond"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y

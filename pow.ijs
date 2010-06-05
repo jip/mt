@@ -8,13 +8,10 @@ NB. hepow  raise a Hermitian matrix in integer powers
 coclass 'mt'
 
 NB. =========================================================
-NB. Local constants
+NB. Local definitions
 
 NB. =========================================================
-NB. Local verbs
-
-NB. =========================================================
-NB. Interface verbs
+NB. Interface
 
 NB. ---------------------------------------------------------
 NB. gepow                                                 _ 2

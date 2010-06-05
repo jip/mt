@@ -46,46 +46,52 @@ NB. Includes
 NB. ---------------------------------------------------------
 NB. System verbs
 
+script_z_ '~system/main/numeric.ijs'                  NB. range
+script_z_ '~system/main/myutil.ijs'                   NB. timespacex
 script_z_ '~system/packages/math/mathutil.ijs'        NB. mp
 script_z_ '~system/packages/math/matutil.ijs'         NB. diag
-script_z_ '~system/main/numeric.ijs'                  NB. range
 script_z_ '~system/packages/stats/random.ijs'         NB. rand01
 script_z_ '~system/packages/stats/statdist.ijs'       NB. normalrand
 
 NB. ---------------------------------------------------------
 NB. Package verbs
 
-require '~user/projects/mt/util.ijs'                  NB. class-wide utilities
-require '~user/projects/mt/mkmat.ijs'                 NB. matrix generators
+require '~user/projects/mt/util.ijs'                  NB. utilities
+require '~user/projects/mt/struct.ijs'                NB. struct handlers
 require '~user/projects/mt/bal.ijs'                   NB. balance
 require '~user/projects/mt/equ.ijs'                   NB. equilibrate
 require '~user/projects/mt/exp.ijs'                   NB. exponent
 require '~user/projects/mt/hrd.ijs'                   NB. Hessenberg reduction
+NB. require '~user/projects/mt/orf.ijs'                   NB. orthogonal factorization (LQ QL QR RQ)
 require '~user/projects/mt/pow.ijs'                   NB. integer powers
+require '~user/projects/mt/rand.ijs'                  NB. random objects
 require '~user/projects/mt/rot.ijs'                   NB. plane rotations
 require '~user/projects/mt/sv.ijs'                    NB. solve linear monomial equations
 require '~user/projects/mt/trf.ijs'                   NB. triangular factorization (Cholesky LU)
 
 NB. =========================================================
-NB. Interface verbs
+NB. Interface
+
+NB. =========================================================
+NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. test                                                    1
 NB. Test algorithms
 NB.
 NB. Syntax:
-NB.   r=. test [m,]n
+NB.   r=. test m,n
 NB. where
-NB.   n   - to test algorithms with random n×n matrices
 NB.   m,n - to test algorithms with random m×n matrices; if
 NB.         m≠n then algorithms that accept square matrices
 NB.         only are skipped
-NB.   r   - boxed table with 7 columns: 'algorithm name'
-NB.         'datatype' 'rows' 'cols' 'error' 'time, sec.'
-NB.         'space, bytes', and with rows for each unique
-NB.         pair: 'algorithm name' 'datatype'
+NB.   r   - boxed table with 5 columns: 'algorithm name'
+NB.         'datatype' 'error' 'time, sec.' 'space, bytes',
+NB.         and with rows per each unique pair:
+NB.         'algorithm name' 'datatype'
 
 test=: (3 : 0) " 1
+  assert. 2 1 -: (# , #@$) y
   NB. (testbal , testequ , testexp , testhrd , testpow , testrot , testsv , testtrf) y
   testtrf y
 )
@@ -96,18 +102,18 @@ NB. Estimate optimal block size for each blocked version of
 NB. algorithms
 NB.
 NB. Syntax:
-NB.   r=. block [m,]n
+NB.   r=. block m,n
 NB. where
-NB.   n   - to estimate algorithms with random n×n matrices
 NB.   m,n - to estimate algorithms with random m×n matrices;
 NB.         if m≠n then algorithms that accept square
 NB.         matrices only are skipped
-NB.   r   - boxed table with 6 columns: 'algorithm name'
-NB.         'datatype' 'rows' 'cols' 'const name'
-NB.         'const value', and with rows for each unique
-NB.         pair: 'algorithm name' 'datatype'
+NB.   r   - boxed table with 4 columns: 'algorithm name'
+NB.         'datatype' 'const name' 'const value', and with
+NB.         rows per each unique pair: 'algorithm name'
+NB.         'datatype'
 
 block=: (3 : 0) " 1
+  assert. 2 1 -: (# , #@$) y
   NB. (blockbal , blockequ , blockexp , blockhrd , blockpow , blockrot , blocksv , blocktrf) y
   blocktrf y
 )
@@ -123,18 +129,17 @@ NB. cache. This value is used by recursive versions to make
 NB. decision whether to stop recursion or not.
 NB.
 NB. Syntax:
-NB.   r=. space [m,]n
+NB.   r=. space m,n
 NB. where
-NB.   n   - to estimate algorithms with random n×n matrices
 NB.   m,n - to estimate algorithms with random m×n matrices;
 NB.         if m≠n then algorithms that accept square
 NB.         matrices only are skipped
-NB.   r   - boxed table with 6 columns: 'algorithm name'
-NB.         'datatype' 'rows' 'cols' 'const name'
-NB.         'const value', and with rows for each unique
-NB.         pair: 'algorithm name' 'datatype'
+NB.   r   - boxed table with 4 columns: 'algorithm name'
+NB.         'datatype' 'const name' 'const value', and with
+NB.         rows per each unique pair: 'algorithm name'
+NB.         'datatype'
 NB.
-NB. Notes:
+NB. Examples:
 NB. - if there is no intermediate nouns, and operations are
 NB.   in-place only, then coeff=1
 NB. - if algorithm creates e.g. intermediate nouns of double
@@ -142,6 +147,7 @@ NB.   size as input, then coeff=1r3, since following must
 NB.   hold: (insize + 2*insize ≤ CPU_cache_size)
 
 space=: (3 : 0) " 1
+  assert. 2 1 -: (# , #@$) y
   NB. (spacebal , spaceequ , spaceexp , spacehrd , spacepow , spacerot , spacesv , spacetrf) y
   spacetrf y
 )

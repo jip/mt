@@ -1,39 +1,36 @@
 NB. util.ijs
-NB. Common mt verbs
+NB. Common mt staff
 NB.
-NB. vnormi  inf-norm of vector y
-NB. norm1   1-norm of table or vector y
-NB. trace   matrix trace
-NB. ut2tr   transform upper triangular matrix to packed form
-NB. sdiag   add element[s from] x to diagonal of matrix y
+NB. abssq    Re(y)^2 + Im(y)^2
+NB. normi    ∞-norm of matrix or vector y
+NB. norm1    1-norm of matrix or vector y
+NB. trace    matrix trace
+NB. ct       conjugate transpose
+NB. lio      integers grid (2{y) steps from (0{y) by (1{y)
+NB. ii2cp    make cycle permutation from indices x and y
+NB. ht2i     form int list from head y to tail x: y (y+1) ... (x-1)
+NB. kernel3  form top level computing kernel verbs
+NB. sdiag    add element[s from] x to diagonal of matrix y
 
 coclass 'mt'
 
 NB. =========================================================
-NB. Local verbs
+NB. Local definitions
 
 NB. =========================================================
-NB. Interface verbs
+NB. Interface
 
-vnormi=: >./ @: |                       NB. inf-norm of vector y
-norm1=: >./ @: (+/) @: |                NB. 1-norm of table or vector y
+abssq=: +/ @: *: @ +.                   NB. Re(y)^2 + Im(y)^2
+
+normi=: >./ @ (+/ " _1) @: |            NB. ∞-norm of matrix or vector y
+norm1=: >./ @ (+/     ) @: |            NB. 1-norm of matrix or vector y
+
 trace=: +/ @ diag                       NB. matrix trace
-ut2tr=: ((I. @ , @ (<:/~@i.) @ #) { ,)  NB. transform N×N upper triangular matrix to (N*(N+1)/2)-vector, packed form
+ct=: + @ |:                             NB. conjugate transpose
+
 lio=: + ` (* i.)/ " 1                   NB. integers grid (2{y) steps from (0{y) by (1{y)
 ii2cp=: < @ (, ` (, @ ]) @. =)          NB. make cycle permutation from indices x and y
-ht2i=: (] + (i. @ -)) " 0 0             NB. form int list from head y to tail x: y (y+1) ... (x-1)
-abssq=: +/ @: *: @ +.                   NB. Re(y)^2 + Im(y)^2
-ct=: + @ |:                             NB. conjugate transpose
-ts=: 6!:2 , 7!:2 @ ]                    NB. execution time and space
-UL2L=: * ((>:/ & i.)/ @ $)              NB. fill strict upper triangular by zeros
-UL2SL=: * ((>/ & i.)/ @ $)              NB. fill upper triangular by zeros
-UL2U=: * ((<:/ & i.)/ @ $)              NB. fill strict lower triangular by zeros
-UL2SU=: * ((</ & i.)/ @ $)              NB. fill lower triangular by zeros
-UL2I=: (=/ & i.)/ @ $                   NB. identity matrix with the same shape as y
-LU2L1=: UL2I + UL2SL                    NB. extract strict L is m×min(m,n) matrix
->>>>>>>>
-LU2L1=: (mn & ({. " 1)) @: (I + L & *)  NB. L is m×min(m,n) matrix
-LU2U=. (mn & {.) @: (U & *)            NB. U is min(m,n)×n matrix
+ht2i=: ] + (i. @ -)                     NB. form int list from head y to tail x: y (y+1) ... (x-1)
 
 NB. ---------------------------------------------------------
 NB. kernel3
@@ -59,10 +56,10 @@ NB.   mkiosC=. 2 { [
 NB.   kabc=. mkiosA ` mkiosB ` mkiosC kernel3 (- ` mp)
 NB.   iosABC=. 3 2 2 $ 2 2 3 3 2 0 3 2 0 2 2 3
 NB.   m=. i. 5 5
+NB.   updatedA=. iosABC kabc m
 NB.   A=. (0 { iosABC) (] ;. 0 ]) m
 NB.   B=. (1 { iosABC) (] ;. 0 ]) m
 NB.   C=. (2 { iosABC) (] ;. 0 ]) m
-NB.   updatedA=. iosABC kabc m
 NB. then
 NB.   updatedA -: A - B mp C
 
@@ -89,43 +86,5 @@ sdiag=: ((+ (< 0 1) & |:) ((>: * i.) @ # @ ]) } ]) " 1 2
 
 NB. =========================================================
 Note 'testing and timing'
-
-   NB. machine epsilon
-   (-: ^: (1 ~: (1: + {:)) ^: _) 1 0.5
-1.13687e_13 5.68434e_14
-   NB. system setting
-   9!:18 ''
-5.68434e_14
-   NB. epsilon exponent
-   2 ^. 1.13687e_13 5.68434e_14
-_43 _44
-   NB. test
-   1 = 1 + 1.13687e_13 5.68434e_14
-0 1
-
-   NB. underflow threshold
-   (-: ^: (0 ~: {:) ^: _) 1 0.5
-4.94066e_324 0
-   NB. minimum exponent
-   2 ^. 4.94066e_324
-_1074
-   NB. test
-   2 ^ _1074 _1075
-4.94066e_324 0
-   NB. safe minimum
-   _ > 0.5 ^ _1023 _1024
-1 0
-
-   NB. overflow threshold
-   (+: ^: (_ ~: {.) ^: _) 1 0.5
-_ 8.98847e307
-   NB. maximum exponent
-   2 ^. 8.98847e307
-1023
-   NB. test
-   2 ^ 1023 1024
-8.98847e307 _
-   NB. safe maximum
-   _ > % 0.5 ^ 1023 1024
-1 0
+  [:
 )

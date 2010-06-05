@@ -25,6 +25,26 @@ NB. rpotrfu   Cholesky factorization of a Hermitian
 NB.           (symmetric) positive definite matrix for upper
 NB.           triangular factor, recursive version
 NB.
+NB. References:
+NB. [1] J. J. Dongarra, I. Duff, D. Sorensen, H. Van der Vorst.
+NB.     Linear Algebra Computations on Vector and Parallel Computers.
+NB.     Versions of different blocked LU decomposition algorithms
+NB.     http://www.netlib.org/ddsv/slus.f
+NB.     Versions of different blocked Cholesky decomposition algorithms
+NB.     http://www.netlib.org/ddsv/schol.f
+NB. [2] J. J. Dongarra, S. Hammarling, D. W. Walker. (1996)
+NB.     Key Concepts For Parallel Out-Of-Core LU Factorization.
+NB.     LAPACK Working Note 110, UT-CS-96-324, April 1996.
+NB. [3] J. J. Dongarra, E. F. D'Azevedo. (1997)
+NB.     The Design and Implementation of the Parallel
+NB.     Out-of-core ScaLAPACK LU, QR, and Cholesky
+NB.     Factorization Routines.
+NB.     LAPACK Working Note 118, UT-CS-97-347, January 1997.
+NB. [4] F. G. Gustavson, I. Jonsson. Minimal-storage high-
+NB.     performance Cholesky factorization via blocking
+NB.     recursion. IBM J. Res. Develop., vol. 44, No. 6,
+NB.     2000, pp. 823-850.
+NB.
 NB. Version: 1.0.0 2008-11-01
 NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
 NB. License: GNU GPL
@@ -32,114 +52,144 @@ NB. License: GNU GPL
 coclass 'mt'
 
 NB. =========================================================
-NB. Local constants
+NB. Local definitions
 
-NB. =========================================================
-NB. Local verbs
+NB. IO element from list y with max magnitude
+iomaxm=: (i.>./) @: |
 
-iomaxm=: (i.>./) @: |  NB. IO element from list y with max magnitude
+NB. extract rectangle:  0  j
+NB.                     j  jb
+iosA12=: ({. ((0 , [) ,: ,) #) @ [
+
+NB. extract rectangle:  0  _1
+NB.                     j  n-(j+jb)
+iosA13=: 0 _1 ,: (({. @ [) , ((- ({. + #))~ ({: @ $)))
+
+NB. extract rectangle:  j   0
+NB.                     jb  j
+iosA21=: (# ((] , 0:) ,: ,) {.)@[
+
+NB. extract rectangle:  j   _1
+NB.                     jb  n-(j+jb)
+iosA23=: (({. @ [) , _1:) ,: ((# @ [) , ((- ({. + #))~ ({: @ $)))
+
+NB. extract rectangle:  0     j
+NB.                     j+jb  jb
+iosA12A22=: ((((0 , [) ,: (+ , ])) #)~ {.)@[
+
+NB. extract rectangle:  0     _1
+NB.                     j+jb  n-(j+jb)
+iosA13A23=: ((0 _1 ,: (] , -)) ({. + #))~ #
+
+NB. extract rectangle:  _1   0
+NB.                     m-j  j
+iosA21A31=: _1 0 ,: (((- , ]) {.)~ #)
+
+NB. extract rectangle:  _1   j
+NB.                     m-j  jb
+iosA22A32=: (_1 , ({.@[)) ,: ((- {.)~ #) , (#@[)
 
 NB. ---------------------------------------------------------
-NB. kcgetrflu
+NB. kctrflu
 NB. LU Crout algorithm's kernel for column orientation
 NB.
 NB. Syntax:
-NB.   W=. ios kcgetrflu Z
+NB.   B=. ios kctrflu A
 NB. where
-NB.   Z     - m×n general matrix
-NB.   ios   - (j , (j+1) , ... , (j+nb-1))
-NB.   W     - (A - B * C)
-NB.   nb    - block size, nb=1 (non-blocked version) or nb≥1
-NB.           (blocked version)
-NB.   j     - index of row, along with nb it defines Z
-NB.           partitioning, j is multiplier of nb in range:
-NB.           0 ≤ j < min(m,n)
-NB.   m     ≥ 0
-NB.   n     ≥ 0
-NB.   A B C - submatrices extracted from Z at step (j/nb):
-NB.                  j  nb (n-j-nb)
-NB.           j      *  C  *
-NB.           (m-j)  B  A  *
+NB.   A   -  m×n matrix
+NB.   ios -: (j , (j+1) , ... , (j+nb-1))
+NB.   B   -: (A22A32 - A21A31 * A12)
+NB.   nb  -  block size, nb=1 (non-blocked version) or nb≥1
+NB.          (blocked version)
+NB.   j   -  index of row, along with nb it defines Z
+NB.          partitioning, and is multiplier of nb in range:
+NB.          0 ≤ j < min(m,n)
+NB.   m   ≥  0
+NB.   n   ≥  0
+NB.   Akk -  submatrices extracted from A at step (j/nb):
+NB.                 j       nb      (n-j-nb)
+NB.          j      *       A12     *
+NB.          (m-j)  A21A31  A22A32  *
 
-kcgetrflu=: ((_1 , ({. @ [)) ,: (((- {.)~ #) , (# @ [)))`(_1 0 ,: (((- , ]) {.)~ #))`(((0 , {.) ,: ({. , #)) @ [) kernel3 (-`mp)
+kctrflu=: iosA22A32`iosA21A31`iosA12 kernel3 (-`mp)
 
 NB. ---------------------------------------------------------
 NB. krgetrflu
 NB. LU Crout algorithm's kernel for row orientation
 NB.
 NB. Syntax:
-NB.   W=. ios krgetrflu Z
+NB.   B=. ios krgetrflu A
 NB. where
-NB.   Z     - m×n general matrix
-NB.   ios   - (j , (j+1) , ... , (j+nb-1))
-NB.   W     - (A - B * C)
-NB.   nb    - block size, nb=1 (non-blocked version) or nb≥1
-NB.           (blocked version)
-NB.   j     - index of row, along with nb it defines Z
-NB.           partitioning, j is multiplier of nb in range:
-NB.           0 ≤ j < min(m,n)
-NB.   m     ≥ 0
-NB.   n     ≥ 0
-NB.   A B C - submatrices extracted from Z at step (j/nb):
-NB.                    j  nb (n-j-nb)
-NB.           j        *  *  C
-NB.           nb       B  *  A
-NB.           (m-j-nb) *  *  *
+NB.   A   -  m×n general matrix
+NB.   ios -: (j , (j+1) , ... , (j+nb-1))
+NB.   B   -: (A23 - A21 * A13)
+NB.   nb  -  block size, nb=1 (non-blocked version) or nb≥1
+NB.          (blocked version)
+NB.   j   -  index of row, along with nb it defines Z
+NB.          partitioning, j is multiplier of nb in range:
+NB.          0 ≤ j < min(m,n)
+NB.   m   ≥  0
+NB.   n   ≥  0
+NB.   Akk -  submatrices extracted from A at step (j/nb):
+NB.                     j    nb  (n-j-nb)
+NB.           j         *    *   A13
+NB.           nb        A21  *   A23
+NB.           (m-j-nb)  *    *   *
 
-krgetrflu=: ((({. @ [) , _1:) ,: ((# @ [) , ((- ({. + #))~ ({: @ $))))`((({. , 0:) ,: (# , {.)) @ [)`(0 _1 ,: (({. @ [) , ((- ({. + #))~ ({: @ $)))) kernel3 (-`mp)
+krgetrflu=: iosA23`iosA21`iosA13 kernel3 (-`mp)
 
 NB. ---------------------------------------------------------
 NB. kpotrfl
 NB. Cholesky algorithm's kernel for lower triangular factor
-NB. case: L*L' = Z
+NB. case: L*L' = A
 NB.
 NB. Syntax:
-NB.   W=. ios kpotrfl Z
+NB.   B=. ios kpotrfl A
 NB. where
-NB.   Z       -  n×n Hermitian (symmetric) positive definite
-NB.              matrix
-NB.   ios     -: (j , (j+1) , ... , (j+nb-1))
-NB.   W       -: [B;D] - [A;C] * A'
-NB.   nb      -  block size, nb=1 (non-blocked version) or
-NB.              nb≥1 (blocked version)
-NB.   j       -  index of row, defines Z partitioning, it is
-NB.              multiplier of nb in range: 0 ≤ j < min(m,n)
-NB.   n       ≥  0
-NB.   A B C D -  submatrices extracted from Z at step (j/nb):
-NB.                       j  nb (n-j-nb)
-NB.              j        *  *  *
-NB.              nb       A  B  *
-NB.              (n-j-nb) C  D  *
+NB.   A   -  n×n Hermitian (symmetric) positive definite
+NB.          matrix
+NB.   ios -: (j , (j+1) , ... , (j+nb-1))
+NB.   B   -: [A22;A32] - [A21;A31] * A21'
+NB.   nb  -  block size, nb=1 (non-blocked version) or nb≥1
+NB.          (blocked version)
+NB.   j   -  index of row, defines Z partitioning, it is
+NB.          multiplier of nb in range: 0 ≤ j < min(m,n)
+NB.   n   ≥  0
+NB.   Akk -  submatrices extracted from A at step (j/nb):
+NB.                   j    nb   (n-j-nb)
+NB.          j        *    *    *
+NB.          nb       A21  A22  *
+NB.          (n-j-nb) A31  A32  *
 
-kpotrfl=: ((_1 , ({.@[)) ,: ((- {.)~ #) , (#@[))`(_1 0 ,: ((- {.)~ #) , ({.@[))`((# ((] , 0:) ,: ,) {.)@[) kernel3 (-`(mp ct))
+kpotrfl=: iosA22A32`iosA21A31`iosA21 kernel3 (-`(mp ct))
 
 NB. ---------------------------------------------------------
 NB. kpotrfu
 NB. Cholesky algorithm's kernel for upper triangular factor
-NB. case: U*U' = Z
+NB. case: U*U' = A
 NB.
 NB. Syntax:
-NB.   W=. ios kpotrfu Z
+NB.   B=. ios kpotrfu A
 NB. where
-NB.   Z       -  n×n Hermitian (symmetric) positive definite
-NB.              matrix
-NB.   ios     -: (j , (j+1) , ... , (j+nb-1))
-NB.   W       -: [D;B] - [C;A] * A'
-NB.   nb      -  block size, nb=1 (non-blocked version) or
-NB.              nb≥1 (blocked version)
-NB.   j       -  index of row, defines Z partitioning, it is
-NB.              multiplier of nb in range: 0 ≤ j < min(m,n)
-NB.   n       ≥  0
-NB.   A B C D -  submatrices extracted from Z at step (j/nb):
-NB.                       j  nb (n-j-nb)
-NB.              j        *  D  C
-NB.              nb       *  B  A
-NB.              (n-j-nb) *  *  *
+NB.   A   -  n×n Hermitian (symmetric) positive definite
+NB.          matrix
+NB.   ios -: (j , (j+1) , ... , (j+nb-1))
+NB.   B   -: [A12;A22] - [C;A23] * A23'
+NB.   nb  -  block size, nb=1 (non-blocked version) or
+NB.          nb≥1 (blocked version)
+NB.   j   -  index of row, defines Z partitioning, it is
+NB.          multiplier of nb in range: 0 ≤ j < min(m,n)
+NB.   n   ≥  0
+NB.   Akk -  submatrices extracted from A at step (j/nb):
+NB.                   j  nb   (n-j-nb)
+NB.          j        *  A12  C
+NB.          nb       *  A22  A23
+NB.          (n-j-nb) *  *    *
 
-kpotrfu=: (((((0 , [) ,: (+ , ])) #)~ {.)@[)`(((0 _1 ,: (] , -)) ({. + #))~ #)`(_1 0 ,: ((2 & $) @ # @ [)) kernel3 (-`(mp ct))
+kpotrfu=: iosA12A22`iosA13A23`iosA23 kernel3 (-`(mp ct))
 
 NB. =========================================================
-NB. Interface verbs
+NB. Interface
 
 NB. LU Crout algo
 NB. 'p LU'=. [nb] getrflu matrix
@@ -153,7 +203,7 @@ getrflu=: (BGETRF&$: : (4 : 0)) " 0 2
     for_j. range 0 , (mn - 1) , x do.
       jb=. x <. mn - j
       iosc=. (j + jb) ht2i j
-      'p2 rc2'=. 1 getrflu iosc kcgetrflu y   NB. update, then factorize diagonal and subdiagonal blocks by non-blocked version
+      'p2 rc2'=. 1 getrflu iosc kctrflu y   NB. update, then factorize diagonal and subdiagonal blocks by non-blocked version
       dp=. (i. j) , (j + p2)             NB. current iteration's rows permutation (back to y frame from rc2 frame)
       p=. dp C. p                        NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
       y=. dp C. y                        NB. apply rows permutation starting from j-th row
@@ -174,16 +224,6 @@ getrflu=: (BGETRF&$: : (4 : 0)) " 0 2
 )
 
 NB. recursive blocked
-
-NB. References:
-NB. [1] J. J. Dongarra, S. Hammarling, D. W. Walker. (1996)
-NB.     Key Concepts For Parallel Out-Of-Core LU Factorization.
-NB.     LAPACK Working Note 110, UT-CS-96-324, April 1996.
-NB. [2] J. J. Dongarra, E. F. D'Azevedo. (1997)
-NB.     The Design and Implementation of the Parallel
-NB.     Out-of-core ScaLAPACK LU, QR, and Cholesky
-NB.     Factorization Routines.
-NB.     LAPACK Working Note 118, UT-CS-97-347, January 1997.
 
 rgetrflu=: (3 : 0) " 2
   'm n'=. mn=. $ y
@@ -266,9 +306,10 @@ NB.   A -: ((+/ .*) (+ @ |:)) potf2_mt_ &. ((] ;. 0) :. (] ;. 0)) A
 potrfu=: (BPOTRF&$: : (4 : 0)) " 0 2
   n=. # y
   if. n > 2 do.
-    for_j. range (n - 1) , 0 , x do.
+    for_j. range (n - x) , 0 , x do.
       jb=. x <. n - j
       ios=. (j + jb) ht2i j
+smoutput 'iosA' ; (ios iosA12A22 y) ; 'iosB' ; (ios iosA13A23 y) ; 'iosC' ; (ios iosA23 y)
       db=. ios kpotrfu y
       b=. (,.~ _1 , jb) (1 & potrfu) ;. 0 db
       y=. b (< ;~ ios) } y
@@ -348,11 +389,6 @@ NB.     where k  = ⌈log_2(⌈n/nb⌉)⌉
 NB.           nb = CPU_CACHE, block size
 NB.   - strict upper triangle is not modified
 NB.
-NB. References:
-NB. [1] F. G. Gustavson, I. Jonsson, "Minimal-storage high-
-NB.     performance Cholesky factorization via blocking
-NB.     recursion", IBM J. Res. Develop., vol. 44, No. 6,
-NB.     2000, pp. 823-850.
 
 rpotrfl=: (3 : 0) " 2
   if. RPOTRF < 7!:5 < 'y' do.
@@ -389,50 +425,46 @@ rpotrfl_old=: (3 : 0) " 2
 NB. =========================================================
 NB. Test suite
 
-NB. 'name type rows cols error time space'=. name vextract ttrf A
+NB. 'name type error time space'=. name vextract ttrf A
 ttrf=: 1 : 0
 :
-  'm n'=. $ y
-  't s'=. ts 'LUmix=. ' , x , ' y'
-smoutput 'x' ; x ; 'm' ; m ; 'n' ; n ; '($ y)' ; ($ y) ; '$ LUmix' ; ($ LUmix)
-  e=. (norm1 y - u LUmix) % (n * FP_EPS * norm1 y)
-  x ; (datatype y) ; m ; n ; e ; t ; s
+  't s'=. timespacex 'out=. ' , x , ' y'
+NB.smoutput 'x' ; x ; '($ y)' ; ($ y) ; '$ out' ; ($ out) ; 'y (norm1 @ (- u)) out' ; (y (norm1 @ (- u)) out)
+  e=. y ((norm1 @ (- u)) % ((FP_EPS * ({: @ $) * norm1) @ [)) out
+  x ; (datatype y) ; e ; t ; s
 )
 
-NB. result=. testgetrf A
-NB. where result is boxed table with columns: name type rows cols error time space
-testgetrf=: (3 : 0) " 2
-NB.smoutput 'testgetrf ($ y)' ; ($ y)
-  r=. 0 7 $ a:
-  r=. r , 'getrflu'        (UL2L1 mp UL2U) ttrf y
-  r=. r , 'rgetrflu'       (UL2L1 mp UL2U) ttrf y
-  r=. r , 'getrf_jlapack_' (((mp & >) @ (2 & {.)) invperm_jlapack_ (2 & {::)) ttrf y
+NB. r=. tgetrf A
+NB. where r is boxed table with columns: name type error time space
+tgetrf=: (3 : 0) " 2
+NB.smoutput 'tgetrf ($ y)' ; ($ y)
+  r=. 0 5 $ a:
+  r=. r , 'getrflu'        (((C.~ /:)~ (ltri1 mp utri)) & > /) ttrf y
+  r=. r , 'rgetrflu'       (((C.~ /:)~ (ltri1 mp utri)) & > /) ttrf y
+  r=. r , 'getrf_jlapack_' (((mp & >)/ @ (2 & {.)) invperm_jlapack_ (2 & {::)) ttrf y
 )
 
-NB. result=. testpotrf A
-NB. where result is boxed table with columns: name type rows cols error time space
-testpotrf=: (3 : 0) " 2
-  llh2a=. (mp ct) @ UL2L
-  uuh2a=. (mp ct) @ UL2U
-NB.smoutput 'testpotrf ($ y)' ; ($ y)
-  r=. 0 7 $ a:
-  r=. r , 'potrfl'         llh2a ttrf y
-  r=. r , 'potrfl_old'     llh2a ttrf y
-  r=. r , 'potrf_jlapack_' llh2a ttrf y
-  r=. r , 'potrfu'         uuh2a ttrf y
-  r=. r , '1 & potrfl'     llh2a ttrf y
-  r=. r , 'potf2l_old'     llh2a ttrf y
-  r=. r , 'rpotrfl'        llh2a ttrf y
-  r=. r , 'rpotrfl_old'    llh2a ttrf y
+NB. r=. tpotrf A
+NB. where r is boxed table with columns: name type error time space
+tpotrf=: (3 : 0) " 2
+NB.smoutput 'tpotrf ($ y)' ; ($ y)
+  r=. 0 5 $ a:
+  r=. r , 'potrfl'         ((mp ct) @ ltri) ttrf y
+  r=. r , 'potrfl_old'     ((mp ct) @ ltri) ttrf y
+  r=. r , 'potrf_jlapack_' ((mp ct) @ ltri) ttrf y
+NB.  r=. r , 'potrfu'         ((mp ct) @ utri) ttrf y
+  r=. r , '1 & potrfl'     ((mp ct) @ ltri) ttrf y
+  r=. r , 'potf2l_old'     ((mp ct) @ ltri) ttrf y
+  r=. r , 'rpotrfl'        ((mp ct) @ ltri) ttrf y
+  r=. r , 'rpotrfl_old'    ((mp ct) @ ltri) ttrf y
 )
 
+NB. r=. testtrf m,n
 testtrf=: (3 : 0) " 1
-  r=. 0 7 $ a:
-  r=. r , (testpotrf @ (mkun mkpo) @ {. ^: (=/)) 2 $ y
-  r=. r , (testpotrf @ (mkor mkpo) @ {. ^: (=/)) 2 $ y
-  r=. r , (testgetrf @ rand01) y
+  r=. 0 5 $ a:
+  r=. r , (tpotrf @ (runmat rpomat) ^: (=/)) y
+  r=. r , (tgetrf @ (rgemat j. rgemat)) y
 )
-
 
 NB. test for errors, measure time and space
 NB.   tpotrf mat

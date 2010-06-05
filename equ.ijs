@@ -7,13 +7,10 @@ NB. poequ  equilibrate a Hermitian positive definite matrix
 coclass 'mt'
 
 NB. =========================================================
-NB. Local constants
+NB. Local definitions
 
 NB. =========================================================
-NB. Local verbs
-
-NB. =========================================================
-NB. Interface verbs
+NB. Interface
 
 NB. ---------------------------------------------------------
 NB. geequ

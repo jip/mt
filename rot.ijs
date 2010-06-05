@@ -12,7 +12,7 @@ NB. License: Version 3 of the GNU GPL or any later version
 coclass 'mt'
 
 NB. =========================================================
-NB. Local constants
+NB. Local definitions
 
 NB. various exponents for effective thresholds
 FP_ESFMA=: 1 2 3 4 _1 _2 _3 _4 * >. 1r4 * (FP_BASE ^. FP_SFMIN % (FP_IGUNFL { (FP_EPS , 1)))
@@ -39,13 +39,14 @@ FP_MN1324MX8231=: (FP_SFMN*(1-FP_EPS)) , (FP_SFMN3*(1-FP_EPS)) , (FP_SFMN2*(1-FP
 FP_MX13241MN4231=: FP_SFMX , FP_SFMX3 , FP_SFMX2 , FP_SFMX4 , 1 , FP_SFMN4 , FP_SFMN2 , FP_SFMN3 , FP_SFMN
 FP_MN13241MX4231=: FP_SFMN , FP_SFMN3 , FP_SFMN2 , FP_SFMN4 , 1 , FP_SFMX4 , FP_SFMX2 , FP_SFMX3 , FP_SFMX
 
-NB. =========================================================
-NB. Local verbs
-
 abs1=: >./ @: | @ +.                 NB. max(|Re(y)|,|Im(y)|)
 sgnr=: 1 1 _1 & ({~) @ * @ (9 & o.)  NB. sgn(Re(y))
 
-NB. case 1: f≠0, g≠0, neither f nor g too big or small, minimal work
+NB. ---------------------------------------------------------
+NB. lartgc1
+NB. case 1: f≠0, g≠0, neither f nor g too big or small,
+NB. minimal work
+
 lartgc1=: 3 : 0
   'f2 g2'=. abssq 'f g'=. y
   d1=. (sgnr f) * %: f2 * fg2=. f2 + g2  NB. (% sgnr) = (* sgnr)
@@ -53,7 +54,7 @@ lartgc1=: 3 : 0
 )
 
 NB. =========================================================
-NB. Interface verbs
+NB. Interface
 
 NB. ---------------------------------------------------------
 NB. lartg                                                   1

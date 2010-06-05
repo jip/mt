@@ -15,16 +15,13 @@ NB.         eigenvectors
 coclass 'mt'
 
 NB. =========================================================
-NB. Local constants
-
-NB. =========================================================
-NB. Local verbs
+NB. Local definitions
 
 pt=: [ (C. " 1) C.   NB. apply permutation x to both rows and columns of table y
 p2P=: =/ (i. @ #)    NB. transform permutation vector y to permutation matrix
 
 NB. =========================================================
-NB. Interface verbs
+NB. Interface
 
 NB. ---------------------------------------------------------
 NB. gebalp

@@ -114,38 +114,6 @@ NB.smoutput 'y' ; ($y) ; y
   p ; y
 )
 
-NB. recursive blocked
-
-NB. References:
-NB. [1] J. J. Dongarra, S. Hammarling, D. W. Walker. (1996)
-NB.     Key Concepts For Parallel Out-Of-Core LU Factorization.
-NB.     LAPACK Working Note 110, UT-CS-96-324, April 1996.
-NB. [2] J. J. Dongarra, E. F. D'Azevedo. (1997)
-NB.     The Design and Implementation of the Parallel
-NB.     Out-of-core ScaLAPACK LU, QR, and Cholesky
-NB.     Factorization Routines.
-NB.     LAPACK Working Note 118, UT-CS-97-347, January 1997.
-
-rgetrf=: (3 : 0) " 2
-  'm n'=. mn=. $ y
-  if. (CPU_CACHE < 7!:5 < 'y') *. (n > 1) do.
-    k=. m <. n2=. >. -: n
-    'p1 UL1'=. (0 0 ,: m , k) rgetrf ;. 0 y     NB. factorize A's 1st block column recursively
-    UL11=. (0 0 ,: 2 $ k) ] ;. 0 UL1            NB. split A's 1st block column on UL11 and L21
-    A21=. (_1 0 ,: (m - k) , k) ] ;. 0 y
-    L21=. A21 getrsxu UL11                      NB. solve L21*U11=A21 for L21
-    y=. (0 _1 ,: m , (n - k)) (p1 & C.) ;. 0 y  NB. apply p1 to A's 2nd block column
-    A12=. (0 0 ,: k , (n - k)) ] ;. 0 y
-    U12=. A12 getrslx UL11                      NB. solve L11*U12=A12 for U12
-    A22=. (_1 0 ,: (m - k) , (n - k)) ] ;. 0 y
-    'p2 UL22'=. rgetrf (A22 - L21 mp U12)       NB. factorize updated A22 recursively
-    p=. (k + p2) C. p1                          NB. ((i. k) , (k + p2)) C. p1
-    p ; (UL11 ,. U12) , ((p2 C. L21) ,. UL22)
-  else.
-    getf2fix y
-  end.
-)
-
 NB. J wiki essay "LU decomposition"
 
 jLU=: 3 : 0
@@ -203,11 +171,8 @@ NB.smoutput 'r' ; ($r) ; r ; 'new y' ; ($y) ; y
 
 slubc=: (3 : 0) " 2
   si2i=. ] + (i. @ -)                    NB. y (y+1) ... (x-1)
-  mkcp=. < @ (, ` (, @ ]) @. =) " 1 1    NB. make cycle permutation from x and y
-  ipiv2scrp=. ((}: ^: ({. -: {:)) &. >)@(<"1)@(i.@# ,. <:)  NB. pivot indices to standard cycle representation of the permutatio
-  invperm=. C.~ ipiv2scrp                NB. inverse permutation of x by pivot indices from y
 
-  nb=. 2 NB. 32                                NB. choosed experimentally
+  nb=. 32                                NB. choosed experimentally
   mn=. <./ 'm n'=. $ y
   p=. i. m
 
@@ -217,12 +182,12 @@ slubc=: (3 : 0) " 2
     iosa=. (j - m) , j
     iosb=. (0 , j) ,: (j , jb)
     'p2 c'=. sluc ((iosc & (] ;. 0)) - (iosa & {.) mp (iosb & (] ;. 0))) y  NB. update (c←c-a*b), then LU-factorize diagonal and subdiagonal blocks c
-    y=. (((j + jb) si2i j) mkcp (j + jb {. p2)) C. y   NB. apply permutations for diagonal block and shift from c frame to y frame
-    iosp2=. m si2i j                     NB. where p2 will modify p
-    p=. (p2 { (iosp2 { p)) iosp2 } p     NB. adjust p by p2
-    iosr=. m si2i j
+    iosr=. m si2i j                      NB. where p2 will modify p
     iosc=. (j + jb) si2i j
-    y=. c (< iosr ; iosc) } y            NB. write back diagonal and subdiagonal blocks and undo p2 permutation in current column block
+    dp=. (i. j) , (j + p2)               NB. current iteration's rows permutation
+    y=. dp C. y                          NB. apply rows permutation starting from j-th row
+    p=. dp C. p                          NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
+    y=. c (< iosr ; iosc) } y            NB. write back diagonal and subdiagonal blocks and hence undo p2 permutation in it
     iosc=. (j , _1) ,: (jb , (n - (j + jb)))
     iosa=. (j , 0) ,: (jb , j)
     iosb=. j , ((j + jb) - n)
@@ -236,6 +201,113 @@ slubc=: (3 : 0) " 2
   p ; y
 )
 
+sluc2_kernel=: 1 : 0
+:
+  '`f g h'=. u
+  x ([ (}. - ((h & (x g y)) @ {.)) f) y
+)
+sluc2_col=: ({"1)`((- (0 & (1 }) @ $)) {. ])`(mp~) sluc2_kernel
+sluc2_row=:  {   `((- (0 & (0 }) @ $)) {. ])` mp   sluc2_kernel
+
+sluc2=: (3 : 0) " 2
+  si2i=. ] + (i. @ -)                    NB. y (y+1) ... (x-1)
+
+  mn=. <./ 'm n'=. $ y
+  p=. i. m
+
+  for_j. i. mn do.
+    c2=. j sluc2_col y                   NB. compute updated tail of j-th col
+    jp=. j + jp0=. {. \: | c2            NB. find pivot
+NB.smoutput 'SLUC' ; 'c' ; ($c) ; c ; 'c2' ; ($c2) ; c2 ; 'p' ; ($p) ; p ; 'jp' ; jp
+    if. jp0 do.
+      s=. < jp , j
+      p=. s C. p                         NB. accumulate permutations
+      y=. s C. y                         NB. swap j-th and jp-th rows of y
+      c2=. (< 0 , jp0) C. c2             NB. swap j-th and jp-th items of c
+NB.smoutput 'jp0≠0' ; 'p' ; ($p) ; p ; 'new c2' ; ($c2) ; c2 ; 'new y' ; ($y) ; y
+    end.
+    c2=. ({. 0 } (% {.)) c2              NB. scale c2's tail by its head
+    y=. c2 (< (m si2i j) ; j) } y        NB. write back c2
+NB.smoutput 'new c2' ; ($c2) ; c2 ; 'new y' ; ($y) ; y
+    y=. (({. c2) (0 }) j sluc2_row y) (< j ; (n si2i j)) } y     NB. compute and write back updated tail of j-th row
+NB.smoutput 'new y' ; ($y) ; y
+  end.
+
+  p ; y
+)
+
+slubc2_kernel=: 1 : 0
+:
+  '`f g h i j'=. u
+  x ([ (i - ((h & (x g y)) @ j)) f) y
+)
+slubc2_col=: ({"1)`((- (0 & (1 }) @ $)) {. ])`(mp~) slubc2_kernel
+slubc2_row=:  {   `((- (0 & (0 }) @ $)) {. ])` mp   slubc2_kernel
+
+slubc2=: (3 : 0) " 2
+  si2i=. ] + (i. @ -)                    NB. y (y+1) ... (x-1)
+
+  nb=. 32                                NB. choosed experimentally
+  mn=. <./ 'm n'=. $ y
+  p=. i. m
+
+  for_j. range 0 , (mn - 1) , nb do.
+    jb=. nb <. mn - j
+    iosc=. (_1 , j) ,: ((m - j) , jb)
+    iosa=. (j - m) , j
+    iosb=. (0 , j) ,: (j , jb)
+    'p2 c'=. sluc2 ((iosc & (] ;. 0)) - (iosa & {.) mp (iosb & (] ;. 0))) y  NB. update (c←c-a*b), then LU-factorize diagonal and subdiagonal blocks c
+    iosr=. m si2i j                      NB. where p2 will modify p
+    iosc=. (j + jb) si2i j
+    dp=. (i. j) , (j + p2)               NB. current iteration's rows permutation
+    y=. dp C. y                          NB. apply rows permutation starting from j-th row
+    p=. dp C. p                          NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
+    y=. c (< iosr ; iosc) } y            NB. write back diagonal and subdiagonal blocks and hence undo p2 permutation in it
+    iosc=. (j , _1) ,: (jb , (n - (j + jb)))
+    iosa=. (j , 0) ,: (jb , j)
+    iosb=. j , ((j + jb) - n)
+    c=. ((iosc & (] ;. 0)) - (iosa & (] ;. 0)) mp (iosb & {.)) y  NB. update (c←c-a*b)
+    c=. c getrslx1 ((,.~ j , jb) (] ;. 0) y)                      NB. solve (L*x=c)
+    iosr=. (j + jb) si2i j
+    iosc=. n si2i (j + jb)
+    y=. c (< iosr ; iosc) } y            NB. write back x
+  end.
+
+  p ; y
+)
+
+
+NB. recursive blocked
+
+NB. References:
+NB. [1] J. J. Dongarra, S. Hammarling, D. W. Walker. (1996)
+NB.     Key Concepts For Parallel Out-Of-Core LU Factorization.
+NB.     LAPACK Working Note 110, UT-CS-96-324, April 1996.
+NB. [2] J. J. Dongarra, E. F. D'Azevedo. (1997)
+NB.     The Design and Implementation of the Parallel
+NB.     Out-of-core ScaLAPACK LU, QR, and Cholesky
+NB.     Factorization Routines.
+NB.     LAPACK Working Note 118, UT-CS-97-347, January 1997.
+
+rgetrf=: (3 : 0) " 2
+  'm n'=. mn=. $ y
+  if. (m > 2) *. (n > 2) do. NB. (CPU_CACHE < 7!:5 < 'y') *. (n > 1) do.
+    k=. m <. n2=. >. -: n
+    'p1 UL1'=. (0 0 ,: m , k) rgetrf ;. 0 y     NB. factorize A's 1st block column recursively
+    UL11=. (0 0 ,: 2 $ k) ] ;. 0 UL1            NB. split A's 1st block column on UL11 and L21
+    A21=. (_1 0 ,: (m - k) , k) ] ;. 0 y
+    L21=. A21 getrsxu UL11                      NB. solve L21*U11=A21 for L21
+    y=. (0 _1 ,: m , (n - k)) (p1 & C.) ;. 0 y  NB. apply p1 to A's 2nd block column
+    A12=. (0 0 ,: k , (n - k)) ] ;. 0 y
+    U12=. A12 getrslx UL11                      NB. solve L11*U12=A12 for U12
+    A22=. (_1 0 ,: (m - k) , (n - k)) ] ;. 0 y
+    'p2 UL22'=. rgetrf (A22 - L21 mp U12)       NB. factorize updated A22 recursively
+    p=. (k + p2) C. p1                          NB. ((i. k) , (k + p2)) C. p1
+    p ; (UL11 ,. U12) , ((p2 C. L21) ,. UL22)
+  else.
+    sluc2 y
+  end.
+)
 
 NB. =========================================================
 NB. Test suite
@@ -266,6 +338,8 @@ tgetrf=: 3 : 0
   smoutput 'rgetrf (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
   'p LU'=. sluc y
   smoutput 'sluc (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
+  'p LU'=. sluc2 y
+  smoutput 'sluc2 (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
   'p LU'=. slubc y
   smoutput 'slubc (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
   'L U p'=. getrf_jlapack_ y
@@ -279,7 +353,7 @@ NB.   mgetrf mat
 
 mgetrf=: 3 : 0
   ts=. 6!:2, 7!:2@]
-  ts & > 'pLU=. getf2 y';'pLU=. getf2fix y';'pLU=. rgetrf y';'pLU=. sluc y';'pLU=. slubc y';'LUp=. getrf_jlapack_ y' NB.;'pLU=. jLU y'
+  ts & > 'pLU=. getf2 y';'pLU=. getf2fix y';'pLU=. rgetrf y';'pLU=. sluc y';'pLU=. sluc2 y';'pLU=. slubc y';'LUp=. getrf_jlapack_ y' NB.;'pLU=. jLU y'
 )
 
 NB. test and measure interface verbs
@@ -306,3 +380,19 @@ NB. |   y=.(((i((>:@[)}.({"1))y)-l)    %((n1*i)({,)y))(<(m si2i>:i);i)}y
 NB.    testgetrf_mt_ 500 300
 NB. |NaN error: getf2r
 NB. |   y=.(((i((>:@[)}.({"1))y)-l)    %((n1*i)({,)y))(<(m si2i>:i);i)}y
+
+NB.    testgetrf_mt_ 1000
+NB. getf2 (match error): 0 9.69122e_5
+NB. getf2fix (match error): 0 9.69122e_5
+NB. rgetrf (match error): 0 1459.65
+NB. sluc (match error): 0 2.39063e_5
+NB. sluc2 (match error): 0 2.39063e_5
+NB. slubc (match error): 0 5.42776e_5
+NB. LAPACK getrf (match error): 0 9.69768e_5
+NB. 58.0344 3.78039e7
+NB. 61.1677 3.78041e7
+NB. 9.50659 4.19584e7
+NB. 41.0749 1.89153e7
+NB.  40.391  1.8905e7
+NB. 3.19797 1.92858e7
+NB. 5.48789 4.08991e7

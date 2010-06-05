@@ -32,7 +32,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFNB=: 64  NB. block size limit, >0
+TRFNB=: 3  NB. block size limit, >0
 
 NB. ---------------------------------------------------------
 NB. hetf2pl
@@ -201,7 +201,9 @@ NB.    l0i=. 1 (0}) l0i            NB. to guarantee 1 at head
 
 NB. row-wise traversing
 
-lahefpur=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
+NB. clean lahefpur_mt_ ((i.5);(0 {. HE5);(5 ($!.0) 1);(,0);(0 ({,) HE5);(i.0);HE5;(0 {. HE5);({. HE5);((< 0;(<<0)) { HE5))
+
+lahefpur=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(0 & {::)))
   'ip U1 u0 u1 t0 t1 A H h0 h1'=. y
   U1=. U1 appendr u0
   u0=. }. u0
@@ -218,7 +220,7 @@ lahefpur=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
   u1=. u1 % t01                    NB. 1 at head is not guaranteed!
   A=. dip (sp :: ]) A
   H=. dip (C."1 :: ]) H
-  h0=. ((j (dhs2lios@(((* >:)),-~)) n) ({,) A) - (+ j ({"1 :: 0:) U1) mp (j }."1  H)  NB. if j is n then use 0: instead of (j {"1 U1)
+  h0=. ((j (dhs2lios@(((* >:)),-~)) n) (({,) dbg 'arg0') A) (- dbg 'h0=-') (+ j ({"1 :: 0:) U1) (mp dbg 'h0=mp') (j }."1  H)  NB. if j is n then use 0: instead of (j {"1 U1)
   h1=. h0 - t10 * u0
   t11=. 9 o. 0 ({ :: ]) h1         NB. CHECKME: is Re() necessary?; if h1 is (i.0) then use h1 instead of ({.h1)
   t0=. t0 , t11
@@ -240,18 +242,112 @@ hetrfpur=: 3 : 0
   u0i=. n ($!.0) 1
   t0=. 0 ({,) y
   for_k. n (] dhs2lios (0,(>.@%))) TRFNB do.
-    'ipi U1i u0i u1i t0i t1i y Hi h0i h1i'=. lahefpur ((i. # y);(0 {. y);u0i;(,0);({:t0);(i.0);y;(0 {. y);({. y);((< 0;(<<0)) { y))
+    'ipi U1i u0i u1i t0i t1i y Hi h0i h1i'=. (lahefpur dbg 'lahefpur') ((i. # y);(0 {. y);u0i;(,0);({:t0);(i.0);y;(0 {. y);({. y);((< 0;(<<0)) { y))
     dip=. k (i.@[ , +) ipi         NB. force permutation to act on tail part only
     ip=. dip C. ip
     U1=. (dip C."1 U1) appendr U1i
 NB.    u0i=. 1 (0}) u0i            NB. to guarantee 1 at head
     t0=. t0 , (}. t0i)
     t1=. t1 , t1i
-    y=. ((2 # TRFNB) }. y) - ((Hi ((mp~ ct) &(TRFNB&(}."1))) U1i) + (((+ u0i) */ ({: t1i) * u1i)))
+    y=. ((2 # TRFNB) }. y) (- dbg '-') ((Hi (((mp dbg 'mp')~ ct) &(TRFNB&(}."1))) U1i) (+ dbg '+r1u') (((+ u0i) (*/ dbg '*/r1u') ({: t1i) (* dbg '*r1u') u1i)))
   end.
   T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
   ip ; U1 ; T
 )
+
+NB. ---------------------------------------------------------
+NB. row-wise traversing with monolitic A,L1,H
+
+NB. ---------------------------------------------------------
+NB. cardinal directions: north east south west
+NB. positive m for head margin
+NB. lios of length (#v)
+NB. TODO:
+NB. - negative m for tail margin
+NB. - conj. to account head/tail origin, lios of length (n-#v-sh)
+NB. Examples:
+NB.   _ _ _ _ (2 liosE ) _1 - i. _10 _10
+NB.   _ _ _ _ (2 liosS ) _1 - i. _10 _10
+NB.   _ _ _ _ (2 liosW )      i.  10  10
+NB.   _ _ _ _ (2 liosEt)      i.  10  10
+NB.   _ _ _ _ (2 liosWt)      i.  10  10
+
+liosE=:  1 : 'dhs2lios@((((_1-(*((<:m)&+))),])#)~c)'
+liosS=:  1 : '((dhs2lios ((,~(-m)&-)))#)~c'
+liosW=:  1 : 'dhs2lios@(((*((<:m)&+)),])#)~c'
+
+liosEt=: 1 : 'dhs2lios@((((*+(m+])),(-(m&+)))#)~c)'
+liosWt=: 1 : 'dhs2lios@((([*-),m-~-)#)~c'
+
+NB. ---------------------------------------------------------
+
+NB. clean lahefplr_mt_ ((i.5);HE5;(4 # 0);(,0);(0 ({,) HE5);(i.0);({. HE5);(}. {. HE5))
+
+lahefplr=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(2 & {::)))
+  'ip A l0 l1 t0 t1 h0 h1'=. y     NB. n n*n n-(j+1) n-(j+1) k+(j+1) k+j n-j
+  A=. l0 (1 liosS) } A             NB. n dhs2lios j*(n+1)+n,n-(j+1)
+  l1=. (+ h1) - l0 * {: t0
+  A=. h0 (0 liosE) } A             NB.   dhs2lios j*(n+1),n-j
+  dip0=. < 0 , ((i.>./)@soris) l1  NB. non-standard cycle permutation!
+  dip=. (A -&# l0) (+ &. >) dip0   NB. non-standard cycle permutation!
+  ip=. dip (C. :: ]) ip
+  l0=. dip0 (C. :: ]) l0
+  l1=. dip0 (C. :: ]) l1
+  t01=. + t10=. (0&{ :: ]) l1
+  l1=. l1 % t10                    NB. 1 at head is not guaranteed!
+  A=. dip (sp :: ]) A
+  h0=. l0 ((((0 liosE) dbg '0liosE') (({,) dbg 'arg0') ]) (- dbg 'h0=-') (((0 liosWt) dbg '0liosWt') ({,) ]) (mp dbg 'h0=mp') (((-~ , -@[)&#) {. ])) A
+  h1=. h0 - t10 * + l0
+  t11=. 9 o. 0 ({ :: ]) h1         NB. CHECKME: is Re() necessary?; if h1 is (i.0) then use h1 instead of ({.h1)
+  t0=. t0 , t11
+  t1=. t1 , t10
+  ip ; A ; (}. l1) ; l0 ; t0 ; t1 ; h0 ; (}. h1)
+)
+
+NB. 'ip U1 T'=. hetrfpu A
+NB. 'ip U1 T permA H'=. step (ip;U1;T;A;H)
+
+NB. 'ipi U1i Ti Ai Hi hi'=. (9 # 0) hetf2pl_mt_ HEci10
+NB. ((((] dhs2lios (_1,-))/@$) ({,) ]) U1i) hetf2pl_mt_ (((_1 ({,) Ti) , hi) (< a: ; 0)} (2 2 }. HEci10))
+
+hetrfplr=: 3 : 0
+  n=. # y
+  ip=. i. n
+  t0=. 0 ({,) y
+  t1=. i. 0
+  l1i=. ,0
+  l0i=. (0 >. <: n) # 0
+  for. i. n (>.@%) TRFNB do.
+    'ip y l0i l1i t0 t1 h0i h1i'=. (lahefplr dbg 'lahefplr') (ip;y;l0i;l1i;t0;t1;(t1 ((0 liosEt) ({,) ]) y);(t1 ((1 liosEt) ({,) ]) y))
+    ios=. TRFNB (rt (; dbg 'ios') }.) y (th2lios (-&TRFNB))&# t1
+    subA=. ios ((<@(1 1{[)){]) y
+    subL=. ios ((<@(1 0{[)){]) y
+    subH=. ios ((<@(0 1{[)){]) y
+    rank1upd=. (1,l0i) (*/ dbg '*/r1u') ({: t1) (* dbg '*r1u') l1i
+    subAupd=. subA (- dbg '-') ((subL (mp dbg 'mp') subH) (+ dbg 'rr1u') rank1upd)
+    y=. subAupd (((< 1 1 { ios) }) dbg 'subA}A') y
+    NB. y=. ios (((<@(0 0{[)){]) (- dbg '-') (((<@(0 1{[)){]) (mp dbg 'mp') ((<@(1 0{[)){])))`(<@(0 0{[))`] } y
+  end.
+  L1=. trl1 y
+  T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
+  ip ; L1 ; T
+)
+
+NB. xxxhetrfplr=: (]) @ ((lahefplr dbg 'lahefplr') ^: (>.@(%&TRFNB)@#@(0&{::))) @ ((i.@#);];(0 #~ (#@}.@{.));(#@}.@{.);(0&({,));(i.@0:);(t0 (((dhs2lios@((* >:),-~))&#) ({,) ]) y))
+NB.   n=. # y
+NB.   ip=. i. n
+NB.   t0=. 0 ({,) y
+NB.   t1=. i. 0
+NB.   l1i=. }. {. y
+NB.   l0i=. (# l1i) # 0         NB. (0 >. <: n) # 0
+NB.   for. i. n (>.@%) TRFNB do.
+NB.     'ip y l0i l1i t0 t1 h0i h1i'=. 
+NB.     y=. (TRFNB (}. ; rt) y th2lios&# t0) (((<@(0 0{[)){])(- dbg '-') (((<@(0 1{[)){]) (mp dbg 'mp') ((<@(1 0{[)){])))`(<@(0 0{[))`] } y
+NB.   end.
+NB.   L1=. trl1 y
+NB.   T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
+NB.   ip ; L1 ; T
+NB. )
 
 
 
@@ -1004,7 +1100,7 @@ testtrf=: 1 : 'EMPTY_mt_ [ (((testpttrf_mt_ @ (u ptmat_mt_)) [ (testpotrf_mt_ @ 
 
 NB. L1=. trl1_mt_ 0 (< a: ; 0) } 0.1 * _8 + ? 5 5 $ 18
 NB. T=. (+ ct_mt_) bdlpick_mt_ trl_mt_ 0.1 * >: ? 5 5 $ 9
-NB. ip=. (?@! A. i.) 5
+NB. ip=. (?@!@<: A. i.) 5
 NB. HE5=. clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
 
 NB. L1=. trl1_mt_ 0 (< a: ; 0) } 0.1 * _8 + ? 6 6 $ 18

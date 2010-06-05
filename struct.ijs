@@ -210,7 +210,7 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Misc.
 
-c=: 1{$                NB. Columns in matrix
+c=: 1{$                NB. Columns in matrix, also:  (#@{.)
 
 trace=: +/ @ diag      NB. Matrix trace
 

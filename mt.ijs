@@ -163,7 +163,7 @@ test=: 1 : 0
   (u testbak_mt_) y
   (u testbal_mt_) y
   (u testequ_mt_) y
-  (u testref_mt_) y
+  (u testref_mt_) y  NB. testlarfb is called only for relatively small matrices (min dim < 200)
   (u testrot_mt_) y
   (u testgq_mt_) y
   (u testmq_mt_) y

@@ -196,9 +196,6 @@ NB.
 NB. Notes:
 NB. - (h,s) pair defines raveled rIOS of solid part within
 NB.   diagonal
-NB.
-NB. TODO:
-NB. - eliminate cut
 
 diaglios=: (0 0 _&$:) :(4 : 0)
   'd h s'=. x=. ((i. 3) < (# x)) } 0 0 _ ,: x  NB. in-place op
@@ -500,6 +497,9 @@ NB.   B=. bdlpick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, lower bidiagonal
+NB.
+NB. TODO:
+NB. - B would be sparse
 
 bdlpick=: * _1 0 & mbstencil
 
@@ -515,6 +515,9 @@ NB.   B=. bdupick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, upper bidiagonal
+NB.
+NB. TODO:
+NB. - B would be sparse
 
 bdupick=: * 0 1 & mbstencil
 
@@ -560,6 +563,9 @@ NB.   B=. tdpick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, tridiagonal
+NB.
+NB. TODO:
+NB. - B would be sparse
 
 tdpick=: * _1 1 & mbstencil
 
@@ -631,6 +637,9 @@ NB.    1 idmat 3 4                  _1 idmat 3 4
 NB. 0 1 0 0                      0 0 0 0
 NB. 0 0 1 0                      1 0 0 0
 NB. 0 0 0 1                      0 1 0 0
+NB.
+NB. TODO:
+NB. - I would be sparse
 
 idmat=: (a:&$:) :((1;[) setdiag (0 $~ 2 $ ]))
 
@@ -673,6 +682,9 @@ NB. 3 0 0                        3 0 0 0
 NB. 0 5 0                        0 5 0 0
 NB. 0 0 7                        0 0 7 0
 NB. 0 0 0
+NB.
+NB. TODO:
+NB. - D would be sparse
 
 diagmat=: (0 0&$:) :((; {.)~ setdiag ((0 $~ ((+ (2&(|.@}. - {.)@(0&(<. , >.))))))~ #))
 

@@ -31,7 +31,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRINB=: 3 NB. 64  NB. block size limit
+TRINB=: 64  NB. block size limit
 
 NB. ---------------------------------------------------------
 NB. getrilu1pstep
@@ -42,48 +42,46 @@ NB.
 NB. Syntax:
 NB.   'pfxi1 sfxi1'=. getrilu1pstep (pfxi ; sfxi)
 NB. where
-NB.   pfxi  - n×j-matrix after i-th step and before
+NB.   pfxi  - (j+TRINB)×n-matrix after i-th step and before
+NB.           (i+1)-th one, contains not yet processed part
+NB.   sfxi  - (n-j-TRINB)×n-matrix after i-th step and before
 NB.           (i+1)-th one, contains already processed part
-NB.   sfxi  - n×(n-j)-matrix after i-th step and before
-NB.           (i+1)-th one, contains тще нуе processed part
-NB.   pfxi1 - n×(j+TRINB)-matrix, being pfxi after (i+1)-th
-NB.           step
-NB.   sfxi1 - n×(n-j-TRINB)-matrix, being sfxi after (i+1)-th
-NB.           step
-NB.   j     = n-(I-i)*TRINB
+NB.   pfxi1 - j×n-matrix, being pfxi after (i+1)-th step
+NB.   sfxi1 - (n-j)×n-matrix, being sfxi after (i+1)-th step
+NB.   j     = (I-(i+1))*TRINB
 NB.   i     = 0:I-1
 NB.   I     = ⌊n/TRINB⌋
 NB.
 NB. Algorithm:
 NB.   In:
-NB.     pfx(i) := A[0:n-1,0:j-1]
-NB.     sfx(i) := A[0:n-1,j:n-1]
+NB.     pfx(i) := A[0:j+TRINB-1,0:n-1]
+NB.     sfx(i) := A[j+TRINB:n-1,0:n-1]
 NB.   Out:
-NB.     pfx(i+1) := A[0:n-1,0:j+TRINB-1]
-NB.     sfx(i+1) := A[0:n-1,j+TRINB:n-1]
-NB.   1) extract current diagonal block of A(i) from sfx(i):
+NB.     pfx(i+1) := A[0:j-1,0:n-1]
+NB.     sfx(i+1) := A[j:n-1,0:n-1]
+NB.   1) extract current diagonal block of A(i) from pfx(i):
 NB.        U0i := A[j:j+TRINB-1,j:j+TRINB-1] ,
 NB.      it contains merged current diagonal blocks of L^_1
 NB.      and U1
-NB.   2) extract current superdiagonal block column of U1
-NB.      from sfx(i):
-NB.        U1i := A[0:j-1,j:j+TRINB-1]
-NB.   3) extract current block column of L^_1 from sfx(i):
-NB.      3.1) extract current block column of A(i):
-NB.             Ri := A[0:n-1,j:j+TRINB-1] ,
-NB.           it contains merged current column blocks of
+NB.   2) extract current subdiagonal block row of U1 from
+NB.      pfx(i):
+NB.        U1i := A[j:j+TRINB-1,j+TRINB:n-1]
+NB.   3) extract current block row of L^_1 from pfx(i):
+NB.      3.1) extract current block row of A(i):
+NB.             Ri := A[j:j+TRINB-1,0:n-1] ,
+NB.           it contains merged current row blocks of
 NB.           L^_1 and U1
-NB.      3.2) zeroize in Ci elements above the main diagonal
-NB.   4) update Ci:
+NB.      3.2) zeroize in Ri elements behind the main diagonal
+NB.   4) update Ri:
 NB.      4.1) do:
-NB.             Ci := Ci - sfx(i) * U1i
+NB.             Ri := Ri - U1i * sfx(i)
 NB.      4.2) solve:
-NB.             U0i * Ciupd = Ci
-NB.           for Ciupd, where U0i is unit upper triangular
+NB.             Riupd * U0i = Ri
+NB.           for Riupd, where U0i is unit upper triangular
 NB.   5) assemble output:
-NB.      5.1) cut off current block column from sfx(i) to
-NB.           produce sfx(i+1)
-NB.      5.2) stitch Ciupd to pfx(i) to produce pfx(i+1)
+NB.      5.1) cut off current block row from pfx(i) to
+NB.           produce pfx(i+1)
+NB.      5.2) append sfx(i) to Riupd to produce sfx(i+1)
 NB.      5.3) link sfx(i+1) to pfx(i+1)
 
 getrilu1pstep=: 3 : 0
@@ -178,46 +176,48 @@ NB.
 NB. Syntax:
 NB.   'pfxi1 sfxi1'=. getripu1lstep (pfxi ; sfxi)
 NB. where
-NB.   pfxi  - (j+TRINB)×n-matrix after i-th step and before
-NB.           (i+1)-th one, contains not yet processed part
-NB.   sfxi  - (n-j-TRINB)×n-matrix after i-th step and before
+NB.   pfxi  - n×j-matrix after i-th step and before
 NB.           (i+1)-th one, contains already processed part
-NB.   pfxi1 - j×n-matrix, being pfxi after (i+1)-th step
-NB.   sfxi1 - (n-j)×n-matrix, being sfxi after (i+1)-th step
-NB.   j     = (I-(i+1))*TRINB
+NB.   sfxi  - n×(n-j)-matrix after i-th step and before
+NB.           (i+1)-th one, contains тще нуе processed part
+NB.   pfxi1 - n×(j+TRINB)-matrix, being pfxi after (i+1)-th
+NB.           step
+NB.   sfxi1 - n×(n-j-TRINB)-matrix, being sfxi after (i+1)-th
+NB.           step
+NB.   j     = n-(I-i)*TRINB
 NB.   i     = 0:I-1
 NB.   I     = ⌊n/TRINB⌋
 NB.
 NB. Algorithm:
 NB.   In:
-NB.     pfx(i) := A[0:j+TRINB-1,0:n-1]
-NB.     sfx(i) := A[j+TRINB:n-1,0:n-1]
+NB.     pfx(i) := A[0:n-1,0:j-1]
+NB.     sfx(i) := A[0:n-1,j:n-1]
 NB.   Out:
-NB.     pfx(i+1) := A[0:j-1,0:n-1]
-NB.     sfx(i+1) := A[j:n-1,0:n-1]
-NB.   1) extract current diagonal block of A(i) from pfx(i):
+NB.     pfx(i+1) := A[0:n-1,0:j+TRINB-1]
+NB.     sfx(i+1) := A[0:n-1,j+TRINB:n-1]
+NB.   1) extract current diagonal block of A(i) from sfx(i):
 NB.        U0i := A[j:j+TRINB-1,j:j+TRINB-1] ,
 NB.      it contains merged current diagonal blocks of L^_1
 NB.      and U1
-NB.   2) extract current subdiagonal block row of U1 from
-NB.      pfx(i):
-NB.        U1i := A[j:j+TRINB-1,j+TRINB:n-1]
-NB.   3) extract current block row of L^_1 from pfx(i):
-NB.      3.1) extract current block row of A(i):
-NB.             Ri := A[j:j+TRINB-1,0:n-1] ,
-NB.           it contains merged current row blocks of
+NB.   2) extract current superdiagonal block column of U1
+NB.      from sfx(i):
+NB.        U1i := A[0:j-1,j:j+TRINB-1]
+NB.   3) extract current block column of L^_1 from sfx(i):
+NB.      3.1) extract current block column of A(i):
+NB.             Ri := A[0:n-1,j:j+TRINB-1] ,
+NB.           it contains merged current column blocks of
 NB.           L^_1 and U1
-NB.      3.2) zeroize in Ri elements behind the main diagonal
-NB.   4) update Ri:
+NB.      3.2) zeroize in Ci elements above the main diagonal
+NB.   4) update Ci:
 NB.      4.1) do:
-NB.             Ri := Ri - U1i * sfx(i)
+NB.             Ci := Ci - sfx(i) * U1i
 NB.      4.2) solve:
-NB.             Riupd * U0i = Ri
-NB.           for Riupd, where U0i is unit upper triangular
+NB.             U0i * Ciupd = Ci
+NB.           for Ciupd, where U0i is unit upper triangular
 NB.   5) assemble output:
-NB.      5.1) cut off current block row from pfx(i) to
-NB.           produce pfx(i+1)
-NB.      5.2) append sfx(i) to Riupd to produce sfx(i+1)
+NB.      5.1) cut off current block column from sfx(i) to
+NB.           produce sfx(i+1)
+NB.      5.2) stitch Ciupd to pfx(i) to produce pfx(i+1)
 NB.      5.3) link sfx(i+1) to pfx(i+1)
 
 getripu1lstep=: 3 : 0
@@ -393,6 +393,34 @@ NB.   LU1p - 3-vector of boxes, the output of getrflu1p, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.
+NB. Algorithm for getripl1u:#################
+NB.   In: ip L1U
+NB.   Out: iA
+NB.   1) extract ip and L1U from y
+NB.   2) extract U from L1U, inverse it and save into y
+NB.   3) replace U by y into L1U
+NB.   4) find I, the number of iterations of partitioned
+NB.      algorithm:
+NB.        I := ⌊n/TRINB⌋
+NB.      note: partitioned algorithm will be applied to the
+NB.            first I*TRINB columns of L1U
+NB.   5) invert A:
+NB.      5.1) prepare suffix sfx from the last n%TRINB
+NB.           columns of y, which won't be touched by
+NB.           partitioned algorithm
+NB.           5.1.1) extract last n%TRINB columns from iU
+NB.           5.1.2) extract lower triangular
+NB.           5.1.3) solve
+NB.      5.2) I iterations
+NB.      5.3) extract suffix
+NB.      5.4) apply ip
+NB.
+NB. Assertions:
+NB.   (%. -: (getrilu1p@getrflu1p)) A
+NB.   (%. -: (getripl1u@getrfpl1u)) A
+NB.   (%. -: (getripu1l@getrfpu1l)) A
+NB.   (%. -: (getriul1p@getrful1p)) A
+NB.
 NB. Notes:
 NB. - getripl1u implements LAPACK's xGETRI
 NB.
@@ -418,6 +446,44 @@ getripl1u=: 3 : 0
   y=. (>/~ i. n) } y ,: L1U  NB. spec code
   I=. <. n % TRINB
   ip (C.^:_1"1) 1 {:: getripl1ustep ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
+)
+
+NB. num_array3=: [num_value2] bool_IOS_table aamend num_value1
+NB.
+NB. Notes:
+NB. - the following definition:
+NB.     amend=: 1 : 0
+NB.     :
+NB.       y=. m } y ,: x
+NB.     )
+NB.   doesn't work, see http://www.jsoftware.com/pipermail/programming/2010-March/018944.html
+
+amend=: 1 : 0
+  y=. m } y ,: 0
+:
+  y=. m } y ,: x
+)
+getripl1ustep2=: 4 : 0
+  'n jj'=. $ y
+  j=. (n - jj) - TRINB
+  'L0i L1i'=. TRINB ({. ; }.) j }. x
+  (L0i trsmxl1 ((-j) trupick x) - y mp L1i) ,. y
+)
+getripl1u2=: 3 : 0
+  ip=. 0 {:: y
+  y=. (1 {:: y) (>/~ i. # ip) amend trtriu tru 1 {:: y
+  ip C.^:_1"1 > (getripl1ustep2&:>/) (({. @ ((0 _ ,. TRINB) & (<;._3))) , (<@((-~/@$) (trl1 trsmxl1 tru) ])@((-@(TRINB&|)@#) {."1 ]))) y
+)
+getripl1ustep3=: 4 : 0
+  'n jj'=. $ y
+  j=. (n - jj) - TRINB
+  'L0i L1i'=. TRINB ({. ; }.) j }. x
+  (L0i trsmxl1 (x (((i. n) - j) <:/ i. TRINB) amend 0) - y mp L1i) ,. y
+)
+getripl1u3=: 3 : 0
+  ip=. 0 {:: y
+  y=. (1 {:: y) (>/~ i. # ip) amend trtriu tru 1 {:: y
+  ip C.^:_1"1 > (getripl1ustep3&:>/) (({. @ ((0 _ ,. TRINB) & (<;._3))) , (<@((-~/@$) (trl1 trsmxl1 tru) ])@((-@(TRINB&|)@#) {."1 ]))) y
 )
 
 getripu1l=: 3 : 0
@@ -590,6 +656,8 @@ testgetri=: 3 : 0
 
   ('getrilu1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrflu1p) y
   ('getripl1u' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpl1u) y
+  ('getripl1u2' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpl1u) y
+  ('getripl1u3' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpl1u) y
   ('getripu1l' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpu1l) y
   ('getriul1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrful1p) y
 

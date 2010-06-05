@@ -5,6 +5,7 @@ NB. sgn       Simplified signum
 NB. condneg   Conditional negate
 NB. copysign  Copy sign
 NB. sorim     Sum of real and imaginary parts' modules
+NB. soris     Sum of real and imaginary parts' squares
 NB. fmtlog    Format log string
 NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
@@ -33,7 +34,8 @@ NB. Miscellaneous
 sgn=: 0&(<: - >)                                        NB. if y<0 then -1 else 1 endif
 condneg=: -@]^:(0>[)                                    NB. if x<0 then -y else y endif
 copysign=: -@]^:((=-)&*)                                NB. if x<0 then -|y| else |y| endif
-sorim=: +/"1 @: | @: +.                                 NB. sum of real and imaginary parts' modules
+sorim=: +/"1 @: |  @: +.                                NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
+soris=: +/"1 @: *: @: +.                                NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
 fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' vsprintf  NB. Format log string
 
 NB. ---------------------------------------------------------

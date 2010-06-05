@@ -153,6 +153,26 @@ potrsatx=: ([ +@trsmlhx trsmlx ) +
 potrsxa=:   [   trsmxl  trsmxlh
 potrsxat=: ([ +@trsmxl  trsmxlh) +
 
+pttrfsaxstep1=: 3 : 0
+  'ein Bin Bout'=. y
+  (}. ein) ; (}. Bin) ; (Bout , (({. Bin) - ({. ein) * ({: Bout)))
+)
+
+pttrfsaxstep2=: 3 : 0
+  'ein din Bin Bout'=. y
+  (}: ein) ; (}: din) ; (}: Bin) ; (((Bin (% & {:) din) - (({: ein) * ({. Bout))) , Bout)
+)
+
+NB. X=. (L1 ,: D) pttrfsax B
+pttrfsax=: 4 : 0
+  'L1 D'=. x
+  e=. _1 diag L1
+  d=. diag D
+  y=. _1 {:: pttrfsaxstep1 ^: (<: # L1) (e ; (}. y) ; (1 {. y))
+  y=. _1 {:: pttrfsaxstep2 ^: (<: # L1) (e ; (}: d) ; (}: y) ; (y (% & (_1&{.)) d))
+)
+
+
 NB. =========================================================
 NB. Test suite
 

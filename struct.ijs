@@ -103,6 +103,9 @@ NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
 NB.
 NB. Notes:
 NB. - (h,s) pair defines raveled rIOS of solid part within diagonal
+NB.
+NB. TODO:
+NB. - eliminate cut
 
 diaglios=: (0 0 _&$:) :(4 : 0)
   'd h s'=. x=. ((i. 3) < (# x)) } 0 0 _ ,: x  NB. in-place op
@@ -118,15 +121,15 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Misc.
 
-c=: 1{$              NB. Columns in matrix
-trace=: +/ @ diag    NB. matrix trace
-ct=: + @ |:          NB. conjugate transpose
-pt=: |. @ |: @ |.    NB. pertranspose
-cpt=: + @ pt         NB. conjugate pertranspose
-sp=: [ C."1 C.       NB. Symmetric permutation
-p2P=: =/ (i. @ #)    NB. transform permutation vector to permutation matrix
-ip2P=: =/~ (i. @ #)  NB. transform inversed permutation vector to permutation
-                     NB.   matrix, or permutation vector to inversed permutation matrix
+c=: 1{$            NB. Columns in matrix
+trace=: +/ @ diag  NB. Matrix trace
+ct=: + @ |:        NB. Conjugate transpose
+pt=: |. @ |: @ |.  NB. Pertranspose
+cpt=: + @ pt       NB. Conjugate pertranspose
+sp=: [ C."1 C.     NB. Symmetric permutation
+p2P=: {=           NB. Transform permutation vector to permutation matrix
+ip2P=: {^:_1=      NB. Transform inversed permutation vector to permutation
+                   NB.   matrix, or permutation vector to inversed permutation matrix
 
 NB. ---------------------------------------------------------
 NB. rt
@@ -284,15 +287,15 @@ NB.          diagonal, default is 0 (main diagonal)
 NB.   h    - integer in range [-S,S-1], optional IO extreme
 NB.          element of solid part within diagonal, default
 NB.          is 0 (take from head)
-NB.   s    - integer in range [-S,S] or ±∞ (default is +∞)
-NB.          when e is scalar, or either -k or k (default is
-NB.          k) when e is vector; optional size of solid part
-NB.          within diagonal, default values mean "all
-NB.          elements in forward direction"
+NB.   s    - integer in range [-S,S] or ±∞ when e is scalar,
+NB.          or any from set {±k,±∞} when e is vector;
+NB.          optional size of solid part within diagonal,
+NB.          default is +∞ (all elements in forward
+NB.          direction)
 NB.   Aupd - m×n-matrix A with value[s] e assigned to solid
 NB.          part within d-th diagonal
-NB.   S    ≥ 0, the length of d-th diagonal, if e is vector
-NB.          then S=k must hold
+NB.   S    ≥ 0, the length of d-th diagonal
+NB.   k    ≤ S, the length of vector e
 NB.
 NB. Examples:
 NB. 
@@ -314,7 +317,7 @@ NB. 0 0 2 0                         0 0 1 0
 
 setdiag=: 4 : 0
   'e dhs'=. x
-  dhs=. ((i. 3) < (# dhs)) } (0 0 , (_:`#@.(0<#@$) e)) ,: dhs  NB. assign defaults, in-place op
+  dhs=. ((i. 3) < (# dhs)) } 0 0 _ ,: dhs  NB. assign defaults, in-place op
   lios=. dhs diaglios $ y
   e (lios"_) } y
 )
@@ -398,7 +401,7 @@ NB. 0 1 0 0                      0 0 0 0
 NB. 0 0 1 0                      1 0 0 0
 NB. 0 0 0 1                      0 1 0 0
 
-idmat=: (0 0 _&$:) :((1;[) setdiag (0 $~ 2 $ ]))
+idmat=: (a:&$:) :((1;[) setdiag (0 $~ 2 $ ]))
 
 NB. ---------------------------------------------------------
 NB. diagmat
@@ -419,6 +422,11 @@ NB.   D - m×n-matrix of zeros with vector e assigned to h-th
 NB.       diagonal
 NB.   S ≥ 0, the length of h-th diagonal
 NB.
+NB. Algorithm:
+NB.   1) find D shape
+NB.   2) generate lIOS for h-th diagonal
+NB.   3) write e into matrix of zeros
+NB.
 NB. Examples:
 NB.    diagmat 3 5 7                0 0 diagmat 3 5 7
 NB. 3 0 0                        3 0 0
@@ -435,11 +443,7 @@ NB. 0 5 0                        0 5 0 0
 NB. 0 0 7                        0 0 7 0
 NB. 0 0 0
 
-diagmat=: (0 0&$:) :(4 : 0)
-  sh=. (#y) + (2&(|.@}. - {.)@(0&(<. , >.))) x  NB. find D shape
-  lios=. ({. x) diaglios sh                     NB. lIOS for h-th diagonal
-  y (lios"_) } sh $ 0                           NB. write e into matrix of zeros
-)
+diagmat=: (0 0&$:) :((; {.)~ setdiag ((0 $~ ((+ (2&(|.@}. - {.)@(0&(<. , >.))))))~ #))
 
 NB. ---------------------------------------------------------
 NB. trl

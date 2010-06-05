@@ -536,76 +536,68 @@ NB.       tridiagonal
 NB.   D - n×n-matrix, diagonal
 NB.   L - n×n-matrix, unit lower bidiangonal
 NB.
+NB. Formula:
+NB.   for k=1:n-1
+NB.     d[k] := d[k] - |e[k-1]|^2 / d[k-1]
+NB.     e[k-1] := e[k-1] / d[k-1]
+NB.   end
+NB. where
+NB.   d - n-vector, elements of D's main diagonal
+NB.   e - (n-1)-vector, elements of L1's subdiagonal
+NB.
+NB. Algorithm:
+NB.   In:  A
+NB.   Out: L1 D
+NB.   0) extract main diagonal and subdiagonal from A to d
+NB.      and e, respectively
+NB.   1) 
+NB.   Out: d,e
+NB.   
+NB.
+NB.
+NB.
+NB.
+NB.
+NB.
 NB. Assertions:
 NB.   A (-:!.(2^_34)) L1 (mp mp (ct@[)) D
 NB. where
 NB.   'L1 D'=. pttrfl A
 NB.
 NB. Notes:
+NB. - 'continued fractions' approach is useless here since
+NB.   infix scan is non-consequtive
 NB. - L1 and D should be sparse
 
-acfh_bad=: 1 : '({:@] - ((u {:)~ {.))/\  @ ,.'  NB. adverb 'continued fraction' from head
-acft_bad=: 1 : '({:@] - ((u {:)~ {.))/\. @ ,.'  NB. adverb 'continued fraction' from tail
+NB. Golub, Van Loan 1996 p. 157
 
+NB. используем готовый квадрат модуля e на входе, две операции деления, векторы по отдельности
 pttrfliter=: 3 : 0
   'ein esin din dout eout'=. y
   dk1=. {: dout
-  dk=. ({. din) - ({. esin) % dk1
-  (}. ein) ; (}. esin) ; (}. din) ; (dout , dk) ; (eout , ({. ein) % dk1)
+  (}. ein) ; (}. esin) ; (}. din) ; (dout , (({. din) - ({. esin) % dk1)) ; (eout , ({. ein) % dk1)
 )
 
 pttrfl=: 3 : 0
-  'd e'=. (diag ; (1&diag)) y
-  NB. stage0
-  'd e'=. _2 {. pttrfliter ^: (#e) (e ; (e^2) ; (}. d) ; ({. d) ; a:)
+  'd e'=. (diag ; (_1&diag)) y
+  'd e'=. _2 {. pttrfliter ^: (#e) (e ; (soris e) ; (}. d) ; ({. d) ; a:)
   L1=. (e;_1) setdiag idmat $ y
   D=. diagmat d
-  L1 ,: D
+  L1 ; D
 )
 
-NB. Golub, Van Loan 1996 p. 157
+NB. используем готовый квадрат модуля e на входе, две операции деления, сшитые векторы
+pttrfl2iter=: ((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/
+
 pttrfl2=: 3 : 0
-  n=. # y
-  'd e'=. (diag ; (1&diag)) y
-  NB. stage0
-  for_k. n ht2lios 1 do.
-    t=. (k-1) { e
-    ek1=. t % (k-1) { d
-    e=. ek1 (k-1) } e
-    d=. ((k{d) - t * ek1) k } d
-  end.
-  L1=. (e;_1) setdiag idmat $ y
+  'd e'=. (diag ; (_1&diag)) y
+  'e d'=. |: _1 {:: pttrfl2iter ^: (#e) (e ((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) d)
+  L1=. ((}. e);_1) setdiag idmat $ y
   D=. diagmat d
-  L1 ,: D
+  L1 ; D
 )
 
-NB. X=. (d;e) pttrfsax b
-pttrfsax_bad=: 3 : 0
-  'd e'=. x
-  NB. stage1
-  y=. (0,e) ({."1 @ (* acfh)) y
-  NB. stage2
-  (0,e) ({."1 @ (* acft)) (y % d)
-)
-
-pttrfsaxstep1=: 3 : 0
-  'ein Bin Bout'=. y
-  (}. ein) ; (}. Bin) ; (Bout , (({. Bin) - ({. ein) * ({: Bout)))
-)
-
-pttrfsaxstep2=: 3 : 0
-  'ein din Bin Bout'=. y
-  (}: ein) ; (}: din) ; (}: Bin) ; (((Bin (% & {:) din) - (({: ein) * ({. Bout))) , Bout)
-)
-
-NB. X=. (L1 ,: D) pttrfsax B
-pttrfsax=: 4 : 0
-  'L1 D'=. x
-  e=. _1 diag L1
-  d=. diag D
-  y=. _1 {:: pttrfsaxstep1 ^: (<: # L1) (e ; (}. y) ; (1 {. y))
-  y=. _1 {:: pttrfsaxstep2 ^: (<: # L1) (e ; (}: d) ; (}: y) ; (y (% & (_1&{.)) d))
-)
+pttrfl3=: (((setdiag (idmat@$))~ (_1;~(}.@:({."1)))) ; (diagmat@:({:"1)@])) (1 {:: ((((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: ((# @ (0 & {::))`(((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) & >/))) @ ((_1&diag) ; diag))
 
 NB. =========================================================
 NB. Test suite

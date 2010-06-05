@@ -4,11 +4,57 @@ NB.
 NB. geexp  matrix exponential of a general matrix
 NB. diexp  matrix exponential of a diagonalizable matrix
 NB. heexp  matrix exponential of a Hermitian matrix
+NB.
+NB. XREF: gepow sdiag
 
 coclass 'pjlap'
 
 NB. =========================================================
 NB. Local verbs
+
+NB. ---------------------------------------------------------
+NB. r=. m geexpm2r A
+NB. find r_m(A) = [m/m] Padé approximant to A
+
+geexpm2r=: 4 : 0
+  vbyrs=. +/ @ (* " 3 1)        NB. multiply vector by report, then sum
+  sdiag02=. sdiag " 0 2
+  b0b1=. ((0 0 ; 1 0) & {) @ ]  NB. extract (b[0] , b[1]) from y
+
+  NB. coeffcients b[i] of degree 13 Padé approximant
+  b=. 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
+
+  NB. b[i] coeffs for V (1st row) and U (2nd row)
+  bc=. _2 (|: @ (]\)) (>: x) {. b
+
+  NB. U=. A*Σ(b[i+1]*(A^i),i=0,2,..,m-1)
+  NB. V=.   Σ(b[i  ]*(A^i),i=0,2,..,m-1)
+  if. x < 13 do.
+    NB. A powers (2 [4 [6 [8]]]), shape: p-by-N-by-N
+    pA=. (+: }. i. >. -: x) gepow y
+
+    NB. - multiply each table in pA by corresp. scalar b[i], output: report 2-by-p-by-N-by-N
+    NB. - sum multiplied tables, output: report 2-by-N-by-N
+    NB. - shift 1st table's diagonal by b[0], 2nd table's diagonal by b[1]
+    'V U'=. pA (b0b1 sdiag02 (vbyrs (0 1 & }.))) bc
+  else.
+    NB. report of A powers (2 4 6)
+    pA=. 2 4 6 gepow y
+
+    NB. V=. (b[8]*(A^2)+b[10]*(A^4)+b[12]*(A^6)) * (A^6)
+    NB. U=. (b[9]*(A^2)+b[11]*(A^4)+b[13]*(A^6)) * (A^6)
+    NB. VU=. V ,: U
+    VU=. pA (({: @ [) (mp " 2 2) (vbyrs (2 _3 & {.))) bc
+
+    NB. V=.      V + b[6]*A6+b[4]*A4+b[2]*A2+b[0]*I
+    NB. U=. A * (U + b[7]*A6+b[5]*A4+b[3]*A2+b[1]*I)
+    'V U'=. VU + (pA (b0b1 sdiag02 (vbyrs ((0 1 ,: 2 3) & (] ;. 0)))) bc)
+  end.
+  U=. y mp U
+
+  NB. find r_m(A) = [m/m] Padé approximant to A
+  r=. V (+ %. -) U  NB. r=. gesv V (- ; +) U
+)
 
 NB. =========================================================
 NB. Interface verbs
@@ -20,11 +66,9 @@ NB.
 NB. Syntax:
 NB.   E=. geexp A
 NB. where
-NB.
-NB. If:
-NB.   
-NB. then
-NB.   
+NB.   A - N-by-N table, a general matrix
+NB.   E - N-by-N table, matrix exponent exp(A)
+NB.   N >= 0
 NB.
 NB. References:
 NB. [1] N. J. Higham, The scaling and squaring method for the
@@ -33,45 +77,6 @@ NB.     Appl. Vol. 26, No. 4, pp. 1179–1193
 NB.
 NB. Notes:
 NB. - works incorrectly for diagonal matrices (use diexp instead)
-
-NB. find r_m(A) = [m/m] Padé approximant to A
-NB. r=. m geexpm2r A
-geexpm2r=: 4 : 0
-  NB. coeffcients b[i] of degree 13 Padé approximant
-  b=. 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
-
-  NB. b[i] coeffs for V (1st row) and U (2nd row)
-  bc=. _2 (|: @ (]\)) (>: x) {. b
-
-  NB. U=. A*Σ(b[i+1]*(A^i),i=0,2,..,m-1)
-  NB. V=.   Σ(b[i  ]*(A^i),i=0,2,..,m-1)
-  if. x < 13 do.
-    NB. report of A powers (2 [4 [6 [8]]])
-    pA=. (+: }. i. >. -: x) gepow y
-
-    NB. - multiply each table in pA by corresp. scalar b[i], output: report 2-by-p-by-N-by-N
-    NB. - sum multiplied tables, output: report 2-by-N-by-N
-    NB. - shift 1st table's diagonal by b[0], 2nd table's diagonal by b[1]
-    'V U'=. pA (((+/ @ (* " 3 1)) (0 1 & }.)) (sdiag " 0 2)~ (((0 1;1 1) & {) @ ])) bc
-    U=. y mp U
-  else.
-    NB. report of A powers (2 4 6)
-    pA=. 2 4 6 gepow y
-
-    NB. let: A2=(A^2), A4=(A^4), A6=(A^6)
-
-    NB. VU=. ((b[8]*A2+b[10]*A4+b[12]*A6) ,: (b[9]*A2+b[11]*A4+b[13]*A6)) * A6
-    VU=. pA (({: @ [) (mp " 2 2) ((+/ @ (* " 3 1)) (2 _3 & {.))) bc
-
-    NB. V=.      V + b[6]*A6+b[4]*A4+b[2]*A2+b[0]*I
-    NB. U=. A * (U + b[7]*A6+b[5]*A4+b[3]*A2+b[1]*I)
-    'V U'=. VU + (pA ((((0 0;1 0) & {) @ ]) (sdiag " 0 2) ((+/ @ (* " 3 1)) ((0 1 ,: 2 3) & (] ;. 0)))) bc)
-    U=. y mp U
-  end.
-
-  NB. find r_m(A) = [m/m] Padé approximant to A
-  r=. gesv_jlapack_ (V-U) ; (V+U)  NB. r=. gesv (V-U) ; (V+U)
-)
 
 geexp=: (3 : 0) " 2
 
@@ -90,24 +95,19 @@ geexp=: (3 : 0) " 2
   NB. - balance to reduce 1-norm
   'y scale'=. 0 3 { gebals (] ; (0 , #) ; (a: " _)) y
 
-  NB. find m
-  iom=. theta I. norm1 y
-  if. iom < # vm do.
-    m=. iom { vm
-  else.
-    m=. {: vm
-  end.
+  NB. find max m such that norm1(A) <= θ[m] , or let m=13
+  m=. ((theta I. norm1 y) <. <: # vm) { vm
 
   NB. find r_m(A) = [m/m] Padé approximant to A
-  if. m<13 do.
+  if. m < 13 do.
     r=. m geexpm2r y
   else.
     s=. >. 2 ^. (norm1 y) % {: theta  NB. find a minimal integer such that norm1(A/2^s)<=θ[13]
-    y=. y % 2 ^ s
+    y=. y % 2 ^ s                     NB. scaling
     r=. m geexpm2r y
-    r=. mp~ ^: s r
+    r=. mp~ ^: s r                    NB. undo scaling
   end.
-  E=. (^ mu) * r (] * (% " 1)) scale
+  E=. (^ mu) * r (] * (% " 1)) scale  NB. undo preprocessing
 )
 
 NB. ---------------------------------------------------------
@@ -115,42 +115,29 @@ NB. diexp                                                   1
 NB. Matrix exponential of a diagonalizable matrix
 NB.
 NB. Syntax:
-NB.   E=. diexp (RV ; ev ; RVi)
+NB.   E=. diexp (rv ; ev ; rvi)
 NB. where
-NB.
-NB. If:
-NB.   
-NB. then
-NB.   
-NB.
-NB. Notes:
-NB. - 
-NB.
-NB. TODO:
-NB. - 
+NB.   rv  - N-by-N table, right eigenvectors of A
+NB.   ev  - N-vector, eigenvalues of A
+NB.   rvi - N-by-N table, inversion of rv
+NB.   E   - N-by-N table, matrix exponent exp(A)
+NB.   N  >= 0
 
-diexp=: ((0 & {::) ([ mp ((* (+ @ |:))~ ^)) (1 & {::)) : [: " 2
+diexp=: (0 & {::) mp ((^ @: (1 & {::)) * (2 & {::)) : [: " 1
 
 NB. ---------------------------------------------------------
 NB. heexp                                                   1
 NB. Matrix exponential of a Hermitian matrix
 NB.
 NB. Syntax:
-NB.   E=. diexp (RV ; ev)
+NB.   E=. diexp (rv ; ev)
 NB. where
-NB.
-NB. If:
-NB.   
-NB. then
-NB.   
-NB.
-NB. Notes:
-NB. - 
-NB.
-NB. TODO:
-NB. - 
+NB.   rv  - N-by-N table, right eigenvectors of A
+NB.   ev  - N-vector, eigenvalues of A
+NB.   E   - N-by-N table, matrix exponent exp(A)
+NB.   N  >= 0
 
-heexp=: (0 & {::) mp ((^ @: (1 & {::)) * (2 & {::)) : [: " 2
+heexp=: ((0 & {::) ([ mp ((* (+ @ |:))~ ^)) (1 & {::)) : [: " 1
 
 NB. =========================================================
 Note 'exp testing and timing'

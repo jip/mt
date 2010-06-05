@@ -32,12 +32,12 @@ NB. Syntax:
 NB.   'Ap ss p'=. gebalp A
 NB. where
 NB.   A  - N-by-N matrix
-NB.   Ap - N-by-N matrix with isolated eigenvalues, being
-NB.        A with permuted rows and columns
+NB.   Ap - N-by-N matrix with isolated eigenvalues, being A
+NB.        with permuted rows and columns
 NB.   ss - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11
-NB.   p  - N-vector, standart permutation vector to
-NB.        transform A to Ap
+NB.   p  - N-vector, standart permutation vector to transform
+NB.        A to Ap
 NB.
 NB. If:
 NB.   'Ap ss p'=. gebalp A
@@ -108,8 +108,8 @@ NB.   Ap - N-by-N matrix with isolated eigenvalues (see
 NB.        gebalp)
 NB.   ss - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11 (see gebalp)
-NB.   p  - N-vector, standart permutation vector to
-NB.        transform A to Ap (see gebalp)
+NB.   p  - N-vector, standart permutation vector to transform
+NB.        A to Ap (see gebalp)
 NB.   As - N-by-N matrix, scaled version of Ap
 NB.   s  - N-vector, diagonal of scaling matrix D
 NB.
@@ -174,8 +174,8 @@ NB.   A  - N-by-N matrix
 NB.   Ab - N-by-N matrix, balanced version of A
 NB.   ss - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11 (see gebalp)
-NB.   p  - N-vector, standart permutation vector to
-NB.        transform A to Ap (see gebalp)
+NB.   p  - N-vector, standart permutation vector to transform
+NB.        A to Ap (see gebalp)
 NB.   s  - N-vector, diagonal of scaling matrix D (see
 NB.        gebals)
 NB.

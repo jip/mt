@@ -10,3 +10,5 @@ require '~user/projects/pjlap/bal.ijs'          NB. balance
 require '~user/projects/pjlap/equ.ijs'          NB. equilibrate
 require '~user/projects/pjlap/exp.ijs'          NB. exponent
 require '~user/projects/pjlap/pow.ijs'          NB. powers
+require '~user/projects/pjlap/sv.ijs'           NB. solve
+require '~user/projects/pjlap/trf.ijs'          NB. LU factorization

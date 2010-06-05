@@ -1,12 +1,10 @@
-NB. pure_j_lapack.ijs
-NB. Implement LAPACK routines on pure J
-
-script_z_ '~system/packages/math/matutil.ijs'  NB. diag
+NB. gebal.ijs
+NB. Balance a general square matrix
 
 NB. =========================================================
 NB. Local verbs
 
-prc=: [ (C. " 1) C.  NB. apply permutation x to both rows and columns of table y
+pt=: [ (C. " 1) C.   NB. apply permutation x to both rows and columns of table y
 p2P=: =/ (i. @ #)    NB. transform permutation vector y to permutation matrix
 
 NB. =========================================================
@@ -14,30 +12,37 @@ NB. Interface verbs
 
 NB. ---------------------------------------------------------
 NB. gebalp
-NB. General square matrix A balancing permutation:
-NB.                   ( A00 A01 A02 )
-NB. Ap = P*A*inv(P) = ( 0   A11 A12 )
-NB.                   ( 0   0   A22 )
+NB. Permute a general square matrix A by a similarity
+NB. transformation to isolate eigenvalues in diagonals of A00
+NB. and A22:
+NB.                         ( A00 A01 A02 )
+NB.   Ap = P * A * inv(P) = ( 0   A11 A12 )
+NB.                         ( 0   0   A22 )
+NB. where A00 and A22 are square upper triangular matrices.
 NB.
 NB. Syntax:
-NB.   'Ap ss p'=. gebalpi A
+NB.   'Ap ss p'=. gebalp A
 NB. where
 NB.   A  - N-by-N matrix
-NB.   Ap - N-by-N matrix, balanced by permutation
+NB.   Ap - N-by-N matrix with isolated eigenvalues, being
+NB.        A with permuted rows and columns
 NB.   ss - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11
 NB.   p  - N-vector, standart permutation vector to
-NB.        transform A to Aperm
+NB.        transform A to Ap
 NB.
 NB. If:
-NB.   'Ap ss p'=. gebalpi A
+NB.   'Ap ss p'=. gebalp A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB. then
 NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
-NB.   Ap -: p prc A
+NB.   Ap -: p pt A
 NB.   A11 -: (,.~ ss) (] ;. 0) Ap
+NB.
+NB. TODO:
+NB. - try to apply incremental permut. cp to y
 
 gebalp=: 3 : 0
   nz=. 0 & ~:
@@ -73,102 +78,113 @@ NB.  nzr=. p { nzr                              NB. apply all permutations
     s=. <: s                                  NB. ...leading column
   end.
 
-  (p prc y) ; (f , s) ; p
+  (p pt y) ; (f , s) ; p
 )
 
 NB. ---------------------------------------------------------
 NB. gebals
-NB. General square matrix A balancing by scaling:
-NB.   A11s = D*A11*inv(D)
+NB. Apply a diagonal similarity transformation to rows and
+NB. columns of matrix A11 (see gebalp) to make the rows and
+NB. columns as close in 1-norm as possible:
+NB.   As = D * A * inv(D)
+NB. where D is diagonal scaling matrix.
 NB.
 NB. Syntax:
-NB.   'A11s s'=. gebalsi A11
+NB.   'As ss p s'=. gebals Ap ; ss ; p
 NB. where
-NB.   A11  - N-by-N matrix from gebalp's partition
-NB.   A11s - N-by-N matrix, balanced by scaling
-NB.   s    - N-vector, diagonal of scaling matrix D
+NB.   Ap - N-by-N matrix with isolated eigenvalues (see
+NB.        gebalp)
+NB.   ss - 2-vector, corner start (left and up) and size
+NB.        (width and height) of A11 (see gebalp)
+NB.   p  - N-vector, standart permutation vector to
+NB.        transform A to Ap (see gebalp)
+NB.   As - N-by-N matrix, scaled version of Ap
+NB.   s  - N-vector, diagonal of scaling matrix D
 NB.
 NB. If:
-NB.   'A11s s'=. gebalsi A11
+NB.   'As ss p s'=. gebals Ap ; ss ; p
 NB.   D=. diagmat s
 NB.   Dinv=. %. D
 NB. then
-NB.   Dinv -: |: D
-NB.   A11s -: D mp A11 mp Dinv
-NB.   A11s -: A11 (] * [ *"1 %) s
+NB.   Dinv -: diagmat % s
+NB.   As -: D mp Ap mp Dinv
+NB.   As -: Ap (] * (% " 1)) s
 NB.
 NB. Applications:
-NB.   'A11s s'=. (,.~ ss) gebals ;. 0 Ap
+NB.   'As ss p s'=. gebals (] ; (0 , #) ; (a: " _)) A
 
 gebals=: 3 : 0
-  n=. # y
-  scale=. n $ 1x
-  RADIX=. 2x
+  'Ap ss p'=. y
+  n=. # Ap
+  s=. n $ 1x                                        NB. scaling matrix D diagonal
+  RADIX=. 2x                                        NB. floating point base
   whilst. noconv do.
     noconv=. 0
-    for_i. i. n do.
-      'c r'=. i ([ (+/ @ (| @ ((0:`[`]) }))) ({ " 1 ,. {)) y  NB. 1-norm of i-th col and i-th row without diagonal element 
+    for_i. ({. + (i. @ {:)) ss do.
+      'c r'=. (ss ,. 0 2) (+/ @: |) ;. 0 (i ([ ((0:`[`]) }) ({ " 1 ,. {)) Ap)  NB. 1-norm of i-th col and i-th row of A11 without diagonal element
       if. (r ~: 0) *. (c ~: 0) do.
         m=. >. -: <: RADIX ^. r % c
         f=. RADIX ^ m
         if. (m ~: 0) *. (((r % f) + (c * f)) < (0.95 * (c + r))) do.
-          scale=. (f * (i { scale)) i } scale
-          noconv=. 1
-          y=. ((i  {      y) % f) (i }    ) y
-          y=. ((i ({ " 1) y) * f) (<a: ; i) } y
+          s=. (f * (i { s)) i } s                   NB. correct i-th element of scale vector
+          Ap=. ((i  {      Ap) % f)        i  } Ap  NB. scale i-th row
+          Ap=. ((i ({ " 1) Ap) * f) (<a: ; i) } Ap  NB. scale i-th col
+          noconv=. 1                                NB. it needs to repeat scaling
         end.
       end.
     end.
   end.
-  y ; scale
+  Ap ; ss ; p ; s
 )
 
 NB. ---------------------------------------------------------
 NB. gebal
-NB. Balance square matrix A
-NB. 'Ab ss p s'=. gebal A
-
-gebal=: 3 : 0
-  'Ap ss p'=. gebalp y
-  'A11s s'=. (,.~ ss) gebals ;. 0 Ap
-  IOS11=. ({. + (i. @ {:)) ss
-  s=. s IOS11 } (# y) $ 1x
-  Ab=. A11s (< ;~ IOS11) } Ap
-  Ab ; ss ; p ; s
-)
-
-NB. ---------------------------------------------------------
-NB. geequ
-NB. Equilibrate matrix
+NB. Balance a general square matrix A. This involves, first,
+NB. isolating eigenvalues (see gebalp); and second, making
+NB. the rows and columns of A11 as close in 1-norm as
+NB. possible (see gebals):
+NB.                     ( A00 A01 A02 )
+NB.   Ap = P*A*inv(P) = ( 0   A11 A12 )
+NB.                     ( 0   0   A22 )
+NB.   Ab = D * Ap * inv(D)
+NB. where
+NB.   A00 and A22 - square upper triangular matrices
+NB.   P           - permutation matrix
+NB.   D           - diagonal scaling matrix
 NB.
-NB. References:
-NB. [1] "A parallel matrix scaling algorithm"
-NB.     Patrick R. Amestoy, Iain S. Duff, Daniel Ruiz, and Bora Uçar
-NB.     Technical report RAL-TR-2008-013, May 6, 2008
+NB. Syntax:
+NB.   'Ab ss p s'=. gebal A
+NB. where
+NB.   A  - N-by-N matrix
+NB.   Ab - N-by-N matrix, balanced version of A
+NB.   ss - 2-vector, corner start (left and up) and size
+NB.        (width and height) of A11 (see gebalp)
+NB.   p  - N-vector, standart permutation vector to
+NB.        transform A to Ap (see gebalp)
+NB.   s  - N-vector, diagonal of scaling matrix D (see
+NB.        gebals)
 NB.
-NB. TODO:
-NB. - verify
+NB. If:
+NB.   'Ab ss p s'=. gebal A
+NB.   P=. p2P p
+NB.   Pinv=. %. P
+NB.   D=. diagmat s
+NB.   Dinv=. %. D
+NB. then
+NB.   Pinv -: |: P
+NB.   Ap -: P mp A mp Pinv
+NB.   Ap -: p pt A
+NB.   Dinv -: diagmat % s
+NB.   Ab -: D mp Ap mp Dinv
+NB.   Ab -: Ap (] * (% " 1)) s
+NB.   A11 -: (,.~ ss) (] ;. 0) Ap
 
-geequ=: 3 : 0
-  eps=. 1e_1
-  n=. # y
-  d1=. n $ 1
-  d2=. n $ 1
-  whilst. (eps < vnormi <: dr) +. (eps < vnormi <: dc)  do.
-NB.    'dr dc'=. (((1 & (I. @ (0 & = @ ])) }) @: %: &. >) @ ((>./ " 1 ; (>./ )) @: |)) y  NB. use this line instead following if row or column may contain zeros only
-    'dr dc'=. (%: &. > @ ((>./ " 1 ; (>./ )) @: |)) y
-    d1=. d1 % dr
-    d2=. d2 % dc
-    y=. d1 * y (* " 1) d2
-  end.
-  dr ; dc ; y
-)
-
+gebal=: gebals @ gebalp
 
 NB. =========================================================
 Note 'gebal testing and timing'
    load '~addons/math/lapack/lapack.ijs'
-   load '~addons/math/lapack/gebal.ijs'   NB. modified 'permute only' version
+   load '~addons/math/lapack/gebal.ijs'
    load '/home/jip/j602-user/projects/pure_j_lapack.ijs'
 
    ts=: 6!:2, 7!:2@]
@@ -184,7 +200,7 @@ Note 'gebal testing and timing'
    Pinv=. |: P
    Pinv -: %. P
    Aperm=. gebalp a1000f
-   Aperm -: p prc a1000f
+   Aperm -: p pt a1000f
    Aperm -: (P mp a1000f) mp Pinv
 
    5 ts 'gebal_jlapack_ a1000f'

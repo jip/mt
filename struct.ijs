@@ -11,10 +11,6 @@ NB. ms        Minimum in sum of vectors
 NB. rt        Restrained Take
 NB.
 NB. upd1      Adv. to update subarray by a monad
-NB. upd1i     Conj. to update indirectly subarray by a monad
-NB. map2i     Conj. to map indirectly by dyad to subarray
-NB. map3i     Conj. to map indirectly by triad to subarray
-NB.
 NB. uncut     To frame matrix by border of zeros
 NB. append    Template adv. to make verbs to enhance append
 NB.           verb
@@ -150,160 +146,6 @@ cpt=: + @ pt                             NB. conjugate pertranspose
 gi=: 2 : '(n{m)`:6'                      NB. Conj. to evoke n-th verb from gerund m: m[n]
 
 NB. ---------------------------------------------------------
-NB. upd1
-NB.
-NB. Description:
-NB.   Adv. to update subarray by a monad
-NB.
-NB. Syntax:
-NB.   vapp=. u upd1
-NB. where
-NB.   u       - monad to update subA; is called as:
-NB.               subAupd=. u subA
-NB.   vapp    - verb to update A; is called as:
-NB.               Aupd=. ios vapp A
-NB.   ios     - IOS of subA in the A
-NB.   subA    - subarray in the A
-NB.   A       - array
-NB.   Aupd    - A with subA being replaced by subAupd
-NB.
-NB. If:
-NB.   vapp=. u upd1
-NB.   subA=. ios { A
-NB.   subAupd=. u subA
-NB.   Aupd=. subAupd ios } A
-NB. then
-NB.   Aupd -: ios vapp A
-NB.
-NB. Example:######################
-NB. - the following replaces 87 by _8525 in array (i. 10 10):
-NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
-NB.   since
-NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
-NB.
-NB. References:
-NB. [1] [Jprogramming] Transform to Amend
-NB.     Dan Bron, Sat Mar 3 03:26:44 HKT 2007
-NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005425.html
-
-upd1=: (@:{) (`[) (`]) }
-
-NB. ---------------------------------------------------------
-NB. upd1i
-NB.
-NB. Description:
-NB.   Conj. to update indirectly subarray by a monad
-NB.
-NB. Syntax:
-NB.   vapp=. u upd1i io
-NB. where
-NB.   u       - monad to update subA; is called as:
-NB.               subAupd=. u subA
-NB.   io      - IO iossubA in the ios
-NB.   vapp    - verb to update A; is called as:
-NB.               Aupd=. ios vapp A
-NB.   ios     - vector of IOSs
-NB.   iossubA -: io { ios
-NB.   subA    -: iossubA { A
-NB.   A       - array
-NB.   Aupd    - A with subA being replaced by subAupd
-NB.
-NB. If:
-NB.   vapp=. u upd1i io
-NB.   iossubA=. io { ios
-NB.   subA=. iossubA { A
-NB.   subAupd=. u subA
-NB.   Aupd=. subAupd iossubA } A
-NB. then
-NB.   Aupd -: ios vapp A
-NB.
-NB. Example:######################
-NB. - the following replaces 87 by _8525 in array (i. 10 10):
-NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
-NB.   since
-NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
-
-upd1i=: 2 : '(((u@:{)`[`] })~ (n&{))~'
-
-NB. ---------------------------------------------------------
-NB. map2i
-NB.
-NB. Description:
-NB.   Conj. to map indirectly by dyad to subarray
-NB.
-NB. Syntax:
-NB.   vapp=. u map2i io0 io1 io2
-NB. where#########################
-NB.   u           - dyad to map from subA and subB to subC;
-NB.                 is called as:
-NB.                   subC=. subA u subB
-NB.   io0 io1 io2 - integers, IOS of iossubA, iossubB iossubC
-NB.                 in the ios
-NB.   vapp        - verb to update A; is called as:
-NB.                   Aupd=. ios vapp A
-NB.   iossubA iossubB iossubC - IOSs of subA, subB and subC,
-NB.                             respectively
-NB.   subA subB subC - subarrays in A
-NB.   A       - array
-NB.   Aupd    - A with subC being replaced by subAupd
-NB.
-NB. If:
-NB.   vapp=. u upd1i io
-NB.   iossubA=. io { ios
-NB.   subA=. iossubA { A
-NB.   subAupd=. u subA
-NB.   Aupd=. subAupd iossubA } A
-NB. then
-NB.   Aupd -: ios vapp A
-NB.
-NB. Example:######################
-NB. - the following replaces 87 by _8525 in array (i. 10 10):
-NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
-NB.   since
-NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
-
-map2i=: 2 : '(({~ ((0{n)&{)) u ({~ ((1{n)&{)))~`((2{n){[)`]}'
-
-NB. ---------------------------------------------------------
-NB. map3i
-NB.
-NB. Description:
-NB.   Conj. to map indirectly by triad to subarray
-NB.
-NB. Syntax:
-NB.   vapp=. u0`u1 map2i io0 io1 io2 io3
-NB. where#########################
-NB.   u           - dyad to map from subA and subB to subC;
-NB.                 is called as:
-NB.                   subC=. subA u subB
-NB.   io0 io1 io2 - integers, IOS of iossubA, iossubB iossubC
-NB.                 in the ios
-NB.   vapp        - verb to update A; is called as:
-NB.                   Aupd=. ios vapp A
-NB.   iossubA iossubB iossubC - IOSs of subA, subB and subC,
-NB.                             respectively
-NB.   subA subB subC - subarrays in A
-NB.   A       - array
-NB.   Aupd    - A with subC being replaced by subAupd
-NB.
-NB. If:
-NB.   vapp=. u upd1i io
-NB.   iossubA=. io { ios
-NB.   subA=. iossubA { A
-NB.   subAupd=. u subA
-NB.   Aupd=. subAupd iossubA } A
-NB. then
-NB.   Aupd -: ios vapp A
-NB.
-NB. Example:######################
-NB. - the following replaces 87 by _8525 in array (i. 10 10):
-NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
-NB.   since
-NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
-
-map3i=: 2 : '(({~((0{n)&{)) (u gi 0) ({~((1{n)&{)) (u gi 1) ({~((2{n)&{)))~`((3{n){[)`]}'
-
-NB. ---------------------------------------------------------
 NB. ms
 NB.
 NB. Description: Minimum in [sum of] vector[s]
@@ -342,6 +184,45 @@ NB. 5  6  7                      5  6  7
 NB. 9 10 11                      9 10 11
 
 rt=: ((({.~#)~$),:[)({.~(>|)/`(_,:{:)})~^:(((>+./@:*. _~:])|)/@[)]
+
+NB. ---------------------------------------------------------
+NB. upd1
+NB.
+NB. Description:
+NB.   Adv. to update subarray by a monad
+NB.
+NB. Syntax:
+NB.   vapp=. u upd1
+NB. where
+NB.   u       - monad to update subA; is called as:
+NB.               subAupd=. u subA
+NB.   vapp    - verb to update A; is called as:
+NB.               Aupd=. ios vapp A
+NB.   ios     - IOS of subA in the A
+NB.   subA    - subarray in the A
+NB.   A       - array
+NB.   Aupd    - A with subA being replaced by subAupd
+NB.
+NB. If:
+NB.   vapp=. u upd1
+NB.   subA=. ios { A
+NB.   subAupd=. u subA
+NB.   Aupd=. subAupd ios } A
+NB. then
+NB.   Aupd -: ios vapp A
+NB.
+NB. Example:######################
+NB. - the following replaces 87 by _8525 in array (i. 10 10):
+NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
+NB.   since
+NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
+NB.
+NB. References:
+NB. [1] [Jprogramming] Transform to Amend
+NB.     Dan Bron, Sat Mar 3 03:26:44 HKT 2007
+NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005425.html
+
+upd1=: (@:{) (`[) (`]) }
 
 NB. ---------------------------------------------------------
 NB. uncut
@@ -502,7 +383,7 @@ upddiag=: 1 : 0
   e=. lios ({,) y
   (u e) (lios"_) } y
 :
-  lios=. x (diaglios $) y
+  lios=. x diaglios $ y
   e=. lios ({,) y
   (u e) (lios"_) } y
 )

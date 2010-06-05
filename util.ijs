@@ -1,17 +1,11 @@
 NB. util.ijs
 NB. Utilities
 NB.
-NB. ii2cp      Make cycle permutation from indices x and y
-NB.
 NB. sgn        Simplified signum
 NB. condneg    Conditional negate
 NB. copysign   Copy sign
-NB.
-NB. hds2ios    IOS from head, delta and size
-NB. ht2ios     IOS from head and tail
-NB. hs2ios     IOS from head and size
-NB. rios2ios   Convert rIOS to IOS
-NB. rios2lios  Convert rIOS to lIOS
+NB. fmtlog     Format log string
+NB. ios2cp     Make cycle permutation from indices
 NB.
 NB. norm1      Magnitude-based 1-norm of vector or matrix
 NB. normi      Magnitude-based ∞-norm of vector or matrix
@@ -20,13 +14,17 @@ NB. normit     Taxicab-based ∞-norm of vector or matrix
 NB. norms      Square-based (Euclidean/Frobenius) norm of
 NB.            vector or matrix
 NB.
-NB. fmtlog     Format log string
+NB. hds2ios    IOS from head, delta and size
+NB. ht2ios     IOS from head and tail
+NB. hs2ios     IOS from head and size
+NB. rios2ios   Convert rIOS to IOS
+NB. rios2lios  Convert rIOS to lIOS
 NB.
 NB. tmonad     Template conj. to make verbs to test
 NB.            computational monad
 NB. tdyad      Template conj. to make verbs to test
 NB.            computational dyad
-NB. dbg        Conj. to sjow verb's input and output
+NB. dbg        Conj. to show verb's input and output
 NB.
 NB. Copyright (C) 2009 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -50,19 +48,38 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-ii2cp=: < @ (, ` (, @ ]) @. =)     NB. make cycle permutation from indices x and y (NB!: if y is empty then output must be a:)
-                                   NB. CHECKME: ii2cp=: < @ , @ (, ^: ~:)
-                                   NB. CHECKME: ii2cp=: (, ^: (-. @ -:)) & ,
-                                   NB. sw=: <@~.@[ C. ]
-                                   NB.   [Jprogramming] Swapping array elements
-                                   NB.   Roger Hui, Mon May 11 06:23:07 HKT 2009
-                                   NB.   http://www.jsoftware.com/pipermail/programming/2009-May/014682.html
-
 sgn=: 0 & (<: - >)                 NB. if y<0 then -1 else 1 endif
 condneg=: (* sgn)~                 NB. if x<0 then -y else y endif
 copysign=: condneg |               NB. if x<0 then -|y| else |y| endif
 
 fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' vsprintf  NB. Format log string
+
+NB. ---------------------------------------------------------
+NB. ii2cp
+NB.
+NB. Description:
+NB.   Make cycle permutation from indices x and y
+NB.
+NB. Syntax:
+NB.   cp=. io0 ios2cp io1
+NB. where
+NB.   io0 io1 - indices
+NB.   cp      - cycle permutation
+NB.
+NB. References:
+NB. [1] [Jprogramming] Swapping array elements
+NB.     Roger Hui, Mon May 11 06:23:07 HKT 2009
+NB.     http://www.jsoftware.com/pipermail/programming/2009-May/014682.html
+NB.
+NB. TODO:
+NB. - if y is empty then output must be a:
+NB.
+NB. Consider:
+NB.   ios2cp=: < @ (, ` (, @ ]) @. =)
+NB.   ios2cp=: < @ , @ (, ^: ~:)
+NB.   ios2cp=: (, ^: (-. @ -:)) & ,
+
+ios2cp=: < @ ~. @ ,
 
 NB. ---------------------------------------------------------
 NB. Norms
@@ -76,7 +93,7 @@ norm1t=: (+/ " 1 @: | @: +.) mocs  NB. 1-norm of vector or matrix
 normit=: (+/ " 1 @: | @: +.) mors  NB. ∞-norm of vector or matrix
 
 NB. Square-based (Euclidean/Frobenius) norm of vector or matrix
-NB. for vector input emulates LAPACK's DZNRM2 and SCNRM2
+NB. for vector input emulates LAPACK's DZNRM2
 norms=: (((((+/^:_) &.: *:) @: %) * ]) (>./^:_)) @: | @: +.
 
 NB. ---------------------------------------------------------
@@ -195,7 +212,7 @@ NB.   NB. to estimate rcond in 1-norm
 NB.   vrcond=. ((_."_)`(norm1 con getri) @. (=/@$))@[
 NB.   NB. to calc. berr, assuming:
 NB.   NB.   berr := ||A - realA||_1 / (m * ε * ||A||_1)
-NB.   vberr=. ((- (% & norm1) [) % (FP_EPS * # @ [)) unmqr
+NB.   vberr=. ((- (% & norm1) [) % (FP_EPS * (norm1 * #) @ [)) unmqr
 NB.   NB. let's test geqrf
 NB.   ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
 NB.

@@ -378,3 +378,5 @@ testtrs=: 1 : 0
   thetrs @ ((u hemat) ; u) @ {. y
   tpotrs @ ((u pomat) ; u) @ {. y
 )
+
+NB. testtrs=: 1 : 'EMPTY [ (thetrf ^: (=/@$@(0&({::))) [ tgetrf) @ (u L: 0) @ (] ; {. ; {:)'

@@ -28,8 +28,8 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-GQBS=: 32   NB. block size limit
-GQNX=: 128  NB. crossover point, GQNX ≥ GQBS
+GQNB=: 32   NB. block size limit
+GQNX=: 128  NB. crossover point, GQNX ≥ GQNB
 
 NB. ---------------------------------------------------------
 NB. ungi
@@ -40,7 +40,7 @@ NB. where        k = min(rows,columns)
 NB. Formula:     iters = max(0,⌊(k+BS-NX-1)/BS⌋)
 NB. Notes:       is memo, since repetitive calls are expected
 
-ungi=: (0 >. <.@(GQBS %~ (_1+GQBS-GQNX)&+))M.
+ungi=: (0 >. <.@(GQNB %~ (_1+GQNB-GQNX)&+))M.
 
 NB. ---------------------------------------------------------
 NB. ungb
@@ -51,7 +51,7 @@ NB. where        k = min(rows,columns)
 NB. Formula:     size = min(k,BS*iters)
 NB. Notes:       is memo, since repetitive calls are expected
 
-ungb=: (<. (GQBS * ungi))M.
+ungb=: (<. (GQNB * ungi))M.
 
 NB. ---------------------------------------------------------
 NB. Description:
@@ -176,11 +176,11 @@ NB. Notes:
 NB. - ung{l2,2l,2r,r2} and corresp. ung{lq,ql,qr,rq} are
 NB.   topologic equivalents
 
-unglqstep=: ((((GQBS, _),:~(-&c))                       (] ;. 0)       [) (((ungl2~ #) @ [) ,   larfbrcfr) ]) ({."1~ ((-GQBS)-c))
-ungqrstep=: ((((GQBS,~_),:~(-&#))                       (] ;. 0)       [) (((ung2r~ c) @ [) ,.  larfblnfc) ]) ({.  ~ ((-GQBS)-#))
+unglqstep=: ((((GQNB, _),:~(-&c))                       (] ;. 0)       [) (((ungl2~ #) @ [) ,   larfbrcfr) ]) ({."1~ ((-GQNB)-c))
+ungqrstep=: ((((GQNB,~_),:~(-&#))                       (] ;. 0)       [) (((ung2r~ c) @ [) ,.  larfblnfc) ]) ({.  ~ ((-GQNB)-#))
 
-ungqlstep=: ((((GQBS,~_),:~(0 {:: [) ((GQBS-1)+-~) c@]) (] ;. 0) 1 {:: [) (((ung2l~ c) @ [) ,.~ larfblnbc) ]) ({.  ~ (  GQBS +#))
-ungrqstep=: ((((GQBS, _),:~(0 {:: [) ((GQBS-1)+-~) #@]) (] ;. 0) 1 {:: [) (((ungr2~ #) @ [) , ~ larfbrcbr) ]) ({."1~ (  GQBS +c))
+ungqlstep=: ((((GQNB,~_),:~(0 {:: [) ((GQNB-1)+-~) c@]) (] ;. 0) 1 {:: [) (((ung2l~ c) @ [) ,.~ larfblnbc) ]) ({.  ~ (  GQNB +#))
+ungrqstep=: ((((GQNB, _),:~(0 {:: [) ((GQNB-1)+-~) #@]) (] ;. 0) 1 {:: [) (((ungr2~ #) @ [) , ~ larfbrcbr) ]) ({."1~ (  GQNB +c))
 
 NB. =========================================================
 NB. Interface

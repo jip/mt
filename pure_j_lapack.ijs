@@ -13,33 +13,33 @@ NB. =========================================================
 NB. Interface verbs
 
 NB. ---------------------------------------------------------
-NB. gebalpi
-NB. General square matrix A balancing permutation info:
-NB.                      ( A00 A01 A02 )
-NB. Aperm = P*A*inv(P) = ( 0   A11 A12 )
-NB.                      ( 0   0   A22 )
+NB. gebalp
+NB. General square matrix A balancing permutation:
+NB.                   ( A00 A01 A02 )
+NB. Ap = P*A*inv(P) = ( 0   A11 A12 )
+NB.                   ( 0   0   A22 )
 NB.
 NB. Syntax:
-NB.   'ss p'=. gebalpi A
+NB.   'Ap ss p'=. gebalpi A
 NB. where
-NB.   A  - N-by-N matrix to balance by permutation
+NB.   A  - N-by-N matrix
+NB.   Ap - N-by-N matrix, balanced by permutation
 NB.   ss - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11
 NB.   p  - N-vector, standart permutation vector to
 NB.        transform A to Aperm
 NB.
 NB. If:
-NB.   'ss p'=. gebalpi A
-NB.   Aperm=. gebalp A
+NB.   'Ap ss p'=. gebalpi A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB. then
 NB.   Pinv -: |: P
-NB.   Aperm -: P mp A mp Pinv
-NB.   Aperm -: p prc A
-NB.   A11 -: (,.~ ss) (] ;. 0) Aperm
+NB.   Ap -: P mp A mp Pinv
+NB.   Ap -: p prc A
+NB.   A11 -: (,.~ ss) (] ;. 0) Ap
 
-gebalpi=: 3 : 0
+gebalp=: 3 : 0
   nz=. 0 & ~:
   nzd=. nz @ diag                             NB. non-zeros on diagonal
   mkcp=. < @ (, ` (, @ ]) @. =)               NB. make cycle permutation from x and y
@@ -73,94 +73,120 @@ NB.  nzr=. p { nzr                              NB. apply all permutations
     s=. <: s                                  NB. ...leading column
   end.
 
-  (f , s) ; p
+  (p prc y) ; (f , s) ; p
 )
 
 NB. ---------------------------------------------------------
-NB. gebalp
-NB. General square matrix A balancing permutation:
-NB.                      ( A00 A01 A02 )
-NB. Aperm = P*A*inv(P) = ( 0   A11 A12 )
-NB.                      ( 0   0   A22 )
+NB. gebals
+NB. General square matrix A balancing by scaling:
+NB.   A11s = D*A11*inv(D)
 NB.
 NB. Syntax:
-NB.   Aperm=. gebalp A
+NB.   'A11s s'=. gebalsi A11
 NB. where
-NB.   A and Aperm - N-by-N matrces
-
-gebalp=: prc~ ((1 & {::) @ gebalpi)
-
-NB. ---------------------------------------------------------
-NB. gebalsi
-NB. General square matrix A balancing scaling info:
-NB.   Ascal = D*A*inv(D)
-NB.
-NB. Syntax:
-NB.   s=. gebalsi A
-NB. where
-NB.   A - N-by-N matrix to balance by scaling
-NB.   s - N-vector, diagonal of scaling matrix D
+NB.   A11  - N-by-N matrix from gebalp's partition
+NB.   A11s - N-by-N matrix, balanced by scaling
+NB.   s    - N-vector, diagonal of scaling matrix D
 NB.
 NB. If:
-NB.   s=. gebalsi A
-NB.   Ascal=. gebals A
+NB.   'A11s s'=. gebalsi A11
 NB.   D=. diagmat s
 NB.   Dinv=. %. D
 NB. then
 NB.   Dinv -: |: D
-NB.   Ascal -: D mp A mp Dinv
-NB.   Ascal -: s * A (* " 1) (% s)
+NB.   A11s -: D mp A11 mp Dinv
+NB.   A11s -: A11 (] * [ *"1 %) s
 NB.
 NB. Applications:
-NB.   A11scal=. (,.~ ss) gebals ;. 0 Aperm
+NB.   'A11s s'=. (,.~ ss) gebals ;. 0 Ap
 
-gebalsi=: 3 : 0
+gebals=: 3 : 0
   n=. # y
-  s=. n $ 1
-  noconv=. 1
+  scale=. n $ 1x
+  RADIX=. 2x
   whilst. noconv do.
-    'r c'=. ((+/ " 1 ,: (+/)) (- " 1) (+: @ diag)) @ |
-    
+    noconv=. 0
+    for_i. i. n do.
+      'c r'=. i ([ (+/ @ (| @ ((0:`[`]) }))) ({ " 1 ,. {)) y  NB. 1-norm of i-th col and i-th row without diagonal element 
+      if. (r ~: 0) *. (c ~: 0) do.
+        m=. >. -: <: RADIX ^. r % c
+        f=. RADIX ^ m
+        if. (m ~: 0) *. (((r % f) + (c * f)) < (0.95 * (c + r))) do.
+          scale=. (f * (i { scale)) i } scale
+          noconv=. 1
+          y=. ((i  {      y) % f) (i }    ) y
+          y=. ((i ({ " 1) y) * f) (<a: ; i) } y
+        end.
+      end.
+    end.
   end.
-)
-
-NB. ############################################################
-
-NB. ---------------------------------------------------------
-NB. gebals
-NB. General square matrix A balancing scaling:
-NB.   Ascal = D*A*inv(D)
-NB.
-NB. Syntax:
-NB.   Ascal=. gebals A
-NB. where
-NB.   A and Ascal - N-by-N matrces
-
-gebals=: * ((*/ %) @ gebalsi)
-
-NB. ############################################################
-NB. ---------------------------------------------------------
-NB. 'ss p s'=. gebali mat
-gebali=. 3 : 0
-  'ss p'=. gebalpi y
-  ss ; p ; ss gebalsi y <<<<<<<<<<<<<<<<<<<<<,
-  (((0 & {::))~ gebalpi) y
-  ((0 & {::)) @ gebalpi
+  y ; scale
 )
 
 NB. ---------------------------------------------------------
-NB. Abal=. gebal A
+NB. gebal
 NB. Balance square matrix A
+NB. 'Ab ss p s'=. gebal A
 
-gebal=: 3 : '?????? gebals @ gebalp'
+gebal=: 3 : 0
+  'Ap ss p'=. gebalp y
+  'A11s s'=. (,.~ ss) gebals ;. 0 Ap
+  IOS11=. ({. + (i. @ {:)) ss
+  s=. s IOS11 } (# y) $ 1x
+  Ab=. A11s (< ;~ IOS11) } Ap
+  Ab ; ss ; p ; s
+)
 
 NB. ---------------------------------------------------------
-Note 'gebal timing'
+NB. geequ
+NB. Equilibrate matrix
+NB.
+NB. References:
+NB. [1] "A parallel matrix scaling algorithm"
+NB.     Patrick R. Amestoy, Iain S. Duff, Daniel Ruiz, and Bora Uçar
+NB.     Technical report RAL-TR-2008-013, May 6, 2008
+NB.
+NB. TODO:
+NB. - verify
+
+geequ=: 3 : 0
+  eps=. 1e_1
+  n=. # y
+  d1=. n $ 1
+  d2=. n $ 1
+  whilst. (eps < vnormi <: dr) +. (eps < vnormi <: dc)  do.
+NB.    'dr dc'=. (((1 & (I. @ (0 & = @ ])) }) @: %: &. >) @ ((>./ " 1 ; (>./ )) @: |)) y  NB. use this line instead following if row or column may contain zeros only
+    'dr dc'=. (%: &. > @ ((>./ " 1 ; (>./ )) @: |)) y
+    d1=. d1 % dr
+    d2=. d2 % dc
+    y=. d1 * y (* " 1) d2
+  end.
+  dr ; dc ; y
+)
+
+
+NB. =========================================================
+Note 'gebal testing and timing'
    load '~addons/math/lapack/lapack.ijs'
    load '~addons/math/lapack/gebal.ijs'   NB. modified 'permute only' version
+   load '/home/jip/j602-user/projects/pure_j_lapack.ijs'
+
    ts=: 6!:2, 7!:2@]
-   a1000f=. dzero_jlapack_ + ? 1000 1000 $ 10
-   a1000c=. zzero_jlapack_ + j./ ? 2 1000 1000 $ 10
+   ] a=. 7 7 $ 6 0 0 0 0 1 0 0 4 0 0.00025 0.0125 0.02 0.125 1 128 64 0 0 _2 16 0 16384 0 1 _400 256 _4000 _2 _256 0 0.0125 2 2 32 0 0 0 0 0 0 0 0 8 0 0.004 0.125 _0.2 3
+   a1000f=. 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } dzero_jlapack_ + ? 1000 1000 $ 10
+   a1000c=. 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } zzero_jlapack_ + j./ ? 2 1000 1000 $ 10
+
+   (gebalp -: (2b1000 & gebal_jlapack_)) a1000f
+   +/ +/ (gebalp ~: (2b1000 & gebal_jlapack_)) a1000f
+   tgebal_jlapack_ a1000f
+   'ss p'=. gebalpi a1000f
+   P=. p2P p
+   Pinv=. |: P
+   Pinv -: %. P
+   Aperm=. gebalp a1000f
+   Aperm -: p prc a1000f
+   Aperm -: (P mp a1000f) mp Pinv
+
    5 ts 'gebal_jlapack_ a1000f'
 0.239994 2.51897e7
    5 ts 'gebalp a1000f'
@@ -174,22 +200,13 @@ Note 'gebal timing'
    (gebalp a1000c) -: (2b1000 gebal_jlapack_ a1000c)
 1
 
-NB. ---------------------------------------------------------
-Note 'gebal testing'
-   ] a=. 7 7 $ 6 0 0 0 0 1 0 0 4 0 0.00025 0.0125 0.02 0.125 1 128 64 0 0 _2 16 0 16384 0 1 _400 256 _4000 _2 _256 0 0.0125 2 2 32 0 0 0 0 0 0 0 0 8 0 0.004 0.125 _0.2 3
-   load '/home/jip/j602-user/projects/pure_j_lapack.ijs'
-   load '/home/jip/j602-user/projects/lapack/lapack.ijs'
-   load '/home/jip/j602-user/projects/lapack/gebal.ijs'
-   a1000f=. dzero_jlapack_ + ? 1000 1000 $ 10
-   (gebalp -: (2b1000 & gebal_jlapack_)) 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } a1000f
-   +/ +/ (gebalp ~: (2b1000 & gebal_jlapack_)) 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } a1000f
-   tgebal_jlapack_ (0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } a1000f)
-   'ss p'=. gebalpi 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } a1000f
-   P=. p2P p
-   Pinv=. |: P
-   Pinv -: %. P
-   Aperm=. gebalp 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } a1000f
-   Aperm -: p prc 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } a1000f
-   Aperm -: (P mp (0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } a1000f)) mp Pinv
+   5 ts 'gebal_jlapack_ a1000f'
+0.289798 2.51897e7
+   5 ts 'gebal_jlapack_ a1000f'
+0.289943 2.51897e7
+   5 ts 'gebal a1000f'
+0.350457 2.9392e7
+   5 ts 'gebal a1000f'
+0.357612 2.9392e7
+
 )
-NB. ############################################################

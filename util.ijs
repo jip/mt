@@ -41,7 +41,7 @@ NB. Local utilities
 
 getCols=: {: @ $          NB. get columns count of table y
 tr=: (<0 1) & |:          NB. tr(y) is trace of table y
-norm1=: >./ @: (+/) @: |  NB. 1-norm of table y
+norm1=: >./ @: (+/) @: |  NB. 1-norm of table or vector y
 
 NB. =========================================================
 NB. Interface verbs

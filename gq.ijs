@@ -1,15 +1,6 @@
 NB. gq.ijs
 NB. Generate Q from LQ QL QR RQ output
 NB.
-NB. ungl2  Generate a matrix with orthonormal rows from
-NB.        output of gelq2 or gelqf (non-blocked version)
-NB. ung2l  Generate a matrix with orthonormal columns from
-NB.        output of geql2 or geqlf (non-blocked version)
-NB. ung2r  Generate a matrix with orthonormal columns from
-NB.        output of geqr2 or geqrf (non-blocked version)
-NB. ungr2  Generate a matrix with orthonormal rows from
-NB.        output of gerq2 or gerqf (non-blocked version)
-NB.
 NB. unglq  Generate a matrix with orthonormal rows from
 NB.        output of gelq2 or gelqf
 NB. ungql  Generate a matrix with orthonormal columns from
@@ -31,10 +22,10 @@ NB. Local definitions
 NB. Nouns, differences between cIOSs at consequent
 NB. iterations: cios(i+1)-cios(i)
 
-UNGL2DCIOS=: 6 2 $ _1 0j1 0j1 0j1 _1 0j1 _1 0 _1 _1 _1 0j_1  NB. z,R,VtoScale,τ,diag,Rto0
-UNG2LDCIOS=: 6 2 $ 0j1 1 0j1 0j1 0j1 1 0 1 1 1 0j_1 1        NB. z,L,VtoScale,τ,diag,Cto0
-UNG2RDCIOS=: 6 2 $ 0j1 _1 0j1 0j1 0j1 _1 0 _1 _1 _1 0j_1 _1  NB. z,L,VtoScale,τ,diag,Cto0
-UNGR2DCIOS=: 6 2 $ 1 0j1 0j1 0j1 1 0j1 1 0 1 1 1 0j_1        NB. z,R,VtoScale,τ,diag,Rto0
+UNGL2DCIOS=: 6 2 $ _1 0j1 0j1 0j1 _1 0j1 _1 0 _1 _1 _1 0j_1  NB. z,R,vtoscale,τ,diag,rto0
+UNG2LDCIOS=: 6 2 $ 0j1 1 0j1 0j1 0j1 1 0 1 1 1 0j_1 1        NB. z,L,vtoscale,τ,diag,cto0
+UNG2RDCIOS=: 6 2 $ 0j1 _1 0j1 0j1 0j1 _1 0 _1 _1 _1 0j_1 _1  NB. z,L,vtoscale,τ,diag,cto0
+UNGR2DCIOS=: 6 2 $ 1 0j1 0j1 0j1 1 0j1 1 0 1 1 1 0j_1        NB. z,R,vtoscale,τ,diag,rto0
 
 NB. ---------------------------------------------------------
 NB. mkcios0ungl2
@@ -84,13 +75,6 @@ ungl2step=: (- +)`(+@-)`(0 1 larfRfcc) ungq2step
 ung2lstep=:  -   `   - `(0 1 larfLbss) ungq2step
 ung2rstep=:  -   `   - `(0 1 larfLfss) ungq2step
 ungr2step=: (- +)`(+@-)`(0 1 larfRbcc) ungq2step
-
-NB. =========================================================
-NB. Interface
-
-NB. TODO:
-NB. - optimize write-in idmat: zeros, then unit diag
-NB. - template adv. ung2
 
 NB. ---------------------------------------------------------
 NB. ungl2
@@ -238,6 +222,13 @@ ungr2=: ($:~ (<./ @ (0 _1 & +) @ $)) :(4 : 0)
   y=. (idmat sizeI) (cios2ios ciosI) } y
   (- (k , n)) {. 0 {:: x (UNGR2DCIOS & ungr2step) (y ; cios0)
 )
+
+NB. =========================================================
+NB. Interface
+
+NB. TODO:
+NB. - optimize write-in idmat: zeros, then unit diag
+NB. - template adv. ung2
 
 NB. =========================================================
 NB. Test suite

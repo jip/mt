@@ -62,17 +62,17 @@ coclass 'mt'
 NB. =========================================================
 NB. Concepts
 NB.
-NB. IO   = index of
-NB. IOS  = indices of
-NB. lIOS = linear IOS
-NB. rIOS = rectangular IOS
-NB. cIOS = complex IOS
+NB. IO   - index of
+NB. IOS  - indices of
+NB. lIOS - linear IOS, is a vector of integers
+NB. rIOS - rectangular IOS, for r-rank array is a 2×r-array
+NB.        of integers ((from0,from1,...),:(size0,size1,...))
 NB.
 NB. Following are equivalents:
-NB.   (3 5 _7 ,: 2 _3 4) ] ;. 0 report
-NB.   (< 3 4 ; 7 6 5 ; _10 _9 _8 _7) { report
-NB.   (cios2ios 3j2 5j_3 _7j4) { report
-NB.   (cios2rios 3j2 5j_3 _7j4) ] ;. 0 report
+NB.   (3 5 _7,:2 _3 4) (] ;. 0) report
+NB.   (< 3 4;7 6 5;_10 _9 _8 _7) { report
+NB.   (rios2ios (3 5 _7,:2 _3 4)) { report
+NB.   (ios2rios (< 3 4;7 6 5;_10 _9 _8 _7)) (] ;. 0) report
 NB.
 NB. Following are equivalents:
 NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4
@@ -86,28 +86,26 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Indirect extractors
 
-NB. m-th from y from x: x[y[m]]
-myx=: 1 : '{~ (m & {)'
-
-NB. m-th from n from y from x: x[y[n[m]]]
-mnyx=: 2 : '{~ ((m { n) & {)'
-
-NB. m-th from x: x[m]
+NB. Adv. to extract m-th from x: x[m]
 mx=: 1 : 'm { ['
 
-NB. m-th from n from x: x[n[m]]
+NB. Conj. to extract m-th from n-th from x: x[n[m]]
 mnx=: 2 : '(m { n) { ['
 
-NB. aggregated extractor: u(x[y[n[0]]],x[y[n[1]]])
-mnyx01=: 2 : '(0 mnyx n) u (1 mnyx n)'
+NB. Conj. to evoke n-th verb from gerund m: m[n]
+gi=: 2 : '(n{m)`:6'
 
-NB. TODO: mnyx012
+NB. Conj. to apply u to submatrix from y, defined by n-th
+NB. rIOS from x: u(y[x[n]])
+uci=: 2 : '(n mx) (u ;. 0) ]'
 
-NB. ---------------------------------------------------------
-NB. Wrappers
+NB. Conj. to supply n-th verb from gerund to 'cut':
+NB. u[n](y[x])
+gic=: 2 : '(m gi n) ;. 0'
 
-NB. cIOS wrapper: u(cios2ios(x),y)
-cioswrap=: 1 : '(u~ cios2ios)~'
+NB. Conj. to implement indirect version of gic:
+NB. u[n[1]](y[x[n[0]]])
+gici=: 2 : '((0{n) mx) (m gic (1{n)) ]'
 
 NB. ---------------------------------------------------------
 NB. convert shape y to IOS differences table
@@ -176,83 +174,81 @@ nfv=: 2 : '((- upd)~ (cios2ios @ ((9&o. j. 1:) updl n) @ (m&{)))~'
 
 NB. ---------------------------------------------------------
 NB. IOS explorers
-NB. TODO: sink cios2ios to low-level indirect extractors
-
-NB. Model direct 'from' accepting cIOS: y[x]
-fromc=: ({~ cios2ios)~
-
-NB. Adv. to model indirect 'from': y[x[m]]
-fromi=: 1 : '(m myx)~'
-
-NB. Adv. to model 'fromi' accepting cIOS
-fromci=: 1 : '(m fromi) cioswrap'
-
-NB. Adv. to model indirect 'amend' accepting cIOS
-NB. y[x[n]] := u(x,y)
-amendci=: 2 : 'u`(cios2ios @ (n mx))`] }'
-
-NB. Adv. to update subarray by monad: y[x] := u(y[x])
-upd=: 1 : '(u @ {)`[`]}'
+NB. monad     dyad    triad   tetrad     pentad     hexad     heptad    octad    ennead decade
+NB.           couplet triplet quadruplet quintuplet sextuplet septuplet octuplet
+NB. singleton duet    trio    quartet    quintet    sextet    septet    octet
 
 NB. Conj. to model 'upd' accepting lIOS
 updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'
 
-NB. Conj. to model indirect 'upd':
+NB. Conj. to model 'upd' accepting rIOS
 NB. y[x[n]] := u(y[x[n]])
-updi=: 2 : '((u @ (n myx))~)`(n mx)`] }'
+NB. Aupd=. rios (u updr) A
+updr=: 1 : '(u ;. 0)`(rios2ios@[)`] }'
 
-NB. Conj. to model 'updi' accepting cIOS
-updci=: 2 : '(u updi n) cioswrap'
+NB. Conj. to model 'updi' accepting rIOS
+NB. y[x[n]] := u(y[x[n]])
+NB. Aupd=. rios (u updri io) A
+updri=: 2 : '(n mx) (u updr) ]'
 
-NB. Conj. to indirect update subarray by dyad:
-NB. y[x[n[1]]] := u(y[x[n[0]]],y[x[n[1]]])
-upd2i=: 2 : '((u mnyx01 n)~)`(1 mnx n)`] }'
+NB. Conj. to model 'upd2i' accepting rIOS
+NB. y[x[n[1]]] := u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]])))
+upd2ri=: 2 : '((u gici ((1{n),2)) (u gi 1) (u gici ((0{n),0)))`(rios2ios@(1 mnx n))`] }'
 
-NB. Conj. to model 'upd2i' accepting cIOS
-upd2ci=: 2 : '(u upd2i n) cioswrap'
+NB. ---------------------------------------------------------
+NB. upd3ri
+NB. Template conj. to make verbs to update subarray by pentad
+NB. indirectly, addressing mode is rIOS
+NB.
+NB. Syntax:
+NB.   vapp=. u0`u1`u2`u3`u4 upd3ri io0 io1 io2
+NB. where
+NB.   rios        - k×2×2-array of integers, vector of rIOSs
+NB.   io0 io1 io2 - integers, IOs in rios
+NB.   A           - input matrix
+NB.   A0 A1 A2    - 2-rank arrays, submatrices in A:
+NB.                   A0 -: (io0{rios) (] ;. 0) A
+NB.                   A1 -: (io1{rios) (] ;. 0) A
+NB.                   A2 -: (io2{rios) (] ;. 0) A
+NB.   u0 u2 u4    - monads to adjust A0 A1 A2, respectively
+NB.   u1 u3       - dyads to glue staff
+NB.   vapp        - verb to update A2, is called as:
+NB.                   Aupd=. rios vapp A
+NB.   Aupd        - A with submatrix A2 replaced by value:
+NB.                  (u4 A2) u3 (u2 A1) u1 (u0 A0)
+NB.   k           > 0
+NB.
+NB. Example:
+NB. - following replaces 24 by _1220 in array (i. 10 10):
+NB.     (3 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1) (%:`+`*:`-`-: upd3ri 0 1 2) i. 10 10
+NB.   since
+NB.     _1220 -: (-: 24) - (*: 35) + (%: 49)
 
-NB. Conj. to indirect update subarray by triad:
-NB. y[x[n[2]]] := u[1](u[0](y[x[n[0]]],y[x[n[1]]]),y[x[n[2]]])
-upd3i=: 2 : '(((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n))~)`(2 mnx n)`] }'
+upd3ri=: 2 : '((u gici ((2{n),4)) (u gi 3) (u gici ((1{n),2)) (u gi 1) (u gici ((0{n),0)))`(rios2ios@(2 mnx n))`] }'
 
-NB. Conj. to model 'upd3i' accepting cIOS
-upd3ci=: 2 : '(u upd3i n) cioswrap'
+NB. Adv. to model 'map' accepting lIOS
+NB. y[u[1](u[0](y[x]),y)] := u[0](y[x])
+NB. Aupd=. lios (u0`u1 mapl) A
+mapl=: 1 : '((u gi 0) @ ({,)) ((u gi 1) }) ]'
 
-NB. Conj. to indirect map subarray to another one by monad:
-NB. y[x[n[1]]] := u(y[x[n[0]]])
-mapi=: 2 : '((u @ (0 mnyx n))~)`(1 mnx n)`] }'
+NB. Adv. to model 'map' accepting rIOS to read and
+NB. using lIOS to write
+NB. y[u[1](u[0](y[x]),y)] := u[0](y[x])
+NB. Aupd=. rIOS (u0`u1 maprl) A
+maprl=: 1 : '(u gic 0) ((u gi 1) }) ]'
 
-NB. Conj. to model 'mapi' accepting cIOS
-mapci=: 2 : '(u mapi n) cioswrap'
+NB. Conj. to model 'mapi' accepting rIOS
+NB. y[u[1](y[x[n]],y)] := u[0](y[x[n]])
+NB. Aupd=. rios (u mapri (ioFrom,ioTo)) A
+mapri=: 2 : '(u uci (0{n))`(rios2ios@(1 mnx n))`] }'
 
-NB. Conj. to model 'mapi' accepting lIOS
-NB. y[x[n[1]]] := u(y[x[n[0]]])
-NB. FIXME!
-NB. mapli=: 2 : '((0 mnx n) (u @ ({,)) ]) ((1 mnx n) }) ]'
-NB. mapli=: 2 : '((0 {:: [) (u ;. 0) ]) ((1 {:: [) }) ]'    NB. (rIOSget ; lIOSwrite) (u mapli 0 1) A
+NB. Conj. to model 'upd3i' accepting rIOS
+NB. y[x[n[2]]] := u[3](u[4](y[x[n[2]]]),u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]])))
+map3ri=: 2 : '((u gici ((2{n),4)) (u gi 3) (u gici ((1{n),2)) (u gi 1) (u gici ((0{n),0)))`(rios2ios@(3 mnx n))`] }'
 
-NB. Conj. to indirect map two subarrays to another one by
-NB. dyad: y[x[n[2]]] := u(y[x[n[0]]],y[x[n[1]]])
-map2i=: 2 : '((u mnyx01 n)~)`(2 mnx n)`] }'
-
-NB. Conj. to model 'map2i' accepting cIOS
-map2ci=: 2 : '(u map2i n) cioswrap'
-
-NB. Conj. to indirect map three subarrays to another one by
-NB. triad:
-NB. y[x[n[3]]] := u[1](u[0](y[x[n[0]]],y[x[n[1]]]),y[x[n[2]]])
-map3i=: 2 : '(((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n))~)`(3 mnx n)`] }'
-
-NB. Conj. to model 'map3i' accepting cIOS
-map3ci=: 2 : '(u map3i n) cioswrap'
-
-NB. Conj. to indirect map four subarrays to another one by
-NB. tetrad:
-NB. y[x[n[4]]] := u[2](u[1](u[0](y[x[n[0]]],y[x[n[1]]]),y[x[n[2]]]),y[x[n[3]]])
-map4i=: 2 : '((((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n)) ((2{u)`:6) (3 mnyx n))~)`(4 mnx n)`] }'
-
-NB. Conj. to model 'map3i' accepting cIOS
-map4ci=: 2 : '(u map4i n) cioswrap'
+NB. Conj. to model 'upd4i' accepting rIOS
+NB. y[x[n[4]]] := u[5](u[6](y[x[n[3]]]),u[3](u[4](y[x[n[2]]]),u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]]))))
+map4ri=: 2 : '((u gici ((3{n),6)) (u gi 5) ((u gici ((2{n),4)) (u gi 3) (u gici ((1{n),2)) (u gi 1) (u gici ((0{n),0))))`(rios2ios@(4 mnx n))`] }'
 
 NB. ---------------------------------------------------------
 NB. append

@@ -1,8 +1,11 @@
 NB. Matrix toolbox
 NB.
-NB. test  Adverb to test algorithms
+NB. test      Adv. to test package
+NB. logclean  Clean up log file (if enabled) and/or log array
+NB.           (if enabled)
+NB. logstat   Show statistics from log array
 NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-01-01
 
@@ -32,6 +35,12 @@ FP_OVFL=: (FP_BASE - FP_PREC) * (FP_BASE ^ FP_EMAX)   NB. max normalized positiv
 FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/SFMIN does not overflow
 
 NB. ---------------------------------------------------------
+NB. Tests logging
+
+TESTLOGFILE=: '~user/temp/mt.log'                     NB. empty literal to switch off file logging
+TESTLOG=: ''                                          NB. literal array, being formatted test log
+
+NB. ---------------------------------------------------------
 NB. Miscellaneous
 
 EMPTY=: i. 0 0
@@ -54,7 +63,6 @@ NB. utility
 require '~user/projects/mt/util.ijs'    NB. utilities
 require '~user/projects/mt/con.ijs'     NB. condition number
 require '~user/projects/mt/rand.ijs'    NB. random objects
-require '~user/projects/mt/ios.ijs'     NB. IOS handlers
 require '~user/projects/mt/struct.ijs'  NB. structure handlers
 
 NB. low-level
@@ -62,6 +70,8 @@ require '~user/projects/mt/bal.ijs'     NB. balance
 require '~user/projects/mt/equ.ijs'     NB. equilibrate
 require '~user/projects/mt/ref.ijs'     NB. reflect
 require '~user/projects/mt/rot.ijs'     NB. rotate
+NB. require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ output
+NB. require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ output
 
 NB. mid-level
 NB. require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
@@ -70,7 +80,6 @@ require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization LQ QL QR RQ
 require '~user/projects/mt/trf.ijs'     NB. triangular factorization
 require '~user/projects/mt/tri.ijs'     NB. inverse via trf
 require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via trf
-require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ output
 
 NB. hi-level
 require '~user/projects/mt/exp.ijs'     NB. exponent
@@ -84,7 +93,7 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. test
-NB. Adverb to test algorithms
+NB. Adv. to test package
 NB.
 NB. Syntax:
 NB.   r=. mkge test m,n
@@ -103,12 +112,25 @@ NB.   r=. (_1 1 0 16 _6 4 & gemat) test 500 500
 NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) test 500 500
 
 test=: 1 : 0
-
   require 'printf'
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'gesv getrf potrf'
-
   '%-25s %-12s %-12s %-12s %-12s %-12s' & printf 'algorithm' ; 'rcond' ; 'rel bw err' ; 'rel fw err' ; 'time, sec.' ; 'space, bytes'
   assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
   ((u testtrf) [ (u testtri) [ (u testtrs)) y
 )
+
+NB. ---------------------------------------------------------
+NB. logclean
+NB. Clean up log file (if enabled) and/or log array (if
+NB. enabled)
+NB.
+NB. Syntax: logclean ''
+
+logclean=: [:
+
+NB. ---------------------------------------------------------
+NB. logstat
+NB. Show statistics from log array
+NB.
+NB. Syntax: logstat ''
+
+logstat=: [:

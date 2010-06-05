@@ -10,6 +10,15 @@ NB. XREF: gepow sdiag
 coclass 'mt'
 
 NB. =========================================================
+NB. Local constants
+
+NB. coeffcients b[i] of degree 13 Padé approximant
+PA13_GEEXP=: 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
+
+NB. coeffcients θ[m]
+THETA_GEEXP=: 24774315513739r1656496414665010 2287286674603605r9007199254740992 1070075424639547r1125899906842624  1180983412074661r562949953421312 1512061155730925r281474976710656
+
+NB. =========================================================
 NB. Local verbs
 
 NB. ---------------------------------------------------------
@@ -21,11 +30,8 @@ geexpm2r=: 4 : 0
   sdiag02=. sdiag " 0 2
   b0b1=. ((0 0 ; 1 0) & {) @ ]  NB. extract (b[0] , b[1]) from y
 
-  NB. coeffcients b[i] of degree 13 Padé approximant
-  b=. 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
-
   NB. b[i] coeffs for V (1st row) and U (2nd row)
-  bc=. _2 (|: @ (]\)) (>: x) {. b
+  bc=. _2 (|: @ (]\)) (>: x) {. PA13_GEEXP
 
   NB. U=. A*Σ(b[i+1]*(A^i),i=0,2,..,m-1)
   NB. V=.   Σ(b[i  ]*(A^i),i=0,2,..,m-1)
@@ -83,9 +89,6 @@ geexp=: (3 : 0) " 2
   NB. Padé approximant degrees m
   vm=. 3 5 7 9 13
 
-  NB. coeffcients θ[m]
-  theta=. 24774315513739r1656496414665010 2287286674603605r9007199254740992 1070075424639547r1125899906842624  1180983412074661r562949953421312 1512061155730925r281474976710656
-
   NB. preprocess A
 
   NB. - shift
@@ -96,19 +99,19 @@ smoutput 'shifted y' ; y
   'y scale'=. 0 3 { gebals (] ; (0 , #) ; (a: " _)) y
 smoutput 'balanced y' ; y
   NB. find max m such that norm1(A) <= θ[m] , or let m=13
-  m=. ((theta I. norm1 y) <. <: # vm) { vm
+  m=. ((THETA_GEEXP I. norm1 y) <. <: # vm) { vm
 
   NB. find r_m(A) = [m/m] Padé approximant to A
   if. m < 13 do.
     r=. m geexpm2r y
   else.
-    s=. >. 2 ^. (norm1 y) % {: theta  NB. find a minimal integer such that norm1(A/2^s)<=θ[13]
-    y=. y % 2 ^ s                     NB. scaling
+    s=. >. 2 ^. (norm1 y) % {: THETA_GEEXP  NB. find a minimal integer such that norm1(A/2^s)<=θ[13]
+    y=. y % 2 ^ s                           NB. scaling
     r=. m geexpm2r y
 smoutput 's' ; s ; 'r' ; r ; 'norm1 y' ; (norm1 y)
-    r=. mp~ ^: s r                    NB. undo scaling
+    r=. mp~ ^: s r                          NB. undo scaling
   end.
-  E=. (^ mu) * r (] * (% " 1)) scale  NB. undo preprocessing
+  E=. (^ mu) * r (] * (% " 1)) scale        NB. undo preprocessing
 )
 
 NB. ---------------------------------------------------------

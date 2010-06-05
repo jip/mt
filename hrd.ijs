@@ -1,10 +1,10 @@
-NB. hess.ijs
+NB. hrd.ijs
 NB. Reduce a general matrix to upper Hessenberg form
 NB.
 NB. gehrd   reduce a general matrix to upper Hessenberg form
 NB.
 NB. Version: 1.0.0 2008-09-01
-NB. Copyright: Igor Zhuravlov, igor@uic.dvgu.ru
+NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
 NB. License: GNU GPL
 
 coclass 'mt'

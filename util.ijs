@@ -22,10 +22,22 @@ ut2tr=: ((I. @ , @ (<:/~@i.) @ #) { ,)  NB. transform N×N upper triangular matr
 lio=: + ` (* i.)/ " 1                   NB. integers grid (2{y) steps from (0{y) by (1{y)
 ii2cp=: < @ (, ` (, @ ]) @. =)          NB. make cycle permutation from indices x and y
 ht2i=: (] + (i. @ -)) " 0 0             NB. form int list from head y to tail x: y (y+1) ... (x-1)
+abssq=: +/ @: *: @ +.                   NB. Re(y)^2 + Im(y)^2
+ct=: + @ |:                             NB. conjugate transpose
+ts=: 6!:2 , 7!:2 @ ]                    NB. execution time and space
+UL2L=: * ((>:/ & i.)/ @ $)              NB. fill strict upper triangular by zeros
+UL2SL=: * ((>/ & i.)/ @ $)              NB. fill upper triangular by zeros
+UL2U=: * ((<:/ & i.)/ @ $)              NB. fill strict lower triangular by zeros
+UL2SU=: * ((</ & i.)/ @ $)              NB. fill lower triangular by zeros
+UL2I=: (=/ & i.)/ @ $                   NB. identity matrix with the same shape as y
+LU2L1=: UL2I + UL2SL                    NB. extract strict L is m×min(m,n) matrix
+>>>>>>>>
+LU2L1=: (mn & ({. " 1)) @: (I + L & *)  NB. L is m×min(m,n) matrix
+LU2U=. (mn & {.) @: (U & *)            NB. U is min(m,n)×n matrix
 
 NB. ---------------------------------------------------------
 NB. kernel3
-NB. Conjunction to form top level computing kernel verb to
+NB. Conjunction to form top level computing kernel verbs to
 NB. calculate:
 NB.   submatrixA op0 submatrixB op1 submatrixC
 NB. from x and matrix y

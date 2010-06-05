@@ -7,6 +7,9 @@ NB. poequ  equilibrate a Hermitian positive definite matrix
 coclass 'mt'
 
 NB. =========================================================
+NB. Local constants
+
+NB. =========================================================
 NB. Local verbs
 
 NB. =========================================================

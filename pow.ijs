@@ -8,6 +8,9 @@ NB. hepow  raise a Hermitian matrix in integer powers
 coclass 'mt'
 
 NB. =========================================================
+NB. Local constants
+
+NB. =========================================================
 NB. Local verbs
 
 NB. =========================================================

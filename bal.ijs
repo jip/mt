@@ -15,6 +15,9 @@ NB.         eigenvectors
 coclass 'mt'
 
 NB. =========================================================
+NB. Local constants
+
+NB. =========================================================
 NB. Local verbs
 
 pt=: [ (C. " 1) C.   NB. apply permutation x to both rows and columns of table y

@@ -6,7 +6,7 @@ NB. lartv   applies a plane rotation to a 2-vector
 NB. lartvt  applies a transposed plane rotation to a 2-vector
 NB.
 NB. Version: 1.0.0 2008-07-30
-NB. Copyright: Igor Zhuravlov igor@uic.dvgu.ru
+NB. Copyright: Igor Zhuravlov igor at uic.dvgu.ru
 NB. License: Version 3 of the GNU GPL or any later version
 
 coclass 'mt'
@@ -43,7 +43,6 @@ NB. =========================================================
 NB. Local verbs
 
 abs1=: >./ @: | @ +.                 NB. max(|Re(y)|,|Im(y)|)
-abssq=: +/ @: *: @ +.                NB. Re(y)^2 + Im(y)^2
 sgnr=: 1 1 _1 & ({~) @ * @ (9 & o.)  NB. sgn(Re(y))
 
 NB. case 1: f≠0, g≠0, neither f nor g too big or small, minimal work

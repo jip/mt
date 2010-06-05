@@ -538,8 +538,6 @@ NB.   L - n×n-matrix, unit lower bidiangonal
 NB.
 NB. Formula:
 NB.   for k=1:n-1
-NB.     d[k] := d[k] - |e[k-1]|^2 / d[k-1]
-NB.     e[k-1] := e[k-1] / d[k-1]
 NB.   end
 NB. where
 NB.   d - n-vector, elements of D's main diagonal
@@ -550,54 +548,65 @@ NB.   In:  A
 NB.   Out: L1 D
 NB.   0) extract main diagonal and subdiagonal from A to d
 NB.      and e, respectively
-NB.   1) 
-NB.   Out: d,e
-NB.   
-NB.
-NB.
-NB.
-NB.
-NB.
+NB.   1) prepare input for iterations:
+NB.        ee2din := (e ,. |e|^2 ,. (}. d))
+NB.        edout := 0 , ({. d)
+NB.   2) start (n-1) iterations with k=1:n-1 via power (^:)
+NB.      on (ee2din;edout) :
+NB.      2.0) extract input for current k-th iteration:
+NB.             (e[k] |e[k]|^2 d[k]) := ee2din[k]
+NB.      2.1) extract last d[k-1] from previous (k-1)-th
+NB.           iteration:
+NB.             d[k-1] := edout[_1,_1]
+NB.      2.2) find new e[k-1] and d[k]:
+NB.             e[k-1] := e[k-1] / d[k-1]
+NB.             d[k] := d[k] - |e[k-1]|^2 / d[k-1]
+NB.   3) now edout contains raw output, extract it:
+NB.        edout := 1 {:: (ee2din;edout)
+NB.   4) extract d - D's main diagonal, and e - L1's
+NB.      subdiagonal from edout:
+NB.        e=. }. {."1 edout
+NB.        d=. {:"1 edout
+NB.   5) form output matrices:
+NB.        L1=. (e;_1) setdiag idmat $ A
+NB.        D=. diagmat d
+NB.   6) link matrices L1 and D to form output:
+NB.        L1 ; D
 NB.
 NB. Assertions:
 NB.   A (-:!.(2^_34)) L1 (mp mp (ct@[)) D
 NB. where
 NB.   'L1 D'=. pttrfl A
 NB.
+NB. References:
+NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB.     Johns Hopkins University Press, Baltimore, Md, USA,
+NB.     3rd edition, 1996, p. 157
+NB.
 NB. Notes:
 NB. - 'continued fractions' approach is useless here since
 NB.   infix scan is non-consequtive
 NB. - L1 and D should be sparse
 
-NB. Golub, Van Loan 1996 p. 157
+pttrfl=: (((setdiag (idmat@$))~ (_1;~(}.@:({."1)))) ; (diagmat@:({:"1)@])) (1 {:: ((((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: ((# @ (0 & {::))`(((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) & >/))) @ ((_1&diag) ; diag))
 
-NB. используем готовый квадрат модуля e на входе, две операции деления, векторы по отдельности
-pttrfliter=: 3 : 0
-  'ein esin din dout eout'=. y
-  dk1=. {: dout
-  (}. ein) ; (}. esin) ; (}. din) ; (dout , (({. din) - ({. esin) % dk1)) ; (eout , ({. ein) % dk1)
+pttrflr=: 3 : 0
+  n=. # y
+  if. 2 = n do.
+    'd0 a10 a11'=. 0 2 3 ({,) y
+    d1=. a11 - (*: | a10) % d0
+    ;/ 2 2 2 $ (1 0 , (a10 % d0) , 1 , d0 , 0 0 , d1)
+  elseif. 2 < n do.
+    k=. >. -: n
+    'L00 D0'=. pttrflr (2 # k) {. y                  NB. L00 * D0 * L00^H = A00
+    a10=. (<k - 0 1) { y
+    l10=. a10 % _1 ({,) D0              NB. L10 = A10 * D0^_1 , since L10 * D0 * L00^H = L10 * D0 = A10
+    'L11 D1'=. pttrflr (<0 0) (-&(a10 * + l10)) upd1 (2 # k) }. y  NB. L11 * D1 * L11^H = A11 - A10 * D^_1 * A10^H
+    ((l10 (<k - 0 1) } n {. L00) ,. ((-n) {. L11)) ; ((n {. D0) ,. ((-n) {. D1))  NB. assemble result
+  elseif. do.
+    ((2 # n) $ 1) ; y
+  end.
 )
-
-pttrfl=: 3 : 0
-  'd e'=. (diag ; (_1&diag)) y
-  'd e'=. _2 {. pttrfliter ^: (#e) (e ; (soris e) ; (}. d) ; ({. d) ; a:)
-  L1=. (e;_1) setdiag idmat $ y
-  D=. diagmat d
-  L1 ; D
-)
-
-NB. используем готовый квадрат модуля e на входе, две операции деления, сшитые векторы
-pttrfl2iter=: ((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/
-
-pttrfl2=: 3 : 0
-  'd e'=. (diag ; (_1&diag)) y
-  'e d'=. |: _1 {:: pttrfl2iter ^: (#e) (e ((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) d)
-  L1=. ((}. e);_1) setdiag idmat $ y
-  D=. diagmat d
-  L1 ; D
-)
-
-pttrfl3=: (((setdiag (idmat@$))~ (_1;~(}.@:({."1)))) ; (diagmat@:({:"1)@])) (1 {:: ((((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: ((# @ (0 & {::))`(((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) & >/))) @ ((_1&diag) ; diag))
 
 NB. =========================================================
 NB. Test suite

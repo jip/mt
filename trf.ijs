@@ -70,7 +70,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFNB=: 32   NB. block size limit
+TRFNB=: 32  NB. block size limit
 
 NB. ---------------------------------------------------------
 
@@ -254,10 +254,10 @@ getrfpl1ustepc=: 3 : 0
   p ; pfx ; sfxL ; sfxR
 )
 
-NB. (-: (clean@((/: @ (0&({::))) { ((trl1 mp tru)@(1&({::))))@getrfpl1ua)) A
+NB. (-: (clean@((/: @ (0&({::))) C. ((trl1 mp tru)@(1&({::))))@getrfpl1ua)) A
 NB. 'ip L1U'=. getrfpl1ua A
 
-getrfpl1uc=: getf2pl1uc`(((0&{),((,&.>)/@(1 2&{))) @ (getrfpl1ustepc ^: ((>.@(TRFNB %~ (<./@$)))`((i.@#);(0&{.);(_ 0 {. ]);]))))@.(TRFNB<(<./@$))
+getrfpl1uc=: getf2pl1uc`(((0&{),((,&.>)/@(1 2&{))) @ (getrfpl1ustepc ^: ((>.@(TRFNB %~ (<./@$)))`(((i.0)"_);(0&{.);(_ 0 {. ]);]))))@.(TRFNB<(<./@$))
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -278,6 +278,26 @@ getrfpl1ud=: 3 : 0
     'pib Afbb'=. getrfpl1ud y ((- (mp & Afba)) & (k & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
     dpib=. (i. k) , (k + pib)                                   NB. apply 2nd block's permutation to 1st block
     (dpib C. pia) ; ((dpib C. Afa) ,. (Afba , Afbb))            NB. assemble solution
+  end.
+)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+getrfpl1ue=: 3 : 0
+  'm n'=. sh=. $ y
+  if. 1 = n do.
+    jp=. iofmaxm y
+    y=. ((] 0:} %) (0&({,))) jp laswp y                         NB. permute single column (row), scale by head, keep head unscaled
+    jp ; y
+  elseif. 0 e. sh do.
+    (i. 0) ; y
+  elseif. do.
+    k=. m (<. >.@-:) n
+    'pia Afa'=. getrfpl1ue k {."1 y                             NB. factorize 1st block recursively
+    y=. pia laswp k }."1 y                                      NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
+    Afba=. Afa (trtrsl1x & (k & {.)) y                          NB. calculate 2nd block's 1st sub-block
+    'pib Afbb'=. getrfpl1ue y ((- (mp & Afba)) & (k & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
+    ((k {. pia) , pib) ; ((((k#0) , pib) laswp Afa) ,. (Afba , Afbb))            NB. assemble solution
   end.
 )
 
@@ -302,6 +322,74 @@ NB. - this is a right-looking version of algorithm
 
 NB. =========================================================
 NB. Test suite
+
+NB. ---------------------------------------------------------
+NB. tgetrf
+NB.
+NB. Description:
+NB.   Test general matrix TRF algorithms
+NB.
+NB. Syntax:
+NB.   tgetrf A
+NB. where
+NB.   A - m×n-matrix
+NB.
+NB. Note:
+NB. - NB. berr := ||P*L1*U - A ||/(ε*||A||*n)
+
+tgetrf=: 3 : 0
+  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y
+
+  ('getrfpl1u'  tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C. ((trl1 mp tru)@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrfpl1ua' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C. ((trl1 mp tru)@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrfpl1ub' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((_1 0&ms@$) {. {:) swp2fw ((trl1 mp tru)@}:)))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrfpl1uc' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) swp2fw ((trl1 mp tru)@(1 & {::))   ))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrfpl1ud' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C. ((trl1 mp tru)@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrfpl1ue' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) swp2fw ((trl1 mp tru)@(1 & {::))   ))) % (FP_EPS*((norm1*c)@[)))))) y
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. thetrf
+NB.
+NB. Description:
+NB.   Test Hermitian matrix TRF algorithms
+NB.
+NB. Syntax:
+NB.   thetrf A
+NB. where
+NB.   A - n×n-matrix, is used to produce Hermitian matrix
+
+thetrf=: 3 : 0
+  NB. A=. (+ ct) y                         NB. convert matrix type: ge -> he
+  NB. rcond=. (norm1 con getri) A
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testtrf
+NB.
+NB. Description:
+NB.   Adv. to make verb to test TRF algorithms by matrix of
+NB.   generator and shape given
+NB.
+NB. Syntax:
+NB.   vtest=. mkmat testtrf
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.            mat=. mkmat (m,n)
+NB.   vtest - monad to test algorithms by matrix mat; is
+NB.           called as:
+NB.             vtest (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.
+NB. Application:
+NB. - with limited random matrix values' amplitudes
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrf 150 100
+
+testtrf=: 1 : 'EMPTY [ (thetrf ^: (=/@$) [ tgetrf) @ u'
 
 NB. #########################################################
 NB. #########################################################
@@ -725,19 +813,7 @@ potrfl=: potrfl`{.`trtrslx`}.`(,.~)`( 0 append~) potrf
 NB. =========================================================
 NB. Test suite
 
-NB. name vextract ttrf A
-NB. TODO: forward error (getrf has two: for L and U?)
-
-ttrf=: 1 : 0
-:
-  't s'=. timespacex 'out=. ' , x , ' y'
-  be=. (((norm1 (y - u out)) % ({: $ y)) % (norm1 y)) % FP_EPS  NB. backward error
-  prn x ; ((_."_)`(norm1 con getri) @. (=/@$) y) ; be ; (i.0) ; t ; s
-)
-
-NB. tgetrf A
-
-tgetrf=: 3 : 0
+tgetrfnote=: 0 : 0
   y=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
 
   'getrfpl1u'       (((C.  ~ /:)~ (trl1 mp tru )) & > /)               ttrf y
@@ -746,14 +822,7 @@ tgetrf=: 3 : 0
   'getrful1p'       (((C."1~ /:)~ (tru  mp trl1)) & > /)               ttrf y
   'getrf_jlapack_' (((mp & >)/ @ (2 & {.)) invperm_jlapack_ (2 & {::)) ttrf y
   EMPTY
-)
 
-NB. thetrf A===============
-
-thetrfp=: 3 : 0
-  if. (i. 0) -: $ y do.
-    y=. (_1 1 0 16 _6 4 & (gemat j. gemat)) hemat y
-  end.
   'L T pi'=. hetrfpl y
   Asol=: (/: pi) pt (L mp T mp ct L)
   smoutput 'A' ; ($ y) ; y ; 'L' ; ($ L) ; L ; 'T' ; ($ T) ; T ; 'Asol' ; ($ Asol) ; Asol
@@ -762,43 +831,12 @@ thetrfp=: 3 : 0
   Asol=: (/: pi) pt (U mp T mp ct U)
   smoutput 'A' ; ($ y) ; y ; 'U' ; ($ U) ; U ; 'T' ; ($ T) ; T ; 'Asol' ; ($ Asol) ; Asol
   smoutput 'A -: Asol' ; (y -: Asol) ; '||A - Asol||/||A|| in 1-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & norm1) y) ; '||A - Asol||/||A|| in i-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & normi) y)
-)
-
-
-
-NB. tpotrf A
-
-tpotrf=: 3 : 0
-  y=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
 
   'potrfu'         ((mp ct) @ tru) ttrf y
   'potrfl'         ((mp ct) @ trl) ttrf y
   'potrf_jlapack_' ((mp ct) @ trl) ttrf y
   EMPTY
-)
 
-NB. ---------------------------------------------------------
-NB. testtrf
-NB. Adverb to test triangular factorization algorithms
-NB.
-NB. Syntax:
-NB.   mkge testtrf m,n
-NB. where
-NB.   m,n  - 2-vector of integers, shape of random matrices
-NB.          to test algorithms
-NB.   mkge - monadic verb to generate random non-singular
-NB.          general y-matrix (shape is taken from y)
-NB.
-NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   cocurrent 'mt'
-NB.   (_1 1 0 16 _6 4 & gemat) testtrf 500 500
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrf 500 500
-NB.
-NB. Notes:
-NB. - if m≠n then both thetrf and tpotrf are skipped
-
-testtrf=: 1 : 0
   (tgetrf @ u)                      y
   (thetrf @ (u hemat) @ {. ^: (=/)) y
   (tpotrf @ (u pomat) @ {. ^: (=/)) y

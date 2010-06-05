@@ -3,8 +3,7 @@ NB.
 NB. c         Columns in matrix
 NB. trace     Matrix trace
 NB. ct        Conjugate transpose
-NB. pt        Pertranspose
-NB. cpt       Conjugate pertranspose
+NB. cp        Conjugate pertranspose
 NB. sp        Symmetric permutation
 NB. p2P       Transform permutation vector to permutation
 NB.           matrix
@@ -211,15 +210,21 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Misc.
 
-c=: 1{$            NB. Columns in matrix
-trace=: +/ @ diag  NB. Matrix trace
-ct=: + @ |:        NB. Conjugate transpose
-pt=: |. @ |: @ |.  NB. Pertranspose
-cpt=: + @ pt       NB. Conjugate pertranspose
-sp=: [ C."1 C.     NB. Symmetric permutation
-p2P=: {=           NB. Transform permutation vector to permutation matrix
-ip2P=: {^:_1=      NB. Transform inversed permutation vector to permutation
-                   NB.   matrix, or permutation vector to inversed permutation matrix
+c=: 1{$                NB. Columns in matrix
+
+trace=: +/ @ diag      NB. Matrix trace
+
+ct=: + @      |:       NB. Conjugate transpose
+cp=: + @ |. @ |: @ |.  NB. Conjugate pertranspose
+
+sp=: [ C."1 C.         NB. Symmetric permutation
+
+p2P=:  {    =          NB. Transform permutation vector to
+                       NB.   permutation matrix
+ip2P=: {^:_1=          NB. Transform inversed permutation
+                       NB.   vector to permutation matrix, or
+                       NB.   permutation vector to inversed
+                       NB.   permutation matrix
 
 NB. ---------------------------------------------------------
 NB. icut

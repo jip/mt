@@ -182,33 +182,63 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB. 
 
-NB. lahefpl_mt_ ((i.5);(0 {."1 HE5);(5 ($!.0) 1);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
-NB. lahefpl_mt_ ((i.10);(0 {."1 HEci10);(10 ($!.0) 1);(9 # 0);(0 ({,) HEci10);(i.0);HEci10;(1 {."1 HEci10);(9 # 0);((< (<0);0) { HEci10))
+NB. XXX lahefpl_mt_ ((i.5);(0 {."1 HE5);(5 ($!.0) 1);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
+NB. XXX lahefpl_mt_ ((i.10);(0 {."1 HEci10);(10 ($!.0) 1);(9 # 0);(0 ({,) HEci10);(i.0);HEci10;(1 {."1 HEci10);(9 # 0);((< (<0);0) { HEci10))
 
-lahefpl=: (3 : 0) ^: (TRFNB<.(#@(3 & {::)))
+NB. lahefplo_mt_ ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
+NB. lahefplo_mt_ ((i.10);(10 1 ($!.0) 1);(9 # 0);(9 # 0);(0 ({,) HEci10);(i.0);HEci10;(1 {."1 HEci10);(9 # 0);((< (<0);0) { HEci10))
+
+NB. lahefplo=: (3 : 0) ^: ((<:TRFNB)<.(#@(2 & {::)))
+NB.   'ip L1 l0 l1 t0 t1 A H h0 h1'=. y
+NB.   'n j'=. $ L1
+NB.   l1=. h1 - l0 * ({: t0)
+NB.   q=. liofmax l1
+NB.   dip0=. 0 lios2cp q
+NB.   dip=. j (+ &. >) dip0
+NB.   l0=. dip0 C. l0
+NB.   l1=. dip0 C. l1
+NB.   ip=. dip C. ip
+NB.   L1=. dip C. L1
+NB.   H=. dip C. H
+NB.   A=. dip sp A
+NB.   t01=. + t10=. {. l1
+NB.   l1=. l1 % t10
+NB.   h0=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j { L1)
+NB.   L1=. L1 stitchrb l1
+NB.   H=. H stitchrb (t01 , h0)
+NB.   h1=. h0 - l0 * t01
+NB.   t11=. {. h1
+NB.   t0=. t0 , t11
+NB.   t1=. t1 , t01
+NB.   ip ; L1 ; (}. l1) ; l0 ; t0 ; t1 ; A ; H ; (}. h0) ; (}. h1)
+NB. )
+
+NB. lahefpl_mt_ ((i.5);(0 {."1 HE5);(5 ($!.0) 1);(,0);(0 ({,) HE5);(i.0);HE5;(0 {."1 HE5);({."1 HE5);((< (<0);0) { HE5))
+NB. lahefpl_mt_ ((i.10);(0 {."1 HEci10);(10 ($!.0) 1);(,0);(0 ({,) HEci10);(i.0);HEci10;(0 {."1 HEci10);({."1 HEci10);((< (<0);0) { HEci10))
+
+lahefpl=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
   'ip L1 l0 l1 t0 t1 A H h0 h1'=. y
   L1=. L1 stitchrb l0
   l0=. }. l0
   'n j'=. $ L1
   l1=. h1 - l0 * ({: t0)
-  q=. liofmax l1
-  dip0=. 0 lios2cp q
-  dip=. j (+ &. >) dip0
-  l0=. dip0 C. l0
-  l1=. dip0 C. l1
-  ip=. dip C. ip
-  L1=. dip C. L1
-  H=. dip C. H
-  A=. dip sp A
-  t01=. + t10=. {. l1
-  l1=. l1 % t10
-  h0=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j { L1)
-  H=. H stitchrb (t01 , h0)
+  H=. H stitchrb h0                NB. h0 instead of (({: t1) , h0)
+  dip0=. < 0 , ((i.>./)@soris) l1  NB. non-standard cycle permutation!
+  dip=. j (+ &. >) dip0            NB. non-standard cycle permutation!
+  ip=. dip (C. :: ]) ip
+  L1=. dip (C. :: ]) L1
+  l0=. dip0 (C. :: ]) l0
+  l1=. dip0 (C. :: ]) l1
+  t01=. + t10=. (0&{ :: ]) l1
+  l1=. l1 % t10                    NB. 1 at head is not guaranteed!
+  A=. dip (sp :: ]) A
+  H=. dip (C. :: ]) H
+  h0=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j ({ :: 0:) L1)  NB. if j is n then use 0: instead of (j{L1)
   h1=. h0 - l0 * t01
-  t11=. {. h1
+  t11=. 9 o. 0 ({ :: ]) h1         NB. CHECKME: is Re() necessary?; if h1 is (i.0) then use h1 instead of ({.h1)
   t0=. t0 , t11
   t1=. t1 , t01
-  ip ; L1 ; l1 ; l0 ; t0 ; t1 ; A ; H ; (}. h0) ; (}. h1)
+  ip ; L1 ; l1 ; l0 ; t0 ; t1 ; A ; H ; h0 ; (}. h1)
 )
 
 NB. 'ip L1 T'=. hetrfpl A
@@ -220,24 +250,41 @@ NB. ((((] dhs2lios (_1,-))/@$) ({,) ]) L1i) hetf2pl_mt_ (((_1 ({,) Ti) , hi) (< 
 hetrfpl=: 3 : 0
   n=. # y
   ip=. i. n
-  L1=. 0 {."1 y
-  t0=. 0 ({,) y
   t1=. i. 0
-  h1i=. (< (<0);0) { y
+  L1=. 0 {."1 y
   l0i=. n ($!.0) 1
-  l1i=. h0i=. }. l0i                             NB. (<: n) # 0
+  t0=. 0 ({,) y
   for_k. n (] dhs2lios (0,(>.@%))) TRFNB do.
-    'ipi L1i l0i l1i t0i t1i y Hi h0i h1i'=. (lahefpl dbg 'lahefpl') ((i.#y);(0 {."1 y);l0i;l1i;({:t0);(i.0);y;(,.({:t0),h1i);h0i;h1i)
-    dip=. (i.k),(k+ipi)
-    ip=. dip (C. dbg 'C.ip') ip
-    L1=. (dip (C. dbg 'C.L1') L1) (stitchrb dbg 'L1 stitchb L1i') L1i
-    t0=. t0 (, dbg 't0') (}. t0i)
-    t1=. t1 (, dbg 't1') t1i
-    y=. ((2 # TRFNB) }. y) (- dbg 'Aupd') ((Hi ((((mp ct) dbg 'mpct')&(TRFNB&}.)) dbg 'Hi*L1i') L1i) (+ dbg '+') ((l0i (* dbg '*') {: t1i) (*/ dbg '*/') l1i))
+    'ipi L1i l0i l1i t0i t1i y Hi h0i h1i'=. (lahefpl dbg 'lahefpl') ((i. # y);(0 {."1 y);l0i;(,0);({:t0);(i.0);y;(0 {."1 y);({."1 y);((< (<0);0) { y))
+    dip=. k (i.@[ , +) ipi         NB. force permutation to act on tail part only
+    ip=. dip C. ip
+    L1=. (dip C. L1) stitchrb L1i
+NB.    l0i=. 1 (0}) l0i            NB. to guarantee 1 at head
+    t0=. t0 , (}. t0i)
+    t1=. t1 , t1i
+    y=. ((2 # TRFNB) }. y) - ((Hi ((((mp ct) dbg 'mpct') &(TRFNB&}.)) dbg 'mpct&NB}.') L1i) + ((l1i * {: t1i) */ + l0i))
   end.
-  T=. ((+t1);_1) setdiag (t1;1) setdiag (t0;0) (2 # n) $ 0
+  T=. ((+t1);_1) setdiag (t1;1) setdiag (t0;0) setdiag (2 # n) $ 0
   ip ; L1 ; T
 )
+NB. lahefpl ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
+NB.   'ip L1 l0 l1 t0 t1 A H h0 h1'=. y
+NB.    lahefpl_mt_ ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
+NB. ┌─────────┬─────────────────┬┬────┬───────────────────┬───────────────┬─────────────────────────────┬──────────────────────────┬┬┐
+NB. │0 1 3 4 2│1    0   0    0 0││_0.8│1.4 1.4 1.6 1.4 0.6│0.4 0.3 0.8 0.3│  1.4   0.4  0.24   0.2 _0.28│  1.4   0.4    0    0    0│││
+NB. │         │0    1   0    0 0││    │                   │               │  0.4   1.4  1.14  0.97 _0.71│  0.4   1.4  0.3    0    0│││
+NB. │         │0  0.6   1    0 0││    │                   │               │ 0.24  1.14 2.464 2.972 0.164│ 0.24  1.14 1.78  0.8    0│││
+NB. │         │0  0.5 0.9    1 0││    │                   │               │  0.2  0.97 2.972 4.756 0.076│  0.2  0.97 2.39 2.12  0.3│││
+NB. │         │0 _0.7 0.9 _0.8 1││    │                   │               │_0.28 _0.71 0.164 0.076 1.468│_0.28 _0.71 0.59 _0.1 0.36│││
+NB. └─────────┴─────────────────┴┴────┴───────────────────┴───────────────┴─────────────────────────────┴──────────────────────────┴┴┘
+NB.    lahefpl_mt_ ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
+NB. ┌─────────┬──────────┬───────┬────────────┬───────────┬───────┬─────────────────────────────┬────────────────┬─────────┬────────┐
+NB. │0 1 3 2 4│1    0   0│0.9 0.9│0.6 _0.7 0.5│1.4 1.4 1.6│0.4 0.3│  1.4   0.4  0.24 _0.28   0.2│  1.4   0.4    0│0.59 2.39│0.8 2.24│
+NB. │         │0    1   0│       │            │           │       │  0.4   1.4  1.14 _0.71  0.97│  0.4   1.4  0.3│         │        │
+NB. │         │0  0.6   1│       │            │           │       │ 0.24  1.14 2.464 0.164 2.972│ 0.24  1.14 1.78│         │        │
+NB. │         │0 _0.7 0.9│       │            │           │       │_0.28 _0.71 0.164 1.468 0.076│_0.28 _0.71 0.59│         │        │
+NB. │         │0  0.5 0.9│       │            │           │       │  0.2  0.97 2.972 0.076 4.756│  0.2  0.97 2.39│         │        │
+NB. └─────────┴──────────┴───────┴────────────┴───────────┴───────┴─────────────────────────────┴────────────────┴─────────┴────────┘
 
 NB. ---------------------------------------------------------
 NB. hetf2pu
@@ -284,10 +331,10 @@ hetf2pu=: 3 : 0
     lum=. ((>:j) ([ , -) n) {. U1  NB. U1[0:j,j+1:n-1]
     v=. a - lum mp h               NB. v[0:j]=A[0:j,j+1]-U1[0:j,j+1:n-1]*H[j+1:n-1,j+1]=U1[0:j,j]*T[j,j+1] non-pivoted yet
     q=. liolmax v                  NB. IO pivot from tail
-    v=. (j lios2cp q) C. v         NB. v[_1]↔v[q]
-    dip=. q lios2cp j              NB. any[j]↔any[q]
-    y=. dip sp y                   NB. A[j,0:j]↔A[q,0:j], A[0:j,j]↔A[0:j,q]
-    ip=. dip C. ip                 NB. ip[j]↔ip[q]
+    dip=. < q , j                  NB. any[j]↔any[q], non-standard cycle permutation!
+    v=. dip (C. :: ]) v            NB. v[_1]↔v[q]
+    y=. dip (sp :: ]) y            NB. A[j,0:j]↔A[q,0:j], A[0:j,j]↔A[0:j,q]
+    ip=. dip (C. :: ]) ip          NB. ip[j]↔ip[q]
     to=. {: v                      NB. T[j,j+1]
     lu=. q { lum                   NB. U1[j,j+1:n-1] after pivoting
     luecto=. to * + {. lu          NB. conj(U1[j,j+1])*T[j,j+1]
@@ -345,9 +392,9 @@ getrflu1p=: 3 : 0
   if. 0 e. sh do.
     (i. n) ; y
   elseif. 1=m do.
-    dip=. 0 lios2cp liofmax {. y
-    ip=. dip C. i. n
-    y=. ((] 0:} %) (0&({,))) dip (C."1) y                          NB. permute single row, scale by head, keep head unscaled
+    dip=. < 0 , liofmax {. y                                       NB. non-standard cycle permutation!
+    ip=. dip (C. :: ]) i. n
+    y=. ((] 0:} %) (0&({,))) dip ((C."1) :: ]) y                   NB. permute single row, scale by head, keep head unscaled
     ip ; y
   elseif. do.
     k=. n (<. >.@-:) m
@@ -404,9 +451,9 @@ getrfpl1u=: 3 : 0
   if. 0 e. sh do.
     (i. m) ; y
   elseif. 1 = n do.
-    dip=. 0 lios2cp liofmax y
-    ip=. dip C. i. m
-    y=. ((] 0:} %) (0&({,))) dip C. y                          NB. permute single column, scale by head, keep head unscaled
+    dip=. < 0 , liofmax y                                      NB. non-standard cycle permutation!
+    ip=. dip (C. :: ]) i. m
+    y=. ((] 0:} %) (0&({,))) dip (C. :: ]) y                   NB. permute single column, scale by head, keep head unscaled
     ip ; y
   elseif. do.
     k=. m (<. >.@-:) n
@@ -460,9 +507,9 @@ getrfpu1l=: 3 : 0
   if. 0 e. sh do.
     (i. m) ; y
   elseif. 1 = n do.
-    dip=. (<:m) lios2cp liolmax y
-    ip=. dip C. i. m
-    y=. ((] _1:} %) (_1&({,))) dip C. y                           NB. permute single column, scale by head, keep head unscaled
+    dip=. < _1 , liolmax y                                        NB. non-standard cycle permutation!
+    ip=. dip (C. :: ]) i. m
+    y=. ((] _1:} %) (_1&({,))) dip (C. :: ]) y                    NB. permute single column, scale by head, keep head unscaled
     ip ; y
   elseif. do.
     k=. m (<. >.@-:) n
@@ -516,9 +563,9 @@ getrful1p=: 3 : 0
   if. 0 e. sh do.
     (i. n) ; y
   elseif. 1 = m do.
-    dip=. (<:n) lios2cp liolmax {. y
-    ip=. dip C. i. n
-    y=. ((] _1:} %) (_1&({,))) dip C."1 y                             NB. permute single row, scale by head, keep head unscaled
+    dip=. < _1 , liolmax {. y                                         NB. non-standard cycle permutation!
+    ip=. dip (C. :: ]) i. n
+    y=. ((] _1:} %) (_1&({,))) dip (C."1 :: ]) y                      NB. permute single row, scale by head, keep head unscaled
     ip ; y
   elseif. do.
     k=. n (<. >.@-:) m
@@ -965,38 +1012,22 @@ testtrf=: 1 : 'EMPTY_mt_ [ (((testpttrf_mt_ @ (u ptmat_mt_)) [ (testpotrf_mt_ @ 
 
 
 
-NB.    ] L1=. 1 0 0 0 0 (< a: ; 0) } trl1_mt_ 0.1 * j./ _8 + ? 2 5 5 $ 18
-NB. 1       0        0        0 0
-NB. 0       1        0        0 0
-NB. 0  0j_0.2        1        0 0
-NB. 0     0.9 _0.5j0.7        1 0
-NB. 0 0.9j0.1 _0.4j0.8 _0.4j0.2 1
-NB.    | L1
-NB. 1        0        0        0 0
-NB. 0        1        0        0 0
-NB. 0      0.2        1        0 0
-NB. 0      0.9 0.860233        1 0
-NB. 0 0.905539 0.894427 0.447214 1
-NB.    ] T=. (+ ct_mt_) bdlpick_mt_ trl_mt_ 0.1 * j./ >: ? 2 5 5 $ 9
-NB.     1.6 0.5j_0.9        0        0        0
-NB. 0.5j0.9      0.2 0.6j_0.5        0        0
-NB.       0  0.6j0.5      1.6 0.7j_0.6        0
-NB.       0        0  0.7j0.6      0.6 0.3j_0.8
-NB.       0        0        0  0.3j0.8      0.8
-NB.    ip=. 0 1 3 4 2
-NB.    P=. ip2P_mt_ ip
-NB.    ] HE5=. clean P mp L1 mp T mp (ct_mt_ L1) mp |: P
-NB.       1.6   0.5j_0.9   0.36j_0.86    0.18j0.1   0.45j_0.81
-NB.   0.5j0.9        0.2   _0.46j_0.3   0.6j_0.46  _0.47j_0.17
-NB. 0.36j0.86  _0.46j0.3        1.508 _0.51j0.698   0.624j1.91
-NB. 0.18j_0.1   0.6j0.46 _0.51j_0.698       1.408 0.406j_1.176
-NB. 0.45j0.81 _0.47j0.17  0.624j_1.91 0.406j1.176        0.916
-NB.    hetf2plo_mt_ HE5
-NB. ┌─────────┬─────────────────────────────┬───────────────────────────────────────────┐
-NB. │0 1 3 4 2│1       0        0        0 0│    1.6 0.5j_0.9        0        0        0│
-NB. │         │0       1        0        0 0│0.5j0.9      0.2 0.6j_0.5        0        0│
-NB. │         │0  0j_0.2        1        0 0│      0  0.6j0.5      1.6 0.7j_0.6        0│
-NB. │         │0     0.9 _0.5j0.7        1 0│      0        0  0.7j0.6      0.6 0.3j_0.8│
-NB. │         │0 0.9j0.1 _0.4j0.8 _0.4j0.2 1│      0        0        0  0.3j0.8      0.8│
-NB. └─────────┴─────────────────────────────┴───────────────────────────────────────────┘
-NB.    1 0 0 0 0 hetf2plb_mt_ HE5
+
+
+NB. L1=. trl1_mt_ 0 (< a: ; 0) } 0.1 * _8 + ? 5 5 $ 18
+NB. T=. (+ ct_mt_) bdlpick_mt_ trl_mt_ 0.1 * >: ? 5 5 $ 9
+NB. ip=. (?@! A. i.) 5
+NB. HE5=. clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
+
+NB. L1=. trl1_mt_ 0 (< a: ; 0) } 0.1 * _8 + ? 6 6 $ 18
+NB. T=. (+ ct_mt_) bdlpick_mt_ trl_mt_ 0.1 * >: ? 6 6 $ 9
+NB. ip=. (?@!@<: A. i.) 6                                  NB. <: to force ip[0]==0
+NB. HE6=. clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
+
+NB. L1=. trl1_mt_ 0 (< a: ; 0) } j./ 0.1 * _7 + ? 2 10 10 $ 14
+NB. T=. (+ ct_mt_) bdlpick_mt_ trl_mt_ j./ 0.1 * >: ? 2 10 10 $ 9
+NB. ip=. (?@!@<: A. i.) 10
+NB. HE10=. clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
+NB. ip ; L1 ; (i.0) ; (i.0) ; (diag_mt_ T) ; (1 diag_mt_ T) ; (ip sp_mt_ HE10) ; (L1 mp T) ; (i.0) ; (i.0)
+NB. clean lahefpl_mt_ ((i.10);(0 {."1 HE10);(10 ($!.0) 1);(,0);(0 ({,) HE10);(i.0);HE10;(0 {."1 HE10);({."1 HE10);((< (<0);0) { HE10))
+NB. clean hetrfpl_mt_ HE10

@@ -4,7 +4,6 @@ NB. liofmax    lIO 1st element with maximum sum of real and
 NB.            imagine parts' modules
 NB. liolmax    lIO last element with maximum sum of real and
 NB.            imagine parts' modules
-NB. lios2cp    Convert lIOS to cycle permutation
 NB. th2lios    Generate lIOS from tail and head
 NB. dhs2lios   Generate lIOS from head, size and optional
 NB.            delta
@@ -57,25 +56,6 @@ liofmax=: (i.>./) @ sorim
 
 NB. lIO last element e with max(|Re(e)|+|Im(e)|) from list y
 liolmax=: (i:>./) @ sorim
-
-NB. ---------------------------------------------------------
-NB. lios2cp
-NB.
-NB. Description:
-NB.   Convert lIOS to cycle permutation
-NB.
-NB. Syntax:
-NB.   cp=. io0 lios2cp io1
-NB. where
-NB.   io0,io1 - lIOS
-NB.   cp      - cycle permutation
-NB.
-NB. References:
-NB. [1] [Jprogramming] Swapping array elements
-NB.     Roger Hui, Mon May 11 06:23:07 HKT 2009
-NB.     http://www.jsoftware.com/pipermail/programming/2009-May/014682.html
-
-lios2cp=: < @ ~. @ ,
 
 NB. ---------------------------------------------------------
 NB. th2lios

@@ -31,7 +31,9 @@ NB.   http://www.netlib.org/lapack/lug/node51.html
 NB.   http://www.netlib.org/lapack/lug/node70.html
 NB.   http://www.netlib.org/lapack/lug/node94.html
 NB.
-NB. 2008-02-29 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. Version: 1.0.0 2008-03-30
+NB. Copyright: Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. License: GPL v3 or later
 
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 script_z_ '~system/main/numeric.ijs'            NB. clean
@@ -40,7 +42,7 @@ require '~user/projects/lapack/lapack.ijs'      NB. '~addons/math/lapack/lapack.
 require '~user/projects/lapack/geev.ijs'        NB. need_jlapack_ 'geev gesvd gesvx'
 require '~user/projects/lapack/gesvd.ijs'       NB. (line above makes it excessive)
 require '~user/projects/lapack/gesvx.ijs'       NB. -//-
-require '~user/projects/tau/util.ijs'           NB. powsm rndmat rndmat_neig
+require '~user/projects/tau/util.ijs'           NB. powsm rndmat rndmatne
 
 coclass 'tau'
 
@@ -174,10 +176,10 @@ NB. makeAt
 NB. Solve equation M*A(t)=L(t) for A(t)
 NB.
 NB. Syntax:
-NB.   At=. NxPMV makeAt ts
+NB.   At=. NxWMV makeAt ts
 NB. where:
 NB.   ts    > 0, sample time
-NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
+NB.   NxWMV - output of prexpm, being (Nx;W;M;V)
 NB.   At    - Ng-vector, solution A(t) of equation M*A(t)=L(t)
 NB.   Ng    = #G , table G's minimal polynom's order
 
@@ -189,7 +191,7 @@ NB. prexpm
 NB. Prepare time-invariant parts for expm
 NB.
 NB. Syntax:
-NB.   'Nx P M V'=. prexpm A;B[;trash]
+NB.   'Nx W M V'=. prexpm A;B[;trash]
 NB. where:
 NB.   A - Nx-by-Nx table, state matrix of LTI system, should
 NB.       be stable, i.e. all eigenvalues of A must have
@@ -199,7 +201,7 @@ NB.   V - (#vm)-by-3 table, prepared eigenvalues of G, output
 NB.       of prepV
 NB.   M - Ng-by-Ng table, matrix for equation M*A(t)=L(t),
 NB.       output of makeLtM
-NB.   P - Ng-by-Ng-by-Ng table, powers 0..(Ng-1) of G,
+NB.   W - Ng-by-Ng-by-Ng table, powers 0..(Ng-1) of G,
 NB.       output of powsm
 NB.   G - Ng-by-Ng table, augmented LTI system, output of
 NB.       makeG
@@ -219,13 +221,13 @@ NB. for sampe time ts via Lagrange-Sylvester interpolation
 NB. polynome [1, p. 88]
 NB.
 NB. Syntax:
-NB.   'Phi Gamma'=. NxPMV expm ts
+NB.   'Phi Gamma'=. NxWMV expm ts
 NB. where:
-NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
+NB.   NxWMV - output of prexpm, being (Nx;W;M;V)
 NB.   ts    > 0, sample time
 NB.   Phi   - Nx-by-Nx table, matrix exponent
 NB.   Gamma - Nx-by-Nu table, Cauchy intergal
-NB.   Nu    = (#P)-Nx
+NB.   Nu    = (#W)-Nx
 NB.
 NB. Applications:
 NB.   'Phi Gamma'=. (A;B) ((prexpm @ [) expm ]) ts
@@ -242,17 +244,17 @@ NB. Syntax: is_passed=. texpm A;B;ts
 
 texpm=: 3 : 0
 'A B ts'=. y
-P=. 0 {:: (prexpm A;B) expm ts
+W=. 0 {:: (prexpm A;B) expm ts
 eigA=. /:~ ^ ts * (2 geev_jlapack_ A)
-eigP=. /:~ (2 geev_jlapack_ P)
-err=. clean %: +/ *: | eigA - eigP
+eigW=. /:~ (2 geev_jlapack_ W)
+err=. clean %: +/ *: | eigA - eigW
 0 = err
 )
 
 NB. Syntax: testexpm ''
 
 testexpm=: 3 : 0
-'A0 A1 A2 A3'=. (rndmat_neig &. >) 4;6;8;10
+'A0 A1 A2 A3'=. (rndmatne &. >) 4;6;8;10
 'B0 B1 B2 B3'=. (rndmat &. >) 4 3;6 5;8 7;10 9
 'ts0 ts1 ts2 ts3'=. 0.01 * >: ? 4 $ 100
 texpm &> (< A0;B0;ts0) , (< A1;B1;ts1) , (< A2;B2;ts2) , (< A3;B3;ts3)

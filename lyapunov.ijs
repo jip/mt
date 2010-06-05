@@ -17,8 +17,11 @@ NB.   http://www.netlib.org/lapack/lug/node50.html
 NB.   http://www.netlib.org/lapack/lug/node51.html
 NB.   http://www.netlib.org/lapack/lug/node70.html
 NB.   http://www.netlib.org/lapack/lug/node94.html
+NB. - equation pairs simultaneous solver
 NB.
-NB. 2008-03-30 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. Version: 1.0.0 2008-03-30
+NB. Copyright: Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. License: GPL v3 or later
 
 script_z_ '~system/packages/math/matutil.ijs'  NB. diag
 require '~user/projects/lapack/lapack.ijs'      NB. -> require '~addons/math/lapack/lapack.ijs'
@@ -28,39 +31,42 @@ require '~user/projects/lapack/geev.ijs'        NB. -> /dev/null
 require '~user/projects/lapack/gerqf.ijs'       NB. -> /dev/null
 require '~user/projects/lapack/potrf.ijs'       NB. -> /dev/null
 require '~user/projects/lapack/trtrs.ijs'       NB. -> /dev/null
-require '~user/projects/tau/util.ijs'           NB. shiftdiag rndmat rndmat_neig
+require '~user/projects/tau/util.ijs'           NB. ht shiftdiag rndmat rndmatne
 
 coclass 'tau'
 
 NB. =========================================================
-NB. Utilities
+NB. Local utilities
 
-split=: (}:;{:) &. >                    NB. split under box at last item
-N2=: [: %: [: +/ [: *: |                NB. 2-norm of vector
+split=: (}:;{:) &. >       NB. split under box at last item
+N2=: %: @ (+/) @: *: @: |  NB. 2-norm of vector
 
 NB. ---------------------------------------------------------
 NB. sorzhouiter
-NB. Execute single iteration # (n-j) of Sorensen-Zhou algorithm
+NB. Execute single iteration # (N-j) of Sorensen-Zhou
+NB. algorithm
 NB.
 NB. Syntax:
 NB.   'B1 ijupd Uupd'=. R sorzhouiter B ; ij ; U
 NB. where:
-NB.   R     - N-by-N upper triangular stable matrix, i.e. all eigenvalues of R
-NB.           must have negative real parts
+NB.   R     - N-by-N upper triangular stable matrix, i.e. all
+NB.           eigenvalues of R must have negative real parts
 NB.   B     - N-by-M matrix, updated at step #j
 NB.   ij    - i. j
-NB.   U     - N-by-N upper triangular matrix with all but first j columns
-NB.           updated
-NB.   B1    - (N-1)-by-M matrix B without last row and updated after step #j
+NB.   U     - N-by-N upper triangular matrix with all but
+NB.           first j columns updated
+NB.   B1    - (N-1)-by-M matrix B without last row and
+NB.           updated after step #j
 NB.   ijupd - }: ij
 NB.   Uupd  - N-by-N matrix U with updated column #j
 NB.   N     > 0
 NB.   M     > 0
 NB.
 NB. Reference:
-NB.   Danny C. Sorensen and Yunkai Zhou, "Direct methods for matrix
-NB.   Sylvester and Lyapunov equations", J. Appl. Math, vol. 2003, no. 6,
-NB.   pp. 277-303, 2003. doi:10.1155/S1110757X03212055
+NB.   Danny C. Sorensen and Yunkai Zhou, "Direct methods for
+NB.   matrix Sylvester and Lyapunov equations", J. Appl.
+NB.   Math, vol. 2003, no. 6, pp. 277-303, 2003.
+NB.   doi:10.1155/S1110757X03212055
 
 sorzhouiter=: 4 : 0
   'B1 bh ij j'=. ; split }: y   NB. split B on B1;bh at last row and ij on ijupd;j at last atom
@@ -98,39 +104,31 @@ NB.   U=. A lyapchol B
 NB.   U=. (R;Q) lyapchol B
 NB. where:
 NB.   A   - N-by-N stable matrix
-NB.   R,Q - N-by-N matrices from non-real Schur factorization:
-NB.         Q*R*Q' = A
+NB.   R,Q - N-by-N matrices from non-real Schur
+NB.         factorization: Q*R*Q' = A
 NB.   B   - N-by-M matrix
 NB.   U   - N-by-N upper triangular matrix
 NB.   N  >= 0
 NB.   M  >= 0
+NB.
+NB. Applications:
+NB.   assert. -. 0 e. 0 > 9 o. 2 geev_jlapack_ A  NB. is A stable?
 NB.
 NB. Reference:
 NB.   Solution of stable continuous- or discrete-time Lyapunov equations
 NB.   (Cholesky factor), URL: http://www.slicot.org/shared/doc/SB03OD.html
 
 lyapchol=: 4 : 0
-  vmatrixorvector_jlapack_ y
   n=. # y
-  if. L. x do.
-    'Q R'=. x                               NB. Schur factorization Q*R*Q' = A
-    vsquare_jlapack_ Q
-    assert. n = # Q
-    assert. Q (-: &: $) R                   NB. R and Q shapes are match
-  else.
-    vsquare_jlapack_ x
-    assert. n = # x
-    'Q R'=. 13 gees_jlapack_ x              NB. Schur factorization Q*R*Q' = A
-  end.
-  assert. -. 0 e. 0 > 9 o. diag R           NB. A is stable
-  R1=. 8 gerqf_jlapack_ y                   NB. RQ factorization R1*P1=B
-  R2=. 8 gerqf_jlapack_ (h Q) mp R1         NB. RQ factorization R2*P2=Q'*R1
+  'Q R'=. (13 & gees_jlapack_ ^: (-. @ L.)) x  NB. Schur factorization Q*R*Q' = A
+  R1=. 8 gerqf_jlapack_ y                      NB. RQ factorization R1*P1=B
+  R2=. 8 gerqf_jlapack_ (ht Q) mp R1           NB. RQ factorization R2*P2=Q'*R1
 
   NB. solve triangular Luapunov equation directly for Cholesky factor V
   V=. 2 {:: R (sorzhouiter ^: n) R2 ; (i. n) ; ((2 $ n) $ 0)
 
-  R3=. 8 gerqf_jlapack_ Q mp V              NB. RQ factorization R3*P3=Q*V
-  R3=. (*"1 * @: diag) R3                   NB. negate columns having negative diagonal elements
+  R3=. 8 gerqf_jlapack_ Q mp V                 NB. RQ factorization R3*P3=Q*V
+  R3=. (*"1 * @: diag) R3                      NB. negate columns having negative diagonal elements
 NB. ---  smoutput 2 6 $ 'Q' ; 'R' ; 'R1' ; 'R2' ; 'V' ; 'R3' ; Q ; R ; R1 ; R2 ; V ; R3
   R3
 )
@@ -162,8 +160,8 @@ NB. Syntax: is_passed=. tlyapchol A;B
 tlyapchol=: 3 : 0
 'A B'=. y
 U=. A lyapchol B
-X=. (mp h) U
-err=. clean (A mp X) + (X (mp h) A) + ((mp h) B)
+X=. (mp ht) U
+err=. clean (A mp X) + (X (mp ht) A) + ((mp ht) B)
 (*./ ^: 2) 0 = err
 )
 
@@ -172,11 +170,11 @@ NB. Syntax: testlyapchol ''
 testlyapchol=: 3 : 0
 ma0=. 0 0 $ 0
 mb0=. 0 0 $ 0
-ma1=. rndmat_neig 4
+ma1=. rndmatne 4
 mb1=. ? 4 4 $ 10
-ma2=. rndmat_neig 10
+ma2=. rndmatne 10
 mb2=. ? 10 5 $ 10
-ma3=. rndmat_neig 100
+ma3=. rndmatne 100
 mb3=. ? 100 50 $ 10
 tlyapchol &> (<ma0;mb0) , (<ma1;mb1) , (<ma2;mb2) , (<ma3;mb3)
 )

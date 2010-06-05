@@ -130,55 +130,79 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:           Syntax:
-NB. trtrsux        U    * X = B      X=. A trtrsux B
-NB. trtrsutx       U^T  * X = B      X=. A trtrsutx B
-NB. trtrsuhx       U^H  * X = B      X=. A trtrsuhx B
-NB. trtrsu1x       U1   * X = B      X=. A trtrsu1x B
-NB. trtrsu1tx      U1^T * X = B      X=. A trtrsu1tx B
-NB. trtrsu1hx      U1^H * X = B      X=. A trtrsu1hx B
-NB. trtrslx        L    * X = B      X=. A trtrslx B
-NB. trtrsltx       L^T  * X = B      X=. A trtrsltx B
-NB. trtrslhx       L^H  * X = B      X=. A trtrslhx B
-NB. trtrsl1x       L1   * X = B      X=. A trtrsl1x B
-NB. trtrsltx       L1^T * X = B      X=. A trtrsl1tx B
-NB. trtrslhx       L1^H * X = B      X=. A trtrsl1hx B
+NB. trtrslx        L    * X = B      Xv=. A trtrslx Bv
+NB. trtrsl1x       L1   * X = B      Xv=. A trtrsl1x Bv
+NB. trtrsl1hx      L1^H * X = B      Xv=. A trtrsl1hx Bv
+NB. trtrsl1tx      L1^T * X = B      Xv=. A trtrsl1tx Bv
+NB. trtrslhx       L^H  * X = B      Xv=. A trtrslhx Bv
+NB. trtrsltx       L^T  * X = B      Xv=. A trtrsltx Bv
+NB. trtrsux        U    * X = B      Xv=. A trtrsux Bv
+NB. trtrsu1x       U1   * X = B      Xv=. A trtrsu1x Bv
+NB. trtrsu1hx      U1^H * X = B      Xv=. A trtrsu1hx Bv
+NB. trtrsu1tx      U1^T * X = B      Xv=. A trtrsu1tx Bv
+NB. trtrsuhx       U^H  * X = B      Xv=. A trtrsuhx Bv
+NB. trtrsutx       U^T  * X = B      Xv=. A trtrsutx Bv
+NB. trtrsxl        X * L    = B      Xh=. A trtrsxl Bh
+NB. trtrsxl1       X * L1   = B      Xh=. A trtrsxl1 Bh
+NB. trtrsxl1h      X * L1^H = B      Xh=. A trtrsxl1h Bh
+NB. trtrsxl1t      X * L1^T = B      Xh=. A trtrsxl1t Bh
+NB. trtrsxlh       X * L^H  = B      Xh=. A trtrsxlh Bh
+NB. trtrsxlt       X * L^T  = B      Xh=. A trtrsxlt Bh
+NB. trtrsxu        X * U    = B      Xh=. A trtrsxu Bh
+NB. trtrsxu1       X * U1   = B      Xh=. A trtrsxu1 Bh
+NB. trtrsxu1h      X * U1^H = B      Xh=. A trtrsxu1h Bh
+NB. trtrsxu1t      X * U1^T = B      Xh=. A trtrsxu1t Bh
+NB. trtrsxuh       X * U^H  = B      Xh=. A trtrsxuh Bh
+NB. trtrsxut       X * U^T  = B      Xh=. A trtrsxut Bh
 NB.
 NB. Description:
-NB.   solve triangular system
+NB.   Solve triangular system
 NB. where:
 NB.   A    - n×n-matrix, containing either U, U1, L or L1
-NB.   U    - n×n upper triangular matrix
-NB.   U1   - n×n unit upper triangular matrix (diagonal is
+NB.   U    - n×n-matrix, upper triangular
+NB.   U1   - n×n-matrix, unit upper triangular (diagonal is
 NB.          not saved)
-NB.   L    - n×n lower triangular matrix
-NB.   L1   - n×n unit lower triangular matrix (diagonal is
+NB.   L    - n×n-matrix, lower triangular
+NB.   L1   - n×n-matrix, unit lower triangular (diagonal is
 NB.          not saved)
-NB.   B    - n-vector or n×nrhs-matrix, the RHS
-NB.   X    - same shape as B, the solution
-NB.   n    ≥ 0
+NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
+NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
+NB.   Xv   - same shape as Bv, the solution
+NB.   Xh   - same shape as Bh, the solution
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
 NB. - opposite triangle is not referenced
 NB. - unit diagonal is not referenced
 
-trtrsux=:   trtrsux  `}.`{.` ,  `     mp      `(,~)`(% 0&({,)) trtrs
-trtrsutx=:  trtrsutx `{.`}.` ,  `(|:@(mp~ |:))` ,  `(% 0&({,)) trtrs
-trtrsuhx=:  trtrsuhx `{.`}.` ,  `(ct@(mp~ ct))` ,  `(% 0&({,)) trtrs
-trtrsu1x=:  trtrsu1x `}.`{.` ,  `     mp      `(,~)`[          trtrs
-trtrsu1tx=: trtrsu1tx`{.`}.` ,  `(|:@(mp~ |:))` ,  `[          trtrs
-trtrsu1hx=: trtrsu1hx`{.`}.` ,  `(ct@(mp~ ct))` ,  `[          trtrs
 trtrslx=:   trtrslx  `{.`}.`(,~)`     mp      ` ,  `(% 0&({,)) trtrs
-trtrsltx=:  trtrsltx `}.`{.`(,~)`(|:@(mp~ |:))`(,~)`(% 0&({,)) trtrs
-trtrslhx=:  trtrslhx `}.`{.`(,~)`(ct@(mp~ ct))`(,~)`(% 0&({,)) trtrs
-trtrsl1x=:  trtrsl1x `{.`}.`(,~)`     mp      ` ,  `[          trtrs
-trtrsl1tx=: trtrsl1tx`}.`{.`(,~)`(|:@(mp~ |:))`(,~)`[          trtrs
+NB. trtrsl1x
 trtrsl1hx=: trtrsl1hx`}.`{.`(,~)`(ct@(mp~ ct))`(,~)`[          trtrs
+trtrsl1tx=: trtrsl1tx`}.`{.`(,~)`(|:@(mp~ |:))`(,~)`[          trtrs
+trtrslhx=:  trtrslhx `}.`{.`(,~)`(ct@(mp~ ct))`(,~)`(% 0&({,)) trtrs
+trtrsltx=:  trtrsltx `}.`{.`(,~)`(|:@(mp~ |:))`(,~)`(% 0&({,)) trtrs
+NB. trtrsux
+NB. trtrsu1x
+trtrsu1hx=: trtrsu1hx`{.`}.` ,  `(ct@(mp~ ct))` ,  `[          trtrs
+trtrsu1tx=: trtrsu1tx`{.`}.` ,  `(|:@(mp~ |:))` ,  `[          trtrs
+trtrsuhx=:  trtrsuhx `{.`}.` ,  `(ct@(mp~ ct))` ,  `(% 0&({,)) trtrs
+NB. trtrsutx
+trtrsxl=:   |:@trtrsltx |:
+trtrsxl1=:  |:@trtrsl1tx |:
+trtrsxl1h=: |:@trtrsl1x |:
+trtrsxl1t=: ct@trtrsl1x ct
+trtrsxlh=:  |:@trtrslx |:
+trtrsxlt=:  ct@trtrslx ct
+trtrsxu=:   |:@trtrsutx |:
+trtrsxu1=:  |:@trtrsu1tx |:
+trtrsxu1h=: ct@trtrsu1x ct
+trtrsxu1t=: |:@trtrsu1x |:
+trtrsxuh=:  ct@trtrsux ct
+trtrsxut=:  |:@trtrsux |:
 
-NB. без обрезания Ui и Bi, индекс ч/з hds2ios
-NB. Xi1=. (L1 ; B) step Xi
-NB. X=. U trtrsl1x2 B
-trtrsl1x2=: (4 : 0) ^: (;`(#@])`(0 {. ]))
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+trtrsl1x=: (4 : 0) ^: (;`(#@])`(0 {. ]))
   'L1 B'=. x
   Xi=. y
   i=. # Xi
@@ -187,66 +211,67 @@ trtrsl1x2=: (4 : 0) ^: (;`(#@])`(0 {. ]))
   Xi , ((i { B) - (li mp Xi))
 )
 
-NB. без обрезания Ui и Bi, индекс ч/з hds2ios
-NB. Xi1=. (U ; B) step Xi
-NB. X=. U trtrsux2 B
-trtrsux2=: (4 : 0) ^: (;`(#@])`(0 {. ]))
+trtrsux=: (4 : 0) ^: (;`(#@])`(0 {. ]))
   'U B'=. x
   Xi=. y
   i=. # Xi
   n=. # U
-  i1n=. i * _1 - n
-  ui=. (hds2ios i1n,1,i) ({,) U
-  uii=. (<: i1n) ({,) U
+  j=. i * _1 - n
+  ui=. (hds2ios j,1,i) ({,) U
+  uii=. (<: j) ({,) U
   ((((_1-i) { B) - (ui mp Xi)) % uii) , Xi
 )
 
-NB. ---------------------------------------------------------
-NB. Verb:          Solves:           Syntax:
-NB. trtrsxu        X * U    = B      X=. A trtrsxu B
-NB. trtrsxut       X * U^T  = B      X=. A trtrsxut B
-NB. trtrsxuh       X * U^H  = B      X=. A trtrsxuh B
-NB. trtrsxu1       X * U1   = B      X=. A trtrsxu1 B
-NB. trtrsxu1t      X * U1^T = B      X=. A trtrsxu1t B
-NB. trtrsxu1h      X * U1^H = B      X=. A trtrsxu1h B
-NB. trtrsxl        X * L    = B      X=. A trtrsxl B
-NB. trtrsxlt       X * L^T  = B      X=. A trtrsxlt B
-NB. trtrsxlh       X * L^H  = B      X=. A trtrsxlh B
-NB. trtrsxl1       X * L1   = B      X=. A trtrsxl1 B
-NB. trtrsxl1t      X * L1^T = B      X=. A trtrsxl1t B
-NB. trtrsxl1h      X * L1^H = B      X=. A trtrsxl1h B
-NB.
-NB. Description:
-NB.   solve triangular system
-NB. where:
-NB.   A    - n×n-matrix, containing either U, U1, L or L1
-NB.   U    - n×n upper triangular matrix
-NB.   U1   - n×n unit upper triangular matrix (diagonal is
-NB.          not saved)
-NB.   L    - n×n lower triangular matrix
-NB.   L1   - n×n unit lower triangular matrix (diagonal is
-NB.          not saved)
-NB.   B    - n-vector or nrhs×n-matrix, the RHS
-NB.   X    - same shape as B, the solution
-NB.   n    ≥ 0
-NB.   nrhs ≥ 0
-NB.
-NB. Notes:
-NB. - opposite triangle is not referenced
-NB. - unit diagonal is not referenced
+trtrsu1x=: (4 : 0) ^: (;`(#@])`(0 {. ]))
+  'U B'=. x
+  Xi=. y
+  i=. # Xi
+  n=. # U
+  ui=. (hds2ios (i * _1 - n),1,i) ({,) U
+  (((_1-i) { B) - (ui mp Xi)) , Xi
+)
 
-trtrsxu=:   |:@trtrsutx |:
-trtrsxut=:  |:@trtrsux |:
-trtrsxuh=:  ct@trtrsux ct
-trtrsxu1=:  |:@trtrsu1tx |:
-trtrsxu1t=: |:@trtrsu1x |:
-trtrsxu1h=: ct@trtrsu1x ct
-trtrsxl=:   |:@trtrsltx |:
-trtrsxlt=:  |:@trtrslx |:
-trtrsxlt=:  ct@trtrslx ct
-trtrsxl1=:  |:@trtrsl1tx |:
-trtrsxl1t=: |:@trtrsl1x |:
-trtrsxl1t=: ct@trtrsl1x ct
+trtrsuhx=: (4 : 0) ^: (;`(#@])`(0 {. ]))
+  'U B'=. x
+  Xi=. y
+  i=. # Xi
+  n=. # U
+  ui=. (hds2ios i,n,i) ({,) U
+  uii=. (i * >: n) ({,) U
+  Xi , (((i { B) - ((+ ui) mp Xi)) % uii)
+)
+
+trtrsutx=: (4 : 0) ^: (;`(#@])`(0 {. ]))
+  'U B'=. x
+  Xi=. y
+  i=. # Xi
+  n=. # U
+  ui=. (hds2ios i,n,i) ({,) U
+  uii=. (i * >: n) ({,) U
+  Xi , (((i { B) - (ui mp Xi)) % uii)
+)
+
+trtrsxl=: (4 : 0) ^: (;`(c@])`(0 ({."1) ]))
+  'L B'=. x
+  Xi=. y
+  i=. c Xi
+  n=. # L
+  j=. _1 - i * >: n
+  li=. (hds2ios (j+n),n,i) ({,) L
+  lii=. j ({,) L
+  ((((_1-i) {"1 B) - (Xi mp li)) % lii) ,. Xi
+)
+
+trtrsxl12=: (4 : 0) ^: (;`(c@])`(0 ({."1) ]))
+  'L1 B'=. x
+  Xi=. y
+  i=. c Xi
+  n=. # L1
+  li=. (hds2ios i ((<:@] - (* >:)) , ,~) n) ({,) L1  NB. ((n-1)-i*(n+1)),n,i
+  (((_1-i) {"1 B) - (Xi mp li)) ,. Xi
+)
+
+trtrsxl13=: ((((_1-(c@])) {"1 (1 {:: [)) - (] mp ((hds2ios @ ((c@]) ((<:@] - (* >:)) , ,~) (# @ (0 {:: [)))) ({,) (0 {:: [)))) ,. ]) ^: (;`(c@])`(0 ({."1) ]))
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:              Syntax:

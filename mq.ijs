@@ -28,21 +28,21 @@ NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-06-01
-NB.
-NB. TODO:
-NB. - s/C/A/g
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
 
-arounddown=: 1 : '- m&|'  NB. adv. to round down by an integer constant
-
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-MQNB=: 3 NB. 32   NB. block size limit
+MQNB=: 32   NB. block size limit
+
+NB. ---------------------------------------------------------
+NB. Miscellaneous
+
+arounddown=: 1 : '- m&|'  NB. adv. to round down by an integer constant
 
 NB. ---------------------------------------------------------
 NB. Description:
@@ -88,25 +88,25 @@ NB.        tmp=. vtaui larfxxxx xfxCi
 NB.   3) combine tmp and either pfxC(i) or sfxC(i) to
 NB.      produce pfxC(i+1) and sfxC(i+1)
 
-unml2lnstep=: (0 {:: ]) ((,    1  _&rt)  ;  1  0&}.@])  (,;.0~ (1 _ ,:~ 2 #      #@(0&({::)))) larflcfr 1 {:: ]
-unml2lcstep=: (0 {:: ]) ((, ~ _1  _&rt)~ ;~_1  0&}.@[)  (,;.0~ (1 _ ,:~ 2 #      #@(0&({::)))) larflnfr 1 {:: ]
-unml2rnstep=: (0 {:: ]) ((,.~  _ _1&rt)~ ;~ 0 _1&}.@[)  (,;.0~ (1 _ ,:~ 2 #      c@(0&({::)))) larfrcfr 1 {:: ]
-unml2rcstep=: (0 {:: ]) ((,.   _  1&rt)  ;  0  1&}.@])  (,;.0~ (1 _ ,:~ 2 #      c@(0&({::)))) larfrnfr 1 {:: ]
+unml2lnstep=: (0 {:: ]) ((,    1  _&rt)  ;  }.   @])  (,;.0~ (1 _ ,:~ 2 #      #@(0&({::)))) larflcfr 1 {:: ]
+unml2lcstep=: (0 {:: ]) ((, ~ _1  _&rt)~ ;~ }:   @[)  (,;.0~ (1 _ ,:~ 2 #      #@(0&({::)))) larflnfr 1 {:: ]
+unml2rnstep=: (0 {:: ]) ((,.~  _ _1&rt)~ ;~(}:"1)@[)  (,;.0~ (1 _ ,:~ 2 #      c@(0&({::)))) larfrcfr 1 {:: ]
+unml2rcstep=: (0 {:: ]) ((,.   _  1&rt)  ; (}."1)@])  (,;.0~ (1 _ ,:~ 2 #      c@(0&({::)))) larfrnfr 1 {:: ]
 
-unm2llnstep=: (1 {:: ]) ((,    1  _&rt)  ;  1  0&}.@])~ (,;.0~ (_ 1 ,:~ 2 # _1 - #@(1&({::)))) larflnbc 0 {:: ]
-unm2llcstep=: (1 {:: ]) ((, ~ _1  _&rt)~ ;~_1  0&}.@[)~ (,;.0~ (_ 1 ,:~ 2 # _1 - #@(1&({::)))) larflcbc 0 {:: ]
-unm2lrnstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~ 0 _1&}.@[)~ (,;.0~ (_ 1 ,:~ 2 # _1 - c@(1&({::)))) larfrnbc 0 {:: ]
-unm2lrcstep=: (1 {:: ]) ((,.   _  1&rt)  ;  0  1&}.@])~ (,;.0~ (_ 1 ,:~ 2 # _1 - c@(1&({::)))) larfrcbc 0 {:: ]
+unm2llnstep=: (1 {:: ]) ((,    1  _&rt)  ;  }.   @])~ (,;.0~ (_ 1 ,:~ 2 # _1 - #@(1&({::)))) larflnbc 0 {:: ]
+unm2llcstep=: (1 {:: ]) ((, ~ _1  _&rt)~ ;~ }:   @[)~ (,;.0~ (_ 1 ,:~ 2 # _1 - #@(1&({::)))) larflcbc 0 {:: ]
+unm2lrnstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~(}:"1)@[)~ (,;.0~ (_ 1 ,:~ 2 # _1 - c@(1&({::)))) larfrnbc 0 {:: ]
+unm2lrcstep=: (1 {:: ]) ((,.   _  1&rt)  ; (}."1)@])~ (,;.0~ (_ 1 ,:~ 2 # _1 - c@(1&({::)))) larfrcbc 0 {:: ]
 
-unm2rlnstep=: (0 {:: ]) ((, ~ _1  _&rt)~ ;~_1  0&}.@[)  (,;.0~ (_ 1 ,:~ 2 #      #@(0&({::)))) larflnfc 1 {:: ]
-unm2rlcstep=: (0 {:: ]) ((,    1  _&rt)  ;  1  0&}.@])  (,;.0~ (_ 1 ,:~ 2 #      #@(0&({::)))) larflcfc 1 {:: ]
-unm2rrnstep=: (0 {:: ]) ((,.   _  1&rt)  ;  0  1&}.@])  (,;.0~ (_ 1 ,:~ 2 #      c@(0&({::)))) larfrnfc 1 {:: ]
-unm2rrcstep=: (0 {:: ]) ((,.~  _ _1&rt)~ ;~ 0 _1&}.@[)  (,;.0~ (_ 1 ,:~ 2 #      c@(0&({::)))) larfrcfc 1 {:: ]
+unm2rlnstep=: (0 {:: ]) ((, ~ _1  _&rt)~ ;~ }:   @[)  (,;.0~ (_ 1 ,:~ 2 #      #@(0&({::)))) larflnfc 1 {:: ]
+unm2rlcstep=: (0 {:: ]) ((,    1  _&rt)  ;  }.   @])  (,;.0~ (_ 1 ,:~ 2 #      #@(0&({::)))) larflcfc 1 {:: ]
+unm2rrnstep=: (0 {:: ]) ((,.   _  1&rt)  ; (}."1)@])  (,;.0~ (_ 1 ,:~ 2 #      c@(0&({::)))) larfrnfc 1 {:: ]
+unm2rrcstep=: (0 {:: ]) ((,.~  _ _1&rt)~ ;~(}:"1)@[)  (,;.0~ (_ 1 ,:~ 2 #      c@(0&({::)))) larfrcfc 1 {:: ]
 
-unmr2lnstep=: (1 {:: ]) ((, ~ _1  _&rt)~ ;~_1  0&}.@[)~ (,;.0~ (1 _ ,:~ 2 # _1 - #@(1&({::)))) larflcbr 0 {:: ]
-unmr2lcstep=: (1 {:: ]) ((,    1  _&rt)  ;  1  0&}.@])~ (,;.0~ (1 _ ,:~ 2 # _1 - #@(1&({::)))) larflnbr 0 {:: ]
-unmr2rnstep=: (1 {:: ]) ((,.   _  1&rt)  ;  0  1&}.@])~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&({::)))) larfrcbr 0 {:: ]
-unmr2rcstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~ 0 _1&}.@[)~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&({::)))) larfrnbr 0 {:: ]
+unmr2lnstep=: (1 {:: ]) ((, ~ _1  _&rt)~ ;~ }:   @[)~ (,;.0~ (1 _ ,:~ 2 # _1 - #@(1&({::)))) larflcbr 0 {:: ]
+unmr2lcstep=: (1 {:: ]) ((,    1  _&rt)  ;  }.   @])~ (,;.0~ (1 _ ,:~ 2 # _1 - #@(1&({::)))) larflnbr 0 {:: ]
+unmr2rnstep=: (1 {:: ]) ((,.   _  1&rt)  ; (}."1)@])~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&({::)))) larfrcbr 0 {:: ]
+unmr2rcstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~(}:"1)@[)~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&({::)))) larfrnbr 0 {:: ]
 
 NB. ---------------------------------------------------------
 NB. Verb     Action   Side   Tran  Syntax
@@ -156,22 +156,22 @@ NB.   3) apply unmxxxxstep to (pfxCi1;sfxCi1) to produce bCi1
 NB.   4) combine aCi1 and bCi1 to produce eCprod
 NB.
 NB. Assertions:
-NB.   (idmat n) (-: (clean@(_1  0&}.))) ((   tru1 gelqf A) unml2ln ((ct unglq gelqf A) ,   0))
-NB.   (idmat n) (-: (clean@(_1  0&}.))) ((   tru1 gelqf A) unml2lc ((   unglq gelqf A) ,   0))
-NB.   (idmat n) (-: (clean@( 0 _1&}.))) ((   tru1 gelqf A) unml2rn ((ct unglq gelqf A) ,.  0))
-NB.   (idmat n) (-: (clean@( 0 _1&}.))) ((   tru1 gelqf A) unml2rc ((   unglq gelqf A) ,.  0))
-NB.   (idmat n) (-: (clean@( 1  0&}.))) ((_1 tru1 geqlf A) unm2lln ((ct ungql geqlf A) , ~ 0))
-NB.   (idmat n) (-: (clean@( 1  0&}.))) ((_1 tru1 geqlf A) unm2llc ((   ungql geqlf A) , ~ 0))
-NB.   (idmat n) (-: (clean@( 0  1&}.))) ((_1 tru1 geqlf A) unm2lrn ((ct ungql geqlf A) ,.~ 0))
-NB.   (idmat n) (-: (clean@( 0  1&}.))) ((_1 tru1 geqlf A) unm2lrc ((   ungql geqlf A) ,.~ 0))
-NB.   (idmat n) (-: (clean@(_1  0&}.))) ((   trl1 geqrf A) unm2rln ((ct ungqr geqrf A) ,   0))
-NB.   (idmat n) (-: (clean@(_1  0&}.))) ((   trl1 geqrf A) unm2rlc ((   ungqr geqrf A) ,   0))
-NB.   (idmat n) (-: (clean@( 0 _1&}.))) ((   trl1 geqrf A) unm2rrn ((ct ungqr geqrf A) ,.  0))
-NB.   (idmat n) (-: (clean@( 0 _1&}.))) ((   trl1 geqrf A) unm2rrc ((   ungqr geqrf A) ,.  0))
-NB.   (idmat n) (-: (clean@( 1  0&}.))) (( 1 trl1 gerqf A) unmr2ln ((ct ungrq gerqf A) , ~ 0))
-NB.   (idmat n) (-: (clean@( 1  0&}.))) (( 1 trl1 gerqf A) unmr2lc ((   ungrq gerqf A) , ~ 0))
-NB.   (idmat n) (-: (clean@( 0  1&}.))) (( 1 trl1 gerqf A) unmr2rn ((ct ungrq gerqf A) ,.~ 0))
-NB.   (idmat n) (-: (clean@( 0  1&}.))) (( 1 trl1 gerqf A) unmr2rc ((   ungrq gerqf A) ,.~ 0))
+NB.   (idmat n) (-: (clean@:( }:   ))) ((   tru1 gelqf A) unml2ln ((ct unglq gelqf A) ,   0))
+NB.   (idmat n) (-: (clean@:( }:   ))) ((   tru1 gelqf A) unml2lc ((   unglq gelqf A) ,   0))
+NB.   (idmat n) (-: (clean@:((}:"1)))) ((   tru1 gelqf A) unml2rn ((ct unglq gelqf A) ,.  0))
+NB.   (idmat n) (-: (clean@:((}:"1)))) ((   tru1 gelqf A) unml2rc ((   unglq gelqf A) ,.  0))
+NB.   (idmat n) (-: (clean@:( }.   ))) ((_1 tru1 geqlf A) unm2lln ((ct ungql geqlf A) , ~ 0))
+NB.   (idmat n) (-: (clean@:( }.   ))) ((_1 tru1 geqlf A) unm2llc ((   ungql geqlf A) , ~ 0))
+NB.   (idmat n) (-: (clean@:((}."1)))) ((_1 tru1 geqlf A) unm2lrn ((ct ungql geqlf A) ,.~ 0))
+NB.   (idmat n) (-: (clean@:((}."1)))) ((_1 tru1 geqlf A) unm2lrc ((   ungql geqlf A) ,.~ 0))
+NB.   (idmat n) (-: (clean@:( }:   ))) ((   trl1 geqrf A) unm2rln ((ct ungqr geqrf A) ,   0))
+NB.   (idmat n) (-: (clean@:( }:   ))) ((   trl1 geqrf A) unm2rlc ((   ungqr geqrf A) ,   0))
+NB.   (idmat n) (-: (clean@:((}:"1)))) ((   trl1 geqrf A) unm2rrn ((ct ungqr geqrf A) ,.  0))
+NB.   (idmat n) (-: (clean@:((}:"1)))) ((   trl1 geqrf A) unm2rrc ((   ungqr geqrf A) ,.  0))
+NB.   (idmat n) (-: (clean@:( }.   ))) (( 1 trl1 gerqf A) unmr2ln ((ct ungrq gerqf A) , ~ 0))
+NB.   (idmat n) (-: (clean@:( }.   ))) (( 1 trl1 gerqf A) unmr2lc ((   ungrq gerqf A) , ~ 0))
+NB.   (idmat n) (-: (clean@:((}."1)))) (( 1 trl1 gerqf A) unmr2rn ((ct ungrq gerqf A) ,.~ 0))
+NB.   (idmat n) (-: (clean@:((}."1)))) (( 1 trl1 gerqf A) unmr2rc ((   ungrq gerqf A) ,.~ 0))
 NB. where
 NB.   2 -: # $ A  NB. A is a 2-rank array (i.e. matrix)
 NB.   -:/ @ $ A   NB. A is a square matrix (it's not

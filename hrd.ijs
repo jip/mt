@@ -63,16 +63,18 @@ NB. - v[i]'s direction is forward, but T is lower triangular
 lahr2l=: 3 : 0
   V=. 0 {. y
   T=. H=. 0 0 $ 0
-  for_j. i. HRDNB do.
+  j=. 0
+  while. j < HRDNB do.
     b=. (j { y) - (+ (<: j) {"1 V) mp (j {. y)
     b=. b - (((0 (_1) } b) mp (ct V)) mp (ct T)) mp V  NB. matrix-by-vector ops only
-    z1=. 1 j } z=. _1 + upd1 (j , _1) larfg (0 (i. j) } b)
+    z1=. 1 j } z=. _1 + upd (j , _1) larfg (0 (i. j) } b)
     u=. (* +@{:) z1
     w=. V +@mp (+ - 0 (_1) } u)
     T=. T appendl ((w mp T) , (+ {: z1))
     y=. ((w (i. j) } (0 , u)) mp y) j } y
     H=. H appendl ((j {. b) , (j { z))
     V=. V appendr z1
+    j=. >: j
   end.
   (HRDNB {. y) ; V ; H ; T
 )
@@ -118,7 +120,8 @@ NB.   - V is formed explicitely
 lahr2u=: 3 : 0
   V=. _ 0 {. y
   T=. H=. 0 0 $ 0
-  for_j. i. HRDNB do.
+  j=. 0
+  while. j < HRDNB do.
     b=. (j {"1 y) - (j {."1 y) mp + (<: j) { V
     b=. b - V mp (ct T) mp (ct V) mp 0 (_1) } b  NB. matrix-by-vector ops only
     z1=. 1 j } z=. (j , _1) larfg (0 (i. j) } b)
@@ -128,6 +131,7 @@ lahr2u=: 3 : 0
     y=. (y mp (w (i. j) } (0 , u))) (< a: ; j) } y
     H=. H stitcht ((j {. b) , (j { z))
     V=. V stitchb z1
+    j=. >: j
   end.
   (HRDNB {."1 y) ; V ; H ; T
 )
@@ -153,15 +157,17 @@ NB.         matrix A, see gehrdl
 NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdl
 
 gehd2l=: 4 : 0
-  A=. ({. x) {. y                                                       NB. skip ...
-  y=. ({. x) }. y                                                       NB. ...reduced rows
-  for_j. dhs2lios (x + 1 _1) do.                                        NB. (s-1)-vector: h+1,h+2,...,h+s-1
+  A=. ({. x) {. y                            NB. skip ...
+  y=. ({. x) }. y                            NB. ...reduced rows
+  'j jlimit'=. 1 0 + (+/\) x                 NB. 'j jlimit'=. (h+1),(h+s)
+  while. j < jlimit do.                      NB. (s-1)-vector: h+1,h+2,...,h+s-1
     r=. {. y
     z1=. 1 (0) } z=. larfgfc j }. r
-    eL=. z1 larflcfr (}. y)                                             NB. L := H' * L
-    eR=. z1 larfrnfr (j }."1 eL)                                        NB. R := R * H
+    eL=. z1 larflcfr (}. y)                  NB. L := H' * L
+    eR=. z1 larfrnfr (j }."1 eL)             NB. R := R * H
     A=. A , ((j {. r) , z)
     y=. (j {."1 eL) ,. eR
+    j=. >: j
   end.
   0 ((A (+&#) y) ([ dhs2lios ((_1-[),])) ((c y) - (+/ x)))"_ } (A , y)  NB. clear τ[h+s-1:n-1]
 )
@@ -190,15 +196,17 @@ NB. Notes:
 NB. - implements LAPACK's xGEHD2 up to storage layout
 
 gehd2u=: 4 : 0
-  A=. ({. x) {."1 y                                  NB. skip ...
-  y=. ({. x) }."1 y                                  NB. ...reduced columns
-  for_j. dhs2lios (x + 1 _1) do.                     NB. (s-1)-vector: h+1,h+2,...,h+s-1
+  A=. ({. x) {."1 y                          NB. skip ...
+  y=. ({. x) }."1 y                          NB. ...reduced columns
+  'j jlimit'=. 1 0 + (+/\) x                 NB. 'j jlimit'=. (h+1),(h+s)
+  while. j < jlimit do.                      NB. (s-1)-vector: h+1,h+2,...,h+s-1
     c=. {."1 y
     z1=. 1 (0) } z=. larfgf j }. c
-    eR=. z1 larfrnfc (0 1 }. y)                      NB. R := R * H
-    eL=. z1 larflcfc (j }. eR)                       NB. L := H' * L
+    eR=. z1 larfrnfc (0 1 }. y)              NB. R := R * H
+    eL=. z1 larflcfc (j }. eR)               NB. L := H' * L
     A=. A ,. ((j {. c) , z)
     y=. (j {. eR) , eL
+    j=. >: j
   end.
   0 (dhs2lios (_2,((# y) - (+/ x))))"_ } (A ,. y)  NB. clear τ[h+s-1:n-1]
 )
@@ -280,17 +288,19 @@ gehrdl=: 4 : 0
   Atop=. (h , _) {. y
   Aleft=. (h - (n1 , _1)) {. y
   y=. (h + 0 1) }. y
-  I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB       NB. how many panels will be reduced
-  for_i. HRDNB dhs2lios (h , I) do.               NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB}
-    'Y V H T'=. lahr2l y                          NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
-    eV0=. 0 ,. (0 (_1) }"1 V)                     NB. prepend by zero column, replace τs by zeros
+  I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB  NB. how many panels will be reduced
+  'i ilimit'=. h + (0,HRDNB) * I             NB. 'i ilimit'=. h,(h+HRDNB*I)
+  while. i < ilimit do.                      NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2lios (h,I))
+    'Y V H T'=. lahr2l y                     NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
+    eV0=. 0 ,. (0 (_1) }"1 V)                NB. prepend by zero column, replace τs by zeros
     Aleft=. Aleft - (ct eV0) mp (T mp (eV0 mp Aleft))  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
     y=. (HRDNB }. y) - (ct (HRDNB }."1 eV0)) mp Y      NB. apply reflector from the left
     y=. y - (y mp (ct T mp (0 (_1) }"1 V))) mp V       NB. apply reflector from the right
-    V=. ((i. HRDNB) </ (i. (n-i))) } H ,: V       NB. write H into V's lower triangle in-place
+    V=. ((i. HRDNB) </ (i. (n-i))) } H ,: V  NB. write H into V's lower triangle in-place
     Atop=. Atop , (HRDNB {. Aleft) ,. V
     Aleft=. (HRDNB }. Aleft) ,. (HRDNB {."1 y)
     y=. HRDNB }."1 y
+    i=. HRDNB + i
   end.
   _1 0 }. (x + 1 _1 * HRDNB * I) gehd2l (Atop , Aleft ,. y)
 )
@@ -373,17 +383,19 @@ gehrdu=: 4 : 0
   Aleft=. h {."1 y
   Atop=. (h - (_1 , n1)) {. y
   y=. (h + 1 0) }. y
-  I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB       NB. how many panels will be reduced
-  for_i. HRDNB dhs2lios (h , I) do.               NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB}
-    'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
-    eV0=. 0 , (0 (_1) } V)                        NB. prepend by zero row, replace τs by zeros
+  I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB  NB. how many panels will be reduced
+  'i ilimit'=. h + (0,HRDNB) * I             NB. 'i ilimit'=. h,(h+HRDNB*I)
+  while. i < ilimit do.                      NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2lios (h,I))
+    'Y V H T'=. lahr2u y                     NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
+    eV0=. 0 , (0 (_1) } V)                   NB. prepend by zero row, replace τs by zeros
     Atop=. Atop - ((Atop mp eV0) mp T) mp (ct eV0)  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
     y=. (HRDNB }."1 y) - Y mp (ct (HRDNB }. eV0))   NB. apply reflector from the right
     y=. y - V mp (ct (0 (_1) } V) mp T) mp y        NB. apply reflector from the left
-    V=. ((i. (n-i)) >/ (i. HRDNB)) } H ,: V       NB. write H into V's upper triangle in-place
+    V=. ((i. (n-i)) >/ (i. HRDNB)) } H ,: V  NB. write H into V's upper triangle in-place
     Aleft=. Aleft ,. (HRDNB {."1 Atop) , V
     Atop=. (HRDNB }."1 Atop) , (HRDNB {. y)
     y=. HRDNB }. y
+    i=. HRDNB + i
   end.
   0 _1 }. (x + 1 _1 * HRDNB * I) gehd2u (Aleft ,. Atop , y)
 )
@@ -397,7 +409,7 @@ NB.
 NB. Description:
 NB.   Test Hessenberg reduction algorithms:
 NB.   - gehrd (math/lapack addon)
-NB.   - gehrdl gehrdu (math/mt addon)
+NB.   - gehrdx (math/mt addon)
 NB.   by general matrix given
 NB.
 NB. Syntax:
@@ -418,10 +430,10 @@ testgehrd=: 3 : 0
 
   rcond=. (norm1 con (getrilu1p@getrflu1p)) y
 
-NB. FIXME!  ('gehrd_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
+  ('2b1100 & gehrd_jlapack_' tmonad        ((];1:;#)`(,&>/)`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
-  ('gehrdl'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@( 0 _1&}.)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
-  ('gehrdu'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@(_1  0&}.)) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdl'                tdyad  ((0,#)`]        `]     `(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@:(}:"1)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdu'                tdyad  ((0,#)`]        `]     `(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
   EMPTY
 )

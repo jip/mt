@@ -148,7 +148,7 @@ NB. where
 NB.   k       = 0:|Π{size[i],i=0:r-1}|-1, IO lios' item
 NB.   n[k][i] - i-th axis' IO for k-th lios' item
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   (lios ({,) array) -: (rios (, ;. 0) array)
 NB. where
 NB.   rios=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
@@ -176,7 +176,7 @@ NB. where
 NB.   liosX - adv., any of: liosE liosN liosS liosW
 NB.   gap   - integer, negative value means "from
 NB.           head", otherwise "from tail"
-NB.   vapp  - dyad to return lios; is evoked as:
+NB.   vapp  - dyad to return lios; is called as:
 NB.             lios=. l vapp n
 NB.   lios  - l-vector of integers, lIOS of v in ravelled A
 NB.   v     - l-vector from A:

@@ -65,21 +65,21 @@ NB. Syntax:
 NB.   vapp=. ioz`getv`mkt`dhs gebalxp1d
 NB. where
 NB.   ioz  - dyad to scan vector, either (i.) or (i:), is
-NB.          evoked as:
+NB.          called as:
 NB.            io=. (ioz & 0) vector
 NB.   getv - dyad to extract vector from matrix, is either
-NB.          ({) or ({"1), is evoked as:
+NB.          ({) or ({"1), is called as:
 NB.            vector=. iovector getv matrix
 NB.   mkt  - dyad to prepare index for transposition, is
-NB.          either (+ <:) or ([), is evoked as:
+NB.          either (+ <:) or ([), is called as:
 NB.            io=. h mkt s
 NB.   dhs  - monad to reduce submatrix B11 by excluding row
 NB.          and column which are intersecting in the element
 NB.          with IO either (<0 0) or (<_1 _1), is either
-NB.          (+&0 _1) or (+&1 _1), is evoked as:
+NB.          (+&0 _1) or (+&1 _1), is called as:
 NB.            hs=. dhs hs
 NB.   vapp - dyad to traverse single direction, is
-NB.          evoked as:
+NB.          called as:
 NB.            'p hs'=. A vapp (p ; hs ; nz)
 NB.   nz   - n-vector of non-negative integers, count of
 NB.          non-zero elements in rows (columns) of A
@@ -143,14 +143,14 @@ NB. Syntax:
 NB.   vapp=. getv0`getv1 gebalxp2d
 NB. where
 NB.   getv0 - dyad to extract vector (either row or column)
-NB.           from matrix, is either ({) or ({"1), is evoked
+NB.           from matrix, is either ({) or ({"1), is called
 NB.           as:
 NB.             vector=. iovector getv matrix
 NB.   getv1 - dyad to extract vector (either column or row)
 NB.           from matrix, of direction opposite to getv0, is
-NB.           either ({) or ({"1), is evoked as:
+NB.           either ({) or ({"1), is called as:
 NB.             vector=. iovector getv matrix
-NB.   vapp  - dyad to traverse both directions, is evoked as:
+NB.   vapp  - dyad to traverse both directions, is called as:
 NB.             'p hs'=. A vapp (nz0 ,: nz1)
 NB.   nz0   - n-vector of non-negative integers, count of
 NB.           non-zero elements in either rows or columns
@@ -214,13 +214,13 @@ NB.         e/f > BALSFMIN2
 NB.
 NB. Note:
 NB. - conventional (closed) insertion point is calculated by:
-NB.     k=. x I. y
+NB.     c=. x I. y
 NB.   and provides:
-NB.     y <: k { x
+NB.     y <: c { x
 NB. - alternative (open) insertion point is calculated by:
-NB.     j=. x I. (1 + FP_PREC) * y
+NB.     o=. x I. (1 + FP_PREC) * y
 NB.   and provides:
-NB.     y < j { x
+NB.     y < o { x
 
 gebalsf=: BALPOWMAX {~ (BALPOWMAX i. (1 { (BALSCLFAC ^ 1 1 _1) & ((*^:(({.<{:)@])^:_) (3&{.)))) <. (BALESFMAX1 - BALPOWMAX I. (1+FP_PREC)*(3{])) <. (BALPOWMIN I. (4{]))
 
@@ -291,8 +291,8 @@ NB.
 NB. Notes:
 NB. - gebalup models LAPACK's xGEBAL with 'P' option
 
-geballp=: ([ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) (-"1) diag)@:(0&~:))))
-gebalup=: ([ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) (-"1) diag)@:(0&~:))))
+geballp=: ([ ((fp~ (0 & {::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) (-"1) diag)@:(0&~:))))
+gebalup=: ([ ((fp~ (0 & {::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) (-"1) diag)@:(0&~:))))
 
 NB. ---------------------------------------------------------
 NB. gebals
@@ -437,8 +437,8 @@ gebals=: 3 : 0
             if. di >: BALSFMAX1%f do. continue. end.
           end.
           d=. (di*f) i } d
-          B=. i  (%&f) upd1    B
-          B=. i ((*&f) upd1)"1 B
+          B=. i  (%&f) upd    B
+          B=. i ((*&f) upd)"1 B
           noconv=. 1
         end.
       end.
@@ -509,16 +509,6 @@ NB.   testgebal A
 NB. where
 NB.   A - n×n-matrix
 NB.
-NB. Formula:
-NB.   berr := ######################||A - A^H|| / (ε * ||A|| * m)
-NB.   'C p hs d'=. gebalu A
-NB.   B=. p fp A
-NB.   B11=. (,.~ hs) (] ;. 0) B
-NB.   C11=. (,.~ hs) (] ;. 0) C
-NB.   dispersion_orig=. >./ | 10 ^. %/"1 ((,. &: norm1t"1) |:) B11
-NB.   dispersion_bal=.  >./ | 10 ^. %/"1 ((,. &: norm1t"1) |:) C11
-NB.   quality=. dispersion_bal % dispersion_orig
-NB.
 NB. TODO:
 NB. - consider [1]
 NB.
@@ -531,12 +521,12 @@ testgebal=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gebal'
 
-  rcond=. (norm1 con (getrilu1p@geballu1p)) y
-  ####################
-  ('gebal_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_ (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
+  rcond=. (norm1 con (getrilu1p@getrflu1p)) y
 
-  ('geball'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1"1 (( trl            mp  tru1          )@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
-  ('gebalu'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1   (( trl1           mp  tru           )@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('gebal_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+
+  ('geball' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gebalu' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
 )

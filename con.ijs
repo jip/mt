@@ -17,33 +17,38 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. con
-NB. Conjunction to estimate the reciprocal of the condition
-NB. number of a matrix in a given norm
+NB.
+NB. Description:
+NB.   Conj. to make verb estimating the reciprocal of the
+NB.   condition number of a matrix in a given norm
 NB.
 NB. Syntax:
-NB.   rcond=. norm con inv A
+NB.   vapp=. norm con inv
 NB. where
-NB.   norm  - monadic verb to calculate matrix norm
-NB.   inv   - monadic verb to inverse square matrix
+NB.   norm  - monadic verb to calculate norm of matrix, is
+NB.           called as:
+NB.             normA=. norm A
+NB.   inv   - monadic verb to inverse square matrix, is
+NB.           called as:
+NB.             invA=. inv A
+NB.   vapp  - monadic verb to calculate the reciprocal of the
+NB.           condition number of a matrix in a given norm,
+NB.           is called as:
+NB.             rcond=. vapp A
 NB.   A     - n×n-matrix
-NB.   rcond - the reciprocal of the condition number of
-NB.           matrix A in norm defined by verb 'norm',
-NB.           0≤rcond≤1
-NB.   n     ≥ 0
 NB.
 NB. Application:
 NB. - verb to estimate rcond(y) of a general square matrix y
 NB.   in 1-norm:
 NB.     gecon=: norm1 con (getriul1p@getrful1p)
-NB. - noun, estimated rcond(A) of a Hermitian (symmetric)
+NB. - noun, an estimated rcond(A) of a Hermitian (symmetric)
 NB.   positive definite matrix A in ∞-norm:
 NB.     rcondA=. normi con (potril@potrfl) A
 NB. - noun, estimated rcond(Q) of a unitary (orthogonal)
 NB.   matrix Q in Frobenius-norm
 NB.     rcondQ=. norms con ct Q
 NB.
-NB. Notes:
-NB. - currently an expensive approach of exact calculation
-NB.   is implemented
+NB. TODO:
+NB. - implement more practical norm-estimation approach
 
 con=: 2 : '(* & (% @ u)) v'

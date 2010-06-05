@@ -32,7 +32,7 @@ NB. where
 NB.   ax   - ambivalent verbs to define input nodes of
 NB.          execution graph
 NB.   b0   - dyad to define output node of execution graph
-NB.   vapp - 2-fork, is evoked as:
+NB.   vapp - 2-fork, is called as:
 NB.            out=.   vapp y
 NB.            out=. x vapp y
 NB.
@@ -70,7 +70,7 @@ NB.          execution graph
 NB.   bx   - dyads to define intermediate nodes of execution
 NB.          graph
 NB.   c0   - dyad to define output node of execution graph
-NB.   vapp - 3-fork, is evoked as:
+NB.   vapp - 3-fork, is called as:
 NB.            out=.   vapp y
 NB.            out=. x vapp y
 NB.
@@ -120,7 +120,7 @@ NB.           execution graph
 NB.   bx cx - dyads to define intermediate nodes of execution
 NB.           graph
 NB.   d0    - dyad to define output node of execution graph
-NB.   vapp  - 4-fork, is evoked as:
+NB.   vapp  - 4-fork, is called as:
 NB.            out=.   vapp y
 NB.            out=. x vapp y
 NB.
@@ -183,7 +183,7 @@ NB.   bx cx dx - dyads to define intermediate nodes of
 NB.              execution graph
 NB.   e0       - dyad to define output node of execution
 NB.              graph
-NB.   vapp     - 5-fork, is evoked as:
+NB.   vapp     - 5-fork, is called as:
 NB.                out=.   vapp y
 NB.                out=. x vapp y
 NB.
@@ -260,7 +260,7 @@ NB.   bx cx dx ex - dyads to define intermediate nodes of
 NB.                 execution graph
 NB.   f0          - dyad to define output node of execution
 NB.                 graph
-NB.   vapp        - 6-fork, is evoked as:
+NB.   vapp        - 6-fork, is called as:
 NB.                   out=.   vapp y
 NB.                   out=. x vapp y
 NB.

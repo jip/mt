@@ -46,7 +46,8 @@ NB.   d    - n-vector, diagonal of scaling matrix D
 NB.   B    - n×n-matrix, transformed eigenvectors
 NB.
 NB. Notes:
-NB. - models LAPACK's xGEBAK with 'S' option
+NB. - gebakusl models LAPACK's xGEBAK('S','L')
+NB. - gebakusr models LAPACK's xGEBAK('S','R')
 
 gebaklsl=: ((0 & {::) %"1 (2 & {::)) ; (1 & {::)
 gebaklsr=: ((0 & {::) *"1 (2 & {::)) ; (1 & {::)
@@ -68,7 +69,7 @@ NB.   p  - n-vector, permutation of B
 NB.   C  - n×n-matrix, transformed eigenvectors
 NB.
 NB. Notes:
-NB. - models LAPACK's xGEBAK with 'P' option
+NB. - gebakup models LAPACK's xGEBAK('P')
 
 gebaklp=: C."1~ & >
 gebakup=: C.  ~ & >
@@ -95,7 +96,8 @@ NB.   d - n-vector, diagonal of scaling matrix D
 NB.   C - n×n-matrix, transformed eigenvectors
 NB.
 NB. Notes:
-NB. - models LAPACK's xGEBAK with 'B' option
+NB. - gebakul models LAPACK's xGEBAK('B','L')
+NB. - gebakur models LAPACK's xGEBAK('B','R')
 
 gebakll=: gebaklp @ gebaklsl
 gebaklr=: gebaklp @ gebaklsr
@@ -117,7 +119,7 @@ NB. where
 NB.   A - n×n-matrix
 
 testgebak=: 3 : 0
-  rcond=. (norm1 con (getrilu1p@geballu1p)) y
+  rcond=. (norm1 con (getrilu1p@getrflu1p)) y
 
   ('gebakll' tmonad ((];(i.;(0&,);($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
   ('gebaklr' tmonad ((];(i.;(0&,);($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
@@ -154,4 +156,4 @@ NB.     (_1 1 0 4 _6 4 & gemat_mt_) testbak_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testbak_mt_ 150 200
 
-testbal=: 1 : 'EMPTY_mt_ [ (testgebak_mt_ @ u ^: (=/))'
+testbak=: 1 : 'EMPTY_mt_ [ (testgebak_mt_ @ u ^: (=/))'

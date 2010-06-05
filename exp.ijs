@@ -156,13 +156,13 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
 NB.   C -: L mp R                 NB. LAPACK doesn't guarantee (C -: idmat # A)
-NB.   iL -: R %"1 c
-NB.   iR -: L % c
+NB.   iL -: R %"1 c               NB. see [1]
+NB.   iR -: L % c                 NB. see [1]
 NB.   A -: iL mp V mp L
 NB.   A -: iL mp v * L
 NB.   A -: R mp V mp iR
 NB.   A -: R mp v * iR
-NB.   F -: diagmat ^ v
+NB.   F -: diagmat f
 NB.   E -: iL mp F mp L
 NB.   E -: iL mp f * L
 NB.   E -: R mp F mp iR
@@ -180,6 +180,11 @@ NB.   C=. diagmat c
 NB.   E=. geexp A
 NB.   f=. ^ v
 NB.   F=. geexp V
+NB.
+NB. References:
+NB. [1] http://icl.cs.utk.edu/lapack-forum/viewtopic.php?p=985#p985
+NB.     LAPACK/ScaLAPACK Development ‹ DGEEVX and left eigenvectors
+NB.     Julien Langou, Fri Dec 22, 2006 5:15 pm
 
 diexp=: (0 & {::) mp (^ @: (1 & {::)) * (2 & {::)
 
@@ -201,7 +206,7 @@ NB.   ((-: ct) A)     NB. A must be Hermitian (symmetric)
 NB.   iR -: ct R
 NB.   A -: R mp V mp iR
 NB.   A -: R mp v * iR
-NB.   F -: diagmat ^ v
+NB.   F -: diagmat f
 NB.   E -: R mp F mp iR
 NB.   E -: R mp f * iR
 NB.   E -: heexp v ; R
@@ -249,8 +254,7 @@ NB. where
 NB.   A - n×n-matrix, diagonalizable
 NB.
 NB. TODO:
-NB. - assertion
-NB.     (-: ~.) v
+NB. - replace geev_jlapack_ by geev
 
 testdiexp=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
@@ -258,13 +262,14 @@ testdiexp=: 3 : 0
 
   rcond=. (norm1 con (getrilu1p@getrflu1p)) y
 
-  NB. - do eigendecomposition: 'Lh v R'=. geev A
-  NB. - replace Lh by (Lh^H), as diexp expects
-  NB. - for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force A to be negative definite, this will avoid NaN error in diexp
-  NB. - save adjusted boxed triplet back into y
-  y=. (ct&.>`(j./@(*"1 (-@*@{.))@:|:@:+.&.>)`] ag) geev_jlapack_ y
+  'Lh v R'=. geev_jlapack_ y         NB. do eigendecomposition
+  v=. j./ (*"1 (-@*@{.)) |: +. v     NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
+                                     NB. A to be negative definite, this will avoid NaN error in diexp
+  assert ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
+  L=. ct Lh                          NB. restore L
+  iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in diexp
 
-  ('diexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('diexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (R ; v ; iR)
 
   EMPTY
 )
@@ -279,6 +284,9 @@ NB. Syntax:
 NB.   testheexp A
 NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric)
+NB.
+NB. TODO:
+NB. - replace heev_jlapack_ by heev
 
 testheexp=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
@@ -287,7 +295,9 @@ testheexp=: 3 : 0
   rcond=. (norm1 con (hetripl@hetrfpl)) y
 
   NB. - do eigendecomposition: 'v R'=. heev A
-  NB. - for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force A to be negative definite, this will avoid NaN error in heexp
+  NB. - for each v[i] in v, flip sign of v[i] if Re(v[i])>0,
+  NB.   to force A to be negative definite, this will avoid
+  NB.   NaN error in heexp
   NB. - save adjusted boxed duplet back into y
   y=. ((j./@(*"1 (-@*@{.))@:|:@:+.&.>)`] ag) heev_jlapack_ y
 
@@ -300,7 +310,7 @@ NB. ---------------------------------------------------------
 NB. testexp
 NB.
 NB. Description:
-NB.   Adv. to make verb to test geexpx by matrix of
+NB.   Adv. to make verb to test xxexp by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
@@ -314,13 +324,13 @@ NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - test by random rectangular real matrix with elements
+NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     (? @ $ 0:) testexp_mt_ 200 150
+NB.     (? @ $ 0:) testexp_mt_ 200 200
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
 NB.     (_1 1 0 4 _6 4 & gemat_mt_) testexp_mt_ 200 200
-NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testexp_mt_ 150 200
+NB. - test by random square complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testexp_mt_ 200 200
 
 testexp=: 1 : 'EMPTY_mt_ [ ((testheexp_mt_ @ (u hemat_mt_)) [ (testdiexp_mt_ @ (u dimat_mt_ u)) [ (testgeexp_mt_ @ u)) ^: (=/)'

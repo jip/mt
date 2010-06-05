@@ -656,7 +656,7 @@ NB.   pU1T - 3-vector of boxes, the output of hetrfpu, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.
-NB. Assertion:
+NB. Assertions (with appropriate comparison tolerance):
 NB.   iA -: %. A
 NB. where
 NB.   iA=. hetripl hetrfpl A
@@ -688,6 +688,13 @@ NB.   U  - n×n-matrix, the output of potrfu, upper
 NB.        triangular Cholesky factor
 NB.   iA - n×n-matrix, an inversion of A
 NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   iA -: %. A
+NB. where
+NB.   iA=. potril potrfl A
+NB.   or
+NB.   iA=. potriu potrfu A
+NB.
 NB. Notes:
 NB. - potril models LAPACK's xPOTRI('L'), but uses direct,
 NB.   not iterative matrix product
@@ -716,7 +723,10 @@ NB. Algorithm for dyadic pttril:
 NB. Reflexive is used to emulate monadic gerund power:
 NB. u^:(v0`v1`v2)y ↔ (v0 y)u^:(v1 y)(v2 y)
 NB.
-NB. Assertions:
+NB. Assertions (with appropriate comparison tolerance):
+NB.   iA -: %. A
+NB. where
+NB.   iA=. pttril pttrfl A
 NB.
 NB. References:
 NB. [1] Moawwad El-Mikkawy, El-Desouky Rahmo. A new recursive
@@ -732,10 +742,8 @@ NB. - A should be sparse
 pttril=: ($:~ pttrfl) : ((4 : 0) ^: (((0:`(+@])`(_1&diag)`,.`((-@,. (1&(|.!.0)))~ }.)`diag fork3)@])`(<:@#@])`((,. @ ((]`- ag) @ (*/\)&.|.) @ (((, (%@{:))~ +)~&>/) @ ((_1&diag&.>)`(diag&.>) ag) @ [))))
   io=. -c y
   pi=. io { x
-  ((io (>: upd1) (+/"1) ((}. pi) (*"1) (2 {."1 y))) % ({. pi)) ,. y
+  ((io (>: upd) (+/"1) ((}. pi) (*"1) (2 {."1 y))) % ({. pi)) ,. y
 )
-
-pttriu=: [:
 
 NB. =========================================================
 NB. Test suite
@@ -868,7 +876,6 @@ testpttri=: 3 : 0
   rcond=. (norm1 con pttril) y
 
   ('pttril' tdyad ((pttrfl@])`]`]`(rcond"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
-  ('pttriu' tdyad ((pttrfu@])`]`]`(rcond"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
 
   EMPTY
 )

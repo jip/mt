@@ -23,31 +23,31 @@ NB.
 NB. Syntax:
 NB.   Ascl=. (f,t) scl A
 NB. where
-NB.   A    - r-rank array
-NB.   f    ≠ 0, numeric atom
-NB.   t    - numeric atom
-NB.   Ascl - r-rank array, being A scaled by ratio (t/f)
-NB.          without under- or overflow, if possible
-NB.   r    ≥ 0, integer
+NB.   A - r-rank array
+NB.   f ≠ 0, numeric atom
+NB.   t - numeric atom
+NB.   B - r-rank array, being A scaled by ratio (t/f) without
+NB.       under- or overflow, if possible
+NB.   r ≥ 0, integer
 NB.
 NB. Formula:
 NB.   if |(f*FP_SFMIN)*FP_SFMIN| > |t|
-NB.     A := (t/((f*FP_SFMIN)*FP_SFMIN))*((A*FP_SFMIN)*FP_SFMIN)
+NB.     B := (t/((f*FP_SFMIN)*FP_SFMIN))*((A*FP_SFMIN)*FP_SFMIN)
 NB.   elseif |f*FP_SFMIN| > |t|
-NB.     A := (t/(f*FP_SFMIN))*(A*FP_SFMIN)
+NB.     B := (t/(f*FP_SFMIN))*(A*FP_SFMIN)
 NB.   elseif |(t/FP_SFMAX)/FP_SFMAX| > |f|
-NB.     A := (((t/FP_SFMAX)/FP_SFMAX)/f)*((A*FP_SFMAX)*FP_SFMAX)
+NB.     B := (((t/FP_SFMAX)/FP_SFMAX)/f)*((A*FP_SFMAX)*FP_SFMAX)
 NB.   elseif |t/FP_SFMAX| > |f|
-NB.     A := ((t/FP_SFMAX)/f)*(A*FP_SFMAX)
+NB.     B := ((t/FP_SFMAX)/f)*(A*FP_SFMAX)
 NB.   else
-NB.     A := (t/f)*A
+NB.     B := (t/f)*A
 NB.   endif
 NB. where
 NB.   FP_SFMAX := 1/FP_SFMIN
 NB.
 NB. Algorithm:
 NB.   In: A f t
-NB.   Out: Ascl
+NB.   Out: B
 NB.   1) find lIOS |f| and |t| in scale vector (1,1,FP_SFMIN)
 NB.      1.1) form vector (|f|,|t|)
 NB.      1.2) form matrix:
@@ -67,9 +67,9 @@ NB.                    (f,t) := ftscl (* ^: |io|) (f,t)
 NB.           3.1.3) find scaled ratio
 NB.                    ft := f/t
 NB.      3.2) scale A up or down
-NB.             Ascl := FP_SFMIN (* ^: io) A
+NB.             B := FP_SFMIN (* ^: io) A
 NB.      3.3) scale A by ratio
-NB.             Ascl := ft * Ascl
+NB.             B := ft * Ascl
 NB.
 NB. Notes:
 NB. - models LAPACK's xLASCL('G'), when A is a matrix

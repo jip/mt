@@ -12,11 +12,9 @@ NB.           permutation matrix
 NB. rt        Restrained Take
 NB. icut      Inversed cut
 NB.
-NB. upd1      Adv. to update subarray by a monad
-NB. append    Template adv. to make verbs to enhance append
-NB.           built-in verb (,)
-NB. stitch    Template adv. to make verbs to enhance stitch
-NB.           built-in verb (,.)
+NB. upd       Adv. to update subarray by a monad
+NB. appendx   Enhance built-in Append verb (,)
+NB. stitchx   Enhance built-in Stitch verb (,.)
 NB.
 NB. diag      Return a solid part of diagonal
 NB. setdiag   Assign value[s] to a solid part of diagonal
@@ -41,17 +39,22 @@ NB.
 NB. idmat     Make identity matrix with units on solid part
 NB.           of diagonal
 NB. diagmat   Make diagonal matrix
-NB.
-NB. tru       Extract upper triangular (trapezoidal) matrix
 NB. trl       Extract lower triangular (trapezoidal) matrix
-NB. tru0      Extract strictly upper triangular (trapezoidal)
-NB.           matrix
+NB. tru       Extract upper triangular (trapezoidal) matrix
 NB. trl0      Extract strictly lower triangular (trapezoidal)
 NB.           matrix
-NB. tru1      Extract unit upper triangular (trapezoidal)
+NB. tru0      Extract strictly upper triangular (trapezoidal)
 NB.           matrix
 NB. trl1      Extract unit lower triangular (trapezoidal)
 NB.           matrix
+NB. tru1      Extract unit upper triangular (trapezoidal)
+NB.           matrix
+NB. tr2he     Make Hermitian (symmetric) matrix from
+NB.           triangular
+NB. he        Make Hermitian (symmetric) matrix from general
+NB.           square
+NB. po        Make Hermitian (symmetric) positive definite
+NB.           matrix from general square invertible
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -63,13 +66,13 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. Misc.
+NB. Miscellaneous
 
 NB. convert table y to table of diagonals
 t2td=: 1 : '({. u/&i. {:)@$'
 
-NB. template conj. to extract rectangular matrix
-NB. circumscribing the triangular (trapezoidal) matrix
+NB. template conj. to extract matrix circumscribing the
+NB. triangular (trapezoidal) matrix
 NB. starting from diagonal number x in the matrix y
 trcut=: 2 : '((m & *) @: (<./ " 1) @ v $) {. ]'
 
@@ -80,7 +83,7 @@ NB. extract lower triangular (trapezoidal) matrix
 trlcut=: _1 1 trcut ((+ {.) ,. ])
 
 NB. template conj. to extract triangular (trapezoidal)
-NB. matrix starting from diagonal number x in the rectangular
+NB. matrix starting from diagonal number x in the
 NB. circumscribing matrix y
 tr=: 2 : '0&$: : ([ (] * (u~ (-~ t2td))) v)'
 
@@ -89,27 +92,27 @@ NB. mxbstencil
 NB.
 NB. Description:
 NB.   Template adv. to make verbs returning
-NB.   [multi-][anti-]band stencil for rectangular matrix
+NB.   [multi-][anti-]band stencil for matrix
 NB.
 NB. Syntax:
 NB.   vapp=. vmix mxbstencil
 NB. where
 NB.   vmix - dyad to mix lIOS x and y, is either (-~) for
-NB.          band, or (+) for anti-band stencils, is evoked
+NB.          band, or (+) for anti-band stencils, is called
 NB.          as:
 NB.            mix=. lIOrow vmix lIOcolumn
 NB.   vapp - dyad to make multi-[anti-]band stencil, is
-NB.          evoked as:
+NB.          called as:
 NB.            s=. bs vapp A
 NB.   bs   - k×2-matrix of (b)s, or single b, or d, defines
 NB.          [anti-]bands to stencil
 NB.   b    - 2-vector (h,t), defines one [anti-]band to
 NB.          stencil
-NB.   h    - integer in range [-∞,t], lIO head
+NB.   h    - integer in range [-∞,t], lIO head of
 NB.          [anti-]diagonal
-NB.   t    - integer in range [h,+∞], lIO tail
+NB.   t    - integer in range [h,+∞], lIO tail of
 NB.          [anti-]diagonal
-NB.   d    - integer in range [-∞,+∞], lIO one
+NB.   d    - integer in range [-∞,+∞], lIO single
 NB.          [anti-]diagonal to stencil
 NB.   A    - m×n-matrix
 NB.   s    - m×n-matrix, boolean, having 1s on [anti-]band[s]
@@ -124,8 +127,7 @@ NB. mbstencil
 NB. mabstencil
 NB.
 NB. Description:
-NB.   [Multi-]band and [multi-]anti-band stencils for
-NB.   rectangular matrix
+NB.   [Multi-]band and [multi-]anti-band stencils for matrix
 NB.
 NB. Syntax:
 NB.   s=. bs mbstencil  A
@@ -137,18 +139,18 @@ NB.   A    - m×n-matrix
 NB.   s    - m×n-matrix, boolean, having 1s on [anti-]band[s]
 NB.   b    - 2-vector (h,t), defines one [anti-]band to
 NB.          stencil
-NB.   h    - integer in range [-∞,t], defines lIO head
+NB.   h    - integer in range [-∞,t], defines lIO head of
 NB.          [anti-]diagonal
-NB.   t    - integer in range [h,+∞], defines lIO tail
+NB.   t    - integer in range [h,+∞], defines lIO tail of
 NB.          [anti-]diagonal
 NB.   d    - integer in range [-∞,+∞], defines one
 NB.          [anti-]diagonal to stencil
 NB.
 NB. Examples:
-NB.    2 mbstencil i. 3 5                    2 mabstencil i. 3 5
+NB.    1 mbstencil i. 3 5                    1 mabstencil i. 3 5
+NB. 0 1 0 0 0                             0 0 0 1 0
 NB. 0 0 1 0 0                             0 0 1 0 0
 NB. 0 0 0 1 0                             0 1 0 0 0
-NB. 0 0 0 0 1                             1 0 0 0 0
 NB.    2 3 mbstencil i. 3 5                  2 3 mabstencil i. 3 5
 NB. 0 0 1 1 0                             0 1 1 0 0
 NB. 0 0 0 1 1                             1 1 0 0 0
@@ -165,8 +167,7 @@ NB. ---------------------------------------------------------
 NB. diaglios
 NB.
 NB. Description:
-NB.   Return lIOS of solid part of diagonal of rectangular
-NB.   matrix
+NB.   Return lIOS of solid part of diagonal of matrix
 NB.
 NB. Syntax:
 NB.   lios=. [(d[,h[,s]])] diaglios [m,]n
@@ -174,26 +175,26 @@ NB. where
 NB.   m    ≥ 0, integer, optional rows in matrix, default is
 NB.          n
 NB.   n    ≥ 0, integer, columns in matrix
-NB.   d    - integer in range [1-m,n-1], optional IO
+NB.   d    - integer in range [1-m,n-1], optional lIO
 NB.          diagonal, default is 0 (main diagonal)
-NB.   h    - integer in range [-S,S-1], optional IO extreme
-NB.          element of solid part within diagonal,
-NB.          default is 0 (take from head)
+NB.   h    - integer in range [-S,S-1], optional lIO extreme
+NB.          element of solid part of diagonal, default is 0
+NB.          (take from head)
 NB.   s    - integer in range [-S,S] or ±∞, optional size of
-NB.          solid part within diagonal, default is +∞ (all
+NB.          solid part of diagonal, default is +∞ (all
 NB.          elements in forward direction)
-NB.   lios - min(S,|s|)-vector of integers, lIOS of solid
+NB.   lios - min(S,|s|)-vector of integers, lIOS solid
 NB.          part of diagonal
 NB.   S    ≥ 0, the length of diagonal
 NB.
 NB. Formulae:
-NB. - the whole diagonal's IO extreme element:
+NB. - the whole diagonal's lIO extreme element:
 NB.     H := (d ≥ 0) ? d : (-n*d)
 NB. - the whole diagonal's size:
 NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
 NB.
 NB. Notes:
-NB. - (h,s) pair defines raveled rIOS of solid part within
+NB. - (h,s) pair defines raveled rIOS of solid part of
 NB.   diagonal
 
 diaglios=: (0 0 _&$:) :(4 : 0)
@@ -208,7 +209,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Misc.
+NB. Miscellaneous
 
 c=: {:!.1 @ $      NB. Columns in noun
 
@@ -219,12 +220,14 @@ cp=: |. @ ct @ |.  NB. Conjugate pertranspose
 
 fp=: [ C."1 C.     NB. Full (symmetric) permutation
 
-p2P=:  {    =      NB. Transform permutation vector to
-                   NB.   permutation matrix
-ip2P=: {^:_1=      NB. Transform inversed permutation vector
-                   NB.   to permutation matrix, or
-                   NB.   permutation vector to inversed
-                   NB.   permutation matrix
+NB. Transform permutation vector to permutation matrix, to
+NB. permute rows by y or columns by (/:y)
+p2P=:  {    =
+
+NB. Transform inversed permutation vector to permutation
+NB. matrix, or permutation vector to inversed permutation
+NB. matrix, to permute rows by (/:y) or columns by y
+ip2P=: {^:_1=
 
 NB. ---------------------------------------------------------
 NB. icut
@@ -238,7 +241,7 @@ NB. where
 NB.   bA - block array
 NB.   A  - sh-array
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   A -: icut fret <;.1 A
 NB. where
 NB.   A    - some array
@@ -259,7 +262,7 @@ NB. rt
 NB.
 NB. Description:
 NB.   Restrained Take. Just like built-in Take verb ({.), but
-NB.   without overtake feature. Overtaking sizes mean "all
+NB.   without overtake feature. Overtaking value means "all
 NB.   elements along this axis".
 NB.
 NB. Examples:
@@ -284,13 +287,13 @@ NB. 9 10 11                      9 10 11
 rt=: (*@[ * |@[ <. (({.~ #)~ $)) {. ]
 
 NB. ---------------------------------------------------------
-NB. upd1
+NB. upd
 NB.
 NB. Description:
 NB.   Adv. to update subarray by a monad
 NB.
 NB. Syntax:
-NB.   vapp=. u upd1
+NB.   vapp=. u upd
 NB. where
 NB.   u       - monad to update subA; is called as:
 NB.               subAupd=. u subA
@@ -301,33 +304,42 @@ NB.   subA    - subarray in the A
 NB.   A       - array
 NB.   Aupd    - A with subA being replaced by subAupd
 NB.
-NB. If:
-NB.   vapp=. u upd1
+NB. Assertions:
+NB.   Aupd -: ios vapp A
+NB. where
+NB.   vapp=. u upd
 NB.   subA=. ios { A
 NB.   subAupd=. u subA
 NB.   Aupd=. subAupd ios } A
-NB. then
-NB.   Aupd -: ios vapp A
 NB.
-NB. Example:######################
-NB. - the following replaces 87 by _8525 in array (i. 10 10):
-NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
-NB.   since
-NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
+NB. Examples:
+NB.    1 ('*'"_ upd) 4 5$'-'             1 2 ('*'"_ upd) 4 5$'-'
+NB. -----                             -----
+NB. *****                             *****
+NB. -----                             *****
+NB. -----                             -----
+NB.    (<1 2) ('*'"_ upd) 4 5$'-'        (1 2;2 3) ('*'"_ upd) 4 5$'-'
+NB. -----                             -----
+NB. --*--                             --*--
+NB. -----                             ---*-
+NB. -----                             -----
 NB.
 NB. References:
 NB. [1] [Jprogramming] Transform to Amend
 NB.     Dan Bron, Sat Mar 3 03:26:44 HKT 2007
 NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005425.html
 
-upd1=: (@:{) (`[) (`]) }
+upd=: (@:{) (`[) (`]) }
 
 NB. ---------------------------------------------------------
-NB. append
+NB. appendl
+NB. appendr
 NB.
 NB. Description:
-NB.   Template adv. to make verbs to enhance append built-in
-NB.   verb (,)
+NB.   Enhance built-in Append verb (,)
+NB.
+NB. Syntax:
+NB.   B=. A0 appendx A1
 NB.
 NB. Examples:
 NB.    (3 3$3) appendl (2 2$2)      (3 3$3) appendr (2 2$2)
@@ -344,31 +356,27 @@ NB. 3 3 3                        3 3 3
 NB. 3 3 3                        3 3 3
 NB.
 NB. Notes:
-NB. - 1-rank arrays (i.e. vectors) are also acceptable
+NB. - at most one of A0, A1 can be 1-rank array (i.e. vector)
 
-append=: 1 : '(,`([,({."1~ ((-^:m)@c))~)`(({."1~ ((-^:m)@c)),]) @. ((*@-)&c)) & (,: ^: (2 > (#@$)))'
-
-NB. USEME:
 appendl=: , `([, (({."1~    c )~))`(({."1~    c ), ]) @. (*@-&c)
 appendr=: , `([, (({."1~ (-@c))~))`(({."1~ (-@c)), ]) @. (*@-&c)
 
-stitcht=: ,.`([,.(({.  ~    # )~))`(({.  ~    # ),.]) @. (*@-&#)
-stitchb=: ,.`([,.(({.  ~ (-@#))~))`(({.  ~ (-@#)),.]) @. (*@-&#)
-
-
 NB. ---------------------------------------------------------
-NB. stitch
+NB. stitcht
+NB. stitchb
 NB.
 NB. Description:
-NB.   Template adv. to make verbs to enhance stitch built-in
-NB.   verb (,.)
+NB.   Enhance built-in Stitch verb (,.)
+NB.
+NB. Syntax:
+NB.   B=. A0 stitchx A1
 NB.
 NB. Examples:
-NB.    (3 3$3) 0 stitch (2 2$2)     (3 3$3) _1 stitch (2 2$2)
+NB.    (3 3$3) stitcht (2 2$2)      (3 3$3) stitchb (2 2$2)
 NB. 3 3 3 2 2                    3 3 3 0 0
 NB. 3 3 3 2 2                    3 3 3 2 2
 NB. 3 3 3 0 0                    3 3 3 2 2
-NB.    (2 2$2) 0 stitch (3 3$3)     (2 2$2) _1 stitch (3 3$3)
+NB.    (2 2$2) stitcht (3 3$3)      (2 2$2) stitchb (3 3$3)
 NB. 2 2 3 3 3                    0 0 3 3 3
 NB. 2 2 3 3 3                    2 2 3 3 3
 NB. 0 0 3 3 3                    2 2 3 3 3
@@ -376,26 +384,27 @@ NB.
 NB. Notes:
 NB. - 1-rank arrays (i.e. vectors) are also acceptable
 
-stitch=: 1 : '((({.~ #),.])`([,.({.~ #)~)@.(>&#))`((({.~ (-@#)),.])`([,.({.~ (-@#))~)@.(>&#))@.(m"_)'
+stitcht=: ,.`([,.(({.  ~    # )~))`(({.  ~    # ),.]) @. (*@-&#)
+stitchb=: ,.`([,.(({.  ~ (-@#))~))`(({.  ~ (-@#)),.]) @. (*@-&#)
 
 NB. ---------------------------------------------------------
 NB. diag
 NB.
 NB. Description:
-NB.   Return a solid part of diagonal of rectangular matrix
+NB.   Return a solid part of diagonal of matrix
 NB.
 NB. Syntax:
 NB.   e=. [(d[,h[,s]])] diag A
 NB. where
 NB.   A - m×n-matrix
-NB.   d - integer in range [1-m,n-1], optional IO diagonal,
+NB.   d - integer in range [1-m,n-1], optional lIO diagonal,
 NB.       default is 0 (main diagonal)
-NB.   h - integer in range [-S,S-1], optional IO extreme
-NB.       element of solid part within diagonal, default is 0
+NB.   h - integer in range [-S,S-1], optional lIO extreme
+NB.       element of solid part of diagonal, default is 0
 NB.       (take from head)
 NB.   s - integer in range [-S,S] or ±∞, optional size of 
-NB.       solid part within diagonal, default is +∞ (all
-NB.       elements in forward direction)
+NB.       solid part of diagonal, default is +∞ (all elements
+NB.       in forward direction)
 NB.   e - min(S,|s|)-vector, elements from the solid part of
 NB.       diagonal
 NB.   S ≥ 0, the length of diagonal
@@ -413,17 +422,17 @@ NB.   Aupd=. (e;[d[,h[,s]]]) setdiag A
 NB. where
 NB.   A    - m×n-matrix to change
 NB.   e    - {0,1}-rank array, value[s] to assign
-NB.   d    - integer in range [1-m,n-1], optional IO
+NB.   d    - integer in range [1-m,n-1], optional lIO
 NB.          diagonal, default is 0 (main diagonal)
-NB.   h    - integer in range [-S,S-1], optional IO extreme
-NB.          element of solid part within diagonal, default
-NB.          is 0 (take from head)
+NB.   h    - integer in range [-S,S-1], optional lIO extreme
+NB.          element of solid part of diagonal, default is 0
+NB.          (take from head)
 NB.   s    - integer in range [-S,S] or ±∞ when e is atom, or
 NB.          any from set {±k,±∞} when e is vector; optional
-NB.          size of solid part within diagonal, default is
-NB.          +∞ (all elements in forward direction)
+NB.          size of solid part of diagonal, default is +∞
+NB.          (all elements in forward direction)
 NB.   Aupd - m×n-matrix A with value[s] e assigned to solid
-NB.          part within d-th diagonal
+NB.          part of d-th diagonal
 NB.   S    ≥ 0, the length of d-th diagonal
 NB.   k    ≤ S, the length of vector e
 NB.
@@ -464,21 +473,21 @@ NB.   vapp=. u upddiag
 NB. where
 NB.   u    - monad to change elements; is called as:
 NB.            eupd=. u e
-NB.   vapp - ambivalent verb to update a solid part within
+NB.   vapp - ambivalent verb to update a solid part of
 NB.          diagonal of matrix A by monad u; is called
 NB.          as:
 NB.             Aupd=. [(d,[h[,s]])] vapp A
-NB.   d    - integer in range [1-m,n-1], optional IO
+NB.   d    - integer in range [1-m,n-1], optional lIO
 NB.          diagonal, default is 0 (main diagonal)
-NB.   h    - integer in range [-S,S-1], optional IO extreme
-NB.          element of solid part within diagonal, default
-NB.          is 0 (take from head)
+NB.   h    - integer in range [-S,S-1], optional lIO extreme
+NB.          element of solid part of diagonal, default is 0
+NB.          (take from head)
 NB.   s    - integer in range [-S,S] or ±∞, optional size of
-NB.          solid part within diagonal, default is +∞ (all
+NB.          solid part of diagonal, default is +∞ (all
 NB.          elements in forward direction)
 NB.   A    - m×n-matrix to update
-NB.   Aupd - m×n-matrix A with solid part within d-th
-NB.          diagonal being updated by monad u
+NB.   Aupd - m×n-matrix A with solid part of d-th diagonal
+NB.          being updated by monad u
 NB.   S    ≥ 0, the length of d-th diagonal
 NB.
 NB. TODO:
@@ -627,16 +636,16 @@ NB. where
 NB.   m    ≥ 0, integer, optional rows in matrix I, default
 NB.          is n
 NB.   n    ≥ 0, integer, columns in matrix I
-NB.   d    - integer in range [1-m,n-1], optional IO
+NB.   d    - integer in range [1-m,n-1], optional lIO
 NB.          diagonal, default is 0 (main diagonal)
-NB.   h    - integer in range [-S,S-1], optional IO extreme
-NB.          element of solid part within diagonal, default
-NB.          is 0 (take from head)
+NB.   h    - integer in range [-S,S-1], optional lIO extreme
+NB.          element of solid part of diagonal, default is 0
+NB.          (take from head)
 NB.   s    - integer in range [-S,S] or ±∞, optional size of
-NB.          solid part within diagonal, default is +∞ (all
+NB.          solid part of diagonal, default is +∞ (all
 NB.          elements in forward direction)
 NB.   I    - m×n-matrix of zeros with unit assigned to solid
-NB.          part within d-th diagonal
+NB.          part of d-th diagonal
 NB.   S    ≥ 0, the length of d-th diagonal
 NB.
 NB. Examples:
@@ -664,9 +673,9 @@ NB. Syntax:
 NB.   D=. [(h,t)] diagmat e
 NB. where
 NB.   e - S-vector, new values for diagonal
-NB.   h - integer in range [1-m,n-1], IO diagonal of v's
+NB.   h - integer in range [1-m,n-1], lIO diagonal of v's
 NB.       head, relatively to top left corner, default is 0
-NB.   t - integer in range [1-m,n-1], IO diagonal of v's
+NB.   t - integer in range [1-m,n-1], lIO diagonal of v's
 NB.       tail, relatively to bottom right corner, default is
 NB.       0
 NB.   D - m×n-matrix of zeros with vector e assigned to h-th
@@ -675,7 +684,7 @@ NB.   S ≥ 0, the length of h-th diagonal
 NB.
 NB. Algorithm:
 NB.   1) find D shape
-NB.   2) generate lIOS for h-th diagonal
+NB.   2) generate lIO h-th diagonal
 NB.   3) write e into matrix of zeros
 NB.
 NB. Examples:
@@ -844,3 +853,47 @@ NB.                              0 1 9
 NB.                              0 0 1
 
 tru1=: (0&$:) :([ tru ((1;[) setdiag ]))
+
+NB. ---------------------------------------------------------
+NB. tr2he
+NB.
+NB. Description:
+NB.   Make Hermitian (symmetric) matrix from lower or upper
+NB.   triangular
+NB.
+NB. Syntax:
+NB.   H=. tr2he T
+NB. where
+NB.   T - n×n-matrix, lower or upper triangular
+NB.   H - n×n-matrix, Hermitian (symmetric)
+
+tr2he=: (-: upddiag) @ (+ ct)
+
+NB. ---------------------------------------------------------
+NB. he
+NB.
+NB. Description:
+NB.   Make Hermitian (symmetric) matrix from general square
+NB.
+NB. Syntax:
+NB.   H=. he G
+NB. where
+NB.   G - n×n-matrix
+NB.   H - n×n-matrix, Hermitian (symmetric)
+
+he=: tr2he @ trl
+
+NB. ---------------------------------------------------------
+NB. po
+NB.
+NB. Description:
+NB.   Make Hermitian (symmetric) positive definite matrix
+NB.   from general square invertible
+NB.
+NB. Syntax:
+NB.   P=. po G
+NB. where
+NB.   G - n×n-matrix, invertible
+NB.   H - n×n-matrix, Hermitian (symmetric)
+
+po=: mp ct

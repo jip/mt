@@ -265,7 +265,7 @@ lahefpl=: (3 : 0) ^: (TRFNB<.#@(0 & {::))
   'ip A lt t0 t1'=. y
   w=. lt ((-~&# { ]) ((}.~ #) - ({.~ #) mp ]) ((-~,-@[)&# {. ])) A
   A=. (w,:lt) (((0 liosE),:(0 liosS)))&c } A
-  w=. 0 (9&o.) upd1 w - lt (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
+  w=. 0 (9&o.) upd w - lt (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
   lt=. lt (+@}.@] - ((* }.)~ {.)) w
   dip=. (liofmax (-@] <@, -) #) lt
   ip=. dip C. :: ] ip
@@ -507,7 +507,7 @@ lahefpu=: (3 : 0) ^: (TRFNB<.#@(0 & {::))
   'ip A ut t0 t1'=. y
   w=. ut ((<:@-&# { ]) (({.~ c) - (}.~ c) mp ]) ((-,[)&# {. ])) A
   A=. (ut,:w) (((0 liosN),:(0 liosW)))&c } A
-  w=. _1 (9&o.) upd1 w - ut (({:@[ * +@((1 liosN)&# ({,) ])) :: 0:) A
+  w=. _1 (9&o.) upd w - ut (({:@[ * +@((1 liosN)&# ({,) ])) :: 0:) A
   ut=. ut (+@}:@] - ((* }:)~ {:)) w
   dip=. (<:@(1>.#) <@, liolmax) ut
   ip=. dip C. :: ] ip
@@ -640,7 +640,7 @@ NB.                  Pb^_1 :
 NB.                    U1ab := U1ab * Pb^_1
 NB.           4.7.3) assemble triangular matrices L and U1
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -794,7 +794,7 @@ NB.                  Pb^_1 :
 NB.                    L1ab := Pb^_1 * L1ab
 NB.           4.7.3) assemble triangular matrices L1 and U
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -951,7 +951,7 @@ NB.                  Pa^_1 :
 NB.                    U1ba := Pa^_1 * U1ba
 NB.           4.7.3) assemble triangular matrices U1 and L
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -1105,7 +1105,7 @@ NB.                  Pa^_1 :
 NB.                    L1ba := L1ba * Pa^_1
 NB.           4.7.3) assemble triangular matrices L1 and U
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -1208,7 +1208,7 @@ NB.
 NB. FLOPs [1]:
 NB.   1/3 * (1 + 1/TRFNB) * n^3 + O(n^2 * k)
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   A -: clean (/: ip) fp L1 (mp mp ct@[) T
@@ -1229,8 +1229,6 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
-NB. - avoid "for." control structure to guarantee proper
-NB.   execution order
 NB. - T would be sparse
 
 hetrfpl=: 3 : 0
@@ -1239,13 +1237,15 @@ hetrfpl=: 3 : 0
   L1=. 0 {."1 y
   lt=. n # 0
   t0=. t1=. i. 0
-  for_i. n (] dhs2lios (0,(>.@%))) TRFNB do.
+  i=. 0
+  while. i < n do.
     'ipi y lt t0 t1'=. lahefpl ((i. # lt);y;lt;t0;t1)
     dip=. i (i.@[ , +) ipi
     ip=. dip C. ip
     subL1=. trl1 (_,TRFNB) rt y
     L1=. (dip C. L1) stitchb subL1
     y=. ((2 # TRFNB) }. y) - (((TRFNB }. subL1) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 { :: ] lt) * (1 (0}) :: ] lt)) */ + (lt ((_1 liosS)&# ({,) ]) y))
+    i=. TRFNB + i
   end.
   T=. t1 (((setdiag~ (;&_1)) (setdiag~ (+;1:)) ])~ diagmat) t0
   ip ; L1 ; T
@@ -1318,7 +1318,7 @@ NB.
 NB. FLOPs [1]:
 NB.   1/3 * (1 + 1/TRFNB) * n^3 + O(n^2 * k)
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   A -: clean (/: ip) fp U1 (mp mp ct@[) T
@@ -1335,8 +1335,6 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
-NB. - avoid "for." control structure to guarantee proper
-NB.   execution order
 NB. - T would be sparse
 
 hetrfpu=: 3 : 0
@@ -1345,13 +1343,15 @@ hetrfpu=: 3 : 0
   U1=. 0 {."1 y
   ut=. n # 0
   t0=. t1=. i. 0
-  for_i. n (] dhs2lios (_1,(-@>.@%))) TRFNB do.
+  i=. _1
+  while. i >: -n do.
     'ipi y ut t0 t1'=. lahefpu ((i. # ut);y;ut;t0;t1)
     dip=. i (],((+(i.@(_1&-)))~#)) ipi
     ip=. dip C. ip
     subU1=. (tru1~(-~/@$)) (_,-TRFNB) rt y
     U1=. subU1 stitcht (dip C. U1)
     y=. ((2 # -TRFNB) }. y) - ((((-TRFNB) }. subU1) mp ((-TRFNB) ((((0>.+)#),[) }. ]) y)) + ((_1 { :: ] ut) * (1 (_1}) :: ] ut)) */ + (ut ((1 liosN)&# ({,) ]) y))
+    i=. i - TRFNB
   end.
   T=. t1 (((setdiag~ (;&1)) (setdiag~ (+;_1:)) ])~ diagmat) t0
   ip ; U1 ; T
@@ -1402,7 +1402,7 @@ NB.                    ⌈n/2⌉ n-⌈n/2⌉
 NB.   3) else:
 NB.        L := sqrt(A)
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   A -: clean (mp ct) L
 NB. where
 NB.   L=. potrfl A
@@ -1458,7 +1458,7 @@ NB.                    ⌈n/2⌉ n-⌈n/2⌉
 NB.   3) else:
 NB.        U := sqrt(A)
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   A -: clean (mp ct) U
 NB. where
 NB.   U=. potrfu A
@@ -1503,7 +1503,7 @@ NB.        D=. diagmat d
 NB.   6) link matrices L1 and D to form output:
 NB.        L1 ; D
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   A -: clean L1 (mp mp ct@[) D
 NB. where
 NB.   'L1 D'=. pttrfl A
@@ -1561,7 +1561,7 @@ NB.        D=. diagmat d
 NB.   6) link matrices U1 and D to form output:
 NB.        U1 ; D
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.   A -: clean U1 (mp mp ct@[) D
 NB. where
 NB.   'U1 D'=. pttrfu A
@@ -1649,7 +1649,7 @@ NB. - for P * U1 * T * U1^H * P^_1 = A :
 NB.     berr := ||P * U1 * T * U1^H * P^_1 - A|| / (ε * ||A|| * n)
 
 testhetrf=: 3 : 0
-  rcond=. _. NB. (norm1 con (hetripl@hetrfpl)) y
+  rcond=. (norm1 con (hetripl@hetrfpl)) y
 
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
   ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y

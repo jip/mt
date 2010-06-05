@@ -1,6 +1,7 @@
 NB. 'Matrix toolbox' addon's entry point
 NB.
-NB. TESTLOGFILE  Log file name or a: to switch logging off
+NB. TESTLOGFILE  a: to switch logging off or boxed logfile
+NB.              name
 NB. TESTLOG      Literal array, being formatted test log
 NB. DEBUG        Debug level
 NB. FP_BASE      Floating point base
@@ -80,14 +81,14 @@ NB. =========================================================
 NB. Includes
 
 NB. ---------------------------------------------------------
-NB. System verbs
+NB. System definitions
 
 script_z_ '~system/main/printf.ijs'             NB. printf vsprintf
 script_z_ '~system/main/myutil.ijs'             NB. timespacex
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 
 NB. ---------------------------------------------------------
-NB. Addon verbs and nouns
+NB. Addon definitions
 NB.
 NB. TODO: s@user/projects@addons/math/mt@g
 
@@ -160,20 +161,20 @@ NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
 test=: 1 : 0
-  '%-25s %-14s %-14s %-14s %-14s %-14s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
+  '%-25s %-16s %-16s %-16s %-16s %-16s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
 
   NB. low-level algorithms
-  (u testbak_mt_) y  NB. square matrices only
-  (u testbal_mt_) y  NB. square matrices only
-  (u testref_mt_) y  NB. testlarfb is called only for relatively small matrices (min dim < 200)
-  (u testrot_mt_) y  NB. y is ignored
-  (u testgq_mt_) y
-  (u testmq_mt_) y
-  (u testsm_mt_) y
+  (u testbak_mt_) y   NB. square matrices only
+  (u testbal_mt_) y   NB. square matrices only
+  (u testref_mt_) y   NB. testlarfb is called only for relatively small matrices (min dim < 200)
+     testrot_mt_  ''  NB. y is ignored
+  (u testgq_mt_ ) y
+  (u testmq_mt_ ) y
+  (u testsm_mt_ ) y   NB. testtrsm is called only for relatively small matrices (size ≤ 500)
 
   NB. mid-level algorithms
   (u testhrd_mt_) y
-  (u testqf_mt_) y
+  (u testqf_mt_ ) y
   (u testtrf_mt_) y
   (u testtri_mt_) y
   (u testtrs_mt_) y
@@ -181,7 +182,7 @@ test=: 1 : 0
   NB. hi-level algorithms
   (u testexp_mt_) y
   (u testpow_mt_) y
-  (u testsv_mt_) y
+  (u testsv_mt_ ) y
 
   EMPTY_mt_
 )

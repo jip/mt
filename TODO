@@ -1,12 +1,9 @@
-s/Blocked code/partitioned code/g
-s/If:...then/Assertion:...where/
-
 TODO about computational methods see in MATRIX file
-
-Supply warning to all for.-having verbs about unordered evaluation
 
 Complete methods necessary to release TAU addon (Control Theory toolbox)
 
-add TODO: avoid "for" control structure to guarantee proper ordering
+replace v&}. v&{. by s&}."1 s&{."1 and so on (qg)
 
 s/blocked/partitioned/G
+
+check tests for 0x0 0xN Nx0

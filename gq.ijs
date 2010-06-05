@@ -122,10 +122,10 @@ NB.   1) form eQ(0) as unit matrix of proper size
 NB.   2) do iterations: eQ=. (s;Qf) (ungxxstep ^: k) eQ0
 NB.
 NB. Assertions:
-NB.   (] -: clean @ ((         trl   @( 0 _1&}.)) mp  (( 0 _1&}.)@(# ungl2 ])@         tru1   @(  k & {.   )))@gelqf) A
-NB.   (] -: clean @ ((((-~/@$) trl ])@( 1  0&}.)) mp~ (( 1  0&}.)@(c ung2l ])@((-~/@$) tru1 ])@((-k)&({."1))))@geqlf) A
-NB.   (] -: clean @ ((         tru   @(_1  0&}.)) mp~ ((_1  0&}.)@(c ung2r ])@         trl1   @(  k &({."1))))@geqrf) A
-NB.   (] -: clean @ ((((-~/@$) tru ])@( 0  1&}.)) mp  (( 0  1&}.)@(# ungr2 ])@((-~/@$) trl1 ])@((-k)& {.   )))@gerqf) A
+NB.   (] -: clean @ ((         trl   @:(}:"1)) mp  ((}:"1)@(# ungl2 ])@         tru1   @(  k & {.   )))@gelqf) A
+NB.   (] -: clean @ ((((-~/@$) trl ])@: }.   ) mp~ ( }.   @(c ung2l ])@((-~/@$) tru1 ])@((-k)&({."1))))@geqlf) A
+NB.   (] -: clean @ ((         tru   @: }:   ) mp~ ( }:   @(c ung2r ])@         trl1   @(  k &({."1))))@geqrf) A
+NB.   (] -: clean @ ((((-~/@$) tru ])@:(}."1)) mp  ((}."1)@(# ungr2 ])@((-~/@$) trl1 ])@((-k)& {.   )))@gerqf) A
 NB. where
 NB.   k=. <./ $ A
 NB.

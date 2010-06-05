@@ -8,7 +8,7 @@ Library of verbs to solving some problems in matrix algebra: transforming, decom
 
 VERSION=: '0.4.0'
 
-RELEASE=: 'j602'
+RELEASE=: 'j602 j701'
 
 LABCATEGORY=: 'Math'
 
@@ -20,20 +20,15 @@ MATRIX
 TODO
 bak.ijs
 bal.ijs
-brd.ijs
 con.ijs
 dbg.ijs
 eqr.ijs
-equ.ijs
-ev.ijs
-evs.ijs
 exp.ijs
 fork.ijs
 gq.ijs
 history.txt
 hrd.ijs
 ios.ijs
-log.ijs
 mq.ijs
 mt.ijs
 norm.ijs

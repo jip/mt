@@ -31,18 +31,6 @@ laqr1=: 4 : 0
 NB. =========================================================
 NB. Interface
 
-NB. ---------------------------------------------------------
-NB. hseqr
-NB.
-NB. ######Description:
-NB.   Solve:
-NB.     A * X = B
-NB.
-NB. Syntax
-NB.     X=. A gesv B
-NB. where
-NB.   A  - m*n matrix
-
 NB. =========================================================
 NB. Test suite
 

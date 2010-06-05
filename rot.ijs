@@ -1,11 +1,10 @@
 NB. Rotations
 NB.
-NB. lartg  Generates a plane rotation of a 2-vector
-NB. rot    Applies a plane rotation(s) to a 2-vector(s)
+NB. lartg      Generates a plane rotation of a 2-vector
+NB. rot        Applies a plane rotation(s) to a 2-vector(s)
 NB.
 NB. testlartg  Test lartg by vectors given
-NB. testrot    Adv. to make verb to test lartg by pre-defined
-NB.            vectors
+NB. testrot    Test rotation algorithms by predefined matrix
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -33,15 +32,28 @@ NB.   Z04  =  z^ 4   =  2^ 1020
 'ROTZ04 ROTZ03 ROTZ02 ROTZ01 ROTZ_1 ROTZ_2 ROTZ_3 ROTZ_4'=: (<<<4) { ROTSCL20=: FP_BASE ^ (i: 4) * ROTPOW=: >. 1r4 * FP_BASE ^. FP_SFMIN
 
 NB. Miscellaneous
+
 ROTSQRTEPS=: %: FP_EPS
 ROTZ0h=: %: ROTZ01
 
 NB. Intervals
+NB.
+NB. Note:
+NB. - conventional (closed) insertion point is calculated by:
+NB.     c=. x I. y
+NB.   and provides:
+NB.     y <: c { x
+NB. - alternative (open) insertion point is calculated by:
+NB.     o=. x I. (1 + FP_PREC) * y
+NB.   and provides:
+NB.     y < o { x
+
 ROTINT0=: (ROTZ_2*(1-FP_EPS)) , ROTZ02
 ROTINT1=: (ROTZ_3*(1-FP_EPS)) , (ROTZ_1*(1-FP_EPS)) , ROTZ01 , ROTZ03
 ROTINT2=: (ROTZ_4*(1-FP_EPS)) , (ROTZ_3*(1-FP_EPS)) , (ROTZ_2*(1-FP_EPS)) , (ROTZ_1*(1-FP_EPS)) , ROTZ0h , ROTZ02 , ROTZ03 , ROTZ04
 
 NB. Scale vectors of corresponding intervals
+
 ROTSCL00=: ROTZ04 , 1 , ROTZ_4
 ROTSCL01=: |. ROTSCL00
 ROTSCL10=: ROTZ04 , ROTZ02 , 1 , ROTZ_2 , ROTZ_4
@@ -53,7 +65,7 @@ NB. ---------------------------------------------------------
 NB. Miscellaneous
 
 morim=: >./"1 @: | @: +.  NB. monad: max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
-sgn=: *`1:@.(0&=)         NB. monad: (if y<0 then -1 else 1 endif), for reals equiv. to: (0&(<:->))
+sgn=: (*!.0)`1:@.(0&=)    NB. monad: (if y<0 then -1 else 1 endif), for reals equiv. to: (0&(<:->))
 sgnr=: sgn @ (9 & o.)     NB. monad: sgn(Re(y))
 
 NB. ---------------------------------------------------------
@@ -73,7 +85,7 @@ NB. ---------------------------------------------------------
 NB. perm
 NB.
 NB. Description:
-NB.   Generate all [x-]permutations of size n from the set y
+NB.   Generate all [x-]permutations of size x from the set y
 NB.
 NB. Syntax:
 NB.   p=. [k] perm v
@@ -110,7 +122,7 @@ NB.
 NB. Notes:
 NB. - niladic verb
 NB. - is called each time when there is a need to have test
-NB.   array, to avoid memory consumption
+NB.   array, to reduce memory consumption (32Mb)
 NB. - numbers are selected to force lartg to go through all
 NB.   code branches, see LAWN148
 
@@ -256,19 +268,72 @@ NB. where
 NB.   A - n×2-matrix, each row is (f,g) pair of complex
 NB.       numbers to test
 NB.
-NB. Formula:
-NB.   berr := max(|r - exactr| / max(ε * |exactr|, FP_SFMIN * FP_PREC))
-NB. where
-NB.   FP_SFMIN * FP_PREC - the smallest denormalized number
-NB.   r                  - computed by lartg, |r - exactr| ≤ FP_OVFL
-NB.   exactr             - computed by algorithm 1 (see [1]
-NB.                        in lartg), |exactr| ≤ FP_OVFL
+NB. Algorithm for calculating backward error:
+NB.   In:  A, CSR
+NB.   where
+NB.        A -: F ,. G
+NB.        CSR=. lartg"1 A
+NB.        CSR -: C ,. S ,. R
+NB.   Out: maxberr
+NB.   1) find exact solution for each row by Algorithm 1
+NB.        CSRexact=. algo1"1 A
+NB.      where
+NB.        CSRexact -: Cexact ,. Sexact ,. Rexact
+NB.   2) combine CSR and CSRexact:
+NB.        CSRboth=. CSR ,. CSRexact
+NB.   3) exclude rows containing NaNs:
+NB.        CSRboth=. xrNaN CSRboth
+NB.      note: J602 has a bug in (128!:5) [1], so the
+NB.            following workaround:
+NB.              j./"1@(128!:5)@:+.
+NB.            must be used instead of:
+NB.              128!:5
+NB.   4) exclude rows containing ±∞:
+NB.        CSRboth=. xrInf CSRboth
+NB.   5) extract vectors R and Rexact from CSRboth:
+NB.        R      := [R[0],      R[1],      ...] := CSRboth[:,2]
+NB.        Rexact := [Rexact[0], Rexact[1], ...] := CSRboth[:,5]
+NB.   6) calculate backward error for each pair
+NB.      (R[i],Rexact[i]):
+NB.        BErr[i] := ||R[i]| - |Rexact[i]|| / max(ε * |Rexact[i]|, SDN)
+NB.      where
+NB.        SDN       = FP_SFMIN * FP_PREC, the smallest
+NB.                    denormalized number
+NB.        R[i]      - approximation computed by lartg,
+NB.                      |R[i] - Rexact[i]| ≤ FP_OVFL
+NB.        Rexact[i] - exact value computed by algorithm 1
+NB.                    (see LAWN148),
+NB.                      |Rexact[i]| ≤ FP_OVFL
+NB.      note: comparing to LAWN148, a different formula is
+NB.            used here due to necessity to eliminate sign
+NB.            changes in R. This changes are implemented
+NB.            according to LAWN150. An original formula can
+NB.            be used if rottestmat generates all f only
+NB.            such that sgn(Re(f))=1
+NB.   7) exclude +∞ from vector of BErr:
+NB.        BErr=. xrInf BErr
+NB.   8) find backward error:
+NB.        maxberr = max(BErr[:])
+NB.
+NB. References:
+NB. [1] http://www.jsoftware.com/pipermail/programming/2009-December/017071.html
+NB.     [Jprogramming] 128!:5] 0j_.
+NB.     Dan Bron, Wed Dec 2 02:22:37 HKT 2009
 
 testlartg=: 3 : 0
   NB. implement algorithm 1
-  algo1=. 3 : 'if. 0 = {: y do. (sgn,0:,]) {. y elseif. 0 = {. y do. (0,(sgn@+),|) {: y elseif. do. ((d*|f),(sgnf*(|g)*d),(sgnf % d)) [ sgnf=. sgn f [ d=. (sgnr f) % %: (+/) soris ''f g''=. y end.'
+  algo1=. 3 : 'if. 0 = {: y do. (sgn,0:,]) {. y elseif. 0 = {. y do. (0,(sgn@+),|) {: y elseif. do. try. ((d*|f),(sgnf*(+g)*d),(sgnf % d)) [ sgnf=. sgn f [ d=. (sgnr f) % %: (+/) soris ''f g''=. y catch. 3 # _. end. end.'
 
-  ('lartg"1' tmonad (]`({:"1)`(_."_)`(_."_)`(normi@((((|@:-)(>./@(#~ (_&~:)))((FP_SFMIN * FP_PREC)>.(FP_EPS*|@]))) (({:"1)@:(algo1"1)))~)))) y
+  NB. exclude rows containing NaN from the table y
+  xrNaN=. #~(-.@(+./)@|:@:(j./"1@(128!:5)@:+.))
+
+  NB. exclude rows containing ±∞ from the table y
+  xrInf=. #~(-.@(+./)@|:@:(_=|))
+
+  NB. backward error calculator:
+  vberr=. ((|@:(-&:|) >./@:xrInf@:% (FP_SFMIN * FP_PREC) >. FP_EPS * |@])/@(2 5&{)@|:@xrInf@xrNaN@,. algo1"1)~
+
+  ('lartg"1' tmonad (]`]`(_."_)`(_."_)`(vberr f.))) y  NB. fix vberr to allow trans-locale calling
 
   EMPTY
 )
@@ -277,27 +342,14 @@ NB. ---------------------------------------------------------
 NB. testrot
 NB.
 NB. Description:
-NB.   Adv. to make verb to test triangular inversion
-NB.   algorithms by matrix of generator and shape given
+NB.   Test rotation algorithms by predefined matrix
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testtri
+NB.   testtri y
 NB. where
-NB.   mkmat - monad to generate a matrix; is called as:
-NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
-NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   y - any noun
 NB.
-NB. Application:
-NB. - test by random rectangular real matrix with elements
-NB.   distributed uniformly with support (0,1):
-NB.     (? @ $ 0:) testtri_mt_ 200 150
-NB. - test by random square real matrix with elements with
-NB.   limited value's amplitude:
-NB.     (_1 1 0 4 _6 4 & gemat_mt_) testtri_mt_ 200 200
-NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testtri_mt_ 150 200
+NB. Notes:
+NB. - niladic verb
 
-testrot=: 1 : 'EMPTY_mt_ [ testlartg_mt_ @ rottestmat_mt_'
+testrot=: EMPTY [ testlartg @ rottestmat

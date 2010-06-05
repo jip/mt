@@ -151,14 +151,14 @@ NB.   Monads to generate an elementary reflector, see larfg,
 NB.   larfp for details.
 
 larfgf=: 0 _1 & larfg
-larfgfc=: _1 + upd1 larfgf
+larfgfc=: _1 + upd larfgf
 larfgb=: _1 0 & larfg
-larfgbc=: 0 + upd1 larfgb
+larfgbc=: 0 + upd larfgb
 
 larfpf=: 0 _1 & larfp
-larfpfc=: _1 + upd1 larfpf
+larfpfc=: _1 + upd larfpf
 larfpb=: _1 0 & larfp
-larfpbc=: 0 + upd1 larfpb
+larfpbc=: 0 + upd larfpb
 
 NB. ---------------------------------------------------------
 NB. larftbc
@@ -380,7 +380,7 @@ NB.   V     - unit triangular (trapezoidal) matrix
 NB.   tau   - k-vector τ[0:k-1] corresp. to V
 NB.
 NB. Notes:
-NB. - models LAPACK's sequence of calls to xLARFT and then
+NB. - models sequence of calls to LAPACK's xLARFT and then
 NB.   to xLARFB
 NB. - larfxxxx and larfbxxxx are topological equivalents
 
@@ -408,8 +408,8 @@ NB. =========================================================
 NB. Test suite
 NB.
 NB. Notes:
-NB. - foregoing verbs are also testing implicitly in gq, mq,
-NB.   qf tests
+NB. - foregoing verbs are also testing implicitly in testgq,
+NB.   testmq, testqf
 
 NB. ---------------------------------------------------------
 NB. testlarft
@@ -502,8 +502,9 @@ NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testref_mt_ 150 200
 NB.
 NB. Notes:
-NB. - non-blocked larfxxxx algos are tested implicitly in gq,
-NB.   mq, qf tests
-NB. - larfbxxxx are useful for relatively small matrices
+NB. - non-blocked larfxxxx algos are tested implicitly in
+NB.   testgq, testmq, testqf
+NB. - larftxx and larfbxxxx are impractical for large
+NB.   matrices
 
-testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ ^: (200 > (<./@$@(0 & {::))) [ testlarft_mt_) @ (u ; u)'
+testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_) @ (u ; u) ^: (200 > (<./@$@(0 & {::)))'

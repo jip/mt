@@ -96,90 +96,23 @@ potf2u=: (3 : 0) " 2
   y * (<:/~ i. n)                      NB. fill strict lower triangular by zeros
 )
 
-NB. optimal NB must be such that NB×NB matrix should fit in CPU cache
-NB.   sp=: 3 : '7!:5 <''y'''
-NB.   0 ": sp (2 $ 500) $ 100.1
-NB.2097152
-NB.   0 ": sp (2 $ 250) $ 100.1
-NB.524288
-NB.   2097152 524288 % 1024
-NB. 2048 512
-
-Cholesky=: 4 : 0
- n=.#y
- if. x >: n do.
-NB.smoutput 'direct, n=' , (": n) , ', NB=' , ": x
-  potf2l y
- else.
-NB.smoutput 'recursive, n=' , (": n) , ', NB=' , ": x
-  p=.>.-:n
-  qn=.p-n
-  X=.(p,p){.y
-  Yh=.(qn,p){.y
-  Z=.(qn,qn){.y
-  L0=.x Cholesky X
-  L2=.Yh mp (128!:1) (h L0)
-  L1=.x Cholesky Z - (mp h) L2
-  L0,L2,.L1
- end.
-)
-
-potrf=: (3 : 0) " 2
+potrfl=: (3 : 0) " 2
   n=. # y
-
-NB. *           Compute the Cholesky factorization A = L*L'.
-NB. *
-NB.             DO 20 J = 1, N, NB
-NB. *
-NB. *              Update and factorize the current diagonal block and test
-NB. *              for non-positive-definiteness.
-NB. *
-NB.                JB = MIN( NB, N-J+1 )
-NB.                CALL ZHERK( 'Lower', 'No transpose', JB, J-1, -ONE,
-NB.      $                     A( J, 1 ), LDA, ONE, A( J, J ), LDA )
-NB.                CALL ZPOTF2( 'Lower', JB, A( J, J ), LDA, INFO )
-NB.                IF( INFO.NE.0 )
-NB.      $            GO TO 30
-NB.                IF( J+JB.LE.N ) THEN
-NB. *
-NB. *                 Compute the current block column.
-NB. *
-NB.                   CALL ZGEMM( 'No transpose', 'Conjugate transpose',
-NB.      $                        N-J-JB+1, JB, J-1, -CONE, A( J+JB, 1 ),
-NB.      $                        LDA, A( J, 1 ), LDA, CONE, A( J+JB, J ),
-NB.      $                        LDA )
-NB.                   CALL ZTRSM( 'Right', 'Lower', 'Conjugate transpose',
-NB.      $                        'Non-unit', N-J-JB+1, JB, CONE, A( J, J ),
-NB.      $                        LDA, A( J+JB, J ), LDA )
-NB.                END IF
-NB.    20       CONTINUE
-)
-
-NB. CPU L1 cache size
-    L1_CACHE=:  8*1024  NB.  8k for Intel Pentium 4
-NB. L1_CACHE=: 64*1024  NB. 64k for AMD Athlon
-
-NB. complex square matrix max size to fit entirely in L1 cache
-NB. TODO: automate via sp=: 3 : '7!:5 <''y'''
-NB. NBLOCK=: 22             NB. or 31 for floating point datatype
-
-nb=: 2 ^ 4
-nb2=: +: nb
-
-rpotrf=: (3 : 0) " 2
-  [: ''
-)
-
-rgetrsu=: (3 : 0) " 2 2
-  [: ''
-)
-
-rsyrk=: (3 : 0) " 2 2
-  [: ''
-)
-
-syrk=: (3 : 0) " 2 2
-  [: ''
+  nb=. 32           NB. choosed experimentally
+  for_j. range 0 , (n-1) , nb do.
+    jb=. nb <. n-j
+    bd=. ((j , j) ,: ((n - j) , jb)) ] ;. 0 y
+    ac=. ((j , 0) ,: ((n - j) , j)) ] ;. 0 y
+    ah=. ((j , 0) ,: (jb , j)) h ;. 0 y
+    bd=. bd - ac mp ah
+    b=. (2 $ jb) potf2l ;. 0 bd
+    y=. b (< ;~ j + i. jb) } y
+    ios=. (j + i. jb) ; ((j + jb) ([ + (i. @ (-~))) n)
+    y=. 0 (< ios) } y
+    d=. (_1 0 ,: ((n - (j + jb)) , jb)) ] ;. 0 bd
+    x=. d mp (128!:1) h b
+    y=. x (< |. ios) } y
+  end.
 )
 
 NB. =========================================================
@@ -232,10 +165,6 @@ error
    A1000 -: ((+/ .*) (+ @ |:)) (potf2_pjlap_ A1000)
 1
    ts=: 6!:2, 7!:2@]
-   5 (ts & >) 'z=. potf2_pjlap_ A100';'z=. potf2_pjlap_ A500';'z=. potf2_pjlap_ A1000'
-0.0164126    810688
-  1.08656 1.28652e7
-  7.70693 5.14168e7
 
    A50d=. ((+/ .*) |:) ? 50 50 $ 100
    (potf2_pjlap_ (+/ @: (+/) @: | @: -) Choleski_pjlap_) A50d
@@ -245,6 +174,16 @@ error
    (A50d (+/ @: (+/) @: | @: -) ((+/ .*) (+ @ |:)) (Choleski_pjlap_ A50d))
 2.53472e_5
 
+   A1000f=: ((+/ .*) |:) 10.1 + ? (2 $ 1000) $ 10
+   A1000c=: ((+/ .*) (+ @ |:)) j./ ? (2 , (2 $ 1000)) $ 10
+   ts & > 'z=. potf2l_pjlap_ A1000f';'z=. potrfl_pjlap_ A1000f';'z=. Cholesky_pjlap_ A1000f'
+4.32201 1.78581e7
+ 1.0309 1.35258e7
+1.76633 2.93628e7
+   ts & > 'z=. potf2l_pjlap_ A1000c';'z=. potrfl_pjlap_ A1000c';'z=. Cholesky_pjlap_ A1000c'
+7.73323 5.14207e7
+2.44583 2.70426e7
+3.96861 5.87229e7
 
 )
 
@@ -270,34 +209,34 @@ flops_Chol=: 4 : 0
 )
 
 plot2d=: 3 : 0
-  vnb=. lio 1 1 , y  NB. NB[i]
-  vtf=. y $ 0      NB. execution time for float
-  Af=: ((+/ .*) |:) ? (2 $ y) $ 100
-NB.  Ac=: ((+/ .*) (+ @ |:)) j./ ? 2 (2 $ y) $ 100
+  vnb=. lio 1 1 100 NB. , y  NB. NB[i]
+  vt=. (# vnb) $ 0      NB. execution time
+NB.  A=: ((+/ .*) |:) 10.1 + ? (2 $ y) $ 10
+  A=: ((+/ .*) (+ @ |:)) j./ ? (2 , (2 $ y)) $ 10
   for_b. vnb do.
-    nb=: b
-    tf=. (6!:2) 'z=. nb Cholesky Af'
-NB.    ff=. ((nb flops_Chol y) % tf) % 1e6
+    nb=: b NB. >>>>>> CPU_CACHE=: b
+    t=. (6!:2) 'z=. nb potrfl2 A'
+NB.    f=. ((flops_Chol y) % t) % 1e6
     if. 0 = (y%10) | b do.
-      smoutput 'b_index' ; ((": >: b_index) , '/' , (": y)) ; 'NB' ; b ; 'time float' ; tf
+      smoutput 'b_index' ; ((": >: b_index) , '/' , (": y)) ; 'NB' ; b ; 'time' ; t
     end.
-    vtf=. tf b_index } vtf
-NB.    vff=. ff b_index } vff
+    vt=. t b_index } vt
+NB.    vf=. f b_index } vf
   end.
 
   pd 'reset'
-  pd 'title Cholesky factorization blocked recursion'
+  pd 'title Cholesky factorization via potrfl2'
   pd 'type line'
-  pd 'xticpos ' , ": lio 10 10 , (y % 10)
+  pd 'xticpos ' , ": lio 10 10 , ((# vnb) % 10)
 NB.  pd 'grids 0 1'
 NB.  pd 'yrange 0 0.075'
   pd 'xcaption Size, N'
   pd 'ycaption Execution time, sec'
-  pd vnb;vtf
+  pd vnb;vt
   pd 'show'
   pd 'save bmp 1280 1000 chol_2d.bmp'
 
-  vtf writetable < 'vtf.dump'
+  vt writetable < 'vt.dump'
 NB.  vff writetable < 'vff.dump'
 )
 
@@ -309,10 +248,10 @@ plot3d=: 3 : 0
 NB.  mff=. (2 $ y) $ 0  NB. FLOPs for float
   for_n. vn do.
     Af=: ((+/ .*) |:) ? (2 $ n) $ 100
-NB.    Ac=: ((+/ .*) (+ @ |:)) j./ ? 2 (2 $ n) $ 100
+NB.    Ac=: ((+/ .*) (+ @ |:)) j./ ? (2 , (2 $ n)) $ 100
     for_b. lio 1 1 , n do. NB. log: ((, (>. @ -: @ {:)) ^: (1 ~: {:) ^: _ ) n
-      nb=: b
-      tf=. (6!:2) 'z=. nb Cholesky Af'
+      >>>>>>>>>>>>CPU_CACHE=: b
+      tf=. (6!:2) 'z=. Cholesky Af'
 NB.      ff=. ((nb flops_Chol n) % tf) % 1e6
       mtf=. tf (< n_index , b_index) } mtf
 NB.      mff=. ff (< n_index , b_index) } mff

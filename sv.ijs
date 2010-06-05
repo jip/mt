@@ -3,6 +3,7 @@ NB. Solve linear system
 NB.
 NB. getrsu   Solve system U*x=b, where U is an upper triangular matrix
 NB. trtrsu   Solve system U*x=b, where U is an upper triangular matrix in packed form
+NB. getrsl   Solve system L*X=B, where L is a lower triangular matrix
 NB. getrsl1  Solve system L*x=b, where L is a unit lower triangular matrix
 NB. gesv     Solve system A*x=b via LU factorization with partial pivoting
 NB. disv     Solve system A*x=b, where A is a diagonalizable matrix
@@ -99,12 +100,44 @@ trtrsu=: (4 : 0) " 1 1
 )
 
 NB. ---------------------------------------------------------
+NB. getrsl                                                2 2
+NB. Solve system L*X=B, where L is a lower triangular matrix
+NB.
+NB. Syntax:
+NB.   X=. B getrsl LU
+NB. where
+NB.   LU - N×N-matrix, the factors L and U from
+NB.        factorization, U is not referenced
+NB.   B  - N-vector or N×NRHS-matrix, RHS
+NB.   X  - same shape as B, solution
+NB.   N >= 0
+NB.
+NB. If:
+NB.   X1=. B getrsl LU
+NB.   L=. ltri_jlapack_ LU
+NB.   X2=. B getrsl1 L
+NB. then
+NB.   B -: L mp X
+NB.   X1 -: X2
+NB.
+NB. Notes:
+NB. - result is identical to LAPACK's dgetrs/zgetrs
+
+getrsl=: (4 : 0) " 2 2
+  n=. # x
+  z=. ($ x) $ 0
+  for_i. i. n do.              NB. traverse all rows of L
+    z=. (((i { x) - ((i {. i { y) mp (i {. z))) % ((< 2 $ i) { y)) i } z
+  end.
+)
+
+NB. ---------------------------------------------------------
 NB. getrsl1                                               1 2
 NB. Solve system L*x=b, where L is a lower triangular matrix
 NB. with units on diagonal
 NB.
 NB. Syntax:
-NB.   x=. b getrl1 LU
+NB.   x=. b getrls1 LU
 NB. where
 NB.   LU - N-by-N-matrix, the factors L and U from
 NB.        factorization

@@ -20,9 +20,6 @@ NB. Local constants
 NB. =========================================================
 NB. Local verbs
 
-mp=: +/ . *  NB. matrix product
-h =: +@|:    NB. conjugate transpose
-
 NB. =========================================================
 NB. Interface verbs
 
@@ -99,53 +96,31 @@ potf2u=: (3 : 0) " 2
   y * (<:/~ i. n)                      NB. fill strict lower triangular by zeros
 )
 
-CholeskyNB=: 3 : 0
+NB. optimal NB must be such that NB×NB matrix should fit in CPU cache
+NB.   sp=: 3 : '7!:5 <''y'''
+NB.   0 ": sp (2 $ 500) $ 100.1
+NB.2097152
+NB.   0 ": sp (2 $ 250) $ 100.1
+NB.524288
+NB.   2097152 524288 % 1024
+NB. 2048 512
+
+Cholesky=: 4 : 0
  n=.#y
- if. NBLOCK>:n do.
+ if. x >: n do.
+NB.smoutput 'direct, n=' , (": n) , ', NB=' , ": x
   potf2l y
  else.
+NB.smoutput 'recursive, n=' , (": n) , ', NB=' , ": x
   p=.>.-:n
-  q=.n-p
+  qn=.p-n
   X=.(p,p){.y
-  Y=.(p,-q){.y
-  Z=.(-q,q){.y
-  L0=.CholeskyNB X
-  L2=. h L2h=.Y %. L0
-  L1=.CholeskyNB Z - L2 mp L2h
+  Yh=.(qn,p){.y
+  Z=.(qn,qn){.y
+  L0=.x Cholesky X
+  L2=.Yh mp (128!:1) (h L0)
+  L1=.x Cholesky Z - (mp h) L2
   L0,L2,.L1
- end.
-)
-
-Cholesky1=: 3 : 0
- n=.#y
- if. 1>:n do.
-NB.  assert. (A=|A)>0=A  NB. check for positive definite
-  %:y
- else.
-  p=.>.-:n
-  q=.n-p
-  X=.(p,p){.y
-  Y=.(p,-q){.y
-  Z=.(-q,q){.y
-  L0=. Cholesky1 X
-  L2=. h L2h=.Y %. L0
-  L1=. Cholesky1 Z - L2 mp L2h
-  L0,L2,.L1
- end.
-)
-
-
-Choleski=: 3 : 0
- n=.#A=.y
- if. 1>:n do.
-  assert. (A=|A)>0=A  NB. check for positive definite
-  %:A
- else.
-  p=.>.n%2 [ q=.<.n%2
-  X=.(p,p){.A [ Y=.(p,-q){.A [ Z=.(-q,q){.A
-  L0=.Choleski X
-  L1=.Choleski Z-(T=.(h Y) mp %.X) mp Y
-  L0,(T mp L0),.L1
  end.
 )
 
@@ -178,6 +153,7 @@ NB.      $                        'Non-unit', N-J-JB+1, JB, CONE, A( J, J ),
 NB.      $                        LDA, A( J+JB, J ), LDA )
 NB.                END IF
 NB.    20       CONTINUE
+)
 
 NB. CPU L1 cache size
     L1_CACHE=:  8*1024  NB.  8k for Intel Pentium 4
@@ -191,22 +167,7 @@ nb=: 2 ^ 4
 nb2=: +: nb
 
 rpotrf=: (3 : 0) " 2
-  n=. #y
-  if. n < nb2 do.
-    potf2 y
-    return.
-  else.
-    n1=. <. -: n
-    j1=. >: n1
-    'ios1 ios2'=. n1 ({. ; }.) i. n
-    iosA11=. < 2 $ < ios1
-    y=. iosA11 ((rpotrf @: {)`[`]) } y
-    iosA21=. < ios2 ; ios1
-    y=. iosA21 ((rgetrsu @: {)`[`]) } y
-    iosA22=. < 2 $ < ios2
-    y=. ((iosA21 { y) rsyrk (iosA22 { y)) iosA22 } y
-    y=. iosA22 ((rpotrf @: {)`[`]) } y
-  end.
+  [: ''
 )
 
 rgetrsu=: (3 : 0) " 2 2
@@ -290,70 +251,101 @@ error
 NB. зависимость времени исполнения potf2l от размера матрицы
 
 require 'plot'
-lio=: + ` (* i.)/ " 1                   NB. integers grid (2{y) steps from (0{y) by (1{y)
+
+mp=: +/ . *            NB. matrix product
+h =: +@|:              NB. conjugate transpose
+lio=: + ` (* i.)/ " 1  NB. integers grid (2{y) steps from (0{y) by (1{y)
+
 writetable=: 4 : '(toHOST,(": x),"1 LF) 1!:2 y'  NB. table writetable < 'filename'
 readtable=: 3 : '>0 ". each cutopen toJ 1!:1 y'  NB. table=. readtable < 'filename'
-flops_potf2=: 0 0.166667 1.41667 0.166667 & p.
-flops_Chol1=: 3 : 0
-  if. 2>y do.
-    1
+
+flops_potf=: 0 0.166667 1.41667 0.166667 & p.
+
+flops_Chol=: 4 : 0
+  if. x>:y do.
+    flops_potf y
   else.
-    (flops_Cho1 + (0 0 1 0.5 0.1875 & p.)) >. -: y
+    x (flops_Chol + (0 0 1 0.5 0.1875 p. ])) (>. -: y)
   end.
 )
 
-plotflopsN=: 3 : 0
-  N=. 50
-  vn=. lio 400 1 , N
-  vFfp=. N $ 0
-  vFfr=. N $ 0
-  for_n. vn do.
-    Af=: ((+/ .*) |:) ? (2 $ n) $ 100
-NB.    A500c=: ((+/ .*) (+ @ |:)) j./ ? 2 500 500 $ 100
-    'tfp tfr'=. ((6!:2) & >) 'z=. potf2l Af';'z=. Cholesky1 Af'
-    if. 0 = (N%10) | n do.
-      smoutput 'n_index' ; ((": >: n_index) , '/' , (": N)) ; 'n' ; n ; 'time float plain' ; tfp ; 'time float recursive' ; tfr
+plot2d=: 3 : 0
+  vnb=. lio 1 1 , y  NB. NB[i]
+  vtf=. y $ 0      NB. execution time for float
+  Af=: ((+/ .*) |:) ? (2 $ y) $ 100
+NB.  Ac=: ((+/ .*) (+ @ |:)) j./ ? 2 (2 $ y) $ 100
+  for_b. vnb do.
+    nb=: b
+    tf=. (6!:2) 'z=. nb Cholesky Af'
+NB.    ff=. ((nb flops_Chol y) % tf) % 1e6
+    if. 0 = (y%10) | b do.
+      smoutput 'b_index' ; ((": >: b_index) , '/' , (": y)) ; 'NB' ; b ; 'time float' ; tf
     end.
-    vFfp=. (tfp %~ flops_potf2 n) n_index } vFfp
-    vFfr=. (tfr %~ flops_Chol1 n) n_index } vFfr
+    vtf=. tf b_index } vtf
+NB.    vff=. ff b_index } vff
   end.
-  'type line,marker;keypos ctie;keystyle lbhc;title Cholesky factorization;ycaption FLOPs.;xcaption N;key potf2 Chol/1' plot vn ; vFfp ,: vFfr
-  vn ; vFfp ; vFfr
+
+  pd 'reset'
+  pd 'title Cholesky factorization blocked recursion'
+  pd 'type line'
+  pd 'xticpos ' , ": lio 10 10 , (y % 10)
+NB.  pd 'grids 0 1'
+NB.  pd 'yrange 0 0.075'
+  pd 'xcaption Size, N'
+  pd 'ycaption Execution time, sec'
+  pd vnb;vtf
+  pd 'show'
+  pd 'save bmp 1280 1000 chol_2d.bmp'
+
+  vtf writetable < 'vtf.dump'
+NB.  vff writetable < 'vff.dump'
 )
 
 NB. зависимость времени исполнения от размера квадрата, факторизуемого посредством potf2l
 
-plotflopsNB=: 3 : 0
-  N=. 150
-  vn=. lio 1 1 , N
-  mFfp=. (2 $ N) $ 0
-  mFfr=. (2 $ N) $ 0
+plot3d=: 3 : 0
+  vn=. lio 1 1 , y   NB. N[i]
+  mtf=. (2 $ y) $ 0  NB. execution time for float
+NB.  mff=. (2 $ y) $ 0  NB. FLOPs for float
   for_n. vn do.
     Af=: ((+/ .*) |:) ? (2 $ n) $ 100
-NB.    A500c=: ((+/ .*) (+ @ |:)) j./ ? 2 500 500 $ 100
-    for_b. i. n do.
-      NBLOCK=: >: b
-      'tfp tfr'=. ((6!:2) & >) 'z=. potf2l Af';'z=. CholeskyNB Af'
-      mFfp=. tfp (< n_index , b) } mFfp
-      mFfr=. tfr (< n_index , b) } mFfr
+NB.    Ac=: ((+/ .*) (+ @ |:)) j./ ? 2 (2 $ n) $ 100
+    for_b. lio 1 1 , n do. NB. log: ((, (>. @ -: @ {:)) ^: (1 ~: {:) ^: _ ) n
+      nb=: b
+      tf=. (6!:2) 'z=. nb Cholesky Af'
+NB.      ff=. ((nb flops_Chol n) % tf) % 1e6
+      mtf=. tf (< n_index , b_index) } mtf
+NB.      mff=. ff (< n_index , b_index) } mff
     end.
-    if. 0 = (N%10) | n do.
-      smoutput 'n_index' ; ((": >: n_index) , '/' , (": N)) ; 'n' ; n
+    if. 0 = (y%10) | n do.
+      smoutput 'n_index' ; ((": >: n_index) , '/' , (": y)) ; 'n' ; n
     end.
   end.
-smoutput 'vn' ; ($vn) ; 'mFfp' ; ($mFfp) ; 'mFfr' ; ($mFfp)
+
   pd 'reset'
   pd 'title Cholesky factorization blocked recursion exec time, sec'
+NB.  pd 'sub 1 2'
+NB.  pd 'new'
+  pd 'type surface'
+  pd 'viewpoint 2.4 0.25 0.5' NB. _1.6 2.4 0.5'
+  pd 'yticpos ' , ": lio 10 10 , (y % 10)
+  pd 'grids 0 1'
+  pd 'zrange 0 0.075'
   pd 'xcaption N'
   pd 'ycaption NB'
-  pd 'type surface'
-  pd vn;vn;mFfp
-  pd 'type surface'
-  pd vn;vn;mFfr
+  pd vn;vn;mtf
+NB.  pd 'use'
+NB.  pd 'type surface'
+NB.  pd 'viewpoint _1.6 2.4 0.5'
+NB.  pd 'xcaption N'
+NB.  pd 'ycaption NB'
+NB.  pd vn;vn;mff
+NB.  pd 'endsub'
   pd 'show'
-  pd 'save bmp chol_nb.bmp'
-  mFfp writetable < 'mFfp.dump'
-  mFfr writetable < 'mFfr.dump'
+  pd 'save bmp 1280 1000 chol_nb.bmp'
+
+  mtf writetable < 'mtf.dump'
+NB.  mff writetable < 'mff.dump'
 )
 
 plotflops=: 3 : 0

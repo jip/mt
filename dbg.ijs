@@ -12,7 +12,7 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-gshapes=: $`($(;<)($ L: 0)) @. (0 < L.)  NB. get shapes, boxes are accepted, too
+gshapes=: $`($(;<)($ L: 0)) @. (0 < L.)  NB. get shapes
 
 NB. ---------------------------------------------------------
 NB. dbg1
@@ -29,31 +29,30 @@ NB.   title - any literal to name v
 NB.   v     - verb to switch to debug mode
 NB.   vdbg1 - being verb v equipped by output of its rank
 NB.           and valency, input's and output's shapes
-NB.   vdbg2 - being verb v equipped by output of its rank
-NB.           and valency, input's and output's shapes and
-NB.           values
+NB.   vdbg2 - the same output as by vdbg1 plus input's and
+NB.           output's values
 
 dbg1=: 2 : 0
-  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes y)
+  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y)
   o=. u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes o)
+  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes_mt_ o)
   o
 :
-  smoutput 'dbg' ; 'x' ; (gshapes x) ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes y)
+  smoutput 'dbg' ; 'x' ; (gshapes_mt_ x) ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y)
   o=. x u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes o)
+  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes_mt_ o)
   o
 )
 
 dbg2=: 2 : 0
-  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes y) ; < y
+  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y) ; < y
   o=. u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes o) ; < o
+  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes_mt_ o) ; < o
   o
 :
-  smoutput 'dbg' ; 'x' ; (gshapes x) ; x ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes y) ; < y
+  smoutput 'dbg' ; 'x' ; (gshapes_mt_ x) ; x ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y) ; < y
   o=. x u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes o) ; < o
+  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes_mt_ o) ; < o
   o
 )
 
@@ -77,6 +76,6 @@ NB.   vdbg  - being verb v equipped by output of debug info
 NB.
 NB. Application:
 NB. - to debug verb '*' in verb (+/ .*) try:
-NB.     C=. A (+/ .(* dbg '*')) B
+NB.     C=. A (+/ .(* dbg_mt_ '*')) B
 
-dbg=: 2 : 'u`(u dbg1 n)`(u dbg2 n) @. DEBUG'
+dbg=: 2 : 'u`(u dbg1_mt_ n)`(u dbg2_mt_ n) @. DEBUG_mt_'

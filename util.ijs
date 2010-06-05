@@ -24,9 +24,6 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-mocs=: >./ @ (+/   ) @:                                 NB. vector: sum of, matrix: max of column sums
-mors=: >./ @ (+/"_1) @:                                 NB. vector: max of, matrix: max of row sums
-
 NB. =========================================================
 NB. Interface
 
@@ -146,12 +143,12 @@ NB.   NB. to estimate rcond in ∞-norm
 NB.   vrcond=. ((_."_)`(normi con getri) @. (=/@$)) @ (0 {:: [)
 NB.   NB. to calc. ferr, assuming:
 NB.   NB.   ferr := ||x - realx||_inf / ||realx||_inf
-NB.   vferr=. ((- (% & normi) [) (1&{::))~
+NB.   vferr=. ((- (% & normi) [) (1 & {::))~
 NB.   NB. to calc. componentwise berr [LUG 75], assuming:
 NB.   NB.   berr := max_i(|b - A * realx|_i / (|A| * |realx| + |b|)_i)
 NB.   vberr=. ((mp & >/@[) (|@-) (0 {:: [) mp ]) (>./ @ %) (((0 {:: [) (mp & |) ]) + (|@mp & >/@[))
 NB.   NB. let's test getrs
-NB.   ('getrs' tdyad (0&{::)`(mp & >/)`]`vrcond`vferr`vberr) (A;x)
+NB.   ('getrs' tdyad (0 & {::)`(mp & >/)`]`vrcond`vferr`vberr) (A;x)
 
 tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n

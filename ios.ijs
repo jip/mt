@@ -1,11 +1,11 @@
 NB. ios.ijs
 NB. IOS
 NB.
-NB. iofmax     lIO 1st element with maximum sum of real and
+NB. liofmax    lIO 1st element with maximum sum of real and
 NB.            imagine parts' modules
-NB. iolmax     lIO last element with maximum sum of real and
+NB. liolmax    lIO last element with maximum sum of real and
 NB.            imagine parts' modules
-NB. ios2cp     Make cycle permutation from indices
+NB. lios2cp    Convert lIOS to cycle permutation
 NB. ht2lios    Generate lIOS from head and tail
 NB. dhs2lios   Generate lIOS from head, size and optional
 NB.            delta
@@ -14,7 +14,7 @@ NB. rios2lios  Convert rIOS to lIOS
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-01-10
+NB. Version: 1.0.0 2010-06-10
 
 coclass 'mt'
 
@@ -52,38 +52,31 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-NB. IO 1st element e with max(|Re(e)|+|Im(e)|) from list y
-NB. emulates LAPACK's IxAMAX
-iofmax=: (i.>./) @ sorim
+NB. lIO 1st element e with max(|Re(e)|+|Im(e)|) from list y
+NB. implements LAPACK's IxAMAX
+liofmax=: (i.>./) @ sorim
 
-NB. IO last element e with max(|Re(e)|+|Im(e)|) from list y
-iolmax=: (i:>./) @ sorim
+NB. lIO last element e with max(|Re(e)|+|Im(e)|) from list y
+liolmax=: (i:>./) @ sorim
 
 NB. ---------------------------------------------------------
-NB. ios2cp
+NB. lios2cp
 NB.
 NB. Description:
-NB.   Make cycle permutation from indices x and y
+NB.   Convert lIOS to cycle permutation
 NB.
 NB. Syntax:
-NB.   cp=. io0 ios2cp io1
+NB.   cp=. io0 lios2cp io1
 NB. where
-NB.   io0 io1 - IOS
+NB.   io0,io1 - lIOS
 NB.   cp      - cycle permutation
 NB.
 NB. References:
 NB. [1] [Jprogramming] Swapping array elements
 NB.     Roger Hui, Mon May 11 06:23:07 HKT 2009
 NB.     http://www.jsoftware.com/pipermail/programming/2009-May/014682.html
-NB.
-NB. TODO:
-NB. - if y is empty then output must be a:
-NB. - consider:
-NB.   ios2cp=: < @ (, ` (, @ ]) @. =)
-NB.   ios2cp=: < @ , @ (, ^: ~:)
-NB.   ios2cp=: (, ^: (-. @ -:)) & ,
 
-ios2cp=: < @ ~. @ ,
+lios2cp=: < @ ~. @ ,
 
 NB. ---------------------------------------------------------
 NB. ht2lios
@@ -122,12 +115,12 @@ NB.   s    - integer, size of lios, if s<0 then lios's order
 NB.          is reversed
 NB.   d    - optional non-negative integer, delta of lios,
 NB.          default is 1
-NB.   lios - |s|-vector of integers, lIOS of solid
-NB.          part of diagonal
+NB.   lios - |s|-vector of integers, lIOS of solid part of
+NB.          diagonal
 NB.
 NB. Notes:
-NB. - models rIOS in (u;.0) with following discrepancy: s
-NB.   cannot be ±∞
+NB. - monadic case models rIOS in (u;.0) with following
+NB.   difference: s cannot be ±∞
 
 dhs2lios=: 1&$: :({.@] + (condneg~ {.) * i.@(condneg/)@])
 
@@ -141,8 +134,8 @@ NB. Syntax:
 NB.   ios=. rios2ios rios
 NB.
 NB. Note:
-NB. - rios with columns count less than array's rank indexes
-NB.   the slice
+NB. - rios with columns count less than array's rank is
+NB.   indexing the slice
 
 rios2ios=: < " 1 @ rios2oios
 
@@ -169,12 +162,12 @@ NB. where
 NB.   k       = 0:|Π{size[i],i=0:r-1}|-1, IO lios' item
 NB.   n[k][i] - i-th axis' IO for k-th lios' item
 NB.
-NB. If:
+NB. Assertion:
+NB.   (lios ({,) array) -: (rios (, ;. 0) array)
+NB. where
 NB.   rios=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
 NB.   sh=. 10 11 12 13
 NB.   array=. i. sh
 NB.   lios=. sh rios2lios rios
-NB. then
-NB.   (lios ({,) array) -: (rios (, ;. 0) array)
 
 rios2lios=: ((*/\.) @ (1 & (|.!.1)) @ [) (+/ @: *) ((+ (1 & (|.!.0) @ (0 & >))) @ |: @: > @ , @ { @ rios2oios @ ])

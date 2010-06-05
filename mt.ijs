@@ -1,4 +1,5 @@
-NB. "Matrix toolbox" addon
+NB. mt.ijs
+NB. "Matrix toolbox" addon's main file
 NB.
 NB. test  Adv. to make verb to test algorithms
 NB.
@@ -6,10 +7,10 @@ NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-06-01
 
+coclass 'mt'
+
 NB. =========================================================
 NB. Configuration
-
-coclass 'mt'
 
 NB. ---------------------------------------------------------
 NB. IEEE 754-1985 double-precision 64 bit floating point
@@ -34,7 +35,7 @@ FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/
 NB. ---------------------------------------------------------
 NB. Tests logging
 
-TESTLOGFILE=: < '/home/jip/j602-user/temp/mt.log'     NB. a: to switch off file logging
+TESTLOGFILE=: < jpath '~temp/mt.log'                  NB. assign a: to switch off file logging
 TESTLOG=: ''                                          NB. literal array, being formatted test log
 
 NB. ---------------------------------------------------------
@@ -65,8 +66,10 @@ script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 
 NB. ---------------------------------------------------------
 NB. Addon verbs and nouns
+NB.
+NB. TODO: s@user/projects@addons/math/mt@g
 
-NB. utility
+NB. utilities
 require '~user/projects/mt/dbg.ijs'     NB. debug
 require '~user/projects/mt/util.ijs'    NB. utilities
 require '~user/projects/mt/ios.ijs'     NB. IOS
@@ -76,6 +79,7 @@ require '~user/projects/mt/rand.ijs'    NB. random objects
 require '~user/projects/mt/con.ijs'     NB. condition number
 
 NB. low-level
+require '~user/projects/mt/bak.ijs'     NB. recover eigenvectors after balancing
 require '~user/projects/mt/bal.ijs'     NB. balance
 require '~user/projects/mt/equ.ijs'     NB. equilibrate
 require '~user/projects/mt/ref.ijs'     NB. reflect
@@ -90,13 +94,14 @@ require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization
 require '~user/projects/mt/trf.ijs'     NB. triangular factorization
 require '~user/projects/mt/tri.ijs'     NB. inverse via trf
-require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via trf
+require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation from trf
 
 NB. hi-level
+require '~user/projects/mt/ev.ijs'      NB. eigenvalue decomposition
 require '~user/projects/mt/exp.ijs'     NB. exponent
 require '~user/projects/mt/log.ijs'     NB. logarithm
 require '~user/projects/mt/pow.ijs'     NB. power
-require '~user/projects/mt/sv.ijs'      NB. linear monomial equation
+require '~user/projects/mt/sv.ijs'      NB. solve linear monomial equation
 
 NB. =========================================================
 NB. Interface
@@ -108,7 +113,8 @@ NB. ---------------------------------------------------------
 NB. test
 NB.
 NB. Description:
-NB.   Adv. to make verb to test algorithms
+NB.   Adv. to make verb to test algorithms by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkge test
@@ -124,14 +130,15 @@ NB.
 NB. Application:
 NB. - test by random square real matrix with limited values'
 NB.   amplitudes:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) test_mt_ 500 500
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) test_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 100 500
+NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
 test=: 1 : 0
   '%-25s %-12s %-12s %-12s %-12s %-12s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
 
   NB. low-level algorithms
+  (u testbak_mt_) y
   (u testbal_mt_) y
   (u testequ_mt_) y
   (u testref_mt_) y

@@ -1,44 +1,16 @@
 NB. trf.ijs
-NB. Triangular factorization of matrix
+NB. Triangular factorization
 NB.
-NB. getrflu1p  Triangular factorization with partial pivoting
-NB.            of a general matrix: L * U1 * P = A, where P
-NB.            is permutation matrix, L is lower triangular
-NB.            and U1 is unit upper triangular
-NB. getrfpl1u  Triangular factorization with partial pivoting
-NB.            of a general matrix: P * L1 * U = A, where P
-NB.            is permutation matrix, L1 is unit lower
-NB.            triangular and U is upper triangular
-NB. getrfpu1l  Triangular factorization with partial pivoting
-NB.            of a general matrix: P * U1 * L = A, where P
-NB.            is permutation matrix, U1 is unit upper
-NB.            triangular and L is lower triangular
-NB. getrful1p  Triangular factorization with partial pivoting
-NB.            of a general matrix: U * L1 * P = A, where P
-NB.            is permutation matrix, U is upper
-NB.            triangular and L1 is unit lower triangular
-NB.
-NB. hetrfpl    Triangular factorization with full pivoting of
-NB.            a Hermitian (symmetric) matrix:
-NB.            P * L1 * T * L1' * P' = A, where P is
-NB.            permutation matrix, L1 is unit lower
-NB.            triangular and T is tridiagonal
-NB. hetrfpu    Triangular factorization with full pivoting of
-NB.            a Hermitian (symmetric) matrix:
-NB.            P * U1 * T * U1' * P' = A, where P is
-NB.            permutation matrix, U1 is unit upper
-NB.            triangular and T is tridiagonal
-NB.
-NB. potrfl     Cholesky factorization of a Hermitian
-NB.            (symmetric) positive definite matrix:
-NB.            L * L' = A, where L is lower triangular
-NB. potrfu     Cholesky factorization of a Hermitian
-NB.            (symmetric) positive definite matrix:
-NB.            U * U' = A, where U is upper triangular
+NB. getrfxxxx  Triangular factorization with partial pivoting
+NB.            of a general matrix
+NB. hetrfpx    Triangular factorization with full pivoting of
+NB.            a Hermitian (symmetric) matrix
+NB. potrfx     Cholesky factorization of a Hermitian
+NB.            (symmetric) positive definite matrix
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-01-10
+NB. Version: 1.0.0 2010-06-10
 
 coclass 'mt'
 
@@ -61,7 +33,6 @@ NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
 NB.   ip  - n-vector, full inversed permutation of A
 NB.   L1  - n×n-matrix, unit lower triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
-NB.   k   = min(m,n)
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -95,9 +66,9 @@ hetf2pl=: 3 : 0
     a=. (< ios ; (<: j)) { y   NB. A[j:n-1,j-1]
     lum=. (j (- , [) n) {. L1  NB. L1[j:n-1,0:j-1]
     v=. a - lum mp h           NB. v[0:n-j-1]=A[j:n-1,j-1]-L1[j:n-1,0:j-1]*H[0:j-1,j-1]=L1[j:n-1,j]*T[j,j-1] non-pivoted yet
-    q=. iofmax v               NB. IO pivot from head
-    v=. (0 ios2cp q) C. v      NB. v[0]↔v[q]
-    dip=. q (+ ios2cp ]) j     NB. any[j]↔any[j+q]
+    q=. liofmax v              NB. IO pivot from head
+    v=. (0 lios2cp q) C. v     NB. v[0]↔v[q]
+    dip=. q (+ lios2cp ]) j    NB. any[j]↔any[j+q]
     y=. dip sp y               NB. A[j,j:n-1]↔A[j+q,j:n-1], A[j:n-1,j]↔A[j:n-1,j+q]
     ip=. dip C. ip             NB. ip[j]↔ip[j+q]
     to=. {. v                  NB. T[j,j-1]
@@ -129,7 +100,6 @@ NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
 NB.   ip  - n-vector, full inversed permutation of A
 NB.   U1  - n×n-matrix, unit upper triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
-NB.   k   = min(m,n)
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -157,9 +127,9 @@ hetf2pu=: 3 : 0
     a=. (< ios ; (>: j)) { y       NB. A[0:j,j+1]
     lum=. ((>:j) ([ , -) n) {. U1  NB. U1[0:j,j+1:n-1]
     v=. a - lum mp h               NB. v[0:j]=A[0:j,j+1]-U1[0:j,j+1:n-1]*H[j+1:n-1,j+1]=U1[0:j,j]*T[j,j+1] non-pivoted yet
-    q=. iolmax v                   NB. IO pivot from tail
-    v=. (j ios2cp q) C. v          NB. v[_1]↔v[q]
-    dip=. q ios2cp j               NB. any[j]↔any[q]
+    q=. liolmax v                  NB. IO pivot from tail
+    v=. (j lios2cp q) C. v         NB. v[_1]↔v[q]
+    dip=. q lios2cp j              NB. any[j]↔any[q]
     y=. dip sp y                   NB. A[j,0:j]↔A[q,0:j], A[0:j,j]↔A[0:j,q]
     ip=. dip C. ip                 NB. ip[j]↔ip[q]
     to=. {: v                      NB. T[j,j+1]
@@ -218,7 +188,7 @@ getrflu1p=: 3 : 0
   if. 0 e. sh do.
     (i. n) ; y
   elseif. 1=m do.
-    dip=. 0 ios2cp iofmax {. y
+    dip=. 0 lios2cp liofmax {. y
     ip=. dip C. i. n
     y=. ((] 0:} %) (0&({,))) dip (C."1) y                          NB. permute single row, scale by head, keep head unscaled
     ip ; y
@@ -267,13 +237,16 @@ NB.   iP=. p2P ip
 NB.   P=. p2P p
 NB.   L1=. trl1 L1U
 NB.   U=. tru L1U
+NB.
+NB. Notes:
+NB. - models LAPACK's xGETRF
 
 getrfpl1u=: 3 : 0
   'm n'=. sh=. $ y
   if. 0 e. sh do.
     (i. m) ; y
   elseif. 1 = n do.
-    dip=. 0 ios2cp iofmax y
+    dip=. 0 lios2cp liofmax y
     ip=. dip C. i. m
     y=. ((] 0:} %) (0&({,))) dip C. y                          NB. permute single column, scale by head, keep head unscaled
     ip ; y
@@ -328,7 +301,7 @@ getrfpu1l=: 3 : 0
   if. 0 e. sh do.
     (i. m) ; y
   elseif. 1 = n do.
-    dip=. (<:m) ios2cp iolmax y
+    dip=. (<:m) lios2cp liolmax y
     ip=. dip C. i. m
     y=. ((] _1:} %) (_1&({,))) dip C. y                           NB. permute single column, scale by head, keep head unscaled
     ip ; y
@@ -383,7 +356,7 @@ getrful1p=: 3 : 0
   if. 0 e. sh do.
     (i. n) ; y
   elseif. 1 = m do.
-    dip=. (<:n) ios2cp iolmax {. y
+    dip=. (<:n) lios2cp liolmax {. y
     ip=. dip C. i. n
     y=. ((] _1:} %) (_1&({,))) dip C."1 y                             NB. permute single row, scale by head, keep head unscaled
     ip ; y
@@ -414,7 +387,6 @@ NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
 NB.   ip  - n-vector, full inversed permutation of A
 NB.   L1  - n×n-matrix, unit lower triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
-NB.   k   = min(m,n)
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -456,7 +428,6 @@ NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
 NB.   ip  - n-vector, full inversed permutation of A
 NB.   U1  - n×n-matrix, unit upper triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
-NB.   k   = min(m,n)
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -577,8 +548,9 @@ testgetrf=: 3 : 0
 
   rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
 
-  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_                           (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
-  ('lud'            tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %.                                         (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('lud' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %. (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
+
+  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_ (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 
   ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1"1 (( trl            mp  tru1          )@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
   ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1   (( trl1           mp  tru           )@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
@@ -606,7 +578,7 @@ NB. - P*L*T*L'*P'=A : berr := ||P*L*T*L'*P' - A ||/(ε*||A||*n)
 NB. - P*U*T*U'*P'=A : berr := ||P*U*T*U'*P' - A ||/(ε*||A||*n)
 
 testhetrf=: 3 : 0
-  rcond=. _.  NB. rcond=. (norm1 con hetri) y
+  rcond=. (norm1 con hetri) y
 
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
   ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y
@@ -639,10 +611,12 @@ testpotrf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'potrf'
 
-  rcond=. _.  NB. rcond=. (norm1 con potri) y
+  rcond=. (norm1 con potri) y
+
+  ('choleski'       tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
 
   ('potrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
-  ('choleski'       tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+
   ('potrfl'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
   ('potrfu'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*#)@[))))) y
 
@@ -653,21 +627,25 @@ NB. ---------------------------------------------------------
 NB. testtrf
 NB.
 NB. Description:
-NB.   Adv. to make verb to test TRF algorithms by matrix of
-NB.   generator and shape given
+NB.   Adv. to make verb to test triangular factorization
+NB.   algorithms algorithms by matrix of generator and shape
+NB.   given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testtrf
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
-NB.            mat=. mkmat (m,n)
+NB.             mat=. mkmat (m,n)
 NB.   vtest - monad to test algorithms by matrix mat; is
 NB.           called as:
 NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrf 150 100
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtrf_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 
 testtrf=: 1 : 'EMPTY_mt_ [ (((testpotrf_mt_ @ (u pomat_mt_)) [ (testhetrf_mt_ @ (u hemat_mt_))) ^: (=/)) [ testgetrf_mt_ @ u'

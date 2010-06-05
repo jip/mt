@@ -7,9 +7,9 @@ NB. heexp  Matrix exponential of a Hermitian matrix
 NB.
 NB. XREF: gepow sdiag
 NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

@@ -1,19 +1,15 @@
 NB. tri.ijs
-NB. Compute the inverse of a matrix using the triangular
-NB. factorization
+NB. Inverse via triangular factorization
 NB.
-NB. trtriu   Inverse an upper triangular matrix
-NB. trtriu1  Inverse an unit upper triangular matrix
-NB. trtril   Inverse a lower triangular matrix
-NB. trtril1  Inverse an unit lower triangular matrix
+NB. trtrixx  Inverse a triangular matrix
 NB. getri    Inverse a general matrix
 NB. hetri    Inverse a Hermitian (symmetric) matrix
 NB. potri    Inverse a Hermitian (symmetric) positive
 NB.          definite matrix
 NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -108,7 +104,7 @@ NB.   inv(A) = inv(U) * inv(L1) * P
 getri=: ((C."1~ /:)~ (trtriu mp trtril1)) & >/ @ getrfpl1u
 
 NB. ---------------------------------------------------------
-hetri=: potri  NB. stub for a while
+hetri=: getri  NB. stub for a while
 
 NB. ---------------------------------------------------------
 NB. potri
@@ -217,10 +213,11 @@ NB.   mkge - monadic verb to generate random non-singular
 NB.          general y-matrix (shape is taken from y)
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   cocurrent 'mt'
-NB.   (_1 1 0 16 _6 4 & gemat) testtri 500 500
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtri 500 500
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtri_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testtri_mt_ 150 200
 NB.
 NB. Notes:
 NB. - diagonalizable matrices are processed the same way as

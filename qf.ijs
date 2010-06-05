@@ -8,7 +8,7 @@ NB. gerqf  RQ factorization of a general matrix
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-01-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -59,7 +59,7 @@ NB.   (  pfx sfxB  ) m-k    (  pfx   sfxB    ) m-k-nb
 NB.      k   n+1-k             k+nb  n+1-k-nb
 NB.
 NB. Notes:
-NB. - gelq2 emulates LAPACK's xGELQ2
+NB. - models LAPACK's xGELQ2
 NB. - gelq2 and gelqf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
@@ -99,7 +99,7 @@ NB.   (  sfx  sfx   ) k        (  sfx     sfx   ) k+nb
 NB.      n-k  k                   n-k-nb  k+nb
 NB.
 NB. Notes:
-NB. - geql2 emulates LAPACK's xGEQL2
+NB. - models LAPACK's xGEQL2
 NB. - geql2 and geqlf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
@@ -139,7 +139,7 @@ NB.   (  sfxL  sfxR  ) m+1-k    (  sfxL  sfxR  ) m+1-k-nb
 NB.      k     n-k                 k+nb  n-k-nb
 NB.
 NB. Notes:
-NB. - geqr2 emulates LAPACK's xGEQR2
+NB. - models LAPACK's xGEQR2
 NB. - gerq2 and geqrf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
@@ -179,7 +179,7 @@ NB.   (  pfxB   sfx  ) k      (  pfxB      sfx  ) k+nb
 NB.      n+1-k  k                n+1-k-nb  k+nb
 NB.
 NB. Notes:
-NB. - gerq2 emulates LAPACK's xGERQ2
+NB. - models LAPACK's xGERQ2
 NB. - gerq2 and gerqf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
@@ -223,7 +223,7 @@ NB.   A -: L mp Q
 NB.   (] -: clean @ ((         trl   @( 0 _1&}.)) mp  unglq)@gelqf) A
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xGELQF
+NB. - models LAPACK's xGELQF
 
 gelqf=: ((0&({::)) ,. (1&({::)) , (gelq2 @ (2&({::)))) @ ((3 : 0) ^: ((qfi@(0 _1&(ms $)))`((0&({."1));(0&{.);]))) @ (,. & 0)
   'pfx sfxT sfxB'=. y
@@ -262,7 +262,7 @@ NB.   A -: Q mp L
 NB.   (] -: clean @ ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)@geqlf) A
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xGEQLF
+NB. - models LAPACK's xGEQLF
 
 geqlf=: (((geql2 @ (0&({::))) ,. (1&({::))) , (2&({::))) @ ((3 : 0) ^: ((qfi@(_1 0&(ms $)))`(];(0&({."1));(0&{.)))) @ (0 & ,)
   'pfxL pfxR sfx'=. y
@@ -301,7 +301,7 @@ NB.   A -: Q mp R
 NB.   (] -: clean @ ((         tru   @(_1  0&}.)) mp~ ungqr)@geqrf) A
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xGEQRF
+NB. - models LAPACK's xGEQRF
 
 geqrf=: ((0&({::)) , (1&({::)) ,. (geqr2 @ (2&({::)))) @ ((3 : 0) ^: ((qfi@(_1 0&(ms $)))`((0&{.);(0&({."1));]))) @ (, & 0)
   'pfx sfxL sfxR'=. y
@@ -340,7 +340,7 @@ NB.   A -: R mp Q
 NB.   (] -: clean @ ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)@gerqf) A
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xGERQF
+NB. - models LAPACK's xGERQF
 
 NB. RQf=. gerqf A
 gerqf=: (((gerq2 @ (0&({::))) , (1&({::))) ,. (2&({::))) @ ((3 : 0) ^: ((qfi@(0 _1&(ms $)))`(];(0&{.);(0&({."1))))) @ (0 & ,.)
@@ -415,7 +415,10 @@ NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testqf 150 100
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) testqf_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testqf_mt_ 150 200
 
 testqf=: 1 : 'EMPTY_mt_ [ testgeqf_mt_ @ u'

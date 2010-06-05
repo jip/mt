@@ -15,13 +15,9 @@ NB. dimat    Random diagonalizable matrix
 NB. pomat    Random Hermitian (symmetric) positive defined
 NB.          matrix
 NB.
-NB. XRef:
-NB. - system: mp
-NB. - mt: ct geqrf
-NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

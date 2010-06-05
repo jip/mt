@@ -1,9 +1,7 @@
 NB. ref.ijs
 NB. Reflections
 NB.
-NB. larfg      Dyad to generate an elementary reflector
-NB. larfp      Dyad to generate an elementary reflector with
-NB.            β≥0
+NB. larfx      Dyad to generate an elementary reflector
 NB. larfxxx    Monads to generate an elementary reflector
 NB. larftxx    Monads to form the triangular factor of a
 NB.            block reflector
@@ -16,7 +14,7 @@ NB.            from either the left or the right
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-01-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -77,8 +75,8 @@ NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. Notes:
 NB. - IEEE floating point configuration is encoded implicitly
-NB. - larfg emulates LAPACK's xLARFG
-NB. - larfp emulates LAPACK's xLARFP
+NB. - larfg models LAPACK's xLARFG
+NB. - larfp models LAPACK's xLARFP
 NB. - larfp provides τ=2 ↔ ||x||_2 ≈ 0
 NB. - not zeroing v in larfp in case τ=2 relies on fact:
 NB.   'comparison tolerance tol>0'; otherwise (tol=0) x
@@ -372,7 +370,7 @@ NB.   v     - vector with 1 at head (forward direction) or
 NB.           tail (backward direction)
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xLARF
+NB. - models LAPACK's xLARF
 NB. - larfxxxx and larfbxxxx are topological equivalents
 
 larflcbc=: ] - [ */ (mp~ (+ @ ((0 & ( 0 })) * {.)))~    NB. C - v * ((v * τ)' * C)
@@ -432,7 +430,7 @@ NB.   V     - unit triangular (trapezoidal) matrix
 NB.   tau   - k-vector τ[0:k-1] corresp. to V
 NB.
 NB. Notes:
-NB. - emulates LAPACK's sequence of calls to xLARFT and then
+NB. - models LAPACK's sequence of calls to xLARFT and then
 NB.   to xLARFB
 NB. - larfxxxx and larfbxxxx are topological equivalents
 
@@ -539,15 +537,18 @@ NB. Syntax:
 NB.   vtest=. mkmat testref
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
-NB.            mat=. mkmat (m,n)
+NB.             mat=. mkmat (m,n)
 NB.   vtest - monad to test algorithms by matrix mat; is
 NB.           called as:
 NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testref 150 100
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) testref_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testref_mt_ 150 200
 NB.
 NB. Notes:
 NB. - non-blocked larfxxxx algos are tested implicitly in gq,

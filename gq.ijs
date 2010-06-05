@@ -1,24 +1,15 @@
 NB. gq.ijs
 NB. Generate Q from its factored form
 NB.
-NB. unglq   Generate a matrix with orthonormal rows from
-NB.         output of gelqf
-NB. ungql   Generate a matrix with orthonormal columns from
-NB.         output of geqlf
-NB. ungqr   Generate a matrix with orthonormal columns from
-NB.         output of geqrf
-NB. ungrq   Generate a matrix with orthonormal rows from
-NB.         output of gerqf
-NB. unghrl  Generate an unitary (orthogonal) matrix which is
+NB. ungxx   Generate a matrix with orthonormal rows or
+NB.         columns from output of gexxf
+NB. unghrx  Generate an unitary (orthogonal) matrix which is
 NB.         defined as the product of elementary reflectors as
-NB.         returned by gehrdl
-NB. unghru  Generate an unitary (orthogonal) matrix which is
-NB.         defined as the product of elementary reflectors as
-NB.         returned by gehrdu
+NB.         returned by gehrdx
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-01-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -238,7 +229,7 @@ NB. then (with appropriate comparison tolerance)
 NB.   (idmat @ ms @ $ -: clean @ (mp  ct)) Q
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xUNGLQ
+NB. - implements LAPACK's xUNGLQ
 
 unglq=: ($:~ ( 0 _1&(ms $))) : ( 0 _1 }. ([ (unglqstep^:(]`(ungi@#@])`((-(ungb@#)) ungl2 ((}.~ (2 # (  ungb@#)))@])))) ( tru1            @((   <. ( 0 _1&(ms $)) ) {.   ]))))
 
@@ -296,7 +287,7 @@ NB. then (with appropriate comparison tolerance)
 NB.   (idmat @ ms @ $ -: clean @ (mp~ ct)) Q
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xUNGQL
+NB. - implements LAPACK's xUNGQL
 
 ungql=: ($:~ (_1  0&(ms $))) : ( 1  0 }. ([ (ungqlstep^:(;`(ungi@c@])`((-(ungb@c)) ung2l ((}.~ (2 # (-@ungb@c)))@])))) ((tru1~ (-~/ @ $))@((-@(<. (_1  0&(ms $)))) {."1 ]))))
 
@@ -354,7 +345,7 @@ NB. then (with appropriate comparison tolerance)
 NB.   (idmat @ ms @ $ -: clean @ (mp~ ct)) Q
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xUNGQR
+NB. - implements LAPACK's xUNGQR
 
 ungqr=: ($:~ (_1  0&(ms $))) : (_1  0 }. ([ (ungqrstep^:(]`(ungi@c@])`((-(ungb@c)) ung2r ((}.~ (2 # (  ungb@c)))@])))) ( trl1            @((   <. (_1  0&(ms $)) ) {."1 ]))))
 
@@ -411,7 +402,7 @@ NB. then (with appropriate comparison tolerance)
 NB.   (idmat @ ms @ $ -: clean @ (mp ct)) Q
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xUNGRQ
+NB. - implements LAPACK's xUNGRQ
 
 ungrq=: ($:~ ( 0 _1&(ms $))) : ( 0  1 }. ([ (ungrqstep^:(;`(ungi@#@])`((-(ungb@#)) ungr2 ((}.~ (2 # (-@ungb@#)))@])))) ((trl1~ (-~/ @ $))@((-@(<. ( 0 _1&(ms $)))) {.   ]))))
 
@@ -457,7 +448,7 @@ NB.   HQf - (n+1)×n-matrix with packed H and Qf (see gehrdu)
 NB.   Q   - n×n-matrix, an unitary (orthogonal)
 NB.
 NB. Notes:
-NB. - emulates LAPACK's xUNGHR
+NB. - models LAPACK's xUNGHR
 NB. - instead of using f and s parameters, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i),i=0:n-1} ,
@@ -507,14 +498,17 @@ NB. Syntax:
 NB.   vtest=. mkmat testgq
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
-NB.            mat=. mkmat (m,n)
+NB.             mat=. mkmat (m,n)
 NB.   vtest - monad to test algorithms by matrix mat; is
 NB.           called as:
 NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testgq 150 100
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) testgq_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
 
 testgq=: 1 : 'EMPTY_mt_ [ testungq_mt_ @ u'

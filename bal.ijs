@@ -7,9 +7,9 @@ NB.         matrix as close in 1-norm as possible
 NB. gebal   Balance a general square matrix
 NB. ggbal   Balance a pair of general square matrices
 NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -57,8 +57,7 @@ NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany.
 NB.
 NB. Notes:
-NB. - result is identical to LAPACK's dgebal/zgebal with 'P'
-NB.   option
+NB. - models LAPACK's xGEBAL with 'P' option
 NB.
 NB. TODO:
 NB. - try to apply incremental permut. cp to y
@@ -163,18 +162,18 @@ NB.   Dinv -: diagmat % s
 NB.   As -: D mp Ap mp Dinv
 NB.   As -: Ap (] * (% " 1)) s
 NB.
+NB. Applications:
+NB.   'As fs p s'=. gebals (] ; (0 , #) ; (a: " _)) A
+NB.
+NB. Notes:
+NB. - models LAPACK's xGEBAL with 'S' option, but with
+NB.   slightly different result
+NB.
 NB. References:
 NB. [1] Kressner, D. 2004. Numerical methods and software for
 NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany.
-NB.
-NB. Notes:
-NB. - result isn't identical to LAPACK's dgebal/zgebal with 'S'
-NB.   option, but is close to
-NB.
-NB. Applications:
-NB.   'As fs p s'=. gebals (] ; (0 , #) ; (a: " _)) A
 
 gebals=: 3 : 0
   'Ap fs p'=. y
@@ -251,6 +250,10 @@ NB.   Dinv -: diagmat % s
 NB.   Ab -: D mp Ap mp Dinv
 NB.   Ab -: Ap (] * (% " 1)) s
 NB.   A11 -: (,.~ fs) (] ;. 0) Ap
+NB.
+NB. Notes:
+NB. - models LAPACK's xGEBAL with 'B' option, but with
+NB.   slightly different result
 
 gebal=: gebals @ gebalp
 

@@ -5,9 +5,9 @@ NB. lartg   Generates a plane rotation of a 2-vector
 NB. lartv   Applies a plane rotation to a 2-vector
 NB. lartvt  Applies a transposed plane rotation to a 2-vector
 NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -83,6 +83,7 @@ NB.   G1=. 2 2 $ cs , sn , (- + sn) , cs
 NB.   G2=. |: G1
 NB.
 NB. Notes:
+NB. - models LAPACK's xLARTG
 NB. - input NaN or ±∞ leads to inconsistent output or NaN
 NB.   error
 NB. - other input may lead to ±∞ in output

@@ -1,17 +1,15 @@
 NB. hrd.ijs
-NB. Reduce a general matrix to upper or lower Hessenberg form
-NB. by an unitary similarity transformation
+NB. Reduce to Hessenberg form by an unitary similarity
+NB. transformation
 NB.
-NB. gehrdl  Reduce a general matrix to lower Hessenberg form
-NB. gehrdu  Reduce a general matrix to upper Hessenberg form
-NB. gghrdl  Reduce a pair of general and lower triangular
-NB.         matrices to generalized lower Hessenberg form
-NB. gghrdu  Reduce a pair of general and upper triangular
-NB.         matrices to generalized upper Hessenberg form
+NB. gehrdx  Reduce a general matrix to lower or upper
+NB.         Hessenberg form
+NB. gghrdx  Reduce a pair of general and triangular
+NB.         matrices to generalized Hessenberg form
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-01-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -110,7 +108,7 @@ NB.           defines subeA position in the eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
 NB. Notes:
-NB. - emulates xLAHR2 with following differences:
+NB. - implements LAPACK's xLAHR2 with following differences:
 NB.   - upper i×HRDNB part of Y is calculated later in gehrdu
 NB.   - V and H are returned separately from each other
 NB.   - V is formed explicitely
@@ -187,7 +185,7 @@ NB.         matrix A, see gehrdu
 NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdu
 NB.
 NB. Notes:
-NB. - emulates xGEHD2 up to storage layout
+NB. - implements LAPACK's xGEHD2 up to storage layout
 
 gehd2u=: 4 : 0
   A=. ({. x) {."1 y                                  NB. skip ...
@@ -364,7 +362,7 @@ NB.   (idmat n) -: (mp~ ct) Q
 NB.   H -: A ((ct @ ]) mp mp) Q
 NB.
 NB. Notes:
-NB. - emulates xGEHRD up to storage layout
+NB. - implements LAPACK's xGEHRD up to storage layout
 
 gehrdu=: 4 : 0
   'h s'=. x
@@ -437,16 +435,17 @@ NB. Syntax:
 NB.   vtest=. mkmat testhrd
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
-NB.            mat=. mkmat (m,n)
+NB.             mat=. mkmat (m,n)
 NB.   vtest - monad to test algorithms by matrix mat; is
 NB.           called as:
 NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB.   NB. with limited random matrix values' amplitudes
-NB.   cocurrent 'mt'
-NB.   (_1 1 0 16 _6 4 & gemat) testhrd 500 500
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testhrd 500 500
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) testhrd_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 200
 
 testhrd=: 1 : 'EMPTY_mt_ [ (testgehrd_mt_ @ u) ^: (=/)'

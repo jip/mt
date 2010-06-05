@@ -1,55 +1,13 @@
 NB. sm.ijs
-NB. Solve matrix linear monomial equation with triangular
-NB. matrix
+NB. Solve linear monomial equation with triangular matrix
 NB.
-NB. trsmlx    Solve equation L * X = B, where L is a lower
-NB.           triangular matrix
-NB. trsml1x   Solve equation L1 * X = B, where L1 is an unit
-NB.           lower triangular matrix
-NB. trsml1hx  Solve equation L1^H * X = B, where L1 is an
-NB.           unit lower triangular matrix
-NB. trsml1tx  Solve equation L1^T * X = B, where L1 is an
-NB.           unit lower triangular matrix
-NB. trsmlhx   Solve equation L^H * X = B, where L is a lower
-NB.           triangular matrix
-NB. trsmltx   Solve equation L^T * X = B, where L is a lower
-NB.           triangular matrix
-NB. trsmux    Solve equation U * X = B, where U is an upper
-NB.           triangular matrix
-NB. trsmu1hx  Solve equation U1^H * X = B, where U1 is an
-NB.           unit upper triangular matrix
-NB. trsmu1tx  Solve equation U1^T * X = B, where U1 is an
-NB.           unit upper triangular matrix
-NB. trsmuhx   Solve equation U^H * X = B, where U is an
-NB.           upper triangular matrix
-NB. trsmutx   Solve equation U^T * X = B, where U is an
-NB.           upper triangular matrix
-NB. trsmu1x   Solve equation U1 * X = B, where U1 is an unit
-NB.           upper triangular matrix
-NB. trsmxl    Solve equation X * L = B, where L is a lower
-NB.           triangular matrix
-NB. trsmxl1   Solve equation X * L1 = B, where L1 is an unit
-NB.           lower triangular matrix
-NB. trsmxl1h  Solve equation X * L1^H = B, where L1 is an
-NB.           unit lower triangular matrix
-NB. trsmxl1t  Solve equation X * L1^T = B, where L1 is an
-NB.           unit lower triangular matrix
-NB. trsmxlh   Solve equation X * L^H = B, where L is a lower
-NB.           triangular matrix
-NB. trsmxlt   Solve equation X * L^T = B, where L is a lower
-NB.           triangular matrix
-NB. trsmxu    Solve equation X * U = B, where U is an upper
-NB.           triangular matrix
-NB. trsmxu1   Solve equation X * U1 = B, where U1 is an unit
-NB.           upper triangular matrix
-NB. trsmxu1h  Solve equation X * U1^H = B, where U1 is an
-NB.           unit upper triangular matrix
-NB. trsmxu1t  Solve equation X * U1^T = B, where U1 is an
-NB.           unit upper triangular matrix
-NB. trsmxuh   Solve equation X * U^H = B, where U is an
-NB.           upper triangular matrix
-NB. trsmxut   Solve equation X * U^T = B, where U is an
-NB.           upper triangular matrix
+NB. trsmxxxx  Solve equation (op(A) * X = B) or
+NB.           (X * op(A) = B), where A is either unit or
+NB.           non-unit, either lower or upper, triangular
+NB.           matrix; op(A) is either A itself, or A^T,
+NB.           the transposition of A, or A^H, the conjugate
+NB.           transposition of A; B is known right-hand side
+NB.           (RHS), X is unknown solution
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -109,10 +67,11 @@ NB.
 NB. Notes:
 NB. - opposite triangle is not referenced
 NB. - unit diagonal is not referenced
-NB. - emulate BLAS's xTRSV for vector RHS
-NB. - emulate BLAS's xTRSM for matrix RHS with following
-NB.   discrepancy: alpha parameter is not supported
-NB.   (alpha≡1); to involve alpha, use the following pattern:
+NB. - model BLAS's xTRSV for vector RHS
+NB. - model BLAS's xTRSM for matrix RHS with following
+NB.   difference: alpha parameter is assumed to be always
+NB.   equal to 1; to workaround this limitation use the
+NB.   following pattern:
 NB.     X=. A trsmxxxx alpha*B
 
 trsmlx=:   ((((    (#@])  {   (1 {:: [)) - (] mp~ (((#@]) (1 dhs2lios (    * ,[)) (# @ (0 {:: [)))   ({,) (0 {:: [)))) % (((#@])     (* >:)  (# @ (0 {:: [)))   ({,) (0 {:: [))) , ~ ]) ^: (;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
@@ -163,34 +122,39 @@ NB. - ferr := max(||X - exactX|| / ||X||)
 NB. - berr := max(||B - op(A) * X|| / (||op(A)|| * ||X||*eps))
 
 testtrsm=: 3 : 0
+  require '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ 'trtrs'
+
   'A X'=. y
   'L L1 U U1'=. bT=. (trl ; trl1 ; tru ; tru1) A
   'conL conL1 conU conU1'=. ((((norm1 con trtril)&.>)`((norm1 con trtril1)&.>)`((norm1 con trtriu)&.>)`((norm1 con trtriu1)&.>)) ag) bT
 
-  ('trtrslx'   tdyad ((0&{::)`( mp       & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
-  ('trtrsl1x'  tdyad ((0&{::)`( mp       & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (L1;X)
-  ('trtrsl1hx' tdyad ((0&{::)`((mp~ ct)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L1;X)
-  ('trtrsl1tx' tdyad ((0&{::)`((mp~ |:)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L1;X)
-  ('trtrslhx'  tdyad ((0&{::)`((mp~ ct)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
-  ('trtrsltx'  tdyad ((0&{::)`((mp~ |:)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
-  ('trtrsux'   tdyad ((0&{::)`( mp       & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (U ;X)
-  ('trtrsu1x'  tdyad ((0&{::)`( mp       & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (U1;X)
-  ('trtrsu1hx' tdyad ((0&{::)`((mp~ ct)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (U1;X)
-  ('trtrsu1tx' tdyad ((0&{::)`((mp~ |:)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (U1;X)
-  ('trtrsuhx'  tdyad ((0&{::)`((mp~ ct)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (U ;X)
-  ('trtrsutx'  tdyad ((0&{::)`((mp~ |:)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1&{::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (U ;X)
-  ('trtrsxl'   tdyad ((0&{::)`( mp~      & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (L ;X)
-  ('trtrsxl1'  tdyad ((0&{::)`( mp~      & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (L1;X)
-  ('trtrsxl1h' tdyad ((0&{::)`((mp  ct)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (L1;X)
-  ('trtrsxl1t' tdyad ((0&{::)`((mp  |:)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (L1;X)
-  ('trtrsxlh'  tdyad ((0&{::)`((mp  ct)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (L ;X)
-  ('trtrsxlt'  tdyad ((0&{::)`((mp  |:)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (L ;X)
-  ('trtrsxu'   tdyad ((0&{::)`( mp~      & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (U ;X)
-  ('trtrsxu1'  tdyad ((0&{::)`( mp~      & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (U1;X)
-  ('trtrsxu1h' tdyad ((0&{::)`((mp  ct)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (U1;X)
-  ('trtrsxu1t' tdyad ((0&{::)`((mp  |:)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (U1;X)
-  ('trtrsxuh'  tdyad ((0&{::)`((mp  ct)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (U ;X)
-  ('trtrsxut'  tdyad ((0&{::)`((mp  |:)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1&{::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (U ;X)
+  ('trtrs_jlapack_'  tmonad ({.,((mp~ |:)~ &. >/))`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
+
+  ('trtrslx'   tdyad ((0 & {::)`( mp       & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
+  ('trtrsl1x'  tdyad ((0 & {::)`( mp       & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (L1;X)
+  ('trtrsl1hx' tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L1;X)
+  ('trtrsl1tx' tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L1;X)
+  ('trtrslhx'  tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
+  ('trtrsltx'  tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
+  ('trtrsux'   tdyad ((0 & {::)`( mp       & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (U ;X)
+  ('trtrsu1x'  tdyad ((0 & {::)`( mp       & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (U1;X)
+  ('trtrsu1hx' tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (U1;X)
+  ('trtrsu1tx' tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (U1;X)
+  ('trtrsuhx'  tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (U ;X)
+  ('trtrsutx'  tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (U ;X)
+  ('trtrsxl'   tdyad ((0 & {::)`( mp~      & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (L ;X)
+  ('trtrsxl1'  tdyad ((0 & {::)`( mp~      & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (L1;X)
+  ('trtrsxl1h' tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (L1;X)
+  ('trtrsxl1t' tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (L1;X)
+  ('trtrsxlh'  tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (L ;X)
+  ('trtrsxlt'  tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (L ;X)
+  ('trtrsxu'   tdyad ((0 & {::)`( mp~      & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (U ;X)
+  ('trtrsxu1'  tdyad ((0 & {::)`( mp~      & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (U1;X)
+  ('trtrsxu1h' tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (U1;X)
+  ('trtrsxu1t' tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (U1;X)
+  ('trtrsxuh'  tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (U ;X)
+  ('trtrsxut'  tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1   @]))))))) (U ;X)
 
   EMPTY
 )
@@ -207,16 +171,17 @@ NB. Syntax:
 NB.   vtest=. mkmat testsm
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
-NB.            mat=. mkmat (m,n)
+NB.             mat=. mkmat (m,n)
 NB.   vtest - monad to test algorithms by matrix mat; is
 NB.           called as:
 NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB.   NB. with limited random matrix values' amplitudes
-NB.   cocurrent 'mt'
-NB.   (_1 1 0 16 _6 4 & gemat) testsm 500 500
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testsm 500 500
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) testsm_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testsm_mt_ 150 200
 
 testsm=: 1 : 'EMPTY_mt_ [ (testtrsm_mt_ @ (u ; u)) ^: (=/)'

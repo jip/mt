@@ -1,13 +1,14 @@
 NB. fri.ijs
-NB. Compute the inverse of a matrix using the Frobenius
-NB. formula
+NB. Compute the inverse using the Frobenius formula
 NB.
 NB. gefri  Inverse a general matrix
 NB. hefri  Inverse a Hermitian (symmetric) matrix
+NB. pofri  Inverse a Hermitian (symmetric) positive definite
+NB.        matrix
 NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -180,10 +181,11 @@ NB.   mkge - monadic verb to generate random non-singular
 NB.          general y-matrix (shape is taken from y)
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   cocurrent 'mt'
-NB.   (_1 1 0 16 _6 4 & gemat) testfri 500 500
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testfri 500 500
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) testfri_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testfri_mt_ 150 200
 NB.
 NB. Notes:
 NB. - diagonalizable matrices are processed the same way as

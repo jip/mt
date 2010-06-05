@@ -222,7 +222,7 @@ NB. - no check τ≠0
 NB. - assign (1 iob } z)
 
 NB. cIOS version: larf=: 2 : '(([ - (((2{u)`:6) @ (({:n) { ])) * (((0{u)`:6) (1 & ((({.n)"_) }) @: ((1{u)`:6) @: (({:n) & ywolx)))) ,)~'
-NB. ###FIXME!### larf=: 2 : '(((1&(({.n)}))@,)`([ - ((u nu 2)@(({:n){]))*((u nu 0) (u nu 1)@(({:n)&ywox)))`]) upd2ri n'
+NB. ###FIXME!### larf=: 2 : '(((1&(({.n)}))@,)`([ - ((u nu 2)@(({:n){]))*((u nu 0) (u nu 1)@(({:n)&ywox)))`]) upd2ir n'
 
 NB. =========================================================
 NB. Interface
@@ -378,17 +378,17 @@ NB.   k       ≥ max(iosz,ioss)+1
 NB.   m       ≥ 0
 NB.   n       ≥ 0
 
-NB. ### larfLfsc=: (0 _1 larflsc) upd2ri  NB. from the left; forward; the same v; conjugated τ
-NB. ### larfLfss=: (0 _1 larflss) upd2ri  NB. from the left; forward; the same v; the same τ
+NB. ### larfLfsc=: (0 _1 larflsc) upd2ir  NB. from the left; forward; the same v; conjugated τ
+NB. ### larfLfss=: (0 _1 larflss) upd2ir  NB. from the left; forward; the same v; the same τ
 
-NB. ### larfLbsc=: (_1 0 larflsc) upd2ri  NB. from the left; backward; the same v; conjugated τ
-NB. ### larfLbss=: (_1 0 larflss) upd2ri  NB. from the left; backward; the same v; conjugated τ
+NB. ### larfLbsc=: (_1 0 larflsc) upd2ir  NB. from the left; backward; the same v; conjugated τ
+NB. ### larfLbss=: (_1 0 larflss) upd2ir  NB. from the left; backward; the same v; conjugated τ
 
-NB. ### larfRfcc=: (0 _1 larfrcc) upd2ri  NB. from the right; forward; conjugated v; conjugated τ
-NB. ### larfRfcs=: (0 _1 larfrcs) upd2ri  NB. from the right; forward; conjugated v; the same τ
+NB. ### larfRfcc=: (0 _1 larfrcc) upd2ir  NB. from the right; forward; conjugated v; conjugated τ
+NB. ### larfRfcs=: (0 _1 larfrcs) upd2ir  NB. from the right; forward; conjugated v; the same τ
 
-NB. ### larfRbcc=: (_1 0 larfrcc) upd2ri  NB. from the right; backward; conjugated v; conjugated τ
-NB. ### larfRbcs=: (_1 0 larfrcs) upd2ri  NB. from the right; backward; conjugated v; the same τ
+NB. ### larfRbcc=: (_1 0 larfrcc) upd2ir  NB. from the right; backward; conjugated v; conjugated τ
+NB. ### larfRbcs=: (_1 0 larfrcs) upd2ir  NB. from the right; backward; conjugated v; the same τ
 
 NB. ######---------------------------------------------------------
 NB. larfL
@@ -544,7 +544,7 @@ NB.     LAPACK Working Note 203.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. TODO:
-NB. - CHECKME! after larf[gp] monad -> dyad and upd3ri gerund reversion
+NB. - CHECKME! after larf[gp] monad -> dyad and upd3ir gerund reversion
 
 larfLs=: 1 : '(((ct0 cfuj (0{m)) unxu (3 4{m)) ((ct0c cfuj (2{m)) unxu (5{m)) ]) ((,`larfl) upd3ci (0 1 2{m)) ]'
 
@@ -602,7 +602,7 @@ NB.     LAPACK Working Note 203.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. TODO:
-NB. - CHECKME! after larf[gp] monad -> dyad and upd3ri gerund reversion
+NB. - CHECKME! after larf[gp] monad -> dyad and upd3ir gerund reversion
 
 larfRs=: 1 : '(((ct0 cfuj (0{m)) unxu (3 4{m)) ((ct0r cfuj (2{m)) unxu (5{m)) ]) ((,`larfr) upd3ci (0 1 2{m)) ]'
 
@@ -673,7 +673,7 @@ NB. Notes:
 NB. - aviods scanning V twice
 NB.
 NB. TODO:
-NB. - CHECKME! after larf[gp] monad -> dyad and upd3ri gerund reversion
+NB. - CHECKME! after larf[gp] monad -> dyad and upd3ir gerund reversion
 
 larfRLs=: 1 : '(((ct0 cfuj (0{m)) unxu (4 6{m)) ((ct0r cfuj (2{m)) unxu (5{m)) ]) (((ct0c cfuj (3{m)) unxu (8{m)) ((,`larfl) upd3ci (0 1 3{m)) ((,`larfr) upd3ci (0 1 2{m))) ]'
 
@@ -729,49 +729,11 @@ NB.          define a block reflector H, and submatrix C to
 NB.          update
 NB.   Aupd - m×n-matrix, being A with updated submatrix C
 
-LARFTFCDRIOS=: 5 2 2 $ 1 0 _1 1 1 1 _1 0 0 1 0 0 0 0 1 1 0 1 1 0       NB. A,v,τ,Ttru,Tcol
-LARFTBCDRIOS=: 5 2 2 $ 0 0 _1 1 0 _1 _1 0 0 _1 0 0 _1 0 1 1 _1 _1 1 0  NB. A,v,τ,Ttrl,Tcol
-LARFTFRDRIOS=: 5 2 2 $ 0 1 1 _1 1 1 0 _1 1 0 0 0 0 0 1 1 0 1 1 0       NB. A,v,τ,Ttru,Tcol
-LARFTBRDRIOS=: 5 2 2 $ 0 0 1 _1 _1 0 0 _1 _1 0 0 0 0 _1 1 1 0 _1 1 0   NB. A,v,τ,Ttrl,Tcol
+NB. FC: Tcol =: Ttru0 * (- τ) * (v' * A)'
+NB. BC: Tcol =: Ttrl0 * (- τ) * (v' * A)'
+NB. FR: Tcol =: Ttru0 * (- τ) * A * v'
+NB. BR: Tcol =: Ttrl0 * (- τ) * A * v'
 
-NB. rios1=. mkrios1larftfc riosV
-mkrios1larftfc=: 3 : 0
-  tT=. >: tt=. (+/) 0 2 { 'tV1 lV1 hV1'=. 1 1 _1 + 'tV lV hV'=. 3 ({.,) y
-  5 2 2 $ tV1,lV,hV1,1,tV1,lV1,hV1,1,tt,lV1,1 1,tT,0 1 1,tT,1 1 1
-)
-
-NB. rios1=. mkrios1larftbc riosV
-mkrios1larftbc=: 3 : 0
-  't1 l1 h1 w1'=. <: 't l h w'=. , y
-  5 2 2 $ t,l,h1,1,t,l1,h1,1,t1,l1,1 1,w1,_1 1 1,w1,_2 1 1
-)
-
-NB. rios1=. mkrios1larftfr riosV
-mkrios1larftfr=: 3 : 0
-  't1 l1 w1'=. 1 1 _1 + 't l w'=. 2 ywolx y
-  5 2 2 $ t,l1,1,w1,t1,l1,1,w1,t1,(l+w),1 1 0,(l+w+1),1 1 0,(l+w+2),1 1
-)
-
-NB. rios1=. mkrios1larftbr riosV
-mkrios1larftbr=: 3 : 0
-  't1 l1 h1 w1'=. <: 't l h w'=. , y
-  5 2 2 $ t,l,1,w1,t1,l,1,w1,t1,l1,1 1 _1,h1,1 1 _1,(h-2),1 1
-)
-
-NB. Tcol =: Ttru0 * (- τ) * (v' * A)'
-larftfcstep=: (]`mp`(-@(0&({,)))`*`((1 & (0:}))@ct)`(ct@mp)`] map4ri 0 1 2 3 4) step
-
-NB. Tcol =: Ttrl0 * (- τ) * (v' * A)'
-larftbcstep=: (]`mp`(-@(0&({,)))`*`((1 & (_1:}))@ct)`(ct@mp)`] map4ri 0 1 2 3 4) step
-
-NB. Tcol =: Ttru0 * (- τ) * A * v'
-larftfrstep=: (]`mp`(-@(0&({,)))`*`((1 & (0:}))@ct)`(mp~)`] map4ri 0 1 2 3 4) step
-
-NB. Tcol =: Ttrl0 * (- τ) * A * v'
-larftbrstep=: (]`mp`(-@(0&({,)))`*`((1 & (_1:}))@ct)`(mp~)`] map4ri 0 1 2 3 4) step
-
-NB. Aupd=. rios ((ioV,ioTau) larftfc) A
-NB.
 NB. Algorithm:
 NB.   1) calculate block size:
 NB.        bs := width of V
@@ -785,27 +747,39 @@ NB.        (LARFTFCDRIOS & larftfcstep) (Aupd ; rios1)
 NB.      iters times
 NB.   6) extract 0-th item from boxed 2-vector
 
-NB. Aupd=. rios ((ioV,ioTau) larftfr) A
-larftfr=: 1 : '(<: @ (2 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTFRDRIOS & larftfrstep)) ((,`(((- #)~ ({:@$)) diaglios ($@])) maprli (1{m)) ; (mkrios1larftfr @ (m nmx 0)))'
-
-NB. Aupd=. rios ((ioV,ioTau) larftbc) A
-larftbc=: 1 : '(<: @ (_1 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTBCDRIOS & larftbcstep)) ((,`(((- #)~ ({:@$)) diaglios ($@])) maprli (1{m)) ; (mkrios1larftbc @ (m nmx 0)))'
-
-NB. Aupd=. rios ((ioV,ioTau) larftfc) A
-larftfc=: 1 : '(<: @ (_1 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTFCDRIOS & larftfcstep)) ((,`((- & #) diaglios ($@])) maprli (1{m)) ; (mkrios1larftfc @ (m nmx 0)))'
-
-NB. Aupd=. rios ((ioV,ioTau) larftbr) A
-larftbr=: 1 : '(<: @ (2 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTBRDRIOS & larftbrstep)) ((,`((- & #) diaglios ($@])) maprli (1{m)) ; (mkrios1larftbr @ (m nmx 0)))'
-
 NB.   VT - (m+1+n)×n-matrix, being matrix VTau0 with zero
 NB.        matrix replaced by matrix T
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-NB. larftfr    forward      rowwise
-NB. larftbc    backward     columnwise
-NB. larftbr    backward     rowwise
+NB. P=. taus mkPpfx Vtru1
+mkPpfx=: (* -)~ ((mp ct) {:)\
 
+NB. P=. taus mkPsfx Vtru1
+mkPsfx=: (* -)~ ((mp ct) {.)\.
+
+NB. stitch to y vector ((Ti*coli),1)
+looperfwd=: (1 & (_1:})) @ (, & 0) @ (] ,.  (] mp (([ {. {)~ #)))
+
+NB. stitch vector (1,(Ti*coli)) to y
+looperbwd=: (1 & ( 0:})) @ (0 & ,) @ (] ,.~ (] mp (([ {. {)~ #)))
+
+NB.   vlarftfc=. (ioV,ioTau) larftfcx
+NB.   T=. rios vlarftfc A
+NB. T=. rios ((ioV,ioTau) larftfc) A
+larftfc=: 1 : '(, getir (1{m)) ([ * (EMPTY (looperfwd ^: (#@[))~ mkPpfx)) ((ct@trl1) getir (0{m))'
+
+NB. larftfr    forward      rowwise
+NB. T=. rios ((ioV,ioTau) larftfr) A
+larftfr=: 1 : '(, getir (1{m)) ([ * (EMPTY (looperfwd ^: (#@[))~ mkPpfx)) (tru1 getir (0{m))'
+
+NB. larftbc    backward     columnwise
+NB. T=. rios ((ioV,ioTau) larftbc) A
+larftbc=: 1 : '(, getir (1{m)) ([ * (EMPTY (looperbwd ^: (#@[))~ (|.@(0 1&}.)@mkPsfx))) ((ct@((-~/@$) tru1 ])) getir (0{m))'
+
+NB. larftbr    backward     rowwise
+NB. T=. rios ((ioV,ioTau) larftbr) A
+larftbr=: 1 : '(, getir (1{m)) ([ * (EMPTY (looperbwd ^: (#@[))~ (|.@(0 1&}.)@mkPsfx))) (((-~/@$) trl1 ]) getir (0{m))'
 
 NB. ---------------------------------------------------------
 NB. Adverb     Action   Side   Transp  Direction  Layout      Algo
@@ -853,11 +827,11 @@ NB.          define a block reflector H, and submatrix C to
 NB.          update
 NB.   Aupd - m×n-matrix, being A with updated submatrix C
 
-larfblnfc=: ]`(mp~)`         trl1   `([      ((>: upddiag0)@mp) ((mp ct)~))`- upd3ri  NB. CHECKME!
-larfblcfc=: ]`(mp~)`         trl1   `([      ((>: upddiag0)@mp) (ct@mp)   )`- upd3ri  NB. QR: (I + V * (V * (-T))') * C
-larfblcbc=: ]`(mp~)`((-~/@$) tru1 ])`([      ((>: upddiag0)@mp) (ct@mp)   )`- upd3ri  NB. QL: (I + V * (V * (-T))') * C
-larfbrnfr=: ]` mp  `         tru1   `((ct@[) ((>: upddiag0)@mp) (mp~)     )`- upd3ri  NB. LQ: C * (I + V' * (-T) * V)
-larfbrnbr=: ]` mp  `((-~/@$) trl1 ])`((ct@[) ((>: upddiag0)@mp) (mp~)     )`- upd3ri  NB. RQ: C * (I + V' * (-T) * V)
+larfblnfc=: ]`(mp~)`         trl1   `([      ((>: upddiag0)@mp) ((mp ct)~))`- upd3ir  NB. CHECKME!
+larfblcfc=: ]`(mp~)`         trl1   `([      ((>: upddiag0)@mp) (ct@mp)   )`- upd3ir  NB. QR: (I + V * (V * (-T))') * C
+larfblcbc=: ]`(mp~)`((-~/@$) tru1 ])`([      ((>: upddiag0)@mp) (ct@mp)   )`- upd3ir  NB. QL: (I + V * (V * (-T))') * C
+larfbrnfr=: ]` mp  `         tru1   `((ct@[) ((>: upddiag0)@mp) (mp~)     )`- upd3ir  NB. LQ: C * (I + V' * (-T) * V)
+larfbrnbr=: ]` mp  `((-~/@$) trl1 ])`((ct@[) ((>: upddiag0)@mp) (mp~)     )`- upd3ir  NB. RQ: C * (I + V' * (-T) * V)
 
 NB. =========================================================
 NB. Test suite

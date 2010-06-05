@@ -95,10 +95,6 @@ nmx=: 2 : '(n { m) { ['
 NB. Conj. to evoke n-th verb from gerund m: m[n]
 gi=: 2 : '(n{m)`:6'
 
-NB. Conj. to apply u to submatrix from y, defined by n-th
-NB. rIOS from x: u(y[x[n]])
-uci=: 2 : '(n mx) (u ;. 0) ]'
-
 NB. Conj. to supply n-th verb from gerund to 'cut':
 NB. u[n](y[x])
 gic=: 2 : '(m gi n) ;. 0'
@@ -149,6 +145,8 @@ ct0r=: ct1 @ (ioscv & 0)  NB. count trailing zero rows in matrix y
 
 trace=: +/ @ diag         NB. matrix trace
 ct=: + @ |:               NB. conjugate transpose
+NB. pt=: |. @ |: @ |.         NB. pertranspose
+NB. cpt=: + @ pt              NB. conjugate pertranspose
 
 NB. ---------------------------------------------------------
 NB. IOS explorers
@@ -156,10 +154,20 @@ NB. monad     dyad    triad   tetrad     pentad     hexad     heptad    octad   
 NB.           couplet triplet quadruplet quintuplet sextuplet septuplet octuplet
 NB. singleton duet    trio    quartet    quintet    sextet    septet    octet
 
+NB. Conj. to get submatrix processed by monad u, accepting rIOS indirectly
+NB. Formula: subA := u(y[x[n]])
+NB. Syntax: subA=. rios (u getir io) A
+getir=: 2 : '(n mx) (u ;. 0) ]'
+
+NB. Adv. to set submatrix, accepting rIOS
+NB. Formula: y[x] := u(x,y)
+NB. Syntax: Aupd=. rios (vset setr) A
+setr=: 1 : 'u`(rios2ios@[)`] }'
+
 NB. Adv. to set submatrix, accepting rIOS indirectly
-NB. Syntax: Aupd=. rioss (vset setri io) A
-NB. y[x[n]] := u(x,y)
-setri=: 2 : 'u`(rios2ios@(n mx))`] }'
+NB. Formula: y[x[n]] := u(x,y)
+NB. Syntax: Aupd=. rioss (vset setir io) A
+setir=: 2 : 'u`(rios2ios@(n mx))`] }'
 
 NB. Adv. to update submatrix
 NB. Syntax: Aupd=. ios (vapp upd) A
@@ -169,26 +177,26 @@ NB. Conj. to model 'upd' accepting lIOS
 updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'
 
 NB. Conj. to model 'upd' accepting rIOS
-NB. y[x[n]] := u(y[x[n]])
-NB. Aupd=. rios (u updr) A
+NB. Formula: y[x[n]] := u(y[x[n]])
+NB. Syntax: Aupd=. rios (u updr) A
 updr=: 1 : '(u ;. 0)`(rios2ios@[)`] }'
 
 NB. Conj. to model 'updi' accepting rIOS
-NB. y[x[n]] := u(y[x[n]])
-NB. Aupd=. rios (u updri io) A
-updri=: 2 : '(n mx) (u updr) ]'
+NB. Formula: y[x[n]] := u(y[x[n]])
+NB. Syntax: Aupd=. rios (u updir io) A
+updir=: 2 : '(n mx) (u updr) ]'
 
 NB. Conj. to model 'upd2i' accepting rIOS
-NB. y[x[n[1]]] := u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]])))
-upd2ri=: 2 : '((m gici ((1{n),2)) (m gi 1) (m gici ((0{n),0)))`(rios2ios@(n nmx 1))`] }'
+NB. Formula: y[x[n[1]]] := u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]])))
+upd2ir=: 2 : '((m gici ((1{n),2)) (m gi 1) (m gici ((0{n),0)))`(rios2ios@(n nmx 1))`] }'
 
 NB. ---------------------------------------------------------
-NB. upd3ri
+NB. upd3ir
 NB. Template conj. to make verbs to update subarray by pentad
 NB. indirectly, addressing mode is rIOS
 NB.
 NB. Syntax:
-NB.   vapp=. u0`u1`u2`u3`u4 upd3ri io0 io1 io2
+NB.   vapp=. u0`u1`u2`u3`u4 upd3ir io0 io1 io2
 NB. where
 NB.   rios     - k×2×2-array of integers, vector of rIOSs
 NB.   io0..io2 - integers, IOs in rios
@@ -207,56 +215,56 @@ NB.   k        > 0
 NB.
 NB. Example:
 NB. - the following replaces 24 by _1220 in array (i. 10 10):
-NB.     (3 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1) (-:`-`*:`+`%: upd3ri 0 1 2) i. 10 10
+NB.     (3 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1) (-:`-`*:`+`%: upd3ir 0 1 2) i. 10 10
 NB.   since
 NB.     _1220 -: (-: 24) - (*: 35) + (%: 49)
 
-upd3ri=: 2 : '((m gici ((2{n),0)) (m gi 1) (m gici ((1{n),2)) (m gi 3) (m gici ((0{n),4)))`(rios2ios@(n nmx 2))`] }'
+upd3ir=: 2 : '((m gici ((2{n),0)) (m gi 1) (m gici ((1{n),2)) (m gi 3) (m gici ((0{n),4)))`(rios2ios@(n nmx 2))`] }'
 
 NB. Conj. to 'map' set of elements to another one, accepting IOS
-NB. y[x[1]] := u(y[x[0]])
-NB. Aupd=. IOS (u map (ioFrom,ioTo)) A
+NB. Formula: y[x[1]] := u(y[x[0]])
+NB. Syntax: Aupd=. IOS (u map (ioFrom,ioTo)) A
 
 map=: 2 : '(u @ (n nmx 0))`(n nmx 1)`] }'
 
 NB. Adv. to model 'map' accepting lIOS
-NB. y[u[1](u[0](y[x]),y)] := u[0](y[x])
-NB. Aupd=. lios (u0`u1 mapl) A
+NB. Formula: y[u[1](u[0](y[x]),y)] := u[0](y[x])
+NB. Syntax: Aupd=. lios (u0`u1 mapl) A
 mapl=: 1 : '((m gi 0) @ ({,)) ((m gi 1) }) ]'
 
 NB. FIXME! NB. Adv. to model 'mapl' with indirect access to lIOS
-NB. FIXME! NB. y[u[1](x[1])] := u[0](y[x[0]])
-NB. FIXME! NB. vapp=. u0`u1 mapli
-NB. FIXME! NB. Aupd=. liosa vapp A
+NB. FIXME! NB. Formula: y[u[1](x[1])] := u[0](y[x[0]])
+NB. FIXME! NB. Syntax: vapp=. u0`u1 mapli
+NB. FIXME! NB. Syntax: Aupd=. liosa vapp A
 NB. FIXME! mapli=: 1 : '((((m gi 0) @ ({,))~ (0&{))~) (((m gi 1) @ (1 mx)) }) ]'
 
 NB. Adv. to model 'map' accepting rIOS to read and
 NB. using lIOS to write
-NB. y[u[1](u[0](y[x]),y)] := u[0](y[x])
-NB. Aupd=. rIOS (u0`u1 maprl) A
+NB. Formula: y[u[1](u[0](y[x]),y)] := u[0](y[x])
+NB. Syntax: Aupd=. rIOS (u0`u1 maprl) A
 maprl=: 1 : '(m gic 0) ((m gi 1) }) ]'
 
 NB. Conj. to model 'maprl' with indirect access to rIOS
-NB. y[u[1](u[0](y[x[n]]),y)] := u[0](y[x[n]])
-NB. Aupd=. rIOSs (u0`u1 maprli ioFrom) A
+NB. Formula: y[u[1](u[0](y[x[n]]),y)] := u[0](y[x[n]])
+NB. Syntax: Aupd=. rIOSs (u0`u1 maprli ioFrom) A
 maprli=: 2 : '(m gici (n,0)) ((m gi 1) }) ]'
 
 NB. Conj. to model 'mapi' accepting rIOS
-NB. y[u[1](y[x[n]],y)] := u[0](y[x[n]])
-NB. Aupd=. rios (u mapri (ioFrom,ioTo)) A
-mapri=: 2 : '(u uci (0{n))`(rios2ios@(n nmx 1))`] }'
+NB. Formula: y[u[1](y[x[n]],y)] := u[0](y[x[n]])
+NB. Syntax: Aupd=. rios (u mapir (ioFrom,ioTo)) A
+mapir=: 2 : '(u getir (0{n))`(rios2ios@(n nmx 1))`] }'
 
 NB. Conj. to model 'upd3i' accepting rIOS
-NB. y[x[n[2]]] := u[3](u[4](y[x[n[2]]]),u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]])))
-map3ri=: 2 : '((m gici ((2{n),4)) (m gi 3) (m gici ((1{n),2)) (m gi 1) (m gici ((0{n),0)))`(rios2ios@(n nmx 3))`] }'
+NB. Formula: y[x[n[2]]] := u[3](u[4](y[x[n[2]]]),u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]])))
+map3ir=: 2 : '((m gici ((2{n),4)) (m gi 3) (m gici ((1{n),2)) (m gi 1) (m gici ((0{n),0)))`(rios2ios@(n nmx 3))`] }'
 
 NB. ---------------------------------------------------------
-NB. map4ri
+NB. map4ir
 NB. Template conj. to make verbs to map 4 subarrays by heptad
 NB. to another subarray indirectly, addressing mode is rIOS
 NB.
 NB. Syntax:
-NB.   vapp=. u0`u1`u2`u3`u4`u5`u6 map4ri io0 io1 io2 io3 io4 io5
+NB.   vapp=. u0`u1`u2`u3`u4`u5`u6 map4ir io0 io1 io2 io3 io4 io5
 NB. where
 NB.   rios        - k×2×2-array of integers, vector of rIOSs
 NB.   io0..io5    - integers, IOs in rios
@@ -277,11 +285,11 @@ NB.   k           > 0
 NB.
 NB. Example:
 NB. - the following replaces 87 by _8525 in array (i. 10 10):
-NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
+NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ir 0 1 2 3 4) i. 10 10
 NB.   since
 NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
 
-map4ri=: 2 : '((m gici ((3{n),0)) (m gi 1) ((m gici ((2{n),2)) (m gi 3) (m gici ((1{n),4)) (m gi 5) (m gici ((0{n),6))))`(rios2ios@(n nmx 4))`] }'
+map4ir=: 2 : '((m gici ((3{n),0)) (m gi 1) ((m gici ((2{n),2)) (m gi 3) (m gici ((1{n),4)) (m gi 5) (m gici ((0{n),6))))`(rios2ios@(n nmx 4))`] }'
 
 NB. ---------------------------------------------------------
 NB. append
@@ -341,8 +349,8 @@ NB.   lios=. [d[,f,s]] diaglios (m,n)
 NB. where
 NB.   m    ≥ 0, integer, rows in matrix
 NB.   n    ≥ 0, integer, columns in matrix
-NB.   d    - integer in range [-(m-1):n-1], IO diagonal,
-NB.          default is 0 (main diagonal)
+NB.   d    - integer, IO diagonal, default is 0 (main
+NB.          diagonal)
 NB.   f    - integer in range [-min(m,n):min(m,n)-1], IO 1st
 NB.          element of diagonal's fragment to be returned,
 NB.          default is 0 (take from head)
@@ -356,7 +364,7 @@ NB. Formulae:
 NB. - the whole diagonal's IO 1st element:
 NB.     F := (d ≥ 0) ? d : (-n*d)
 NB. - the whole diagonal's size:
-NB.     S := min(m,n,⌊(n+m-|n-m-2*d|)/2⌋)
+NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
 NB.
 NB. Notes:
 NB. - (f,s) pair defines rIOS of diagonal's fragment to be
@@ -366,8 +374,8 @@ diaglios=: (0 0 _&$:) :(4 : 0)
   'd f s'=. 3 {. x , 0 _
   'm n'=. y
   F=. n (-@* ^: (0 > ])) d
-  S=. <./ y , <. -: (n + m - | n - m + +: d)
-  (f,:s) (] ;. 0) hds2ios F , (>: n) , S
+  S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
+  (f ,: (s <. S)) (] ;. 0) hds2ios F , (>: n) , S
 )
 
 NB. ---------------------------------------------------------
@@ -378,8 +386,7 @@ NB. Syntax:
 NB.   e=. [d[,f,s]] diag A
 NB. where
 NB.   A - m×n-matrix
-NB.   d - integer in range [-(m-1):n-1], IO diagonal,
-NB.       default is 0 (main diagonal)
+NB.   d - integer, IO diagonal, default is 0 (main diagonal)
 NB.   f - integer in range [-min(m,n):min(m,n)-1], IO 1st
 NB.       element of diagonal's fragment to be returned,
 NB.       default is 0 (take from head)
@@ -410,8 +417,7 @@ NB.   vapp  - ambivalent verb to update d-th diagonal of
 NB.           matrix A by monad u; is called as:
 NB.             Aupd=. [d,[f,s]] vapp A
 NB.   A     - m×n-matrix to update
-NB.   d     - integer in range [-(m-1):n-1], optional IO
-NB.           diagonal
+NB.   d     - integer, optional IO diagonal
 NB.   A0upd - m×n-matrix A with 0-th diagonal updated by u
 NB.   Aupd  - m×n-matrix A with d-th diagonal updated by u
 NB.   m     ≥ 0
@@ -420,7 +426,9 @@ NB.
 NB. Notes:
 NB. - upddiag0 can't update diagonal partially
 
-upddiag0=: 1 : '(u @ diag) ((diaglios @ $ @ ]) }) ]'
+setdiag0=: (diaglios @ $ @ ]) }
+
+upddiag0=: 1 : '(u @ diag) setdiag0 ]'
 
 upddiag=: 1 : 0
   (u upddiag0) y

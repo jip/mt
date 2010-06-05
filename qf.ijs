@@ -27,6 +27,7 @@ NB. for non-blocked code, reduces height and width by 1
 GEQ2DRIOS=: 2 2 $ 0 0 _1 _1
 
 NB. for blocked code (see ge{lq,ql,qr,rq}fstep)
+NB. in 'block size' units
 GELQFDRIOS=: 6 2 2 $ 1 1 0 _1 1 1 0 _1 1 0 0 0 0 0 0 0 1 1 _1 _1 0 0 0 0
 GEQLFDRIOS=: 6 2 2 $ 0 _1 _1 0 0 _1 _1 0 0 _1 0 0 0 0 0 0 0 0 _1 _1 0 0 0 0
 GEQRFDRIOS=: 6 2 2 $ 1 1 _1 0 1 1 _1 0 0 1 0 0 0 0 0 0 1 1 _1 _1 0 0 0 0
@@ -175,15 +176,13 @@ NB. emulate xGE{LQ,QL,QR,RQ}2
 NB.
 NB. TODO:
 NB. - consider delay tau conjugation to final batch processing
+NB. - ensure geq*2 accepts eA and returns eAupd
 
 gelq2=: (0 _1 & +)`(_1 _1 & ,:)`(GEQ2DRIOS & gelq2step) geq2
 geql2=: (_1 0 & +)`( 0  0 & ,:)`(GEQ2DRIOS & geql2step) geq2
 geqr2=: (_1 0 & +)`(_1 _1 & ,:)`(GEQ2DRIOS & geqr2step) geq2
 gerq2=: (0 _1 & +)`( 0  0 & ,:)`(GEQ2DRIOS & gerq2step) geq2
 
-NB. Differences between rIOSs at consequent iterations:
-NB.   rios(i+1)-rios(i)
-NB. in 'block size' units for (order does matter):
 NB.   Vτ     - V and τ aggregated
 NB.   V      - current block within input matrix
 NB.   τ      - vector of τ[i] corresp. to V
@@ -220,10 +219,10 @@ mkrios0gerqf=: 3 : 0
   6 2 2 $ _1,bs,bs,(n+1),_1,(bs+1),bs,n,_1,bs,bs,1 _1 0,bs,bs,0,(bs+1),(m-bs),n,0,bs,(m-ibs),(n+1-ibs)
 )
 
-gelqfstep=: ([ ([ (3 1 4 larfbrnfr) (1 2 larftfr)) (gelq2 updri 0)) step
-geqlfstep=: ([ ([ (3 1 4 larfblcbc) (1 2 larftbc)) (geql2 updri 0)) step
-geqrfstep=: ([ ([ (3 1 4 larfblcfc) (1 2 larftfc)) (geqr2 updri 0)) step
-gerqfstep=: ([ ([ (3 1 4 larfbrnbr) (1 2 larftbr)) (gerq2 updri 0)) step
+gelqfstep=: ([ ([ (3 1 4 larfbrnfr) (1 2 larftfr)) (gelq2 updir 0)) step
+geqlfstep=: ([ ([ (3 1 4 larfblcbc) (1 2 larftbc)) (geql2 updir 0)) step
+geqrfstep=: ([ ([ (3 1 4 larfblcfc) (1 2 larftfc)) (geqr2 updir 0)) step
+gerqfstep=: ([ ([ (3 1 4 larfbrnbr) (1 2 larftbr)) (gerq2 updir 0)) step
 
 NB. =========================================================
 NB. Interface
@@ -257,6 +256,7 @@ NB. - geqrfri & Co.: QR of submatrix defined by rIOS
 NB.   indirectly, when space for τ and T is pre-allocated
 NB. - geqrfp & Co.: version using larfp to produce
 NB.   non-negative diagonal
+NB. - >>>>>>>>>>> ensure geq*f monad: A->LQf, dyad: (A,riosB)->Aupd
 
 gelqf=: 3 : 0
   k=. <./ 'm n'=. $ y
@@ -268,7 +268,7 @@ gelqf=: 3 : 0
   'bs iters'=. _2 {. x
   rios0=. mkrios0gelqf x
   drios=. bs * GELQFDRIOS
-  iters (((0,(-bs)) & }.) @ ((1 {:: ]) (gelq2 updri 5) (0 {:: ])) @ (drios & gelqfstep)) (y ; rios0)
+  iters (((0,(-bs)) & }.) @ ((1 {:: ]) (gelq2 updir 5) (0 {:: ])) @ (drios & gelqfstep)) (y ; rios0)
 )
 
 geqlf=: 3 : 0
@@ -281,7 +281,7 @@ geqlf=: 3 : 0
   'bs iters'=. _2 {. x
   rios0=. mkrios0geqlf x
   drios=. bs * GEQLFDRIOS
-  iters (((bs,0) & }.) @ ((1 {:: ]) (geql2 updri 5) (0 {:: ])) @ (drios & geqlfstep)) (y ; rios0)
+  iters (((bs,0) & }.) @ ((1 {:: ]) (geql2 updir 5) (0 {:: ])) @ (drios & geqlfstep)) (y ; rios0)
 )
 
 geqrf=: 3 : 0
@@ -294,7 +294,7 @@ geqrf=: 3 : 0
   'bs iters'=. _2 {. x
   rios0=. mkrios0geqrf x
   drios=. bs * GEQRFDRIOS
-  iters ((((-bs),0) & }.) @ ((1 {:: ]) (geqr2 updri 5) (0 {:: ])) @ (drios & geqrfstep)) (y ; rios0)
+  iters ((((-bs),0) & }.) @ ((1 {:: ]) (geqr2 updir 5) (0 {:: ])) @ (drios & geqrfstep)) (y ; rios0)
 )
 
 gerqf=: 3 : 0
@@ -307,7 +307,7 @@ gerqf=: 3 : 0
   'bs iters'=. _2 {. x
   rios0=. mkrios0gerqf x
   drios=. bs * GERQFDRIOS
-  iters (((0,bs) & }.) @ ((1 {:: ]) (gerq2 updri 5) (0 {:: ])) @ (drios & gerqfstep)) (y ; rios0)
+  iters (((0,bs) & }.) @ ((1 {:: ]) (gerq2 updir 5) (0 {:: ])) @ (drios & gerqfstep)) (y ; rios0)
 )
 
 NB. =========================================================
@@ -336,7 +336,7 @@ tgeqf=: 3 : 0
   load '/home/jip/j602-user/projects/lapack/geqrf.ijs'
   load '/home/jip/j602-user/projects/lapack/gerqf.ijs'
 
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y
+  rcond=. ((_."_)`(norm1 con getir) @. (=/@$)) y
 
   ('gelq2' tmonad (,.&0 )`]`(rcond"_)`(_."_)`((norm1@(- ((         trl   @( 0 _1&}.)) mp  unglq)))%(FP_EPS*(#*norm1)@[))) y
   ('geql2' tmonad (0 &, )`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)))%(FP_EPS*(#*norm1)@[))) y

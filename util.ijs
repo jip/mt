@@ -171,8 +171,8 @@ NB. tdyad
 NB. Template conj. to make monad to test computational verb
 NB.
 NB. Syntax:
-NB.   vtestm=. mname tmonad vgety`vrcond`vferr`vberr
-NB.   vtestd=. dname tdyad vgetx`vgety`vrcond`vferr`vberr
+NB.   vtestm=. mname tmonad vgety`vgeto`vrcond`vferr`vberr
+NB.   vtestd=. dname tdyad vgetx`vgety`vgeto`vrcond`vferr`vberr
 NB. where
 NB.   vgetx  - monad to extract left argument for vd; is
 NB.            called as:
@@ -180,12 +180,15 @@ NB.              argx=. vgetx y
 NB.   vgety  - monad to extract right argument for vm or vd;
 NB.            is called as:
 NB.              argy=. vgety y
+NB.   vgeto  - monad to extract output from ret;
+NB.            is called as:
+NB.              out=. vgeto ret
 NB.   vrcond - monad to find rcond; is called as:
 NB.              rcond=. vrcond y
 NB.   vferr  - dyad to find ferr; is called as:
-NB.              ferr=. out vferr y
+NB.              ferr=. y vferr out
 NB.   vberr  - dyad to find berr; is called as:
-NB.              berr=. out vberr y
+NB.              berr=. y vberr out
 NB.   mname  - literal, the name of monad vm to test
 NB.   dname  - literal, the name of dyad vd to test
 NB.   vtestm - monad to test monad vm and to log result:
@@ -199,13 +202,14 @@ NB.            on the screen, in the global var TESTLOG and,
 NB.            optionally, in the log file; is called as:
 NB.              vtestd y
 NB.   vm     - monad to test; is called as:
-NB.              out=. vm argy
+NB.              ret=. vm argy
 NB.   vd     - dyad to test; is called as:
-NB.              out=. argx vd argy
+NB.              ret=. argx vd argy
 NB.   y      - some input for vtestm or vtestd
 NB.   argx   - some left argument for vd
 NB.   argy   - some right argument for vm or vd
-NB.   out    - some output from vm or vd
+NB.   ret    - some output from vm or vd
+NB.   out    - rectified ret, i.e. filtered output
 NB.   ferr   ≥ 0 or +∞ or indeterminate, the relative forward
 NB.            error
 NB.   berr   ≥ 0 or +∞ or indeterminate, the relative
@@ -219,31 +223,32 @@ NB. Application 1:
 NB.   NB. to estimate rcond in 1-norm
 NB.   vrcond=. (_."_)`(norm1 con getri) @. (=/@$)
 NB.   NB. to calc. berr, assuming:
-NB.   NB.   berr := ||A - realA||_1 / ||A||_1
-NB.   vberr=. ((- (% & norm1) [) unmqr)~                   CHECKME!
+NB.   NB.   berr := ||A - realA||_1 / (m * ε * ||A||_1)
+NB.   vberr=. ((- (% & norm1) [) % (FP_EPS * # @ [)) unmqr
 NB.   NB. let's test geqrf
-NB.   ('geqrf' tmonad ]`vrcond`(_."_)`vberr) A
+NB.   ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
 NB.
 NB. Application 2:
 NB.   NB. to estimate rcond in ∞-norm
 NB.   vrcond=. ((_."_)`(normi con getri) @. (=/@$)) @ (0 & {::)
 NB.   NB. to calc. ferr, assuming:
 NB.   NB.   ferr := ||x - realx||_inf / ||realx||_inf
-NB.   vferr=. (- (% & normi) [) (1&{::)
+NB.   vferr=. ((- (% & normi) [) (1&{::))~
 NB.   NB. to calc. componentwise berr [LUG 75], assuming:
 NB.   NB.   berr := max_i(|b - A * realx|_i / (|A| * |realx| + |b|)_i)
-NB.   vberr=. ((mp & >/ @ ] - (mp~ (0&{::))) (>./ @ %) ((| @ mp & >/ @ ]) + ((mp & |)~ (0&{::)))
+NB.   vberr=. ((mp & >/@[) (|@-) (0 {:: [) mp ]) (>./ @ %) (((0 {:: [) (mp & |) ]) + (|@mp & >/@[))
 NB.   NB. let's test getrs
-NB.   ('getrs' tdyad (0&{::)`(mp & >/)`vrcond`vferr`vberr) (A;x)
+NB.   ('getrs' tdyad (0&{::)`(mp & >/)`]`vrcond`vferr`vberr) (A;x)
 
 tmonad=: 2 : 0
-  '`vgety vrcond vferr vberr'=. n
+  '`vgety vgeto vrcond vferr vberr'=. n
   argy=. vgety y
   try. rcond=. vrcond y                               catch. rcond=. _  end.
-  try. 't s'=. timespacex 'out=. ' , m , ' argy'      catch. t=. s=. _. end.
+  try. 't s'=. timespacex 'ret=. ' , m , ' argy'      catch. t=. s=. _. end.
+  try. out=. vgeto ret                                catch. out=. _.   end.
   try. ferr=. out vferr y                             catch. ferr=. _.  end.
   try. berr=. out vberr y                             catch. berr=. _.  end.
-  logline=. fmtlog x ; rcond ; ferr ; berr ; t ; s
+  logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
   logline ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline
   logline (1!:2) 2
@@ -251,14 +256,15 @@ tmonad=: 2 : 0
 )
 
 tdyad=: 2 : 0
-  '`vgetx vgety vrcond vferr vberr'=. n
+  '`vgetx vgety vgeto vrcond vferr vberr'=. n
   argx=. vgetx y
   argy=. vgety y
   try. rcond=. vrcond y                               catch. rcond=. _  end.
-  try. 't s'=. timespacex 'out=. argx ' , m , ' argy' catch. t=. s=. _. end.
+  try. 't s'=. timespacex 'ret=. argx ' , m , ' argy' catch. t=. s=. _. end.
+  try. out=. vgeto ret                                catch. out=. _.   end.
   try. ferr=. out vferr y                             catch. ferr=. _.  end.
   try. berr=. out vberr y                             catch. berr=. _.  end.
-  logline=. fmtlog x ; rcond ; ferr ; berr ; t ; s
+  logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
   logline ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline
   logline (1!:2) 2

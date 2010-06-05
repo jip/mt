@@ -33,7 +33,9 @@ NB. append    Template adv. to make verbs to enhance append
 NB. stitch    Template adv. to make verbs to enhance stitch
 NB.
 NB. rws       Rows weighted sum
-NB. sdiag     Add element[s from] x to diagonal of matrix y
+NB. upddiag0  Template adv. to make verbs to update 0-th
+NB.           diagonal
+NB. upddiag   Template adv. to make verbs to update diagonal
 NB.
 NB. idmat     Make rectangular identity matrix with shifted
 NB.           diagonal
@@ -154,9 +156,14 @@ NB. monad     dyad    triad   tetrad     pentad     hexad     heptad    octad   
 NB.           couplet triplet quadruplet quintuplet sextuplet septuplet octuplet
 NB. singleton duet    trio    quartet    quintet    sextet    septet    octet
 
+NB. Adv. to set submatrix, accepting rIOS indirectly
+NB. Syntax: Aupd=. rioss (vset setri io) A
+NB. y[x[n]] := u(x,y)
+setri=: 2 : 'u`(rios2ios@(n mx))`] }'
+
 NB. Adv. to update submatrix
 NB. Syntax: Aupd=. ios (vapp upd) A
-upd=: 1 : '(u@{)`[`]}'
+upd=: 1 : '(u@{)`[`] }'
 
 NB. Conj. to model 'upd' accepting lIOS
 updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'
@@ -387,23 +394,40 @@ NB.   n   ≥ 0
 diag=: ((<0 1)&|:) :((diaglios $) ({,) ])
 
 NB. ---------------------------------------------------------
-NB. sdiag
-NB. Shift diagonal of y by values from x, i.e. make x*I+y
-NB. from scalar or vector x and matrix y
+NB. upddiag0
+NB. upddiag
+NB. Update diagonal
 NB.
 NB. Syntax:
-NB.   s=. x sdiag y
+NB.   vapp0=. u upddiag0
+NB.   vapp=. u upddiag
 NB. where
-NB.   y - n×n-matrix
-NB.   x - numeric scalar of n-vector, shift for y's diagonal
-NB.   s - n×n-matrix, equals to (y+x*idmat(#y))
-NB.   n >= 0
+NB.   u     - monad to change diagonal
+NB.   vapp0 - monad to update 0-th diagonal of matrix A by
+NB.           monad u; is called as:
+NB.             A0upd=. vapp0 A
+NB.   vapp  - ambivalent verb to update d-th diagonal of
+NB.           matrix A by monad u; is called as:
+NB.             Aupd=. [d,[f,s]] vapp A
+NB.   A     - m×n-matrix to update
+NB.   d     - integer in range [-(m-1):n-1], optional IO
+NB.           diagonal
+NB.   A0upd - m×n-matrix A with 0-th diagonal updated by u
+NB.   Aupd  - m×n-matrix A with d-th diagonal updated by u
+NB.   m     ≥ 0
+NB.   n     ≥ 0
 NB.
-NB. TODO:
-NB. - implement for non-square matrices via diag[lios]:
-NB.   sdiag=: blah-blah-blah updl
+NB. Notes:
+NB. - upddiag0 can't update diagonal partially
 
-sdiag=: (+ diag) ((>: * i.) @ # @ ]) } ]  NB. FIXME! via diaglios
+upddiag0=: 1 : '(u @ diag) ((diaglios @ $ @ ]) }) ]'
+
+upddiag=: 1 : 0
+  (u upddiag0) y
+:
+  lios=. x (diaglios $) y
+  (u (lios ({,) y)) ((lios"_) }) y
+)
 
 NB. ---------------------------------------------------------
 NB. idmat

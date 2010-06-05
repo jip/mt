@@ -729,9 +729,10 @@ NB.          define a block reflector H, and submatrix C to
 NB.          update
 NB.   Aupd - m×n-matrix, being A with updated submatrix C
 
-LARFTFCDRIOS=: 5 2 2 $ 1 0 _1 1 1 1 _1 0 0 1 0 0 0 0 1 1 0 1 1 0         NB. A,v,τ,Ttru,Tcol
-LARFTBCDRIOS=: 5 2 2 $ _1 0 _1 1 _1 _1 _1 0 0 _1 0 0 _1 0 1 1 _1 _1 1 0  NB. A,v,τ,Ttrl,Tcol
-LARFTFRDRIOS=: 5 2 2 $ 0 1 1 _1 1 1 0 _1 1 0 0 0 0 0 1 1 0 1 1 0         NB. A,v,τ,Ttru,Tcol
+LARFTFCDRIOS=: 5 2 2 $ 1 0 _1 1 1 1 _1 0 0 1 0 0 0 0 1 1 0 1 1 0       NB. A,v,τ,Ttru,Tcol
+LARFTBCDRIOS=: 5 2 2 $ 0 0 _1 1 0 _1 _1 0 0 _1 0 0 _1 0 1 1 _1 _1 1 0  NB. A,v,τ,Ttrl,Tcol
+LARFTFRDRIOS=: 5 2 2 $ 0 1 1 _1 1 1 0 _1 1 0 0 0 0 0 1 1 0 1 1 0       NB. A,v,τ,Ttru,Tcol
+LARFTBRDRIOS=: 5 2 2 $ 0 0 1 _1 _1 0 0 _1 _1 0 0 0 0 _1 1 1 0 _1 1 0   NB. A,v,τ,Ttrl,Tcol
 
 NB. rios1=. mkrios1larftfc riosV
 mkrios1larftfc=: 3 : 0
@@ -741,14 +742,20 @@ mkrios1larftfc=: 3 : 0
 
 NB. rios1=. mkrios1larftbc riosV
 mkrios1larftbc=: 3 : 0
-  'h1 w1'=. <: 'h w'=. {: y
-  5 2 2 $ _2 _1,h1,1 _2 _2,h1,1,w,_2 1 1,w1,_1 1 1,w1,_2 1 1
+  't1 l1 h1 w1'=. <: 't l h w'=. , y
+  5 2 2 $ t,l,h1,1,t,l1,h1,1,t1,l1,1 1,w1,_1 1 1,w1,_2 1 1
 )
 
 NB. rios1=. mkrios1larftfr riosV
 mkrios1larftfr=: 3 : 0
-  't1 l1 w1'=. 1 1 _1 + 't l w'=. (<<< 2) ({,) y
+  't1 l1 w1'=. 1 1 _1 + 't l w'=. 2 ywolx y
   5 2 2 $ t,l1,1,w1,t1,l1,1,w1,t1,(l+w),1 1 0,(l+w+1),1 1 0,(l+w+2),1 1
+)
+
+NB. rios1=. mkrios1larftbr riosV
+mkrios1larftbr=: 3 : 0
+  't1 l1 h1 w1'=. <: 't l h w'=. , y
+  5 2 2 $ t,l,1,w1,t1,l,1,w1,t1,l1,1 1 _1,h1,1 1 _1,(h-2),1 1
 )
 
 NB. Tcol =: Ttru0 * (- τ) * (v' * A)'
@@ -759,6 +766,9 @@ larftbcstep=: (]`mp`(-@(0&({,)))`*`((1 & (_1:}))@ct)`(ct@mp)`] map4ri 0 1 2 3 4)
 
 NB. Tcol =: Ttru0 * (- τ) * A * v'
 larftfrstep=: (]`mp`(-@(0&({,)))`*`((1 & (0:}))@ct)`(mp~)`] map4ri 0 1 2 3 4) step
+
+NB. Tcol =: Ttrl0 * (- τ) * A * v'
+larftbrstep=: (]`mp`(-@(0&({,)))`*`((1 & (_1:}))@ct)`(mp~)`] map4ri 0 1 2 3 4) step
 
 NB. Aupd=. rios ((ioV,ioTau) larftfc) A
 NB.
@@ -775,14 +785,17 @@ NB.        (LARFTFCDRIOS & larftfcstep) (Aupd ; rios1)
 NB.      iters times
 NB.   6) extract 0-th item from boxed 2-vector
 
-larftfc=: 1 : '(<: @ (_1 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTFCDRIOS & larftfcstep)) ((,`((- & #) diaglios ($@])) maprli (1{m)) ; (mkrios1larftfc @ (m nmx 0)))'
+NB. Aupd=. rios ((ioV,ioTau) larftfr) A
+larftfr=: 1 : '(<: @ (2 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTFRDRIOS & larftfrstep)) ((,`(((- #)~ ({:@$)) diaglios ($@])) maprli (1{m)) ; (mkrios1larftfr @ (m nmx 0)))'
 
 NB. Aupd=. rios ((ioV,ioTau) larftbc) A
 larftbc=: 1 : '(<: @ (_1 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTBCDRIOS & larftbcstep)) ((,`(((- #)~ ({:@$)) diaglios ($@])) maprli (1{m)) ; (mkrios1larftbc @ (m nmx 0)))'
 
-NB. Aupd=. rios ((ioV,ioTau) larftfr) A
-larftfr=: 1 : '(<: @ (2 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTFRDRIOS & larftfrstep)) ((,`(((- #)~ ({:@$)) diaglios ($@])) maprli (1{m)) ; (mkrios1larftfr @ (m nmx 0)))'
+NB. Aupd=. rios ((ioV,ioTau) larftfc) A
+larftfc=: 1 : '(<: @ (_1 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTFCDRIOS & larftfcstep)) ((,`((- & #) diaglios ($@])) maprli (1{m)) ; (mkrios1larftfc @ (m nmx 0)))'
 
+NB. Aupd=. rios ((ioV,ioTau) larftbr) A
+larftbr=: 1 : '(<: @ (2 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTBRDRIOS & larftbrstep)) ((,`((- & #) diaglios ($@])) maprli (1{m)) ; (mkrios1larftbr @ (m nmx 0)))'
 
 NB.   VT - (m+1+n)×n-matrix, being matrix VTau0 with zero
 NB.        matrix replaced by matrix T
@@ -810,7 +823,7 @@ NB. larfbrnfr  C  * H   right  none    forward    rowwise     LQ
 NB. larfbrnfr  C  * H'  right  ct      forward    rowwise
 NB. larfblnbr  H  * C   left   none    backward   rowwise
 NB. larfblcbr  H' * C   left   ct      backward   rowwise
-NB. larfbrnbr  C  * H   right  none    backward   rowwise
+NB. larfbrnbr  C  * H   right  none    backward   rowwise     RQ
 NB. larfbrcbr  C  * H'  right  ct      backward   rowwise
 NB.
 NB. Template adv. to make verbs to apply a block reflector H
@@ -840,10 +853,11 @@ NB.          define a block reflector H, and submatrix C to
 NB.          update
 NB.   Aupd - m×n-matrix, being A with updated submatrix C
 
-larfblnfc=: ]`(mp~)`         trl1   `([      ((1&sdiag)@mp) ((mp ct)~))`- upd3ri  NB. CHECKME!
-larfblcfc=: ]`(mp~)`         trl1   `([      ((1&sdiag)@mp) (ct@mp)   )`- upd3ri  NB. QR: (I + V * (V * (-T))') * C
-larfblcbc=: ]`((mp~) dbg 'larfb mp~')`((-~/@$) tru1 ])`(([      ((1&sdiag)@mp) (ct@mp)   ) dbg 'sdiag@mp,ct@mp')`- upd3ri  NB. QL: (I + V * (V * (-T))') * C
-larfbrnfr=: ]` mp  `         tru1   `((ct@[) ((1&sdiag)@mp) (mp~)     )`- upd3ri  NB. LQ: C * (I + V' * (-T) * V)
+larfblnfc=: ]`(mp~)`         trl1   `([      ((>: upddiag0)@mp) ((mp ct)~))`- upd3ri  NB. CHECKME!
+larfblcfc=: ]`(mp~)`         trl1   `([      ((>: upddiag0)@mp) (ct@mp)   )`- upd3ri  NB. QR: (I + V * (V * (-T))') * C
+larfblcbc=: ]`(mp~)`((-~/@$) tru1 ])`([      ((>: upddiag0)@mp) (ct@mp)   )`- upd3ri  NB. QL: (I + V * (V * (-T))') * C
+larfbrnfr=: ]` mp  `         tru1   `((ct@[) ((>: upddiag0)@mp) (mp~)     )`- upd3ri  NB. LQ: C * (I + V' * (-T) * V)
+larfbrnbr=: ]` mp  `((-~/@$) trl1 ])`((ct@[) ((>: upddiag0)@mp) (mp~)     )`- upd3ri  NB. RQ: C * (I + V' * (-T) * V)
 
 NB. =========================================================
 NB. Test suite

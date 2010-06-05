@@ -28,7 +28,7 @@ require '~user/projects/jlapack/ztrtrs.ijs'     NB. -//-
 
 NB. ===========================================================================
 NB. lyapchol
-NB. solve stable non-negative definite continuous-time Lyapunov equation
+NB. Solve stable non-negative definite continuous-time Lyapunov equation
 NB. A*X + X*A' + B*B' = 0 directly for Cholesky factor U, X = U*U'
 NB.
 NB. Usage:
@@ -52,7 +52,8 @@ NB.   (Cholesky factor), URL: http://www.slicot.org/shared/doc/SB03OD.html
 
 lyapchol=: 4 : 0
   n=. # y
-  assert. 2 = # $ y                         NB. B is table (rank-2 array) (FIXME - vector allowed)
+  if. 0 = n do. i. 0 return. end.           NB. early termination
+  vmatrixorvector_jlapack_ y
   if. L. x do.
     'Q R'=. x                               NB. Schur factorization Q*R*Q' = A
     vsquare_jlapack_ Q
@@ -81,10 +82,10 @@ lyapchol=: 4 : 0
 
 NB. ===========================================================================
 NB. sorzhouiter
-NB. execute single iteration # (n-j) of Sorensen-Zhou algorithm
+NB. Execute single iteration # (n-j) of Sorensen-Zhou algorithm
 NB.
 NB. Usage:
-NB.   'Bupd ijupd Uupd'=. R sorzhouiter B ; ij ; U
+NB.   'B1 ijupd Uupd'=. R sorzhouiter B ; ij ; U
 NB. where:
 NB.   R     - N-by-N upper triangular stable matrix, i.e. all eigenvalues of R
 NB.           must have negative real parts
@@ -92,7 +93,7 @@ NB.   B     - N-by-M matrix, updated at step #j
 NB.   ij    - i. j
 NB.   U     - N-by-N upper triangular matrix with all but first j columns
 NB.           updated
-NB.   Bupd  - (N-1)-by-M matrix B without last row and updated after step #j
+NB.   B1    - (N-1)-by-M matrix B without last row and updated after step #j
 NB.   ijupd - }: ij
 NB.   Uupd  - N-by-N matrix U with updated column #j
 NB.   N     > 0
@@ -112,11 +113,11 @@ sorzhouiter=: 4 : 0
   bh=. bh % tau
   chk=. (0 < # B1) *. (0 < tau)
   if. chk do.
-    atmp=. (jj {. x) shiftR1 } (lambda ; ij ; j)        NB. "R1+conj(lambda)*I" where R1 is "jj {. x"
+    atmp=. (jj {. x) shiftR1 } (lambda ; ij)            NB. "R1+conj(lambda)*I" where R1 is "jj {. x"
     btmp=. (B1 mp (+ - bh)) + (ijj { x) * - tau         NB. -tau*r-(1/tau)*B1*b
 
     NB. solve for u complex upper triangular system atmp * u = btmp
-    u=. , ztrtrs_jlapack_ atmp ; ,. btmp
+    u=. ztrtrs_jlapack_ atmp ; btmp
   else.
     u=. j $ 0
   end.

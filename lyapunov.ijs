@@ -39,7 +39,7 @@ require '~user/projects/tau/util.ijs'           NB. shiftdiag rndmat rndmatne
 coclass 'tau'
 
 NB. =========================================================
-NB. Local utilities
+NB. Local verbs
 
 split=: (}:;{:) &. >       NB. split under box at last item
 N2=: %: @ (+/) @: *: @: |  NB. 2-norm of vector

@@ -113,6 +113,51 @@ NB.   v[i]
 
 larft=: 2 : '(n&{) ([ * (EMPTY (((1 & (m gi 4)) @ (0 & (m gi 3)) @ (] (m gi 2) (] mp (([ {. { )~ #)))) ^: (#@[))~ (m gi 1))) ((m gi 0) @ (0 & (n })))'
 
+rlarftfc=: 3 : 0
+  n=. c y
+  select. * <: n
+  case. 0 do.  NB. 1=n
+    _1 {. y
+  case. 1 do.  NB. 1<n
+    k=. <. -: n
+    Vl=. k {."1 y
+    Vr=. k }."1 y
+    T00=. rlarftfc Vl
+    T11=. rlarftfc Vr
+    (T00 ,. (- T00 mp ((ct Vl) mp (0 (_1}) Vr)) mp T11)) (_1 append) T11
+  case. _1 do.  NB. 0=n
+    EMPTY
+  end.
+)
+
+r2larftfc=: 3 : 0
+  n=. c y
+  if. 1=n do.
+    _1 {. y
+  elseif. 1<n do.
+    k=. <. -: n
+    Vl=. k {."1 y
+    Vr=. k }."1 y
+    T00=. r2larftfc Vl
+    T11=. r2larftfc Vr
+    (T00 ,. (- T00 mp ((ct Vl) mp (0 (_1}) Vr)) mp T11)) (_1 append) T11
+  elseif. do.  NB. 0=n
+    EMPTY
+  end.
+)
+
+rtlarftfc=: 3 : 0
+  n=. c y
+  select. * <: n
+  case. 0 do.  NB. 1=n
+    _1 {. y
+  case. 1 do.  NB. 1<n
+     (((1 0 & {::) ,. ((1 0 & {::) mp ((ct @ (0 0 & {::)) (-@mp) (0 (_1}) ((0 1 & {::)))) mp (1 1 & {::))) (_1 append) (1 1 & {::)) (]`(rtlarftfc&.>))`:0 (<. -: n) (({."1) ; (}."1)) y
+  case. _1 do.  NB. 0=n
+    EMPTY
+  end.
+)
+
 NB. =========================================================
 NB. Interface
 

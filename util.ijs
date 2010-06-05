@@ -25,7 +25,6 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-sgn=: 0&(<: - >)                                        NB. if y<0 then -1 else 1 endif
 condneg=: -@]^:(0>[)                                    NB. if x<0 then -y else y endif
 copysign=: -@]^:((=-)&*)                                NB. if x<0 then -|y| else |y| endif
 sorim=: +/"1 @: |  @: +.                                NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|

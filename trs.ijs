@@ -524,8 +524,8 @@ NB.   A - n×n-matrix
 NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
-NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
+NB.   ferr := max(||X - exactX|| / ||X||)
+NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
@@ -576,8 +576,8 @@ NB.   A - n×n-matrix, Hermitian (symmetric)
 NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
-NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
+NB.   ferr := max(||X - exactX|| / ||X||)
+NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
@@ -611,8 +611,8 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
-NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
+NB.   ferr := max(||X - exactX|| / ||X||)
+NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testpotrs=: 3 : 0
   'A X'=. y
@@ -647,8 +647,8 @@ NB.       tridiagonal
 NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
-NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
+NB.   ferr := max(||X - exactX|| / ||X||)
+NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 NB.
 NB. TODO:
 NB. - A should be sparse

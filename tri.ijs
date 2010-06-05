@@ -755,7 +755,7 @@ NB. where
 NB.   A - n×n-matrix, lower triangular
 NB.
 NB. Formula:
-NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
+NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testtrtri=: 3 : 0
   L1=. |: U1=. tru1 U=. |: y
@@ -786,7 +786,7 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
-NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
+NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testgetri=: 3 : 0
   rcond=. (norm1 con (getrilu1p@getrflu1p)) y
@@ -813,7 +813,7 @@ NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric)
 NB.
 NB. Formula:
-NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
+NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testhetri=: 3 : 0
   rcond=. (norm1 con (hetripl@hetrfpl)) y
@@ -837,7 +837,7 @@ NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.
 NB. Formula:
-NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
+NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpotri=: 3 : 0
   rcond=. (norm1 con (potril@potrfl)) y
@@ -862,7 +862,7 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite tridiagonal
 NB.
 NB. Formula:
-NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
+NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpttri=: 3 : 0
   rcond=. (norm1 con pttril) y

@@ -23,8 +23,8 @@ NB. tdyad
 NB. Template conj. to make monad to test computational verb
 NB.
 NB. Syntax:
-NB.   vtestm=. mname tmonad vgety`vgeto`vrcond`vferr`vberr
-NB.   vtestd=. dname tdyad vgetx`vgety`vgeto`vrcond`vferr`vberr
+NB.   vtestm=. mname tmonad        vgety`vgeto`vrcond`vferr`vberr
+NB.   vtestd=. dname tdyad   vgetx`vgety`vgeto`vrcond`vferr`vberr
 NB. where
 NB.   vgetx  - monad to extract left argument for vd; is
 NB.            called as:

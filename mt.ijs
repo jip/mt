@@ -166,7 +166,7 @@ test=: 1 : 0
   (u testbak_mt_) y  NB. square matrices only
   (u testbal_mt_) y  NB. square matrices only
   (u testref_mt_) y  NB. testlarfb is called only for relatively small matrices (min dim < 200)
-  (u testrot_mt_) y
+  (u testrot_mt_) y  NB. y is ignored
   (u testgq_mt_) y
   (u testmq_mt_) y
   (u testsm_mt_) y

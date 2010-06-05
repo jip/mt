@@ -3,6 +3,10 @@ NB.
 NB. lartg  Generates a plane rotation of a 2-vector
 NB. rot    Applies a plane rotation(s) to a 2-vector(s)
 NB.
+NB. testlartg  Test lartg by vectors given
+NB. testrot    Adv. to make verb to test lartg by pre-defined
+NB.            vectors
+NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-06-01
@@ -12,78 +16,139 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. various exponents for effective thresholds
-FP_ESFMA=: 1 2 3 4 _1 _2 _3 _4 * >. 1r4 * (FP_BASE ^. FP_SFMIN % (FP_IGUNFL { (FP_EPS , 1)))
+NB. ---------------------------------------------------------
+NB. Constants
 
-NB. effective underflow threshold FP_SFMN
-NB.   = 2^_1020 (gradual underflow)
-NB.   = 2^_968 (no gradual underflow)
-NB. effective overflow threshold FP_SFMX
-NB.   = 2^1020 (gradual underflow)
-NB.   = 2^968 (no gradual underflow)
-'FP_SFMN4 FP_SFMN2 FP_SFMN3 FP_SFMN FP_SFMX4 FP_SFMX2 FP_SFMX3 FP_SFMX'=: FP_BASE ^ FP_ESFMA
+NB. Effective thresholds if there is a gradual underflow
+NB.   Z_4  =  z^_4   =  2^_1020
+NB.   Z_3  =  z^_3   =  2^ _765
+NB.   Z_2  =  z^_2   =  2^ _510
+NB.   Z_1  =  z^_1   =  2^ _255
+NB.   Z0h  =  z^1r2  =  2^  255r2
+NB.   Z01  =  z^ 1   =  2^  255
+NB.   Z02  =  z^ 2   =  2^  510
+NB.   Z03  =  z^ 3   =  2^  765
+NB.   Z04  =  z^ 4   =  2^ 1020
 
-NB. miscellaneous
-FP_SQRTEPS=: %: FP_EPS
-FP_SQRTMX4=: %: FP_SFMX4
-FP_MN2MX2=: (FP_SFMN2*(1-FP_EPS)) , FP_SFMX2
-FP_MX1MN=: FP_SFMX , 1 , FP_SFMN
-FP_MN1MX=: FP_SFMN , 1 , FP_SFMX
-FP_MN3MN4MX4MX3=: (FP_SFMN3*(1-FP_EPS)) , (FP_SFMN4*(1-FP_EPS)) , FP_SFMX4 , FP_SFMX3
-FP_MXMX21MN2MN=: FP_SFMX , FP_SFMX2 , 1 , FP_SFMN2 , FP_SFMN
-FP_1MN2MNMN6MN8=: 1 , FP_SFMN2 , FP_SFMN , 0 0  NB. FP_SFMN4^6 = 0, FP_SFMN4^8 = 0
-FP_MNMN21MX2MX=: |. FP_MXMX21MN2MN
-FP_MN1324MX8231=: (FP_SFMN*(1-FP_EPS)) , (FP_SFMN3*(1-FP_EPS)) , (FP_SFMN2*(1-FP_EPS)) , (FP_SFMN4*(1-FP_EPS)) , FP_SQRTMX4 , FP_SFMX2 , FP_SFMX3 , FP_SFMX
-FP_MX13241MN4231=: FP_SFMX , FP_SFMX3 , FP_SFMX2 , FP_SFMX4 , 1 , FP_SFMN4 , FP_SFMN2 , FP_SFMN3 , FP_SFMN
-FP_MN13241MX4231=: FP_SFMN , FP_SFMN3 , FP_SFMN2 , FP_SFMN4 , 1 , FP_SFMX4 , FP_SFMX2 , FP_SFMX3 , FP_SFMX
+'ROTZ04 ROTZ03 ROTZ02 ROTZ01 ROTZ_1 ROTZ_2 ROTZ_3 ROTZ_4'=: (<<<4) { ROTSCL20=: FP_BASE ^ (i: 4) * ROTPOW=: >. 1r4 * FP_BASE ^. FP_SFMIN
 
-morim=: >./"1 @: | @: +.  NB. max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
-sgnr=: sgn @ (9 & o.)     NB. sgn(Re(y))
+NB. Miscellaneous
+ROTSQRTEPS=: %: FP_EPS
+ROTZ0h=: %: ROTZ01
+
+NB. Intervals
+ROTINT0=: (ROTZ_2*(1-FP_EPS)) , ROTZ02
+ROTINT1=: (ROTZ_3*(1-FP_EPS)) , (ROTZ_1*(1-FP_EPS)) , ROTZ01 , ROTZ03
+ROTINT2=: (ROTZ_4*(1-FP_EPS)) , (ROTZ_3*(1-FP_EPS)) , (ROTZ_2*(1-FP_EPS)) , (ROTZ_1*(1-FP_EPS)) , ROTZ0h , ROTZ02 , ROTZ03 , ROTZ04
+
+NB. Scale vectors of corresponding intervals
+ROTSCL00=: ROTZ04 , 1 , ROTZ_4
+ROTSCL01=: |. ROTSCL00
+ROTSCL10=: ROTZ04 , ROTZ02 , 1 , ROTZ_2 , ROTZ_4
+ROTSCL11=: 1 , ROTZ_2 , ROTZ_4 , 0 0  NB. ROTZ_1^6 = 0, ROTZ_1^8 = 0
+ROTSCL12=: |. ROTSCL10
+ROTSCL21=: |. ROTSCL20
+
+NB. ---------------------------------------------------------
+NB. Miscellaneous
+
+morim=: >./"1 @: | @: +.  NB. monad: max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
+sgn=: *`1:@.(0&=)         NB. monad: (if y<0 then -1 else 1 endif), for reals equiv. to: (0&(<:->))
+sgnr=: sgn @ (9 & o.)     NB. monad: sgn(Re(y))
 
 NB. ---------------------------------------------------------
 NB. lartgc1
-NB. case 1: f≠0, g≠0, neither f nor g too big or small,
-NB. minimal work
+NB. algorithm 3 for case 1: f≠0, g≠0, neither f nor g too big
+NB. or small, minimal work
+NB. Note: (% sgnr) = (* sgnr)
 
 lartgc1=: 3 : 0
   'f2 g2'=. soris 'f g'=. y
-  d1=. (sgnr f) * %: f2 * fg2=. f2 + g2  NB. (% sgnr) = (* sgnr)
-  (f2 , (f * + g) , (f * fg2)) % d1
+  d1=. (sgnr f) % %: f2 * fg2=. f2 + g2
+  fd1=. f * d1
+  (f2 * d1) , (fd1 * + g) , (fd1 * fg2)
 )
+
+NB. ---------------------------------------------------------
+NB. perm
+NB.
+NB. Description:
+NB.   Generate all [x-]permutations of size n from the set y
+NB.
+NB. Syntax:
+NB.   p=. [k] perm v
+NB. where
+NB.   v - n-vector
+NB.   k ≥ 0, optional size of generated permutations, default
+NB.       is n
+NB.   p - (n^k)×k-matrix, k-permutations
+NB.
+NB. References:
+NB. [1] [Jprogramming] Choosing k items out of n
+NB.     R.E. Boss, Sat Aug 2 13:49:59 HKT 2008
+NB.     http://www.jsoftware.com/pipermail/programming/2008-August/011576.html
+NB.
+NB. Notes:
+NB. - extends perm from system/packages/stats/statfns.ijs
+NB. - see also [1]
+
+perm=: (! A.&i. ]) :(((# #: i.@<.@(^~)) #) { ])
+
+NB. ---------------------------------------------------------
+NB. rottestmat
+NB.
+NB. Description:
+NB.   Generate matrix to test lartg
+NB.
+NB. Syntax:
+NB.   m=. rottestmat y
+NB. where
+NB.   y - any noun
+NB.   m - (29^4)×2-matrix, each row is (f,g) pair of complex
+NB.       numbers to test
+NB.
+NB. Notes:
+NB. - niladic verb
+NB. - is called each time when there is a need to have test
+NB.   array, to avoid memory consumption
+NB. - numbers are selected to force lartg to go through all
+NB.   code branches, see LAWN148
+
+rottestmat=: j./"1@(_2&(]\"1))@(4 perm (2 ^ ROTPOW * _ 3 _3 1.5 _1.5 0.5 _0.5 3.5 3.5 2.5 2.5 1.5 1.5 0.5 0.5 0.1 _0.1 _0.5 _0.5 _1.5 _1.5 _2.5 _2.5 _3.5 _3.5 0 3 _3 3)&[)
 
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. lartg                                                   1
-NB. Generates a plane rotation of 2-vector:
-NB.   [  cs  sn  ]     [ f ]     [ r ]
-NB.   [  __      ]  .  [   ]  =  [   ]   where cs^2 + |sn|^2 = 1
-NB.   [ -sn  cs  ]     [ g ]     [ 0 ]
+NB. lartg
+NB.
+NB. Description:
+NB.   Generates a plane rotation of 2-vector:
+NB.     (  c       s ) * ( f ) = ( r )
+NB.     ( -conj(s) c )   ( g )   ( 0 )
+NB. where
+NB.   c^2 + |s|^2 = 1
 NB.
 NB. Syntax:
-NB.   'cs sn r'=. lartg (f,g)
+NB.   'c s r'=. lartg (f,g)
 NB. where
 NB.   (f,g) - 2-vector to rotate
-NB.   cs sn - representation of 2×2 rotation matrix
+NB.   c s   - representation of 2×2 unutary (orthogonal)
+NB.           rotation matrix
 NB.   r     - representation of rotated 2-vector (r,0)
 NB.
-NB. If:
-NB.   'cs sn r'=. lartg (f,g)
-NB. then (with appropriate comparison tolerance)
+NB. Assertions (with appropriate comparison tolerance):
 NB.   (r,0) -: G1 mp (f,g)
 NB.   (r,0) -: (f,g) mp G2
 NB.   (0,r) -: G2 mp (g,f)
 NB.   (0,r) -: (g,f) mp G1
 NB. where
-NB.   G1=. 2 2 $ cs , sn , (- + sn) , cs
+NB.   'c s r'=. lartg (f,g)
+NB.   G1=. 2 2 $ c , s , (- + s) , c
 NB.   G2=. |: G1
 NB.
 NB. Notes:
-NB. - models LAPACK's xLARTG
-NB. - input NaN or ±∞ leads to inconsistent output or NaN
-NB.   error
-NB. - other input may lead to ±∞ in output
+NB. - models LAPACK's xLARTG, but with fix described in [2]
 NB.
 NB. References:
 NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. (2001) On
@@ -97,59 +162,58 @@ NB.     LAPACK Working Note 150, University of Tennessee,
 NB.     UT-CS-00-454, December 4, 2000.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
-lartg=: (3 : 0) " 1
-
+lartg=: 3 : 0
   'f g'=. y
   'scalef scaleg'=. scalefg=. morim y
 
   if. scaleg = 0 do.
-    NB. g=0, f may be 0
-    (sgnr f) , 0 , f * cs
-    return.
+    NB. algorithm 2E for case g=0, f may be 0
+    c=. sgnr f
+    s=. 0
+    r=. c * f
 
   elseif. scalef = 0 do.
-    NB. f=0, g≠0
+    NB. algorithm 2E for case f=0, g≠0
     NB. optionally scale g by z^(±4) so that z^_2 ≤ ||g|| ≤ z^2
-    ios=. FP_MN2MX2 I. scaleg
-    gs=. g * ios { FP_MX1MN
-    d1=. %: soris gs
-    cs=. 0
-    sn=. + gs % d1
-    r=. d1 * ios { FP_MN1MX
+    ios=. ROTINT0 I. scaleg
+    gs=. g * ios { ROTSCL00
+    d1=. | gs
+    c=. 0
+    s=. + gs % d1
+    r=. d1 * ios { ROTSCL01
 
-  elseif. (scalef <: FP_SFMX4) *. (scalef >: FP_SFMN4) *. (scaleg <: FP_SFMX4) do.
-    NB. case 1: f≠0, g≠0, neither f nor g too big or small, minimal work
+  elseif. (scalef <: ROTZ01) *. (scalef >: ROTZ_1) *. (scaleg <: ROTZ01) do.
+    NB. algorithm 3 for case 1: f≠0, g≠0, neither f nor g too big or small, minimal work
     lartgc1 y
     return.
 
-  elseif. scaleg < FP_SQRTEPS * scalef do.
-    NB. case 2: f≠0, g≠0, |f|^2 + |g|^2 rounds to |f|^2
-    iog=. {: iofg=. FP_MN2MX2 I. scalefg
-    dscalefg=. iofg { FP_MX1MN
+  elseif. scaleg < ROTSQRTEPS * scalef do.
+    NB. algorithm 6 for case 2: f≠0, g≠0, |f|^2 + |g|^2 rounds to |f|^2
+    iog=. {: iofg=. ROTINT0 I. scalefg  NB. io{f,g}={scalef,-scaleg}={{_1,0,1},{_1,0,1}}, pair {_1,_1} never takes place
+    dscalefg=. iofg { ROTSCL00
     'fs gs'=. y * dscalefg
-    cs=. sgnr f
-    sn=. cs * (iog { FP_MN1MX) * ({. dscalefg) * (fs * + gs) % soris fs
-    r=. cs * f
+    c=. sgnr f
+    s=. c * (iog { ROTSCL01) * ({. dscalefg) * (fs * + gs) % soris fs
+    r=. c * f
 
-  elseif. scalef < FP_SQRTEPS * scaleg do.
-    NB. case 3: f≠0, g≠0, |f|^2 + |g|^2 rounds to |g|^2
-    iofg=. FP_MN3MN4MX4MX3 I. scalefg               NB. io{f,g} = count{f,g}+2 = {_2,_1,0,1,2}+2 = {0,1,2,3,4}
-    dscalefg=. iofg { FP_MXMX21MN2MN
-    'f2 g2'=. soris 'fs gs'=. y * dscalefg
-    d1=. (sgnr f) * %: f2 * g2
-    cs=. d1 %~ f2 * (-~/ iofg) { FP_1MN2MNMN6MN8    NB. (countf-countg)≤0 => form non-neg. io={0,1,2,3,4}, cs *=  (z^2)^(countf-countg)
-    sn=. d1 %~ fs * + gs
-    r=. d1 %~ fs * g2 * ({: iofg) { FP_MNMN21MX2MX  NB. r *= (z^2)^countg
+  elseif. scalef < ROTSQRTEPS * scaleg do.
+    NB. algorithm 7 for case 3: f≠0, g≠0, |f|^2 + |g|^2 rounds to |g|^2
+    iofg=. ROTINT1 I. scalefg                  NB. io{f,g} = count{f,g}+2 = {_2,_1,0,1,2}+2 = {0,1,2,3,4}
+    'f2 g2'=. soris 'fs gs'=. y * iofg { ROTSCL10
+    d1=. (sgnr f) % %: f2 * g2
+    c=. ((-~/ iofg) { ROTSCL11) * d1 * f2      NB. (countf-countg)≤0 => form non-neg. io={0,1,2,3,4}, c *=  (z^2)^(countf-countg)
+    s=. d1 * fs * + gs
+    r=. (({: iofg) { ROTSCL12) * fs * d1 * g2  NB. r *= (z^2)^countg
 
   elseif. do.
-    NB. case 4: f≠0, g≠0, scale f and g up or down and use formula from case 1
-    iof=. FP_MN1324MX8231 I. scalef
-    'cs sn r'=. lartgc1 y * iof { FP_MX13241MN4231
-    r=. r * iof { FP_MN13241MX4231
+    NB. algorithm 8 for case 4: f≠0, g≠0, scale f and g up or down and use formula from case 1
+    iof=. ROTINT2 I. scalef
+    'c s r'=. lartgc1 y * iof { ROTSCL20
+    r=. r * iof { ROTSCL21
 
   end.
 
-  cs , sn , r
+  c , s , r
 )
 
 NB. ---------------------------------------------------------
@@ -161,15 +225,15 @@ NB.     ( x[i] ) :=  ( c[j]        s[j] ) * ( x[i] )
 NB.     ( y[i] )     ( -conj(s[j]) c[j] )   ( y[i] )
 NB.
 NB. Syntax:
-NB.   outxy=. cs rot inxy
+NB.   oxy=. cs rot ixy
 NB. where
-NB.   inxy  - 2-vector of scalars (x,y) or n×2-matrix of
-NB.           laminated vectors (x[i],y[i]), staff to rotate
-NB.   cs    - 2-vector of scalars (c,s) or n×2-matrix of
-NB.           laminated vectors (c[i],s[i]), defines rotation
-NB.           matrix(-ces)
-NB.   outxy - array of the same shape as input array of max
-NB.           rank (either inxy or cs), rotated staff
+NB.   ixy - 2-vector of scalars (x,y) or n×2-matrix of
+NB.         laminated vectors (x[i],y[i]), staff to rotate
+NB.   cs  - 2-vector of scalars (c,s) or n×2-matrix of
+NB.         laminated vectors (c[i],s[i]), defines rotation
+NB.         matrix(-ces)
+NB.   oxy - array of the same shape as input array of max
+NB.         rank (either ixy or cs), the rotated staff
 NB.
 NB. Notes:
 NB. - for 1-rank cs implements LAPACK's xROT
@@ -181,48 +245,59 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB.*tlartg v test lartg
-
-NB.*tlartg v test lartg
-
-tlartg=: (3 : 0) " 1
-  'cs sn r'=. lartg y
-  G=. 2 2 $ cs , sn , (- + sn) , cs
-  (r,0) -: G mp y
-)
-
-NB. ---------------------------------------------------------
-NB.*tlartg2 v test lartg
-
-tlartg2=: (3 : 0) " 1
-  erm=. 4 : '(| x - y) % ((FP_EPS_mt_ * | x) >. (FP_SFMIN_mt_ * FP_PREC_mt_))'
-  'cs sn r'=. lartg y
-  G=. 2 2 $ cs , sn , (- + sn) , cs
-  r erm {. G mp y
-)
-
-NB. ---------------------------------------------------------
-NB.*testlartg v test lartg
+NB. testlartg
+NB.
+NB. Description:
+NB.   Test lartg by vectors given
+NB.
+NB. Syntax:
+NB.   testlartg A
+NB. where
+NB.   A - n×2-matrix, each row is (f,g) pair of complex
+NB.       numbers to test
+NB.
+NB. Formula:
+NB.   berr := max(|r - exactr| / max(ε * |exactr|, FP_SFMIN * FP_PREC))
+NB. where
+NB.   FP_SFMIN * FP_PREC - the smallest denormalized number
+NB.   r                  - computed by lartg, |r - exactr| ≤ FP_OVFL
+NB.   exactr             - computed by algorithm 1 (see [1]
+NB.                        in lartg), |exactr| ≤ FP_OVFL
 
 testlartg=: 3 : 0
-  *./ tlartg ((9^2^2) , 2) $, (,"0/~) , (j./~) 1e_308 1e_200 1e_100 1e_50 10 1e50 1e100 1e200 1e308
+  NB. implement algorithm 1
+  algo1=. 3 : 'if. 0 = {: y do. (sgn,0:,]) {. y elseif. 0 = {. y do. (0,(sgn@+),|) {: y elseif. do. ((d*|f),(sgnf*(|g)*d),(sgnf % d)) [ sgnf=. sgn f [ d=. (sgnr f) % %: (+/) soris ''f g''=. y end.'
+
+  ('lartg"1' tmonad (]`({:"1)`(_."_)`(_."_)`(normi@((((|@:-)(>./@(#~ (_&~:)))((FP_SFMIN * FP_PREC)>.(FP_EPS*|@]))) (({:"1)@:(algo1"1)))~)))) y
+
+  EMPTY
 )
 
-NB. =========================================================
-Note 'rot testing and timing'
-   a=. (0.1 * 1e5 2 $ 100) * (10 ^ ? 1e5 2 $ 70)
-   ac=. j./ (0.1 * 2 1e5 2 $ 100) * (10 ^ ? 2 1e5 2 $ 70)
-   b=. (2 ^ _1074 + ? 1e5 2 $ (1023 - _1074))
-   bc=. j./ (2 ^ _1074 + ? 2 1e5 2 $ (1023 - _1074))
-   ts=: 6!:2, 7!:2@]
-   load '/home/maya/j602-user/projects/mt/rot.ijs'
-   2 ts 'z=. lartg_mt_ a'
-13.005 3.10898e7
-   2 ts 'z=. lartg_mt_ ac'
-13.1008 3.10899e7
-   ts 'z=. lartg_mt_ b'
-   tlartg_mt_ ((4^2^2) , 2) $, (,"0/~) , (j./~) _ __ 0 _.
-   tlartg_mt_ 0 ,.~ ~. , (j./~) 2 ^ _1074 _1020 _765 _510 _255 0 255 510 765 1020 1023
-   tlartg_mt_ 0 ,. ~. , (j./~) 2 ^ _1074 _1020 _765 _510 _255 0 255 510 765 1020 1023
-   ts 'z=. lartg_mt_ ((13^2^2) , 2) $, (,"0/~) , (j./~) 2 ^ _1074 _1020 _765 _510 _255 _10 0 10 255 510 765 1020 1023'
-)
+NB. ---------------------------------------------------------
+NB. testrot
+NB.
+NB. Description:
+NB.   Adv. to make verb to test triangular inversion
+NB.   algorithms by matrix of generator and shape given
+NB.
+NB. Syntax:
+NB.   vtest=. mkmat testtri
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.             mat=. mkmat (m,n)
+NB.   vtest - monad to test algorithms by matrix mat; is
+NB.           called as:
+NB.             vtest (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.
+NB. Application:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     (? @ $ 0:) testtri_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testtri_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testtri_mt_ 150 200
+
+testrot=: 1 : 'EMPTY_mt_ [ testlartg_mt_ @ rottestmat_mt_'

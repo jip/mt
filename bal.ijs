@@ -1,10 +1,10 @@
 NB. Balance a matrix or pair of matrices
 NB.
-NB. gebalp  Isolate eigenvalues of a general square matrix
-NB. gebals  Make the rows and columns of a general square
-NB.         matrix as close in 1-norm as possible
-NB. gebal   Balance a general square matrix
-NB. ggbal   Balance a pair of general square matrices
+NB. gebalxp  Isolate eigenvalues of a general square matrix
+NB. gebalxs  Make the rows and columns of a general square
+NB.          matrix as close in 1-norm as possible
+NB. gebalx   Balance a general square matrix
+NB. ggbalx   Balance a pair of general square matrices
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -15,39 +15,165 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
+gebalxp1d=: 1 : 0
+:
+  '`ioz getv mkt dhs'=. u
+  'p hs nz'=. y
+  'h s'=. hs
+  while.
+    zi=. h + (h ,: s) (ioz & 0 ;. 0) nz
+    zi < h + s
+  do.
+    nza=. (zi { p) (0:`[`(0 ~: getv)) } x
+    nst=. < (h mkt s) , zi
+    p=. nst C. :: ] p
+    nz=. (nst C. :: ] nz) - (p { nza)
+    'h s'=. dhs (h , s)
+  end.
+  p ; (h , s)
+)
+
+gebalxp2d=: 1 : 0
+:
+  n=. # x
+  'p hs'=. x i:`(({.u)`:6)`(+ <:)`(+&0 _1) gebalxp1d ((i. n) ; (0,n) ;       ({. y) )
+  'p hs'=. x i.`(({:u)`:6)`[     `(+&1 _1) gebalxp1d (p      ; hs    ; (p C. ({: y)))
+)
+
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. gebalp
-NB. Permute a general square matrix A by a similarity
-NB. transformation to isolate eigenvalues in diagonals of A00
-NB. and A22:
-NB.                         ( A00 A01 A02 )
-NB.   Ap = P * A * inv(P) = ( 0   A11 A12 )
-NB.                         ( 0   0   A22 )
-NB. where A00 and A22 are square upper triangular matrices.
+NB. geballp
+NB.
+NB. Description:
+NB.   Permute a general square matrix A by a similarity
+NB.   transformation to isolate eigenvalues in diagonals of
+NB.   square upper triangular matrices B00 and B22:
+NB.         ( B00         )
+NB.     B = ( B10 B11     ) = P * A * P^_1
+NB.         ( B20 B21 B22 )
 NB.
 NB. Syntax:
-NB.   'Ap fs p'=. gebalp A
+NB.   'B hs p'=. geballp A
 NB. where
-NB.   A  - N×N-matrix
-NB.   Ap - N×N-matrix with isolated eigenvalues, being A
+NB.   A  - n×n-matrix
+NB.   B  - n×n-matrix with isolated eigenvalues, being A
 NB.        with permuted rows and columns
-NB.   fs - 2-vector, corner start (left and up) and size
-NB.        (width and height) of A11
-NB.   p  - N-vector, standard permutation vector,
-NB.        presentation of permutation matrix P
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrix B11 position in B
+NB.   p  - n-vector, full permutation of A
 NB.
-NB. If:
-NB.   'Ap fs p'=. gebalp A
+NB. Algorithm:
+NB.   In: A
+NB.   Out: B, hs, p
+NB.   1) initialize hs, p
+NB.   2) count non-zeros in rows (nzr) and columns (nzc) of A
+NB.      without diagonal
+NB.   3) apply all permutations to nzr (optional)
+NB.   4) while there are zeros in nzr fragment (,.hs),
+NB.      traverse rows from top to bottom:
+NB.      4.1) find nzr amendment (nza) after cols swapping
+NB.           (indirect zi because column zi may be swapped
+NB.           before)
+NB.      4.2) compose non-standard transposition nst
+NB.      4.3) try to adjust p by nst
+NB.      4.4) adjust nzr: move zero found in (4) to start,
+NB.           apply all permutations to nza, then amend nzr
+NB.           by excluded row
+NB.      4.5) adjust h, s to exclude leading row
+NB.   5) apply all permutations to nzc
+NB.   6) while there are zeros in nzc fragment (,. hs),
+NB.      traverse columns from right to left:
+NB.      6.1) find nzc amendment (nza) after rows swapping
+NB.           (indirect zi because row zi may be swapped
+NB.           before)
+NB.      6.2) compose non-standard transposition nst
+NB.      6.3) try to adjust p by nst
+NB.      6.4) adjust nzc: move zero found in (6) to end,
+NB.           apply all permutations to nza, then amend nzc
+NB.           by excluded column
+NB.      6.5) adjust s to exclude last column
+NB.   7) link the following pieces with p to produce output:
+NB.      7.1) apply full permutation p to A to produce B
+NB.      7.2) assemble hs from h and s
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   Pinv -: |: P
+NB.   B -: P mp A mp Pinv
+NB.   B -: p sp A
+NB.   B11 -: (,.~ hs) (] ;. 0) B
+NB. where
+NB.   'B hs p'=. geballp A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
-NB. then (with appropriate comparison tolerance)
+
+geballp2=: ([ ((sp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) (-"1) diag)@:(0&~:))))
+
+NB. ---------------------------------------------------------
+NB. gebalup
+NB.
+NB. Description:
+NB.   Permute a general square matrix A by a similarity
+NB.   transformation to isolate eigenvalues in diagonals of
+NB.   square upper triangular matrices B00 and B22:
+NB.         ( B00 B01 B02 )
+NB.     B = (     B11 B12 ) = P * A * P^_1
+NB.         (         B22 )
+NB.
+NB. Syntax:
+NB.   'B hs p'=. gebalup A
+NB. where
+NB.   A  - n×n-matrix
+NB.   B  - n×n-matrix with isolated eigenvalues, being A
+NB.        with permuted rows and columns
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrix B11 position in B
+NB.   p  - n-vector, full permutation of A
+NB.
+NB. Algorithm:
+NB.   In: A
+NB.   Out: B, hs, p
+NB.   1) initialize hs, p
+NB.   2) count non-zeros in rows (nzr) and columns (nzc) of A
+NB.      without diagonal
+NB.   3) apply all permutations to nzr (optional)
+NB.   4) while there are zeros in nzr fragment (,.hs),
+NB.      traverse rows from bottom to top:
+NB.      4.1) find nzr amendment (nza) after cols swapping
+NB.           (indirect zi because column zi may be swapped
+NB.           before)
+NB.      4.2) compose non-standard transposition nst
+NB.      4.3) try to adjust p by nst
+NB.      4.4) adjust nzr: move zero found in (4) to end,
+NB.           apply all permutations to nza, then amend nzr
+NB.           by excluded row
+NB.      4.5) adjust s to exclude last row
+NB.   5) apply all permutations to nzc
+NB.   6) while there are zeros in nzc fragment (,.hs),
+NB.      traverse columns from left to right:
+NB.      6.1) find nzc amendment (nza) after rows swapping
+NB.           (indirect zi because row zi may be swapped
+NB.           before)
+NB.      6.2) compose non-standard transposition nst
+NB.      6.3) try to adjust p by nst
+NB.      6.4) adjust nzc: move zero found in (6) to start,
+NB.           apply all permutations to nza, then amend nzc
+NB.           by excluded column
+NB.      6.5) adjust h, s to exclude leading column
+NB.   7) link the following pieces with p to produce output:
+NB.      7.1) apply full permutation p to A to produce B
+NB.      7.2) assemble hs from h and s
+NB.
+NB. Assertions (with appropriate comparison tolerance):
 NB.   Pinv -: |: P
-NB.   Ap -: P mp A mp Pinv
-NB.   Ap -: p sp A
-NB.   A11 -: (,.~ fs) (] ;. 0) Ap
+NB.   B -: P mp A mp Pinv
+NB.   B -: p sp A
+NB.   B11 -: (,.~ hs) (] ;. 0) B
+NB. where
+NB.   'B hs p'=. gebalup A
+NB.   P=. p2P p
+NB.   Pinv=. %. P
 NB.
 NB. References:
 NB. [1] Kressner, D. 2004. Numerical methods and software for
@@ -57,131 +183,117 @@ NB.     Germany.
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEBAL with 'P' option
-NB.
-NB. TODO:
-NB. - try to apply incremental permut. cp to y
 
-gebalp=: 3 : 0
-  nz=. 0 & ~:
-  nzd=. nz @ diag                             NB. non-zeros on diagonal
+gebalup2=: ([ ((sp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) (-"1) diag)@:(0&~:))))
 
+geballp=: 3 : 0
   n=. # y
-  f=. 0                                       NB. A11 upper left corner start
-  s=. n                                       NB. A11 size
-  p=. i. n                                    NB. permutations accumulator
-  'nzr nzc'=. (((+/ " 1 ,: (+/)) (- " 1) diag) @ nz) y  NB. count non-zeros in rows and cols of A without diagonal
-
-NB.  nzr=. p { nzr                              NB. apply all permutations
-  whilst. 1 do.                               NB. traverse rows from bottom to up
-    zi=. f + (f ,: s) (i: & 0 ;. 0) nzr       NB. find rightmost zero's index into A11 non-zeros counter
-    if. zi >: f + s do. break. end.           NB. no zeros left?
-    nza=. (zi { p) (0:`[`(nz @ ({ " 1))) } y  NB. find nzr amendment after cols swapping (indirect zi because col zi may be swapped before)
-    cp=. (<: f + s) <@, zi                  NB. new cycle permutation
-    p=. cp C. :: ] p                               NB. accumulate permutations
-    nzr=. (cp C. :: ] nzr) - (p { nza)             NB. in nzr move zero found to end, apply all permutations to nza, then amend nzr by excluded row
-    s=. <: s                                  NB. exclude last row
-  end.
-
-  nzc=. p { nzc                               NB. apply all permutations
-  whilst. 1 do.                               NB. traverse columns from left to right
-    zi=. f + (f ,: s) (i. & 0 ;. 0) nzc       NB. find leftmost zero's index into A11 non-zeros counter
-    if. zi >: f + s do. break. end.           NB. no zeros left?
-    nza=. (zi { p) (0:`[`(nz @ {)) } y        NB. find nzc amendment after rows swapping (indirect zi because row zi may be swapped before)
-    cp=. f <@, zi                           NB. new cycle permutation
-    p=. cp C. :: ] p                               NB. accumulate permutations
-    nzc=. (cp C. :: ] nzc) - (p { nza)             NB. in nzc move zero found to start, apply all permutations to nza, then amend nzc by excluded col
-    f=. >: f                                  NB. exclude...
-    s=. <: s                                  NB. ...leading column
-  end.
-
-  (p sp y) ; (f , s) ; p
-)
-
-gebalp2=: 3 : 0
-  ii2cp=. <@~.@,
-  x2b3=. < @ < @ < @ [
-
-  n=. # y
+  h=. 0
+  s=. n
   p=. i. n
-  iL=. 0
-  iH=. <: n
-  whilst. swapped do.
-    swapped=. 0
-    i=. iL
-    while. (i <: iH) *. (-. swapped) do.
-      if. 0 = ((iL ,: (iH - iL)) ((+/ @: |) ;. 0) i (x2b3 { {) y) do.
-        swapped=. 1
-        cp=. i ii2cp iH
-        y=. cp sp y
-        p=. cp C. p
-        iH=. <: iH
-      end.
-      i=. >: i
-    end.
-    j=. iL
-    while. (j <: iH) *. (-. swapped) do.
-      if. 0 = ((iL ,: (iH - iL)) ((+/ @: |) ;. 0) j (x2b3 { ({ " 1)) y) do.
-        swapped=. 1
-        cp=. j ii2cp iL
-        y=. cp sp y
-        p=. cp C. p
-        iL=. >: iL
-      end.
-      j=. >: j
-    end.
+  'nzr nzc'=. ((+/ " 1 ,: (+/)) (- " 1) diag) 0 ~: y
+
+NB.  nzc=. p C. nzc
+  while.
+    zi=. h + (h ,: s) (i: & 0 ;. 0) nzc
+    zi < h + s
+  do.
+    nza=. (zi { p) (0:`[`(0 ~: {)) } y
+    nst=. < (<: h + s) , zi
+    p=. nst C. :: ] p
+    nzc=. (nst C. :: ] nzc) - (p { nza)
+    s=. <: s
   end.
 
-  y ; (iL , (>: iH - iL)) ; p
+  nzr=. p C. nzr
+  while.
+    zi=. h + (h ,: s) (i. & 0 ;. 0) nzr
+    zi < h + s
+  do.
+    nza=. (zi { p) (0:`[`(0 ~: ({ " 1))) } y
+    nst=. < h , zi
+    p=. nst C. :: ] p
+    nzr=. (nst C. :: ] nzr) - (p { nza)
+    h=. >: h
+    s=. <: s
+  end.
+
+  (p sp y) ; p ; (h , s)
 )
 
-gebalp3=: 3 : 0
+gebalup=: 3 : 0
   n=. # y
-  'nzr nzc'=. (((+/ " 1 ,: (+/)) (- " 1) diag) @ (0 & ~:)) y  NB. count non-zeros in rows and cols of A without diagonal
+  h=. 0
+  s=. n
+  p=. i. n
+  'nzr nzc'=. ((+/ " 1 ,: (+/)) (- " 1) diag) 0 ~: y
 
-  nzro=. /: nzr                                   NB. nzr ordered
-  prn=. ((nzro { nzr) <: (i. n)) i. 0             NB. rows to permute number
-  dpr=. <@~."1 (prn {. nzro) ,. (prn {. (i. - n))    NB. delta permutation of rows (at tail)
+NB.  nzr=. p C. nzr
+  while.
+    zi=. h + (h ,: s) (i: & 0 ;. 0) nzr
+    zi < h + s
+  do.
+    nza=. (zi { p) (0:`[`(0 ~: ({ " 1))) } y
+    nst=. < (<: h + s) , zi
+    p=. nst C. :: ] p
+    nzr=. (nst C. :: ] nzr) - (p { nza)
+    s=. <: s
+  end.
 
-  nzc=. dpr (C. dbg 'upd nzc') nzc                                NB. adjust nzc according to dpr
+  nzc=. p C. nzc
+  while.
+    zi=. h + (h ,: s) (i. & 0 ;. 0) nzc
+    zi < h + s
+  do.
+    nza=. (zi { p) (0:`[`(0 ~: {)) } y
+    nst=. < h , zi
+    p=. nst C. :: ] p
+    nzc=. (nst C. :: ] nzc) - (p { nza)
+    h=. >: h
+    s=. <: s
+  end.
 
-  nzco=. /: nzc                                   NB. nzr ordered
-  pcn=. ((nzco { nzc) <: (i. n)) i. 0             NB. columns to permute number
-  dpc=. <@~."1 (pcn {. nzco) ,. (pcn {. (i. n))      NB. delta permutation of columns (at head)
-
-  p=. |. dpr , dpc                                NB. accumulate cyclic permutations
-  (p sp y) ; (pcn ([ , -~) n-prn) ; (p C. i. n)   NB. permute A ; assemble fs ; build p
+  (p sp y) ; p ; (h , s)
 )
 
 NB. ---------------------------------------------------------
-NB. gebals
-NB. Apply a diagonal similarity transformation to rows and
-NB. columns of matrix A11 (see gebalp) to make the rows and
-NB. columns as close in 1-norm as possible:
-NB.   As = D * A * inv(D)
-NB. where D is diagonal scaling matrix.
+NB. gebalus
+NB.
+NB. Description:
+NB.   Apply a diagonal similarity transformation:
+NB.     C = D^_1 * B * D
+NB.   to make the 1-norms of each row of B11 and its
+NB.   corresponding column as close as possible
 NB.
 NB. Syntax:
-NB.   'As fs p s'=. gebals Ap ; fs ; p
+NB.   'C hs p s'=. gebalus B ; hs ; p
 NB. where
-NB.   Ap - N×N-matrix with isolated eigenvalues (see gebalp)
-NB.   fs - 2-vector, corner start (left and up) and size
-NB.        (width and height) of A11 (see gebalp)
-NB.   p  - N-vector, standard permutation vector,
-NB.        presentation of permutation matrix P (see gebalp)
-NB.   As - N×N-matrix, scaled version of Ap
-NB.   s  - N-vector, diagonal of scaling matrix D
+NB.   B  - n×n-matrix with isolated eigenvalues, the output
+NB.        of gebalup
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrix B11 position in B, the output of
+NB.        gebalup
+NB.   p  - some not changing parameter, the output of gebalup
+NB.   C  - n×n-matrix, scaled version of B
+NB.   s  - n-vector, diagonal of scaling matrix D
 NB.
-NB. If:
-NB.   'As fs p s'=. gebals Ap ; fs ; p
-NB.   D=. diagmat s
-NB.   Dinv=. %. D
-NB. then (with appropriate comparison tolerance)
+NB. Algorithm:
+NB.   In: B hs p
+NB.   Out: C s
+NB.   1) initialize s
+NB.
+NB.
+NB. Assertions (with appropriate comparison tolerance):#############
 NB.   Dinv -: diagmat % s
 NB.   As -: D mp Ap mp Dinv
 NB.   As -: Ap (] * (% " 1)) s
+NB. where
+NB.   'As fs p s'=. gebalus Ap ; fs ; p
+NB.   D=. diagmat s
+NB.   Dinv=. %. D
 NB.
 NB. Application:
-NB.   'As fs p s'=. gebals (] ; (0 , #) ; (a: " _)) A
+NB.   'As fs p s'=. gebalus (] ; (0 , #) ; (a: " _)) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEBAL with 'S' option, but with
@@ -193,7 +305,7 @@ NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany.
 
-gebals=: 3 : 0
+gebalus=: 3 : 0
   'Ap fs p'=. y
   n=. # Ap
   s=. n $ 1x                                        NB. scaling matrix D diagonal
@@ -228,11 +340,11 @@ gebals=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. gebal
+NB. gebalu
 NB. Balance a general square matrix A. This involves, first,
-NB. isolating eigenvalues (see gebalp); and second, making
+NB. isolating eigenvalues (see gebalup); and second, making
 NB. the rows and columns of A11 as close in 1-norm as
-NB. possible (see gebals):
+NB. possible (see gebalus):
 NB.                     ( A00 A01 A02 )
 NB.   Ap = P*A*inv(P) = ( 0   A11 A12 )
 NB.                     ( 0   0   A22 )
@@ -243,19 +355,19 @@ NB.   P           - permutation matrix
 NB.   D           - diagonal scaling matrix
 NB.
 NB. Syntax:
-NB.   'Ab fs p s'=. gebal A
+NB.   'Ab fs p s'=. gebalu A
 NB. where
 NB.   A  - N×N-matrix
 NB.   Ab - N×N-matrix, balanced version of A
 NB.   fs - 2-vector, corner start (left and up) and size
-NB.        (width and height) of A11 (see gebalp)
+NB.        (width and height) of A11 (see gebalup)
 NB.   p  - N-vector, standard permutation vector,
-NB.        presentation of permutation matrix P (see gebalp)
+NB.        presentation of permutation matrix P (see gebalup)
 NB.   s  - N-vector, diagonal of scaling matrix D (see
-NB.        gebals)
+NB.        gebalus)
 NB.
 NB. If:
-NB.   'Ab fs p s'=. gebal A
+NB.   'Ab fs p s'=. gebalu A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB.   D=. diagmat s
@@ -273,13 +385,13 @@ NB. Notes:
 NB. - models LAPACK's xGEBAL with 'B' option, but with
 NB.   slightly different result
 
-gebal=: gebals @ gebalp
+gebalu=: gebalus @ gebalup
 
 NB. ---------------------------------------------------------
-NB. ggbal
+NB. ggbalu
 NB. Balance a pair of general square matrices A and B.
 
-ggbal=: [:
+ggbalu=: [:
 
 NB. =========================================================
 Note 'bal testing and timing'

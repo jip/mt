@@ -9,6 +9,9 @@ NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-01-01
+NB.
+NB. TODO:
+NB. - replace $: by ^:
 
 coclass 'mt'
 
@@ -309,7 +312,7 @@ tgeqf=: 3 : 0
   ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         trl   @( 0 _1&}.)) mp  unglq)))%((FP_EPS*({:@$)*norm1)@[)))) y  NB. berr := ||A-L*Q||/(ε*n*||A||)
   ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*L||/(ε*m*||A||)
   ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         tru   @(_1  0&}.)) mp~ ungqr)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
-  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)))%((FP_EPS*({:@$))*norm1)@[)))) y  NB. berr := ||A-R*Q||/(ε*n*||A||)
+  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)))%((FP_EPS*({:@$))*norm1)@[))) y  NB. berr := ||A-R*Q||/(ε*n*||A||)
 
   EMPTY
 )

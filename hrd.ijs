@@ -1,5 +1,5 @@
 NB. hrd.ijs
-NB. Reduce general matrix to upper or lower Hessenberg form
+NB. Reduce a general matrix to upper or lower Hessenberg form
 NB. by an unitary similarity transformation
 NB.
 NB. gehrdl  Reduce a general matrix to lower Hessenberg form
@@ -21,8 +21,8 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-HRDBS=: 3 NB. 32   NB. block size limit
-HRDNX=: 4 NB. 128  NB. crossover point, HRDNX ≥ HRDBS must hold
+HRDBS=: 32   NB. block size limit
+HRDNX=: 128  NB. crossover point, HRDNX ≥ HRDBS
 
 NB. ---------------------------------------------------------
 NB. lahr2l
@@ -31,7 +31,7 @@ NB. Description:
 NB.   Reduce the first HRDBS rows (panel) of a general matrix
 NB.   subeA so that elements behind the 1st supdiagonal are
 NB.   zero. The reduction is performed by an unitary
-NB.   (orthogonal) similarity transformation: Q' * subeA * Q
+NB.   (orthogonal) similarity transformation: Q * subeA * Q'
 NB.
 NB. Syntax:
 NB.   'Y V H T'=. lahr2l subeA
@@ -56,25 +56,25 @@ NB.   i     - integer from set:
 NB.             {f+j*HRDBS, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDBS⌋},
 NB.           defines subeA position in the eA
 NB.   n     ≥ 0, integer, size of matrix A
+NB.
+NB. Notes:
+NB. - v[i]'s direction is forward, but T is lower triangular
 
 lahr2l=: 3 : 0
-  Y=. V=. 0 {. y
+  V=. 0 {. y
   T=. H=. 0 0 $ 0
   for_j. i. HRDBS do.
-    b=. IOSFR { y
-    y=. 1 0 }. y
-    b=. b (- dbg 'L1 -') (+ (< a: ; <: j) { V) (mp dbg 'L1 mp') Y
-    b=. b (- dbg 'L2 -') (((0 (_1) } b) (mp dbg 'L2 mp1') (ct V)) (mp dbg 'L2 mp2') T) (mp dbg 'L2 mp3') V  NB. matrix-by-vector ops only
-    z1=. 1 (0) } z=. (larfgfc dbg 'L3 larfgfc') j }. b
-    'beta tau'=. 0 _1 { z
-    u=. z1 (* dbg 'L5 *') + - tau
-    w=. (0 (_1) } u) (mp dbg 'L6 mp') (ct ((0 , j) }. V))
-    T=. T ((0 append) dbg 'L7 0append T') ((w (mp dbg 'L7 mp') (ct T)) , tau)
-    Y=. Y (, dbg 'L8 , Y') ((w (mp dbg 'L8 mp2') Y) - (u (mp dbg 'L8 mp1') y))
-    H=. H (0 append) ((j {. b) , beta)
+    b=. (j { y) - (+ (< a: ; <: j) { V) mp (j {. y)
+    b=. b - (((0 (_1) } b) mp (ct V)) mp (ct T)) mp V  NB. matrix-by-vector ops only
+    z1=. 1 j } z=. (+ updl _1) (j , _1) larfg (0 (i. j) } b)
+    u=. (* +@{:) z1
+    w=. V +@mp (+ - 0 (_1) } u)
+    T=. T (0 append) ((w mp T) , (+ {: z1))
+    y=. ((w (i. j) } (0 , u)) mp y) j } y
+    H=. H (0 append) ((j {. b) , (j { z))
     V=. V (_1 append) z1
   end.
-  Y ; V ; H ; T
+  (HRDBS {. y) ; V ; H ; T
 )
 
 NB. ---------------------------------------------------------
@@ -116,23 +116,20 @@ NB.   - V and H are returned separately from each other
 NB.   - V is formed explicitely
 
 lahr2u=: 3 : 0
-  Y=. V=. _ 0 {. y
+  V=. _ 0 {. y
   T=. H=. 0 0 $ 0
   for_j. i. HRDBS do.
-    b=. IOSFC { y
-    y=. 0 1 }. y
-    b=. b (- dbg 'U1 -') Y (mp dbg 'U1 mp') + (<: j) { V
-    b=. b (- dbg 'U2 -') V (mp dbg 'U2 mp3') (ct T) (mp dbg 'U2 mp2') (ct V) (mp dbg 'U2 mp1') 0 (_1) } b  NB. matrix-by-vector ops only
-    z1=. 1 (0) } z=. (larfgf dbg 'U3 larfgf') j }. b
-    'beta tau'=. 0 _1 { z
-    u=. z1 (* dbg 'U5 *') - tau
-    w=. + ((+ 0 (_1) } u) (mp dbg 'U6 mp') (j }. V))
-    T=. T ((0 stitch) dbg 'U7 0stitch T') ((T (mp dbg 'U7 mp') w) , tau)
-    Y=. Y (,. dbg 'U8 ,. Y') ((Y (mp dbg 'U8 mp2') w) - (y (mp dbg 'U8 mp1') u))
-    H=. H (0 stitch) ((j {. b) , beta)
+    b=. ((< a: ; j) { y) - ((_ , j) {. y) mp + (<: j) { V
+    b=. b - V mp (ct T) mp (ct V) mp 0 (_1) } b  NB. matrix-by-vector ops only
+    z1=. 1 j } z=. (j , _1) larfg (0 (i. j) } b)
+    u=. (* {:) z1
+    w=. (+ - 0 (_1) } u) +@mp V
+    T=. T (0 stitch) ((T mp w) , ({: z1))
+    y=. (y mp (w (i. j) } (0 , u))) (< a: ; j) } y
+    H=. H (0 stitch) ((j {. b) , (j { z))
     V=. V (_1 stitch) z1
   end.
-  Y ; V ; H ; T
+  ((_ , HRDBS) {. y) ; V ; H ; T
 )
 
 NB. ---------------------------------------------------------
@@ -142,7 +139,7 @@ NB. Description:
 NB.   Reduce an augmented general matrix eA to lower
 NB.   Hessenberg form H by a unitary (orthogonal) similarity
 NB.   transformation via a non-blocked algorithm:
-NB.     Q' * A * Q = H
+NB.     Q * A * Q' = H
 NB.
 NB. Syntax:
 NB.   HQf=. fs gehd2l eA
@@ -214,7 +211,7 @@ NB.
 NB. Description:
 NB.   Reduce a general matrix A to lower Hessenberg form H
 NB.   by a unitary (orthogonal) similarity transformation:
-NB.     Q' * A * Q = H
+NB.     Q * A * Q' = H
 NB.
 NB. Syntax:
 NB.   HQf=. fs gehrdl A
@@ -393,17 +390,11 @@ gehrdu=: 4 : 0
 NB. =========================================================
 NB. Test suite
 
-NB. A=. 6 6 $ 6 _4 9 6 3 4 8 1 0 9 5 _9 _7 9 6 3 5 _4 8 9 _7 _9 _2 _9 3 _7 _1 7 3 _8 _8 9 8 8 _6 6
-NB. B=. 6 6 $ 4j6 5j2 4j8 _7j_8 5j1 1j_4 _3j_5 6j_1 5j_4 0j_8 _5j_1 _7j1 9j8 _6j_3 _4j5 9j1 0j_9 _7j_6 _9j_3 0j6 3j5 _3j5 4j_3 _5j2 _1j_6 _1j2 3j_2 2j8 7j_6 6j_5 _2j_5 3j1 _6j1 _5j_7 9j6 _5j3
-NB. C=. _9 + j./ ? 2 10 10 $ 19
-NB. D=. 10 10 $ 4 1 6 9 6 _2 7 1 4 _8 _6 5 _3 0 1 _6 _1 2 _6 9 0 _2 8 3 9 0 _7 _8 8 7 _5 _8 4 _3 _6 _6 1 3 2 _2 _9 8 3 4 _5 _9 0 _4 _8 4 _9 4 6 0 8 _8 _7 0 _8 _8 1 _6 _8 6 _8 4 8 _2 2 _2 2 3 _5 _7 6 6 5 2 _3 7 _3 0 _1 8 _1 5 _1 4 _3 0 1 1 6 6 4 9 6 _6 3 _9
-NB. E=. 10 10 $ 4 1 6 9 6 _2 7 1 4 _8 0 5 _3 0 1 _6 _1 2 _6 9 0 _2 8 3 9 0 _7 _8 8 7 0 _8 4 _3 _6 _6 1 3 2 _2 0 8 3 4 _5 _9 0 _4 _8 4 0 4 6 0 8 _8 _7 0 _8 _8 0 _6 _8 6 _8 4 8 _2 2 _2 0 3 _5 _7 6 6 5 2 _3 7 0 0 0 0 0 0 0 0 _3 4 0 0 0 0 0 0 0 0 0 _9
-
 NB. ---------------------------------------------------------
 NB. thrd
 NB. Test Hessenberg reduction algorithms:
 NB. - LAPACK: gehrd
-NB. - mt package: gehrd
+NB. - mt package: gehrdl gehrdu
 NB. by general matrix
 NB.
 NB. Syntax: thrd A
@@ -413,8 +404,10 @@ thrd=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gehrd'
 
-  ('gehrdl' tdyad (]`(0,#)`((norm1 con getri)@[)`(_."_)`((norm1@(- ((( 1 & trl)@( 0 _1&}.)) (] mp (mp ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*H*Q'||/ε*n*||A||
-  ('gehrdu' tdyad (]`(0,#)`((norm1 con getri)@[)`(_."_)`((norm1@(- (((_1 & tru)@(_1  0&}.)) (] mp (mp ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*H*Q'||/ε*n*||A||
+  rcond=. (norm1 con getri) y
+
+  ('gehrdl'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@( 0 _1&}.)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q'*H*Q||/ε*n*||A||
+  ('gehrdu'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@(_1  0&}.)) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*H*Q'||/ε*n*||A||
 
 NB. FIXME!  ('gehrd_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
 
@@ -424,10 +417,10 @@ NB. FIXME!  ('gehrd_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_
 NB. ---------------------------------------------------------
 NB. testhrd
 NB. Test Hessenberg reduction
-NB. Syntax: mkge testhrd n
+NB. Syntax: mkge testhrd (m,n)
 NB.
 NB. Application:
 NB. - with limited random matrix values' amplitudes
 NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testhrd 100 100
 
-testhrd=: 1 : 'EMPTY [ ((thrd @ u) ^: (=/ @ $))'
+testhrd=: 1 : 'EMPTY [ ((thrd @ u) ^: (=/))'

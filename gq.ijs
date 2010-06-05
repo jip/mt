@@ -29,7 +29,7 @@ NB. ---------------------------------------------------------
 NB. Blocked code constants
 
 UNGBS=: 32   NB. block size limit
-UNGNX=: 128  NB. crossover point  TODO: implement
+UNGNX=: 128  NB. crossover point
 
 NB. ---------------------------------------------------------
 NB. Compute geometry for block versions of algorithms
@@ -113,7 +113,7 @@ ung2rstep=: 4 : 0
 
 ungr2step=: 4 : 0
   io=. y (- & #) x
-  (io { x) (larfrcbr , (((- @ + @ {.) ((>: @ [) (io }) *) [) @ ])) y
+  (io { x) (larfrcbr , (((- @ + @ {.) ((>: @ [) (io }) *) ]) @ [)) y
 )
 
 NB. ---------------------------------------------------------
@@ -194,12 +194,7 @@ ungqlstep=: 4 : 0
   (riosQfi (] ;. 0) x) (larfblnbc ,. (ung2l @ [)) (sizeeC {. y)
 )
 
-ungqrstep=: 4 : 0
-  'shx shy'=. x (,: & $) y
-  riosQfi=. ((shx - shy) - UNGBS) ,: (UNGBS + (0 (1 }) shy))
-  sizeeC=. - ((UNGBS , 0) + shy)
-  (riosQfi (] ;. 0) x) ((ung2r @ [) ,. larfblnfc) (sizeeC {. y)
-)
+ungqrstep=: ((((_,UNGBS),:~(2&$))@(UNGBS-~(-&#))) (] ;. 0) [) ((ung2r@[),.larfblnfc) (({.~ (UNGBS -@+ #))@])
 
 ungrqstep=: 4 : 0
   'shx shy'=. x (,: & $) y
@@ -304,10 +299,13 @@ NB.         of order m: Q = Π{H(i),i=0:k-1}
 NB.   k   = min(m,n)
 NB.
 NB. Algorithm:
-NB.   1) find iters, the number of iterations for ungqrstep
-NB.   2) form eQ0
-NB.   3) do iterations: eQ=. Qf (ungqrstep ^: iters) eQ0
-NB.   4) cut off last row from eQ to produce Q
+NB.   1) extract Qf
+NB.   2) extract Qf0
+NB.   3) eQi=. ung2r Qf0
+NB.   4) do iterations:
+NB.        eQi=. Qf ungqrstep eQi
+NB.      until rows count in Qf and eQi matches
+NB.   5) cut off last row from eQ to produce Q
 NB.
 NB. If:
 NB.   'm n'=. _1 0 + $ QfR
@@ -323,7 +321,7 @@ NB.   parameter (amount of leading vectors from QfR to form
 NB.   Q) is assumed K=k; to emulate case K<k the last (k-K)
 NB.   elements in τ[0:k-1] must be zeroed
 
-ungqr=: _1 0 }. (ungqrstep ^: ((_1 0 ungqiters $ @ [)`(ung2r @ (}.~ (2 $ UNGBS * _1 0 ungqiters $)))))~ @ trl1 @ ((_ , (_1 0 ungqk $)) {. ])
+ungqr=: _1 0 }. ((ungqrstep^:(>&#)^:_) (((UNGBS rounddown (0>.(-&(UNGNX+1-UNGBS))))@(1{$))(ung2r@((2$[)}.]))]))@(trl1@((_,(_1 0 ungqk $)){.]))
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -433,8 +431,8 @@ tungq=: 3 : 0
   ('ungrq' tmonad (gerqf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag)@(mp  ct)) % (FP_EPS*{:@$))@]))) y  NB. berr := ||Q*Q'-I||/(ε*n)
 
   NB. following are tested iif A is square
-  ('unghrl' tmonad (gehrdl`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp  ct)) % (FP_EPS*#))@]))) ^: (=/ @ $) y  NB. berr := ||Q*Q'-I||/(ε*n)
-  ('unghru' tmonad (gehrdu`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp~ ct)) % (FP_EPS*#))@]))) ^: (=/ @ $) y  NB. berr := ||Q'*Q-I||/(ε*n)
+  ('unghrl' tmonad (((0,#) gehrdl ])`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp  ct)) % (FP_EPS*#))@]))) ^: (=/ @ $) y  NB. berr := ||Q*Q'-I||/(ε*n)
+  ('unghru' tmonad (((0,#) gehrdu ])`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp~ ct)) % (FP_EPS*#))@]))) ^: (=/ @ $) y  NB. berr := ||Q'*Q-I||/(ε*n)
   EMPTY
 )
 

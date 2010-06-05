@@ -12,6 +12,8 @@ NB. pt        Pertranspose
 NB. cpt       Conjugate pertranspose
 NB. updl      Conj. to update array accepting linear IOS
 NB. gi        Conj. to evoke n-th verb from gerund m
+NB. hc        Take the 1st column
+NB. tc        Take the last column
 NB.
 NB. uncut     To frame matrix by border of zeros
 NB. append    Template adv. to make verbs to enhance append
@@ -154,6 +156,9 @@ pt=: |. @ |: @ |.                        NB. pertranspose
 cpt=: + @ pt                             NB. conjugate pertranspose
 updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'  NB. Conj. to update array accepting linear IOS
 gi=: 2 : '(n{m)`:6'                      NB. Conj. to evoke n-th verb from gerund m: m[n]
+
+hc=: , @ (_  1 & {.)                     NB. take the head column as 1-rank array from 2-rank array, using standard fill
+tc=: , @ (_ _1 & {.)                     NB. take the tail column as 1-rank array from 2-rank array, using standard fill
 
 NB. ---------------------------------------------------------
 NB. uncut

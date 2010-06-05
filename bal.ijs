@@ -5,12 +5,7 @@ NB. gebalp  Isolate eigenvalues of a general square matrix
 NB. gebals  Make the rows and columns of a general square
 NB.         matrix as close in 1-norm as possible
 NB. gebal   Balance a general square matrix
-NB. gebak   Restore an original matrix left or right
-NB.         eigenvectors from a balanced matrix eigenvectors
 NB. ggbal   Balance a pair of general square matrices
-NB. ggbak   Restore an original matrix pair left or right
-NB.         eigenvectors from a balanced matrix pair
-NB.         eigenvectors
 NB.
 NB. Copyright (C) 2009 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution

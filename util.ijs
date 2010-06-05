@@ -57,7 +57,7 @@ sgn=: 0 & (<: - >)                 NB. if y<0 then -1 else 1 endif
 condneg=: (* sgn)~                 NB. if x<0 then -y else y endif
 copysign=: condneg |               NB. if x<0 then -|y| else |y| endif
 
-fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d\n' vsprintf  NB. Format log string
+fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' vsprintf  NB. Format log string
 
 NB. ---------------------------------------------------------
 NB. Norms
@@ -215,7 +215,7 @@ tmonad=: 2 : 0
   try. ferr=. y vferr out                             catch. ferr=. _.        end.
   try. berr=. y vberr out                             catch. berr=. _.        end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
-  logline ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
+  (logline , LF) ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline
   logline (1!:2) 2
   EMPTY
@@ -231,7 +231,7 @@ tdyad=: 2 : 0
   try. ferr=. y vferr out                             catch. ferr=. _.        end.
   try. berr=. y vberr out                             catch. berr=. _.        end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
-  logline ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
+  (logline , LF) ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline
   logline (1!:2) 2
   EMPTY

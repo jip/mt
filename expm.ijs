@@ -20,15 +20,16 @@ NB. Resources:
 NB. - http://www.jsoftware.com/jwiki/...
 NB. - http://www.dvgu.ru/forum/...
 NB.
-NB. 2008-02-15 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. 2008-02-27 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 script_z_ '~system/main/numeric.ijs'            NB. clean
 script_z_ '~system/packages/math/makemat.ijs'   NB. idmat
 require '~user/projects/lapack/lapack.ijs'      NB. '~addons/math/lapack/lapack.ijs'
-require '~user/projects/lapack/geev.ijs'        NB. need_jlapack_ 'geev gesvx'
-require '~user/projects/lapack/gesvx.ijs'       NB. (line above makes it excessive)
-require '~user/projects/tau/util.ijs'           NB. makeP
+require '~user/projects/lapack/geev.ijs'        NB. need_jlapack_ 'geev gesvd gesvx'
+require '~user/projects/lapack/gesvd.ijs'       NB. (line above makes it excessive)
+require '~user/projects/lapack/gesvx.ijs'       NB. -//-
+require '~user/projects/tau/util.ijs'           NB. makeP gen_rand_mat gen_rand_mat_neg_eig
 
 coclass 'tau'
 
@@ -180,7 +181,8 @@ NB.
 NB. Syntax:
 NB.   'Nx P M V'=. prexpm A;B
 NB. where:
-NB.   A - Nx-by-Nx state matrix of LTI system
+NB.   A - Nx-by-Nx state matrix of LTI system, should be stable,
+NB.       i.e. all eigenvalues of A must have negative real parts
 NB.   B - Nx-by-Nu control input matrix of LTI system
 NB.   V - (#vm)-by-3 matrix, prepared eigenvalues of G, output of prepV
 NB.   M - Ng-by-Ng matrix for equation M*A(t)=L(t), output of makeLtM
@@ -221,28 +223,22 @@ expm=: (0 {:: [) extract augsys     NB. extract Phi and Gamma from exp(G*ts) [2,
 NB. =========================================================
 NB. Test suite
 
-NB. Syntax: texpm A;B;ts
+NB. Syntax: is_passed=. texpm A;B;ts
 
 texpm=: 3 : 0
 'A B ts'=. y
 P =. 0 {:: (prexpm A;B) expm ts
 eigA=. /:~ ^ ts * (2 geev_jlapack_ A)
 eigP=. /:~ (2 geev_jlapack_ P)      NB. FIXME: this sort gives wrong result
-err=. %: +/ *: | eigA - eigP
-smoutput (eigA ,. eigP) ; (,. | eigA - eigP) ; err
+err=. clean %: +/ *: | eigA - eigP
 0 = err
 )
 
 NB. Syntax: testexpm ''
 
 testexpm=: 3 : 0
-'A0 B0'=.  4 splitbyx _4 + ?  4  7 $ 10
-'A1 B1'=.  6 splitbyx _4 + ?  6 11 $ 10
-'A2 B2'=.  8 splitbyx _4 + ?  8 13 $ 10
-'A3 B3'=. 10 splitbyx _4 + ? 10 17 $ 10
-'A4 B4'=. 4 splitbyx j./ ? 2 4 7 $ 10
-
-'ts0 ts1 ts2 ts3 ts4'=. 0.01 * >: ? 5 $ 100
-
-texpm &> (< A0;B0;ts0) , (< A1;B1;ts1) , (< A2;B2;ts2) , (< A3;B3;ts3) , (< A4;B4;ts4)
+'A0 A1 A2 A3'=. (gen_rand_mat_neg_eig &. >) 4;6;8;10
+'B0 B1 B2 B3'=. (gen_rand_mat &. >) 4 3;6 5;8 7;10 9
+'ts0 ts1 ts2 ts3'=. 0.01 * >: ? 4 $ 100
+texpm &> (< A0;B0;ts0) , (< A1;B1;ts1) , (< A2;B2;ts2) , (< A3;B3;ts3)
 )

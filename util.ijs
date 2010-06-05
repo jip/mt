@@ -52,5 +52,26 @@ repl1=: (make1) 0: } topows       NB. replace by identity matrix in 1st box
 prepP=: pows > @ repl1 < @ ]      NB. form report of y ^ i. x
 make0=: (0 $~ 0 , $ @ ]) " _      NB. make zero report: 0 N N $ 0
 check0=: make0`prepP @. (0 ~: [)  NB. choose report type depending on x=0
-makeP=: (# $: ]) :check0          NB. force dyadic call: (#@]) check0 ]
+makeP=: (# $: ]) :check0 M.       NB. force dyadic call: (#@]) check0 ]
 
+NB. ---------------------------------------------------------------------------
+NB. Generate rectangular random matrix of values from range [0,10)
+NB. Syntax:
+NB.   mat=. gen_rand_mat size
+NB.   mat=. gen_rand_mat rows cols
+
+gen_rand_mat=: 3 : 0
+sh=. ({. , {:) y
+m=. 0.1 * ? sh $ 100
+)
+
+NB. ---------------------------------------------------------------------------
+NB. Generate square random matrix with negative eigenvalues from range (-10,0]
+NB. Syntax:
+NB.   mat=. gen_rand_mat_neg_eig size
+
+gen_rand_mat_neg_eig=: 3 : 0
+d=. diagmat _0.1 * ? y $ 100
+o=. 2b100 gesvd_jlapack_ 0.1 * ? (2 $ y) $ 100
+m=. o mp d mp +|:o
+)

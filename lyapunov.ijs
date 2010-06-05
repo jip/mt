@@ -14,7 +14,7 @@ NB. - handle non-squared case
 NB. - implement enhanced LAPACK interfaces
 NB. - CO2DI: Cayley transform
 NB.
-NB. 2007-12-25 1.0.0 Igor Zhuravlov
+NB. 2007-12-25 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 require '~system/packages/math/matutil.ijs'     NB. diag
 require '~user/projects/jlapack/lapack.ijs'     NB. '~addons/math/lapack/lapack.ijs'

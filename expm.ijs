@@ -1,6 +1,6 @@
 NB. expm.ijs
 NB. Calculate matrix exponent and Cauchy integral
-NB. 
+NB.
 NB. prexpm  prepare time-invariant parts for expm
 NB. expm    calculate matrix exponent and Cauchy integral
 NB.
@@ -8,6 +8,7 @@ NB. References:
 NB. - Podchukaev V.A. Theory of informational processes and systems. - M.,
 NB.   2006. (Подчукаев В. А. Теория информационных процессов и систем. -
 NB.   М.: Гардарики, 2006 - 209 с.)
+NB.   TODO: URL
 NB. - Andrievskiy B.R., Fradkov A.L. Selected chapters of automatic
 NB.   control theory with MATLAB examples. - SPb., 2000 (Андриевский Б.
 NB.   Р., Фрадков А. Л. Избранные главы теории автоматического управления
@@ -21,13 +22,12 @@ NB. TODO:
 NB. - consider s/@:/@/g when possible
 NB. - consider complex A or B => non-self-adjoined eigenvalues
 NB. - consider B is vector
-NB. - consider geevx instead of geev
 NB.
 NB. 2008-01-11 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 require '~addons/math/lapack/lapack.ijs'
-NB. require '~user/projects/jlapack/geev.ijs'       NB. '~addons/math/lapack/geev.ijs'
-NB. require '~user/projects/jlapack/gesvx.ijs'      NB. '~addons/math/lapack/gesvx.ijs'
+require '~user/projects/lapack/geev.ijs'       NB. '~addons/math/lapack/geev.ijs'
+require '~user/projects/lapack/gesvx.ijs'      NB. '~addons/math/lapack/gesvx.ijs'
 
 coclass 'tau'
 
@@ -52,7 +52,7 @@ NB.
 NB. TODO:
 NB. - test
 
-prexpm=: (((0 & makeLtM ; ]) @ prepV @ geevV_jlapack_) ; makeP) @ makeG ; getCols @ getA
+prexpm=: (((0 & makeLtM ; ]) @ prepV @ (1 & geev_jlapack_)) ; makeP) @ makeG ; getCols @ getA
 
 NB. ---------------------------------------------------------
 NB. expm
@@ -93,7 +93,7 @@ NB. ---------------------------------------------------------
 NB. makeP
 NB. Make report of G powers
 NB.
-NB. Syntax: 
+NB. Syntax:
 NB.   P=. makeP G
 NB. where
 NB.   G - Ng-by-Ng matrix, augmented LTI system, output of makeG
@@ -196,12 +196,12 @@ NB.   Gi=. makeGi lambdai , ic , mi , IOs , Nm , k
 NB. where:
 NB.   k       - matrix G minimal polynom's order, k = Ng
 NB.   Nm      = # M
-NB.   IOs     - IO 1st row (atom) of corresp. Mi (Li) in M (Lt)
+NB.   IOs     - IO 1st row (atom) of corresp. M[i] (L[i](t)) in M (L(t))
 NB.   mi      - multiplicity, taking self-adjoiners into account
 NB.   ic      - datatype flag: 0 for real, 1 for complex
 NB.   lambdai - i-th eigenvalue of G
 NB.   Gi      - mi-by-k matrix, G[i]
-NB.   
+NB.
 NB. Test:
 NB.    makeGi 1j1 1 4 7 15 9
 NB. 1 1 1 1  1  1   1   1   1
@@ -225,12 +225,12 @@ NB.   'T2i T3i'=. reim makeTi lambdai , ic , mi , IOs , Nm , k
 NB. where:
 NB.   k           - matrix G minimal polynom's order, k = Ng
 NB.   Nm          = # M
-NB.   IOs         - IO 1st row (atom) of corresp. Mi (Li) in M (Lt)
+NB.   IOs         - IO 1st row (atom) of corresp. M[i] (L[i](t)) in M (L(t))
 NB.   mi          - multiplicity, taking self-adjoiners into account
 NB.   ic          - datatype flag: 0 for real, 1 for complex
 NB.   lambdai     - i-th eigenvalue of G
 NB.   T1i,T2i,T3i - mi-by-k matrix, T1[i], T2[i] or T3[i] respectively
-NB.   
+NB.
 NB. Tests:
 NB.    makeTi 4 0 2 0 15 9
 NB. 1 4 16 64 256 1024 4096 16384 65536
@@ -258,7 +258,7 @@ NB. classify and count. Outputs 5 columns:
 NB. - lambdai, i-th eigenvalue
 NB. - ic, datatype flag: 0 for real, 1 for complex
 NB. - mi, multiplicity, taking self-adjoiners into account
-NB. - IOs, IO 1st row (atom) of corresp. Mi (Lti) in M (Lt)
+NB. - IOs, IO 1st row (atom) of corresp. M[i] (L[i](t)) in M (L(t))
 NB. - Nm = # M
 NB. - k, matrix G minimal polynom's order, k = Ng
 NB.
@@ -306,7 +306,7 @@ getIOs=: 3 { ]        NB. extract IOs
 getNm=: 4 { ]         NB. extract Nm
 getk=: 5 { ]          NB. extract k
 
-getCols=: {: @ $      NB. get columns of table y
+getCols=: {: @ $      NB. get columns count of table y
 reim=: 9 11 o."0 _ ]  NB. extract Re(y) and Im(y) from complex y
 c2r=: ,/ @ reim       NB. realificate complex y
 idmat=: =@i.          NB. identity matrix of size y

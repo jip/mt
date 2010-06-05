@@ -1,105 +1,51 @@
-NB. rot.ijs
-NB. Rotations
+NB. hrd.ijs
+NB. Reduce a general matrix to upper Hessenberg form
 NB.
-NB. lartg   generates a plane rotation of a 2-vector
-NB. lartv   applies a plane rotation to a 2-vector
-NB. lartvt  applies a transposed plane rotation to a 2-vector
+NB. gehrd   reduce a general matrix to upper Hessenberg form
 NB.
-NB. Version: 1.0.0 2008-07-30
-NB. Copyright: Igor Zhuravlov igor at uic.dvgu.ru
-NB. License: Version 3 of the GNU GPL or any later version
+NB. Version: 1.0.0 2008-09-01
+NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
+NB. License: GNU GPL
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
 
-NB. various exponents for effective thresholds
-FP_ESFMA=: 1 2 3 4 _1 _2 _3 _4 * >. 1r4 * (FP_BASE ^. FP_SFMIN % (FP_IGUNFL { (FP_EPS , 1)))
-
-NB. effective underflow threshold FP_SFMN
-NB.   = 2^_1020 (gradual underflow)
-NB.   = 2^_968 (no gradual underflow)
-NB. effective overflow threshold FP_SFMX
-NB.   = 2^1020 (gradual underflow)
-NB.   = 2^968 (no gradual underflow)
-'FP_SFMN4 FP_SFMN2 FP_SFMN3 FP_SFMN FP_SFMX4 FP_SFMX2 FP_SFMX3 FP_SFMX'=: FP_BASE ^ FP_ESFMA
-
-NB. miscellaneous
-FP_SQRTEPS=: %: FP_EPS
-FP_SQRTMX4=: %: FP_SFMX4
-FP_MN2MX2=: (FP_SFMN2*(1-FP_EPS)) , FP_SFMX2
-FP_MX1MN=: FP_SFMX , 1 , FP_SFMN
-FP_MN1MX=: FP_SFMN , 1 , FP_SFMX
-FP_MN3MN4MX4MX3=: (FP_SFMN3*(1-FP_EPS)) , (FP_SFMN4*(1-FP_EPS)) , FP_SFMX4 , FP_SFMX3
-FP_MXMX21MN2MN=: FP_SFMX , FP_SFMX2 , 1 , FP_SFMN2 , FP_SFMN
-FP_1MN2MNMN6MN8=: 1 , FP_SFMN2 , FP_SFMN , 0 0  NB. FP_SFMN4^6 = 0, FP_SFMN4^8 = 0
-FP_MNMN21MX2MX=: |. FP_MXMX21MN2MN
-FP_MN1324MX8231=: (FP_SFMN*(1-FP_EPS)) , (FP_SFMN3*(1-FP_EPS)) , (FP_SFMN2*(1-FP_EPS)) , (FP_SFMN4*(1-FP_EPS)) , FP_SQRTMX4 , FP_SFMX2 , FP_SFMX3 , FP_SFMX
-FP_MX13241MN4231=: FP_SFMX , FP_SFMX3 , FP_SFMX2 , FP_SFMX4 , 1 , FP_SFMN4 , FP_SFMN2 , FP_SFMN3 , FP_SFMN
-FP_MN13241MX4231=: FP_SFMN , FP_SFMN3 , FP_SFMN2 , FP_SFMN4 , 1 , FP_SFMX4 , FP_SFMX2 , FP_SFMX3 , FP_SFMX
-
-abssq=: +/      @: *: @  +.  NB. Re(y)^2 + Im(y)^2
-abs1=: >./ @: | @ +.         NB. max(|Re(y)|,|Im(y)|)
-sgnr=: sgn @ (9 & o.)        NB. sgn(Re(y))
-
-NB. ---------------------------------------------------------
-NB. lartgc1
-NB. case 1: f≠0, g≠0, neither f nor g too big or small,
-NB. minimal work
-
-lartgc1=: 3 : 0
-  'f2 g2'=. abssq 'f g'=. y
-  d1=. (sgnr f) * %: f2 * fg2=. f2 + g2  NB. (% sgnr) = (* sgnr)
-  (f2 , (f * + g) , (f * fg2)) % d1
-)
-
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. lartg                                                   1
-NB. Generates a plane rotation of 2-vector:
-NB.   [  cs  sn  ]     [ f ]     [ r ]
-NB.   [  __      ]  .  [   ]  =  [   ]   where cs^2 + |sn|^2 = 1
-NB.   [ -sn  cs  ]     [ g ]     [ 0 ]
+NB. gehrd                                                   1
+NB. Reduce a general matrix A to upper Hessenberg form H by
+NB. an unitary similarity transformation:
+NB.   Q' * A * Q = H
 NB.
 NB. Syntax:
-NB.   'cs sn r'=. lartg (f,g)
+NB.   'HQ tau'=. gehrd A ; ss
 NB. where
-NB.   (f,g) - 2-vector to rotate
-NB.   cs sn - representation of 2×2 rotation matrix
-NB.   r     - representation of rotated 2-vector (r,0)
+NB.   A   - N×N-matrix with isolated eigenvalues (see gebal)
+NB.   ss  - 2-vector, corner start (left and up) and size
+NB.         (width and height) of A11 (see gebalp)
+NB.   HQ  - N×N-matrix, ???
+NB.   tau - (N-1)-vector, ???
 NB.
 NB. If:
-NB.   'cs sn r'=. lartg (f,g)
+NB.   'HQ tau'=. gehrd A ; ss
+NB.   >>>>>>>>>>>>>>>>>D=. diagmat s
+NB.   Dinv=. %. D
 NB. then
-NB.   (r,0) -: G1 mp (f,g)
-NB.   (r,0) -: (f,g) mp G2
-NB.   (0,r) -: G2 mp (g,f)
-NB.   (0,r) -: (g,f) mp G1
-NB. where
-NB.   G1=. 2 2 $ cs , sn , (- + sn) , cs
-NB.   G2=. |: G1
+NB.   Dinv -: diagmat % s
+NB.   As -: D mp Ap mp Dinv
+NB.   As -: Ap (] * (% " 1)) s
 NB.
 NB. Notes:
-NB. - input NaN or ±∞ leads to inconsistent output or NaN
-NB.   error
-NB. - other input may lead to ±∞ in output
 NB.
 NB. References:
-NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. (2001) On
-NB.     Computing Givens rotations reliably and efficiently.
-NB.     LAPACK Working Note 148, University of Tennessee,
-NB.     UT-CS-00-449, January 31, 2001.
-NB.     http://www.netlib.org/lapack/lawns/downloads/
-NB. [2] Anderson, Edward. (2000) Discontinuous Plane
-NB.     Rotations and the Symmetric Eigenvalue Problem.
-NB.     LAPACK Working Note 150, University of Tennessee,
-NB.     UT-CS-00-454, December 4, 2000.
-NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB. [1] 
+NB. [2] 
 
-lartg=: (3 : 0) " 1
+gehrd=: (3 : 0) " 1
 
   'f g'=. y
   'scalef scaleg'=. scalefg=. abs1 y
@@ -214,7 +160,7 @@ NB. ---------------------------------------------------------
 NB.*tlartg2 v test lartg
 
 tlartg2=: (3 : 0) " 1
-  erm=. 4 : '(| x - y) % ((FP_EPS_mt_ * | x) >. (FP_SFMIN_mt_ * FP_PREC_mt_))'
+  erm=. 4 : '(| x - y) % ((FP_EPS * | x) >. (FP_SFMIN * FP_PREC))'
   'cs sn r'=. lartg y
   G=. 2 2 $ cs , sn , (- + sn) , cs
   r erm {. G mp y

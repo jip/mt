@@ -5,6 +5,7 @@ NB. =========================================================
 NB. Configuration
 
 coclass 'mt'
+NB.coinsert   'base'
 
 NB. ---------------------------------------------------------
 NB. IEEE 754-1985 double-precision 64 bit floating point
@@ -27,26 +28,14 @@ FP_OVFL=: (FP_BASE - FP_PREC) * (FP_BASE ^ FP_EMAX)   NB. max normalized positiv
 FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/SFMIN does not overflow
 
 NB. ---------------------------------------------------------
-NB. Optimal block size for blocked versions
-
-BGETRF=: 32                                           NB. getrfl1u getrflu1 getrfu1l getrful1
-BPOTRF=: 32                                           NB. potrfl potrfu
-
-NB. ---------------------------------------------------------
-NB. Optimal values
-NB.   CPU_cache_size * algorithm_RAM_consumption_coefficient
-NB. for recursive versions, in (7!:5) units
-
-RGETRF=: 512*1024                                     NB. rgetrfl1u rgetrflu1 rgetrfu1l rgetrful1
-RPOTRF=: 512*1024                                     NB. rpotrfl rpotrfu
-
-NB. ---------------------------------------------------------
 NB. Miscellaneous
 
 VERBOSE=: 1                                           NB. boolean 'is verbose?' flag
 
 NB. =========================================================
 NB. Includes
+
+NB. ('mt';'z') copath 'base'
 
 NB. ---------------------------------------------------------
 NB. System verbs
@@ -70,6 +59,7 @@ require '~user/projects/mt/hrd.ijs'                   NB. Hessenberg reduction
 NB. require '~user/projects/mt/orf.ijs'                   NB. orthogonal factorization (LQ QL QR RQ)
 require '~user/projects/mt/pow.ijs'                   NB. integer powers
 require '~user/projects/mt/rand.ijs'                  NB. random objects
+require '~user/projects/mt/rcond.ijs'                 NB. reciprocal of condition number
 require '~user/projects/mt/rot.ijs'                   NB. plane rotations
 require '~user/projects/mt/sv.ijs'                    NB. solve linear monomial equations
 require '~user/projects/mt/trf.ijs'                   NB. triangular factorization (Cholesky LU)
@@ -96,67 +86,19 @@ NB.   r    - boxed table with 4 columns: 'algorithm name'
 NB.          'error' 'time, sec.' 'space, bytes'
 NB.
 NB. Application:
-NB.   ('mt';'z') copath 'base'
-NB.   r=. gemat test 7 7
+NB.   cocurrent 'mt'
+NB.   r=. (_1 1 0 16 _6 4 & gemat) test 132 132
+NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) test 132 132
 
-test=: 1 : 'u testtrf_mt_'
-NB.---  NB. assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
-NB.---  NB. (testbal , testequ , testexp , testhrd , testpow , testrot , testsv , testtrf) y
-NB.---  u testtrf_mt_ y
-NB.---)
+NB.--- test=: 1 : 'u testtrf'
+test=: 1 : 0
 
-NB. ---------------------------------------------------------
-NB. block                                                   1
-NB. Estimate optimal block size for each blocked version of
-NB. algorithms
-NB.
-NB. Syntax:
-NB.   r=. block m,n
-NB. where
-NB.   m,n - to estimate algorithms with random m×n matrices;
-NB.         if m≠n then algorithms that accept square
-NB.         matrices only are skipped
-NB.   r   - boxed table with 4 columns: 'algorithm name'
-NB.         'datatype' 'const name' 'const value', and with
-NB.         rows per each unique pair: 'algorithm name'
-NB.         'datatype'
+  require 'printf'
+  require '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ 'gesv getrf potrf'
 
-block=: (3 : 0) " 1
-  assert. 2 1 -: (# , #@$) y
-  NB. (blockbal , blockequ , blockexp , blockhrd , blockpow , blockrot , blocksv , blocktrf) y
-  blocktrf y
+  '%-25s %-12s %-12s %-12s %-12s' & printf ^: (VERBOSE"_) 'Algorithm' ; 'Backward err' ; 'Forward err' ; 'Time, sec.' ; 'Space, bytes'
+  assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
+  ((u testtrf) , (u testtrs)) y
 )
 
-NB. ---------------------------------------------------------
-NB. space                                                   1
-NB. Estimate optimal value
-NB.   CPU_cache_size * algorithm_RAM_consumption_coefficient
-NB. in (7!:5) units for each blocked version of algorithms.
-NB. Optimal value should guarantee that all input,
-NB. intermediate and output data will fit entirely into CPU
-NB. cache. This value is used by recursive versions to make
-NB. decision whether to stop recursion or not.
-NB.
-NB. Syntax:
-NB.   r=. space m,n
-NB. where
-NB.   m,n - to estimate algorithms with random m×n matrices;
-NB.         if m≠n then algorithms that accept square
-NB.         matrices only are skipped
-NB.   r   - boxed table with 4 columns: 'algorithm name'
-NB.         'datatype' 'const name' 'const value', and with
-NB.         rows per each unique pair: 'algorithm name'
-NB.         'datatype'
-NB.
-NB. Examples:
-NB. - if there is no intermediate nouns, and operations are
-NB.   in-place only, then coeff=1
-NB. - if algorithm creates e.g. intermediate nouns of double
-NB.   size as input, then coeff=1r3, since following must
-NB.   hold: (insize + 2*insize ≤ CPU_cache_size)
-
-space=: (3 : 0) " 1
-  assert. 2 1 -: (# , #@$) y
-  NB. (spacebal , spaceequ , spaceexp , spacehrd , spacepow , spacerot , spacesv , spacetrf) y
-  spacetrf y
-)

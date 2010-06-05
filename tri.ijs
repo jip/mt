@@ -5,7 +5,7 @@ NB. getrixxxx  Inverse general matrix
 NB. hetripx    Inverse Hermitian (symmetric) matrix
 NB. potrix     Inverse Hermitian (symmetric) positive
 NB.            definite matrix
-NB. pttrix     Inverse Hermitian (symmetric) positive
+NB. pttri      Inverse Hermitian (symmetric) positive
 NB.            definite tridiagonal matrix
 NB.
 NB. testtrtri  Test trtrixx by triangular matrix given
@@ -14,7 +14,7 @@ NB. testhetri  Test hetripx by Hermitian (symmetric) matrix
 NB.            given
 NB. testpotri  Test potrix by Hermitian (symmetric) positive
 NB.            definite matrix given
-NB. testpttri  Test pttrix by Hermitian (symmetric) positive
+NB. testpttri  Test pttri by Hermitian (symmetric) positive
 NB.            definite tridiagonal matrix given
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
@@ -114,15 +114,15 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:              Syntax:
-NB. trtril         L  * iL  = I         iL=.  trtril  A
-NB. trtril1        L1 * iL1 = I         iL1=. trtril1 A
-NB. trtriu         U  * iU  = I         iU=.  trtriu  A
-NB. trtriu1        U1 * iU1 = I         iU1=. trtriu1 A
+NB. trtril         L  * L^_1  = I       iL=.  trtril  A
+NB. trtril1        L1 * L1^_1 = I       iL1=. trtril1 A
+NB. trtriu         U  * U^_1  = I       iU=.  trtriu  A
+NB. trtriu1        U1 * U1^_1 = I       iU1=. trtriu1 A
 NB.
 NB. Description:
 NB.   Inverse triangular matrix
 NB. where:
-NB.   A   - n×n-matrix, containing triangular matrix
+NB.   A   - n×n-matrix, contains triangular matrix to inverse
 NB.   U   - n×n upper triangular matrix
 NB.   U1  - n×n unit upper triangular matrix (diagonal is not
 NB.         saved)
@@ -140,29 +140,29 @@ NB.
 NB. Algorithm for trtriu:
 NB.   In: A - n×n-matrix
 NB.   Out: iU
-NB.   0) if 1 < # A
-NB.      0.0) then
-NB.           0.0.0) form (#A)-vector of zeros:
+NB.   1) if 1 < # A
+NB.      1.1) then
+NB.           1.1.1) form (#A)-vector of zeros:
 NB.                    fret=. n $ 0
-NB.           0.0.1) find splitting edge:
+NB.           1.1.2) find splitting edge:
 NB.                    k := ⌈n/2⌉
-NB.           0.0.2) mark intervals:
+NB.           1.1.3) mark intervals:
 NB.                    fret=. 1 (0,k)} fret
-NB.           0.0.3) cut A by fret to block matrix bA:
+NB.           1.1.4) cut A by fret to block matrix bA:
 NB.                    bA = (  A00  A01  )  k
 NB.                         (  A10  A11  )  n-k
 NB.                            k    n-k
-NB.           0.0.4) apply trtriu itself to A00 and A11:
+NB.           1.1.5) apply trtriu itself to A00 and A11:
 NB.                    iA00=. $: A00
 NB.                    iA11=. $: A11
-NB.           0.0.5) replace A00 and A11 by iA00 and iA11,
+NB.           1.1.6) replace A00 and A11 by iA00 and iA11,
 NB.                  respectively, in bA
-NB.           0.0.6) inverse A01:
+NB.           1.1.7) inverse A01:
 NB.                    iA01=. - iA00 mp A01 mp iA11
-NB.           0.0.7) replace A01 by iA01 in bA
-NB.           0.0.8) assemble iA from block matrix:
+NB.           1.1.8) replace A01 by iA01 in bA
+NB.           1.1.9) assemble iA from block matrix:
 NB.                    iA=. icut bA
-NB.     0.1) else return reciprocal:
+NB.     1.2) else return reciprocal:
 NB.            iA=. % A
 NB.
 NB. Notes:
@@ -186,7 +186,9 @@ trtriu1=: (1:"0)`(icut@((1:}~ <@:-@((0 0 {:: ]) mp (0 1 {:: ]) mp 1 1 {:: ]))@(<
 
 NB. ---------------------------------------------------------
 NB. Verb:      Factorization used:  Syntax:
+NB. getrilu1p  L * U1 * P = A       iA=. getrilu1p (ip ; LU1)
 NB. getripl1u  P * L1 * U = A       iA=. getripl1u (ip ; L1U)
+NB. getripu1l  P * U1 * L = A       iA=. getripu1l (ip ; U1L)
 NB. getriul1p  U * L1 * P = A       iA=. getriul1p (ip ; UL1)
 NB.
 NB. Description:
@@ -195,20 +197,24 @@ NB.   factorization with partial pivoting
 NB. where
 NB.   ip  - n-vector, partial inversed permutation of A, as
 NB.         returned by getrfxxxx
-NB.   L1U - n×n-matrix, contains U and L1, as returned by
+NB.   LU1 - n×n-matrix, contains L and U1, as returned by
+NB.         getrflu1p
+NB.   L1U - n×n-matrix, contains L1 and U, as returned by
 NB.         getrfpl1u
+NB.   U1L - n×n-matrix, contains U and L1, as returned by
+NB.         getrfpu1l
 NB.   UL1 - n×n-matrix, contains U and L1, as returned by
 NB.         getrful1p
 NB.   iA  - n×n-matrix, inversion of A
 NB.   P   - n×n-matrix, partial permutation of A
+NB.   L   - n×n-matrix, lower triangular
 NB.   L1  - n×n-matrix, unit lower triangular
 NB.   U   - n×n-matrix, upper triangular
+NB.   U1  - n×n-matrix, unit upper triangular
 NB.   A   - n×n-matrix to inverse
 NB.
 NB. Notes:
 NB. - getripl1u implements LAPACK's xGETRI
-NB. - getriul1p models LAPACK's xGETRI, but uses row blocks
-NB.   and another triangular factorization
 NB.
 NB. References:
 NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
@@ -256,12 +262,21 @@ NB.   iA - n×n-matrix, inversion of A
 NB.   P  - n×n-matrix, full permutation of A
 NB.   A  - n×n-matrix to inverse, Hermitian (symmetric)
 NB.
+NB. Assertion:
+NB.   iA -: %. A
+NB. where
+NB.   iA=. hetripl hetrfpl A
+NB.   or
+NB.   iA=. hetripu hetrfpu A
+NB.
 NB. Notes:
 NB. - is similar to LAPACK's xHETRI, but uses another
 NB.   factorization, see hetrfx
 
-hetripl=: (0 & {::) sp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))  NB. IMPLEMENTME
-hetripu=: (0 & {::) sp (pttriu @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))  NB. IMPLEMENTME
+hetripl=: (/: @ (0 & {::)) sp (pttri @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))
+hetripl2=: (sp&:>)`(((ct @ [) mp mp~)&>)/ @ ((/:&.>)`(trtril1 &. >)`(pttri &. >) ag)
+hetripl3=: (sp&:>)`(((mp~ ct)~ mp [)&>)/ @ ((/:&.>)`(trtril1 &. >)`(pttri &. >) ag)
+hetripu=: (/: @ (0 & {::)) sp (pttri @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))
 
 NB. ---------------------------------------------------------
 NB. Verb:     Factorization used:          Syntax:
@@ -288,26 +303,38 @@ potril=: (mp~ ct) @ trtril
 potriu=: (mp~ ct) @ trtriu
 
 NB. ---------------------------------------------------------
-NB. Verb:     Factorization used:        Syntax:
-NB. pttril    L1 * D * L1^H = A          iA=. pttril (L1 ; D)
-NB. pttriu    U1 * D * U1^H = A          iA=. pttriu (U1 ; D)
+NB. pttri
 NB.
 NB. Description:
 NB.   Inverse Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix using the triangular factorization
+NB.   tridiagonal matrix
+NB.
+NB. Syntax:
+NB.   iA=. pttri A
 NB. where
-NB.   L1 - n×n-matrix, unit lower triangular, as returned by
-NB.        pttrfl
-NB.   U1 - n×n-matrix, unit upper triangular, as returned by
-NB.        pttrfu
-NB.   D  - n×n-matrix, diagonal with positive diagonal
-NB.        entries, as returned by pttrfx
-NB.   iA - n×n-matrix, inversion of A
 NB.   A  - n×n-matrix to inverse, Hermitian (symmetric)
 NB.        positive definite tridiagonal
+NB.   iA - n×n-matrix, inversion of A
+NB.
+NB. Algorithm [1]:
+NB. Reflexive is used to emulate monadic gerund power:
+NB. u^:(v0`v1`v2)y ↔ (v0 y)u^:(v1 y)(v2 y)
+NB.
+NB. References:
+NB. [1] Moawwad El-Mikkawy, El-Desouky Rahmo. A new recursive
+NB.     algorithm for inverting general tridiagonal and
+NB.     anti-tridiagonal matrices.
+NB.     Applied Mathematics and Computation 204 (2008) 368–372
+NB.
+NB. TODO:
+NB. - A should be sparse
 
-pttril=: pttrsax idmat @ # @ (0 & {::)
-pttriu=: [:                             NB. pttrs version accepting U1*D*U1^H is not implemented yet
+
+pttri=: ((4 : 0) ^: (((0:`(+@])`(_1&diag)`,.`((-@,. (1&(|.!.0)))~ }.)`diag fork3)@])`(<:@#@])`((,. @ (]`- ag) @ (*/\&.|.) @ ((, (%@{:))&>/) @ ((_1&diag&.>)`(diag&.>) ag) @ pttrfl)@])))~
+  io=. -c y
+  pi=. io { x
+  ((io (>: upd1) (+/"1) ((}. pi) (*"1) (2 {."1 y))) % ({. pi)) ,. y
+)
 
 NB. =========================================================
 NB. Test suite
@@ -388,7 +415,11 @@ NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 testhetri=: 3 : 0
   rcond=. _. NB. (norm1 con (hetripl@hetrfpl)) y
 
+  ('%.'      tmonad (] `]`(rcond"_)`(_."_)`(           (norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))   ))             y
+
   ('hetripl' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
+  ('hetripl2' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
+  ('hetripl3' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
   ('hetripu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpu) y
 
   EMPTY
@@ -412,6 +443,8 @@ NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 testpotri=: 3 : 0
   rcond=. (norm1 con (potril@potrfl)) y
 
+  ('%.'     tmonad (]        `]`(rcond"_)`(_."_)`(           (norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))   ))            y
+
   ('potril' tmonad ((1 & {::)`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; potrfl) y
   ('potriu' tmonad ((1 & {::)`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; potrfu) y
 
@@ -422,7 +455,7 @@ NB. ---------------------------------------------------------
 NB. testpttri
 NB.
 NB. Description:
-NB.   Test pttrix by Hermitian (symmetric) positive definite
+NB.   Test pttri by Hermitian (symmetric) positive definite
 NB.   tridiagonal matrix given
 NB.
 NB. Syntax:
@@ -435,10 +468,11 @@ NB. Formula:
 NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpttri=: 3 : 0
-  rcond=. (norm1 con (pttril@pttrfl)) y
+  rcond=. (norm1 con pttri) y
 
-  ('pttril' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; pttrfl) y
-  ('pttriu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; pttrfu) y
+  ('%.'    tmonad (]`]`(rcond"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
+
+  ('pttri' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
 
   EMPTY
 )

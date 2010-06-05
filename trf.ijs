@@ -256,38 +256,73 @@ NB.    u0i=. 1 (0}) u0i            NB. to guarantee 1 at head
 )
 
 NB. ---------------------------------------------------------
-NB. row-wise traversing with monolitic A,L1,H
+NB. row-wise traversing with fused A,L1,H
 
 NB. ---------------------------------------------------------
-NB. cardinal directions: north east south west
-NB. positive m for head margin
-NB. lios of length (#v)
-NB. TODO:
-NB. - negative m for tail margin
-NB. - conj. to account head/tail origin, lios of length (n-#v-sh)
+NB. liosE
+NB. liosN
+NB. liosS
+NB. liosW
+NB.
+NB. Description:
+NB.   lIOS of vector laying between diagonal and matrix edge
+NB.   in any of one cardinal direction: east, north, south or
+NB.   west; and having optional gap at head or tail
+NB.
+NB. Syntax:
+NB.   vapp=. gap liosX
+NB. where
+NB.   liosX - adv., any of: liosE liosN liosS liosW
+NB.   gap   - integer, negative value means "from
+NB.           head", otherwise "from tail"
+NB.   vapp  - dyad to return lios; is evoked as:
+NB.             lios=. l vapp n
+NB.   lios  - l-vector of integers, lIOS of v in ravelled A
+NB.   v     - l-vector from A:
+NB.             v -: lios ({,) A
+NB.   A     - m×n-matrix
+NB.
 NB. Examples:
-NB.   _ _ _ _ (2 liosE ) _1 - i. _10 _10
-NB.   _ _ _ _ (2 liosS ) _1 - i. _10 _10
-NB.   _ _ _ _ (2 liosW )      i.  10  10
-NB.   _ _ _ _ (2 liosEt)      i.  10  10
-NB.   _ _ _ _ (2 liosWt)      i.  10  10
+NB.    '***' ((((0 liosE)&c) }),.' ',.(((1 liosE)&c) }),.' ',.(((_1 liosE)&c) })) 5 6$'-'
+NB. ------ ------ ------
+NB. ------ --***- ---***
+NB. ---*** ------ ------
+NB. ------ ------ ------
+NB. ------ ------ ------
+NB.    '***' ((((0 liosN)&c) }),.' ',.(((1 liosN)&c) }),.' ',.(((_1 liosN)&c) })) 5 6$'-'
+NB. --*--- ---*-- ------
+NB. --*--- ---*-- ---*--
+NB. --*--- ---*-- ---*--
+NB. ------ ------ ---*--
+NB. ------ ------ ------
+NB.    '***' ((((0 liosS)&c) }),.' ',.(((1 liosS)&c) }),.' ',.(((_1 liosS)&c) })) 5 6$'-'
+NB. ------ ------ ------
+NB. ------ --*--- ------
+NB. ---*-- --*--- --*---
+NB. ---*-- --*--- --*---
+NB. ---*-- ------ --*---
+NB.    '***' ((((0 liosW)&c) }),.' ',.(((1 liosW)&c) }),.' ',.(((_1 liosW)&c) })) 5 6$'-'
+NB. ------ ------ ------
+NB. ------ ------ ------
+NB. ***--- ------ ------
+NB. ------ ***--- -***--
+NB. ------ ------ ------
 
-liosE=:  1 : 'dhs2lios@((((_1-(*((<:m)&+))),])#)~c)'
-liosS=:  1 : '((dhs2lios ((,~(-m)&-)))#)~c'
-liosW=:  1 : 'dhs2lios@(((*((<:m)&+)),])#)~c'
+liosE=:  1 : 'dhs2lios_mt_@(((_1-0>.m)- (*((<:|m)&+))~),[)'
+liosW=:  1 : 'dhs2lios_mt_@(((   0<.m)-~(*((<:|m)&+))~),[)'
 
-liosEt=: 1 : 'dhs2lios@((((*+(m+])),(-(m&+)))#)~c)'
-liosWt=: 1 : 'dhs2lios@((([*-),m-~-)#)~c'
+liosN=:  1 : ']dhs2lios_mt_(((-~((<:|m)&+))~(*&(0<.m))),[)'
+liosS=:  1 : ']dhs2lios_mt_(((-~((- |m)&-))~(*&(0>.m))),[)'
 
 NB. ---------------------------------------------------------
 
-NB. clean lahefplr_mt_ ((i.5);HE5;(4 # 0);(,0);(0 ({,) HE5);(i.0);({. HE5);(}. {. HE5))
+NB. clean lahefplro_mt_ ((i.5);HE5;(4 # 0);(,0);(0 ({,) HE5);(i.0);({. HE5);(}. {. HE5))
 
-lahefplr=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(2 & {::)))
+lahefplro=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(2 & {::)))
   'ip A l0 l1 t0 t1 h0 h1'=. y     NB. n n*n n-(j+1) n-(j+1) k+(j+1) k+j n-j
-  A=. l0 (1 liosS) } A             NB. n dhs2lios j*(n+1)+n,n-(j+1)
+  A=. l0 ((1 liosS)&c) } A             NB. n dhs2lios j*(n+1)+n,n-(j+1)
   l1=. (+ h1) - l0 * {: t0
-  A=. h0 (0 liosE) } A             NB.   dhs2lios j*(n+1),n-j
+  A=. h0 ((0 liosE)&c) } A             NB.   dhs2lios j*(n+1),n-j
   dip0=. < 0 , ((i.>./)@soris) l1  NB. non-standard cycle permutation!
   dip=. (A -&# l0) (+ &. >) dip0   NB. non-standard cycle permutation!
   ip=. dip (C. :: ]) ip
@@ -296,12 +331,34 @@ lahefplr=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(2 & {::)))
   t01=. + t10=. (0&{ :: ]) l1
   l1=. l1 % t10                    NB. 1 at head is not guaranteed!
   A=. dip (sp :: ]) A
-  h0=. l0 ((((0 liosE) dbg '0liosE') (({,) dbg 'arg0') ]) (- dbg 'h0=-') (((0 liosWt) dbg '0liosWt') ({,) ]) (mp dbg 'h0=mp') (((-~ , -@[)&#) {. ])) A
+  h0=. l0 (((((0 liosE) dbg '0liosE')&c) (({,) dbg 'arg0') ]) (- dbg 'h0=-') ((((-~ (1 liosW) ]) dbg '1liosW')&c) ({,) ]) (mp dbg 'h0=mp') (((-~ , -@[)&#) {. ])) A
   h1=. h0 - t10 * + l0
   t11=. 9 o. 0 ({ :: ]) h1         NB. CHECKME: is Re() necessary?; if h1 is (i.0) then use h1 instead of ({.h1)
   t0=. t0 , t11
   t1=. t1 , t10
   ip ; A ; (}. l1) ; l0 ; t0 ; t1 ; h0 ; (}. h1)
+)
+
+NB. ---------------------------------------------------------
+
+NB. clean lahefplr_mt_ ((i.5);(((5-1) # 0) ((_1 liosS)&c) } HE5);(5 ($!.0) 1))
+NB. clean lahefplr_mt_ (((< 1 4) C. i.5);((< 1 4) sp_mt_ (((5-1) # 0) ((_1 liosS_mt_)&c_mt_) } HE5));(0 ({`[`(] % {))} (<0 3) C. 0.03 _0.03 _0.21 0.3))
+
+lahefplr=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(0 & {::)))
+  'ip A l0'=. y                    NB. n n*n n-(j+?), j=1:?
+  j=. A ((-&#) dbg 'j') l0
+  a=. j ({ dbg 'a') A
+  h0=. (j }. a) (- dbg 'h0=asfx-') (j {. a) (mp dbg 'apfx mp subH') ((j,(-#l0)) {. A)
+  h1=. h0 (- dbg 'h1=}.h0-') ({. l0) (* dbg '({.*+}.)l0') (+ l0 (((((_1 liosS)&c) dbg 'lios(l0)') (({,) dbg '{,') ]) :: ((0 (0}) [) dbg 'FAILED0')) A)
+  l1=. (+ }. h1) (- dbg 'l1=+h1-') (}. l0) (* dbg '}.l0 * {.h1') ({. h1)
+  dip0=. < 0 , (((i.>./)@soris) dbg 'p') l1  NB. non-standard cycle permutation!
+  dip=. (>:j) ((+ &. >) dbg 'j,dip0 -> dip') dip0   NB. non-standard cycle permutation!
+  ip=. dip ((C. :: ]) dbg 'C.ip') ip
+  l1=. dip0 ((C. :: ]) dbg 'C.l1') l1
+  A=. ((({. h1) 0 } h0) , l0) ((((((((0 liosE) dbg '0liosE'),(] ((((-~ {.)`0:`])}) dbg '}liosS') (0 liosS)))~ -:)~&c) }) dbg 'l0,h0->A') :: (((}.~ (>:@-:@#))@[ (((_1 liosS)&c) }) ]) dbg 'FAILED1')) A NB. 
+  A=. dip ((sp :: ]) dbg 'sp(A)') A
+  l1=. 0 ((({`[`(] % {))} :: ]) dbg 'l1[1:] /= l1[0]') l1
+  ip ; A ; l1
 )
 
 NB. 'ip U1 T'=. hetrfpu A
@@ -1095,8 +1152,10 @@ NB.     (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 testtrf=: 1 : 'EMPTY_mt_ [ (((testpttrf_mt_ @ (u ptmat_mt_)) [ (testpotrf_mt_ @ (u pomat_mt_)) [ (testhetrf_mt_ @ (u hemat_mt_))) ^: (=/)) [ testgetrf_mt_ @ u'
 
 
-
-
+NB. ip=. 0 4 3 1 2
+NB. L1=. 5 5 $ 1 0 0 0 0 0 1 0 0 0 0 _0.7 1 0 0 0 0.1 0.8 1 0 0 _0.1 0.2 0.6 1
+NB. T=. 5 5 $ 1 0.3 0 0 0 0.3 1.6 0.7 0 0 0 0.7 0.6 0.9 0 0 0 0.9 1.4 0.3 0 0 0 0.3 1.2
+NB. HE5=. 5 5 $ 1 0.03 _0.03 _0.21 0.3 0.03 3.352 1.79 0.946 0.72 _0.03 1.79 2.292 0.604 _0.02 _0.21 0.946 0.604 0.404 _0.42 0.3 0.72 _0.02 _0.42 1.6
 
 NB. L1=. trl1_mt_ 0 (< a: ; 0) } 0.1 * _8 + ? 5 5 $ 18
 NB. T=. (+ ct_mt_) bdlpick_mt_ trl_mt_ 0.1 * >: ? 5 5 $ 9

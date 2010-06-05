@@ -1,6 +1,6 @@
 NB. Structure handlers
 NB.
-NB. c         Columns in matrix
+NB. c         Columns in scalar or array
 NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. cp        Conjugate pertranspose
@@ -210,7 +210,7 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Misc.
 
-c=: 1{$                NB. Columns in matrix, also:  (#@{.)
+c=: {:!.1 @ $          NB. Columns in scalar or array
 
 trace=: +/ @ diag      NB. Matrix trace
 

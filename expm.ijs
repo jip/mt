@@ -1,6 +1,5 @@
 NB. expm.ijs
-NB. Matrix exponent and Cauchy integral from state-space
-NB. representation of LTI system
+NB. Matrix exponent and Cauchy integral from LTI SS system
 NB.
 NB. prexpm  prepare time-invariant parts for expm
 NB. expm    calculate matrix exponent and Cauchy integral
@@ -38,10 +37,10 @@ NB. License: GPL v3 or later
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 script_z_ '~system/main/numeric.ijs'            NB. clean
 script_z_ '~system/packages/math/makemat.ijs'   NB. idmat
-require '~user/projects/lapack/lapack.ijs'      NB. '~addons/math/lapack/lapack.ijs'
-require '~user/projects/lapack/geev.ijs'        NB. need_jlapack_ 'geev gesvd gesvx'
-require '~user/projects/lapack/gesvd.ijs'       NB. (line above makes it excessive)
-require '~user/projects/lapack/gesvx.ijs'       NB. -//-
+
+require '~addons/math/lapack/lapack.ijs'
+need_jlapack_ 'geev gesvd gesvx'
+
 require '~user/projects/tau/util.ijs'           NB. powsm rndmat rndmatne
 
 coclass 'tau'

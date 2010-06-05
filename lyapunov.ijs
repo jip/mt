@@ -5,8 +5,14 @@ NB. lyapchol   solve continuous-time Lyapunov equation
 NB.            directly for Cholesky factor
 NB. dlyapchol  solve discrete-time Lyapunov equation
 NB.            directly for Cholesky factor
+NB.
 NB. lyap       solve continuous-time Lyapunov equation
 NB. dlyap      solve discrete-time Lyapunov equation
+NB.
+NB. dlyap2     solve pair of discrete-time Lyapunov
+NB.            equations
+NB. lyap2      solve pair of continuous-time Lyapunov
+NB.            equations
 NB.
 NB. TODO
 NB. - replace some of assert. by throw.
@@ -24,13 +30,10 @@ NB. Copyright: Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 NB. License: GPL v3 or later
 
 script_z_ '~system/packages/math/matutil.ijs'  NB. diag
-require '~user/projects/lapack/lapack.ijs'      NB. -> require '~addons/math/lapack/lapack.ijs'
-NB. need_jlapack_ 'gees geev gerqf potrf trtrs'
-require '~user/projects/lapack/gees.ijs'        NB. -> /dev/null
-require '~user/projects/lapack/geev.ijs'        NB. -> /dev/null
-require '~user/projects/lapack/gerqf.ijs'       NB. -> /dev/null
-require '~user/projects/lapack/potrf.ijs'       NB. -> /dev/null
-require '~user/projects/lapack/trtrs.ijs'       NB. -> /dev/null
+
+require '~addons/math/lapack/lapack.ijs'
+need_jlapack_ 'gees geev gerqf potrf trtrs'
+
 require '~user/projects/tau/util.ijs'           NB. ht shiftdiag rndmat rndmatne
 
 coclass 'tau'
@@ -151,6 +154,16 @@ NB. ---------------------------------------------------------
 NB. dlyap
 NB. Solve discrete-time Lyapunov equation
 NB.   A*X*A' + X + B*B' = 0
+
+NB. ---------------------------------------------------------
+NB. lyap2
+
+lyap2=: 0: ; 0:
+
+NB. ---------------------------------------------------------
+NB. dlyap2
+
+dlyap2=: 0: ; 0:
 
 NB. =========================================================
 NB. Test suite

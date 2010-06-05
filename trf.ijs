@@ -308,8 +308,8 @@ NB.---  elseif. do.
 )
 
 NB. U*U'=A
-NB.   A -: ((+/ .*) (+ @ |:)) potf2u_mt_ A
-NB.   A -: ((+/ .*) (+ @ |:)) potf2_mt_ &. ((] ;. 0) :. (] ;. 0)) A
+NB.   A -: ((+/ .*) (+ @ |:)) potf2u A
+NB.   A -: ((+/ .*) (+ @ |:)) potf2 &. ((] ;. 0) :. (] ;. 0)) A
 
 potrfu=: (BPOTRF&$: : (4 : 0)) " 0 2
   n=. # y
@@ -434,45 +434,59 @@ rpotrfl_old=: (3 : 0) " 2
 NB. =========================================================
 NB. Test suite
 
-NB. 'name type error time space'=. name vextract ttrf A
+NB. 'name error time space'=. name vextract ttrf A
 ttrf=: 1 : 0
 :
   't s'=. timespacex 'out=. ' , x , ' y'
-NB.smoutput 'x' ; x ; '($ y)' ; ($ y) ; '$ out' ; ($ out) ; 'y (norm1 @ (- u)) out' ; (y (norm1 @ (- u)) out)
+smoutput 'x' ; x ; '($ y)' ; ($ y) ; '$ out' ; ($ out) ; 'u out' ; ($ u out)
   e=. y ((norm1 @ (- u)) % ((FP_EPS * ({: @ $) * norm1) @ [)) out
-  x ; (datatype y) ; e ; t ; s
+smoutput^:(VERBOSE"_) x , '   ' , (": e) , '   ' , (": t) , '   ' , (": s)
+  x ; e ; t ; s
 )
 
 NB. r=. tgetrf A
-NB. where r is boxed table with columns: name type error time space
+NB. where r is boxed table with columns: name error time space
 tgetrf=: (3 : 0) " 2
 NB.smoutput 'tgetrf ($ y)' ; ($ y)
-  r=. 0 5 $ a:
+  r=. 0 4 $ a:
   r=. r , 'getrflu'        (((C.~ /:)~ (ltri1 mp utri)) & > /) ttrf y
   r=. r , 'rgetrflu'       (((C.~ /:)~ (ltri1 mp utri)) & > /) ttrf y
   r=. r , 'getrf_jlapack_' (((mp & >)/ @ (2 & {.)) invperm_jlapack_ (2 & {::)) ttrf y
 )
 
 NB. r=. tpotrf A
-NB. where r is boxed table with columns: name type error time space
+NB. where r is boxed table with columns: name error time space
 tpotrf=: (3 : 0) " 2
-NB.smoutput 'tpotrf ($ y)' ; ($ y)
-  r=. 0 5 $ a:
+smoutput 'tpotrf ($ y)' ; ($ y)
+  r=. 0 4 $ a:
   r=. r , 'potrfl'         ((mp ct) @ ltri) ttrf y
   r=. r , 'potrfl_old'     ((mp ct) @ ltri) ttrf y
   r=. r , 'potrf_jlapack_' ((mp ct) @ ltri) ttrf y
-  r=. r , 'potrfu'         ((mp ct) @ utri) ttrf y
+NB.  r=. r , 'potrfu'         ((mp ct) @ utri) ttrf y
   r=. r , '1 & potrfl'     ((mp ct) @ ltri) ttrf y
   r=. r , 'potf2l_old'     ((mp ct) @ ltri) ttrf y
-  r=. r , 'rpotrfl'        ((mp ct) @ ltri) ttrf y
+NB.  r=. r , 'rpotrfl'        ((mp ct) @ ltri) ttrf y
   r=. r , 'rpotrfl_old'    ((mp ct) @ ltri) ttrf y
 )
 
-NB. r=. testtrf m,n
-testtrf=: (3 : 0) " 1
-  r=. 0 5 $ a:
-  r=. r , (tpotrf @ (unmat pomat) ^: (=/)) y
-  r=. r , (tgetrf @ (rgemat j. rgemat)) y
+NB. ---------------------------------------------------------
+NB. testtrf
+NB. Adverb to test triangular factorization algorithms
+NB.
+NB. Syntax:
+NB.   r=. mkge testtrf m,n
+NB. where
+NB.   m,n  - 2-vector of integers, shape of random matrices
+NB.          to test algorithms; if m≠n then algorithms that
+NB.          accept square matrices only are skipped
+NB.   mkge - monadic verb to generate random non-singular
+NB.          general y-matrix (shape is taken from y)
+NB.   r    - boxed table with 4 columns: 'algorithm name'
+NB.          'error' 'time, sec.' 'space, bytes'
+
+testtrf=: 1 : 0
+  r=.     (tpotrf @ (u pomat) @ {. ^: (=/)) y
+  r=. r , (tgetrf @ u)                      y
 )
 
 NB. test for errors, measure time and space

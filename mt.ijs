@@ -40,6 +40,11 @@ NB. for recursive versions, in (7!:5) units
 RGETRF=: 512*1024                                     NB. rgetrfl1u rgetrflu1 rgetrfu1l rgetrful1
 RPOTRF=: 512*1024                                     NB. rpotrfl rpotrfu
 
+NB. ---------------------------------------------------------
+NB. Miscellaneous
+
+VERBOSE=: 1                                           NB. boolean 'is verbose?' flag
+
 NB. =========================================================
 NB. Includes
 
@@ -77,24 +82,28 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. test                                                    1
-NB. Test algorithms
+NB. Adverb to test algorithms
 NB.
 NB. Syntax:
-NB.   r=. test m,n
+NB.   r=. mkge test m,n
 NB. where
-NB.   m,n - to test algorithms with random m×n matrices; if
-NB.         m≠n then algorithms that accept square matrices
-NB.         only are skipped
-NB.   r   - boxed table with 5 columns: 'algorithm name'
-NB.         'datatype' 'error' 'time, sec.' 'space, bytes',
-NB.         and with rows per each unique pair:
-NB.         'algorithm name' 'datatype'
+NB.   m,n  - 2-vector of integers, shape of random matrices
+NB.          to test algorithms; if m≠n then algorithms that
+NB.          accept square matrices only are skipped
+NB.   mkge - monadic verb to generate random non-singular
+NB.          general y-matrix (shape is taken from y)
+NB.   r    - boxed table with 4 columns: 'algorithm name'
+NB.          'error' 'time, sec.' 'space, bytes'
+NB.
+NB. Application:
+NB.   ('mt';'z') copath 'base'
+NB.   r=. gemat test 7 7
 
-test=: (3 : 0) " 1
-  assert. 2 1 -: (# , #@$) y
-  NB. (testbal , testequ , testexp , testhrd , testpow , testrot , testsv , testtrf) y
-  testtrf y
-)
+test=: 1 : 'u testtrf_mt_'
+NB.---  NB. assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
+NB.---  NB. (testbal , testequ , testexp , testhrd , testpow , testrot , testsv , testtrf) y
+NB.---  u testtrf_mt_ y
+NB.---)
 
 NB. ---------------------------------------------------------
 NB. block                                                   1

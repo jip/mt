@@ -38,25 +38,25 @@ NB.                         ( 0   0   A22 )
 NB. where A00 and A22 are square upper triangular matrices.
 NB.
 NB. Syntax:
-NB.   'Ap ss p'=. gebalp A
+NB.   'Ap fs p'=. gebalp A
 NB. where
 NB.   A  - N×N-matrix
 NB.   Ap - N×N-matrix with isolated eigenvalues, being A
 NB.        with permuted rows and columns
-NB.   ss - 2-vector, corner start (left and up) and size
+NB.   fs - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11
 NB.   p  - N-vector, standard permutation vector,
 NB.        presentation of permutation matrix P
 NB.
 NB. If:
-NB.   'Ap ss p'=. gebalp A
+NB.   'Ap fs p'=. gebalp A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB. then
 NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
 NB.   Ap -: p pt A
-NB.   A11 -: (,.~ ss) (] ;. 0) Ap
+NB.   A11 -: (,.~ fs) (] ;. 0) Ap
 NB.
 NB. References:
 NB. [1] Kressner, D. 2004. Numerical methods and software for
@@ -152,10 +152,10 @@ NB.   As = D * A * inv(D)
 NB. where D is diagonal scaling matrix.
 NB.
 NB. Syntax:
-NB.   'As ss p s'=. gebals Ap ; ss ; p
+NB.   'As fs p s'=. gebals Ap ; fs ; p
 NB. where
 NB.   Ap - N×N-matrix with isolated eigenvalues (see gebalp)
-NB.   ss - 2-vector, corner start (left and up) and size
+NB.   fs - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11 (see gebalp)
 NB.   p  - N-vector, standard permutation vector,
 NB.        presentation of permutation matrix P (see gebalp)
@@ -163,7 +163,7 @@ NB.   As - N×N-matrix, scaled version of Ap
 NB.   s  - N-vector, diagonal of scaling matrix D
 NB.
 NB. If:
-NB.   'As ss p s'=. gebals Ap ; ss ; p
+NB.   'As fs p s'=. gebals Ap ; fs ; p
 NB.   D=. diagmat s
 NB.   Dinv=. %. D
 NB. then
@@ -182,17 +182,17 @@ NB. - result isn't identical to LAPACK's dgebal/zgebal with 'S'
 NB.   option, but is close to
 NB.
 NB. Applications:
-NB.   'As ss p s'=. gebals (] ; (0 , #) ; (a: " _)) A
+NB.   'As fs p s'=. gebals (] ; (0 , #) ; (a: " _)) A
 
 gebals=: 3 : 0
-  'Ap ss p'=. y
+  'Ap fs p'=. y
   n=. # Ap
   s=. n $ 1x                                        NB. scaling matrix D diagonal
   RADIX=. x: FP_BASE                                NB. floating point base
   whilst. noconv do.
     noconv=. 0                                      NB. don't repeat scaling by default
-    for_i. ({. + (i. @ {:)) ss do.                  NB. traverse A11
-      'c r'=. (ss ,. 0 2) (+/ @: |) ;. 0 (i ([ ((0:`[`]) }) ({ " 1 ,. {)) Ap)  NB. 1-norm of i-th col and i-th row of A11 without diagonal element
+    for_i. ({. + (i. @ {:)) fs do.                  NB. traverse A11
+      'c r'=. (fs ,. 0 2) (+/ @: |) ;. 0 (i ([ ((0:`[`]) }) ({ " 1 ,. {)) Ap)  NB. 1-norm of i-th col and i-th row of A11 without diagonal element
       if. r (*. & (~: & 0)) c do.                   NB. protect against zero row or col
         sum=. c + r
         f=. 1x
@@ -215,7 +215,7 @@ gebals=: 3 : 0
       end.
     end.
   end.
-  Ap ; ss ; p ; s
+  Ap ; fs ; p ; s
 )
 
 NB. ---------------------------------------------------------
@@ -234,11 +234,11 @@ NB.   P           - permutation matrix
 NB.   D           - diagonal scaling matrix
 NB.
 NB. Syntax:
-NB.   'Ab ss p s'=. gebal A
+NB.   'Ab fs p s'=. gebal A
 NB. where
 NB.   A  - N×N-matrix
 NB.   Ab - N×N-matrix, balanced version of A
-NB.   ss - 2-vector, corner start (left and up) and size
+NB.   fs - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11 (see gebalp)
 NB.   p  - N-vector, standard permutation vector,
 NB.        presentation of permutation matrix P (see gebalp)
@@ -246,7 +246,7 @@ NB.   s  - N-vector, diagonal of scaling matrix D (see
 NB.        gebals)
 NB.
 NB. If:
-NB.   'Ab ss p s'=. gebal A
+NB.   'Ab fs p s'=. gebal A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB.   D=. diagmat s
@@ -258,7 +258,7 @@ NB.   Ap -: p pt A
 NB.   Dinv -: diagmat % s
 NB.   Ab -: D mp Ap mp Dinv
 NB.   Ab -: Ap (] * (% " 1)) s
-NB.   A11 -: (,.~ ss) (] ;. 0) Ap
+NB.   A11 -: (,.~ fs) (] ;. 0) Ap
 
 gebal=: gebals @ gebalp
 
@@ -282,7 +282,7 @@ Note 'bal testing and timing'
    (gebalp -: (2b1000 & gebal_jlapack_)) a1000f
    +/ +/ (gebalp ~: (2b1000 & gebal_jlapack_)) a1000f
    tgebal_jlapack_ a1000f
-   'ss p'=. gebalpi a1000f
+   'fs p'=. gebalpi a1000f
    P=. p2P p
    Pinv=. |: P
    Pinv -: %. P

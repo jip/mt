@@ -158,7 +158,7 @@ Note 'exp testing and timing'
    (gebalp -: (2b1000 & gebal_jlapack_)) a1000f
    +/ +/ (gebalp ~: (2b1000 & gebal_jlapack_)) a1000f
    tgebal_jlapack_ a1000f
-   'ss p'=. gebalpi a1000f
+   'fs p'=. gebalpi a1000f
    P=. p2P p
    Pinv=. |: P
    Pinv -: %. P

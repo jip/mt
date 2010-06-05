@@ -54,13 +54,13 @@ NB. utility
 require '~user/projects/mt/util.ijs'    NB. utilities
 require '~user/projects/mt/con.ijs'     NB. condition number
 require '~user/projects/mt/rand.ijs'    NB. random objects
-require '~user/projects/mt/struct.ijs'  NB. struct handlers
+require '~user/projects/mt/struct.ijs'  NB. structure handlers
 
 NB. low-level
 require '~user/projects/mt/bal.ijs'     NB. balance
 require '~user/projects/mt/equ.ijs'     NB. equilibrate
-require '~user/projects/mt/ref.ijs'     NB. reflections
-require '~user/projects/mt/rot.ijs'     NB. rotations
+require '~user/projects/mt/ref.ijs'     NB. reflect
+require '~user/projects/mt/rot.ijs'     NB. rotate
 
 NB. mid-level
 require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
@@ -68,7 +68,7 @@ require '~user/projects/mt/orf.ijs'     NB. orthogonal factorization
 require '~user/projects/mt/pow.ijs'     NB. integer powers
 require '~user/projects/mt/trf.ijs'     NB. triangular factorization
 require '~user/projects/mt/tri.ijs'     NB. inverse
-require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via triang. factorization
+require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via trf
 
 NB. hi-level
 require '~user/projects/mt/exp.ijs'     NB. exponent
@@ -92,14 +92,6 @@ NB.          to test algorithms; only algorithms which accept
 NB.          m and n given are called
 NB.   mkge - monadic verb to generate random non-singular
 NB.          general y-matrix (shape is taken from y)
-NB.   r    - boxed table with 6 columns:
-NB.          - algorithm name
-NB.          - the estimated reciprocal of the condition
-NB.            number of a matrix in 1-norm
-NB.          - relative backward error
-NB.          - relative forward error
-NB.          - execution time, sec.
-NB.          - execution space, bytes
 NB.
 NB. Application:
 NB. - with limited random matrix values' amplitudes

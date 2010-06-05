@@ -366,7 +366,7 @@ NB.
 NB. Syntax: tgeqf A
 NB. where A - general m×n-matrix
 NB.
-NB. Notes:
+NB. Formula:
 NB. - berr for LQ: berr := ||A-L*Q||/(ε*n*||A||)
 NB. - berr for QL: berr := ||A-Q*L||/(ε*m*||A||)
 NB. - berr for QR: berr := ||A-Q*R||/(ε*m*||A||)

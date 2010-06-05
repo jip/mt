@@ -241,28 +241,37 @@ NB. ---------------------------------------------------------
 NB. tgetrf
 NB.
 NB. Description:
-NB.   Test general matrix TRF algorithms by matrix given
+NB.   Test triangular factorization algorithms
+NB.   - lud (math/misc)
+NB.   - getrf (math/lapack)
+NB.   - getrflu1p getrfpl1u getrfpu1l getrful1p (math/mt)
+NB.   by general matrix given
 NB.
 NB. Syntax:
 NB.   tgetrf A
 NB. where
-NB.   A  - m×n-matrix
+NB.   A - m×n-matrix
 NB.
-NB. Note:
-NB. -
+NB. Formula:
+NB. - L*U1*P=A : berr := ||L*U1*P - A ||/(ε*||A||*m)
+NB. - P*L1*U=A : berr := ||P*L1*U - A ||/(ε*||A||*n)
+NB. - P*U1*L=A : berr := ||P*U1*L - A ||/(ε*||A||*n)
+NB. - U*L1*P=A : berr := ||U*L1*P - A ||/(ε*||A||*m)
 
 tgetrf=: 3 : 0
+  require '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
 
   rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
 
-  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_~      (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y NB. berr := ||P*L1*U - A ||/(ε*||A||*n)
+  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_                           (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('lud'            tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %.                                         (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 
-  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C."1 (( trl            mp  tru1          )@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y NB. berr := ||L*U1*P - A ||/(ε*||A||*m)
-  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C.   (( trl1           mp  tru           )@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y NB. berr := ||P*L1*U - A ||/(ε*||A||*n)
-  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C.   (((tru1~ (-~/@$)) mp (trl ~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y NB. berr := ||P*U1*L - A ||/(ε*||A||*n)
-  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C."1 (((tru ~ (-~/@$)) mp (trl1~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y NB. berr := ||U*L1*P - A ||/(ε*||A||*m)
+  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C."1 (( trl            mp  tru1          )@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
+  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C.   (( trl1           mp  tru           )@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C.   (((tru1~ (-~/@$)) mp (trl ~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C."1 (((tru ~ (-~/@$)) mp (trl1~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
 
   EMPTY
 )
@@ -271,16 +280,52 @@ NB. ---------------------------------------------------------
 NB. thetrf
 NB.
 NB. Description:
-NB.   Test Hermitian matrix TRF algorithms by matrix given
+NB.   Test triangular factorization algorithms
+NB.   - hetrfpl hetrfpu (math/mt)
+NB.   by Hermitian (symmetric) matrix given
 NB.
 NB. Syntax:
 NB.   thetrf A
 NB. where
-NB.   A - n×n-matrix, is used to produce Hermitian matrix
+NB.   A - n×n-matrix, Hermitian
 
 thetrf=: 3 : 0
-  NB. A=. (+ ct) y                         NB. convert matrix type: ge -> he
-  NB. rcond=. (norm1 con getri) A
+  NB. rcond=. (norm1 con hetri) y
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. tpotrf
+NB.
+NB. Description:
+NB.   Test triangular factorization algorithms
+NB.   - choleski (math/misc addon)
+NB.   - potrf (math/lapack addon)
+NB.   - potrfpl potrfpu (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite matrix given
+NB.
+NB. Syntax:
+NB.   tpotrf A
+NB. where
+NB.   A - n×n-matrix, Hermitian (symmetric) positive
+NB.       definite
+NB.
+NB. Formula:
+NB. - L*L'=A : berr := ||L*L' - A ||/(ε*||A||*n)
+NB. - U*U'=A : berr := ||U*U' - A ||/(ε*||A||*m)
+
+tpotrf=: 3 : 0
+  require '~addons/math/misc/matfacto.ijs'
+  require '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ 'potrf'
+
+NB.  rcond=. (norm1 con potri) y
+
+NB.  ('potrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+NB.  ('choleski'       tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+NB.  ('potrfl'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+NB.  ('potrfu'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
 
   EMPTY
 )
@@ -306,4 +351,4 @@ NB. Application:
 NB. - with limited random matrix values' amplitudes
 NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrf 150 100
 
-testtrf=: 1 : 'EMPTY [ (thetrf ^: (=/@$) [ tgetrf) @ u'
+testtrf=: 1 : 'EMPTY [ (((tpotrf @ (u pomat)) [ (thetrf @ (u hemat))) ^: (=/@$)) [ tgetrf @ u'

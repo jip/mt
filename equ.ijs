@@ -1,5 +1,10 @@
-NB. geequ.ijs
-NB. Equilibrate a general matrix
+NB. equ.ijs
+NB. Equilibrate a matrix
+NB.
+NB. geequ  equilibrate a matrix
+NB. poequ  equilibrate a Hermitian positive definite matrix
+
+coclass 'pjlap'
 
 NB. =========================================================
 NB. Local verbs
@@ -9,7 +14,7 @@ NB. Interface verbs
 
 NB. ---------------------------------------------------------
 NB. geequ
-NB. Equilibrate matrix
+NB. Equilibrate a matrix
 NB.
 NB. References:
 NB. [1] "A parallel matrix scaling algorithm"
@@ -21,39 +26,50 @@ NB. - verify
 
 geequ=: 3 : 0
   eps=. 1e_1
-  y0=. y
   'm n'=. $ y
   d1=. m $ 1
   d2=. n $ 1
-  k=. 0
   while.
-smoutput 'k' ; k
-NB.    'vr vc'=. (1 & (I. @ (0 & = @ ])) } &. > @ ((>./ " 1 ; (>./ )) @: |)) y  NB. use this line instead following if row or column may consist of zeros only
+NB.    'vr vc'=. (1 & (I. @ (0 & = @ ])) } &. > @ ((>./ " 1 ; (>./ )) @: |)) y  NB. use this line instead following if row or col may consists of zeros only
    'vr vc'=. ((>./ " 1 ; (>./ )) @: |) y
-smoutput 2 2 $ 'vr' ; vr ; 'vc' ; vc
-smoutput 2 2 $ '||1-vr||-inf' ; (vnormi <: vr) ; '||1-vc||-inf' ; (vnormi <: vc)
    (eps < vnormi <: vr) +. (eps < vnormi <: vc)
   do.
-    dr=. %: vr
-    dc=. %: vc
-smoutput 2 2 $ 'dr' ; dr ; 'dc' ; dc
-    d1=. d1 % dr            NB. D1 =: D1 * inv(Dr)
-    d2=. d2 % dc            NB. D2 =: D2 * inv(Dc)
-smoutput 2 2 $ 'd1' ; d1 ; 'd2' ; d2
-    y=. d1 * y0 (* " 1) d2  NB. Aeq =: D1 * A * D2
-k=. >: k
-if. k>20 do. break. end.
+    dr=. %: vr              NB. Dr(k)   := diag(sqrt(r[i](k)))
+    dc=. %: vc              NB. Dc(k)   := diag(sqrt(c[i](k)))
+    y=. dr %~ y (% " 1) dc  NB. A(k+1)  := inv(Dr) * A(k) * inv(Dc)
+    d1=. d1 % dr            NB. D1(k+1) := D1(k) * inv(Dr(k))
+    d2=. d2 % dc            NB. D2(k+1) := D2(k) * inv(Dc(k))
   end.
-  y ; d1 ; d2  NB. y ; dr ; dc
+  y ; d1 ; d2
 )
 
+NB. ---------------------------------------------------------
+NB. poequ
+NB. Equilibrate a Hermitian (symmetric if real) positive
+NB. definite matrix
+
+poequ=: [:
+
 NB. =========================================================
-Note 'geequ testing and timing'
+Note 'equ testing and timing'
    load '~addons/math/lapack/lapack.ijs'
-   load '~addons/math/lapack/gebal.ijs'   NB. modified 'permute only' version
-   load '/home/jip/j602-user/projects/pure_j_lapack.ijs'
+   load '~addons/math/lapack/geequ.ijs'
+   load '/home/jip/j602-user/projects/pjlapack/pjlapack.ijs'
 
    ts=: 6!:2, 7!:2@]
+   A=. (* (10 & ^))/ ? 2 10 10 $ 10
+   'Aeq d1 d2'=. geequ A
+   Aeq -: d1 * A (* " 1) d2
+1
+   A -: d1 %~ Aeq (% " 1) d2
+1
+
+
+
+
+
+
+
    ] a=. 7 7 $ 6 0 0 0 0 1 0 0 4 0 0.00025 0.0125 0.02 0.125 1 128 64 0 0 _2 16 0 16384 0 1 _400 256 _4000 _2 _256 0 0.0125 2 2 32 0 0 0 0 0 0 0 0 8 0 0.004 0.125 _0.2 3
    a1000f=. 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } dzero_jlapack_ + ? 1000 1000 $ 10
    a1000c=. 0 ((3 33 333 666) } " 1) 0 (2 25 125 800 999) } zzero_jlapack_ + j./ ? 2 1000 1000 $ 10

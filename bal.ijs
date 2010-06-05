@@ -1,5 +1,13 @@
-NB. gebal.ijs
-NB. Balance a general square matrix
+NB. bal.ijs
+NB. Balance a matrix / pair of matrices
+NB.
+NB. gebalp  isolate eigenvalues of a general square matrix
+NB. gebals  make the rows and columns of a general square
+NB.         matrix as close in 1-norm as possible
+NB. gebal   balance a general square matrix
+NB. ggbal   balance a pair of general square matrices
+
+coclass 'pjlap'
 
 NB. =========================================================
 NB. Local verbs
@@ -40,6 +48,10 @@ NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
 NB.   Ap -: p pt A
 NB.   A11 -: (,.~ ss) (] ;. 0) Ap
+NB.
+NB. Notes:
+NB. - result is identical to LAPACK's dgebal/zgebal with 'P'
+NB.   option
 NB.
 NB. TODO:
 NB. - try to apply incremental permut. cp to y
@@ -110,6 +122,10 @@ NB.   Dinv -: diagmat % s
 NB.   As -: D mp Ap mp Dinv
 NB.   As -: Ap (] * (% " 1)) s
 NB.
+NB. Notes:
+NB. - result isn't identical to LAPACK's dgebal/zgebal with 'S'
+NB.   option, but is close to
+NB.
 NB. Applications:
 NB.   'As ss p s'=. gebals (] ; (0 , #) ; (a: " _)) A
 
@@ -119,17 +135,16 @@ gebals=: 3 : 0
   s=. n $ 1x                                        NB. scaling matrix D diagonal
   RADIX=. 2x                                        NB. floating point base
   whilst. noconv do.
-    noconv=. 0
-    for_i. ({. + (i. @ {:)) ss do.
+    noconv=. 0                                      NB. don't repeat scaling by default
+    for_i. ({. + (i. @ {:)) ss do.                  NB. traverse A11
       'c r'=. (ss ,. 0 2) (+/ @: |) ;. 0 (i ([ ((0:`[`]) }) ({ " 1 ,. {)) Ap)  NB. 1-norm of i-th col and i-th row of A11 without diagonal element
-      if. (r ~: 0) *. (c ~: 0) do.
-        m=. >. -: <: RADIX ^. r % c
-        f=. RADIX ^ m
-        if. (m ~: 0) *. (((r % f) + (c * f)) < (0.95 * (c + r))) do.
-          s=. (f * (i { s)) i } s                   NB. correct i-th element of scale vector
+      if. r (*. & (~: & 0)) c do.                   NB. protect against zero row or col
+        f=. RADIX ^ >. -: <: RADIX ^. r % c         NB. scale[i] correction
+        if. (f ~: 1x) *. (((r % f) + (c * f)) < (0.95 * (c + r))) do.          NB. does correction f meaningful?
+          s=. (f * (i { s)) i } s                   NB. correct scale[i]
           Ap=. ((i  {      Ap) % f)        i  } Ap  NB. scale i-th row
           Ap=. ((i ({ " 1) Ap) * f) (<a: ; i) } Ap  NB. scale i-th col
-          noconv=. 1                                NB. it needs to repeat scaling
+          noconv=. 1                                NB. A11 traversing will be repeated
         end.
       end.
     end.
@@ -181,8 +196,14 @@ NB.   A11 -: (,.~ ss) (] ;. 0) Ap
 
 gebal=: gebals @ gebalp
 
+NB. ---------------------------------------------------------
+NB. ggbal
+NB. Balance a pair of general square matrices A and B.
+
+ggbal=: [:
+
 NB. =========================================================
-Note 'gebal testing and timing'
+Note 'bal testing and timing'
    load '~addons/math/lapack/lapack.ijs'
    load '~addons/math/lapack/gebal.ijs'
    load '/home/jip/j602-user/projects/pure_j_lapack.ijs'

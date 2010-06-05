@@ -1,5 +1,5 @@
 NB. gq.ijs
-NB. Generate Q from LQ QL QR RQ HRD output
+NB. Generate Q from its factored form
 NB.
 NB. unglq   Generate a matrix with orthonormal rows from
 NB.         output of gelqf
@@ -472,17 +472,17 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. tgq
+NB. testungq
 NB.
 NB. Description:
-NB.   Test Q generation algorithms by matrix given
+NB.   Test Q generation algorithms by general matrix given
 NB.
 NB. Syntax:
-NB.   tgq A
+NB.   testungq A
 NB. where
 NB.   A - m×n-matrix
 
-tgq=: 3 : 0
+testungq=: 3 : 0
   cberr=. 2 : '((norm1@(<: upddiag)@(u ct)) % (FP_EPS * v)) @ ]'
 
   ('unglq' tmonad (gelqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q*Q'-I||/(ε*n)
@@ -517,4 +517,4 @@ NB. Application:
 NB. - with limited random matrix values' amplitudes
 NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testgq 150 100
 
-testgq=: 1 : 'EMPTY [ tgq @ u'
+testgq=: 1 : 'EMPTY_mt_ [ testungq_mt_ @ u'

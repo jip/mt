@@ -1,11 +1,10 @@
-NB. Matrix toolbox
+NB. "Matrix toolbox" addon
 NB.
-NB. test      Adv. to test addon
-NB. logstat   Show statistics from log array
+NB. test  Adv. to make verb to test algorithms
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-01-01
+NB. Version: 1.0.0 2010-06-01
 
 NB. =========================================================
 NB. Configuration
@@ -39,6 +38,17 @@ TESTLOGFILE=: < '/home/jip/j602-user/temp/mt.log'     NB. a: to switch off file 
 TESTLOG=: ''                                          NB. literal array, being formatted test log
 
 NB. ---------------------------------------------------------
+NB. Debug
+
+NB. debug level used by "dbg":
+NB.   0 - execute debuging verb transparently and silently
+NB.   1 - show for debuging verb its rank and valency,
+NB.       input's and output's shapes
+NB.   2 - case 1 plus input's and output's values
+
+DEBUG=: 2
+
+NB. ---------------------------------------------------------
 NB. Miscellaneous
 
 EMPTY=: i. 0 0
@@ -49,16 +59,18 @@ NB. Includes
 NB. ---------------------------------------------------------
 NB. System verbs
 
-script_z_ '~system/main/printf.ijs'                   NB. printf vsprintf
-script_z_ '~system/main/myutil.ijs'                   NB. timespacex
-script_z_ '~system/packages/math/mathutil.ijs'        NB. mp
+script_z_ '~system/main/printf.ijs'             NB. printf vsprintf
+script_z_ '~system/main/myutil.ijs'             NB. timespacex
+script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 
 NB. ---------------------------------------------------------
 NB. Addon verbs and nouns
 
 NB. utility
-require '~user/projects/mt/ios.ijs'     NB. IOS
+require '~user/projects/mt/dbg.ijs'     NB. debug
 require '~user/projects/mt/util.ijs'    NB. utilities
+require '~user/projects/mt/ios.ijs'     NB. IOS
+require '~user/projects/mt/norm.ijs'    NB. norms
 require '~user/projects/mt/struct.ijs'  NB. structure handlers
 require '~user/projects/mt/rand.ijs'    NB. random objects
 require '~user/projects/mt/con.ijs'     NB. condition number
@@ -68,13 +80,14 @@ require '~user/projects/mt/bal.ijs'     NB. balance
 require '~user/projects/mt/equ.ijs'     NB. equilibrate
 require '~user/projects/mt/ref.ijs'     NB. reflect
 require '~user/projects/mt/rot.ijs'     NB. rotate
-require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ HRD output
-require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ HRD output
+require '~user/projects/mt/gq.ijs'      NB. generate Q from its factored form
+require '~user/projects/mt/mq.ijs'      NB. multiply by Q represented in factored form
+require '~user/projects/mt/sm.ijs'      NB. solve linear monomial equation with triangular matrix
 
 NB. mid-level
+require '~user/projects/mt/fri.ijs'     NB. inverse using the Frobenius formula
 require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
-require '~user/projects/mt/pow.ijs'     NB. integer powers
-require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization LQ QL QR RQ
+require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization
 require '~user/projects/mt/trf.ijs'     NB. triangular factorization
 require '~user/projects/mt/tri.ijs'     NB. inverse via trf
 require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via trf
@@ -82,7 +95,8 @@ require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via t
 NB. hi-level
 require '~user/projects/mt/exp.ijs'     NB. exponent
 require '~user/projects/mt/log.ijs'     NB. logarithm
-require '~user/projects/mt/sv.ijs'      NB. solve linear monomial equation
+require '~user/projects/mt/pow.ijs'     NB. power
+require '~user/projects/mt/sv.ijs'      NB. linear monomial equation
 
 NB. =========================================================
 NB. Interface
@@ -92,49 +106,53 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. test
-NB. Adv. to test addon
+NB.
+NB. Description:
+NB.   Adv. to make verb to test algorithms
 NB.
 NB. Syntax:
-NB.   r=. mkge test (m,n)
+NB.   vtest=. mkge test
 NB. where
-NB.   m,n  - 2-vector of integers, shape of random matrices
-NB.          to test algorithms; only algorithms which accept
-NB.          m and n given are called
-NB.   mkge - monadic verb to generate random non-singular
-NB.          general y-matrix (shape is taken from y)
+NB.   (m,n) - 2-vector of integers, shape of random matrices
+NB.           to test algorithms; only algorithms which
+NB.           accept m and n given will be tested
+NB.   mkge  - monadic verb to generate random non-singular
+NB.           general y-matrix (shape is taken from y)
+NB.   vtest - verb to test algorithms; is called as:
+NB.              vtest (m,n)
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   load '~addons/math/mt/mt.ijs'
-NB.   cocurrent 'mt'
-NB.   r=. (_1 1 0 16 _6 4 & gemat) test 500 500
-NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) test 500 500
-NB.
-NB. TODO:
-NB. - test0 - test scalar (0-rank) algos
-NB. - test1 - test vector (1-rank) algos
-NB. - test2 - test matrix (2-rank) algos
-NB. - test3 - test space  (3-rank) algos
+NB. - test by random square real matrix with limited values'
+NB.   amplitudes:
+NB.     (_1 1 0 16 _6 4 & gemat_mt_) test_mt_ 500 500
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 100 500
 
 test=: 1 : 0
   '%-25s %-12s %-12s %-12s %-12s %-12s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
-  (u testref) y
-  (u testgq) y
-  (u testmq) y
 
-  (u testhrd) y
-  (u testqf) y
-NB.  (u testtrf) y
-NB.  (u testtri) y
-NB.  (u testtrs) y
+  NB. low-level algorithms
+  (u testbal_mt_) y
+  (u testequ_mt_) y
+  (u testref_mt_) y
+  (u testrot_mt_) y
+  (u testgq_mt_) y
+  (u testmq_mt_) y
+  (u testsm_mt_) y
 
-  EMPTY
+  NB. mid-level algorithms
+  (u testfri_mt_) y
+  (u testhrd_mt_) y
+  (u testqf_mt_) y
+  (u testtrf_mt_) y
+  (u testtri_mt_) y
+  (u testtrs_mt_) y
+
+  NB. hi-level algorithms
+  (u testexp_mt_) y
+  (u testlog_mt_) y
+  (u testpow_mt_) y
+  (u testsv_mt_) y
+
+  EMPTY_mt_
 )
-
-NB. ---------------------------------------------------------
-NB. logstat
-NB. Show statistics from log array
-NB.
-NB. Syntax: logstat ''
-
-logstat=: [:

@@ -1,5 +1,5 @@
 NB. qf.ijs
-NB. Orthogonal factorizations LQ QL QR RQ
+NB. Orthogonal factorization
 NB.
 NB. gelqf  LQ factorization of a general matrix
 NB. geqlf  QL factorization of a general matrix
@@ -356,15 +356,19 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. tgeqf
-NB. Test orthogonal factorization algorithms:
-NB. - built-in: 128!:0
-NB. - LAPACK addon: gelqf geqlf geqrf gerqf
-NB. - mt addon: gelqf geqlf geqrf gerqf
-NB. by matrix given
+NB. testgeqf
 NB.
-NB. Syntax: tgeqf A
-NB. where A - general m×n-matrix
+NB. Description:
+NB.   Test orthogonal factorization algorithms:
+NB.   - 128!:0 (built-in)
+NB.   - gelqf geqlf geqrf gerqf (math/lapack addon)
+NB.   - gelqf geqlf geqrf gerqf (math/mt addon)
+NB.   by general matrix given
+NB.
+NB. Syntax:
+NB.   testgeqf A
+NB. where
+NB.   A - m×n-matrix
 NB.
 NB. Formula:
 NB. - berr for LQ: berr := ||A-L*Q||/(ε*n*||A||)
@@ -372,7 +376,7 @@ NB. - berr for QL: berr := ||A-Q*L||/(ε*m*||A||)
 NB. - berr for QR: berr := ||A-Q*R||/(ε*m*||A||)
 NB. - berr for RQ: berr := ||A-R*Q||/(ε*n*||A||)
 
-tgeqf=: 3 : 0
+testgeqf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gelqf geqlf geqrf gerqf'
 
@@ -401,10 +405,17 @@ NB.   Test orthogonal factorization algorithms by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   mkge testqf (m,n)
+NB.   vtest=. mkmat testqf
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.             mat=. mkmat (m,n)
+NB.   vtest - monad to test algorithms by matrix mat; is
+NB.           called as:
+NB.             vtest (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
 NB. - with limited random matrix values' amplitudes
 NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testqf 150 100
 
-testqf=: 1 : 'EMPTY [ tgeqf @ u'
+testqf=: 1 : 'EMPTY_mt_ [ testgeqf_mt_ @ u'

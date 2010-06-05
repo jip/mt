@@ -108,6 +108,9 @@ NB.   inv(A) = inv(U) * inv(L1) * P
 getri=: ((C."1~ /:)~ (trtriu mp trtril1)) & >/ @ getrfpl1u
 
 NB. ---------------------------------------------------------
+hetri=: potri  NB. stub for a while
+
+NB. ---------------------------------------------------------
 NB. potri
 NB. Inverse a Hermitian (symmetric) positive definite matrix
 NB. using the Cholesky factorization:
@@ -120,7 +123,7 @@ NB. =========================================================
 NB. Test suite
 
 NB. name ttri A;rcondA
-ttri=: 4 : 0
+testtri=: 4 : 0
   'A rcondA'=. y
   n=. # A
   I=. idmat n
@@ -131,12 +134,12 @@ ttri=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. ttrtri
+NB. testtrtri
 NB. Test inverse algorithms with random triangular matrix
 NB.
 NB. ttrtri A
 
-ttrtri=: 3 : 0
+testtrtri=: 3 : 0
   n=. # y
   GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
 
@@ -154,12 +157,12 @@ ttrtri=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. tgetri
+NB. testgetri
 NB. Test inverse algorithms with random general matrix y
 NB.
 NB. tgetri A
 
-tgetri=: 3 : 0
+testgetri=: 3 : 0
   n=. # y
   GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
   rcondGE=. norm1 con getri   GE
@@ -170,13 +173,13 @@ tgetri=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. thetri
+NB. testhetri
 NB. Test inverse algorithms with random Hermitian (symmetric)
 NB. matrix y
 NB.
 NB. thetri A
 
-thetri=: 3 : 0
+testhetri=: 3 : 0
   n=. # y
   GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
   rcondHE=. norm1 con hetri HE=. ge2he GE
@@ -185,13 +188,13 @@ thetri=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. tpotri
+NB. testpotri
 NB. Test inverse algorithms with random Hermitian (symmetric)
 NB. positive definite matrix y
 NB.
 NB. tpotri A
 
-tpotri=: 3 : 0
+testpotri=: 3 : 0
   n=. # y
   GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
   rcondPO=. norm1 con potri   PO=. (mp ct) GE  NB. >>> ###### PO=. ge2po GE
@@ -223,9 +226,4 @@ NB. Notes:
 NB. - diagonalizable matrices are processed the same way as
 NB.   general matrices
 
-testtri=: 1 : 0
-  (tgetri @  u             ^: (=/)) y
-  (thetri @ (u hemat) @ {. ^: (=/)) y
-  (tpotri @ (u pomat) @ {. ^: (=/)) y
-  EMPTY
-)
+testtri=: 1 : 'EMPTY_mt_ [ ((testpotri_mt_ @ (u pomat_mt_)) [ (testhetri_mt_ @ (u hemat_mt_)) [ (testgetri_mt_ @ u)) ^: (=/)'

@@ -77,4 +77,3 @@ larfp=: 3 : 0
     y=. (beta , tau) (0 _1 " _) } y                         NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
   end.
 )
-

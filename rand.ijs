@@ -193,7 +193,7 @@ NB.   H=. (_1 1 0 16 _6 4 & gemat) hemat 4
 NB. - generate Hermitian matrix with certain distribution law
 NB.   H=. (_1 1 0 16 _6 4 & (gemat j. gemat)) hemat 4
 
-hemat=: vu2y (+ ct)
+hemat=: vu2y (+ ct_mt_)
 
 NB. ---------------------------------------------------------
 NB. unmat
@@ -224,7 +224,7 @@ NB.     matrices from the classical compact groups.
 NB.     Notices of the AMS, Vol. 54 (2007), 592-604
 NB.     http://arxiv.org/abs/math-ph/0609050v2
 
-unmat=: ((* " 1) ((% |) @ ((<0 1) & |:))) & >/ @ geqrf vu2y
+unmat=: ((* " 1) ((% |) @ ((<0 1) & |:))) & >/ @ geqrf_mt_ vu2y
 
 NB. ---------------------------------------------------------
 NB. dimat
@@ -246,7 +246,7 @@ NB. Notes:
 NB. - D will be Hermitian (symmetric) if randx produces float
 NB.   (non-complex), possibly non-distinct numbers
 
-dimat=: 2 : 'u (] mp (* ct)) v'
+dimat=: 2 : 'u (] mp (* ct_mt_)) v'
 
 NB. ---------------------------------------------------------
 NB. pomat
@@ -265,4 +265,4 @@ NB.
 NB. Application:
 NB.   P=. (2p1 & rande) pomat 4
 
-pomat=: vu2y (mp ct)
+pomat=: vu2y (mp ct_mt_)

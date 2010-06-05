@@ -42,4 +42,3 @@ NB.   n    ≥ 0
 NB.   nrhs ≥ 0
 
 poevs=: heevs
-

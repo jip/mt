@@ -117,7 +117,7 @@ NB. Test inverse algorithms with random triangular matrix
 NB.
 NB. ttrfri A
 
-ttrfri=: 3 : 0
+testtrfri=: 3 : 0
   n=. # y
   GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
 
@@ -140,7 +140,7 @@ NB. Test inverse algorithms with random general matrix y
 NB.
 NB. tgefri A
 
-tgefri=: 3 : 0
+testgefri=: 3 : 0
   n=. # y
   GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
   rcondGE=. norm1 con gefri   GE
@@ -157,7 +157,7 @@ NB. matrix y
 NB.
 NB. thefri A
 
-thefri=: 3 : 0
+testhefri=: 3 : 0
   n=. # y
   GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
   rcondHE=. norm1 con hefri HE=. ge2he GE
@@ -190,7 +190,7 @@ NB. - diagonalizable matrices are processed the same way as
 NB.   general matrices
 
 testfri=: 1 : 0
-  (tgefri @  u             ^: (=/)) y
-  (thefri @ (u hemat) @ {. ^: (=/)) y
+  (testgefri @  u             ^: (=/)) y
+  (testhefri @ (u hemat) @ {. ^: (=/)) y
   EMPTY
 )

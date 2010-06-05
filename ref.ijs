@@ -436,47 +436,46 @@ NB. - emulates LAPACK's sequence of calls to xLARFT and then
 NB.   to xLARFB
 NB. - larfxxxx and larfbxxxx are topological equivalents
 
-larfblcbc=: ] - [ mp (mp~ (ct @ ((0 & (IOSFR })) mp larftbc)))~   NB. C - V * ((V * T)' * C)
-larfblcbr=: ] - (ct @ (mp~ larftbr) @ [) mp ((0 IOSFC } [) mp ])  NB. C - (T * V)' * (V * C)
-larfblcfc=: ] - [ mp (mp~ (ct @ ((0 & (IOSLR })) mp larftfc)))~   NB. C - V * ((V * T)' * C)
-larfblcfr=: ] - (ct @ (mp~ larftfr) @ [) mp ((0 IOSLC } [) mp ])  NB. C - (T * V)' * (V * C)
+larfblcbc=: ] - [ mp (mp~ (ct @ ((0 & (0})) mp larftbc)))~             NB. C - V * ((V * T)' * C)
+larfblcbr=: ] - (ct @ (mp~ larftbr) @ [) mp ((0 (< a: ; 0)} [) mp ])   NB. C - (T * V)' * (V * C)
+larfblcfc=: ] - [ mp (mp~ (ct @ ((0 & (_1})) mp larftfc)))~            NB. C - V * ((V * T)' * C)
+larfblcfr=: ] - (ct @ (mp~ larftfr) @ [) mp ((0 (< a: ; _1)} [) mp ])  NB. C - (T * V)' * (V * C)
 
-larfblnbc=: ] - [ mp (mp~ (larftbc mp (ct @ (0 & (IOSFR })))))~   NB. C - V * ((T * V') * C)
-larfblnbr=: ] - ((ct mp larftbr) @ [) mp (mp~ (0 & (IOSFC })))~   NB. C - (V' * T) * (V * C)
-larfblnfc=: ] - [ mp (mp~ (larftfc mp (ct @ (0 & (IOSLR })))))~   NB. C - V * ((T * V') * C)
-larfblnfr=: ] - ((ct mp larftfr) @ [) mp (mp~ (0 & (IOSLC })))~   NB. C - (V' * T) * (V * C)
+larfblnbc=: ] - [ mp (mp~ (larftbc mp (ct @ (0 & (0})))))~             NB. C - V * ((T * V') * C)
+larfblnbr=: ] - ((ct mp larftbr) @ [) mp (mp~ (0 & ((< a: ; 0)})))~    NB. C - (V' * T) * (V * C)
+larfblnfc=: ] - [ mp (mp~ (larftfc mp (ct @ (0 & (_1})))))~            NB. C - V * ((T * V') * C)
+larfblnfr=: ] - ((ct mp larftfr) @ [) mp (mp~ (0 & ((< a: ; _1)})))~   NB. C - (V' * T) * (V * C)
 
-larfbrcbc=: ] - (mp (0 & (IOSFR })))~ mp (ct @ (mp larftbc) @ [)  NB. C - (C * V) * (V * T)'
-larfbrcbr=: ] - (mp (ct @ (larftbr mp (0 & (IOSFC })))))~ mp [    NB. C - (C * (T * V)') * V
-larfbrcfc=: ] - (mp (0 & (IOSLR })))~ mp (ct @ (mp larftfc) @ [)  NB. C - (C * V) * (V * T)'
-larfbrcfr=: ] - (mp (ct @ (larftfr mp (0 & (IOSLC })))))~ mp [    NB. C - (C * (T * V)') * V
+larfbrcbc=: ] - (mp (0 & (0})))~ mp (ct @ (mp larftbc) @ [)            NB. C - (C * V) * (V * T)'
+larfbrcbr=: ] - (mp (ct @ (larftbr mp (0 & ((< a: ; 0)})))))~ mp [     NB. C - (C * (T * V)') * V
+larfbrcfc=: ] - (mp (0 & (_1})))~ mp (ct @ (mp larftfc) @ [)           NB. C - (C * V) * (V * T)'
+larfbrcfr=: ] - (mp (ct @ (larftfr mp (0 & ((< a: ; _1)})))))~ mp [    NB. C - (C * (T * V)') * V
 
-larfbrnbc=: ] - (mp ((0 & (IOSFR })) mp larftbc))~ mp (ct @ [)    NB. C - (C * (V * T)) * V'
-larfbrnbr=: ] - (mp ((ct @ (0 & (IOSFC }))) mp larftbr))~ mp [    NB. C - (C * (V' * T)) * V
-larfbrnfc=: ] - (mp ((0 & (IOSLR })) mp larftfc))~ mp (ct @ [)    NB. C - (C * (V * T)) * V'
-larfbrnfr=: ] - (mp ((ct @ (0 & (IOSLC }))) mp larftfr))~ mp [    NB. C - (C * (V' * T)) * V
+larfbrnbc=: ] - (mp ((0 & (0})) mp larftbc))~ mp (ct @ [)              NB. C - (C * (V * T)) * V'
+larfbrnbr=: ] - (mp ((ct @ (0 & ((< a: ; 0)}))) mp larftbr))~ mp [     NB. C - (C * (V' * T)) * V
+larfbrnfc=: ] - (mp ((0 & (_1})) mp larftfc))~ mp (ct @ [)             NB. C - (C * (V * T)) * V'
+larfbrnfr=: ] - (mp ((ct @ (0 & ((< a: ; _1)}))) mp larftfr))~ mp [    NB. C - (C * (V' * T)) * V
 
 NB. =========================================================
 NB. Test suite
 NB.
 NB. Notes:
-NB. - foregoing verbs are tested implicitly in gq, mq, qf
-NB.   tests
-
+NB. - foregoing verbs are also testing implicitly in gq, mq,
+NB.   qf tests
 
 NB. ---------------------------------------------------------
-NB. trefrft
+NB. testlarft
 NB.
 NB. Description:
 NB.   Test algorithms forming the triangular factor of a
-NB.   block reflector, by matrix given
+NB.   block reflector, by general matrix given
 NB.
 NB. Syntax:
-NB.   trefrft (A;trash)
+NB.   testlarft (A;trash)
 NB. where
 NB.   A - m×n-matrix, is used to get Qf
 
-trefrft=: 3 : 0
+testlarft=: 3 : 0
   AC=: y=. 0 {:: y
   rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
 
@@ -489,19 +488,19 @@ trefrft=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. trefrfb
+NB. testlarfb
 NB.
 NB. Description:
-NB.   Test algorithms applying a block reflector, by matrix
-NB.   given
+NB.   Test algorithms applying a block reflector, by general
+NB.   matrix given
 NB.
 NB. Syntax:
-NB.   trefrfb (A;C)
+NB.   testlarfb (A;C)
 NB. where
 NB.   A - m×n-matrix, is used to get Qf
 NB.   C - m×n-matrix, is used as multiplier
 
-trefrfb=: 3 : 0
+testlarfb=: 3 : 0
   'A C'=. y
   rcond=. (norm1 con getri) C
   'LQf QfL QfR RQf'=. (gelqf ; geqlf ; geqrf ; gerqf) A
@@ -554,4 +553,4 @@ NB. Notes:
 NB. - non-blocked larfxxxx algos are tested implicitly in gq,
 NB.   mq, qf tests
 
-testref=: 1 : 'EMPTY [ (trefrfb [ trefrft) @ (u ; u)'
+testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_) @ (u ; u)'

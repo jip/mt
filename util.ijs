@@ -1,38 +1,31 @@
 NB. util.ijs
 NB. Utilities
 NB.
-NB. sgn        Simplified signum
-NB. condneg    Conditional negate
-NB. copysign   Copy sign
-NB. fmtlog     Format log string
-NB. gi         Conj. to evoke n-th verb from gerund m
-NB. ms         Minimum in sum of vectors
+NB. sgn       Simplified signum
+NB. condneg   Conditional negate
+NB. copysign  Copy sign
+NB. sorim     Sum of real and imaginary parts' modules
+NB. fmtlog    Format log string
+NB. ag        Adv. to apply successive verbs from gerund to
+NB.           successive elements of list
+NB. ms        Minimum in sum of vectors
 NB.
-NB. norm1      Magnitude-based 1-norm of vector or matrix
-NB. normi      Magnitude-based ∞-norm of vector or matrix
-NB. norm1t     Taxicab-based 1-norm of vector or matrix
-NB. normit     Taxicab-based ∞-norm of vector or matrix
-NB. norms      Square-based (Euclidean/Frobenius) norm of
-NB.            vector or matrix
+NB. tmonad    Template conj. to make verbs to test
+NB.           computational monad
+NB. tdyad     Template conj. to make verbs to test
+NB.           computational dyad
 NB.
-NB. tmonad     Template conj. to make verbs to test
-NB.            computational monad
-NB. tdyad      Template conj. to make verbs to test
-NB.            computational dyad
-NB. dbg        Conj. to show verb's input and output
-NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
 
-gshapes=: $`($(;<)($ L: 0)) @. (0 < L.)  NB. get shapes, boxes are accepted, too
-mocs=: >./ @ (+/   ) @:                  NB. vector: sum of, matrix: max of column sums
-mors=: >./ @ (+/"_1) @:                  NB. vector: max of, matrix: max of row sums
+mocs=: >./ @ (+/   ) @:                                 NB. vector: sum of, matrix: max of column sums
+mors=: >./ @ (+/"_1) @:                                 NB. vector: max of, matrix: max of row sums
 
 NB. =========================================================
 NB. Interface
@@ -43,8 +36,36 @@ NB. Miscellaneous
 sgn=: 0&(<: - >)                                        NB. if y<0 then -1 else 1 endif
 condneg=: -@]^:(0>[)                                    NB. if x<0 then -y else y endif
 copysign=: -@]^:((=-)&*)                                NB. if x<0 then -|y| else |y| endif
+sorim=: +/"1 @: | @: +.                                 NB. sum of real and imaginary parts' modules
 fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' vsprintf  NB. Format log string
-gi=: 2 : '(n{m)`:6'                                     NB. Conj. to evoke n-th verb from gerund m: m[n]
+
+NB. ---------------------------------------------------------
+NB. ag
+NB.
+NB. Description
+NB.   Adv. to apply successive verbs from gerund to
+NB.   successive elements of list
+NB.
+NB. Syntax:
+NB.   vapp=: g ag
+NB. where
+NB.   g    - gerund u0`u1`... ; each monad ui is called as:
+NB.            eiupd=. ui ei
+NB.   vapp - monad to apply successive ui to successive ei;
+NB.          is called as:
+NB.             Eupd=. vapp E
+NB.   E    = rank-1 array (e0,e1,...)
+NB.   Eupd = rank-1 array (e0upd,e1upd,...)
+NB.
+NB. References:
+NB. [0] [Jforum] gerund apply
+NB.     Henry Rich, Sat Oct 22 06:37:12 HKT 2005
+NB.     http://www.jsoftware.com/pipermail/general/2005-October/025450.html
+NB. [1] [Jforum] gerund apply
+NB.     Jose Mario Quintana, Sat Oct 22 10:08:38 HKT 2005
+NB.     http://www.jsoftware.com/pipermail/general/2005-October/025459.html
+
+ag=: /. (,/@)
 
 NB. ---------------------------------------------------------
 NB. ms
@@ -56,21 +77,6 @@ NB. Formula:     k = min(delta0+value0,delta1+value1,...)
 NB. Notes:       is memo, since repetitive calls are expected
 
 ms=: <./@:(] :+)M.
-
-NB. ---------------------------------------------------------
-NB. Norms
-
-NB. Magnitude-based norms |y|
-norm1=: | mocs       NB. 1-norm of vector or matrix
-normi=: | mors       NB. ∞-norm of vector or matrix
-
-NB. Taxicab-based norms |Re(y)| + |Im(y)|
-norm1t=: sorim mocs  NB. 1-norm of vector or matrix
-normit=: sorim mors  NB. ∞-norm of vector or matrix
-
-NB. Square-based (Euclidean/Frobenius) norm of vector or matrix
-NB. for vector input emulates LAPACK's DZNRM2
-norms=: (((((+/^:_) &.: *:) @: %) * ]) (>./^:_)) @: | @: +.
 
 NB. ---------------------------------------------------------
 NB. tmonad
@@ -176,44 +182,4 @@ tdyad=: 2 : 0
   TESTLOG=: TESTLOG , logline
   logline (1!:2) 2
   EMPTY
-)
-
-NB. ---------------------------------------------------------
-NB. dbg
-NB. Conj. to show verb's input and output
-NB.
-NB. Syntax:
-NB.   vapp=. v dbg title
-NB. where
-NB.   title - any literal to name v
-NB.   v     - verb to switch to debug mode
-NB.   vapp  - being verb v augmented with output of incoming
-NB.           parameters and outcoming result
-NB.
-NB. Application:
-NB. - to debug verb '*' in verb (+/ .*) try:
-NB.   C=. A (+/ .(* dbg '*')) B
-
-dbg=: 2 : 0
-  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes y) ; < y
-  o=. u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes o) ; < o
-  o
-:
-  smoutput 'dbg' ; 'x' ; (gshapes x) ; x ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes y) ; < y
-  o=. x u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes o) ; < o
-  o
-)
-
-dbg2=: 2 : 0
-  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes y)
-  o=. u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes o)
-  o
-:
-  smoutput 'dbg' ; 'x' ; (gshapes x) ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes y)
-  o=. x u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes o)
-  o
 )

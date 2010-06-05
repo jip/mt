@@ -144,25 +144,26 @@ NB.
 NB. Syntax:
 NB.   HQf=. hs gehd2l eA
 NB. where
-NB.   eA  - n×(n+1)-matrix, being A with appended trash
-NB.         column, is already factored in rows [0:h-1]
+NB.   eA  - (n+1)×(n+1)-matrix, being A with appended trash
+NB.         row and column of τs, is already reduced in rows
+NB.         [0:h-1]
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdl
-NB.   HQf - n×(n+1)-matrix, combined H and Qf, see gehrdl
+NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdl
 
 gehd2l=: 4 : 0
-  A=. ({. x) {. y                                                     NB. skip ...
-  y=. ({. x) }. y                                                     NB. ...reduced rows
-  for_j. dhs2lios (x + 1 _1) do.                                      NB. (s-1)-vector: h+1,h+2,...,h+s-1
+  A=. ({. x) {. y                                                       NB. skip ...
+  y=. ({. x) }. y                                                       NB. ...reduced rows
+  for_j. dhs2lios (x + 1 _1) do.                                        NB. (s-1)-vector: h+1,h+2,...,h+s-1
     r=. {. y
     z1=. 1 (0) } z=. larfgfc j }. r
-    eL=. z1 larflcfr (}. y)                                           NB. L := H' * L
-    eR=. z1 larfrnfr (j }."1 eL)                                      NB. R := R * H
+    eL=. z1 larflcfr (}. y)                                             NB. L := H' * L
+    eR=. z1 larfrnfr (j }."1 eL)                                        NB. R := R * H
     A=. A , ((j {. r) , z)
     y=. (j {."1 eL) ,. eR
   end.
-  ((({: $ y) >:@- (+/ x)) $ 0) ((dhs2lios~ (_1,#))~ (-@#)) } (A , y)  NB. clear τ[h+s-1:n]
+  0 ((A (+&#) y) ([ dhs2lios ((_1-[),])) ((c y) - (+/ x)))"_ } (A , y)  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -177,8 +178,8 @@ NB.
 NB. Syntax:
 NB.   HQf=. hs gehd2u eA
 NB. where
-NB.   eA  - (n+1)×(n+1)-matrix, being A with appended trash
-NB.         row and column, is already reduced in columns
+NB.   eA  - (n+1)×(n+1)-matrix, being A with appended row of
+NB.         τs and trash column, is already reduced in columns
 NB.         0:h-1
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
@@ -189,17 +190,17 @@ NB. Notes:
 NB. - emulates xGEHD2 up to storage layout
 
 gehd2u=: 4 : 0
-  A=. ({. x) {."1 y                                              NB. skip ...
-  y=. ({. x) }."1 y                                              NB. ...reduced columns
-  for_j. dhs2lios (x + 1 _1) do.                                 NB. (s-1)-vector: h+1,h+2,...,h+s-1
+  A=. ({. x) {."1 y                                  NB. skip ...
+  y=. ({. x) }."1 y                                  NB. ...reduced columns
+  for_j. dhs2lios (x + 1 _1) do.                     NB. (s-1)-vector: h+1,h+2,...,h+s-1
     c=. {."1 y
     z1=. 1 (0) } z=. larfgf j }. c
-    eR=. z1 larfrnfc (0 1 }. y)                                  NB. R := R * H
-    eL=. z1 larflcfc (j }. eR)                                   NB. L := H' * L
+    eR=. z1 larfrnfc (0 1 }. y)                      NB. R := R * H
+    eL=. z1 larflcfc (j }. eR)                       NB. L := H' * L
     A=. A ,. ((j {. c) , z)
     y=. (j {. eR) , eL
   end.
-  (((# y) >:@- (+/ x)) $ 0) (_1 dhs2lios (_1 , #@[)) } (A ,. y)  NB. clear τ[f+s-1:n]
+  0 (dhs2lios (_2,((# y) - (+/ x))))"_ } (A ,. y)  NB. clear τ[h+s-1:n-1]
 )
 
 NB. =========================================================
@@ -227,7 +228,7 @@ NB.         1st supdiagonal
 NB.   Qf  - (s-1)×(n-h)-matrix, unit upper triangular (unit
 NB.         diagonal not stored), represents Q in factored
 NB.         form:
-NB.           Q = Π{H(i)',i=h+s-2:f} ,
+NB.           Q = Π{H(i)',i=h+s-2:h} ,
 NB.         where each elementary reflector Q(i) is
 NB.         represented as:
 NB.           Q(i) = I - v[i] * τ[i] * v[i]' ,
@@ -276,8 +277,8 @@ gehrdl=: 4 : 0
   'h s'=. x
   n1=. >: n=. # y
   y=. (2 $ n1) {. y
-  Atop=. (f , _) {. y
-  Aleft=. (f - (n1 , _1)) {. y
+  Atop=. (h , _) {. y
+  Aleft=. (h - (n1 , _1)) {. y
   y=. (h + 0 1) }. y
   I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB       NB. how many panels will be reduced
   for_i. HRDNB dhs2lios (h , I) do.               NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB}
@@ -373,7 +374,7 @@ gehrdu=: 4 : 0
   Atop=. (h - (_1 , n1)) {. y
   y=. (h + 1 0) }. y
   I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB       NB. how many panels will be reduced
-  for_i. HRDNB dhs2lios (f , I) do.               NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB}
+  for_i. HRDNB dhs2lios (h , I) do.               NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB}
     'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
     eV0=. 0 , (0 (_1) } V)                        NB. prepend by zero row, replace τs by zeros
     Atop=. Atop - ((Atop mp eV0) mp T) mp (ct eV0)  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
@@ -391,13 +392,26 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. thrd
-NB. Test Hessenberg reduction algorithms by matrix given
+NB. testgehrd
+NB. Description:
+NB.   Test Hessenberg reduction algorithms:
+NB.   - gehrd (math/lapack addon)
+NB.   - gehrdl gehrdu (math/mt addon)
+NB.   by general matrix given
 NB.
-NB. Syntax: thrd A
+NB. Syntax:
+NB.   testgehrd A
+NB. where
+NB.   A - n×n-matrix
+NB.
+NB. Formula:
+NB. - Q * A * Q' = H : berr := ||A-Q'*H*Q||/ε*n*||A||
+NB. - Q' * A * Q = H : berr := ||A-Q*H*Q'||/ε*n*||A||
+NB.
+NB. Syntax: testgehrd A
 NB. where A - general n×n-matrix
 
-thrd=: 3 : 0
+testgehrd=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gehrd'
 
@@ -405,21 +419,34 @@ thrd=: 3 : 0
 
 NB. FIXME!  ('gehrd_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
 
-  ('gehrdl'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@( 0 _1&}.)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q'*H*Q||/ε*n*||A||
-  ('gehrdu'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@(_1  0&}.)) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*H*Q'||/ε*n*||A||
+  ('gehrdl'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@( 0 _1&}.)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdu'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@(_1  0&}.)) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
 NB. testhrd
-NB. Test Hessenberg reduction algorithms by matrix of
-NB. generator and shape given
 NB.
-NB. Syntax: mkge testhrd (m,n)
+NB. Description:
+NB.   Adv. to make verb to test Hessenberg reduction
+NB.   algorithms gehrdx by matrix of generator and
+NB.   shape given
+NB.
+NB. Syntax:
+NB.   vtest=. mkmat testhrd
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.            mat=. mkmat (m,n)
+NB.   vtest - monad to test algorithms by matrix mat; is
+NB.           called as:
+NB.             vtest (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testhrd 100 100
+NB.   NB. with limited random matrix values' amplitudes
+NB.   cocurrent 'mt'
+NB.   (_1 1 0 16 _6 4 & gemat) testhrd 500 500
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testhrd 500 500
 
-testhrd=: 1 : 'EMPTY [ ((thrd @ u) ^: (=/))'
+testhrd=: 1 : 'EMPTY_mt_ [ (testgehrd_mt_ @ u) ^: (=/)'

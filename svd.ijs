@@ -1,13 +1,9 @@
-NB. sv.ijs
-NB. Solve linear monomial equation
+NB. svd.ijs
+NB. Singular value decomposition (SVD)
 NB.
-NB. gesv  #########
-NB. hesv  #########
-NB. disv  #########
-NB. posv  #########
-NB. ddsv  #########
-NB. pssv  #########
-NB. nssv  #########
+NB. gesvd  #########
+NB. hesvd  #########
+NB. ggsvd  #########
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -22,9 +18,9 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. gesv
+NB. gesvd
 NB.
-NB. Description:
+NB. ######Description:
 NB.   Solve:
 NB.     A * X = B
 NB.
@@ -33,9 +29,7 @@ NB.     X=. A gesv B
 NB. where
 NB.   A  - m*n matrix
 
-gesv=: (getrs~ getrf)~
+gesvd=: [:
 
 NB. =========================================================
 NB. Test suite
-
-NB.   '(gesv_jlapack_ @ ;)' mp ttrs (A;X;AX;rcondA)

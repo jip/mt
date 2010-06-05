@@ -1,16 +1,19 @@
 math/mt - change history
 
+== 0.5.0 ==
+ * iterative (^:) or recursive with splitted argument
+
 == 0.4.0 ==
- * iterative (mostly) tacit
+ * iterative (^:) with integral argument
 
 == 0.3.0 ==
- * iterative version, rIOS
+ * iterative (^:) (mostly) tacit
 
 == 0.2.0 ==
- * iterative version, cIOS
+ * iterative with rIOS
 
 == 0.1.0 ==
- * recursive version
+ * iterative with cIOS
 
 == 0.0.0 ==
- * initial release
+ * initial release, recursion via ($:)

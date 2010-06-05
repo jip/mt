@@ -203,6 +203,7 @@ NB.   P -: |: iP
 NB.   P -: ip2P ip
 NB.   A (-:!.(2^_34)) p {"1 L mp U1
 NB.   A (-:!.(2^_34)) p C."1 L mp U1
+NB.   A (-:!.(2^_34)) ip C.^:_1"1 L mp U1
 NB.   A (-:!.(2^_34)) L mp U1 mp P
 NB. where
 NB.   'ip LU1'=. getrflu1p A
@@ -225,7 +226,7 @@ getrflu1p=: 3 : 0
     k=. n (<. >.@-:) m
     'pia Afa'=. getrflu1p k {. y                                   NB. factorize 1st block recursively
     y=. pia (C."1) k }. y                                          NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trtrsxu1 & (k & ({."1))) y                         NB. calculate 2nd block's 1st sub-block
+    Afba=. Afa (trsmxu1 & (k & ({."1))) y                          NB. calculate 2nd block's 1st sub-block
     'pib Afbb'=. getrflu1p y ((- (Afba & mp)) & (k & (}."1))) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
     dpib=. (i. k) , (k + pib)                                      NB. apply 2nd block's permutation to 1st block
     (dpib (C."1) pia) ; ((dpib (C."1) Afa) , (Afba ,. Afbb))       NB. assemble solution
@@ -257,6 +258,7 @@ NB.   P -: |: iP
 NB.   P -: ip2P ip
 NB.   A (-:!.(2^_34)) p { L1 mp U
 NB.   A (-:!.(2^_34)) p C. L1 mp U
+NB.   A (-:!.(2^_34)) ip C.^:_1 L1 mp U
 NB.   A (-:!.(2^_34)) P mp L1 mp U
 NB. where
 NB.   'ip L1U'=. getrfpl1u A
@@ -279,7 +281,7 @@ getrfpl1u=: 3 : 0
     k=. m (<. >.@-:) n
     'pia Afa'=. getrfpl1u k {."1 y                             NB. factorize 1st block recursively
     y=. pia C. k }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trtrsl1x & (k & {.)) y                         NB. calculate 2nd block's 1st sub-block
+    Afba=. Afa (trsml1x & (k & {.)) y                          NB. calculate 2nd block's 1st sub-block
     'pib Afbb'=. getrfpl1u y ((- (mp & Afba)) & (k & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
     dpib=. (i. k) , (k + pib)                                  NB. apply 2nd block's permutation to 1st block
     (dpib C. pia) ; ((dpib C. Afa) ,. (Afba , Afbb))           NB. assemble solution
@@ -311,6 +313,7 @@ NB.   P -: |: iP
 NB.   P -: ip2P ip
 NB.   A (-:!.(2^_34)) p { U1 mp L
 NB.   A (-:!.(2^_34)) p C. U1 mp L
+NB.   A (-:!.(2^_34)) ip C.^:_1 U1 mp L
 NB.   A (-:!.(2^_34)) P mp U1 mp L
 NB. where
 NB.   'ip U1L'=. getrfpu1l A
@@ -333,7 +336,7 @@ getrfpu1l=: 3 : 0
     k=. m (<. >.@-:) n
     'pia Afa'=. getrfpu1l (-k) {."1 y                             NB. factorize 1st block recursively
     y=. pia C. (-k) }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trtrsu1x & ((-k) & {.)) y                         NB. calculate 2nd block's 1st sub-block
+    Afba=. Afa (trsmu1x & ((-k) & {.)) y                          NB. calculate 2nd block's 1st sub-block
     'pib Afbb'=. getrfpu1l y ((- (mp & Afba)) & ((-k) & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
     dpib=. pib , ((m-k) + i. k)                                   NB. apply 2nd block permutation to 1st block
     (dpib C. pia) ; ((Afbb , Afba) ,. (dpib C. Afa))              NB. assemble solution
@@ -365,6 +368,7 @@ NB.   P -: |: iP
 NB.   P -: ip2P ip
 NB.   A (-:!.(2^_34)) p {"1 U mp L1
 NB.   A (-:!.(2^_34)) p C."1 U mp L1
+NB.   A (-:!.(2^_34)) ip C.^:_1"1 U mp L1
 NB.   A (-:!.(2^_34)) U mp L1 mp iP
 NB. where
 NB.   'p UL1'=. getrful1p A
@@ -387,7 +391,7 @@ getrful1p=: 3 : 0
     k=. n (<. >.@-:) m
     'pia Afa'=. getrful1p (-k) {. y                                   NB. factorize 1st block recursively
     y=. pia (C."1) (-k) }. y                                          NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trtrsxl1 & ((-k) & ({."1))) y                         NB. calculate 2nd block's 1st sub-block
+    Afba=. Afa (trsmxl1 & ((-k) & ({."1))) y                          NB. calculate 2nd block's 1st sub-block
     'pib Afbb'=. getrful1p y ((- (Afba & mp)) & ((-k) & (}."1))) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
     dpib=. pib , ((n-k) + i. k)                                       NB. apply 2nd block permutation to 1st block
     (dpib C."1 pia) ; ((Afbb ,. Afba) , (dpib C."1 Afa))              NB. assemble solution
@@ -424,9 +428,6 @@ NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
 NB.
-NB. Notes:
-NB. - stub for a while
-NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
 NB.     Partitioned triangular tridiagonalization.
@@ -434,6 +435,7 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
+NB. - implement partitioned algorithm
 NB. - T should be sparse
 
 hetrfpl=: hetf2pl
@@ -468,10 +470,8 @@ NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
 NB.
-NB. Notes:
-NB. - stub for a while
-NB.
 NB. TODO:
+NB. - implement partitioned algorithm
 NB. - T should be sparse
 
 hetrfpu=: hetf2pu
@@ -502,7 +502,7 @@ potrfl=: 3 : 0
     k=. >. -: n
     Ta=. potrfl (2 # k) {. y     NB. recursively factorize square matrix from top left or bottom right corner
     Ac=. (k ([ , -) n) {. y      NB. off-diagonal part of input matrix
-    Tb=. ct Tbh=. Ta trtrslx Ac  NB. off-diagonal part of output matrix
+    Tb=. ct Tbh=. Ta trsmlx Ac   NB. off-diagonal part of output matrix
     Aa=. (2 # k) }. y            NB. square matrix from opposite corner on diagonal of input matrix
     Tc=. potrfl Aa - Tb mp Tbh   NB. recursively factorize square matrix from opposite corner on diagonal
     Ta 0 append (Tb ,. Tc)       NB. assemble output as triangular matrix
@@ -537,7 +537,7 @@ potrfu=: 3 : 0
     k=. >. -: n
     Ta=. potrfu (2 # k) }. y     NB. recursively factorize square matrix from top left or bottom right corner
     Ac=. (k ([ , -) n) }. y      NB. off-diagonal part of input matrix
-    Tb=. ct Tbh=. Ta trtrsux Ac  NB. off-diagonal part of output matrix
+    Tb=. ct Tbh=. Ta trsmux Ac   NB. off-diagonal part of output matrix
     Aa=. (2 # k) {. y            NB. square matrix from opposite corner on diagonal of input matrix
     Tc=. potrfu Aa - Tb mp Tbh   NB. recursively factorize square matrix from opposite corner on diagonal
     (Tc ,. Tb) _1 append Ta      NB. assemble output as triangular matrix
@@ -550,17 +550,17 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. tgetrf
+NB. testgetrf
 NB.
 NB. Description:
-NB.   Test triangular factorization algorithms
+NB.   Test triangular factorization algorithms:
 NB.   - lud (math/misc)
 NB.   - getrf (math/lapack)
 NB.   - getrflu1p getrfpl1u getrfpu1l getrful1p (math/mt)
 NB.   by general matrix given
 NB.
 NB. Syntax:
-NB.   tgetrf A
+NB.   testgetrf A
 NB. where
 NB.   A - m×n-matrix
 NB.
@@ -570,7 +570,7 @@ NB. - P*L1*U=A : berr := ||P*L1*U - A ||/(ε*||A||*n)
 NB. - P*U1*L=A : berr := ||P*U1*L - A ||/(ε*||A||*n)
 NB. - U*L1*P=A : berr := ||U*L1*P - A ||/(ε*||A||*m)
 
-tgetrf=: 3 : 0
+testgetrf=: 3 : 0
   require '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
@@ -580,24 +580,24 @@ tgetrf=: 3 : 0
   ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_                           (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
   ('lud'            tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %.                                         (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 
-  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C."1 (( trl            mp  tru1          )@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
-  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C.   (( trl1           mp  tru           )@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
-  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C.   (((tru1~ (-~/@$)) mp (trl ~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
-  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C."1 (((tru ~ (-~/@$)) mp (trl1~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
+  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1"1 (( trl            mp  tru1          )@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
+  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1   (( trl1           mp  tru           )@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1   (((tru1~ (-~/@$)) mp (trl ~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1"1 (((tru ~ (-~/@$)) mp (trl1~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. thetrf
+NB. testhetrf
 NB.
 NB. Description:
-NB.   Test triangular factorization algorithms
+NB.   Test triangular factorization algorithms:
 NB.   - hetrfpl hetrfpu (math/mt)
 NB.   by Hermitian (symmetric) matrix given
 NB.
 NB. Syntax:
-NB.   thetrf A
+NB.   testhetrf A
 NB. where
 NB.   A - n×n-matrix, Hermitian
 NB.
@@ -605,7 +605,7 @@ NB. Formula:
 NB. - P*L*T*L'*P'=A : berr := ||P*L*T*L'*P' - A ||/(ε*||A||*n)
 NB. - P*U*T*U'*P'=A : berr := ||P*U*T*U'*P' - A ||/(ε*||A||*n)
 
-thetrf=: 3 : 0
+testhetrf=: 3 : 0
   rcond=. _.  NB. rcond=. (norm1 con hetri) y
 
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
@@ -615,17 +615,17 @@ EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. tpotrf
+NB. testpotrf
 NB.
 NB. Description:
-NB.   Test triangular factorization algorithms
+NB.   Test triangular factorization algorithms:
 NB.   - choleski (math/misc addon)
 NB.   - potrf (math/lapack addon)
 NB.   - potrfpl potrfpu (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix given
 NB.
 NB. Syntax:
-NB.   tpotrf A
+NB.   testpotrf A
 NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite
@@ -634,7 +634,7 @@ NB. Formula:
 NB. - L*L'=A : berr := ||L*L' - A ||/(ε*||A||*n)
 NB. - U*U'=A : berr := ||U*U' - A ||/(ε*||A||*n)
 
-tpotrf=: 3 : 0
+testpotrf=: 3 : 0
   require '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'potrf'
@@ -670,4 +670,4 @@ NB. Application:
 NB. - with limited random matrix values' amplitudes
 NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrf 150 100
 
-testtrf=: 1 : 'EMPTY [ (((tpotrf @ (u pomat)) [ (thetrf @ (u hemat))) ^: (=/)) [ tgetrf @ u'
+testtrf=: 1 : 'EMPTY_mt_ [ (((testpotrf_mt_ @ (u pomat_mt_)) [ (testhetrf_mt_ @ (u hemat_mt_))) ^: (=/)) [ testgetrf_mt_ @ u'

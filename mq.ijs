@@ -40,34 +40,6 @@ NB. ---------------------------------------------------------
 arounddown=: 1 : '- m&|'  NB. adverb to round down by an integer constant
 
 NB. ---------------------------------------------------------
-NB. aag
-NB.
-NB. Description
-NB.   Adverb to apply successive verbs from gerund to
-NB.   successive elements of list
-NB.
-NB. Syntax:
-NB.   vapp=: g aag
-NB. where
-NB.   g    - gerund u0`u1`... ; each monad ui is called as:
-NB.            eiupd=. ui ei
-NB.   vapp - monad to apply successive ui to successive ei;
-NB.          is called as:
-NB.             Eupd=. vapp E
-NB.   E    = rank-1 array (e0,e1,...)
-NB.   Eupd = rank-1 array (e0upd,e1upd,...)
-NB.
-NB. References:
-NB. [0] [Jforum] gerund apply
-NB.     Henry Rich, Sat Oct 22 06:37:12 HKT 2005
-NB.     http://www.jsoftware.com/pipermail/general/2005-October/025450.html
-NB. [1] [Jforum] gerund apply
-NB.     Jose Mario Quintana, Sat Oct 22 10:08:38 HKT 2005
-NB.     http://www.jsoftware.com/pipermail/general/2005-October/025459.html
-
-aag=: /. (,/@)
-
-NB. ---------------------------------------------------------
 NB. Description:
 NB.   Single step of non-blocked version of algorithms
 NB.
@@ -516,22 +488,23 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. tmqqf
+NB. testmqqf
 NB.
 NB. Description:
-NB.   Test Q multiplication qf-algorithms
+NB.   Test Q multiplication qf-algorithms by general matrix
+NB.   given
 NB.
 NB. Syntax:
-NB.   tmqqf (A;C)
+NB.   testmqqf (A;C)
 NB. where
 NB.   A - m×n-matrix, is used to get Qf
 NB.   C - m×n-matrix, is used as multiplier
 
-tmqqf=: 3 : 0
+testmqqf=: 3 : 0
   'A C'=. y
   rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) C  NB. meaninigful for square matrices only
   'LQf QfL QfR RQf'=. xQf=. (gelqf ; geqlf ; geqrf ; gerqf) A
-  'Qlq Qql Qqr Qrq'=. (((unglq~ (<:@c))&.>)`((ungql~ (<:@#))&.>)`((ungqr~ (<:@#))&.>)`((ungrq~ (<:@c))&.>)) aag xQf
+  'Qlq Qql Qqr Qrq'=. (((unglq~ (<:@c))&.>)`((ungql~ (<:@#))&.>)`((ungqr~ (<:@#))&.>)`((ungrq~ (<:@c))&.>)) ag xQf
 
   ('unmlqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;(ct C);    Qlq )  NB. berr := ||Q *C -Q *C ||/(ε*||C||*n)
   ('unmlqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;(ct C);(ct Qlq))  NB. berr := ||Q'*C -Q'*C ||/(ε*||C||*n)
@@ -557,22 +530,23 @@ tmqqf=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. tmqhrd
+NB. testmqhrd
 NB.
 NB. Description:
-NB.   Test Q multiplication hrd-algorithms by matrix given
+NB.   Test Q multiplication hrd-algorithms by square general
+NB.   matrix given
 NB.
 NB. Syntax:
-NB.   tmqhrd (A;C)
+NB.   testmqhrd (A;C)
 NB. where
 NB.   A - n×n-matrix, is used to get Qf
 NB.   C - n×n-matrix, is used as multiplier
 
-tmqhrd=: 3 : 0
+testmqhrd=: 3 : 0
   'A C'=. y
   rcond=. (norm1 con getri) C
   'HlQf HuQf'=. xQf=. ((gehrdl~ (0,#)) ; (gehrdu~ (0,c))) A
-  'Qhrl Qhru'=. ((unghrl&.>)`(unghru&.>)) aag xQf
+  'Qhrl Qhru'=. ((unghrl&.>)`(unghru&.>)) ag xQf
 
   ('unmhrlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;(ct C);    Qhrl )  NB. berr := ||Q *C -Q *C ||/(ε*||C||*n)
   ('unmhrllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;(ct C);(ct Qhrl))  NB. berr := ||Q'*C -Q'*C ||/(ε*||C||*n)
@@ -598,7 +572,7 @@ NB. Syntax:
 NB.   vtest=. mkmat testmq
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
-NB.            mat=. mkmat (m,n)
+NB.             mat=. mkmat (m,n)
 NB.   vtest - monad to test algorithms by matrix mat; is
 NB.           called as:
 NB.             vtest (m,n)
@@ -608,4 +582,4 @@ NB. Application:
 NB. - with limited random matrix values' amplitudes
 NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testmq 150 100
 
-testmq=: 1 : 'EMPTY [ (tmqhrd ^: (=/@$@(0&({::))) [ tmqqf) @ (u ; u)'
+testmq=: 1 : 'EMPTY_mt_ [ (testmqhrd_mt_ ^: (=/@$@(0&({::))) [ testmqqf_mt_) @ (u ; u)'

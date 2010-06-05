@@ -1,5 +1,5 @@
 NB. ev.ijs
-NB. Eigenvalue decomposition (EVD) of a matrix
+NB. Eigenvalue decomposition (EVD)
 NB.
 NB. geev  #########
 NB. heev  #########

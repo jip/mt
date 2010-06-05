@@ -22,6 +22,7 @@ bak.ijs
 bal.ijs
 brd.ijs
 con.ijs
+dbg.ijs
 equ.ijs
 evs(trash).ijs
 exp.ijs
@@ -33,6 +34,7 @@ ios.ijs
 log.ijs
 mq.ijs
 mt.ijs
+norm.ijs
 pow.ijs
 qf.ijs
 rand.ijs

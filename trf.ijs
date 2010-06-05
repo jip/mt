@@ -167,8 +167,26 @@ NB.   u8  - unite 2nd block's permutation parts
 NB.   u9  - unite 1st and 2nd blocks
 NB.   u10 - unite 2nd block's 1st and 2nd sub-blocks
 
-NB. FIXME
-hetrfpp=: 1 : 0
+NB. <<<<<<<<<<<<<
+NB. hetrfpp
+
+NB. 'Lunit T'=. L1stcol hetrfpl1dl1p A
+
+hetrfpl1dl1p=: 1 : 0
+  n=. # y
+  if. 1 < n do.
+    k=. >. -: n
+    'L11 Ta'=. hetrfpl1dl1p (2 $ k) {. y
+    A21=. ((k-n), k) {. y
+    Hg=. Ta mp L11  NB. 3-diagonal Hermitian mp unit upper triangular produces upper Hessenberg
+    L21=. (k }. x) ,. ((1 _1 }. Hg) trtrsxu (0 _1 }. A21))
+    T21=. 
+  else. NB. 1=n
+  end.
+)
+
+
+
   '`u0 u1 u2 u3 u4 u5 u6 u7 u8 u9 u10'=. u
   'm n'=. sh=. $ y
   if. 0 e. sh do.

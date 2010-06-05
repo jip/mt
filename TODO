@@ -16,6 +16,12 @@ trf.ijs
 - Toeplitz (optional)
 - Circulant (optional)
 
+trs.ijs
+- hgsvxu (desirable)
+- hgsvux (desirable)
+- hgsvxl (optional)
+- hgsvlx (optional)
+
 orf.ijs
 - qr (necessary)
 - rq (necessary)

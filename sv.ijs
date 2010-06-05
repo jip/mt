@@ -2,6 +2,7 @@ NB. sv.ijs
 NB. Solve linear system
 NB.
 NB. getrsu   Solve system U*x=b, where U is an upper triangular matrix
+NB. trtrsu   Solve system U*x=b, where U is an upper triangular matrix in packed form
 NB. getrsl1  Solve system L*x=b, where L is a unit lower triangular matrix
 NB. gesv     Solve system A*x=b via LU factorization with partial pivoting
 NB. disv     Solve system A*x=b, where A is a diagonalizable matrix
@@ -51,40 +52,48 @@ getrsu=: (4 : 0) " 1 2
 NB. ---------------------------------------------------------
 NB. trtrsu                                                1 1
 NB. Solve system U*x=b, where U is an upper triangular matrix
-NB. in raveled form (only upper triangle elements are stored)
+NB. in packed form (vector where only upper triangle elements
+NB. are stored)
 NB.
 NB. Syntax:
 NB.   x=. b trtrsu U
 NB. where
 NB.   U - (N*(N+1)/2)-vector, upper triangle elements of
-NB.       N-by-N matrix A in order: from top row to bottom,
-NB.       and within each row from leftmost to rightmost
-NB.       element
+NB.       N-by-N matrix A, i-th row elements (i=0..(N-1)) are
+NB.       stored in (N-i)-vector with indices:
+NB.       (i*N-i*(i-1)/2)..((i+1)*N-i*(i+1)/2-1)
 NB.   b - N-vector, RHS
 NB.   x - N-vector, solution
 NB.   N >= 0
 NB.
 NB. If:
-NB.   x=. b trtrsu U
+NB.   Utr=. ut2tr U
+NB.   x=. b trtrsu Utr
 NB. then
-NB.   b -: (tr2ge U) mp x
+NB.   b -: U mp x
 NB.
 NB. Notes:
+NB. - for the i-th row of A:
+NB.   - iosz refers to (n-1-i)-vector: z elements with IOS (i+1)..(N-1)
+NB.   - iosa refers to (n-1-i)-vector: A elements A[i][i+1]..A[i][N-1] or
+NB.     U elements with IOS (i*N-i*(i-1)/2+1)..((i+1)*N-i*(i+1)/2-1)
+NB.   - ioaii refers to A[i][i] in A i.e. U element with IO i*(n-(i-1)/2)
 NB. >>>>>>> - result is identical to LAPACK's dgesv/zgesv
 
 trtrsu=: (4 : 0) " 1 1
   n=. # x
-  n1=. >: n
-  n2=. n - 2
-  z=. n $ 0
-  iosa=. iosz=. i. 0
-  ioaii=. -: (* >:) n
-  for_i. |. i. n do.
-smoutput 'i' ; i ; 'ioaii' ; ioaii ; 'iosa' ; iosa ; 'iosz' ; iosz ; 'z' ; z
-    z=. (((i { x) - ((iosa { y) mp (iosz { z))) % (ioaii { y)) i } z
-    iosz=. i , iosz                  NB. (n-1-i)-vector: (i+1)..(n-1)
-    iosa=. (iosa - n2) , (<: ioaii)  NB. (n-1-i)-vector: (i*N-i*(i-1)/2)..((i+1)*N-i*(i+1)/2-1)
-    ioaii=. ioaii + i - n1           NB. i*(n-(i-1)/2)
+  'ni nd'=. (>: , <:) n
+  z=. (x (% & {:) y) _1 } n $ 0
+  ioaii=. _3 + -: n * ni  NB. IO A[i][i]
+  iosa=. (>: ioaii) ,: 1  NB. IOS A[i][i+1]..A[i][N-1]
+  iosz=. nd ,: 1          NB. IOS X[i+1]..X[N-1]
+  dz=. _1 ,: 1            NB. iosz(i+1) - iosz(i)
+  for_i. |. i. nd do.
+    z=. (((i { x) - ((iosa ];.0 y) mp (iosz ];.0 z))) % (ioaii { y)) i } z
+    NB. prepare ios for next iteration
+    iosz=. iosz + dz
+    iosa=. iosa + 1 ,:~ i - ni
+    ioaii=. ioaii + i - ni
   end.
   z
 )
@@ -142,7 +151,7 @@ NB.
 NB. Notes:
 NB. - result is identical to LAPACK's dgesv/zgesv
 
-gesv=: [ (((0 {:: ]) C. [) (getrsl1 getrsu ]) (1 {:: ])) getrf
+gesv=: (((0 {:: ]) C. [) (getrsl1 getrsu ]) (1 {:: ])) getrf
 
 NB. ---------------------------------------------------------
 NB. disv                                                  1 1
@@ -184,19 +193,24 @@ Note 'trs testing and timing'
    L=. (sltri_jlapack_ LU) + (idmat_jlapack_ n)
    bL=. L mp x
    b=. A mp x
-   x -: bU getrsu_pjlap_ U
-1
-   x -: bL getrsl1_pjlap_ L
-1
-   x -: b gesv_pjlap_ A
-1
+   +/ | x - bU getrsu_pjlap_ U
+1.98175e_14
+   +/ | x - bL getrsl1_pjlap_ L
+1.77636e_15
+   +/ | x - b gesv_pjlap_ A
+5.86198e_14
+   +/ | x - bU trtrsu_pjlap_ trU
+1.98175e_14
 
+   ts=: 6!:2, 7!:2@]
    L1000=. (sltri_jlapack_ 1 {:: getrf_pjlap_ 0.1 * ? 1000 1000 $ 100) + (idmat_jlapack_ 1000)
    U1000=. utri_jlapack_ 1 {:: getrf_pjlap_ 0.1 * ? 1000 1000 $ 100
+   U1000tr=. ut2tr_pjlap_ U1000
    x1000=. 0.1 * ? 1000 $ 100
-   b1000=. U1000 mp x1000
-   10 ts 'b1000 getrsu_pjlap_ U1000'
+   bU1000=. U1000 mp x1000
+   bL1000=. L1000 mp x1000
+   10 (ts & >) 'bU1000 getrsu_pjlap_ U1000';'bL1000 getrsl1_pjlap_ L1000';'bU1000 trtrsu_pjlap_ U1000tr'
 0.0334183 41984
-   10 ts 'b1000 getrsl1_pjlap_ L1000'
 0.0268176 41344
+0.0407204 34176
 )

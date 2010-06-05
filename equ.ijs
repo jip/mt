@@ -45,8 +45,7 @@ NB.    'vr vc'=. (1 & (I. @ (0 & = @ ])) } &. > @ ((>./ " 1 ; (>./ )) @: |)) y  
 
 NB. ---------------------------------------------------------
 NB. poequ
-NB. Equilibrate a Hermitian (symmetric if real) positive
-NB. definite matrix
+NB. Equilibrate a Hermitian positive definite matrix
 
 poequ=: [:
 

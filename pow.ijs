@@ -1,9 +1,9 @@
 NB. pow.ijs
 NB. Matrix power[s]
 NB.
-NB. gepow  X-Y-Z matrix of a general matrix y powers 0..(x-1)
-NB. dipow  X-Y-Z matrix of a diagonalizable matrix y powers 0..(x-1)
-NB. hepow  X-Y-Z matrix of a Hermitian matrix y powers 0..(x-1)
+NB. gepow  raise a general matrix y in integer powers x
+NB. dipow  raise a diagonalizable matrix y in integer powers x
+NB. hepow  raise a Hermitian matrix y in integer powers x
 
 coclass 'pjlap'
 
@@ -14,75 +14,75 @@ NB. =========================================================
 NB. Interface verbs
 
 NB. ---------------------------------------------------------
-NB. gepow                                               2 0 2
-NB. Make X-Y-Z matrix of a general matrix y powers:
-NB.   I y y^2 ... y^(x-1)
+NB. gepow                                                 _ 2
+NB. Raise a general matrix A in integer powers
 NB.
 NB. Syntax:
-NB.   P=. [x] gepow y
+NB.   P=. p gepow A
 NB. where
-NB.   y - N-by-N table
-NB.   x - integer >= 0, powers count, default is #y
-NB.   P - x-by-N-by-N report, matrix y in powers 0..(x-1)
+NB.   A - N-by-N table, a general matrix
+NB.   p - non-negative integers array of any shape sh, powers
+NB.   P - sh-by-N-by-N array, a matrix A in powers p
 NB.   N >= 0
 NB.
 NB. References:
 NB. [1] http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
 
-gepow=: (# $: ]) :((4 :0) " 0 2)
+gepow=: (4 :0) " _ 2
 
-  mpi3=. mp/ ^: (3 = (# @ $))           NB. insert mp only between 2-cells of report y (stiff rank)
+  mpi3=. mp/ ^: (3 = (# @ $))       NB. apply mp/ only to 3-rank arrays (stiff rank)
 
-  pl=. i. >: <. (2 & ^.) x              NB. powers list: 2^i
-  pb=. (< @ I. @ (|. " 1) @ #: @ i.) x  NB. pl bits boxed list
-  pp=. mp~ ^: pl y                      NB. powers proxy: y^2^i
+  pl=. i. >: <. (2 & ^.) (>./) , x  NB. powers list: 2^i
+  pc=. mp~ ^: pl y                  NB. powers cache: A^2^i
+  pb=. (< @ I. @ (|. " 1) @ #:) x   NB. pl bits boxed array of shape sh
 
-  pp (mpi3 @ ({~ >)) " 3 0 pb           NB. extract and mp y's powers for each pl atom
+  pc (mpi3 @ ({~ >)) " 3 0 pb       NB. extract and mp A's powers for each pl atom
 )
 
 NB. ---------------------------------------------------------
-NB. dipow                                                   2
-NB. Matrix powonential of a diagonalizable matrix
+NB. dipow                                                 _ 1
+NB. Raise a diagonalizable matrix A in integer powers
 NB.
 NB. Syntax:
-NB.   Apow=. dipow (VR ; Λ)
+NB.   P=. p dipow (RV ; ev ; RVi)
 NB. where
+NB.   RV  - N-by-N matrix, right eigenvectors of input matrix A
+NB.   ev  - N-vector, eigenvalues of input matrix A
+NB.   RVi - N-by-N matrix, inversion of RV
+NB.   p   - non-negative integers array of any shape sh, powers
+NB.   P   - sh-by-N-by-N array, a matrix A in powers p
+NB.   N  >= 0
 NB.
 NB. If:
-NB.   
+NB.   A=. RV mp (diagmat ev) mp RVi
+NB.   P=. 2 dipow (RV ; ev ; RVi)
 NB. then
-NB.   
-NB.
-NB. Notes:
-NB. - 
-NB.
-NB. TODO:
-NB. - 
+NB.   P -: A mp A
+NB.   P -: RV mp (diagmat (ev ^ 2)) mp RVi
 
-dipow=: ((0 & {::) ([ mp ((* (+ @ |:))~ ^)) (1 & {::)) : [: " 2
+dipow=: ((0 {:: ]) mp"2 ([ ^"1 0~ 1 {:: ]) (*"1 2) 2 {:: ]) " _ 1
 
 NB. ---------------------------------------------------------
-NB. hepow                                                   2
-NB. Matrix powonential of a Hermitian (symmetric if real)
-NB. matrix
+NB. hepow                                                 _ 1
+NB. Raise a Hermitian matrix A in integer powers
 NB.
 NB. Syntax:
-NB.   Apow=. dipow (VR ; Λ ; VRinv)
+NB.   P=. p dipow (RV ; ev)
 NB. where
+NB.   RV  - N-by-N matrix, right eigenvectors of input matrix A
+NB.   ev  - N-vector, eigenvalues of input matrix A
+NB.   p   - non-negative integers array of any shape sh, powers
+NB.   P   - sh-by-N-by-N array, a matrix A in powers p
+NB.   N  >= 0
 NB.
 NB. If:
-NB.   
+NB.   A=. RV mp (diagmat ev) mp (+ |: RV)
+NB.   P=. 2 dipow (RV ; ev)
 NB. then
-NB.   
-NB.
-NB. Notes:
-NB. - 
-NB.
-NB. TODO:
-NB. - 
+NB.   P -: A mp A
+NB.   P -: RV mp (diagmat (ev ^ 2)) mp (+ |: RV)
 
-hepow=: (0 & {::) mp ((^ @: (1 & {::)) * (2 & {::)) : [: " 2
-
+hepow=: ((0 {:: ]) mp"2 ([ ^"1 0~ 1 {:: ]) *"1 2 +@(|:@(0 {:: ]))) " _ 1
 
 NB. =========================================================
 Note 'pow testing and timing'

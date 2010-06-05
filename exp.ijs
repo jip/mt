@@ -18,7 +18,7 @@ NB. geexp                                                   2
 NB. Matrix exponential of a general matrix
 NB.
 NB. Syntax:
-NB.   Aexp=. geexp A
+NB.   E=. geexp A
 NB. where
 NB.
 NB. If:
@@ -35,7 +35,7 @@ NB. Notes:
 NB. - 
 NB.
 NB. TODO:
-NB. - 
+NB. - shiftdiag for r[m](A)
 
 geexp=: (3 : 0) " 2
 
@@ -51,41 +51,51 @@ geexp=: (3 : 0) " 2
   NB. preprocess A
 
   NB. - shift
-  mu=. (tr % #) y
+  mu=. (trace % #) y
   y=. (- mu) shiftdiag y
 
-  NB. --- NB. balance to reduce 1-norm of A (wait for pjlap project)
-  NB. --- 'y s'=. 0 3 {:: gebals (] ; (0 , #) ; (a: " _)) y
->>>>>>>>>>>>
-  NB. make report of matrices b[i]*M^i , where i=0..13
-  R=. b * 14 powsm M
+  NB. - balance to reduce 1-norm of A
+  'y scale'=. 0 3 {:: gebals (] ; (0 , #) ; (a: " _)) y
 
-  for_m. vm do.
-    if. (norm1 M) <: (m { theta) do.
-      if. m <: 9 do.
-      else.
-      end.
-      X=. ((^ mu) * d) * X (* " 1) di  NB. undo preprocessing
-    end.
+  NB. find m
+  iom=. theta I. norm1 y
+  if. iom < # vm do.
+    m=. iom { vm
+  else.
+    m=. {: vm
   end.
 
-  s=. >. 2 ^. (norm1 M) % (13 { theta)
-  M=. M % 2x ^ s
+  if. m<13 do.
+    NB. b[i] coeffs for V (1st row) and U (2nd row)
+    bc=. _2 |:@(]\) (>: m) {. b
 
-  NB. form [13/13] Padé approximant to expm(A)
-  VU=. (2 | i. 14) +/. (b (* " 0 2) (14 powsm M))
-  r13=. (gesvx @: (-/ ; +/)) VU
+    NB. A powers (0 2 4 ...)
+    pA=. (+: i. <. -: m) gepow y
 
-  X=. (mp~ ^: s) r13
-  X=. ((^ mu) * d) * X (* " 1) di  NB. undo preprocessing
+    NB. U=. A*Σ(b[i+1]*(A^i),i=1,3,..,m  )
+    NB. V=.   Σ(b[i  ]*(A^i),i=0,2,..,m-1)
+    'V U'=. bc +/@(* " 1) pA
+    U=. A mp U
+
+    NB. find r[m](A)
+    r=. gesv (V-U) ; (V+U)
+  else.
+    s=. >. 2 ^. (norm1 y) % {: theta
+    y=. y % 2 ^ s
+    'V U'=.
+    U=. A mp U
+    r=. gesv (V-U) ; (V+U)
+    r=. mp~ ^: s r
+  end.
+  E=. (^ mu) * r (] * (% " 1)) scale
 )
 
 NB. ---------------------------------------------------------
-NB. diexp                                                   2
+NB. diexp                                                   1
 NB. Matrix exponential of a diagonalizable matrix
 NB.
 NB. Syntax:
-NB.   Aexp=. diexp (VR ; Λ)
+NB.   E=. diexp (RV ; ev ; RVi)
 NB. where
 NB.
 NB. If:
@@ -102,12 +112,11 @@ NB. -
 diexp=: ((0 & {::) ([ mp ((* (+ @ |:))~ ^)) (1 & {::)) : [: " 2
 
 NB. ---------------------------------------------------------
-NB. heexp                                                   2
-NB. Matrix exponential of a Hermitian (symmetric if real)
-NB. matrix
+NB. heexp                                                   1
+NB. Matrix exponential of a Hermitian matrix
 NB.
 NB. Syntax:
-NB.   Aexp=. diexp (VR ; Λ ; VRinv)
+NB.   E=. diexp (RV ; ev)
 NB. where
 NB.
 NB. If:

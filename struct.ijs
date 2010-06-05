@@ -13,6 +13,7 @@ NB. pt        Pertranspose
 NB. cpt       Conjugate pertranspose
 NB. updl      Conj. to update array accepting linear IOS
 NB. gi        Conj. to evoke n-th verb from gerund m
+NB. ms        Minimum in sum of vectors
 NB. rt        Restrained Take
 NB.
 NB. uncut     To frame matrix by border of zeros
@@ -157,6 +158,17 @@ pt=: |. @ |: @ |.                        NB. pertranspose
 cpt=: + @ pt                             NB. conjugate pertranspose
 updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'  NB. Conj. to update array accepting linear IOS
 gi=: 2 : '(n{m)`:6'                      NB. Conj. to evoke n-th verb from gerund m: m[n]
+
+NB. ---------------------------------------------------------
+NB. ms
+NB.
+NB. Description: Minimum in [sum of] vector[s]
+NB. Syntax:      k=. [(delta0,delta1,...)] ms (value0,value1,...)
+NB. where        default deltai is 0
+NB. Formula:     k = min(delta0+value0,delta1+value1,...)
+NB. Notes:       is memo, since repetitive calls are expected
+
+ms=: <./@:(] :+)M.
 
 NB. ---------------------------------------------------------
 NB. rt
@@ -335,9 +347,14 @@ NB.   A    - m×n-matrix to update
 NB.   Aupd - m×n-matrix A with solid part within d-th
 NB.          diagonal being updated by monad u
 NB.   S    ≥ 0, the length of d-th diagonal
+NB.
+NB. TODO:
+NB. - [Jgeneral] duce/fold in J as an adverb or conjuction
+NB.   Henry Rich, Sun Nov 25 14:07:46 HKT 2007
+NB.   http://www.jsoftware.com/pipermail/general/2007-November/031233.html
 
 upddiag=: 1 : 0
-  lios=. diaglios ($ y)
+  lios=. diaglios $ y
   e=. lios ({,) y
   (u e) (lios"_) } y
 :

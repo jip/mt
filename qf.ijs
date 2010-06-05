@@ -153,6 +153,15 @@ gerq3=: gerq2`((     QFBS  & }.) (] ,~  ((((_ , QFBS) & {.) ,.~ ($: @ ((0 , (-QF
 NB. =========================================================
 NB. Interface
 
+NB. ####### TODO ###############
+NB. If:
+NB.   2 -: # $ A
+NB. then (with appropriate comparison tolerance)
+NB.   (] -: clean @ ((         trl   @( 0 _1&}.)) mp  unglq)@gelqf) A
+NB.   (] -: clean @ ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)@geqlf) A
+NB.   (] -: clean @ ((         tru   @(_1  0&}.)) mp~ ungqr)@geqrf) A
+NB.   (] -: clean @ ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)@gerqf) A
+
 NB. ---------------------------------------------------------
 NB. gelqf
 NB.

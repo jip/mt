@@ -1,6 +1,7 @@
 NB. util.ijs
 NB. Linear time-invariant (LTI) system's utilities
 NB.
+NB. h            conjugate transpose of table
 NB. powm         raise table y to power x
 NB. powsm        make report of table y powers
 NB. shiftdiag    add element[s from] x to diagonal of table y
@@ -23,6 +24,11 @@ require '~user/projects/lapack/gesvd.ijs'       NB. need_jlapack_ 'gesvd'
 coclass 'tau'
 
 NB. =========================================================
+
+NB. conjugate transpose of table
+h=: +@|:
+
+NB. ---------------------------------------------------------
 NB. powm
 NB. Raise matrix y to power x
 NB.

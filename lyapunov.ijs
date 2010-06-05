@@ -10,8 +10,6 @@ NB. dlyap      solve discrete-time Lyapunov equation
 NB.
 NB. TODO
 NB. - replace some of assert. by throw.
-NB. - handle non-squared case
-NB. - CO2DI: Cayley transform
 NB. - gebal before geev or geevx instead of
 NB.   gehrd before gees
 NB.   see:
@@ -39,7 +37,6 @@ NB. Utilities
 
 split=: (}:;{:) &. >                    NB. split under box at last item
 N2=: [: %: [: +/ [: *: |                NB. 2-norm of vector
-h=: +@|:                                NB. conjugate transpose of table
 
 NB. ---------------------------------------------------------
 NB. sorzhouiter
@@ -76,7 +73,6 @@ sorzhouiter=: 4 : 0
   if. chk do.
     atmp=. (+ lambda) shiftdiag (jj {. x)        NB. conj(lambda)*I + R1
     btmp=. (B1 mp (+ - bh)) + (ijj { x) * - tau  NB. -tau*r-(1/tau)*B1*b
-smoutput 2 4 $ '$atmp' ; 'atmp' ; '$btmp' ; 'btmp' ; ($atmp) ; atmp ; ($btmp) ; btmp
     u=. trtrs_jlapack_ atmp ; btmp               NB. solve for u complex upper triangular system atmp*u=btmp
   else.
     u=. j $ 0
@@ -91,34 +87,31 @@ smoutput 2 4 $ '$atmp' ; 'atmp' ; '$btmp' ; 'btmp' ; ($atmp) ; atmp ; ($btmp) ; 
 NB. =========================================================
 NB. lyapchol
 NB. Solve stable non-negative definite continuous-time
-NB. Lyapunov equation
+NB. Lyapunov equation:
 NB.   A*X + X*A' + B*B' = 0
-NB. directly for Cholesky factor U, X = U*U'
+NB. directly for Cholesky factor U, X = U*U'. The matrix A
+NB. must be stable, that is, all the eigenvalues of A must
+NB. have negative real parts.
 NB.
 NB. Usage:
 NB.   U=. A lyapchol B
 NB.   U=. (R;Q) lyapchol B
 NB. where:
-NB.   A   - N-by-N stable matrix, i.e. all eigenvalues of A must
-NB.         have negative real parts
+NB.   A   - N-by-N stable matrix
 NB.   R,Q - N-by-N matrices from non-real Schur factorization:
 NB.         Q*R*Q' = A
 NB.   B   - N-by-M matrix
 NB.   U   - N-by-N upper triangular matrix
-NB.   N   > 0
-NB.   M   > 0
-NB.
-NB. Solution must exist and be unique, i.e. vectors eigenvalue(A) and
-NB.   eigenvalue(B) have not to have common values
+NB.   N  >= 0
+NB.   M  >= 0
 NB.
 NB. Reference:
 NB.   Solution of stable continuous- or discrete-time Lyapunov equations
 NB.   (Cholesky factor), URL: http://www.slicot.org/shared/doc/SB03OD.html
 
 lyapchol=: 4 : 0
-  n=. # y
-  if. 0 = n do. 0 0 $ 0 return. end.        NB. early termination
   vmatrixorvector_jlapack_ y
+  n=. # y
   if. L. x do.
     'Q R'=. x                               NB. Schur factorization Q*R*Q' = A
     vsquare_jlapack_ Q
@@ -129,10 +122,7 @@ lyapchol=: 4 : 0
     assert. n = # x
     'Q R'=. 13 gees_jlapack_ x              NB. Schur factorization Q*R*Q' = A
   end.
-  evA=. diag R                              NB. eigenvalues(A)
-  evB=. 2 geev_jlapack_ y                   NB. eigenvalues(B)
-  assert. -. 0 e. 0 > 9 o. evA              NB. A is stable
-  assert. evA (*:/ @: (e. , e.~)) evB       NB. solution exists and is unique
+  assert. -. 0 e. 0 > 9 o. diag R           NB. A is stable
   R1=. 8 gerqf_jlapack_ y                   NB. RQ factorization R1*P1=B
   R2=. 8 gerqf_jlapack_ (h Q) mp R1         NB. RQ factorization R2*P2=Q'*R1
 
@@ -141,7 +131,7 @@ lyapchol=: 4 : 0
 
   R3=. 8 gerqf_jlapack_ Q mp V              NB. RQ factorization R3*P3=Q*V
   R3=. (*"1 * @: diag) R3                   NB. negate columns having negative diagonal elements
-  smoutput 2 6 $ 'Q' ; 'R' ; 'R1' ; 'R2' ; 'V' ; 'R3' ; Q ; R ; R1 ; R2 ; V ; R3
+NB. ---  smoutput 2 6 $ 'Q' ; 'R' ; 'R1' ; 'R2' ; 'V' ; 'R3' ; Q ; R ; R1 ; R2 ; V ; R3
   R3
 )
 
@@ -150,7 +140,9 @@ NB. dlyapchol
 NB. Solve convergent non-negative definite discrete-time
 NB. Lyapunov equation
 NB.   A*X*A' + X + B*B' = 0
-NB. directly for Cholesky factor U, X = U*U'
+NB. directly for Cholesky factor U, X = U*U'. The matrix A
+NB. must be d-stable, that is, all the eigenvalues of A must
+NB. lie inside the unit circle.
 
 NB. ---------------------------------------------------------
 NB. lyap
@@ -169,15 +161,9 @@ NB. Syntax: is_passed=. tlyapchol A;B
 
 tlyapchol=: 3 : 0
 'A B'=. y
-smoutput 'A' ; A ; 'geev(A)' ; (< geev_jlapack_ A)
-smoutput 'B' ; B ; 'geev(B)' ; (< geev_jlapack_ B)
-smoutput 'BB''' ; ((mp h) B) ; 'geev(BB'')' ; (< geev_jlapack_ ((mp h) B))
 U=. A lyapchol B
 X=. (mp h) U
-smoutput 'X' ; X ; 'geev(X)' ; (< geev_jlapack_ X)
-smoutput 'U' ; U ; 'geev(U)' ; (< geev_jlapack_ U)
 err=. clean (A mp X) + (X (mp h) A) + ((mp h) B)
-smoutput 2 5 $ 'A' ; 'B' ; 'X' ; 'U' ; 'AX+XA''+BB''' ; A ; B ; X ; U ; ((A mp X) + (X (mp h) A) + (B (mp h) B))
 (*./ ^: 2) 0 = err
 )
 
@@ -186,18 +172,11 @@ NB. Syntax: testlyapchol ''
 testlyapchol=: 3 : 0
 ma0=. 0 0 $ 0
 mb0=. 0 0 $ 0
-A=. 4 4 $ _1 _1 2 2 37 _10 _4 _2 _12 0 7 7 _12 4 _6 _9
-B=. 4 4 $ 2 2 4 5 0 8 7 7 0 0 2 6 0 0 0 2
 ma1=. rndmat_neig 4
-mb1=. 0.1 shiftdiag utri_jlapack_ ? 4 4 $ 10
-tlyapchol &> (<ma0;mb0) , (<A;B) , (<ma1;mb1)
+mb1=. ? 4 4 $ 10
+ma2=. rndmat_neig 10
+mb2=. ? 10 5 $ 10
+ma3=. rndmat_neig 100
+mb3=. ? 100 50 $ 10
+tlyapchol &> (<ma0;mb0) , (<ma1;mb1) , (<ma2;mb2) , (<ma3;mb3)
 )
-
-NB.  A=. 4 4 $ _1 _1 2 2 37 _10 _4 _2 _12 0 7 7 _12 4 _6 _9
-NB.  B=. 4 4 $ 2 2 4 5 0 8 7 7 0 0 2 6 0 0 0 2
-NB.  X=. 4 4 $ 18.3023846590474 43.8883259794941 75.7212100367117 _56.8758547174409 43.8883259794941 139.292151950139 128.468952844055 _100.964634818162 75.7212100367117 128.468952844055 492.482132895331 _365.531487118111 _56.8758547174409 _100.964634818162 _365.531487118111 274.871182227256
-NB.  U=. potrf_jlapack_ &. ((] ;. 0) :. (] ;. 0)) X
-NB.  u=. A lyapchol B
-NB.  x=. (mp h) u
-NB.  smoutput 2 10 $ 'A' ; 'B' ; 'X' ; 'U' ; 'X-UU''' ; 'AX+XA''+BB''' ; 'solution: u' ; 'x=u*u''' ; 'Ax+xA''+BB''' ; 'U-u' ; A ; B ; X ; U ; (X - U mp h U) ; ((A mp X) + (X (mp h) A) + ((mp h) B)) ; u ; x ; ((A mp x) + (x (mp h) A) + ((mp h) B)) ; (U-u)
-NB.  U (-: !. 1e_11) u

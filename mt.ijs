@@ -1,32 +1,29 @@
 NB. 'Matrix toolbox' addon's entry point
 NB.
-NB. Interface:
-NB.   TESTLOGFILE  Log file name or a: to switch logging off
-NB.   TESTLOG      Literal array, being formatted test log
-NB.   DEBUG        Debug level
-NB.   FP_BASE      Floating point base
-NB.   FP_ELEN      Exponent field length (bits)
-NB.   FP_FLEN      Fraction field length (bits)
-NB.   FP_IGUNFL    Is gradual underflow? (boolean)
-NB.   FP_EBIAS     Exponent bias for normalized numbers
-NB.   FP_EPS       Machine epsilon
-NB.   FP_PREC      Machine precision 
-NB.   FP_EMIN      Min exponent for normalized numbers
-NB.   FP_UNFL      Min normalized positive number
-NB.   FP_EMAX      Max exponent for normalized numbers
-NB.   FP_OVFL      Max normalized positive number
-NB.   FP_SFMIN     Safe min, such that 1/FP_SFMIN does not
-NB.                overflow
-NB.   EMPTY        i. 0 0
+NB. TESTLOGFILE  Log file name or a: to switch logging off
+NB. TESTLOG      Literal array, being formatted test log
+NB. DEBUG        Debug level
+NB. FP_BASE      Floating point base
+NB. FP_ELEN      Exponent field length (bits)
+NB. FP_FLEN      Fraction field length (bits)
+NB. FP_IGUNFL    Is gradual underflow? (boolean)
+NB. FP_EBIAS     Exponent bias for normalized numbers
+NB. FP_EPS       Machine epsilon
+NB. FP_PREC      Machine precision 
+NB. FP_EMIN      Min exponent for normalized numbers
+NB. FP_UNFL      Min normalized positive number
+NB. FP_EMAX      Max exponent for normalized numbers
+NB. FP_OVFL      Max normalized positive number
+NB. FP_SFMIN     Safe min, such that 1/FP_SFMIN does not
+NB.              overflow
+NB. EMPTY        i. 0 0
 NB.
-NB. Test suite:
-NB.   test         Adv. to make verb to test algorithms by
-NB.                matrix of generator and shape given
+NB. test         Adv. to make verb to test algorithms by
+NB.              matrix of generator and shape given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

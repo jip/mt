@@ -1,30 +1,27 @@
 NB. Reflections
 NB.
-NB. Interface:
-NB.   larfx      Dyad to generate an elementary reflector
-NB.   larfxxx    Monads to generate an elementary reflector
-NB.   larftxx    Monads to form the triangular factor of a
-NB.              block reflector
-NB.   larfxxxx   Dyads to apply an elementary reflector or its
-NB.              transpose to a matrix from either the left or
-NB.              the right
-NB.   larfbxxxx  Dyads to build a block reflector by larftxx
-NB.              and to apply it or its transpose to a matrix
-NB.              from either the left or the right
+NB. larfx      Dyad to generate an elementary reflector
+NB. larfxxx    Monads to generate an elementary reflector
+NB. larftxx    Monads to form the triangular factor of a
+NB.            block reflector
+NB. larfxxxx   Dyads to apply an elementary reflector or its
+NB.            transpose to a matrix from either the left or
+NB.            the right
+NB. larfbxxxx  Dyads to build a block reflector by larftxx
+NB.            and to apply it or its transpose to a matrix
+NB.            from either the left or the right
 NB.
-NB. Test suite:
-NB.   testlarft  Test algorithms forming the triangular
-NB.              factor of a block reflector, by general
-NB.              matrix given
-NB.   testlarfb  Test algorithms applying a block reflector,
-NB.              by general matrix given
-NB.   testref    Adv. to make verb to test algorithms by
-NB.              matrix of generator and shape given
+NB. testlarft  Test algorithms forming the triangular
+NB.            factor of a block reflector, by general matrix
+NB.            given
+NB. testlarfb  Test algorithms applying a block reflector, by
+NB.            general matrix given
+NB. testref    Adv. to make verb to test algorithms by matrix
+NB.            of generator and shape given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -485,7 +482,7 @@ NB.   A - m×n-matrix, is used to get Qf
 
 testlarft=: 3 : 0
   AC=: y=. 0 {:: y
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getri@getrf)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
@@ -510,7 +507,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testlarfb=: 3 : 0
   'A C'=. y
-  rcond=. (norm1 con getri) C
+  rcond=. (norm1 con (getri@getrf)) C
   'LQf QfL QfR RQf'=. (gelqf ; geqlf ; geqrf ; gerqf) A
 
   ('larfblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;(    C , ~0))

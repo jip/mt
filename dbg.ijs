@@ -1,12 +1,10 @@
 NB. Debug
 NB.
-NB. Interface:
-NB.   dbg  Conj. to force verb to show debug info
+NB. dbg  Conj. to force verb to show debug info
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

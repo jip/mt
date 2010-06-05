@@ -1,24 +1,24 @@
 NB. Random objects
 NB.
-NB. Interface:
-NB.   randu    Uniform distribution U(a,b)
-NB.   rande    Exponential distribution E(μ)
-NB.   randnf   Normal distribution N(μ,σ²) of float numbers
-NB.   randnc   Normal distribution N(μ,σ²) of complex numbers
-NB.   randtnf  Truncated normal distribution TN(μ,σ²,a,b) of
-NB.            float numbers
+NB. randu    Uniform distribution U(a,b)
+NB. rande    Exponential distribution E(μ)
+NB. randnf   Normal distribution N(μ,σ²) of float numbers
+NB. randnc   Normal distribution N(μ,σ²) of complex numbers
+NB. randtnf  Truncated normal distribution TN(μ,σ²,a,b) of
+NB.          float numbers
 NB.
-NB.   gemat    Random general matrix
-NB.   hemat    Random Hermitian (symmetric) matrix
-NB.   unmat    Random unitary (orthogonal) matrix
-NB.   dimat    Random diagonalizable matrix
-NB.   pomat    Random Hermitian (symmetric) positive defined
-NB.            matrix
+NB. gemat    Random general matrix
+NB. hemat    Random Hermitian (symmetric) matrix
+NB. unmat    Random unitary (orthogonal) matrix
+NB. dimat    Random diagonalizable matrix
+NB. pomat    Random Hermitian (symmetric) positive defined
+NB.          matrix
+NB. ptmat    Random Hermitian (symmetric) positive defined
+NB.          tridiagonal matrix
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -32,7 +32,9 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. randu
-NB. Uniform distribution U(a,b) with support (a,b)
+NB.
+NB. Description:
+NB.   Uniform distribution U(a,b) with support (a,b)
 NB.
 NB. Syntax:
 NB.   S=. [supp] randu sh
@@ -52,7 +54,9 @@ randu=: (? @ $ 0:) :((p.~ (-~/\))~ $:)
 
 NB. ---------------------------------------------------------
 NB. rande
-NB. Exponential distribution E(μ) with mean μ
+NB.
+NB. Description:
+NB.   Exponential distribution E(μ) with mean μ
 NB.
 NB. Formula:
 NB.   e ← -μ*log(1-u)
@@ -79,8 +83,10 @@ rande=: (- @ ^. @ randu) : (* $:)
 NB. ---------------------------------------------------------
 NB. randnf
 NB. randnc
-NB. Normal distribution N(μ,σ²) of float (complex) numbers
-NB. with mean μ and variance σ²
+NB.
+NB. Description:
+NB.   Normal distribution N(μ,σ²) of float (complex) numbers
+NB.   with mean μ and variance σ²
 NB.
 NB. Formula:
 NB.   nf1 ← sqrt(e)*cos(u)         NB. Box-Muller
@@ -111,8 +117,10 @@ randnc=: ((%: @      rande ) * (_12 o. (0 2p1 & randu))) : (p. $:)
 
 NB. ---------------------------------------------------------
 NB. randtnf
-NB. Truncated normal distribution TN(μ,σ²,a,b) of float
-NB. numbers in range [a,b] with mean μ and variance σ²
+NB.
+NB. Description:
+NB.   Truncated normal distribution TN(μ,σ²,a,b) of float
+NB.   numbers in range [a,b] with mean μ and variance σ²
 NB.
 NB. Syntax:
 NB.   S=. [par] randtnf sh
@@ -138,7 +146,9 @@ randtnf=: (0 1 __ _ & $:) :(4 : 0)
 
 NB. ---------------------------------------------------------
 NB. gemat
-NB. Make random general matrix
+NB.
+NB. Description:
+NB.   Make random general matrix
 NB.
 NB. Formula:
 NB.   g  ← mantissa * 2 ^ exponent
@@ -174,7 +184,10 @@ gemat=: ((_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX) & $:) :(((randu~ 2&{.) (* 2
 
 NB. ---------------------------------------------------------
 NB. hemat
-NB. Adverb to make random Hermitian (symmetric) matrix
+NB.
+NB. Description:
+NB.   Adv. to make verb to make random Hermitian (symmetric)
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   H=. gemat hemat n
@@ -194,8 +207,10 @@ hemat=: vu2y (+ ct_mt_)
 
 NB. ---------------------------------------------------------
 NB. unmat
-NB. Adverb to make a random unitary (orthogonal) matrix with
-NB. distribution given by Haar measure
+NB.
+NB. Description:
+NB.   Adv. to make verb to make a random unitary (orthogonal)
+NB.   matrix with distribution given by Haar measure
 NB.
 NB. Formula:
 NB.   Z ← randn(n,n)
@@ -225,7 +240,10 @@ unmat=: ((* " 1) ((% |) @ ((<0 1) & |:))) & >/ @ geqrf_mt_ vu2y
 
 NB. ---------------------------------------------------------
 NB. dimat
-NB. Conjunction to make a random diagonalizable square matrix
+NB.
+NB. Description:
+NB.   Conj. to make verb to make a random diagonalizable
+NB.   square matrix
 NB.
 NB. Syntax:
 NB.   D=. randx dimat randq n
@@ -247,8 +265,10 @@ dimat=: 2 : 'u (] mp (* ct_mt_)) v'
 
 NB. ---------------------------------------------------------
 NB. pomat
-NB. Adverb to make a random Hermitian (symmetric) positive
-NB. defined matrix
+NB.
+NB. Description:
+NB.   Adv. to make verb to make a random Hermitian
+NB.   (symmetric) positive defined matrix
 NB.
 NB. Syntax:
 NB.   P=. randx pomat n
@@ -263,3 +283,29 @@ NB. Application:
 NB.   P=. (2p1 & rande) pomat 4
 
 pomat=: vu2y (mp ct_mt_)
+
+NB. ---------------------------------------------------------
+NB. ptmat
+NB.
+NB. Description:
+NB.   Adv. to make verb to make a random Hermitian
+NB.   (symmetric) positive defined tridiagonal matrix
+NB.
+NB. Syntax:
+NB.   T=. randx ptmat n
+NB. where
+NB.   n     ≥ 0, size of matrix T
+NB.   randx - monadic verb to generate random vectors d and
+NB.           e; is called as:
+NB.             d=. (| @ (9 o. randx)) n
+NB.             e=. randx (n-1)
+NB.   d     - n-vector of positive numbers, the main diagonal
+NB.           of T
+NB.   e     - (n-1)-vector, the subdiagonal of T
+NB.   T     - n×n-matrix, random Hermitian (symmetric)
+NB.           positive defined tridiagonal
+NB.
+NB. Application:
+NB.   T=. (randu r. rande) ptmat 4
+
+ptmat=: 1 : '(u @ <:) (((+@[);1:) setdiag_mt_ (([;_1:) setdiag_mt_ ])) ((a:;~(|@(9 o. u))) setdiag_mt_ idmat_mt_)'

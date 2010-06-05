@@ -1,26 +1,23 @@
 NB. Generate matrix with orthonormal rows or columns from its
 NB. factored form
 NB.
-NB. Interface:
-NB.   ungxx      Generate a matrix with orthonormal rows or
-NB.              columns from output of gexxf
-NB.   unghrx     Generate an unitary (orthogonal) matrix
-NB.              which is defined as the product of
-NB.              elementary reflectors as returned by gehrdx
+NB. ungxx      Generate a matrix with orthonormal rows or
+NB.            columns from output of gexxf
+NB. unghrx     Generate an unitary (orthogonal) matrix which
+NB.            is defined as the product of elementary
+NB.            reflectors as returned by gehrdx
 NB.
-NB. Test suite:
-NB.   testungq   Test Q generation algorithms by general
-NB.              matrix given
-NB.   testunghr  Test Q generation algorithms by square
-NB.              matrix given
-NB.   testgq     Adv. to make verb to test Q generation
-NB.              algorithms by matrix of generator and shape
-NB.              given
+NB. testungq   Test Q generation algorithms by general matrix
+NB.            given
+NB. testunghr  Test Q generation algorithms by square matrix
+NB.            given
+NB. testgq     Adv. to make verb to test Q generation
+NB.            algorithms by matrix of generator and shape
+NB.            given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -487,10 +484,10 @@ NB. where
 NB.   A - m×n-matrix
 
 testungq=: 3 : 0
-  ('unglq' tmonad (gelqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q*Q'-I||/(ε*n)
-  ('ungql' tmonad (geqlf`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q'*Q-I||/(ε*m)
-  ('ungqr' tmonad (geqrf`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q'*Q-I||/(ε*m)
-  ('ungrq' tmonad (gerqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q*Q'-I||/(ε*n)
+  ('unglq' tmonad (gelqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q * Q^_1 - I|| / (ε * n)
+  ('ungql' tmonad (geqlf`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q^_1 * Q - I|| / (ε * m)
+  ('ungqr' tmonad (geqrf`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q^_1 * Q - I|| / (ε * m)
+  ('ungrq' tmonad (gerqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q * Q^_1 - I|| / (ε * n)
 
   EMPTY
 )
@@ -507,8 +504,8 @@ NB. where
 NB.   A - n×n-matrix
 
 testunghr=: 3 : 0
-  ('unghrl' tmonad ((gehrdl~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q*Q'-I||/(ε*n)
-  ('unghru' tmonad ((gehrdu~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q'*Q-I||/(ε*n)
+  ('unghrl' tmonad ((gehrdl~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q * Q^_1 - I|| / (ε * n)
+  ('unghru' tmonad ((gehrdu~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q^_1 * Q - I|| / (ε * n)
 
   EMPTY
 )

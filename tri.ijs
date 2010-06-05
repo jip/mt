@@ -1,35 +1,32 @@
 NB. Inverse by triangular factorization
 NB.
-NB. Interface:
-NB.   trtrixx    Inverse triangular matrix
-NB.   getri      Inverse general matrix
-NB.   hetri      Inverse Hermitian (symmetric) matrix
-NB.   potri      Inverse Hermitian (symmetric) positive
-NB.              definite matrix
-NB.   pttri      Inverse Hermitian (symmetric) positive
-NB.              definite tridiagonal matrix
+NB. trtrixx    Inverse triangular matrix
+NB. getri      Inverse general matrix
+NB. hetri      Inverse Hermitian (symmetric) matrix
+NB. potri      Inverse Hermitian (symmetric) positive
+NB.            definite matrix
+NB. pttri      Inverse Hermitian (symmetric) positive
+NB.            definite tridiagonal matrix
 NB.
-NB. Test suite:
-NB.   testtrtri  Test triangular inversion algorithms by
-NB.              triangular matrix given
-NB.   testgetri  Test triangular inversion algorithms by
-NB.              general matrix given
-NB.   testhetri  Test triangular inversion algorithms by
-NB.              Hermitian (symmetric) matrix given
-NB.   testpotri  Test triangular inversion algorithms by
-NB.              Hermitian (symmetric) positive definite
-NB.              matrix given
-NB.   testpttri  Test triangular inversion algorithms by
-NB.              Hermitian (symmetric) positive definite
-NB.              tridiagonal matrix given
-NB.   testtri    Adv. to make verb to test triangular
-NB.              inversion algorithms by matrix of generator
-NB.              and shape given
+NB. testtrtri  Test triangular inversion algorithms by
+NB.            triangular matrix given
+NB. testgetri  Test triangular inversion algorithms by
+NB.            general matrix given
+NB. testhetri  Test triangular inversion algorithms by
+NB.            Hermitian (symmetric) matrix given
+NB. testpotri  Test triangular inversion algorithms by
+NB.            Hermitian (symmetric) positive definite
+NB.            matrix given
+NB. testpttri  Test triangular inversion algorithms by
+NB.            Hermitian (symmetric) positive definite
+NB.            tridiagonal matrix given
+NB. testtri    Adv. to make verb to test triangular
+NB.            inversion algorithms by matrix of generator
+NB.            and shape given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -274,7 +271,7 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite tridiagonal
 NB.
 NB. Formula:
-NB. - berr := || I - A * A^_1 ||/(ε * ||A|| * ||A^_1|| * n)
+NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpttri=: 3 : 0
   rcond=. (norm1 con (pttri@pttrfl)) y

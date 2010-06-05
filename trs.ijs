@@ -1,52 +1,48 @@
 NB. Solve linear monomial equation from triangular
 NB. factorization
 NB.
-NB. Interface:
-NB.   getrsxxx   Solve equation (op(A) * X = B) or
-NB.              (X * op(A) = B), where A is a general
-NB.              matrix, represented in factored form; op(A)
-NB.              is either A itself, or A^T (the
-NB.              transposition of A), or A^H (the conjugate
-NB.              transposition of A); B is known right-hand
-NB.              side (RHS), X is unknown solution
-NB.   hetrsxxx   Solve equation (op(A) * X = B) or
-NB.              (X * op(A) = B), where A is a Hermitian
-NB.              (symmetric) matrix, represented in factored
-NB.              form; op(A) is either A itself, or A^T (the
-NB.              transposition of A); B is known right-hand
-NB.              side (RHS), X is unknown solution
-NB.   potrsxxx   Solve equation (op(A) * X = B) or
-NB.              (X * op(A) = B), where A is a Hermitian
-NB.              (symmetric) positive definite matrix,
-NB.              represented as Cholesky triangle; op(A) is
-NB.              either A itself, or A^T (the transposition
-NB.              of A); B is known right-hand side (RHS), X
-NB.              is unknown solution
-NB.   pttrsxxx   Solve equation (op(A) * X = B) or
-NB.              (X * op(A) = B), where A is a Hermitian
-NB.              (symmetric) positive definite tridiagonal
-NB.              matrix, represented as superdiagonal linked
-NB.              to diagonal; op(A) is either A itself, or
-NB.              A^T (the transposition of A); B is known
-NB.              right-hand side (RHS), X is unknown solution
+NB. getrsxxx   Solve equation (op(A) * X = B) or
+NB.            (X * op(A) = B), where A is a general matrix,
+NB.            represented in factored form; op(A) is either
+NB.            A itself, or A^T (the transposition of A), or
+NB.            A^H (the conjugate transposition of A); B is
+NB.            known right-hand side (RHS), X is unknown
+NB.            solution
+NB. hetrsxxx   Solve equation (op(A) * X = B) or
+NB.            (X * op(A) = B), where A is a Hermitian
+NB.            (symmetric) matrix, represented in factored
+NB.            form; op(A) is either A itself, or A^T (the
+NB.            transposition of A); B is known right-hand
+NB.            side (RHS), X is unknown solution
+NB. potrsxxx   Solve equation (op(A) * X = B) or
+NB.            (X * op(A) = B), where A is a Hermitian
+NB.            (symmetric) positive definite matrix,
+NB.            represented as Cholesky triangle; op(A) is
+NB.            either A itself, or A^T (the transposition of
+NB.            A); B is known right-hand side (RHS), X is
+NB.            unknown solution
+NB. pttrsxxx   Solve equation (op(A) * X = B) or
+NB.            (X * op(A) = B), where A is a Hermitian
+NB.            (symmetric) positive definite tridiagonal
+NB.            matrix, represented as superdiagonal linked to
+NB.            diagonal; op(A) is either A itself, or A^T
+NB.            (the transposition of A); B is known
+NB.            right-hand side (RHS), X is unknown solution
 NB.
-NB. Test suite:
-NB.   testgetrs  Test linear monomial equation solving
-NB.              algorithms by general matrix given
-NB.   testhetrs  Test linear monomial equation solving
-NB.              algorithms by Hermitian (symmetric) matrix
-NB.              given
-NB.   testpotrs  Test linear monomial equation solving
-NB.              algorithms by Hermitian (symmetric)
-NB.              positive definite matrix given
-NB.   testtrs    Adv. to make verb to test triangular solver
-NB.              algorithms by matrix of generator and shape
-NB.              given
+NB. testgetrs  Test getrsxxx by general matrix given
+NB. testhetrs  Test hetrsxxx by Hermitian (symmetric) matrix
+NB.            given
+NB. testpotrs  Test potrsxxx by Hermitian (symmetric)
+NB.            positive definite matrix given
+NB. testpttrs  Test pttrsxxx by Hermitian (symmetric)
+NB.            positive definite tridiagonal matrix given
+NB. testtrs    Adv. to make verb to test triangular solver
+NB.            algorithms by matrix of generator and shape
+NB.            given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -85,8 +81,6 @@ NB.   nrhs ≥ 0
 NB.
 NB. Notes:
 NB. - models LAPACK's xGETRS
-NB. - based on (P*L1*U) variant of factorization as the
-NB.   fastest among getrfxxxx
 NB.
 NB. TODO:
 NB. - implement LAPACK's xGETRS and choose the best
@@ -122,8 +116,7 @@ NB.   T    - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
-NB. - based on (P * L1 * T * L1^H * P^_1 = A) variant of
-NB.   factorization as the fastest among hetrfxxxx
+NB. - models LAPACK's xHETRS
 NB.
 NB. TODO:
 NB. - implement LAPACK's xHETRS and choose the best
@@ -157,8 +150,7 @@ NB.          diagonal entries, Cholesky triangle
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
-NB. - based on (L * L^H = A) variant of factorization as the
-NB.   fastest among potrfx
+NB. - models LAPACK's xPOTRS
 NB.
 NB. TODO:
 NB. - implement LAPACK's xPOTRS and choose the best
@@ -240,11 +232,7 @@ NB. Notes:
 NB. - 'continued fractions' approach is useless here since
 NB.   infix scan is non-consequtive
 NB. - L1 and D should be sparse
-NB. - based on (L1 * D * L1^H = A) variant of factorization
-NB.   as the fastest among pttrfx
-NB.
-NB. TODO:
-NB. - implement LAPACK's xPTTRS and choose the best
+NB. - implement LAPACK's xPTTRS
 
 pttrsax=: 4 : 0
   'L1 D'=. x
@@ -262,8 +250,7 @@ NB. ---------------------------------------------------------
 NB. testgetrs
 NB.
 NB. Description:
-NB.   Test linear monomial equation solving algorithms
-NB.   getrsxxx by general matrix given
+NB.   Test getrsxxx by general matrix given
 NB.
 NB. Syntax:
 NB.   testgetrs (A;X)
@@ -273,11 +260,11 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (||op(A)|| * ||X||*eps))
+NB. - berr := max(||B - op(A) * X|| / (||eps * op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
-  'conA conAh conAt'=. (norm1 con getri)"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. (norm1 con (getri@getrf))"2 (] , ct ,: |:) A
   Af=. getrfpl1u A
 
   ('getrsax'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;Af)
@@ -294,8 +281,7 @@ NB. ---------------------------------------------------------
 NB. testhetrs
 NB.
 NB. Description:
-NB.   Test linear monomial equation solving algorithms
-NB.   hetrsxxx by Hermitian (symmetric) matrix given
+NB.   Test hetrsxxx by Hermitian (symmetric) matrix given
 NB.
 NB. Syntax:
 NB.   testhetrs (A;X)
@@ -305,11 +291,11 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (||op(A)|| * ||X||*eps))
+NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con hetri)"2 (] ,: |:) A
+  'conA conAt'=. (norm1 con (hetri@hetrf))"2 (] ,: |:) A
   Af=. hetrfpl A
 
   ('hetrsax'  tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;Af)
@@ -324,9 +310,8 @@ NB. ---------------------------------------------------------
 NB. testpotrs
 NB.
 NB. Description:
-NB.   Test linear monomial equation solving algorithms
-NB.   potrsxxx by Hermitian (symmetric) positive definite
-NB.   matrix given
+NB.   Test potrsxxx by Hermitian (symmetric) positive
+NB.   definite matrix given
 NB.
 NB. Syntax:
 NB.   testpotrs (A;X)
@@ -336,17 +321,48 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (||op(A)|| * ||X||*eps))
+NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
 
 testpotrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con potri)"2 (] ,: |:) A
+  'conA conAt'=. (norm1 con (potri@potrf))"2 (] ,: |:) A
   L=. potrfpl A
 
   ('potrsax'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
   ('potrsatx' tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;L)
   ('potrsxa'  tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;L)
   ('potrsxat' tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;L)
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testpttrs
+NB.
+NB. Description:
+NB.   Test pttrsxxx by Hermitian (symmetric) positive
+NB.   definite tridiagonal matrix given
+NB.
+NB. Syntax:
+NB.   testpttrs (A;X)
+NB. where
+NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
+NB.       tridiagonal
+NB.   X - n×n-matrix, exact solution
+NB.
+NB. Formula:
+NB. - ferr := max(||X - exactX|| / ||X||)
+NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
+
+testpttrs=: 3 : 0
+  'A X'=. y
+  'conA conAt'=. (norm1 con (pttri@pttrf))"2 (] ,: |:) A
+  'L1 D'=. pttrfpl A NB. ##################
+
+  ('pttrsax'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
+  ('pttrsatx' tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;L)
+  ('pttrsxa'  tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;L)
+  ('pttrsxat' tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;L)
 
   EMPTY
 )
@@ -375,4 +391,4 @@ NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtrs_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrs_mt_ 150 200
 
-testtrs=: 1 : 'EMPTY_mt_ [ ((testpotrs_mt_ @ ((u pomat_mt_) ; u)) [ ((testhetrs_mt_ @ ((u hemat_mt_) ; u))) [ (testgetrs_mt_ @ (u ; u))) ^: (=/)'
+testtrs=: 1 : 'EMPTY_mt_ [ ((testpttrs_mt_ @ ((u ptmat_mt_) ; u)) [ (testpotrs_mt_ @ ((u pomat_mt_) ; u)) [ ((testhetrs_mt_ @ ((u hemat_mt_) ; u))) [ (testgetrs_mt_ @ (u ; u))) ^: (=/)'

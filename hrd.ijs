@@ -1,22 +1,19 @@
 NB. Reduce to Hessenberg form by an unitary similarity
 NB. transformation
 NB.
-NB. Interface:
-NB.   gehrdx     Reduce a general matrix to Hessenberg form
-NB.   gghrdx     Reduce a pair of general and triangular
-NB.              matrices to generalized Hessenberg form
+NB. gehrdx     Reduce a general matrix to Hessenberg form
+NB. gghrdx     Reduce a pair of general and triangular
+NB.            matrices to generalized Hessenberg form
 NB.
-NB. Test suite:
-NB.   testgehrd  Test Hessenberg reduction algorithms by
-NB.              general matrix given
-NB.   testhrd    Adv. to make verb to test Hessenberg
-NB.              reduction algorithms gehrdx by matrix of
-NB.              generator and shape given
+NB. testgehrd  Test Hessenberg reduction algorithms by
+NB.            general matrix given
+NB. testhrd    Adv. to make verb to test Hessenberg
+NB.            reduction algorithms gehrdx by matrix of
+NB.            generator and shape given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -36,7 +33,7 @@ NB. Description:
 NB.   Reduce the first HRDNB rows (panel) of a general matrix
 NB.   subeA so that elements behind the 1st supdiagonal are
 NB.   zero. The reduction is performed by an unitary
-NB.   (orthogonal) similarity transformation: Q * subeA * Q'
+NB.   (orthogonal) similarity transformation: Q * subeA * Q^_1
 NB.
 NB. Syntax:
 NB.   'Y V H T'=. lahr2l subeA
@@ -89,7 +86,7 @@ NB. Description:
 NB.   Reduce the first HRDNB columns (panel) of a general
 NB.   matrix subeA so that elements below the 1st subdiagonal
 NB.   are zero. The reduction is performed by an unitary
-NB.   (orthogonal) similarity transformation: Q' * subeA * Q
+NB.   (orthogonal) similarity transformation: Q^_1 * subeA * Q
 NB.
 NB. Syntax:
 NB.   'Y V H T'=. lahr2u subeA
@@ -144,7 +141,7 @@ NB. Description:
 NB.   Reduce an augmented general matrix eA to lower
 NB.   Hessenberg form H by a unitary (orthogonal) similarity
 NB.   transformation by non-blocked algorithm:
-NB.     Q * A * Q' = H
+NB.     Q * A * Q^_1 = H
 NB.
 NB. Syntax:
 NB.   HQf=. hs gehd2l eA
@@ -178,7 +175,7 @@ NB. Description:
 NB.   Reduce an augmented general matrix eA to upper
 NB.   Hessenberg form H by a unitary (orthogonal) similarity
 NB.   transformation by non-blocked algorithm:
-NB.     Q' * A * Q = H
+NB.     Q^_1 * A * Q = H
 NB.
 NB. Syntax:
 NB.   HQf=. hs gehd2u eA
@@ -217,7 +214,7 @@ NB.
 NB. Description:
 NB.   Reduce a general matrix A to lower Hessenberg form H
 NB.   by a unitary (orthogonal) similarity transformation:
-NB.     Q * A * Q' = H
+NB.     Q * A * Q^_1 = H
 NB.
 NB. Syntax:
 NB.   HQf=. hs gehrdl A
@@ -306,7 +303,7 @@ NB.
 NB. Description:
 NB.   Reduce a general matrix A to upper Hessenberg form H
 NB.   by a unitary (orthogonal) similarity transformation:
-NB.     Q' * A * Q = H
+NB.     Q^_1 * A * Q = H
 NB.
 NB. Syntax:
 NB.   HQf=. hs gehrdu A
@@ -411,8 +408,8 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
-NB. - Q * A * Q' = H : berr := ||A-Q'*H*Q||/ε*n*||A||
-NB. - Q' * A * Q = H : berr := ||A-Q*H*Q'||/ε*n*||A||
+NB. - Q * A * Q^_1 = H : berr := ||A - Q^_1 * H * Q|| / (ε * ||A|| * n)
+NB. - Q^_1 * A * Q = H : berr := ||A - Q * H * Q^_1|| / (ε * ||A|| * n)
 NB.
 NB. Syntax: testgehrd A
 NB. where A - general n×n-matrix
@@ -421,7 +418,7 @@ testgehrd=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gehrd'
 
-  rcond=. (norm1 con getri) y
+  rcond=. (norm1 con (getri@getrf)) y
 
 NB. FIXME!  ('gehrd_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
 

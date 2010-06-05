@@ -1,25 +1,22 @@
 NB. Solve linear monomial equation with triangular matrix
 NB.
-NB. Interface:
-NB.   trsmxxxx  Solve equation (op(A) * X = B) or
-NB.             (X * op(A) = B), where A is either unit or
-NB.             non-unit, either lower or upper, triangular
-NB.             matrix; op(A) is either A itself, or A^T,
-NB.             the transposition of A, or A^H, the conjugate
-NB.             transposition of A; B is known right-hand
-NB.             side (RHS), X is unknown solution
+NB. trsmxxxx  Solve equation (op(A) * X = B) or
+NB.           (X * op(A) = B), where A is either unit or
+NB.           non-unit, either lower or upper, triangular
+NB.           matrix; op(A) is either A itself, or A^T, the
+NB.           transposition of A, or A^H, the conjugate
+NB.           transposition of A; B is known right-hand side
+NB.           (RHS), X is unknown solution
 NB.
-NB. Test suite:
-NB.   testtrsm  Test linear monomial equation solving
-NB.             algorithms by triangular matrix given
-NB.   testsm    Adv. to make verb to test linear monomial
-NB.             equation solving algorithms trsmxxxx by
-NB.             matrix of generator and shape given
+NB. testtrsm  Test linear monomial equation solving
+NB.           algorithms by triangular matrix given
+NB. testsm    Adv. to make verb to test linear monomial
+NB.           equation solving algorithms trsmxxxx by matrix
+NB.           of generator and shape given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

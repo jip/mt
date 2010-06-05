@@ -1,39 +1,36 @@
 NB. Multiply a general matrix by a matrix with orthonormal
 NB. rows or columns, which is represented in factored form
 NB.
-NB. Interface:
-NB.   unmlqxx    Multiply a general matrix by a matrix with
-NB.              orthonormal rows, which is represented in
-NB.              factored form, as returned by gelqf
-NB.   unmqlxx    Multiply a general matrix by a matrix with
-NB.              orthonormal columns, which is represented in
-NB.              factored form, as returned by geqlf
-NB.   unmqrxx    Multiply a general matrix by a matrix with
-NB.              orthonormal columns, which is represented in
-NB.              factored form, as returned by geqrf
-NB.   unmrqxx    Multiply a general matrix by a matrix with
-NB.              orthonormal rows, which is represented in
-NB.              factored form, as returned by gerqf
-NB.   unmhrxxx   Multiply a general matrix by an unitary
-NB.              (orthogonal) matrix, which is represented in
-NB.              factored form, as returned by gehrdx
-NB.   unmbrxx    Multiply a general matrix by an unitary
-NB.              (orthogonal) matrix, which is represented in
-NB.              factored form, as returned by gebrdx
+NB. unmlqxx    Multiply a general matrix by a matrix with
+NB.            orthonormal rows, which is represented in
+NB.            factored form, as returned by gelqf
+NB. unmqlxx    Multiply a general matrix by a matrix with
+NB.            orthonormal columns, which is represented in
+NB.            factored form, as returned by geqlf
+NB. unmqrxx    Multiply a general matrix by a matrix with
+NB.            orthonormal columns, which is represented in
+NB.            factored form, as returned by geqrf
+NB. unmrqxx    Multiply a general matrix by a matrix with
+NB.            orthonormal rows, which is represented in
+NB.            factored form, as returned by gerqf
+NB. unmhrxxx   Multiply a general matrix by an unitary
+NB.            (orthogonal) matrix, which is represented in
+NB.            factored form, as returned by gehrdx
+NB. unmbrxx    Multiply a general matrix by an unitary
+NB.            (orthogonal) matrix, which is represented in
+NB.            factored form, as returned by gebrdx
 NB.
-NB. Test suite:
-NB.   testunmq   Test Q multiplication qf-algorithms by
-NB.              general matrix given
-NB.   testunmhr  Test Q multiplication hrd-algorithms by
-NB.              square matrix given
-NB.   testmq     Adv. to make verb to test Q multiplication
-NB.              algorithms by matrix of generator and shape
-NB.              given
+NB. testunmq   Test Q multiplication qf-algorithms by general
+NB.            matrix given
+NB. testunmhr  Test Q multiplication hrd-algorithms by square
+NB.            matrix given
+NB. testmq     Adv. to make verb to test Q multiplication
+NB.            algorithms by matrix of generator and shape
+NB.            given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -114,23 +111,23 @@ unmr2rnstep=: (1 {:: ]) ((,.   _  1&rt)  ;  0  1&}.@])~ (,;.0~ (1 _ ,:~ 2 # _1 -
 unmr2rcstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~ 0 _1&}.@[)~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&({::)))) larfrnbr 0 {:: ]
 
 NB. ---------------------------------------------------------
-NB. Verb     Action  Side   Tran  Syntax
-NB. unml2ln  Q * C   left   none  eCprod=. Qf unml2ln (C, 0)
-NB. unml2lc  Q'* C   left   ct    eCprod=. Qf unml2lc (C, 0)
-NB. unml2rn  C * Q   right  none  eCprod=. Qf unml2rn (C,.0)
-NB. unml2rc  C * Q'  right  ct    eCprod=. Qf unml2rc (C,.0)
-NB. unm2lln  Q * C   left   none  eCprod=. Qf unm2lln (0, C)
-NB. unm2llc  Q'* C   left   ct    eCprod=. Qf unm2llc (0, C)
-NB. unm2lrn  C * Q   right  none  eCprod=. Qf unm2lrn (0,.C)
-NB. unm2lrc  C * Q'  right  ct    eCprod=. Qf unm2lrc (0,.C)
-NB. unm2rln  Q * C   left   none  eCprod=. Qf unm2rln (C, 0)
-NB. unm2rlc  Q'* C   left   ct    eCprod=. Qf unm2rlc (C, 0)
-NB. unm2rrn  C * Q   right  none  eCprod=. Qf unm2rrn (C,.0)
-NB. unm2rrc  C * Q'  right  ct    eCprod=. Qf unm2rrc (C,.0)
-NB. unmr2ln  Q * C   left   none  eCprod=. Qf unmr2ln (0, C)
-NB. unmr2lc  Q'* C   left   ct    eCprod=. Qf unmr2lc (0, C)
-NB. unmr2rn  C * Q   right  none  eCprod=. Qf unmr2rn (0,.C)
-NB. unmr2rc  C * Q'  right  ct    eCprod=. Qf unmr2rc (0,.C)
+NB. Verb     Action   Side   Tran  Syntax
+NB. unml2ln  Q * C    left   none  eCprod=. Qf unml2ln (C, 0)
+NB. unml2lc  Q^H * C  left   ct    eCprod=. Qf unml2lc (C, 0)
+NB. unml2rn  C * Q    right  none  eCprod=. Qf unml2rn (C,.0)
+NB. unml2rc  C * Q^H  right  ct    eCprod=. Qf unml2rc (C,.0)
+NB. unm2lln  Q * C    left   none  eCprod=. Qf unm2lln (0, C)
+NB. unm2llc  Q^H * C  left   ct    eCprod=. Qf unm2llc (0, C)
+NB. unm2lrn  C * Q    right  none  eCprod=. Qf unm2lrn (0,.C)
+NB. unm2lrc  C * Q^H  right  ct    eCprod=. Qf unm2lrc (0,.C)
+NB. unm2rln  Q * C    left   none  eCprod=. Qf unm2rln (C, 0)
+NB. unm2rlc  Q^H * C  left   ct    eCprod=. Qf unm2rlc (C, 0)
+NB. unm2rrn  C * Q    right  none  eCprod=. Qf unm2rrn (C,.0)
+NB. unm2rrc  C * Q^H  right  ct    eCprod=. Qf unm2rrc (C,.0)
+NB. unmr2ln  Q * C    left   none  eCprod=. Qf unmr2ln (0, C)
+NB. unmr2lc  Q^H * C  left   ct    eCprod=. Qf unmr2lc (0, C)
+NB. unmr2rn  C * Q    right  none  eCprod=. Qf unmr2rn (0,.C)
+NB. unmr2rc  C * Q^H  right  ct    eCprod=. Qf unmr2rc (0,.C)
 NB.
 NB. Description:
 NB.   Multiply a general matrix C, augmented by trash vector,
@@ -286,11 +283,11 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb     Action  Side   Tran  Syntax
-NB. unmlqln  Q * C   left   none  QeC=.  Qf unmlqln C
-NB. unmlqlc  Q'* C   left   ct    cQeC=. Qf unmlqlc C
-NB. unmlqrn  C * Q   right  none  eCQ=.  Qf unmlqlc C
-NB. unmlqrc  C * Q'  right  ct    eCcQ=. Qf unmlqlc C
+NB. Verb     Action   Side   Tran  Syntax
+NB. unmlqln  Q * C    left   none  QeC=.  Qf unmlqln C
+NB. unmlqlc  Q^H * C  left   ct    cQeC=. Qf unmlqlc C
+NB. unmlqrn  C * Q    right  none  eCQ=.  Qf unmlqlc C
+NB. unmlqrc  C * Q^H  right  ct    eCcQ=. Qf unmlqlc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -321,11 +318,11 @@ unmlqrn=:  0 _1 }. ((unml2rn`(,.&>/@([ unmlqrnstep^:(>.@(MQBS %~ #@[)) ((({.~ _&
 unmlqrc=:  0 _1 }. ((unml2rc`(,.&>/@(  unmlqrcstep^:(>.@(MQBS %~ #@[)) (;~ _ 0&{.                                             ) ))@.(MQBS < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
 
 NB. ---------------------------------------------------------
-NB. Verb     Action  Side   Tran  Syntax
-NB. unmqlln  Q * C   left   none  QeC=.  Qf unmqlln C
-NB. unmqllc  Q'* C   left   ct    cQeC=. Qf unmqllc C
-NB. unmqlrn  C * Q   right  none  eCQ=.  Qf unmqllc C
-NB. unmqlrc  C * Q'  right  ct    eCcQ=. Qf unmqllc C
+NB. Verb     Action   Side   Tran  Syntax
+NB. unmqlln  Q * C    left   none  QeC=.  Qf unmqlln C
+NB. unmqllc  Q^H * C  left   ct    cQeC=. Qf unmqllc C
+NB. unmqlrn  C * Q    right  none  eCQ=.  Qf unmqllc C
+NB. unmqlrc  C * Q^H  right  ct    eCcQ=. Qf unmqllc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -355,11 +352,11 @@ unmqlrn=:  0  1 }. ((unm2lrn`(,.&>/@(  unmqlrnstep^:(>.@(MQBS %~ c@[)) (;  _ 0&{
 unmqlrc=:  0  1 }. ((unm2lrc`(,.&>/@([ unmqlrcstep^:(>.@(MQBS %~ c@[)) ((({.~ _&,) ;~ (}.~ 0&,))  (MQBS                  - c ))~))@.(MQBS < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
 
 NB. ---------------------------------------------------------
-NB. Verb     Action  Side   Tran  Syntax
-NB. unmqrln  Q * C   left   none  QeC=.  Qf unmqrln C
-NB. unmqrlc  Q'* C   left   ct    cQeC=. Qf unmqrlc C
-NB. unmqrrn  C * Q   right  none  eCQ=.  Qf unmqrlc C
-NB. unmqrrc  C * Q'  right  ct    eCcQ=. Qf unmqrlc C
+NB. Verb     Action   Side   Tran  Syntax
+NB. unmqrln  Q * C    left   none  QeC=.  Qf unmqrln C
+NB. unmqrlc  Q^H * C  left   ct    cQeC=. Qf unmqrlc C
+NB. unmqrrn  C * Q    right  none  eCQ=.  Qf unmqrlc C
+NB. unmqrrc  C * Q^H  right  ct    eCcQ=. Qf unmqrlc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -390,11 +387,11 @@ unmqrrn=:  0 _1 }. ((unm2rrn`(,.&>/@(  unmqrrnstep^:(>.@(MQBS %~ c@[)) (;~ _ 0&{
 unmqrrc=:  0 _1 }. ((unm2rrc`(,.&>/@([ unmqrrcstep^:(>.@(MQBS %~ c@[)) ((({.~ _&,) ;  (}.~ 0&,))  (MQBS arounddown @ (_1 + c)))~))@.(MQBS < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
 
 NB. ---------------------------------------------------------
-NB. Verb     Action  Side   Tran  Syntax
-NB. unmrqln  Q * C   left   none  QeC=.  Qf unmrqln C
-NB. unmrqlc  Q'* C   left   ct    cQeC=. Qf unmrqlc C
-NB. unmrqrn  C * Q   right  none  eCQ=.  Qf unmrqlc C
-NB. unmrqrc  C * Q'  right  ct    eCcQ=. Qf unmrqlc C
+NB. Verb     Action   Side   Tran  Syntax
+NB. unmrqln  Q * C    left   none  QeC=.  Qf unmrqln C
+NB. unmrqlc  Q^H * C  left   ct    cQeC=. Qf unmrqlc C
+NB. unmrqrn  C * Q    right  none  eCQ=.  Qf unmrqlc C
+NB. unmrqrc  C * Q^H  right  ct    eCcQ=. Qf unmrqlc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -425,11 +422,11 @@ unmrqrn=:  0  1 }. ((unmr2rn`(,.&>/@([ unmrqrnstep^:(>.@(MQBS %~ #@[)) ((({.~ _&
 unmrqrc=:  0  1 }. ((unmr2rc`(,.&>/@(  unmrqrcstep^:(>.@(MQBS %~ #@[)) (;  _ 0&{.                                             ) ))@.(MQBS < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
 
 NB. ---------------------------------------------------------
-NB. Verb      Action  Side   Tran  Syntax
-NB. unmhrlln  Q * C   left   none  QeC=.  Qf unmhrlln C
-NB. unmhrllc  Q'* C   left   ct    cQeC=. Qf unmhrllc C
-NB. unmhrlrn  C * Q   right  none  eCQ=.  Qf unmhrlrn C
-NB. unmhrlrc  C * Q'  right  ct    eCcQ=. Qf unmhrlrc C
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmhrlln  Q * C    left   none  QeC=.  Qf unmhrlln C
+NB. unmhrllc  Q^H * C  left   ct    cQeC=. Qf unmhrllc C
+NB. unmhrlrn  C * Q    right  none  eCQ=.  Qf unmhrlrn C
+NB. unmhrlrc  C * Q^H  right  ct    eCcQ=. Qf unmhrlrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by unitary (orthogonal)
@@ -460,11 +457,11 @@ unmhrlrn=: (unmlqrn~ (|. !. 0))~
 unmhrlrc=: (unmlqrc~ (|. !. 0))~
 
 NB. ---------------------------------------------------------
-NB. Verb      Action  Side   Tran  Syntax
-NB. unmhruln  Q * C   left   none  QeC=.  Qf unmhruln C
-NB. unmhrulc  Q'* C   left   ct    cQeC=. Qf unmhrulc C
-NB. unmhrurn  C * Q   right  none  eCQ=.  Qf unmhrurn C
-NB. unmhrurc  C * Q'  right  ct    eCcQ=. Qf unmhrurc C
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmhruln  Q * C    left   none  QeC=.  Qf unmhruln C
+NB. unmhrulc  Q^H * C  left   ct    cQeC=. Qf unmhrulc C
+NB. unmhrurn  C * Q    right  none  eCQ=.  Qf unmhrurn C
+NB. unmhrurc  C * Q^H  right  ct    eCcQ=. Qf unmhrurc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by unitary (orthogonal)
@@ -512,29 +509,29 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testunmq=: 3 : 0
   'A C'=. y
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) C  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getri@getrf)) @. (=/@$)) C  NB. meaninigful for square matrices only
   'LQf QfL QfR RQf'=. xQf=. (gelqf ; geqlf ; geqrf ; gerqf) A
   'Qlq Qql Qqr Qrq'=. (((unglq~ (<:@c))&.>)`((ungql~ (<:@#))&.>)`((ungqr~ (<:@#))&.>)`((ungrq~ (<:@c))&.>)) ag xQf
 
-  ('unmlqln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;(ct C);    Qlq )  NB. berr := ||Q *C -Q *C ||/(ε*||C||*n)
-  ('unmlqlc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;(ct C);(ct Qlq))  NB. berr := ||Q'*C -Q'*C ||/(ε*||C||*n)
-  ('unmlqrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;    C ;    Qlq )  NB. berr := ||C *Q -C *Q ||/(ε*||C||*n)
-  ('unmlqrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;    C ;(ct Qlq))  NB. berr := ||C *Q'-C *Q'||/(ε*||C||*n)
+  ('unmlqln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;(ct C);    Qlq )  NB. berr := ||Q * C   - Q * C  || / (ε * ||C|| * n)
+  ('unmlqlc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;(ct C);(ct Qlq))  NB. berr := ||Q^H * C - Q^H * C|| / (ε * ||C|| * n)
+  ('unmlqrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;    C ;    Qlq )  NB. berr := ||C * Q   - C * Q  || / (ε * ||C|| * n)
+  ('unmlqrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (LQf;    C ;(ct Qlq))  NB. berr := ||C * Q^H - C * Q^H|| / (ε * ||C|| * n)
 
-  ('unmqlln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfL;    C ;    Qql )  NB. berr := ||Q *C -Q *C ||/(ε*||C||*m)
-  ('unmqllc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfL;    C ;(ct Qql))  NB. berr := ||Q'*C -Q'*C ||/(ε*||C||*m)
-  ('unmqlrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfL;(ct C);    Qql )  NB. berr := ||C *Q -C *Q ||/(ε*||C||*m)
-  ('unmqlrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfL;(ct C);(ct Qql))  NB. berr := ||C *Q'-C *Q'||/(ε*||C||*m)
+  ('unmqlln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfL;    C ;    Qql )  NB. berr := ||Q * C   - Q * C  || / (ε * ||C|| * m)
+  ('unmqllc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfL;    C ;(ct Qql))  NB. berr := ||Q^H * C - Q^H * C|| / (ε * ||C|| * m)
+  ('unmqlrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfL;(ct C);    Qql )  NB. berr := ||C * Q - C * Q    || / (ε * ||C|| * m)
+  ('unmqlrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfL;(ct C);(ct Qql))  NB. berr := ||C * Q^H - C * Q^H|| / (ε * ||C|| * m)
 
-  ('unmqrln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfR;    C ;    Qqr )  NB. berr := ||Q *C -Q *C ||/(ε*||C||*m)
-  ('unmqrlc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfR;    C ;(ct Qqr))  NB. berr := ||Q'*C -Q'*C ||/(ε*||C||*m)
-  ('unmqrrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfR;(ct C);    Qqr )  NB. berr := ||C *Q -C *Q ||/(ε*||C||*m)
-  ('unmqrrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfR;(ct C);(ct Qqr))  NB. berr := ||C *Q'-C *Q'||/(ε*||C||*m)
+  ('unmqrln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfR;    C ;    Qqr )  NB. berr := ||Q * C   - Q * C  || / (ε * ||C|| * m)
+  ('unmqrlc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfR;    C ;(ct Qqr))  NB. berr := ||Q^H * C - Q^H * C|| / (ε * ||C|| * m)
+  ('unmqrrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfR;(ct C);    Qqr )  NB. berr := ||C * Q   - C * Q  || / (ε * ||C|| * m)
+  ('unmqrrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (QfR;(ct C);(ct Qqr))  NB. berr := ||C * Q^H - C * Q^H|| / (ε * ||C|| * m)
 
-  ('unmrqln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (RQf;(ct C);    Qrq )  NB. berr := ||Q *C -Q *C ||/(ε*||C||*n)
-  ('unmrqlc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (RQf;(ct C);(ct Qrq))  NB. berr := ||Q'*C -Q'*C ||/(ε*||C||*n)
-  ('unmrqrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (RQf;    C ;    Qrq )  NB. berr := ||C *Q -C *Q ||/(ε*||C||*n)
-  ('unmrqrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (RQf;    C ;(ct Qrq))  NB. berr := ||C *Q'-C *Q'||/(ε*||C||*n)
+  ('unmrqln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (RQf;(ct C);    Qrq )  NB. berr := ||Q * C   - Q * C  || / (ε * ||C|| * n)
+  ('unmrqlc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (RQf;(ct C);(ct Qrq))  NB. berr := ||Q^H * C - Q^H * C|| / (ε * ||C|| * n)
+  ('unmrqrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (RQf;    C ;    Qrq )  NB. berr := ||C * Q   - C * Q  || / (ε * ||C|| * n)
+  ('unmrqrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (RQf;    C ;(ct Qrq))  NB. berr := ||C * Q^H - C * Q^H|| / (ε * ||C|| * n)
 
   EMPTY
 )
@@ -554,19 +551,19 @@ NB.   C - n×n-matrix, is used as multiplier
 
 testunmhr=: 3 : 0
   'A C'=. y
-  rcond=. (norm1 con getri) C
+  rcond=. (norm1 con (getri@getrf)) C
   'HlQf HuQf'=. xQf=. ((gehrdl~ (0,#)) ; (gehrdu~ (0,c))) A
   'Qhrl Qhru'=. ((unghrl&.>)`(unghru&.>)) ag xQf
 
-  ('unmhrlln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;(ct C);    Qhrl )  NB. berr := ||Q *C -Q *C ||/(ε*||C||*n)
-  ('unmhrllc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;(ct C);(ct Qhrl))  NB. berr := ||Q'*C -Q'*C ||/(ε*||C||*n)
-  ('unmhrlrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;    C ;    Qhrl )  NB. berr := ||C *Q -C *Q ||/(ε*||C||*n)
-  ('unmhrlrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;    C ;(ct Qhrl))  NB. berr := ||C *Q'-C *Q'||/(ε*||C||*n)
+  ('unmhrlln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;(ct C);    Qhrl )  NB. berr := ||Q * C   - Q * C  || / (ε * ||C|| * n)
+  ('unmhrllc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;(ct C);(ct Qhrl))  NB. berr := ||Q^H * C - Q^H * C|| / (ε * ||C|| * n)
+  ('unmhrlrn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;    C ;    Qhrl )  NB. berr := ||C * Q   - C * Q  || / (ε * ||C|| * n)
+  ('unmhrlrc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*c)@(1 {:: [))))))) (HlQf;    C ;(ct Qhrl))  NB. berr := ||C * Q^H - C * Q^H|| / (ε * ||C|| * n)
 
-  ('unmhruln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (HuQf;(ct C);    Qhru )  NB. berr := ||Q *C -Q *C ||/(ε*||C||*m)
-  ('unmhrulc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (HuQf;(ct C);(ct Qhru))  NB. berr := ||Q'*C -Q'*C ||/(ε*||C||*m)
-  ('unmhrurn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (HuQf;    C ;    Qhru )  NB. berr := ||C *Q -C *Q ||/(ε*||C||*m)
-  ('unmhrurc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (HuQf;    C ;(ct Qhru))  NB. berr := ||C *Q'-C *Q'||/(ε*||C||*m)
+  ('unmhruln' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (HuQf;(ct C);    Qhru )  NB. berr := ||Q * C   - Q * C  || / (ε * ||C|| * m)
+  ('unmhrulc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp~ & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (HuQf;(ct C);(ct Qhru))  NB. berr := ||Q^H * C - Q^H * C|| / (ε * ||C|| * m)
+  ('unmhrurn' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (HuQf;    C ;    Qhru )  NB. berr := ||C * Q   - C * Q  || / (ε * ||C|| * m)
+  ('unmhrurc' tdyad ((0 & {::)`(1 & {::)`]`(rcond"_)`(_."_)`(((norm1@((- ((mp  & >/)@}.))~)) % (FP_EPS*((norm1*#)@(1 {:: [))))))) (HuQf;    C ;(ct Qhru))  NB. berr := ||C * Q^H - C * Q^H|| / (ε * ||C|| * m)
 
   EMPTY
 )

@@ -1,21 +1,19 @@
 NB. IOS
 NB.
-NB. Interface:
-NB.   liofmax    lIO 1st element with maximum sum of real and
-NB.              imagine parts' modules
-NB.   liolmax    lIO last element with maximum sum of real
-NB.              and imagine parts' modules
-NB.   lios2cp    Convert lIOS to cycle permutation
-NB.   ht2lios    Generate lIOS from head and tail
-NB.   dhs2lios   Generate lIOS from head, size and optional
-NB.              delta
-NB.   rios2ios   Convert rIOS to IOS
-NB.   rios2lios  Convert rIOS to lIOS
+NB. liofmax    lIO 1st element with maximum sum of real and
+NB.            imagine parts' modules
+NB. liolmax    lIO last element with maximum sum of real and
+NB.            imagine parts' modules
+NB. lios2cp    Convert lIOS to cycle permutation
+NB. ht2lios    Generate lIOS from head and tail
+NB. dhs2lios   Generate lIOS from head, size and optional
+NB.            delta
+NB. rios2ios   Convert rIOS to IOS
+NB. rios2lios  Convert rIOS to lIOS
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

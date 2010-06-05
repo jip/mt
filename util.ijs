@@ -1,24 +1,22 @@
 NB. Utilities
 NB.
-NB. Interface:
-NB.   sgn       Simplified signum
-NB.   condneg   Conditional negate
-NB.   copysign  Copy sign
-NB.   sorim     Sum of real and imaginary parts' modules
-NB.   soris     Sum of real and imaginary parts' squares
-NB.   fmtlog    Format log string
-NB.   ag        Adv. to apply successive verbs from gerund to
-NB.             successive elements of list
-NB.   ms        Minimum in sum of vectors
-NB.   tmonad    Template conj. to make verbs to test
-NB.             computational monad
-NB.   tdyad     Template conj. to make verbs to test
-NB.             computational dyad
+NB. sgn       Simplified signum
+NB. condneg   Conditional negate
+NB. copysign  Copy sign
+NB. sorim     Sum of real and imaginary parts' modules
+NB. soris     Sum of real and imaginary parts' squares
+NB. fmtlog    Format log string
+NB. ag        Adv. to apply successive verbs from gerund to
+NB.           successive elements of list
+NB. ms        Minimum in sum of vectors
+NB. tmonad    Template conj. to make verbs to test
+NB.           computational monad
+NB. tdyad     Template conj. to make verbs to test
+NB.           computational dyad
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -131,26 +129,26 @@ NB.            number of the input matrix; +∞ if matrix is
 NB.            singular; indeterminate if matrix is
 NB.            non-square
 NB.
-NB. Application 1:
-NB.   NB. to estimate rcond in 1-norm
-NB.   vrcond=. ((_."_)`(norm1 con getri) @. (=/@$))@[
-NB.   NB. to calc. berr, assuming:
-NB.   NB.   berr := ||A - realA||_1 / (m * ε * ||A||_1)
-NB.   vberr=. ((- (% & norm1) [) % (FP_EPS * (norm1 * #) @ [)) unmqr
-NB.   NB. let's test geqrf
-NB.   ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
-NB.
-NB. Application 2:
-NB.   NB. to estimate rcond in ∞-norm
-NB.   vrcond=. ((_."_)`(normi con getri) @. (=/@$)) @ (0 {:: [)
-NB.   NB. to calc. ferr, assuming:
-NB.   NB.   ferr := ||x - realx||_inf / ||realx||_inf
-NB.   vferr=. ((- (% & normi) [) (1 & {::))~
-NB.   NB. to calc. componentwise berr [LUG 75], assuming:
-NB.   NB.   berr := max_i(|b - A * realx|_i / (|A| * |realx| + |b|)_i)
-NB.   vberr=. ((mp & >/@[) (|@-) (0 {:: [) mp ]) (>./ @ %) (((0 {:: [) (mp & |) ]) + (|@mp & >/@[))
-NB.   NB. let's test getrs
-NB.   ('getrs' tdyad (0 & {::)`(mp & >/)`]`vrcond`vferr`vberr) (A;x)
+NB. Applications:
+NB. - to test geqrf:
+NB.     NB. to estimate rcond in 1-norm
+NB.     vrcond=. ((_."_)`(norm1 con (getri@getrf)) @. (=/@$))@[
+NB.     NB. to calc. berr, assuming:
+NB.     NB.   berr := ||A - realA||_1 / (m * ε * ||A||_1)
+NB.     vberr=. ((- (% & norm1) [) % (FP_EPS * (norm1 * #) @ [)) unmqr
+NB.     NB. do the job
+NB.     ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
+NB. - to test getrs:
+NB.     NB. to estimate rcond in ∞-norm
+NB.     vrcond=. ((_."_)`(normi con (getri@getrf)) @. (=/@$)) @ (0 {:: [)
+NB.     NB. to calc. ferr, assuming:
+NB.     NB.   ferr := ||x - realx||_inf / ||realx||_inf
+NB.     vferr=. ((- (% & normi) [) (1 & {::))~
+NB.     NB. to calc. componentwise berr [LUG 75], assuming:
+NB.     NB.   berr := max_i(|b - A * realx|_i / (|A| * |realx| + |b|)_i)
+NB.     vberr=. ((mp & >/@[) (|@-) (0 {:: [) mp ]) (>./ @ %) (((0 {:: [) (mp & |) ]) + (|@mp & >/@[))
+NB.     NB. do the job
+NB.     ('getrs' tdyad (0 & {::)`(mp & >/)`]`vrcond`vferr`vberr) (A;x)
 
 tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n

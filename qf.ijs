@@ -1,21 +1,18 @@
 NB. Orthogonal factorization
 NB.
-NB. Interface:
-NB.   gelqf     LQ factorization of a general matrix
-NB.   geqlf     QL factorization of a general matrix
-NB.   geqrf     QR factorization of a general matrix
-NB.   gerqf     RQ factorization of a general matrix
+NB. gelqf     LQ factorization of a general matrix
+NB. geqlf     QL factorization of a general matrix
+NB. geqrf     QR factorization of a general matrix
+NB. gerqf     RQ factorization of a general matrix
 NB.
-NB. Test suite:
-NB.   testgeqf  Test orthogonal factorization algorithms by
-NB.             general matrix given
-NB.   testqf    Test orthogonal factorization algorithms by
-NB.             matrix of generator and shape given
+NB. testgeqf  Test orthogonal factorization algorithms by
+NB.           general matrix given
+NB. testqf    Test orthogonal factorization algorithms by
+NB.           matrix of generator and shape given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -378,16 +375,16 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - berr for LQ: berr := ||A-L*Q||/(ε*n*||A||)
-NB. - berr for QL: berr := ||A-Q*L||/(ε*m*||A||)
-NB. - berr for QR: berr := ||A-Q*R||/(ε*m*||A||)
-NB. - berr for RQ: berr := ||A-R*Q||/(ε*n*||A||)
+NB. - berr for LQ: berr := ||A - L * Q|| / (ε * n * ||A||)
+NB. - berr for QL: berr := ||A - Q * L|| / (ε * m * ||A||)
+NB. - berr for QR: berr := ||A - Q * R|| / (ε * m * ||A||)
+NB. - berr for RQ: berr := ||A - R * Q|| / (ε * n * ||A||)
 
 testgeqf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gelqf geqlf geqrf gerqf'
 
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getri@getrf)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('128!:0' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (mp & >/)))%(FP_EPS*(#*norm1)@[)))) y
 

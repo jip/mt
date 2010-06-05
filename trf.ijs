@@ -1,35 +1,32 @@
 NB. Triangular factorization
 NB.
-NB. Interface:
-NB.   getrfxxxx  Triangular factorization with partial pivoting
-NB.              of a general matrix
-NB.   hetrfpx    Triangular factorization with full pivoting of
-NB.              a Hermitian (symmetric) matrix
-NB.   potrfx     Cholesky factorization of a Hermitian
-NB.              (symmetric) positive definite matrix
-NB.   pttrfx     Triangular factorization of a Hermitian
-NB.              (symmetric) positive definite tridiagonal
-NB.              matrix
+NB. getrfxxxx  Triangular factorization with partial pivoting
+NB.            of a general matrix
+NB. hetrfpx    Triangular factorization with full pivoting of
+NB.            a Hermitian (symmetric) matrix
+NB. potrfx     Cholesky factorization of a Hermitian
+NB.            (symmetric) positive definite matrix
+NB. pttrfx     Triangular factorization of a Hermitian
+NB.            (symmetric) positive definite tridiagonal
+NB.            matrix
 NB.
-NB. Test suite:
-NB.   testgetrf  Test triangular factorization algorithms by
-NB.              general matrix given
-NB.   testhetrf  Test triangular factorization algorithms by
-NB.              Hermitian (symmetric) matrix given
-NB.   testpotrf  Test triangular factorization algorithms by
-NB.              Hermitian (symmetric) positive definite
-NB.              matrix given
-NB.   testpttrf  Test triangular factorization algorithms by
-NB.              Hermitian (symmetric) positive definite
-NB.              tridiagonal matrix given
-NB.   testtrf    Adv. to make verb to test triangular
-NB.              factorization algorithms by matrix of
-NB.              generator and shape given
+NB. testgetrf  Test triangular factorization algorithms by
+NB.            general matrix given
+NB. testhetrf  Test triangular factorization algorithms by
+NB.            Hermitian (symmetric) matrix given
+NB. testpotrf  Test triangular factorization algorithms by
+NB.            Hermitian (symmetric) positive definite matrix
+NB.            given
+NB. testpttrf  Test triangular factorization algorithms by
+NB.            Hermitian (symmetric) positive definite
+NB.            tridiagonal matrix given
+NB. testtrf    Adv. to make verb to test triangular
+NB.            factorization algorithms by matrix of
+NB.            generator and shape given
 NB.
-NB. Requisites:
-NB.   Copyright (C) 2010 Igor Zhuravlov
-NB.   For license terms, see the file COPYING in this distribution
-NB.   Version: 1.0.0 2010-06-01
+NB. Copyright (C) 2010 Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -698,17 +695,17 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - L*U1*P=A : berr := ||L*U1*P - A ||/(ε*||A||*m)
-NB. - P*L1*U=A : berr := ||P*L1*U - A ||/(ε*||A||*n)
-NB. - P*U1*L=A : berr := ||P*U1*L - A ||/(ε*||A||*n)
-NB. - U*L1*P=A : berr := ||U*L1*P - A ||/(ε*||A||*m)
+NB. - L*U1*P=A : berr := ||L * U1 * P - A|| / (ε * ||A|| * m)
+NB. - P*L1*U=A : berr := ||P * L1 * U - A|| / (ε * ||A|| * n)
+NB. - P*U1*L=A : berr := ||P * U1 * L - A|| / (ε * ||A|| * n)
+NB. - U*L1*P=A : berr := ||U * L1 * P - A|| / (ε * ||A|| * m)
 
 testgetrf=: 3 : 0
   require '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
 
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getri@getrf)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('lud' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %. (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 
@@ -737,12 +734,12 @@ NB.   A - n×n-matrix, Hermitian
 NB.
 NB. Formula:
 NB. - P * L * T * L^H * P^_1 = A :
-NB.     berr := || P * L * T * L^H * P^_1 - A ||/(ε * ||A|| * n)
+NB.     berr := ||P * L * T * L^H * P^_1 - A|| / (ε * ||A|| * n)
 NB. - P * U * T * U^H * P^_1 = A :
-NB.     berr := || P * U * T * U^H * P^_1 - A ||/(ε * ||A|| * n)
+NB.     berr := ||P * U * T * U^H * P^_1 - A|| / (ε * ||A|| * n)
 
 testhetrf=: 3 : 0
-  rcond=. (norm1 con hetri) y
+  rcond=. (norm1 con (hetri@hetrf)) y
 
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
   ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y
@@ -768,16 +765,16 @@ NB.       definite
 NB.
 NB. Formula:
 NB. - L * L^H = A :
-NB.     berr := || L * L^H - A ||/(ε * ||A|| * n)
+NB.     berr := ||L * L^H - A|| / (ε * ||A|| * n)
 NB. - U * U^H = A :
-NB.     berr := || U * U^H - A ||/(ε * ||A|| * n)
+NB.     berr := ||U * U^H - A|| / (ε * ||A|| * n)
 
 testpotrf=: 3 : 0
   require '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'potrf'
 
-  rcond=. (norm1 con potri) y
+  rcond=. (norm1 con (potri@potrf)) y
 
   ('choleski'       tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
 
@@ -806,12 +803,12 @@ NB.       definite tridiagonal
 NB.
 NB. Formula:
 NB. - L1 * D * L1^H = A :
-NB.     berr := || L1 * D * L1^H - A ||/(ε * ||A|| * n)
+NB.     berr := ||L1 * D * L1^H - A|| / (ε * ||A|| * n)
 NB. - U1 * D * U1^H = A :
-NB.     berr := || U1 * D * U1^H - A ||/(ε * ||A|| * n)
+NB.     berr := ||U1 * D * U1^H - A|| / (ε * ||A|| * n)
 
 testpttrf=: 3 : 0
-  rcond=. (norm1 con pttri) y
+  rcond=. (norm1 con (pttri@pttrf)) y
 
   ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*c)@[))))) y
   ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*#)@[))))) y

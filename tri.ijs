@@ -28,6 +28,48 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
+NB. ---------------------------------------------------------
+NB. Blocked code constants
+
+TRINB=: 64  NB. block size limit
+
+NB. ---------------------------------------------------------
+NB. getristep
+NB.
+NB. Description:
+NB.   Single step of non-blocked version of getri
+NB.
+NB. Syntax:
+NB.   'pfxi1 sfxi1'=. getristep (pfxi ; sfxi)
+NB. where
+NB.   pfxi  - pfx(i), j×n-matrix after i-th step and before
+NB.           (i+1)-th one, contains already processed part
+NB.   sfxi  - sfx(i), (n-j)×n-matrix after i-th step and
+NB.           before (i+1)-th one, contains not yet processed
+NB.           part
+NB.   pfxi1 - pfx(i+1), (j+TRINB)×n-matrix, being pfx(i)
+NB.           after (i+1)-th step
+NB.   sfxi1 - sfx(i+1), (n-j-TRINB)×n-matrix, being sfx(i)
+NB.           after (i+1)-th step
+NB.
+NB. References:
+NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
+NB.     Inversion, UT-CS-90-119, October, 1990.
+NB.     LAPACK Working Note 27.
+NB.     http://www.netlib.org/lapack/lawns/downloads/
+
+getristep=: 3 : 0
+  'pfx sfx'=. y
+  'j n'=. $ pfx
+  L0=. ((0 , j) ,: (2 # TRINB)) (];.0) sfx
+  L1=. (TRINB , j) {. sfx
+  R=. TRINB {. sfx
+  R=. ((i. TRINB) >/ ((i. n) - j)) } R ,: 0       NB. spec code
+  R=. R - L1 mp pfx
+  R=. L0 trsml1x R
+  (pfx , R) ; (TRINB }. sfx)
+)
+
 NB. =========================================================
 NB. Interface
 
@@ -39,7 +81,7 @@ NB. trtriu         U  * invU  = I       invU=.  trtriu A
 NB. trtriu1        U1 * invU1 = I       invU1=. trtriu1 A
 NB.
 NB. Description:
-NB.   inverse triangular matrix
+NB.   Inverse triangular matrix
 NB. where:
 NB.   A     - n×n-matrix, containing triangular matrix
 NB.   U     - n×n upper triangular matrix
@@ -128,9 +170,27 @@ trtriu1=: 3 : 0
 
 NB. ---------------------------------------------------------
 NB. getri
-NB. Inverse a general matrix using the LU factorization
-NB.   inv(P) * L1 * U = A
-NB.   inv(A) = inv(U) * inv(L1) * P
+NB.
+NB. Description:
+NB.   Inverse a general matrix using the UL factorization:
+NB.     U * L1 * P = A
+NB.
+NB. Syntax:
+NB.   iA=. getri (ip ; UL1)
+NB. where
+NB.   ip  - n-vector, columns inversed permutation of A, as
+NB.         returned by getrful1p
+NB.   UL1 - n×n-matrix, contains U and L1, as returned by
+NB.         getrful1p
+NB.   iA  - n×n-matrix, inversion of A
+NB.   P   - n×n-matrix, columns permutation of A
+NB.   L   - n×n-matrix, unit lower triangular
+NB.   U1  - n×n-matrix, upper triangular
+NB.   A   - n×n-matrix to inverse
+NB.
+NB. Notes:
+NB. - models LAPACK's xGETRI, but uses row blocks and another
+NB.   triangular factorization
 NB.
 NB. References:
 NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
@@ -138,78 +198,29 @@ NB.     Inversion, UT-CS-90-119, October, 1990.
 NB.     LAPACK Working Note 27.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
-getri=: ((C."1~ /:)~ (trtriu mp trtril1)) & >/
-
-TRINB=: 64
-
-NB. implements LAPACK's xGETRI with column blocks, P*L1*U=A
-getri2step=: 3 : 0
-  'pfx sfx'=. y
-  n=. # pfx
-  j=. (c pfx) - TRINB
-  L0=. (,.~ j , TRINB) (];.0) pfx
-  L1=. (- (c sfx),TRINB) {. pfx
-  bcol=. (-TRINB) {."1 pfx
-  bcol=. (((i. n) - j) >/ i. TRINB) } bcol ,: 0       NB. spec code
-  bcol=. bcol - sfx mp L1
-  bcol=. L0 trsmxl1 bcol
-  ((-TRINB) }."1 pfx) ; (bcol ,. sfx)
-)
-
-getri2=: 3 : 0
-  'ip L1U'=. y
-  n=. # L1U
-  y=. trtriu L1U
-  y=. (>/~ i. n) } y ,: L1U       NB. spec code
-  I=. 0 >. <. (n-1) % TRINB
-  ip (C.^:_1"1) 1 {:: getri2step ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
-)
-
-NB. models LAPACK's xGETRI with row blocks, U*L1*P=A
-NB. TODO: x m&v y ↔ m&v^:x y
-getri3step=: 3 : 0
-  'pfx sfx'=. y
-  'j n'=. $ pfx
-  L0=. ((0 , j) ,: (2 # TRINB)) (];.0) sfx
-  L1=. (TRINB , j) {. sfx
-  R=. TRINB {. sfx
-  R=. ((i. TRINB) >/ ((i. n) - j)) } R ,: 0       NB. spec code
-  R=. R - L1 mp pfx
-  R=. L0 trsml1x R
-  (pfx , R) ; (TRINB }. sfx)
-)
-
-getri3=: 3 : 0
+getri=: 3 : 0
   'ip UL1'=. y
   n=. # UL1
   y=. trtriu UL1
-  y=. (>/~ i. n) } y ,: UL1              NB. spec code
-  rn=. (TRINB+1) (| &. <:) (1 >. n)      NB. reminder of n, (n-nn): if. n>0 then. (NB|(n-1))+1 else. 0 end.
-  I=. <. TRINB %~ <: (1 >. n)            NB. if. n>0 then. max(0,floor((n-1)%NB)) else. 0 end.
-  ip (C.^:_1) 0 {:: getri3step ^: I (rn ((((2 # [) {. ]) trsml1x (tru@{.)) ; }.) y)
+  y=. (>/~ i. n) } y ,: UL1          NB. spec code
+  rn=. (TRINB+1) (| &. <:) (1 >. n)  NB. reminder of n, (n-nn): if. n>0 then. (NB|(n-1))+1 else. 0 end.
+  I=. <. TRINB %~ <: (1 >. n)        NB. if. n>0 then. max(0,floor((n-1)%NB)) else. 0 end.
+  ip (C.^:_1) 0 {:: getristep ^: I (rn ((((2 # [) {. ]) trsml1x (tru@{.)) ; }.) y)
 )
 
-NB. x m&v y ↔ m&v^:x y
-getri4step=: 4 : 0
+NB. non-blocked
+getrinb=: ((C.^:_1) (0 {:: (((3 : 0) ^: (# @ (1 & {::))) @ (3 : 0)))) & >/
+  n=. # y
+  iUL1=. trtriu y
+  y=. (>/~ i. n) } iUL1 ,: y          NB. spec code
+  ((0 & {.) ; ]) y
+)
   'pfx sfx'=. y
   'j n'=. $ pfx
-  L0=. ((0 , j) ,: (2 # TRINB)) (];.0) sfx
-  L1=. (TRINB , j) {. sfx
-  R=. TRINB {. sfx
-  R=. ((i. TRINB) >/ ((i. n) - j)) } R ,: 0       NB. spec code
-  R=. R - L1 mp pfx
-  R=. L0 trsml1x R
-  (pfx , R) ; (TRINB }. sfx)
-)
-
-getri4=: 3 : 0
-  'ip UL1'=. y
-  n=. # UL1
-  y=. trtriu UL1
-  y=. (>/~ i. n) } y ,: UL1              NB. spec code
-  rn=. (TRINB+1) (| &. <:) (1 >. n)      NB. reminder of n, (n-nn): if. n>0 then. (NB|(n-1))+1 else. 0 end.
-  I=. <. TRINB %~ <: (1 >. n)            NB. if. n>0 then. max(0,floor((n-1)%NB)) else. 0 end.
-  ip (C.^:_1) 0 {:: I (0&getri4step) (rn ((((2 # [) {. ]) trsml1x (tru@{.)) ; }.) y)
+  r=. {. sfx
+  l=. j {. r
+  r=. (j <: (i. n)) } 0 ,: r       NB. spec code
+  (pfx , (r - l mp pfx)) ; (}. sfx)
 )
 
 NB. ---------------------------------------------------------

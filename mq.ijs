@@ -254,7 +254,7 @@ NB.        tmp=. VTaui larfbxxxx xfxCi
 NB.   3) combine tmp and either pfxC(i) or sfxC(i) to
 NB.      produce pfxC(i+1) and sfxC(i+1)
 NB.
-NB. Note:
+NB. Notes:
 NB. - assigning MQBS=:1 transforms this verbs to their
 NB.   non-blocked counterparts
 

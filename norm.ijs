@@ -24,22 +24,31 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Magnitude-based norms |y|
+NB.
+NB. Notes:
+NB. - matrix must not contain extraneous values
 
-norm1=: | mocs           NB. 1-norm of vector (matrix), implements LAPACK's DZSUM1,xLANGE('1'),xLANHE('1'),xLANHS('1'),xLANHT('1'),xLANST('1'),xLANTR('1')
-normi=: | mors           NB. ∞-norm of vector (matrix), implements LAPACK's xLANGE('i'),xLANHE('i'),xLANHS('i'),xLANHT('i'),xLANST('i'),xLANTR('i')
+norm1=: | mocs           NB. 1-norm of vector (matrix), implements LAPACK's DZSUM1,xLANGE('1'), models xLANHE('1'),xLANHS('1'),xLANHT('1'),xLANST('1'),xLANTR('1')
+normi=: | mors           NB. ∞-norm of vector (matrix), implements LAPACK's xLANGE('i'), models xLANHE('i'),xLANHS('i'),xLANHT('i'),xLANST('i'),xLANTR('i')
 
 NB. ---------------------------------------------------------
 NB. Taxicab-based norms |Re(y)| + |Im(y)|
+NB.
+NB. Notes:
+NB. - matrix must not contain extraneous values
 
 norm1t=: sorim mocs      NB. 1-norm of vector (matrix), implements BLAS's DASUM,DZASUM
 normit=: sorim mors      NB. ∞-norm of vector (matrix)
 
 NB. ---------------------------------------------------------
 NB. Square-based Euclidean (Frobenius) norm of vector
-NB. (matrix)
+NB. (matrix) |y|^2
 NB.
-NB. Note:
+NB. Notes:
 NB. - implements BLAS's DZNRM2 and partially xLASSQ
-NB. - implements LAPACK's xLANGE('f'),xLANHE('f'),xLANHS('f'),xLANHT('f'),xLANST('f'),xLANTR('f')
+NB. - implements LAPACK's xLANGE('f'), models xLANHE('f'),
+NB.   xLANHS('f'),xLANHT('f'),xLANST('f'),xLANTR('f') with
+NB.   following difference:
+NB.   - matrix must not contain extraneous values
 
 norms=: (((((+/^:_) &.: *:) @: %) * ]) (>./^:_)) @: | @: +.

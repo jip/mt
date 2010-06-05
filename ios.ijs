@@ -132,7 +132,7 @@ NB.
 NB. Syntax:
 NB.   ios=. rios2ios rios
 NB.
-NB. Note:
+NB. Notes:
 NB. - rios with columns count less than array's rank is
 NB.   indexing the slice
 

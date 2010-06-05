@@ -1,5 +1,5 @@
 NB. gq.ijs
-NB. Generate Q from LQ QL QR RQ output
+NB. Generate Q from LQ QL QR RQ HRD output
 NB.
 NB. unglq  Generate a matrix with orthonormal rows from
 NB.        output of gelqf
@@ -9,6 +9,9 @@ NB. ungqr  Generate a matrix with orthonormal columns from
 NB.        output of geqrf
 NB. ungrq  Generate a matrix with orthonormal rows from
 NB.        output of gerqf
+NB. unghr  Generate an unitary (orthogonal) matrix which is
+NB.        defined as the product of elementary reflectors as
+NB.        returned by gehrd
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -67,38 +70,6 @@ NB. Formula:     iters = ⌊k % bs⌋
 ungqiters=: (ungqk (<. @ %) ungqbs) M.
 
 NB. ---------------------------------------------------------
-NB. Apply reflector H or H' from either the left or the right
-NB. to the matrix C to update it, where
-NB.   H := H(v,τ) := I - τ*v*v'
-NB.
-NB. Algorithm:
-NB.   Input:
-NB.     eC -: C with appended or stitched trash vector
-NB.     z   - vector in form:
-NB.             (0[0:any-1],1[any],v[any+1:n-1],τ)
-NB.           for forward direction, or:
-NB.             (τ,v[1:any-1],1[any],0[any+1:n])
-NB.           for backward direction
-NB.   Output:
-NB.     eCupd - Cupd, being updated C, with appended or
-NB.             stitched trash vector
-NB.   Actions:
-NB.     1) conjugate z (optionally): z=. + z
-NB.     2) replace τ (at z tail if forward direction, or at z
-NB.        head if backward one) by 0 to get ev, the
-NB.        extension of vector v: ev=. 0 i} z
-NB.     3) multiple C by ev:
-NB.        a) if side is left: deltaC=. ev*ev'*C
-NB.        b) if side is right: deltaC=. ev*ev'*C
-NB.     4) multiply deltaC by optionally conjugated τ:
-NB.          deltaC=. deltaC * 
-
-larfr1fcc=: [ - ((({: @ ]) * (larfr (0 & (_1 })))) +)  NB. forward direction, H := H(conj(v),conj(τ))
-larfl1bss=: [ - (({. @ ]) * (larfl (0 & (0 }))))       NB. backward direction, H := H(v,τ)
-larfl1fss=: [ - (({: @ ]) * (larfl (0 & (_1 }))))      NB. forward direction, H := H(v,τ)
-larfr1bcc=: [ - ((({. @ ]) * (larfr (0 & (0 })))) +)   NB. backward direction, H := H(conj(v),conj(τ))
-
-NB. ---------------------------------------------------------
 NB. ungl2step
 NB. ung2lstep
 NB. ung2rstep
@@ -131,22 +102,22 @@ NB.   6) append or stitch new z to eQiupd, producing eQi1
 
 ungl2step=: 4 : 0
   io=. x (<: @ - & #) y
-  y ((((- @ + @ {:) ((>: @ [) (io }) *) ]) @ ]) , larfr1fcc) (io { x)
+  y ((((- @ + @ {:) ((>: @ [) (io }) *) ]) @ ]) , larfrcfr) (io { x)
 )
 
 ung2lstep=: 4 : 0
   io=. y (- & ({: @ $)) y
-  y (larfl1bss ,. (((- @ {.) ((>: @ [) (io }) *) ]) @ ])) ((< a: ; io) { x)
+  y (larflnbc ,. (((- @ {.) ((>: @ [) (io }) *) ]) @ ])) ((< a: ; io) { x)
 )
 
 ung2rstep=: 4 : 0
   io=. y (<: @ - & ({: @ $)) y
-  y ((((- @ {:) ((>: @ [) (io }) *) ]) @ ]) ,. larfl1fss) ((< a: ; io) { x)
+  y ((((- @ {:) ((>: @ [) (io }) *) ]) @ ]) ,. larflnfc) ((< a: ; io) { x)
 )
 
 ungr2step=: 4 : 0
   io=. y (- & #) x
-  y (larfr1bcc , (((- @ + @ {.) ((>: @ [) (io }) *) ]) @ ])) (io { x)
+  y (larfrcbr , (((- @ + @ {.) ((>: @ [) (io }) *) ]) @ ])) (io { x)
 )
 
 NB. ---------------------------------------------------------
@@ -161,10 +132,10 @@ NB.
 NB. Syntax:
 NB.   eQ=. ungxx Qf
 NB. where
-NB.   Qf  - unit triangular matrix, Q's factored form
-NB.   eQ  - Q with appended or stitched trash vector
-NB.   Q   - matrix with orthonormal rows or columns which is
-NB.         defined as the product of k elementary reflectors
+NB.   Qf - unit triangular matrix, Q's factored form
+NB.   eQ - Q with appended or stitched trash vector
+NB.   Q  - matrix with orthonormal rows or columns which is
+NB.        defined as the product of k elementary reflectors
 NB.
 NB. Algorithm:
 NB.   1) find iters, the number of iterations for ungxxstep
@@ -172,8 +143,7 @@ NB.   2) form eQ0
 NB.   3) do iterations: eQ=. Qf (ungxxstep ^: iters) eQ0
 NB.
 NB. Notes:
-NB. - following identity holds: 
-NB.   eQ (-: & $) Qf
+NB. - eQ and Qf shapes are the same
 
 ungl2=: (0 $~ (0 (0 }) $)) (ungl2step ^: (0 _1 ungqk ($ @ [)))~ ]  NB. Qf -: tru1 Qf
 ung2l=: (0 $~ (0 (1 }) $)) (ung2lstep ^: (_1 0 ungqk ($ @ [)))~ ]  NB. Qf -: ((-~/ @ $) tru1 ]) Qf
@@ -207,7 +177,7 @@ NB.      matrix to update Ci with appended or stitched trash
 NB.      vector
 NB.   2) extract current block - the matrix Qfi from Qf
 NB.   3) supply eQi and Qfi to larfbxxxx, to produce eCiupd
-NB.   4) aplly non-blocked version of algorithm to Qfi to
+NB.   4) apply non-blocked version of algorithm to Qfi to
 NB.      produce matrix eQi1part
 NB.   5) assemble eCiupd and eQi1part, to produce eQi1
 
@@ -224,7 +194,8 @@ ungqlstep=: 4 : 0
   bs=. _1 0 ungqbs shx
   riosQfi=. (0 (0 }) shy) ,: (bs + (0 (1 }) shy))
   sizeeC=. (bs , 0) + shy
-  (sizeeC {. y) (larfblcbc ,. (ung2l @ ])) (riosQfi (] ;. 0) x)
+smoutput 'riosQfi' ; ($ riosQfi) ; riosQfi ; 'sizeeC' ; ($ sizeeC) ; sizeeC
+  (sizeeC {. y) (larfblnbc ,. (ung2l @ ])) (riosQfi (] ;. 0) x)
 )
 
 ungqrstep=: 4 : 0
@@ -275,6 +246,12 @@ NB.   Q=. unglq LQf
 NB. then
 NB.   Q -: unglq (k {. LQf)
 NB.   I -: (mp ct) Q
+NB.
+NB. Notes:
+NB. - emulates LAPACK's xUNGLQ with following difference: K
+NB.   parameter (amount of leading vectors from LQf to form
+NB.   Q) is assumed K=k; to emulate case K<k the last (k-K)
+NB.   elements in τ[0:k-1] must be zeroed
 
 unglq=: 3 : 0
   'k n1'=. sizeQf=. ((0 _1 & ungqk) , {:) ($ y)
@@ -311,15 +288,24 @@ NB.   'm n'=. _1 0 + $ QfL
 NB.   k=. m <. n
 NB.   Q=. ungql QfL
 NB. then
-NB.   Q -: ungql (((m+1),(-n)) {. QfL)
+NB.   Q -: ungql (((m+1),(-k)) {. QfL)
 NB.   I -: (mp~ ct) Q
+NB.
+NB. Notes:
+NB. - emulates LAPACK's xUNGQL with following difference: K
+NB.   parameter (amount of concluding vectors from QfL to
+NB.   form Q) is assumed K=k; to emulate case K<k the first
+NB.   (k-K) elements in τ[0:k-1] must be zeroed
 
 ungql=: 3 : 0
   'm1 k'=. sizeQf=. ({. , (_1 0 & ungqk)) ($ y)
-  y=. ((-~/ @ $) tru1 ]) sizeQf {. y
+yo=. y
+  y=. ((-~/ @ $) tru1 ]) (1 _1 * sizeQf) {. y
+smoutput 'sizeQf' ; ($ sizeQf) ; sizeQf ; 'old y' ; ($ yo) ; yo ; 'new y' ; ($ y) ; y
   ibs=. */ 'bs iters'=. _1 0 (ungqbs , ungqiters) sizeQf
   sizeQf0=. (m1-ibs) , (bs|k)
-  Q=. 1 0 }. (y ungqlstep ^: iters (ung2l (sizeQf0 {. y)))
+smoutput 'sizeQf0' ; ($ sizeQf0) ; sizeQf0 ; 'bs' ; ($ bs) ; bs ; 'iters' ; ($ iters) ; iters
+  Q=. 1 0 }. (y (ungqlstep dbg 'ungqlstep') ^: iters (ung2l (sizeQf0 {. y)))
 )
 
 NB. ---------------------------------------------------------
@@ -349,8 +335,14 @@ NB.   'm n'=. _1 0 + $ QfR
 NB.   k=. m <. n
 NB.   Q=. ungqr QfR
 NB. then
-NB.   Q -: ungql (((m+1),n) {. QfR)
+NB.   Q -: ungql (((m+1),k) {. QfR)
 NB.   I -: (mp~ ct) Q
+NB.
+NB. Notes:
+NB. - emulates LAPACK's xUNGQR with following difference: K
+NB.   parameter (amount of leading vectors from QfR to form
+NB.   Q) is assumed K=k; to emulate case K<k the last (k-K)
+NB.   elements in τ[0:k-1] must be zeroed
 
 ungqr=: 3 : 0
   'm1 k'=. sizeQf=. ({. , (_1 0 & ungqk)) ($ y)
@@ -389,13 +381,44 @@ NB.   Q=. ungrq RQf
 NB. then
 NB.   Q -: ungrq (((-k),(n+1)) {. RQf)
 NB.   I -: (mp ct) Q
+NB.
+NB. Notes:
+NB. - emulates LAPACK's xUNGRQ with following difference: K
+NB.   parameter (amount of concluding vectors from RQf to
+NB.   form Q) is assumed K=k; to emulate case K<k the first
+NB.   (k-K) elements in τ[0:k-1] must be zeroed
 
 ungrq=: 3 : 0
   'k n1'=. sizeQf=. ((0 _1 & ungqk) , {:) ($ y)
-  y=. ((-~/ @ $) tru1 ]) sizeQf {. y
+  y=. ((-~/ @ $) tru1 ]) (_1 1 * sizeQf) {. y
   ibs=. */ 'bs iters'=. 0 _1 (ungqbs , ungqiters) sizeQf
   sizeQf0=. (bs|k) , (n1-ibs)
   Q=. 0 1 }. (y ungrqstep ^: iters (ungr2 (sizeQf0 {. y)))
+)
+
+NB. ---------------------------------------------------------
+NB. unghr
+NB.
+NB. Description:
+NB.   Generate an unitary (orthogonal) matrix Q which is
+NB.   defined as the product of ({:fs) elementary reflectors
+NB.   of order n, as returned by gehrd:
+NB.     Q = H(f) H(f+1) ... H(f+s-1)
+NB.
+NB. Syntax:
+NB.   Q=. unghr HQf ; fs
+NB. where
+NB.   HQf - max(n,f+s+1)×n-matrix with packed H and Qf (see
+NB.         gehrd)
+NB.   fs  - 2-vector of integers (f,s) 'from' and 'size',
+NB.         defines submatrix A11 position in matrix A (see
+NB.         gebalp)
+NB.   Q   - 
+NB.
+NB. TODO: dyad
+
+unghr=: 3 : 0
+  riosQf=. 
 )
 
 NB. =========================================================
@@ -410,21 +433,14 @@ NB. Syntax: tungq A
 NB. where A - general m×n-matrix
 
 tungq=: 3 : 0
-  NB. ### while no qf ###
-  'fuzzym fuzzyn'=. fuzzysh=. $ y
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'gelqf geqlf geqrf gerqf'
-  gelqf=. ((0&{::) (+ & (fuzzysh & {.)) ((tru0 @ (1&{::)) ,. (2&{::))) @ (2b1110 & gelqf_jlapack_)
-  NB. ### /while no qf ###
-
-  ('unglq' tmonad gelqf`]`(((%@mp&norm1) ct)@])`(_."_)`((((<: upddiag0)@(mp ct)) (%&norm1) ]) % (FP_EPS*#@]))) y
+  ('unglq' tmonad (gelqf`]`(((%@mp&norm1) ct)@])`(_."_)`((((<: upddiag0)@(mp ct)) (%&norm1) ]) % (FP_EPS*#@])))) y
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
 NB. testgq
-NB. Test Q generators on random matrices with shape y
+NB. Adv. to test Q generators with random matrices of shape y
 NB. Syntax: mkge testgq (m,n)
 NB.
 NB. Application:

@@ -163,7 +163,7 @@ NB. ---------------------------------------------------------
 NB. fmtlog
 NB. Format log string
 
-fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' & vsprintf
+fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' vsprintf
 
 NB. ---------------------------------------------------------
 NB. tmonad
@@ -243,11 +243,11 @@ NB.   ('getrs' tdyad (0&{::)`(mp & >/)`]`vrcond`vferr`vberr) (A;x)
 tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n
   argy=. vgety y
-  try. 't s'=. timespacex 'ret=. ' , m , ' argy'      catch. t=. s=. _. end.
-  try. out=. vgeto ret                                catch. out=. _.   end.
-  try. rcond=. y vrcond out                           catch. rcond=. _  end.
-  try. ferr=. y vferr out                             catch. ferr=. _.  end.
-  try. berr=. y vberr out                             catch. berr=. _.  end.
+  try. 't s'=. timespacex 'ret=. ' , m , ' argy'      catch. t=. s=. ret=. _. end.
+  try. out=. vgeto ret                                catch. out=. _.         end.
+  try. rcond=. y vrcond out                           catch. rcond=. _        end.
+  try. ferr=. y vferr out                             catch. ferr=. _.        end.
+  try. berr=. y vberr out                             catch. berr=. _.        end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
   logline ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline
@@ -259,11 +259,11 @@ tdyad=: 2 : 0
   '`vgetx vgety vgeto vrcond vferr vberr'=. n
   argx=. vgetx y
   argy=. vgety y
-  try. 't s'=. timespacex 'ret=. argx ' , m , ' argy' catch. t=. s=. _. end.
-  try. out=. vgeto ret                                catch. out=. _.   end.
-  try. rcond=. y vrcond out                           catch. rcond=. _  end.
-  try. ferr=. y vferr out                             catch. ferr=. _.  end.
-  try. berr=. y vberr out                             catch. berr=. _.  end.
+  try. 't s'=. timespacex 'ret=. argx ' , m , ' argy' catch. t=. s=. ret=. _. end.
+  try. out=. vgeto ret                                catch. out=. _.         end.
+  try. rcond=. y vrcond out                           catch. rcond=. _        end.
+  try. ferr=. y vferr out                             catch. ferr=. _.        end.
+  try. berr=. y vberr out                             catch. berr=. _.        end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
   logline ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline

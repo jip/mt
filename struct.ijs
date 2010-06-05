@@ -427,10 +427,20 @@ NB.
 NB. Notes:
 NB. - upddiag0 can't update diagonal partially
 
+NB. Aupd=. val setdiag0 A
 setdiag0=: (diaglios @ $ @ ]) }
 
+NB. Aupd=. (val[,diag]) setdiag A
+setdiag=: 4 : 0
+  'v d'=. 2 {. x , 0
+  lios=. d (diaglios $) y
+  v ((lios"_) }) y
+)
+
+NB. Aupd=. (u upddiag0) A
 upddiag0=: 1 : '(u @ diag) setdiag0 ]'
 
+NB. Aupd=. [d] (u upddiag) A
 upddiag=: 1 : 0
   (u upddiag0) y
 :
@@ -548,7 +558,7 @@ NB. Extract strictly lower triangular (trapezoidal) matrix
 NB. with optional shrinking
 NB.
 NB. Examples:
-NB.    trl0_mt_ i. 4 3                0 trl0_mt_ i. 4 3
+NB.    trl0 i. 4 3                0 trl0 i. 4 3
 NB. 0  0  0                        0  0  0
 NB. 3  0  0                        3  0  0
 NB. 6  7  0                        6  7  0
@@ -592,11 +602,11 @@ NB. trl1
 NB. Extract unit lower triangular (trapezoidal) matrix with
 NB. optional shrinking
 
-trl1=: (0 & $:) :((0 >. [) (] + (idmat $)) trl0)
+trl1=: (trl @ (1 & setdiag0)) : ([ trl ((1 , [) setdiag ]))
 
 NB. ---------------------------------------------------------
 NB. tru1
 NB. Extract unit upper triangular (trapezoidal) matrix with
 NB. optional shrinking
 
-tru1=: (0 & $:) :((0 <. [) (] + (idmat $)) tru0)
+tru1=: (tru @ (1 & setdiag0)) : ([ tru ((1 , [) setdiag ]))

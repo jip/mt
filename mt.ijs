@@ -35,7 +35,7 @@ FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/
 NB. ---------------------------------------------------------
 NB. Tests logging
 
-TESTLOGFILE=: '~user/temp/mt.log'                     NB. empty literal to switch off file logging
+TESTLOGFILE=: < '/home/jip/j602-user/temp/mt.log'     NB. a: to switch off file logging
 TESTLOG=: ''                                          NB. literal array, being formatted test log
 
 NB. ---------------------------------------------------------
@@ -49,6 +49,7 @@ NB. Includes
 NB. ---------------------------------------------------------
 NB. System verbs
 
+script_z_ '~system/main/printf.ijs'                  NB. printf vsprintf
 script_z_ '~system/main/numeric.ijs'                  NB. range
 script_z_ '~system/main/myutil.ijs'                   NB. timespacex
 script_z_ '~system/packages/math/mathutil.ijs'        NB. mp
@@ -67,13 +68,13 @@ require '~user/projects/mt/bal.ijs'     NB. balance
 require '~user/projects/mt/equ.ijs'     NB. equilibrate
 require '~user/projects/mt/ref.ijs'     NB. reflect
 require '~user/projects/mt/rot.ijs'     NB. rotate
-require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ output
+require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ HRD output
 NB. require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ output
 
 NB. mid-level
 NB. require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~user/projects/mt/pow.ijs'     NB. integer powers
-NB. require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization LQ QL QR RQ
+require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization LQ QL QR RQ
 require '~user/projects/mt/trf.ijs'     NB. triangular factorization
 require '~user/projects/mt/tri.ijs'     NB. inverse via trf
 require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via trf
@@ -114,15 +115,14 @@ NB. - test1 - test vector (1-rank) algos
 NB. - test2 - test matrix (2-rank) algos
 
 test=: 1 : 0
-  require 'printf'
   '%-25s %-12s %-12s %-12s %-12s %-12s' printf 'algorithm' ; 'rcond' ; 'rel fw err' ; 'rel bw err' ; 'time, sec.' ; 'space, bytes'
   assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
-  (u testtrf) y
-  (u testtri) y
-  (u testtrs) y
+NB.  (u testtrf) y
+NB.  (u testtri) y
+NB.  (u testtrs) y
   (u testqf) y
   (u testgq) y
-  (u testmq) y
+NB.  (u testmq) y
 )
 
 NB. ---------------------------------------------------------

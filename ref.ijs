@@ -1,37 +1,15 @@
 NB. ref.ijs
 NB. Reflections
 NB.
-NB. larfg      Generate an elementary reflector
-NB. larfp      Generate an elementary reflector with β≥0
-NB.
-NB. larfl      Multiply matrix by vectors from the left
-NB. larfr      Multiply matrix by vectors from the right
-NB.
-NB. larftbc    Monad to form the triangular factor of a block
-NB.            reflector from input vectors which have
-NB.            backward direction and columnwise layout
-NB. larftbr    Monad to form the triangular factor of a block
-NB.            reflector from input vectors which have
-NB.            backward direction and rowwise layout
-NB. larftfc    Monad to form the triangular factor of a block
-NB.            reflector from input vectors which have
-NB.            forward direction and columnwise layout
-NB. larftfr    Monad to form the triangular factor of a block
-NB.            reflector from input vectors which have
-NB.            forward direction and rowwise layout
-NB.
-NB. larfblcbc  Dyad to build a block reflector by larftbc and
-NB.            to apply its transpose to a submatrix from the
-NB.            left
-NB. larfblcfc  Dyad to build a block reflector by larftfc and
-NB.            to apply its transpose to a submatrix from the
-NB.            left
-NB. larfbrcfr  Dyad to build a block reflector by larftfr and
-NB.            to apply it to a submatrix from the right
-NB. larfbrnbr  Dyad to build a block reflector by larftbr and
-NB.            to apply it to a submatrix from the right
-NB. larfbrnfr  Dyad to build a block reflector by larftfr and
-NB.            to apply it to a submatrix from the right
+NB. larfxxx    Verbs to generate an elementary reflector
+NB. larftxx    Monads to form the triangular factor of a block
+NB.            reflector
+NB. larfxxxx   Dyads to build a reflector and to apply it or
+NB.            its transpose to a matrix from either the left
+NB.            or the right
+NB. larfbxxxx  Dyads to build a block reflector and to apply
+NB.            it or its transpose to a matrix from either
+NB.            the left or the right
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -42,8 +20,113 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. return y without elements with linear IOS from x
+NB. return y without elements with lIOS from x
 ywolx=: (({,)~ (<^:3))~
+
+NB. ---------------------------------------------------------
+NB. larfg
+NB. larfp
+NB.
+NB. Description:
+NB.   Generate an elementary reflector H of order n such that
+NB.   H'*y = β*e1, where H=I-τ*v*v', H'*H=I. H is represented
+NB.   in factored form by n-vector v and scalar τ. Vector v
+NB.   can have either forward (α in head) or backward (α in
+NB.   tail) direction. Input and output vector directions are
+NB.   the same.
+NB.
+NB. Syntax:
+NB.   z=. ios larfg y
+NB.   z=. ios larfp y
+NB. where
+NB.   ios - 2-vector of integers (ioa,iot)
+NB.   ioa - lIO α in y
+NB.   iot - lIO pre-allocated scalar for τ in y
+NB.   y   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
+NB.         having scalar α at index ioa, any scalar at index
+NB.         iot, and vector x[1:n-1] in the rest elements,
+NB.         vector to reflect is (α,x[1:n-1]), α ∊ ℂ,
+NB.         x ∊ ℂⁿ⁻¹
+NB.   z   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
+NB.         (y and z shapes are match) having scalar β at
+NB.         index ioa, scalar τ at index iot, and vector
+NB.         v[1:n-1] in the rest elements, reflection result
+NB.         is vector (1,v[1:n-1]), 1 is not stored, β ∊ ℝ,
+NB.         (larfp provides β≥0), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
+NB.
+NB. Applications:
+NB. - reflect vector (α,x) by larfg and store τ at tail:
+NB.     z=. 0 _1 larfg (α,x,0)
+NB.     v=. 1 (0: }) }: z
+NB.     'beta tau'=. 0 _1 ({,) z
+NB. - reflect vector (x,α) by larfp and store τ at head:
+NB.     z=. _1 0 larfp (0,x,α)
+NB.     v=. 1 (_1: }) }. z
+NB.     'beta tau'=. _1 0 ({,) z
+NB.
+NB. References:
+NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, and E.
+NB.     Jason Riedy. (2008) Non-Negative Diagonals and High
+NB.     Performance on Low-Profile Matrices from Householder
+NB.     QR. UCB/EECS-2008-76, May 30, 2008
+NB.     LAPACK Working Note 203.
+NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB.
+NB. Notes:
+NB. - IEEE floating point configuration is encoded implicitly
+NB. - larfg emulates LAPACK's xLARFG
+NB. - larfp emulates LAPACK's xLARFP
+NB. - larfp provides τ=2 ↔ ||x||_2 ≈ 0
+NB. - not zeroing v in larfp in case τ=2 relies on fact:
+NB.   'comparison tolerance tol>0'; otherwise (tol=0) x
+NB.   should be filled by zeros
+
+larfg=: 4 : 0
+  'ioalpha iotau'=. x
+  alpha=. ioalpha ({,) y
+  xnorm=. norms (x ywolx y)                                 NB. ||x||_2
+  if. xnorm (+. & (0 & ~:)) (11 o. alpha) do.
+    beta=. - (9 o. alpha) condneg norms alpha , xnorm       NB. β=-copysign(||y||_2,Re(α))
+    y=. beta (iotau " _) } y                                NB. write in-place β
+    if. FP_SFMIN > | beta do.
+      y=. y % FP_SFMIN                                      NB. scale (α,x[1],...,x[n-1],β)
+    end.
+    dzeta=. -/ x ({,) y                                     NB. ζ=α_scaled-β_scaled
+    tau=. (- dzeta) % (iotau ({,) y)                        NB. τ=-ζ/β_scaled
+    y=. y % dzeta                                           NB. y=y/ζ
+    y=. (beta , tau) (x " _) } y                            NB. replace α_scaled by β_unscaled and β_scaled by τ
+  end.
+  y
+)
+
+larfp=: 4 : 0
+  'ioalpha iotau'=. x
+  alpha=. ioalpha ({,) y
+  xnorm=. norms (x ywolx y)                                 NB. ||x||_2
+  if. (0 = xnorm) do.
+    y=. ((| , (1 - *)) alpha) (x " _) } y                   NB. replace in-place α by |β| and τ by (1-α/|α|)
+  else.
+    beta=. - (9 o. alpha) condneg norms alpha , xnorm       NB. β=-copysign(||y||_2,Re(α))
+    y=. (| beta) (iotau " _) } y                            NB. write in-place |β|
+    if. FP_SFMIN > | beta do.
+      y=. y % FP_SFMIN                                      NB. scale (α,x[1],...,x[n-1],|β|)
+      xnorm=. xnorm % FP_SFMIN
+    end.
+    if. 0 <: beta do.
+      dzeta=. -/ x ({,) y                                   NB. ζ=α_scaled-|β_scaled|
+      tau=. (- dzeta) % (iotau ({,) y)                      NB. τ=-ζ/|β_scaled|
+    else.
+      beta=. - beta                                         NB. |β_unscaled|
+      'realpha imalpha'=. +. ioalpha ({,) y                 NB. Re(α_scaled) , Im(α_scaled)
+      gamma=. realpha + iotau ({,) y                        NB. γ=Re(α_scaled)+|β_scaled|
+      delta=. (imalpha , xnorm) (- @ (+/) @ ([ * %)) gamma  NB. δ=-(Im(α_scaled)*(Im(α_scaled)/γ)+||x||_2*(||x||_2/γ))
+      dzeta=. delta j. imalpha                              NB. ζ=δ+i*Im(α_scaled)
+      tau=. - dzeta % iotau ({,) y                          NB. τ=-ζ/|β_scaled|
+    end.
+    y=. y % dzeta
+    y=. (beta , tau) (x " _) } y                            NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
+  end.
+)
 
 NB. ---------------------------------------------------------
 NB. larft
@@ -123,7 +206,7 @@ NB.         row: Ti=. (1 & vs1) Ti
 NB.   6) multiply T[i] by tau (item-by-row): T=. tau * Ti
 NB.
 NB. Notes:
-NB. - emulates LAPACK's LARFT, but without zeros scanning in
+NB. - emulates LAPACK's xLARFT, but without zeros scanning in
 NB.   v[i]
 
 larft=: 2 : '(n&{) ([ * (EMPTY (((1 & (m gi 4)) @ (0 & (m gi 3)) @ (] (m gi 2) (] mp (([ {. { )~ #)))) ^: (#@[))~ (m gi 1))) ((m gi 0) @ (0 & (n })))'
@@ -132,151 +215,29 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. larfg
-NB. larfp
+NB. Verb       Input             Output                  β≥0
+NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          no
+NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    no
+NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          no
+NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    no
+NB. larfpf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          yes
+NB. larfpfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    yes
+NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          yes
+NB. larfpbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    yes
 NB.
 NB. Description:
-NB.   Generate an elementary reflector H of order n such that
-NB.   H'*y = β*e1, where H=I-τ*v*v', H'*H=I. H is represented
-NB.   in factored form by n-vector v and scalar τ. Input and
-NB.   output arrays have the same shape and may be either a
-NB.   (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix.
-NB.   Vector v can have either forward (α in head) or
-NB.   backward (α in tail) direction. Input and output vector
-NB.   directions are the same.
-NB.
-NB. Syntax:
-NB.   z=. ios larfg y
-NB.   z=. ios larfp y
-NB. where
-NB.   ios - 2-vector of integers (ioa,iot)
-NB.   ioa - lIO α in y
-NB.   iot - lIO pre-allocated zero scalar for τ in y
-NB.   y   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
-NB.         having scalar α at index ioa, scalar 0 at index
-NB.         iot, and vector x[1:n-1] in the rest elements,
-NB.         vector to reflect is (α,x[1:n-1]), α ∊ ℂ,
-NB.         x ∊ ℂⁿ⁻¹
-NB.   z   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
-NB.         (y and z shapes are match) having scalar β at
-NB.         index ioa, scalar τ at index iot, and vector
-NB.         v[1:n-1] in the rest elements, reflection result
-NB.         is vector (1,v[1:n-1]), 1 is not stored, β ∊ ℝ,
-NB.         (larfp provides β≥0), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
-NB.
-NB. Applications:
-NB. - reflect vector (α,x) by larfg and store τ at tail:
-NB.     z=. 0 _1 larfg (α,x,0)
-NB.     v=. 1 (0: }) }: z
-NB.     'beta tau'=. 0 _1 ({,) z
-NB. - reflect vector (x,α) by larfp and store τ at head:
-NB.     z=. _1 0 larfp (0,x,α)
-NB.     v=. 1 (_1: }) }. z
-NB.     'beta tau'=. _1 0 ({,) z
-NB. - define monad to get input: (α x[1:n-1] 0), and to
-NB.   output: (β v[1:n-1] τ):
-NB.     larfgf=: 0 _1 & larfg
-NB. - define monad to get input: (0 x[1:n-1] α), and to
-NB.   output: (τ v[1:n-1] β):
-NB.     larfgb=: _1 0 & larfg
-NB. - define monad to get input: (α x[1:n-1] 0), and to
-NB.   output: (β v[1:n-1] conj(τ)):
-NB.     larfgfc=: (+ updl _1) @ larfgf
-NB. - define monad to get input: (0 x[1:n-1] α), and to
-NB.   output: (conj(τ) v[1:n-1] β):
-NB.     larfgbc=: (+ updl 0) @ larfgb
-NB.
-NB. References:
-NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, and E.
-NB.     Jason Riedy. (2008) Non-Negative Diagonals and High
-NB.     Performance on Low-Profile Matrices from Householder
-NB.     QR. UCB/EECS-2008-76, May 30, 2008
-NB.     LAPACK Working Note 203.
-NB.     http://www.netlib.org/lapack/lawns/downloads/
-NB.
-NB. Notes:
-NB. - IEEE floating point configuration is encoded implicitly
-NB. - larfg emulates LAPACK's xLARFG
-NB. - larfp emulates LAPACK's xLARFP
-NB. - larfp provides τ=2 ↔ ||x||_2 ≈ 0
-NB. - not zeroing v in larfp in case τ=2 relies on fact:
-NB.   'comparison tolerance tol>0'; otherwise (tol=0) x
-NB.   should be filled by zeros
+NB.   Monads to generate an elementary reflector, see larfg,
+NB.   larfp for details.
 
-larfg=: 4 : 0
-  'ioalpha iotau'=. x
-  alpha=. ioalpha ({,) y
-  xnorm=. norms (x ywolx y)                                 NB. ||x||_2
-  if. xnorm (+. & (0 & ~:)) (11 o. alpha) do.
-    beta=. - (9 o. alpha) condneg norms alpha , xnorm       NB. β=-copysign(||y||_2,Re(α))
-    y=. beta (iotau " _) } y                                NB. write in-place β
-    if. FP_SFMIN > | beta do.
-      y=. y % FP_SFMIN                                      NB. scale (α,x[1],...,x[n-1],β)
-    end.
-    dzeta=. -/ x ({,) y                                     NB. ζ=α_scaled-β_scaled
-    tau=. (- dzeta) % (iotau ({,) y)                        NB. τ=-ζ/β_scaled
-    y=. y % dzeta                                           NB. y=y/ζ
-    y=. (beta , tau) (x " _) } y                            NB. replace α_scaled by β_unscaled and β_scaled by τ
-  end.
-  y
-)
+larfgf=: 0 _1 & larfg
+larfgfc=: (+ updl _1) @ larfgf
+larfgb=: _1 0 & larfg
+larfgbc=: (+ updl 0) @ larfgb
 
-larfp=: 4 : 0
-  'ioalpha iotau'=. x
-  alpha=. ioalpha ({,) y
-  xnorm=. norms (x ywolx y)                                 NB. ||x||_2
-  if. (0 = xnorm) do.
-    y=. ((| , (1 - *)) alpha) (x " _) } y                   NB. replace in-place α by |β| and τ by (1-α/|α|)
-  else.
-    beta=. - (9 o. alpha) condneg norms alpha , xnorm       NB. β=-copysign(||y||_2,Re(α))
-    y=. (| beta) (iotau " _) } y                            NB. write in-place |β|
-    if. FP_SFMIN > | beta do.
-      y=. y % FP_SFMIN                                      NB. scale (α,x[1],...,x[n-1],|β|)
-      xnorm=. xnorm % FP_SFMIN
-    end.
-    if. 0 <: beta do.
-      dzeta=. -/ x ({,) y                                   NB. ζ=α_scaled-|β_scaled|
-      tau=. (- dzeta) % (iotau ({,) y)                      NB. τ=-ζ/|β_scaled|
-    else.
-      beta=. - beta                                         NB. |β_unscaled|
-      'realpha imalpha'=. +. ioalpha ({,) y                 NB. Re(α_scaled) , Im(α_scaled)
-      gamma=. realpha + iotau ({,) y                        NB. γ=Re(α_scaled)+|β_scaled|
-      delta=. (imalpha , xnorm) (- @ (+/) @ ([ * %)) gamma  NB. δ=-(Im(α_scaled)*(Im(α_scaled)/γ)+||x||_2*(||x||_2/γ))
-      dzeta=. delta j. imalpha                              NB. ζ=δ+i*Im(α_scaled)
-      tau=. - dzeta % iotau ({,) y                          NB. τ=-ζ/|β_scaled|
-    end.
-    y=. y % dzeta
-    y=. (beta , tau) (x " _) } y                            NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
-  end.
-)
-
-NB. ---------------------------------------------------------
-NB. larfl
-NB. Multiply matrix A by vectors from the left:
-NB.   B=. v * (v' * A)
-NB.
-NB. Syntax:
-NB.   B=. A larfl v
-NB. where
-NB.   A - m×n-matrix
-NB.   v - m-vector
-NB.   B - m×n-matrix
-
-larfl=: ] */ (mp~ +)
-
-NB. ---------------------------------------------------------
-NB. larfr
-NB. Multiply matrix A by vectors from the right:
-NB.   B=. (A * v) * v'
-NB.
-NB. Syntax:
-NB.   B=. A larfr v
-NB. where
-NB.   A - m×n-matrix
-NB.   v - n-vector
-NB.   B - m×n-matrix
-
-larfr=: mp */ (+@])
+larfpf=: 0 _1 & larfp
+larfpfc=: (+ updl _1) @ larfpf
+larfpb=: _1 0 & larfp
+larfpbc=: (+ updl 0) @ larfpb
 
 NB. ---------------------------------------------------------
 NB. Verb       Direction    Layout
@@ -288,10 +249,10 @@ NB.
 NB. Description:
 NB.   Monads to form the triangular factor T of a block
 NB.   reflector H. If direction is forward, then:
-NB.     H = H(1) H(2) ... H(k) and T is upper triangular,
-NB.   otherwise direction is backward, and:
-NB.     H = H(k) ... H(2) H(1) and T is lower triangular.
-NB.   If layout is columnwise, then:
+NB.     H = H(0) * H(1) * ... * H(k-1) and T is upper
+NB.   triangular, otherwise direction is backward, and:
+NB.     H = H(k-1) * ... * H(1) * H(0) and T is lower
+NB.   triangular. If layout is columnwise, then:
 NB.     H = I - V * T * V' ,
 NB.   otherwise layout is rowwise, and:
 NB.     H = I - V' * T * V .
@@ -326,16 +287,53 @@ larftfr=: ] `(             (* -)~ ((mp ct) {:)\  )` ,.  `(,~)`(_1:}) larft IOSLC
 
 NB. ---------------------------------------------------------
 NB. Verb       Action   Side   Transp  Direction  Layout      Used in
+NB. larflcfc   H' * C   left   ct      forward    columnwise  geqr2
+NB. larflnbc   H  * C   left   none    backward   columnwise  ung2l
+NB. larflnfc   H  * C   left   none    forward    columnwise  ung2r
+NB. larfrcbr   C  * H'  right  ct      backward   rowwise     ungr2
+NB. larfrcfr   C  * H'  right  ct      forward    rowwise     ungl2
+NB. larfrnfr   C  * H   right  none    forward    rowwise     gelq2
+NB.
+NB. Description:
+NB.   Dyads to apply a reflector or its transpose to a
+NB.   matrix, from either the left or the right
+NB.
+NB. Syntax:
+NB.   eCupd=. eC larfxxxx vtau
+NB. where
+NB.   vtau  - v with appended tau
+NB.   v     - vector with 1 at head (forward direction) or
+NB.           tail (backward direction)
+NB.   tau   - complex scalar τ
+NB.   eC    - matrix C to update with appended or stitched
+NB.           trash vector
+NB.   eCupd - being updated matrix C with appended or
+NB.           stitched trash vector
+NB.
+NB. Notes:
+NB. - larfxxxx and larfbxxxx are topological equivalents
+
+larflcbc=: [ - ] */ (mp~ (+ @ ((0 & ( 0 })) * {.)))  NB. C - v * ((v * τ)' * C)
+larflcfc=: [ - ] */ (mp~ (+ @ ((0 & (_1 })) * {:)))  NB. C - v * ((v * τ)' * C)
+larflnbc=: [ - ] */ (mp~ ((+ @ (0 & ( 0 }))) * {.))  NB. C - v * ((τ * v') * C)
+larflnfc=: [ - ] */ (mp~ ((+ @ (0 & (_1 }))) * {:))  NB. C - v * ((τ * v') * C)
+larfrcbr=: [ - (mp (+ @ ((0 & ( 0 })) * {.))) */ ]   NB. C - (C * (τ * v)') * v
+larfrcfr=: [ - (mp (+ @ ((0 & (_1 })) * {:))) */ ]   NB. C - (C * (τ * v)') * v
+larfrnfr=: [ - (mp ((+ @ (0 & (_1 }))) * {:)) */ ]   NB. C - (C * (v' * τ)) * v
+
+
+NB. ---------------------------------------------------------
+NB. Verb       Action   Side   Transp  Direction  Layout      Used in
 NB. larfblcbc  H' * C   left   ct      backward   columnwise  geqlf
 NB. larfblcbr  H' * C   left   ct      backward   rowwise
 NB. larfblcfc  H' * C   left   ct      forward    columnwise  geqrf
 NB. larfblcfr  H' * C   left   ct      forward    rowwise
-NB. larfblnbc  H  * C   left   none    backward   columnwise
+NB. larfblnbc  H  * C   left   none    backward   columnwise  ungql
 NB. larfblnbr  H  * C   left   none    backward   rowwise
-NB. larfblnfc  H  * C   left   none    forward    columnwise
+NB. larfblnfc  H  * C   left   none    forward    columnwise  ungqr
 NB. larfblnfr  H  * C   left   none    forward    rowwise
 NB. larfbrcbc  C  * H'  right  ct      backward   columnwise
-NB. larfbrcbr  C  * H'  right  ct      backward   rowwise
+NB. larfbrcbr  C  * H'  right  ct      backward   rowwise     ungrq
 NB. larfbrcfc  C  * H'  right  ct      forward    columnwise
 NB. larfbrcfr  C  * H'  right  ct      forward    rowwise     unglq
 NB. larfbrnbc  C  * H   right  none    backward   columnwise
@@ -344,9 +342,9 @@ NB. larfbrnfc  C  * H   right  none    forward    columnwise
 NB. larfbrnfr  C  * H   right  none    forward    rowwise     gelqf
 NB.
 NB. Description:
-NB.   Dyads to build and apply a block reflector H or its
-NB.   transpose H' to a submatrix C, from either the left or
-NB.   the right.
+NB.   Dyads to build and apply a block reflector or its
+NB.   transpose to a matrix, from either the left or the
+NB.   right
 NB.
 NB. Syntax:
 NB.   eCupd=. eC larfbxxxx Vtau
@@ -359,24 +357,19 @@ NB.           trash vector
 NB.   eCupd - being updated matrix C with appended or
 NB.           stitched trash vector
 NB.
-NB. Algorithm:
-NB.   1) compute negated T: Tneg=. - larftxx Vtau
-NB.   2) compute negated part of H without I added:
-NB.        Hnegpart = op1(V) * op2(Tneg) * op1(V')
-NB.      where op(Z) is either Z or Z'
-NB.   3) compute op2(H) = (I+Hnegpart) by incrementing the
-NB.      0-th diagonal:
-NB.        op2(H) =: (>: upddiag0) Hnegpart
-NB.
 NB. Notes:
-NB. - emulates LAPACK's sequence of calls to LARFT and then
+NB. - emulates LAPACK's sequence of calls to xLARFT and then
 NB.   to LARFB
+NB. - larfxxxx and larfbxxxx are topological equivalents
 
-larfblcbc=: [ (mp~) (((0&(IOSFR }))@]) (    [  ((>: upddiag0)@ mp  ) (ct@ mp  )) (-@larftbc@]))  NB. (I + V * (V * (-T))') * C
-larfblcfc=: [ (mp~) (((0&(IOSLR }))@]) (    [  ((>: upddiag0)@ mp  ) (ct@ mp  )) (-@larftfc@]))  NB. (I + V * (V * (-T))') * C
-larfbrcfr=: [  mp   (((0&(IOSLC }))@]) (    [  ((>: upddiag0)@(mp~)) (ct@(mp~))) (-@larftfr@]))  NB. C  * (I + ((-T) * V)' * V)
-larfbrnbr=: [  mp   (((0&(IOSFC }))@]) ((ct@[) ((>: upddiag0)@ mp  ) (    mp~ )) (-@larftbr@]))  NB. C * (I + V' * (-T) * V)
-larfbrnfr=: [  mp   (((0&(IOSLC }))@]) ((ct@[) ((>: upddiag0)@ mp  ) (    mp~ )) (-@larftfr@]))  NB. C * (I + V' * (-T) * V)
+larfblcbc=: ((] - [ mp (mp~ (ct @ (mp larftbc)))~) (0 & (IOSFR })))~  NB. C - V * ((V * T)' * C)
+larfblcfc=: ((] - [ mp (mp~ (ct @ (mp larftfc)))~) (0 & (IOSLR })))~  NB. C - V * ((V * T)' * C)
+larfblnbc=: (([ - ] mp (mp~ (larftbc mp ct)))~ (0 & (IOSFR })))~      NB. C - V * ((T * V') * C)
+larfblnfc=: (([ - ] mp (mp~ (larftfc mp ct)))~ (0 & (IOSLR })))~      NB. C - V * ((T * V') * C)
+larfbrcbr=: (([ - (mp (ct @ (mp~ larftbr))) mp ])~ (0 & (IOSFC })))~  NB. C - (C * (T * V)') * V
+larfbrcfr=: (([ - (mp (ct @ (mp~ larftfr))) mp ])~ (0 & (IOSLC })))~  NB. C - (C * (T * V)') * V
+larfbrnbr=: (([ - (mp (ct mp larftbr)) mp ])~ (0 & (IOSFC })))~       NB. C - (C * (V' * T)) * V
+larfbrnfr=: (([ - (mp (ct mp larftfr)) mp ])~ (0 & (IOSLC })))~       NB. C - (C * (V' * T)) * V
 
 NB. =========================================================
 NB. Test suite

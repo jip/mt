@@ -208,7 +208,7 @@ NB. TODO:
 NB. - check Nx|Ny|Nu == 0
 
 plot=: (3 : 0) " 0 1
-  (conew 'jzplot') plot_tau_ y               NB. supply new plot object
+  (conew 'jzplot') plot y                    NB. supply new plot object
 :
   ib=. * @ L.                                NB. is a box?
   ip=. -. @ (ib +. ('' & -:)) @ ]            NB. is a prefix?
@@ -236,33 +236,37 @@ NB. --- smoutput 'kt' ; <kt
 
   NB. pair-wise conditional append non-empty key titles (kt), prepended by string ';key', to subplot options (so)
   so=. so ((, ((';key' & ,) ^: (* @ #))) L: 0) kt
-NB. --- smoutput 'so' ; <so
+smoutput 'so' ; <so
 
   NB. for each xx and dat pairs (xxi,dati): dati=. if empty(xxi) then (dati) else (xxi;dati)
   xdat=. xx ((; ^: (* @ # @ [)) ` ($: L: _1) @. (ib @ ])) dat
-NB. --- smoutput 'xdat' ; <xdat
+smoutput 'xdat' ; <xdat
 
   NB. couple each leaf from so with corresp. rank-1 box from xdat
   sdat=. so ((, & <) L: 0 _1) xdat
-NB. --- smoutput 'sdat' ; <sdat
+smoutput 'sdat' ; <sdat
 
   NB. under each sdat box: if it is subsubplots data then convert
   NB. it from boxed Si-vector to boxed Si-by-2 table,
   NB. finally ravel whole [R-by-]C array to form multiplot pd data
   pdat=. , ((> ^: (ib @: (0 & {::))) &. >) sdat
-NB. --- smoutput 'plot pdat=' ; <pdat
+smoutput 'plot pdat=' ; <pdat
 
   pd__x ps
 
   if. 8 -: # y do.
     pd__x pdat
   else.
-    NB. subplots case: send each [sub]subplot's data to pd consequently
+    NB. subplots special case: send each [sub]subplot's data
+    NB. to pd consequently to enshure proper pd initialization
 
-    cct=. 2 : '((v @ }. @ [) (u @ (0 & {::))) ^: (0 < #)'  NB. consequencer conj: apply u to head, then v (usually $:) to tail
-    ss2p=. pd__x cct $:                                    NB. send subsubplot data (soij then xdatij) to pd
-    s2p=. (ss2p cct $:) @ ((, @ <) ^: (0 < #) " 1)         NB. box-then-ravel y if it's a non-empty list, then send subplot data rows to ss2p consequently
-    (s2p cct $:) pdat                                      NB. send pdat items (i.e. boxed subplot data (soij;xdatij)) to s2p consequently
+    NB. 1) prepare pdat to form list (pdat1;pdat2;...;pdatRC)
+    NB.    where: RC -: R*C
+    NB.           pdati is either (soi;xdati) or (soi1;xdati1;soi2;xdati2;...;soiSi;xdatiSi)
+    NB. 2) until prepared pdat is empty:
+    NB.    2.1) apply pd to unboxed head from list
+    NB.    2.2) call itself with tail supplied
+    ((($: @ }. @ [) (pd__x @ (0 & {::))) ^: (0 < #)) (, ; pdat)
 
   end.
 

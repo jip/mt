@@ -9,7 +9,7 @@ NB. [1] Podchukaev V.A. Theory of informational processes
 NB.     and systems. - M., 2006. (Подчукаев В. А. Теория
 NB.     информационных процессов и систем. - М.: Гардарики,
 NB.     2006 - 209 с.)
-NB.     URL: http://www.sgau.ru/uit/Book3.htm
+NB.     URL: http://sgau.ru/uit/Book3.htm
 NB. [2] Andrievskiy B.R., Fradkov A.L. Selected chapters of
 NB.     automatic control theory with MATLAB examples. -
 NB.     SPb., 2000 (Андриевский Б.Р., Фрадков А. Л.

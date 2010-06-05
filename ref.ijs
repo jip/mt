@@ -478,7 +478,7 @@ NB.   A - m×n-matrix, is used to get Qf
 
 testlarft=: 3 : 0
   AC=: y=. 0 {:: y
-  rcond=. ((_."_)`(norm1 con (getri@getrf)) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y

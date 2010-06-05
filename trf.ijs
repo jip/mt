@@ -709,7 +709,7 @@ testgetrf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
 
-  rcond=. ((_."_)`(norm1 con (getri@getrf)) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('lud' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %. (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 

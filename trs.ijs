@@ -272,7 +272,7 @@ NB. - berr := max(||B - op(A) * X|| / (||ε * op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
-  'conA conAh conAt'=. 3 # _. NB. (norm1 con (getri@getrf))"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. 3 # _. NB. (norm1 con (getriul1p@getrful1p))"2 (] , ct ,: |:) A
   Af=. getrfpl1u A
 
   ('getrsax'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;Af)

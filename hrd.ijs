@@ -417,7 +417,7 @@ testgehrd=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gehrd'
 
-  rcond=. (norm1 con (getri@getrf)) y
+  rcond=. (norm1 con (getriul1p@getrful1p)) y
 
 NB. FIXME!  ('gehrd_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
 

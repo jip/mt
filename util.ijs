@@ -41,4 +41,43 @@ sdiag=: ((+ (< 0 1) & |:) ((>: * i.) @ # @ ]) } ]) " 1 2
 
 NB. =========================================================
 Note 'testing and timing'
+
+   NB. machine epsilon
+   (-: ^: (1 ~: (1: + {:)) ^: _) 1 0.5
+1.13687e_13 5.68434e_14
+   NB. system setting
+   9!:18 ''
+5.68434e_14
+   NB. epsilon exponent
+   2 ^. 1.13687e_13 5.68434e_14
+_43 _44
+   NB. test
+   1 = 1 + 1.13687e_13 5.68434e_14
+0 1
+
+   NB. underflow threshold
+   (-: ^: (0 ~: {:) ^: _) 1 0.5
+4.94066e_324 0
+   NB. minimum exponent
+   2 ^. 4.94066e_324
+_1074
+   NB. test
+   2 ^ _1074 _1075
+4.94066e_324 0
+   NB. safe minimum
+   _ > 0.5 ^ _1023 _1024
+1 0
+
+   NB. overflow threshold
+   (+: ^: (_ ~: {.) ^: _) 1 0.5
+_ 8.98847e307
+   NB. maximum exponent
+   2 ^. 8.98847e307
+1023
+   NB. test
+   2 ^ 1023 1024
+8.98847e307 _
+   NB. safe maximum
+   _ > % 0.5 ^ 1023 1024
+1 0
 )

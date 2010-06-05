@@ -38,7 +38,7 @@ NB. =========================================================
 NB. Local definitions
 
 rios2oios=: < @ hs2ios/ " 1 @: |:  NB. convert rIOS to opened (non-boxed) IOS
-gshapes=: $`($ L: 0) @. (0 < L.)   NB. get shapes, boxes are accepted, too
+gshapes=: $`($(;<)($ L: 0)) @. (0 < L.)   NB. get shapes, boxes are accepted, too
 
 NB. template adverbs to form norm verbs
 mocs=: >./ @ (+/     ) @:          NB. vector: sum of, matrix: max of column sums

@@ -359,8 +359,7 @@ NB.   Qf=. tru1 LQf
 NB.   Q=. unglq LQf
 NB.   k=. <./ $ A
 NB. then
-NB.   ((idmat @ c) (-: clean) ((tru1         ) unmlqln (ct @ unglq)) @ gelqf) A
-NB.   ((idmat @ c) (-: clean) ((tru1 @ (k&{.)) unmlqlc (     unglq)) @ gelqf) A
+NB.   ((idmat @ c) (-: clean) ((_1 & tru1 @ ((_ _10)&{.)) unmqllc (     ungql)) @ geqlf) A
 NB.
 NB. Notes:
 NB. - input's and output's shapes are the same
@@ -465,8 +464,7 @@ NB.   Qf=. tru1 LQf
 NB.   Q=. unglq LQf
 NB.   k=. <./ $ A
 NB. then
-NB.   ((idmat @ c) (-: clean) ((tru1         ) unmlqln (ct @ unglq)) @ gelqf) A
-NB.   ((idmat @ c) (-: clean) ((tru1 @ (k&{.)) unmlqlc (     unglq)) @ gelqf) A
+NB.   
 NB.
 NB. Notes:
 NB. - input's and output's shapes are the same
@@ -501,8 +499,7 @@ NB.   Qf=. tru1 LQf
 NB.   Q=. unglq LQf
 NB.   k=. <./ $ A
 NB. then
-NB.   ((idmat @ c) (-: clean) ((tru1         ) unmlqln (ct @ unglq)) @ gelqf) A
-NB.   ((idmat @ c) (-: clean) ((tru1 @ (k&{.)) unmlqlc (     unglq)) @ gelqf) A
+NB.   
 NB.
 NB. Notes:
 NB. - input's and output's shapes are the same

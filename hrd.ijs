@@ -21,14 +21,14 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-HRDBS=: 32   NB. block size limit
-HRDNX=: 128  NB. crossover point, HRDNX ≥ HRDBS
+HRDNB=: 32   NB. block size limit
+HRDNX=: 128  NB. crossover point, HRDNX ≥ HRDNB
 
 NB. ---------------------------------------------------------
 NB. lahr2l
 NB.
 NB. Description:
-NB.   Reduce the first HRDBS rows (panel) of a general matrix
+NB.   Reduce the first HRDNB rows (panel) of a general matrix
 NB.   subeA so that elements behind the 1st supdiagonal are
 NB.   zero. The reduction is performed by an unitary
 NB.   (orthogonal) similarity transformation: Q * subeA * Q'
@@ -37,23 +37,23 @@ NB. Syntax:
 NB.   'Y V H T'=. lahr2l subeA
 NB. where
 NB.   subeA - (n-i)×(n-i)-matrix eA[i:n-1,i+1:n]
-NB.   Y     - HRDBS×(n-i)-matrix, Y = T * V * subeA, the
+NB.   Y     - HRDNB×(n-i)-matrix, Y = T * V * subeA, the
 NB.           last column contains trash
-NB.   V     - HRDBS×(n-i)-matrix, unit upper triangular,
-NB.           the last column contains τ[i:i+HRDBS-1]
-NB.   T     - HRDBS×HRDBS-matrix, lower triangular
-NB.   H     - HRDBS×HRDBS-matrix, lower triangular
+NB.   V     - HRDNB×(n-i)-matrix, unit upper triangular,
+NB.           the last column contains τ[i:i+HRDNB-1]
+NB.   T     - HRDNB×HRDNB-matrix, lower triangular
+NB.   H     - HRDNB×HRDNB-matrix, lower triangular
 NB.   eA    - n×(n+1)-matrix, being A with stitched trash
 NB.           column
 NB.   A     - n×n-matrix to reduce
 NB.   Q     - (n-i)×(n-i)-matrix, block reflector,
 NB.             Q = I - V'*T*V
-NB.   VH    - HRDBS×(n-i)-matrix, represents reduced rows
+NB.   VH    - HRDNB×(n-i)-matrix, represents reduced rows
 NB.           of subeA, lower triangles of VH and H are
 NB.           match, strict upper triangles of VH and V are
 NB.           match
 NB.   i     - integer from set:
-NB.             {f+j*HRDBS, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDBS⌋)},
+NB.             {f+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in the eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
@@ -63,10 +63,10 @@ NB. - v[i]'s direction is forward, but T is lower triangular
 lahr2l=: 3 : 0
   V=. 0 {. y
   T=. H=. 0 0 $ 0
-  for_j. i. HRDBS do.
-    b=. (j { y) - (+ (< a: ; <: j) { V) mp (j {. y)
+  for_j. i. HRDNB do.
+    b=. (j { y) - (+ (<: j) {"1 V) mp (j {. y)
     b=. b - (((0 (_1) } b) mp (ct V)) mp (ct T)) mp V  NB. matrix-by-vector ops only
-    z1=. 1 j } z=. (+ updl _1) (j , _1) larfg (0 (i. j) } b)
+    z1=. 1 j } z=. _1 + upd1 (j , _1) larfg (0 (i. j) } b)
     u=. (* +@{:) z1
     w=. V +@mp (+ - 0 (_1) } u)
     T=. T (0 append) ((w mp T) , (+ {: z1))
@@ -74,14 +74,14 @@ lahr2l=: 3 : 0
     H=. H (0 append) ((j {. b) , (j { z))
     V=. V (_1 append) z1
   end.
-  (HRDBS {. y) ; V ; H ; T
+  (HRDNB {. y) ; V ; H ; T
 )
 
 NB. ---------------------------------------------------------
 NB. lahr2u
 NB.
 NB. Description:
-NB.   Reduce the first HRDBS columns (panel) of a general
+NB.   Reduce the first HRDNB columns (panel) of a general
 NB.   matrix subeA so that elements below the 1st subdiagonal
 NB.   are zero. The reduction is performed by an unitary
 NB.   (orthogonal) similarity transformation: Q' * subeA * Q
@@ -90,36 +90,36 @@ NB. Syntax:
 NB.   'Y V H T'=. lahr2u subeA
 NB. where
 NB.   subeA - (n-i)×(n-i)-matrix eA[i+1:n,i:n-1]
-NB.   Y     - (n-i)×HRDBS-matrix, Y = subeA * V * T, the
+NB.   Y     - (n-i)×HRDNB-matrix, Y = subeA * V * T, the
 NB.           last row contains trash
-NB.   V     - (n-i)×HRDBS-matrix, unit lower triangular,
-NB.           the last row contains τ[i:i+HRDBS-1]
-NB.   T     - HRDBS×HRDBS-matrix, upper triangular
-NB.   H     - HRDBS×HRDBS-matrix, upper triangular
+NB.   V     - (n-i)×HRDNB-matrix, unit lower triangular,
+NB.           the last row contains τ[i:i+HRDNB-1]
+NB.   T     - HRDNB×HRDNB-matrix, upper triangular
+NB.   H     - HRDNB×HRDNB-matrix, upper triangular
 NB.   eA    - (n+1)×n-matrix, being A with appended trash row
 NB.   A     - n×n-matrix to reduce
 NB.   Q     - (n-i)×(n-i)-matrix, block reflector,
 NB.             Q = I - V*T*V'
-NB.   VH    - (n-i)×HRDBS-matrix, represents reduced columns
+NB.   VH    - (n-i)×HRDNB-matrix, represents reduced columns
 NB.           of subeA, upper triangles of VH and H are
 NB.           match, strict lower triangles of VH and V are
 NB.           match
 NB.   i     - integer from set:
-NB.             {f+j*HRDBS, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDBS⌋)},
+NB.             {f+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in the eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
 NB. Notes:
 NB. - emulates xLAHR2 with following differences:
-NB.   - upper i×HRDBS part of Y is calculated later in gehrdu
+NB.   - upper i×HRDNB part of Y is calculated later in gehrdu
 NB.   - V and H are returned separately from each other
 NB.   - V is formed explicitely
 
 lahr2u=: 3 : 0
   V=. _ 0 {. y
   T=. H=. 0 0 $ 0
-  for_j. i. HRDBS do.
-    b=. ((< a: ; j) { y) - (j {."1 y) mp + (<: j) { V
+  for_j. i. HRDNB do.
+    b=. (j {"1 y) - (j {."1 y) mp + (<: j) { V
     b=. b - V mp (ct T) mp (ct V) mp 0 (_1) } b  NB. matrix-by-vector ops only
     z1=. 1 j } z=. (j , _1) larfg (0 (i. j) } b)
     u=. (* {:) z1
@@ -129,7 +129,7 @@ lahr2u=: 3 : 0
     H=. H (0 stitch) ((j {. b) , (j { z))
     V=. V (_1 stitch) z1
   end.
-  (HRDBS {."1 y) ; V ; H ; T
+  (HRDNB {."1 y) ; V ; H ; T
 )
 
 NB. ---------------------------------------------------------
@@ -279,19 +279,19 @@ gehrdl=: 4 : 0
   Atop=. (f , _) {. y
   Aleft=. (f - (n1 , _1)) {. y
   y=. (f + 0 1) }. y
-  I=. 0 >. >: <. (s - (2 + HRDNX)) % HRDBS        NB. how many panels will be reduced
-  for_i. hds2ios (f , HRDBS , I) do.              NB. reduce i-th panel, i = {f,f+HRDBS,...,f+(I-1)*HRDBS}
+  I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB       NB. how many panels will be reduced
+  for_i. hds2ios (f , HRDNB , I) do.              NB. reduce i-th panel, i = {f,f+HRDNB,...,f+(I-1)*HRDNB}
     'Y V H T'=. lahr2l y                          NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
     eV0=. 0 ,. (0 (_1) }"1 V)                     NB. prepend by zero column, replace τs by zeros
     Aleft=. Aleft - (ct eV0) mp (T mp (eV0 mp Aleft))  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
-    y=. (HRDBS }. y) - (ct (HRDBS }."1 eV0)) mp Y      NB. apply reflector from the left
+    y=. (HRDNB }. y) - (ct (HRDNB }."1 eV0)) mp Y      NB. apply reflector from the left
     y=. y - (y mp (ct T mp (0 (_1) }"1 V))) mp V       NB. apply reflector from the right
-    V=. ((i. HRDBS) </ (i. (n-i))) } H ,: V       NB. write H into V's lower triangle in-place
-    Atop=. Atop , (HRDBS {. Aleft) ,. V
-    Aleft=. (HRDBS }. Aleft) ,. (HRDBS {."1 y)
-    y=. HRDBS }."1 y
+    V=. ((i. HRDNB) </ (i. (n-i))) } H ,: V       NB. write H into V's lower triangle in-place
+    Atop=. Atop , (HRDNB {. Aleft) ,. V
+    Aleft=. (HRDNB }. Aleft) ,. (HRDNB {."1 y)
+    y=. HRDNB }."1 y
   end.
-  _1 0 }. (x + 1 _1 * HRDBS * I) gehd2l (Atop , Aleft ,. y)
+  _1 0 }. (x + 1 _1 * HRDNB * I) gehd2l (Atop , Aleft ,. y)
 )
 
 NB. ---------------------------------------------------------
@@ -372,19 +372,19 @@ gehrdu=: 4 : 0
   Aleft=. f {."1 y
   Atop=. (f - (_1 , n1)) {. y
   y=. (f + 1 0) }. y
-  I=. 0 >. >: <. (s - (2 + HRDNX)) % HRDBS        NB. how many panels will be reduced
-  for_i. hds2ios (f , HRDBS , I) do.              NB. reduce i-th panel, i = {f,f+HRDBS,...,f+(I-1)*HRDBS}
+  I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB       NB. how many panels will be reduced
+  for_i. hds2ios (f , HRDNB , I) do.              NB. reduce i-th panel, i = {f,f+HRDNB,...,f+(I-1)*HRDNB}
     'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
     eV0=. 0 , (0 (_1) } V)                        NB. prepend by zero row, replace τs by zeros
     Atop=. Atop - ((Atop mp eV0) mp T) mp (ct eV0)     NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
-    y=. (HRDBS }."1 y) - Y mp (ct (HRDBS }. eV0))      NB. apply reflector from the right
+    y=. (HRDNB }."1 y) - Y mp (ct (HRDNB }. eV0))      NB. apply reflector from the right
     y=. y - V mp (ct (0 (_1) } V) mp T) mp y           NB. apply reflector from the left
-    V=. ((i. (n-i)) >/ (i. HRDBS)) } H ,: V       NB. write H into V's upper triangle in-place
-    Aleft=. Aleft ,. (HRDBS {."1 Atop) , V
-    Atop=. (HRDBS }."1 Atop) , (HRDBS {. y)
-    y=. HRDBS }. y
+    V=. ((i. (n-i)) >/ (i. HRDNB)) } H ,: V       NB. write H into V's upper triangle in-place
+    Aleft=. Aleft ,. (HRDNB {."1 Atop) , V
+    Atop=. (HRDNB }."1 Atop) , (HRDNB {. y)
+    y=. HRDNB }. y
   end.
-  0 _1 }. (x + 1 _1 * HRDBS * I) gehd2u (Aleft ,. Atop , y)
+  0 _1 }. (x + 1 _1 * HRDNB * I) gehd2u (Aleft ,. Atop , y)
 )
 
 NB. =========================================================
@@ -392,10 +392,7 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. thrd
-NB. Test Hessenberg reduction algorithms:
-NB. - LAPACK: gehrd
-NB. - mt package: gehrdl gehrdu
-NB. by general matrix
+NB. Test Hessenberg reduction algorithms by general matrix
 NB.
 NB. Syntax: thrd A
 NB. where A - general n×n-matrix

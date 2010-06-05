@@ -239,14 +239,14 @@ NB.   Monads to generate an elementary reflector, see larfg,
 NB.   larfp for details.
 
 larfgf=: 0 _1 & larfg
-larfgfc=: (+ updl _1) @ larfgf
+larfgfc=: _1 + upd1 larfgf
 larfgb=: _1 0 & larfg
-larfgbc=: (+ updl 0) @ larfgb
+larfgbc=: 0 + upd1 larfgb
 
 larfpf=: 0 _1 & larfp
-larfpfc=: (+ updl _1) @ larfpf
+larfpfc=: _1 + upd1 larfpf
 larfpb=: _1 0 & larfp
-larfpbc=: (+ updl 0) @ larfpb
+larfpbc=: 0 + upd1 larfpb
 
 NB. ---------------------------------------------------------
 NB. Verb       Direction    Layout

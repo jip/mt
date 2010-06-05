@@ -6,10 +6,12 @@ NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. pt        Pertranspose
 NB. cpt       Conjugate pertranspose
-NB. updl      Conj. to update array accepting linear IOS
 NB. gi        Conj. to evoke n-th verb from gerund m
 NB. ms        Minimum in sum of vectors
 NB. rt        Restrained Take
+NB.
+NB. upd1      Adv. to update subarray by a monad
+NB. map2i     Conj. to indirectly map by dyad to subarray
 NB.
 NB. uncut     To frame matrix by border of zeros
 NB. append    Template adv. to make verbs to enhance append
@@ -143,8 +145,72 @@ trace=: +/ @ diag                        NB. matrix trace
 ct=: + @ |:                              NB. conjugate transpose
 pt=: |. @ |: @ |.                        NB. pertranspose
 cpt=: + @ pt                             NB. conjugate pertranspose
-updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'  NB. Conj. to update array accepting linear IOS
 gi=: 2 : '(n{m)`:6'                      NB. Conj. to evoke n-th verb from gerund m: m[n]
+
+NB. ---------------------------------------------------------
+NB. upd1
+NB.
+NB. Description:
+NB.   Adv. to update subarray by a monad
+NB.
+NB. Syntax:
+NB.   vapp=. u upd1
+NB. where
+NB.   u       - monad to update subA
+NB.   vapp    - verb to update A
+NB.   ios     - IOS of subA in the A
+NB.   subA    - subarray in the A
+NB.   A       - array
+NB.   Aupd    - A with subA being replaced by subAupd
+NB.   subAupd -: u subA
+NB.
+NB. If:
+NB.   subA=. ios { A
+NB.   subAupd=. u subA
+NB.   Aupd=. subAupd ios } A
+NB. then
+NB.   Aupd -: ios vapp A
+NB.
+NB. Example:######################
+NB. - the following replaces 87 by _8525 in array (i. 10 10):
+NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
+NB.   since
+NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
+NB.
+NB. References:
+NB. [1] [Jprogramming] Transform to Amend
+NB.     Dan Bron, Sat Mar 3 03:26:44 HKT 2007
+NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005425.html
+
+upd1=: (@:{) (`[) (`]) }
+
+NB. ---------------------------------------------------------
+NB. map2i
+NB.
+NB. Description:
+NB.   Conj. to indirectly map by dyad to subarray
+NB.
+NB. Syntax:
+NB.   vapp=. u map2i
+NB. where#########################
+NB.   u        - dyad to produce subA2
+NB.   vapp     - verb to update A
+NB.   aios     - 3-array of IOS (iosA0,iosA1,iosA2) of subA0, subA1 and subA2 in
+NB.              the A
+NB.   subA0,subA1,subA2 - subarrays in the A
+NB.   A        - array
+NB.   Aupd     - A with subA1 being replaced by subA1upd
+NB.   subA2upd -: subA0 u subA1
+NB.
+NB. If:
+NB.   subA0=. (0{ios) { A
+NB.   subA1=. (1{ios) { A
+NB.   subA1upd=. subA0 u subA1
+NB.   Aupd=. subA1upd (1{ios) } A
+NB. then
+NB.   Aupd -: ios vapp A
+
+map2i=: 2 : '((((0{n){[){])u(((1{n){[){]))`((2{n){[)`]}'
 
 NB. ---------------------------------------------------------
 NB. ms

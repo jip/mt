@@ -21,87 +21,6 @@ NB. Version: 1.0.0 2010-01-01
 coclass 'mt'
 
 NB. =========================================================
-NB. Concepts
-
-NB. ---------------------------------------------------------
-NB. larftxx
-NB.
-NB. Description:
-NB.   Monads to form the triangular factor T of a block
-NB.   reflector H, which is defined as a product of k
-NB.   elementary reflectors.
-NB.
-NB. Algorithm:
-NB.   1) prepare V0: V0=. iot 0} Vtau
-NB.   2) prepare V0r: V0r=. vV V0
-NB.   3) extract tau: tau=. iot { Vtau
-NB.   4) prepare coefficients matrix P: P=. tau vP V0r
-NB.   5) let T[i]=0×0-matrix, start loop i=0:k-1:
-NB.      5.1) extract vector p[i]: pi=P[i,0:i-1]
-NB.      5.2) calc new column: c[i]: ci=. pi mp Ti
-NB.      5.3) stitch c[i] to T[i]: Ti=. Ti vTi ci
-NB.      5.4) append zero row to T[i]: Ti=. (0 & va0) Ti
-NB.      5.5) write 1 in the diagonal element of appended
-NB.           zero row: Ti=. (1 & vs1) Ti
-NB.   6) multiply T[i] by tau (item-by-row): T=. tau * Ti
-NB. where
-NB.   vV   - verb to prepare V0r; input must be a triangular
-NB.          (trapezoidal) matrix with zeroed tau elements;
-NB.          vectors within output must get horizontal
-NB.          orientation; is called as:
-NB.            V0r=. vV V0
-NB.   vP   - verb to calculate coefficients matrix P; is
-NB.          called as:
-NB.            P=. tau vP V0r
-NB.   vTi  - verb to stitch new column while building matrix
-NB.          T on current iteration; is called as:
-NB.            Tiupd=. P vTi Ti
-NB.   va0  - verb to append or prepend Tiupd with row of
-NB.          values from scalar x; is called as:
-NB.            Tiupd0=. (0 & va0) Tiupd
-NB.   vs1  - verb to place scalar x in the diagonal element
-NB.          of column just added by va0; is called as:
-NB.            Tiupd1=. (1 & vs1) Tiupd0
-NB.   iost - IOS tau in Vtau
-NB.   vapp - dyad to form the triangular factor T; is called
-NB.          as:
-NB.            T=. vapp Vtau
-NB.   Vtau - matrix V with appended or stitched vector tau
-NB.   V0   - unit triangular (trapezoidal) matrix with zeroed
-NB.          tau elements
-NB.   V0r  - k×(n+1)-matrix, unit triangular (trapezoidal)
-NB.          with rows - elementary reflectors v[i], i=0:k-1,
-NB.          and zeroed tau elements
-NB.   P    - coefficients, it is either the k×k-matrix
-NB.          (-tau)*Pfwd for forward direction, or
-NB.          k×(k-1)-matrix (0 1 }. ((-tau)*Pbwd)) for
-NB.          backward direction (item-by-row product in both
-NB.          cases)
-NB.   Pfwd - k×k-matrix ('*' means trash):
-NB.            [ *        0        0        ... 0          0   ]
-NB.            [ p[1,0]   *        0        ... 0          0   ]
-NB.            [ p[2,0]   p[2,1]   *        ... 0          0   ]
-NB.            [ ...      ...      ...      ... ...        ... ]
-NB.            [ p[k-1,0] p[k-1,1] p[k-1,2] ... p[k-1,k-2] *   ]
-NB.          where for i=0:k-1
-NB.            p[i] = (p[i,0:i-1] , *) = V0r[0:i,0:n-1] * V0r'[i,0:n-1]
-NB.   Pbwd - k×k-matrix ('*' means trash):
-NB.            [ *   0        0        0        ... 0          ]
-NB.            [ *   p[1,0]   0        0        ... 0          ]
-NB.            [ *   p[2,0]   p[2,1]   0        ... 0          ]
-NB.            [ ... ...      ...      ...      ... ...        ]
-NB.            [ *   p[k-1,0] p[k-1,1] p[k-1,2] ... p[k-1,k-2] ]
-NB.          where for i=0:k-1, j=k-1-i
-NB.            p[i] = (* , p[i,0:i-1]) = V0r[j:k-1,0:n-1] * V0r'[j,0:n-1]
-NB.   tau  - k-vector of τ[0:k-1], corresp. to V,
-NB.            tau -: iost { Vtau
-NB.   T    - k×k-matrix, upper or lower triangular
-NB.
-NB. Notes:
-NB. - emulates LAPACK's xLARFT, but without zeros scanning in
-NB.   v[i]
-
-NB. =========================================================
 NB. Local definitions
 
 NB. =========================================================
@@ -256,11 +175,31 @@ NB.   V   - m×k-matrix, unit upper triangular (trapezoidal)
 NB.         with 1s on (k-m)-th diagonal and 0s below
 NB.   tau - k-vector τ[0:k-1] corresp. to V
 NB.   T   - k×k-matrix, lower triangular
+NB.
+NB. Storage layout:
+NB.   (  T00       )  k
+NB.   (  T10  T11  )  n-k
+NB.       k   n-k
+NB. where
+NB.   T10 = - T11 * (Vr' * Vl) * T00
+NB.   Vl  = V[0:m-1,0:k-1]
+NB.   Vr  = V[0:m-1,k:n-1]
 
-larftbc=: (         0 &{) ([ * (EMPTY (((1 & ( 0:})) @ (0&,) @ (] (,.~) (] mp (([ {. {)~ #)))) ^: (#@[))~ (|.@(1&(}."1))@((* -)~ ((mp ct) {.)\.)))) (ct@(0&(         0 })))
-larftbr=: ((< a: ;  0)&{) ([ * (EMPTY (((1 & ( 0:})) @ (0&,) @ (] (,.~) (] mp (([ {. {)~ #)))) ^: (#@[))~ (|.@(1&(}."1))@((* -)~ ((mp ct) {.)\.)))) (    0&((< a: ;  0)}) )
-larftfc=: (        _1 &{) ([ * (EMPTY (((1 & (_1:})) @ (,&0) @ (]  ,.   (] mp (([ {. {)~ #)))) ^: (#@[))~ (               (* -)~ ((mp ct) {:)\  ))) (ct@(0&(        _1 })))
-larftfr=: ((< a: ; _1)&{) ([ * (EMPTY (((1 & (_1:})) @ (,&0) @ (]  ,.   (] mp (([ {. {)~ #)))) ^: (#@[))~ (               (* -)~ ((mp ct) {:)\  ))) (    0&((< a: ; _1)}) )
+larftbc=: 3 : 0
+  n=. c y
+  if. 1=n do.
+    1 1 {. y
+  elseif. 1<n do.
+    k=. <. -: n
+    Vl=. k {."1 y
+    Vr=. k }."1 y
+    T00=. larftbc Vl
+    T11=. larftbc Vr
+    T00 , (((- T11) mp ((ct 0 (0}) Vr) mp Vl) mp T00) ,. T11)
+  elseif. do.  NB. 0=n
+    EMPTY
+  end.
+)
 
 NB. ---------------------------------------------------------
 NB. larftbr
@@ -279,7 +218,31 @@ NB.   V   - k×n-matrix, unit lower triangular (trapezoidal)
 NB.         with 1s on (n-k)-th diagonal and 0s above
 NB.   tau - k-vector τ[0:k-1] corresp. to V
 NB.   T   - k×k-matrix, lower triangular
+NB.
+NB. Storage layout:
+NB.   (  T00       )  k
+NB.   (  T10  T11  )  m-k
+NB.       k   m-k
+NB. where
+NB.   T10 = - T11 * (Vb * Vt') * T11
+NB.   Vt  = V[0:k-1,0:n-1]
+NB.   Vb  = V[k:m-1,0:n-1]
 
+larftbr=: 3 : 0
+  m=. # y
+  if. 1=m do.
+    1 1 {. y
+  elseif. 1<m do.
+    k=. <. -: m
+    Vt=. k {. y
+    Vb=. k }. y
+    T00=. larftbr Vt
+    T11=. larftbr Vb
+    T00 , (((- T11) mp (Vb mp 0 (0}) ct Vt) mp T00) ,. T11)
+  elseif. do.  NB. 0=m
+    EMPTY
+  end.
+)
 
 NB. ---------------------------------------------------------
 NB. larftfc
@@ -298,7 +261,38 @@ NB.   V   - m×k-matrix, unit lower triangular (trapezoidal)
 NB.         with 1s on 0-th diagonal and 0s above
 NB.   tau - k-vector τ[0:k-1] corresp. to V
 NB.   T   - k×k-matrix, upper triangular
+NB.
+NB. Storage layout:
+NB.   (  T00  T01  )  k
+NB.   (       T11  )  n-k
+NB.       k   n-k
+NB. where
+NB.   T01 = - T00 * (Vl' * Vr) * T11
+NB.   Vl  = V[0:m-1,0:k-1]
+NB.   Vr  = V[0:m-1,k:n-1]
+NB.
+NB. References:
+NB. [1] E. Elmroth, F. Gustavson. Applying Recursion to
+NB.     Serial and Parallel QR Factorization Leads to Better
+NB.     Performance. IBM J. Research & Development, Vol. 44,
+NB.     No. 4, 2000, pp 605-624.
+NB.     http://www.research.ibm.com/journal/rd/444/elmroth.pdf
 
+larftfc=: 3 : 0
+  n=. c y
+  if. 1=n do.
+    _1 _1 {. y
+  elseif. 1<n do.
+    k=. <. -: n
+    Vl=. k {."1 y
+    Vr=. k }."1 y
+    T00=. larftfc Vl
+    T11=. larftfc Vr
+    (T00 ,. (- T00) mp ((ct 0 (_1}) Vl) mp Vr) mp T11) _1 append T11
+  elseif. do.  NB. 0=n
+    EMPTY
+  end.
+)
 
 NB. ---------------------------------------------------------
 NB. larftfr
@@ -317,7 +311,31 @@ NB.   V   - k×n-matrix, unit upper triangular (trapezoidal)
 NB.         with 1s on 0-th diagonal and 0s below
 NB.   tau - k-vector τ[0:k-1] corresp. to V
 NB.   T   - k×k-matrix, upper triangular
+NB.
+NB. Storage layout:
+NB.   (  T00  T01  )  k
+NB.   (       T11  )  m-k
+NB.       k   m-k
+NB. where
+NB.   T01 = - T00 * (Vt * Vb') * T11
+NB.   Vt  = V[0:k-1,0:n-1]
+NB.   Vb  = V[k:m-1,0:n-1]
 
+larftfr=: 3 : 0
+  m=. # y
+  if. 1=m do.
+    _1 _1 {. y
+  elseif. 1<m do.
+    k=. <. -: m
+    Vt=. k {. y
+    Vb=. k }. y
+    T00=. larftfr Vt
+    T11=. larftfr Vb
+    (T00 ,. (- T00) mp (Vt mp 0 (_1}) ct Vb) mp T11) _1 append T11
+  elseif. do.  NB. 0=m
+    EMPTY
+  end.
+)
 
 NB. ---------------------------------------------------------
 NB. Verb       Action    Side    Tran   Dir   Layout     eC

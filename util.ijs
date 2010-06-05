@@ -300,7 +300,7 @@ NB.   mat=. rndmatpe size
 
 rndmatpe=: 3 : 0
 d=. diagmat 0.1 + 0.1 * ? y $ 100
-o=. 2b100 gesvd_jlapack_ rndmat y
+o=. 2b001 geev_jlapack_ rndmat y  NB. o=. 2b100 gesvd_jlapack_ rndmat y
 m=. o mp d mp + |: o
 )
 

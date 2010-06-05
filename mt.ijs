@@ -69,7 +69,7 @@ require '~user/projects/mt/equ.ijs'     NB. equilibrate
 require '~user/projects/mt/ref.ijs'     NB. reflect
 require '~user/projects/mt/rot.ijs'     NB. rotate
 require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ HRD output
-require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ output
+require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ HRD output
 
 NB. mid-level
 require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
@@ -82,6 +82,7 @@ require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via t
 NB. hi-level
 require '~user/projects/mt/exp.ijs'     NB. exponent
 require '~user/projects/mt/log.ijs'     NB. logarithm
+require '~user/projects/mt/sv.ijs'      NB. solve linear monomial equation
 
 NB. =========================================================
 NB. Interface

@@ -1,12 +1,12 @@
 NB. util.ijs
 NB. Linear time-invariant (LTI) system's utilities
 NB.
-NB. expm       calculate matrix exponent and Cauchy integral
-NB. logm       calculate matrix logarithm
-NB. powm       raise table y to power x
-NB. powsm      make report of table y powers
+NB. expm       matrix exponent and Cauchy integral
+NB. logm       matrix logarithm
+NB. powm       matrix y to power x
+NB. powsm      X-Y-Z matrix (report) of matrix y powers 0..(x-1)
 NB.
-NB. shiftdiag  add element[s from] x to diagonal of table y
+NB. shiftdiag  add element[s from] x to diagonal of matrix y
 NB. logspace   create vector of logarithmically spaced numbers
 NB. plot       plot data as multiplot or subplots grid
 NB.
@@ -48,7 +48,7 @@ NB. Calculate matrix exponent
 NB.   Φ(ts) = exp(A*ts)
 NB. and Cauchy integral
 NB.   Γ(ts) = Integral(exp(A*(ts-t))*dt,t=0..ts)*B
-NB. for sampe time ts
+NB. for sampe time ts.
 NB.
 NB. Syntax:
 NB.   'Phi Gamma'=. VPIVB expm ts

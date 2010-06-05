@@ -182,7 +182,7 @@ NB.
 NB. TODO:
 NB. - consider >. instead of <.
 
-qfi=: (<.@(QFNB %~ (_1+QFNB-QFNX)&+))M.
+qfi=: (0>.<.@(QFNB %~ (_1+QFNB-QFNX)&+))M.
 
 NB. usage: (iv4C`ih4C`iv4z`ih4z geqfios)
 geqfios=: 1 : '_2 <@,\ (2{.m)/. , (2}.m)/. , ,.'
@@ -237,17 +237,147 @@ gerqf=: (gerq2`(((<@}.) (gerq2 upd1) (0&({::)))@(gerqfstep ^: ((qfi@(0 _1&(ms $)
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-rgeqrf=: 3 : 0
+rgeqr3=: 3 : 0
   n=. c y
   if. 0=n do. 1 0 # 0
   elseif. 1=n do. larfpf y
   elseif. do.
     k=. <. -: n
-    QfRl=. rgeqrf k {."1 y
+    QfRl=. rgeqr3 k {."1 y
     QfRr=. (trl1 QfRl) rlarfblcfc k }."1 y
-    QfRl ,. (k ({. , (rgeqrf@}.)) QfRr)
+    QfRl ,. (k ({. , (rgeqr3@}.)) QfRr)
   end.
 )
+rgeqrf=: rgeqr3 & (, & 0)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+geqr2o=: ((] ,.  (((( 1 ,  (1 -  ({: @ $))) {. ]) ,   ($: @ ( 1  1 & }.))) @ (larflcfc~ (1 & ( 0 }))))) (larfpf  @: ({."1))) ^: (*./ @ (0 < (_1 0 + $)))
+geqr3o=: geqr2o`(((0 ,   QFNB)  & }.) (] ,.  (((       QFNB   & {.) ,   ($: @ (       QFNB   & }.))) @ (larfblcfc~  trl1          ))) (geqr2o @ ((_ ,   QFNB)  & {.))) @. (*./ @ (QFNX < (_1 0 + $)))
+geqrfo=: geqr3o @ (, & 0)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+NB. 'pfx sfxL sfxR'=. geqr2istep (pfx ; sfxL ; sfxR)
+geqr2istep=: 3 : 0
+  'pfx sfxL sfxR'=. y
+  z=. larfpf {."1 sfxR
+  sfxL=. sfxL ,. z
+  sfxR=. (1 (0}) z) larflcfc }."1 sfxR
+  (pfx , (sfxL (, & {.) sfxR)) ; (}. sfxL) ; (}. sfxR)
+)
+
+NB. QfR=. geqr2i eA
+geqr2i=: ,&>/ @ }: @ (geqr2istep ^: ((_1 0&(ms $))`((0&{.);(0&({."1));])))
+
+NB. 'pfx sfxL sfxR'=. geqr3istep (pfx ; sfxL ; sfxR)
+geqr3istep=: 3 : 0
+  'pfx sfxL sfxR'=. y
+  nb=. QFNB <. k=. <./ _1 0 ms $ sfxR
+  Z=. geqr2i nb {."1 sfxR
+  sfxL=. sfxL ,. Z
+  sfxR=. (trl1 Z) larfblcfc nb }."1 sfxR
+  (pfx , (sfxL (,. & (nb & {.)) sfxR)) ; (nb }. sfxL) ; (nb }. sfxR)
+)
+
+NB. QfR=. geqr3i eA
+geqr3i=: ((0&({::)) , (1&({::)) ,. (geqr2i @ (2&({::)))) @ (geqr3istep ^: ((qfi@(_1 0&(ms $)))`((0&{.);(0&({."1));])))
+
+NB. QfR=. geqrfi A
+geqrfi=: geqr3i @ (, & 0)
+
+NB. 'pfx sfxL sfxR'=. geqr3iistep (pfx ; sfxL ; sfxR)
+geqr3iistep=: 3 : 0
+  'pfx sfxL sfxR'=. y
+  nb=. QFNB <. k=. <./ _1 0 ms $ sfxR
+  Z=. geqr2i nb {."1 sfxR
+  sfxL=. sfxL ,. Z
+  sfxR=. (trl1 Z) rlarfblcfc nb }."1 sfxR
+  (pfx , (sfxL (,. & (nb & {.)) sfxR)) ; (nb }. sfxL) ; (nb }. sfxR)
+)
+
+NB. QfR=. geqr3ii eA
+geqr3ii=: ((0&({::)) , (1&({::)) ,. (geqr2i @ (2&({::)))) @ (geqr3iistep ^: ((qfi@(_1 0&(ms $)))`((0&{.);(0&({."1));])))
+
+NB. QfR=. geqrfii A
+geqrfii=: geqr3ii @ (, & 0)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+r02geqr3=: 3 : 0
+  n=. c y
+  if. 2 >: n do. geqr2o y
+  else.
+    k=. <. -: n
+    QfRl=. r02geqr3 k {."1 y
+    QfRr=. (trl1 QfRl) rlarfblcfc k }."1 y
+    QfRl ,. (k ({. , (r02geqr3@}.)) QfRr)
+  end.
+)
+r02geqrf=: r02geqr3 @ (, & 0)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+r04geqr3=: 3 : 0
+  n=. c y
+  if. 4 >: n do. geqr2o y
+  else.
+    k=. <. -: n
+    QfRl=. r04geqr3 k {."1 y
+    QfRr=. (trl1 QfRl) rlarfblcfc k }."1 y
+    QfRl ,. (k ({. , (r04geqr3@}.)) QfRr)
+  end.
+)
+r04geqrf=: r04geqr3 @ (, & 0)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+r08geqr3=: 3 : 0
+  n=. c y
+  if. 8 >: n do. geqr2o y
+  else.
+    k=. <. -: n
+    QfRl=. r08geqr3 k {."1 y
+    QfRr=. (trl1 QfRl) rlarfblcfc k }."1 y
+    QfRl ,. (k ({. , (r08geqr3@}.)) QfRr)
+  end.
+)
+r08geqrf=: r08geqr3 @ (, & 0)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+r16geqr3=: 3 : 0
+  n=. c y
+  if. 16 >: n do. geqr2o y
+  else.
+    k=. <. -: n
+    QfRl=. r16geqr3 k {."1 y
+    QfRr=. (trl1 QfRl) rlarfblcfc k }."1 y
+    QfRl ,. (k ({. , (r16geqr3@}.)) QfRr)
+  end.
+)
+r16geqrf=: r16geqr3 @ (, & 0)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+r32geqr3=: 3 : 0
+  n=. c y
+  if. 32 >: n do. geqr2o y
+  else.
+    k=. <. -: n
+    QfRl=. r32geqr3 k {."1 y
+    QfRr=. (trl1 QfRl) rlarfblcfc k }."1 y
+    QfRl ,. (k ({. , (r32geqr3@}.)) QfRr)
+  end.
+)
+r32geqrf=: r32geqr3 @ (, & 0)
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+r64geqr3=: 3 : 0
+  n=. c y
+  if. 64 >: n do. geqr2o y
+  else.
+    k=. <. -: n
+    QfRl=. r64geqr3 k {."1 y
+    QfRr=. (trl1 QfRl) rlarfblcfc k }."1 y
+    QfRl ,. (k ({. , (r64geqr3@}.)) QfRr)
+  end.
+)
+r64geqrf=: r64geqr3 @ (, & 0)
 
 NB. ---------------------------------------------------------
 NB. geqlf
@@ -372,6 +502,16 @@ tgeqf=: 3 : 0
   ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( trl         @:(}:"1)@]) - unmlqrc~))%((FP_EPS*c*norm1)@[)))) y  NB. berr := ||A-L*Q||/(ε*n*||A||)
   ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((trl~(-~/@$))@  }.   @]) - unmqllc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*L||/(ε*m*||A||)
   ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('geqrfi' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('geqrfii' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('geqrfo' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('rgeqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('r02geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('r04geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('r08geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('r16geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('r32geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('r64geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
   ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((tru~(-~/@$))@:(}."1)@]) - unmrqrc~))%((FP_EPS*c*norm1)@[)))) y  NB. berr := ||A-R*Q||/(ε*n*||A||)
 
   EMPTY

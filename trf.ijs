@@ -70,7 +70,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFBS=: 32   NB. block size limit
+TRFNB=: 32   NB. block size limit
 
 NB. ---------------------------------------------------------
 
@@ -97,7 +97,7 @@ NB.            matrix L1U(i+1)
 NB.   sfxLi1 - sfxL(i+1), the left part of 
 NB.   sfxRi1 - sfxR(i+1), the right part of 
 
-getf2pl1ustep2=: 3 : 0
+getf2pl1ustepa=: 3 : 0
   'p pfx sfxL sfxR'=. y
   c=. {."1 sfxR
   jp=. iofmaxm c
@@ -115,7 +115,7 @@ NB.   'p L1U'=. getf2pl1u A
 NB. where
 NB.   A   - m*n-matrix
 
-getf2pl1u2=: ((0&{) , ((,&.>)/@(1 2&{))) @ (getf2pl1ustep2 ^: ((<./@$)`((i.@#);(0&{.);(_ 0&{.);])))
+getf2pl1ua=: ((0&{) , ((,&.>)/@(1 2&{))) @ (getf2pl1ustepa ^: ((<./@$)`((i.@#);(0&{.);(_ 0&{.);])))
 
 NB. ---------------------------------------------------------
 NB. Description:
@@ -132,11 +132,11 @@ NB. a10 a21 a22 a22      a10 a10 a11 a12
 NB. a10 a21 a22 a22      a10 a10 a21 a22
 NB.
 
-getrfpl1ustep2=: 3 : 0
+getrfpl1ustepa=: 3 : 0
   'p pfx sfxL sfxR'=. y
   nj=. -~/ 'j n'=. $ pfx
-  bs=. TRFBS <. (# sfxL) <. nj
-  'pi L1U'=. getf2pl1u2 bs {."1 sfxR
+  bs=. TRFNB <. (# sfxL) <. nj
+  'pi L1U'=. getf2pl1ua bs {."1 sfxR
   sfxL=. pi C. sfxL
   A1222=. pi C. bs }."1 sfxR
   A11=. bs {. L1U
@@ -167,7 +167,16 @@ NB.
 NB. Notes:
 NB. - this is a right-looking version of algorithm
 
-getrfpl1u2=: getf2pl1u2`(((0&{),((,&.>)/@(1 2&{))) @ (getrfpl1ustep2 ^: ((>.@(TRFBS %~ (<./@$)))`((i.@#);(0&{.);(_ 0 {. ]);]))))@.(TRFBS<(<./@$))
+getrfpl1ua=: getf2pl1ua`(((0&{),((,&.>)/@(1 2&{))) @ (getrfpl1ustepa ^: ((>.@(TRFNB %~ (<./@$)))`((i.@#);(0&{.);(_ 0 {. ]);]))))@.(TRFNB<(<./@$))
+
+
+getf2pl1ustepb=: (((1;0)&({::)) (([ C.~ (<@~.@(],]+({~(<@(_1&,)))))))~ ((<@}.) ((([ (0}"0 1) (] - ((0:`(_1,({:@[))`[}) */ (({~ {:)~))))~ ((({`[`([ _1} (]%{))})~ iofmaxm)@:({."1))) upd1) (0&({::)))) ; (     }.&.>@}.)
+
+getf2pl1ub=: 0 {:: (getf2pl1ustepb ^: ((_1 0&(ms $))`(];((;&i.)/@$))))
+
+
+
+
 
 NB. =========================================================
 NB. Test suite

@@ -170,6 +170,7 @@ NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
 NB.   At    - Ng-vector, solution A(t) of equation M*A(t)=L(t)
 NB.   Ng    = #G , matrix G minimal polynom's order
 
+NB. makeAt=: (9 & o.) @: gesvx_jlapack_ @ ((2 {:: [) ; ] makeLtM (3 {:: [))
 makeAt=: gesvx_jlapack_ @ ((2 {:: [) ; ] makeLtM (3 {:: [))
 
 NB. =========================================================
@@ -239,8 +240,9 @@ testexpm=: 3 : 0
 'A1 B1'=.  6 splitbyx _4 + ?  6 11 $ 10
 'A2 B2'=.  8 splitbyx _4 + ?  8 13 $ 10
 'A3 B3'=. 10 splitbyx _4 + ? 10 17 $ 10
+'A4 B4'=. 4 splitbyx j./ ? 2 4 7 $ 10
 
-'ts0 ts1 ts2 ts3'=. 0.01 * >: ? 4 $ 100
+'ts0 ts1 ts2 ts3 ts4'=. 0.01 * >: ? 5 $ 100
 
-texpm &> (< A0;B0;ts0) , (< A1;B1;ts1) , (< A2;B2;ts2) , (< A3;B3;ts3)
+texpm &> (< A0;B0;ts0) , (< A1;B1;ts1) , (< A2;B2;ts2) , (< A3;B3;ts3) , (< A4;B4;ts4)
 )

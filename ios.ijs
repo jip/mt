@@ -9,6 +9,8 @@ NB. dhs2lios   Generate lIOS from head, size and optional
 NB.            delta
 NB. rios2ios   Convert rIOS to IOS
 NB. rios2lios  Convert rIOS to lIOS
+NB. liosX      lIOS of vector laying between diagonal and
+NB.            matrix edge
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -150,3 +152,59 @@ NB.   array=. i. sh
 NB.   lios=. sh rios2lios rios
 
 rios2lios=: ((*/\.) @ (1 & (|.!.1)) @ [) (+/ @: *) ((+ (1 & (|.!.0) @ (0 & >))) @ |: @: > @ , @ { @ rios2oios @ ])
+
+NB. ---------------------------------------------------------
+NB. liosE
+NB. liosN
+NB. liosS
+NB. liosW
+NB.
+NB. Description:
+NB.   lIOS of vector laying between diagonal and matrix edge
+NB.   in any of one cardinal direction: east, north, south or
+NB.   west; and having optional gap at head or tail
+NB.
+NB. Syntax:
+NB.   vapp=. gap liosX
+NB. where
+NB.   liosX - adv., any of: liosE liosN liosS liosW
+NB.   gap   - integer, negative value means "from
+NB.           head", otherwise "from tail"
+NB.   vapp  - dyad to return lios; is evoked as:
+NB.             lios=. l vapp n
+NB.   lios  - l-vector of integers, lIOS of v in ravelled A
+NB.   v     - l-vector from A:
+NB.             v -: lios ({,) A
+NB.   A     - m×n-matrix
+NB.
+NB. Examples:
+NB.    '***' ((((0 liosE)&c) }),.' ',.(((1 liosE)&c) }),.' ',.(((_1 liosE)&c) })) 5 6$'-'
+NB. ------ ------ ------
+NB. ------ --***- ---***
+NB. ---*** ------ ------
+NB. ------ ------ ------
+NB. ------ ------ ------
+NB.    '***' ((((0 liosN)&c) }),.' ',.(((1 liosN)&c) }),.' ',.(((_1 liosN)&c) })) 5 6$'-'
+NB. --*--- ---*-- ------
+NB. --*--- ---*-- ---*--
+NB. --*--- ---*-- ---*--
+NB. ------ ------ ---*--
+NB. ------ ------ ------
+NB.    '***' ((((0 liosS)&c) }),.' ',.(((1 liosS)&c) }),.' ',.(((_1 liosS)&c) })) 5 6$'-'
+NB. ------ ------ ------
+NB. ------ --*--- ------
+NB. ---*-- --*--- --*---
+NB. ---*-- --*--- --*---
+NB. ---*-- ------ --*---
+NB.    '***' ((((0 liosW)&c) }),.' ',.(((1 liosW)&c) }),.' ',.(((_1 liosW)&c) })) 5 6$'-'
+NB. ------ ------ ------
+NB. ------ ------ ------
+NB. ***--- ------ ------
+NB. ------ ***--- -***--
+NB. ------ ------ ------
+
+liosE=:  1 : 'dhs2lios_mt_@(((_1-0>.m)- (*((<:|m)&+))~),[)'
+liosW=:  1 : 'dhs2lios_mt_@(((   0<.m)-~(*((<:|m)&+))~),[)'
+
+liosN=:  1 : ']dhs2lios_mt_(((-~((<:|m)&+))~(*&(0<.m))),[)'
+liosS=:  1 : ']dhs2lios_mt_(((-~((- |m)&-))~(*&(0>.m))),[)'

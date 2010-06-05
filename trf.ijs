@@ -259,62 +259,6 @@ NB. ---------------------------------------------------------
 NB. row-wise traversing with fused A,L1,H
 
 NB. ---------------------------------------------------------
-NB. liosE
-NB. liosN
-NB. liosS
-NB. liosW
-NB.
-NB. Description:
-NB.   lIOS of vector laying between diagonal and matrix edge
-NB.   in any of one cardinal direction: east, north, south or
-NB.   west; and having optional gap at head or tail
-NB.
-NB. Syntax:
-NB.   vapp=. gap liosX
-NB. where
-NB.   liosX - adv., any of: liosE liosN liosS liosW
-NB.   gap   - integer, negative value means "from
-NB.           head", otherwise "from tail"
-NB.   vapp  - dyad to return lios; is evoked as:
-NB.             lios=. l vapp n
-NB.   lios  - l-vector of integers, lIOS of v in ravelled A
-NB.   v     - l-vector from A:
-NB.             v -: lios ({,) A
-NB.   A     - m×n-matrix
-NB.
-NB. Examples:
-NB.    '***' ((((0 liosE)&c) }),.' ',.(((1 liosE)&c) }),.' ',.(((_1 liosE)&c) })) 5 6$'-'
-NB. ------ ------ ------
-NB. ------ --***- ---***
-NB. ---*** ------ ------
-NB. ------ ------ ------
-NB. ------ ------ ------
-NB.    '***' ((((0 liosN)&c) }),.' ',.(((1 liosN)&c) }),.' ',.(((_1 liosN)&c) })) 5 6$'-'
-NB. --*--- ---*-- ------
-NB. --*--- ---*-- ---*--
-NB. --*--- ---*-- ---*--
-NB. ------ ------ ---*--
-NB. ------ ------ ------
-NB.    '***' ((((0 liosS)&c) }),.' ',.(((1 liosS)&c) }),.' ',.(((_1 liosS)&c) })) 5 6$'-'
-NB. ------ ------ ------
-NB. ------ --*--- ------
-NB. ---*-- --*--- --*---
-NB. ---*-- --*--- --*---
-NB. ---*-- ------ --*---
-NB.    '***' ((((0 liosW)&c) }),.' ',.(((1 liosW)&c) }),.' ',.(((_1 liosW)&c) })) 5 6$'-'
-NB. ------ ------ ------
-NB. ------ ------ ------
-NB. ***--- ------ ------
-NB. ------ ***--- -***--
-NB. ------ ------ ------
-
-liosE=:  1 : 'dhs2lios_mt_@(((_1-0>.m)- (*((<:|m)&+))~),[)'
-liosW=:  1 : 'dhs2lios_mt_@(((   0<.m)-~(*((<:|m)&+))~),[)'
-
-liosN=:  1 : ']dhs2lios_mt_(((-~((<:|m)&+))~(*&(0<.m))),[)'
-liosS=:  1 : ']dhs2lios_mt_(((-~((- |m)&-))~(*&(0>.m))),[)'
-
-NB. ---------------------------------------------------------
 
 NB. clean lahefplro_mt_ ((i.5);HE5;(4 # 0);(,0);(0 ({,) HE5);(i.0);({. HE5);(}. {. HE5))
 
@@ -341,10 +285,27 @@ lahefplro=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(2 & {::)))
 
 NB. ---------------------------------------------------------
 
-NB. clean lahefplr_mt_ ((i.5);(((5-1) # 0) ((_1 liosS)&c) } HE5);(5 ($!.0) 1))
-NB. clean lahefplr_mt_ (((< 1 4) C. i.5);((< 1 4) sp_mt_ (((5-1) # 0) ((_1 liosS_mt_)&c_mt_) } HE5));(0 ({`[`(] % {))} (<0 3) C. 0.03 _0.03 _0.21 0.3))
+NB. 'ip A l0'=. lahefplr_mt_ ip;A;l0
+NB. clean lahefplr_mt_ (i.n);HE;(n ($!.0) 1)
 
-lahefplr=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(0 & {::)))
+lahefplr=: (3 : 0) ^: (TRFNB<.(#@(2 & {::)))
+  'ip A l0'=. y                    NB. n n*n n-j, j=0:n-1
+  j=. A -&# l0
+  a=. j { A
+  h0=. (j }. a) - (j {. a) mp ((j,(-#l0)) {. A)
+  h1=. h0 - ({. l0) * (+ l0 (((_1 liosS)&c ({,) ]) :: (0 (0}) [)) A)
+  l1=. (+ }. h1) - (}. l0) * ({. h1)
+  dip0=. < 0 , ((i.>./)@soris) l1  NB. non-standard cycle permutation!
+  dip=. (>:j) +&.> dip0            NB. non-standard cycle permutation!
+  ip=. dip C. :: ] ip
+  l1=. dip0 C. :: ] l1
+  A=. ((({. h1) 0 } h0) , l0) ((((0 liosE),(] (((-~ {.)`0:`])}) (0 liosS)))~ -:)~&c } :: ((}.~ (>:@-:@#))@[ ((_1 liosS)&c }) ])) A
+  A=. dip sp :: ] A
+  l1=. 0 ({`[`(] % {))} :: ] l1
+  ip ; A ; l1
+)
+
+lahefplrd=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(2 & {::)))
   'ip A l0'=. y                    NB. n n*n n-(j+?), j=1:?
   j=. A ((-&#) dbg 'j') l0
   a=. j ({ dbg 'a') A
@@ -361,71 +322,31 @@ lahefplr=: ((3 : 0) dbg 'step') ^: (TRFNB<.(#@(0 & {::)))
   ip ; A ; l1
 )
 
-NB. 'ip U1 T'=. hetrfpu A
-NB. 'ip U1 T permA H'=. step (ip;U1;T;A;H)
-
-NB. 'ipi U1i Ti Ai Hi hi'=. (9 # 0) hetf2pl_mt_ HEci10
-NB. ((((] dhs2lios (_1,-))/@$) ({,) ]) U1i) hetf2pl_mt_ (((_1 ({,) Ti) , hi) (< a: ; 0)} (2 2 }. HEci10))
+NB. 'ip L1 T'=. hetrfplr A
 
 hetrfplr=: 3 : 0
   n=. # y
   ip=. i. n
-  t0=. 0 ({,) y
-  t1=. i. 0
-  l1i=. ,0
-  l0i=. (0 >. <: n) # 0
+  l0=. n ($!.0) 1
   for. i. n (>.@%) TRFNB do.
-    'ip y l0i l1i t0 t1 h0i h1i'=. (lahefplr dbg 'lahefplr') (ip;y;l0i;l1i;t0;t1;(t1 ((0 liosEt) ({,) ]) y);(t1 ((1 liosEt) ({,) ]) y))
-    ios=. TRFNB (rt (; dbg 'ios') }.) y (th2lios (-&TRFNB))&# t1
+    ios=. TRFNB (rt (; dbg 'ios') }.) y ([ th2lios -)&# l0
+    'ip y l0'=. (lahefplrd dbg 'lahefplr') (ip;y;l0)
     subA=. ios ((<@(1 1{[)){]) y
     subL=. ios ((<@(1 0{[)){]) y
     subH=. ios ((<@(0 1{[)){]) y
-    rank1upd=. (1,l0i) (*/ dbg '*/r1u') ({: t1) (* dbg '*r1u') l1i
-    subAupd=. subA (- dbg '-') ((subL (mp dbg 'mp') subH) (+ dbg 'rr1u') rank1upd)
+    l1=. l0 ((_1 liosS)&c ({,) ]) y
+    rank1upd=. ((0 { :: ] l0) (+@* dbg 't10*l0') (1 (0}) :: ] l0)) (*/ dbg 'conj(t10l0)*/l1') l1
+    subAupd=. subA (- dbg '-') ((subL (mp dbg 'mp') subH) (+ dbg 'LH+r1u') rank1upd)
     y=. subAupd (((< 1 1 { ios) }) dbg 'subA}A') y
     NB. y=. ios (((<@(0 0{[)){]) (- dbg '-') (((<@(0 1{[)){]) (mp dbg 'mp') ((<@(1 0{[)){])))`(<@(0 0{[))`] } y
   end.
   L1=. trl1 y
+  t0=. diag y
+  t1=. 1 diag y
   T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
   ip ; L1 ; T
 )
 
-NB. xxxhetrfplr=: (]) @ ((lahefplr dbg 'lahefplr') ^: (>.@(%&TRFNB)@#@(0&{::))) @ ((i.@#);];(0 #~ (#@}.@{.));(#@}.@{.);(0&({,));(i.@0:);(t0 (((dhs2lios@((* >:),-~))&#) ({,) ]) y))
-NB.   n=. # y
-NB.   ip=. i. n
-NB.   t0=. 0 ({,) y
-NB.   t1=. i. 0
-NB.   l1i=. }. {. y
-NB.   l0i=. (# l1i) # 0         NB. (0 >. <: n) # 0
-NB.   for. i. n (>.@%) TRFNB do.
-NB.     'ip y l0i l1i t0 t1 h0i h1i'=. 
-NB.     y=. (TRFNB (}. ; rt) y th2lios&# t0) (((<@(0 0{[)){])(- dbg '-') (((<@(0 1{[)){]) (mp dbg 'mp') ((<@(1 0{[)){])))`(<@(0 0{[))`] } y
-NB.   end.
-NB.   L1=. trl1 y
-NB.   T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
-NB.   ip ; L1 ; T
-NB. )
-
-
-
-NB. lahefpl ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
-NB.   'ip L1 l0 l1 t0 t1 A H h0 h1'=. y
-NB.    lahefpl_mt_ ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
-NB. ┌─────────┬─────────────────┬┬────┬───────────────────┬───────────────┬─────────────────────────────┬──────────────────────────┬┬┐
-NB. │0 1 3 4 2│1    0   0    0 0││_0.8│1.4 1.4 1.6 1.4 0.6│0.4 0.3 0.8 0.3│  1.4   0.4  0.24   0.2 _0.28│  1.4   0.4    0    0    0│││
-NB. │         │0    1   0    0 0││    │                   │               │  0.4   1.4  1.14  0.97 _0.71│  0.4   1.4  0.3    0    0│││
-NB. │         │0  0.6   1    0 0││    │                   │               │ 0.24  1.14 2.464 2.972 0.164│ 0.24  1.14 1.78  0.8    0│││
-NB. │         │0  0.5 0.9    1 0││    │                   │               │  0.2  0.97 2.972 4.756 0.076│  0.2  0.97 2.39 2.12  0.3│││
-NB. │         │0 _0.7 0.9 _0.8 1││    │                   │               │_0.28 _0.71 0.164 0.076 1.468│_0.28 _0.71 0.59 _0.1 0.36│││
-NB. └─────────┴─────────────────┴┴────┴───────────────────┴───────────────┴─────────────────────────────┴──────────────────────────┴┴┘
-NB.    lahefpl_mt_ ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
-NB. ┌─────────┬──────────┬───────┬────────────┬───────────┬───────┬─────────────────────────────┬────────────────┬─────────┬────────┐
-NB. │0 1 3 2 4│1    0   0│0.9 0.9│0.6 _0.7 0.5│1.4 1.4 1.6│0.4 0.3│  1.4   0.4  0.24 _0.28   0.2│  1.4   0.4    0│0.59 2.39│0.8 2.24│
-NB. │         │0    1   0│       │            │           │       │  0.4   1.4  1.14 _0.71  0.97│  0.4   1.4  0.3│         │        │
-NB. │         │0  0.6   1│       │            │           │       │ 0.24  1.14 2.464 0.164 2.972│ 0.24  1.14 1.78│         │        │
-NB. │         │0 _0.7 0.9│       │            │           │       │_0.28 _0.71 0.164 1.468 0.076│_0.28 _0.71 0.59│         │        │
-NB. │         │0  0.5 0.9│       │            │           │       │  0.2  0.97 2.972 0.076 4.756│  0.2  0.97 2.39│         │        │
-NB. └─────────┴──────────┴───────┴────────────┴───────────┴───────┴─────────────────────────────┴────────────────┴─────────┴────────┘
 
 NB. ---------------------------------------------------------
 NB. hetf2pu

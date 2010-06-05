@@ -52,7 +52,7 @@ NB. If:
 NB.   'Ap fs p'=. gebalp A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
 NB.   Ap -: p pt A
@@ -166,7 +166,7 @@ NB. If:
 NB.   'As fs p s'=. gebals Ap ; fs ; p
 NB.   D=. diagmat s
 NB.   Dinv=. %. D
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Dinv -: diagmat % s
 NB.   As -: D mp Ap mp Dinv
 NB.   As -: Ap (] * (% " 1)) s
@@ -251,7 +251,7 @@ NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB.   D=. diagmat s
 NB.   Dinv=. %. D
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
 NB.   Ap -: p pt A

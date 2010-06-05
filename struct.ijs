@@ -19,12 +19,8 @@ NB.           verb
 NB. stitch    Template adv. to make verbs to enhance stitch
 NB.           verb
 NB.
-NB. diag      Return solid part of diagonal
-NB. setdiag0  Assign scalar or vector value to all elements
-NB.           of 0-th diagonal
+NB. diag      Return a solid part of diagonal
 NB. setdiag   Assign scalar value to solid part of diagonal
-NB. upddiag0  Template adv. to make verbs to update all
-NB.           elements of 0-th diagonal
 NB. upddiag   Template adv. to make verbs to update solid
 NB.           part of diagonal
 NB.
@@ -75,46 +71,8 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. diaglios
-NB. Return lIOS of solid part of diagonal of rectangular
-NB. matrix
-NB.
-NB. Syntax:
-NB.   lios=. [d[,f,s]] diaglios [m,]n
-NB. where
-NB.   m    ≥ 0, integer, optional rows in matrix, default is
-NB.          n
-NB.   n    ≥ 0, integer, columns in matrix
-NB.   d    - integer, IO diagonal, default is 0 (main
-NB.          diagonal)
-NB.   f    - integer in range [-min(m,n):min(m,n)-1], IO 1st
-NB.          element of diagonal's fragment to be returned,
-NB.          default is 0 (take from head)
-NB.   s    - integer in range [-min(m,n):min(m,n)] or ±∞,
-NB.          size of diagonal's fragment to be returned,
-NB.          default is _ (all elements in forward direction)
-NB.   lios - (0:min(m,n))-vector of integers, lIOS of
-NB.          d-th diagonal elements in matrix of shape (m,n)
-NB.
-NB. Formulae:
-NB. - the whole diagonal's IO 1st element:
-NB.     F := (d ≥ 0) ? d : (-n*d)
-NB. - the whole diagonal's size:
-NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
-NB.
-NB. Notes:
-NB. - (f,s) pair defines raveled rIOS of diagonal's fragment
-NB.   to be returned
+NB. Misc.
 
-diaglios=: (0 0 _&$:) :(4 : 0)
-  'd f s'=. 3 {. x , 0 _
-  'm n'=. ({. , {:) y
-  F=. n (-@* ^: (0 > ])) d
-  S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
-  (f ,: (s <. S)) (] ;. 0) hds2ios F , (>: n) , S
-)
-
-NB. ---------------------------------------------------------
 NB. convert shape y to IOS differences table
 sh2id=: {. -~/&i. {:
 
@@ -133,6 +91,48 @@ NB. template conj. to extract triangular (trapezoidal)
 NB. matrix starting from diagonal number x in the rectangular
 NB. circumscribing matrix y
 tr=: 2 : '0&$: : ([ (] * (u~ sh2id@$)) v)'
+
+NB. ---------------------------------------------------------
+NB. diaglios
+NB.
+NB. Description:
+NB.   Return lIOS of solid part of diagonal of rectangular
+NB.   matrix
+NB.
+NB. Syntax:
+NB.   lios=. [(d[,f[,s]])] diaglios [m,]n
+NB. where
+NB.   m    ≥ 0, integer, optional rows in matrix, default is
+NB.          n
+NB.   n    ≥ 0, integer, columns in matrix
+NB.   d    - integer in range [1-m,n-1], optional IO
+NB.          diagonal, default is 0 (main diagonal)
+NB.   f    - integer in range [-S,S-1], optional IO extreme
+NB.          element of solid part within diagonal,
+NB.          default is 0 (take from head)
+NB.   s    - integer in range [-S,S] or ±∞, optional size of
+NB.          solid part within diagonal, default is +∞ (all
+NB.          elements in forward direction)
+NB.   lios - min(S,|s|)-vector of integers, lIOS of solid
+NB.          part of diagonal
+NB.   S    ≥ 0, the length of diagonal
+NB.
+NB. Formulae:
+NB. - the whole diagonal's IO extreme element:
+NB.     F := (d ≥ 0) ? d : (-n*d)
+NB. - the whole diagonal's size:
+NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
+NB.
+NB. Notes:
+NB. - (f,s) pair defines raveled rIOS of solid part within diagonal
+
+diaglios=: (0 0 _&$:) :(4 : 0)
+  'd f s'=. x=. ((i. 3) < (# x)) } 0 0 _ ,: x  NB. in-place op
+  'm n'=. y=. 2 $ y
+  F=. n (- @ * ^: (0 > ])) d
+  S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
+  (f ,: (s <. S)) (] ;. 0) hds2ios F , (>: n) , S
+)
 
 NB. =========================================================
 NB. Interface
@@ -157,16 +157,18 @@ gi=: 2 : '(n{m)`:6'                      NB. Conj. to evoke n-th verb from gerun
 
 NB. ---------------------------------------------------------
 NB. uncut
-NB. To frame matrix by border of zeros
+NB.
+NB. Description:
+NB.   To frame matrix by border of zeros
 NB.
 NB. Syntax:
 NB.   A=. ((t,l),:(b,r)) uncut subA
 NB. where
 NB.   t l b r ≥ 0, integers, border widths at top, left,
 NB.             bottom and right, respectively
-NB.   subA    - h×w-matrix to border
-NB.   A       - (t+h+b)×(l+w+r)-matrix such that
-NB.               subA -: ((t,h),:(l,w)) (] ;. 0) A
+NB.   subA    - m×n-matrix to border
+NB.   A       - (t+m+b)×(l+n+r)-matrix such that
+NB.               subA -: ((t,m),:(l,n)) (] ;. 0) A
 NB.             and other elements are zeros
 NB.
 NB. Note:
@@ -176,7 +178,9 @@ uncut=: ((((_1 1 * (+"1)) (+/\))~ $)) (({:@[) {. (({.~ {.)~)) ]
 
 NB. ---------------------------------------------------------
 NB. append
-NB. Template adv. to make verbs to enhance append verb
+NB.
+NB. Description:
+NB.   Template adv. to make verbs to enhance append verb
 NB.
 NB. Examples:
 NB.    (3 3$3) 0 append (2 2$2)     (3 3$3) _1 append (2 2$2)
@@ -191,12 +195,17 @@ NB. 2 2 0                        0 2 2
 NB. 3 3 3                        3 3 3
 NB. 3 3 3                        3 3 3
 NB. 3 3 3                        3 3 3
+NB.
+NB. Notes:
+NB. - 1-rank arrays (i.e. vectors) are also acceptable
 
-append=: 1 : ',`((({."_1~ (-@{:@$)),])`([,({."_1~ (-@{:@$))~)@.(>&({:@$)))@.(m"_)'
+append=: 1 : '(,`([,({.~ (_,((-^:m)@{:@$)))~)`(({.~ (_,((-^:m)@{:@$))),]) @. ((*@-) & ({:@$))) & (,: ^: (2 > (#@$)))'
 
 NB. ---------------------------------------------------------
 NB. stitch
-NB. Template adv. to make verbs to enhance stitch verb
+NB.
+NB. Description:
+NB.   Template adv. to make verbs to enhance stitch verb
 NB.
 NB. Examples:
 NB.    (3 3$3) 0 stitch (2 2$2)     (3 3$3) _1 stitch (2 2$2)
@@ -207,149 +216,128 @@ NB.    (2 2$2) 0 stitch (3 3$3)     (2 2$2) _1 stitch (3 3$3)
 NB. 2 2 3 3 3                    0 0 3 3 3
 NB. 2 2 3 3 3                    2 2 3 3 3
 NB. 0 0 3 3 3                    2 2 3 3 3
+NB.
+NB. Notes:
+NB. - 1-rank arrays (i.e. vectors) are also acceptable
 
 stitch=: 1 : '((({.~ #),.])`([,.({.~ #)~)@.(>&#))`((({.~ (-@#)),.])`([,.({.~ (-@#))~)@.(>&#))@.(m"_)'
 
 NB. ---------------------------------------------------------
 NB. diag
-NB. Ambivalent verb to return a solid part of diagonal
+NB.
+NB. Description:
+NB.   Return a solid part of diagonal of rectangular matrix
 NB.
 NB. Syntax:
-NB.   e=. [d[,f,s]] diag A
+NB.   e=. [(d[,f[,s]])] diag A
 NB. where
 NB.   A - m×n-matrix
-NB.   d - integer, optional IO diagonal, default is 0 (main
-NB.       diagonal)
-NB.   f - integer in range [-min(m,n):min(m,n)-1], optional
-NB.       IO 1st element of diagonal's fragment to be
-NB.       returned, default is 0 (take from head)
-NB.   s - integer in range [-min(m,n):min(m,n)] or ±∞,
-NB.       optional size of diagonal's fragment to be
-NB.       returned, default is +∞ (all elements in forward
-NB.       direction)
-NB.   e - (0:min(m,n))-vector, d-th diagonal elements from
-NB.       matrix A
+NB.   d - integer in range [1-m,n-1], optional IO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   f - integer in range [-S,S-1], optional IO extreme
+NB.       element of solid part within diagonal, default is 0
+NB.       (take from head)
+NB.   s - integer in range [-S,S] or ±∞, optional size of 
+NB.       solid part within diagonal, default is +∞ (all
+NB.       elements in forward direction)
+NB.   e - min(S,|s|)-vector, elements from the solid part of
+NB.       diagonal
+NB.   S ≥ 0, the length of diagonal
 
 diag=: ((<0 1)&|:) :((diaglios $) ({,) ])
 
 NB. ---------------------------------------------------------
-NB. setdiag0
-NB. Assign scalar or vector value to all elements of 0-th
-NB. diagonal
-NB.
-NB. Syntax:
-NB.   Aupd=. e setdiag0 A
-NB. where
-NB.   A    - m×n-matrix to change
-NB.   e    - scalar or min(m,n)-vector, new diagonal
-NB.          element(s)
-NB.   Aupd - m×n-matrix A with 0-th diagonal replaced by e
-NB.
-NB. TODO:
-NB. - change solid part possibility, too
-
-setdiag0=: (diaglios @ $ @ ]) }
-
-NB. ---------------------------------------------------------
 NB. setdiag
-NB. Assign scalar value to a solid part of any diagonal
+NB.
+NB. Description:
+NB.   Assign scalar value to a solid part of diagonal
 NB.
 NB. Syntax:
 NB.   Aupd=. (e[,d[,f[,s]]]) setdiag A
 NB. where
 NB.   A    - m×n-matrix to change
-NB.   e    - scalar, diagonal elements new value
+NB.   e    - scalar, the value to assign
 NB.   d    - integer in range [1-m,n-1], optional IO
-NB.          diagonal to change, default is 0
-NB.   f    - integer in range [-k,k-1], optional IO extreme
-NB.          element of solid part within d-th diagonal to
-NB.          change, default is 0
-NB.   s    - integer in range [-k,k-1] or ±∞, optional size
-NB.          of solid part within diagonal to change,
-NB.          default is 0
-NB.   Aupd - m×n-matrix A with d-th diagonal elements defined
-NB.          by rIOS (f,:s), being replaced by value v
-NB.   k    - integer, the length of d-th diagonal
+NB.          diagonal, default is 0 (main diagonal)
+NB.   f    - integer in range [-S,S-1], optional IO extreme
+NB.          element of solid part within diagonal, default
+NB.          is 0 (take from head)
+NB.   s    - integer in range [-S,S] or ±∞, optional size of
+NB.          solid part within diagonal, default is +∞ (all
+NB.          elements in forward direction)
+NB.   Aupd - m×n-matrix A with value e assigned to solid part
+NB.          within d-th diagonal
+NB.   S    ≥ 0, the length of d-th diagonal
 
 setdiag=: 4 : 0
-  'v d f s'=. x=. ((i. 4) < (# x)) } 0 0 0 _ ,: x
-  lios=. (f ,: s) (] ;. 0) d (diaglios $) y
-  v (lios"_) } y
+  'e dfs'=. ({. ; }.) x=. ((i. 4) < (# x)) } 0 0 0 _ ,: x  NB. in-place op
+  lios=. dfs (diaglios $) y
+  e (lios"_) } y
 )
 
 NB. ---------------------------------------------------------
-NB. upddiag0
-NB. Template adv. to make verbs to update a solid part of
-NB. 0-th diagonal
-NB.
-NB. Syntax:
-NB.   vapp=. u upddiag0
-NB. where
-NB.   u    - monad to change elements; is called as:
-NB.            eupd=. u e
-NB.   vapp - ambivalent verb to update a solid part of
-NB.          0-th diagonal of matrix A by monad u; is called
-NB.          as:
-NB.            Aupd=. [d[,f,s]] vapp A
-NB.   d    - integer, optional IO diagonal, default is 0
-NB.          (main diagonal)
-NB.   f    - integer in range [-min(m,n):min(m,n)-1],
-NB.          optional IO 1st element of diagonal's fragment
-NB.          to be returned, default is 0 (take from head)
-NB.   s    - integer in range [-min(m,n):min(m,n)] or ±∞,
-NB.          optional size of diagonal's fragment to be
-NB.          returned, default is +∞ (all elements in forward
-NB.          direction)
-NB.   A    - m×n-matrix to update
-NB.   Aupd - m×n-matrix A with 0-th diagonal elements being
-NB.          replaced by value(s) eupd
-NB.
-NB. Note:
-NB. - may be used to map any diagonal to 0-th one
-
-upddiag0=: 1 : '(u @ diag) setdiag0 ]'
-
-NB. ---------------------------------------------------------
 NB. upddiag
-NB. Template adv. to make verbs to update a solid part of
-NB. diagonal
+NB.
+NB. Description:
+NB.   Template adv. to make verbs to update a solid part of
+NB.   diagonal
 NB.
 NB. Syntax:
 NB.   vapp=. u upddiag
 NB. where
 NB.   u    - monad to change elements; is called as:
 NB.            eupd=. u e
-NB.   vapp - ambivalent verb to update a solid part of
-NB.          d-th diagonal of matrix A by monad u; is called
+NB.   vapp - ambivalent verb to update a solid part within
+NB.          diagonal of matrix A by monad u; is called
 NB.          as:
-NB.             Aupd=. [d,[f,s]] vapp A
-NB.   d    - integer, optional IO diagonal, default is 0
-NB.          (main diagonal)
-NB.   f    - integer in range [-min(m,n):min(m,n)-1],
-NB.          optional IO 1st element of diagonal's fragment
-NB.          to be returned, default is 0 (take from head)
-NB.   s    - integer in range [-min(m,n):min(m,n)] or ±∞,
-NB.          optional size of diagonal's fragment to be
-NB.          returned, default is +∞ (all elements in forward
-NB.          direction)
+NB.             Aupd=. [(d,[f[,s]])] vapp A
+NB.   d    - integer in range [1-m,n-1], optional IO
+NB.          diagonal, default is 0 (main diagonal)
+NB.   f    - integer in range [-S,S-1], optional IO extreme
+NB.          element of solid part within diagonal, default
+NB.          is 0 (take from head)
+NB.   s    - integer in range [-S,S] or ±∞, optional size of
+NB.          solid part within diagonal, default is +∞ (all
+NB.          elements in forward direction)
 NB.   A    - m×n-matrix to update
-NB.   Aupd - m×n-matrix A with d-th diagonal elements defined
-NB.          by rIOS (f,:s), being replaced by value(s) eupd
+NB.   Aupd - m×n-matrix A with solid part within d-th
+NB.          diagonal being updated by monad u
+NB.   S    ≥ 0, the length of d-th diagonal
 
 upddiag=: 1 : 0
-  (u upddiag0) y
+  lios=. diaglios ($ y)
+  e=. lios ({,) y
+  (u e) (lios"_) } y
 :
   lios=. x (diaglios $) y
-  (u (lios ({,) y)) (lios"_) } y
+  e=. lios ({,) y
+  (u e) (lios"_) } y
 )
 
 NB. ---------------------------------------------------------
 NB. idmat
-NB. Make rectangular identity matrix with shifted diagonal,
-NB. partially filled by units
+NB.
+NB. Description:
+NB.   Make identity matrix with units on solid part of
+NB.   diagonal
 NB.
 NB. Syntax:
-NB.   I=. [d[,f,s]] idmat [m,]n
+NB.   I=. [(d[,f[,s]])] idmat [m,]n
+NB. where
+NB.   m    ≥ 0, integer, optional rows in matrix I, default
+NB.          is n
+NB.   n    ≥ 0, integer, columns in matrix I
+NB.   d    - integer in range [1-m,n-1], optional IO
+NB.          diagonal, default is 0 (main diagonal)
+NB.   f    - integer in range [-S,S-1], optional IO extreme
+NB.          element of solid part within diagonal, default
+NB.          is 0 (take from head)
+NB.   s    - integer in range [-S,S] or ±∞, optional size of
+NB.          solid part within diagonal, default is +∞ (all
+NB.          elements in forward direction)
+NB.   I    - m×n-matrix of zeros with unit assigned to solid
+NB.          part within d-th diagonal
+NB.   S    ≥ 0, the length of d-th diagonal
 NB.
 NB. Examples:
 NB.    idmat 3                        idmat 3 4
@@ -361,23 +349,26 @@ NB. 0 1 0 0                        0 0 0 0
 NB. 0 0 1 0                        1 0 0 0
 NB. 0 0 0 1                        0 1 0 0
 
-idmat=: (0 & $:) :((setdiag~ (1 & ,))~ (({. , {:) $ 0:))
+idmat=: (0 0 _&$:) :((1 , [) setdiag (0 $~ 2 $ ]))
 
 NB. ---------------------------------------------------------
 NB. diagmat
-NB. Make rectangular diagonal matrix with y on diagonal
+NB.
+NB. Description:
+NB.   Make diagonal matrix
 NB.
 NB. Syntax:
-NB.   D=. [se] diagmat v
+NB.   D=. [(h,t)] diagmat e
 NB. where
-NB.   v  - min(m,n)-vector, new values for diagonal
-NB.   se - complex number (s j. e):
-NB.        s - integer, diagonal number for v's head,
-NB.            relatively to top left corner
-NB.        e - integer, diagonal number for v's tail,
-NB.            relatively to bottom right corner
-NB.        default se=0j0, i.e. square matrix 0-th diagonal
-NB.   D  - m×n-matrix, diagonal rectangular with v on diagonal
+NB.   e - S-vector, new values for diagonal
+NB.   h - integer in range [1-m,n-1], IO diagonal of v's
+NB.       head, relatively to top left corner, default is 0
+NB.   t - integer in range [1-m,n-1], IO diagonal of v's
+NB.       tail, relatively to bottom right corner, default is
+NB.       0
+NB.   D - m×n-matrix of zeros with vector e assigned to h-th
+NB.       diagonal
+NB.   S ≥ 0, the length of h-th diagonal
 NB.
 NB. Examples:
 NB.    diagmat 3 5 7                  0j0 diagmat 3 5 7
@@ -396,111 +387,154 @@ NB. 0 0 7                          0 0 7 0
 NB. 0 0 0
 
 diagmat=: (0 & $:) :(4 : 0)
-  'm r'=. sh=. (#y) + (2&(|.@}. - {.)@(0&(<. , >.)@+.)) x  NB. find D shape
-  d=. 9 o. x                                               NB. IO diagonal
-  lios=. d diaglios sh                                     NB. lIOS for d
-  y (lios " _) } sh $ 0                                    NB. write v into matrix of zeros
+  sh=. (#y) + (2&(|.@}. - {.)@(0&(<. , >.))) x  NB. find D shape
+  h=. {. x                                      NB. IO diagonal
+  lios=. h diaglios sh                          NB. lIOS for h-th diagonal
+  y (lios"_) } sh $ 0                           NB. write e into matrix of zeros
 )
 
 NB. ---------------------------------------------------------
 NB. trl
-NB. Extract lower triangular (trapezoidal) matrix with
-NB. optional shrinking
+NB.
+NB. Description:
+NB.   Extract lower triangular (trapezoidal) matrix with
+NB.   optional shrinking
 NB.
 NB. Examples:
-NB.    trl i. 3 4                     0 trl i. 3 4
-NB. 0 0  0                         0 0  0
-NB. 4 5  0                         4 5  0
-NB. 8 9 10                         8 9 10
-NB.    1 trl i. 3 4                   _1 trl i. 3 4
-NB. 0 1  0  0                      4 0
-NB. 4 5  6  0                      8 9
-NB. 8 9 10 11
-NB.    1 trl i. 4 3                   _1 trl i. 4 3
-NB. 0  1  0                        3  0  0
-NB. 3  4  5                        6  7  0
-NB. 6  7  8                        9 10 11
-NB. 9 10 11
+NB.    trl >: i. 3 4                  0 trl >: i. 3 4
+NB. 1  0  0                        1  0  0
+NB. 5  6  0                        5  6  0
+NB. 9 10 11                        9 10 11
+NB.    1 trl >: i. 3 4                _1 trl >: i. 3 4
+NB. 1  2  0  0                     5  0
+NB. 5  6  7  0                     9 10
+NB. 9 10 11 12
+NB.    1 trl >: i. 4 3                _1 trl >: i. 4 3
+NB.  1  2  0                        4  0  0
+NB.  4  5  6                        7  8  0
+NB.  7  8  9                       10 11 12
+NB. 10 11 12
 
 trl=: (>:~ 0&>.) tr trlcut
 
 NB. ---------------------------------------------------------
 NB. tru
-NB. Extract upper triangular (trapezoidal) matrix with
-NB. optional shrinking
+NB.
+NB. Description:
+NB.   Extract upper triangular (trapezoidal) matrix with
+NB.   optional shrinking
 NB.
 NB. Examples:
-NB.    tru i. 3 4                     0 tru i. 3 4
-NB. 0 1  2  3                      0 1  2  3
-NB. 0 5  6  7                      0 5  6  7
-NB. 0 0 10 11                      0 0 10 11
-NB.    1 tru i. 3 4                   _1 tru i. 3 4
-NB. 1 2  3                         0 1  2  3
-NB. 0 6  7                         4 5  6  7
-NB. 0 0 11                         0 9 10 11
-NB.    1 tru i. 4 3                   _1 tru i. 4 3
-NB. 1 2                            0 1  2
-NB. 0 5                            3 4  5
-NB.                                0 7  8
-NB.                                0 0 11
+NB.    tru >: i. 3 4                  0 tru >: i. 3 4
+NB. 1 2  3  4                      1 2  3  4
+NB. 0 6  7  8                      0 6  7  8
+NB. 0 0 11 12                      0 0 11 12
+NB.    1 tru >: i. 3 4                _1 tru >: i. 3 4
+NB. 2 3  4                         1  2  3  4
+NB. 0 7  8                         5  6  7  8
+NB. 0 0 12                         0 10 11 12
+NB.    1 tru >: i. 4 3                _1 tru >: i. 4 3
+NB. 2 3                            1 2  3
+NB. 0 6                            4 5  6
+NB.                                0 8  9
+NB.                                0 0 12
 
 tru=: (<:~ 0&<.) tr trucut
 
 NB. ---------------------------------------------------------
 NB. trl0
-NB. Extract strictly lower triangular (trapezoidal) matrix
-NB. with optional shrinking
+NB.
+NB. Description:
+NB.   Extract strictly lower triangular (trapezoidal) matrix
+NB.   with optional shrinking
 NB.
 NB. Examples:
-NB.    trl0 i. 4 3                0 trl0 i. 4 3
-NB. 0  0  0                        0  0  0
-NB. 3  0  0                        3  0  0
-NB. 6  7  0                        6  7  0
-NB. 9 10 11                        9 10 11
-NB.    1 trl0 i. 4 3                  _1 trl0 i. 4 3
-NB. 0  0  0                        0  0 0
-NB. 3  4  0                        6  0 0
-NB. 6  7  8                        9 10 0
-NB. 9 10 11
-NB.    1 trl0 i. 3 4                  _1 trl0 i. 3 4
-NB. 0 0  0 0                       0 0
-NB. 4 5  0 0                       8 0
-NB. 8 9 10 0
+NB.    trl0 >: i. 4 3                 0 trl0 >: i. 4 3
+NB.  0  0  0                        0  0  0
+NB.  4  0  0                        4  0  0
+NB.  7  8  0                        7  8  0
+NB. 10 11 12                       10 11 12
+NB.    1 trl0 >: i. 4 3               _1 trl0 >: i. 4 3
+NB.  1  0  0                        0  0 0
+NB.  4  5  0                        7  0 0
+NB.  7  8  9                       10 11 0
+NB. 10 11 12
+NB.    1 trl0 >: i. 3 4               _1 trl0 >: i. 3 4
+NB. 1  0  0 0                      0 0
+NB. 5  6  0 0                      9 0
+NB. 9 10 11 0
 
 trl0=: (>~ 0&>.) tr trlcut
 
 NB. ---------------------------------------------------------
 NB. tru0
-NB. Extract strictly upper triangular (trapezoidal) matrix
-NB. with optional shrinking
+NB.
+NB. Description:
+NB.   Extract strictly upper triangular (trapezoidal) matrix
+NB.   with optional shrinking
 NB.
 NB. Examples:
-NB.    tru0 i. 3 4                    0 tru0 i. 3 4
-NB. 0 1 2  3                       0 1 2  3
-NB. 0 0 6  7                       0 0 6  7
-NB. 0 0 0 11                       0 0 0 11
-NB.    1 tru0 i. 3 4                  _1 tru0 i. 3 4
-NB. 0 2 3                          0 1  2  3
-NB. 0 0 7                          0 5  6  7
-NB. 0 0 0                          0 0 10 11
-NB.    1 tru0 i. 4 3                  _1 tru0 i. 4 3
-NB. 0 2                            0 1 2
-NB. 0 0                            0 4 5
-NB.                                0 0 8
+NB.    tru0 >: i. 3 4                 0 tru0 >: i. 3 4
+NB. 0 2 3  4                       0 2 3  4
+NB. 0 0 7  8                       0 0 7  8
+NB. 0 0 0 12                       0 0 0 12
+NB.    1 tru0 >: i. 3 4               _1 tru0 >: i. 3 4
+NB. 0 3 4                          1 2  3  4
+NB. 0 0 8                          0 6  7  8
+NB. 0 0 0                          0 0 11 12
+NB.    1 tru0 >: i. 4 3               _1 tru0 >: i. 4 3
+NB. 0 3                            1 2 3
+NB. 0 0                            0 5 6
+NB.                                0 0 9
 NB.                                0 0 0
 
 tru0=: (<~ 0&<.) tr trucut
 
 NB. ---------------------------------------------------------
 NB. trl1
-NB. Extract unit lower triangular (trapezoidal) matrix with
-NB. optional shrinking
+NB.
+NB. Description:
+NB.   Extract unit lower triangular (trapezoidal) matrix with
+NB.   optional shrinking
+NB.
+NB. Examples:
+NB.    trl1 >: i. 4 3                 0 trl1 >: i. 4 3
+NB.  1  0  0                        1  0  0
+NB.  4  1  0                        4  1  0
+NB.  7  8  1                        7  8  1
+NB. 10 11 12                       10 11 12
+NB.    1 trl1 >: i. 4 3               _1 trl1 >: i. 4 3
+NB.  1  1  0                        1  0 0
+NB.  4  5  1                        7  1 0
+NB.  7  8  9                       10 11 1
+NB. 10 11 12
+NB.    1 trl1 >: i. 3 4               _1 trl1 >: i. 3 4
+NB. 1  1  0 0                      1 0
+NB. 5  6  1 0                      9 1
+NB. 9 10 11 1
 
-trl1=: (trl @ (1 & setdiag0)) : ([ trl ((1 , [) setdiag ]))
+trl1=: (0&$:) :([ trl ((1 , [) setdiag ]))
 
 NB. ---------------------------------------------------------
 NB. tru1
-NB. Extract unit upper triangular (trapezoidal) matrix with
-NB. optional shrinking
+NB.
+NB. Description:
+NB.   Extract unit upper triangular (trapezoidal) matrix with
+NB.   optional shrinking
+NB.
+NB. Examples:
+NB.    tru1 >: i. 3 4                 0 tru1 >: i. 3 4
+NB. 1 2 3  4                       1 2 3  4
+NB. 0 1 7  8                       0 1 7  8
+NB. 0 0 1 12                       0 0 1 12
+NB.    1 tru1 >: i. 3 4               _1 tru1 >: i. 3 4
+NB. 1 3 4                          1 2  3  4
+NB. 0 1 8                          1 6  7  8
+NB. 0 0 1                          0 1 11 12
+NB.    1 tru1 >: i. 4 3               _1 tru1 >: i. 4 3
+NB. 1 3                            1 2 3
+NB. 0 1                            1 5 6
+NB.                                0 1 9
+NB.                                0 0 1
 
-tru1=: (tru @ (1 & setdiag0)) : ([ tru ((1 , [) setdiag ]))
+tru1=: (0&$:) :([ tru ((1 , [) setdiag ]))

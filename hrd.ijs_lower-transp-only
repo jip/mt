@@ -63,14 +63,14 @@ lahr2l=: 3 : 0
   for_j. i. HRDBS do.
     b=. IOSFR { y
     y=. 1 0 }. y
-    b=. b (- dbg 'L1 -') (+ (< a: ; <: j) { V) (mp dbg 'L1 mp') Y
-    b=. b (- dbg 'L2 -') (((0 (_1) } b) (mp dbg 'L2 mp1') (ct V)) (mp dbg 'L2 mp2') T) (mp dbg 'L2 mp3') V  NB. matrix-by-vector ops only
-    z1=. 1 (0) } z=. (larfgfc dbg 'L3 larfgfc') j }. b
+    b=. b - (+ (< a: ; <: j) { V) mp Y
+    b=. b - (((0 (_1) } b) mp (ct V)) mp (ct T)) mp V  NB. matrix-by-vector ops only
+    z1=. 1 (0) } z=. larfgf j }. b
     'beta tau'=. 0 _1 { z
-    u=. z1 (* dbg 'L5 *') + - tau
-    w=. (0 (_1) } u) (mp dbg 'L6 mp') (ct ((0 , j) }. V))
-    T=. T ((0 append) dbg 'L7 0append T') ((w (mp dbg 'L7 mp') (ct T)) , tau)
-    Y=. Y (, dbg 'L8 , Y') ((w (mp dbg 'L8 mp2') Y) - (u (mp dbg 'L8 mp1') y))
+    u=. z1 * - tau
+    w=. + (((0 , j) }. V) mp (+ 0 (_1) } u))
+    T=. T (0 append) ((w mp T) , tau)
+    Y=. Y , ((w mp Y) - (u mp y))
     H=. H (0 append) ((j {. b) , beta)
     V=. V (_1 append) z1
   end.
@@ -121,14 +121,14 @@ lahr2u=: 3 : 0
   for_j. i. HRDBS do.
     b=. IOSFC { y
     y=. 0 1 }. y
-    b=. b (- dbg 'U1 -') Y (mp dbg 'U1 mp') + (<: j) { V
-    b=. b (- dbg 'U2 -') V (mp dbg 'U2 mp3') (ct T) (mp dbg 'U2 mp2') (ct V) (mp dbg 'U2 mp1') 0 (_1) } b  NB. matrix-by-vector ops only
-    z1=. 1 (0) } z=. (larfgf dbg 'U3 larfgf') j }. b
+    b=. b - Y mp + (<: j) { V
+    b=. b - V mp (ct T) mp (ct V) mp 0 (_1) } b  NB. matrix-by-vector ops only
+    z1=. 1 (0) } z=. larfgf j }. b
     'beta tau'=. 0 _1 { z
-    u=. z1 (* dbg 'U5 *') - tau
-    w=. + ((+ 0 (_1) } u) (mp dbg 'U6 mp') (j }. V))
-    T=. T ((0 stitch) dbg 'U7 0stitch T') ((T (mp dbg 'U7 mp') w) , tau)
-    Y=. Y (,. dbg 'U8 ,. Y') ((Y (mp dbg 'U8 mp2') w) - (y (mp dbg 'U8 mp1') u))
+    u=. z1 * - tau
+    w=. + ((+ 0 (_1) } u) mp (j }. V))
+    T=. T (0 stitch) ((T mp w) , tau)
+    Y=. Y ,. ((Y mp w) - (y mp u))
     H=. H (0 stitch) ((j {. b) , beta)
     V=. V (_1 stitch) z1
   end.
@@ -159,9 +159,9 @@ gehd2l=: 4 : 0
   y=. ({. x) }. y                                                            NB. ...reduced rows
   for_j. hs2ios/ (x + 1 _1) do.                                              NB. (s-1)-vector: f+1,f+2,...,f+s-1
     r=. IOSFR { y                                                            NB. force to be 1-rank
-    z1=. 1 (0) } z=. larfgfc j }. r
-    eL=. z1 larflcfr (}. y)                                                  NB. L := H' * L
-    eR=. z1 larfrnfr ((0 , j) }. eL)                                         NB. R := R * H
+    z1=. 1 (0) } z=. larfgf j }. r
+    eL=. z1 larflnfr (}. y)                                                  NB. L := H' * L
+    eR=. z1 larfrcfr ((0 , j) }. eL)                                         NB. R := R * H
     A=. A , ((j {. r) , z)
     y=. ((_ , j) {. eL) ,. eR
   end.

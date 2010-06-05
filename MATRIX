@@ -1,8 +1,48 @@
+Legend:
+
+GE - general matrix
+  SQ - square matrix
+    HE - Hermitian matrix
+    DI - diagonalizable matrix
+    PO - positive definite matrix
+    PS - positive semidefinite matrix
+    NE - negative definite matrix
+    NS - negative semidefinite matrix
+    ID - indefinite matrix
+    UN - unitary (orthogonal) matrix
+    TD - tridiagonal matrix
+    BD - bidiagonal matrix
+
+TRF - triangular factorization
+TRS - solve monomial linear eq. of type A*X=B via TRF
+TRI - inverse a matrix via TRF
+
+EVD - eigenvalue decomposition
+EVS - solve monomial linear eq. of type A*X=B via EVD
+EVI - inverse a matrix via EVD
+
+SVD - singular value decomposition
+SVS - solve monomial linear eq. of type A*X=B via SVD
+SVI - inverse a matrix via SVD
+
+HRD - Hessenberg reduction
+HRS - solve monomial linear eq. of type A*X=B via HRD
+HRI - inverse a matrix via HRD
+
+EXP - matrix exponentioal
+LOG - matrix logarithm
+SGN - matrix signum
+
+
 Matrix type
+                GE
+                  SQ
+                    HE DI PO PS NE NS ID UN TD BD
+
 
 Matrix method
 
-
+TRF
 
 
 CalcMethod   MatrixType    GEneral      HErmitian       DIagonalizable        POsitive definite

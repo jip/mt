@@ -320,7 +320,7 @@ NB.   Pi=. ((i.#pi)=/pi)
 NB.   P=. ((i.#p)=/p)
 NB.   L1=. trl1 Af
 NB.   U=. tru Af
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Pi -: %. P
 NB.   Pi -: |: P
 NB.   A -: p { L1 mp U
@@ -364,7 +364,7 @@ NB.   Pi=. ((i.#pi)=/pi)
 NB.   P=. ((i.#p)=/p)
 NB.   L1=. trl1 Af
 NB.   U=. tru Af
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Pi -: %. P
 NB.   Pi -: |: P
 NB.   A -: p { L1 mp U
@@ -404,7 +404,7 @@ NB.   p=. /: pi
 NB.   Pi=. ((i.#pi)=/pi)
 NB.   P=. ((i.#p)=/p)
 NB.   U1=. tru1 U
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Pi -: %. P
 NB.   Pi -: |: P
 NB.   U1 -: U
@@ -435,7 +435,7 @@ NB.
 NB. If:
 NB.   'U T'=. hetrfu A
 NB.   U1=. tru1 U
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   U1 -: U
 NB.   A -: U mp T mp ct U
 NB.
@@ -466,7 +466,7 @@ NB.
 NB. If:
 NB.   U=. potrfl A
 NB.   L=. potrfl A
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   A -: (mp ct) U
 NB.   A -: (mp ct) L
 NB. where

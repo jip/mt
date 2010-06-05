@@ -60,7 +60,7 @@ NB.
 NB. If:
 NB.   A=. RV mp (diagmat ev) mp RVi
 NB.   P=. 2 dipow (RV ; ev ; RVi)
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   P -: A mp A
 NB.   P -: RV mp (diagmat (ev ^ 2)) mp RVi
 
@@ -82,7 +82,7 @@ NB.
 NB. If:
 NB.   A=. RV mp (diagmat ev) mp (+ |: RV)
 NB.   P=. 2 dipow (RV ; ev)
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   P -: A mp A
 NB.   P -: RV mp (diagmat (ev ^ 2)) mp (+ |: RV)
 

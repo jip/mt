@@ -73,7 +73,7 @@ NB.   r     - representation of rotated 2-vector (r,0)
 NB.
 NB. If:
 NB.   'cs sn r'=. lartg (f,g)
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   (r,0) -: G1 mp (f,g)
 NB.   (r,0) -: (f,g) mp G2
 NB.   (0,r) -: G2 mp (g,f)
@@ -178,7 +178,7 @@ NB.
 NB. If:
 NB.   'f2 g2'=. (cs,sn) lartv (f,g)
 NB.   'f2h g2h'=. (cs,sn) lartvt (f,g)
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   (f2,g2)   -: G1 mp (f,g)
 NB.   (f2h,g2h) -: G2 mp (f,g)
 NB. where

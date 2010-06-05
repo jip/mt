@@ -59,9 +59,9 @@ NB. Package verbs and nouns
 
 NB. utility
 require '~user/projects/mt/util.ijs'    NB. utilities
-require '~user/projects/mt/con.ijs'     NB. condition number
-require '~user/projects/mt/rand.ijs'    NB. random objects
 require '~user/projects/mt/struct.ijs'  NB. structure handlers
+require '~user/projects/mt/rand.ijs'    NB. random objects
+require '~user/projects/mt/con.ijs'     NB. condition number
 
 NB. low-level
 require '~user/projects/mt/bal.ijs'     NB. balance
@@ -69,7 +69,7 @@ require '~user/projects/mt/equ.ijs'     NB. equilibrate
 require '~user/projects/mt/ref.ijs'     NB. reflect
 require '~user/projects/mt/rot.ijs'     NB. rotate
 require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ HRD output
-NB. require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ output
+require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ output
 
 NB. mid-level
 require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction

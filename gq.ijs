@@ -1,17 +1,20 @@
 NB. gq.ijs
 NB. Generate Q from LQ QL QR RQ HRD output
 NB.
-NB. unglq  Generate a matrix with orthonormal rows from
-NB.        output of gelqf
-NB. ungql  Generate a matrix with orthonormal columns from
-NB.        output of geqlf
-NB. ungqr  Generate a matrix with orthonormal columns from
-NB.        output of geqrf
-NB. ungrq  Generate a matrix with orthonormal rows from
-NB.        output of gerqf
-NB. unghr  Generate an unitary (orthogonal) matrix which is
-NB.        defined as the product of elementary reflectors as
-NB.        returned by gehrd
+NB. unglq   Generate a matrix with orthonormal rows from
+NB.         output of gelqf
+NB. ungql   Generate a matrix with orthonormal columns from
+NB.         output of geqlf
+NB. ungqr   Generate a matrix with orthonormal columns from
+NB.         output of geqrf
+NB. ungrq   Generate a matrix with orthonormal rows from
+NB.         output of gerqf
+NB. unghrl  Generate an unitary (orthogonal) matrix which is
+NB.         defined as the product of elementary reflectors as
+NB.         returned by gehrdl
+NB. unghru  Generate an unitary (orthogonal) matrix which is
+NB.         defined as the product of elementary reflectors as
+NB.         returned by gehrdu
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -221,7 +224,7 @@ NB. where
 NB.   LQf - m×(n+1)-matrix, the output of gelqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the product of k elementary reflectors
-NB.         of order n: Q = H(k-1)' * ... * H(1)' * H(0)'
+NB.         of order n: Q = Π{H(i)',i=k-1:0}
 NB.   k   = min(m,n)
 NB.
 NB. Algorithm:
@@ -234,7 +237,7 @@ NB. If:
 NB.   'm n'=. 0 _1 + $ LQf
 NB.   k=. m <. n
 NB.   Q=. unglq LQf
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Q -: unglq (k {. LQf)
 NB.   I -: (mp ct) Q
 NB.
@@ -259,7 +262,7 @@ NB. where
 NB.   QfL - (m+1)×n-matrix, the output of geqlf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the product of k elementary reflectors
-NB.         of order m: Q = H(k-1) * ... * H(1) * H(0)
+NB.         of order m: Q = Π{H(i),i=k-1:0}
 NB.   k   = min(m,n)
 NB.
 NB. Algorithm:
@@ -272,7 +275,7 @@ NB. If:
 NB.   'm n'=. _1 0 + $ QfL
 NB.   k=. m <. n
 NB.   Q=. ungql QfL
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Q -: ungql (((m+1),(-k)) {. QfL)
 NB.   I -: (mp~ ct) Q
 NB.
@@ -297,7 +300,7 @@ NB. where
 NB.   QfR - (m+1)×n-matrix, the output of geqrf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the product of k elementary reflectors
-NB.         of order m: Q = H(0) * H(1) * ... * H(k-1)
+NB.         of order m: Q = Π{H(i),i=0:k-1}
 NB.   k   = min(m,n)
 NB.
 NB. Algorithm:
@@ -310,7 +313,7 @@ NB. If:
 NB.   'm n'=. _1 0 + $ QfR
 NB.   k=. m <. n
 NB.   Q=. ungqr QfR
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Q -: ungql (((m+1),k) {. QfR)
 NB.   I -: (mp~ ct) Q
 NB.
@@ -335,7 +338,7 @@ NB. where
 NB.   RQf - m×(n+1)-matrix, the output of gerqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the product of k elementary reflectors
-NB.         of order n: Q = H(0)' * H(1)' * ... * H(k-1)'
+NB.         of order n: Q = Π{H(i)',i=0:k-1}
 NB.   k   = min(m,n)
 NB.
 NB. Algorithm:
@@ -348,7 +351,7 @@ NB. If:
 NB.   'm n'=. 0 _1 + $ RQf
 NB.   k=. m <. n
 NB.   Q=. ungrq RQf
-NB. then
+NB. then (with appropriate comparison tolerance)
 NB.   Q -: ungrq (((-k),(n+1)) {. RQf)
 NB.   I -: (mp ct) Q
 NB.
@@ -361,32 +364,56 @@ NB.   (k-K) elements in τ[0:k-1] must be zeroed
 ungrq=: 0 1 }. (ungrqstep ^: ((0 _1 ungqiters $ @ [)`(ungr2 @ (}.~ (2 $ (- UNGBS) * 0 _1 ungqiters $)))))~ @ ((-~/ @ $) trl1 ]) @ ((- @ (0 _1 ungqk $)) {. ])
 
 NB. ---------------------------------------------------------
-NB. unghr
+NB. unghrl
 NB.
 NB. Description:
 NB.   Generate an unitary (orthogonal) matrix Q which is
-NB.   defined as the product of ({:fs) elementary reflectors
-NB.   of order n, as returned by gehrd:
-NB.     Q = H(f) H(f+1) ... H(f+s-1)
+NB.   defined as the product of elementary reflectors of
+NB.   order n, as returned by gehrdl:
+NB.     Q = Π{H(i)',i=f+s-2:f} .
 NB.
 NB. Syntax:
-NB.   Q=. unghr HQf ; fs
+NB.   Q=. unghrl HQf
 NB. where
-NB.   HQf - max(n,f+s+1)×n-matrix with packed H and Qf (see
-NB.         gehrd)
-NB.   fs  - 2-vector of integers (f,s) 'from' and 'size',
-NB.         defines submatrix A11 position in matrix A (see
-NB.         gebalp)
-NB.   Q   - 
+NB.   HQf - n×(n+1)-matrix with packed H and Qf (see gehrdl)
+NB.   Q   - n×n-matrix, an unitary (orthogonal)
 NB.
-NB. TODO: dyad
+NB. Notes:
+NB. - instead of using f and s parameters, the following
+NB.   product is really calculating:
+NB.     Q = Π{H(i)',i=n-1:0} ,
+NB.   where
+NB.     H(0:f-1) = H(f+s-1:n-1) = I .
+NB.   This approach delivers excessive calculations in rare
+NB.   case ((f>0) OR (f+s<n)).
 
-unghr=: 3 : 0
-  riosQf=. (2 2 $ 1 1 0 _1) + ,.~ 1 {:: y
-  t=. l=. {. 1 {:: y
-  b=. r=. (# 0 {:: y) - +/ 1 {:: y
-  (1 0 _1,l) setdiag (1 0 0,t) setdiag ((t,l),:(b,r)) uncut riosQf (ungqr ;. 0) (0 {:: y)
-)
+unghrl=: unglq @ (|. !. 0)
+
+NB. ---------------------------------------------------------
+NB. unghru
+NB.
+NB. Description:
+NB.   Generate an unitary (orthogonal) matrix Q which is
+NB.   defined as the product of elementary reflectors of
+NB.   order n, as returned by gehrdu:
+NB.     Q = Π{H(i),i=f:f+s-2} .
+NB.
+NB. Syntax:
+NB.   Q=. unghru HQf
+NB. where
+NB.   HQf - (n+1)×n-matrix with packed H and Qf (see gehrdu)
+NB.   Q   - n×n-matrix, an unitary (orthogonal)
+NB.
+NB. Notes:
+NB. - instead of using f and s parameters, the following
+NB.   product is really calculating:
+NB.     Q = Π{H(i),i=0:n-1} ,
+NB.   where
+NB.     H(0:f-1) = H(f+s-1:n-1) = I .
+NB.   This approach delivers excessive calculations in rare
+NB.   case ((f>0) OR (f+s<n)).
+
+unghru=: ungqr @ (0 _1 & (|. !. 0))
 
 NB. =========================================================
 NB. Test suite
@@ -400,10 +427,14 @@ NB. Syntax: tungq A
 NB. where A - general m×n-matrix
 
 tungq=: 3 : 0
-  ('unglq' tmonad (gelqf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp  ct)) % (FP_EPS*{:@$))@]))) y  NB. berr := ||Q*Q'-I||/ε*n
-  ('ungql' tmonad (geqlf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp~ ct)) % (FP_EPS*#   ))@]))) y  NB. berr := ||Q'*Q-I||/ε*m
-  ('ungqr' tmonad (geqrf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp~ ct)) % (FP_EPS*#   ))@]))) y  NB. berr := ||Q'*Q-I||/ε*m
-  ('ungrq' tmonad (gerqf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp  ct)) % (FP_EPS*{:@$))@]))) y  NB. berr := ||Q*Q'-I||/ε*n
+  ('unglq' tmonad (gelqf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag)@(mp  ct)) % (FP_EPS*{:@$))@]))) y  NB. berr := ||Q*Q'-I||/(ε*n)
+  ('ungql' tmonad (geqlf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag)@(mp~ ct)) % (FP_EPS*#   ))@]))) y  NB. berr := ||Q'*Q-I||/(ε*m)
+  ('ungqr' tmonad (geqrf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag)@(mp~ ct)) % (FP_EPS*#   ))@]))) y  NB. berr := ||Q'*Q-I||/(ε*m)
+  ('ungrq' tmonad (gerqf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag)@(mp  ct)) % (FP_EPS*{:@$))@]))) y  NB. berr := ||Q*Q'-I||/(ε*n)
+
+  NB. following are tested iif A is square
+  ('unghrl' tmonad (gehrdl`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp  ct)) % (FP_EPS*#))@]))) ^: (=/ @ $) y  NB. berr := ||Q*Q'-I||/(ε*n)
+  ('unghru' tmonad (gehrdu`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp~ ct)) % (FP_EPS*#))@]))) ^: (=/ @ $) y  NB. berr := ||Q'*Q-I||/(ε*n)
   EMPTY
 )
 

@@ -2,66 +2,66 @@ NB. trs.ijs
 NB. Solve linear monomial equation via triangular
 NB. factorization
 NB.
-NB. trtrsux    Solve equation U * X = B, where U is an upper
-NB.            triangular matrix
-NB. trtrsutx   Solve equation U^T * X = B, where U is an
-NB.            upper triangular matrix
-NB. trtrsuhx   Solve equation U^H * X = B, where U is an
-NB.            upper triangular matrix
-NB. trtrsu1x   Solve equation U1 * X = B, where U1 is an unit
-NB.            upper triangular matrix
-NB. trtrsu1tx  Solve equation U1^T * X = B, where U1 is an
-NB.            unit upper triangular matrix
-NB. trtrsu1hx  Solve equation U1^H * X = B, where U1 is an
-NB.            unit upper triangular matrix
-NB. trtrsxu    Solve equation X * U = B, where U is an upper
-NB.            triangular matrix
-NB. trtrsxut   Solve equation X * U^T = B, where U is an
-NB.            upper triangular matrix
-NB. trtrsxuh   Solve equation X * U^H = B, where U is an
-NB.            upper triangular matrix
-NB. trtrsxu1   Solve equation X * U1 = B, where U1 is an unit
-NB.            upper triangular matrix
-NB. trtrsxu1t  Solve equation X * U1^T = B, where U1 is an
-NB.            unit upper triangular matrix
-NB. trtrsxu1h  Solve equation X * U1^H = B, where U1 is an
-NB.            unit upper triangular matrix
 NB. trtrslx    Solve equation L * X = B, where L is a lower
-NB.            triangular matrix
-NB. trtrsltx   Solve equation L^T * X = B, where L is a lower
-NB.            triangular matrix
-NB. trtrslhx   Solve equation L^H * X = B, where L is a lower
 NB.            triangular matrix
 NB. trtrsl1x   Solve equation L1 * X = B, where L1 is an unit
 NB.            lower triangular matrix
-NB. trtrsl1tx  Solve equation L1^T * X = B, where L1 is an
-NB.            unit lower triangular matrix
 NB. trtrsl1hx  Solve equation L1^H * X = B, where L1 is an
 NB.            unit lower triangular matrix
+NB. trtrsl1tx  Solve equation L1^T * X = B, where L1 is an
+NB.            unit lower triangular matrix
+NB. trtrslhx   Solve equation L^H * X = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsltx   Solve equation L^T * X = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsux    Solve equation U * X = B, where U is an upper
+NB.            triangular matrix
+NB. trtrsu1hx  Solve equation U1^H * X = B, where U1 is an
+NB.            unit upper triangular matrix
+NB. trtrsu1tx  Solve equation U1^T * X = B, where U1 is an
+NB.            unit upper triangular matrix
+NB. trtrsuhx   Solve equation U^H * X = B, where U is an
+NB.            upper triangular matrix
+NB. trtrsutx   Solve equation U^T * X = B, where U is an
+NB.            upper triangular matrix
+NB. trtrsu1x   Solve equation U1 * X = B, where U1 is an unit
+NB.            upper triangular matrix
 NB. trtrsxl    Solve equation X * L = B, where L is a lower
-NB.            triangular matrix
-NB. trtrsxlt   Solve equation X * L^T = B, where L is a lower
-NB.            triangular matrix
-NB. trtrsxlh   Solve equation X * L^H = B, where L is a lower
 NB.            triangular matrix
 NB. trtrsxl1   Solve equation X * L1 = B, where L1 is an unit
 NB.            lower triangular matrix
-NB. trtrsxl1t  Solve equation X * L1^T = B, where L1 is an
-NB.            unit lower triangular matrix
 NB. trtrsxl1h  Solve equation X * L1^H = B, where L1 is an
 NB.            unit lower triangular matrix
+NB. trtrsxl1t  Solve equation X * L1^T = B, where L1 is an
+NB.            unit lower triangular matrix
+NB. trtrsxlh   Solve equation X * L^H = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsxlt   Solve equation X * L^T = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsxu    Solve equation X * U = B, where U is an upper
+NB.            triangular matrix
+NB. trtrsxu1   Solve equation X * U1 = B, where U1 is an unit
+NB.            upper triangular matrix
+NB. trtrsxu1h  Solve equation X * U1^H = B, where U1 is an
+NB.            unit upper triangular matrix
+NB. trtrsxu1t  Solve equation X * U1^T = B, where U1 is an
+NB.            unit upper triangular matrix
+NB. trtrsxuh   Solve equation X * U^H = B, where U is an
+NB.            upper triangular matrix
+NB. trtrsxut   Solve equation X * U^T = B, where U is an
+NB.            upper triangular matrix
 NB.
 NB. getrsax    Solve equation A * X = B, where A is a general
 NB.            matrix
-NB. getrsatx   Solve equation A^T * X = B, where A is a
-NB.            general matrix
 NB. getrsahx   Solve equation A^H * X = B, where A is a
+NB.            general matrix
+NB. getrsatx   Solve equation A^T * X = B, where A is a
 NB.            general matrix
 NB. getrsxa    Solve equation X * A = B, where A is a general
 NB.            matrix
-NB. getrsxat   Solve equation X * A^T = B, where A is a
-NB.            general matrix
 NB. getrsxah   Solve equation X * A^H = B, where A is a
+NB.            general matrix
+NB. getrsxat   Solve equation X * A^T = B, where A is a
 NB.            general matrix
 NB.
 NB. hetrsax    Solve equation A * X = B, where A is a
@@ -73,7 +73,9 @@ NB.            Hermitian (symmetric) matrix
 NB. hetrsxat   Solve equation X * A^T = B, where A is a
 NB.            Hermitian (symmetric) matrix
 NB.
-NB. potrs      Solve equation A*X=B, where A is a Hermitian
+NB. potrsax    Solve equation A*X=B, where A is a Hermitian
+NB.            (symmetric) positive definite matrix
+NB. potrsxa    Solve equation X*A=B, where A is a Hermitian
 NB.            (symmetric) positive definite matrix
 NB.
 NB. Copyright (C) 2009 Igor Zhuravlov
@@ -174,8 +176,9 @@ NB.
 NB. Notes:
 NB. - opposite triangle is not referenced
 NB. - unit diagonal is not referenced
+NB. - emulate LAPACK's xTRTRS
 
-trtrslx=:   trtrslx  `{.`}.`(,~)`     mp      ` ,  `(% 0&({,)) trtrs
+NB. trtrslx=:   trtrslx  `{.`}.`(,~)`     mp      ` ,  `(% 0&({,)) trtrs
 NB. trtrsl1x
 trtrsl1hx=: trtrsl1hx`}.`{.`(,~)`(ct@(mp~ ct))`(,~)`[          trtrs
 trtrsl1tx=: trtrsl1tx`}.`{.`(,~)`(|:@(mp~ |:))`(,~)`[          trtrs
@@ -202,14 +205,9 @@ trtrsxut=:  |:@trtrsux |:
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-trtrsl1x=: (4 : 0) ^: (;`(#@])`(0 {. ]))
-  'L1 B'=. x
-  Xi=. y
-  i=. # Xi
-  n=. # L1
-  li=. (hds2ios (i*n),1,i) ({,) L1
-  Xi , ((i { B) - (li mp Xi))
-)
+trtrslx=:  (((((#@]) {   (1 {:: [)) - (] mp~ (((#@]) (1 dhs2lios (*,[)) (# @ (0 {:: [))) ({,) (0 {:: [)))) % (((#@]) (* >:) (# @ (0 {:: [))) ({,) (0 {:: [))) , ~ ]) ^: (;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (i*n,i)), lio(lii)=i*(n+1)
+
+trtrsl1x=: ( (((#@]) {   (1 {:: [)) - (] mp~ (((#@]) (1 dhs2lios (*,[)) (# @ (0 {:: [))) ({,) (0 {:: [)))                                                        ) , ~ ]) ^: (;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (i*n,i))
 
 trtrsux=: (4 : 0) ^: (;`(#@])`(0 {. ]))
   'U B'=. x
@@ -217,17 +215,19 @@ trtrsux=: (4 : 0) ^: (;`(#@])`(0 {. ]))
   i=. # Xi
   n=. # U
   j=. i * _1 - n
-  ui=. (hds2ios j,1,i) ({,) U
+  ui=. (dhs2lios j,i) ({,) U
   uii=. (<: j) ({,) U
   ((((_1-i) { B) - (ui mp Xi)) % uii) , Xi
 )
+trtrsux=:  (((((_1-(#@])) {   (1 {:: [)) - (] mp~ (((#@]) (1 dhs2lios (*,[)) (# @ (0 {:: [))) ({,) (0 {:: [)))) % (((#@]) (* >:) (# @ (0 {:: [))) ({,) (0 {:: [))) , ~ ]) ^: (;`(#@])`(0 {.   ]))  NB. lios(ui)=(1 dhs2lios (-i*(n+1),i)), lio(lii)=-1-i*(n+1)
+
 
 trtrsu1x=: (4 : 0) ^: (;`(#@])`(0 {. ]))
   'U B'=. x
   Xi=. y
   i=. # Xi
   n=. # U
-  ui=. (hds2ios (i * _1 - n),1,i) ({,) U
+  ui=. (dhs2lios (i * _1 - n),i) ({,) U
   (((_1-i) { B) - (ui mp Xi)) , Xi
 )
 
@@ -236,7 +236,7 @@ trtrsuhx=: (4 : 0) ^: (;`(#@])`(0 {. ]))
   Xi=. y
   i=. # Xi
   n=. # U
-  ui=. (hds2ios i,n,i) ({,) U
+  ui=. (n dhs2lios 2 # i) ({,) U
   uii=. (i * >: n) ({,) U
   Xi , (((i { B) - ((+ ui) mp Xi)) % uii)
 )
@@ -246,24 +246,14 @@ trtrsutx=: (4 : 0) ^: (;`(#@])`(0 {. ]))
   Xi=. y
   i=. # Xi
   n=. # U
-  ui=. (hds2ios i,n,i) ({,) U
+  ui=. (n dhs2lios 2 # i) ({,) U
   uii=. (i * >: n) ({,) U
   Xi , (((i { B) - (ui mp Xi)) % uii)
 )
 
-NB. прямая конвертация с explicit, с двукратным изготовлением lIOS индивидуально для lii и li
-trtrsxl=:  (((((_1-(c@])) {"1 (1 {:: [)) - (] mp ((hds2ios @ ((c@]) ((<:@] - (* >:)) , ,~) (# @ (0 {:: [)))) ({,) (0 {:: [)))) % (((c@]) (_1-(* >:)) (# @ (0 {:: [))) ({,) (0 {:: [))) ,. ]) ^: (;`(c@])`(0 {."1 ]))  NB. hds2ios(((n-1)-i*(n+1)),n,i), IO(lii)==-1-i*(n+1)
+trtrsxl=:  (((((_1-(c@])) {"1 (1 {:: [)) - (] mp (((c@]) (] dhs2lios ((<:@] - (* >:)) , [)) (# @ (0 {:: [))) ({,) (0 {:: [)))) % (((c@]) (_1-(* >:)) (# @ (0 {:: [))) ({,) (0 {:: [))) ,. ]) ^: (;`(c@])`(0 {."1 ]))  NB. hds2ios(((n-1)-i*(n+1)),n,i), IO(lii)==-1-i*(n+1)
 
-NB. переделка trtrsxl с однократным изготовлением общего lIOS и заменой нулевого ящика вектором (lii,li)
-trtrsxl2=: ((((((hds2ios @ ((c@]) ((_1-(* >:)) , (, >:)~) (# @ (0 {:: [)))) (<@({,)) (0 {:: [)))`0:`[}) ((((_1-(c@])) {"1 (1 {:: [)) - (] (mp }.) (0 {:: [))) % ({. @ (0 {:: [))) ]) ,. ]) ^: (;`(c@])`(0 {."1 ]))  NB. IOS(lii,li)==hds2ios(-1-i*(n+1),n,i+1)
-
-NB. переделка trtrsxl2 с однократным изготовлением общего lIOS и прилинковкой вектора (lii,li) к ящику - левому аргументу x степпера trtrsxl3step (внутренний безымянный глагол)
-trtrsxl3=: ((((((hds2ios @ ((c@]) ((_1-(* >:)) , (, >:)~) (# @ (0 {:: [)))) ({,) (0 {:: [))) ; [) ((((_1-(c@])) {"1 (2 {:: [)) - (] (mp }.) (0 {:: [))) % ({. @ (0 {:: [))) ]) ,. ]) ^: (;`(c@])`(0 {."1 ]))  NB. IOS(lii,li)==hds2ios(-1-i*(n+1),n,i+1)
-
-NB. переделка trtrsxl3 с однократным изготовлением общего lIOS и прилинковкой скаляра lii, затем вектора li к ящику - левому аргументу x степпера trtrsxl4step (внутренний безымянный глагол)
-trtrsxl4=: ((((((hds2ios @ ((c@]) ((_1-(* >:)) , (, >:)~) (# @ (0 {:: [)))) ({,) (0 {:: [))) (({.@[) ; (}.@[ ; ])) [) ((((_1-(c@])) {"1 (3 {:: [)) - (] mp (1 {:: [))) % (0 {:: [)) ]) ,. ]) ^: (;`(c@])`(0 {."1 ]))  NB. IOS(lii,li)==hds2ios(-1-i*(n+1),n,i+1)
-
-trtrsxl1=: ( (((_1-(c@])) {"1 (1 {:: [)) - (] mp ((hds2ios @ ((c@]) ((<:@] - (* >:)) , ,~) (# @ (0 {:: [)))) ({,) (0 {:: [)))                                                        ) ,. ]) ^: (;`(c@])`(0 {."1 ]))  NB. hds2ios(((n-1)-i*(n+1)),n,i)
+trtrsxl1=: ( (((_1-(c@])) {"1 (1 {:: [)) - (] mp (((c@]) (] dhs2lios ((<:@] - (* >:)) , [)) (# @ (0 {:: [))) ({,) (0 {:: [)))                                                        ) ,. ]) ^: (;`(c@])`(0 {."1 ]))  NB. hds2ios(((n-1)-i*(n+1)),n,i)
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:              Syntax:

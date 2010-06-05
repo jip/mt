@@ -29,6 +29,7 @@ fri.ijs
 gq.ijs
 history.txt
 hrd.ijs
+ios.ijs
 log.ijs
 mq.ijs
 mt.ijs

@@ -46,28 +46,6 @@ NB. Version: 1.0.0 2010-01-01
 coclass 'mt'
 
 NB. =========================================================
-NB. Concepts
-NB.
-NB. IO   - index of
-NB. lIO  - linear IO, is an integer
-NB. IOS  - indices of
-NB. lIOS - linear IOS, is a vector of integers
-NB. rIOS - rectangular IOS, for r-rank array is a 2×r-array
-NB.        of integers ((from0,from1,...),:(size0,size1,...))
-NB.
-NB. Following are equivalents:
-NB.   (3 5 _7,:2 _3 4) (] ;. 0) report
-NB.   (< 3 4;7 6 5;_10 _9 _8 _7) { report
-NB.   (rios2ios (3 5 _7,:2 _3 4)) { report
-NB.   (ios2rios (< 3 4;7 6 5;_10 _9 _8 _7)) (] ;. 0) report
-NB.
-NB. Following are equivalents:
-NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4
-NB.   (4 lios2ios 1 6 11) { i. 3 4
-NB.   (4 ios2lios (0 1 ; 1 2 ; 2 3)) ({,) i. 3 4
-NB.   1 6 11 ({,) i. 3 4
-
-NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
@@ -100,14 +78,14 @@ NB.   Return lIOS of solid part of diagonal of rectangular
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   lios=. [(d[,f[,s]])] diaglios [m,]n
+NB.   lios=. [(d[,h[,s]])] diaglios [m,]n
 NB. where
 NB.   m    ≥ 0, integer, optional rows in matrix, default is
 NB.          n
 NB.   n    ≥ 0, integer, columns in matrix
 NB.   d    - integer in range [1-m,n-1], optional IO
 NB.          diagonal, default is 0 (main diagonal)
-NB.   f    - integer in range [-S,S-1], optional IO extreme
+NB.   h    - integer in range [-S,S-1], optional IO extreme
 NB.          element of solid part within diagonal,
 NB.          default is 0 (take from head)
 NB.   s    - integer in range [-S,S] or ±∞, optional size of
@@ -119,19 +97,19 @@ NB.   S    ≥ 0, the length of diagonal
 NB.
 NB. Formulae:
 NB. - the whole diagonal's IO extreme element:
-NB.     F := (d ≥ 0) ? d : (-n*d)
+NB.     H := (d ≥ 0) ? d : (-n*d)
 NB. - the whole diagonal's size:
 NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
 NB.
 NB. Notes:
-NB. - (f,s) pair defines raveled rIOS of solid part within diagonal
+NB. - (h,s) pair defines raveled rIOS of solid part within diagonal
 
 diaglios=: (0 0 _&$:) :(4 : 0)
-  'd f s'=. x=. ((i. 3) < (# x)) } 0 0 _ ,: x  NB. in-place op
+  'd h s'=. x=. ((i. 3) < (# x)) } 0 0 _ ,: x  NB. in-place op
   'm n'=. y=. 2 $ y
-  F=. n (- @ * ^: (0 > ])) d
+  H=. n (- @ * ^: (0 > ])) d
   S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
-  (f ,: (s <. S)) (] ;. 0) hds2ios F , (>: n) , S
+  (h ,: (s <. S)) (] ;. 0) (>: n) dhs2lios H , S
 )
 
 NB. =========================================================
@@ -273,12 +251,12 @@ NB. Description:
 NB.   Return a solid part of diagonal of rectangular matrix
 NB.
 NB. Syntax:
-NB.   e=. [(d[,f[,s]])] diag A
+NB.   e=. [(d[,h[,s]])] diag A
 NB. where
 NB.   A - m×n-matrix
 NB.   d - integer in range [1-m,n-1], optional IO diagonal,
 NB.       default is 0 (main diagonal)
-NB.   f - integer in range [-S,S-1], optional IO extreme
+NB.   h - integer in range [-S,S-1], optional IO extreme
 NB.       element of solid part within diagonal, default is 0
 NB.       (take from head)
 NB.   s - integer in range [-S,S] or ±∞, optional size of 
@@ -297,13 +275,13 @@ NB. Description:
 NB.   Assign scalar value to a solid part of diagonal
 NB.
 NB. Syntax:
-NB.   Aupd=. (e[,d[,f[,s]]]) setdiag A
+NB.   Aupd=. (e[,d[,h[,s]]]) setdiag A
 NB. where
 NB.   A    - m×n-matrix to change
 NB.   e    - scalar, the value to assign
 NB.   d    - integer in range [1-m,n-1], optional IO
 NB.          diagonal, default is 0 (main diagonal)
-NB.   f    - integer in range [-S,S-1], optional IO extreme
+NB.   h    - integer in range [-S,S-1], optional IO extreme
 NB.          element of solid part within diagonal, default
 NB.          is 0 (take from head)
 NB.   s    - integer in range [-S,S] or ±∞, optional size of
@@ -314,8 +292,8 @@ NB.          within d-th diagonal
 NB.   S    ≥ 0, the length of d-th diagonal
 
 setdiag=: 4 : 0
-  'e dfs'=. ({. ; }.) x=. ((i. 4) < (# x)) } 0 0 0 _ ,: x  NB. in-place op
-  lios=. dfs (diaglios $) y
+  'e dhs'=. ({. ; }.) x=. ((i. 4) < (# x)) } 0 0 0 _ ,: x  NB. in-place op
+  lios=. dhs (diaglios $) y
   e (lios"_) } y
 )
 
@@ -334,10 +312,10 @@ NB.            eupd=. u e
 NB.   vapp - ambivalent verb to update a solid part within
 NB.          diagonal of matrix A by monad u; is called
 NB.          as:
-NB.             Aupd=. [(d,[f[,s]])] vapp A
+NB.             Aupd=. [(d,[h[,s]])] vapp A
 NB.   d    - integer in range [1-m,n-1], optional IO
 NB.          diagonal, default is 0 (main diagonal)
-NB.   f    - integer in range [-S,S-1], optional IO extreme
+NB.   h    - integer in range [-S,S-1], optional IO extreme
 NB.          element of solid part within diagonal, default
 NB.          is 0 (take from head)
 NB.   s    - integer in range [-S,S] or ±∞, optional size of
@@ -371,14 +349,14 @@ NB.   Make identity matrix with units on solid part of
 NB.   diagonal
 NB.
 NB. Syntax:
-NB.   I=. [(d[,f[,s]])] idmat [m,]n
+NB.   I=. [(d[,h[,s]])] idmat [m,]n
 NB. where
 NB.   m    ≥ 0, integer, optional rows in matrix I, default
 NB.          is n
 NB.   n    ≥ 0, integer, columns in matrix I
 NB.   d    - integer in range [1-m,n-1], optional IO
 NB.          diagonal, default is 0 (main diagonal)
-NB.   f    - integer in range [-S,S-1], optional IO extreme
+NB.   h    - integer in range [-S,S-1], optional IO extreme
 NB.          element of solid part within diagonal, default
 NB.          is 0 (take from head)
 NB.   s    - integer in range [-S,S] or ±∞, optional size of

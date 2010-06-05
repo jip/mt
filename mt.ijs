@@ -57,6 +57,7 @@ NB. ---------------------------------------------------------
 NB. Addon verbs and nouns
 
 NB. utility
+require '~user/projects/mt/ios.ijs'     NB. IOS
 require '~user/projects/mt/util.ijs'    NB. utilities
 require '~user/projects/mt/struct.ijs'  NB. structure handlers
 require '~user/projects/mt/rand.ijs'    NB. random objects

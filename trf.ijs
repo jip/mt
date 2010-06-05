@@ -90,8 +90,8 @@ hetf2pl=: 3 : 0
   T=. ($ {. (1 1 {. ])) y      NB. T[0,0]=A[0,0]
   ip=. i. n
   h=. i. 1                     NB. h[0:j-1]=H[0:j-1,j-1], may be defined arbitrary before the 1st iteration only
-  ios=. n ht2ios 1             NB. j:n-1
-  for_j. n ht2ios 1 do.        NB. 1:n-1
+  ios=. n ht2lios 1            NB. j:n-1
+  for_j. n ht2lios 1 do.       NB. 1:n-1
     a=. (< ios ; (<: j)) { y   NB. A[j:n-1,j-1]
     lum=. (j (- , [) n) {. L1  NB. L1[j:n-1,0:j-1]
     v=. a - lum mp h           NB. v[0:n-j-1]=A[j:n-1,j-1]-L1[j:n-1,0:j-1]*H[0:j-1,j-1]=L1[j:n-1,j]*T[j,j-1] non-pivoted yet

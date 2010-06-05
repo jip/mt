@@ -53,7 +53,7 @@ NB.           of subeA, lower triangles of VH and H are
 NB.           match, strict upper triangles of VH and V are
 NB.           match
 NB.   i     - integer from set:
-NB.             {f+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.             {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in the eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
@@ -105,7 +105,7 @@ NB.           of subeA, upper triangles of VH and H are
 NB.           match, strict lower triangles of VH and V are
 NB.           match
 NB.   i     - integer from set:
-NB.             {f+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.             {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in the eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
@@ -142,27 +142,27 @@ NB.   transformation via a non-blocked algorithm:
 NB.     Q * A * Q' = H
 NB.
 NB. Syntax:
-NB.   HQf=. fs gehd2l eA
+NB.   HQf=. hs gehd2l eA
 NB. where
 NB.   eA  - n×(n+1)-matrix, being A with appended trash
-NB.         column, is already factored in rows [0:f-1]
-NB.   fs  - 2-vector of integers (f,s) 'from' and 'size',
+NB.         column, is already factored in rows [0:h-1]
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdl
 NB.   HQf - n×(n+1)-matrix, combined H and Qf, see gehrdl
 
 gehd2l=: 4 : 0
-  A=. ({. x) {. y                                                            NB. skip ...
-  y=. ({. x) }. y                                                            NB. ...reduced rows
-  for_j. hs2ios/ (x + 1 _1) do.                                              NB. (s-1)-vector: f+1,f+2,...,f+s-1
+  A=. ({. x) {. y                                                     NB. skip ...
+  y=. ({. x) }. y                                                     NB. ...reduced rows
+  for_j. dhs2lios (x + 1 _1) do.                                      NB. (s-1)-vector: h+1,h+2,...,h+s-1
     r=. {. y
     z1=. 1 (0) } z=. larfgfc j }. r
-    eL=. z1 larflcfr (}. y)                                                  NB. L := H' * L
-    eR=. z1 larfrnfr (j }."1 eL)                                             NB. R := R * H
+    eL=. z1 larflcfr (}. y)                                           NB. L := H' * L
+    eR=. z1 larfrnfr (j }."1 eL)                                      NB. R := R * H
     A=. A , ((j {. r) , z)
     y=. (j {."1 eL) ,. eR
   end.
-  ((({: $ y) >:@- (+/ x)) $ 0) (hds2ios @ (((_1 , ,) #)~ (- @ #))) } (A , y)  NB. clear τ[f+s-1:n]
+  ((({: $ y) >:@- (+/ x)) $ 0) ((dhs2lios~ (_1,#))~ (-@#)) } (A , y)  NB. clear τ[h+s-1:n]
 )
 
 NB. ---------------------------------------------------------
@@ -175,12 +175,12 @@ NB.   transformation via a non-blocked algorithm:
 NB.     Q' * A * Q = H
 NB.
 NB. Syntax:
-NB.   HQf=. fs gehd2u eA
+NB.   HQf=. hs gehd2u eA
 NB. where
 NB.   eA  - (n+1)×(n+1)-matrix, being A with appended trash
 NB.         row and column, is already reduced in columns
-NB.         0:f-1
-NB.   fs  - 2-vector of integers (f,s) 'from' and 'size',
+NB.         0:h-1
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdu
 NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdu
@@ -189,17 +189,17 @@ NB. Notes:
 NB. - emulates xGEHD2 up to storage layout
 
 gehd2u=: 4 : 0
-  A=. ({. x) {."1 y                                                 NB. skip ...
-  y=. ({. x) }."1 y                                                 NB. ...reduced columns
-  for_j. hs2ios/ (x + 1 _1) do.                                     NB. (s-1)-vector: f+1,f+2,...,f+s-1
+  A=. ({. x) {."1 y                                              NB. skip ...
+  y=. ({. x) }."1 y                                              NB. ...reduced columns
+  for_j. dhs2lios (x + 1 _1) do.                                 NB. (s-1)-vector: h+1,h+2,...,h+s-1
     c=. {."1 y
     z1=. 1 (0) } z=. larfgf j }. c
-    eR=. z1 larfrnfc (0 1 }. y)                                     NB. R := R * H
-    eL=. z1 larflcfc (j }. eR)                                      NB. L := H' * L
+    eR=. z1 larfrnfc (0 1 }. y)                                  NB. R := R * H
+    eL=. z1 larflcfc (j }. eR)                                   NB. L := H' * L
     A=. A ,. ((j {. c) , z)
     y=. (j {. eR) , eL
   end.
-  (((# y) >:@- (+/ x)) $ 0) (hds2ios @ (_1 _1 , # @ [)) } (A ,. y)  NB. clear τ[f+s-1:n]
+  (((# y) >:@- (+/ x)) $ 0) (_1 dhs2lios (_1 , #@[)) } (A ,. y)  NB. clear τ[f+s-1:n]
 )
 
 NB. =========================================================
@@ -214,45 +214,45 @@ NB.   by a unitary (orthogonal) similarity transformation:
 NB.     Q * A * Q' = H
 NB.
 NB. Syntax:
-NB.   HQf=. fs gehrdl A
+NB.   HQf=. hs gehrdl A
 NB. where
 NB.   A   - n×n-matrix to reduce
-NB.   fs  - 2-vector of integers (f,s) 'from' and 'size',
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gebalpl and storage layout below
 NB.   HQf - n×(n+1)-matrix, combined H and Qf
 NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
-NB.         elements [0:f-1] and [f+s:n-1], and zeros behind
+NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
 NB.         1st supdiagonal
-NB.   Qf  - (s-1)×(n-f)-matrix, unit upper triangular (unit
+NB.   Qf  - (s-1)×(n-h)-matrix, unit upper triangular (unit
 NB.         diagonal not stored), represents Q in factored
 NB.         form:
-NB.           Q = Π{H(i)',i=f+s-2:f} ,
+NB.           Q = Π{H(i)',i=h+s-2:f} ,
 NB.         where each elementary reflector Q(i) is
 NB.         represented as:
 NB.           Q(i) = I - v[i] * τ[i] * v[i]' ,
-NB.         and values v[i][i-f+1:s-2] and τ[i] are
-NB.         stored in (i-f)-th row of Qf:
-NB.           Qf[i-f,0:s-1] = (0,...,0,1,v[i][i-f+1],...,v[i][s-2],0,...0,τ[i])
+NB.         and values v[i][i-h+1:s-2] and τ[i] are
+NB.         stored in (i-h)-th row of Qf:
+NB.           Qf[i-h,0:s-1] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...0,τ[i])
 NB.         assuming
-NB.           v[i][0:i-f-1] = v[i][s-1:n-f-2] = 0 ,
-NB.           v[i][i-f] = 1 ,
-NB.         v[i][i-f+1:s-2] is stored in A[i,i+2:f+s-1], τ[i]
+NB.           v[i][0:i-h-1] = v[i][s-1:n-h-2] = 0 ,
+NB.           v[i][i-h] = 1 ,
+NB.         v[i][i-h+1:s-2] is stored in A[i,i+2:h+s-1], τ[i]
 NB.         is stored in A[i,n]
 NB.   Q   - n×n-matrix, being unit matrix with unitary
 NB.         (orthogonal) matrix inserted into elements
-NB.         Q[f:f+s-1,f:f+s-1]
+NB.         Q[h:h+s-1,h:h+s-1]
 NB.
 NB. Storage layout:
 NB.       (  A00          )
 NB.   A = (  A10 A11      )
 NB.       (  A20 A21 A22  )
 NB. where
-NB.   A00     - f×f-matrix, lower triangular
+NB.   A00     - h×h-matrix, lower triangular
 NB.   A11     - s×s-matrix to be reduced
-NB.   A22     - (n-(f+s))×(n-(f+s))-matrix, lower triangular
+NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, lower triangular
 NB.   A10,A21 - matrices to be updated
-NB. Example for f=1, s=5, n=7:
+NB. Example for h=1, s=5, n=7:
 NB.   input  A                     output HQf
 NB.   (  a                    )    (  a                       )
 NB.   (  a  a  a  a  a  a     )    (  a  a  β1 v1 v1 v1    τ1 )
@@ -264,8 +264,8 @@ NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a     )
 NB.
 NB. If:
 NB.   n=. # A
-NB.   fs=. 0 , n
-NB.   HQf=. fs gehrdl A
+NB.   hs=. 0 , n
+NB.   HQf=. hs gehrdl A
 NB.   H=. 1 trl 0 _1 }. HQf
 NB.   Q=. unghrl HQf
 NB. then (with appropriate comparison tolerance)
@@ -273,14 +273,14 @@ NB.   (idmat n) -: (mp ct) Q
 NB.   H -: A (mp~ mp (ct @ ])) Q
 
 gehrdl=: 4 : 0
-  'f s'=. x
+  'h s'=. x
   n1=. >: n=. # y
   y=. (2 $ n1) {. y
   Atop=. (f , _) {. y
   Aleft=. (f - (n1 , _1)) {. y
-  y=. (f + 0 1) }. y
+  y=. (h + 0 1) }. y
   I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB       NB. how many panels will be reduced
-  for_i. hds2ios (f , HRDNB , I) do.              NB. reduce i-th panel, i = {f,f+HRDNB,...,f+(I-1)*HRDNB}
+  for_i. HRDNB dhs2lios (h , I) do.               NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB}
     'Y V H T'=. lahr2l y                          NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
     eV0=. 0 ,. (0 (_1) }"1 V)                     NB. prepend by zero column, replace τs by zeros
     Aleft=. Aleft - (ct eV0) mp (T mp (eV0 mp Aleft))  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
@@ -303,45 +303,45 @@ NB.   by a unitary (orthogonal) similarity transformation:
 NB.     Q' * A * Q = H
 NB.
 NB. Syntax:
-NB.   HQf=. fs gehrdu A
+NB.   HQf=. hs gehrdu A
 NB. where
 NB.   A   - n×n-matrix to reduce
-NB.   fs  - 2-vector of integers (f,s) 'from' and 'size',
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gebalpu and storage layout below
 NB.   HQf - (n+1)×n-matrix, combined H and Qf
 NB.   H   - n×n-matrix, it has zeros under 0-th diagonal
-NB.         elements [0:f-1] and [f+s:n-1], and zeros below
+NB.         elements [0:h-1] and [h+s:n-1], and zeros below
 NB.         1st subdiagonal
-NB.   Qf  - (n-f)×(s-1)-matrix, unit lower triangular (unit
+NB.   Qf  - (n-h)×(s-1)-matrix, unit lower triangular (unit
 NB.         diagonal not stored), represents Q in factored
 NB.         form:
-NB.           Q = Π{H(i),i=f:f+s-2} ,
+NB.           Q = Π{H(i),i=h:h+s-2} ,
 NB.         where each elementary reflector Q(i) is
 NB.         represented as:
 NB.           Q(i) = I - v[i] * τ[i] * v[i]' ,
-NB.         and values v[i][i-f+1:s-2] and τ[i] are
-NB.         stored in (i-f)-th column of Qf:
-NB.           Qf[0:s-1,i-f] = (0,...,0,1,v[i][i-f+1],...,v[i][s-2],0,...0,τ[i])
+NB.         and values v[i][i-h+1:s-2] and τ[i] are
+NB.         stored in (i-h)-th column of Qf:
+NB.           Qf[0:s-1,i-h] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...0,τ[i])
 NB.         assuming
-NB.           v[i][0:i-f-1] = v[i][s-1:n-f-2] = 0 ,
-NB.           v[i][i-f] = 1 ,
-NB.         v[i][i-f+1:s-2] is stored in A[i+2:f+s-1,i], τ[i]
+NB.           v[i][0:i-h-1] = v[i][s-1:n-h-2] = 0 ,
+NB.           v[i][i-h] = 1 ,
+NB.         v[i][i-h+1:s-2] is stored in A[i+2:h+s-1,i], τ[i]
 NB.         is stored in A[n,i]
 NB.   Q   - n×n-matrix, being unit matrix with unitary
 NB.         (orthogonal) matrix inserted into elements
-NB.         Q[f:f+s-1,f:f+s-1]
+NB.         Q[h:h+s-1,h:h+s-1]
 NB.
 NB. Storage layout:
 NB.       (  A00 A01 A02  )
 NB.   A = (      A11 A12  )
 NB.       (          A22  )
 NB. where
-NB.   A00     - f×f-matrix, upper triangular
+NB.   A00     - h×h-matrix, upper triangular
 NB.   A11     - s×s-matrix to be reduced
-NB.   A22     - (n-(f+s))×(n-(f+s))-matrix, upper triangular
+NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, upper triangular
 NB.   A01,A12 - matrices to be updated
-NB. Example for f=1, s=5, n=7:
+NB. Example for h=1, s=5, n=7:
 NB.   input  A                     output HQf
 NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a  )
 NB.   (     a  a  a  a  a  a  )    (     a  h  h  h  h  a  )
@@ -354,8 +354,8 @@ NB.                                (     τ1 τ2 τ3 τ4       )
 NB.
 NB. If:
 NB.   n=. # A
-NB.   fs=. 0 , n
-NB.   HQf=. fs gehrdu A
+NB.   hs=. 0 , n
+NB.   HQf=. hs gehrdu A
 NB.   H=. _1 tru _1 0 }. HQf
 NB.   Q=. unghru HQf
 NB. then (with appropriate comparison tolerance)
@@ -366,19 +366,19 @@ NB. Notes:
 NB. - emulates xGEHRD up to storage layout
 
 gehrdu=: 4 : 0
-  'f s'=. x
+  'h s'=. x
   n1=. >: n=. # y
   y=. (2 $ n1) {. y
-  Aleft=. f {."1 y
-  Atop=. (f - (_1 , n1)) {. y
-  y=. (f + 1 0) }. y
+  Aleft=. h {."1 y
+  Atop=. (h - (_1 , n1)) {. y
+  y=. (h + 1 0) }. y
   I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB       NB. how many panels will be reduced
-  for_i. hds2ios (f , HRDNB , I) do.              NB. reduce i-th panel, i = {f,f+HRDNB,...,f+(I-1)*HRDNB}
+  for_i. HRDNB dhs2lios (f , I) do.               NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB}
     'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
     eV0=. 0 , (0 (_1) } V)                        NB. prepend by zero row, replace τs by zeros
-    Atop=. Atop - ((Atop mp eV0) mp T) mp (ct eV0)     NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
-    y=. (HRDNB }."1 y) - Y mp (ct (HRDNB }. eV0))      NB. apply reflector from the right
-    y=. y - V mp (ct (0 (_1) } V) mp T) mp y           NB. apply reflector from the left
+    Atop=. Atop - ((Atop mp eV0) mp T) mp (ct eV0)  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
+    y=. (HRDNB }."1 y) - Y mp (ct (HRDNB }. eV0))   NB. apply reflector from the right
+    y=. y - V mp (ct (0 (_1) } V) mp T) mp y        NB. apply reflector from the left
     V=. ((i. (n-i)) >/ (i. HRDNB)) } H ,: V       NB. write H into V's upper triangle in-place
     Aleft=. Aleft ,. (HRDNB {."1 Atop) , V
     Atop=. (HRDNB }."1 Atop) , (HRDNB {. y)

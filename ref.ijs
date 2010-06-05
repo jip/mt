@@ -28,6 +28,9 @@ NB. gerf02   Template conj. to make verbs to generate and
 NB.          conditionally apply an elementary reflector to a
 NB.          matrix
 NB.
+NB. unghr    Generate an unitary (orthogonal) matrix which is
+NB.          defined as the product of elementary reflectors
+NB.
 NB. Copyright (C) 2009 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
@@ -37,43 +40,18 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. - extract n-th cIOS cios from x, then extract by cfrom
-NB.   from y submatrix defined by cios
-NB. - apply u
-NB. - make imaginary
-cfuj=: 2 : 'j. @ u @ (n cfrom)'
-
 NB. update n-th from x (warning!: linear IOS) by (x u y)
 unxu=: 2 : '((n({,)[) - u)(n"_)}['
 
+NB. return y without elements with linear IOS from x
+ywolx=: (({,)~ (<^:3))~
+
 NB. ---------------------------------------------------------
-NB. larf
-NB. Template conj. to make verbs to apply an elementary
-NB. reflector H = I - τ*v*v' to a matrix A from either the
-NB. left or the right
-NB.
-NB. Syntax:
-NB.   vapp=. vmul larf vtau
-NB. where
-NB.   vmul - verb to calculate (v*v'*A) or (A*v*v'); is
-NB.          called as: (A vmul (β,v,τ))
-NB.   vtau - verb to pre-process τ; is called as: (vtau τ)
-NB.   vapp - verb to apply an elementary reflector; is called
-NB.          as: ((β,v,τ) vapp A)
-NB.   β    - any scalar, is not used
-NB.   v    - (n-1)-vector of v[1:n-1]; v[0]=1 is not stored
-NB.   τ    - scalar
-NB.
-NB. Notes:
-NB. - pre-ravel (β,v,τ)
-NB. - no check τ≠0
-NB. - assign v[0]=1
-NB. - pre-process τ by verb v
-
-larf=: 2 : '(([ - (v @ (_1 { ])) * ((u (1 & (0 }) @ }:)))) ,)~'
-
-NB. =========================================================
-NB. Interface
+NB. - extract n-th cIOS cios from x, then extract by fromci
+NB.   from y submatrix defined by cios
+NB. - apply u
+NB. - make imaginary
+cfuj=: 2 : 'j. @ u @ (n fromci)'
 
 NB. ---------------------------------------------------------
 NB. larfg
@@ -83,14 +61,33 @@ NB. Generate an elementary reflector H of order n such that
 NB. H'*y = β*e1, where H=I-τ*v*v', H'*H=I
 NB.
 NB. Syntax:
-NB.   z=. larfg y
-NB.   z=. larfp y
+NB.   z=. ios larfg y
+NB.   z=. ios larfp y
 NB. where
-NB.   y - n-vector or n×1-matrix (α,x[1:n-1]) to reflect,
-NB.       α ∊ ℂ, x ∊ ℂⁿ⁻¹
-NB.   z - (n+1)-vector or (n+1)×1-matrix (y and z ranks are
-NB.       match) (β,v[1:n-1],τ) of reflection result,
-NB.       β ∊ ℝ, (β≥0 for larfp only), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
+NB.   ios - 2-vector of integers (ioa,iot)
+NB.   ioa - IO α in y
+NB.   iot - IO pre-allocated zero scalar for τ in y
+NB.   y   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
+NB.         having scalar α at index ioa, scalar 0 at index
+NB.         iot, and vector x[1:n-1] in the rest elements,
+NB.         vector to reflect is (α,x[1],...,x[n-1]), α ∊ ℂ,
+NB.         x ∊ ℂⁿ⁻¹
+NB.   z   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
+NB.         (y and z ranks are match) having scalar β at
+NB.         index ioa, scalar τ at index iot, and vector
+NB.         v[1:n-1] in the rest elements, reflection result
+NB.         is vector (1,v[1],...,v[n-1]), 1 is not stored,
+NB.         β ∊ ℝ, (β≥0 for larfp only), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
+NB.
+NB. Applications:
+NB. - reflect vector (α,x) by larfg and store τ at tail:
+NB.   z=. 0 _1 larfg (α,x,0)
+NB.   v=. 1 , (0 _1 ywox z)
+NB.   'beta tau'=. 0 _1 { z
+NB. - reflect vector (x,α) by larfp and store τ at head:
+NB.   z=. _1 0 larfp (0,x,α)
+NB.   v=. 1 ,~ (0 _1 ywox z)
+NB.   'beta tau'=. _1 0 { z
 NB.
 NB. References:
 NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, and E.
@@ -101,107 +98,266 @@ NB.     LAPACK Working Note 203.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. Notes:
-NB. - IEEE fp cfg features are implicitly encoded here
+NB. - IEEE floating point configuration is encoded implicitly
 NB. - larfg emulates LAPACK's xLARFG
 NB. - larfp emulates LAPACK's xLARFP
-NB. - both larfg (<-CHECKME) and larfp provide: τ=2 ↔ ||x||_2 = 0
+NB. - larfp provides τ=2 ↔ ||x||_2 = 0
 NB. - not zeroing v in larfp in case τ=2 (x≈0) relies on
 NB.   fact: 'comparison tolerance tol>0'; otherwise
 NB.   (tol=0) x should be filled by zeros (see larf* gerf*)
 
-larfg=: 3 : 0
-  alpha=. {. y
-  xnorm=. norms }. y                                        NB. ||x||_2
-  if. (0 = xnorm) *. (0 = 11 o. alpha) do.
-    y=. y , 0                                               NB. append in-place τ=0
-  else.
+larfg=: 4 : 0
+  'ioalpha iotau'=. x
+  alpha=. ioalpha ({,) y
+  xnorm=. norms (x ywolx y)                                 NB. ||x||_2
+  if. xnorm (+. & (0 & ~:)) (11 o. alpha) do.
     beta=. - (9 o. alpha) condneg norms alpha , xnorm       NB. β=-copysign(||y||_2,Re(α))
-    y=. y , beta                                            NB. append in-place β
+    y=. beta (iotau " _) } y                                NB. write in-place β
     if. FP_SFMIN > | beta do.
       y=. y % FP_SFMIN                                      NB. scale (α,x[1],...,x[n-1],β)
     end.
-    tau=. ({: (- % [) {.) y                                 NB. τ=(β_scaled-α_scaled)/β_scaled
-    y=. (% ({. ({.@:-) {:)) y                               NB. y=y/(α_scaled-β_scaled)
-    y=. (beta , tau) (0 _1 " _) } y                         NB. replace α_scaled by β_unscaled and β_scaled by τ
+    dzeta=. -/ x ({,) y                                     NB. ζ=α_scaled-β_scaled
+    tau=. (- dzeta) % (iotau ({,) y)                        NB. τ=-ζ/β_scaled
+    y=. y % dzeta                                           NB. y=y/ζ
+    y=. (beta , tau) (x " _) } y                            NB. replace α_scaled by β_unscaled and β_scaled by τ
   end.
+  y
 )
 
-larfp=: 3 : 0
-  alpha=. {. y
-  xnorm=. norms }. y                                        NB. ||x||_2
+larfp=: 4 : 0
+  'ioalpha iotau'=. x
+  alpha=. ioalpha ({,) y
+  xnorm=. norms (x ywolx y)                                 NB. ||x||_2
   if. (0 = xnorm) do.
-    y=. (| alpha) 0 } y                                     NB. replace in-place α by β
-    y=. y , (1 - * alpha)                                   NB. append in-place τ=1-α/|α|
+    y=. ((| , (1 - *)) alpha) (x " _) } y                   NB. replace in-place α by |β| and τ by (1-α/|α|)
   else.
     beta=. - (9 o. alpha) condneg norms alpha , xnorm       NB. β=-copysign(||y||_2,Re(α))
-    y=. y , | beta                                          NB. append in-place |β|
+    y=. (| beta) (iotau " _) } y                            NB. write in-place |β|
     if. FP_SFMIN > | beta do.
       y=. y % FP_SFMIN                                      NB. scale (α,x[1],...,x[n-1],|β|)
       xnorm=. xnorm % FP_SFMIN
     end.
     if. 0 <: beta do.
-      dzeta=. ({. - {:) y                                   NB. ζ=α_scaled-|β_scaled|
-      tau=. ({: (- % [) {.) y                               NB. τ=(|β_scaled|-α_scaled)/|β_scaled|
+      dzeta=. -/ x ({,) y                                   NB. ζ=α_scaled-|β_scaled|
+      tau=. (- dzeta) % (iotau ({,) y)                      NB. τ=-ζ/|β_scaled|
     else.
       beta=. - beta                                         NB. |β_unscaled|
-      'realpha imalpha'=. +. 0 ({,) y                       NB. Re(α_scaled) , Im(α_scaled)
-      gamma=. realpha + _1 ({,) y                           NB. γ=Re(α_scaled)+|β_scaled|
+      'realpha imalpha'=. +. ioalpha ({,) y                 NB. Re(α_scaled) , Im(α_scaled)
+      gamma=. realpha + iotau ({,) y                        NB. γ=Re(α_scaled)+|β_scaled|
       delta=. (imalpha , xnorm) (- @ (+/) @ ([ * %)) gamma  NB. δ=-(Im(α_scaled)*(Im(α_scaled)/γ)+||x||_2*(||x||_2/γ))
       dzeta=. delta j. imalpha                              NB. ζ=δ+i*Im(α_scaled)
-      tau=. - dzeta % {: y                                  NB. τ=-ζ/|β_scaled|
+      tau=. - dzeta % iotau ({,) y                          NB. τ=-ζ/|β_scaled|
     end.
     y=. y % dzeta
-    y=. (beta , tau) (0 _1 " _) } y                         NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
+    y=. (beta , tau) (x " _) } y                            NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
   end.
 )
 
 NB. ---------------------------------------------------------
 NB. larfl
-NB. Apply an elementary reflector H' to a matrix A from left:
-NB.   H'*A = A - conj(tau) * v * (v' * A)
+NB. Multiply matrix A by vectors from the left:
+NB.   B=. v * (v' * A)
 NB.
 NB. Syntax:
-NB.   HA=. z larfl A
+NB.   B=. A larfl v
 NB. where
-NB.   A  - n×n-matrix
-NB.   z  - (n+1)-vector (β,v[1:n-1],τ), where β is any
-NB.        scalar
-NB.   HA - n×n-matrix H'*A
-NB.
-NB. Notes:
-NB. - differs from LAPACK's xLARF('L') in:
-NB.   - τ conjugation
-NB.   - not scans trailing zeros in v
+NB.   A - m×n-matrix
+NB.   v - m-vector
+NB.   B - m×n-matrix
 
-larfl=: (] */ (mp~ +)) larf +
+larfl=: ] */ (mp~ +)
 
 NB. ---------------------------------------------------------
 NB. larfr
-NB. Apply an elementary reflector H to a matrix A from right:
+NB. Multiply matrix A by vectors from the right:
+NB.   B=. (A * v) * v'
+NB.
+NB. Syntax:
+NB.   B=. A larfr v
+NB. where
+NB.   A - m×n-matrix
+NB.   v - n-vector
+NB.   B - m×n-matrix
+
+larfr=: mp */ (+@])
+
+NB. ---------------------------------------------------------
+NB. larf
+NB. Template conj. to make verbs to apply an elementary
+NB. reflector H = I - τ*v*v' to a matrix A from either the
+NB. left or the right
+NB.
+NB. Syntax:
+NB.   vapp=. (vmul`vv`vtau) larf (iob,iot)
+NB. where
+NB.   vmul - either larfl or larfr; is called as: (A vmul v)
+NB.   vv   - verb to pre-process v; is called as: (vv v)
+NB.   vtau - verb to pre-process τ; is called as: (vtau τ)
+NB.   vapp - verb to apply an elementary reflector; is called
+NB.          as: (z vapp A)
+NB.   A    - m×n-matrix
+NB.   z    - either (k+1)-vector, or 1×(k+1)-matrix, or
+NB.          (k+1)×1-matrix, contains scalar β at index iob,
+NB.          scalar τ at index iot, and all but one elements
+NB.          of vector v in the rest elements
+NB.   v    - k-vector, is produced from z by removing τ and
+NB.          replacing β by value 1
+NB.   k    = either m (if vmul is larfl) or n (if vmul is
+NB.          larfr)
+NB.
+NB. Notes:
+NB. - pre-ravel z
+NB. - no check τ≠0
+NB. - assign (1 iob } z)
+
+larf=: 2 : '(([ - (((2{u)`:6) @ (({:n) { ])) * ((((0{u)`:6) (1 & ((({.n)"_) }) @: ((1{u)`:6) @: (({:n) & ywolx))))) ,)~'
+
+NB. =========================================================
+NB. Interface
+
+NB. ---------------------------------------------------------
+NB. larfgf
+NB. larfgb
+NB. larfgfc
+NB. larfgbc
+NB.
+NB. Shortcuts to generate an elementary reflector H of order
+NB. n such that H'*y = β*e1, where H=I-τ*v*v', H'*H=I. H is
+NB. represented in factored form by n-vector v and scalar τ.
+NB. Vector v can have either forward (α in head) or backward
+NB. (α in tail) direction. Input and output vectors direction
+NB. is the same.
+
+larfgf=: 0 _1 & larfg           NB. (β,v[1:n-1],τ)=. larfgf (α,x[1:n-1],0)
+larfgb=: _1 0 & larfg           NB. (τ,v[1:n-1],β)=. larfgb (0,x[1:n-1],α)
+larfgfc=: (+ updl _1) @ larfgf  NB. (β,v[1:n-1],conj(τ))=. larfgfc (α,x[1:n-1],0)
+larfgbc=: (+ updl 0) @ larfgb   NB. (conj(τ),v[1:n-1],β)=. larfgbc (0,x[1:n-1],α)
+
+NB. ---------------------------------------------------------
+NB. larflsc
+NB. Template adv. to make verbs to apply an elementary
+NB. reflector H' to a matrix A from the left:
+NB.   H'*A = A - conj(tau) * v * (v' * A)
+NB.
+NB. Syntax:
+NB.   vapp=. (iob,iot) larflsc
+NB. where
+NB.   iob  - integer, IO β in z
+NB.   iot  - integer, IO τ in z
+NB.   vapp - verb to apply an elementary reflector; is called
+NB.          as: (HA=. z vapp A)
+NB.   z    - either (m+1)-vector, or 1×(m+1)-matrix, or
+NB.          (m+1)×1-matrix, contains scalar β at index iob,
+NB.          scalar τ at index iot, and all but one elements
+NB.          of vector v in the rest elements
+NB.   A    - m×n-matrix
+NB.   v    - m-vector, is produced from z by removing τ and
+NB.          replacing β by value 1
+NB.   HA   - m×n-matrix H'*A
+NB.   H    - m×m-matrix H
+NB.   m    ≥ 0
+NB.   n    ≥ 0
+NB.
+NB. Notes:
+NB. - differs from LAPACK's xLARF('L') in not scanning
+NB.   trailing zeros in v
+
+larflsc=: (larfl`]`+) larf  NB. pre-processing: the same v, conjugated τ
+
+NB. ---------------------------------------------------------
+NB. larfrss
+NB. larfrcs
+NB. Template adv. to make verbs to apply an elementary
+NB. reflector H to a matrix A from the right:
 NB.   A*H = A - tau * (A * v) * v'
 NB.
 NB. Syntax:
-NB.   AH=. z larfr A
+NB.   vapp=. (iob,iot) larfrss
+NB.   vapp=. (iob,iot) larfrcs
 NB. where
-NB.   A  - n×n-matrix
-NB.   z  - (n+1)-vector (β,v[1:n-1],τ), where β is any
-NB.        scalar
-NB.   AH - n×n-matrix A*H
+NB.   iob  - integer, IO β in z
+NB.   iot  - integer, IO τ in z
+NB.   vapp - verb to apply an elementary reflector; is called
+NB.          as: (AH=. z vapp A)
+NB.   z    - either (n+1)-vector, or 1×(n+1)-matrix, or
+NB.          (n+1)×1-matrix, contains scalar β at index iob,
+NB.          scalar τ at index iot, and all but one elements
+NB.          of vector v in the rest elements
+NB.   A    - m×n-matrix
+NB.   v    - n-vector, is produced from z by removing τ and
+NB.          replacing β by value 1
+NB.   HA   - m×n-matrix A*H
+NB.   H    - n×n-matrix H
+NB.   m    ≥ 0
+NB.   n    ≥ 0
 NB.
 NB. Notes:
-NB. - differs from LAPACK's xLARF('R') in:
-NB.   - not scans trailing zeros in v
+NB. - differs from LAPACK's xLARF('R') in not scanning
+NB.   trailing zeros in v
 
-larfr=: (mp */ (+@])) larf ]
+NB. larfrss=: (larfr`]`]) larf  NB. pre-processing: the same v, same τ
+larfrcs=: (larfr`+`]) larf  NB. pre-processing: conjugate v, the same τ
 
 NB. ---------------------------------------------------------
+NB. larfLfcs
+NB. larfLbcs
+NB. larfRfcs
+NB. larfLbcs
+NB.
+NB. Update submatrix by an elementary reflector from either
+NB. the left or the right. Reflector's layout is either a row
+NB. or a column in the matrix. Reflector's direction is
+NB. either forward (β is in head) or backward (β is in tail).
+NB. Vector v or scalar τ may be pre-conjugated or not
+NB. independently of each other.
+NB.
+NB. Syntax:
+NB.   Aupd=. cios vapp A
+NB. ##########vapp=. vref larfS (ioz,ios,iob,iot)
+NB. where
+NB.   vref    - verb to apply an elementary reflector; is
+NB.             called as: (subAupd=. z vref subA)
+NB.   ioz     - integer, IO vector z's cIOS in cIOS bundle
+NB.             cios
+NB.   ios     - integer, IO submatrix subA's cIOS in cIOS
+NB.             bundle cios
+NB.   iob     - integer, IO scalar β in vector z
+NB.   iot     - integer, IO scalar τ in vector z
+NB.   vapp    - verb to apply an elementary reflector to
+NB.             submatrix from either the left or the right;
+NB.             is called as: ()
+NB.   z       - either (l+1)-vector, or 1×(l+1)-matrix, or
+NB.             (k+1)×1-matrix, contains scalar β at index iob,
+NB.             scalar τ at index iot, and all but one elements
+NB.             of vector v in the rest elements
+NB.   cios    - k×2 matrix of cIOSs
+NB.   A       - m×n-matrix
+NB.   subA    - m1×n1-matrix to update, solid part of A
+NB.   Aupd    - m×n-matrix, A with updated subA
+NB.   subAupd - m1×n1-matrix, updated subA, solid part of Aupd
+NB.   k       ≥ max(iosz,ioss)+1
+NB.   m       ≥ 0
+NB.   n       ≥ 0
+
+NB. apply from: the left; z direction: forward;
+NB. pre-processing: the same v, conjugated τ; z cIOS is in
+NB. (0{cios); subA cIOS is in (2{cios)
+larfLfsc=: (0 _1 larflsc) upd2ci 0 2
+
+NB. apply from: the left; z direction: backward;
+NB. pre-processing: the same v, conjugated τ; z cIOS is in
+NB. (0{cios); subA cIOS is in (2{cios)
+larfLbsc=: (_1 0 larflsc) upd2ci 0 2
+
+NB. ######---------------------------------------------------------
 NB. larfL
 NB. Template adv. to make verbs to update submatrix by larfl
 NB.
 NB. Syntax:
-NB.   vapp=. ios larfL
+NB.   vapp=. iosv larfL ioss
 NB. where
-NB.   ios  - 2-vector of integers (iosZ,iosL)
+NB.   iosv - 2-vector of integers (iosZ,iosL)
+NB.   ioss - 2-vector of integers (ioa,iot)
 NB.   vapp - verb to update submatrix L by larfl; usage:
 NB.            Aupd=. cios vapp A
 NB.          where
@@ -218,13 +374,13 @@ NB.   iosL{cios - cIOS of submatrix L in matrix A to update
 NB.               by larfl
 NB.
 NB. Application:
-NB. - let cios=. (ciosY , ciosZ , ciosT , ciosR ,: ciosL)
-NB.   is cIOS bundle for vectors y, z (see larfl), scalar τ,
-NB.   and submatrices R, L, respectively; then to apply larfl
-NB.   to submatrix L:
-NB.     Aupd=. cios (1 4 larfL) A
+NB. - let cios=. (ciosYZ , ciosT , ciosR ,: ciosL)
+NB.   is cIOS bundle for vectors y and z (see larfl), scalar
+NB.   τ, and submatrices R, L, respectively; scalars α and τ
+NB.   are in head and tail, respectively, of vector z; then
+NB.   to apply larfl to submatrix L:
+NB.     Aupd=. cios (1 4 larfL 0 _1) A
 
-larfL=: 1 : 'larfl cupd2 m'
 
 NB. ---------------------------------------------------------
 NB. larfR
@@ -256,7 +412,15 @@ NB.   and submatrices R, L, respectively; then to apply larfr
 NB.   to submatrix R:
 NB.     Aupd=. cios (1 3 larfR) A
 
-larfR=: 1 : 'larfr cupd2 m'
+NB. apply from: the right; z direction: forward;
+NB. pre-processing: conjugated v, the same τ; z cIOS is in
+NB. (0{cios); subA cIOS is in (2{cios)
+larfRfcs=: (0 _1 larfrcs) upd2ci 0 2
+
+NB. apply from: the right; z direction: backward;
+NB. pre-processing: conjugated v, the same τ; z cIOS is in
+NB. (0{cios); subA cIOS is in (2{cios)
+larfRbcs=: (_1 0 larfrcs) upd2ci 0 2
 
 NB. ---------------------------------------------------------
 NB. larfRL
@@ -293,7 +457,7 @@ NB.   and submatrices R, L, respectively; then to apply larfr
 NB.   to submatrix R and then larfl to submatrix L:
 NB.     Aupd=. cios (1 3 4 larfRL) A
 
-larfRL=: 1 : '[ ((0 2{m) larfL) ((0 1{m) larfR)'
+larfRL=: 1 : '[ ((0 2{m) larfL 0 _1) ((0 1{m) larfR 0 _1)'
 
 NB. ---------------------------------------------------------
 NB. larfLs
@@ -347,8 +511,11 @@ NB.     Performance on Low-Profile Matrices from Householder
 NB.     QR. UCB/EECS-2008-76, May 30, 2008
 NB.     LAPACK Working Note 203.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB.
+NB. TODO:
+NB. - CHECKME! after larf[gp] monad -> dyad
 
-larfLs=: 1 : '(((ct0 cfuj (0{m)) unxu (3 4{m)) ((ct0c cfuj (2{m)) unxu (5{m)) ]) ((,`larfl) cupd3 (0 1 2{m)) ]'
+larfLs=: 1 : '(((ct0 cfuj (0{m)) unxu (3 4{m)) ((ct0c cfuj (2{m)) unxu (5{m)) ]) ((,`larfl) upd3ci (0 1 2{m)) ]'
 
 NB. ---------------------------------------------------------
 NB. larfRs
@@ -402,8 +569,11 @@ NB.     Performance on Low-Profile Matrices from Householder
 NB.     QR. UCB/EECS-2008-76, May 30, 2008
 NB.     LAPACK Working Note 203.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB.
+NB. TODO:
+NB. - CHECKME! after larf[gp] monad -> dyad
 
-larfRs=: 1 : '(((ct0 cfuj (0{m)) unxu (3 4{m)) ((ct0r cfuj (2{m)) unxu (5{m)) ]) ((,`larfr) cupd3 (0 1 2{m)) ]'
+larfRs=: 1 : '(((ct0 cfuj (0{m)) unxu (3 4{m)) ((ct0r cfuj (2{m)) unxu (5{m)) ]) ((,`larfr) upd3ci (0 1 2{m)) ]'
 
 NB. ---------------------------------------------------------
 NB. larfRLs
@@ -470,8 +640,11 @@ NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. Notes:
 NB. - aviods scanning V twice
+NB.
+NB. TODO:
+NB. - CHECKME! after larf[gp] monad -> dyad
 
-larfRLs=: 1 : '(((ct0 cfuj (0{m)) unxu (4 6{m)) ((ct0r cfuj (2{m)) unxu (5{m)) ]) (((ct0c cfuj (3{m)) unxu (8{m)) ((,`larfl) cupd3 (0 1 3{m)) ((,`larfr) cupd3 (0 1 2{m))) ]'
+larfRLs=: 1 : '(((ct0 cfuj (0{m)) unxu (4 6{m)) ((ct0r cfuj (2{m)) unxu (5{m)) ]) (((ct0c cfuj (3{m)) unxu (8{m)) ((,`larfl) upd3ci (0 1 3{m)) ((,`larfr) upd3ci (0 1 2{m))) ]'
 
 NB. ---------------------------------------------------------
 NB. gerf0
@@ -481,7 +654,7 @@ NB.
 NB. Syntax:
 NB.   vcondapp=. (vref`vapp) gerf0 ios
 NB. where
-NB.   ios      - 3-vector of integers (iosY,iosZ,iosT),
+NB.   ios      - 2-vector of integers (iosYZ,iosT),
 NB.              indices in cIOS bundle (see layout below)
 NB.   vref     - verb to reflect vector y (see larfg or
 NB.              larfp)
@@ -495,30 +668,32 @@ NB.                   and store result into vector ((1{x){y)
 NB.                2) if ((2{x){y)≠0 then call verb (x vapp y)
 NB.
 NB. Storage layout for cios:
-NB.   iosY{cios - cIOS of vector y (see larfr or larfl)
-NB.   iosZ{cios - cIOS of vector z (see larfr or larfl)
-NB.   iosT{cios - cIOS of scalar τ (see larfr or larfl)
+NB.   iosYZ{cios - cIOS of vector y or z (see larfr or larfl)
+NB.   iosT{cios  - cIOS of scalar τ (see larfr or larfl)
 NB.
 NB. Application:
-NB. - let cios=. (ciosY , ciosZ , ciosT , ciosR ,: ciosL)
-NB.   is cIOS bundle for vectors y, z, scalar τ, and
+NB. - let cios=. (ciosYZ , ciosT , ciosR ,: ciosL)
+NB.   is cIOS bundle for vectors y (or z), scalar τ, and
 NB.   submatrices R and L, respectively; vector y is stored
-NB.   vertically
+NB.   vertically, α is in head, τ is in tail
 NB. - to reflect in the matrix A the vector y by larfg, then
 NB.   to apply vector v from the left (emulate main loop of
 NB.   xGEQR2 in LAPACK version 3.1.1):
-NB.     vapp=: 1 4 larfL                          NB. verb to apply v from the left to L
-NB.     Aupd=. cios ((larfg`vapp) gerf0 0 1 2) A  NB. apply gerund and ios to do the job
+NB.     vref=: 0 _1 & larfg                    NB. verb to reflect Y to Z
+NB.     vapp=: 0 3 larfL                       NB. verb to apply v from the left to L
+NB.     Aupd=. cios ((vref`vapp) gerf0 0 1) A  NB. apply gerund and ios to do the job
 NB. - to do the same as above, but apply v from the right,
 NB.   then from the left (emulate main loop of xGEHD2 in
 NB.   LAPACK version 3.1.1):
-NB.     vapp=: 1 3 4 larfRL                       NB. verb to apply v from the right to R, then from the left to L
-NB.     Aupd=. cios ((larfg`vapp) gerf0 0 1 2) A  NB. apply gerund and ios to do the job
+NB.     vref=: 0 _1 & larfg                    NB. verb to reflect Y to Z
+NB.     vapp=: 0 2 3 larfRL                    NB. verb to apply v from the right to R, then from the left to L
+NB.     Aupd=. cios ((vref`vapp) gerf0 0 1) A  NB. apply gerund and ios to do the job
 NB. - do the same as above, but with matrix shrinking:
-NB.     vapp=: 0 2 3 4 0 6 7 8 9 larfRLs          NB. verb to apply shrinked v from the right to shrinked R, then from the left to shrinked L
-NB.     Aupd=. cios ((larfg`vapp) gerf0 0 1 2) A  NB. apply gerund and ios to do the job
+NB.     vref=: 0 _1 & larfg                    NB. verb to reflect Y to Z
+NB.     vapp=: 0 1 2 3 0 4 5 6 7 larfRLs       NB. verb to apply shrinked v from the right to shrinked R, then from the left to shrinked L
+NB.     Aupd=. cios ((vref`vapp) gerf0 0 1) A  NB. apply gerund and ios to do the job
 
-gerf0=: 2 : '[ (((1{u)`:6) ^: (0 ~: (0 ({,) ((2{n) cfrom)))) (((0{u)`:6) cmap (0 1{n))'
+gerf0=: 2 : '[ (((1{u)`:6) ^: (0 ~: (0 ({,) ((1{n) fromci)))) (((0{u)`:6) updci (0{n))'
 
 NB. ---------------------------------------------------------
 NB. gerf02
@@ -528,14 +703,14 @@ NB.
 NB. Syntax:
 NB.   vcondapp=. (vref`vneg`vapp) gerf02 ios
 NB. where
-NB.   ios      - 3-vector of integers (iosY,iosZ,iosT),
+NB.   ios      - 2-vector of integers (iosYZ,iosT),
 NB.              indices in cIOS bundle (see layout below)
 NB.   vref     - verb to reflect vector y (see larfg or
 NB.              larfp)
 NB.   vneg     - verb to negate either a 1st row (left side
 NB.              case), or a 1st column (right side case); is
 NB.              called when τ=2; cIOSs are taken from x,
-NB.              matrix is in y 
+NB.              matrix is in y
 NB.   vapp     - verb to apply an elementary reflector to a
 NB.              submatrix from either the left or the right;
 NB.              is called when τ≠0 and τ≠2; cIOSs are taken
@@ -548,23 +723,23 @@ NB.                2b) if ((2{x){y)=2 then call verb (x vneg y)
 NB.                2c) othewise call verb (x vapp y)
 NB.
 NB. Storage layout for cios:
-NB.   iosY{cios - cIOS of vector y (see larfr or larfl)
-NB.   iosZ{cios - cIOS of vector z (see larfr or larfl)
-NB.   iosT{cios - cIOS of scalar τ (see larfr or larfl)
+NB.   iosYZ{cios - cIOS of vector y or z (see larfr or larfl)
+NB.   iosT{cios  - cIOS of scalar τ (see larfr or larfl)
 NB.
 NB. Application:
-NB. - let cios=. (ciosY , ciosZ , ciosT , ciosR ,: ciosL)
+NB. - let cios=. (ciosYZ , ciosT , ciosR ,: ciosL)
 NB.   is cIOS bundle for vectors y, z, scalar τ, and
 NB.   submatrices R and L, respectively; vector y is stored
-NB.   vertically
+NB.   vertically, α is in head, τ is in tail
 NB. - to reflect in the matrix A the vector y by larfp, then
 NB.   either to negate 1st row of submatrix L (if τ=2), or to
 NB.   apply shrinked vector v from the left (if τ≠0 and τ≠2)
 NB.   to the shrinked submatrix L (emulate main loop of
 NB.   xGEQR2 in LAPACK version 3.2):
-NB.     vneg=: 4 nfv 0                                  NB. verb to negate L's 1st row
-NB.     vapp=: 0 2 4 0 8 9 larfLs                       NB. verb to apply v from the left to L
-NB.     Aupd=. cios ((larfp`vneg`vapp) gerf02 0 1 2) A  NB. apply gerund and ios to do the job
+NB.     vref=: 0 _1 & larfp                          NB. verb to reflect Y to Z
+NB.     vneg=: 3 nfv 0                               NB. verb to negate L's 1st row
+NB.     vapp=: 0 1 3 0 6 7 larfLs                    NB. verb to apply v from the left to L
+NB.     Aupd=. cios ((vref`vneg`vapp) gerf02 0 1) A  NB. apply gerund and ios to do the job
 NB. - to reflect in the matrix A the vector y by larfp, then
 NB.   either to negate 1st column of submatrix R and then to
 NB.   negate 1st row of submatrix L (if τ=2), or to apply
@@ -572,16 +747,49 @@ NB.   shrinked vector v to the shrinked submatrix R from the
 NB.   right, then to the shrinked submatrix L from the left
 NB.   (if τ≠0 and τ≠2) (emulate main loop of xGEHD2 in
 NB.   LAPACK version 3.2):
-NB.     vneg=: [ (4 nfv 0) (3 nfv 1)                    NB. verb to negate R's 1st col, then L's 1st row
-NB.     vapp=: 0 2 3 4 0 6 7 8 9 larfRLs                NB. verb to apply shrinked v from the right to shrinked R, then from the left to shrinked L
-NB.     Aupd=. cios ((larfp`vneg`vapp) gerf02 0 1 2) A  NB. apply gerund and ios to do the job
+NB.     vref=: 0 _1 & larfp                          NB. verb to reflect Y to Z
+NB.     vneg=: [ (3 nfv 0) (2 nfv 1)                 NB. verb to negate R's 1st col, then L's 1st row
+NB.     vapp=: 0 1 2 3 0 4 5 6 7 larfRLs             NB. verb to apply shrinked v from the right to shrinked R, then from the left to shrinked L
+NB.     Aupd=. cios ((vref`vneg`vapp) gerf02 0 1) A  NB. apply gerund and ios to do the job
 NB. - to do the same as previous, but without shrinking
 NB.   (optimize speed for non-band matrices):
-NB.     vneg=: [ (4 nfv 0) (3 nfv 1)                    NB. verb to negate R's 1st col, then L's 1st row
-NB.     vapp=: 1 3 4 larfRL                             NB. verb to apply v from the right to R, then from the left to L
-NB.     Aupd=. cios ((larfp`vneg`vapp) gerf02 0 1 2) A  NB. apply gerund and ios to do the job
+NB.     vref=: 0 _1 & larfp                          NB. verb to reflect Y to Z
+NB.     vneg=: [ (3 nfv 0) (2 nfv 1)                 NB. verb to negate R's 1st col, then L's 1st row
+NB.     vapp=: 0 2 3 larfRL                          NB. verb to apply v from the right to R, then from the left to L
+NB.     Aupd=. cios ((vref`vneg`vapp) gerf02 0 1) A  NB. apply gerund and ios to do the job
 
-gerf02=: 2 : '[ ((]`(}.u)) @. (0 2 i. (0 ({,) ((2{n) cfrom)))) (((0{u)`:6) cmap (0 1{n))'
+gerf02=: 2 : '[ ((]`(}.u)) @. (0 2 i. (0 ({,) ((1{n) fromci)))) (((0{u)`:6) updci (0{n))'
+
+NB. ---------------------------------------------------------
+NB. unghr
+NB. Generate an unitary (orthogonal) matrix Q which is
+NB. defined as the product of ({:fs) elementary reflectors of
+NB. order n, as returned by gehrd:
+NB.    Q = H(f) H(f+1) ... H(f+s-1)
+NB.
+NB. Syntax:
+NB.   Q=. unghr A ; fs
+NB. where
+NB.   fs - (f,s), defines where Qf is in A
+
+
+NB. for QR
+unghrfc=: 3 : 0
+  k=. <./ 'm n'=. _1 0 + $ y
+  Qf=. trl1 (_2 0 j. (2 $ k)) fromc y
+  Tau=. {. (_1 0 j. (1 , k)) fromc y
+NB. smoutput 'Qf' ; ($ Qf) ; Qf ; 'Tau' ; ($ Tau) ; Tau
+  mp/ (idmat # Qf) -"2 Tau * (* +)"0/~"1 |:Qf
+)
+
+NB. for QL
+unghrbc=: 3 : 0
+  k=. <./ 'm n'=. _1 0 + $ y
+  Qf=. |. tru1 (1 _1 j. (2 $ k)) fromc y
+  Tau=. {. (0 _1 j. (1 , k)) fromc y
+smoutput 'Qf' ; ($ Qf) ; Qf ; 'Tau' ; ($ Tau) ; Tau
+  mp/ (idmat # Qf) -"2 Tau * (* +)"0/~"1 |:Qf
+)
 
 NB. =========================================================
 NB. Test suite

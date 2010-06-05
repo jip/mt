@@ -36,6 +36,8 @@ NB. =========================================================
 NB. Interface
 
 ii2cp=: < @ (, ` (, @ ]) @. =)     NB. make cycle permutation from indices x and y (NB!: if y is empty then output must be a:)
+                                   NB. CHECKME: ii2cp=: < @ , @ (, ^: ~:)
+                                   NB. CHECKME: ii2cp=: (, ^: (-. @ -:)) & ,
 
 sgn=: 0 & (<: - >)                 NB. if y<0 then -1 else 1 endif
 condneg=: (* sgn)~                 NB. if x<0 then -y else y endif

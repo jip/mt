@@ -11,17 +11,17 @@ NB. hds2ios   IOS from head, delta and size
 NB. ht2ios    IOS from head and tail
 NB. hs2ios    IOS from head and size
 NB. cios2ios  Convert complex IOS (cIOS) to IOS
-NB. from      Adv. to model indirect 'from'
-NB. cfrom     Adv. to model 'from' accepting cIOS
-NB. upd       Conj. to update subarray by monad
-NB. cupd      Conj. to model 'upd' accepting cIOS
-NB. upd2      Conj. to update subarray by dyad
-NB. cupd2     Conj. to model 'upd2' accepting cIOS
-NB. map       Conj. to map subarray to another one by monad
-NB. cmap      Conj. to model 'map' accepting cIOS
-NB. map2      Conj. to map two subarrays to another one by
+NB. fromi     Adv. to model indirect 'from'
+NB. fromci    Adv. to model 'fromi' accepting cIOS
+NB. updi      Conj. to update subarray by monad
+NB. updci     Conj. to model 'updi' accepting cIOS
+NB. upd2i     Conj. to update subarray by dyad
+NB. upd2ci    Conj. to model 'upd2i' accepting cIOS
+NB. mapi      Conj. to map subarray to another one by monad
+NB. mapci     Conj. to model 'mapi' accepting cIOS
+NB. map2i     Conj. to map two subarrays to another one by
 NB.           dyad
-NB. cmap2     Conj. to model 'map2' accepting cIOS
+NB. map2ci    Conj. to model 'map2i' accepting cIOS
 NB.
 NB. append   Enhance append (A)
 NB. stitch   Enhance stitch (A)
@@ -82,10 +82,6 @@ mnyx01=: 2 : '(0 mnyx n) u (1 mnyx n)'  NB. aggregated extractor
 NB. cIOS wrapper
 cioswrap=: 1 : '(u~ cios2ios)~'
 
-NB. if (v is noun) then: update items defined by (v) in (y) by verb (u)
-NB. else: update items defined by linear IOS (x v y) in (y) by verb (u)
-uvfyu=: 2 : '(u @ (v { ])) v} ]'
-
 NB. =========================================================
 NB. Interface
 
@@ -96,7 +92,9 @@ ct0c=: ct1 @ (0 & ioscv)  NB. count trailing zero columns in matrix y
 ct0r=: ct1 @ (ioscv & 0)  NB. count trailing zero rows in matrix y
 
 NB. ---------------------------------------------------------
-NB. Linear IOS / Rectangular IOS (rIOS) / Complex IOS (cIOS)
+NB. Linear IOS (lIOS)
+NB. Rectangular IOS (rIOS)
+NB. Complex IOS (cIOS)
 NB.
 NB. Following are equivalents:
 NB.    (3 5 _7 ,: 2 _3 4) ] ;. 0 report
@@ -114,19 +112,21 @@ cios2ios=: < " 1 @ (< @ hs2ios/ " 1 @: +.)  NB. convert cIOS to IOS; side effect
 
 NB. explorers
 NB. FIXME: sink cios2ios to low-level individual selectors
-from=: 1 : '(m myx)~'                          NB. model indirect 'from': (m{x){y
-cfrom=: 1 : '(m from) cioswrap'                NB. model 'from' accepting cIOS
-upd=: 2 : '((u @ (n myx))~)`(n mx)`] }'        NB. update subarray by monad: (u ((n{x){y)) (n{x) } y
-cupd=: 2 : '(u upd n) cioswrap'                NB. model 'upd' accepting cIOS
-updu=: 1 : '(u @ {)`[`]}'                      NB. update in y items defined by x by verb u
-upd2=: 2 : '((u mnyx01 n)~)`(1 mnx n)`] }'     NB. update subarray by dyad: (((({.n){x){y) u ((({:n){x){y)) (({:n){x) } y
-cupd2=: 2 : '(u upd2 n) cioswrap'              NB. model 'upd2' accepting cIOS
-upd3=: 2 : '(((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n))~)`(2 mnx n)`] }'  NB. update subarray by gerund
-cupd3=: 2 : '(u upd3 n) cioswrap'              NB. model 'upd3' accepting cIOS
-map=: 2 : '((u @ (0 mnyx n))~)`(1 mnx n)`] }'  NB. map subarray to another one by monad: (u ((({.n){x){y)) (({:n){x) } y
-cmap=: 2 : '(u map n) cioswrap'                NB. model 'map' accepting cIOS
-map2=: 2 : '((u mnyx01 n)~)`(2 mnx n)`] }'     NB. map two subarrays to another one by dyad: (((({.n){x){y) u (((1{n){x){y)) (({:n){x) } y
-cmap2=: 2 : '(u map2 n) cioswrap'              NB. model 'map2' accepting cIOS
+fromi=: 1 : '(m myx)~'                          NB. model indirect 'from': (m{x){y
+fromc=: ({~ cios2ios)~                          NB. model direct 'from' accepting cIOS: x{y
+fromci=: 1 : '(m fromi) cioswrap'               NB. model 'fromi' accepting cIOS
+updi=: 2 : '((u @ (n myx))~)`(n mx)`] }'        NB. update subarray by monad: (u ((n{x){y)) (n{x) } y
+updci=: 2 : '(u updi n) cioswrap'               NB. model 'updi' accepting cIOS
+upd=: 1 : '(u @ {)`[`]}'                        NB. update items defined by IOS (x) in (y) by verb (u)
+updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'         NB. model 'upd' accepting lIOS
+upd2i=: 2 : '((u mnyx01 n)~)`(1 mnx n)`] }'     NB. update subarray by dyad: (((({.n){x){y) u ((({:n){x){y)) (({:n){x) } y
+upd2ci=: 2 : '(u upd2i n) cioswrap'             NB. model 'upd2i' accepting cIOS
+upd3i=: 2 : '(((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n))~)`(2 mnx n)`] }'  NB. update subarray by gerund
+upd3ci=: 2 : '(u upd3i n) cioswrap'             NB. model 'upd3i' accepting cIOS
+mapi=: 2 : '((u @ (0 mnyx n))~)`(1 mnx n)`] }'  NB. map subarray to another one by monad: (u ((({.n){x){y)) (({:n){x) } y
+mapci=: 2 : '(u mapi n) cioswrap'               NB. model 'mapi' accepting cIOS
+map2i=: 2 : '((u mnyx01 n)~)`(2 mnx n)`] }'     NB. map two subarrays to another one by dyad: (((({.n){x){y) u (((1{n){x){y)) (({:n){x) } y
+map2ci=: 2 : '(u map2i n) cioswrap'             NB. model 'map2i' accepting cIOS
 
 NB. ---------------------------------------------------------
 NB. nfv
@@ -136,7 +136,7 @@ NB.
 NB. Syntax:
 NB.   vneg=. iocios nfv iovh
 NB. where
-NB.   iovh   - integer ub rabge (-r:r-1), IO in cIOS
+NB.   iovh   - integer in range (-r:r-1), IO in cIOS
 NB.            (iocios{cios) to select axis to negate
 NB.   iocios - integer, IO in cIOS bundle (cios) to select
 NB.   vneg   - verb to negate, is called as: (cios vneg A),
@@ -148,19 +148,18 @@ NB.              4) use this IOS to update by verb (-)
 NB.                 submatrix in y
 NB.
 NB. Application:
-NB. - let cios=. (ciosY , ciosZ , ciosT , ciosR ,: ciosL)
-NB.   is cIOS bundle for vectors y, z, scalar τ, and
-NB.   submatrices R and L, respectively; vector y is stored
-NB.   vertically
+NB. - let cios=. (ciosYZ , ciosT , ciosR ,: ciosL) is cIOS
+NB.   bundle for vectors y and z, scalar τ, and submatrices
+NB.   R and L, respectively; vector y is stored vertically
 NB. - to make verb to negate 1st column of submatrix R:
-NB.     vneg=: 3 nfv 1
+NB.     vneg=: 2 nfv 1
 NB. - to make verb to negate 1st row of submatrix L:
-NB.     vneg=: 4 nfv 0
+NB.     vneg=: 3 nfv 0
 NB. - to make verb to negate 1st column of submatrix R and
 NB.   then to negate 1st row of submatrix L
-NB.     vneg=: [ (4 nfv 0) (3 nfv 1)
+NB.     vneg=: [ (3 nfv 0) (2 nfv 1)
 
-nfv=: 2 : '((- updu)~ (cios2ios @ ((9&o. j. 1:) uvfyu n) @ (m&{)))~'
+nfv=: 2 : '((- upd)~ (cios2ios @ ((9&o. j. 1:) updl n) @ (m&{)))~'
 
 NB. ---------------------------------------------------------
 NB. append

@@ -1,5 +1,5 @@
 NB. hrd.ijs
-NB. Reduce a general matrix to upper Hessenberg form
+NB. Reduce matrix to upper Hessenberg form
 NB.
 NB. gehrdu  Reduce a general matrix to upper Hessenberg form
 NB. gehd2u  Reduce a general matrix to upper Hessenberg form
@@ -134,14 +134,14 @@ NB.     if (f+s=n) then zero row will be appended to matrix to store τ[f:f+s-2]
 NB.
 NB. If:
 NB.   B=. gehd2u (A ; fs)
-NB.   H=. _1 utri B
+NB.   H=. _1 tru B
 NB.   Q=. unghr (B ; fs)
 NB. then
 NB.   (idmat n) -: ((ct Q) mp Q)
 NB.   H -: (ct Q) mp A mp Q
 NB.
 NB. Notes:
-NB. - emulates xGEHD2 up to storage layout scheme
+NB. - emulates xGEHD2 up to storage layout
 NB.
 NB. References:
 NB. [1] 

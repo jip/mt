@@ -133,7 +133,211 @@ NB.   5 4 3    -: ht2ios  3
 ht2ios=: ] + (i. @ -)
 
 NB. y-vector of integers from head x; models rIOS in (u;.0)
+NB. TODO:
+NB. - current_hs2ios ===      hs2ios (head,size)
+NB.                  === 1    hs2ios (head,size)
+NB. - riosed_hds2ios === step hs2ios (head,size)
+
 hs2ios=: [ + ((] * i. @ *) sgn)~
+
+NB. lios=. [delta] dhs2ios (head,size)
+dhs2ios1=: ({. + ({: (] * i. @ *) (sgn @ {.))) : ({.@] + (* ({: (]*i.@*) (sgn@{.))))
+dhs2ios2=: (1&$:) : ({.@] + (* ({: (] * i. @ *) (sgn @ {.))))
+dhs2ios3=: ({. + ({: (] * i. @ *) (sgn @ {.))) : ({.@] + (*^:(1~:[) ({: (] * i. @ *) (sgn @ {.))))
+dhs2ios4=: (1&$:) : ({.@] + (*^:(1~:[) ({: (] * i. @ *) (sgn @ {.))))
+dhs2ios5=: ({. + ({. condneg ((i. @ condneg)/))) : ({.@] + ({.@] condneg (* ((i. @ condneg)/))))
+dhs2ios6=: (1&$:) : ({.@] + ({.@] condneg (* ((i. @ condneg)/))))
+dhs2ios7=: ({. + ({. condneg ((i. @ condneg)/))) : ({.@] + ({.@] condneg (*^:(1~:[) ((i. @ condneg)/))))
+dhs2ios8=: (1&$:) : ({.@] + ({.@] condneg (*^:(1~:[) ((i. @ condneg)/))))
+dhs2ios9=: ({. + ({. condneg ((i. @ condneg)/))) : ({.@] + (condneg~ {.) * i.@(condneg/)@])
+dhs2ios10=: (1&$:) : ({.@] + (condneg~ {.) * i.@(condneg/)@])
+
+testdhs2ios=: 3 : 0
+  'hpsp hpsn hnsp hnsn'=. (1 1 , 1 _1 , _1 1 ,: _1 _1) (*"1) 1 {:: 'd hs'=. ({. ; }.) y
+  e=. i. 0
+
+  smoutput 'dhs2ios2' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios2) hpsp)
+  smoutput 'dhs2ios2' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios2) hpsn)
+  smoutput 'dhs2ios2' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios2) hnsp)
+  smoutput 'dhs2ios2' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios2) hnsn)
+
+  smoutput 'dhs2ios2' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios2) hpsp)
+  smoutput 'dhs2ios2' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios2) hpsn)
+  smoutput 'dhs2ios2' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios2) hnsp)
+  smoutput 'dhs2ios2' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios2) hnsn)
+
+  smoutput 'dhs2ios2' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios2) hpsp)
+  smoutput 'dhs2ios2' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios2) hpsn)
+  smoutput 'dhs2ios2' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios2) hnsp)
+  smoutput 'dhs2ios2' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios2) hnsn)
+
+
+  smoutput 'dhs2ios3' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios3) hpsp)
+  smoutput 'dhs2ios3' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios3) hpsn)
+  smoutput 'dhs2ios3' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios3) hnsp)
+  smoutput 'dhs2ios3' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios3) hnsn)
+
+  smoutput 'dhs2ios3' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios3) hpsp)
+  smoutput 'dhs2ios3' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios3) hpsn)
+  smoutput 'dhs2ios3' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios3) hnsp)
+  smoutput 'dhs2ios3' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios3) hnsn)
+
+  smoutput 'dhs2ios3' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios3) hpsp)
+  smoutput 'dhs2ios3' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios3) hpsn)
+  smoutput 'dhs2ios3' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios3) hnsp)
+  smoutput 'dhs2ios3' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios3) hnsn)
+
+
+  smoutput 'dhs2ios4' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios4) hpsp)
+  smoutput 'dhs2ios4' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios4) hpsn)
+  smoutput 'dhs2ios4' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios4) hnsp)
+  smoutput 'dhs2ios4' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios4) hnsn)
+
+  smoutput 'dhs2ios4' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios4) hpsp)
+  smoutput 'dhs2ios4' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios4) hpsn)
+  smoutput 'dhs2ios4' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios4) hnsp)
+  smoutput 'dhs2ios4' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios4) hnsn)
+
+  smoutput 'dhs2ios4' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios4) hpsp)
+  smoutput 'dhs2ios4' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios4) hpsn)
+  smoutput 'dhs2ios4' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios4) hnsp)
+  smoutput 'dhs2ios4' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios4) hnsn)
+
+
+  smoutput 'dhs2ios5' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios5) hpsp)
+  smoutput 'dhs2ios5' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios5) hpsn)
+  smoutput 'dhs2ios5' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios5) hnsp)
+  smoutput 'dhs2ios5' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios5) hnsn)
+
+  smoutput 'dhs2ios5' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios5) hpsp)
+  smoutput 'dhs2ios5' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios5) hpsn)
+  smoutput 'dhs2ios5' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios5) hnsp)
+  smoutput 'dhs2ios5' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios5) hnsn)
+
+  smoutput 'dhs2ios5' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios5) hpsp)
+  smoutput 'dhs2ios5' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios5) hpsn)
+  smoutput 'dhs2ios5' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios5) hnsp)
+  smoutput 'dhs2ios5' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios5) hnsn)
+
+
+  smoutput 'dhs2ios6' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios6) hpsp)
+  smoutput 'dhs2ios6' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios6) hpsn)
+  smoutput 'dhs2ios6' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios6) hnsp)
+  smoutput 'dhs2ios6' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios6) hnsn)
+
+  smoutput 'dhs2ios6' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios6) hpsp)
+  smoutput 'dhs2ios6' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios6) hpsn)
+  smoutput 'dhs2ios6' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios6) hnsp)
+  smoutput 'dhs2ios6' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios6) hnsn)
+
+  smoutput 'dhs2ios6' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios6) hpsp)
+  smoutput 'dhs2ios6' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios6) hpsn)
+  smoutput 'dhs2ios6' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios6) hnsp)
+  smoutput 'dhs2ios6' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios6) hnsn)
+
+
+  smoutput 'dhs2ios7' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios7) hpsp)
+  smoutput 'dhs2ios7' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios7) hpsn)
+  smoutput 'dhs2ios7' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios7) hnsp)
+  smoutput 'dhs2ios7' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios7) hnsn)
+
+  smoutput 'dhs2ios7' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios7) hpsp)
+  smoutput 'dhs2ios7' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios7) hpsn)
+  smoutput 'dhs2ios7' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios7) hnsp)
+  smoutput 'dhs2ios7' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios7) hnsn)
+
+  smoutput 'dhs2ios7' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios7) hpsp)
+  smoutput 'dhs2ios7' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios7) hpsn)
+  smoutput 'dhs2ios7' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios7) hnsp)
+  smoutput 'dhs2ios7' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios7) hnsn)
+
+
+  smoutput 'dhs2ios8' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios8) hpsp)
+  smoutput 'dhs2ios8' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios8) hpsn)
+  smoutput 'dhs2ios8' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios8) hnsp)
+  smoutput 'dhs2ios8' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios8) hnsn)
+
+  smoutput 'dhs2ios8' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios8) hpsp)
+  smoutput 'dhs2ios8' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios8) hpsn)
+  smoutput 'dhs2ios8' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios8) hnsp)
+  smoutput 'dhs2ios8' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios8) hnsn)
+
+  smoutput 'dhs2ios8' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios8) hpsp)
+  smoutput 'dhs2ios8' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios8) hpsn)
+  smoutput 'dhs2ios8' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios8) hnsp)
+  smoutput 'dhs2ios8' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios8) hnsn)
+
+
+  smoutput 'dhs2ios9' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios9) hpsp)
+  smoutput 'dhs2ios9' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios9) hpsn)
+  smoutput 'dhs2ios9' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios9) hnsp)
+  smoutput 'dhs2ios9' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios9) hnsn)
+
+  smoutput 'dhs2ios9' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios9) hpsp)
+  smoutput 'dhs2ios9' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios9) hpsn)
+  smoutput 'dhs2ios9' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios9) hnsp)
+  smoutput 'dhs2ios9' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios9) hnsn)
+
+  smoutput 'dhs2ios9' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios9) hpsp)
+  smoutput 'dhs2ios9' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios9) hpsn)
+  smoutput 'dhs2ios9' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios9) hnsp)
+  smoutput 'dhs2ios9' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios9) hnsn)
+
+
+  smoutput 'dhs2ios10' ; e ; hpsp ; (  (dhs2ios1 -: dhs2ios10) hpsp)
+  smoutput 'dhs2ios10' ; e ; hpsn ; (  (dhs2ios1 -: dhs2ios10) hpsn)
+  smoutput 'dhs2ios10' ; e ; hnsp ; (  (dhs2ios1 -: dhs2ios10) hnsp)
+  smoutput 'dhs2ios10' ; e ; hnsn ; (  (dhs2ios1 -: dhs2ios10) hnsn)
+
+  smoutput 'dhs2ios10' ; 1 ; hpsp ; (1 (dhs2ios1 -: dhs2ios10) hpsp)
+  smoutput 'dhs2ios10' ; 1 ; hpsn ; (1 (dhs2ios1 -: dhs2ios10) hpsn)
+  smoutput 'dhs2ios10' ; 1 ; hnsp ; (1 (dhs2ios1 -: dhs2ios10) hnsp)
+  smoutput 'dhs2ios10' ; 1 ; hnsn ; (1 (dhs2ios1 -: dhs2ios10) hnsn)
+
+  smoutput 'dhs2ios10' ; d ; hpsp ; (1 (dhs2ios1 -: dhs2ios10) hpsp)
+  smoutput 'dhs2ios10' ; d ; hpsn ; (1 (dhs2ios1 -: dhs2ios10) hpsn)
+  smoutput 'dhs2ios10' ; d ; hnsp ; (1 (dhs2ios1 -: dhs2ios10) hnsp)
+  smoutput 'dhs2ios10' ; d ; hnsn ; (1 (dhs2ios1 -: dhs2ios10) hnsn)
+
+  EMPTY
+)
+
+timingdhs2ios=: 3 : 0
+
+  NB. output: verb;(time,space);IO_time_graded_down;IO_space_graded_down
+
+  NB. timing: head,size
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios00a=. 5 hs2ios 100000';'ios1a=. dhs2ios1 5 100000';'ios2a=. dhs2ios2 5 100000';'ios3a=. dhs2ios3 5 100000';'ios4a=. dhs2ios4 5 100000';'ios5a=. dhs2ios5 5 100000';'ios6a=. dhs2ios6 5 100000';'ios7a=. dhs2ios7 5 100000';'ios8a=. dhs2ios8 5 100000';'ios9a=. dhs2ios9 5 100000';'ios10a=. dhs2ios10 5 100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios00b=. 5 hs2ios _100000';'ios1b=. dhs2ios1 5 _100000';'ios2b=. dhs2ios2 5 _100000';'ios3b=. dhs2ios3 5 _100000';'ios4b=. dhs2ios4 5 _100000';'ios5b=. dhs2ios5 5 _100000';'ios6b=. dhs2ios6 5 _100000';'ios7b=. dhs2ios7 5 _100000';'ios8b=. dhs2ios8 5 _100000';'ios9b=. dhs2ios9 5 _100000';'ios10b=. dhs2ios10 5 _100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios00c=. _5 hs2ios 100000';'ios1c=. dhs2ios1 _5 100000';'ios2c=. dhs2ios2 _5 100000';'ios3c=. dhs2ios3 _5 100000';'ios4c=. dhs2ios4 _5 100000';'ios5c=. dhs2ios5 _5 100000';'ios6c=. dhs2ios6 _5 100000';'ios7c=. dhs2ios7 _5 100000';'ios8c=. dhs2ios8 _5 100000';'ios9c=. dhs2ios9 _5 100000';'ios10c=. dhs2ios10 _5 100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios00d=. _5 hs2ios _100000';'ios1d=. dhs2ios1 _5 _100000';'ios2d=. dhs2ios2 _5 _100000';'ios3d=. dhs2ios3 _5 _100000';'ios4d=. dhs2ios4 _5 _100000';'ios5d=. dhs2ios5 _5 _100000';'ios6d=. dhs2ios6 _5 _100000';'ios7d=. dhs2ios7 _5 _100000';'ios8d=. dhs2ios8 _5 _100000';'ios9d=. dhs2ios9 _5 _100000';'ios10d=. dhs2ios10 _5 _100000'
+
+  NB. timing: head,1,size
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios0e=. hds2ios 5 1 100000';'ios1e=. 1 dhs2ios1 5 100000';'ios2e=. 1 dhs2ios2 5 100000';'ios3e=. 1 dhs2ios3 5 100000';'ios4e=. 1 dhs2ios4 5 100000';'ios5e=. 1 dhs2ios5 5 100000';'ios6e=. 1 dhs2ios6 5 100000';'ios7e=. 1 dhs2ios7 5 100000';'ios8e=. 1 dhs2ios8 5 100000';'ios9e=. 1 dhs2ios9 5 100000';'ios10e=. 1 dhs2ios10 5 100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios1f=. 1 dhs2ios1 5 _100000';'ios2f=. 1 dhs2ios2 5 _100000';'ios3f=. 1 dhs2ios3 5 _100000';'ios4f=. 1 dhs2ios4 5 _100000';'ios5f=. 1 dhs2ios5 5 _100000';'ios6f=. 1 dhs2ios6 5 _100000';'ios7f=. 1 dhs2ios7 5 _100000';'ios8f=. 1 dhs2ios8 5 _100000';'ios9f=. 1 dhs2ios9 5 _100000';'ios10f=. 1 dhs2ios10 5 _100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios0g=. hds2ios _5 1 100000';'ios1g=. 1 dhs2ios1 _5 100000';'ios2g=. 1 dhs2ios2 _5 100000';'ios3g=. 1 dhs2ios3 _5 100000';'ios4g=. 1 dhs2ios4 _5 100000';'ios5g=. 1 dhs2ios5 _5 100000';'ios6g=. 1 dhs2ios6 _5 100000';'ios7g=. 1 dhs2ios7 _5 100000';'ios8g=. 1 dhs2ios8 _5 100000';'ios9g=. 1 dhs2ios9 _5 100000';'ios10g=. 1 dhs2ios10 _5 100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios1h=. 1 dhs2ios1 _5 _100000';'ios2h=. 1 dhs2ios2 _5 _100000';'ios3h=. 1 dhs2ios3 _5 _100000';'ios4h=. 1 dhs2ios4 _5 _100000';'ios5h=. 1 dhs2ios5 _5 _100000';'ios6h=. 1 dhs2ios6 _5 _100000';'ios7h=. 1 dhs2ios7 _5 _100000';'ios8h=. 1 dhs2ios8 _5 _100000';'ios9h=. 1 dhs2ios9 _5 _100000';'ios10h=. 1 dhs2ios10 _5 _100000'
+
+  NB. timing: head,10,size
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios0i=. hds2ios 5 10 100000';'ios1i=. 10 dhs2ios1 5 100000';'ios2i=. 10 dhs2ios2 5 100000';'ios3i=. 10 dhs2ios3 5 100000';'ios4i=. 10 dhs2ios4 5 100000';'ios5i=. 10 dhs2ios5 5 100000';'ios6i=. 10 dhs2ios6 5 100000';'ios7i=. 10 dhs2ios7 5 100000';'ios8i=. 10 dhs2ios8 5 100000';'ios9i=. 10 dhs2ios9 5 100000';'ios10i=. 10 dhs2ios10 5 100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios1j=. 10 dhs2ios1 5 _100000';'ios2j=. 10 dhs2ios2 5 _100000';'ios3j=. 10 dhs2ios3 5 _100000';'ios4j=. 10 dhs2ios4 5 _100000';'ios5j=. 10 dhs2ios5 5 _100000';'ios6j=. 10 dhs2ios6 5 _100000';'ios7j=. 10 dhs2ios7 5 _100000';'ios8j=. 10 dhs2ios8 5 _100000';'ios9j=. 10 dhs2ios9 5 _100000';'ios10j=. 10 dhs2ios10 5 _100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios0k=. hds2ios _5 10 100000';'ios1k=. 10 dhs2ios1 _5 100000';'ios2k=. 10 dhs2ios2 _5 100000';'ios3k=. 10 dhs2ios3 _5 100000';'ios4k=. 10 dhs2ios4 _5 100000';'ios5k=. 10 dhs2ios5 _5 100000';'ios6k=. 10 dhs2ios6 _5 100000';'ios7k=. 10 dhs2ios7 _5 100000';'ios8k=. 10 dhs2ios8 _5 100000';'ios9k=. 10 dhs2ios9 _5 100000';'ios10k=. 10 dhs2ios10 _5 100000'
+
+  smoutput (,. (<"0@((/:"1)&.|:)@:>@:({:"1)))@:((; (40&timespacex))&>) 'ios1l=. dhs2ios1 _5 _100000';'ios2l=. dhs2ios2 _5 _100000';'ios3l=. dhs2ios3 _5 _100000';'ios4l=. dhs2ios4 _5 _100000';'ios5l=. dhs2ios5 _5 _100000';'ios6l=. dhs2ios6 _5 _100000';'ios7l=. dhs2ios7 _5 _100000';'ios8l=. dhs2ios8 _5 _100000';'ios9l=. dhs2ios9 _5 _100000';'ios10l=. dhs2ios10 _5 _100000'
+
+  EMPTY
+)
 
 NB. ---------------------------------------------------------
 NB. IOS converters

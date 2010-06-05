@@ -17,14 +17,13 @@ NB.
 NB. 2007-12-25 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 require '~system/packages/math/matutil.ijs'     NB. diag
-require '~user/projects/jlapack/lapack.ijs'     NB. '~addons/math/lapack/lapack.ijs'
-require '~user/projects/jlapack/dgerqf.ijs'     NB. -//-
-require '~user/projects/jlapack/dpotrf.ijs'     NB. -//- (+)
-require '~user/projects/jlapack/zgees.ijs'      NB. -//-
-require '~user/projects/jlapack/zgeev.ijs'      NB. -//-
-require '~user/projects/jlapack/zgerqf.ijs'     NB. -//-
-require '~user/projects/jlapack/zpotrf.ijs'     NB. -//-
-require '~user/projects/jlapack/ztrtrs.ijs'     NB. -//-
+require '~user/projects/lapack/lapack.ijs'      NB. -> require '~addons/math/lapack/lapack.ijs'
+NB. need_jlapack_ 'gerqf gees geev potrf trtrs'
+require '~user/projects/lapack/gerqf.ijs'       NB. -> /dev/null
+require '~user/projects/lapack/gees.ijs'        NB. -> /dev/null
+require '~user/projects/lapack/geev.ijs'        NB. -> /dev/null
+require '~user/projects/lapack/potrf.ijs'       NB. -> /dev/null
+require '~user/projects/lapack/trtrs.ijs'       NB. -> /dev/null
 
 NB. ===========================================================================
 NB. lyapchol

@@ -8,7 +8,7 @@ NB. References:
 NB. - Podchukaev V.A. Theory of informational processes and systems. - M.,
 NB.   2006. (Подчукаев В. А. Теория информационных процессов и систем. -
 NB.   М.: Гардарики, 2006 - 209 с.)
-NB.   TODO: URL
+NB.   URL: http://www.sgau.ru/uit/Book3.htm
 NB. - Andrievskiy B.R., Fradkov A.L. Selected chapters of automatic
 NB.   control theory with MATLAB examples. - SPb., 2000 (Андриевский Б.
 NB.   Р., Фрадков А. Л. Избранные главы теории автоматического управления
@@ -18,16 +18,30 @@ NB. Resources:
 NB. - http://www.jsoftware.com/jwiki/...
 NB. - http://www.dvgu.ru/forum/...
 NB.
+NB. Test:
+NB.    A=. 4 4 $ _0.0069 0.0558 0 _2.4525 _0.0226 _0.3149 3.6858 0 0.0062 _0.2151 _0.4282 0 0 0 0.2500 0
+NB.    B=. 4 1 $ 0
+NB.    Ts=. 0.1486
+NB.    MVPN=. prexpm_tau_ A;B
+NB.    ] 'Ad Bd'=. MVPN expm_tau_ Ts
+NB. ┌─────────────────────────────────────────────────┬─┐
+NB. │   0.998809   0.00806035 _0.00409042    _0.361715│0│
+NB. │_0.00303186     0.946446    0.516207  0.000551852│0│
+NB. │0.000936048   _0.0301219     0.93059 _0.000153388│0│
+NB. │ 1.56358e_5 _0.000537876   0.0358006      0.99984│0│
+NB. └─────────────────────────────────────────────────┴─┘
+NB.
 NB. TODO:
 NB. - consider s/@:/@/g when possible
 NB. - consider complex A or B => non-self-adjoined eigenvalues
 NB. - consider B is vector
 NB.
-NB. 2008-01-11 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. 2008-02-02 0.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
-require '~addons/math/lapack/lapack.ijs'
+require '~user/projects/lapack/lapack.ijs'     NB. '~addons/math/lapack/lapack.ijs'
+NB. need_jlapack_ 'geev gels'
 require '~user/projects/lapack/geev.ijs'       NB. '~addons/math/lapack/geev.ijs'
-require '~user/projects/lapack/gesvx.ijs'      NB. '~addons/math/lapack/gesvx.ijs'
+require '~user/projects/lapack/gels.ijs'       NB. '~addons/math/lapack/gels.ijs'
 
 coclass 'tau'
 
@@ -36,7 +50,7 @@ NB. prexpm
 NB. Prepare time-invariant parts for expm
 NB.
 NB. Syntax:
-NB.   'M V P Nx'=. MVPN=. prexpm A;B
+NB.   'M V P Nx'=. A;B
 NB. where:
 NB.   A - Nx-by-Nx state matrix of LTI system
 NB.   B - Nx-by-Nu control input matrix of LTI system
@@ -48,11 +62,8 @@ NB.   Nm = +/ vm * (ic+1), see prepV
 NB.   Ng = Nx + Nu
 NB.   Nx >= 0
 NB.   Nu >= 0
-NB.
-NB. TODO:
-NB. - test
 
-prexpm=: (((0 & makeLtM ; ]) @ prepV @ (1 & geev_jlapack_)) ; makeP) @ makeG ; getCols @ getA
+prexpm=: (((0 & makeLtM ; ]) @ prepV @ (2b010 & geev_jlapack_)) , (< @ makeP)) @ makeG , (< @ getCols @ getA)
 
 NB. ---------------------------------------------------------
 NB. expm
@@ -71,9 +82,6 @@ NB.   T    - sampling period, T>0
 NB.   EA   - Nx-by-Nx matrix, matrix exponent
 NB.   IE   - Nx-by-Nu matrix, Cauchy intergal
 NB.   Nu   = (#P)-Nx
-NB.
-NB. TODO:
-NB. - test
 
 splitbyx=: {."1 ; }."1         NB. split table y at column x
 extract=: [ splitbyx {.        NB. extract 1st x rows from table y
@@ -100,18 +108,12 @@ NB.   G - Ng-by-Ng matrix, augmented LTI system, output of makeG
 NB.   P - Ng-by-Ng-by-Ng matrix, powers 0..(Ng-1) of G
 NB.
 NB. Test:
-NB.    makeP ? 3 3 $ 10
-NB.  1   0  0
-NB.  0   1  0
-NB.  0   0  1
-NB.
-NB.  6   5  9
-NB.  2   4  9
-NB.  0   7  0
-NB.
-NB. 46 113 99
-NB. 20  89 54
-NB. 14  28 63
+NB.    ;/ makeP_tau_ ? 3 3 $ 10
+NB. ┌─────┬─────┬────────┐
+NB. │1 0 0│5 5 0│70 25 25│
+NB. │0 1 0│9 0 5│50 75 35│
+NB. │0 0 1│1 6 7│66 47 79│
+NB. └─────┴─────┴────────┘
 NB.
 NB. Notes:
 NB. - powers are calculated via repeated squaring to
@@ -182,10 +184,11 @@ NB.   MVPN - output of prexpm, being (M;V;P;Nx)
 NB.   At   - Nm-vector, solution A(t) of equation M*A(t)=L(t)
 NB.   Nm = +/ vm * (ic+1), see prepV
 NB.
-NB. TODO:
-NB. - test
+NB. Test:
+NB.    MVPN makeAt_tau_ Ts
+NB. 0.999842 0.147562 0.0104619 0.00040034 0.000429799
 
-makeAt=: gesvx_jlapack_ @: (getM ; ] makeLtM getV)
+makeAt=: gels_jlapack_ @: (getM ; ] makeLtM getV)
 
 NB. ---------------------------------------------------------
 NB. makeGi

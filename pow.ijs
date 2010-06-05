@@ -1,4 +1,3 @@
-NB. pow.ijs
 NB. Raise to a power
 NB.
 NB. gepow  Raise a general matrix in integer powers
@@ -18,7 +17,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. gepow                                                 _ 2
+NB. gepow
 NB. Raise a general matrix A in integer powers
 NB.
 NB. Syntax:
@@ -44,7 +43,7 @@ gepow=: (4 :0) " _ 2
 )
 
 NB. ---------------------------------------------------------
-NB. dipow                                                 _ 1
+NB. dipow
 NB. Raise a diagonalizable matrix A in integer powers
 NB.
 NB. Syntax:
@@ -67,7 +66,7 @@ NB.   P -: RV mp (diagmat (ev ^ 2)) mp RVi
 dipow=: ((0 {:: ]) mp"2 ([ ^"1 0~ 1 {:: ]) (*"1 2) 2 {:: ]) " _ 1
 
 NB. ---------------------------------------------------------
-NB. hepow                                                 _ 1
+NB. hepow
 NB. Raise a Hermitian matrix A in integer powers
 NB.
 NB. Syntax:

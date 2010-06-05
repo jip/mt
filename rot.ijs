@@ -1,9 +1,7 @@
-NB. rot.ijs
 NB. Rotations
 NB.
-NB. lartg   Generates a plane rotation of a 2-vector
-NB. lartv   Applies a plane rotation to a 2-vector
-NB. lartvt  Applies a transposed plane rotation to a 2-vector
+NB. lartg  Generates a plane rotation of a 2-vector
+NB. rot    Applies a plane rotation(s) to a 2-vector(s)
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -39,9 +37,8 @@ FP_MN1324MX8231=: (FP_SFMN*(1-FP_EPS)) , (FP_SFMN3*(1-FP_EPS)) , (FP_SFMN2*(1-FP
 FP_MX13241MN4231=: FP_SFMX , FP_SFMX3 , FP_SFMX2 , FP_SFMX4 , 1 , FP_SFMN4 , FP_SFMN2 , FP_SFMN3 , FP_SFMN
 FP_MN13241MX4231=: FP_SFMN , FP_SFMN3 , FP_SFMN2 , FP_SFMN4 , 1 , FP_SFMX4 , FP_SFMX2 , FP_SFMX3 , FP_SFMX
 
-abssq=: +/      @: *: @  +.  NB. Re(y)^2 + Im(y)^2
-abs1=: >./ @: | @ +.         NB. max(|Re(y)|,|Im(y)|)
-sgnr=: sgn @ (9 & o.)        NB. sgn(Re(y))
+morim=: >./"1 @: | @: +.  NB. max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
+sgnr=: sgn @ (9 & o.)     NB. sgn(Re(y))
 
 NB. ---------------------------------------------------------
 NB. lartgc1
@@ -49,7 +46,7 @@ NB. case 1: f≠0, g≠0, neither f nor g too big or small,
 NB. minimal work
 
 lartgc1=: 3 : 0
-  'f2 g2'=. abssq 'f g'=. y
+  'f2 g2'=. soris 'f g'=. y
   d1=. (sgnr f) * %: f2 * fg2=. f2 + g2  NB. (% sgnr) = (* sgnr)
   (f2 , (f * + g) , (f * fg2)) % d1
 )
@@ -103,7 +100,7 @@ NB.     http://www.netlib.org/lapack/lawns/downloads/
 lartg=: (3 : 0) " 1
 
   'f g'=. y
-  'scalef scaleg'=. scalefg=. abs1 y
+  'scalef scaleg'=. scalefg=. morim y
 
   if. scaleg = 0 do.
     NB. g=0, f may be 0
@@ -115,7 +112,7 @@ lartg=: (3 : 0) " 1
     NB. optionally scale g by z^(±4) so that z^_2 ≤ ||g|| ≤ z^2
     ios=. FP_MN2MX2 I. scaleg
     gs=. g * ios { FP_MX1MN
-    d1=. %: abssq gs
+    d1=. %: soris gs
     cs=. 0
     sn=. + gs % d1
     r=. d1 * ios { FP_MN1MX
@@ -131,14 +128,14 @@ lartg=: (3 : 0) " 1
     dscalefg=. iofg { FP_MX1MN
     'fs gs'=. y * dscalefg
     cs=. sgnr f
-    sn=. cs * (iog { FP_MN1MX) * ({. dscalefg) * (fs * + gs) % abssq fs
+    sn=. cs * (iog { FP_MN1MX) * ({. dscalefg) * (fs * + gs) % soris fs
     r=. cs * f
 
   elseif. scalef < FP_SQRTEPS * scaleg do.
     NB. case 3: f≠0, g≠0, |f|^2 + |g|^2 rounds to |g|^2
     iofg=. FP_MN3MN4MX4MX3 I. scalefg               NB. io{f,g} = count{f,g}+2 = {_2,_1,0,1,2}+2 = {0,1,2,3,4}
     dscalefg=. iofg { FP_MXMX21MN2MN
-    'f2 g2'=. abssq 'fs gs'=. y * dscalefg
+    'f2 g2'=. soris 'fs gs'=. y * dscalefg
     d1=. (sgnr f) * %: f2 * g2
     cs=. d1 %~ f2 * (-~/ iofg) { FP_1MN2MNMN6MN8    NB. (countf-countg)≤0 => form non-neg. io={0,1,2,3,4}, cs *=  (z^2)^(countf-countg)
     sn=. d1 %~ fs * + gs
@@ -156,46 +153,29 @@ lartg=: (3 : 0) " 1
 )
 
 NB. ---------------------------------------------------------
-NB. lartv                                                 1 1
-NB. lartvt                                                1 1
-NB. Applies a plane rotation to a 2-vector:
-NB. - lartv:
-NB.   [ f2 ]    [  cs  sn  ]     [ f ]
-NB.   [    ] := [  __      ]  .  [   ]
-NB.   [ g2 ]    [ -sn  cs  ]     [ g ]
-NB. - lartvt:          __
-NB.   [ f2 ]    [ cs  -sn  ]     [ f ]
-NB.   [    ] := [          ]  .  [   ]
-NB.   [ g2 ]    [ sn   cs  ]     [ g ]
+NB. rot
+NB.
+NB. Description:
+NB.   Applies a plane rotation(s) to a 2-vector(s):
+NB.     ( x[i] ) :=  ( c[j]        s[j] ) * ( x[i] )
+NB.     ( y[i] )     ( -conj(s[j]) c[j] )   ( y[i] )
 NB.
 NB. Syntax:
-NB.   'f2 g2'=. (cs,sn) lartv (f,g)
-NB.   'f2 g2'=. (cs,sn) lartvt (f,g)
+NB.   outxy=. cs rot inxy
 NB. where
-NB.   (f,g)   - 2-vector to rotate
-NB.   (cs,sn) - representation of 2×2 rotation matrix
-NB.   (f2,g2) - 2-vector, rotated version of (f,g)
-NB.
-NB. If:
-NB.   'f2 g2'=. (cs,sn) lartv (f,g)
-NB.   'f2h g2h'=. (cs,sn) lartvt (f,g)
-NB. then (with appropriate comparison tolerance)
-NB.   (f2,g2)   -: G1 mp (f,g)
-NB.   (f2h,g2h) -: G2 mp (f,g)
-NB. where
-NB.   G1=. 2 2 $ cs , sn , (- + sn) , cs
-NB.   G2=. |: G1
-NB.
-NB. Application:
-NB.   'vf2 vg2'=. |: (vcs ,. vsn) lartv (vf ,. vg)
+NB.   inxy  - 2-vector of scalars (x,y) or n×2-matrix of
+NB.           laminated vectors (x[i],y[i]), staff to rotate
+NB.   cs    - 2-vector of scalars (c,s) or n×2-matrix of
+NB.           laminated vectors (c[i],s[i]), defines rotation
+NB.           matrix(-ces)
+NB.   outxy - array of the same shape as input array of max
+NB.           rank (either inxy or cs), rotated staff
 NB.
 NB. Notes:
-NB. - input NaN or ±∞ leads to inconsistent output or NaN
-NB.   error
-NB. - other input may lead to ±∞ in output
+NB. - for 1-rank cs implements LAPACK's xROT
+NB. - for 2-rank cs implements LAPACK's xLARTV
 
-lartv=:  ([: : ((+/ @: *) , (+/ @: (* (_1 1 & * @ |. @: +))~))) " 1 1
-lartvt=: ([: : ((+/ @: (* (1 _1 & * @: +))~) , (+/ @: (* |.)~))) " 1 1
+rot=: (mp"2 1~ (,:"1 ((-@+@:({:"1)) ,. {."1)))~
 
 NB. =========================================================
 NB. Test suite

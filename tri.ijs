@@ -325,32 +325,32 @@ NB.   iU1 - n×n-matrix, unit upper triangular (diagonal is
 NB.         not saved), an inversion of U1
 NB.
 NB. Algorithm for trtriu:
-NB.   In: A - n×n-matrix
+NB.   In: U
 NB.   Out: iU
-NB.   1) if 1 < # A
+NB.   1) if 1 < # U
 NB.      1.1) then
-NB.           1.1.1) form (#A)-vector of zeros:
-NB.                    fret=. n $ 0
-NB.           1.1.2) find splitting edge:
+NB.           1.1.1) form (#U)-vector fret:
+NB.                    fret[:] := 0
+NB.                    fret[0] := 1
+NB.                    fret[k] := 1
+NB.                  where k is splitting edge:
 NB.                    k := ⌈n/2⌉
-NB.           1.1.3) mark intervals:
-NB.                    fret=. 1 (0,k)} fret
-NB.           1.1.4) cut A by fret to block matrix bA:
-NB.                    bA = (  A00  A01  )  k
-NB.                         (  A10  A11  )  n-k
-NB.                            k    n-k
-NB.           1.1.5) apply trtriu itself to A00 and A11:
-NB.                    iA00=. $: A00
-NB.                    iA11=. $: A11
-NB.           1.1.6) replace A00 and A11 by iA00 and iA11,
-NB.                  respectively, in bA
-NB.           1.1.7) inverse A01:
-NB.                    iA01=. - iA00 mp A01 mp iA11
-NB.           1.1.8) replace A01 by iA01 in bA
-NB.           1.1.9) assemble iA from block matrix:
-NB.                    iA=. icut bA
+NB.           1.1.2) cut U by fret to block matrix bU:
+NB.                    bU := (  U00       )  k
+NB.                          (  U10  U11  )  n-k
+NB.                             k    n-k
+NB.           1.1.3) apply trtriu itself to U00 and U11:
+NB.                    iU00 := U00^_1
+NB.                    iU11 := U11^_1
+NB.           1.1.4) replace U00 and U11 by iU00 and iU11,
+NB.                  respectively, in bU
+NB.           1.1.5) inverse U01:
+NB.                    iU01 := - iU00 * U01 * iU11
+NB.           1.1.6) replace U01 by iU01 in bU
+NB.           1.1.7) assemble iU from block matrix:
+NB.                    iU=. icut bU
 NB.     1.2) else return reciprocal:
-NB.            iA=. % A
+NB.            iU=. % U
 NB.
 NB. Notes:
 NB. - unit diagonal is not referenced
@@ -366,69 +366,66 @@ NB.
 NB. TODO:
 NB. - fret would be sparse
 
-trtril=:  %     `(icut@((2:}~ <@:-@((1 1 {:: ]) mp (1 0 {:: ]) mp 0 0 {:: ]))@(<@$:`<`<;.1~ ;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1 < #)
-trtril1=: (1:"0)`(icut@((2:}~ <@:-@((1 1 {:: ]) mp (1 0 {:: ]) mp 0 0 {:: ]))@(<@$:`<`<;.1~ ;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1 < #)
-trtriu=:  %     `(icut@((1:}~ <@:-@((0 0 {:: ]) mp (0 1 {:: ]) mp 1 1 {:: ]))@(<@$:`<`<;.1~ ;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1 < #)
-trtriu1=: (1:"0)`(icut@((1:}~ <@:-@((0 0 {:: ]) mp (0 1 {:: ]) mp 1 1 {:: ]))@(<@$:`<`<;.1~ ;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1 < #)
+trtril=:  %     `(icut@(2:}~ <@:-@((1 1 {:: ]) mp (1 0 {:: ]) mp 0 0 {:: ]))@(<@$:`<`<;.1~ ;~@((1:`]`([ ($!.0) 1:)} (>.@-:))@#)))@.(1 < #)
+trtril1=: (1:"0)`(icut@(2:}~ <@:-@((1 1 {:: ]) mp (1 0 {:: ]) mp 0 0 {:: ]))@(<@$:`<`<;.1~ ;~@((1:`]`([ ($!.0) 1:)} (>.@-:))@#)))@.(1 < #)
+trtriu=:  %     `(icut@(1:}~ <@:-@((0 0 {:: ]) mp (0 1 {:: ]) mp 1 1 {:: ]))@(<@$:`<`<;.1~ ;~@((1:`]`([ ($!.0) 1:)} (>.@-:))@#)))@.(1 < #)
+trtriu1=: (1:"0)`(icut@(1:}~ <@:-@((0 0 {:: ]) mp (0 1 {:: ]) mp 1 1 {:: ]))@(<@$:`<`<;.1~ ;~@((1:`]`([ ($!.0) 1:)} (>.@-:))@#)))@.(1 < #)
 
 NB. ---------------------------------------------------------
-NB. Verb:        Factorization used:    Syntax:
-NB. getrilu1p    L * U1 * P = A         iA=. getrilu1p LU1p
-NB. getripl1u    P * L1 * U = A         iA=. getripl1u pL1U
-NB. getripu1l    P * U1 * L = A         iA=. getripu1l pU1L
-NB. getriul1p    U * L1 * P = A         iA=. getriul1p UL1p
+NB. getrilu1p
 NB.
 NB. Description:
 NB.   Inverse a general matrix A, represented in factored
-NB.   form [1]
+NB.   form:
+NB.     L * U1 * P = A
+NB.
+NB. Syntax:
+NB.   iA=. getrilu1p LU1p
 NB. where
-NB.   A    - n×n-matrix
-NB.   LU1p - 3-vector of boxes, the output of getrflu1p, the
-NB.          matrix A represented in factored form
-NB.   pL1U - 3-vector of boxes, the output of getrfpl1u, the
-NB.          matrix A represented in factored form
-NB.   pU1L - 3-vector of boxes, the output of getrfpu1l, the
-NB.          matrix A represented in factored form
 NB.   LU1p - 3-vector of boxes, the output of getrflu1p, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
+NB.   A    - n×n-matrix
 NB.
-NB. Algorithm for getripl1u:#################
-NB.   In: ip L1U
+NB. Algorithm:
+NB.   In: LU1p
 NB.   Out: iA
-NB.   1) extract ip and L1U from y
-NB.   2) extract U from L1U, inverse it and save into y
-NB.   3) replace U by y into L1U
-NB.   4) find I, the number of iterations of partitioned
+NB.   1) extract ip and LU1 from LU1p
+NB.   2) acquire n, the size of A
+NB.   3) extract L from LU1, inverse it and save L^_1 into y
+NB.   4) copy U1 from LU1 into the strict upper triangle of y
+NB.   5) calculate the number of iterations of partitioned
 NB.      algorithm:
 NB.        I := ⌊n/TRINB⌋
 NB.      note: partitioned algorithm will be applied to the
-NB.            first I*TRINB columns of L1U
-NB.   5) invert A:
-NB.      5.1) prepare suffix sfx from the last n%TRINB
-NB.           columns of y, which won't be touched by
-NB.           partitioned algorithm
-NB.           5.1.1) extract last n%TRINB columns from iU
-NB.           5.1.2) extract lower triangular
-NB.           5.1.3) solve
-NB.      5.2) I iterations
-NB.      5.3) extract suffix
-NB.      5.4) apply ip
+NB.            first I*TRINB rows of y
+NB.   6) invert A:
+NB.      6.1) prepare suffix sfx from the last n%TRINB rows
+NB.           of y, which won't be processed by partitioned
+NB.           algorithm
+NB.           6.1.1) extract last n%TRINB rows from L^_1:
+NB.                    iLsfx := L^_1[I*TRINB:n-1,0:n-1]
+NB.           6.1.2) extract unit upper triangular matrix
+NB.                  from last n%TRINB rows of U1:
+NB.                    U1sfx := U1[I*TRINB:n-1,I*TRINB:n-1]
+NB.           6.1.3) solve system
+NB.                    U1sfx * sfx = iLsfx
+NB.                  for sfx, where
+NB.                    sfx := A^_1[I*TRINB:n-1,0:n-1]
+NB.                  is the last n%TRINB rows of A^_1
+NB.      6.2) prepare prefix pfx - the 1st I*TRINB rows of y,
+NB.           which will be processed by partitioned
+NB.           algorithm:
+NB.             pfx := A[0:I*TRINB-1,0:n-1]
+NB.      6.3) do iterations i=0:I-1 :
+NB.             'pfx sfx'=. getrilu1pstep ^: I (pfx ; sfx)
+NB.      6.4) extract sfx produced by the last iteration
+NB.      6.5) apply permutation P to the rows of sfx by
+NB.           obversed applying of inversed permutation P^_1,
+NB.           to produce final A^_1
 NB.
 NB. Assertions:
 NB.   (%. -: (getrilu1p@getrflu1p)) A
-NB.   (%. -: (getripl1u@getrfpl1u)) A
-NB.   (%. -: (getripu1l@getrfpu1l)) A
-NB.   (%. -: (getriul1p@getrful1p)) A
-NB.
-NB. Notes:
-NB. - getripl1u implements LAPACK's xGETRI
-NB.
-NB. References:
-NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
-NB.     Inversion, UT-CS-90-119, October, 1990.
-NB.     LAPACK Working Note 27.
-NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 getrilu1p=: 3 : 0
   'ip LU1'=. y
@@ -439,6 +436,71 @@ getrilu1p=: 3 : 0
   ip (C.^:_1) 1 {:: getrilu1pstep ^: I ((TRINB * I) ({. ; ([ (tru1 trsmu1x trl) }.)) y)
 )
 
+NB. ---------------------------------------------------------
+NB. getripl1u
+NB.
+NB. Description:
+NB.   Inverse a general matrix A, represented in factored
+NB.   form [1]:
+NB.     P * L1 * U = A
+NB.
+NB. Syntax:
+NB.   iA=. getripl1u pL1U
+NB. where
+NB.   pL1U - 3-vector of boxes, the output of getrfpl1u, the
+NB.          matrix A represented in factored form
+NB.   iA   - n×n-matrix, an inversion of A
+NB.   A    - n×n-matrix
+NB.
+NB. Algorithm:
+NB.   In: pL1U
+NB.   Out: iA
+NB.   1) extract ip and L1U from pL1U
+NB.   2) acquire n, the size of A
+NB.   3) extract U from L1U, inverse it and save U^_1 into y
+NB.   4) copy L1 from L1U into the strict lower triangle of y
+NB.   5) calculate the number of iterations of partitioned
+NB.      algorithm:
+NB.        I := ⌊n/TRINB⌋
+NB.      note: partitioned algorithm will be applied to the
+NB.            first I*TRINB columns of y
+NB.   6) invert A:
+NB.      6.1) prepare suffix sfx from the last n%TRINB columns
+NB.           of y, which won't be processed by partitioned
+NB.           algorithm
+NB.           6.1.1) extract last n%TRINB columns from U^_1:
+NB.                    iUsfx := U^_1[0:n-1,I*TRINB:n-1]
+NB.           6.1.2) extract unit lower triangular matrix
+NB.                  from last n%TRINB columns of L1:
+NB.                    L1sfx := L1[I*TRINB:n-1,I*TRINB:n-1]
+NB.           6.1.3) solve system
+NB.                    sfx * L1sfx = iUsfx
+NB.                  for sfx, where
+NB.                    sfx := A^_1[0:n-1,I*TRINB:n-1]
+NB.                  is the last n%TRINB columns of A^_1
+NB.      6.2) prepare prefix pfx - the 1st I*TRINB columns of
+NB.           y, which will be processed by partitioned
+NB.           algorithm:
+NB.             pfx := A[0:n-1,0:I*TRINB-1]
+NB.      6.3) do iterations i=0:I-1 :
+NB.             'pfx sfx'=. getripl1ustep ^: I (pfx ; sfx)
+NB.      6.4) extract sfx produced by the last iteration
+NB.      6.5) apply permutation P to the columns of sfx by
+NB.           obversed applying of inversed permutation P^_1,
+NB.           to produce final A^_1
+NB.
+NB. Assertions:
+NB.   (%. -: (getripl1u@getrfpl1u)) A
+NB.
+NB. Notes:
+NB. - implements LAPACK's xGETRI
+NB.
+NB. References:
+NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
+NB.     Inversion, UT-CS-90-119, October, 1990.
+NB.     LAPACK Working Note 27.
+NB.     http://www.netlib.org/lapack/lawns/downloads/
+
 getripl1u=: 3 : 0
   'ip L1U'=. y
   n=. # L1U
@@ -448,6 +510,62 @@ getripl1u=: 3 : 0
   ip (C.^:_1"1) 1 {:: getripl1ustep ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
 )
 
+NB. ---------------------------------------------------------
+NB. getripu1l
+NB.
+NB. Description:
+NB.   Inverse a general matrix A, represented in factored
+NB.   form:
+NB.     P * U1 * L = A
+NB.
+NB. Syntax:
+NB.   iA=. getripu1l pU1L
+NB. where
+NB.   pU1L - 3-vector of boxes, the output of getrfpu1l, the
+NB.          matrix A represented in factored form
+NB.   iA   - n×n-matrix, an inversion of A
+NB.   A    - n×n-matrix
+NB.
+NB. Algorithm:
+NB.   In: pU1L
+NB.   Out: iA
+NB.   1) extract ip and U1L from pU1L
+NB.   2) acquire n, the size of A
+NB.   3) extract L from U1L, inverse it and save L^_1 into y
+NB.   4) copy U1 from U1L into the strict upper triangle of y
+NB.   5) calculate the number of iterations of partitioned
+NB.      algorithm:
+NB.        I := ⌊n/TRINB⌋
+NB.      note: partitioned algorithm will be applied to the
+NB.            last I*TRINB columns of y
+NB.   6) invert A:
+NB.      6.1) prepare prefix pfx from the 1st n%TRINB columns
+NB.           of y, which won't be processed by partitioned
+NB.           algorithm
+NB.           6.1.1) extract 1st n%TRINB columns from L^_1:
+NB.                    iLpfx := L^_1[0:n-1,0:n%TRINB-1]
+NB.           6.1.2) extract unit upper triangular matrix
+NB.                  from 1st n%TRINB columns of U1:
+NB.                    U1pfx := U1[0:n%TRINB-1,0:n%TRINB-1]
+NB.           6.1.3) solve system
+NB.                    pfx * U1pfx = iLpfx
+NB.                  for pfx, where
+NB.                    pfx := A^_1[0:n-1,0:n%TRINB-1]
+NB.                  is the 1st n%TRINB columns of A^_1
+NB.      6.2) prepare suffix sfx - the last I*TRINB columns
+NB.           of y, which will be processed by partitioned
+NB.           algorithm:
+NB.             sfx := A[0:n-1,n%TRINB:n-1]
+NB.      6.3) do iterations i=0:I-1 :
+NB.             'pfx sfx'=. getripu1lstep ^: I (pfx ; sfx)
+NB.      6.4) extract pfx produced by the last iteration
+NB.      6.5) apply permutation P to the columns of pfx by
+NB.           obversed applying of inversed permutation P^_1,
+NB.           to produce final A^_1
+NB.
+NB. Assertions:
+NB.   (%. -: (getripu1l@getrfpu1l)) A
+
 getripu1l=: 3 : 0
   'ip U1L'=. y
   n=. c U1L
@@ -456,6 +574,62 @@ getripu1l=: 3 : 0
   I=. <. n % TRINB
   ip (C.^:_1"1) 0 {:: getripu1lstep ^: I ((TRINB | n) ((((2 # [) {. ]) trsmxu1 (trl@:({."1))) ; (}."1)) y)
 )
+
+NB. ---------------------------------------------------------
+NB. getriul1p
+NB.
+NB. Description:
+NB.   Inverse a general matrix A, represented in factored
+NB.   form:
+NB.     U * L1 * P = A
+NB.
+NB. Syntax:
+NB.   iA=. getriul1p UL1p
+NB. where
+NB.   UL1p - 3-vector of boxes, the output of getrful1p, the
+NB.          matrix A represented in factored form
+NB.   iA   - n×n-matrix, an inversion of A
+NB.   A    - n×n-matrix
+NB.
+NB. Algorithm:
+NB.   In: UL1p
+NB.   Out: iA
+NB.   1) extract ip and UL1 from UL1p
+NB.   2) acquire n, the size of A
+NB.   3) extract U from UL1, inverse it and save U^_1 into y
+NB.   4) copy L1 from UL1 into the strict lower triangle of y
+NB.   5) calculate the number of iterations of partitioned
+NB.      algorithm:
+NB.        I := ⌊n/TRINB⌋
+NB.      note: partitioned algorithm will be applied to the
+NB.            last I*TRINB rows of y
+NB.   6) invert A:
+NB.      6.1) prepare prefix pfx from the 1st n%TRINB rows of
+NB.           y, which won't be processed by partitioned
+NB.           algorithm
+NB.           6.1.1) extract 1st n%TRINB rows from U^_1:
+NB.                    iUpfx := U^_1[0:n%TRINB-1,0:n-1]
+NB.           6.1.2) extract unit lower triangular matrix
+NB.                  from 1st n%TRINB rows of L1:
+NB.                    L1pfx := L1[0:n%TRINB-1,0:n%TRINB-1]
+NB.           6.1.3) solve system
+NB.                    L1pfx * pfx  = iUpfx
+NB.                  for pfx, where
+NB.                    pfx := A^_1[0:n%TRINB-1,0:n-1]
+NB.                  is the 1st n%TRINB rows of A^_1
+NB.      6.2) prepare suffix sfx - the last I*TRINB rows of
+NB.           y, which will be processed by partitioned
+NB.           algorithm:
+NB.             sfx := A[n%TRINB:n-1,0:n-1]
+NB.      6.3) do iterations i=0:I-1 :
+NB.             'pfx sfx'=. getriul1pstep ^: I (pfx ; sfx)
+NB.      6.4) extract pfx produced by the last iteration
+NB.      6.5) apply permutation P to the rows of pfx by
+NB.           obversed applying of inversed permutation P^_1,
+NB.           to produce final A^_1
+NB.
+NB. Assertions:
+NB.   (%. -: (getriul1p@getrful1p)) A
 
 getriul1p=: 3 : 0
   'ip UL1'=. y

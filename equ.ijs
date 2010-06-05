@@ -1,4 +1,3 @@
-NB. equ.ijs
 NB. Equilibrate
 NB.
 NB. geequ  Equilibrate a general matrix

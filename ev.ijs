@@ -1,4 +1,3 @@
-NB. ev.ijs
 NB. Eigenvalue decomposition (EVD)
 NB.
 NB. geev  #########

@@ -1,4 +1,3 @@
-NB. log.ijs
 NB. Matrix logarithm
 NB.
 NB. gelog   Matrix logarithm of a general matrix

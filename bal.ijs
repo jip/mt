@@ -1,4 +1,3 @@
-NB. bal.ijs
 NB. Balance a matrix or pair of matrices
 NB.
 NB. gebalp  Isolate eigenvalues of a general square matrix
@@ -77,9 +76,9 @@ NB.  nzr=. p { nzr                              NB. apply all permutations
     zi=. f + (f ,: s) (i: & 0 ;. 0) nzr       NB. find rightmost zero's index into A11 non-zeros counter
     if. zi >: f + s do. break. end.           NB. no zeros left?
     nza=. (zi { p) (0:`[`(nz @ ({ " 1))) } y  NB. find nzr amendment after cols swapping (indirect zi because col zi may be swapped before)
-    cp=. (<: f + s) ii2cp zi                  NB. new cycle permutation
-    p=. cp C. p                               NB. accumulate permutations
-    nzr=. (cp C. nzr) - (p { nza)             NB. in nzr move zero found to end, apply all permutations to nza, then amend nzr by excluded row
+    cp=. (<: f + s) <@, zi                  NB. new cycle permutation
+    p=. cp C. :: ] p                               NB. accumulate permutations
+    nzr=. (cp C. :: ] nzr) - (p { nza)             NB. in nzr move zero found to end, apply all permutations to nza, then amend nzr by excluded row
     s=. <: s                                  NB. exclude last row
   end.
 
@@ -88,9 +87,9 @@ NB.  nzr=. p { nzr                              NB. apply all permutations
     zi=. f + (f ,: s) (i. & 0 ;. 0) nzc       NB. find leftmost zero's index into A11 non-zeros counter
     if. zi >: f + s do. break. end.           NB. no zeros left?
     nza=. (zi { p) (0:`[`(nz @ {)) } y        NB. find nzc amendment after rows swapping (indirect zi because row zi may be swapped before)
-    cp=. f ii2cp zi                           NB. new cycle permutation
-    p=. cp C. p                               NB. accumulate permutations
-    nzc=. (cp C. nzc) - (p { nza)             NB. in nzc move zero found to start, apply all permutations to nza, then amend nzc by excluded col
+    cp=. f <@, zi                           NB. new cycle permutation
+    p=. cp C. :: ] p                               NB. accumulate permutations
+    nzc=. (cp C. :: ] nzc) - (p { nza)             NB. in nzc move zero found to start, apply all permutations to nza, then amend nzc by excluded col
     f=. >: f                                  NB. exclude...
     s=. <: s                                  NB. ...leading column
   end.
@@ -132,6 +131,20 @@ gebalp2=: 3 : 0
   end.
 
   y ; (iL , (>: iH - iL)) ; p
+)
+
+gebalp3=: 3 : 0
+  n=. # y
+  f=. 0                                       NB. A11 upper left corner start
+  s=. n                                       NB. A11 size
+  p=. i. n                                    NB. permutations accumulator
+  'nzr nzc'=. (((+/ " 1 ,: (+/)) ((- " 1) dbg 'nzrc') diag) @ (0 & ~:)) y  NB. count non-zeros in rows and cols of A without diagonal
+  nzco=. (\: dbg 'nzco') nzc
+  pc=. (((\:~ dbg 'sorted') nzc) (<: dbg '<:') (i. - n)) (i. dbg 'pc') 0
+  y=. (<"1 (pc {. nzco) (}:@,. dbg ',.') (pc {. (i. - n))) ((C."1) dbg 'c C."1 A') y
+  nzro=. (/: dbg 'nzro') nzr
+  pr=. (((/:~ dbg 'sorted') nzr) (>: dbg '>:') (i. n)) (i: dbg 'pr') 0
+  y=. (<"1 (pr {. nzro) (,. dbg ',.') (pr {. (i. n))) (C. dbg 'r C. A') y
 )
 
 NB. ---------------------------------------------------------

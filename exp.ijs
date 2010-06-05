@@ -1,4 +1,3 @@
-NB. exp.ijs
 NB. Matrix exponential
 NB.
 NB. geexp  Matrix exponential of a general matrix

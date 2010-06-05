@@ -26,8 +26,8 @@ cberr=. 2 : '((norm1@(<: upddiag)@(u ct)) % (FP_EPS * v)) @ ]'  NB. conj. to for
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-GQNB=: 32   NB. block size limit
-GQNX=: 128  NB. crossover point, GQNX ≥ GQNB
+GQNB=: 3 NB. 32   NB. block size limit
+GQNX=: 4 NB. 128  NB. crossover point, GQNX ≥ GQNB
 
 NB. ---------------------------------------------------------
 NB. ungi
@@ -237,6 +237,8 @@ NB.   (idmat @ ms @ $ -: clean @ (mp  ct)) Q
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGLQ
+NB. - equivalent code
+NB.   Q -: K {. mp/ (idmat N) -"2 |. (+ TAU) * (* +)"0/~"1 + H
 
 unglq=: ($:~ ( 0 _1&(ms $))) : ( 0 _1 }. ([ (unglqstep^:(]`(ungi@#@])`((-(ungb@#)) ungl2 ((}.~ (2 # (  ungb@#)))@])))) ( tru1            @((   <. ( 0 _1&(ms $)) ) {.   ]))))
 
@@ -295,6 +297,8 @@ NB.   (idmat @ ms @ $ -: clean @ (mp~ ct)) Q
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGQL
+NB. - equivalent code
+NB.   Q -: (M,(-K)) {. mp/ (idmat M) -"2 |. TAU * (* +)"0/~"1 |: H
 
 ungql=: ($:~ (_1  0&(ms $))) : ( 1  0 }. ([ (ungqlstep^:(;`(ungi@c@])`((-(ungb@c)) ung2l ((}.~ (2 # (-@ungb@c)))@])))) ((tru1~ (-~/ @ $))@((-@(<. (_1  0&(ms $)))) {."1 ]))))
 
@@ -353,8 +357,32 @@ NB.   (idmat @ ms @ $ -: clean @ (mp~ ct)) Q
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGQR
+NB. - straightforward O(k*m^3) code:
+NB.   Q -: (M,K) {. mp/ (idmat M) -"2 TAU * (* +)"0/~"1 |: H
 
 ungqr=: ($:~ (_1  0&(ms $))) : (_1  0 }. ([ (ungqrstep^:(]`(ungi@c@])`((-(ungb@c)) ung2r ((}.~ (2 # (  ungb@c)))@])))) ( trl1            @((   <. (_1  0&(ms $)) ) {."1 ]))))
+
+
+NB. Formula:     iters = max(0,⌊(k+BS-NX-1)/BS⌋)
+ungi=: (0 >. <.@(GQNB %~ (_1+GQNB-GQNX)&+))M.
+
+NB. Formula:     size = min(k,BS*iters)
+ungb=: (<. (GQNB * ungi))M.
+
+
+
+
+NB. Q=. [n] ungqr Qf
+NB. Qf: m*k-matrix, unit lower triangular; n: 0:m, default is k; Q: m*n-matrix
+
+ungqr2=: 3 : 0
+  'ip L1U'=. y
+  n=. # L1U
+  y=. trtriu tru L1U
+  y=. (>/~ i. n) } y ,: L1U  NB. spec code
+  I=. <. n % TRINB
+  ip (C.^:_1"1) 1 {:: getripl1ustep ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
+)
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -410,6 +438,8 @@ NB.   (idmat @ ms @ $ -: clean @ (mp ct)) Q
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGRQ
+NB. - equivalent code
+NB.   Q -: (-K) {. mp/ (idmat N) -"2 (+ TAU) * (* +)"0/~"1 + H
 
 ungrq=: ($:~ ( 0 _1&(ms $))) : ( 0  1 }. ([ (ungrqstep^:(;`(ungi@#@])`((-(ungb@#)) ungr2 ((}.~ (2 # (-@ungb@#)))@])))) ((trl1~ (-~/ @ $))@((-@(<. ( 0 _1&(ms $)))) {.   ]))))
 

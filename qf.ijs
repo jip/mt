@@ -374,10 +374,12 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - berr for LQ: berr := ||A - L * Q|| / (ε * n * ||A||)
-NB. - berr for QL: berr := ||A - Q * L|| / (ε * m * ||A||)
-NB. - berr for QR: berr := ||A - Q * R|| / (ε * m * ||A||)
-NB. - berr for RQ: berr := ||A - R * Q|| / (ε * n * ||A||)
+NB. - berr for LQ: berr := ||L - A * Q^H|| / (ε * n * ||A||)
+NB. - berr for QL: berr := ||L - Q^H * A|| / (ε * m * ||A||)
+NB. - berr for QR: berr := ||R - Q^H * A|| / (ε * m * ||A||)
+NB. - berr for RQ: berr := ||R - A * Q^H|| / (ε * n * ||A||)
+NB. where
+NB.   matrix product is done indirectly via unmxxxx
 
 testgeqf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
@@ -392,10 +394,10 @@ testgeqf=: 3 : 0
   ('2b0111 & geqrf_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
   ('2b1110 & gerqf_jlapack_' tmonad (]`({. , (,.~ &. > / @ }.))`(rcond"_)`(_."_)`((norm1@(- ((mp  ungrq) & > /)))%((FP_EPS*c*norm1)@[)))) y
 
-  ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( trl         @:(}:"1)@]) (- dbg2 'lq-') unmlqrc~))%((FP_EPS*c*norm1)@[)))) y
-  ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((trl~(-~/@$))@  }.   @]) (- dbg2 'ql-') unmqllc~))%((FP_EPS*#*norm1)@[)))) y
-  ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) (- dbg2 'qr-') unmqrlc~))%((FP_EPS*#*norm1)@[)))) y
-  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((tru~(-~/@$))@:(}."1)@]) (- dbg2 'rq-') unmrqrc~))%((FP_EPS*c*norm1)@[)))) y
+  ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( trl         @:(}:"1)@]) - ((   <./ @$@]) {."1 unmlqrc)~))%((FP_EPS*c*norm1)@[)))) y
+  ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((trl~(-~/@$))@  }.   @]) - ((-@(<./)@$@]) {.   unmqllc)~))%((FP_EPS*#*norm1)@[)))) y
+  ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) - ((   <./ @$@]) {.   unmqrlc)~))%((FP_EPS*#*norm1)@[)))) y
+  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((tru~(-~/@$))@:(}."1)@]) - ((-@(<./)@$@]) {."1 unmrqrc)~))%((FP_EPS*c*norm1)@[)))) y
 
   EMPTY
 )

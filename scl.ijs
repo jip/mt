@@ -1,4 +1,3 @@
-NB. scl.ijs
 NB. Scale
 NB.
 NB. scl  Try to scale without overflow or underflow
@@ -25,8 +24,8 @@ NB. Syntax:
 NB.   Ascl=. (f,t) scl A
 NB. where
 NB.   A    - r-rank array
-NB.   f    ≠ 0, atom
-NB.   t    - atom
+NB.   f    ≠ 0, numeric atom
+NB.   t    - numeric atom
 NB.   Ascl - r-rank array, being A scaled by ratio (t/f)
 NB.          without under- or overflow, if possible
 NB.   r    ≥ 0, integer

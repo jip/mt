@@ -1,4 +1,3 @@
-NB. eqr.ijs
 NB. Eigenvalues and eigenvectors of structured matrix
 NB.
 NB. hseqr  Eigenvalues and, optionally, the Schur decomposition

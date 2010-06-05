@@ -1,4 +1,3 @@
-NB. bak.ijs
 NB. Restore original eigenvectors by backward transformation
 NB. from a balanced matrix or matrix pair
 NB.

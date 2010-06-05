@@ -1,8 +1,12 @@
 NB. pjlap.ijs
 NB. Pure J Linear Algebra Package
 
-require '~user/projects/pjlapack/util.ijs'     NB. vnormi
+script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
+script_z_ '~system/packages/math/matutil.ijs'   NB. diag
 
-require '~user/projects/pjlapack/bal.ijs'      NB. balance
-require '~user/projects/pjlapack/equ.ijs'      NB. equilibrate
-require '~user/projects/pjlapack/exp.ijs'      NB. exponent
+require '~user/projects/pjlap/util.ijs'         NB. vnormi
+
+require '~user/projects/pjlap/bal.ijs'          NB. balance
+require '~user/projects/pjlap/equ.ijs'          NB. equilibrate
+require '~user/projects/pjlap/exp.ijs'          NB. exponent
+require '~user/projects/pjlap/pow.ijs'          NB. powers

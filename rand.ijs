@@ -8,9 +8,9 @@ NB. trumat   Random upper triangular matrix
 NB. hemat    Random Hermitian (symmetric) matrix
 NB. unmat    Random unitary (orthogonal) matrix
 NB. dimat    Random diagonalizable matrix
-NB. pomat    Random Hermitian (symmetric) positive defined
+NB. pomat    Random Hermitian (symmetric) positive definite
 NB.          matrix
-NB. ptmat    Random Hermitian (symmetric) positive defined
+NB. ptmat    Random Hermitian (symmetric) positive definite
 NB.          tridiagonal matrix
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
@@ -93,14 +93,14 @@ NB. randnf
 NB. randnc
 NB.
 NB. Description:
-NB.   Normal distribution N(μ,σ^2) of float (complex) numbers
+NB.   Normal distribution N(μ,σ^2) of real (complex) numbers
 NB.   with mean μ and variance σ^2
 NB.
 NB. Syntax:
 NB.   S=. [par] randnf sh
 NB.   S=. [par] randnc sh
 NB. where
-NB.   sh   - r-array, shape of S
+NB.   sh  - r-array, shape of S
 NB.   par - optional 2-vector (μ,σ), σ>0, parameters of
 NB.         distribution, default is (0 1)
 NB.   S   - sh-array of values s ~ N(μ,σ^2)
@@ -109,8 +109,8 @@ NB.
 NB. Formula:
 NB.   nf1 ← sqrt(e)*cos(u)         NB. Box-Muller
 NB.   nf2 ← sqrt(e)*sin(u)         NB.   algorithm
-NB.   nc  ← (nf1 + i*nf2)/sqrt(2)
-NB.   n3  ← σ*n + μ
+NB.   nc  ← (nf1 + i*nf2)/sqrt(2)  NB. D.R.Brillinger [1]
+NB.   n3  ← σ*nxx + μ
 NB. where
 NB.   u            ~ U(0,2*π)
 NB.   e            ~ E(2)
@@ -136,14 +136,20 @@ NB.        S=. sh ($,) S
 NB.
 NB. Application:
 NB. - verb to generate real matrix S with elements s
-NB.   having s ~ N(1,2^2):
-NB.     normrand=: 1 2 & randnf
+NB.   having s ~ N(1,3^2):
+NB.     normrand=: 1 3 & randnf
 NB. - verb to generate complex matrix S with elements s
-NB.   having s ~ N(1,2^2)
-NB.     normrand=: 1 2 & randnc
+NB.   having s ~ N(1,3^2)
+NB.     normrand=: 1 3 & randnc
 NB. - verb to generate complex matrix S with elements s
-NB.   having Re(s) ~ N(0,1) and Im(s) ~ N(1,2^2):
-NB.     normrand=: randnf j. (1 2 & randnf)
+NB.   having Re(s) ~ N(0,1) and Im(s) ~ N(1,3^2):
+NB.     normrand=: randnf j. (1 3 & randnf)
+NB.
+NB. References:
+NB. [1] David R. Brillinger "Time series data analysis and
+NB.     theory", The University of California, Berkeley, 1975
+NB.     (Д. Бриллинджер "Временные ряды. Обработка данных и
+NB.     теория". Изд-во "Мир". М. 1980, стр. 98)
 
 randnf=: (($,) +.@:((%: @ (2 & rande)) r. (0 2p1 & randu))@>.@-:@(*/)) : (p. $:)
 randnc=:           ((%: @      rande ) r. (0 2p1 & randu))             : (p. $:)
@@ -152,7 +158,7 @@ NB. ---------------------------------------------------------
 NB. randtnf
 NB.
 NB. Description:
-NB.   Truncated normal distribution TN(μ,σ^2,a,b) of float
+NB.   Truncated normal distribution TN(μ,σ^2,a,b) of real
 NB.   numbers in range [a,b] with mean μ and variance σ^2
 NB.
 NB. Syntax:
@@ -168,8 +174,8 @@ NB.
 NB. Application:
 NB. - verb to generate complex matrix S with elements s
 NB.   having left-side truncated normal distribution
-NB.   TN(1,2^2,3,+∞):
-NB.     tnormrand=: 1 2 3 _ & randtnf
+NB.   TN(1,3^2,4,+∞):
+NB.     tnormrand=: 1 3 4 _ & randtnf
 
 randtnf=: (0 1 __ _ & $:) :(4 : 0)
   'mu sigma a b'=. x
@@ -209,21 +215,21 @@ NB.
 NB. Application:
 NB. - generate real 4×4-matrix G with elements g having:
 NB.     mantissa(g) ~ U(_1,1)
-NB.     exponent(g) ~ TN(0,4^2,_6,4)
+NB.     exponent(g) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     G=. _1 1 0 4 _6 4 gemat 4 4
+NB.     G=. _1 1 0 3 _6 4 gemat 4 4
 NB. - generate complex 4×4-matrix G with elements g having:
 NB.     mantissa(Re(g)),mantissa(Im(g)) ~ U(_1,1)
-NB.     exponent(Re(g)),exponent(Im(g)) ~ TN(0,4^2,_6,4)
+NB.     exponent(Re(g)),exponent(Im(g)) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     G=. _1 1 0 4 _6 4 (gemat j. gemat) 4 4
+NB.     G=. _1 1 0 3 _6 4 (gemat j. gemat) 4 4
 NB. - generate complex 4×4-matrix G with elements g having:
 NB.     mantissa(Re(g)) ~ U(0,1)
 NB.     exponent(Re(g)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(g)) ~ U(_1,1)
-NB.     exponent(Im(g)) ~ TN(0,4^2,_6,4)
+NB.     exponent(Im(g)) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     G=. (gemat j. (_1 1 0 4 _6 4 & gemat)) 4 4
+NB.     G=. ((0 1 0 1 __ _ & gemat) j. (_1 1 0 3 _6 4 & gemat)) 4 4
 NB.
 NB. Notes:
 NB. - default par provides about 95% of g numbers falls into
@@ -255,41 +261,41 @@ NB. Algorithm for basic adverb trlmat:
 NB.   In: n randx
 NB.   Out: L
 NB.   0) count non-zero elements in lower triangle:
-NB.        nz := n*(n+1)/2
-NB.   1) generate random nz-vector:
-NB.        vr=. randx nz
+NB.        ne := n*(n+1)/2
+NB.   1) generate random ne-vector:
+NB.        ve=. randx ne
 NB.   2) prepare fret:
-NB.      2.0) generate zero nz-vector:
-NB.             f=. nz $ 0
+NB.      2.0) generate zero ne-vector:
+NB.             f=. ne $ 0
 NB.      2.1) generate lIOS for start of an interval marks:
-NB.             lios=. +/\ i. nz
+NB.             lios=. +/\ i. ne
 NB.      2.2) write in marks:
 NB.             f=. 1 lios } f
-NB.   3) cut vz on pieces of length 1 2 3 ... and stack them
+NB.   3) cut ve on pieces of length 1 2 3 ... and stack them
 NB.      into lower triangular matrix:
-NB.        L=. f ];.1 vr
+NB.        L=. f ];.1 ve
 NB.
 NB. Application:
 NB. - generate real lower triangular 4×4-matrix L with
 NB.   elements l having:
 NB.     mantissa(l) ~ U(_1,1)
-NB.     exponent(l) ~ TN(0,4^2,_6,4)
+NB.     exponent(l) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     L=. (_1 1 0 4 _6 4 & gemat) trlmat 4 4
+NB.     L=. (_1 1 0 3 _6 4 & gemat) trlmat 4 4
 NB. - generate complex lower triangular 4×4-matrix L with
 NB.   elements l having:
 NB.     mantissa(Re(l)),mantissa(Im(l)) ~ U(_1,1)
-NB.     exponent(Re(l)),exponent(Im(l)) ~ TN(0,4^2,_6,4)
+NB.     exponent(Re(l)),exponent(Im(l)) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     L=. (_1 1 0 4 _6 4 & (gemat j. gemat)) trlmat 4
+NB.     L=. (_1 1 0 3 _6 4 & (gemat j. gemat)) trlmat 4
 NB. - generate complex lower triangular 4×4-matrix L with
 NB.   elements l having:
 NB.     mantissa(Re(l)) ~ U(0,1)
 NB.     exponent(Re(l)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(l)) ~ U(_1,1)
-NB.     exponent(Im(l)) ~ TN(0,4^2,_6,4)
+NB.     exponent(Im(l)) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     L=. (gemat j. (_1 1 0 4 _6 4 & gemat)) trlmat 4
+NB.     L=. ((0 1 0 1 __ _ & gemat) j. (_1 1 0 3 _6 4 & gemat)) trlmat 4
 NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
@@ -323,23 +329,23 @@ NB. Application:
 NB. - generate real symmetric 4×4-matrix H with
 NB.   elements h having:
 NB.     mantissa(h) ~ U(_1,1)
-NB.     exponent(h) ~ TN(0,4^2,_6,4)
+NB.     exponent(h) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     H=. (_1 1 0 4 _6 4 & gemat) hemat 4 4
+NB.     H=. (_1 1 0 3 _6 4 & gemat) hemat 4 4
 NB. - generate complex Hermitian 4×4-matrix L with elements h
 NB.   having:
 NB.     mantissa(Re(h)),mantissa(Im(h)) ~ U(_1,1)
-NB.     exponent(Re(h)),exponent(Im(h)) ~ TN(0,4^2,_6,4)
+NB.     exponent(Re(h)),exponent(Im(h)) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     H=. (_1 1 0 4 _6 4 & (gemat j. gemat)) hemat 4
+NB.     H=. (_1 1 0 3 _6 4 & (gemat j. gemat)) hemat 4
 NB. - generate complex Hermitian 4×4-matrix L with elements h
 NB.   having:
 NB.     mantissa(Re(h)) ~ U(0,1)
 NB.     exponent(Re(h)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(h)) ~ U(_1,1)
-NB.     exponent(Im(h)) ~ TN(0,4^2,_6,4)
+NB.     exponent(Im(h)) ~ TN(0,3^2,_6,4)
 NB.   :
-NB.     H=. (gemat j. (_1 1 0 4 _6 4 & gemat)) hemat 4
+NB.     H=. ((0 1 0 1 __ _ & gemat) j. (_1 1 0 3 _6 4 & gemat)) hemat 4
 NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
@@ -363,8 +369,8 @@ NB.            N(0,1), it is either randnf or randnc
 NB.   Q      - n×n-matrix, random unitary (orthogonal)
 NB.
 NB. Formula:
-NB.   Z ← randnx(n,n)
-NB.   (Q,R) ← QR(Z)
+NB.   A ← randnx(n,n)
+NB.   (Q,R) ← QR(A)
 NB.   d ← diag(R)
 NB.   Λ ← diagmat(d / |d|)
 NB.   Q ← Q*Λ
@@ -378,10 +384,14 @@ NB.   I=. idmat n
 NB.   Q=. randnf unmat n
 NB.
 NB. Application:
-NB. - generate real orthogonal 4×4-matrix Q:
-NB.     Q=. (1 2 & randnf) unmat 4 4
-NB. - generate complex unitary 4×4-matrix U:
-NB.     U=. (1 2 & randnc) unmat 4
+NB. - generate real orthogonal 4×4-matrix Q, where Q is
+NB.   derived via QR-factorization from real matrix B having
+NB.   elements b ~ N(1,3^2):
+NB.     Q=. (1 3 & randnf) unmat 4 4
+NB. - generate complex unitary 4×4-matrix U, where U is
+NB.   derived via QR-factorization from complex matrix B
+NB.   having elements b ~ N(1,3^2):
+NB.     U=. (1 3 & randnc) unmat 4
 NB.
 NB. References:
 NB. [1] Francesco Mezzadri (2007). How to generate random
@@ -410,7 +420,7 @@ NB.   randq - monadic verb to generate random unitary
 NB.           (orthogonal) (y,y)-matrix (size is taken from
 NB.           y)
 NB.   randx - monadic verb to generate random y-vector
-NB.           (length is taken from y) of distinct or float
+NB.           (length is taken from y) of distinct or real
 NB.           (non-complex) numbers
 NB.   A     - n×n-matrix, random diagonalizable square
 NB.
@@ -424,34 +434,30 @@ NB.
 NB. Application:
 NB. - generate real diagonalizable 4×4-matrix A with
 NB.   eigenvalues d having:
-NB.     mantissa(d) ~ U(_1,1)
-NB.     exponent(d) ~ TN(0,4^2,_6,4)
-NB.   :
-NB.     A=. (_1 1 0 4 _6 4 & gemat) dimat ((_1 1 & randnf) unmat) 4 4
+NB.     mantissa(d) ~ U(1,3)
+NB.     exponent(d) ~ TN(0,4^2,_5,6)
+NB.   and eigenvectors Q derived via QR-factorization from
+NB.   real matrix B having elements b ~ N(1,3^2):
+NB.     A=. (1 3 0 4 _5 6 & gemat) dimat ((1 3 & randnf) unmat) 4 4
 NB. - generate complex diagonalizable Hermitian 4×4-matrix A
 NB.   with eigenvalues d having:
-NB.     mantissa(d) ~ U(_1,1)
-NB.     exponent(d) ~ TN(0,4^2,_6,4)
-NB.   :
-NB.     A=. (_1 1 0 4 _6 4 & gemat) dimat ((_1 1 & randnc) unmat) 4
+NB.     mantissa(d) ~ U(1,3)
+NB.     exponent(d) ~ TN(0,4^2,_5,6)
+NB.   and eigenvectors U derived via QR-factorization from
+NB.   complex matrix B having elements b ~ N(1,3^2):
+NB.     A=. (1 3 0 4 _5 6 & gemat) dimat ((1 3 & randnc) unmat) 4
 NB. - generate complex diagonalizable 4×4-matrix A with
 NB.   eigenvalues d having:
-NB.     mantissa(Re(d)),mantissa(Im(d)) ~ U(_1,1)
-NB.     exponent(Re(d)),exponent(Im(d)) ~ TN(0,4^2,_6,4)
-NB.   :
-NB.     A=. (_1 1 0 4 _6 4 & (gemat j. gemat)) dimat ((_1 1 & randnc) unmat) 4
-NB. - generate complex diagonalizable 4×4-matrix A with
-NB.   eigenvalues d having:
-NB.     mantissa(Re(d)) ~ U(0,1)
-NB.     exponent(Re(d)) ~ TN(0,1,-∞,+∞)
-NB.     mantissa(Im(d)) ~ U(_1,1)
-NB.     exponent(Im(d)) ~ TN(0,4^2,_6,4)
-NB.   :
-NB.     A=. (gemat j. (_1 1 0 4 _6 4 & gemat)) dimat (randnc unmat) 4 4
+NB.     mantissa(Re(d)),mantissa(Im(d)) ~ U(1,3)
+NB.     exponent(Re(d)),exponent(Im(d)) ~ TN(0,4^2,_5,6)
+NB.   and eigenvectors U derived via QR-factorization from
+NB.   complex matrix B having elements b ~ N(1,3^2):
+NB.     A=. (1 3 0 4 _5 6 & (gemat j. gemat)) dimat ((1 3 & randnc) unmat) 4
 NB.
 NB. Notes:
-NB. - A will be Hermitian (symmetric) if randx produces float
+NB. - A will be Hermitian (symmetric) if randx produces real
 NB.   (non-complex), possibly non-distinct numbers
+NB. - A is diagonalizable iif A is normal (A^H * A = A * A^H)
 NB.
 NB. TODO:
 NB. - assertion
@@ -463,7 +469,7 @@ NB. pomat
 NB.
 NB. Description:
 NB.   Adv. to make verb to make a random Hermitian
-NB.   (symmetric) positive defined matrix
+NB.   (symmetric) positive definite matrix
 NB.
 NB. Syntax:
 NB.   P=. randx pomat sh
@@ -472,29 +478,29 @@ NB.   sh    - size or shape, either n or (n,n)
 NB.   randx - monadic verb to generate random non-singular
 NB.           n×n-matrix
 NB.   P     - n×n-matrix, random Hermitian (symmetric)
-NB.           positive defined
+NB.           positive definite
 NB.
 NB. Application:
-NB. - generate real symmetric positive defined 4×4-matrix P
+NB. - generate real symmetric positive definite 4×4-matrix P
 NB.   with elements p having:
-NB.     mantissa(p) ~ U(_1,1)
-NB.     exponent(p) ~ TN(0,4^2,_6,4)
+NB.     mantissa(p) ~ U(1,3)
+NB.     exponent(p) ~ TN(0,4^2,_5,6)
 NB.   :
-NB.     P=. (_1 1 0 4 _6 4 & gemat) pomat 4 4
-NB. - generate complex Hermitian positive defined 4×4-matrix
+NB.     P=. (1 3 0 4 _5 6 & gemat) pomat 4 4
+NB. - generate complex Hermitian positive definite 4×4-matrix
 NB.   P with elements p having:
-NB.     mantissa(Re(p)),mantissa(Im(p)) ~ U(_1,1)
-NB.     exponent(Re(p)),exponent(Im(p)) ~ TN(0,4^2,_6,4)
+NB.     mantissa(Re(p)),mantissa(Im(p)) ~ U(1,3)
+NB.     exponent(Re(p)),exponent(Im(p)) ~ TN(0,4^2,_5,6)
 NB.   :
-NB.     P=. (_1 1 0 4 _6 4 & (gemat j. gemat)) pomat 4
-NB. - generate complex Hermitian positive defined 4×4-matrix
+NB.     P=. (1 3 0 4 _5 6 & (gemat j. gemat)) pomat 4
+NB. - generate complex Hermitian positive definite 4×4-matrix
 NB.   P with elements p having:
-NB.     mantissa(Re(p)) ~ U(0,1)
+NB.     mantissa(Re(p)) ~ U(1,2)
 NB.     exponent(Re(p)) ~ TN(0,1,-∞,+∞)
-NB.     mantissa(Im(p)) ~ U(_1,1)
-NB.     exponent(Im(p)) ~ TN(0,4^2,_6,4)
+NB.     mantissa(Im(p)) ~ U(1,3)
+NB.     exponent(Im(p)) ~ TN(0,4^2,_5,6)
 NB.   :
-NB.     P=. (gemat j. (_1 1 0 4 _6 4 & gemat)) pomat 4
+NB.     P=. ((1 2 0 1 __ _ & gemat) j. (1 3 0 4 _5 6 & gemat)) pomat 4
 NB.
 NB. TODO:
 NB. - assertion
@@ -506,7 +512,7 @@ NB. ptmat
 NB.
 NB. Description:
 NB.   Adv. to make verb to make a random Hermitian
-NB.   (symmetric) positive defined tridiagonal matrix
+NB.   (symmetric) positive definite tridiagonal matrix
 NB.
 NB. Syntax:
 NB.   T=. randx ptmat sh
@@ -518,32 +524,31 @@ NB.             d=. (| @ (9 o. randx)) n
 NB.             e=. randx (n-1)
 NB.   d     - n-vector of positive numbers, the main diagonal
 NB.           of T
-NB.   e     - (n-1)-vector, the subdiagonal of T
+NB.   e     - (n-1)-vector, the subdiagonal and also the
+NB.           conjugated superdiagonal of T
 NB.   T     - n×n-matrix, random Hermitian (symmetric)
-NB.           positive defined tridiagonal
+NB.           positive definite tridiagonal
 NB.
 NB. Application:
-NB.   T=. (randu r. rande) ptmat 4
-NB. Application:
-NB. - generate real symmetric positive defined tridiagonal
-NB.   4×4-matrix T with elements t having:
-NB.     mantissa(t) ~ U(_1,1)
-NB.     exponent(t) ~ TN(0,4^2,_6,4)
+NB. - generate real symmetric positive definite tridiagonal
+NB.   4×4-matrix T with elements d and e having:
+NB.     mantissa(d),mantissa(e) ~ U(1,3)
+NB.     mantissa(d),exponent(e) ~ TN(0,4^2,_5,6)
 NB.   :
-NB.     T=. (_1 1 0 4 _6 4 & gemat) ptmat 4 4
-NB. - generate complex Hermitian positive defined tridiagonal
-NB.   4×4-matrix T with elements t having:
-NB.     mantissa(Re(t)),mantissa(Im(t)) ~ U(_1,1)
-NB.     exponent(Re(t)),exponent(Im(t)) ~ TN(0,4^2,_6,4)
+NB.     T=. (1 3 0 4 _5 6 & gemat) ptmat 4 4
+NB. - generate complex Hermitian positive definite
+NB.   tridiagonal 4×4-matrix T with elements d and e having:
+NB.     mantissa(d),mantissa(Re(e)),mantissa(Im(e)) ~ U(1,3)
+NB.     exponent(d),exponent(Re(e)),exponent(Im(e)) ~ TN(0,4^2,_5,6)
 NB.   :
-NB.     T=. (_1 1 0 4 _6 4 & (gemat j. gemat)) ptmat 4
-NB. - generate complex Hermitian positive defined tridiagonal
-NB.   4×4-matrix T with elements t having:
-NB.     mantissa(Re(t)) ~ U(0,1)
-NB.     exponent(Re(t)) ~ TN(0,1,-∞,+∞)
-NB.     mantissa(Im(t)) ~ U(_1,1)
-NB.     exponent(Im(t)) ~ TN(0,4^2,_6,4)
+NB.     T=. (1 3 0 4 _5 6 & (gemat j. gemat)) ptmat 4
+NB. - generate complex Hermitian positive definite
+NB.   tridiagonal 4×4-matrix T with elements d and e having:
+NB.     mantissa(d),mantissa(Re(e)) ~ U(0,1)
+NB.     mantissa(d),exponent(Re(e)) ~ TN(0,1,-∞,+∞)
+NB.     mantissa(Im(e)) ~ U(1,3)
+NB.     exponent(Im(e)) ~ TN(0,4^2,_5,6)
 NB.   :
-NB.     T=. (gemat j. (_1 1 0 4 _6 4 & gemat)) ptmat 4
+NB.     T=. (gemat j. (1 3 0 4 _5 6 & gemat)) ptmat 4
 
 ptmat=: 1 : '(u@<:@{.) (((+@[);1:) setdiag_mt_ (([;_1:) setdiag_mt_ ])) ((a:;~(|@(9 o. u)@{.)) setdiag_mt_ idmat_mt_)'

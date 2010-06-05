@@ -85,6 +85,9 @@ NB. stitchb=: {.  `(-@>.)`,. tile
 NB. appendl=: {."1`   >. `,  tile
 NB. appendr=: {."1`(-@>.)`,  tile
 
+NB. stitcht=: ,.`([,.(({.~    # )~))`(({.~    # ),.]) @. (*@-&#)
+NB. stitchb=: ,.`([,.(({.~ (-@#))~))`(({.~ (-@#)),.]) @. (*@-&#)
+
 stitchrb=: [ ,. ({.~ (-@#))~            NB. stitch right aligned down to the left
 
 NB. ---------------------------------------------------------

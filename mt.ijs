@@ -1,8 +1,6 @@
 NB. Matrix toolbox
 NB.
 NB. test      Adv. to test package
-NB. logclean  Clean up log file (if enabled) and/or log array
-NB.           (if enabled)
 NB. logstat   Show statistics from log array
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
@@ -54,7 +52,6 @@ NB. System verbs
 script_z_ '~system/main/numeric.ijs'                  NB. range
 script_z_ '~system/main/myutil.ijs'                   NB. timespacex
 script_z_ '~system/packages/math/mathutil.ijs'        NB. mp
-script_z_ '~system/packages/math/matutil.ijs'         NB. diag
 
 NB. ---------------------------------------------------------
 NB. Package verbs and nouns
@@ -96,7 +93,7 @@ NB. test
 NB. Adv. to test package
 NB.
 NB. Syntax:
-NB.   r=. mkge test m,n
+NB.   r=. mkge test (m,n)
 NB. where
 NB.   m,n  - 2-vector of integers, shape of random matrices
 NB.          to test algorithms; only algorithms which accept
@@ -113,19 +110,15 @@ NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) test 500 500
 
 test=: 1 : 0
   require 'printf'
-  '%-25s %-12s %-12s %-12s %-12s %-12s' & printf 'algorithm' ; 'rcond' ; 'rel bw err' ; 'rel fw err' ; 'time, sec.' ; 'space, bytes'
+  '%-25s %-12s %-12s %-12s %-12s %-12s' printf 'algorithm' ; 'rcond' ; 'rel fw err' ; 'rel bw err' ; 'time, sec.' ; 'space, bytes'
   assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
-  ((u testtrf) [ (u testtri) [ (u testtrs)) y
+  (u testtrf) y
+  (u testtri) y
+  (u testtrs) y
+  (u testqf) y
+  (u testgq) y
+  (u testmq) y
 )
-
-NB. ---------------------------------------------------------
-NB. logclean
-NB. Clean up log file (if enabled) and/or log array (if
-NB. enabled)
-NB.
-NB. Syntax: logclean ''
-
-logclean=: [:
 
 NB. ---------------------------------------------------------
 NB. logstat

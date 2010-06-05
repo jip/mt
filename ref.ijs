@@ -544,7 +544,7 @@ NB.     LAPACK Working Note 203.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. TODO:
-NB. - CHECKME! after larf[gp] monad -> dyad
+NB. - CHECKME! after larf[gp] monad -> dyad and upd3ri gerund reversion
 
 larfLs=: 1 : '(((ct0 cfuj (0{m)) unxu (3 4{m)) ((ct0c cfuj (2{m)) unxu (5{m)) ]) ((,`larfl) upd3ci (0 1 2{m)) ]'
 
@@ -602,7 +602,7 @@ NB.     LAPACK Working Note 203.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. TODO:
-NB. - CHECKME! after larf[gp] monad -> dyad
+NB. - CHECKME! after larf[gp] monad -> dyad and upd3ri gerund reversion
 
 larfRs=: 1 : '(((ct0 cfuj (0{m)) unxu (3 4{m)) ((ct0r cfuj (2{m)) unxu (5{m)) ]) ((,`larfr) upd3ci (0 1 2{m)) ]'
 
@@ -673,21 +673,14 @@ NB. Notes:
 NB. - aviods scanning V twice
 NB.
 NB. TODO:
-NB. - CHECKME! after larf[gp] monad -> dyad
+NB. - CHECKME! after larf[gp] monad -> dyad and upd3ri gerund reversion
 
 larfRLs=: 1 : '(((ct0 cfuj (0{m)) unxu (4 6{m)) ((ct0r cfuj (2{m)) unxu (5{m)) ]) (((ct0c cfuj (3{m)) unxu (8{m)) ((,`larfl) upd3ci (0 1 3{m)) ((,`larfr) upd3ci (0 1 2{m))) ]'
 
 NB. ---------------------------------------------------------
-NB. Adverb     Direction    Layout
-NB. larftfc    forward      columnwise
-NB. larftfr    forward      rowwise
-NB. larftbc    backward     columnwise
-NB. larftbr    backward     rowwise
-NB.
-NB. Template adv. to make verbs to form the triangular factor
-NB. T of a block reflector H, which is defined as a product
-NB. of p elementary reflectors. If direction is forward,
-NB. then:
+NB. Form the triangular factor T of a block reflector H,
+NB. which is defined as a product of p elementary reflectors.
+NB. If direction is forward, then:
 NB.   H = H(1) H(2) ... H(p) and T is upper triangular,
 NB. otherwise direction is backward, and:
 NB.   H = H(p) ... H(2) H(1) and T is lower triangular.
@@ -696,8 +689,30 @@ NB.   H = I - V * T * V' ,
 NB. otherwise layout is rowwise, and:
 NB.   H = I - V' * T * V .
 NB.
+NB. TODO:
+NB. - consider to scan trailing zeros
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. larftfc
+NB. Input V has forward direction and columnwise layout
+NB.
 NB. Syntax:
-NB.   vapp=. (ioV,ioT) larftxx
+NB.   Aupd=. rios larftfc A
+NB. where
+NB.   V0 - (m+1+n)×n-matrix, being matrix V with appended
+NB.        zero matrix to store matrix T
+NB.   V  - (m+1)×n-matrix, unit lower trinagular, i-th
+NB.        column (i=0:n-1) V[0:m][i] is (m+1)-vector:
+NB.          (0[0:i-1],1,V[i][i+1:m-1],τ[i])
+NB.   T  - n×n-matrix, upper triangular, the factor of the
+NB.        block reflector H
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. larftfc
+NB. Input V has forward direction and columnwise layout
+NB.
+NB. Syntax:
+NB.   vapp=. (ioV,ioTau,ioT) larftxx
 NB. where
 NB.   ioV  - integer, IO V's rIOS in x, i.e.
 NB.            V -: (ioV { rios) ] ;. 0 A
@@ -713,80 +728,85 @@ NB.          zero rows allocated for bs×bs-matrix T
 NB.          define a block reflector H, and submatrix C to
 NB.          update
 NB.   Aupd - m×n-matrix, being A with updated submatrix C
-NB.
-NB. Layout:
-NB. - for m=8, n=7, bs=3, direction=forward,
-NB.   layout=columnwise, after 2nd QRF step:
-NB.     a   a   a   a   a   a   a
-NB.     a   a   a   a   a   a   a
-NB.     a   a   a   a   a   a   a
-NB.     a   a   a   β33 a   a   a
-NB.     a   a   a   V34 β44 a   a
-NB.     a   a   a   V35 V45 β55 a
-NB.     a   a   a   V36 V46 V56 a
-NB.     a   a   a   V37 V47 V57 a
-NB.     τ   τ   τ   τ3  τ4  τ5  τ
-NB.     T00 T01 T02 0   0   0   0
-NB.     0   T11 T12 0   0   0   0
-NB.     0   0   T22 0   0   0   0
-NB.   V is unit lower triangular (unit diagonal is not
-NB.   stored), T is placed in the leftmost position in the
-NB.   reserved space.
 
-NB. TODO: consider to scan trailing zeros
+LARFTFCDRIOS=: 5 2 2 $ 1 0 _1 1 1 1 _1 0 0 1 0 0 0 0 1 1 0 1 1 0         NB. A,v,τ,Ttru,Tcol
+LARFTBCDRIOS=: 5 2 2 $ _1 0 _1 1 _1 _1 _1 0 0 _1 0 0 _1 0 1 1 _1 _1 1 0  NB. A,v,τ,Ttrl,Tcol
+LARFTFRDRIOS=: 5 2 2 $ 0 1 1 _1 1 1 0 _1 1 0 0 0 0 0 1 1 0 1 1 0         NB. A,v,τ,Ttru,Tcol
 
-LARFTFCDRIOS=: 5 2 2 $ 1 0 _1 1 1 1 _1 0 0 1 0 0 0 0 1 1 0 1 1 0  NB. A,v,τ,Ttru0,Tcol
-LARFTFRDRIOS=: 5 2 2 $ 0 1 1 _1 1 1 0 _1 1 0 0 0 0 0 1 1 0 1 1 0  NB. A,v,τ,Ttru0,Tcol
-
-NB. cios1=. mkcios1larftfc (t,h,l,w)
+NB. rios1=. mkrios1larftfc riosV
 mkrios1larftfc=: 3 : 0
-  th1=. >: (+/) }: 't1 h1 l1'=. 1 _1 1 + }: 't h l w'=. y
-  5 2 2 $ t1,l,h1,1,t1,l1,h1,1,(t+h),l1,1 1,th1,0 1 1,th1,1 1 1
+  tT=. >: tt=. (+/) 0 2 { 'tV1 lV1 hV1'=. 1 1 _1 + 'tV lV hV'=. 3 ({.,) y
+  5 2 2 $ tV1,lV,hV1,1,tV1,lV1,hV1,1,tt,lV1,1 1,tT,0 1 1,tT,1 1 1
 )
 
-NB. cios1=. mkcios1larftfr (t,h,l,w)
+NB. rios1=. mkrios1larftbc riosV
+mkrios1larftbc=: 3 : 0
+  'h1 w1'=. <: 'h w'=. {: y
+  5 2 2 $ _2 _1,h1,1 _2 _2,h1,1,w,_2 1 1,w1,_1 1 1,w1,_2 1 1
+)
+
+NB. rios1=. mkrios1larftfr riosV
 mkrios1larftfr=: 3 : 0
-  't1 l1 w1'=. 1 1 _1 + (<<<1) { 't h l w'=. y
+  't1 l1 w1'=. 1 1 _1 + 't l w'=. (<<< 2) ({,) y
   5 2 2 $ t,l1,1,w1,t1,l1,1,w1,t1,(l+w),1 1 0,(l+w+1),1 1 0,(l+w+2),1 1
 )
 
 NB. Tcol =: Ttru0 * (- τ) * (v' * A)'
-larftcstep=: (]`(ct@mp)`((1 & (0:}))@ct)`*`(-@(0&({,)))`mp`] map4ri 0 1 2 3 4) step
+larftfcstep=: (]`mp`(-@(0&({,)))`*`((1 & (0:}))@ct)`(ct@mp)`] map4ri 0 1 2 3 4) step
 
-NB. Trow =: Ttrl0 * (- τ) * A * v'
-larftrstep=: (]`(mp~)`((1 & (0:}))@ct)`*`(-@(0&({,)))`mp`] map4ri 0 1 2 3 4) step
+NB. Tcol =: Ttrl0 * (- τ) * (v' * A)'
+larftbcstep=: (]`mp`(-@(0&({,)))`*`((1 & (_1:}))@ct)`(ct@mp)`] map4ri 0 1 2 3 4) step
 
-NB. VT=. riosV larftfc A
-larftfc=: 4 : 0
-  'm n'=. $ y
-  't h l w'=. thlw=. , x
-  y=. (((t+h),l) ,: (1,w)) (,`(hds2ios@(((-@*),(,~ >:)) & ({:@$))) maprl) y  NB. copy current block's τ[i*nb:(i+1)*nb-1] to T's diagonal
-  cios1=. mkcios1larftfc thlw
-  0 {:: (<:w) (LARFTFCDRIOS & larftfcstep) (y ; cios1)
-)
+NB. Tcol =: Ttru0 * (- τ) * A * v'
+larftfrstep=: (]`mp`(-@(0&({,)))`*`((1 & (0:}))@ct)`(mp~)`] map4ri 0 1 2 3 4) step
 
-NB. VT=. riosV larftfc A
-larftfr=: 4 : 0
-  'm n'=. $ y
-  't h l w'=. thlw=. , x
-  y=. ((t,(l+w)) ,: (h,1)) (,`(hds2ios@(((-~),(,~ >:)) & ({:@$))) maprl) y  NB. copy current block's τ[i*nb:(i+1)*nb-1] to T's diagonal
-  cios1=. mkcios1larftfr thlw
-  0 {:: (<:w) (LARFTFCDRIOS & larftfrstep) (y ; cios1)
-)
+NB. Aupd=. rios ((ioV,ioTau) larftfc) A
+NB.
+NB. Algorithm:
+NB.   1) calculate block size:
+NB.        bs := width of V
+NB.   2) calculate number of iterations:
+NB.        iters := bs - 1
+NB.   3) Aupd := A with vector τ[leftV:leftV+bs-1] copied into T diagonal
+NB.      (copying single τ[leftV] into T[0,0] completes the step 0)
+NB.   4) rios1 := calculated rIOS after step 0 and before step 1
+NB.   5) evaluate expression:
+NB.        (LARFTFCDRIOS & larftfcstep) (Aupd ; rios1)
+NB.      iters times
+NB.   6) extract 0-th item from boxed 2-vector
+
+larftfc=: 1 : '(<: @ (_1 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTFCDRIOS & larftfcstep)) ((,`((- & #) diaglios ($@])) maprli (1{m)) ; (mkrios1larftfc @ (m nmx 0)))'
+
+NB. Aupd=. rios ((ioV,ioTau) larftbc) A
+larftbc=: 1 : '(<: @ (_1 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTBCDRIOS & larftbcstep)) ((,`(((- #)~ ({:@$)) diaglios ($@])) maprli (1{m)) ; (mkrios1larftbc @ (m nmx 0)))'
+
+NB. Aupd=. rios ((ioV,ioTau) larftfr) A
+larftfr=: 1 : '(<: @ (2 & ({,)) @ (m nmx 0)) ((0 & {::) @ (LARFTFRDRIOS & larftfrstep)) ((,`(((- #)~ ({:@$)) diaglios ($@])) maprli (1{m)) ; (mkrios1larftfr @ (m nmx 0)))'
+
+
+NB.   VT - (m+1+n)×n-matrix, being matrix VTau0 with zero
+NB.        matrix replaced by matrix T
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+NB. larftfr    forward      rowwise
+NB. larftbc    backward     columnwise
+NB. larftbr    backward     rowwise
+
 
 NB. ---------------------------------------------------------
-NB. Adverb     Action   Side   Transp  Direction  Layout
+NB. Adverb     Action   Side   Transp  Direction  Layout      Algo
 NB. larfblnfc  H  * C   left   none    forward    columnwise
-NB. larfblcfc  H' * C   left   ct      forward    columnwise
+NB. larfblcfc  H' * C   left   ct      forward    columnwise  QR
 NB. larfbrnfc  C  * H   right  none    forward    columnwise
 NB. larfbrnfc  C  * H'  right  ct      forward    columnwise
 NB. larfblnbc  H  * C   left   none    backward   columnwise
-NB. larfblcbc  H' * C   left   ct      backward   columnwise
+NB. larfblcbc  H' * C   left   ct      backward   columnwise  QL
 NB. larfbrnbc  C  * H   right  none    backward   columnwise
 NB. larfbrcbc  C  * H'  right  ct      backward   columnwise
 NB. larfblnfr  H  * C   left   none    forward    rowwise
 NB. larfblcfr  H' * C   left   ct      forward    rowwise
-NB. larfbrnfr  C  * H   right  none    forward    rowwise
+NB. larfbrnfr  C  * H   right  none    forward    rowwise     LQ
 NB. larfbrnfr  C  * H'  right  ct      forward    rowwise
 NB. larfblnbr  H  * C   left   none    backward   rowwise
 NB. larfblcbr  H' * C   left   ct      backward   rowwise
@@ -820,8 +840,10 @@ NB.          define a block reflector H, and submatrix C to
 NB.          update
 NB.   Aupd - m×n-matrix, being A with updated submatrix C
 
-larfblnfc=: -`([ ((1&sdiag)@mp) ((mp ct)~))`trl1`(mp~)`] upd3ri
-larfblcfc=: -`([ ((1&sdiag)@mp) (ct@mp)   )`trl1`(mp~)`] upd3ri
+larfblnfc=: ]`(mp~)`         trl1   `([      ((1&sdiag)@mp) ((mp ct)~))`- upd3ri  NB. CHECKME!
+larfblcfc=: ]`(mp~)`         trl1   `([      ((1&sdiag)@mp) (ct@mp)   )`- upd3ri  NB. QR: (I + V * (V * (-T))') * C
+larfblcbc=: ]`((mp~) dbg 'larfb mp~')`((-~/@$) tru1 ])`(([      ((1&sdiag)@mp) (ct@mp)   ) dbg 'sdiag@mp,ct@mp')`- upd3ri  NB. QL: (I + V * (V * (-T))') * C
+larfbrnfr=: ]` mp  `         tru1   `((ct@[) ((1&sdiag)@mp) (mp~)     )`- upd3ri  NB. LQ: C * (I + V' * (-T) * V)
 
 NB. =========================================================
 NB. Test suite

@@ -18,51 +18,12 @@ NB. Local definitions
 NB. Nouns, differences between rIOSs at consequent
 NB. iterations: rios(i+1)-rios(i)
 
-GELQ2DRIOS=: 3 2 2 $ 1 0 0 _1 1 0 0 0 0 0 _1 _1    NB. z,τ,C*H
-GEQL2DRIOS=: 3 2 2 $ 0 _1 _1 0 0 _1 0 0 0 0 _1 _1  NB. z,τ,H'*C
-NB. ### GEQR2DRIOS=: 3 2 2 $ 0 1 _1 0 0 1 0 0 0 0 _1 _1    NB. z,τ,H'*C
-GEQR2DRIOS=: 2 2 $ 0 0 _1 _1  NB. extended C to apply reflector
-GERQ2DRIOS=: 3 2 2 $ _1 0 _1 0 0 0 0 _1 0 0 _1 _1  NB. z,τ,C*H
+GELQ2DRIOS=: 2 2 $ 0 0 _1 _1  NB. reduce height and width by 1
+GEQL2DRIOS=: 2 2 $ 0 0 _1 _1  NB. reduce height and width by 1
+GEQR2DRIOS=: 2 2 $ 0 0 _1 _1  NB. reduce height and width by 1
+GERQ2DRIOS=: 2 2 $ 0 0 _1 _1  NB. reduce height and width by 1
 
 NB. ---------------------------------------------------------
-NB. mkrios0gelq2
-NB. mkrios0geql2
-NB. mkrios0geqr2
-NB. mkrios0gerq2
-NB.
-NB. Create rIOS at 0-th iteration for corresp. method
-NB.
-NB. Syntax:
-NB.   rios0=. mkrios0gelq2 mn
-NB.   rios0=. mkrios0geql2 mn
-NB.   rios0=. mkrios0geqr2 mn
-NB.   rios0=. mkrios0gerq2 mn
-NB. where
-NB.   mn    - 2-vector of integers (m,n), shape of matrix to
-NB.           factorize
-NB.   rios0 - 3×2×2-table rios(0), rIOSs corresponding to
-NB.           iteration 0, see ge*2step verbs
-
-mkrios0gelq2=: 3 : 0
-  'm1 n1'=. _1 1 + 'm n'=. y
-  3 2 2 $ 0 _1 1,n1,0 _1 1 1 _1 _2,m1,n
-)
-
-mkrios0geql2=: 3 : 0
-  'm1 n1'=. 1 _1 + 'm n'=. y
-  3 2 2 $ 0 _1,m1,1 0 _1 1 1 1 0,m,n1
-)
-
-mkrios0geqr2=: 3 : 0
-  'm1 n1'=. 1 _1 + 'm n'=. y
-  3 2 2 $ _1 0,m1,1 _1 0 1 1 _2 _1,m,n1
-)
-
-mkrios0gerq2=: 3 : 0
-  'm1 n1'=. _1 1 + 'm n'=. y
-  3 2 2 $ _1 0 1,n1,_1 0 1 1 0 1,m1,n
-)
-
 NB. gerf0    Template conj. to make verbs to generate and
 NB.          conditionally apply an elementary reflector to a
 NB.          matrix
@@ -180,36 +141,37 @@ NB.     vneg=: [ (3 nfv 0) (2 nfv 1)                 NB. verb to negate R's 1st 
 NB.     vapp=: 0 2 3 larfRL                          NB. verb to apply v from the right to R, then from the left to L
 NB.     Aupd=. rios ((vref`vneg`vapp) gerf02 0 1) A  NB. apply gerund and ios to do the job
 
-
 NB. ---------------------------------------------------------
 NB. geq2step
 NB.
 NB. Template adv. to form verbs ge*2step
 NB.
 NB. Syntax:
-NB.   vstep=. vref`vapp geq2step
+NB.   vstep=. vref`vmul`vtau geq2step iosyz
 NB. where
-NB.   vref  - verb to generate an elementary reflector, see
+NB.   vref  - monad to generate an elementary reflector, see
 NB.           larfg* larfp*; is called as:
 NB.             z=. vref y
-NB.   vapp  - verb to apply an elementary reflector, see
-NB.           larfL* larfR*; is called as:
-NB.             Aupd=. rios vapp A
+NB.   vmul  - dyad to extract v from z and to product
+NB.           (v*v'*C) or (C*v*v'); see larfl, larfr; is
+NB.           called as:
+NB.             eCupd=. eC vmul z
 NB.   vstep - verb to perform single step of Q-factorization;
 NB.           see ge*2step; is called as:
-NB.             'Ai1 riosi1'=. drios gelq2step (Ai ; riosi)
+NB.             'Ai1 riosi1'=. drios vstep (Ai ; riosi)
+NB.   iosyz - IOS vectors y and z in matrix eC
 
 NB. geq2step=: 1 : '([ ((m gi 1) ^: (0 ~: (0 ({,) (1 fromci)))) ((m gi 0) updci 0)) step'     NB. gerf0
 NB. geq2step=: 1 : '([ ((]`(}.u)) @. (0 2 i. (0 ({,) (1 fromci)))) ((m gi 0) updci 0)) step'  NB. gerf02
-NB. geq2step=: 1 : '([ (m gi 1) ((m gi 0) updri 0)) step'   NB. gerf
-NB. geq2step=: 1 : '([ (m gi 1) ((m gi 0) updri 0)) step'   NB. gerfx
+NB. geq2step=: 1 : '([ (m gi 1) ((m gi 0) updri 0)) step'                                     NB. gerf
+
+geq2step=: 2 : '(((] (n}) ([ - (m gi 2) * (m gi 1))) ((m gi 0) @ (n&{))) updr) step'          NB. aggregated gerf
 
 NB. ---------------------------------------------------------
 NB. gelq2step
 NB. geql2step
 NB. geqr2step
 NB. gerq2step
-NB.
 NB. Single step of corresp. method
 NB.
 NB. Syntax:
@@ -249,36 +211,36 @@ NB.             3) adjust rios(i) by Δrios;
 NB.             4) box output rios(i+1) and write it into
 NB.                1-th item of input.
 
-NB. ### gelq2step=: (larfgfc`(0 2 larfRfcs)) geq2step
-NB. ### geql2step=: (larfgb`(0 2 larfLbsc)) geq2step
-NB. ### geqr2step=: (larfgf`(0 2 larfLfsc)) geq2step
-NB. ### gerq2step=: (larfgbc`(0 2 larfRbcs)) geq2step
+NB.   z     - vector, reflection result of y
+NB.   eC    - matrix C augmented by vector y and zero vector:
+NB.             ((α,x,0),(C,.0)) - for LQ
+NB.             (0,(C,.y)) - for QL
+NB.             ((y,.C),0) - for QR
+NB.             (0,.(C,y)) - for RQ
+NB.   eCupd - updated matrix eC:
+NB.             ((β,v,τ),((C*H),.0)) - for LQ
+NB.             (0,(C,.y)) - for QL
+NB.             ((y,.C),0) - for QR
+NB.             (0,.(C,y)) - for RQ
+NB.           τ
+
+NB. (C,.y) before update, ((H'*C),.z) after update
+NB. (y,.C) before update, (z,.(H'*C)) after update
+NB. (C,y) before update, ((C*H),z) after update
+
+NB. geqr2step=: (vref`vmul`vtau geq2step iosY) updr
+
+gelq2step=: larfgfc`(larfr (+ @ (1 0 & (0 _1}))))`     (_1 { ])  geq2step IOSFR
+geql2step=: larfgb `(larfl      (0 1 & (0 _1})) )`(+ @ ( 0 { ])) geq2step IOSLC
+geqr2step=: larfgf `(larfl      (1 0 & (0 _1})) )`(+ @ (_1 { ])) geq2step IOSFC
+gerq2step=: larfgbc`(larfr (+ @ (0 1 & (0 _1}))))`     ( 0 { ])  geq2step IOSLR
 
 NB. ---------------------------------------------------------
+NB. geq2
 NB. Template adv. to form verbs ge*2
-
-NB. Algo: (min/ shape) (0 {:: ge*2step) ((0 mix A) ; (mkcios0 shape))
-NB. geq2=: 1 : '(<./ @ $) (0 {:: (m gi 2)) ((0 (m gi 0) ]) ; ((m gi 1) @ $))'
 
 NB. Algo: ((min/ shape) (0 {:: ge*2step) (A ; cios0)) shape
 geq2=: 1 : '((<./ @ (m gi 0) @ ]) (0 {:: (m gi 2)) (; (m gi 1))) $'
-
-IOSFC=: < a: ; 0     NB. IOS 1st column
-IOSLC=: < a: ; _1    NB. IOS last column
-IOSFR=: < 0 ; < a:   NB. IOS 1st row
-IOSLR=: < _1 ; < a:  NB. IOS last row
-
-NB. - - - poligon - - - 
-
-NB. QR2
-
-NB. 'Ai1 riosi1'=. drios geqr2step (Ai ; riosi)
-geq2step=: 2 : '((((((] ((n}) dbg ''wr Z'') (([ - ((m gi 3) dbg ''vtau'') * (((m gi 1) dbg ''vmul'') ((m gi 2) dbg ''vv''))) dbg ''H*C'')) dbg ''f(C,Z)'') ((m gi 0) @ ((n&{) dbg ''get Y for ref''))) dbg ''vjob'') updr) dbg ''updr'') step'
-
-NB. geqr2step=: (vref`vmul`vv`vtau geq2step iosY) updr
-geqr2step=: larfgf`larfl`(0 & (_1}))`(_1 { ]) geq2step IOSFC
-
-NB. - - - /poligon - - - 
 
 NB. ---------------------------------------------------------
 NB. gelq2
@@ -288,10 +250,12 @@ NB. gerq2
 NB. emulate xGELQ2
 NB. LQf=. gelq2 A
 
-NB. ### gelq2=: (0 _1 & +)`mkrios0gelq2`(GELQ2DRIOS & gelq2step) geq2
-NB. ### geql2=: (_1 0 & +)`mkrios0geql2`(GEQL2DRIOS & geql2step) geq2
+NB. TODO: delay tau conjugation to final batch processing
+
+gelq2=: (0 _1 & +)`(_1 _1 & ,:)`(GELQ2DRIOS & gelq2step) geq2
+geql2=: (_1 0 & +)`( 0  0 & ,:)`(GEQL2DRIOS & geql2step) geq2
 geqr2=: (_1 0 & +)`(_1 _1 & ,:)`(GEQR2DRIOS & geqr2step) geq2
-NB. ### gerq2=: (0 _1 & +)`mkrios0gerq2`(GERQ2DRIOS & gerq2step) geq2
+gerq2=: (0 _1 & +)`( 0  0 & ,:)`(GERQ2DRIOS & gerq2step) geq2
 
 NB. =========================================================
 NB. Interface
@@ -303,30 +267,90 @@ NB. geqrf
 NB. gerqf
 NB. emulate xGELQF
 
-gelqf=: gelq2  NB. stub for a while
 geqlf=: geql2  NB. stub for a while
 
 QFBSMIN=: 2  NB. min block size for qf algorithms
 QFBSMAX=: 3  NB. max block size for qf algorithms
 
-GEQRFDRIOS=: 3 2 2 $ 1 1 _1 0 0 0 0 0 1 1 _1 _1  NB. Z,T,CbyH; divided by block size
+NB. Vτ,V,τ,T,C,Vτlast; in 'block size' units
 
-NB. rios0=. mkrios0geqrf m,n,bs
-mkrios0geqrf=: 3 : 0
-  'm n bs'=. y
-  3 2 2 $ 0 0,m,bs,(m+1),0,bs,bs,0,bs,m,(n-bs)
+GELQFDRIOS=: 6 2 2 $ 1 1 0 _1 1 1 0 _1 1 0 0 0 0 0 0 0 1 1 _1 _1 0 0 0 0
+GEQLFDRIOS=: 6 2 2 $ _1 _1 _1 0 _1 _1 _1 0 0 _1 0 0 0 0 0 0 0 0 _1 _1 0 0 0 0
+GEQRFDRIOS=: 6 2 2 $ 1 1 _1 0 1 1 _1 0 0 1 0 0 0 0 0 0 1 1 _1 _1 0 0 0 0
+
+NB. rios0=. mkrios0gexxf m,n,bs,iter
+
+mkrios0gelqf=: 3 : 0
+  'm n bs iter'=. y
+  ibs=. bs*iter
+  6 2 2 $ 0 0,bs,(n+1),0 0,bs,n,0,n,bs,1,0,(n+1),bs,bs,bs,0,(m-bs),n,ibs,ibs,(m-ibs),(n+1-ibs)
 )
 
-NB. ### geqrfstep=: ([ ([ ((((0 1 2 larfblcfc) dbg 'larfB') upd3ri 0 1 2) dbg 'H''*C') ((larftfc mapri 0 1) dbg 'larfT')) ((geqr2 updri 0) dbg 'QR2')) dbg 'step'
+mkrios0geqlf=: 3 : 0
+  'm n bs iter'=. y
+  ibs=. bs*iter
+  6 2 2 $ _1 _1,(m+1),bs,_1 _1,m,bs,bs,_1 1,bs,0,_1,bs,bs,(bs+1),0,m,(n-bs),bs,0,(m+1-ibs),(n-ibs)
+)
+
+mkrios0geqrf=: 3 : 0
+  'm n bs iter'=. y
+  ibs=. bs*iter
+  6 2 2 $ 0 0,(m+1),bs,0 0,m,bs,m,0 1,bs,(m+1),0,bs,bs,0,bs,m,(n-bs),ibs,ibs,(m+1-ibs),(n-ibs)
+)
+
+gelqfstep=: ([ ([ (3 1 4 larfbrnfr) (1 2 larftfr)) (gelq2 updri 0)) step
+geqlfstep=: (([ ([ (3 1 4 larfblcbc) (1 2 larftbc)) (geql2 updri 0)) dbg 'step') step
+geqrfstep=: ([ ([ (3 1 4 larfblcfc) (1 2 larftfc)) (geqr2 updri 0)) step
+
+NB. ambivalent:
+NB. LQf=.                gelqf A
+NB. LQf=. (m,n,bs,iters) gelqf ((m , (n+1+bs)) {. A)
+
+gelqf=: 3 : 0
+  k=. <./ 'm n'=. $ y
+  bs=. QFBSMIN >. QFBSMAX <. k  NB. adjusted block size
+  iters=. <. k % bs             NB. # of iterations
+  y=. (m , (n+1+bs)) {. y       NB. allocate space for τ and T, filled by zeros
+  (m,n,bs,iters) gelqf y
+:
+  'bs iters'=. _2 {. x
+  rios0=. mkrios0gelqf x
+  drios=. bs * GELQFDRIOS
+  iters (((0,(-bs)) & }.) @ ((1 {:: ]) (gelq2 updri 5) (0 {:: ])) @ (drios & gelqfstep)) (y ; rios0)
+)
+
+NB. ambivalent:
+NB. QfL=.                geqlf A
+NB. QfL=. (m,n,bs,iters) geqlf (((-(m+1+bs)) , n) {. A)
+
+geqlf=: 3 : 0
+  k=. <./ 'm n'=. $ y
+  bs=. QFBSMIN >. QFBSMAX <. k  NB. adjusted block size
+  iters=. <. k % bs             NB. # of iterations
+  y=. ((-(m+1+bs)) , n) {. y    NB. allocate space for τ and T, filled by zeros
+  (m,n,bs,iters) geqlf y
+:
+  'bs iters'=. _2 {. x
+  rios0=. mkrios0geqlf x
+  drios=. bs * GEQLFDRIOS
+  iters (((bs,0) & }.) @ ((1 {:: ]) (((geql2 dbg 'geql2') updri 5) dbg 'last QL2') (0 {:: ])) @ (drios & geqlfstep)) (y ; rios0)
+)
+
+NB. ambivalent:
+NB. QfR=.                geqrf A
+NB. QfR=. (m,n,bs,iters) geqrf (((m+1+bs) , n) {. A)
 
 geqrf=: 3 : 0
   k=. <./ 'm n'=. $ y
   bs=. QFBSMIN >. QFBSMAX <. k  NB. adjusted block size
-  i=. <. k % bs                 NB. # of iterations
-  y=. (m+1+bs) {. y             NB. allocate space for τ and T, filled by zeros
-  rios0=. mkrios0geqrf m,n,bs
+  iters=. <. k % bs             NB. # of iterations
+  y=. ((m+1+bs) , n) {. y       NB. allocate space for τ and T, filled by zeros
+  (m,n,bs,iters) geqrf y
+:
+  'bs iters'=. _2 {. x
+  rios0=. mkrios0geqrf x
   drios=. bs * GEQRFDRIOS
-  ((-(bs+1)),0) }. 0 {:: i (drios & geqrfstep) (y ; rios0)
+  iters ((((-bs),0) & }.) @ ((1 {:: ]) (geqr2 updri 5) (0 {:: ])) @ (drios & geqrfstep)) (y ; rios0)
 )
 
 NB. =========================================================
@@ -356,6 +380,9 @@ tgeqf=: 3 : 0
   'geqlf'          ??? tqf y
   'geqlf_jlapack_' ??? tqf y
   'geqrf'          ??? tqf y
+  if. >:/ $ y do. 
+    '128!:0' ??? tmonad y
+  end.
   'geqrf_jlapack_' ??? tqf y
   'gerqf'          ??? tqf y
   'gerqf_jlapack_' ??? tqf y

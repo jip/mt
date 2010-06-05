@@ -6,8 +6,6 @@ NB. ct1       Count trailing 1s in Boolean vector
 NB. ct0       Count trailing 0s in vector
 NB. ct0c      Count trailing zero columns in matrix
 NB. ct0r      Count trailing zero rows in matrix
-NB. nfv       Template conj. to make verbs negating 1st
-NB.           vector (either row or column)
 NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB.
@@ -89,8 +87,8 @@ NB. Indirect extractors
 NB. Adv. to extract m-th from x: x[m]
 mx=: 1 : 'm { ['
 
-NB. Conj. to extract m-th from n-th from x: x[n[m]]
-mnx=: 2 : '(m { n) { ['
+NB. Conj. to extract n-th from m-th from x: x[m[n]]
+nmx=: 2 : '(n { m) { ['
 
 NB. Conj. to evoke n-th verb from gerund m: m[n]
 gi=: 2 : '(n{m)`:6'
@@ -130,6 +128,17 @@ tr=: 2 : '0&$: : ([ (] * (u~ sh2id@$)) v)'
 NB. =========================================================
 NB. Interface
 
+NB. ---------------------------------------------------------
+NB. Nouns, IOS a priori known submatrices
+
+IOSFC=: < a: ; 0     NB. IOS 1st column
+IOSLC=: < a: ; _1    NB. IOS last column
+IOSFR=: < 0 ; < a:   NB. IOS 1st row
+IOSLR=: < _1 ; < a:  NB. IOS last row
+
+NB. ---------------------------------------------------------
+NB. Misc.
+
 ioscv=: *./ .=            NB. locate constant vector in matrix (column: 'm & ioscv', row: 'ioscv & n')
 ct1=: +/ @: (*./\.)       NB. count trailing 1s in Boolean vector y
 ct0=: ct1 @ (0&=)         NB. count trailing 0s in vector y
@@ -140,43 +149,14 @@ trace=: +/ @ diag         NB. matrix trace
 ct=: + @ |:               NB. conjugate transpose
 
 NB. ---------------------------------------------------------
-NB. nfv
-NB. Template conj. to make verbs negating 1st vector (either
-NB. row or column)
-NB.
-NB. Syntax:
-NB.   vneg=. iocios nfv iovh
-NB. where
-NB.   iovh   - integer in range (-r:r-1), IO in cIOS
-NB.            (cios[iocios]) to select axis to negate
-NB.   iocios - integer, IO in cIOS bundle (cios) to select
-NB.   vneg   - verb to negate, is called as: (cios vneg A)
-NB.
-NB. Algorighm for verb vneg:
-NB.   1) take cIOS from x[m]
-NB.   2) set imaginary part to 1 in its n-th item
-NB.   3) convert transformed cIOS to IOS
-NB.   4) use this IOS to update by verb (-) submatrix in y
-NB.
-NB. Application:
-NB. - let cios=. (ciosYZ , ciosT , ciosR ,: ciosL) is cIOS
-NB.   bundle for vectors y and z, scalar τ, and submatrices
-NB.   R and L, respectively; vector y is stored vertically
-NB. - to make verb to negate 1st column of submatrix R:
-NB.     vneg=: 2 nfv 1
-NB. - to make verb to negate 1st row of submatrix L:
-NB.     vneg=: 3 nfv 0
-NB. - to make verb to negate 1st column of submatrix R and
-NB.   then to negate 1st row of submatrix L
-NB.     vneg=: [ (3 nfv 0) (2 nfv 1)
-
-nfv=: 2 : '((- upd)~ (cios2ios @ ((9&o. j. 1:) updl n) @ (m&{)))~'
-
-NB. ---------------------------------------------------------
 NB. IOS explorers
 NB. monad     dyad    triad   tetrad     pentad     hexad     heptad    octad    ennead decade
 NB.           couplet triplet quadruplet quintuplet sextuplet septuplet octuplet
 NB. singleton duet    trio    quartet    quintet    sextet    septet    octet
+
+NB. Adv. to update submatrix
+NB. Syntax: Aupd=. ios (vapp upd) A
+upd=: 1 : '(u@{)`[`]}'
 
 NB. Conj. to model 'upd' accepting lIOS
 updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'
@@ -193,7 +173,7 @@ updri=: 2 : '(n mx) (u updr) ]'
 
 NB. Conj. to model 'upd2i' accepting rIOS
 NB. y[x[n[1]]] := u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]])))
-upd2ri=: 2 : '((u gici ((1{n),2)) (u gi 1) (u gici ((0{n),0)))`(rios2ios@(1 mnx n))`] }'
+upd2ri=: 2 : '((m gici ((1{n),2)) (m gi 1) (m gici ((0{n),0)))`(rios2ios@(n nmx 1))`] }'
 
 NB. ---------------------------------------------------------
 NB. upd3ri
@@ -203,52 +183,98 @@ NB.
 NB. Syntax:
 NB.   vapp=. u0`u1`u2`u3`u4 upd3ri io0 io1 io2
 NB. where
-NB.   rios        - k×2×2-array of integers, vector of rIOSs
-NB.   io0 io1 io2 - integers, IOs in rios
-NB.   A           - input matrix
-NB.   A0 A1 A2    - 2-rank arrays, submatrices in A:
-NB.                   A0 -: (io0{rios) (] ;. 0) A
-NB.                   A1 -: (io1{rios) (] ;. 0) A
-NB.                   A2 -: (io2{rios) (] ;. 0) A
-NB.   u0 u2 u4    - monads to adjust A0 A1 A2, respectively
-NB.   u1 u3       - dyads to glue staff
-NB.   vapp        - verb to update A2, is called as:
-NB.                   Aupd=. rios vapp A
-NB.   Aupd        - A with submatrix A2 replaced by value:
-NB.                  (u4 A2) u3 (u2 A1) u1 (u0 A0)
-NB.   k           > 0
+NB.   rios     - k×2×2-array of integers, vector of rIOSs
+NB.   io0..io2 - integers, IOs in rios
+NB.   A        - input matrix
+NB.   A0..A2   - 2-rank arrays, submatrices in A:
+NB.                A0 -: (io0{rios) (] ;. 0) A
+NB.                A1 -: (io1{rios) (] ;. 0) A
+NB.                A2 -: (io2{rios) (] ;. 0) A
+NB.   u0 u2 u4 - monads to adjust A2 A1 A0, respectively
+NB.   u1 u3    - dyads to glue staff
+NB.   vapp     - verb to update A2, is called as:
+NB.                Aupd=. rios vapp A
+NB.   Aupd     - A with submatrix A2 replaced by value:
+NB.               (u0 A2) u1 (u2 A1) u3 (u4 A0)
+NB.   k        > 0
 NB.
 NB. Example:
-NB. - following replaces 24 by _1220 in array (i. 10 10):
-NB.     (3 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1) (%:`+`*:`-`-: upd3ri 0 1 2) i. 10 10
+NB. - the following replaces 24 by _1220 in array (i. 10 10):
+NB.     (3 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1) (-:`-`*:`+`%: upd3ri 0 1 2) i. 10 10
 NB.   since
 NB.     _1220 -: (-: 24) - (*: 35) + (%: 49)
 
-upd3ri=: 2 : '((u gici ((2{n),4)) (u gi 3) (u gici ((1{n),2)) (u gi 1) (u gici ((0{n),0)))`(rios2ios@(2 mnx n))`] }'
+upd3ri=: 2 : '((m gici ((2{n),0)) (m gi 1) (m gici ((1{n),2)) (m gi 3) (m gici ((0{n),4)))`(rios2ios@(n nmx 2))`] }'
+
+NB. Conj. to 'map' set of elements to another one, accepting IOS
+NB. y[x[1]] := u(y[x[0]])
+NB. Aupd=. IOS (u map (ioFrom,ioTo)) A
+
+map=: 2 : '(u @ (n nmx 0))`(n nmx 1)`] }'
 
 NB. Adv. to model 'map' accepting lIOS
 NB. y[u[1](u[0](y[x]),y)] := u[0](y[x])
 NB. Aupd=. lios (u0`u1 mapl) A
-mapl=: 1 : '((u gi 0) @ ({,)) ((u gi 1) }) ]'
+mapl=: 1 : '((m gi 0) @ ({,)) ((m gi 1) }) ]'
+
+NB. FIXME! NB. Adv. to model 'mapl' with indirect access to lIOS
+NB. FIXME! NB. y[u[1](x[1])] := u[0](y[x[0]])
+NB. FIXME! NB. vapp=. u0`u1 mapli
+NB. FIXME! NB. Aupd=. liosa vapp A
+NB. FIXME! mapli=: 1 : '((((m gi 0) @ ({,))~ (0&{))~) (((m gi 1) @ (1 mx)) }) ]'
 
 NB. Adv. to model 'map' accepting rIOS to read and
 NB. using lIOS to write
 NB. y[u[1](u[0](y[x]),y)] := u[0](y[x])
 NB. Aupd=. rIOS (u0`u1 maprl) A
-maprl=: 1 : '(u gic 0) ((u gi 1) }) ]'
+maprl=: 1 : '(m gic 0) ((m gi 1) }) ]'
+
+NB. Conj. to model 'maprl' with indirect access to rIOS
+NB. y[u[1](u[0](y[x[n]]),y)] := u[0](y[x[n]])
+NB. Aupd=. rIOSs (u0`u1 maprli ioFrom) A
+maprli=: 2 : '(m gici (n,0)) ((m gi 1) }) ]'
 
 NB. Conj. to model 'mapi' accepting rIOS
 NB. y[u[1](y[x[n]],y)] := u[0](y[x[n]])
 NB. Aupd=. rios (u mapri (ioFrom,ioTo)) A
-mapri=: 2 : '(u uci (0{n))`(rios2ios@(1 mnx n))`] }'
+mapri=: 2 : '(u uci (0{n))`(rios2ios@(n nmx 1))`] }'
 
 NB. Conj. to model 'upd3i' accepting rIOS
 NB. y[x[n[2]]] := u[3](u[4](y[x[n[2]]]),u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]])))
-map3ri=: 2 : '((u gici ((2{n),4)) (u gi 3) (u gici ((1{n),2)) (u gi 1) (u gici ((0{n),0)))`(rios2ios@(3 mnx n))`] }'
+map3ri=: 2 : '((m gici ((2{n),4)) (m gi 3) (m gici ((1{n),2)) (m gi 1) (m gici ((0{n),0)))`(rios2ios@(n nmx 3))`] }'
 
-NB. Conj. to model 'upd4i' accepting rIOS
-NB. y[x[n[4]]] := u[5](u[6](y[x[n[3]]]),u[3](u[4](y[x[n[2]]]),u[1](u[2](y[x[n[1]]]),u[0](y[x[n[0]]]))))
-map4ri=: 2 : '((u gici ((3{n),6)) (u gi 5) ((u gici ((2{n),4)) (u gi 3) (u gici ((1{n),2)) (u gi 1) (u gici ((0{n),0))))`(rios2ios@(4 mnx n))`] }'
+NB. ---------------------------------------------------------
+NB. map4ri
+NB. Template conj. to make verbs to map 4 subarrays by heptad
+NB. to another subarray indirectly, addressing mode is rIOS
+NB.
+NB. Syntax:
+NB.   vapp=. u0`u1`u2`u3`u4`u5`u6 map4ri io0 io1 io2 io3 io4 io5
+NB. where
+NB.   rios        - k×2×2-array of integers, vector of rIOSs
+NB.   io0..io5    - integers, IOs in rios
+NB.   A           - input matrix
+NB.   A0..A4      - 2-rank arrays, submatrices in A:
+NB.                   A0 -: (io0{rios) (] ;. 0) A
+NB.                   A1 -: (io1{rios) (] ;. 0) A
+NB.                   A2 -: (io2{rios) (] ;. 0) A
+NB.                   A3 -: (io3{rios) (] ;. 0) A
+NB.                   A4 -: (io4{rios) (] ;. 0) A
+NB.   u0 u2 u4 u6 - monads to adjust A3 A2 A1 A0, respectively
+NB.   u1 u3 u5    - dyads to glue staff
+NB.   vapp        - verb to update A4, is called as:
+NB.                   Aupd=. rios vapp A
+NB.   Aupd        - A with submatrix A4 replaced by value:
+NB.                  (u6 A3) u5 (u4 A2) u3 (u2 A1) u1 (u0 A0)
+NB.   k           > 0
+NB.
+NB. Example:
+NB. - the following replaces 87 by _8525 in array (i. 10 10):
+NB.     (5 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1 1 _1 1 1 _2 _3 1 1) (+:`+`-:`-`*:`*`%: map4ri 0 1 2 3 4) i. 10 10
+NB.   since
+NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
+
+map4ri=: 2 : '((m gici ((3{n),0)) (m gi 1) ((m gici ((2{n),2)) (m gi 3) (m gici ((1{n),4)) (m gi 5) (m gici ((0{n),6))))`(rios2ios@(n nmx 4))`] }'
 
 NB. ---------------------------------------------------------
 NB. append
@@ -300,6 +326,67 @@ NB.   ((1 _2) 3 4 rws (i. 5 5)
 rws=: 1 : '+/ @ (* (m & {))'
 
 NB. ---------------------------------------------------------
+NB. diaglios
+NB. Specified diagonal element's lIOS of rectangular matrix
+NB.
+NB. Syntax:
+NB.   lios=. [d[,f,s]] diaglios (m,n)
+NB. where
+NB.   m    ≥ 0, integer, rows in matrix
+NB.   n    ≥ 0, integer, columns in matrix
+NB.   d    - integer in range [-(m-1):n-1], IO diagonal,
+NB.          default is 0 (main diagonal)
+NB.   f    - integer in range [-min(m,n):min(m,n)-1], IO 1st
+NB.          element of diagonal's fragment to be returned,
+NB.          default is 0 (take from head)
+NB.   s    - integer in range [-min(m,n):min(m,n)] or ±∞,
+NB.          size of diagonal's fragment to be returned,
+NB.          default is _ (all elements in forward direction)
+NB.   lios - (0:min(m,n))-vector of integers, lIOS of
+NB.          d-th diagonal elements in matrix of shape (m,n)
+NB.
+NB. Formulae:
+NB. - the whole diagonal's IO 1st element:
+NB.     F := (d ≥ 0) ? d : (-n*d)
+NB. - the whole diagonal's size:
+NB.     S := min(m,n,⌊(n+m-|n-m-2*d|)/2⌋)
+NB.
+NB. Notes:
+NB. - (f,s) pair defines rIOS of diagonal's fragment to be
+NB.   returned
+
+diaglios=: (0 0 _&$:) :(4 : 0)
+  'd f s'=. 3 {. x , 0 _
+  'm n'=. y
+  F=. n (-@* ^: (0 > ])) d
+  S=. <./ y , <. -: (n + m - | n - m + +: d)
+  (f,:s) (] ;. 0) hds2ios F , (>: n) , S
+)
+
+NB. ---------------------------------------------------------
+NB. diag
+NB. Return possibly partial diagonal of rectangular matrix
+NB.
+NB. Syntax:
+NB.   e=. [d[,f,s]] diag A
+NB. where
+NB.   A - m×n-matrix
+NB.   d - integer in range [-(m-1):n-1], IO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   f - integer in range [-min(m,n):min(m,n)-1], IO 1st
+NB.       element of diagonal's fragment to be returned,
+NB.       default is 0 (take from head)
+NB.   s - integer in range [-min(m,n):min(m,n)] or ±∞, size
+NB.       of diagonal's fragment to be returned, default is
+NB.       _ (all elements in forward direction)
+NB.   e - (0:min(m,n))-vector, d-th diagonal elements from
+NB.       matrix A
+NB.   m   ≥ 0
+NB.   n   ≥ 0
+
+diag=: ((<0 1)&|:) :((diaglios $) ({,) ])
+
+NB. ---------------------------------------------------------
 NB. sdiag
 NB. Shift diagonal of y by values from x, i.e. make x*I+y
 NB. from scalar or vector x and matrix y
@@ -313,9 +400,10 @@ NB.   s - n×n-matrix, equals to (y+x*idmat(#y))
 NB.   n >= 0
 NB.
 NB. TODO:
-NB. - implement for non-square matrices
+NB. - implement for non-square matrices via diag[lios]:
+NB.   sdiag=: blah-blah-blah updl
 
-sdiag=: (+ diag) ((>: * i.) @ # @ ]) } ]
+sdiag=: (+ diag) ((>: * i.) @ # @ ]) } ]  NB. FIXME! via diaglios
 
 NB. ---------------------------------------------------------
 NB. idmat
@@ -331,7 +419,7 @@ NB. 0 1 0 0                        0 0 0 0
 NB. 0 0 1 0                        1 0 0 0
 NB. 0 0 0 1                        0 1 0 0
 
-idmat=: (0 & $:) :(= sh2id)
+idmat=: (0 & $:) :(= sh2id)  NB. FIXME! via diaglios
 
 NB. ---------------------------------------------------------
 NB. diagmat
@@ -369,6 +457,7 @@ NB. 0 5 0                          0 5 0 0
 NB. 0 0 7                          0 0 7 0
 NB. 0 0 0
 
+NB. FIXME! via diaglios
 diagmat=: (0 & $:) :(4 : 0)
   'r c'=. shape=. (#y) + (2&(|.@}. - {.)@(0&(<. , >.)@+.)) x  NB. find D shape
   shift=. c ((* |) ^: (0 > ])) (9 o. x)                       NB. find d head linear IO

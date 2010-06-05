@@ -1,27 +1,34 @@
 NB. util.ijs
 NB. Utilities
 NB.
-NB. ii2cp     Make cycle permutation from indices x and y
+NB. ii2cp      Make cycle permutation from indices x and y
 NB.
-NB. sgn       Simplified signum
-NB. condneg   Conditional negate
-NB. copysign  Copy sign
+NB. sgn        Simplified signum
+NB. condneg    Conditional negate
+NB. copysign   Copy sign
 NB.
-NB. hds2ios   IOS from head, delta and size
-NB. ht2ios    IOS from head and tail
-NB. hs2ios    IOS from head and size
-NB. rios2ios  Convert rIOS to IOS
+NB. hds2ios    IOS from head, delta and size
+NB. ht2ios     IOS from head and tail
+NB. hs2ios     IOS from head and size
+NB. rios2ios   Convert rIOS to IOS
+NB. rios2lios  Convert rIOS to lIOS
 NB.
-NB. step      Template adv. to make verbs of single iteration
+NB. norm1      Magnitude-based 1-norm of vector or matrix
+NB. normi      Magnitude-based ∞-norm of vector or matrix
+NB. norm1t     Taxicab-based 1-norm of vector or matrix
+NB. normit     Taxicab-based ∞-norm of vector or matrix
+NB. norms      Square-based (Euclidean/Frobenius) norm of
+NB.            vector or matrix
 NB.
-NB. prn       Formatted console output
-NB. dbg       Conj. to show verb's input and output
+NB. step       Adv. to make verbs of single iteration
 NB.
-NB. norm1     Magnitude-based 1-norm of vector or matrix
-NB. normi     Magnitude-based ∞-norm of vector or matrix
-NB. norm1t    Taxicab-based 1-norm of vector or matrix
-NB. normit    Taxicab-based ∞-norm of vector or matrix
-NB. norms     Square-based (Euclidean/Frobenius) norm of vector or matrix
+NB. fmtlog     Format log string
+NB.
+NB. tmonad     Template conj. to make verbs to test
+NB.            computational monad
+NB. tdyad      Template conj. to make verbs to test
+NB.            computational dyad
+NB. dbg        Conj. to show verb's input and output
 NB.
 NB. Copyright (C) 2009 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -31,6 +38,8 @@ coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
+
+rios2oios=: < @ hs2ios/ " 1 @: |:  NB. convert rIOS to opened (non-boxed) IOS
 
 NB. template adverbs to form norm verbs
 mocs=: >./ @ (+/     ) @:          NB. vector: sum of, matrix: max of column sums
@@ -78,10 +87,43 @@ hs2ios=: [ + ((] * i. @ *) sgn)~
 NB. ---------------------------------------------------------
 NB. IOS converters
 
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Convert rIOS to IOS
 NB. Note: IOS with length less than array's rank indexes
 NB.       the slice
-rios2ios=: < " 1 @ (< @ hs2ios/ " 1 @: |:)
+
+rios2ios=: < " 1 @ rios2oios
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. rios2lios
+NB. Convert rIOS to lIOS
+NB.
+NB. Syntax:
+NB.   lios=. sh rios2lios rios
+NB. where
+NB.   rios  - 2×r-array of integers, rIOS of subarray:
+NB.             (2,r) $ from[0:r-1],size[0:r-1]
+NB.   sh    - r-array of integers, shape of array to explore:
+NB.             Size[0:r-1]
+NB.   lios  - |Π{size[i],i=0:r-1}|-array of integers, rowwise
+NB.           lIOS of subarray elements
+NB.   r     ≥ 0, integer, rank of array to explore
+NB.
+NB. Formulae:
+NB.   lios[k] := Σ{Π{Size[j],j=i+1:r-1}*(n[k][i]-(n[k][i+1]<0 ? 1 : 0)),i=0:r-2} + n[k][r-1]
+NB. where
+NB.   k       = 0:|Π{size[i],i=0:r-1}|-1, IO lios' item
+NB.   n[k][i] - i-th axis' IO for k-th lios' item
+NB.
+NB. If:
+NB.   rios=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
+NB.   sh=. 10 11 12 13
+NB.   array=. i. sh
+NB.   lios=. sh rios2lios rios
+NB. then
+NB.   (lios ({,) array) -: (rios (, ;. 0) array)
+
+NB. rios2lios=: ((*/\.) @ (1 & (|.!.1)) @ [) (+/ @: *) ((+ (1 & (|.!.0) @ (0 & >))) @ |: @: > @ , @ { @ rios2oios @ ])
 
 NB. ---------------------------------------------------------
 NB. step
@@ -98,7 +140,7 @@ NB.   Ai      - matrix A(i) to update before i-th
 NB.             iteration
 NB.   riosi   - matrix rios(i) of rIOS (rIOSs) for i-th
 NB.             iteration
-NB.   drios   - difference between rIOS (rIOSs) at
+NB.   drios   - difference between rIOS (rIOSs) of
 NB.             consequent iterations: rios(i+1)-rios(i)
 NB.   Ai1     - matrix A(i+1) after i-th iteration
 NB.   riosi1  - matrix rios(i+1) of rIOSs for (i+1)-th
@@ -118,98 +160,110 @@ NB.     Output -: (Ai1 ; riosi1)
 step=: 1 : '(< @ (+ (1&{::))) 1} (((1 {:: ]) (< @ u) (0 {:: ])) 0} ])'
 
 NB. ---------------------------------------------------------
-NB. prn
-NB. Formatted console output
+NB. fmtlog
+NB. Format log string
 
 fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' & vsprintf
 
 NB. ---------------------------------------------------------
-NB. tmonad1pass
-NB. tmonad2pass
-NB. tdyad1pass
-NB. tdyad2pass
-NB.
-NB. Test single computational verb
+NB. tmonad
+NB. tdyad
+NB. Template conj. to make monad to test computational verb
 NB.
 NB. Syntax:
-NB.   vapp=. v2test`vi2test`vferr`vberr`vnorm test1
+NB.   vtestm=. mname tmonad vgety`vrcond`vferr`vberr
+NB.   vtestd=. dname tdyad vgetx`vgety`vrcond`vferr`vberr
 NB. where
-NB.   v2test  - monad to test; is called as:
-NB.               out=. v2test in
-NB.   vi2test - v2test's inversion; is called as:
-NB.               in=. vi2test out
-NB.   vferr   - dyad to find ferr of some realvalue
-NB.             relatively to some modelvalue; is called as:
-NB.               ferr=. modelvalue vferr realvalue
-NB.   vberr   - dyad to find berr of some realvalue
-NB.             relatively to some modelvalue; is called as:
-NB.               berr=. modelvalue vberr realvalue
-NB.   vnorm   - monad to find norm; is called as:
-NB.               norm=. vnorm array
-NB.   vapp    - dyad to try to estimate reciprocal of
-NB.             condition number of the input matrix (only
-NB.             for square matrices), ferr, berr, execution
-NB.             time and space of verb v2test, and optionally
-NB.             save result into log file and/or log array
-NB.             and/or console; is called as:
-NB.               vname vapp in
-NB.   in      - some input for v2test and output for vi2test
-NB.   out     - some output for v2test and input for vi2test
-NB.   ferr    ≥ 0, relative forward error
-NB.   berr    ≥ 0, relative backward error
-NB.   norm    ≥ 0, matrix or vector norm
-NB.   vname   - literal array, the name of v2test
+NB.   vgetx  - monad to extract left argument for vd; is
+NB.            called as:
+NB.              argx=. vgetx y
+NB.   vgety  - monad to extract right argument for vm or vd;
+NB.            is called as:
+NB.              argy=. vgety y
+NB.   vrcond - monad to find rcond; is called as:
+NB.              rcond=. vrcond y
+NB.   vferr  - dyad to find ferr; is called as:
+NB.              ferr=. out vferr y
+NB.   vberr  - dyad to find berr; is called as:
+NB.              berr=. out vberr y
+NB.   mname  - literal, the name of monad vm to test
+NB.   dname  - literal, the name of dyad vd to test
+NB.   vtestm - monad to test monad vm and to log result:
+NB.              mname rcond ferr berr time space
+NB.            on the screen, in the global var TESTLOG and,
+NB.            optionally, in the log file; is called as:
+NB.              vtestm y
+NB.   vtestd - monad to test dyad vd and to log result:
+NB.              dname rcond ferr berr time space
+NB.            on the screen, in the global var TESTLOG and,
+NB.            optionally, in the log file; is called as:
+NB.              vtestd y
+NB.   vm     - monad to test; is called as:
+NB.              out=. vm argy
+NB.   vd     - dyad to test; is called as:
+NB.              out=. argx vd argy
+NB.   y      - some input for vtestm or vtestd
+NB.   argx   - some left argument for vd
+NB.   argy   - some right argument for vm or vd
+NB.   out    - some output from vm or vd
+NB.   ferr   ≥ 0 or +∞ or indeterminate, the relative forward
+NB.            error
+NB.   berr   ≥ 0 or +∞ or indeterminate, the relative
+NB.            backward error
+NB.   rcond  ≥ 0, the estimated reciprocal of the condition
+NB.            number of the input matrix; +∞ if matrix is
+NB.            singular; indeterminate if matrix is
+NB.            non-square
 NB.
-NB. Application:
-NB.   'geqrf' (geqrf`unmqr`vferr`vberr`vnorm test1) A
+NB. Application 1:
+NB.   NB. to estimate rcond in 1-norm
+NB.   vrcond=. (_."_)`(norm1 con getri) @. (=/@$)
+NB.   NB. to calc. berr, assuming:
+NB.   NB.   berr := ||A - realA||_1 / ||A||_1
+NB.   vberr=. ((- (% & norm1) [) unmqr)~                   CHECKME!
+NB.   NB. let's test geqrf
+NB.   ('geqrf' tmonad ]`vrcond`(_."_)`vberr) A
 NB.
-NB. TODO:
-NB.   try. catch.
+NB. Application 2:
+NB.   NB. to estimate rcond in ∞-norm
+NB.   vrcond=. ((_."_)`(normi con getri) @. (=/@$)) @ (0 & {::)
+NB.   NB. to calc. ferr, assuming:
+NB.   NB.   ferr := ||x - realx||_inf / ||realx||_inf
+NB.   vferr=. (- (% & normi) [) (1&{::)
+NB.   NB. to calc. componentwise berr [LUG 75], assuming:
+NB.   NB.   berr := max_i(|b - A * realx|_i / (|A| * |realx| + |b|)_i)
+NB.   vberr=. ((mp & >/ @ ] - (mp~ (0&{::))) (>./ @ %) ((| @ mp & >/ @ ]) + ((mp & |)~ (0&{::)))
+NB.   NB. let's test getrs
+NB.   ('getrs' tdyad (0&{::)`(mp & >/)`vrcond`vferr`vberr) (A;x)
 
-tmonad2pass=: 1 : 0
-:
-  '`v2test vi2test vferr vberr vnorm'=. m
-  try.
-    modelout=. v2test y
-    modeliny=. vi2test modelout
-    rcond=. (_."_)`(vnorm con getri) @. (=/@$) modeliny
-    't s'=. timespacex 'realout=. ' , x , ' modeliny'
-    realiny=. vi2test realout
-    try. ferr=. modeliny vferr realiny catch. ferr=. _. end.
-    try. berr=. modelout vberr realout catch. berr=. _. end.
-  catch.
-    rcond=. berr=. ferr=. t=. s=. _.
-  end.
-  logline=. fmtlog x ; rcond ; berr ; ferr ; t ; s
+tmonad=: 2 : 0
+  '`vgety vrcond vferr vberr'=. n
+  argy=. vgety y
+  try. rcond=. vrcond y                               catch. rcond=. _  end.
+  try. 't s'=. timespacex 'out=. ' , m , ' argy'      catch. t=. s=. _. end.
+  try. ferr=. out vferr y                             catch. ferr=. _.  end.
+  try. berr=. out vberr y                             catch. berr=. _.  end.
+  logline=. fmtlog x ; rcond ; ferr ; berr ; t ; s
   logline ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline
   logline (1!:2) 2
   EMPTY
 )
 
-tmonad1pass=: 1 : 0
-:
-  '`v2test vi2test vferr vberr vnorm'=. m
-  try.
-    modeliny=. y
-    rcond=. (_."_)`(vnorm con getri) @. (=/@$) modeliny
-    't s'=. timespacex 'realout=. ' , x , ' modeliny'
-    realiny=. vi2test realout
-    ferr=. _.
-    try. berr=. modelout vberr realout catch. berr=. _. end.
-  catch.
-    rcond=. berr=. ferr=. t=. s=. _.
-  end.
-  logline=. fmtlog x ; rcond ; berr ; ferr ; t ; s
+tdyad=: 2 : 0
+  '`vgetx vgety vrcond vferr vberr'=. n
+  argx=. vgetx y
+  argy=. vgety y
+  try. rcond=. vrcond y                               catch. rcond=. _  end.
+  try. 't s'=. timespacex 'out=. argx ' , m , ' argy' catch. t=. s=. _. end.
+  try. ferr=. out vferr y                             catch. ferr=. _.  end.
+  try. berr=. out vberr y                             catch. berr=. _.  end.
+  logline=. fmtlog x ; rcond ; ferr ; berr ; t ; s
   logline ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline
   logline (1!:2) 2
   EMPTY
 )
-
-tdyad2pass=: [:
-
-tdyad1pass=: [:
 
 NB. ---------------------------------------------------------
 NB. dbg

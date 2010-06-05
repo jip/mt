@@ -321,6 +321,7 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xLARF
 NB. - larfxxxx and larfbxxxx are topological equivalents
+NB. - if τ=0 then v can have any element values
 
 larflcbc=: ] - [ */ (mp~ (+ @ ((0 & ( 0 })) * {.)))~    NB. C - v * ((v * τ)' * C)
 larflcbr=: ] - (+ @ (* {.) @ [) */ ((0 ( 0) } [) mp ])  NB. C - (τ * v)' * (v * C)

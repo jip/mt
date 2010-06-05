@@ -363,19 +363,26 @@ NB.   Q -: (M,K) {. mp/ (idmat M) -"2 TAU * (* +)"0/~"1 |: H
 ungqr=: ($:~ (_1  0&(ms $))) : (_1  0 }. ([ (ungqrstep^:(]`(ungi@c@])`((-(ungb@c)) ung2r ((}.~ (2 # (  ungb@c)))@])))) ( trl1            @((   <. (_1  0&(ms $)) ) {."1 ]))))
 
 
-NB. Formula:     iters = max(0,⌊(k+BS-NX-1)/BS⌋)
-ungi=: (0 >. <.@(GQNB %~ (_1+GQNB-GQNX)&+))M.
+NB. seems FAILED
 
-NB. Formula:     size = min(k,BS*iters)
-ungb=: (<. (GQNB * ungi))M.
+NB.   'Qfi1 eQi1'=. ung2rstep2 (Qfi;eQi)
+ung2rstep2=: (((>:@(-/)@$) (0 liosS) ]) @ (0 & {::)) (((>:@]  0} *)   -@{:)@[ ,.  larflnfc) 0 , (1 & {::)
 
+NB.   eQ=. Qf ung2r eQ0
+ung2r2=: 1 {:: ung2rstep2^:(;`(c@])`(idmat@((,~ #)-c@])))
 
+NB.   eQi1=. Qf  ungqrstep eQi
+ungqrstep=: ((((GQNB,~_),:~(-&#))                       (] ;. 0)       [) (((ung2r~ c) @ [) ,.  larfblnfc) ]) ({.  ~ ((-GQNB)-#))
 
 
 NB. Q=. [n] ungqr Qf
 NB. Qf: m*k-matrix, unit lower triangular; n: 0:m, default is k; Q: m*n-matrix
 
-ungqr2=: 3 : 0
+ungqr2=: 4 : 0
+  y=. x ]`((1;0,[) setdiag {."1)`({."1) @. (*@(-c)) y  NB. keep/post-stitch-idmat/shrink
+  }: (ungqrstep^:(]`(ungi@c@])`((-(ungb@c)) ung2r ((}.~ (2 # (  ungb@c)))@]))))
+  ip (C.^:_1"1) 1 {:: getripl1ustep ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
+  
   'ip L1U'=. y
   n=. # L1U
   y=. trtriu tru L1U
@@ -383,6 +390,8 @@ ungqr2=: 3 : 0
   I=. <. n % TRINB
   ip (C.^:_1"1) 1 {:: getripl1ustep ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
 )
+
+NB. /seems FAILED
 
 NB. ---------------------------------------------------------
 NB. ungrq

@@ -167,7 +167,8 @@ NB.
 NB. Description:
 NB.   lIOS of vector laying between diagonal and matrix edge
 NB.   in any of one cardinal direction: east, north, south or
-NB.   west; and having optional gap at head or tail
+NB.   west; and having optional gap between diagonal, at head
+NB.   or tail
 NB.
 NB. Syntax:
 NB.   vapp=. gap liosX

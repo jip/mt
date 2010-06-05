@@ -109,7 +109,7 @@ unmr2rnstep=: (1 {:: ]) ((,.   _  1&rt)  ;  0  1&}.@])~ (,;.0~ (1 _ ,:~ 2 # _1 -
 unmr2rcstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~ 0 _1&}.@[)~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&({::)))) larfrnbr 0 {:: ]
 
 NB. ---------------------------------------------------------
-NB. Verb     Action   Side   Tran  Syntax
+NB. Verb:    Action:  Side:  Tran: Syntax:
 NB. unml2ln  Q * C    left   none  eCprod=. Qf unml2ln (C, 0)
 NB. unml2lc  Q^H * C  left   ct    eCprod=. Qf unml2lc (C, 0)
 NB. unml2rn  C * Q    right  none  eCprod=. Qf unml2rn (C,.0)
@@ -281,7 +281,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb     Action   Side   Tran  Syntax
+NB. Verb:    Action:  Side:  Tran: Syntax:
 NB. unmlqln  Q * A    left   none  B=. LQf unmlqln A
 NB. unmlqlc  Q^H * A  left   ct    B=. LQf unmlqlc A
 NB. unmlqrn  A * Q    right  none  B=. LQf unmlqrn A
@@ -344,7 +344,7 @@ unmlqrn=:  0 _1 }. ((unml2rn`(,.&>/@([ unmlqrnstep^:(>.@(MQNB %~ #@[)) ((({.~ _&
 unmlqrc=:  0 _1 }. ((unml2rc`(,.&>/@(  unmlqrcstep^:(>.@(MQNB %~ #@[)) (;~ _ 0&{.                                             ) ))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
 
 NB. ---------------------------------------------------------
-NB. Verb     Action   Side   Tran  Syntax
+NB. Verb:    Action:  Side:  Tran: Syntax:
 NB. unmqlln  Q * C    left   none  QeC=.  Qf unmqlln C
 NB. unmqllc  Q^H * C  left   ct    cQeC=. Qf unmqllc C
 NB. unmqlrn  C * Q    right  none  eCQ=.  Qf unmqlrn C
@@ -378,7 +378,7 @@ unmqlrn=:  0  1 }. ((unm2lrn`(,.&>/@(  unmqlrnstep^:(>.@(MQNB %~ c@[)) (;  _ 0&{
 unmqlrc=:  0  1 }. ((unm2lrc`(,.&>/@([ unmqlrcstep^:(>.@(MQNB %~ c@[)) ((({.~ _&,) ;~ (}.~ 0&,))  (MQNB                  - c ))~))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
 
 NB. ---------------------------------------------------------
-NB. Verb     Action   Side   Tran  Syntax
+NB. Verb:    Action:  Side:  Tran: Syntax:
 NB. unmqrln  Q * C    left   none  QeC=.  Qf unmqrln C
 NB. unmqrlc  Q^H * C  left   ct    cQeC=. Qf unmqrlc C
 NB. unmqrrn  C * Q    right  none  eCQ=.  Qf unmqrrn C
@@ -413,7 +413,7 @@ unmqrrn=:  0 _1 }. ((unm2rrn`(,.&>/@(  unmqrrnstep^:(>.@(MQNB %~ c@[)) (;~ _ 0&{
 unmqrrc=:  0 _1 }. ((unm2rrc`(,.&>/@([ unmqrrcstep^:(>.@(MQNB %~ c@[)) ((({.~ _&,) ;  (}.~ 0&,))  (MQNB arounddown @ (_1 + c)))~))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
 
 NB. ---------------------------------------------------------
-NB. Verb     Action   Side   Tran  Syntax
+NB. Verb:    Action:  Side:  Tran: Syntax:
 NB. unmrqln  Q * C    left   none  QeC=.  Qf unmrqln C
 NB. unmrqlc  Q^H * C  left   ct    cQeC=. Qf unmrqlc C
 NB. unmrqrn  C * Q    right  none  eCQ=.  Qf unmrqrn C
@@ -448,7 +448,7 @@ unmrqrn=:  0  1 }. ((unmr2rn`(,.&>/@([ unmrqrnstep^:(>.@(MQNB %~ #@[)) ((({.~ _&
 unmrqrc=:  0  1 }. ((unmr2rc`(,.&>/@(  unmrqrcstep^:(>.@(MQNB %~ #@[)) (;  _ 0&{.                                             ) ))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
+NB. Verb:     Action:  Side:  Tran: Syntax:
 NB. unmhrlln  Q * C    left   none  QeC=.  Qf unmhrlln C
 NB. unmhrllc  Q^H * C  left   ct    cQeC=. Qf unmhrllc C
 NB. unmhrlrn  C * Q    right  none  eCQ=.  Qf unmhrlrn C
@@ -483,7 +483,7 @@ unmhrlrn=: (unmlqrn~ (|. !. 0))~
 unmhrlrc=: (unmlqrc~ (|. !. 0))~
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
+NB. Verb:     Action:  Side:  Tran: Syntax:
 NB. unmhruln  Q * C    left   none  QeC=.  Qf unmhruln C
 NB. unmhrulc  Q^H * C  left   ct    cQeC=. Qf unmhrulc C
 NB. unmhrurn  C * Q    right  none  eCQ=.  Qf unmhrurn C

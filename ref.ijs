@@ -136,7 +136,7 @@ larfp=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Verb       Input             Output                   β
+NB. Verb:      Input:            Output:                  β:
 NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∊ℝ
 NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∊ℝ
 NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∊ℝ
@@ -285,7 +285,7 @@ NB.   Vb  = V[k:m-1,0:n-1]
 larftfr=: (_1 _1&{.)`(( {.    (0:`0:`(larftfr@[)`]`[`( mp  ((0&(_1}))@ct)  )`[`(-@mp )` mp  `(larftfr@])`(({.~   #),.])`, `]`[`0: fork5)  }.   )~ (<.@-:@#))`(EMPTY"_)@.(*@<:@#)
 
 NB. ---------------------------------------------------------
-NB. Verb       Action    Side    Tran   Dir   Layout     eC
+NB. Verb:      Action:   Side:   Tran:  Dir:  Layout:    eC:
 NB. larflcbc   H' * C    left    ct     bwd   col-wise   0, C
 NB. larflcbr   H' * C    left    ct     bwd   rowwise    0, C
 NB. larflcfc   H' * C    left    ct     fwd   col-wise   C, 0
@@ -344,7 +344,7 @@ larfrnfc=: ] - (mp ((0 & (_1 })) * {:))~ */ (+ @ [)     NB. C - (C * (v * τ)) *
 larfrnfr=: ] - (mp ((+ @ (0 & (_1 }))) * {:))~ */ [     NB. C - (C * (v' * τ)) * v
 
 NB. ---------------------------------------------------------
-NB. Verb       Action    Side    Tran   Dir   Layout     eC
+NB. Verb:      Action:   Side:   Tran:  Dir:  Layout:    eC:
 NB. larfblcbc  H' * C    left    ct     bwd   col-wise   0, C
 NB. larfblcbr  H' * C    left    ct     bwd   rowwise    0, C
 NB. larfblcfc  H' * C    left    ct     fwd   col-wise   C, 0

@@ -28,48 +28,6 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. ---------------------------------------------------------
-NB. trtri
-NB. Template adverb to make triangular matrix inversion verbs
-NB.
-NB. Syntax:
-NB.   u0=. u0`u1`u2`u3`u4`u5`u6 trtri
-NB. where
-NB.   u0 - inversion verb for recursive call
-NB.   u1 - extract the square triangular matrix Ta from
-NB.        either top left or bottom right corner
-NB.   u2 - extract the square triangular matrix Tb opposite
-NB.        to Ta on diagonal
-NB.   u3 - combine intervals to extract non-zero part either
-NB.        from top right part (tru case), or bottom left
-NB.        part (trl case) of input matrix A
-NB.   u4 - combine inverses of both invTa and invAc
-NB.   u5 - assemble output as triangular matrix
-NB.   u6 - inverse 1×1 sized system
-NB.
-NB. References:
-NB. [1] E. E. Tyrtyshnikov "Matrix analysis and linear
-NB.     algebra", Lecture notes, 2004-2005, pp. 284-285
-NB.     (Тыртышников Е.Е. "Матричный анализ и линейная
-NB.     алгебра", лекции, 2004-2005, стр. 284-285)
-NB.     http://www.inm.ras.ru/vtm/lection/all.pdf
-
-trtri=: 1 : 0
-  '`u0 u1 u2 u3 u4 u5 u6'=. u
-  n=. # y
-  if. n > 1 do.
-    p=. >. -: n
-    Ta=. (2 $ p) u1 y
-    invTa=. u0 Ta
-    invTb=. u0 (2 $ p) u2 y
-    Ac=. (p u3 (p - n)) {. y
-    invAc=. - invTa mp Ac mp invTb
-    (invTa u4 invAc) u5 invTb
-  else.
-    u6 y
-  end.
-)
-
 NB. =========================================================
 NB. Interface
 
@@ -101,6 +59,12 @@ NB.
 NB. Notes:
 NB. - opposite triangle is not referenced
 NB. - unit diagonal is not referenced
+NB.
+NB. References:
+NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
+NB.     Inversion, UT-CS-90-119, October, 1990.
+NB.     LAPACK Working Note 27.
+NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 trtril=: 3 : 0
   n=. # y
@@ -167,41 +131,85 @@ NB. getri
 NB. Inverse a general matrix using the LU factorization
 NB.   inv(P) * L1 * U = A
 NB.   inv(A) = inv(U) * inv(L1) * P
+NB.
+NB. References:
+NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
+NB.     Inversion, UT-CS-90-119, October, 1990.
+NB.     LAPACK Working Note 27.
+NB.     http://www.netlib.org/lapack/lawns/downloads/
 
-getri=: ((C."1~ /:)~ (trtriu mp trtril1)) & >/ @ getrfpl1u
+getri=: ((C."1~ /:)~ (trtriu mp trtril1)) & >/
 
-NB. ##############
-NB.    ('';1 1 0 1 1) <;.1 i.3 5
-NB. ┌──┬─────┬──┬──┐
-NB. │ 0│ 1  2│ 3│ 4│
-NB. │ 5│ 6  7│ 8│ 9│
-NB. │10│11 12│13│14│
-NB. └──┴─────┴──┴──┘
+TRINB=: 64
 
-TRNB=: 3 NB. 64
-
+NB. implements LAPACK's xGETRI with column blocks, P*L1*U=A
 getri2step=: 3 : 0
-  'pfx bcol sfx'=. y
-  j=. c pfx
-  jb=. c bcol
-  L0=. ((j+i.jb);(i.jb)) { bcol
-  L1=. ((j+jb-n),jb) {. bcol
+  'pfx sfx'=. y
+  n=. # pfx
+  j=. (c pfx) - TRINB
+  L0=. (,.~ j , TRINB) (];.0) pfx
+  L1=. (- (c sfx),TRINB) {. pfx
+  bcol=. (-TRINB) {."1 pfx
+  bcol=. (((i. n) - j) >/ i. TRINB) } bcol ,: 0       NB. spec code
   bcol=. bcol - sfx mp L1
   bcol=. L0 trsmxl1 bcol
-  pfx=. NB }."1 pfx
-  bcol=. (-TRNB) {."1 pfx
-  sfx=. bcol ,. sfx
-  pfx ; bcol ; sfx
+  ((-TRINB) }."1 pfx) ; (bcol ,. sfx)
 )
 
 getri2=: 3 : 0
   'ip L1U'=. y
   n=. # L1U
-  nn=. (>: dbg 'nn') TRNB * <. (n-1) % TRNB
-  I=. (<. dbg 'I') (n+(TRNB-1)) % TRNB
-  jb=. TRNB (<. dbg 'jb') (>: n-nn)
-  ios=. (jb+nn-1) (ht2lios dbg 'ht2lios') nn-1
-  ip C.^:_1"1 (,. &: >)/ getri2step ^: I (nn {."1 L1U) ; (ios ({"1 dbg '{"1') L1U) ; ((nn+jb-n) {."1 L1U)
+  y=. trtriu L1U
+  y=. (>/~ i. n) } y ,: L1U       NB. spec code
+  I=. 0 >. <. (n-1) % TRINB
+  ip (C.^:_1"1) 1 {:: getri2step ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
+)
+
+NB. models LAPACK's xGETRI with row blocks, U*L1*P=A
+NB. TODO: x m&v y ↔ m&v^:x y
+getri3step=: 3 : 0
+  'pfx sfx'=. y
+  'j n'=. $ pfx
+  L0=. ((0 , j) ,: (2 # TRINB)) (];.0) sfx
+  L1=. (TRINB , j) {. sfx
+  R=. TRINB {. sfx
+  R=. ((i. TRINB) >/ ((i. n) - j)) } R ,: 0       NB. spec code
+  R=. R - L1 mp pfx
+  R=. L0 trsml1x R
+  (pfx , R) ; (TRINB }. sfx)
+)
+
+getri3=: 3 : 0
+  'ip UL1'=. y
+  n=. # UL1
+  y=. trtriu UL1
+  y=. (>/~ i. n) } y ,: UL1              NB. spec code
+  rn=. (TRINB+1) (| &. <:) (1 >. n)      NB. reminder of n, (n-nn): if. n>0 then. (NB|(n-1))+1 else. 0 end.
+  I=. <. TRINB %~ <: (1 >. n)            NB. if. n>0 then. max(0,floor((n-1)%NB)) else. 0 end.
+  ip (C.^:_1) 0 {:: getri3step ^: I (rn ((((2 # [) {. ]) trsml1x (tru@{.)) ; }.) y)
+)
+
+NB. x m&v y ↔ m&v^:x y
+getri4step=: 4 : 0
+  'pfx sfx'=. y
+  'j n'=. $ pfx
+  L0=. ((0 , j) ,: (2 # TRINB)) (];.0) sfx
+  L1=. (TRINB , j) {. sfx
+  R=. TRINB {. sfx
+  R=. ((i. TRINB) >/ ((i. n) - j)) } R ,: 0       NB. spec code
+  R=. R - L1 mp pfx
+  R=. L0 trsml1x R
+  (pfx , R) ; (TRINB }. sfx)
+)
+
+getri4=: 3 : 0
+  'ip UL1'=. y
+  n=. # UL1
+  y=. trtriu UL1
+  y=. (>/~ i. n) } y ,: UL1              NB. spec code
+  rn=. (TRINB+1) (| &. <:) (1 >. n)      NB. reminder of n, (n-nn): if. n>0 then. (NB|(n-1))+1 else. 0 end.
+  I=. <. TRINB %~ <: (1 >. n)            NB. if. n>0 then. max(0,floor((n-1)%NB)) else. 0 end.
+  ip (C.^:_1) 0 {:: I (0&getri4step) (rn ((((2 # [) {. ]) trsml1x (tru@{.)) ; }.) y)
 )
 
 NB. ---------------------------------------------------------
@@ -245,32 +253,49 @@ NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 testtrtri=: 3 : 0
   L1=. |: U1=. tru1 U=. |: y
   rcondU=. (norm1 con trtriu) U
-  rcondU1=. _."_ NB. (norm1 con trtriu1) U1
-  rcondL=. _."_ NB. (norm1 con trtril) y
-  rcondL1=. _."_ NB. (norm1 con trtril1) L1
+  rcondU1=. (norm1 con trtriu1) U1
+  rcondL=. (norm1 con trtril) y
+  rcondL1=. (norm1 con trtril1) L1
 
-  ('(128!:1)'  tmonad (]`]`(rcondU "_)`(_."_)`(((norm1@(- (<: upddiag @ mp)))) % (FP_EPS*(*&norm1)*(#@[))))) U
+  ('(128!:1)'  tmonad (]`]`(rcondU "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U
 
-  ('trtriu' tmonad (]`]`(rcondU "_)`(_."_)`(((norm1@(- (<: upddiag @ mp)))) % (FP_EPS*(*&norm1)*(#@[))))) U
+  ('trtril'    tmonad (]`]`(rcondL "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
+  ('trtril1'   tmonad (]`]`(rcondL1"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) L1
+  ('trtriu'    tmonad (]`]`(rcondU "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U
+  ('trtriu1'   tmonad (]`]`(rcondU1"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U1
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
 NB. testgetri
-NB. ##############Test inverse algorithms with random general matrix y
 NB.
-NB. tgetri A
+NB. Description:
+NB.   Test getri by general matrix given
+NB.
+NB. Syntax:
+NB.   testgetri A
+NB. where
+NB.   A - n×n-matrix
+NB.
+NB. Formula:
+NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testgetri=: 3 : 0
-  n=. # y
-  GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
-  rcondGE=. norm1 con getri   GE
-  'getri' ttri (GE;rcondGE)
-  'gefri' ttri (GE;rcondGE)
-  '%.'    ttri (GE;rcondGE)
+  rcond=. (norm1 con getri) y
+  ipL1U=. getrfpl1u y
+  ipUL1=. getrful1p y             NB. TODO: save back to y
+
+  ('%.'     tmonad (]`]`(rcond"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
+
+  ('getri'  tmonad (]`]`(rcond"_)`(_."_)`((((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))~ ((C.^:_1   (trl1 mp tru )) & >/))~))) ipL1U
+  ('getri2' tmonad (]`]`(rcond"_)`(_."_)`((((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))~ ((C.^:_1   (trl1 mp tru )) & >/))~))) ipL1U
+  ('getri3' tmonad (]`]`(rcond"_)`(_."_)`((((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))~ ((C.^:_1"1 (tru  mp trl1)) & >/))~))) ipUL1
+  ('getri4' tmonad (]`]`(rcond"_)`(_."_)`((((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))~ ((C.^:_1"1 (tru  mp trl1)) & >/))~))) ipUL1
+
   EMPTY
 )
+
 
 NB. ---------------------------------------------------------
 NB. testhetri

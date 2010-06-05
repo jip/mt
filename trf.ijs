@@ -51,8 +51,8 @@ NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A (-:!.(2^_34)) p sp T (] mp (mp ct)) L1
-NB.   A (-:!.(2^_34)) P (mp mp |:@[) T (] mp (mp ct)) L1
+NB.   A -: clean p sp T (] mp (mp ct)) L1
+NB.   A -: clean P (mp mp |:@[) T (] mp (mp ct)) L1
 NB. where
 NB.   'ip L1 T'=. hetf2pl A
 NB.   p=. /: ip
@@ -119,8 +119,8 @@ NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A (-:!.(2^_34)) p sp T (] mp (mp ct)) U1
-NB.   A (-:!.(2^_34)) P (mp mp |:@[) T (] mp (mp ct)) U1
+NB.   A -: clean p sp T (] mp (mp ct)) U1
+NB.   A -: clean P (mp mp |:@[) T (] mp (mp ct)) U1
 NB. where
 NB.   'ip U1 T'=. hetf2pu A
 NB.   p=. /: ip
@@ -186,10 +186,10 @@ NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A (-:!.(2^_34)) p {"1 L mp U1
-NB.   A (-:!.(2^_34)) p C."1 L mp U1
-NB.   A (-:!.(2^_34)) ip C.^:_1"1 L mp U1
-NB.   A (-:!.(2^_34)) L mp U1 mp P
+NB.   A -: clean p {"1 L mp U1
+NB.   A -: clean p C."1 L mp U1
+NB.   A -: clean ip C.^:_1"1 L mp U1
+NB.   A -: clean L mp U1 mp P
 NB. where
 NB.   'ip LU1'=. getrflu1p A
 NB.   p=. /: ip
@@ -242,10 +242,10 @@ NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A (-:!.(2^_34)) p { L1 mp U
-NB.   A (-:!.(2^_34)) p C. L1 mp U
-NB.   A (-:!.(2^_34)) ip C.^:_1 L1 mp U
-NB.   A (-:!.(2^_34)) P mp L1 mp U
+NB.   A -: clean p { L1 mp U
+NB.   A -: clean p C. L1 mp U
+NB.   A -: clean ip C.^:_1 L1 mp U
+NB.   A -: clean P mp L1 mp U
 NB. where
 NB.   'ip L1U'=. getrfpl1u A
 NB.   p=. /: ip
@@ -301,10 +301,10 @@ NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A (-:!.(2^_34)) p { U1 mp L
-NB.   A (-:!.(2^_34)) p C. U1 mp L
-NB.   A (-:!.(2^_34)) ip C.^:_1 U1 mp L
-NB.   A (-:!.(2^_34)) P mp U1 mp L
+NB.   A -: clean p { U1 mp L
+NB.   A -: clean p C. U1 mp L
+NB.   A -: clean ip C.^:_1 U1 mp L
+NB.   A -: clean P mp U1 mp L
 NB. where
 NB.   'ip U1L'=. getrfpu1l A
 NB.   p=. /: ip
@@ -357,12 +357,12 @@ NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A (-:!.(2^_34)) p {"1 U mp L1
-NB.   A (-:!.(2^_34)) p C."1 U mp L1
-NB.   A (-:!.(2^_34)) ip C.^:_1"1 U mp L1
-NB.   A (-:!.(2^_34)) U mp L1 mp iP
+NB.   A -: clean p {"1 U mp L1
+NB.   A -: clean p C."1 U mp L1
+NB.   A -: clean ip C.^:_1"1 U mp L1
+NB.   A -: clean U mp L1 mp iP           NB. why iP ???
 NB. where
-NB.   'p UL1'=. getrful1p A
+NB.   'ip UL1'=. getrful1p A
 NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
@@ -411,8 +411,8 @@ NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A (-:!.(2^_34)) p sp T (] mp (mp ct)) L1
-NB.   A (-:!.(2^_34)) P (mp mp |:@[) T (] mp (mp ct)) L1
+NB.   A -: clean p sp T (] mp (mp ct)) L1
+NB.   A -: clean P (mp mp |:@[) T (] mp (mp ct)) L1
 NB. where
 NB.   'ip L1 T'=. hetrfpl A
 NB.   p=. /: ip
@@ -453,8 +453,8 @@ NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A (-:!.(2^_34)) p sp T (] mp (mp ct)) U1
-NB.   A (-:!.(2^_34)) P (mp mp |:@[) T (] mp (mp ct)) U1
+NB.   A -: clean p sp T (] mp (mp ct)) U1
+NB.   A -: clean P (mp mp |:@[) T (] mp (mp ct)) U1
 NB. where
 NB.   'ip U1 T'=. hetrfpu A
 NB.   p=. /: ip
@@ -483,7 +483,7 @@ NB.   L - n×n-matrix, lower triangular with positive diagonal
 NB.       entries, Cholesky triangle
 NB.
 NB. Assertion:
-NB.   A (-:!.(2^_34)) (mp ct) L
+NB.   A -: clean (mp ct) L
 NB. where
 NB.   L=. potrfl A
 
@@ -518,7 +518,7 @@ NB.   U - n×n-matrix, upper triangular with positive diagonal
 NB.       entries, Cholesky triangle
 NB.
 NB. Assertion:
-NB.   A (-:!.(2^_34)) (mp ct) U
+NB.   A -: clean (mp ct) U
 NB. where
 NB.   U=. potrfu A
 
@@ -589,7 +589,7 @@ NB.   6) link matrices L1 and D to form output:
 NB.        L1 ; D
 NB.
 NB. Assertion:
-NB.   A (-:!.(2^_34)) L1 (mp mp (ct@[)) D
+NB.   A -: clean L1 (mp mp (ct@[)) D
 NB. where
 NB.   'L1 D'=. pttrfl A
 NB.
@@ -663,7 +663,7 @@ NB.   6) link matrices L1 and D to form output:
 NB.        L1 ; D
 NB.
 NB. Assertion:
-NB.   A (-:!.(2^_34)) U1 (mp mp (ct@[)) D
+NB.   A -: clean U1 (mp mp (ct@[)) D
 NB. where
 NB.   'U1 D'=. pttrfu A
 NB.

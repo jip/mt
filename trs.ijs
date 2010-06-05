@@ -268,7 +268,7 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (||eps * op(A)|| * ||X||))
+NB. - berr := max(||B - op(A) * X|| / (||ε * op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
@@ -299,7 +299,7 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
+NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
@@ -329,7 +329,7 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
+NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testpotrs=: 3 : 0
   'A X'=. y
@@ -360,7 +360,7 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
+NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testpttrs=: 3 : 0
   'A X'=. y

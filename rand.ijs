@@ -121,10 +121,10 @@ NB. Algorithm for monadic randnf:
 NB.   In: sh
 NB.   Out: S
 NB.   0) calc ceiled half of elements quantity in S:
-NB.        n := Π{sh[i],i=0:r-1}
+NB.        n := ⌈Π{sh[i],i=0:r-1}/2⌉
 NB.   1) generate random complex n-vector with elements
-NB.      having real and imagine parts both distributed
-NB.      normally:
+NB.      having real and imagine parts both independently
+NB.      distributed normally:
 NB.        Re(v[i]) := nf1[i], i=0:n-1
 NB.        Im(v[i]) := nf2[i], i=0:n-1
 NB.   2) form n×2-array with separated real and imagine
@@ -146,7 +146,7 @@ NB.   having Re(s) ~ N(0,1) and Im(s) ~ N(1,3^2):
 NB.     normrand=: randnf j. (1 3 & randnf)
 NB.
 NB. References:
-NB. [1] David R. Brillinger "Time series data analysis and
+NB. [1] D.R.Brillinger "Time series. Data analysis and
 NB.     theory", The University of California, Berkeley, 1975
 NB.     (Д. Бриллинджер "Временные ряды. Обработка данных и
 NB.     теория". Изд-во "Мир". М. 1980, стр. 98)
@@ -350,7 +350,7 @@ NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
 
-hemat=: 1 : '(u trlmat_mt_) vu2y (+ ct_mt_)'
+hemat=: 1 : '(-: upddiag @ (u trlmat)) vu2y (+ ct_mt_)'
 
 NB. ---------------------------------------------------------
 NB. unmat

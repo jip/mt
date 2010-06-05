@@ -122,7 +122,7 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (||op(A)|| * ||X||*eps))
+NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testtrsm=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'

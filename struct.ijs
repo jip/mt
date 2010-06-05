@@ -356,11 +356,11 @@ NB.   Henry Rich, Sun Nov 25 14:07:46 HKT 2007
 NB.   http://www.jsoftware.com/pipermail/general/2007-November/031233.html
 
 upddiag=: 1 : 0
-  lios=. diaglios $ y
+  lios=. diaglios_mt_ $ y
   e=. lios ({,) y
   (u e) (lios"_) } y
 :
-  lios=. x diaglios $ y
+  lios=. x diaglios_mt_ $ y
   e=. lios ({,) y
   (u e) (lios"_) } y
 )

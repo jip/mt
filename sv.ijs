@@ -1,9 +1,11 @@
 NB. sv.ijs
-NB. Solve system
+NB. Solve linear system
 NB.
 NB. getrsu   Solve system U*x=b, where U is an upper triangular matrix
 NB. getrsl1  Solve system L*x=b, where L is a unit lower triangular matrix
 NB. gesv     Solve system A*x=b via LU factorization with partial pivoting
+NB. disv     Solve system A*x=b, where A is a diagonalizable matrix
+NB. hesv     Solve system A*x=b, where A is a Hermitian matrix
 
 coclass 'pjlap'
 
@@ -47,6 +49,47 @@ getrsu=: (4 : 0) " 1 2
 )
 
 NB. ---------------------------------------------------------
+NB. trtrsu                                                1 1
+NB. Solve system U*x=b, where U is an upper triangular matrix
+NB. in raveled form (only upper triangle elements are stored)
+NB.
+NB. Syntax:
+NB.   x=. b trtrsu U
+NB. where
+NB.   U - (N*(N+1)/2)-vector, upper triangle elements of
+NB.       N-by-N matrix A in order: from top row to bottom,
+NB.       and within each row from leftmost to rightmost
+NB.       element
+NB.   b - N-vector, RHS
+NB.   x - N-vector, solution
+NB.   N >= 0
+NB.
+NB. If:
+NB.   x=. b trtrsu U
+NB. then
+NB.   b -: (tr2ge U) mp x
+NB.
+NB. Notes:
+NB. >>>>>>> - result is identical to LAPACK's dgesv/zgesv
+
+trtrsu=: (4 : 0) " 1 1
+  n=. # x
+  n1=. >: n
+  n2=. n - 2
+  z=. n $ 0
+  iosa=. iosz=. i. 0
+  ioaii=. -: (* >:) n
+  for_i. |. i. n do.
+smoutput 'i' ; i ; 'ioaii' ; ioaii ; 'iosa' ; iosa ; 'iosz' ; iosz ; 'z' ; z
+    z=. (((i { x) - ((iosa { y) mp (iosz { z))) % (ioaii { y)) i } z
+    iosz=. i , iosz                  NB. (n-1-i)-vector: (i+1)..(n-1)
+    iosa=. (iosa - n2) , (<: ioaii)  NB. (n-1-i)-vector: (i*N-i*(i-1)/2)..((i+1)*N-i*(i+1)/2-1)
+    ioaii=. ioaii + i - n1           NB. i*(n-(i-1)/2)
+  end.
+  z
+)
+
+NB. ---------------------------------------------------------
 NB. getrsl1                                               1 2
 NB. Solve system L*x=b, where L is a lower triangular matrix
 NB. with units on diagonal
@@ -81,8 +124,7 @@ getrsl1=: (4 : 0) " 1 2
 
 NB. ---------------------------------------------------------
 NB. gesv                                                  1 2
-NB. Solve system L*x=b, where L is a lower triangular matrix
-NB. with units on diagonal
+NB. Solve system A*x=b, where A is a general matrix
 NB.
 NB. Syntax:
 NB.   x=. b gesv A
@@ -101,6 +143,35 @@ NB. Notes:
 NB. - result is identical to LAPACK's dgesv/zgesv
 
 gesv=: [ (((0 {:: ]) C. [) (getrsl1 getrsu ]) (1 {:: ])) getrf
+
+NB. ---------------------------------------------------------
+NB. disv                                                  1 1
+NB. Solve system A*x=b, where A is a diagonalizable matrix
+NB.
+NB. Syntax:
+NB.   x=. b disv (rv ; ev ; rvi)
+NB. where
+NB.   rv  - N-by-N table, right eigenvectors of A
+NB.   ev  - N-vector, eigenvalues of A
+NB.   rvi - N-by-N table, inversion of rv
+NB.   x   - N-vector, solution
+NB.   N  >= 0
+
+disv=: [: : ((0 {:: ]) % (1 {:: ])) mp (mp~ (2 & {::)) " 1 1
+
+NB. ---------------------------------------------------------
+NB. hesv                                                  1 1
+NB. Solve system A*x=b, where A is a Hermitian matrix
+NB.
+NB. Syntax:
+NB.   x=. b hesv (rv ; ev)
+NB. where
+NB.   rv - N-by-N table, right eigenvectors of A
+NB.   ev - N-vector, eigenvalues of A
+NB.   x  - N-vector, solution
+NB.   N >= 0
+
+hesv=: [: : ((0 {:: ]) % (1 {:: ])) mp (mp~ (+ @ |: @ (0 & {::))) " 1 1
 
 NB. =========================================================
 Note 'trs testing and timing'

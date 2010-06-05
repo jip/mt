@@ -130,12 +130,12 @@ NB. heexp                                                   1
 NB. Matrix exponential of a Hermitian matrix
 NB.
 NB. Syntax:
-NB.   E=. diexp (rv ; ev)
+NB.   E=. heexp (rv ; ev)
 NB. where
-NB.   rv  - N-by-N table, right eigenvectors of A
-NB.   ev  - N-vector, eigenvalues of A
-NB.   E   - N-by-N table, matrix exponent exp(A)
-NB.   N  >= 0
+NB.   rv - N-by-N table, right eigenvectors of A
+NB.   ev - N-vector, eigenvalues of A
+NB.   E  - N-by-N table, matrix exponent exp(A)
+NB.   N >= 0
 
 heexp=: ((0 & {::) ([ mp ((* (+ @ |:))~ ^)) (1 & {::)) : [: " 1
 

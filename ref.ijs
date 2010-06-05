@@ -1,6 +1,6 @@
 NB. Reflections
 NB.
-NB. larfx      Dyad to generate an elementary reflector
+NB. larfx      Dyads to generate an elementary reflector
 NB. larfxxx    Monads to generate an elementary reflector
 NB. larftxx    Monads to form the triangular factor of a
 NB.            block reflector
@@ -258,20 +258,21 @@ NB.
 NB. Syntax:
 NB.   T=. larftfc eV
 NB. where
-NB.   eV  - (m+1)×k-matrix (V,tau)
-NB.   V   - m×k-matrix, unit lower triangular (trapezoidal)
+NB.   eV  - (m+1)×n-matrix (V,tau)
+NB.   V   - m×n-matrix, unit lower triangular (trapezoidal)
 NB.         with 1s on 0-th diagonal and 0s above
-NB.   tau - k-vector τ[0:k-1] corresp. to V
-NB.   T   - k×k-matrix, upper triangular
+NB.   tau - n-vector τ[0:n-1] corresp. to V
+NB.   T   - n×n-matrix, upper triangular
 NB.
 NB. Storage layout:
 NB.   (  T00  T01  )  k
 NB.   (       T11  )  n-k
 NB.       k   n-k
 NB. where
-NB.   T01 = - T00 * (Vl' * Vr) * T11
-NB.   Vl  = V[0:m-1,0:k-1]
-NB.   Vr  = V[0:m-1,k:n-1]
+NB.   T01 := - T00 * (Vl' * Vr) * T11
+NB.   Vl  := V[0:m-1,0:k-1]
+NB.   Vr  := V[0:m-1,k:n-1]
+NB.   k   := ⌈n/2⌉
 NB.
 NB. References:
 NB. [1] E. Elmroth, F. Gustavson. Applying Recursion to
@@ -295,6 +296,14 @@ larftfc=: 3 : 0
     EMPTY
   end.
 )
+
+larftfct=: (_1 _1&{.)`(((0 & {::) (($:@[) ([ (({.~ #) ,. ]) ((-@mp (0 & {::)) , (1 {:: ]))) (((ct@(0 (_1}) [)) mp ]) (mp;]) ($:@]))) (1 & {::))@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
+
+larftfcti=: (_1 _1&{.)`(((($:@[) ([ (({.~ #) ,. ]) ((-@mp (0 & {::)) , (1 {:: ]))) (((ct@(0 (_1}) [)) mp ]) (mp;]) ($:@])))&>/)@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
+
+larftfcf=: (_1 _1&{.)`(((0 & {::) (0:`0:`(larftfcf@[)`]`[`((ct@(0(_1})[))mp])`[`(-@mp)`mp`(larftfcf@])`(({.~ #),.])`,`]`[`0: fork5) (1 & {::))@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
+
+larftfcfi=: (_1 _1&{.)`((0:`0:`(larftfcf@[)`]`[`((ct@(0(_1})[))mp])`[`(-@mp)`mp`(larftfcf@])`(({.~ #),.])`,`]`[`0: fork5)&>/@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
 
 NB. ---------------------------------------------------------
 NB. larftfr
@@ -483,6 +492,10 @@ testlarft=: 3 : 0
   ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftfc' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfct' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfcti' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfcf' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfcfi' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftfr' tmonad (gelqf`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
@@ -502,7 +515,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testlarfb=: 3 : 0
   'A C'=. y
-  rcond=. (norm1 con (getri@getrf)) C
+  rcond=. (norm1 con (getriul1p@getrful1p)) C
   'LQf QfL QfR RQf'=. (gelqf ; geqlf ; geqrf ; gerqf) A
 
   ('larfblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;(    C , ~0))
@@ -559,4 +572,5 @@ NB. Notes:
 NB. - non-blocked larfxxxx algos are tested implicitly in gq,
 NB.   mq, qf tests
 
-testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_) @ (u ; u)'
+NB. testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_) @ (u ; u)'
+testref=: 1 : 'EMPTY_mt_ [ testlarft_mt_ @ (u ; u)'

@@ -303,7 +303,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. 2 # _. NB. (norm1 con (hetri@hetrf))"2 (] ,: |:) A
+  'conA conAt'=. (norm1 con (hetripl@hetrfpl))"2 (] ,: |:) A
   Af=. hetrfpl A
 
   ('hetrsax'  tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;Af)

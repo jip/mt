@@ -93,6 +93,7 @@ NB. TODO: s@user/projects@addons/math/mt@g
 
 NB. utilities
 require '~user/projects/mt/dbg.ijs'     NB. Debug
+require '~user/projects/mt/fork.ijs'    NB. Extended forks
 require '~user/projects/mt/util.ijs'    NB. Utilities
 require '~user/projects/mt/ios.ijs'     NB. IOS
 require '~user/projects/mt/norm.ijs'    NB. Norms

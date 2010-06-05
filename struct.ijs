@@ -20,7 +20,7 @@ NB. stitch    Template adv. to make verbs to enhance stitch
 NB.           built-in verb (,.)
 NB.
 NB. diag      Return a solid part of diagonal
-NB. setdiag   Assign scalar value to a solid part of diagonal
+NB. setdiag   Assign value[s] to a solid part of diagonal
 NB. upddiag   Template adv. to make verbs to update a solid
 NB.           part of diagonal
 NB.

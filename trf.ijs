@@ -30,22 +30,29 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
+NB. Blocked code constants
+
+TRFNB=: 64  NB. block size limit
+
+NB. ---------------------------------------------------------
 NB. hetf2pl
 NB.
 NB. Description:
-NB.   Triangular factorization with full pivoting of a
-NB.   Hermitian (symmetric) matrix:
+NB.   Partial triangular factorization with full pivoting of
+NB.   a Hermitian (symmetric) matrix:
 NB.     P * L1 * T * L1^H * P^_1 = A
 NB.   by non-blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
-NB.     'ip L1 T'=. hetf2pl A
+NB.     'ip L1 T'=. (l1 ; nb) hetf2pl A
 NB. where
 NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
+NB.   l1  - n-vector, 1st column of L1
+NB.   nb  > 0, columns quantity to factorize
 NB.   ip  - n-vector, full inversed permutation of A
-NB.   P   - n×n-matrix, full permutation of A
 NB.   L1  - n×n-matrix, unit lower triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
+NB.   P   - n×n-matrix, full permutation of A
 NB.
 NB. Assertion:
 NB.   P -: %. iP
@@ -68,7 +75,37 @@ NB.
 NB. TODO:
 NB. - T would be sparse
 
-hetf2pl=: 3 : 0
+hetf2pl=: 4 : 0
+  'l1 nb'=. x
+  n=. # y
+  L1=. n {."0 l1               NB. extend 1st L1's column by zeros
+  T=. ($ {. (1 1 {. ])) y      NB. T[0,0]=A[0,0]
+  ip=. i. n
+  h=. i. 1                     NB. h[0:j-1]=H[0:j-1,j-1], may be defined arbitrary before the 1st iteration only
+  ios=. nb ht2lios 1            NB. j:n-1
+  for_j. nb ht2lios 1 do.       NB. 1:n-1
+    a=. (< ios ; (<: j)) { y   NB. A[j:n-1,j-1]
+    lum=. (j (- , [) n) {. L1  NB. L1[j:n-1,0:j-1]
+    v=. a - lum mp h           NB. v[0:n-j-1]=A[j:n-1,j-1]-L1[j:n-1,0:j-1]*H[0:j-1,j-1]=L1[j:n-1,j]*T[j,j-1] non-pivoted yet
+    q=. liofmax v              NB. IO pivot from head
+    v=. (0 lios2cp q) C. v     NB. v[0]↔v[q]
+    dip=. q (+ lios2cp ]) j    NB. any[j]↔any[j+q]
+    y=. dip sp y               NB. A[j,j:n-1]↔A[j+q,j:n-1], A[j:n-1,j]↔A[j:n-1,j+q]
+    ip=. dip C. ip             NB. ip[j]↔ip[j+q]
+    to=. {. v                  NB. T[j,j-1]
+    lu=. q { lum               NB. L1[j,0:j-1] after pivoting
+    luecto=. to * + {: lu      NB. conj(L1[j,j-1])*T[j,j-1]
+    h=. to (((+ +)~ {:)`_1:`]) } ((2 # j) {. T) mp + lu   NB. h[0:j-1]=H[0:j-1,j]=T[0:j-1,0:j-1]*conj(L1[j,0:j-1])
+    L1=. (1 (0}) v % to) (< ios ; j) } dip C. L1          NB. L1[j,0:n-1]↔L1[j+q,0:n-1], L1[j:n-1,j]=v[0:n-j-1]/v[0], v[0] may be 0
+    td=. 9 o. ((< 2 # j) { y) - (luecto + lu mp h)        NB. T[j,j]=Re(A[j,j]-L1[j,0:j-1]*H[0:j-1,j]-conj(L1[j,j-1])*T[j,j-1])
+    T=. (td (,~ (, +)) to) (_2 <\ 0 _1 _1 0 0 0 + j) } T  NB. TODO: amend by lIOS NB. batch write diagonal and off-diagonal elements T[j,j-1] T[j-1,j] T[j,j]
+    h=. h , luecto + td        NB. h[0:j]=H[0:j,j]=T[0:J,0:J]*conj(L1[j,0:j])
+    ios=. }. ios               NB. j+1:n-1
+  end.
+  ip ; L1 ; T
+)
+
+hetf2plo=: 3 : 0
   n=. # y
   L1=. ($ y) {. 1              NB. 1st L1's column in Aasen method is e(1)-vector
   T=. ($ {. (1 1 {. ])) y      NB. T[0,0]=A[0,0]
@@ -90,7 +127,7 @@ hetf2pl=: 3 : 0
     h=. to (((+ +)~ {:)`_1:`]) } ((2 # j) {. T) mp + lu   NB. h[0:j-1]=H[0:j-1,j]=T[0:j-1,0:j-1]*conj(L1[j,0:j-1])
     L1=. (1 (0}) v % to) (< ios ; j) } dip C. L1          NB. L1[j,0:n-1]↔L1[j+q,0:n-1], L1[j:n-1,j]=v[0:n-j-1]/v[0], v[0] may be 0
     td=. 9 o. ((< 2 # j) { y) - (luecto + lu mp h)        NB. T[j,j]=Re(A[j,j]-L1[j,0:j-1]*H[0:j-1,j]-conj(L1[j,j-1])*T[j,j-1])
-    T=. (td (,~ (, +)) to) (_2 <\ 0 _1 _1 0 0 0 + j) } T  NB. batch write diagonal and off-diagonal elements T[j,j-1] T[j-1,j] T[j,j]
+    T=. (td (,~ (, +)) to) (_2 <\ 0 _1 _1 0 0 0 + j) } T  NB. TODO: amend by lIOS NB. batch write diagonal and off-diagonal elements T[j,j-1] T[j-1,j] T[j,j]
     h=. h , luecto + td        NB. h[0:j]=H[0:j,j]=T[0:J,0:J]*conj(L1[j,0:j])
     ios=. }. ios               NB. j+1:n-1
   end.
@@ -152,7 +189,7 @@ hetf2pu=: 3 : 0
     h=. to (((+ +)~ {.)`0:`]) } ((2 # >: j - n) {. T) mp + lu  NB. h[0:n-j-1]=H[j+1:n-1,j]=T[j+1:n-1,j+1:n-1]*conj(U1[j,j+1:n-1])
     U1=. (1 (_1}) v % to) (< ios ; j) } dip C. U1              NB. U1[j,0:n-1]↔U1[q,0:n-1], U1[0:j,j]=v[0:j]/v[_1], v[_1] may be 0
     td=. 9 o. ((< 2 # j) { y) - (luecto + lu mp h)             NB. T[j,j]=Re(A[j,j]-U1[j,j+1:n-1]*H[j+1:n-1,j]-conj(U1[j,j+1])*T[j,j+1])
-    T=. (td (,~ (, +)) to) (_2 <\ 0 1 1 0 0 0 + j) } T         NB. batch write diagonal and off-diagonal elements T[j,j+1] T[j+1,j] T[j,j]
+    T=. (td (,~ (, +)) to) (_2 <\ 0 1 1 0 0 0 + j) } T         NB. TODO: amend by lIOS NB. batch write diagonal and off-diagonal elements T[j,j+1] T[j+1,j] T[j,j]
     h=. h ,~ luecto + td           NB. h[0:j]=H[0:j,j]=T[0:J,0:J]*conj(U1[j,0:j])
     ios=. }: ios                   NB. 0:j-1
   end.
@@ -429,7 +466,33 @@ NB. TODO:
 NB. - implement partitioned algorithm
 NB. - T would be sparse
 
-hetrfpl=: hetf2pl
+hetrfpl=: 3 : 0
+  n=. # y
+  L1=. idmat n
+  T=. ($ y) $ 0
+  ip=. i. n
+  l1=. n {. 1
+  for_i. TRFNB dhs (0, (<. n % TRFNB)) do.
+    n=. # y
+    nb=. TRFNB <. # y
+    'ipi L1i Ti'=. (l1 ; nb) hetf2l y
+    T=. ((0 0,nb) (diag ; (i 1} [)) Ti) setdiag T
+    k=. nb <. (n-i)
+    d=. (1 0,k) diag Ti
+    T=. (d;(1,i,k))) setdiag T
+    T=. ((+d);(_1,i,k))) setdiag T           NB. TODO: amend by lIOS
+    L1=. L1i (< (n ht2lios i) ; (dhs2lios (i,nb))) } L1
+    l1=. ((n-i) dhs2lios (_1,(n-(i+nb)))) ({,) L1i
+    ipi=. (i. i) , (i+ipi)
+    y=. ipi sp y
+    L1=. ipi C. L1
+    ip=. ipi C. ip
+    A11=. A11 - H*L1^H - L1*T*L1^H       NB. FIXME!
+    recombine A = (  A00  A01  )
+                  (  A10  A11  )
+  end.
+  ip ; L1 ; T
+)
 
 NB. ---------------------------------------------------------
 NB. hetrfpu
@@ -694,7 +757,7 @@ NB. Description:
 NB.   Test:
 NB.   - lud (math/misc)
 NB.   - getrf (math/lapack)
-NB.   - getrflu1p getrfpl1u getrfpu1l getrful1p (math/mt)
+NB.   - getrfxxxx (math/mt)
 NB.   by general matrix given
 NB.
 NB. Syntax:
@@ -749,7 +812,7 @@ NB. - for P * U * T * U^H * P^_1 = A :
 NB.     berr := ||P * U * T * U^H * P^_1 - A|| / (ε * ||A|| * n)
 
 testhetrf=: 3 : 0
-  rcond=. (norm1 con (hetri@hetrf)) y
+  rcond=. (norm1 con (hetripl@hetrfpl)) y
 
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
   ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y
@@ -764,7 +827,7 @@ NB. Description:
 NB.   Test:
 NB.   - choleski (math/misc addon)
 NB.   - potrf (math/lapack addon)
-NB.   - potrfpl potrfpu (math/mt addon)
+NB.   - potrfpx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix given
 NB.
 NB. Syntax:

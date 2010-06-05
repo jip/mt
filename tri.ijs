@@ -138,14 +138,14 @@ NB.         saved), inversion of L1
 NB.   n   ≥ 0
 NB.
 NB. Algorithm for trtriu:
-NB.   In: A
+NB.   In: A - n×n-matrix
 NB.   Out: iU
 NB.   0) if 1 < # A
 NB.      0.0) then
 NB.           0.0.0) form (#A)-vector of zeros:
-NB.                    fret=. (#A) $ 0
+NB.                    fret=. n $ 0
 NB.           0.0.1) find splitting edge:
-NB.                    k=. >. -: # A
+NB.                    k := ⌈n/2⌉
 NB.           0.0.2) mark intervals:
 NB.                    fret=. 1 (0,k)} fret
 NB.           0.0.3) cut A by fret to block matrix bA:

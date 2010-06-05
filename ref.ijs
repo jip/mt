@@ -11,12 +11,9 @@ NB. larfbxxxx  Dyads to build a block reflector by larftxx
 NB.            and to apply it or its transpose to a matrix
 NB.            from either the left or the right
 NB.
-NB. testlarft  Test algorithms forming the triangular
-NB.            factor of a block reflector, by general matrix
-NB.            given
-NB. testlarfb  Test algorithms applying a block reflector, by
-NB.            general matrix given
-NB. testref    Adv. to make verb to test algorithms by matrix
+NB. testlarft  Test larftxx by general matrix given
+NB. testlarfb  Test larfbxxxx by general matrix given
+NB. testref    Adv. to make verb to test larfxxxxx by matrix
 NB.            of generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
@@ -62,7 +59,7 @@ NB.         v[1:n-1] in the rest elements, reflection result
 NB.         is vector (1,v[1:n-1]), 1 is not stored, β ∊ ℝ,
 NB.         (larfp provides β≥0), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
 NB.
-NB. Applications:
+NB. Application:
 NB. - reflect vector (α,x) by larfg and store τ at tail:
 NB.     z=. 0 _1 larfg (α,x,0)
 NB.     v=. 1 (0: }) }: z
@@ -472,8 +469,7 @@ NB. ---------------------------------------------------------
 NB. testlarft
 NB.
 NB. Description:
-NB.   Test algorithms forming the triangular factor of a
-NB.   block reflector, by general matrix given
+NB.   Test larftxx by general matrix given
 NB.
 NB. Syntax:
 NB.   testlarft (A;trash)
@@ -496,8 +492,7 @@ NB. ---------------------------------------------------------
 NB. testlarfb
 NB.
 NB. Description:
-NB.   Test algorithms applying a block reflector, by general
-NB.   matrix given
+NB.   Test larfbxxxx by general matrix given
 NB.
 NB. Syntax:
 NB.   testlarfb (A;C)
@@ -537,8 +532,8 @@ NB. ---------------------------------------------------------
 NB. testref
 NB.
 NB. Description:
-NB.   Adv. to make verb to test block reflection algorithms
-NB.   by matrices of generator and shape given
+NB.   Adv. to make verb to test larfxxxxx by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testref
@@ -556,7 +551,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testref_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testref_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testref_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testref_mt_ 150 200
 NB.

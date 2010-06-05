@@ -129,7 +129,7 @@ NB.            number of the input matrix; +∞ if matrix is
 NB.            singular; indeterminate if matrix is
 NB.            non-square
 NB.
-NB. Applications:
+NB. Application:
 NB. - to test geqrf:
 NB.     NB. to estimate rcond in 1-norm
 NB.     vrcond=. ((_."_)`(norm1 con (getri@getrf)) @. (=/@$))@[

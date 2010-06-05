@@ -29,7 +29,7 @@ NB.         v[1:n-1] in the rest elements, reflection result
 NB.         is vector (1,v[1:n-1]), 1 is not stored, β ∊ ℝ,
 NB.         (larfp provides β≥0), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
 NB.
-NB. Applications:
+NB. Application:
 NB. - reflect vector (α,x) by larfg and store τ at tail:
 NB.     z=. 0 _1 larfg (α,x,0)
 NB.     v=. 1 (0: }) }: z

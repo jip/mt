@@ -186,7 +186,7 @@ NB. where
 NB.   G1=. 2 2 $ cs , sn , (- + sn) , cs
 NB.   G2=. |: G1
 NB.
-NB. Applications:
+NB. Application:
 NB.   'vf2 vg2'=. |: (vcs ,. vsn) lartv (vf ,. vg)
 NB.
 NB. Notes:

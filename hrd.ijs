@@ -7,8 +7,7 @@ NB.            matrices to generalized Hessenberg form
 NB.
 NB. testgehrd  Test Hessenberg reduction algorithms by
 NB.            general matrix given
-NB. testhrd    Adv. to make verb to test Hessenberg
-NB.            reduction algorithms gehrdx by matrix of
+NB. testhrd    Adv. to make verb to test gxhrdx by matrix of
 NB.            generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
@@ -432,9 +431,8 @@ NB. ---------------------------------------------------------
 NB. testhrd
 NB.
 NB. Description:
-NB.   Adv. to make verb to test Hessenberg reduction
-NB.   algorithms gehrdx by matrix of generator and
-NB.   shape given
+NB.   Adv. to make verb to test gxhrdx by matrix of generator
+NB.   and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testhrd
@@ -452,7 +450,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testhrd_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testhrd_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testhrd_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 200
 

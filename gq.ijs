@@ -11,9 +11,8 @@ NB. testungq   Test Q generation algorithms by general matrix
 NB.            given
 NB. testunghr  Test Q generation algorithms by square matrix
 NB.            given
-NB. testgq     Adv. to make verb to test Q generation
-NB.            algorithms by matrix of generator and shape
-NB.            given
+NB. testgq     Adv. to make verb to test ungxxx by matrix of
+NB.            generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -514,8 +513,8 @@ NB. ---------------------------------------------------------
 NB. testgq
 NB.
 NB. Description:
-NB.   Adv. to make verb to test Q generation algorithms by
-NB.   matrix of generator and shape given
+NB.   Adv. to make verb to test ungxxx by matrix of generator
+NB.   and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testgq
@@ -533,7 +532,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testgq_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testgq_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testgq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
 

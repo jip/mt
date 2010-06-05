@@ -10,19 +10,15 @@ NB. pttrfx     Triangular factorization of a Hermitian
 NB.            (symmetric) positive definite tridiagonal
 NB.            matrix
 NB.
-NB. testgetrf  Test triangular factorization algorithms by
-NB.            general matrix given
-NB. testhetrf  Test triangular factorization algorithms by
-NB.            Hermitian (symmetric) matrix given
-NB. testpotrf  Test triangular factorization algorithms by
-NB.            Hermitian (symmetric) positive definite matrix
+NB. testgetrf  Test getrfxxxx by general matrix given
+NB. testhetrf  Test hetrfpx by Hermitian (symmetric) matrix
 NB.            given
-NB. testpttrf  Test triangular factorization algorithms by
-NB.            Hermitian (symmetric) positive definite
-NB.            tridiagonal matrix given
-NB. testtrf    Adv. to make verb to test triangular
-NB.            factorization algorithms by matrix of
-NB.            generator and shape given
+NB. testpotrf  Test potrfx by Hermitian (symmetric) positive
+NB.            definite matrix given
+NB. testpttrf  Test pttrfx by Hermitian (symmetric) positive
+NB.            definite tridiagonal matrix given
+NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
+NB.            of generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -51,7 +47,7 @@ NB.   P   - n×n-matrix, full permutation of A
 NB.   L1  - n×n-matrix, unit lower triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -119,7 +115,7 @@ NB.   P   - n×n-matrix, full permutation of A
 NB.   U1  - n×n-matrix, unit upper triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -186,7 +182,7 @@ NB.   L   - m×k-matrix, lower triangular
 NB.   U1  - k×n-matrix, unit upper triangular
 NB.   k   = min(m,n)
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -242,7 +238,7 @@ NB.   L1  - m×k-matrix, unit lower triangular
 NB.   U   - k×n-matrix, upper triangular
 NB.   k   = min(m,n)
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -301,7 +297,7 @@ NB.   L   - m×k-matrix, lower triangular
 NB.   U1  - k×n-matrix, unit upper triangular
 NB.   k   = min(m,n)
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -357,7 +353,7 @@ NB.   L   - m×k-matrix, unit lower triangular
 NB.   U1  - k×n-matrix, upper triangular
 NB.   k   = min(m,n)
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -411,7 +407,7 @@ NB.   P   - n×n-matrix, full permutation of A
 NB.   L1  - n×n-matrix, unit lower triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -453,7 +449,7 @@ NB.   P   - n×n-matrix, full permutation of A
 NB.   U1  - n×n-matrix, unit upper triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
@@ -486,7 +482,7 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.   L - n×n-matrix, lower triangular with positive diagonal
 NB.       entries, Cholesky triangle
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   A (-:!.(2^_34)) (mp ct) L
 NB. where
 NB.   L=. potrfl A
@@ -521,7 +517,7 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.   U - n×n-matrix, upper triangular with positive diagonal
 NB.       entries, Cholesky triangle
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   A (-:!.(2^_34)) (mp ct) U
 NB. where
 NB.   U=. potrfu A
@@ -592,7 +588,7 @@ NB.        D=. diagmat d
 NB.   6) link matrices L1 and D to form output:
 NB.        L1 ; D
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   A (-:!.(2^_34)) L1 (mp mp (ct@[)) D
 NB. where
 NB.   'L1 D'=. pttrfl A
@@ -666,7 +662,7 @@ NB.        D=. diagmat d
 NB.   6) link matrices L1 and D to form output:
 NB.        L1 ; D
 NB.
-NB. Assertions:
+NB. Assertion:
 NB.   A (-:!.(2^_34)) U1 (mp mp (ct@[)) D
 NB. where
 NB.   'U1 D'=. pttrfu A
@@ -691,7 +687,7 @@ NB. ---------------------------------------------------------
 NB. testgetrf
 NB.
 NB. Description:
-NB.   Test triangular factorization algorithms:
+NB.   Test:
 NB.   - lud (math/misc)
 NB.   - getrf (math/lapack)
 NB.   - getrflu1p getrfpl1u getrfpu1l getrful1p (math/mt)
@@ -731,9 +727,7 @@ NB. ---------------------------------------------------------
 NB. testhetrf
 NB.
 NB. Description:
-NB.   Test triangular factorization algorithms:
-NB.   - hetrfpl hetrfpu (math/mt)
-NB.   by Hermitian (symmetric) matrix given
+NB.   Test hetrfpx by Hermitian (symmetric) matrix given
 NB.
 NB. Syntax:
 NB.   testhetrf A
@@ -759,7 +753,7 @@ NB. ---------------------------------------------------------
 NB. testpotrf
 NB.
 NB. Description:
-NB.   Test triangular factorization algorithms:
+NB.   Test:
 NB.   - choleski (math/misc addon)
 NB.   - potrf (math/lapack addon)
 NB.   - potrfpl potrfpu (math/mt addon)
@@ -798,10 +792,8 @@ NB. ---------------------------------------------------------
 NB. testpttrf
 NB.
 NB. Description:
-NB.   Test triangular factorization algorithms:
-NB.   - pttrfpl pttrfpu (math/mt addon)
-NB.   by Hermitian (symmetric) positive definite tridiagonal
-NB.   matrix given
+NB.   Test pttrfpx by Hermitian (symmetric) positive definite
+NB.   tridiagonal matrix given
 NB.
 NB. Syntax:
 NB.   testpttrf A
@@ -828,8 +820,8 @@ NB. ---------------------------------------------------------
 NB. testtrf
 NB.
 NB. Description:
-NB.   Adv. to make verb to test triangular factorization
-NB.   algorithms by matrix of generator and shape given
+NB.   Adv. to make verb to test xxtrfxxxx by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testtrf
@@ -847,7 +839,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testtrf_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtrf_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testtrf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 

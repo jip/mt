@@ -31,7 +31,7 @@ NB.           matrix A in norm defined by verb 'norm',
 NB.           0≤rcond≤1
 NB.   n     ≥ 0
 NB.
-NB. Applications:
+NB. Application:
 NB. - verb to estimate rcond(y) of a general square matrix y
 NB.   in 1-norm:
 NB.     gecon=: norm1 con (getri@getrf)

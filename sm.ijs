@@ -8,11 +8,9 @@ NB.           transposition of A, or A^H, the conjugate
 NB.           transposition of A; B is known right-hand side
 NB.           (RHS), X is unknown solution
 NB.
-NB. testtrsm  Test linear monomial equation solving
-NB.           algorithms by triangular matrix given
-NB. testsm    Adv. to make verb to test linear monomial
-NB.           equation solving algorithms trsmxxxx by matrix
-NB.           of generator and shape given
+NB. testtrsm  Test trsmxxxx by triangular matrix given
+NB. testsm    Adv. to make verb to test trsmxxxx by matrix of
+NB.           generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -111,7 +109,7 @@ NB. ---------------------------------------------------------
 NB. testtrsm
 NB.
 NB. Description:
-NB.   Test linear monomial equation solving algorithms:
+NB.   Test:
 NB.   - trtrs (math/lapack addon)
 NB.   - trsmxxxx (math/mt addon)
 NB.   by triangular matrix given
@@ -168,9 +166,8 @@ NB. ---------------------------------------------------------
 NB. testsm
 NB.
 NB. Description:
-NB.   Adv. to make verb to test linear monomial equation
-NB.   solving algorithms trsmxxxx by matrix of generator and
-NB.   shape given
+NB.   Adv. to make verb to test trsmxxxx by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testsm
@@ -188,7 +185,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testsm_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testsm_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testsm_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testsm_mt_ 150 200
 

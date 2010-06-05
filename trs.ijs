@@ -36,9 +36,8 @@ NB. testpotrs  Test potrsxxx by Hermitian (symmetric)
 NB.            positive definite matrix given
 NB. testpttrs  Test pttrsxxx by Hermitian (symmetric)
 NB.            positive definite tridiagonal matrix given
-NB. testtrs    Adv. to make verb to test triangular solver
-NB.            algorithms by matrix of generator and shape
-NB.            given
+NB. testtrs    Adv. to make verb to test xxtrsxxx by matrix
+NB.            of generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -186,39 +185,46 @@ NB.   D    - n×n-matrix, diagonal with positive diagonal
 NB.          entries
 NB.   nrhs ≥ 0
 NB.
-NB. Algorithm:#################
-NB.   In:  A
-NB.   Out: L1 D
-NB.   0) extract main diagonal and subdiagonal from A to d
-NB.      and e, respectively
+NB. Algorithm for pttrsax:
+NB.   In:  L1 D Bv
+NB.   Out: Xv
+NB.   0) extract main diagonal d from D and subdiagonal e
+NB.      from L1
 NB.   1) prepare input for iterations:
-NB.        ee2din := (e ,. |e|^2 ,. (}. d))
-NB.        edout := 0 , ({. d)
+NB.        ebin=. (e ,. (}. Bv))
+NB.        bout=. {. Bv
 NB.   2) start iterations k=1:n-1 by Power (^:)
-NB.      on (ee2din;edout) :
+NB.      on (ebin;bout) :
 NB.      2.0) extract input for current k-th iteration:
-NB.             (e[k] |e[k]|^2 d[k]) := ee2din[k]
-NB.      2.1) extract d[k-1] produced during previous
+NB.             (e[k] b[k]) := ebin[k]
+NB.      2.1) extract b[k-1] produced during previous
 NB.           (k-1)-th iteration:
-NB.             d[k-1] := edout[_1,_1]
-NB.      2.2) find new e[k-1] and d[k]:
-NB.             e[k-1] := e[k-1] / d[k-1]
-NB.             d[k] := d[k] - |e[k-1]|^2 / d[k-1]
+NB.             b[k-1] := bout[-1]
+NB.      2.2) find new b[k]:
+NB.             b[k] := b[k] - b[k-1]*e[k-1]
 NB.      2.3) recombine (shift splitting edge) for next
 NB.           iteration:
-NB.             ee2din=. }. ee2din
-NB.             edout=. edout , e[k-1] , d[k]
-NB.   3) now edout contains raw output, extract it:
-NB.        edout := 1 {:: (ee2din;edout)
-NB.   4) extract d - D's main diagonal, and e - L1's
-NB.      subdiagonal from edout:
-NB.        e=. }. {."1 edout
-NB.        d=. {:"1 edout
-NB.   5) form output matrices:
-NB.        L1=. (e;_1) setdiag idmat $ A
-NB.        D=. diagmat d
-NB.   6) link matrices L1 and D to form output:
-NB.        L1 ; D
+NB.             ebin=. }. ebin
+NB.             bout := bout , b[k]
+NB.      then rewrite b by bout
+NB.   3) prepare input for iterations:
+NB.        bdein=. ((}: b) ,. (}: d) ,. e)
+NB.        bout := b[n-1] / d[n-1]
+NB.   4) start iterations k=n-2:0 by Power (^:)
+NB.      on (bdein;bout) :
+NB.      4.0) extract input for current k-th iteration:
+NB.             (b[k] d[k] e[k]) := bdein[k]
+NB.      4.1) extract b[k-1] produced during previous
+NB.           (k-1)-th iteration:
+NB.             b[k+1] := bout[0]
+NB.      4.2) find new b[k]:
+NB.             b[k] := b[k]/d[k] - b[k+1]*conj(e[k])
+NB.      4.3) recombine (shift splitting edge) for next
+NB.           iteration:
+NB.             bdein=. }: bdein
+NB.             bout := b[k] , bout
+NB.      then rewrite b by bout
+NB.   5) return b
 NB.
 NB. Assertions:
 NB.   A (-:!.(2^_34)) L1 (mp mp (ct@[)) D
@@ -266,7 +272,7 @@ NB. - berr := max(||B - op(A) * X|| / (||eps * op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
-  'conA conAh conAt'=. (norm1 con (getri@getrf))"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. 3 # _. NB. (norm1 con (getri@getrf))"2 (] , ct ,: |:) A
   Af=. getrfpl1u A
 
   ('getrsax'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;Af)
@@ -297,7 +303,7 @@ NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (hetri@hetrf))"2 (] ,: |:) A
+  'conA conAt'=. 2 # _. NB. (norm1 con (hetri@hetrf))"2 (] ,: |:) A
   Af=. hetrfpl A
 
   ('hetrsax'  tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;Af)
@@ -327,8 +333,8 @@ NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
 
 testpotrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (potri@potrf))"2 (] ,: |:) A
-  L=. potrfpl A
+  'conA conAt'=. 2 # _. NB. (norm1 con (potri@potrf))"2 (] ,: |:) A
+  L=. potrfl A
 
   ('potrsax'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
   ('potrsatx' tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;L)
@@ -358,8 +364,8 @@ NB. - berr := max(||B - op(A) * X|| / (eps * ||op(A)|| * ||X||))
 
 testpttrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (pttri@pttrf))"2 (] ,: |:) A
-  'L1 D'=. pttrfpl A NB. ##################
+  'conA conAt'=. 2 # _. NB. (norm1 con (pttri@pttrf))"2 (] ,: |:) A NB. ##################
+  'L1 D'=. pttrfpl A
 
   ('pttrsax'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
   ('pttrsatx' tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;L)
@@ -373,8 +379,8 @@ NB. ---------------------------------------------------------
 NB. testtrs
 NB.
 NB. Description:
-NB.   Adv. to make verb to test triangular solver algorithms
-NB.   by matrix of generator and shape given
+NB.   Adv. to make verb to test xxtrsxxx by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testtrs
@@ -392,7 +398,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testtrs_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtrs_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testtrs_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrs_mt_ 150 200
 

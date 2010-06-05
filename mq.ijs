@@ -24,9 +24,8 @@ NB. testunmq   Test Q multiplication qf-algorithms by general
 NB.            matrix given
 NB. testunmhr  Test Q multiplication hrd-algorithms by square
 NB.            matrix given
-NB. testmq     Adv. to make verb to test Q multiplication
-NB.            algorithms by matrix of generator and shape
-NB.            given
+NB. testmq     Adv. to make verb to test unmxxxxx by matrix of
+NB.            generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -572,8 +571,8 @@ NB. ---------------------------------------------------------
 NB. testmq
 NB.
 NB. Description:
-NB.   Adv. to make verb to test Q multiplication algorithms
-NB.   by matrix of generator and shape given
+NB.   Adv. to make verb to test unmxxxxx by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testmq
@@ -591,7 +590,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testmq_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testmq_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testmq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testmq_mt_ 150 200
 

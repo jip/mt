@@ -5,10 +5,9 @@ NB. geqlf     QL factorization of a general matrix
 NB. geqrf     QR factorization of a general matrix
 NB. gerqf     RQ factorization of a general matrix
 NB.
-NB. testgeqf  Test orthogonal factorization algorithms by
-NB.           general matrix given
-NB. testqf    Test orthogonal factorization algorithms by
-NB.           matrix of generator and shape given
+NB. testgeqf  Test gexxx by general matrix given
+NB. testqf    Adv. to make verb to test gexxx by matrix of
+NB.           generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -405,8 +404,8 @@ NB. ---------------------------------------------------------
 NB. testqf
 NB.
 NB. Description:
-NB.   Test orthogonal factorization algorithms by matrix of
-NB.   generator and shape given
+NB.   Adv. to make verb to test gexxx by matrix of generator
+NB.   and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testqf
@@ -424,7 +423,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testqf_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testqf_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testqf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testqf_mt_ 150 200
 

@@ -16,9 +16,8 @@ NB. testpotri  Test potri by Hermitian (symmetric) positive
 NB.            definite matrix given
 NB. testpttri  Test pttri by Hermitian (symmetric) positive
 NB.            definite tridiagonal matrix given
-NB. testtri    Adv. to make verb to test triangular
-NB.            inversion algorithms by matrix of generator
-NB.            and shape given
+NB. testtri    Adv. to make verb to test xxtrixx by matrix of
+NB.            generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -76,10 +75,10 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:              Syntax:
-NB. trtriu         U  * invU  = I       invU=. trtriu A
-NB. trtriu1        U1 * invU1 = I       invU1=. trtriu1 A
-NB. trtril         L  * invL  = I       invL=. trtril A
+NB. trtril         L  * invL  = I       invL=.  trtril A
 NB. trtril1        L1 * invL1 = I       invL1=. trtril1 A
+NB. trtriu         U  * invU  = I       invU=.  trtriu A
+NB. trtriu1        U1 * invU1 = I       invU1=. trtriu1 A
 NB.
 NB. Description:
 NB.   inverse triangular matrix
@@ -103,20 +102,43 @@ NB. Notes:
 NB. - opposite triangle is not referenced
 NB. - unit diagonal is not referenced
 
-NB. trtriu=:  trtriu `{.`}.` ,  ` ,.  `(_1 append) `%      trtri
-trtriu1=: trtriu1`{.`}.` ,  ` ,.  `(_1 append) `(1:"0) trtri
-trtril=:  trtril `}.`{.`(,~)`(,.~)`( 0 append~)`%      trtri
-trtril1=: trtril1`}.`{.`(,~)`(,.~)`( 0 append~)`(1:"0) trtri
+trtril=: 3 : 0
+  n=. # y
+  if. n > 1 do.
+    k=. >. -: n
+    Ta=. (2 # k) }. y
+    invTa=. trtril Ta
+    invTb=. trtril (2 # k) {. y
+    Ac=. (k ,~ (k - n)) {. y
+    invAc=. - invTa mp Ac mp invTb
+    (invTa ,.~ invAc) ( 0 append~) invTb
+  else.
+    % y
+  end.
+)
 
-NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+trtril1=: 3 : 0
+  n=. # y
+  if. n > 1 do.
+    k=. >. -: n
+    Ta=. (2 # k) }. y
+    invTa=. trtril1 Ta
+    invTb=. trtril1 (2 # k) {. y
+    Ac=. (k ,~ (k - n)) {. y
+    invAc=. - invTa mp Ac mp invTb
+    (invTa ,.~ invAc) ( 0 append~) invTb
+  else.
+    (1:"0) y
+  end.
+)
 
-rtrtriu=: 3 : 0
+trtriu=: 3 : 0
   n=. # y
   if. n > 1 do.
     k=. >. -: n
     Ta=. (2 # k) {. y
-    invTa=. rtrtriu Ta
-    invTb=. rtrtriu (2 # k) }. y
+    invTa=. trtriu Ta
+    invTb=. trtriu (2 # k) }. y
     Ac=. (k , (k - n)) {. y
     invAc=. - invTa mp Ac mp invTb
     (invTa ,. invAc) (_1 append) invTb
@@ -125,88 +147,20 @@ rtrtriu=: 3 : 0
   end.
 )
 
-NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-trfriu=: 3 : 0
+trtriu1=: 3 : 0
   n=. # y
   if. n > 1 do.
     k=. >. -: n
-    invA11=. trfriu (2 # k) {. y
-    A12=. (k , (k - n)) {. y
-    A22=. (2 # k) }. y
-    invW=. trfriu - A22
-    M1=. invA11 mp A12
-    M1invW=. M1 mp invW
-    (invA11 ,. M1invW) (_1 append) (- invW)
+    Ta=. (2 # k) {. y
+    invTa=. trtriu1 Ta
+    invTb=. trtriu1 (2 # k) }. y
+    Ac=. (k , (k - n)) {. y
+    invAc=. - invTa mp Ac mp invTb
+    (invTa ,. invAc) (_1 append) invTb
   else.
-    % y
+    (1:"0) y
   end.
 )
-
-NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-TRINB=: 64   NB. block size limit
-
-NB. ---------------------------------------------------------
-NB. trtrii
-NB.
-NB. Description: Number of iterations##############
-NB. Syntax:      iters=. ungi k
-NB. where        k = min(rows,columns)
-NB. Formula:     iters = max(0,⌊(k+BS-NX-1)/BS⌋)
-NB. Notes:       is memo, since repetitive calls are expected
-
-trtrii=: <. @ (% & TRINB) M.
-
-NB. ---------------------------------------------------------
-NB. trtriib
-NB.
-NB. Description: Size of submatrix processed by blocked algo##############
-NB. Syntax:      size=. ungb k
-NB. where        k = min(rows,columns)
-NB. Formula:     size = min(k,BS*iters)
-NB. Notes:       is memo, since repetitive calls are expected
-
-trtriib=: (TRINB * <.) @ (TRINB %~ <:) M.
-
-NB. LAPACK's iterative splitted input
-NB. invU=. trti2u U
-trti2u=: 1 {:: (((3 : 0) ^: (# @ (0 & {::))) @ (EMPTY ;~ ]))
-  'pfx sfx'=. y
-  j=. -~/ 'nj n'=. $ pfx
-  ajj=. (_1-j) ({,) pfx
-  r=. (-j) ({.,) pfx
-  (}: pfx) ; (((r mp sfx) (] , (* -)) (% ajj)) , 0 ,. sfx)
-)
-
-trti2u2=: 1 {:: (((3 : 0) ^: (# @ (0 & {::))) @ (}: ; (% @ (_1 _1 & {.))))
-  'pfx sfx'=. y
-  j=. -~/ 'nj n'=. $ pfx
-  ajj=. (_1-j) ({,) pfx
-  r=. (-j) ({.,) pfx
-  (}: pfx) ; (((r mp sfx) (] , (* -)) (% ajj)) , 0 ,. sfx)
-)
-
-NB. invU=. trtriu U
-trtriu=: 1 {:: (((3 : 0) ^: (trtrii @ # @ (0 & {::))) @ (({. ; (trti2u @ ((2 # [) }. ])))~ (trtriib@#)))
-  'pfx sfx'=. y
-  j=. -~/ 'nj n'=. $ pfx
-  Ajj=. (,.~ nj (-,]) TRINB) (] ;. 0) pfx
-  R=. (_1 _1 ,: (TRINB , j)) (] ;. 0) pfx
-  R=. Ajj trsmux (- R mp sfx)
-  ((-TRINB) }. pfx) ; (((trti2u Ajj) ,. R) (_1 append) sfx)
-)
-
-trtriu2=: 1 {:: (((3 : 0) ^: (trtrii @ # @ (0 & {::))) @ (({. ; (trti2u2 @ ((2 # [) }. ])))~ (trtriib@#)))
-  'pfx sfx'=. y
-  j=. -~/ 'nj n'=. $ pfx
-  Ajj=. (,.~ nj (-,]) TRINB) (] ;. 0) pfx
-  R=. (_1 _1 ,: (TRINB , j)) (] ;. 0) pfx
-  R=. Ajj trsmux (- R mp sfx)
-  ((-TRINB) }. pfx) ; (((trti2u2 Ajj) ,. R) (_1 append) sfx)
-)
-
-
 
 NB. ---------------------------------------------------------
 NB. getri
@@ -297,17 +251,14 @@ testtrtri=: 3 : 0
 
   ('(128!:1)'  tmonad (]`]`(rcondU "_)`(_."_)`(((norm1@(- (<: upddiag @ mp)))) % (FP_EPS*(*&norm1)*(#@[))))) U
 
-  ('rtrtriu' tmonad (]`]`(rcondU "_)`(_."_)`(((norm1@(- (<: upddiag @ mp)))) % (FP_EPS*(*&norm1)*(#@[))))) U
-  ('trfriu'  tmonad (]`]`(rcondU "_)`(_."_)`(((norm1@(- (<: upddiag @ mp)))) % (FP_EPS*(*&norm1)*(#@[))))) U
-  ('trtriu'  tmonad (]`]`(rcondU "_)`(_."_)`(((norm1@(- (<: upddiag @ mp)))) % (FP_EPS*(*&norm1)*(#@[))))) U
-  ('trtriu2' tmonad (]`]`(rcondU "_)`(_."_)`(((norm1@(- (<: upddiag @ mp)))) % (FP_EPS*(*&norm1)*(#@[))))) U
+  ('trtriu' tmonad (]`]`(rcondU "_)`(_."_)`(((norm1@(- (<: upddiag @ mp)))) % (FP_EPS*(*&norm1)*(#@[))))) U
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
 NB. testgetri
-NB. Test inverse algorithms with random general matrix y
+NB. ##############Test inverse algorithms with random general matrix y
 NB.
 NB. tgetri A
 
@@ -400,7 +351,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) testtri_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtri_mt_ 200 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testtri_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtri_mt_ 150 200
 

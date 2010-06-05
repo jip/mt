@@ -162,7 +162,7 @@ NB.   Dinv -: diagmat % s
 NB.   As -: D mp Ap mp Dinv
 NB.   As -: Ap (] * (% " 1)) s
 NB.
-NB. Applications:
+NB. Application:
 NB.   'As fs p s'=. gebals (] ; (0 , #) ; (a: " _)) A
 NB.
 NB. Notes:

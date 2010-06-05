@@ -423,7 +423,7 @@ NB.   A - m×n-matrix, is used to get Qf
 
 testlarft=: 3 : 0
   AC=: y=. 0 {:: y
-  rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
@@ -447,7 +447,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testlarfb=: 3 : 0
   'A C'=. y
-  rcond=. (norm1 con (getriul1p@getrful1p)) C
+  rcond=. (norm1 con (getrilu1p@getrflu1p)) C
   'LQf QfL QfR RQf'=. (gelqf ; geqlf ; geqrf ; gerqf) A
 
   ('larfblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;(    C , ~0))

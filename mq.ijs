@@ -506,7 +506,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testunmq=: 3 : 0
   'A C'=. y
-  rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) C  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$)) C  NB. meaninigful for square matrices only
   'LQf QfL QfR RQf'=. xQf=. (gelqf ; geqlf ; geqrf ; gerqf) A
   'Qlq Qql Qqr Qrq'=. (((unglq~ (<:@c))&.>)`((ungql~ (<:@#))&.>)`((ungqr~ (<:@#))&.>)`((ungrq~ (<:@c))&.>)) ag xQf
 
@@ -548,7 +548,7 @@ NB.   C - n×n-matrix, is used as multiplier
 
 testunmhr=: 3 : 0
   'A C'=. y
-  rcond=. (norm1 con (getriul1p@getrful1p)) C
+  rcond=. (norm1 con (getrilu1p@getrflu1p)) C
   'HlQf HuQf'=. xQf=. ((gehrdl~ (0,#)) ; (gehrdu~ (0,c))) A
   'Qhrl Qhru'=. ((unghrl&.>)`(unghru&.>)) ag xQf
 

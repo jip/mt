@@ -383,7 +383,7 @@ testgeqf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gelqf geqlf geqrf gerqf'
 
-  rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('128!:0' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (mp & >/)))%(FP_EPS*(#*norm1)@[)))) y
 

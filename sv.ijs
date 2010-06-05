@@ -198,7 +198,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testgesv=: 3 : 0
   'A X'=. y
-  'conA conAh conAt'=. (norm1 con (getriul1p@getrful1p))"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. (norm1 con (getrilu1p@getrflu1p))"2 (] , ct ,: |:) A
 
   ('%.' tdyad ((mp & >/)`(0 & {::)`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp & >/)@[) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (A;X)
 

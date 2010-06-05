@@ -74,7 +74,7 @@ NB.
 NB. Application:
 NB. - to test geqrf:
 NB.     NB. to estimate rcond in 1-norm
-NB.     vrcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$))@[
+NB.     vrcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$))@[
 NB.     NB. to calc. berr, assuming:
 NB.     NB.   berr := ||A - realA||_1 / (m * ε * ||A||_1)
 NB.     vberr=. ((- (% & norm1) [) % (FP_EPS * (norm1 * #) @ [)) unmqr
@@ -82,7 +82,7 @@ NB.     NB. do the job
 NB.     ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
 NB. - to test getrs:
 NB.     NB. to estimate rcond in ∞-norm
-NB.     vrcond=. ((_."_)`(normi con (getriul1p@getrful1p)) @. (=/@$)) @ (0 {:: [)
+NB.     vrcond=. ((_."_)`(normi con (getrilu1p@getrflu1p)) @. (=/@$)) @ (0 {:: [)
 NB.     NB. to calc. ferr, assuming:
 NB.     NB.   ferr := ||x - realx||_inf / ||realx||_inf
 NB.     vferr=. ((- (% & normi) [) (1 & {::))~

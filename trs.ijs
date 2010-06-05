@@ -52,13 +52,13 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. getrslu1px    A   * X = B   Xv=. (ip;LU1) getrslu1px  Bv
-NB. getrslu1phx   A^H * X = B   Xv=. (ip;LU1) getrslu1phx Bv
-NB. getrslu1ptx   A^T * X = B   Xv=. (ip;LU1) getrslu1ptx Bv
-NB. getrsxlu1p    X * A   = B   Xh=. (ip;LU1) getrsxlu1p  Bh
-NB. getrsxlu1ph   X * A^H = B   Xh=. (ip;LU1) getrsxlu1ph Bh
-NB. getrsxlu1pt   X * A^T = B   Xh=. (ip;LU1) getrsxlu1pt Bh
+NB. Verb:           Solves:         Syntax:
+NB. getrslu1px      A   * X = B     Xv=. LU1p getrslu1px  Bv
+NB. getrslu1phx     A^H * X = B     Xv=. LU1p getrslu1phx Bv
+NB. getrslu1ptx     A^T * X = B     Xv=. LU1p getrslu1ptx Bv
+NB. getrsxlu1p      X * A   = B     Xh=. LU1p getrsxlu1p  Bh
+NB. getrsxlu1ph     X * A^H = B     Xh=. LU1p getrsxlu1ph Bh
+NB. getrsxlu1pt     X * A^T = B     Xh=. LU1p getrsxlu1pt Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with general square
@@ -70,14 +70,19 @@ NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   ip   - n-vector, columns inversed permutation of A
-NB.   LU1  - n×n-matrix, lower triangle contains L, and
-NB.          strict upper triangle contains U1 without unit
-NB.          diagonal
-NB.   P    - n×n-matrix, columns permutation of A
-NB.   L    - n×n-matrix, lower triangular
-NB.   U1   - n×n-matrix, unit upper triangular
+NB.   LU1p - 2-vector of boxes, the output of getrflu1p, the
+NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
+NB.
+NB. Assertions:
+NB.   Xv -: clean LU1p getrslu1px      A  mp  Xv
+NB.   Xv -: clean LU1p getrslu1phx (ct A) mp  Xv
+NB.   Xv -: clean LU1p getrslu1ptx (|: A) mp  Xv
+NB.   Xh -: clean LU1p getrsxlu1p      A  mp~ Xh
+NB.   Xh -: clean LU1p getrsxlu1ph (ct A) mp~ Xh
+NB.   Xh -: clean LU1p getrsxlu1pt (|: A) mp~ Xh
+NB. where
+NB.   LU1p=. getrflu1p A
 
 getrslu1px=:  (0 {:: [) C.^:_1   ((] trsmu1x  trsmlx ~) (1 & {::))~
 getrsxlu1ph=: (0 {:: [) C.^:_1"1 ((] trsmxu1h trsmxlh~) (1 & {::))~
@@ -88,13 +93,13 @@ getrslu1ptx=: (1 {:: [) ([ trsmltx trsmu1tx) ((0 {:: [) C.   ])
 getrsxlu1p=:  (1 {:: [) ([ trsmxl  trsmxu1 ) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. getrspl1ux    A   * X = B   Xv=. (ip;L1U) getrspl1ux  Bv
-NB. getrspl1uhx   A^H * X = B   Xv=. (ip;L1U) getrspl1uhx Bv
-NB. getrspl1utx   A^T * X = B   Xv=. (ip;L1U) getrspl1utx Bv
-NB. getrsxpl1u    X * A   = B   Xh=. (ip;L1U) getrsxpl1u  Bh
-NB. getrsxpl1uh   X * A^H = B   Xh=. (ip;L1U) getrsxpl1uh Bh
-NB. getrsxpl1ut   X * A^T = B   Xh=. (ip;L1U) getrsxpl1ut Bh
+NB. Verb:           Solves:         Syntax:
+NB. getrspl1ux      A   * X = B     Xv=. pL1U getrspl1ux  Bv
+NB. getrspl1uhx     A^H * X = B     Xv=. pL1U getrspl1uhx Bv
+NB. getrspl1utx     A^T * X = B     Xv=. pL1U getrspl1utx Bv
+NB. getrsxpl1u      X * A   = B     Xh=. pL1U getrsxpl1u  Bh
+NB. getrsxpl1uh     X * A^H = B     Xh=. pL1U getrsxpl1uh Bh
+NB. getrsxpl1ut     X * A^T = B     Xh=. pL1U getrsxpl1ut Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with general square
@@ -106,14 +111,19 @@ NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   ip   - n-vector, rows inversed permutation of A
-NB.   L1U  - n×n-matrix, upper triangle contains U, and
-NB.          strict lower triangle contains L1 without unit
-NB.          diagonal
-NB.   P    - n×n-matrix, rows permutation of A
-NB.   L1   - n×n-matrix, unit lower triangular
-NB.   U    - n×n-matrix, upper triangular
+NB.   pL1U - 2-vector of boxes, the output of getrfpl1u, the
+NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
+NB.
+NB. Assertions:
+NB.   Xv -: clean pL1U getrspl1ux      A  mp  Xv
+NB.   Xv -: clean pL1U getrspl1uhx (ct A) mp  Xv
+NB.   Xv -: clean pL1U getrspl1utx (|: A) mp  Xv
+NB.   Xh -: clean pL1U getrsxpl1u      A  mp~ Xh
+NB.   Xh -: clean pL1U getrsxpl1uh (ct A) mp~ Xh
+NB.   Xh -: clean pL1U getrsxpl1ut (|: A) mp~ Xh
+NB. where
+NB.   pL1U=. getrfpl1u A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xGETRS
@@ -127,13 +137,13 @@ getrspl1utx=: (0 {:: [) C.^:_1   ((] trsml1tx trsmutx~) (1 & {::))~
 getrsxpl1u=:  (0 {:: [) C.^:_1"1 ((] trsmxl1  trsmxu ~) (1 & {::))~
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. getrspu1lx    A   * X = B   Xv=. (ip;U1L) getrspu1lx  Bv
-NB. getrspu1lhx   A^H * X = B   Xv=. (ip;U1L) getrspu1lhx Bv
-NB. getrspu1ltx   A^T * X = B   Xv=. (ip;U1L) getrspu1ltx Bv
-NB. getrsxpu1l    X * A   = B   Xh=. (ip;U1L) getrsxpu1l  Bh
-NB. getrsxpu1lh   X * A^H = B   Xh=. (ip;U1L) getrsxpu1lh Bh
-NB. getrsxpu1lt   X * A^T = B   Xh=. (ip;U1L) getrsxpu1lt Bh
+NB. Verb:           Solves:         Syntax:
+NB. getrspu1lx      A   * X = B     Xv=. pU1L getrspu1lx  Bv
+NB. getrspu1lhx     A^H * X = B     Xv=. pU1L getrspu1lhx Bv
+NB. getrspu1ltx     A^T * X = B     Xv=. pU1L getrspu1ltx Bv
+NB. getrsxpu1l      X * A   = B     Xh=. pU1L getrsxpu1l  Bh
+NB. getrsxpu1lh     X * A^H = B     Xh=. pU1L getrsxpu1lh Bh
+NB. getrsxpu1lt     X * A^T = B     Xh=. pU1L getrsxpu1lt Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with general square
@@ -145,14 +155,19 @@ NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   ip   - n-vector, rows inversed permutation of A
-NB.   U1L  - n×n-matrix, lower triangle contains L, and
-NB.          strict upper triangle contains U1 without unit
-NB.          diagonal
-NB.   P    - n×n-matrix, rows permutation of A
-NB.   L    - n×n-matrix, lower triangular
-NB.   U1   - n×n-matrix, unit upper triangular
+NB.   pU1L - 2-vector of boxes, the output of getrfpu1l, the
+NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
+NB.
+NB. Assertions:
+NB.   Xv -: clean pU1L getrspu1lx      A  mp  Xv
+NB.   Xv -: clean pU1L getrspu1lhx (ct A) mp  Xv
+NB.   Xv -: clean pU1L getrspu1ltx (|: A) mp  Xv
+NB.   Xh -: clean pU1L getrsxpu1l      A  mp~ Xh
+NB.   Xh -: clean pU1L getrsxpu1lh (ct A) mp~ Xh
+NB.   Xh -: clean pU1L getrsxpu1lt (|: A) mp~ Xh
+NB. where
+NB.   pU1L=. getrfpu1l A
 
 getrspu1lx=:  (1 {:: [) ([ trsmlx  trsmu1x ) ((0 {:: [) C.   ])
 getrsxpu1lh=: (1 {:: [) ([ trsmxlh trsmxu1h) ((0 {:: [) C."1 ])
@@ -163,13 +178,13 @@ getrspu1ltx=: (0 {:: [) C.^:_1   ((] trsmu1tx trsmltx~) (1 & {::))~
 getrsxpu1l=:  (0 {:: [) C.^:_1"1 ((] trsmxu1  trsmxl ~) (1 & {::))~
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. getrsul1px    A   * X = B   Xv=. (ip;UL1) getrsul1px  Bv
-NB. getrsul1phx   A^H * X = B   Xv=. (ip;UL1) getrsul1phx Bv
-NB. getrsul1ptx   A^T * X = B   Xv=. (ip;UL1) getrsul1ptx Bv
-NB. getrsxul1p    X * A   = B   Xh=. (ip;UL1) getrsxul1p  Bh
-NB. getrsxul1ph   X * A^H = B   Xh=. (ip;UL1) getrsxul1ph Bh
-NB. getrsxul1pt   X * A^T = B   Xh=. (ip;UL1) getrsxul1pt Bh
+NB. Verb:           Solves:         Syntax:
+NB. getrsul1px      A   * X = B     Xv=. UL1p getrsul1px  Bv
+NB. getrsul1phx     A^H * X = B     Xv=. UL1p getrsul1phx Bv
+NB. getrsul1ptx     A^T * X = B     Xv=. UL1p getrsul1ptx Bv
+NB. getrsxul1p      X * A   = B     Xh=. UL1p getrsxul1p  Bh
+NB. getrsxul1ph     X * A^H = B     Xh=. UL1p getrsxul1ph Bh
+NB. getrsxul1pt     X * A^T = B     Xh=. UL1p getrsxul1pt Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with general square
@@ -181,14 +196,19 @@ NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   ip   - n-vector, columns inversed permutation of A
-NB.   UL1  - n×n-matrix, upper triangle contains U, and
-NB.          strict lower triangle contains L1 without unit
-NB.          diagonal
-NB.   P    - n×n-matrix, columns permutation of A
-NB.   L1   - n×n-matrix, unit lower triangular
-NB.   U    - n×n-matrix, upper triangular
+NB.   UL1p - 2-vector of boxes, the output of getrful1p, the
+NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
+NB.
+NB. Assertions:
+NB.   Xv -: clean UL1p getrsul1px      A  mp  Xv
+NB.   Xv -: clean UL1p getrsul1phx (ct A) mp  Xv
+NB.   Xv -: clean UL1p getrsul1ptx (|: A) mp  Xv
+NB.   Xh -: clean UL1p getrsxul1p      A  mp~ Xh
+NB.   Xh -: clean UL1p getrsxul1ph (ct A) mp~ Xh
+NB.   Xh -: clean UL1p getrsxul1pt (|: A) mp~ Xh
+NB. where
+NB.   UL1p=. getrful1p A
 
 getrsul1px=:  (0 {:: [) C.^:_1   ((] trsml1x  trsmux ~) (1 & {::))~
 getrsxul1ph=: (0 {:: [) C.^:_1"1 ((] trsmxl1h trsmxuh~) (1 & {::))~
@@ -199,11 +219,11 @@ getrsul1ptx=: (1 {:: [) ([ trsmutx trsml1tx) ((0 {:: [) C.   ])
 getrsxul1p=:  (1 {:: [) ([ trsmxu  trsmxl1 ) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. hetrsplx      A   * X = B   Xv=. (ip;L1;T) hetrsplx  Bv
-NB. hetrspltx     A^T * X = B   Xv=. (ip;L1;T) hetrspltx Bv
-NB. hetrsxpl      X * A   = B   Xh=. (ip;L1;T) hetrsxpl  Bh
-NB. hetrsxplt     X * A^T = B   Xh=. (ip;L1;T) hetrsxplt Bh
+NB. Verb:           Solves:         Syntax:
+NB. hetrsplx        A   * X = B     Xv=. pL1T hetrsplx  Bv
+NB. hetrspltx       A^T * X = B     Xv=. pL1T hetrspltx Bv
+NB. hetrsxpl        X * A   = B     Xh=. pL1T hetrsxpl  Bh
+NB. hetrsxplt       X * A^T = B     Xh=. pL1T hetrsxplt Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
@@ -215,14 +235,20 @@ NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   ip   - n-vector, full inversed permutation of A
-NB.   P    - n×n-matrix, full permutation of A
-NB.   L1   - n×n-matrix, unit lower triangular
-NB.   T    - n×n-matrix, Hermitian (symmetric) tridiagonal
+NB.   pL1T - 3-vector of boxes, the output of hetrfpl, the
+NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
 NB.
+NB. Assertions:
+NB.   Xv -: clean pL1T hetrsplx      A  mp  Xv
+NB.   Xv -: clean pL1T hetrspltx (|: A) mp  Xv
+NB.   Xh -: clean pL1T hetrsxpl      A  mp~ Xh
+NB.   Xh -: clean pL1T hetrsxplt (|: A) mp~ Xh
+NB. where
+NB.   pL1T=. hetrfpl A
+NB.
 NB. Notes:
-NB. - is similar to LAPACK's xHETRS, but uses another
+NB. - is similar to LAPACK's xHETRS('L'), but uses another
 NB.   factorization, see hetrfx
 
 hetrsplx=:   (0 {:: [)    C.^:_1    ((1 {:: [) trsml1hx (pttrfl@(2 {:: [) pttrslx ((1 {:: [) trsml1x  ((0 {:: [) C.   ]))))
@@ -231,11 +257,11 @@ hetrsxpl=:   (0 {:: [)    C.^:_1"1  ((1 {:: [) trsmxl1  (pttrfl@(2 {:: [) pttrsx
 hetrsxplt=: ((0 {:: [) +@(C.^:_1"1) ((1 {:: [) trsmxl1  (pttrfl@(2 {:: [) pttrsxl ((1 {:: [) trsmxl1h ((0 {:: [) C."1 ]))))) +
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. hetrspux      A   * X = B   Xv=. (ip;U1;T) hetrspux  Bv
-NB. hetrsputx     A^T * X = B   Xv=. (ip;U1;T) hetrsputx Bv
-NB. hetrsxpu      X * A   = B   Xh=. (ip;U1;T) hetrsxpu  Bh
-NB. hetrsxput     X * A^T = B   Xh=. (ip;U1;T) hetrsxput Bh
+NB. Verb:           Solves:         Syntax:
+NB. hetrspux        A   * X = B     Xv=. pU1T hetrspux  Bv
+NB. hetrsputx       A^T * X = B     Xv=. pU1T hetrsputx Bv
+NB. hetrsxpu        X * A   = B     Xh=. pU1T hetrsxpu  Bh
+NB. hetrsxput       X * A^T = B     Xh=. pU1T hetrsxput Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
@@ -247,11 +273,17 @@ NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   ip   - n-vector, full inversed permutation of A
-NB.   P    - n×n-matrix, full permutation of A
-NB.   U1   - n×n-matrix, unit upper triangular
-NB.   T    - n×n-matrix, Hermitian (symmetric) tridiagonal
+NB.   pU1T - 3-vector of boxes, the output of hetrfpu, the
+NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0
+NB.
+NB. Assertions:
+NB.   Xv -: clean pU1T hetrspux      A  mp  Xv
+NB.   Xv -: clean pU1T hetrsputx (|: A) mp  Xv
+NB.   Xh -: clean pU1T hetrsxpu      A  mp~ Xh
+NB.   Xh -: clean pU1T hetrsxput (|: A) mp~ Xh
+NB. where
+NB.   pU1T=. hetrfpu A
 
 hetrspux=:   (0 {:: [)    C.^:_1    ((1 {:: [) trsmu1hx (pttrfu@(2 {:: [) pttrsux ((1 {:: [) trsmu1x  ((0 {:: [) C.   ]))))
 hetrsputx=: ((0 {:: [) +@(C.^:_1  ) ((1 {:: [) trsmu1hx (pttrfu@(2 {:: [) pttrsux ((1 {:: [) trsmu1x  ((0 {:: [) C.   ]))))) +
@@ -259,11 +291,11 @@ hetrsxpu=:   (0 {:: [)    C.^:_1"1  ((1 {:: [) trsmxu1  (pttrfu@(2 {:: [) pttrsx
 hetrsxput=: ((0 {:: [) +@(C.^:_1"1) ((1 {:: [) trsmxu1  (pttrfu@(2 {:: [) pttrsxu ((1 {:: [) trsmxu1h ((0 {:: [) C."1 ]))))) +
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. potrslx       A   * X = B   Xv=. L potrslx  Bv
-NB. potrsltx      A^T * X = B   Xv=. L potrsltx Bv
-NB. potrsxl       X * A   = B   Xh=. L potrsxl  Bh
-NB. potrsxlt      X * A^T = B   Xh=. L potrsxlt Bh
+NB. Verb:           Solves:         Syntax:
+NB. potrslx         A   * X = B     Xv=. L potrslx  Bv
+NB. potrsltx        A^T * X = B     Xv=. L potrsltx Bv
+NB. potrsxl         X * A   = B     Xh=. L potrsxl  Bh
+NB. potrsxlt        X * A^T = B     Xh=. L potrsxlt Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
@@ -271,18 +303,28 @@ NB.   (symmetric) positive definite matrix A, represented in
 NB.   factored form:
 NB.     L * L^H = A
 NB. where:
-NB.   A    - n×n Hermitian (symmetric) positive definite
-NB.          matrix
+NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
 NB.   L    - n×n-matrix, lower triangular with positive
-NB.          diagonal entries, Cholesky triangle
+NB.          diagonal entries, Cholesky triangle, the output
+NB.          of potrfl, the matrix A represented in factored
+NB.          form
 NB.   nrhs ≥ 0, number of RHSs
 NB.
+NB. Assertions:
+NB.   Xv -: clean L potrslx      A  mp  Xv
+NB.   Xv -: clean L potrsltx (|: A) mp  Xv
+NB.   Xh -: clean L potrsxl      A  mp~ Xh
+NB.   Xh -: clean L potrsxlt (|: A) mp~ Xh
+NB. where
+NB.   L=. potrfl A
+NB.
 NB. Notes:
-NB. - implements LAPACK's xPOTRS
+NB. - implements LAPACK's xPOTRS('L')
 
 potrslx=:   [   trsmlhx trsmlx
 potrsltx=: ([ +@trsmlhx trsmlx ) +
@@ -290,11 +332,11 @@ potrsxl=:   [   trsmxl  trsmxlh
 potrsxlt=: ([ +@trsmxl  trsmxlh) +
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. potrsux       A   * X = B   Xv=. U potrsux  Bv
-NB. potrsutx      A^T * X = B   Xv=. U potrsutx Bv
-NB. potrsxu       X * A   = B   Xh=. U potrsxu  Bh
-NB. potrsxut      X * A^T = B   Xh=. U potrsxut Bh
+NB. Verb:           Solves:         Syntax:
+NB. potrsux         A   * X = B     Xv=. U potrsux  Bv
+NB. potrsutx        A^T * X = B     Xv=. U potrsutx Bv
+NB. potrsxu         X * A   = B     Xh=. U potrsxu  Bh
+NB. potrsxut        X * A^T = B     Xh=. U potrsxut Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
@@ -302,15 +344,25 @@ NB.   (symmetric) positive definite matrix A, represented in
 NB.   factored form:
 NB.     U * U^H = A
 NB. where:
-NB.   A    - n×n Hermitian (symmetric) positive definite
-NB.          matrix
+NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
 NB.   U    - n×n-matrix, upper triangular with positive
-NB.          diagonal entries, Cholesky triangle
+NB.          diagonal entries, Cholesky triangle, the output
+NB.          of potrfu, the matrix A represented in factored
+NB.          form
 NB.   nrhs ≥ 0, number of RHSs
+NB.
+NB. Assertions:
+NB.   Xv -: clean U potrsux      A  mp  Xv
+NB.   Xv -: clean U potrsutx (|: A) mp  Xv
+NB.   Xh -: clean U potrsxu      A  mp~ Xh
+NB.   Xh -: clean U potrsxut (|: A) mp~ Xh
+NB. where
+NB.   U=. potrfu A
 
 potrsux=:   [   trsmuhx trsmux
 potrsutx=: ([ +@trsmuhx trsmux ) +
@@ -318,30 +370,29 @@ potrsxu=:   [   trsmxu  trsmxuh
 potrsxut=: ([ +@trsmxu  trsmxuh) +
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. pttrslx       A   * X = B   Xv=. (L1;D) pttrslx  Bv
-NB. pttrsltx      A^T * X = B   Xv=. (L1;D) pttrsltx Bv
-NB. pttrsxl       X * A   = B   Xh=. (L1;D) pttrsxl  Bh
-NB. pttrsxlt      X * A^T = B   Xh=. (L1;D) pttrsxlt Bh
+NB. Verb:           Solves:         Syntax:
+NB. pttrslx         A   * X = B     Xv=. L1D pttrslx  Bv
+NB. pttrsltx        A^T * X = B     Xv=. L1D pttrsltx Bv
+NB. pttrsxl         X * A   = B     Xh=. L1D pttrsxl  Bh
+NB. pttrsxlt        X * A^T = B     Xh=. L1D pttrsxlt Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) positive definite tridiagonal matrix A,
-NB.   represented in factored form:
+NB.   represented in factored form [1]:
 NB.     L1 * D * L1^H = A
 NB. where:
-NB.   A    - n×n Hermitian (symmetric) positive definite
-NB.          tridiagonal matrix
+NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   L1   - n×n-matrix, unit lower bidiangonal
-NB.   D    - n×n-matrix, diagonal with positive diagonal
-NB.          entries
+NB.   L1D  - 2-vector of boxes, the output of pttrfl, the
+NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0
 NB.
-NB. Algorithm [1] for pttrslx:
+NB. Algorithm for pttrslx:
 NB.   In:  L1 D Bv
 NB.   Out: Xv
 NB.   1) extract main diagonal d from D and subdiagonal e
@@ -389,27 +440,26 @@ pttrsxl=:  |:@(pttrsltx |:)
 pttrsxlt=: |:@(pttrslx  |:)
 
 NB. ---------------------------------------------------------
-NB. Verb:         Solves:       Syntax:
-NB. pttrsux       A   * X = B   Xv=. (U1;D) pttrsux  Bv
-NB. pttrsutx      A^T * X = B   Xv=. (U1;D) pttrsutx Bv
-NB. pttrsxu       X * A   = B   Xh=. (U1;D) pttrsxu  Bh
-NB. pttrsxut      X * A^T = B   Xh=. (U1;D) pttrsxut Bh
+NB. Verb:           Solves:         Syntax:
+NB. pttrsux         A   * X = B     Xv=. U1D pttrsux  Bv
+NB. pttrsutx        A^T * X = B     Xv=. U1D pttrsutx Bv
+NB. pttrsxu         X * A   = B     Xh=. U1D pttrsxu  Bh
+NB. pttrsxut        X * A^T = B     Xh=. U1D pttrsxut Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) positive definite tridiagonal matrix A,
-NB.   represented in factored form:
+NB.   represented in factored form, based on [1]:
 NB.     U1 * D * U1^H = A
 NB. where:
-NB.   A    - n×n Hermitian (symmetric) positive definite
-NB.          tridiagonal matrix
+NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   U1   - n×n-matrix, unit upper bidiangonal
-NB.   D    - n×n-matrix, diagonal with positive diagonal
-NB.          entries
+NB.   U1D  - 2-vector of boxes, the output of pttrfu, the
+NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0
 NB.
 NB. Algorithm for pttrsux:
@@ -445,6 +495,11 @@ NB. Notes:
 NB. - if A is singular then solution Xx will be wrong
 NB. - if A is indefinite then solution Xx may be wrong
 NB.
+NB. References:
+NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB.     Johns Hopkins University Press, Baltimore, Md, USA,
+NB.     3rd edition, 1996, p. 157
+NB.
 NB. TODO:
 NB. - U1 and D would be sparse
 
@@ -474,7 +529,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
-  'conA conAh conAt'=. 3 # _. NB. (norm1 con (getriul1p@getrful1p))"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. 3 # _. NB. (norm1 con (getrilu1p@getrflu1p))"2 (] , ct ,: |:) A
   'LU1ip ipL1U ipU1L UL1ip'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
 
   ('getrslu1px'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;LU1ip)

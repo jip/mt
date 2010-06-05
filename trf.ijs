@@ -247,10 +247,10 @@ NB.   3) use output from the last iteration as algorithm's
 NB.      output
 NB.
 NB. Notes:
-NB. - for n>TRFNB is similar to LAPACK's xLAHEF, but uses
-NB.   another factorization
-NB. - for n<:TRFNB is similar to LAPACK's xHETF2, but uses
-NB.   another factorization
+NB. - for n>TRFNB is similar to LAPACK's xLAHEF('L'), but
+NB.   uses another factorization
+NB. - for n<:TRFNB is similar to LAPACK's xHETF2('L'), but
+NB.   uses another factorization
 NB. - diagonals 0 and 1 of subH (main diagonal and
 NB.   subdiagonal of subH^H) aren't reconstructed since
 NB.   aren't used
@@ -647,7 +647,7 @@ NB.   P -: ip2P ip
 NB.   A -: clean p {"1 L mp U1
 NB.   A -: clean p C."1 L mp U1
 NB.   A -: clean ip C.^:_1"1 L mp U1
-NB.   A -: clean L mp U1 mp P
+NB.   A -: clean L mp U1 mp iP         NB. apply p to columns
 NB. where
 NB.   'ip LU1'=. getrflu1p A
 NB.   p=. /: ip
@@ -1112,7 +1112,7 @@ NB.   P -: ip2P ip
 NB.   A -: clean p {"1 U mp L1
 NB.   A -: clean p C."1 U mp L1
 NB.   A -: clean ip C.^:_1"1 U mp L1
-NB.   A -: clean U mp L1 mp iP           NB. why iP ???
+NB.   A -: clean U mp L1 mp iP         NB. apply p to columns
 NB. where
 NB.   'ip UL1'=. getrful1p A
 NB.   p=. /: ip
@@ -1406,6 +1406,10 @@ NB. Assertion:
 NB.   A -: clean (mp ct) L
 NB. where
 NB.   L=. potrfl A
+NB.
+NB. Notes:
+NB. - models LAPACK's xPOTRF('L'), but uses blocked, not
+NB.   partitioned algorithm
 
 potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0 & {::))`,`(ct@])`trsmlx`(0 1 & {::)`[`mp`[`]`(1 1 & {::)`(_1 stitch)`(potrfl@:-~)`]`[`0:`0: fork6)@((<;.1)~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
@@ -1466,7 +1470,7 @@ NB. pttrfl
 NB.
 NB. Description:
 NB.   Triangular factorization of a Hermitian (symmetric)
-NB.   positive definite tridiagonal matrix:
+NB.   positive definite tridiagonal matrix [1]:
 NB.     L1 * D * L1^H = A
 NB.
 NB. Syntax:
@@ -1481,7 +1485,7 @@ NB.
 NB. Algorithm:
 NB.   In:  A
 NB.   Out: L1 D
-NB.   1) extract main diagonal d and suberdiagonal e from A
+NB.   1) extract main diagonal d and subdiagonal e from A
 NB.   2) prepare input:
 NB.        dee2 := d ,. (0,e) ,. (0,|e|^2)
 NB.   3) do iterations k=1:n-1 by reversed suffix scan:
@@ -1524,7 +1528,7 @@ NB. pttrfu
 NB.
 NB. Description:
 NB.   Triangular factorization of a Hermitian (symmetric)
-NB.   positive definite tridiagonal matrix:
+NB.   positive definite tridiagonal matrix, based on [1]:
 NB.     U1 * D * U1^H = A
 NB.
 NB. Syntax:
@@ -1565,6 +1569,11 @@ NB.
 NB. Notes:
 NB. - if A is indefinite then factors may have unacceptably
 NB.   large elements
+NB.
+NB. References:
+NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB.     Johns Hopkins University Press, Baltimore, Md, USA,
+NB.     3rd edition, 1996, p. 157
 NB.
 NB. TODO:
 NB. - U1 and D would be sparse
@@ -1608,7 +1617,7 @@ testgetrf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
 
-  rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('lud_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %. (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 

@@ -1,10 +1,7 @@
 NB. scl.ijs
-NB. Try to scale without overflow or underflow
+NB. Scale
 NB.
-NB. lascl  Try to scale a matrix without overflow or
-NB.        underflow
-NB. srscl  Try to scale a vector without overflow or
-NB.        underflow
+NB. scl  Try to scale without overflow or underflow
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -19,20 +16,20 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. lascl
+NB. scl
 NB.
 NB. Description:
 NB.   Try to scale a noun without overflow or underflow
 NB.
 NB. Syntax:
-NB.   Ascl=. (f,t) lascl A
+NB.   Ascl=. (f,t) scl A
 NB. where
-NB.   A    - scalar or sh-array
-NB.   f    ≠ 0, scalar
-NB.   t    - scalar
-NB.   Ascl - noun of the same shape as A, being A scaled by
-NB.          ratio (t/f) without under- or overflow, if
-NB.          possible
+NB.   A    - r-rank array
+NB.   f    ≠ 0, atom
+NB.   t    - atom
+NB.   Ascl - r-rank array, being A scaled by ratio (t/f)
+NB.          without under- or overflow, if possible
+NB.   r    ≥ 0, integer
 NB.
 NB. Formula:
 NB.   if |(f*FP_SFMIN)*FP_SFMIN| > |t|
@@ -76,12 +73,10 @@ NB.      3.3) scale A by ratio
 NB.             Ascl := ft * Ascl
 NB.
 NB. Notes:
-NB. - models LAPACK's xLASCL
-NB.
-NB. TODO:
-NB. - merge with LAPACK's xSRSCL
+NB. - models LAPACK's xLASCL('G'), when A is a matrix
+NB. - models LAPACK's xDRSCL, when A is a vector and t=1
 
-lascl=: 4 : 0
+scl=: 4 : 0
   ioft=. ((FP_SFMIN |:@:(*^:2 1) |.) I."1 0 ])@:| x
   io=. -/ ioft
   (%~/ (({&(1 1,FP_SFMIN)) ioft) *^:(| io) x) * (FP_SFMIN&* ^: io y)

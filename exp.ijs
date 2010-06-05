@@ -40,7 +40,7 @@ geexpm2r=: 4 : 0
     NB. A powers (2 [4 [6 [8]]]), shape: p×N×N
     pA=. (+: }. i. >. -: x) gepow y
 
-    NB. - multiply each table in pA by corresp. scalar b[i], output: report 2×p×N×N
+    NB. - multiply each table in pA by corresp. atom b[i], output: report 2×p×N×N
     NB. - sum multiplied tables, output: report 2×N×N
     NB. - shift 1st table's diagonal by b[0], 2nd table's diagonal by b[1]
     'V U'=. pA (b0b1 sdiag02 (vbyrs (0 1 & }.))) bc

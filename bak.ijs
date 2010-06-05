@@ -1,14 +1,20 @@
 NB. bak.ijs
-NB. Restore original eigenvectors from a balanced matrix
-NB. or matrix pair
-NB. --- OR ---
-NB. Form eigenvectors by backward transformation of the
-NB. balanced matrix or pair of matrices
+NB. Restore original eigenvectors by backward transformation
+NB. from a balanced matrix or matrix pair
 NB.
-NB. gebakx  Form eigenvectors by backward transformation of the
-NB.         matrix balanced by gebal?
-NB. ggbakx  Form eigenvectors by backward transformation of the
-NB.         pair of matrices balanced by ggbal?
+NB. gebakpx    Undo permutations after gebalpx
+NB. gebaksx    Undo scaling after gebalsx
+NB. gebakx     Form eigenvectors by backward transformation
+NB.            of the matrix balanced by gebalx
+NB. ggbakpx    Undo permutations after ggbalpx
+NB. ggbaksx    Undo scaling after ggbalsx
+NB. ggbakx     Form eigenvectors by backward transformation
+NB.            of the pair of matrices balanced by ggbalx
+NB.
+NB. testgebak  Test gebakxx by general matrix given
+NB. testggbak  Test ggbakxx by pair of general matrices given
+NB. testbak    Adv. to make verb to test gxbakx by matrix or
+NB.            matrix pair of generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -74,10 +80,7 @@ NB. -
 
 gebaku=: [:
 
-
 NB. =========================================================
 NB. Test suite
-
-tbak=: [:
 
 testbak=: [:

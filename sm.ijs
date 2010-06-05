@@ -15,6 +15,9 @@ NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-06-01
+NB.
+NB. TODO:
+NB. - limit n in testsm
 
 coclass 'mt'
 
@@ -135,7 +138,7 @@ testtrsm=: 3 : 0
   'L L1 U U1'=. bT=. (trl ; trl1 ; tru ; tru1) A
   'conL conL1 conU conU1'=. ((((norm1 con trtril)&.>)`((norm1 con trtril1)&.>)`((norm1 con trtriu)&.>)`((norm1 con trtriu1)&.>)) ag) bT
 
-  ('trtrs_jlapack_'  tmonad ({.,((mp~ |:)~ &. >/))`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
+  ('trtrs_jlapack_'  tmonad (({.,((mp~ |:)~ &. >/))`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
 
   ('trtrslx'   tdyad ((0 & {::)`( mp       & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (L ;X)
   ('trtrsl1x'  tdyad ((0 & {::)`( mp       & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (L1;X)

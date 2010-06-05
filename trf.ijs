@@ -23,6 +23,11 @@ NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-06-01
+NB.
+NB. TODO:
+NB. - lahef: permut layout
+NB. - LaaU1aa - according to fact-n order
+NB. - 
 
 coclass 'mt'
 
@@ -70,8 +75,8 @@ NB.   t1o       - min(n-1,i+TRFNB)-vector, leading elements
 NB.               of subdiagonal of T
 NB.   li        - (n-i)-vector, the 1st scaled column of
 NB.               subL1, having 1 in the 1st element
-NB.   ti        - scalar, the max from li before it was
-NB.               scaled, can be any value when i=0
+NB.   ti        - atom, the max from li before it was scaled,
+NB.               can be any value when i=0
 NB.   subL100   - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, unit
 NB.               lower triangular, top left part of subL1
 NB.   subL110   - max(0,n-i-TRFNB)×min(TRFNB,n-i)-matrix,
@@ -135,7 +140,7 @@ NB.     t0i  - (T[0,0],T[1,1],...,T[i-1,i-1])
 NB.     t1i  - (T[1,0],T[2,1],...,T[i,i-1])
 NB.     li   - vector to write into subL1[0:n-i-1,0] i.e.
 NB.            L1[i:n-1,i]
-NB.     ti   - any scalar
+NB.     ti   - any atom
 NB.   Out:
 NB.     ipo  - ip[i:n-1]
 NB.     B    - see layout
@@ -230,9 +235,9 @@ NB.   3) use output from the last iteration as algorithm's
 NB.      output
 NB.
 NB. Notes:
-NB. - for n>TRFNB is equivalent to LAPACK's xLAHEF, but uses
+NB. - for n>TRFNB is similar to LAPACK's xLAHEF, but uses
 NB.   another factorization
-NB. - for n<:TRFNB is equivalent to LAPACK's xHETF2, but uses
+NB. - for n<:TRFNB is similar to LAPACK's xHETF2, but uses
 NB.   another factorization
 NB. - diagonals 0 and 1 of subH (main diagonal and
 NB.   subdiagonal of subH^H) aren't reconstructed since
@@ -297,8 +302,8 @@ NB.   t1o       - min(n-1,i+1+TRFNB)-vector, tail elements of
 NB.               superdiagonal of T
 NB.   ui        - (n+i+1)-vector, the last scaled column of
 NB.               subU1, having 1 in the last element
-NB.   ti        - scalar, the max from ui before it was
-NB.               scaled, can be any value when i=_1
+NB.   ti        - atom, the max from ui before it was scaled,
+NB.               can be any value when i=_1
 NB.   subU111   - min(TRFNB,n+i+1)×min(TRFNB,n+i+1)-matrix,
 NB.               unit upper triangular, bottom right part of
 NB.               subU1
@@ -364,7 +369,7 @@ NB.     t0i  - (T[n+i+1,n+i+1],T[n+i+2,n+i+2],...,T[n-1,n-1])
 NB.     t1i  - (T[n+i,n+i+1],T[n+i+1,n+i+2],...,T[n-2,n-1])
 NB.     ui   - vector to write into subU1[0:n+i,n+i] i.e.
 NB.            U1[0:n+i,n+i]
-NB.     ti   - any scalar
+NB.     ti   - any atom
 NB.   Out:
 NB.     ipo  - ip[0:n+i]
 NB.     B    - see layout
@@ -663,12 +668,12 @@ NB.   U   - min(m,n)×n-matrix, upper triangular
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           U's partitioning:
-NB.     k   ( Aaa  Aab  ) := ( Aa  Ab  ) := A       k   ( Uaa     Uab     ) := U
-NB.     m-k ( Aba  Abb  )                           m-k (         Ubb     )
+NB.     k   ( Aaa  Aba  ) := ( Aa  Ab  ) := A       k   ( Uaa     Uba     ) := U
+NB.     m-k ( Aab  Abb  )                           m-k (         Ubb     )
 NB.           k    n-k         k   n-k                    k       n-k
 NB.   L1's partitioning:                          L1U's partitioning:
-NB.     k   ( L1aa      ) := ( L1a L1b ) := L1      k   ( L1aaUaa Uab     ) := L1U
-NB.     m-k ( L1ba L1bb )                           m-k ( L1ba    L1bbUbb )
+NB.     k   ( L1aa      ) := ( L1a L1b ) := L1      k   ( L1aaUaa Uba     ) := L1U
+NB.     m-k ( L1ab L1bb )                           m-k ( L1ab    L1bbUbb )
 NB.           k    n-k         k   n-k                    k       n-k
 NB. where
 NB.   L1aaUaa - combined L1aa and Uaa, L1aa's unit diagonal
@@ -714,7 +719,7 @@ NB.                  rows of A:
 NB.                    A[0,:] ↔ A[p,:]
 NB.           3.3.2) if failed (i.e. if p=0), then leave A
 NB.                  unchanged
-NB.           3.3.3) factorize single row:
+NB.           3.3.3) factorize single column:
 NB.                    U  := A[0,0]
 NB.                    L1 := U^_1 * A
 NB.   4) else:
@@ -727,26 +732,26 @@ NB.                 permutation ip
 NB.           note2: L1a and Uaa are stored in the same
 NB.                  matrix L1aUaa, L1a's unit diagonal isn't
 NB.                  stored
-NB.      4.3) permute rows ############# of Ab according to P^_1 :
-NB.             Ab := Ab * P^_1
+NB.      4.3) permute rows of Ab according to P^_1 :
+NB.             Ab := P^_1 * Ab
 NB.           note: purge original A, reuse name 'y' to
 NB.                 store Ab
-NB.      4.4) compute Lba:
-NB.           4.4.1) extract LaaU1aa:
-NB.                    LaaU1aa := LaaU1a[:,0:k-1]
+NB.      4.4) compute Uab:
+NB.           4.4.1) extract L1aaUaa:
+NB.                    L1aaUaa := L1aUaa[0:k-1,:]
 NB.           4.4.2) extract Aba:
-NB.                    Aba := Ab[:,0:k-1]
+NB.                    Aba := Ab[0:k-1,:]
 NB.           4.4.3) solve:
-NB.                    Lba * U1aa = Aba
+NB.                    L1aa * Uba = Aba
 NB.      4.5) update and factorize Abb recursively:
 NB.           4.5.1) extract Abb:
-NB.                    Abb := Ab[k:n-1,:]
-NB.           4.5.2) extract U1ab:
-NB.                    U1ab := LaaU1a[k:n-1,:]
+NB.                    Abb := Ab[k:m-1,:]
+NB.           4.5.2) extract L1ab:
+NB.                    L1ab := L1aUaa[k:m-1,:]
 NB.           4.5.3) update Abb:
-NB.                    Abb := Abb - Lba * U1ab
+NB.                    Abb := Abb - L1ab * Uba
 NB.           4.5.4) factorize Abb recursively:
-NB.                    Lbb * U1bb * Pb = Abb
+NB.                    Pb * L1bb * Ubb = Abb
 NB.                  note: Pb is represented by vector of
 NB.                        inversed permutation ipb
 NB.      4.6) prepare delta of inversed permutation dipb,
@@ -754,11 +759,11 @@ NB.           which defines inversed permutation of tail part
 NB.      4.7) assemble output
 NB.           4.7.1) permute tail part of ip according to
 NB.                  Pb^_1 :
-NB.                    ip[k:n-1] := Pb^_1 * ip[k:n-1]
-NB.           4.7.2) permute columns of U1ab according to
+NB.                    ip[k:m-1] := Pb^_1 * ip[k:m-1]
+NB.           4.7.2) permute rows of L1ab according to
 NB.                  Pb^_1 :
-NB.                    U1ab := U1ab * Pb^_1
-NB.           4.7.3) assemble triangular matrices L and U1
+NB.                    L1ab := Pb^_1 * L1ab
+NB.           4.7.3) assemble triangular matrices L1 and U
 NB.
 NB. Assertion:
 NB.   P -: %. iP
@@ -791,11 +796,11 @@ getrfpl1u=: 3 : 0
   elseif. do.
     k=. m (<. >.@-:) n
     'pi L1aUaa'=. getrfpl1u k {."1 y
-    y=. pi C. k }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. L1aUaa (trsml1x & (k & {.)) y                          NB. calculate 2nd block's 1st sub-block
-    'pib Afbb'=. getrfpl1u y ((- (mp & Afba)) & (k & }.)) L1aUaa  NB. update 2nd block's 2nd sub-block and factorize it recursively
-    dpib=. (i. k) , (k + pib)                                  NB. apply 2nd block's permutation to 1st block
-    (dpib C. pi) ; ((dpib C. L1aUaa) ,. (Afba , Afbb))           NB. assemble solution
+    y=. pi C. k }."1 y
+    Uab=. L1aUaa (trsml1x & (k & {.)) y
+    'ipb L1bbUbb'=. getrfpl1u y ((- (mp & Uab)) & (k & }.)) L1aUaa
+    dipb=. (i. k) , (k + ipb)
+    (dipb C. pi) ; ((dipb C. L1aUaa) ,. (Uab , L1bbUbb))
   end.
 )
 
@@ -815,9 +820,107 @@ NB.   A   - m×n-matrix to factorize
 NB.   U1L - m×n-matrix, lower triangle contains L, and strict
 NB.         upper triangle contains U1 without unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
-NB.   L   - m×k-matrix, lower triangular
-NB.   U1  - k×n-matrix, unit upper triangular
-NB.   k   = min(m,n)
+NB.   L   - m×min(m,n)-matrix, lower triangular
+NB.   U1  - min(m,n)×n-matrix, unit upper triangular
+NB.
+NB. Storage layout:
+NB.   A's partitioning:                           L's partitioning:
+NB.     m-k ( Aaa  Aba  ) := ( Aa  Ab  ) := A       m-k ( Laa             ) := L
+NB.     k   ( Aab  Abb  )                           k   ( Lab     Lbb     )
+NB.           n-k  k           n-k k                      n-k     k
+NB.   U1's partitioning:                          U1L's partitioning:
+NB.     m-k ( U1aa U1ba ) := ( U1a U1b ) := U1      m-k ( LaaU1aa U1ba    ) := U1L
+NB.     k   (      U1bb )                           k   ( Lab     LbbU1bb )
+NB.           n-k  k           n-k k                      n-k       k
+NB. where
+NB.   LaaU1aa - combined Laa and U1aa, U1aa's unit diagonal
+NB.             isn't stored
+NB.   LbbU1bb - combined Lbb and U1bb, U1bb's unit diagonal
+NB.             isn't stored
+NB.
+NB. Algorithm:
+NB.   In: A
+NB.   Out: ip U1L
+NB.   1) acquire geometry of A:
+NB.        sh := shape
+NB.        m  := quantity of rows
+NB.        n  := quantity of columns
+NB.   2) if m=0 or n=0 then:
+NB.      2.1) set output:
+NB.             ip  := i. m
+NB.             U1L := A
+NB.   3) elseif n=1 then:
+NB.      3.1) prepare non-standard transposition dip:
+NB.           3.1.1) find lIO last element with max value in
+NB.                  last column of A:
+NB.                    p := liolmax A[:,_1]
+NB.                  note: to force U1 to be truly diagonally
+NB.                        dominant replace sorim by soris in
+NB.                        liolmax definition
+NB.           3.1.2) compose non-standard transposition:
+NB.                    dip := (_1,p)
+NB.           note: don't waste time for standardizing the
+NB.                 transposition, use Adverse (::) later
+NB.                 instead
+NB.      3.2) prepare ip:
+NB.           3.2.1) init ip:
+NB.                    ip=. i. m
+NB.           3.2.2) try to apply the transposition dip to
+NB.                  ip:
+NB.                    ip[_1] ↔ ip[p]
+NB.           3.2.3) if failed (i.e. if p=m-1), then leave ip
+NB.                  unchanged
+NB.      3.3) prepare U1L:
+NB.           3.3.1) try to apply the transposition dip to
+NB.                  rows of A:
+NB.                    A[_1,:] ↔ A[p,:]
+NB.           3.3.2) if failed (i.e. if p=m-1), then leave A
+NB.                  unchanged
+NB.           3.3.3) factorize single column:
+NB.                    L  := A[_1,_1]
+NB.                    U1 := A * L^_1
+NB.   4) else:
+NB.      4.1) find split point:
+NB.             k := min(m,⌈n/2⌉)
+NB.      4.2) factorize Ab recursively:
+NB.             P * U1b * Lbb = Ab
+NB.           note1: P is represented by vector of inversed
+NB.                 permutation ip
+NB.           note2: Lbb and U1b are stored in the same
+NB.                  matrix LbbU1b, U1b's unit diagonal isn't
+NB.                  stored
+NB.      4.3) permute rows of Aa according to P^_1 :
+NB.             Aa := P^_1 * Aa
+NB.           note: purge original A, reuse name 'y' to
+NB.                 store Aa
+NB.      4.4) compute Lab:
+NB.           4.4.1) extract LbbU1bb:
+NB.                    LbbU1bb := LbbU1b[m-k:m-1,:]
+NB.           4.4.2) extract Aab:
+NB.                    Aab := Aa[m-k:m-1,:]
+NB.           4.4.3) solve:
+NB.                    U1bb * Lab = Aab
+NB.      4.5) update and factorize Aaa recursively:
+NB.           4.5.1) extract Aaa:
+NB.                    Aaa := Aa[0:m-k-1,:]
+NB.           4.5.2) extract U1ba:
+NB.                    U1ba := LbbU1b[0:m-k-1,:]
+NB.           4.5.3) update Aaa:
+NB.                    Aaa := Aaa - U1ba * Lab
+NB.           4.5.4) factorize Aaa recursively:
+NB.                    Pa * U1aa * Laa = Aaa
+NB.                  note: Pa is represented by vector of
+NB.                        inversed permutation ipa
+NB.      4.6) prepare delta of inversed permutation dipa,
+NB.           which defines inversed permutation of head part
+NB.      4.7) assemble output
+NB.           4.7.1) permute head part of ip according to
+NB.                  Pa^_1 :
+NB.                    ip[0:m-k-1] := Pa^_1 * ip[0:m-k-1]
+NB.           4.7.2) permute rows of U1ba according to
+NB.                  Pa^_1 :
+NB.                    U1ba := Pa^_1 * U1ba
+NB.           4.7.3) assemble triangular matrices U1 and L
 NB.
 NB. Assertion:
 NB.   P -: %. iP
@@ -840,18 +943,18 @@ getrfpu1l=: 3 : 0
   if. 0 e. sh do.
     (i. m) ; y
   elseif. 1 = n do.
-    dip=. < _1 , liolmax y                                        NB. non-standard cycle permutation!
+    dip=. < _1 , liolmax y
     ip=. dip (C. :: ]) i. m
-    y=. ((] _1:} %) (_1&({,))) dip (C. :: ]) y                    NB. permute single column, scale by head, keep head unscaled
+    y=. ((] _1:} %) (_1&({,))) dip (C. :: ]) y
     ip ; y
   elseif. do.
     k=. m (<. >.@-:) n
-    'pia Afa'=. getrfpu1l (-k) {."1 y                             NB. factorize 1st block recursively
-    y=. pia C. (-k) }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trsmu1x & ((-k) & {.)) y                          NB. calculate 2nd block's 1st sub-block
-    'pib Afbb'=. getrfpu1l y ((- (mp & Afba)) & ((-k) & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
-    dpib=. pib , ((m-k) + i. k)                                   NB. apply 2nd block permutation to 1st block
-    (dpib C. pia) ; ((Afbb , Afba) ,. (dpib C. Afa))              NB. assemble solution
+    'ip LbbU1b'=. getrfpu1l (-k) {."1 y
+    y=. ip C. (-k) }."1 y
+    Lab=. LbbU1b (trsmu1x & ((-k) & {.)) y
+    'ipa LaaU1aa'=. getrfpu1l y ((- (mp & Lab)) & ((-k) & }.)) LbbU1b
+    dipa=. ipa , ((m-k) + i. k)
+    (dipa C. ip) ; ((LaaU1aa , Lab) ,. (dipa C. LbbU1b))
   end.
 )
 
@@ -876,7 +979,7 @@ NB.   U   - min(m,n)×n-matrix, upper triangular
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       U's partitioning:
-NB.     m-k ( Aaa  Aab  ) := ( Aa  ) := A       m-k ( Uaa     UaB     ) := U
+NB.     m-k ( Aaa  Aab  ) := ( Aa  ) := A       m-k ( Uaa     Uab     ) := U
 NB.     k   ( Aba  Abb  )    ( Ab  )            k   (         Ubb     )
 NB.           n-k  k           n                      n-k     k
 NB.   L1's partitioning:                      UL1's partitioning:
@@ -1073,6 +1176,9 @@ NB.   5) form T from t0 t1
 NB.   6) return
 NB.        ip ; L1 ; T
 NB.
+NB. FLOPs [1]:
+NB.   1/3 * (1 + 1/TRFNB) * n^3 + O(n^2 * k)
+NB.
 NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
@@ -1084,7 +1190,7 @@ NB.   iP=. p2P ip
 NB.   P=. ip2P ip
 NB.
 NB. Notes:
-NB. - is equivalent to LAPACK's xHETRF, but uses another
+NB. - is similar to LAPACK's xHETRF, but uses another
 NB.   factorization
 NB.
 NB. References:
@@ -1179,6 +1285,9 @@ NB.                        kept symmetry after update
 NB.   5) form T from t0 t1
 NB.   6) return
 NB.        ip ; U1 ; T
+NB.
+NB. FLOPs [1]:
+NB.   1/3 * (1 + 1/TRFNB) * n^3 + O(n^2 * k)
 NB.
 NB. Assertion:
 NB.   P -: %. iP
@@ -1527,22 +1636,26 @@ NB. - for L * L^H = A :
 NB.     berr := ||L * L^H - A|| / (ε * ||A|| * n)
 NB. - for U * U^H = A :
 NB.     berr := ||U * U^H - A|| / (ε * ||A|| * n)
+NB.
+NB. Notes:
+NB. - use temporary locale mttmp to avoid mt's names
+NB.   redefinition
 
 testpotrf=: 3 : 0
-  require '~addons/math/misc/matfacto.ijs'
+  require_mttmp_ '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'potrf'
 
   rcond=. (norm1 con (potril@potrfl)) y
 
-  ('choleski_mt_'       tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
 
-  ('potrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
 
-  ('potrfl'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
-  ('potrflf'        tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
-  ('potrfu'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*#)@[))))) y
-  ('potrfuf'        tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*#)@[))))) y
+  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*#)@[))))) y
+
+  coerase <'mttmp'
 
   EMPTY
 )
@@ -1567,7 +1680,7 @@ NB. - for U1 * D * U1^H = A :
 NB.     berr := ||U1 * D * U1^H - A|| / (ε * ||A|| * n)
 
 testpttrf=: 3 : 0
-  rcond=. (norm1 con (pttril@pttrfl)) y
+  rcond=. _. NB. (norm1 con (pttril@pttrfl)) y
 
   ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/)))) % (FP_EPS*((norm1*c)@[))))) y
   ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/)))) % (FP_EPS*((norm1*#)@[))))) y

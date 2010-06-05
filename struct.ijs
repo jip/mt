@@ -1,6 +1,6 @@
 NB. Structure handlers
 NB.
-NB. c         Columns in scalar or array
+NB. c         Columns in noun
 NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. cp        Conjugate pertranspose
@@ -210,7 +210,7 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Misc.
 
-c=: {:!.1 @ $      NB. Columns in scalar or array
+c=: {:!.1 @ $      NB. Columns in noun
 
 trace=: +/ @ diag  NB. Matrix trace
 
@@ -409,17 +409,16 @@ NB. Syntax:
 NB.   Aupd=. (e;[d[,h[,s]]]) setdiag A
 NB. where
 NB.   A    - m×n-matrix to change
-NB.   e    - scalar or k-vector, value[s] to assign
+NB.   e    - {0,1}-rank array, value[s] to assign
 NB.   d    - integer in range [1-m,n-1], optional IO
 NB.          diagonal, default is 0 (main diagonal)
 NB.   h    - integer in range [-S,S-1], optional IO extreme
 NB.          element of solid part within diagonal, default
 NB.          is 0 (take from head)
-NB.   s    - integer in range [-S,S] or ±∞ when e is scalar,
-NB.          or any from set {±k,±∞} when e is vector;
-NB.          optional size of solid part within diagonal,
-NB.          default is +∞ (all elements in forward
-NB.          direction)
+NB.   s    - integer in range [-S,S] or ±∞ when e is atom, or
+NB.          any from set {±k,±∞} when e is vector; optional
+NB.          size of solid part within diagonal, default is
+NB.          +∞ (all elements in forward direction)
 NB.   Aupd - m×n-matrix A with value[s] e assigned to solid
 NB.          part within d-th diagonal
 NB.   S    ≥ 0, the length of d-th diagonal

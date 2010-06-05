@@ -257,7 +257,7 @@ NB.   P  - n×n-matrix, full permutation of A
 NB.   A  - n×n-matrix to inverse, Hermitian (symmetric)
 NB.
 NB. Notes:
-NB. - equivalent to LAPACK's xHETRI, but uses another
+NB. - is similar to LAPACK's xHETRI, but uses another
 NB.   factorization, see hetrfx
 
 hetripl=: (0 & {::) sp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))  NB. IMPLEMENTME

@@ -35,10 +35,10 @@ NB.
 NB. Description:
 NB.   Generate an elementary reflector H of order n such that
 NB.   H'*y = β*e1, where H=I-v*τ*v', H'*H=I. H is represented
-NB.   in factored form by n-vector v and scalar τ. Vector v
-NB.   can have either forward (α in head) or backward (α in
-NB.   tail) direction. Input and output vector directions are
-NB.   the same.
+NB.   in factored form by n-vector v and atom τ. Vector v can
+NB.   have either forward (α in head) or backward (α in tail)
+NB.   direction. Input and output vector directions are the
+NB.   same.
 NB.
 NB. Syntax:
 NB.   z=. ios larfg y
@@ -46,18 +46,18 @@ NB.   z=. ios larfp y
 NB. where
 NB.   ios - 2-vector of integers (ioa,iot)
 NB.   ioa - lIO α in y
-NB.   iot - lIO pre-allocated scalar for τ in y
+NB.   iot - lIO pre-allocated atom for τ in y
 NB.   y   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
-NB.         having scalar α at index ioa, any scalar at index
+NB.         having atom α at index ioa, any atom at index
 NB.         iot, and vector x[1:n-1] in the rest elements,
 NB.         vector to reflect is (α,x[1:n-1]), α ∊ ℂ,
 NB.         x ∊ ℂⁿ⁻¹
 NB.   z   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
-NB.         (y and z shapes are match) having scalar β at
-NB.         index ioa, scalar τ at index iot, and vector
-NB.         v[1:n-1] in the rest elements, reflection result
-NB.         is vector (1,v[1:n-1]), 1 is not stored, β ∊ ℝ,
-NB.         (larfp provides β≥0), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
+NB.         (y and z shapes are match) having atom β at index
+NB.         ioa, atom τ at index iot, and vector v[1:n-1] in
+NB.         the rest elements, reflection result is vector
+NB.         (1,v[1:n-1]), 1 is not stored, β ∊ ℝ, (larfp
+NB.         provides β≥0), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
 NB.
 NB. Application:
 NB. - reflect vector (α,x) by larfg and store τ at tail:
@@ -312,7 +312,7 @@ NB. Syntax:
 NB.   eCupd=. vtau larfxxxx eC
 NB. where
 NB.   eC    - matrix C to update, augmented by trash vector
-NB.   vtau  - vector v augmented by scalar τ
+NB.   vtau  - vector v augmented by atom τ
 NB.   eCupd - being updated matrix C , augmented by modified
 NB.           trash vector
 NB.   v     - vector with 1 at head (forward direction) or

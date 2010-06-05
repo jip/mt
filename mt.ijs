@@ -72,7 +72,7 @@ require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ HRD outp
 NB. require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ output
 
 NB. mid-level
-NB. require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
+require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~user/projects/mt/pow.ijs'     NB. integer powers
 require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization LQ QL QR RQ
 require '~user/projects/mt/trf.ijs'     NB. triangular factorization

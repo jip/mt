@@ -29,7 +29,7 @@ NB. larfp
 NB.
 NB. Description:
 NB.   Generate an elementary reflector H of order n such that
-NB.   H'*y = β*e1, where H=I-τ*v*v', H'*H=I. H is represented
+NB.   H'*y = β*e1, where H=I-v*τ*v', H'*H=I. H is represented
 NB.   in factored form by n-vector v and scalar τ. Vector v
 NB.   can have either forward (α in head) or backward (α in
 NB.   tail) direction. Input and output vector directions are
@@ -217,15 +217,15 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb       Input             Output                  β≥0
-NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          no
-NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    no
-NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          no
-NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    no
-NB. larfpf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          yes
-NB. larfpfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    yes
-NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          yes
-NB. larfpbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    yes
+NB. Verb       Input             Output                   β
+NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∊ℝ
+NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∊ℝ
+NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∊ℝ
+NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ∊ℝ
+NB. larfpf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ≥0
+NB. larfpfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ≥0
+NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ≥0
+NB. larfpbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ≥0
 NB.
 NB. Description:
 NB.   Monads to generate an elementary reflector, see larfg,
@@ -290,48 +290,69 @@ larftfr=: ] `(             (* -)~ ((mp ct) {:)\  )` ,.  `(,~)`(_1:}) larft IOSLC
 NB. ---------------------------------------------------------
 NB. Verb       Action   Side   Transp  Direction  Layout      Used in
 NB. larflcbc   H' * C   left   ct      backward   columnwise  geql2
-NB. larflcfc   H' * C   left   ct      forward    columnwise  geqr2
+NB. larflcbr   H' * C   left   ct      backward   rowwise
+NB. larflcfc   H' * C   left   ct      forward    columnwise  geqr2,gehd2u
+NB. larflcfr   H' * C   left   ct      forward    rowwise
 NB. larflnbc   H  * C   left   none    backward   columnwise  ung2l
+NB. larflnbr   H  * C   left   none    backward   rowwise
 NB. larflnfc   H  * C   left   none    forward    columnwise  ung2r
+NB. larflnfr   H  * C   left   none    forward    rowwise     gehd2l
+NB. larfrcbc   C  * H'  right  ct      backward   columnwise
 NB. larfrcbr   C  * H'  right  ct      backward   rowwise     ungr2
+NB. larfrcfc   C  * H'  right  ct      forward    columnwise
 NB. larfrcfr   C  * H'  right  ct      forward    rowwise     ungl2
+NB. larfrnbc   C  * H   right  none    backward   columnwise
 NB. larfrnbr   C  * H   right  none    backward   rowwise     gerq2
-NB. larfrnfr   C  * H   right  none    forward    rowwise     gelq2
+NB. larfrnfc   C  * H   right  none    forward    columnwise  gehd2u,gehd2l
+NB. larfrnfr   C  * H   right  none    forward    rowwise     gelq2,unml2
 NB.
 NB. Description:
 NB.   Dyads to apply a reflector or its transpose to a
 NB.   matrix, from either the left or the right
 NB.
 NB. Syntax:
-NB.   eCupd=. eC larfxxxx vtau
+NB.   eCupd=. vtau larfxxxx eC
 NB. where
+NB.   eC    - matrix C to update with appended or stitched
+NB.           trash vector
 NB.   vtau  - v with appended tau
 NB.   v     - vector with 1 at head (forward direction) or
 NB.           tail (backward direction)
-NB.   tau   - complex scalar τ
-NB.   eC    - matrix C to update with appended or stitched
-NB.           trash vector
+NB.   tau   - scalar τ
 NB.   eCupd - being updated matrix C with appended or
-NB.           stitched trash vector
+NB.           stitched not modified (CHECKME!) trash vector
 NB.
 NB. Notes:
 NB. - larfxxxx and larfbxxxx are topological equivalents
+NB. - larflcfr and larfrnfc differ from others in
+NB.   following:
+NB.   - (v,τ) := s/β/1/ (z)
+NB.   - v := curtail (v,τ)
+NB.   - only 1-rank arrays are accepted (FIXME)
 
-larflcbc=: [ - ] */ (mp~ (+ @ ((0 & ( 0 })) * {.)))  NB. C - v * ((v * τ)' * C)
-larflcfc=: [ - ] */ (mp~ (+ @ ((0 & (_1 })) * {:)))  NB. C - v * ((v * τ)' * C)
-larflnbc=: [ - ] */ (mp~ ((+ @ (0 & ( 0 }))) * {.))  NB. C - v * ((τ * v') * C)
-larflnfc=: [ - ] */ (mp~ ((+ @ (0 & (_1 }))) * {:))  NB. C - v * ((τ * v') * C)
-larfrcbr=: [ - (mp (+ @ ((0 & ( 0 })) * {.))) */ ]   NB. C - (C * (τ * v)') * v
-larfrcfr=: [ - (mp (+ @ ((0 & (_1 })) * {:))) */ ]   NB. C - (C * (τ * v)') * v
-larfrnbr=: [ - (mp ((+ @ (0 & ( 0 }))) * {.)) */ ]   NB. C - (C * (v' * τ)) * v
-larfrnfr=: [ - (mp ((+ @ (0 & (_1 }))) * {:)) */ ]   NB. C - (C * (v' * τ)) * v
+larflcbc=: ] - [ */ (mp~ (+ @ ((0 & ( 0 })) * {.)))~    NB. C - v * ((v * τ)' * C)
+larflcbr=: ] - (+ @ (* {.) @ [) */ ((0 ( 0) } [) mp ])  NB. C - (τ * v)' * (v * C)
+larflcfc=: ] - [ */ (mp~ (+ @ ((0 & (_1 })) * {:)))~    NB. C - v * ((v * τ)' * C)
+larflcfr=: ] - (+ @ (* {:) @ [) */ ((0 (_1) } [) mp ])  NB. C - (τ * v)' * (v * C)
+larflnbc=: ] - [ */ (mp~ ((+ @ (0 & ( 0 }))) * {.))~    NB. C - v * ((τ * v') * C)
+larflnbr=: ] - ((+ * {.) @ [) */ (mp~ (0 & ( 0 })))~    NB. C - (v' * τ) * (v * C)
+larflnfc=: ] - [ */ (mp~ ((+ @ (0 & (_1 }))) * {:))~    NB. C - v * ((τ * v') * C)
+larflnfr=: ] - ((+ * {:) @ [) */ (mp~ (0 & (_1 })))~    NB. C - (v' * τ) * (v * C)
+larfrcbc=: ] - (] mp (0 ( 0) } [)) */ (+ @ (* {.) @ [)  NB. C - (C * v) * (v * τ)'
+larfrcbr=: ] - (mp (+ @ ((0 & ( 0 })) * {.)))~ */ [     NB. C - (C * (τ * v)') * v
+larfrcfc=: ] - (] mp (0 (_1) } [)) */ (+ @ (* {:) @ [)  NB. C - (C * v) * (v * τ)'
+larfrcfr=: ] - (mp (+ @ ((0 & (_1 })) * {:)))~ */ [     NB. C - (C * (τ * v)') * v
+larfrnbc=: ] - (mp ((0 & ( 0 })) * {.))~ */ (+ @ [)     NB. C - (C * (v * τ)) * v'
+larfrnbr=: ] - (mp ((+ @ (0 & ( 0 }))) * {.))~ */ [     NB. C - (C * (v' * τ)) * v
+larfrnfc=: ] - (mp ((0 & (_1 })) * {:))~ */ (+ @ [)     NB. C - (C * (v * τ)) * v'
+larfrnfr=: ] - (mp ((+ @ (0 & (_1 }))) * {:))~ */ [     NB. C - (C * (v' * τ)) * v
 
 NB. ---------------------------------------------------------
 NB. Verb       Action   Side   Transp  Direction  Layout      Used in
 NB. larfblcbc  H' * C   left   ct      backward   columnwise  geqlf
 NB. larfblcbr  H' * C   left   ct      backward   rowwise
 NB. larfblcfc  H' * C   left   ct      forward    columnwise  geqrf,gehrd
-NB. larfblcfr  H' * C   left   ct      forward    rowwise
+NB. larfblcfr  H' * C   left   ct      forward    rowwise     unmlq
 NB. larfblnbc  H  * C   left   none    backward   columnwise  ungql
 NB. larfblnbr  H  * C   left   none    backward   rowwise
 NB. larfblnfc  H  * C   left   none    forward    columnwise  ungqr
@@ -343,7 +364,7 @@ NB. larfbrcfr  C  * H'  right  ct      forward    rowwise     unglq
 NB. larfbrnbc  C  * H   right  none    backward   columnwise
 NB. larfbrnbr  C  * H   right  none    backward   rowwise     gerqf
 NB. larfbrnfc  C  * H   right  none    forward    columnwise
-NB. larfbrnfr  C  * H   right  none    forward    rowwise     gelqf
+NB. larfbrnfr  C  * H   right  none    forward    rowwise     gelqf,unmlq
 NB.
 NB. Description:
 NB.   Dyads to build and apply a block reflector or its
@@ -351,7 +372,7 @@ NB.   transpose to a matrix, from either the left or the
 NB.   right
 NB.
 NB. Syntax:
-NB.   eCupd=. eC larfbxxxx Vtau
+NB.   eCupd=. eC larfbxxxx Vtau    <<<<<<< CHANGEME: SWAP ARGS!
 NB. where
 NB.   Vtau  - matrix V with appended or stitched vector tau
 NB.   V     - unit triangular (trapezoidal) matrix
@@ -359,21 +380,21 @@ NB.   tau   - k-vector τ[0:k-1] corresp. to V
 NB.   eC    - matrix C to update with appended or stitched
 NB.           trash vector
 NB.   eCupd - being updated matrix C with appended or
-NB.           stitched trash vector
+NB.           stitched not modified (CHECKME!) trash vector
 NB.
 NB. Notes:
 NB. - emulates LAPACK's sequence of calls to xLARFT and then
 NB.   to LARFB
 NB. - larfxxxx and larfbxxxx are topological equivalents
 
-larfblcbc=: ((] - [ mp (mp~ (ct @ (mp larftbc)))~) (0 & (IOSFR })))~  NB. C - V * ((V * T)' * C)
-larfblcfc=: ((] - [ mp (mp~ (ct @ (mp larftfc)))~) (0 & (IOSLR })))~  NB. C - V * ((V * T)' * C)
-larfblnbc=: (([ - ] mp (mp~ (larftbc mp ct)))~ (0 & (IOSFR })))~      NB. C - V * ((T * V') * C)
-larfblnfc=: (([ - ] mp (mp~ (larftfc mp ct)))~ (0 & (IOSLR })))~      NB. C - V * ((T * V') * C)
-larfbrcbr=: (([ - (mp (ct @ (mp~ larftbr))) mp ])~ (0 & (IOSFC })))~  NB. C - (C * (T * V)') * V
-larfbrcfr=: (([ - (mp (ct @ (mp~ larftfr))) mp ])~ (0 & (IOSLC })))~  NB. C - (C * (T * V)') * V
-larfbrnbr=: (([ - (mp (ct mp larftbr)) mp ])~ (0 & (IOSFC })))~       NB. C - (C * (V' * T)) * V
-larfbrnfr=: (([ - (mp (ct mp larftfr)) mp ])~ (0 & (IOSLC })))~       NB. C - (C * (V' * T)) * V
+larfblcbc=: (] - [ mp (mp~ (ct @ (mp larftbc)))~) (0 & (IOSFR }))  NB. C - V * ((V * T)' * C)
+larfblcfc=: (] - [ mp (mp~ (ct @ (mp larftfc)))~) (0 & (IOSLR }))  NB. C - V * ((V * T)' * C)
+larfblnbc=: ([ - ] mp (mp~ (larftbc mp ct)))~ (0 & (IOSFR }))      NB. C - V * ((T * V') * C)
+larfblnfc=: ([ - ] mp (mp~ (larftfc mp ct)))~ (0 & (IOSLR }))      NB. C - V * ((T * V') * C)
+larfbrcbr=: ([ - (mp (ct @ (mp~ larftbr))) mp ])~ (0 & (IOSFC }))  NB. C - (C * (T * V)') * V
+larfbrcfr=: ([ - (mp (ct @ (mp~ larftfr))) mp ])~ (0 & (IOSLC }))  NB. C - (C * (T * V)') * V
+larfbrnbr=: ([ - (mp (ct mp larftbr)) mp ])~ (0 & (IOSFC }))       NB. C - (C * (V' * T)) * V
+larfbrnfr=: ([ - (mp (ct mp larftfr)) mp ])~ (0 & (IOSLC }))       NB. C - (C * (V' * T)) * V
 
 NB. =========================================================
 NB. Test suite

@@ -1,0 +1,13 @@
+TODO about computational methods see in MATRIX file
+
+Complete methods necessary to release TAU addon (Control Theory toolbox)
+
+Refactorize out rand.ijs, struct.ijs
+
+[scriptdoc-conforming comments]
+
+[val] trl A:
+      trl A     == trl  A
+    0 trl A     == trl0 A
+    1 trl A     == trl1 A
+Q: а номер диагонали ???

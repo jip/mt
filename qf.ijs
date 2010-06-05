@@ -71,11 +71,11 @@ NB.      or diagonal of βs by 1 (gexx3):
 NB.        z=. [diag] trx z
 NB.   4) apply an elementary reflector (packed in z) to eA
 NB.      (gexx2):
-NB.        eAupd=. eA larfxxxx z
+NB.        eAupd=. z larfxxxx eA
 NB.      (there is overhead here to re-calculate z), or
 NB.      or generate a block reflector from z and apply it to
 NB.      eA (gexx3):
-NB.        eAupd=. eA larfbxxxx z
+NB.        eAupd=. z larfbxxxx eA
 NB.   5) extract two submatrices S0 and S1 from eAupd
 NB.   6) supply S1 to recursive call to itself:
 NB.        S1upd=. $: S1
@@ -88,15 +88,15 @@ NB. - input's and output's shapes are the same
 NB. - ge{lq,ql,qr,rq}2 and ge{lq,ql,qr,rq}3 respectively are
 NB.   topologic equivalents
 
-gelq2=: ((] ,   (((( 1 ,~ (1 -  #)       ) {. ]) ,.  ($: @ ( 1  1 & }.))) @ (larfrnfr (1 & ( 0 }))))) (larfgfc @ (IOSFR & {))) ^: (*./ @ (0 < (0 _1 + $)))
-geql2=: ((] ,.~ ((((_1 ,  (1 -~ ({: @ $))) {. ]) ,~  ($: @ (_1 _1 & }.))) @ (larflcbc (1 & (_1 }))))) (larfgb  @ (IOSLC & {))) ^: (*./ @ (0 < (_1 0 + $)))
-geqr2=: ((] ,.  (((( 1 ,  (1 -  ({: @ $))) {. ]) ,   ($: @ ( 1  1 & }.))) @ (larflcfc (1 & ( 0 }))))) (larfgf  @ (IOSFC & {))) ^: (*./ @ (0 < (_1 0 + $)))
-gerq2=: ((] ,~  ((((_1 ,~ (1 -~ #)       ) {. ]) ,.~ ($: @ (_1 _1 & }.))) @ (larfrnbr (1 & (_1 }))))) (larfgbc @ (IOSLR & {))) ^: (*./ @ (0 < (0 _1 + $)))
+gelq2=: ((] ,   (((( 1 ,~ (1 -  #)       ) {. ]) ,.  ($: @ ( 1  1 & }.))) @ (larfrnfr~ (1 & ( 0 }))))) (larfgfc @ (IOSFR & {))) ^: (*./ @ (0 < (0 _1 + $)))
+geql2=: ((] ,.~ ((((_1 ,  (1 -~ ({: @ $))) {. ]) ,~  ($: @ (_1 _1 & }.))) @ (larflcbc~ (1 & (_1 }))))) (larfgb  @ (IOSLC & {))) ^: (*./ @ (0 < (_1 0 + $)))
+geqr2=: ((] ,.  (((( 1 ,  (1 -  ({: @ $))) {. ]) ,   ($: @ ( 1  1 & }.))) @ (larflcfc~ (1 & ( 0 }))))) (larfgf  @ (IOSFC & {))) ^: (*./ @ (0 < (_1 0 + $)))
+gerq2=: ((] ,~  ((((_1 ,~ (1 -~ #)       ) {. ]) ,.~ ($: @ (_1 _1 & }.))) @ (larfrnbr~ (1 & (_1 }))))) (larfgbc @ (IOSLR & {))) ^: (*./ @ (0 < (0 _1 + $)))
 
-gelq3=: (((     GEQFBS    <.   #     ) }. ]) (] ,   ((((_ , (GEQFBS    <.  ({:@$))) {. ]) ,.  ($: @ ((0 ,   GEQFBS ) }. ]))) @ (larfbrnfr          tru1   ))) (gelq2 @ ((     GEQFBS    <.  #      ) {. ]))) ^: (*./ @ (0 < (0 _1 + $)))
-geql3=: (((0 , (GEQFBS (-@<.) ({:@$))) }. ]) (] ,.~ ((((     GEQFBS (-@<.)     #  ) {. ]) ,~  ($: @ (     (-GEQFBS)  }. ]))) @ (larfblcbc ((-~/@$) tru1 ])))) (geql2 @ ((_ , (GEQFBS (-@<.) ({:@$))) {. ]))) ^: (*./ @ (0 < (_1 0 + $)))
-geqr3=: (((0 , (GEQFBS    <.  ({:@$))) }. ]) (] ,.  ((((     GEQFBS    <.      #  ) {. ]) ,   ($: @ (       GEQFBS   }. ]))) @ (larfblcfc          trl1   ))) (geqr2 @ ((_ , (GEQFBS    <.  ({:@$))) {. ]))) ^: (*./ @ (0 < (_1 0 + $)))
-gerq3=: (((     GEQFBS (-@<.)  #     ) }. ]) (] ,~  ((((_ , (GEQFBS (-@<.) ({:@$))) {. ]) ,.~ ($: @ ((0 , (-GEQFBS)) }. ]))) @ (larfbrnbr ((-~/@$) trl1 ])))) (gerq2 @ ((     GEQFBS (-@<.) #      ) {. ]))) ^: (*./ @ (0 < (0 _1 + $)))
+gelq3=: (((     GEQFBS    <.   #     ) }. ]) (] ,   ((((_ , (GEQFBS    <.  ({:@$))) {. ]) ,.  ($: @ ((0 ,   GEQFBS ) }. ]))) @ (larfbrnfr~          tru1   ))) (gelq2 @ ((     GEQFBS    <.  #      ) {. ]))) ^: (*./ @ (0 < (0 _1 + $)))
+geql3=: (((0 , (GEQFBS (-@<.) ({:@$))) }. ]) (] ,.~ ((((     GEQFBS (-@<.)     #  ) {. ]) ,~  ($: @ (     (-GEQFBS)  }. ]))) @ (larfblcbc~ ((-~/@$) tru1 ])))) (geql2 @ ((_ , (GEQFBS (-@<.) ({:@$))) {. ]))) ^: (*./ @ (0 < (_1 0 + $)))
+geqr3=: (((0 , (GEQFBS    <.  ({:@$))) }. ]) (] ,.  ((((     GEQFBS    <.      #  ) {. ]) ,   ($: @ (       GEQFBS   }. ]))) @ (larfblcfc~          trl1   ))) (geqr2 @ ((_ , (GEQFBS    <.  ({:@$))) {. ]))) ^: (*./ @ (0 < (_1 0 + $)))
+gerq3=: (((     GEQFBS (-@<.)  #     ) }. ]) (] ,~  ((((_ , (GEQFBS (-@<.) ({:@$))) {. ]) ,.~ ($: @ ((0 , (-GEQFBS)) }. ]))) @ (larfbrnbr~ ((-~/@$) trl1 ])))) (gerq2 @ ((     GEQFBS (-@<.) #      ) {. ]))) ^: (*./ @ (0 < (0 _1 + $)))
 
 NB. =========================================================
 NB. Interface

@@ -1,0 +1,73 @@
+Matrix type
+
+Matrix method
+
+
+
+
+CalcMethod   MatrixType    GEneral      HErmitian       DIagonalizable        POsitive definite
+                                        Hermitian
+Triangular
+- factorization
+- inversion
+- solver
+
+
+[val] trl A:
+      trl A     == trl  A
+    0 trl A     == trl0 A
+    1 trl A     == trl1 A
+Q: а номер диагонали ???
+
+trf.ijs
+- Hermitian
+  - indefinite (necessary)
+    - (P*L)*T*(P*L)^H
+    - (P*U)*T*(P*U)^H
+  - indefinite diagonally dominant (necessary)
+    - L*D*L^H
+    - U*D*U^H
+  - positive semidefinite (necessary)
+    - (P*L)*(P*L)^H
+    - (P*U)*(P*U)^H
+- polar A=Q*P, where Q*Q^H=I, P≥0 (desired)
+- Vandermonde (optional)
+- Toeplitz (optional)
+- Circulant (optional)
+
+trs.ijs
+- hgsvxu (desirable)
+- hgsvux (desirable)
+- hgsvxl (optional)
+- hgsvlx (optional)
+
+qi.ijs (desirable)
+qs.ijs (desirable)
+
+evf.ijs (necessary)
+evi.ijs (necessary)
+evs.ijs (necessary)
+
+esf.ijs (necessary)
+esi.ijs (necessary)
+ess.ijs (necessary)
+
+svdf.ijs (necessary)
+svdi.ijs (necessary)
+svds.ijs (necessary)
+
+hrd.ijs (necessary)
+
+fun.ijs
+- square root (desirable)
+
+log.ijs (necessary)
+
+syl.ijs (necessary)
+
+lyap.ijs (necessary)
+
+ggs.ijs (necessary)
+hhs.ijs (necessary)
+pps.ijs (necessary)
+

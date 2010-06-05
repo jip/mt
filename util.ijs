@@ -17,6 +17,11 @@ NB. Resources:
 NB. - http://www.jsoftware.com/jwiki/...
 NB. - http://www.dvgu.ru/forum/...
 NB.
+NB. TODO:
+NB. - rework pow[s]m to base on eigen-decomposition:
+NB.   if   A   = L * D * R, where D = diagmat(d)
+NB.   then A^n = L * diagmat(d^n) * R
+NB.
 NB. Version: 1.0.0 2008-03-30
 NB. Copyright: Igor Zhuravlov igor@uic.dvgu.ru
 NB. License: Version 3 of the GNU GPL or any later version
@@ -330,4 +335,27 @@ testplot=: 3 : 0
   x=. 2 3 $ (< i.0) , (< i. 5) , (< i. 5) , (< (i.0) ; (i. 4)) , (< (i.0) ; (i. 3 6)) , (< (i. 5) ; (i. 6))
   dat=. 2 3 $ (mba 6) , (mba 4 5) , (< (mba 5) , (mba 5)) , (< (mba 6) , (mba 3 4)) , (< (mba 4 5) , (mba 3 6)) , (< (mba 3 5) , (mba 2 6))
   p=. splot po;so;kt;x;<dat
+
+po=. 'type line'
+'R C'=. RC=. 2 3
+
+mpt=. 'mplot test'
+rt=. 'rt 0' ; 'rt 1'
+ct=. 'ct 0' ; 'ct 1' ; 'ct 2'
+mkt=. 'kt 0' ; 'kt 1' ; 'kt 2' ; 'kt 3'
+mx=. 0.1 * i. 10
+mdata=. ? (4 10 , RC) $ 10
+mplot_tau_ po;mpt;rt;ct;mkt;mx;<mdata
+
+spt=. 'splot test'
+so=. RC $ 'type line';'type line,marker';'type line,stick';'type bar';'type hist';'type sbar'
+st=. RC $ 't 00' ; 't 01' ; 't 02' ; 't 10' ; 't 11' ; 't 12'
+yt=. RC $ 'yt 00' ; 'yt 01' ; 'yt 02' ; 'yt 10' ; 'yt 11' ; 'yt 12'
+xt=. RC $ 'xt 00' ; 'xt 01' ; 'xt 02' ; 'xt 10' ; 'xt 11' ; 'xt 12'
+skt=. ('k #';(<'kt 0' ; 'kt 1' ; 'kt 2' ; 'kt 3')) (1 2;0 1) } RC $ a:
+sx=. RC $ < _1 _0.5 0 0.5 1
+sdata=. ((? 4 5 $ 100);(? 4 5 $ 100)) (0 1;1 2) } <"1 i. (RC, 5)
+splot_tau_ po;spt;so;st;yt;xt;skt;sx;<sdata
+
+
 )

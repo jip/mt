@@ -19,7 +19,7 @@ NB. XRef:
 NB. - system: mp
 NB. - mt: ct qr
 NB.
-NB. Copyright (C) 2009  Igor Zhuravlov
+NB. Copyright (C) 2009 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
 
@@ -35,7 +35,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. randu                                               _ _ _
+NB. randu
 NB. Uniform distribution U(a,b) with support (a,b)
 NB.
 NB. Syntax:
@@ -55,7 +55,7 @@ NB.   randuc=: randu j. (_1 1 & randu)
 randu=: (? @ $ 0:) :((p.~ (-~/\))~ $:)
 
 NB. ---------------------------------------------------------
-NB. rande                                               _ _ _
+NB. rande
 NB. Exponential distribution E(μ) with mean μ
 NB.
 NB. Formula:
@@ -81,8 +81,8 @@ NB.   - randu's values aren't used outside elsewhere
 rande=: (- @ ^. @ randu) : (* $:)
 
 NB. ---------------------------------------------------------
-NB. randnf                                              _ _ _
-NB. randnc                                              _ _ _
+NB. randnf
+NB. randnc
 NB. Normal distribution N(μ,σ²) of float (complex) numbers
 NB. with mean μ and variance σ²
 NB.
@@ -114,7 +114,7 @@ randnf=: ((%: @ (2 & rande)) * (  2 o. (0 2p1 & randu))) : (p. $:)
 randnc=: ((%: @      rande ) * (_12 o. (0 2p1 & randu))) : (p. $:)
 
 NB. ---------------------------------------------------------
-NB. randtnf                                             _ _ _
+NB. randtnf
 NB. Truncated normal distribution TN(μ,σ²,a,b) of float
 NB. numbers in range [a,b] with mean μ and variance σ²
 NB.
@@ -124,12 +124,12 @@ NB. where
 NB.   sh  - n-vector, shape of S
 NB.   par - optional 4-vector (μ,σ,a,b), σ>0, a≤b, (μ,σ) are
 NB.         normal distribution parameters, [a,b] is s range,
-NB.         default is (0 1 -∞ ∞)
+NB.         default is (0 1 -∞ +∞)
 NB.   S   - sh-array of values s ~ N(μ,σ²), a ≤ s ≤ b
 NB.   n   ≥ 0
 NB.
 NB. Application:
-NB. - left-side truncated normal distribution TN(1,2²,3,∞):
+NB. - left-side truncated normal distribution TN(1,2²,3,+∞):
 NB.   randltnf=: (1 2 3 _) & randtnf
 
 randtnf=: (0 1 __ _ & $:) :(4 : 0)
@@ -141,7 +141,7 @@ randtnf=: (0 1 __ _ & $:) :(4 : 0)
 )
 
 NB. ---------------------------------------------------------
-NB. gemat                                               _ _ _
+NB. gemat
 NB. Make random general matrix
 NB.
 NB. Formula:

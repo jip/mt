@@ -12,6 +12,13 @@ NB. TODO
 NB. - replace some of assert. by throw.
 NB. - handle non-squared case
 NB. - CO2DI: Cayley transform
+NB. - gebal before geev or geevx instead of
+NB.   gehrd before gees
+NB.   see:
+NB.   http://www.netlib.org/lapack/lug/node50.html
+NB.   http://www.netlib.org/lapack/lug/node51.html
+NB.   http://www.netlib.org/lapack/lug/node70.html
+NB.   http://www.netlib.org/lapack/lug/node94.html
 NB.
 NB. 2008-03-30 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
@@ -23,7 +30,7 @@ require '~user/projects/lapack/geev.ijs'        NB. -> /dev/null
 require '~user/projects/lapack/gerqf.ijs'       NB. -> /dev/null
 require '~user/projects/lapack/potrf.ijs'       NB. -> /dev/null
 require '~user/projects/lapack/trtrs.ijs'       NB. -> /dev/null
-require '~user/projects/tau/util.ijs'           NB. rndmat rndmat_neig
+require '~user/projects/tau/util.ijs'           NB. shiftdiag rndmat rndmat_neig
 
 coclass 'tau'
 
@@ -33,15 +40,6 @@ NB. Utilities
 split=: (}:;{:) &. >                    NB. split under box at last item
 N2=: [: %: [: +/ [: *: |                NB. 2-norm of vector
 h=: +@|:                                NB. conjugate transpose of table
-
-NB. ---------------------------------------------------------
-NB. shiftR1
-NB. Increase R1 diagonal by conjugated lambda:
-NB.   R1+conj(lambda)*I
-
-shiftdiag=: (+ diag)~ +                 NB. diag(x)+conjugate(y)
-iosdiag=: <"1 @ ,.~                     NB. indices of y-th diagonal elements
-shiftR1=: (shiftdiag (0 & {::))`(iosdiag @: (1 & {::) @: ])`[
 
 NB. ---------------------------------------------------------
 NB. sorzhouiter
@@ -76,8 +74,9 @@ sorzhouiter=: 4 : 0
   bh=. bh % tau
   chk=. (0 < # B1) *. (0 < tau)
   if. chk do.
-    atmp=. (jj {. x) shiftR1 } (lambda ; ij)     NB. "R1+conj(lambda)*I" where R1 is "jj {. x"
+    atmp=. (+ lambda) shiftdiag (jj {. x)        NB. conj(lambda)*I + R1
     btmp=. (B1 mp (+ - bh)) + (ijj { x) * - tau  NB. -tau*r-(1/tau)*B1*b
+smoutput 2 4 $ '$atmp' ; 'atmp' ; '$btmp' ; 'btmp' ; ($atmp) ; atmp ; ($btmp) ; btmp
     u=. trtrs_jlapack_ atmp ; btmp               NB. solve for u complex upper triangular system atmp*u=btmp
   else.
     u=. j $ 0
@@ -118,7 +117,7 @@ NB.   (Cholesky factor), URL: http://www.slicot.org/shared/doc/SB03OD.html
 
 lyapchol=: 4 : 0
   n=. # y
-  if. 0 = n do. i. 0 return. end.           NB. early termination
+  if. 0 = n do. 0 0 $ 0 return. end.        NB. early termination
   vmatrixorvector_jlapack_ y
   if. L. x do.
     'Q R'=. x                               NB. Schur factorization Q*R*Q' = A
@@ -170,24 +169,28 @@ NB. Syntax: is_passed=. tlyapchol A;B
 
 tlyapchol=: 3 : 0
 'A B'=. y
+smoutput 'A' ; A ; 'geev(A)' ; (< geev_jlapack_ A)
+smoutput 'B' ; B ; 'geev(B)' ; (< geev_jlapack_ B)
+smoutput 'BB''' ; ((mp h) B) ; 'geev(BB'')' ; (< geev_jlapack_ ((mp h) B))
 U=. A lyapchol B
 X=. (mp h) U
+smoutput 'X' ; X ; 'geev(X)' ; (< geev_jlapack_ X)
+smoutput 'U' ; U ; 'geev(U)' ; (< geev_jlapack_ U)
 err=. clean (A mp X) + (X (mp h) A) + ((mp h) B)
 smoutput 2 5 $ 'A' ; 'B' ; 'X' ; 'U' ; 'AX+XA''+BB''' ; A ; B ; X ; U ; ((A mp X) + (X (mp h) A) + (B (mp h) B))
-0 = err
+(*./ ^: 2) 0 = err
 )
 
 NB. Syntax: testlyapchol ''
 
 testlyapchol=: 3 : 0
-ma1=. 0 0 $ 0
-mb1=. 0 0 $ 0
-ma2=. rndmat_neig 4
-mu2=. utri_jlapack_ ? 4 4 $ 10
-mx2=. (mp h) mu2
-mbbh2=. - (ma2 mp mx2) + (mx2 (mp h) ma2)
-mb2=. potrf_jlapack_ &. ((] ;. 0) :. (] ;. 0)) mbbh2
-(ma1;ma2) (tlyapchol & >) (mb1;mb2)
+ma0=. 0 0 $ 0
+mb0=. 0 0 $ 0
+A=. 4 4 $ _1 _1 2 2 37 _10 _4 _2 _12 0 7 7 _12 4 _6 _9
+B=. 4 4 $ 2 2 4 5 0 8 7 7 0 0 2 6 0 0 0 2
+ma1=. rndmat_neig 4
+mb1=. 0.1 shiftdiag utri_jlapack_ ? 4 4 $ 10
+tlyapchol &> (<ma0;mb0) , (<A;B) , (<ma1;mb1)
 )
 
 NB.  A=. 4 4 $ _1 _1 2 2 37 _10 _4 _2 _12 0 7 7 _12 4 _6 _9

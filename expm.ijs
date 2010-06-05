@@ -22,6 +22,15 @@ NB. Resources:
 NB. - http://www.jsoftware.com/jwiki/...
 NB. - http://www.dvgu.ru/forum/...
 NB.
+NB. TODO:
+NB. - gebal before geev or geevx instead of
+NB.   gehrd before gees
+NB.   see:
+NB.   http://www.netlib.org/lapack/lug/node50.html
+NB.   http://www.netlib.org/lapack/lug/node51.html
+NB.   http://www.netlib.org/lapack/lug/node70.html
+NB.   http://www.netlib.org/lapack/lug/node94.html
+NB.
 NB. 2008-02-29 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
@@ -31,12 +40,12 @@ require '~user/projects/lapack/lapack.ijs'      NB. '~addons/math/lapack/lapack.
 require '~user/projects/lapack/geev.ijs'        NB. need_jlapack_ 'geev gesvd gesvx'
 require '~user/projects/lapack/gesvd.ijs'       NB. (line above makes it excessive)
 require '~user/projects/lapack/gesvx.ijs'       NB. -//-
-require '~user/projects/tau/util.ijs'           NB. makeP rndmat rndmat_neig
+require '~user/projects/tau/util.ijs'           NB. powsm rndmat rndmat_neig
 
 coclass 'tau'
 
 NB. =========================================================
-NB. Utilities
+NB. Local utilities
 
 getCols=: {: @ $     NB. get columns count of table y
 shybyx=: |.!.0 "0 1  NB. shift y with step x
@@ -50,8 +59,8 @@ NB.   Gi=. makeGi mi , lambdai , Ng
 NB. where:
 NB.   mi      - lambdai multiplicity
 NB.   lambdai - i-th eigenvalue of G
-NB.   Ng      = #G , matrix G minimal polynom's order
-NB.   Gi      - mi-by-Ng matrix, G[i]
+NB.   Ng      = #G , matrix G's minimal polynom's order
+NB.   Gi      - mi-by-Ng table, G[i]
 NB.
 NB. Test:
 NB.    makeGi 4 1j1 7
@@ -74,8 +83,8 @@ NB.   Ti=. makeTi mi , lambdai , Ng
 NB. where:
 NB.   mi      - lambdai multiplicity
 NB.   lambdai - i-th eigenvalue of G
-NB.   Ng      = #G , matrix G minimal polynom's order
-NB.   Ti      - mi-by-Ng matrix, T[i]
+NB.   Ng      = #G , matrix G's minimal polynom's order
+NB.   Ti      - mi-by-Ng table, T[i]
 NB.
 NB. Test:
 NB.    makeTi 4 1j1 7
@@ -94,7 +103,7 @@ NB. Prepare eigenvalues of matrix y: remove dups, then count.
 NB. Outputs 3 columns:
 NB. - mi, lambdai multiplicity
 NB. - lambdai, i-th eigenvalue of G
-NB. - Ng = #y , matrix y minimal polynom's order
+NB. - Ng = #y , table y's minimal polynom's order
 NB.
 NB. If:
 NB.   'vm vlambda vNg' =. |: prepV G
@@ -119,10 +128,10 @@ NB.                                                    ( 0  0 )
 NB. Syntax:
 NB.   G=. makeG A;B[;trash]
 NB. where
-NB.   A - Nx-by-Nx state matrix of LTI system
-NB.   B - Nx-by-Nu control input matrix of LTI system
-NB.   G - Ng-by-Ng matrix, augmented LTI system
-NB.   Ng = Nx+Nu
+NB.   A   - Nx-by-Nx table, state matrix of LTI system
+NB.   B   - Nx-by-Nu table, control input matrix of LTI system
+NB.   G   - Ng-by-Ng table, augmented LTI system
+NB.   Ng  = Nx+Nu
 NB.   Nx >= 0
 NB.   Nu >= 0
 
@@ -136,11 +145,11 @@ NB. Syntax:
 NB.   Lt=. ts makeLtM V
 NB.   M=. 0 makeLtM V
 NB. where:
-NB.   V  - (#vm)-by-3 matrix, prepared eigenvalues of G, output of prepV
+NB.   V  - (#vm)-by-3 table, prepared eigenvalues of G, output of prepV
 NB.   ts > 0, sample time
-NB.   M  - Ng-by-Ng matrix for equation M*A(t)=L(t)
+NB.   M  - Ng-by-Ng table for equation M*A(t)=L(t)
 NB.   Lt - Ng-vector, RHS L(t) for equation M*A(t)=L(t)
-NB.   Ng = #G , matrix G minimal polynom's order
+NB.   Ng = #G , table G's minimal polynom's order
 NB.
 NB. Tests:
 NB.    1.0 makeLtM prepV diagmat 4 4 3 2j2 2j_2 1j1 1j1
@@ -170,7 +179,7 @@ NB. where:
 NB.   ts    > 0, sample time
 NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
 NB.   At    - Ng-vector, solution A(t) of equation M*A(t)=L(t)
-NB.   Ng    = #G , matrix G minimal polynom's order
+NB.   Ng    = #G , table G's minimal polynom's order
 
 makeLt=: (makeLtM (3 & {::))~
 makeAt=: gesvx_jlapack_ @ ((2 {:: [) ; makeLt)
@@ -182,18 +191,23 @@ NB.
 NB. Syntax:
 NB.   'Nx P M V'=. prexpm A;B[;trash]
 NB. where:
-NB.   A - Nx-by-Nx state matrix of LTI system, should be stable,
-NB.       i.e. all eigenvalues of A must have negative real parts
-NB.   B - Nx-by-Nu control input matrix of LTI system
-NB.   V - (#vm)-by-3 matrix, prepared eigenvalues of G, output of prepV
-NB.   M - Ng-by-Ng matrix for equation M*A(t)=L(t), output of makeLtM
-NB.   P - Ng-by-Ng-by-Ng matrix, powers 0..(Ng-1) of G, output of makeP
-NB.   G - Ng-by-Ng matrix, augmented LTI system, output of makeG
+NB.   A - Nx-by-Nx table, state matrix of LTI system, should
+NB.       be stable, i.e. all eigenvalues of A must have
+NB.       negative real parts
+NB.   B - Nx-by-Nu table, control input matrix of LTI system
+NB.   V - (#vm)-by-3 table, prepared eigenvalues of G, output
+NB.       of prepV
+NB.   M - Ng-by-Ng table, matrix for equation M*A(t)=L(t),
+NB.       output of makeLtM
+NB.   P - Ng-by-Ng-by-Ng table, powers 0..(Ng-1) of G,
+NB.       output of powsm
+NB.   G - Ng-by-Ng table, augmented LTI system, output of
+NB.       makeG
 NB.   Ng = Nx + Nu
 NB.   Nx >= 0
 NB.   Nu >= 0
 
-prexpm=: getCols @ (0 {:: ]) ; (makeP ; (0 & makeLtM ; ]) @ prepV) @ makeG
+prexpm=: getCols @ (0 {:: ]) ; (powsm ; (0 & makeLtM ; ]) @ prepV) @ makeG
 
 NB. ---------------------------------------------------------
 NB. expm
@@ -209,8 +223,8 @@ NB.   'Phi Gamma'=. NxPMV expm ts
 NB. where:
 NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
 NB.   ts    > 0, sample time
-NB.   Phi   - Nx-by-Nx matrix, matrix exponent
-NB.   Gamma - Nx-by-Nu matrix, Cauchy intergal
+NB.   Phi   - Nx-by-Nx table, matrix exponent
+NB.   Gamma - Nx-by-Nu table, Cauchy intergal
 NB.   Nu    = (#P)-Nx
 NB.
 NB. Applications:

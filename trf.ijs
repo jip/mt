@@ -130,18 +130,27 @@ NB. 'ip L1 T permA H'=. l0 hetf2pl A
 NB. 'ip L1 T permA H h'=. step (ip;L1;T;A;H;h)
 
 NB. ---------------------------------------------------------
-NB. lahefplstep
+NB. lahefpl
 NB.
 NB. Description:
-NB.   Single step of partial factorization of a Hermitian
-NB.   (symmetric) matrix using the combination of Parlett and
-NB.   Reid, and Aasen methods [1].
+NB.   Partial factorization of a Hermitian (symmetric) matrix
+NB.   using the combination of Parlett and Reid, and Aasen
+NB.   methods [1].
 NB.
 NB. Syntax:
-NB.   'ipi1 L1i1 Ti1 Ai1 Hi1 hi1 li1'=. lahefplstep (ipi;L1i;Ti;Ai;Hi;hi;li)
+NB.   'ipo L1o l0o l1o t0o t1o Ao Ho h0o h1o'=. lahefpl (ipi;L1i;l0i;l1i;t0i;t1i;Ai;Hi;h0i;h1i)
 NB. where
-NB.   Ai   - n×n-matrix A after i-th step and before
-NB.          (i+1)-th, Hermitian (symmetric)
+NB.   ipi  - (n-k)-vector (i. (n-k)), pre-allocated space for
+NB.          inversed permutation after i-th step of
+NB.          partitioned algorithm and before (i+1)-th one
+NB.   L1i  - (n-k)×1-matrix L1 after i-th step of partitioned
+NB.          algorithm  and before (i+1)-th one, unit lower
+NB.          triangular
+NB.   l0i  - ##########(n-k)-vector (i. (n-k)), pre-allocated space for
+NB.          inversed permutation after i-th step of
+NB.          partitioned algorithm and before (i+1)-th one
+NB.   Ai   - (n-k)×(n-k)-matrix A after i-th step and before
+NB.          (i+1)-th one, Hermitian (symmetric)
 NB.   li   - (n-j)-vector, last column under diagonal in
 NB.          L1(i)
 NB.
@@ -151,6 +160,21 @@ NB.
 NB.  A  =  ( L11  0 ) (  D   0  ) ( L11' L21' )  if UPLO = 'L'
 NB.        ( L21  I ) (  0  A22 ) (  0    I   )
 NB.
+NB. Storage layout:
+NB.   
+NB.
+NB.
+NB.
+NB.
+NB.
+NB. Algorithm:
+NB.
+NB.
+NB.
+NB.
+NB.   'ipi1 L1i1 Ti1 Ai1 Hi1 hi1 li1'=. lahefplstep (ipi;L1i;Ti;Ai;Hi;hi;li)
+NB.
+NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
 NB.     Partitioned triangular tridiagonalization.
@@ -158,13 +182,18 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB. 
 
-lahefpl=: (3 : 0) ^: ((<: TRFNB)<.(#@(_1 & {::)))
-  'ip L1 T A H h l0'=. y
+NB. lahefpl_mt_ ((i.5);(0 {."1 HE5);(5 ($!.0) 1);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
+NB. lahefpl_mt_ ((i.10);(0 {."1 HEci10);(10 ($!.0) 1);(9 # 0);(0 ({,) HEci10);(i.0);HEci10;(1 {."1 HEci10);(9 # 0);((< (<0);0) { HEci10))
+
+lahefpl=: (3 : 0) ^: (TRFNB<.(#@(3 & {::)))
+  'ip L1 l0 l1 t0 t1 A H h0 h1'=. y
+  L1=. L1 stitchrb l0
+  l0=. }. l0
   'n j'=. $ L1
-  l1=. h - l0 * (_1 ({,) T)
+  l1=. h1 - l0 * ({: t0)
   q=. liofmax l1
   dip0=. 0 lios2cp q
-  dip=. j (+ &. >) dip0              NB. dip=. j ([ lios2cp +) q
+  dip=. j (+ &. >) dip0
   l0=. dip0 C. l0
   l1=. dip0 C. l1
   ip=. dip C. ip
@@ -173,13 +202,13 @@ lahefpl=: (3 : 0) ^: ((<: TRFNB)<.(#@(_1 & {::)))
   A=. dip sp A
   t01=. + t10=. {. l1
   l1=. l1 % t10
-  h=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j { L1)
-  L1=. L1 stitchrb l1
-  H=. H stitchrb (t01 , h)
-  h=. h - l0 * t01
-  t11=. {. h
-  T=. (t11,t10,t01) (_1 _2,(_1 - #@])) } 1 xsh T
-  ip ; L1 ; T ; A ; H ; (}. h) ; (}. l1)
+  h0=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j { L1)
+  H=. H stitchrb (t01 , h0)
+  h1=. h0 - l0 * t01
+  t11=. {. h1
+  t0=. t0 , t11
+  t1=. t1 , t01
+  ip ; L1 ; l1 ; l0 ; t0 ; t1 ; A ; H ; (}. h0) ; (}. h1)
 )
 
 NB. 'ip L1 T'=. hetrfpl A
@@ -191,22 +220,22 @@ NB. ((((] dhs2lios (_1,-))/@$) ({,) ]) L1i) hetf2pl_mt_ (((_1 ({,) Ti) , hi) (< 
 hetrfpl=: 3 : 0
   n=. # y
   ip=. i. n
-  L1=. (n,0) $ 1
-  T=. 1 1 {. y
-  H=. 1 {."1 y
-  h=. (< (<0);0) { y
-  l=. (<: n) # 0
-  for_j. n (] dhs2lios (0,(>.@%))) TRFNB do.
-    'ipi L1i Ti y H h l'=. lahefpl (ip;L1;(_1 _1 {. T);y;H;l)
-    dip=. (i. j) , (j+ipi)
-    ip=. dip C. ip
-    L1=. dip C. L1
-    L1=. L1 stitchrb L1i
-    T=. T jomat Ti
-    y=. (2 # TRFNB) }. y
-    y=. y - ((H mp ct L1i) + (L1i mp ############
-    l=. (((] dhs2lios (_1,-))/@$) ({,) ]) L1i  NB. last column under diagonal
+  L1=. 0 {."1 y
+  t0=. 0 ({,) y
+  t1=. i. 0
+  h1i=. (< (<0);0) { y
+  l0i=. n ($!.0) 1
+  l1i=. h0i=. }. l0i                             NB. (<: n) # 0
+  for_k. n (] dhs2lios (0,(>.@%))) TRFNB do.
+    'ipi L1i l0i l1i t0i t1i y Hi h0i h1i'=. (lahefpl dbg 'lahefpl') ((i.#y);(0 {."1 y);l0i;l1i;({:t0);(i.0);y;(,.({:t0),h1i);h0i;h1i)
+    dip=. (i.k),(k+ipi)
+    ip=. dip (C. dbg 'C.ip') ip
+    L1=. (dip (C. dbg 'C.L1') L1) (stitchrb dbg 'L1 stitchb L1i') L1i
+    t0=. t0 (, dbg 't0') (}. t0i)
+    t1=. t1 (, dbg 't1') t1i
+    y=. ((2 # TRFNB) }. y) (- dbg 'Aupd') ((Hi ((((mp ct) dbg 'mpct')&(TRFNB&}.)) dbg 'Hi*L1i') L1i) (+ dbg '+') ((l0i (* dbg '*') {: t1i) (*/ dbg '*/') l1i))
   end.
+  T=. ((+t1);_1) setdiag (t1;1) setdiag (t0;0) (2 # n) $ 0
   ip ; L1 ; T
 )
 

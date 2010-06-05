@@ -22,142 +22,6 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. ---------------------------------------------------------
-NB. Nouns, IOS a priori known submatrices
-
-IOSFC=: < a: ; 0   NB. IOS 1st column
-IOSLC=: < a: ; _1  NB. IOS last column
-IOSFR=: 0          NB. IOS 1st row, or (< 0 ; < a:)
-IOSLR=: _1         NB. IOS last row, or (< _1 ; < a:)
-
-NB. ---------------------------------------------------------
-NB. larft
-NB.
-NB. Description:
-NB.   Template adv. to make monads to form the triangular
-NB.   factor T of a block reflector H, which is defined as a
-NB.   product of k elementary reflectors.
-NB.
-NB. Syntax:
-NB.   vapp=. vV`vP`vTi`va0`vs1 larft iost
-NB. where
-NB.   vV   - verb to prepare V0r; input must be a triangular
-NB.          (trapezoidal) matrix with zeroed tau elements;
-NB.          vectors within output must get horizontal
-NB.          orientation; is called as:
-NB.            V0r=. vV V0
-NB.   vP   - verb to calculate coefficients matrix P; is
-NB.          called as:
-NB.            P=. tau vP V0r
-NB.   vTi  - verb to stitch new column while building matrix
-NB.          T on current iteration; is called as:
-NB.            Tiupd=. P vTi Ti
-NB.   va0  - verb to append or prepend Tiupd with row of
-NB.          values from scalar x; is called as:
-NB.            Tiupd0=. (0 & va0) Tiupd
-NB.   vs1  - verb to place scalar x in the diagonal element
-NB.          of column just added by va0; is called as:
-NB.            Tiupd1=. (1 & vs1) Tiupd0
-NB.   iost - IOS tau in Vtau
-NB.   vapp - dyad to form the triangular factor T; is called
-NB.          as:
-NB.            T=. vapp Vtau
-NB.   Vtau - matrix V with appended or stitched vector tau
-NB.   V0   - unit triangular (trapezoidal) matrix with zeroed
-NB.          tau elements
-NB.   V0r  - k×(n+1)-matrix, unit triangular (trapezoidal)
-NB.          with rows - elementary reflectors v[i], i=0:k-1,
-NB.          and zeroed tau elements
-NB.   P    - coefficients, it is either the k×k-matrix
-NB.          (-tau)*Pfwd for forward direction, or
-NB.          k×(k-1)-matrix (0 1 }. ((-tau)*Pbwd)) for
-NB.          backward direction (item-by-row product in both
-NB.          cases)
-NB.   Pfwd - k×k-matrix ('*' means trash):
-NB.            [ *        0        0        ... 0          0   ]
-NB.            [ p[1,0]   *        0        ... 0          0   ]
-NB.            [ p[2,0]   p[2,1]   *        ... 0          0   ]
-NB.            [ ...      ...      ...      ... ...        ... ]
-NB.            [ p[k-1,0] p[k-1,1] p[k-1,2] ... p[k-1,k-2] *   ]
-NB.          where for i=0:k-1
-NB.            p[i] = (p[i,0:i-1] , *) = V0r[0:i,0:n-1] * V0r'[i,0:n-1]
-NB.   Pbwd - k×k-matrix ('*' means trash):
-NB.            [ *   0        0        0        ... 0          ]
-NB.            [ *   p[1,0]   0        0        ... 0          ]
-NB.            [ *   p[2,0]   p[2,1]   0        ... 0          ]
-NB.            [ ... ...      ...      ...      ... ...        ]
-NB.            [ *   p[k-1,0] p[k-1,1] p[k-1,2] ... p[k-1,k-2] ]
-NB.          where for i=0:k-1, j=k-1-i
-NB.            p[i] = (* , p[i,0:i-1]) = V0r[j:k-1,0:n-1] * V0r'[j,0:n-1]
-NB.   tau  - k-vector of τ[0:k-1], corresp. to V,
-NB.            tau -: iost { Vtau
-NB.   T    - k×k-matrix, upper or lower triangular
-NB.
-NB. Algorithm:
-NB.   1) prepare V0: V0=. iot 0} Vtau
-NB.   2) prepare V0r: V0r=. vV V0
-NB.   3) extract tau: tau=. iot { Vtau
-NB.   4) prepare coefficients matrix P: P=. tau vP V0r
-NB.   5) let T[i]=0×0-matrix, start loop i=0:k-1:
-NB.      5.1) extract vector p[i]: pi=P[i,0:i-1]
-NB.      5.2) calc new column: c[i]: ci=. pi mp Ti
-NB.      5.3) stitch c[i] to T[i]: Ti=. Ti vTi ci
-NB.      5.4) append zero row to T[i]: Ti=. (0 & va0) Ti
-NB.      5.5) write 1 in the diagonal element of appended
-NB.           zero row: Ti=. (1 & vs1) Ti
-NB.   6) multiply T[i] by tau (item-by-row): T=. tau * Ti
-NB.
-NB. Notes:
-NB. - emulates LAPACK's xLARFT, but without zeros scanning in
-NB.   v[i]
-
-larft=: 2 : '(n&{) ([ * (EMPTY (((1 & (m gi 4)) @ (0 & (m gi 3)) @ (] (m gi 2) (] mp (([ {. { )~ #)))) ^: (#@[))~ (m gi 1))) ((m gi 0) @ (0 & (n })))'
-
-rlarftfc=: 3 : 0
-  n=. c y
-  select. * <: n
-  case. 0 do.  NB. 1=n
-    _1 {. y
-  case. 1 do.  NB. 1<n
-    k=. <. -: n
-    Vl=. k {."1 y
-    Vr=. k }."1 y
-    T00=. rlarftfc Vl
-    T11=. rlarftfc Vr
-    (T00 ,. (- T00 mp ((ct Vl) mp (0 (_1}) Vr)) mp T11)) (_1 append) T11
-  case. _1 do.  NB. 0=n
-    EMPTY
-  end.
-)
-
-r2larftfc=: 3 : 0
-  n=. c y
-  if. 1=n do.
-    _1 {. y
-  elseif. 1<n do.
-    k=. <. -: n
-    Vl=. k {."1 y
-    Vr=. k }."1 y
-    T00=. r2larftfc Vl
-    T11=. r2larftfc Vr
-    (T00 ,. (- T00 mp ((ct Vl) mp (0 (_1}) Vr)) mp T11)) (_1 append) T11
-  elseif. do.  NB. 0=n
-    EMPTY
-  end.
-)
-
-rtlarftfc=: 3 : 0
-  n=. c y
-  select. * <: n
-  case. 0 do.  NB. 1=n
-    _1 {. y
-  case. 1 do.  NB. 1<n
-     (((1 0 & {::) ,. ((1 0 & {::) mp ((ct @ (0 0 & {::)) (-@mp) (0 (_1}) ((0 1 & {::)))) mp (1 1 & {::))) (_1 append) (1 1 & {::)) (]`(rtlarftfc&.>))`:0 (<. -: n) (({."1) ; (}."1)) y
-  case. _1 do.  NB. 0=n
-    EMPTY
-  end.
-)
-
 NB. =========================================================
 NB. Interface
 
@@ -334,10 +198,73 @@ NB.          Vfr
 NB.   Tl   - k×k-matrix, lower triangular
 NB.   Tu   - k×k-matrix, upper triangular
 
-larftbc=: ct`(|.@(0 1&}.)@((* -)~ ((mp ct) {.)\.))`(,.~)` ,  `( 0:}) larft IOSFR
-larftbr=: ] `(|.@(0 1&}.)@((* -)~ ((mp ct) {.)\.))`(,.~)` ,  `( 0:}) larft IOSFC
-larftfc=: ct`(             (* -)~ ((mp ct) {:)\  )` ,.  `(,~)`(_1:}) larft IOSLR
-larftfr=: ] `(             (* -)~ ((mp ct) {:)\  )` ,.  `(,~)`(_1:}) larft IOSLC
+NB. bad
+rlarftbc=: 3 : 0
+  n=. c y
+  if. 1=n do.
+    1 {. y
+  elseif. 1<n do.
+    k=. <. -: n
+    Vl=. k {."1 y
+    Vr=. k }."1 y
+    T00=. rlarftbc Vl
+    T11=. rlarftbc Vr
+    T00 , ((- T00 mp ((ct Vl) mp (0 (0}) Vr)) mp T11) ,. T11)
+  elseif. do.  NB. 0=n
+    EMPTY
+  end.
+)
+
+NB. not checked yet
+rlarftbr=: 3 : 0
+  m=. # y
+  if. 1=m do.
+    1 1 {. y
+  elseif. 1<m do.
+    k=. <. -: n
+    Vl=. k {. y
+    Vr=. k }. y
+    T00=. rlarftbr Vt
+    T11=. rlarftbr Vb
+    T00 , ((- T00 mp ((ct Vt) mp (0 (0}) Vb)) mp T11) ,. T11)
+  elseif. do.  NB. 0=m
+    EMPTY
+  end.
+)
+
+NB. ok
+rlarftfc=: 3 : 0
+  n=. c y
+  if. 1=n do.
+    _1 {. y
+  elseif. 1<n do.
+    k=. <. -: n
+    Vl=. k {."1 y
+    Vr=. k }."1 y
+    T00=. rlarftfc Vl
+    T11=. rlarftfc Vr
+    (T00 ,. (- T00 mp ((ct Vl) mp (0 (_1}) Vr)) mp T11)) (_1 append) T11
+  elseif. do.  NB. 0=n
+    EMPTY
+  end.
+)
+
+NB. bad
+rlarftfr=: 3 : 0
+  m=. # y
+  if. 1=m do.
+    1 _1 {. y
+  elseif. 1<m do.
+    k=. <. -: m
+    Vt=. k {. y
+    Vb=. k }. y
+    T00=. rlarftfr Vt
+    T11=. rlarftfr Vb
+    (T00 ,. (- T00 mp ((ct Vt) mp (0 (_1}) Vb)) mp T11)) (_1 append) T11
+  elseif. do.  NB. 0=m
+    EMPTY
+  end.
+)
 
 NB. ---------------------------------------------------------
 NB. Verb       Action   Side   Tran  Dir  Layout    eC    Used in
@@ -441,6 +368,7 @@ NB. - larfxxxx and larfbxxxx are topological equivalents
 larfblcbc=: ] - [ mp (mp~ (ct @ ((0 & (IOSFR })) mp larftbc)))~   NB. C - V * ((V * T)' * C)
 larfblcbr=: ] - (ct @ (mp~ larftbr) @ [) mp ((0 IOSFC } [) mp ])  NB. C - (T * V)' * (V * C)
 larfblcfc=: ] - [ mp (mp~ (ct @ ((0 & (IOSLR })) mp larftfc)))~   NB. C - V * ((V * T)' * C)
+rlarfblcfc=: ] - [ mp (mp~ (ct @ ((0 & (IOSLR })) mp rlarftfc)))~   NB. C - V * ((V * T)' * C)
 larfblcfr=: ] - (ct @ (mp~ larftfr) @ [) mp ((0 IOSLC } [) mp ])  NB. C - (T * V)' * (V * C)
 
 larfblnbc=: ] - [ mp (mp~ (larftbc mp (ct @ (0 & (IOSFR })))))~   NB. C - V * ((T * V') * C)

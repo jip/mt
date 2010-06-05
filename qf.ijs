@@ -235,6 +235,20 @@ gerq2=: 0 {:: (gerq2step ^: ((0 _1&(ms $))`(];((;&i.)/@$))))
 gerqfstep=: ((gerqfios@}.) (((],~(larfbrnbr~(trl1~(-~/@$)))) gerq2  ) map2i 0 1 2) (0&({::))) ; ((-QFNB)&}.&.>@}.)
 gerqf=: (gerq2`(((<@}.) (gerq2 upd1) (0&({::)))@(gerqfstep ^: ((qfi@(0 _1&(ms $)))`(];((;&i.)/@$)))))@.(*./@(QFNX<(0 _1+$))))@(,.~ & 0)
 
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+rgeqrf=: 3 : 0
+  n=. c y
+  if. 0=n do. 1 0 # 0
+  elseif. 1=n do. larfpf y
+  elseif. do.
+    k=. <. -: n
+    QfRl=. rgeqrf k {."1 y
+    QfRr=. (trl1 QfRl) rlarfblcfc k }."1 y
+    QfRl ,. (k ({. , (rgeqrf@}.)) QfRr)
+  end.
+)
+
 NB. ---------------------------------------------------------
 NB. geqlf
 NB.

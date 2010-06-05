@@ -1,28 +1,44 @@
 NB. trf.ijs
 NB. Triangular factorization of matrix
 NB.
-NB. getrfl1u   LU factorization of a general matrix, where
-NB.            L is unit lower triangular and U is upper
-NB.            triangular
-NB. getrflu1   LU factorization of a general matrix, where
-NB.            L is lower triangular and U is unit upper
-NB.            triangular
-NB. getrfu1l   UL factorization of a general matrix, where
-NB.            U is unit upper triangular and L is lower
-NB.            triangular
-NB. getrful1   UL factorization of a general matrix, where
-NB.            U is upper triangular and L is unit lower
-NB.            triangular
+NB. getrfpl1u  Factorization with partial pivoting of a
+NB.            general matrix: inv(P) * L1 * U = A, where P
+NB.            is permutation matrix, L1 is unit lower
+NB.            triangular and U is upper triangular
+NB. getrflu1p  Factorization with partial pivoting of a
+NB.            general matrix: L * U1 * inv(P) = A, where P
+NB.            is permutation matrix, L is lower triangular
+NB.            and U1 is unit upper triangular
+NB. getrfpu1l  Factorization with partial pivoting of a
+NB.            general matrix: inv(P) * U1 * L = A, where P
+NB.            is permutation matrix, U1 is unit upper
+NB.            triangular and L is lower triangular
+NB. getrful1p  Factorization with partial pivoting of a
+NB.            general matrix: U * L1 * inv(P) = A, where P
+NB.            is permutation matrix, U is upper triangular
+NB.            and L1 is unit lower triangular
+NB.
+NB. getrfl1u   Factorization without pivoting of a general
+NB.            matrix: L1 * U = A, where L1 is unit lower
+NB.            triangular and U is upper triangular
+NB. getrflu1   Factorization without pivoting of a general
+NB.            matrix: L * U1 = A, where L is lower
+NB.            triangular and U1 is unit upper triangular
+NB. getrfu1l   Factorization without pivoting of a general
+NB.            matrix: U1 * L = A, where U1 is unit upper
+NB.            triangular and L is lower triangular
+NB. getrful1   Factorization without pivoting of a general
+NB.            matrix: U * L1 = A, where U is upper
+NB.            triangular and L1 is unit lower triangular
+NB.
+
 NB. hetrfu     UDU' factorization of a Hermitian (symmetric)
 NB.            matrix, where U is unit upper triangular and
 NB.            D is diagonal
 NB. hetrfl     LDL' factorization of a Hermitian (symmetric)
 NB.            matrix, where L is unit lower triangular and
 NB.            D is diagonal
-NB. ditrfu     ? factorization of a diagonalizable
-NB.            matrix, where ?
-NB. ditrfl     ? factorization of a diagonalizable
-NB.            matrix, where ?
+NB.
 NB. potrfl     LL' (Cholesky) factorization of a Hermitian
 NB.            (symmetric) positive definite matrix for lower
 NB.            triangular factor
@@ -30,16 +46,149 @@ NB. potrfu     UU' (Cholesky) factorization of a Hermitian
 NB.            (symmetric) positive definite matrix for upper
 NB.            triangular factor
 NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
-NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
-NB. License: GNU GPL
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
 
-iomaxm=: (i.>./) @: |  NB. IO element with max magnitude from list y
+iofmaxm=: (i.>./) @: |  NB. IO 1st element with max magnitude from list y
+iolmaxm=: (i:>./) @: |  NB. IO last element with max magnitude from list y
+
+NB. ---------------------------------------------------------
+NB. getrfpp
+NB. Template adverb to make verbs to triangular factorization
+NB. with partial pivoting of a general matrix
+NB.
+NB. Syntax:
+NB.   u0=. u0`u1`u2`u3`u4`u5`u6`u7`u8`u9`u10 getrfpp
+NB. where
+NB.   u0  - factorization verb to do recursive call
+NB.         warning: avoid to change u0's name class!
+NB.   u1  - select number of rows (columns) from shape
+NB.   u2  - find cycle permutation to swap pivot and head
+NB.         (tail)
+NB.   u3  - IO head (tail) in vector to pivot
+NB.   u4  - permute columns (rows)
+NB.   u5  - to form misc. rectangular IOS and deltas
+NB.   u6  - solve unit triangular system for 2nd block's 1st
+NB.         sub-block
+NB.   u7  - multiply 1st block's 2nd sub-block by 2nd block's
+NB.         1st sub-block
+NB.   u8  - unite 2nd block's permutation parts
+NB.   u9  - unite 1st and 2nd blocks
+NB.   u10 - unite 2nd block's 1st and 2nd sub-blocks
+
+getrfpp=: 1 : 0
+  '`u0 u1 u2 u3 u4 u5 u6 u7 u8 u9 u10'=. u
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    (i. (m u1 n)) ; y
+  elseif. 1 = (m u1~ n) do.
+    dpi=. sh u2 y
+    pi=. dpi C. i. (m u1 n)
+    y=. ((] u3 } %) (u3 ({,) ])) dpi u4 y                NB. permute single column (row), scale by head, keep head unscaled
+    pi ; y
+  elseif. do.
+    k=. m (u1 (<. >.@-:) u1~) n
+    'i0 i1 i2 i3 d0 d1'=. u5 (0 _ 1 _1 * k) , sh
+    'pia Afa'=. u0 i0 {. y                               NB. factorize 1st block recursively
+    y=. pia u4 i1 }. y                                   NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
+    Afba=. Afa (u6 & (i2 & {.)) y                        NB. calculate 2nd block's 1st sub-block
+    'pib Afbb'=. u0 y ((- (u7 & Afba)) & (i3 & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
+    dpib=. ((-/ d0) + i. k) u8 ((+/ d1) + pib)           NB. apply 2nd block's permutation to 1st block
+    (dpib u4 pia) ; ((dpib u4 Afa) u9 (Afba u10 Afbb))   NB. assemble solution
+  end.
+)
+
+NB. ---------------------------------------------------------
+NB. getrf
+NB. Template adverb to make verbs to triangular factorization
+NB. without pivoting of a general matrix
+NB.
+NB. Syntax:
+NB.   u0=. u0`u1`u2`u3`u4`u5`u6`u7`u8`u9`u10 getrf
+NB. where
+NB.   u0 - factorization verb to do recursive call
+NB.        warning: avoid to change u0's name class!
+NB.   u1 - select number of rows (columns) from shape
+NB.   u2 - IO head (tail) in vector to pivot
+NB.   u3 - permute columns (rows)
+NB.   u4 - to form misc. rectangular IOS and deltas
+NB.   u5 - solve unit triangular system for 2nd block's 1st
+NB.        sub-block
+NB.   u6 - multiply 1st block's 2nd sub-block by 2nd block's
+NB.        1st sub-block
+NB.   u7 - unite 1st and 2nd blocks
+NB.   u8 - unite 2nd block's 1st and 2nd sub-blocks
+
+getrf=: 1 : 0
+  '`u0 u1 u2 u3 u4 u5 u6 u7 u8'=. u
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    y
+  elseif. 1 = (m u1~ n) do.
+    ((] u2 } %) (u2 ({,) ])) y                     NB. scale by head, keep head unscaled
+  elseif. do.
+    k=. m (u1 (<. >.@-:) u1~) n
+    'i0 i1 i2 i3 d0 d1'=. u4 (0 _ 1 _1 * k) , sh
+    Afa=. u0 i0 {. y                               NB. factorize 1st block recursively
+    y=. pia u3 i1 }. y                             NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
+    Afba=. Afa (u5 & (i2 & {.)) y                  NB. calculate 2nd block's 1st sub-block
+    Afbb=. u0 y ((- (u6 & Afba)) & (i3 & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
+    Afa u7 (Afba u8 Afbb)                          NB. assemble solution
+  end.
+)
+
+NB. ---------------------------------------------------------
+NB. hetrfpp
+NB. Template adverb to make verbs to triangular factorization
+NB. with partial pivoting of a Hermitian (symmetric) matrix
+NB.
+NB. Syntax: <<<<<<<<<<<<<<<<<<<<<<<<<
+NB.   u0=. u0`u1`u2`u3`u4`u5`u6`u7`u8`u9`u10 hetrfpp
+NB. where
+NB.   u0  - factorization verb to do recursive call
+NB.         warning: avoid to change u0's name class!
+NB.   u1  - select number of rows (columns) from shape
+NB.   u2  - find cycle permutation to swap pivot and head
+NB.         (tail)
+NB.   u3  - IO head (tail) in vector to pivot
+NB.   u4  - permute columns (rows)
+NB.   u5  - to form misc. rectangular IOS and deltas
+NB.   u6  - solve unit triangular system for 2nd block's 1st
+NB.         sub-block
+NB.   u7  - multiply 1st block's 2nd sub-block by 2nd block's
+NB.         1st sub-block
+NB.   u8  - unite 2nd block's permutation parts
+NB.   u9  - unite 1st and 2nd blocks
+NB.   u10 - unite 2nd block's 1st and 2nd sub-blocks
+
+NB. FIXME
+hetrfpp=: 1 : 0
+  '`u0 u1 u2 u3 u4 u5 u6 u7 u8 u9 u10'=. u
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    (i. (m u1 n)) ; y
+  elseif. 1 = (m u1~ n) do.
+    dpi=. sh u2 y
+    pi=. dpi C. i. (m u1 n)
+    y=. ((] u3 } %) (u3 ({,) ])) dpi u4 y                NB. permute single column (row), scale by head, keep head unscaled
+    pi ; y
+  elseif. do.
+    k=. m (u1 (<. >.@-:) u1~) n
+    'i0 i1 i2 i3 d0 d1'=. u5 (0 _ 1 _1 * k) , sh
+    'pia Afa'=. u0 i0 {. y                               NB. factorize 1st block recursively
+    y=. pia u4 i1 }. y                                   NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
+    Afba=. Afa (u6 & (i2 & {.)) y                        NB. calculate 2nd block's 1st sub-block
+    'pib Afbb'=. u0 y ((- (u7 & Afba)) & (i3 & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
+    dpib=. ((-/ d0) + i. k) u8 ((+/ d1) + pib)           NB. apply 2nd block's permutation to 1st block
+    (dpib u4 pia) ; ((dpib u4 Afa) u9 (Afba u10 Afbb))   NB. assemble solution
+  end.
+)
 
 NB. ---------------------------------------------------------
 NB. potrf
@@ -81,34 +230,34 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. getrfl1u
-NB. LU factorization of a general matrix with rows pivoting,
-NB. where L is unit lower triangular and U is upper
-NB. triangular:
-NB.   P * L * U = A
+NB. Verb:          Solves:                  Syntax:
+NB. getrfpl1u      inv(P) * L1 * U = A      'pi Af'=. getrfpl1u A
+NB. getrflu1p      L * U1 * inv(P) = A      'pi Af'=. getrflu1p A
+NB. getrfpu1l      inv(P) * U1 * L = A      'pi Af'=. getrfpu1l A
+NB. getrful1p      U * L1 * inv(P) = A      'pi Af'=. getrful1p A
 NB.
-NB. Syntax:
-NB.   'p L1U'=. getrfl1u A
-NB. where
-NB.   A   - m×n-matrix
-NB.   p  - m-vector, inversed rows permutation of A
-NB.   L1U - m×n-matrix, strict lower triangle keeps L (unit
-NB.         diagonal elements are not saved), upper triangle
-NB.         keeps U
-NB.   L   - m×min(m,n)-matrix, unit lower triangular Cholesky
-NB.         factor
-NB.   U   - min(m,n)×n-matrix, upper triangular Cholesky
-NB.         factor
-NB.   m   ≥ 0
-NB.   n   ≥ 0
+NB. Description:
+NB.   triangular factorization with partial pivoting of a
+NB.   general matrix
+NB. where:
+NB.   A  - m×n-matrix, containing either U, U1, L or L1
+NB.   Af - m×n-matrix, contains either U and L1, or U1 and L
+NB.   pi - m-vector or n-vector, inversed rows (columns)
+NB.        permutation of A
+NB.   U  - ?×?-matrix, upper triangular factor
+NB.   U1 - ?×?-matrix, unit upper triangular matrix (diagonal is not saved)
+NB.   L  - ?×?-matrix, lower triangular matrix
+NB.   L1 - ?×?-matrix, unit lower triangular matrix (diagonal is not saved)
+NB.   m  ≥ 0
+NB.   n  ≥ 0
 NB.
 NB. If:
-NB.   'pi L1U'=. getrfl1u A
+NB.   'pi Af'=. getrfpl1u A
 NB.   p=. /: pi
 NB.   Pi=. ((i.#pi)=/pi)
 NB.   P=. ((i.#p)=/p)
-NB.   L1=. trl1 L1U
-NB.   U=. tru L1U
+NB.   L1=. trl1 Af
+NB.   U=. tru Af
 NB. then
 NB.   Pi -: %. P
 NB.   Pi -: |: P
@@ -121,29 +270,54 @@ NB.   - FLOPs:
 NB.   - recursive calls: 3*k*(2^k)-2^(k+1)+3,
 NB.     where k = ⌈log_2(n)⌉
 
-getrfl1u=: 3 : 0
-  'm n'=. sh=. $ y
-  if. 0 e. sh do. (i. m) ; y return. end.
-  if. n > 1 do.
-    k=. m <. >. -: n
-    'p LBC'=. getrfl1u (m , k) {. y                           NB. factorize left block column recursively
-    y=. p C. (0 , k) }. y                                     NB. apply p1 to A's 2nd block column
-    U12=. LBC (trtrsl1x & (k & {.)) y                         NB. solve L11*U12=A12 for U12
-    if. k < m do.
-      'p2 LU22'=. getrfl1u y ((- (mp & U12)) & (k & }.)) LBC  NB. factorize updated A22 recursively
-      dp=. (i. k) , (k + p2)
-      p=. dp C. p
-      LBC=. dp C. LBC
-      U12=. U12 , LU22
-    end.
-    p ; (LBC ,. U12)
-  else.
-    dp=. 0 ii2cp iomaxm y          NB. find pivot and form cycle permutation
-    p=. dp C. i. m                 NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
-    y=. ({. 0 } (%"1 {.)) dp C. y  NB. apply rows permutation starting from j-th row, then scale by head
-    p ; y
-  end.
-)
+getrfpl1u=: getrfpl1u`[`((ii2cp~ 0:   )~ iofmaxm)` 0:` C.   `((4 2,0 2,2 1,2 0,0 0,:0 2)&{)`trtrsl1x` mp  ` ,  ` ,.  ` ,    getrfpp
+getrflu1p=: getrflu1p`]`((ii2cp~ 0:   )~ iofmaxm)` 0:`(C."1)`((2 5,2 0,1 2,0 2,0 0,:0 2)&{)`trtrsxu1`(mp~)` ,  ` ,   ` ,.   getrfpp
+getrfpu1l=: getrfpu1l`[`((ii2cp~ <:@[/)~ iolmaxm)`_1:` C.   `((4 3,0 3,3 1,3 0,4 2,:0 0)&{)`trtrsu1x` mp  `(,~)`(,.~)`(,~ ) getrfpp
+getrful1p=: getrful1p`]`((ii2cp~ <:@]/)~ iolmaxm)`_1:`(C."1)`((3 5,3 0,1 3,0 3,5 2,:0 0)&{)`trtrsxl1`(mp~)`(,~)`(,~ )`(,.~) getrfpp
+
+NB. ---------------------------------------------------------
+NB. Verb:          Solves:                  Syntax:
+NB. getrfl1u       L1 * U = A               Af=. getrfl1u A
+NB. getrflu1       L * U1 = A               Af=. getrflu1 A
+NB. getrfu1l       U1 * L = A               Af=. getrfu1l A
+NB. getrful1       U * L1 = A               Af=. getrful1 A
+NB.
+NB. Description:
+NB.   triangular factorization without pivoting of a
+NB.   general matrix
+NB. where:
+NB.   A  - m×n-matrix, containing either U, U1, L or L1
+NB.   Af - m×n-matrix, contains either U and L1, or U1 and L
+NB.   U  - ?×?-matrix, upper triangular factor
+NB.   U1 - ?×?-matrix, unit upper triangular matrix (diagonal is not saved)
+NB.   L  - ?×?-matrix, lower triangular matrix
+NB.   L1 - ?×?-matrix, unit lower triangular matrix (diagonal is not saved)
+NB.   m  ≥ 0
+NB.   n  ≥ 0
+NB.
+NB. If: <<<<<<<<<<<<<<<<<<
+NB.   'pi Af'=. getrfpl1u A
+NB.   p=. /: pi
+NB.   Pi=. ((i.#pi)=/pi)
+NB.   P=. ((i.#p)=/p)
+NB.   L1=. trl1 Af
+NB.   U=. tru Af
+NB. then
+NB.   Pi -: %. P
+NB.   Pi -: |: P
+NB.   A -: p { L1 mp U
+NB.   A -: p C. L1 mp U
+NB.   A -: P mp L1 mp U
+NB.
+NB. Notes:
+NB.   - FLOPs: 
+NB.   - recursive calls: 3*k*(2^k)-2^(k+1)+3,
+NB.     where k = ⌈log_2(n)⌉
+
+getrfl1u=: getrfpl1u`[` 0:` C.   `((4 2,0 2,2 1,2 0,0 0,:0 2)&{)`trtrsl1x` mp  ` ,.  ` ,    getrf
+getrflu1=: getrflu1p`]` 0:`(C."1)`((2 5,2 0,1 2,0 2,0 0,:0 2)&{)`trtrsxu1`(mp~)` ,   ` ,.   getrf
+getrfu1l=: getrfpu1l`[`_1:` C.   `((4 3,0 3,3 1,3 0,4 2,:0 0)&{)`trtrsu1x` mp  `(,.~)`(,~ ) getrf
+getrful1=: getrful1p`]`_1:`(C."1)`((3 5,3 0,1 3,0 3,5 2,:0 0)&{)`trtrsxl1`(mp~)`(,~ )`(,.~) getrf
 
 NB. ---------------------------------------------------------
 NB. hetrfl
@@ -188,38 +362,41 @@ NB.   - FLOPs:
 NB.   - recursive calls: 3*k*(2^k)-2^(k+1)+3,
 NB.     where k = ⌈log_2(n)⌉
 
-potrfu=: potrfu`}.`trtrsux`{.` ,.  `(_1 append ) potrf  NB. 
-potrfl=: potrfl`{.`trtrslx`}.`(,.~)`( 0 append~) potrf  NB. 
+potrfu=: potrfu`}.`trtrsux`{.` ,.  `(_1 append ) potrf
+potrfl=: potrfl`{.`trtrslx`}.`(,.~)`( 0 append~) potrf
 
 NB. =========================================================
 NB. Test suite
 
-NB. 'name rcond bwerror fwerror time space'=. name vextract ttrf A
+NB. name vextract ttrf A
 NB. TODO: forward error (getrf has two: for L and U?)
+
 ttrf=: 1 : 0
 :
   't s'=. timespacex 'out=. ' , x , ' y'
   be=. (((norm1 (y - u out)) % ({: $ y)) % (norm1 y)) % FP_EPS  NB. backward error
-  dbprn x ; ((_."_)`(norm1 con getri) @. (=/@$) y) ; be ; (i.0) ; t ; s
+  prn x ; ((_."_)`(norm1 con getri) @. (=/@$) y) ; be ; (i.0) ; t ; s
 )
 
-NB. r=. tgetrf A
-NB. where r is boxed table with columns: name rcond bwerror fwerror time space
+NB. tgetrf A
+
 tgetrf=: 3 : 0
   y=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
 
-  r=.  ,: 'getrfl1u'       (((C.~ /:)~ (trl1 mp tru)) & > /)                   ttrf y
-  r=. r , 'getrf_jlapack_' (((mp & >)/ @ (2 & {.)) invperm_jlapack_ (2 & {::)) ttrf y
+  'getrfpl1u'       (((C.~ /:)~ (trl1 mp tru)) & > /)                   ttrf y
+  'getrf_jlapack_' (((mp & >)/ @ (2 & {.)) invperm_jlapack_ (2 & {::)) ttrf y
+  EMPTY
 )
 
-NB. r=. tpotrf A
-NB. where r is boxed table with columns: name rcond bwerror fwerror time space
+NB. tpotrf A
+
 tpotrf=: 3 : 0
   y=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
 
-  r=.  ,: 'potrfu'         ((mp ct) @ tru) ttrf y
-  r=. r , 'potrfl'         ((mp ct) @ trl) ttrf y
-  r=. r , 'potrf_jlapack_' ((mp ct) @ trl) ttrf y
+  'potrfu'         ((mp ct) @ tru) ttrf y
+  'potrfl'         ((mp ct) @ trl) ttrf y
+  'potrf_jlapack_' ((mp ct) @ trl) ttrf y
+  EMPTY
 )
 
 NB. ---------------------------------------------------------
@@ -227,29 +404,25 @@ NB. testtrf
 NB. Adverb to test triangular factorization algorithms
 NB.
 NB. Syntax:
-NB.   r=. mkge testtrf m,n
+NB.   mkge testtrf m,n
 NB. where
 NB.   m,n  - 2-vector of integers, shape of random matrices
-NB.          to test algorithms; if m≠n then algorithms that
-NB.          accept square matrices only are skipped
+NB.          to test algorithms
 NB.   mkge - monadic verb to generate random non-singular
 NB.          general y-matrix (shape is taken from y)
-NB.   r    - boxed table with 6 columns:
-NB.          - algorithm name
-NB.          - the estimated reciprocal of the condition
-NB.            number of a matrix in 1-norm
-NB.          - relative backward error
-NB.          - relative forward error
-NB.          - execution time, sec.
-NB.          - execution space, bytes
 NB.
 NB. Application:
 NB. - with limited random matrix values' amplitudes
 NB.   cocurrent 'mt'
-NB.   r=. (_1 1 0 16 _6 4 & gemat) testtrf 500 500
-NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrf 500 500
+NB.   (_1 1 0 16 _6 4 & gemat) testtrf 500 500
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrf 500 500
+NB.
+NB. Notes:
+NB. - if m≠n then both thetrf and tpotrf are skipped
 
 testtrf=: 1 : 0
-  r=.     (tgetrf @ u)                      y
-  r=. r , (tpotrf @ (u pomat) @ {. ^: (=/)) y
+  (tgetrf @ u)                      y
+  (thetrf @ (u hemat) @ {. ^: (=/)) y
+  (tpotrf @ (u pomat) @ {. ^: (=/)) y
+  EMPTY
 )

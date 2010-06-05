@@ -1,22 +1,28 @@
 NB. struct.ijs
 NB. Matrix structure handlers
 NB.
-NB. append   adverb to enhance append
-NB. stitch   adverb to enhance stitch
+NB. append   Adverb to enhance append
+NB. stitch   Adverb to enhance stitch
 NB.
-NB. idmat    make rectangular identity matrix with shifted diagonal
-NB. diagmat  make rectangular diagonal matrix with shifted diagonal
+NB. idmat    Make rectangular identity matrix with shifted
+NB.          diagonal
+NB. diagmat  Make rectangular diagonal matrix with shifted
+NB.          diagonal
 NB.
-NB. tru     extract upper triangular (trapezoidal) matrix
-NB. trl     extract lower triangular (trapezoidal) matrix
-NB. tru0    extract strictly upper triangular (trapezoidal) matrix
-NB. trl0    extract strictly lower triangular (trapezoidal) matrix
-NB. tru1    extract unit upper triangular (trapezoidal) matrix
-NB. trl1    extract unit lower triangular (trapezoidal) matrix
+NB. tru      Extract upper triangular (trapezoidal) matrix
+NB. trl      Extract lower triangular (trapezoidal) matrix
+NB. tru0     Extract strictly upper triangular (trapezoidal)
+NB.          matrix
+NB. trl0     Extract strictly lower triangular (trapezoidal)
+NB.          matrix
+NB. tru1     Extract unit upper triangular (trapezoidal)
+NB.          matrix
+NB. trl1     Extract unit lower triangular (trapezoidal)
+NB.          matrix
 NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
-NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
-NB. License: GNU GPL
 
 coclass 'mt'
 
@@ -112,10 +118,10 @@ NB.        e - integer, diagonal number for d's tail,
 NB.            relatively to bottom right corner
 NB.        default se=0j0
 NB.   D  - diagonal rectangular m×n-matrix with d on diagonal
-NB.   k  ≥ 0, along with se defines indirectly the shape
-NB.        (m,n) of D
-NB.   m  ≥ 0, rows in D
-NB.   n  ≥ 0, columns in D
+NB.   k  = min(m,n), along with se defines indirectly the
+NB.        shape (m,n) of D
+NB.   m  ≥ 0, rows in matrix D
+NB.   n  ≥ 0, columns in matrix D
 NB.
 NB. Examples:
 NB.    diagmat 3 5 7                  0j0 diagmat 3 5 7
@@ -237,7 +243,7 @@ NB. optional shrinking
 trl1=: (0 & $:) :((0 >. [) (] + (idmat $)) trl0)
 
 NB. ---------------------------------------------------------
-NB. tru1                                               _ _ _
+NB. tru1
 NB. Extract unit upper triangular (trapezoidal) matrix with
 NB. optional shrinking
 

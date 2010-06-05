@@ -1,0 +1,308 @@
+NB. trf.ijs
+NB. Triangular factorization of matrix
+NB.
+NB. getrfpl1u  Factorization with partial pivoting of a
+NB.            general matrix: inv(P) * L1 * U = A, where P
+NB.            is permutation matrix, L1 is unit lower
+NB.            triangular and U is upper triangular
+NB. getrflu1   LU factorization of a general matrix, where
+NB.            L is lower triangular and U is unit upper
+NB.            triangular
+NB. getrfu1l   UL factorization of a general matrix, where
+NB.            U is unit upper triangular and L is lower
+NB.            triangular
+NB. getrful1   UL factorization of a general matrix, where
+NB.            U is upper triangular and L is unit lower
+NB.            triangular
+NB. hetrfu     UDU' factorization of a Hermitian (symmetric)
+NB.            matrix, where U is unit upper triangular and
+NB.            D is diagonal
+NB. hetrfl     LDL' factorization of a Hermitian (symmetric)
+NB.            matrix, where L is unit lower triangular and
+NB.            D is diagonal
+NB. potrfl     LL' (Cholesky) factorization of a Hermitian
+NB.            (symmetric) positive definite matrix for lower
+NB.            triangular factor
+NB. potrfu     UU' (Cholesky) factorization of a Hermitian
+NB.            (symmetric) positive definite matrix for upper
+NB.            triangular factor
+NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
+NB. Version: 1.0.0 2009-06-01
+
+coclass 'mt'
+
+NB. =========================================================
+NB. Local definitions
+
+iofmaxm=: (i.>./) @: |  NB. IO 1st element with max magnitude from list y
+iolmaxm=: (i:>./) @: |  NB. IO last element with max magnitude from list y
+
+NB. ---------------------------------------------------------
+NB. potrf
+NB. Template adverb to make Cholesky factorization verbs of
+NB. a Hermitian (symmetric) positive definite matrix
+NB.
+NB. Syntax:
+NB.   vpotrf=. vpotrf`u1`u2`u3`u4`u5 potrf
+NB. where
+NB.   vpotrf - factorization verb for recursive call
+NB.   u1     - either }. for upper triangular factor
+NB.            or {. for lower triangular factor
+NB.   u2     - either trtrsux for upper triangular factor, or
+NB.            trtrslx for lower triangular factor
+NB.   u3     - either {. for upper triangular factor
+NB.            or }. for lower triangular factor
+NB.   u4     - either ,. for upper triangular factor
+NB.            or ,.~ for [unit] lower triangular factor
+NB.   u5     - either (_1 append) for upper triangular factor
+NB.            or (0 append~) for lower triangular factor
+
+potrf=: 1 : 0
+  '`u0 u1 u2 u3 u4 u5'=. u
+  n=. # y
+  if. n > 1 do.
+    p=. >. -: n
+    Ta=. u0 (2 $ p) u1 y     NB. recursively factorize square matrix from top left or bottom right corner
+    Ac=. (p , (p - n)) u1 y  NB. off-diagonal part of input matrix
+    Tb=. ct Tbh=. Ta u2 Ac   NB. off-diagonal part of output matrix
+    Aa=. (2 $ p) u3 y        NB. square matrix from opposite corner on diagonal of input matrix
+    Tc=. u0 Aa - Tb mp Tbh   NB. recursively factorize square matrix from opposite corner on diagonal
+    (Tc u4 Tb) u5 Ta         NB. assemble output as triangular matrix
+  else.
+    %: y
+  end.
+)
+
+NB. =========================================================
+NB. Interface
+
+NB. ---------------------------------------------------------
+NB. Verb:          Solves:                  Syntax:
+NB. getrfpl1u      inv(P) * L1 * U = A      'pi Af'=. getrfpl1u A
+NB. getrflu1p      L * U1 * inv(P) = A      'pi Af'=. getrflu1p A
+NB. getrfpu1l      inv(P) * U1 * L = A      'pi Af'=. getrfpu1l A
+NB. getrful1p      U * L1 * inv(P) = A      'pi Af'=. getrful1p A
+NB.
+NB. Description:
+NB.   triangular factorization with partial pivoting of a
+NB.   general matrix
+NB. where:
+NB.   A  - m×n-matrix, containing either U, U1, L or L1
+NB.   Af - m×n-matrix, contains either U and L1, or U1 and L
+NB.   pi - m-vector or n-vector, inversed rows (columns)
+NB.        permutation of A
+NB.   U  - ?×?-matrix, upper triangular factor
+NB.   U1 - ?×?-matrix, unit upper triangular matrix (diagonal is not saved)
+NB.   L  - ?×?-matrix, lower triangular matrix
+NB.   L1 - ?×?-matrix, unit lower triangular matrix (diagonal is not saved)
+NB.   m  ≥ 0
+NB.   n  ≥ 0
+NB.
+NB. If:
+NB.   'pi Af'=. getrfpl1u A
+NB.   p=. /: pi
+NB.   Pi=. ((i.#pi)=/pi)
+NB.   P=. ((i.#p)=/p)
+NB.   L1=. trl1 Af
+NB.   U=. tru Af
+NB. then
+NB.   Pi -: %. P
+NB.   Pi -: |: P
+NB.   A -: p { L1 mp U
+NB.   A -: p C. L1 mp U
+NB.   A -: P mp L1 mp U
+NB.
+NB. Notes:
+NB.   - FLOPs: 
+NB.   - recursive calls: 3*k*(2^k)-2^(k+1)+3,
+NB.     where k = ⌈log_2(n)⌉
+
+getrfpl1u=: 3 : 0
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    (i. m) ; y
+  elseif. 1 = n do.
+    dpi=. 0 ii2cp iofmaxm y          NB. cycle permutation to swap pivot and head
+    p=. dpi C. i. m                  NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
+    y=. ((] 0:} %) 0&({,)) dpi C. y  NB. permute columns, scale by head, keep head unscaled
+    p ; y
+  elseif. do.
+    k=. m <. >. -: n
+    'pi Af1'=. getrfpl1u (m , k) {. y  NB. factorize left block column recursively
+    y=. pi C. (0 , k) }. y  NB. apply pi to rows in right block column, purge original y and reuse name 'y'
+    Af12=. Af1 (trtrsl1x & ((k , _) & {.)) y                         NB. solve L11*Af12=A12 for Af12
+    'pi2 Af22'=. getrfpl1u y ((- (mp & Af12)) & ((k , 0) & }.)) Af1  NB. factorize updated A22 recursively
+    dpi=. (i. k) , (k + pi2)                                         NB. permutation for Af1
+    (dpi C. pi) ; ((dpi C. Af1) ,. (Af12 , Af22))
+  end.
+)
+
+getrflu1p=: 3 : 0
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    (i. n) ; y
+  elseif. 1 = m do.
+    dpi=. 0 ii2cp iofmaxm y             NB. cycle permutation to swap pivot and head
+    p=. dpi C. i. n                     NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
+    y=. ((] 0:} %) 0&({,)) dpi C."1 y     NB. permute columns, scale by head, keep head unscaled
+    p ; y
+  elseif. do.
+    k=. n <. >. -: m
+    'pi Af1'=. getrflu1p (k , n) {. y                                 NB. factorize upper block row recursively
+    y=. pi C."1 (k , 0) }. y                                          NB. apply pi to columns in lower block row, purge original y and reuse name 'y'
+    Af21=. Af1 (trtrsxu1 & ((_ , k) & {.)) y                     NB. solve Af21*U11=A21 for Af21
+    'pi2 Af22'=. getrflu1p y ((- (mp~ & Af21)) & ((0 , k) & }.)) Af1  NB. factorize updated A22 recursively
+    dpi=. (i. k) , (k + pi2)                                          NB. permutation for Af1
+    (dpi C."1 pi) ; ((dpi C."1 Af1) , (Af21 ,. Af22))
+  end.
+)
+
+getrfpu1l=: 3 : 0
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    (i. m) ; y
+  elseif. 1 = n do.
+    dpi=. (m-1) ii2cp iolmaxm y        NB. cycle permutation to swap pivot and head
+    p=. dpi C. i. m                    NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
+    y=. ((] _1:} %) _1&({,)) dpi C. y  NB. permute columns, scale by head, keep head unscaled
+    p ; y
+  elseif. do.
+    k=. m <. >. -: n
+    'pi Af2'=. getrfpu1l (m , (- k)) {. y                                  NB. factorize right block column recursively
+    y=. pi C. (0 , (- k)) }. y                                             NB. apply pi to rows in left block column, purge original y and reuse name 'y'
+    Af21=. Af2 (trtrsu1x & (((- k) , _) & {.)) y                           NB. solve U22*Af21=A21 for Af21
+    'pi2 Af11'=. getrfpu1l y ((- (mp & Af21)) & (((- k) , 0) & }.)) Af2  NB. factorize updated A22 recursively
+    dpi=. pi2 , ((m - k) + i. k)                                         NB. permutation for Af2
+    (dpi C. pi) ; ((dpi C. Af2) ,.~ (Af21 ,~ Af11))
+  end.
+)
+
+getrful1p=: 3 : 0
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    (i. n) ; y
+  elseif. 1 = m do.
+    dpi=. (n-1) ii2cp iolmaxm y        NB. cycle permutation to swap pivot and head
+    p=. dpi C. i. n                    NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
+    y=. ((] _1:} %) _1&({,)) dpi C."1 y  NB. permute columns, scale by head, keep head unscaled
+    p ; y
+  elseif. do.
+    k=. n <. >. -: m
+    'pi Af2'=. getrful1p ((- k) , n) {. y                                   NB. factorize lower block row recursively
+    y=. pi C."1 ((- k) , 0) }. y                                            NB. apply pi to columns in upper block row, purge original y and reuse name 'y'
+    Af12=. Af2 (trtrsxl1 & ((_ , (- k)) & {.)) y                       NB. solve Af12*L22=A12 for Af12
+    'pi2 Af11'=. getrful1p y ((- (mp~ & Af12)) & ((0 , (- k)) & }.)) Af2  NB. factorize updated A22 recursively
+    dpi=. pi2 , ((n - k) + i. k)                                          NB. permutation for Af2
+    (dpi C."1 pi) ; ((dpi C."1 Af2) ,~ (Af12 ,.~ Af11))
+  end.
+)
+
+NB. ---------------------------------------------------------
+NB. hetrfl
+NB. Factorization of a  Hermitian (symmetric) matrix:
+NB.    L * D * L' = A
+NB. where L is unit lower triangular and D is diagonal
+
+hetrfl=: 3 : 0
+)
+
+NB. ---------------------------------------------------------
+NB. potrfu
+NB. potrfl
+NB. Hermitian (symmetric) positive definite matrix Cholesky
+NB. recursive factorization by a triangular factor
+NB.   U * U' = A
+NB.   L * L' = A
+NB.
+NB. Syntax:
+NB.   U=. potrfu A
+NB.   L=. potrfl A
+NB. where
+NB.   A - n×n-matrix, Hermitian (symmetric), positive
+NB.       definite
+NB.   U  - n×n-matrix, upper triangular Cholesky factor
+NB.   L  - n×n-matrix, lower triangular Cholesky factor
+NB.   n      ≥ 0
+NB.
+NB. If:
+NB.   U=. potrfl A
+NB.   L=. potrfl A
+NB. then
+NB.   A -: (mp ct) U
+NB.   A -: (mp ct) L
+NB. where
+NB.   A - positive definite matrix
+NB.   U - upper triangular matrix
+NB.   L - lower triangular matrix
+NB.
+NB. Notes:
+NB.   - FLOPs: 
+NB.   - recursive calls: 3*k*(2^k)-2^(k+1)+3,
+NB.     where k = ⌈log_2(n)⌉
+
+potrfu=: potrfu`}.`trtrsux`{.` ,.  `(_1 append ) potrf
+potrfl=: potrfl`{.`trtrslx`}.`(,.~)`( 0 append~) potrf
+
+NB. =========================================================
+NB. Test suite
+
+NB. name vextract ttrf A
+NB. TODO: forward error (getrf has two: for L and U?)
+
+ttrf=: 1 : 0
+:
+  't s'=. timespacex 'out=. ' , x , ' y'
+  be=. (((norm1 (y - u out)) % ({: $ y)) % (norm1 y)) % FP_EPS  NB. backward error
+  prn x ; ((_."_)`(norm1 con getri) @. (=/@$) y) ; be ; (i.0) ; t ; s
+)
+
+NB. tgetrf A
+
+tgetrf=: 3 : 0
+  y=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
+
+  'getrfpl1u'       (((C.~ /:)~ (trl1 mp tru)) & > /)                   ttrf y
+  'getrf_jlapack_' (((mp & >)/ @ (2 & {.)) invperm_jlapack_ (2 & {::)) ttrf y
+  EMPTY
+)
+
+NB. tpotrf A
+
+tpotrf=: 3 : 0
+  y=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
+
+  'potrfu'         ((mp ct) @ tru) ttrf y
+  'potrfl'         ((mp ct) @ trl) ttrf y
+  'potrf_jlapack_' ((mp ct) @ trl) ttrf y
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testtrf
+NB. Adverb to test triangular factorization algorithms
+NB.
+NB. Syntax:
+NB.   mkge testtrf m,n
+NB. where
+NB.   m,n  - 2-vector of integers, shape of random matrices
+NB.          to test algorithms
+NB.   mkge - monadic verb to generate random non-singular
+NB.          general y-matrix (shape is taken from y)
+NB.
+NB. Application:
+NB. - with limited random matrix values' amplitudes
+NB.   cocurrent 'mt'
+NB.   (_1 1 0 16 _6 4 & gemat) testtrf 500 500
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrf 500 500
+NB.
+NB. Notes:
+NB. - if m≠n then both thetrf and tpotrf are skipped
+
+testtrf=: 1 : 0
+  (tgetrf @ u)                      y
+  (thetrf @ (u hemat) @ {. ^: (=/)) y
+  (tpotrf @ (u pomat) @ {. ^: (=/)) y
+  EMPTY
+)

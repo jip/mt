@@ -1,20 +1,20 @@
 NB. bal.ijs
 NB. Balance a matrix or pair of matrices
 NB.
-NB. gebalp  isolate eigenvalues of a general square matrix
-NB. gebals  make the rows and columns of a general square
+NB. gebalp  Isolate eigenvalues of a general square matrix
+NB. gebals  Make the rows and columns of a general square
 NB.         matrix as close in 1-norm as possible
-NB. gebal   balance a general square matrix
-NB. gebak   restore an original matrix left or right
+NB. gebal   Balance a general square matrix
+NB. gebak   Restore an original matrix left or right
 NB.         eigenvectors from a balanced matrix eigenvectors
-NB. ggbal   balance a pair of general square matrices
-NB. ggbak   restore an original matrix pair left or right
+NB. ggbal   Balance a pair of general square matrices
+NB. ggbak   Restore an original matrix pair left or right
 NB.         eigenvectors from a balanced matrix pair
 NB.         eigenvectors
 NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
-NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
-NB. License: GNU GPL
 
 coclass 'mt'
 

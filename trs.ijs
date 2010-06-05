@@ -1,34 +1,84 @@
 NB. trs.ijs
-NB. Solve monomial equation via triangular factorization
+NB. Solve linear monomial equation via triangular
+NB. factorization
 NB.
-NB. trtrsux   Solve equation U*X=B, where U is an upper
-NB.           triangular matrix
-NB. trtrsu1x  Solve equation U1*X=B, where U1 is an unit
-NB.           upper triangular matrix
-NB. trtrsxu   Solve equation X*U=B, where U is an upper
-NB.           triangular matrix
-NB. trtrsxu1  Solve equation X*U1=B, where U1 is an unit
-NB.           upper triangular matrix
-NB. trtrslx   Solve equation L*X=B, where L is a lower
-NB.           triangular matrix
-NB. trtrsl1x  Solve equation L1*X=B, where L1 is an unit
-NB.           lower triangular matrix
-NB. trtrsxl   Solve equation X*L=B, where L is a lower
-NB.           triangular matrix
-NB. trtrsxl1  Solve equation X*L1=B, where L1 is an unit
-NB.           lower triangular matrix
-NB. getrs     Solve equation A*X=B, where A is a general
-NB.           matrix
-NB. hetrs      Solve equation A*X=B, where A is a Hermitian
-NB.           (symmetric) matrix
-NB. ditrs      Solve equation A*X=B, where A is a
-NB.           diagonalizable matrix
+NB. trtrsux    Solve equation U * X = B, where U is an upper
+NB.            triangular matrix
+NB. trtrsutx   Solve equation U^T * X = B, where U is an
+NB.            upper triangular matrix
+NB. trtrsuhx   Solve equation U^H * X = B, where U is an
+NB.            upper triangular matrix
+NB. trtrsu1x   Solve equation U1 * X = B, where U1 is an unit
+NB.            upper triangular matrix
+NB. trtrsu1tx  Solve equation U1^T * X = B, where U1 is an
+NB.            unit upper triangular matrix
+NB. trtrsu1hx  Solve equation U1^H * X = B, where U1 is an
+NB.            unit upper triangular matrix
+NB. trtrsxu    Solve equation X * U = B, where U is an upper
+NB.            triangular matrix
+NB. trtrsxut   Solve equation X * U^T = B, where U is an
+NB.            upper triangular matrix
+NB. trtrsxuh   Solve equation X * U^H = B, where U is an
+NB.            upper triangular matrix
+NB. trtrsxu1   Solve equation X * U1 = B, where U1 is an unit
+NB.            upper triangular matrix
+NB. trtrsxu1t  Solve equation X * U1^T = B, where U1 is an
+NB.            unit upper triangular matrix
+NB. trtrsxu1h  Solve equation X * U1^H = B, where U1 is an
+NB.            unit upper triangular matrix
+NB. trtrslx    Solve equation L * X = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsltx   Solve equation L^T * X = B, where L is a lower
+NB.            triangular matrix
+NB. trtrslhx   Solve equation L^H * X = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsl1x   Solve equation L1 * X = B, where L1 is an unit
+NB.            lower triangular matrix
+NB. trtrsl1tx  Solve equation L1^T * X = B, where L1 is an
+NB.            unit lower triangular matrix
+NB. trtrsl1hx  Solve equation L1^H * X = B, where L1 is an
+NB.            unit lower triangular matrix
+NB. trtrsxl    Solve equation X * L = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsxlt   Solve equation X * L^T = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsxlh   Solve equation X * L^H = B, where L is a lower
+NB.            triangular matrix
+NB. trtrsxl1   Solve equation X * L1 = B, where L1 is an unit
+NB.            lower triangular matrix
+NB. trtrsxl1t  Solve equation X * L1^T = B, where L1 is an
+NB.            unit lower triangular matrix
+NB. trtrsxl1h  Solve equation X * L1^H = B, where L1 is an
+NB.            unit lower triangular matrix
+NB.
+NB. getrsax    Solve equation A * X = B, where A is a general
+NB.            matrix
+NB. getrsatx   Solve equation A^T * X = B, where A is a
+NB.            general matrix
+NB. getrsahx   Solve equation A^H * X = B, where A is a
+NB.            general matrix
+NB. getrsxa    Solve equation X * A = B, where A is a general
+NB.            matrix
+NB. getrsxat   Solve equation X * A^T = B, where A is a
+NB.            general matrix
+NB. getrsxah   Solve equation X * A^H = B, where A is a
+NB.            general matrix
+NB.
+NB. hetrsax    Solve equation A * X = B, where A is a
+NB.            Hermitian (symmetric) matrix
+NB. hetrsatx   Solve equation A^T * X = B, where A is a
+NB.            Hermitian (symmetric) matrix
+NB. hetrsxa    Solve equation X * A = B, where A is a
+NB.            Hermitian (symmetric) matrix
+NB. hetrsxat   Solve equation X * A^T = B, where A is a
+NB.            Hermitian (symmetric) matrix
+NB.
 NB. potrs      Solve equation A*X=B, where A is a Hermitian
-NB.           (symmetric) positive definite matrix
+NB.            (symmetric) positive definite matrix
 NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
-NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
-NB. License: GNU GPL
 
 coclass 'mt'
 
@@ -40,21 +90,22 @@ NB. trtrs
 NB. Template adverb to make triangular solver verbs
 NB.
 NB. Syntax:
-NB.   vtrtrs=. vtrtrs`u1`u2`u3`u4`u5`u6 trtrs
+NB.   u0=. u0`u1`u2`u3`u4`u5`u6 trtrs
 NB. where
-NB.   vtrtrs - solver verb for recursive call
-NB.   u1     - either }. for systems: U1*X=B, U*X=B, X*L1=B, X*L=B
-NB.            or {. for systems: X*U1=B, X*U=B, L1*X=B, L*X=B
-NB.   u2     - either , for systems: U1*X=B, U*X=B, X*U1=B, X*U=B
-NB.            or ,~ for systems: L1*X=B, L*X=B, X*L1=B, X*L=B
-NB.   u3     - either {. for systems: U1*X=B, U*X=B, X*L1=B, X*L=B
-NB.            or }. for systems: X*U1=B, X*U=B, L1*X=B, L*X=B
-NB.   u4     - either mp for systems: U1*X=B, U*X=B, L1*X=B, L*X=B
-NB.            or mp~ for systems: X*U1=B, X*U=B, X*L1=B, X*L=B
-NB.   u5     - either , for systems: X*U1=B, X*U=B, L1*X=B, L*X=B
-NB.            or ,~ for systems: U1*X=B, U*X=B, X*L1=B, X*L=B
-NB.   u6     - either [ for systems: U1*X=B, X*U1=B, L1*X=B, X*L1=B
-NB.            or (% 0&({,)) for systems: U*X=B, X*U=B, L*X=B, X*L=B
+NB.   u0 - solver verb to do recursive call
+NB.        warning: avoid to change u0's name class!
+NB.   u1 - extract either the square matrix Aa from top left
+NB.        or bottom right corner, or the corresponding RHS
+NB.        part Ba
+NB.   u2 - extract either the square matrix Ab opposite to
+NB.        Aa on diagonal, or the corresponding RHS part Bb
+NB.   u3 - combine intervals to extract either top right part
+NB.        (tru case), or bottom left part (trl case) from
+NB.        input matrix A
+NB.   u4 - [commuted] matrix product, optionally pre-process
+NB.        Xa and post-process result
+NB.   u5 - assemble solution X from halves Xa and Xb
+NB.   u6 - optionally scale output, when diagonal is not unit
 
 trtrs=: 1 : 0
 :
@@ -62,13 +113,13 @@ trtrs=: 1 : 0
   n=. # x
   if. n > 1 do.
     p=. >. -: n
-    Aa=. (2 $ p) u1 x              NB. square matrix from top left or bottom right corner
-    Ba=. p u1 y                    NB. RHS part corresponding to Aa
-    Xa=. Aa u0 Ba                  NB. find corresponding solution recursively
-    Ab=. (2 $ p) u3 x              NB. square matrix opposite to Aa on diagonal
-    Bb=. p u3 y                    NB. RHS part corresponding to Ab
-    Ac=. (p u2 (p - n)) {. x       NB. either top right part (tru case), or bottom left part (trl case)
-    Xa u5 (Ab u0 (Bb - Ac u4 Xa))  NB. find corresponding solution recursively and form complete answer
+    Aa=. (2 $ p) u1 x
+    Ba=. p u1 y
+    Xa=. Aa u0 Ba
+    Ab=. (2 $ p) u2 x
+    Bb=. p u2 y
+    Ac=. (p u3 (p - n)) {. x
+    Xa u5 (Ab u0 (Bb - Ac u4 Xa))
   else.
     y u6 x
   end.
@@ -78,165 +129,184 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. trtrsux
-NB. trtrsu1x 
-NB. trtrsxu
-NB. trtrsxu1
-NB. trtrslx
-NB. trtrsl1x
-NB. trtrsxl
-NB. trtrsxl1
-NB. Various triangular solvers to solve systems:
-NB.   T*X=B or X*T=B
-NB. where T is either unit triangular (diagonal is not saved)
-NB. or triangular, B is RHS and X is solution
+NB. Verb:          Solves:           Syntax:
+NB. trtrsux        U    * X = B      X=. A trtrsux B
+NB. trtrsutx       U^T  * X = B      X=. A trtrsutx B
+NB. trtrsuhx       U^H  * X = B      X=. A trtrsuhx B
+NB. trtrsu1x       U1   * X = B      X=. A trtrsu1x B
+NB. trtrsu1tx      U1^T * X = B      X=. A trtrsu1tx B
+NB. trtrsu1hx      U1^H * X = B      X=. A trtrsu1hx B
+NB. trtrslx        L    * X = B      X=. A trtrslx B
+NB. trtrsltx       L^T  * X = B      X=. A trtrsltx B
+NB. trtrslhx       L^H  * X = B      X=. A trtrslhx B
+NB. trtrsl1x       L1   * X = B      X=. A trtrsl1x B
+NB. trtrsltx       L1^T * X = B      X=. A trtrsl1tx B
+NB. trtrslhx       L1^H * X = B      X=. A trtrsl1hx B
 NB.
-NB. Syntax:
-NB.   X=. T solver B
-NB. where
-NB.   solver - any verb of: trtrsu1x trtrsux trtrsxu1 trtrsxu
-NB.            trtrsl1x trtrslx trtrsxl1 trtrsxl
-NB.   B      - n-vector or n×nrhs-matrix, RHS
-NB.   T      - m×n-matrix, containing triangular n×n-matrix
-NB.            of the system
-NB.   X      - same shape as B, the solution
-NB.   m      ≥ 0
-NB.   n      ≥ 0
-NB.   nrhs   ≥ 0
+NB. Description:
+NB.   solve triangular system
+NB. where:
+NB.   A    - n×n-matrix, containing either U, U1, L or L1
+NB.   U    - n×n upper triangular matrix
+NB.   U1   - n×n unit upper triangular matrix (diagonal is
+NB.          not saved)
+NB.   L    - n×n lower triangular matrix
+NB.   L1   - n×n unit lower triangular matrix (diagonal is
+NB.          not saved)
+NB.   B    - n-vector or n×nrhs-matrix, the RHS
+NB.   X    - same shape as B, the solution
+NB.   n    ≥ 0
+NB.   nrhs ≥ 0
 NB.
-NB. If:
-NB.   BUX=. U mp X
-NB.   X=. <<<<<<<<<<<<<<
-NB. then
-NB.   
+NB. Notes:
+NB. - opposite triangle is not referenced
+NB. - unit diagonal is not referenced
 
-erase 'trtrsux';'trtrsu1x';'trtrsux';'trtrsxu1';'trtrsxu';'trtrsl1x';'trtrslx';'trtrsxl1';'trtrsxl'
-
-trtrsux=:  trtrsux `}.` ,  `{.` mp  `(,~)`(% 0&({,)) trtrs  NB. U *X=B, where U  is      upper triangular
-trtrsu1x=: trtrsu1x`}.` ,  `{.` mp  `(,~)`[          trtrs  NB. U1*X=B, where U1 is unit upper triangular
-trtrsxu=:  trtrsxu `{.` ,  `}.`(mp~)` ,  `(% 0&({,)) trtrs  NB. X*U =B, where U  is      upper triangular
-trtrsxu1=: trtrsxu1`{.` ,  `}.`(mp~)` ,  `[          trtrs  NB. X*U1=B, where U1 is unit upper triangular
-trtrslx=:  trtrslx `{.`(,~)`}.` mp  ` ,  `(% 0&({,)) trtrs  NB. L *X=B, where L  is      lower triangular
-trtrsl1x=: trtrsl1x`{.`(,~)`}.` mp  ` ,  `[          trtrs  NB. L1*X=B, where L1 is unit lower triangular
-trtrsxl=:  trtrsxl `}.`(,~)`{.`(mp~)`(,~)`(% 0&({,)) trtrs  NB. X*L =B, where L  is      lower triangular
-trtrsxl1=: trtrsxl1`}.`(,~)`{.`(mp~)`(,~)`[          trtrs  NB. X*L1=B, where L1 is unit lower triangular
+trtrsux=:   trtrsux  `}.`{.` ,  `     mp      `(,~)`(% 0&({,)) trtrs
+trtrsutx=:  trtrsutx `{.`}.` ,  `(|:@(mp~ |:))` ,  `(% 0&({,)) trtrs
+trtrsuhx=:  trtrsuhx `{.`}.` ,  `(ct@(mp~ ct))` ,  `(% 0&({,)) trtrs
+trtrsu1x=:  trtrsu1x `}.`{.` ,  `     mp      `(,~)`[          trtrs
+trtrsu1tx=: trtrsu1tx`{.`}.` ,  `(|:@(mp~ |:))` ,  `[          trtrs
+trtrsu1hx=: trtrsu1hx`{.`}.` ,  `(ct@(mp~ ct))` ,  `[          trtrs
+trtrslx=:   trtrslx  `{.`}.`(,~)`     mp      ` ,  `(% 0&({,)) trtrs
+trtrsltx=:  trtrsltx `}.`{.`(,~)`(|:@(mp~ |:))`(,~)`(% 0&({,)) trtrs
+trtrslhx=:  trtrslhx `}.`{.`(,~)`(ct@(mp~ ct))`(,~)`(% 0&({,)) trtrs
+trtrsl1x=:  trtrsl1x `{.`}.`(,~)`     mp      ` ,  `[          trtrs
+trtrsl1tx=: trtrsl1tx`}.`{.`(,~)`(|:@(mp~ |:))`(,~)`[          trtrs
+trtrsl1hx=: trtrsl1hx`}.`{.`(,~)`(ct@(mp~ ct))`(,~)`[          trtrs
 
 NB. ---------------------------------------------------------
-NB. getrs
-NB. Solve system A*X=B, where A is a general matrix via LU
-NB. factorization
+NB. Verb:          Solves:           Syntax:
+NB. trtrsxu        X * U    = B      X=. A trtrsxu B
+NB. trtrsxut       X * U^T  = B      X=. A trtrsxut B
+NB. trtrsxuh       X * U^H  = B      X=. A trtrsxuh B
+NB. trtrsxu1       X * U1   = B      X=. A trtrsxu1 B
+NB. trtrsxu1t      X * U1^T = B      X=. A trtrsxu1t B
+NB. trtrsxu1h      X * U1^H = B      X=. A trtrsxu1h B
+NB. trtrsxl        X * L    = B      X=. A trtrsxl B
+NB. trtrsxlt       X * L^T  = B      X=. A trtrsxlt B
+NB. trtrsxlh       X * L^H  = B      X=. A trtrsxlh B
+NB. trtrsxl1       X * L1   = B      X=. A trtrsxl1 B
+NB. trtrsxl1t      X * L1^T = B      X=. A trtrsxl1t B
+NB. trtrsxl1h      X * L1^H = B      X=. A trtrsxl1h B
 NB.
-NB. Syntax:
-NB.   X=. A getrs B
-NB. where
-NB.   B    - n-vector or n×nrhs-matrix, RHS
+NB. Description:
+NB.   solve triangular system
+NB. where:
+NB.   A    - n×n-matrix, containing either U, U1, L or L1
+NB.   U    - n×n upper triangular matrix
+NB.   U1   - n×n unit upper triangular matrix (diagonal is
+NB.          not saved)
+NB.   L    - n×n lower triangular matrix
+NB.   L1   - n×n unit lower triangular matrix (diagonal is
+NB.          not saved)
+NB.   B    - n-vector or nrhs×n-matrix, the RHS
+NB.   X    - same shape as B, the solution
+NB.   n    ≥ 0
+NB.   nrhs ≥ 0
+NB.
+NB. Notes:
+NB. - opposite triangle is not referenced
+NB. - unit diagonal is not referenced
+
+trtrsxu=:   |:@trtrsutx |:
+trtrsxut=:  |:@trtrsux |:
+trtrsxuh=:  ct@trtrsux ct
+trtrsxu1=:  |:@trtrsu1tx |:
+trtrsxu1t=: |:@trtrsu1x |:
+trtrsxu1h=: ct@trtrsu1x ct
+trtrsxl=:   |:@trtrsltx |:
+trtrsxlt=:  |:@trtrslx |:
+trtrsxlt=:  ct@trtrslx ct
+trtrsxl1=:  |:@trtrsl1tx |:
+trtrsxl1t=: |:@trtrsl1x |:
+trtrsxl1t=: ct@trtrsl1x ct
+
+NB. ---------------------------------------------------------
+NB. Verb:          Solves:              Syntax:
+NB. getrsax        A   * X = B          X=. A getrsax B
+NB. getrsatx       A^T * X = B          X=. A getrsatx B
+NB. getrsahx       A^H * X = B          X=. A getrsahx B
+NB. getrsxa        X * A   = B          X=. A getrsxa B
+NB. getrsxat       X * A^T = B          X=. A getrsxat B
+NB. getrsxah       X * A^H = B          X=. A getrsxah B
+NB.
+NB. Description:
+NB.   solve system via LU factorization
+NB. where:
 NB.   A    - n×n-matrix
+NB.   B    - n-vector or n×nrhs-matrix, the RHS
 NB.   X    - same shape as B, the solution
 NB.   n    ≥ 0
 NB.   nrhs ≥ 0
-NB.
-NB. If:
-NB.   X=. A getrs B
-NB. then
-NB.   B -: A mp X
-NB.
-NB. TODO:
-NB. - getrsax  A * X = B (done)
-NB. - getrsxa  X * A = B
-NB. - getrsatx A^T * X = B
-NB. - getrsxat X * A^T = B
-NB. - getrsahx A^H * X = B
-NB. - getrsxah X * A^H = B
 
-getrs=: (((1 {:: [) ([ trtrsux trtrsl1x) ((0 {:: [) C. ]))~ getrfl1u)~
+getrsax=:  (((1 {:: ]) ([ trtrsux trtrsl1x) (C.~ (0 & {::))) getrfpl1u)~
+getrsatx=: (((0 {:: ]) C. (([ trtrsltx trtrsu1tx)~ (1 & {::))) getrflu1)~
+getrsahx=: (((0 {:: ]) C. (([ trtrslhx trtrsu1hx)~ (1 & {::))) getrflu1)~
+getrsxa=:  (((0 {:: ]) C. (([ trtrsxl trtrsxu1)~ (1 & {::))) getrflu1)~
+getrsxat=: (((1 {:: ]) ([ trtrsxut trtrsxl1t) (C.~ (0 & {::))) getrfpl1u)~
+getrsxah=: (((1 {:: ]) ([ trtrsxuh trtrsxl1h) (C.~ (0 & {::))) getrfpl1u)~
 
 NB. ---------------------------------------------------------
-NB. hetrs
-NB. Solve system A*X=B, where A is a Hermitian (symmetric)
-NB. matrix
+NB. Verb:          Solves:              Syntax:
+NB. hetrsax        A   * X   = B        X=. A hetrsax B
+NB. hetrsatx       A^T * X   = B        X=. A hetrsatx B
+NB. hetrsxa        X   * A   = B        X=. A hetrsxa B
+NB. hetrsxat       X   * A^T = B        X=. A hetrsxat B
 NB.
-NB. Syntax:
-NB.   X=. A hetrs B
-NB. where
-NB.   B    - n-vector or n×nrhs-matrix, RHS
-NB.   A    - n×n-matrix, Hermitian (symmetric)
+NB. Description:
+NB.   solve system via ? factorization
+NB. where:
+NB.   A    - n×n Hermitian (symmetric) matrix
+NB.   B    - n-vector or n×nrhs-matrix, the RHS
 NB.   X    - same shape as B, the solution
 NB.   n    ≥ 0
 NB.   nrhs ≥ 0
-NB.
-NB. TODO:
-NB. - hetrsax  A * X = B
-NB. - hetrsxa  X * A = B
-NB. - hetrsatx A^T * X = B
-NB. - hetrsxat X * A^T = B
-NB. - hetrsahx A^H * X = B
-NB. - hetrsxah X * A^H = B
 
-hetrs=: [:
+hetrsax=:  [:
+hetrsatx=: [:
+hetrsahx=: [:
+hetrsxa=:  [:
+hetrsxat=: [:
+hetrsxah=: [:
 
 NB. ---------------------------------------------------------
-NB. ditrs
-NB. Solve system A*X=B, where A is a diagonalizable matrix
+NB. Verb:          Solves:              Syntax:
+NB. potrsax        A   * X = B          X=. A potrsax B
+NB. potrsatx       A^T * X = B          X=. A potrsatx B
+NB. potrsxa        X * A   = B          X=. A potrsxa B
+NB. potrsxat       X * A^T = B          X=. A potrsxat B
 NB.
-NB. Syntax:
-NB.   x=. A ditrs B
-NB. where
-NB.   B    - n-vector or n×nrhs-matrix, RHS
-NB.   A    - n×n-matrix, diagonalizable
+NB. Description:
+NB.   solve system via Cholesky factorization
+NB. where:
+NB.   A    - n×n Hermitian (symmetric) positive definite
+NB.          matrix
+NB.   B    - n-vector or n×nrhs-matrix, the RHS
 NB.   X    - same shape as B, the solution
 NB.   n    ≥ 0
 NB.   nrhs ≥ 0
-NB.
-NB. TODO:
-NB. - ditrsax  A * X = B
-NB. - ditrsxa  X * A = B
-NB. - ditrsatx A^T * X = B
-NB. - ditrsxat X * A^T = B
-NB. - ditrsahx A^H * X = B
-NB. - ditrsxah X * A^H = B
 
-ditrs=: [:
-
-NB. ---------------------------------------------------------
-NB. potrs
-NB. Solve system A*X=B, where A is a Hermitian (symmetric)
-NB. positive definite matrix
-NB.
-NB. Syntax:
-NB.   X=. A potrs B
-NB. where
-NB.   B    - n-vector or n×nrhs-matrix, RHS
-NB.   A    - n×n-matrix, a Hermitian (symmetric) positive
-NB.          definite
-NB.   X    - same shape as B, the solution
-NB.   n    ≥ 0
-NB.   nrhs ≥ 0
-NB.
-NB. TODO:
-NB. - potrsax  A * X = B
-NB. - potrsxa  X * A = B
-NB. - potrsatx A^T * X = B
-NB. - potrsxat X * A^T = B
-NB. - potrsahx A^H * X = B
-NB. - potrsxah X * A^H = B
-
-potrs=: [:
+potrsax=:  (([ trtrslhx trtrslx)~ potrfl)~
+potrsatx=: (([ +@trtrslhx trtrslx)~ potrfl)~ +
+potrsxa=:  (([ trtrsxl trtrsxlh)~ potrfl)~
+potrsxat=: (([ trtrsxl trtrslhx)~ potrfl)~ +          NB. CHECKME!
 
 NB. =========================================================
 NB. Test suite
 
-NB. 'name rcond bwerror fwerror time space'=. name vmp ttrs A;X;B;rcond
+NB. name vmp ttrs A;X;B;rcond
+
 ttrs=: 1 : 0
 :
   'A X B rcond'=. y
   't s'=. timespacex 'Xsol=. A ' , x , ' B'
   be=. (((norm1t (B - A u Xsol)) % (norm1 A)) % (norm1t Xsol)) % FP_EPS  NB. backward error
   fe=. (((normit (X - Xsol)) * rcond) % (normit X)) % FP_EPS             NB. forward error
-  dbprn x ; rcond ; be ; fe ; t ; s
+  prn x ; rcond ; be ; fe ; t ; s
 )
 
-NB. r=. ttrtrs A;X
-NB. where r is boxed table with columns: name rcond bwerror fwerror time space
+NB. ttrtrs A;X
 ttrtrs=: 3 : 0
   'A X'=. y
   'm n'=. $ A
@@ -254,29 +324,30 @@ ttrtrs=: 3 : 0
   rcondL=.  norm1 con trtril  L
   rcondL1=. norm1 con trtril1 L1
 
-  r=.  ,: 'trtrsux'         mp  ttrs (U ;X;UX ;rcondU )
-  r=. r , '(mp~ (128!:1))~' mp  ttrs (U ;X;UX ;rcondU )
-  r=. r , 'trtrsu1x'        mp  ttrs (U1;X;U1X;rcondU1)
-  r=. r , 'trtrsxu'         mp~ ttrs (U ;X;XU ;rcondU )
-  r=. r , '(mp (128!:1))~'  mp~ ttrs (U ;X;XU ;rcondU )
-  r=. r , 'trtrsxu1'        mp~ ttrs (U1;X;XU1;rcondU1)
-  r=. r , 'trtrslx'         mp  ttrs (L ;X;LX ;rcondL )
-  r=. r , 'trtrsl1x'        mp  ttrs (L1;X;L1X;rcondL1)
-  r=. r , 'trtrsxl'         mp~ ttrs (L ;X;XL ;rcondL )
-  r=. r , 'trtrsxl1'        mp~ ttrs (L1;X;XL1;rcondL1)
+  'trtrsux'         mp  ttrs (U ;X;UX ;rcondU )  NB. <<<<<< TODO: send A, not U
+  '(mp~ (128!:1))~' mp  ttrs (U ;X;UX ;rcondU )
+  'trtrsu1x'        mp  ttrs (U1;X;U1X;rcondU1)
+  'trtrsxu'         mp~ ttrs (U ;X;XU ;rcondU )
+  '(mp (128!:1))~'  mp~ ttrs (U ;X;XU ;rcondU )
+  'trtrsxu1'        mp~ ttrs (U1;X;XU1;rcondU1)
+  'trtrslx'         mp  ttrs (L ;X;LX ;rcondL )
+  'trtrsl1x'        mp  ttrs (L1;X;L1X;rcondL1)
+  'trtrsxl'         mp~ ttrs (L ;X;XL ;rcondL )
+  'trtrsxl1'        mp~ ttrs (L1;X;XL1;rcondL1)
+  EMPTY
 )
 
-NB. r=. tgetrs A;X
-NB. where r is boxed table with columns: name rcond bwerror fwerror time space
+NB. tgetrs A;X
+
 tgetrs=: 3 : 0
   'A X'=. y
   A=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) A
   'AX XA'=.  X (mp~ ; mp) A
   rcondA=. norm1 con getri A
-
-  r=.  ,: '%.~'                 mp ttrs (A;X;AX;rcondA)
-  r=. r , 'getrs'               mp ttrs (A;X;AX;rcondA)
-  r=. r , '(gesv_jlapack_ @ ;)' mp ttrs (A;X;AX;rcondA)
+  '%.~'                 mp ttrs (A;X;AX;rcondA)
+  'getrsax'             mp ttrs (A;X;AX;rcondA)
+  '(gesv_jlapack_ @ ;)' mp ttrs (A;X;AX;rcondA)
+  EMPTY
 )
 
 NB. ---------------------------------------------------------
@@ -284,32 +355,26 @@ NB. testtrs
 NB. Adverb to test triangular solver algorithms
 NB.
 NB. Syntax:
-NB.   r=. mkge testtrs m,n
+NB.   mkge testtrs m,n
 NB. where
 NB.   m,n  - 2-vector of integers, shape of random matrices
-NB.          to test algorithms; if m≠n then algorithms that
-NB.          accept square matrices only are skipped
+NB.          to test algorithms; tests are run only when m=n
 NB.   mkge - monadic verb to generate random non-singular
 NB.          general y-matrix (shape is taken from y)
-NB.   r    - boxed table with 6 columns:
-NB.          - algorithm name
-NB.          - the estimated reciprocal of the condition
-NB.            number of a matrix in 1-norm
-NB.          - relative backward error
-NB.          - relative forward error
-NB.          - execution time, sec.
-NB.          - execution space, bytes
 NB.
 NB. Application:
-NB. - with limited random matrix values' amplitudes
+NB.   NB. with limited random matrix values' amplitudes
 NB.   cocurrent 'mt'
-NB.   r=. (_1 1 0 16 _6 4 & gemat) testtrs 500 500
-NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrs 500 500
+NB.   (_1 1 0 16 _6 4 & gemat) testtrs 500 500
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testtrs 500 500
+NB.
+NB. Notes:
+NB. - diagonalizable matrices are processed the same way as
+NB.   general matrices
 
 testtrs=: 1 : 0
-  r=.     ttrtrs @ (u ; (u @ {.))       y
-  r=. r , tgetrs @ (u ; (u @ {.))       y
-NB.  r=. r , thetrs @ ((u hemat) ; u) @ {. y
-NB.  r=. r , tditrs @ ((u dimat) ; u) @ {. y
-NB.  r=. r , tpotrs @ ((u pomat) ; u) @ {. y
+  ttrtrs @ (u ; (u @ {.))       y  NB. FIXME! add: (^: (=/))
+  tgetrs @ (u ; (u @ {.))       y
+  thetrs @ ((u hemat) ; u) @ {. y
+  tpotrs @ ((u pomat) ; u) @ {. y
 )

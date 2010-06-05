@@ -1,13 +1,13 @@
 NB. pow.ijs
 NB. Matrix integer powers
 NB.
-NB. gepow  raise a general matrix in integer powers
-NB. dipow  raise a diagonalizable matrix in integer powers
-NB. hepow  raise a Hermitian matrix in integer powers
+NB. gepow  Raise a general matrix in integer powers
+NB. dipow  Raise a diagonalizable matrix in integer powers
+NB. hepow  Raise a Hermitian matrix in integer powers
 NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
-NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
-NB. License: GNU GPL
 
 coclass 'mt'
 

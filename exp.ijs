@@ -1,15 +1,15 @@
 NB. exp.ijs
 NB. Matrix exponential
 NB.
-NB. geexp  matrix exponential of a general matrix
-NB. diexp  matrix exponential of a diagonalizable matrix
-NB. heexp  matrix exponential of a Hermitian matrix
+NB. geexp  Matrix exponential of a general matrix
+NB. diexp  Matrix exponential of a diagonalizable matrix
+NB. heexp  Matrix exponential of a Hermitian matrix
 NB.
 NB. XREF: gepow sdiag
 NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
-NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
-NB. License: GNU GPL
 
 coclass 'mt'
 

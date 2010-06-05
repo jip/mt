@@ -1,13 +1,13 @@
 NB. rot.ijs
 NB. Rotations
 NB.
-NB. lartg   generates a plane rotation of a 2-vector
-NB. lartv   applies a plane rotation to a 2-vector
-NB. lartvt  applies a transposed plane rotation to a 2-vector
+NB. lartg   Generates a plane rotation of a 2-vector
+NB. lartv   Applies a plane rotation to a 2-vector
+NB. lartvt  Applies a transposed plane rotation to a 2-vector
 NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
-NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
-NB. License: GNU GPL
 
 coclass 'mt'
 

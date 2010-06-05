@@ -1,9 +1,10 @@
-NB. mt.ijs
 NB. Matrix toolbox
 NB.
+NB. test  Adverb to test algorithms
+NB.
+NB. Copyright (C) 2009  Igor Zhuravlov
+NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
-NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
-NB. License: GNU GPL
 
 NB. =========================================================
 NB. Configuration
@@ -33,7 +34,7 @@ FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-VERBOSE=: 1                                           NB. boolean 'is verbose?' flag
+EMPTY=: i. 0 0
 
 NB. =========================================================
 NB. Includes
@@ -51,21 +52,24 @@ NB. Package verbs
 
 NB. utility verbs
 require '~user/projects/mt/util.ijs'                  NB. utilities
-require '~user/projects/mt/struct.ijs'                NB. struct handlers
 require '~user/projects/mt/con.ijs'                   NB. condition number
 require '~user/projects/mt/rand.ijs'                  NB. random objects
+require '~user/projects/mt/struct.ijs'                NB. struct handlers
 
-NB. computational verbs
+NB. low-level computational verbs
 require '~user/projects/mt/bal.ijs'                   NB. balance
 require '~user/projects/mt/equ.ijs'                   NB. equilibrate
 NB. require '~user/projects/mt/hrd.ijs'                   NB. Hessenberg reduction
 NB. require '~user/projects/mt/orf.ijs'                   NB. orthogonal factorization
 require '~user/projects/mt/pow.ijs'                   NB. integer powers
 require '~user/projects/mt/rot.ijs'                   NB. rotate plane
+require '~user/projects/mt/trf.ijs'                   NB. triangular factorization
 require '~user/projects/mt/tri.ijs'                   NB. inverse
 require '~user/projects/mt/trs.ijs'                   NB. solve linear monomial equation via triangular factorization
-require '~user/projects/mt/trf.ijs'                   NB. triangular factorization
+
+NB. hi-level computational verbs
 require '~user/projects/mt/exp.ijs'                   NB. exponent
+NB. require '~user/projects/mt/log.ijs'                   NB. logarithm
 
 NB. =========================================================
 NB. Interface
@@ -107,8 +111,8 @@ test=: 1 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gesv getrf potrf'
 
-  '%-25s %-12s %-12s %-12s %-12s %-12s' & printf ^: (VERBOSE"_) 'algorithm' ; 'rcond' ; 'backward err' ; 'forward err' ; 'time, sec.' ; 'space, bytes'
+  '%-25s %-12s %-12s %-12s %-12s %-12s' & printf 'algorithm' ; 'rcond' ; 'backward err' ; 'forward err' ; 'time, sec.' ; 'space, bytes'
   assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
-  ((u testtrf) , ((u testtri) ^: (=/)), ((u testtrs) ^: (=/))) y
+  ((u testtrf) [ (u testtri) [ (u testtrs)) y
 )
 

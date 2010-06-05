@@ -21,7 +21,7 @@ NB. basic values
 FP_BASE=: 2                                           NB. floating point base
 FP_ELEN=: 11                                          NB. exponent field length (bits)
 FP_FLEN=: 53                                          NB. fraction field length (bits)
-FP_IGUNFL=: 1                                         NB. is gradual underflow? (boolean)
+FP_IGUF=: 1                                           NB. is gradual underflow? (boolean)
 
 NB. derived values
 FP_EBIAS=: (FP_BASE ^ (FP_ELEN - 1)) - 1              NB. exponent bias for normalized numbers = 1023

@@ -263,68 +263,70 @@ NB. Description:
 NB.   Inverse Hermitian (symmetric) matrix using the
 NB.   triangular factorization with full pivoting
 NB. where
-NB.   ip  - n-vector, full inversed permutation of A, as
-NB.         returned by hetrfpx
-NB.   L1  - n×n-matrix, unit lower triangular, as returned by
-NB.         hetrfpl
-NB.   U1  - n×n-matrix, unit upper triangular, as returned by
-NB.         hetrfpu
-NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal, as
-NB.         returned by hetrfpx
-NB.   iA  - n×n-matrix, inversion of A
-NB.   P   - n×n-matrix, full permutation of A
-NB.   A   - n×n-matrix to inverse
+NB.   ip - n-vector, full inversed permutation of A, as
+NB.        returned by hetrfpx
+NB.   L1 - n×n-matrix, unit lower triangular, as returned by
+NB.        hetrfpl
+NB.   U1 - n×n-matrix, unit upper triangular, as returned by
+NB.        hetrfpu
+NB.   T  - n×n-matrix, Hermitian (symmetric) 3-diagonal, as
+NB.        returned by hetrfpx
+NB.   iA - n×n-matrix, inversion of A
+NB.   P  - n×n-matrix, full permutation of A
+NB.   A  - n×n-matrix to inverse, Hermitian (symmetric)
 NB.
 NB. Notes:
 NB. - models LAPACK's xHETRI, but uses Aasen factorization
 NB.   instead of Bunch-Kaufman one
 
-hetripl=: (0 & {::) sp (pttril @ pttrfl @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))
-hetripu=: (0 & {::) sp (pttril @ pttrfl @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))
-
-NB. quick-and-dirty iterative variant - doesn't work
-
-NB. 'pfxipi1 pfxL1i1 pfxTi1 sfxipi1 sfxL1i1 sfxTi1'=. hetripl (pfxipi;pfxL1i;pfxTi;sfxipi;sfxL1i;sfxTi)
-zzzhetriplstep=: 3 : 0
-  'pfxipi pfxL1i pfxTi sfxipi sfxL1i sfxTi'=. y
-  'n k'=. $ pfxL1i
-  akk=. % {. 0 _1 1 diag pfxTi        NB. last from main diagonal
-  ak1n=. (< _1 ; n ht2lios k) { pfxL1i
-  ak1nupd=. sfxL1i mp - ak1n
-  akkupd=. akk - 9 o. (+ ak1n) mp ak1nupd
-  ipk=. {: pfxipi
-  dp0=. 0 (lios2cp`(a:"_) @. (*. & (0&=))) ipk - (k-1)
-  dpk=. (k-1) lios2cp ipk
-  pfxipi=. }: pfxipi
-  pfxL1i=. }:"1 pfxL1i
-  pfxTi=. }:"1 pfxTi
-  sfxipi=. ipk , sfxipi
-  sfxL1i=. (1 , + ak1nupd) , ak1nupd ,. sfxL1i
-  tdiag=. akk , diag sfxTi
-  sfxTi=. ((dp0 (C. dbg 'C.') tdiag) ; a:) (setdiag dbg 'setdiag') (2 # 1+k-n) {. sfxTi
-  pfxipi ; pfxL1i ; pfxTi ; sfxipi ; sfxL1i ; sfxTi
-)
-
-NB. iA=. hetripl (ip ; L1 ; T)
-zzzhetripl=: 3 : 0
-  'ip L1 T'=. y
-  (hetriplstep dbg 'STEP') ^: (# ip) y , (i. 0) ; EMPTY ; EMPTY
-)
+hetripl=: (0 & {::) sp (httril @ httrfl @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))  NB. IMPLEMENTME
+hetripu=: (0 & {::) sp (httril @ httrfl @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))  NB. IMPLEMENTME
 
 NB. ---------------------------------------------------------
-NB. potri
-NB. Inverse a Hermitian (symmetric) positive definite matrix
-NB. using the Cholesky factorization:
-NB.   L * L' = A
-NB.   inv(A) = inv(L)' * inv(L)
+NB. Verb:     Factorization used:          Syntax:
+NB. potril    L * L^H = A                  iA=. potril L
+NB. potriu    U * U^H = A                  iA=. potriu U
+NB.
+NB. Description:
+NB.   Inverse Hermitian (symmetric) positive definite matrix
+NB.   using the triangular factorization
+NB. where
+NB.   L  - n×n-matrix, lower triangular, Cholesky triangle as
+NB.        returned by potrfl
+NB.   U  - n×n-matrix, upper triangular, Cholesky triangle as
+NB.        returned by potrfu
+NB.   iA - n×n-matrix, inversion of A
+NB.   A  - n×n-matrix to inverse, Hermitian (symmetric)
+NB.        positive definite
+NB.
+NB. Notes:
+NB. - models LAPACK's xPOTRI, but uses direct, not iterative
+NB.   matrix product
 
-potri=: (mp~ ct) @ trtril
+potril=: (mp~ ct) @ trtril
+potriu=: (mp~ ct) @ trtriu
 
 NB. ---------------------------------------------------------
-NB. pttril
-NB. iA=. pttril (L1;D)
+NB. Verb:     Factorization used:        Syntax:
+NB. pttril    L1 * D * L1^H = A          iA=. pttril (L1 ; D)
+NB. pttriu    U1 * D * U1^H = A          iA=. pttriu (U1 ; D)
+NB.
+NB. Description:
+NB.   Inverse Hermitian (symmetric) positive definite
+NB.   tridiagonal matrix using the triangular factorization
+NB. where
+NB.   L1 - n×n-matrix, unit lower triangular, as returned by
+NB.        pttrfl
+NB.   U1 - n×n-matrix, unit upper triangular, as returned by
+NB.        pttrfu
+NB.   D  - n×n-matrix, diagonal with positive diagonal
+NB.        entries, as returned by pttrfx
+NB.   iA - n×n-matrix, inversion of A
+NB.   A  - n×n-matrix to inverse, Hermitian (symmetric)
+NB.        positive definite tridiagonal
 
-pttril=: pttrsax idmat @ (0 & {::)
+pttril=: pttrsax idmat @ # @ (0 & {::)
+pttriu=: [:                             NB. pttrs version accepting U1*D*U1^H is not implemented yet
 
 NB. =========================================================
 NB. Test suite
@@ -348,9 +350,9 @@ NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testtrtri=: 3 : 0
   L1=. |: U1=. tru1 U=. |: y
-  rcondU=. (norm1 con trtriu) U
+  rcondU=.  (norm1 con trtriu ) U
   rcondU1=. (norm1 con trtriu1) U1
-  rcondL=. (norm1 con trtril) y
+  rcondL=.  (norm1 con trtril ) y
   rcondL1=. (norm1 con trtril1) L1
 
   ('(128!:1)'  tmonad (]`]`(rcondU "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U
@@ -379,45 +381,59 @@ NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testgetri=: 3 : 0
   rcond=. (norm1 con (getriul1p@getrful1p)) y
-  ipL1U=. getrfpl1u y
-  ipUL1=. getrful1p y
 
-  ('%.'        tmonad (]`]`(rcond"_)`(_."_)`(  (norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))                                     )) y
+  ('%.'        tmonad (] `]`(rcond"_)`(_."_)`(           (norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))   ))               y
 
-  ('getripl1u' tmonad (]`]`(rcond"_)`(_."_)`((((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))~ ((C.^:_1   (trl1 mp tru )) & >/))~))) ipL1U
-  ('getriul1p' tmonad (]`]`(rcond"_)`(_."_)`((((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))~ ((C.^:_1"1 (tru  mp trl1)) & >/))~))) ipUL1
+  ('getripl1u' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrfpl1u) y
+  ('getriul1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; getrful1p) y
 
   EMPTY
 )
 
-
 NB. ---------------------------------------------------------
 NB. testhetri
-NB. Test inverse algorithms with random Hermitian (symmetric)
-NB. matrix y
 NB.
-NB. thetri A
+NB. Description:
+NB.   Test hetripx by Hermitian (symmetric) matrix given
+NB.
+NB. Syntax:
+NB.   testhetri A
+NB. where
+NB.   A - n×n-matrix, Hermitian (symmetric)
+NB.
+NB. Formula:
+NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testhetri=: 3 : 0
-  n=. # y
-  GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
-  rcondHE=. norm1 con hetri HE=. ge2he GE
-  'hetri' ttri (HE;rcondHE)
+  rcond=. _. NB. (norm1 con (hetripl@hetrfpl)) y
+
+  ('hetripl' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
+  ('hetripu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpu) y
+
   EMPTY
 )
 
 NB. ---------------------------------------------------------
 NB. testpotri
-NB. Test inverse algorithms with random Hermitian (symmetric)
-NB. positive definite matrix y
 NB.
-NB. tpotri A
+NB. Description:
+NB.   Test hetripx by Hermitian (symmetric) positive definite
+NB.   matrix given
+NB.
+NB. Syntax:
+NB.   testpotri A
+NB. where
+NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
+NB.
+NB. Formula:
+NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpotri=: 3 : 0
-  n=. # y
-  GE=. (sdiag~ (# $ ((10&*)@:((*@diag) * (>./@:|@,))))) y
-  rcondPO=. norm1 con potri   PO=. (mp ct) GE  NB. >>> ###### PO=. ge2po GE
-  'potri'    ttri (PO;rcondPO)
+  rcond=. (norm1 con (potril@potrfl)) y
+
+  ('potril' tmonad ((1 & {::)`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; potrfl) y
+  ('potriu' tmonad ((1 & {::)`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; potrfu) y
+
   EMPTY
 )
 
@@ -425,10 +441,8 @@ NB. ---------------------------------------------------------
 NB. testpttri
 NB.
 NB. Description:
-NB.   Test triangular inversion algorithms:
-NB.   - pttri (math/mt addon)
-NB.   by Hermitian (symmetric) positive definite tridiagonal
-NB.   matrix given
+NB.   Test pttrix by Hermitian (symmetric) positive definite
+NB.   tridiagonal matrix given
 NB.
 NB. Syntax:
 NB.   testpttri A
@@ -440,9 +454,10 @@ NB. Formula:
 NB. - berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpttri=: 3 : 0
-  rcond=. (norm1 con (pttri@pttrfl)) y
+  rcond=. (norm1 con (pttril@pttrfl)) y
 
-  ('pttri' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('pttril' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; pttrfl) y
+  ('pttriu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; pttrfu) y
 
   EMPTY
 )

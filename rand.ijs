@@ -378,7 +378,7 @@ NB. where
 NB.   n - output matrix Q's size
 NB.
 NB. Assertion:
-NB.   I (-:!.(2^_34)) (mp ct) Q
+NB.   I -: clean (mp ct) Q
 NB. where
 NB.   I=. idmat n
 NB.   Q=. randnf unmat n

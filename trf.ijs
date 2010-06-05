@@ -606,7 +606,7 @@ NB. - L1 and D should be sparse
 pttrfl=: 3 : 0
   'e d'=. ((_1&diag) ; diag) y
   'e d'=. ((}.@:({."1)) ; ({:"1)) 1 {:: (((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: (# e) e ((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) d
-  L1=. ((e;_1) setdiag idmat $ y
+  L1=. (e;_1) setdiag idmat $ y
   D=. diagmat d
   L1 ; D
 )
@@ -673,11 +673,11 @@ NB.   infix scan is non-consequtive
 NB. - U1 and D should be sparse
 
 pttrfu=: 3 : 0
-  'e d'=. ((1&diag) ; diag) y NB. ###############
+  'e d'=. ((1&diag) ; diag) y
   'e d'=. ((}.@:({."1)) ; ({:"1)) 1 {:: (((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: (# e) e ((((,. soris)@[) ,. }.@]) ; ((,0) ,. _1{])) d
-  L1=. ((e;_1) setdiag idmat $ y
+  U1=. (e;1) setdiag idmat $ y
   D=. diagmat d
-  L1 ; D
+  U1 ; D
 )
 
 NB. =========================================================
@@ -699,10 +699,14 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - L*U1*P=A : berr := ||L * U1 * P - A|| / (ε * ||A|| * m)
-NB. - P*L1*U=A : berr := ||P * L1 * U - A|| / (ε * ||A|| * n)
-NB. - P*U1*L=A : berr := ||P * U1 * L - A|| / (ε * ||A|| * n)
-NB. - U*L1*P=A : berr := ||U * L1 * P - A|| / (ε * ||A|| * m)
+NB. - for L * U1 * P = A :
+NB.     berr := ||L * U1 * P - A|| / (ε * ||A|| * m)
+NB. - for P * L1 * U = A :
+NB.     berr := ||P * L1 * U - A|| / (ε * ||A|| * n)
+NB. - for P * U1 * L = A :
+NB.     berr := ||P * U1 * L - A|| / (ε * ||A|| * n)
+NB. - for U * L1 * P = A :
+NB.     berr := ||U * L1 * P - A|| / (ε * ||A|| * m)
 
 testgetrf=: 3 : 0
   require '~addons/math/misc/matfacto.ijs'
@@ -735,9 +739,9 @@ NB. where
 NB.   A - n×n-matrix, Hermitian
 NB.
 NB. Formula:
-NB. - P * L * T * L^H * P^_1 = A :
+NB. - for P * L * T * L^H * P^_1 = A :
 NB.     berr := ||P * L * T * L^H * P^_1 - A|| / (ε * ||A|| * n)
-NB. - P * U * T * U^H * P^_1 = A :
+NB. - for P * U * T * U^H * P^_1 = A :
 NB.     berr := ||P * U * T * U^H * P^_1 - A|| / (ε * ||A|| * n)
 
 testhetrf=: 3 : 0
@@ -766,9 +770,9 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite
 NB.
 NB. Formula:
-NB. - L * L^H = A :
+NB. - for L * L^H = A :
 NB.     berr := ||L * L^H - A|| / (ε * ||A|| * n)
-NB. - U * U^H = A :
+NB. - for U * U^H = A :
 NB.     berr := ||U * U^H - A|| / (ε * ||A|| * n)
 
 testpotrf=: 3 : 0
@@ -802,9 +806,9 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite tridiagonal
 NB.
 NB. Formula:
-NB. - L1 * D * L1^H = A :
+NB. - for L1 * D * L1^H = A :
 NB.     berr := ||L1 * D * L1^H - A|| / (ε * ||A|| * n)
-NB. - U1 * D * U1^H = A :
+NB. - for U1 * D * U1^H = A :
 NB.     berr := ||U1 * D * U1^H - A|| / (ε * ||A|| * n)
 
 testpttrf=: 3 : 0

@@ -227,7 +227,7 @@ NB.      then rewrite b by bout
 NB.   5) return b
 NB.
 NB. Assertions:
-NB.   A (-:!.(2^_34)) L1 (mp mp (ct@[)) D
+NB.   A -: clean L1 (mp mp (ct@[)) D
 NB. where
 NB.   'L1 D'=. pttrfl A
 NB.
@@ -250,6 +250,7 @@ pttrsax=: 4 : 0
   y=. _1 {:: (((}:@[) ; (({:@[) (((_2}.[)%(_2{[))-({:@[*])) ({.@])) , ]) & >/) ^: (# e) ((e ,.~ y (,. & }:) d) ; (y (% & (_1&{.)) d))
 )
 
+pttrsatx+; + @ (pttrsax +)
 
 NB. =========================================================
 NB. Test suite

@@ -7,6 +7,9 @@ NB. hetrfpx    Triangular factorization with full pivoting of
 NB.            a Hermitian (symmetric) matrix
 NB. potrfx     Cholesky factorization of a Hermitian
 NB.            (symmetric) positive definite matrix
+NB. pttrfx     Triangular factorization of a Hermitian
+NB.            (symmetric) positive definite tridiagonal
+NB.            matrix
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -23,7 +26,7 @@ NB.
 NB. Description:
 NB.   Triangular factorization with full pivoting of a
 NB.   Hermitian (symmetric) matrix:
-NB.     P * L1 * T * L1' * P' = A
+NB.     P * L1 * T * L1^H * P^_1 = A
 NB.    by non-blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
@@ -90,7 +93,7 @@ NB.
 NB. Description:
 NB.   Triangular factorization with full pivoting of a
 NB.   Hermitian (symmetric) matrix:
-NB.     P * U1 * T * U1' * P' = A
+NB.     P * U1 * T * U1^H * P^_1 = A
 NB.    by non-blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
@@ -377,7 +380,7 @@ NB.
 NB. Description:
 NB.   Triangular factorization with full pivoting of a
 NB.   Hermitian (symmetric) matrix:
-NB.     P * L1 * T * L1' * P' = A
+NB.     P * L1 * T * L1^H * P^_1 = A
 NB.    by blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
@@ -418,7 +421,7 @@ NB.
 NB. Description:
 NB.   Triangular factorization with full pivoting of a
 NB.   Hermitian (symmetric) matrix:
-NB.     P * U1 * T * U1' * P' = A
+NB.     P * U1 * T * U1^H * P^_1 = A
 NB.    by blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
@@ -453,7 +456,7 @@ NB.
 NB. Description:
 NB.   Cholesky factorization of a Hermitian (symmetric)
 NB.   positive definite matrix:
-NB.     L * L' = A
+NB.     L * L^H = A
 NB.
 NB. Syntax:
 NB.   L=. potrfl A
@@ -488,7 +491,7 @@ NB.
 NB. Description:
 NB.   Cholesky factorization of a Hermitian (symmetric)
 NB.   positive definite matrix:
-NB.     U * U' = A
+NB.     U * U^H = A
 NB.
 NB. Syntax:
 NB.   U=. potrfu A
@@ -515,6 +518,93 @@ potrfu=: 3 : 0
   else.
     %: y
   end.
+)
+
+NB. ---------------------------------------------------------
+NB. pttrfl
+NB.
+NB. Description:
+NB.   Triangular factorization of a Hermitian (symmetric)
+NB.   positive definite tridiagonal matrix:
+NB.     L1 * D * L1^H = A
+NB.
+NB. Syntax:
+NB.   'L1 D'=. pttrfl A
+NB. where
+NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
+NB.       tridiagonal
+NB.   D - n×n-matrix, diagonal
+NB.   L - n×n-matrix, unit lower bidiangonal
+NB.
+NB. Assertions:
+NB.   A (-:!.(2^_34)) L1 (mp mp (ct@[)) D
+NB. where
+NB.   'L1 D'=. pttrfl A
+NB.
+NB. Notes:
+NB. - L1 and D should be sparse
+
+acfh_bad=: 1 : '({:@] - ((u {:)~ {.))/\  @ ,.'  NB. adverb 'continued fraction' from head
+acft_bad=: 1 : '({:@] - ((u {:)~ {.))/\. @ ,.'  NB. adverb 'continued fraction' from tail
+
+pttrfliter=: 3 : 0
+  'ein esin din dout eout'=. y
+  dk1=. {: dout
+  dk=. ({. din) - ({. esin) % dk1
+  (}. ein) ; (}. esin) ; (}. din) ; (dout , dk) ; (eout , ({. ein) % dk1)
+)
+
+pttrfl=: 3 : 0
+  'd e'=. (diag ; (1&diag)) y
+  NB. stage0
+  'd e'=. _2 {. pttrfliter ^: (#e) (e ; (e^2) ; (}. d) ; ({. d) ; a:)
+  L1=. (e;_1) setdiag idmat $ y
+  D=. diagmat d
+  L1 ,: D
+)
+
+NB. Golub, Van Loan 1996 p. 157
+pttrfl2=: 3 : 0
+  n=. # y
+  'd e'=. (diag ; (1&diag)) y
+  NB. stage0
+  for_k. n ht2lios 1 do.
+    t=. (k-1) { e
+    ek1=. t % (k-1) { d
+    e=. ek1 (k-1) } e
+    d=. ((k{d) - t * ek1) k } d
+  end.
+  L1=. (e;_1) setdiag idmat $ y
+  D=. diagmat d
+  L1 ,: D
+)
+
+NB. X=. (d;e) pttrfsax b
+pttrfsax_bad=: 3 : 0
+  'd e'=. x
+  NB. stage1
+  y=. (0,e) ({."1 @ (* acfh)) y
+  NB. stage2
+  (0,e) ({."1 @ (* acft)) (y % d)
+)
+
+pttrfsaxstep1=: 3 : 0
+  'ein Bin Bout'=. y
+  (}. ein) ; (}. Bin) ; (Bout , (({. Bin) - ({. ein) * ({: Bout)))
+)
+
+pttrfsaxstep2=: 3 : 0
+  'ein din Bin Bout'=. y
+  (}: ein) ; (}: din) ; (}: Bin) ; (((Bin (% & {:) din) - (({: ein) * ({. Bout))) , Bout)
+)
+
+NB. X=. (L1 ,: D) pttrfsax B
+pttrfsax=: 4 : 0
+  'L1 D'=. x
+  e=. _1 diag L1
+  d=. diag D
+  y=. _1 {:: pttrfsaxstep1 ^: (<: # L1) (e ; (}. y) ; (1 {. y))
+  y=. _1 {:: pttrfsaxstep2 ^: (<: # L1) (e ; (}: d) ; (}: y) ; (y (% & (_1&{.)) d))
 )
 
 NB. =========================================================
@@ -574,8 +664,10 @@ NB. where
 NB.   A - n×n-matrix, Hermitian
 NB.
 NB. Formula:
-NB. - P*L*T*L'*P'=A : berr := ||P*L*T*L'*P' - A ||/(ε*||A||*n)
-NB. - P*U*T*U'*P'=A : berr := ||P*U*T*U'*P' - A ||/(ε*||A||*n)
+NB. - P * L * T * L^H * P^_1 = A :
+NB.     berr := || P * L * T * L^H * P^_1 - A ||/(ε * ||A|| * n)
+NB. - P * U * T * U^H * P^_1 = A :
+NB.     berr := || P * U * T * U^H * P^_1 - A ||/(ε * ||A|| * n)
 
 testhetrf=: 3 : 0
   rcond=. (norm1 con hetri) y
@@ -603,8 +695,10 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite
 NB.
 NB. Formula:
-NB. - L*L'=A : berr := ||L*L' - A ||/(ε*||A||*n)
-NB. - U*U'=A : berr := ||U*U' - A ||/(ε*||A||*n)
+NB. - L * L^H = A :
+NB.     berr := || L * L^H - A ||/(ε * ||A|| * n)
+NB. - U * U^H = A :
+NB.     berr := || U * U^H - A ||/(ε * ||A|| * n)
 
 testpotrf=: 3 : 0
   require '~addons/math/misc/matfacto.ijs'

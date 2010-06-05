@@ -272,28 +272,50 @@ NB. ---------------------------------------------------------
 NB. setdiag
 NB.
 NB. Description:
-NB.   Assign scalar value to a solid part of diagonal
+NB.   Assign value[s] to a solid part of diagonal
 NB.
 NB. Syntax:
-NB.   Aupd=. (e[,d[,h[,s]]]) setdiag A
+NB.   Aupd=. (e;[d[,h[,s]]]) setdiag A
 NB. where
 NB.   A    - m×n-matrix to change
-NB.   e    - scalar, the value to assign
+NB.   e    - scalar or k-vector, value[s] to assign
 NB.   d    - integer in range [1-m,n-1], optional IO
 NB.          diagonal, default is 0 (main diagonal)
 NB.   h    - integer in range [-S,S-1], optional IO extreme
 NB.          element of solid part within diagonal, default
 NB.          is 0 (take from head)
-NB.   s    - integer in range [-S,S] or ±∞, optional size of
-NB.          solid part within diagonal, default is +∞ (all
-NB.          elements in forward direction)
-NB.   Aupd - m×n-matrix A with value e assigned to solid part
-NB.          within d-th diagonal
-NB.   S    ≥ 0, the length of d-th diagonal
+NB.   s    - integer in range [-S,S] or ±∞ (default is +∞)
+NB.          when e is scalar, or either -k or k (default is
+NB.          k) when e is vector; optional size of solid part
+NB.          within diagonal, default values mean "all
+NB.          elements in forward direction"
+NB.   Aupd - m×n-matrix A with value[s] e assigned to solid
+NB.          part within d-th diagonal
+NB.   S    ≥ 0, the length of d-th diagonal, if e is vector
+NB.          then S=k must hold
+NB.
+NB. Examples:
+NB. 
+NB.    (2; a:) setdiag 4 4 $ 0         (2; _1 1 1) setdiag 4 4 $ 0
+NB. 2 0 0 0                         0 0 0 0
+NB. 0 2 0 0                         0 0 0 0
+NB. 0 0 2 0                         0 2 0 0
+NB. 0 0 0 2                         0 0 0 0
+NB.    (2; _1) setdiag 4 4 $ 0         (1 2 3; _1) setdiag 4 4 $ 0
+NB. 0 0 0 0                         0 0 0 0
+NB. 2 0 0 0                         1 0 0 0
+NB. 0 2 0 0                         0 2 0 0
+NB. 0 0 2 0                         0 0 3 0
+NB.    (2; _1 1) setdiag 4 4 $ 0       (1 2 3; _1 _1 _3) setdiag 4 4 $ 0
+NB. 0 0 0 0                         0 0 0 0
+NB. 0 0 0 0                         3 0 0 0
+NB. 0 2 0 0                         0 2 0 0
+NB. 0 0 2 0                         0 0 1 0
 
 setdiag=: 4 : 0
-  'e dhs'=. ({. ; }.) x=. ((i. 4) < (# x)) } 0 0 0 _ ,: x  NB. in-place op
-  lios=. dhs (diaglios $) y
+  'e dhs'=. x
+  dhs=. ((i. 3) < (# dhs)) } (0 0 , (_:`#@.(0<#@$) e)) ,: dhs  NB. assign defaults, in-place op
+  lios=. dhs diaglios $ y
   e (lios"_) } y
 )
 
@@ -376,7 +398,7 @@ NB. 0 1 0 0                      0 0 0 0
 NB. 0 0 1 0                      1 0 0 0
 NB. 0 0 0 1                      0 1 0 0
 
-idmat=: (0 0 _&$:) :((1 , [) setdiag (0 $~ 2 $ ]))
+idmat=: (0 0 _&$:) :((1;[) setdiag (0 $~ 2 $ ]))
 
 NB. ---------------------------------------------------------
 NB. diagmat
@@ -413,7 +435,7 @@ NB. 0 5 0                        0 5 0 0
 NB. 0 0 7                        0 0 7 0
 NB. 0 0 0
 
-diagmat=: (0 & $:) :(4 : 0)
+diagmat=: (0 0&$:) :(4 : 0)
   sh=. (#y) + (2&(|.@}. - {.)@(0&(<. , >.))) x  NB. find D shape
   lios=. ({. x) diaglios sh                     NB. lIOS for h-th diagonal
   y (lios"_) } sh $ 0                           NB. write e into matrix of zeros
@@ -539,7 +561,7 @@ NB. 1  1  0 0                    1 0
 NB. 5  6  1 0                    9 1
 NB. 9 10 11 1
 
-trl1=: (0&$:) :([ trl ((1 , [) setdiag ]))
+trl1=: (0&$:) :([ trl ((1;[) setdiag ]))
 
 NB. ---------------------------------------------------------
 NB. tru1
@@ -563,4 +585,4 @@ NB. 0 1                          1 5 6
 NB.                              0 1 9
 NB.                              0 0 1
 
-tru1=: (0&$:) :([ tru ((1 , [) setdiag ]))
+tru1=: (0&$:) :([ tru ((1;[) setdiag ]))

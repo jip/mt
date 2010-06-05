@@ -22,6 +22,13 @@ NB.           represented as Cholesky triangle; op(A) is
 NB.           either A itself, or A^T (the transposition of
 NB.           A); B is known right-hand side (RHS), X is
 NB.           unknown solution
+NB. pttrsxxx  Solve equation (op(A) * X = B) or
+NB.           (X * op(A) = B), where A is a Hermitian
+NB.           (symmetric) positive definite tridiagonal
+NB.           matrix, represented as superdiagonal linked to
+NB.           diagonal; op(A) is either A itself, or A^T (the
+NB.           transposition of A); B is known right-hand side
+NB.           (RHS), X is unknown solution
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -68,14 +75,15 @@ NB. - based on (P*L1*U) variant of factorization as the
 NB.   fastest among getrfxxxx
 NB.
 NB. TODO:
-NB. - implement LAPACK's xGETRS
+NB. - implement LAPACK's xGETRS and choose the best
 
-getrsax=:  (1 {:: [) ([ trsmux trsml1x) ((0 {:: [) C. ])
+getrsax=:  (1 {:: [) ([ trsmux  trsml1x ) ((0 {:: [) C.       ])
+getrsxah=: (1 {:: [) ([ trsmxuh trsmxl1h) ((0 {:: [) C.^:_1"1 ])
+getrsxah=: (1 {:: [) ([ trsmxut trsmxl1t) ((0 {:: [) C.^:_1"1 ])
+
 getrsahx=: (0 {:: [) C. ((] trsml1hx trsmuhx~) (1 & {::))~
 getrsatx=: (0 {:: [) C. ((] trsml1tx trsmutx~) (1 & {::))~
 getrsxa=:  (0 {:: [) C. ((] trsmxl1  trsmxu ~) (1 & {::))~
-getrsxah=: (1 {:: [) ([ trsmxuh trsmxl1h) ((0 {:: [) C.^:_1"1 ])
-getrsxah=: (1 {:: [) ([ trsmxut trsmxl1t) ((0 {:: [) C.^:_1"1 ])
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:         Syntax:
@@ -87,7 +95,7 @@ NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) matrix, represented in factored form:
-NB.     P * L1 * T * L1' * P' = A
+NB.     P * L1 * T * L1^H * P^_1 = A
 NB. where:
 NB.   A    - n×n-matrix, Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
@@ -100,16 +108,16 @@ NB.   T    - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
-NB. - based on (P*L1*T*L1'*P') variant of factorization as
-NB.   the fastest among hetrfxxxx
+NB. - based on (P * L1 * T * L1^H * P^_1 = A) variant of
+NB.   factorization as the fastest among hetrfxxxx
 NB.
 NB. TODO:
-NB. - implement LAPACK's xHETRS
+NB. - implement LAPACK's xHETRS and choose the best
 
-hetrsax=:   (0 {:: ])    C.^:_1  ((1 {:: ]) trsml1hx ((2 {:: [) httrsax  ((1 {:: [) trsml1x  ((0 {:: [) C.       ]))))
-hetrsatx=: ((0 {:: ]) +@(C.^:_1) ((1 {:: ]) trsml1hx ((2 {:: [) httrsax  ((1 {:: [) trsml1x  ((0 {:: [) C.       ]))))) +
-hetrsxa=:   (0 {:: ])    C."1    ((1 {:: ]) trsmxl1  ((2 {:: ]) httrsxa  ((1 {:: ]) trsmxl1h ((0 {:: [) C.^:_1"1 ]))))
-hetrsxat=: ((0 {:: ])    C."1    ((1 {:: ]) trsmxl1  ((2 {:: ]) httrsxa  ((1 {:: ]) trsmxl1h ((0 {:: [) C.^:_1"1 ]))))) +
+hetrsax=:   (0 {:: ])    C.^:_1  ((1 {:: ]) trsml1hx ((2 {:: [) pttrsax  ((1 {:: [) trsml1x  ((0 {:: [) C.       ]))))
+hetrsatx=: ((0 {:: ]) +@(C.^:_1) ((1 {:: ]) trsml1hx ((2 {:: [) pttrsax  ((1 {:: [) trsml1x  ((0 {:: [) C.       ]))))) +
+hetrsxa=:   (0 {:: ])    C."1    ((1 {:: ]) trsmxl1  ((2 {:: ]) pttrsxa  ((1 {:: ]) trsmxl1h ((0 {:: [) C.^:_1"1 ]))))
+hetrsxat=: ((0 {:: ])    C."1    ((1 {:: ]) trsmxl1  ((2 {:: ]) pttrsxa  ((1 {:: ]) trsmxl1h ((0 {:: [) C.^:_1"1 ]))))) +
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:         Syntax:
@@ -121,7 +129,7 @@ NB.
 NB. Description:
 NB.   Solve Hermitian (symmetric) positive definite system
 NB.   via Cholesky factorization:
-NB.     L * L' = A
+NB.     L * L^H = A
 NB. where:
 NB.   A    - n×n Hermitian (symmetric) positive definite
 NB.          matrix
@@ -134,11 +142,11 @@ NB.          diagonal entries, Cholesky triangle
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
-NB. - based on (L*L') variant of factorization as the
+NB. - based on (L * L^H = A) variant of factorization as the
 NB.   fastest among potrfx
 NB.
 NB. TODO:
-NB. - implement LAPACK's xPOTRS
+NB. - implement LAPACK's xPOTRS and choose the best
 
 potrsax=:   [   trsmlhx trsmlx
 potrsatx=: ([ +@trsmlhx trsmlx ) +

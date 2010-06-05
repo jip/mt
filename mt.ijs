@@ -1,6 +1,6 @@
 NB. Matrix toolbox
 NB.
-NB. test      Adv. to test package
+NB. test      Adv. to test addon
 NB. logstat   Show statistics from log array
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
@@ -54,7 +54,7 @@ script_z_ '~system/main/myutil.ijs'                   NB. timespacex
 script_z_ '~system/packages/math/mathutil.ijs'        NB. mp
 
 NB. ---------------------------------------------------------
-NB. Package verbs and nouns
+NB. Addon verbs and nouns
 
 NB. utility
 require '~user/projects/mt/util.ijs'    NB. utilities
@@ -91,7 +91,7 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. test
-NB. Adv. to test package
+NB. Adv. to test addon
 NB.
 NB. Syntax:
 NB.   r=. mkge test (m,n)
@@ -117,13 +117,17 @@ NB. - test3 - test space  (3-rank) algos
 
 test=: 1 : 0
   '%-25s %-12s %-12s %-12s %-12s %-12s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
+  (u testref) y
   (u testgq) y
-  (u testhrd) y
   (u testmq) y
+
+  (u testhrd) y
   (u testqf) y
 NB.  (u testtrf) y
 NB.  (u testtri) y
 NB.  (u testtrs) y
+
+  EMPTY
 )
 
 NB. ---------------------------------------------------------

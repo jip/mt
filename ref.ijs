@@ -7,8 +7,9 @@ NB.            β≥0
 NB. larfxxx    Monads to generate an elementary reflector
 NB. larftxx    Monads to form the triangular factor of a
 NB.            block reflector
-NB. larfxxxx   Dyads to apply a reflector or its transpose to
-NB.            a matrix from either the left or the right
+NB. larfxxxx   Dyads to apply an elementary reflector or its
+NB.            transpose to a matrix from either the left or
+NB.            the right
 NB. larfbxxxx  Dyads to build a block reflector by larftxx
 NB.            and to apply it or its transpose to a matrix
 NB.            from either the left or the right
@@ -18,6 +19,87 @@ NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-01-01
 
 coclass 'mt'
+
+NB. =========================================================
+NB. Concepts
+
+NB. ---------------------------------------------------------
+NB. larftxx
+NB.
+NB. Description:
+NB.   Monads to form the triangular factor T of a block
+NB.   reflector H, which is defined as a product of k
+NB.   elementary reflectors.
+NB.
+NB. Algorithm:
+NB.   1) prepare V0: V0=. iot 0} Vtau
+NB.   2) prepare V0r: V0r=. vV V0
+NB.   3) extract tau: tau=. iot { Vtau
+NB.   4) prepare coefficients matrix P: P=. tau vP V0r
+NB.   5) let T[i]=0×0-matrix, start loop i=0:k-1:
+NB.      5.1) extract vector p[i]: pi=P[i,0:i-1]
+NB.      5.2) calc new column: c[i]: ci=. pi mp Ti
+NB.      5.3) stitch c[i] to T[i]: Ti=. Ti vTi ci
+NB.      5.4) append zero row to T[i]: Ti=. (0 & va0) Ti
+NB.      5.5) write 1 in the diagonal element of appended
+NB.           zero row: Ti=. (1 & vs1) Ti
+NB.   6) multiply T[i] by tau (item-by-row): T=. tau * Ti
+NB. where
+NB.   vV   - verb to prepare V0r; input must be a triangular
+NB.          (trapezoidal) matrix with zeroed tau elements;
+NB.          vectors within output must get horizontal
+NB.          orientation; is called as:
+NB.            V0r=. vV V0
+NB.   vP   - verb to calculate coefficients matrix P; is
+NB.          called as:
+NB.            P=. tau vP V0r
+NB.   vTi  - verb to stitch new column while building matrix
+NB.          T on current iteration; is called as:
+NB.            Tiupd=. P vTi Ti
+NB.   va0  - verb to append or prepend Tiupd with row of
+NB.          values from scalar x; is called as:
+NB.            Tiupd0=. (0 & va0) Tiupd
+NB.   vs1  - verb to place scalar x in the diagonal element
+NB.          of column just added by va0; is called as:
+NB.            Tiupd1=. (1 & vs1) Tiupd0
+NB.   iost - IOS tau in Vtau
+NB.   vapp - dyad to form the triangular factor T; is called
+NB.          as:
+NB.            T=. vapp Vtau
+NB.   Vtau - matrix V with appended or stitched vector tau
+NB.   V0   - unit triangular (trapezoidal) matrix with zeroed
+NB.          tau elements
+NB.   V0r  - k×(n+1)-matrix, unit triangular (trapezoidal)
+NB.          with rows - elementary reflectors v[i], i=0:k-1,
+NB.          and zeroed tau elements
+NB.   P    - coefficients, it is either the k×k-matrix
+NB.          (-tau)*Pfwd for forward direction, or
+NB.          k×(k-1)-matrix (0 1 }. ((-tau)*Pbwd)) for
+NB.          backward direction (item-by-row product in both
+NB.          cases)
+NB.   Pfwd - k×k-matrix ('*' means trash):
+NB.            [ *        0        0        ... 0          0   ]
+NB.            [ p[1,0]   *        0        ... 0          0   ]
+NB.            [ p[2,0]   p[2,1]   *        ... 0          0   ]
+NB.            [ ...      ...      ...      ... ...        ... ]
+NB.            [ p[k-1,0] p[k-1,1] p[k-1,2] ... p[k-1,k-2] *   ]
+NB.          where for i=0:k-1
+NB.            p[i] = (p[i,0:i-1] , *) = V0r[0:i,0:n-1] * V0r'[i,0:n-1]
+NB.   Pbwd - k×k-matrix ('*' means trash):
+NB.            [ *   0        0        0        ... 0          ]
+NB.            [ *   p[1,0]   0        0        ... 0          ]
+NB.            [ *   p[2,0]   p[2,1]   0        ... 0          ]
+NB.            [ ... ...      ...      ...      ... ...        ]
+NB.            [ *   p[k-1,0] p[k-1,1] p[k-1,2] ... p[k-1,k-2] ]
+NB.          where for i=0:k-1, j=k-1-i
+NB.            p[i] = (* , p[i,0:i-1]) = V0r[j:k-1,0:n-1] * V0r'[j,0:n-1]
+NB.   tau  - k-vector of τ[0:k-1], corresp. to V,
+NB.            tau -: iost { Vtau
+NB.   T    - k×k-matrix, upper or lower triangular
+NB.
+NB. Notes:
+NB. - emulates LAPACK's xLARFT, but without zeros scanning in
+NB.   v[i]
 
 NB. =========================================================
 NB. Local definitions
@@ -158,148 +240,118 @@ larfpb=: _1 0 & larfp
 larfpbc=: 0 + upd1 larfpb
 
 NB. ---------------------------------------------------------
-NB. Verb       Direction    Layout
-NB. larftbc    backward     columnwise
-NB. larftbr    backward     rowwise
-NB. larftfc    forward      columnwise
-NB. larftfr    forward      rowwise
+NB. larftbc
 NB.
 NB. Description:
-NB.   Monads to form the triangular factor T of a block
-NB.   reflector H. If direction is forward, then:
-NB.     H = H(0) * H(1) * ... * H(k-1) and T is upper
-NB.   triangular, otherwise direction is backward, and:
-NB.     H = H(k-1) * ... * H(1) * H(0) and T is lower
-NB.   triangular. If layout is columnwise, then:
-NB.     H = I - V * T * V' ,
-NB.   otherwise layout is rowwise, and:
-NB.     H = I - V' * T * V .
+NB.   Monad to form the triangular factor T of a block
+NB.   reflector H:
+NB.     H = H(k-1) * ... * H(1) * H(0) = I - V * T * V' ,
+NB.   where T is lower triangular.
 NB.
 NB. Syntax:
-NB.   Tl=. larftbc Vbct
-NB.   Tl=. larftbr Vbrt
-NB.   Tu=. larftfc Vfct
-NB.   Tu=. larftfr Vfrt
+NB.   T=. larftbc eV
 NB. where
-NB.   Vbct - (m+1)×k-matrix (tau , Vbc)
-NB.   Vbc  - m×k-matrix, unit upper triangular (trapezoidal)
-NB.          with 1s on (k-m)-th diagonal and 0s below
-NB.   Vbrt - k×(n+1)-matrix (tau ,. Vbr)
-NB.   Vbr  - k×n-matrix, unit lower triangular (trapezoidal)
-NB.          with 1s on (n-k)-th diagonal and 0s above
-NB.   Vfct - (m+1)×k-matrix (Vfc , tau)
-NB.   Vfc  - m×k-matrix, unit lower triangular (trapezoidal)
-NB.          with 1s on 0-th diagonal and 0s above
-NB.   Vfrt - k×(n+1)-matrix (Vfr ,. tau)
-NB.   Vfr  - k×n-matrix, unit upper triangular (trapezoidal)
-NB.          with 1s on 0-th diagonal and 0s below
-NB.   tau  - k-vector τ[0:k-1] corresp. to Vbc, Vbr, Vfc or
-NB.          Vfr
-NB.   Tl   - k×k-matrix, lower triangular
-NB.   Tu   - k×k-matrix, upper triangular
+NB.   eV  - (m+1)×k-matrix (tau,V)
+NB.   V   - m×k-matrix, unit upper triangular (trapezoidal)
+NB.         with 1s on (k-m)-th diagonal and 0s below
+NB.   tau - k-vector τ[0:k-1] corresp. to V
+NB.   T   - k×k-matrix, lower triangular
 
-NB. bad
-rlarftbc=: 3 : 0
-  n=. c y
-  if. 1=n do.
-    1 {. y
-  elseif. 1<n do.
-    k=. <. -: n
-    Vl=. k {."1 y
-    Vr=. k }."1 y
-    T00=. rlarftbc Vl
-    T11=. rlarftbc Vr
-    T00 , ((- T00 mp ((ct Vl) mp (0 (0}) Vr)) mp T11) ,. T11)
-  elseif. do.  NB. 0=n
-    EMPTY
-  end.
-)
-
-NB. not checked yet
-rlarftbr=: 3 : 0
-  m=. # y
-  if. 1=m do.
-    1 1 {. y
-  elseif. 1<m do.
-    k=. <. -: n
-    Vl=. k {. y
-    Vr=. k }. y
-    T00=. rlarftbr Vt
-    T11=. rlarftbr Vb
-    T00 , ((- T00 mp ((ct Vt) mp (0 (0}) Vb)) mp T11) ,. T11)
-  elseif. do.  NB. 0=m
-    EMPTY
-  end.
-)
-
-NB. ok
-rlarftfc=: 3 : 0
-  n=. c y
-  if. 1=n do.
-    _1 {. y
-  elseif. 1<n do.
-    k=. <. -: n
-    Vl=. k {."1 y
-    Vr=. k }."1 y
-    T00=. rlarftfc Vl
-    T11=. rlarftfc Vr
-    (T00 ,. (- T00 mp ((ct Vl) mp (0 (_1}) Vr)) mp T11)) (_1 append) T11
-  elseif. do.  NB. 0=n
-    EMPTY
-  end.
-)
-
-NB. bad
-rlarftfr=: 3 : 0
-  m=. # y
-  if. 1=m do.
-    1 _1 {. y
-  elseif. 1<m do.
-    k=. <. -: m
-    Vt=. k {. y
-    Vb=. k }. y
-    T00=. rlarftfr Vt
-    T11=. rlarftfr Vb
-    (T00 ,. (- T00 mp ((ct Vt) mp (0 (_1}) Vb)) mp T11)) (_1 append) T11
-  elseif. do.  NB. 0=m
-    EMPTY
-  end.
-)
+larftbc=: (         0 &{) ([ * (EMPTY (((1 & ( 0:})) @ (0&,) @ (] (,.~) (] mp (([ {. {)~ #)))) ^: (#@[))~ (|.@(1&(}."1))@((* -)~ ((mp ct) {.)\.)))) (ct@(0&(         0 })))
+larftbr=: ((< a: ;  0)&{) ([ * (EMPTY (((1 & ( 0:})) @ (0&,) @ (] (,.~) (] mp (([ {. {)~ #)))) ^: (#@[))~ (|.@(1&(}."1))@((* -)~ ((mp ct) {.)\.)))) (    0&((< a: ;  0)}) )
+larftfc=: (        _1 &{) ([ * (EMPTY (((1 & (_1:})) @ (,&0) @ (]  ,.   (] mp (([ {. {)~ #)))) ^: (#@[))~ (               (* -)~ ((mp ct) {:)\  ))) (ct@(0&(        _1 })))
+larftfr=: ((< a: ; _1)&{) ([ * (EMPTY (((1 & (_1:})) @ (,&0) @ (]  ,.   (] mp (([ {. {)~ #)))) ^: (#@[))~ (               (* -)~ ((mp ct) {:)\  ))) (    0&((< a: ; _1)}) )
 
 NB. ---------------------------------------------------------
-NB. Verb       Action   Side   Tran  Dir  Layout    eC    Used in
-NB. larflcbc   H' * C   left   ct    bwd  col-wise  0, C  geql2
-NB. larflcbr   H' * C   left   ct    bwd  rowwise   0, C
-NB. larflcfc   H' * C   left   ct    fwd  col-wise  C, 0  geqr2,gehd2u
-NB. larflcfr   H' * C   left   ct    fwd  rowwise   C, 0
-NB. larflnbc   H  * C   left   none  bwd  col-wise  0, C  ung2l
-NB. larflnbr   H  * C   left   none  bwd  rowwise   0, C
-NB. larflnfc   H  * C   left   none  fwd  col-wise  C, 0  ung2r
-NB. larflnfr   H  * C   left   none  fwd  rowwise   C, 0  gehd2l
-NB. larfrcbc   C  * H'  right  ct    bwd  col-wise  0,.C
-NB. larfrcbr   C  * H'  right  ct    bwd  rowwise   0,.C  ungr2
-NB. larfrcfc   C  * H'  right  ct    fwd  col-wise  C,.0
-NB. larfrcfr   C  * H'  right  ct    fwd  rowwise   C,.0  ungl2
-NB. larfrnbc   C  * H   right  none  bwd  col-wise  0,.C
-NB. larfrnbr   C  * H   right  none  bwd  rowwise   0,.C  gerq2
-NB. larfrnfc   C  * H   right  none  fwd  col-wise  C,.0  gehd2u,gehd2l
-NB. larfrnfr   C  * H   right  none  fwd  rowwise   C,.0  gelq2,unml2
+NB. larftbr
 NB.
 NB. Description:
-NB.   Dyads to apply a reflector or its transpose to a
-NB.   matrix, from either the left or the right
+NB.   Monad to form the triangular factor T of a block
+NB.   reflector H:
+NB.     H = H(k-1) * ... * H(1) * H(0) = I - V' * T * V ,
+NB.   where T is lower triangular.
+NB.
+NB. Syntax:
+NB.   T=. larftbr eV
+NB. where
+NB.   eV  - k×(n+1)-matrix (tau,.V)
+NB.   V   - k×n-matrix, unit lower triangular (trapezoidal)
+NB.         with 1s on (n-k)-th diagonal and 0s above
+NB.   tau - k-vector τ[0:k-1] corresp. to V
+NB.   T   - k×k-matrix, lower triangular
+
+
+NB. ---------------------------------------------------------
+NB. larftfc
+NB.
+NB. Description:
+NB.   Monad to form the triangular factor T of a block
+NB.   reflector H:
+NB.     H = H(0) * H(1) * ... * H(k-1) = I - V * T * V' ,
+NB.   where T is upper triangular.
+NB.
+NB. Syntax:
+NB.   T=. larftfc eV
+NB. where
+NB.   eV  - (m+1)×k-matrix (V,tau)
+NB.   V   - m×k-matrix, unit lower triangular (trapezoidal)
+NB.         with 1s on 0-th diagonal and 0s above
+NB.   tau - k-vector τ[0:k-1] corresp. to V
+NB.   T   - k×k-matrix, upper triangular
+
+
+NB. ---------------------------------------------------------
+NB. larftfr
+NB.
+NB. Description:
+NB.   Monad to form the triangular factor T of a block
+NB.   reflector H:
+NB.     H = H(0) * H(1) * ... * H(k-1) = I - V' * T * V ,
+NB.   where T is upper triangular.
+NB.
+NB. Syntax:
+NB.   T=. larftfr eV
+NB. where
+NB.   eV  - k×(n+1)-matrix (V,.tau)
+NB.   V   - k×n-matrix, unit upper triangular (trapezoidal)
+NB.         with 1s on 0-th diagonal and 0s below
+NB.   tau - k-vector τ[0:k-1] corresp. to V
+NB.   T   - k×k-matrix, upper triangular
+
+
+NB. ---------------------------------------------------------
+NB. Verb       Action    Side    Tran   Dir   Layout     eC
+NB. larflcbc   H' * C    left    ct     bwd   col-wise   0, C
+NB. larflcbr   H' * C    left    ct     bwd   rowwise    0, C
+NB. larflcfc   H' * C    left    ct     fwd   col-wise   C, 0
+NB. larflcfr   H' * C    left    ct     fwd   rowwise    C, 0
+NB. larflnbc   H  * C    left    none   bwd   col-wise   0, C
+NB. larflnbr   H  * C    left    none   bwd   rowwise    0, C
+NB. larflnfc   H  * C    left    none   fwd   col-wise   C, 0
+NB. larflnfr   H  * C    left    none   fwd   rowwise    C, 0
+NB. larfrcbc   C  * H'   right   ct     bwd   col-wise   0,.C
+NB. larfrcbr   C  * H'   right   ct     bwd   rowwise    0,.C
+NB. larfrcfc   C  * H'   right   ct     fwd   col-wise   C,.0
+NB. larfrcfr   C  * H'   right   ct     fwd   rowwise    C,.0
+NB. larfrnbc   C  * H    right   none   bwd   col-wise   0,.C
+NB. larfrnbr   C  * H    right   none   bwd   rowwise    0,.C
+NB. larfrnfc   C  * H    right   none   fwd   col-wise   C,.0
+NB. larfrnfr   C  * H    right   none   fwd   rowwise    C,.0
+NB.
+NB. Description:
+NB.   Dyads to apply an elementary reflector H or its
+NB.   transpose H' to a matrix, from either the left or the
+NB.   right. H is defined by pair (v,τ) .
 NB.
 NB. Syntax:
 NB.   eCupd=. vtau larfxxxx eC
 NB. where
-NB.   eC    - matrix C to update with appended or stitched
+NB.   eC    - matrix C to update, augmented by trash vector
+NB.   vtau  - vector v augmented by scalar τ
+NB.   eCupd - being updated matrix C , augmented by modified
 NB.           trash vector
-NB.   vtau  - v with appended tau
-NB.   eCupd - being updated matrix C with appended or
-NB.           stitched modified trash vector
 NB.   v     - vector with 1 at head (forward direction) or
 NB.           tail (backward direction)
-NB.   tau   - scalar τ
 NB.
 NB. Notes:
 NB. - emulates LAPACK's xLARF
@@ -326,37 +378,38 @@ larfrnfc=: ] - (mp ((0 & (_1 })) * {:))~ */ (+ @ [)     NB. C - (C * (v * τ)) *
 larfrnfr=: ] - (mp ((+ @ (0 & (_1 }))) * {:))~ */ [     NB. C - (C * (v' * τ)) * v
 
 NB. ---------------------------------------------------------
-NB. Verb       Action   Side   Tran  Dir  Layout    eC    Used in
-NB. larfblcbc  H' * C   left   ct    bwd  col-wise  0, C  geqlf
-NB. larfblcbr  H' * C   left   ct    bwd  rowwise   0, C
-NB. larfblcfc  H' * C   left   ct    fwd  col-wise  C, 0  geqrf,gehrdu
-NB. larfblcfr  H' * C   left   ct    fwd  rowwise   C, 0  unmlq
-NB. larfblnbc  H  * C   left   none  bwd  col-wise  0, C  ungql
-NB. larfblnbr  H  * C   left   none  bwd  rowwise   0, C
-NB. larfblnfc  H  * C   left   none  fwd  col-wise  C, 0  ungqr
-NB. larfblnfr  H  * C   left   none  fwd  rowwise   C, 0
-NB. larfbrcbc  C  * H'  right  ct    bwd  col-wise  0,.C
-NB. larfbrcbr  C  * H'  right  ct    bwd  rowwise   0,.C  ungrq
-NB. larfbrcfc  C  * H'  right  ct    fwd  col-wise  C,.0
-NB. larfbrcfr  C  * H'  right  ct    fwd  rowwise   C,.0  unglq
-NB. larfbrnbc  C  * H   right  none  bwd  col-wise  0,.C
-NB. larfbrnbr  C  * H   right  none  bwd  rowwise   0,.C  gerqf
-NB. larfbrnfc  C  * H   right  none  fwd  col-wise  C,.0
-NB. larfbrnfr  C  * H   right  none  fwd  rowwise   C,.0  gelqf,unmlq
+NB. Verb       Action    Side    Tran   Dir   Layout     eC
+NB. larfblcbc  H' * C    left    ct     bwd   col-wise   0, C
+NB. larfblcbr  H' * C    left    ct     bwd   rowwise    0, C
+NB. larfblcfc  H' * C    left    ct     fwd   col-wise   C, 0
+NB. larfblcfr  H' * C    left    ct     fwd   rowwise    C, 0
+NB. larfblnbc  H  * C    left    none   bwd   col-wise   0, C
+NB. larfblnbr  H  * C    left    none   bwd   rowwise    0, C
+NB. larfblnfc  H  * C    left    none   fwd   col-wise   C, 0
+NB. larfblnfr  H  * C    left    none   fwd   rowwise    C, 0
+NB. larfbrcbc  C  * H'   right   ct     bwd   col-wise   0,.C
+NB. larfbrcbr  C  * H'   right   ct     bwd   rowwise    0,.C
+NB. larfbrcfc  C  * H'   right   ct     fwd   col-wise   C,.0
+NB. larfbrcfr  C  * H'   right   ct     fwd   rowwise    C,.0
+NB. larfbrnbc  C  * H    right   none   bwd   col-wise   0,.C
+NB. larfbrnbr  C  * H    right   none   bwd   rowwise    0,.C
+NB. larfbrnfc  C  * H    right   none   fwd   col-wise   C,.0
+NB. larfbrnfr  C  * H    right   none   fwd   rowwise    C,.0
 NB.
 NB. Description:
-NB.   Dyads to build and apply a block reflector or its
-NB.   transpose to a matrix, from either the left or the
-NB.   right
+NB.   Dyads to build and apply a block reflector H or its
+NB.   transpose H' to a matrix, from either the left or the
+NB.   right. H is defined by pair (V,Τ) , where Τ is the
+NB.   triangular factor produced from pair (V,tau) by
+NB.   larftxx .
 NB.
 NB. Syntax:
 NB.   eCupd=. Vtau larfbxxxx eC
 NB. where
-NB.   eC    - matrix C to update with appended or stitched
+NB.   eC    - matrix C to update, augmented by trash vector
+NB.   Vtau  - matrix V augmented by vector tau
+NB.   eCupd - being updated matrix C , augmented by modified
 NB.           trash vector
-NB.   Vtau  - matrix V with appended or stitched vector tau
-NB.   eCupd - being updated matrix C with appended or
-NB.           stitched modified trash vector
 NB.   V     - unit triangular (trapezoidal) matrix
 NB.   tau   - k-vector τ[0:k-1] corresp. to V
 NB.
@@ -368,7 +421,6 @@ NB. - larfxxxx and larfbxxxx are topological equivalents
 larfblcbc=: ] - [ mp (mp~ (ct @ ((0 & (IOSFR })) mp larftbc)))~   NB. C - V * ((V * T)' * C)
 larfblcbr=: ] - (ct @ (mp~ larftbr) @ [) mp ((0 IOSFC } [) mp ])  NB. C - (T * V)' * (V * C)
 larfblcfc=: ] - [ mp (mp~ (ct @ ((0 & (IOSLR })) mp larftfc)))~   NB. C - V * ((V * T)' * C)
-rlarfblcfc=: ] - [ mp (mp~ (ct @ ((0 & (IOSLR })) mp rlarftfc)))~   NB. C - V * ((V * T)' * C)
 larfblcfr=: ] - (ct @ (mp~ larftfr) @ [) mp ((0 IOSLC } [) mp ])  NB. C - (T * V)' * (V * C)
 
 larfblnbc=: ] - [ mp (mp~ (larftbc mp (ct @ (0 & (IOSFR })))))~   NB. C - V * ((T * V') * C)
@@ -388,31 +440,100 @@ larfbrnfr=: ] - (mp ((ct @ (0 & (IOSLC }))) mp larftfr))~ mp [    NB. C - (C * (
 
 NB. =========================================================
 NB. Test suite
+NB.
+NB. Notes:
+NB. - foregoing verbs are tested implicitly in gq, mq, qf
+NB.   tests
+
 
 NB. ---------------------------------------------------------
-NB.*tlarfg v test larfg
+NB. trefrft
+NB.
+NB. Description:
+NB.   Test algorithms forming the triangular factor of a
+NB.   block reflector, by a general matrix
+NB.
+NB. Syntax:
+NB.   trefrft (A;trash)
+NB. where
+NB.   A - m×n-matrix, is used to get Qf
 
-tlarfg=: 3 : 0
+trefrft=: 3 : 0
+  AC=: y=. 0 {:: y
+  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y
+
+  ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfc' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfr' tmonad (gelqf`]`(rcond"_)`(_."_)`(_."_))) y
+
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB.*tlarfp v test larfp
+NB. trefrfb
+NB.
+NB. Description:
+NB.   Test algorithms applying a block reflector, by a
+NB.   general matrix
+NB.
+NB. Syntax:
+NB.   trefrfb (A;C)
+NB. where
+NB.   A - m×n-matrix, is used to get Qf
+NB.   C - m×n-matrix, is used as multiplier
 
-tlarfp=: 3 : 0
+trefrfb=: 3 : 0
+  'A C'=. y
+  rcond=. (norm1 con getri) C
+  'LQf QfL QfR RQf'=. (gelqf ; geqlf ; geqrf ; gerqf) A
+
+  ('larfblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;(    C , ~0))
+  ('larfblcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (RQf;((ct C), ~0))
+  ('larfblcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfR;(    C ,  0))
+  ('larfblcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (LQf;((ct C),  0))
+
+  ('larfblnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;(    C , ~0))
+  ('larfblnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (RQf;((ct C), ~0))
+  ('larfblnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfR;(    C ,  0))
+  ('larfblnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (LQf;((ct C),  0))
+
+  ('larfbrcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;((ct C),.~0))
+  ('larfbrcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (RQf;(    C ,.~0))
+  ('larfbrcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfR;((ct C),. 0))
+  ('larfbrcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (LQf;(    C ,. 0))
+
+  ('larfbrnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;((ct C),.~0))
+  ('larfbrnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (RQf;(    C ,.~0))
+  ('larfbrnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfR;((ct C),. 0))
+  ('larfbrnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (LQf;(    C ,. 0))
+
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB.*tref v test reflectors with data suppplied
+NB. testref
+NB.
+NB. Description:
+NB.   Adv. to make verb to test block reflection algorithms
+NB.   by matrices of generator and shape given
+NB.
+NB. Syntax:
+NB.   vtest=. mkmat testref
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.            mat=. mkmat (m,n)
+NB.   vtest - monad to test algorithms by matrix mat; is
+NB.           called as:
+NB.             vtest (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.
+NB. Application:
+NB. - with limited random matrix values' amplitudes
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testref 150 100
+NB.
+NB. Notes:
+NB. - non-blocked larfxxxx algos are tested implicitly in gq,
+NB.   mq, qf tests
 
-tref=: 3 : 0
-  EMPTY
-)
-
-NB. ---------------------------------------------------------
-NB.*testref v test reflectors
-
-testref=: 3 : 0
-  EMPTY
-)
+testref=: 1 : 'EMPTY [ (trefrfb [ trefrft) @ (u ; u)'

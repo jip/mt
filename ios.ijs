@@ -5,7 +5,7 @@ NB.            imagine parts' modules
 NB. liolmax    lIO last element with maximum sum of real and
 NB.            imagine parts' modules
 NB. lios2cp    Convert lIOS to cycle permutation
-NB. ht2lios    Generate lIOS from head and tail
+NB. th2lios    Generate lIOS from tail and head
 NB. dhs2lios   Generate lIOS from head, size and optional
 NB.            delta
 NB. rios2ios   Convert rIOS to IOS
@@ -78,13 +78,13 @@ NB.     http://www.jsoftware.com/pipermail/programming/2009-May/014682.html
 lios2cp=: < @ ~. @ ,
 
 NB. ---------------------------------------------------------
-NB. ht2lios
+NB. th2lios
 NB.
 NB. Description:
-NB.   Generate lIOS from head and tail
+NB.   Generate lIOS from tail and head
 NB.
 NB. Syntax:
-NB.   lios=. t ht2lios h
+NB.   lios=. t th2lios h
 NB. where
 NB.   h    - integer, head of lios
 NB.   t    - integer, tail of lios
@@ -94,10 +94,10 @@ NB.            h (h+1) ... (t-1)
 NB.
 NB. Notes:
 NB. - monadic case is possible, though awkward:
-NB.     _3 _2 _1 -: ht2lios _3
-NB.     5 4 3    -: ht2lios  3
+NB.     _3 _2 _1 -: th2lios _3
+NB.     5 4 3    -: th2lios  3
 
-ht2lios=: ] + (i. @ -)
+th2lios=: ] + (i. @ -)
 
 NB. ---------------------------------------------------------
 NB. dhs2lios

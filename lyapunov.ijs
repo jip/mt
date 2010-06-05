@@ -112,11 +112,9 @@ sorzhouiter=: 4 : 0
   bh=. bh % tau
   chk=. (0 < # B1) *. (0 < tau)
   if. chk do.
-    atmp=. (jj {. x) shiftR1 } (lambda ; ij)            NB. "R1+conj(lambda)*I" where R1 is "jj {. x"
-    btmp=. (B1 mp (+ - bh)) + (ijj { x) * - tau         NB. -tau*r-(1/tau)*B1*b
-
-    NB. solve for u complex upper triangular system atmp * u = btmp
-    u=. ztrtrs_jlapack_ atmp ; btmp
+    atmp=. (jj {. x) shiftR1 } (lambda ; ij)     NB. "R1+conj(lambda)*I" where R1 is "jj {. x"
+    btmp=. (B1 mp (+ - bh)) + (ijj { x) * - tau  NB. -tau*r-(1/tau)*B1*b
+    u=. ztrtrs_jlapack_ atmp ; btmp              NB. solve for u complex upper triangular system atmp*u=btmp
   else.
     u=. j $ 0
   end.

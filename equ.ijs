@@ -85,7 +85,7 @@ Note 'equ testing and timing'
    Pinv=. |: P
    Pinv -: %. P
    Aperm=. gebalp a1000f
-   Aperm -: p pt a1000f
+   Aperm -: p pp a1000f
    Aperm -: (P mp a1000f) mp Pinv
 
    5 ts 'gebal_jlapack_ a1000f'

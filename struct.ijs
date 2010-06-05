@@ -6,6 +6,11 @@ NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. pt        Pertranspose
 NB. cpt       Conjugate pertranspose
+NB. pp        Apply permutation to both rows and columns
+NB. p2P       Transform permutation vector to permutation
+NB.           matrix
+NB. ip2P      Transform inversed permutation vector to
+NB.           permutation matrix
 NB. rt        Restrained Take
 NB.
 NB. upd1      Adv. to update subarray by a monad
@@ -135,11 +140,15 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Misc.
 
-c=: 1{$                                  NB. Columns in matrix
-trace=: +/ @ diag                        NB. matrix trace
-ct=: + @ |:                              NB. conjugate transpose
-pt=: |. @ |: @ |.                        NB. pertranspose
-cpt=: + @ pt                             NB. conjugate pertranspose
+c=: 1{$              NB. Columns in matrix
+trace=: +/ @ diag    NB. matrix trace
+ct=: + @ |:          NB. conjugate transpose
+pt=: |. @ |: @ |.    NB. pertranspose
+cpt=: + @ pt         NB. conjugate pertranspose
+pp=: [ C."1 C.       NB. apply permutation x to both rows and columns of table y
+p2P=: =/ (i. @ #)    NB. transform permutation vector to permutation matrix
+ip2P=: =/~ (i. @ #)  NB. transform inversed permutation vector to permutation
+                     NB.   matrix, or permutation vector to inversed permutation matrix
 
 NB. ---------------------------------------------------------
 NB. rt

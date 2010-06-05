@@ -16,9 +16,6 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-pt=: [ (C. " 1) C.   NB. apply permutation x to both rows and columns of table y
-p2P=: =/ (i. @ #)    NB. transform permutation vector y to permutation matrix
-
 NB. =========================================================
 NB. Interface
 
@@ -50,7 +47,7 @@ NB.   Pinv=. %. P
 NB. then (with appropriate comparison tolerance)
 NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
-NB.   Ap -: p pt A
+NB.   Ap -: p pp A
 NB.   A11 -: (,.~ fs) (] ;. 0) Ap
 NB.
 NB. References:
@@ -99,7 +96,7 @@ NB.  nzr=. p { nzr                              NB. apply all permutations
     s=. <: s                                  NB. ...leading column
   end.
 
-  (p pt y) ; (f , s) ; p
+  (p pp y) ; (f , s) ; p
 )
 
 gebalp2=: 3 : 0
@@ -116,7 +113,7 @@ gebalp2=: 3 : 0
       if. 0 = ((iL ,: (iH - iL)) ((+/ @: |) ;. 0) i (x2b3 { {) y) do.
         swapped=. 1
         cp=. i ii2cp iH
-        y=. cp pt y
+        y=. cp pp y
         p=. cp C. p
         iH=. <: iH
       end.
@@ -127,7 +124,7 @@ gebalp2=: 3 : 0
       if. 0 = ((iL ,: (iH - iL)) ((+/ @: |) ;. 0) j (x2b3 { ({ " 1)) y) do.
         swapped=. 1
         cp=. j ii2cp iL
-        y=. cp pt y
+        y=. cp pp y
         p=. cp C. p
         iL=. >: iL
       end.
@@ -249,7 +246,7 @@ NB.   Dinv=. %. D
 NB. then (with appropriate comparison tolerance)
 NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
-NB.   Ap -: p pt A
+NB.   Ap -: p pp A
 NB.   Dinv -: diagmat % s
 NB.   Ab -: D mp Ap mp Dinv
 NB.   Ab -: Ap (] * (% " 1)) s
@@ -282,7 +279,7 @@ Note 'bal testing and timing'
    Pinv=. |: P
    Pinv -: %. P
    Aperm=. gebalp a1000f
-   Aperm -: p pt a1000f
+   Aperm -: p pp a1000f
    Aperm -: (P mp a1000f) mp Pinv
 
    5 ts 'gebal_jlapack_ a1000f'

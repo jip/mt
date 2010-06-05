@@ -28,20 +28,21 @@ NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-06-01
+NB.
+NB. TODO:
+NB. - s/C/A/g
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
 
+arounddown=: 1 : '- m&|'  NB. adv. to round down by an integer constant
+
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-MQBS=: 32   NB. block size limit
-
-NB. ---------------------------------------------------------
-
-arounddown=: 1 : '- m&|'  NB. adverb to round down by an integer constant
+MQNB=: 32   NB. block size limit
 
 NB. ---------------------------------------------------------
 NB. Description:
@@ -154,13 +155,7 @@ NB.           as (aCi1;bCi1) or (bCi1;aCi1)
 NB.   3) apply unmxxxxstep to (pfxCi1;sfxCi1) to produce bCi1
 NB.   4) combine aCi1 and bCi1 to produce eCprod
 NB.
-NB. If:
-NB.   2 -: # $ A        NB. A is a 2-rank array (i.e. matrix)
-NB.   -:/ @ $ A         NB. A is a square matrix (it's not
-NB.                     NB.   necessary and is assumed just
-NB.                     NB.   to simplify assertions)
-NB.   n=. # A           NB. size of matrix A
-NB. then
+NB. Assertions:
 NB.   (idmat n) (-: (clean@(_1  0&}.))) ((   tru1 gelqf A) unml2ln ((ct unglq gelqf A) ,   0))
 NB.   (idmat n) (-: (clean@(_1  0&}.))) ((   tru1 gelqf A) unml2lc ((   unglq gelqf A) ,   0))
 NB.   (idmat n) (-: (clean@( 0 _1&}.))) ((   tru1 gelqf A) unml2rn ((ct unglq gelqf A) ,.  0))
@@ -177,6 +172,12 @@ NB.   (idmat n) (-: (clean@( 1  0&}.))) (( 1 trl1 gerqf A) unmr2ln ((ct ungrq ge
 NB.   (idmat n) (-: (clean@( 1  0&}.))) (( 1 trl1 gerqf A) unmr2lc ((   ungrq gerqf A) , ~ 0))
 NB.   (idmat n) (-: (clean@( 0  1&}.))) (( 1 trl1 gerqf A) unmr2rn ((ct ungrq gerqf A) ,.~ 0))
 NB.   (idmat n) (-: (clean@( 0  1&}.))) (( 1 trl1 gerqf A) unmr2rc ((   ungrq gerqf A) ,.~ 0))
+NB. where
+NB.   2 -: # $ A        NB. A is a 2-rank array (i.e. matrix)
+NB.   -:/ @ $ A         NB. A is a square matrix (it's not
+NB.                     NB.   necessary and is assumed just
+NB.                     NB.   to simplify assertions)
+NB.   n=. # A           NB. size of matrix A
 NB.
 NB. Notes:
 NB. - input's and output's shapes are the same
@@ -243,8 +244,8 @@ NB.      block reflector, it depends on aC(i)'s size
 NB.   1) try to extract VTau[i] from Qf:
 NB.        VTaui=. rios (] ;. 0) Qf
 NB.      1.0) if failure occures (i.e. execution is at first
-NB.           or last step and 0<MQBS|k ), then replace in
-NB.           rios wrong explicit length (MQBS) by implicit
+NB.           or last step and 0<MQNB|k ), then replace in
+NB.           rios wrong explicit length (MQNB) by implicit
 NB.           one (∞) and retry
 NB.   2) apply a block reflector defined by VTau[i] to either
 NB.      pfxC(i) or sfxC(i) to produce tmp:
@@ -253,45 +254,73 @@ NB.   3) combine tmp and either pfxC(i) or sfxC(i) to
 NB.      produce pfxC(i+1) and sfxC(i+1)
 NB.
 NB. Notes:
-NB. - assigning MQBS=:1 transforms this verbs to their
+NB. - assigning MQNB=:1 transforms this verbs to their
 NB.   non-blocked counterparts
 
-unmlqlnstep=:                          (0 {:: ])              ((,   (MQBS* 1  _)&rt)             ;  (MQBS* 1  0)&}.@])  (  ];.0~ ::(];.0~ _&(2:})) ((MQBS*1 _) ,:~ 2 # #@(0&({::))                                                      )) larfblcfr 1 {:: ]
-unmlqlcstep=:                          (0 {:: ])              ((, ~ (MQBS*_1  _)&rt)~            ;~ (MQBS*_1  0)&}.@[)  (  ];.0~ ::(];.0~ _&(2:})) ((MQBS*1 _) ,:~ 2 # #@(0&({::))                                                      )) larfblnfr 1 {:: ]
-unmlqrnstep=:                          (0 {:: ])              ((,.~ (MQBS* _ _1)&rt)~            ;~ (MQBS* 0 _1)&}.@[)  (  ];.0~ ::(];.0~ _&(2:})) ((MQBS*1 _) ,:~ 2 # c@(0&({::))                                                      )) larfbrcfr 1 {:: ]
-unmlqrcstep=:                          (0 {:: ])              ((,.  (MQBS* _  1)&rt)             ;  (MQBS* 0  1)&}.@])  (  ];.0~ ::(];.0~ _&(2:})) ((MQBS*1 _) ,:~ 2 # c@(0&({::))                                                      )) larfbrnfr 1 {:: ]
+unmlqlnstep=:                          (0 {:: ])              ((,   (MQNB* 1  _)&rt)             ;  (MQNB* 1  0)&}.@])  (  ];.0~ ::(];.0~ _&(2:})) ((MQNB*1 _) ,:~ 2 # #@(0&({::))                                                      )) larfblcfr 1 {:: ]
+unmlqlcstep=:                          (0 {:: ])              ((, ~ (MQNB*_1  _)&rt)~            ;~ (MQNB*_1  0)&}.@[)  (  ];.0~ ::(];.0~ _&(2:})) ((MQNB*1 _) ,:~ 2 # #@(0&({::))                                                      )) larfblnfr 1 {:: ]
+unmlqrnstep=:                          (0 {:: ])              ((,.~ (MQNB* _ _1)&rt)~            ;~ (MQNB* 0 _1)&}.@[)  (  ];.0~ ::(];.0~ _&(2:})) ((MQNB*1 _) ,:~ 2 # c@(0&({::))                                                      )) larfbrcfr 1 {:: ]
+unmlqrcstep=:                          (0 {:: ])              ((,.  (MQNB* _  1)&rt)             ;  (MQNB* 0  1)&}.@])  (  ];.0~ ::(];.0~ _&(2:})) ((MQNB*1 _) ,:~ 2 # c@(0&({::))                                                      )) larfbrnfr 1 {:: ]
 
-unmqllnstep=:                          (1 {:: ])              ((,   (MQBS* 1  _)&rt)             ;  (MQBS* 1  0)&}.@])~ ([ ];.0~ ::(];.0~ _&(3:})) ((MQBS*_ 1) ,:~ ((((((<:@-) {.)~ {.) ,  ((MQBS arounddown @ -~ {:)~ >:@{:))~ $)~ #&>))) larfblnbc 0 {:: ]
-unmqllcstep=: (((<@(_1-(MQBS|<:@(c@[-#@(1 {:: ])))))`0:`]) }) (((1 {:: ]) , ~ ({.  ~ (0&({::)))) ;~ (}.  ~ (0&({::))))~ ([ ];.0~ ::(];.0~ _&(3:})) ((MQBS*_ 1) ,:~ ((((((<:@-) {.)~ {.) ,  ((MQBS arounddown @ -~ {:)~ >:@{:))~ $)~ #&>))) larfblcbc 0 {:: ]
-unmqlrnstep=: (((<@(_1-(MQBS|<:@(c@[-c@(1 {:: ])))))`0:`]) }) (((1 {:: ]) ,.~ ({."1~ (0&({::)))) ;~ (}."1~ (0&({::))))~ ([ ];.0~ ::(];.0~ _&(3:})) ((MQBS*_ 1) ,:~ ((((((<:@-) {.)~ {.) ,  ((MQBS arounddown @ -~ {:)~ >:@{:))~ $)~ c&>))) larfbrnbc 0 {:: ]
-unmqlrcstep=:                          (1 {:: ])              ((,.  (MQBS* _  1)&rt)             ;  (MQBS* 0  1)&}.@])~ ([ ];.0~ ::(];.0~ _&(3:})) ((MQBS*_ 1) ,:~ ((((((<:@-) {.)~ {.) ,  ((MQBS arounddown @ -~ {:)~ >:@{:))~ $)~ c&>))) larfbrcbc 0 {:: ]
+unmqllnstep=:                          (1 {:: ])              ((,   (MQNB* 1  _)&rt)             ;  (MQNB* 1  0)&}.@])~ ([ ];.0~ ::(];.0~ _&(3:})) ((MQNB*_ 1) ,:~ ((((((<:@-) {.)~ {.) ,  ((MQNB arounddown @ -~ {:)~ >:@{:))~ $)~ #&>))) larfblnbc 0 {:: ]
+unmqllcstep=: (((<@(_1-(MQNB|<:@(c@[-#@(1 {:: ])))))`0:`]) }) (((1 {:: ]) , ~ ({.  ~ (0&({::)))) ;~ (}.  ~ (0&({::))))~ ([ ];.0~ ::(];.0~ _&(3:})) ((MQNB*_ 1) ,:~ ((((((<:@-) {.)~ {.) ,  ((MQNB arounddown @ -~ {:)~ >:@{:))~ $)~ #&>))) larfblcbc 0 {:: ]
+unmqlrnstep=: (((<@(_1-(MQNB|<:@(c@[-c@(1 {:: ])))))`0:`]) }) (((1 {:: ]) ,.~ ({."1~ (0&({::)))) ;~ (}."1~ (0&({::))))~ ([ ];.0~ ::(];.0~ _&(3:})) ((MQNB*_ 1) ,:~ ((((((<:@-) {.)~ {.) ,  ((MQNB arounddown @ -~ {:)~ >:@{:))~ $)~ c&>))) larfbrnbc 0 {:: ]
+unmqlrcstep=:                          (1 {:: ])              ((,.  (MQNB* _  1)&rt)             ;  (MQNB* 0  1)&}.@])~ ([ ];.0~ ::(];.0~ _&(3:})) ((MQNB*_ 1) ,:~ ((((((<:@-) {.)~ {.) ,  ((MQNB arounddown @ -~ {:)~ >:@{:))~ $)~ c&>))) larfbrcbc 0 {:: ]
 
-unmqrlnstep=:                          (0 {:: ])              ((, ~ (MQBS*_1  _)&rt)~            ;~ (MQBS*_1  0)&}.@[)  (  ];.0~ ::(];.0~ _&(3:})) ((MQBS*_ 1) ,:~ 2 # #@(0&({::))                                                      )) larfblnfc 1 {:: ]
-unmqrlcstep=:                          (0 {:: ])              ((,   (MQBS* 1  _)&rt)             ;  (MQBS* 1  0)&}.@])  (  ];.0~ ::(];.0~ _&(3:})) ((MQBS*_ 1) ,:~ 2 # #@(0&({::))                                                      )) larfblcfc 1 {:: ]
-unmqrrnstep=:                          (0 {:: ])              ((,.  (MQBS* _  1)&rt)             ;  (MQBS* 0  1)&}.@])  (  ];.0~ ::(];.0~ _&(3:})) ((MQBS*_ 1) ,:~ 2 # c@(0&({::))                                                      )) larfbrnfc 1 {:: ]
-unmqrrcstep=:                          (0 {:: ])              ((,.~ (MQBS* _ _1)&rt)~            ;~ (MQBS* 0 _1)&}.@[)  (  ];.0~ ::(];.0~ _&(3:})) ((MQBS*_ 1) ,:~ 2 # c@(0&({::))                                                      )) larfbrcfc 1 {:: ]
+unmqrlnstep=:                          (0 {:: ])              ((, ~ (MQNB*_1  _)&rt)~            ;~ (MQNB*_1  0)&}.@[)  (  ];.0~ ::(];.0~ _&(3:})) ((MQNB*_ 1) ,:~ 2 # #@(0&({::))                                                      )) larfblnfc 1 {:: ]
+unmqrlcstep=:                          (0 {:: ])              ((,   (MQNB* 1  _)&rt)             ;  (MQNB* 1  0)&}.@])  (  ];.0~ ::(];.0~ _&(3:})) ((MQNB*_ 1) ,:~ 2 # #@(0&({::))                                                      )) larfblcfc 1 {:: ]
+unmqrrnstep=:                          (0 {:: ])              ((,.  (MQNB* _  1)&rt)             ;  (MQNB* 0  1)&}.@])  (  ];.0~ ::(];.0~ _&(3:})) ((MQNB*_ 1) ,:~ 2 # c@(0&({::))                                                      )) larfbrnfc 1 {:: ]
+unmqrrcstep=:                          (0 {:: ])              ((,.~ (MQNB* _ _1)&rt)~            ;~ (MQNB* 0 _1)&}.@[)  (  ];.0~ ::(];.0~ _&(3:})) ((MQNB*_ 1) ,:~ 2 # c@(0&({::))                                                      )) larfbrcfc 1 {:: ]
 
-unmrqlnstep=: (((<@(_1-(MQBS|<:@(#@[-#@(1 {:: ])))))`0:`]) }) (((1 {:: ]) , ~ ({.  ~ (0&({::)))) ;~ (}.  ~ (0&({::))))~ ([ ];.0~ ::(];.0~ _&(2:})) ((MQBS*1 _) ,:~ ((((((<:@-) {:)~ {.) ,~ ((MQBS arounddown @ -~ {.)~ >:@{:))~ $)~ #&>))) larfblcbr 0 {:: ]
-unmrqlcstep=:                          (1 {:: ])              ((,   (MQBS* 1  _)&rt)             ;  (MQBS* 1  0)&}.@])~ ([ ];.0~ ::(];.0~ _&(2:})) ((MQBS*1 _) ,:~ ((((((<:@-) {:)~ {.) ,~ ((MQBS arounddown @ -~ {.)~ >:@{:))~ $)~ #&>))) larfblnbr 0 {:: ]
-unmrqrnstep=:                          (1 {:: ])              ((,.  (MQBS* _  1)&rt)             ;  (MQBS* 0  1)&}.@])~ ([ ];.0~ ::(];.0~ _&(2:})) ((MQBS*1 _) ,:~ ((((((<:@-) {:)~ {.) ,~ ((MQBS arounddown @ -~ {.)~ >:@{:))~ $)~ c&>))) larfbrcbr 0 {:: ]
-unmrqrcstep=: (((<@(_1-(MQBS|<:@(#@[-c@(1 {:: ])))))`0:`]) }) (((1 {:: ]) ,.~ ({."1~ (0&({::)))) ;~ (}."1~ (0&({::))))~ ([ ];.0~ ::(];.0~ _&(2:})) ((MQBS*1 _) ,:~ ((((((<:@-) {:)~ {.) ,~ ((MQBS arounddown @ -~ {.)~ >:@{:))~ $)~ c&>))) larfbrnbr 0 {:: ]
+unmrqlnstep=: (((<@(_1-(MQNB|<:@(#@[-#@(1 {:: ])))))`0:`]) }) (((1 {:: ]) , ~ ({.  ~ (0&({::)))) ;~ (}.  ~ (0&({::))))~ ([ ];.0~ ::(];.0~ _&(2:})) ((MQNB*1 _) ,:~ ((((((<:@-) {:)~ {.) ,~ ((MQNB arounddown @ -~ {.)~ >:@{:))~ $)~ #&>))) larfblcbr 0 {:: ]
+unmrqlcstep=:                          (1 {:: ])              ((,   (MQNB* 1  _)&rt)             ;  (MQNB* 1  0)&}.@])~ ([ ];.0~ ::(];.0~ _&(2:})) ((MQNB*1 _) ,:~ ((((((<:@-) {:)~ {.) ,~ ((MQNB arounddown @ -~ {.)~ >:@{:))~ $)~ #&>))) larfblnbr 0 {:: ]
+unmrqrnstep=:                          (1 {:: ])              ((,.  (MQNB* _  1)&rt)             ;  (MQNB* 0  1)&}.@])~ ([ ];.0~ ::(];.0~ _&(2:})) ((MQNB*1 _) ,:~ ((((((<:@-) {:)~ {.) ,~ ((MQNB arounddown @ -~ {.)~ >:@{:))~ $)~ c&>))) larfbrcbr 0 {:: ]
+unmrqrcstep=: (((<@(_1-(MQNB|<:@(#@[-c@(1 {:: ])))))`0:`]) }) (((1 {:: ]) ,.~ ({."1~ (0&({::)))) ;~ (}."1~ (0&({::))))~ ([ ];.0~ ::(];.0~ _&(2:})) ((MQNB*1 _) ,:~ ((((((<:@-) {:)~ {.) ,~ ((MQNB arounddown @ -~ {.)~ >:@{:))~ $)~ c&>))) larfbrnbr 0 {:: ]
 
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Verb     Action   Side   Tran  Syntax
-NB. unmlqln  Q * C    left   none  QeC=.  Qf unmlqln C
-NB. unmlqlc  Q^H * C  left   ct    cQeC=. Qf unmlqlc C
-NB. unmlqrn  C * Q    right  none  eCQ=.  Qf unmlqlc C
-NB. unmlqrc  C * Q^H  right  ct    eCcQ=. Qf unmlqlc C
+NB. unmlqln  Q * A    left   none  B=. LQf unmlqln A
+NB. unmlqlc  Q^H * A  left   ct    B=. LQf unmlqlc A
+NB. unmlqrn  A * Q    right  none  B=. LQf unmlqrn A
+NB. unmlqrc  A * Q^H  right  ct    B=. LQf unmlqrc A
 NB.
 NB. Description:
-NB.   Multiply a general matrix C by matrix Q, which is
+NB.   Multiply a general matrix A by matrix Q, which is
 NB.   represented in factored form Qf as returned by gelqf
+NB. where
+NB.   A    - m×n-matrix
+NB.   LQf  - m×(n+1)-matrix, combined L and Qf (unit diagonal
+NB.          not stored), the output of gelqf
+NB.   B    - m×n-matrix
+NB.   Qf   - k×(n+1)-matrix, unit upper triangular, the Q
+NB.          represented in factored form
+NB.   Q    - m×m-matrix for unmlqln and unmlqlc, n×n-matrix
+NB.          for unmlqrn and unmlqrc, unitary (orthogonal),
+NB.          which is defined as a product of k elementary
+NB.          reflectors of order n:
+NB.            Q = Π{H(i)',i=k-1:0}
+NB.   k     = min(m,n)
 NB.
-NB. ############Algorithm:
+NB. Algorithm for unmlqrn:
+NB.   In:  Qf C
+NB.   Out: eCQ################
 NB.   iters==⌊(#+BS-1)/BS⌋
+NB. Algorithm:
+NB.   1) augment C by zero column to produce extended C:
+NB.       eC=. C ,. 0
+NB.   2) extract Qf from LQf
+NB.   3) if k>MQNB
+NB.      3.1) split eC on prefix pfxC(0) and suffix sfxC(0):
+NB.             pfxC(0) := eC[:,0:mqb]
+NB.      part intended for blocked algorithm being excluded,
+NB.      to produce eQ(0)
+NB.   4) find iters, the number of iterations
+NB.   5) do iterations:
+NB.        eQ=.    Qf  (unglqstep ^: iters) eQ0
+NB.   6) cut off last column from eQ to produce Q
 NB.
 NB. If:
 NB.   LQf=. gelqf A
@@ -309,17 +338,17 @@ NB. - implements LAPACK's xUNMLQ
 NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmlqln=: _1  0 }. ((unml2ln`(, &>/@(  unmlqlnstep^:(>.@(MQBS %~ #@[)) (;~ 0  &{.                                             ) ))@.(MQBS < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,   &0)
-unmlqlc=: _1  0 }. ((unml2lc`(, &>/@([ unmlqlcstep^:(>.@(MQBS %~ #@[)) (( {.       ;   }.      )~ (MQBS arounddown @ (_1 + #)))~))@.(MQBS < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,   &0)
-unmlqrn=:  0 _1 }. ((unml2rn`(,.&>/@([ unmlqrnstep^:(>.@(MQBS %~ #@[)) ((({.~ _&,) ;  (}.~ 0&,))  (MQBS arounddown @ (_1 + #)))~))@.(MQBS < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
-unmlqrc=:  0 _1 }. ((unml2rc`(,.&>/@(  unmlqrcstep^:(>.@(MQBS %~ #@[)) (;~ _ 0&{.                                             ) ))@.(MQBS < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
+unmlqln=: _1  0 }. ((unml2ln`(, &>/@(  unmlqlnstep^:(>.@(MQNB %~ #@[)) (;~ 0  &{.                                             ) ))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,   &0)
+unmlqlc=: _1  0 }. ((unml2lc`(, &>/@([ unmlqlcstep^:(>.@(MQNB %~ #@[)) (( {.       ;   }.      )~ (MQNB arounddown @ (_1 + #)))~))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,   &0)
+unmlqrn=:  0 _1 }. ((unml2rn`(,.&>/@([ unmlqrnstep^:(>.@(MQNB %~ #@[)) ((({.~ _&,) ;  (}.~ 0&,))  (MQNB arounddown @ (_1 + #)))~))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
+unmlqrc=:  0 _1 }. ((unml2rc`(,.&>/@(  unmlqrcstep^:(>.@(MQNB %~ #@[)) (;~ _ 0&{.                                             ) ))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
 
 NB. ---------------------------------------------------------
 NB. Verb     Action   Side   Tran  Syntax
 NB. unmqlln  Q * C    left   none  QeC=.  Qf unmqlln C
 NB. unmqllc  Q^H * C  left   ct    cQeC=. Qf unmqllc C
-NB. unmqlrn  C * Q    right  none  eCQ=.  Qf unmqllc C
-NB. unmqlrc  C * Q^H  right  ct    eCcQ=. Qf unmqllc C
+NB. unmqlrn  C * Q    right  none  eCQ=.  Qf unmqlrn C
+NB. unmqlrc  C * Q^H  right  ct    eCcQ=. Qf unmqlrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -343,17 +372,17 @@ NB. - implements LAPACK's xUNMLQ
 NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmqlln=:  1  0 }. ((unm2lln`(, &>/@([ unmqllnstep^:(>.@(MQBS %~ c@[)) (( {.       ;~  }.      )~ (MQBS                  - c ))~))@.(MQBS < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ , ~ &0)
-unmqllc=:  1  0 }. ((unm2llc`(, &>/@(  unmqllcstep^:(>.@(MQBS %~ c@[)) (;  0  &{.                                             ) ))@.(MQBS < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ , ~ &0)
-unmqlrn=:  0  1 }. ((unm2lrn`(,.&>/@(  unmqlrnstep^:(>.@(MQBS %~ c@[)) (;  _ 0&{.                                             ) ))@.(MQBS < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
-unmqlrc=:  0  1 }. ((unm2lrc`(,.&>/@([ unmqlrcstep^:(>.@(MQBS %~ c@[)) ((({.~ _&,) ;~ (}.~ 0&,))  (MQBS                  - c ))~))@.(MQBS < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
+unmqlln=:  1  0 }. ((unm2lln`(, &>/@([ unmqllnstep^:(>.@(MQNB %~ c@[)) (( {.       ;~  }.      )~ (MQNB                  - c ))~))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ , ~ &0)
+unmqllc=:  1  0 }. ((unm2llc`(, &>/@(  unmqllcstep^:(>.@(MQNB %~ c@[)) (;  0  &{.                                             ) ))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ , ~ &0)
+unmqlrn=:  0  1 }. ((unm2lrn`(,.&>/@(  unmqlrnstep^:(>.@(MQNB %~ c@[)) (;  _ 0&{.                                             ) ))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
+unmqlrc=:  0  1 }. ((unm2lrc`(,.&>/@([ unmqlrcstep^:(>.@(MQNB %~ c@[)) ((({.~ _&,) ;~ (}.~ 0&,))  (MQNB                  - c ))~))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
 
 NB. ---------------------------------------------------------
 NB. Verb     Action   Side   Tran  Syntax
 NB. unmqrln  Q * C    left   none  QeC=.  Qf unmqrln C
 NB. unmqrlc  Q^H * C  left   ct    cQeC=. Qf unmqrlc C
-NB. unmqrrn  C * Q    right  none  eCQ=.  Qf unmqrlc C
-NB. unmqrrc  C * Q^H  right  ct    eCcQ=. Qf unmqrlc C
+NB. unmqrrn  C * Q    right  none  eCQ=.  Qf unmqrrn C
+NB. unmqrrc  C * Q^H  right  ct    eCcQ=. Qf unmqrrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -378,17 +407,17 @@ NB. - implements LAPACK's xUNMLQ
 NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmqrln=: _1  0 }. ((unm2rln`(, &>/@([ unmqrlnstep^:(>.@(MQBS %~ c@[)) (( {.       ;   }.      )~ (MQBS arounddown @ (_1 + c)))~))@.(MQBS < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,   &0)
-unmqrlc=: _1  0 }. ((unm2rlc`(, &>/@(  unmqrlcstep^:(>.@(MQBS %~ c@[)) (;~ 0  &{.                                             ) ))@.(MQBS < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,   &0)
-unmqrrn=:  0 _1 }. ((unm2rrn`(,.&>/@(  unmqrrnstep^:(>.@(MQBS %~ c@[)) (;~ _ 0&{.                                             ) ))@.(MQBS < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
-unmqrrc=:  0 _1 }. ((unm2rrc`(,.&>/@([ unmqrrcstep^:(>.@(MQBS %~ c@[)) ((({.~ _&,) ;  (}.~ 0&,))  (MQBS arounddown @ (_1 + c)))~))@.(MQBS < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
+unmqrln=: _1  0 }. ((unm2rln`(, &>/@([ unmqrlnstep^:(>.@(MQNB %~ c@[)) (( {.       ;   }.      )~ (MQNB arounddown @ (_1 + c)))~))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,   &0)
+unmqrlc=: _1  0 }. ((unm2rlc`(, &>/@(  unmqrlcstep^:(>.@(MQNB %~ c@[)) (;~ 0  &{.                                             ) ))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,   &0)
+unmqrrn=:  0 _1 }. ((unm2rrn`(,.&>/@(  unmqrrnstep^:(>.@(MQNB %~ c@[)) (;~ _ 0&{.                                             ) ))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
+unmqrrc=:  0 _1 }. ((unm2rrc`(,.&>/@([ unmqrrcstep^:(>.@(MQNB %~ c@[)) ((({.~ _&,) ;  (}.~ 0&,))  (MQNB arounddown @ (_1 + c)))~))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
 
 NB. ---------------------------------------------------------
 NB. Verb     Action   Side   Tran  Syntax
 NB. unmrqln  Q * C    left   none  QeC=.  Qf unmrqln C
 NB. unmrqlc  Q^H * C  left   ct    cQeC=. Qf unmrqlc C
-NB. unmrqrn  C * Q    right  none  eCQ=.  Qf unmrqlc C
-NB. unmrqrc  C * Q^H  right  ct    eCcQ=. Qf unmrqlc C
+NB. unmrqrn  C * Q    right  none  eCQ=.  Qf unmrqrn C
+NB. unmrqrc  C * Q^H  right  ct    eCcQ=. Qf unmrqrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -413,10 +442,10 @@ NB. - implements LAPACK's xUNMLQ
 NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmrqln=:  1  0 }. ((unmr2ln`(, &>/@(  unmrqlnstep^:(>.@(MQBS %~ #@[)) (;  0  &{.                                             ) ))@.(MQBS < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ , ~ &0)
-unmrqlc=:  1  0 }. ((unmr2lc`(, &>/@([ unmrqlcstep^:(>.@(MQBS %~ #@[)) (( {.       ;~  }.      )~ (MQBS                  - # ))~))@.(MQBS < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ , ~ &0)
-unmrqrn=:  0  1 }. ((unmr2rn`(,.&>/@([ unmrqrnstep^:(>.@(MQBS %~ #@[)) ((({.~ _&,) ;~ (}.~ 0&,))  (MQBS                  - # ))~))@.(MQBS < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
-unmrqrc=:  0  1 }. ((unmr2rc`(,.&>/@(  unmrqrcstep^:(>.@(MQBS %~ #@[)) (;  _ 0&{.                                             ) ))@.(MQBS < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
+unmrqln=:  1  0 }. ((unmr2ln`(, &>/@(  unmrqlnstep^:(>.@(MQNB %~ #@[)) (;  0  &{.                                             ) ))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ , ~ &0)
+unmrqlc=:  1  0 }. ((unmr2lc`(, &>/@([ unmrqlcstep^:(>.@(MQNB %~ #@[)) (( {.       ;~  }.      )~ (MQNB                  - # ))~))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ , ~ &0)
+unmrqrn=:  0  1 }. ((unmr2rn`(,.&>/@([ unmrqrnstep^:(>.@(MQNB %~ #@[)) ((({.~ _&,) ;~ (}.~ 0&,))  (MQNB                  - # ))~))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
+unmrqrc=:  0  1 }. ((unmr2rc`(,.&>/@(  unmrqrcstep^:(>.@(MQNB %~ #@[)) (;  _ 0&{.                                             ) ))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax

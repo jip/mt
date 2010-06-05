@@ -67,7 +67,7 @@ NB. - gelq2 and gelqf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
 
-gelq2=: ((0&({::)) 0 stitch (1&({::))) @ ((3 : 0) ^: ((0 _1&(ms $))`((0&({."1));(0&{.);])))
+gelq2=: ((0&({::)) stitcht (1&({::))) @ ((3 : 0) ^: ((0 _1&(ms $))`((0&({."1));(0&{.);])))
   'pfx sfxT sfxB'=. y
   z=. larfpfc {. sfxB
   sfxT=. sfxT , z
@@ -107,7 +107,7 @@ NB. - geql2 and geqlf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
 
-geql2=: ((1&({::)) _1 append (2&({::))) @ ((3 : 0) ^: ((_1 0&(ms $))`(];(0&({."1));(0&{.))))
+geql2=: ((1&({::)) appendr (2&({::))) @ ((3 : 0) ^: ((_1 0&(ms $))`(];(0&({."1));(0&{.))))
   'pfxL pfxR sfx'=. y
   z=. larfpb {:"1 pfxL
   pfxR=. z ,. pfxR
@@ -187,7 +187,7 @@ NB. - gerq2 and gerqf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
 
-gerq2=: ((1&({::)) _1 stitch (2&({::))) @ ((3 : 0) ^: ((0 _1&(ms $))`(];(0&{.);(0&({."1)))))
+gerq2=: ((1&({::)) stitchb (2&({::))) @ ((3 : 0) ^: ((0 _1&(ms $))`(];(0&{.);(0&({."1)))))
   'pfxT pfxB sfx'=. y
   z=. larfpbc {: pfxT
   pfxB=. z , pfxB
@@ -208,22 +208,28 @@ NB. Syntax:
 NB.   LQf=. gelqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   LQf - m×(n+1)-matrix, combined lower triangular
-NB.         m×k-matrix L and unit upper triangular
-NB.         k×(n+1)-matrix Qf (unit diagonal not stored)
+NB.   LQf - m×(n+1)-matrix, combined L and Qf (unit
+NB.         diagonal not stored)
+NB.   L   - m×k-matrix, lower triangular
+NB.   Qf  - k×(n+1)-matrix, unit upper triangular, the Q
+NB.         represented in factored form
+NB.   Q   - k×n-matrix with orthonormal rows, which is
+NB.         defined as the first k rows of a product of m
+NB.         elementary reflectors of order n:
+NB.           Q = Π{H(i)',i=m-1:0}
+NB.         where
+NB.           H(m-1:k)≡H(v(m-1:k),τ(m-1:k))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   k=. m <. n
-NB.   LQf=. gelqf A
-NB.   L=. trl (0 _1 }. LQf)
-NB.   Q=. unglq LQf
-NB. then (with appropriate comparison tolerance)
-NB.   Q -: unglq (k {. LQf)
-NB.   I -: clean (mp ct) Q
+NB. Assertions (with appropriate comparison tolerance)
+NB.   Q -: unglq LQf
+NB.   I -: (mp ct) Q
 NB.   A -: L mp Q
-NB.   (] -: clean @ ((         trl   @( 0 _1&}.)) mp  unglq)@gelqf) A
+NB.   (] -: ((         trl   @:(}:"1)) mp  unglq)@gelqf) A
+NB. where
+NB.   LQf=. gelqf A
+NB.   L=. (trl@:(}:"1)) LQf
+NB.   Q=. unglq LQf
 NB.
 NB. Notes:
 NB. - models LAPACK's xGELQF
@@ -247,22 +253,28 @@ NB. Syntax:
 NB.   QfL=. geqlf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   QfL - (m+1)×n-matrix, combined unit upper triangular
-NB.         (m+1)×k-matrix Qf (unit diagonal not stored) and
-NB.         lower triangular k×n-matrix L
+NB.   QfL - (m+1)×n-matrix, combined Qf (unit diagonal not
+NB.         stored) and L
+NB.   Qf  - (m+1)×k-matrix, unit upper triangular, the Q
+NB.         represented in factored form
+NB.   L   - k×n-matrix, lower triangular
+NB.   Q   - m×k-matrix with orthonormal columns, which is
+NB.         defined as the last k columns of a product of n
+NB.         elementary reflectors of order m:
+NB.           Q = Π{H(i),i=n-1:0}
+NB.         where
+NB.           H(n-1:k)≡H(v(n-1:k),τ(n-1:k))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   k=. m <. n
+NB. Assertions (with appropriate comparison tolerance)
+NB.   Q -: ungql QfL
+NB.   I -: (mp~ ct) Q
+NB.   A -: Q mp L
+NB.   (] -: ((((-~/@$) trl ])@  }.   ) mp~ ungql)@geqlf) A
+NB. where
 NB.   QfL=. geqlf A
 NB.   Q=. ungql QfL
-NB.   L=. (n - m) trl (}. QfL)
-NB. then (with appropriate comparison tolerance)
-NB.   Q -: ungql (((m+1),(-n)) {. QfL)
-NB.   I -: clean (mp~ ct) Q
-NB.   A -: Q mp L
-NB.   (] -: clean @ ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)@geqlf) A
+NB.   L=. (((-~/@$) trl ])@}.) QfL
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQLF
@@ -286,22 +298,28 @@ NB. Syntax:
 NB.   QfR=. geqrf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   QfR - (m+1)×n-matrix, combined unit lower triangular
-NB.         (m+1)×k-matrix Qf (unit diagonal not stored) and
-NB.         upper triangular k×n-matrix R
+NB.   QfR - (m+1)×n-matrix, combined Qf (unit diagonal not
+NB.         stored) and R
+NB.   Qf  - (m+1)×k-matrix, unit lower triangular, the Q
+NB.         represented in factored form
+NB.   R   - k×n-matrix, upper triangular
+NB.   Q   - m×k-matrix with orthonormal columns, which is
+NB.         defined as the first k columns of a product of n
+NB.         elementary reflectors of order m:
+NB.           Q = Π{H(i),i=0:n-1}
+NB.         where
+NB.           H(k:n-1)≡H(v(k:n-1),τ(k:n-1))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   k=. m <. n
+NB. Assertions (with appropriate comparison tolerance)
+NB.   Q -: ungql QfR
+NB.   I -: (mp~ ct) Q
+NB.   A -: Q mp R
+NB.   (] -: ((         tru   @  }:   ) mp~ ungqr)@geqrf) A
+NB. where
 NB.   QfR=. geqrf A
 NB.   Q=. ungqr QfR
-NB.   R=. tru (}: QfR)
-NB. then
-NB.   Q -: ungql (((m+1),n) {. QfR)
-NB.   I -: clean (mp~ ct) Q
-NB.   A -: Q mp R
-NB.   (] -: clean @ ((         tru   @(_1  0&}.)) mp~ ungqr)@geqrf) A
+NB.   R=. tru }: QfR
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQRF
@@ -325,27 +343,32 @@ NB. Syntax:
 NB.   RQf=. gerqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   RQf - m×(n+1)-matrix, combined upper triangular
-NB.         m×k-matrix R and unit lower triangular
-NB.         k×(n+1)-matrix Qf (unit diagonal not stored)
+NB.   RQf - m×(n+1)-matrix, combined R and Qf (unit diagonal
+NB.         not stored)
+NB.   R   - m×k-matrix, upper triangular
+NB.   Qf  - k×(n+1)-matrix, unit lower triangular, the Q
+NB.         represented in factored form
+NB.   Q   - k×n-matrix with orthonormal rows, which is
+NB.         defined as the last k rows of a product of m
+NB.         elementary reflectors of order n:
+NB.           Q = Π{H(i)',i=0:m-1}
+NB.         where
+NB.           H(k:m-1)≡H(v(k:m-1),τ(k:m-1))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   k=. m <. n
-NB.   RQf=. gerqf A
-NB.   R=. (n - m) trl (0 1 }. RQf)
-NB.   Q=. ungrq RQf
-NB. then (with appropriate comparison tolerance)
-NB.   Q -: ungrq (((-k),(n+1)) {. RQf)
-NB.   I -: clean (mp ct) Q
+NB. Assertions (with appropriate comparison tolerance)
+NB.   Q -: ungrq RQf
+NB.   I -: (mp ct) Q
 NB.   A -: R mp Q
-NB.   (] -: clean @ ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)@gerqf) A
+NB.   (] -: ((((-~/@$) tru ])@:(}."1)) mp  ungrq)@gerqf) A
+NB. where
+NB.   RQf=. gerqf A
+NB.   R=. (((-~/@$) tru ])@:(}."1)) RQf
+NB.   Q=. ungrq RQf
 NB.
 NB. Notes:
 NB. - models LAPACK's xGERQF
 
-NB. RQf=. gerqf A
 gerqf=: (((gerq2 @ (0&({::))) , (1&({::))) ,. (2&({::))) @ ((3 : 0) ^: ((qfi@(0 _1&(ms $)))`(];(0&{.);(0&({."1))))) @ (0 & ,.)
   'pfxT pfxB sfx'=. y
   nnb=. - QFNB <. k=. <./ 0 _1 ms $ pfxT

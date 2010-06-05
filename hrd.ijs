@@ -69,10 +69,10 @@ lahr2l=: 3 : 0
     z1=. 1 j } z=. _1 + upd1 (j , _1) larfg (0 (i. j) } b)
     u=. (* +@{:) z1
     w=. V +@mp (+ - 0 (_1) } u)
-    T=. T (0 append) ((w mp T) , (+ {: z1))
+    T=. T appendl ((w mp T) , (+ {: z1))
     y=. ((w (i. j) } (0 , u)) mp y) j } y
-    H=. H (0 append) ((j {. b) , (j { z))
-    V=. V (_1 append) z1
+    H=. H appendl ((j {. b) , (j { z))
+    V=. V appendr z1
   end.
   (HRDNB {. y) ; V ; H ; T
 )
@@ -124,10 +124,10 @@ lahr2u=: 3 : 0
     z1=. 1 j } z=. (j , _1) larfg (0 (i. j) } b)
     u=. (* {:) z1
     w=. (+ - 0 (_1) } u) +@mp V
-    T=. T (0 stitch) ((T mp w) , ({: z1))
+    T=. T stitcht ((T mp w) , ({: z1))
     y=. (y mp (w (i. j) } (0 , u))) (< a: ; j) } y
-    H=. H (0 stitch) ((j {. b) , (j { z))
-    V=. V (_1 stitch) z1
+    H=. H stitcht ((j {. b) , (j { z))
+    V=. V stitchb z1
   end.
   (HRDNB {."1 y) ; V ; H ; T
 )

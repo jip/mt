@@ -1411,7 +1411,7 @@ NB. Notes:
 NB. - models LAPACK's xPOTRF('L'), but uses blocked, not
 NB.   partitioned algorithm
 
-potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0 & {::))`,`(ct@])`trsmlx`(0 1 & {::)`[`mp`[`]`(1 1 & {::)`(_1 stitch)`(potrfl@:-~)`]`[`0:`0: fork6)@((<;.1)~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
+potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0 & {::))`,`(ct@])`trsmlx`(0 1 & {::)`[`mp`[`]`(1 1 & {::)`stitchb`(potrfl@:-~)`]`[`0:`0: fork6)@((<;.1)~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
 NB. ---------------------------------------------------------
 NB. potrfu

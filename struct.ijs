@@ -330,13 +330,13 @@ NB.   Template adv. to make verbs to enhance append built-in
 NB.   verb (,)
 NB.
 NB. Examples:
-NB.    (3 3$3) 0 append (2 2$2)     (3 3$3) _1 append (2 2$2)
+NB.    (3 3$3) appendl (2 2$2)      (3 3$3) appendr (2 2$2)
 NB. 3 3 3                        3 3 3
 NB. 3 3 3                        3 3 3
 NB. 3 3 3                        3 3 3
 NB. 2 2 0                        0 2 2
 NB. 2 2 0                        0 2 2
-NB.    (2 2$2) 0 append (3 3$3)     (2 2$2) _1 append (3 3$3)
+NB.    (2 2$2) appendl (3 3$3)      (2 2$2) appendr (3 3$3)
 NB. 2 2 0                        0 2 2
 NB. 2 2 0                        0 2 2
 NB. 3 3 3                        3 3 3

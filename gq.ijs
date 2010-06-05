@@ -21,35 +21,35 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-cberr=. 2 : '((norm1@(<: upddiag)@(u ct)) % (FP_EPS * v)) @ ]'  NB. conj. to form verb to calc. berr
+gqberr=: 2 : '((norm1@(<: upddiag)@(u ct)) % (FP_EPS * v)) @ ]'  NB. conj. to form verb to calc. berr
 
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-GQNB=: 3 NB. 32   NB. block size limit
-GQNX=: 4 NB. 128  NB. crossover point, GQNX ≥ GQNB
+GQNB=: 32   NB. block size limit
+GQNX=: 128  NB. crossover point, GQNX ≥ GQNB
 
 NB. ---------------------------------------------------------
-NB. ungi
+NB. gqi
 NB.
 NB. Description: Number of iterations
-NB. Syntax:      iters=. ungi k
+NB. Syntax:      iters=. gqi k
 NB. where        k = min(rows,columns)
-NB. Formula:     iters = max(0,⌊(k+BS-NX-1)/BS⌋)
+NB. Formula:     iters = max(0,⌊(k+NB-NX-1)/NB⌋)
 NB. Notes:       is memo, since repetitive calls are expected
 
-ungi=: (0 >. <.@(GQNB %~ (_1+GQNB-GQNX)&+))M.
+gqi=: (0 >. <.@(GQNB %~ (_1+GQNB-GQNX)&+))M.
 
 NB. ---------------------------------------------------------
-NB. ungb
+NB. gqb
 NB.
 NB. Description: Size of submatrix processed by blocked algo
-NB. Syntax:      size=. ungb k
+NB. Syntax:      size=. gqb k
 NB. where        k = min(rows,columns)
-NB. Formula:     size = min(k,BS*iters)
+NB. Formula:     size = min(k,NB*iters)
 NB. Notes:       is memo, since repetitive calls are expected
 
-ungb=: (<. (GQNB * ungi))M.
+gqb=: (<. (GQNB * gqi))M.
 
 NB. ---------------------------------------------------------
 NB. Description:
@@ -97,7 +97,9 @@ ungr2step=: ((1 _ ,:~ (0 {:: [)    -~ #@]) (,;.0) 1 {:: [) (((>:@] _1} *) +@-@{.
 
 NB. ---------------------------------------------------------
 NB. Description:
-NB.   Non-blocked version of algorithms
+NB.   Reconstruct matrix Q, augmented by trash vector, from
+NB.   its elementary reflectors. Non-blocked version of
+NB.   algorithms
 NB.
 NB. Syntax:
 NB.   eQ=. s ungxx Qf
@@ -119,14 +121,16 @@ NB. Algorithm:
 NB.   1) form eQ(0) as unit matrix of proper size
 NB.   2) do iterations: eQ=. (s;Qf) (ungxxstep ^: k) eQ0
 NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   k=. m <. n
-NB. then (with appropriate comparison tolerance)
-NB.   (] -: clean @ ((         trl   @( 0 _1&}.)) mp  (( 0 _1&}.)@(# ungl2 ])@         tru1   @(      k &{.)))@gelqf) A
+NB. Assertions:
+NB.   (] -: clean @ ((         trl   @( 0 _1&}.)) mp  (( 0 _1&}.)@(# ungl2 ])@         tru1   @(  k & {.   )))@gelqf) A
 NB.   (] -: clean @ ((((-~/@$) trl ])@( 1  0&}.)) mp~ (( 1  0&}.)@(c ung2l ])@((-~/@$) tru1 ])@((-k)&({."1))))@geqlf) A
 NB.   (] -: clean @ ((         tru   @(_1  0&}.)) mp~ ((_1  0&}.)@(c ung2r ])@         trl1   @(  k &({."1))))@geqrf) A
 NB.   (] -: clean @ ((((-~/@$) tru ])@( 0  1&}.)) mp  (( 0  1&}.)@(# ungr2 ])@((-~/@$) trl1 ])@((-k)& {.   )))@gerqf) A
+NB. where
+NB.   k=. <./ $ A
+NB.
+NB. TODO:
+NB. - case s<k must be allowed, too
 
 ungl2=: ungl2step^:(;`(#@])`( idmat        @((,  c)-#@])))
 ung2l=: ung2lstep^:(;`(c@])`((idmat~ (-~/))@((,~ #)-c@])))
@@ -157,7 +161,7 @@ NB.          rows/columns which is defined as the first/last
 NB.          rows/columns of a product of s elementary
 NB.          reflectors (see corresp. ung{lq,ql,qr,rq})
 NB.   k    = min(m,n)
-NB.   i    - integer in range [0,ungi(k)]
+NB.   i    - integer in range [0,gqi(k)]
 NB.
 NB. Algorithm:
 NB.   1) augment eQ(i) by zero block
@@ -230,17 +234,17 @@ NB.               reflector H(i) (unit is not stored, v(i)
 NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
-NB. If:
-NB.   Q=. unglq gelqf A
-NB. then (with appropriate comparison tolerance)
+NB. Assertions:
 NB.   (idmat @ ms @ $ -: clean @ (mp  ct)) Q
+NB. where
+NB.   Q=. unglq gelqf A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGLQ
 NB. - equivalent code
-NB.   Q -: K {. mp/ (idmat N) -"2 |. (+ TAU) * (* +)"0/~"1 + H
+NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
-unglq=: ($:~ ( 0 _1&(ms $))) : ( 0 _1 }. ([ (unglqstep^:(]`(ungi@#@])`((-(ungb@#)) ungl2 ((}.~ (2 # (  ungb@#)))@])))) ( tru1            @((   <. ( 0 _1&(ms $)) ) {.   ]))))
+unglq=: ($:~ ( 0 _1&(ms $))) : ( 0 _1 }. ([ (unglqstep^:(]`(gqi@#@])`((-(gqb@#)) ungl2 ((}.~ (2 # (  gqb@#)))@])))) ( tru1            @((   <. ( 0 _1&(ms $)) ) {.   ]))))
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -258,7 +262,7 @@ NB.         defined as the last s columns of a product of n
 NB.         elementary reflectors of order m:
 NB.           Q = Π{H(i),i=n-1:0}
 NB.         where
-NB.           H(n-1:k)≡H(v(n-1:k),τ(n-1:k))=H(0,0)=I
+NB.           H(n-1:s)≡H(v(n-1:s),τ(n-1:s))=H(0,0)=I
 NB.   s   - integer in range [0,m], default is k
 NB.   k   = min(m,n)
 NB.
@@ -290,17 +294,17 @@ NB.               reflector H(i) (unit is not stored, v(i)
 NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
-NB. If:
-NB.   Q=. ungql geqlf A
-NB. then (with appropriate comparison tolerance)
+NB. Assertions:
 NB.   (idmat @ ms @ $ -: clean @ (mp~ ct)) Q
+NB. where
+NB.   Q=. ungql geqlf A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGQL
 NB. - equivalent code
-NB.   Q -: (M,(-K)) {. mp/ (idmat M) -"2 |. TAU * (* +)"0/~"1 |: H
+NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-ungql=: ($:~ (_1  0&(ms $))) : ( 1  0 }. ([ (ungqlstep^:(;`(ungi@c@])`((-(ungb@c)) ung2l ((}.~ (2 # (-@ungb@c)))@])))) ((tru1~ (-~/ @ $))@((-@(<. (_1  0&(ms $)))) {."1 ]))))
+ungql=: ($:~ (_1  0&(ms $))) : ( 1  0 }. ([ (ungqlstep^:(;`(gqi@c@])`((-(gqb@c)) ung2l ((}.~ (2 # (-@gqb@c)))@])))) ((tru1~ (-~/ @ $))@((-@(<. (_1  0&(ms $)))) {."1 ]))))
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -318,7 +322,7 @@ NB.         defined as the first s columns of a product of n
 NB.         elementary reflectors of order m:
 NB.           Q = Π{H(i),i=0:n-1}
 NB.         where
-NB.           H(k:n-1)≡H(v(k:n-1),τ(k:n-1))=H(0,0)=I
+NB.           H(s:n-1)≡H(v(s:n-1),τ(s:n-1))=H(0,0)=I
 NB.   s   - integer in range [0,m], default is k
 NB.   k   = min(m,n)
 NB.
@@ -350,48 +354,17 @@ NB.               reflector H(i) (unit is not stored, v(i)
 NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
-NB. If:
-NB.   Q=. ungqr geqrf A
-NB. then (with appropriate comparison tolerance)
+NB. Assertions:
 NB.   (idmat @ ms @ $ -: clean @ (mp~ ct)) Q
+NB. where
+NB.   Q=. ungqr geqrf A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGQR
 NB. - straightforward O(k*m^3) code:
-NB.   Q -: (M,K) {. mp/ (idmat M) -"2 TAU * (* +)"0/~"1 |: H
+NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
-ungqr=: ($:~ (_1  0&(ms $))) : (_1  0 }. ([ (ungqrstep^:(]`(ungi@c@])`((-(ungb@c)) ung2r ((}.~ (2 # (  ungb@c)))@])))) ( trl1            @((   <. (_1  0&(ms $)) ) {."1 ]))))
-
-
-NB. seems FAILED
-
-NB.   'Qfi1 eQi1'=. ung2rstep2 (Qfi;eQi)
-ung2rstep2=: (((>:@(-/)@$) (0 liosS) ]) @ (0 & {::)) (((>:@]  0} *)   -@{:)@[ ,.  larflnfc) 0 , (1 & {::)
-
-NB.   eQ=. Qf ung2r eQ0
-ung2r2=: 1 {:: ung2rstep2^:(;`(c@])`(idmat@((,~ #)-c@])))
-
-NB.   eQi1=. Qf  ungqrstep eQi
-ungqrstep=: ((((GQNB,~_),:~(-&#))                       (] ;. 0)       [) (((ung2r~ c) @ [) ,.  larfblnfc) ]) ({.  ~ ((-GQNB)-#))
-
-
-NB. Q=. [n] ungqr Qf
-NB. Qf: m*k-matrix, unit lower triangular; n: 0:m, default is k; Q: m*n-matrix
-
-ungqr2=: 4 : 0
-  y=. x ]`((1;0,[) setdiag {."1)`({."1) @. (*@(-c)) y  NB. keep/post-stitch-idmat/shrink
-  }: (ungqrstep^:(]`(ungi@c@])`((-(ungb@c)) ung2r ((}.~ (2 # (  ungb@c)))@]))))
-  ip (C.^:_1"1) 1 {:: getripl1ustep ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
-  
-  'ip L1U'=. y
-  n=. # L1U
-  y=. trtriu tru L1U
-  y=. (>/~ i. n) } y ,: L1U  NB. spec code
-  I=. <. n % TRINB
-  ip (C.^:_1"1) 1 {:: getripl1ustep ^: I ((TRINB * I) (({."1) ; (-@[ (trl1 trsmxl1 tru) (}."1))) y)
-)
-
-NB. /seems FAILED
+ungqr=: ($:~ (_1  0&(ms $))) : (_1  0 }. ([ (ungqrstep^:(]`(gqi@c@])`((-(gqb@c)) ung2r ((}.~ (2 # (  gqb@c)))@])))) ( trl1            @((   <. (_1  0&(ms $)) ) {."1 ]))))
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -409,7 +382,7 @@ NB.         defined as the last s rows of a product of m
 NB.         elementary reflectors of order n:
 NB.           Q = Π{H(i)',i=0:m-1}
 NB.         where
-NB.           H(k:m-1)≡H(v(k:m-1),τ(k:m-1))=H(0,0)=I
+NB.           H(s:m-1)≡H(v(s:m-1),τ(s:m-1))=H(0,0)=I
 NB.   s   - integer in range [0,n], default is k
 NB.   k   = min(m,n)
 NB.
@@ -440,17 +413,17 @@ NB.               reflector H(i) (unit is not stored, v(i)
 NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
-NB. If:
-NB.   Q=. ungrq gerqf A
-NB. then (with appropriate comparison tolerance)
+NB. Assertions:
 NB.   (idmat @ ms @ $ -: clean @ (mp ct)) Q
+NB. where
+NB.   Q=. ungrq gerqf A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGRQ
 NB. - equivalent code
-NB.   Q -: (-K) {. mp/ (idmat N) -"2 (+ TAU) * (* +)"0/~"1 + H
+NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
-ungrq=: ($:~ ( 0 _1&(ms $))) : ( 0  1 }. ([ (ungrqstep^:(;`(ungi@#@])`((-(ungb@#)) ungr2 ((}.~ (2 # (-@ungb@#)))@])))) ((trl1~ (-~/ @ $))@((-@(<. ( 0 _1&(ms $)))) {.   ]))))
+ungrq=: ($:~ ( 0 _1&(ms $))) : ( 0  1 }. ([ (ungrqstep^:(;`(gqi@#@])`((-(gqb@#)) ungr2 ((}.~ (2 # (-@gqb@#)))@])))) ((trl1~ (-~/ @ $))@((-@(<. ( 0 _1&(ms $)))) {.   ]))))
 
 NB. ---------------------------------------------------------
 NB. unghrl
@@ -518,12 +491,18 @@ NB. Syntax:
 NB.   testungq A
 NB. where
 NB.   A - m×n-matrix
+NB.
+NB. Formula:
+NB. - for unglq, ungrq:
+NB.     berr := ||Q * Q^_1 - I|| / (ε * n)
+NB. - for ungql, ungqr:
+NB.     berr := ||Q^_1 * Q - I|| / (ε * m)
 
 testungq=: 3 : 0
-  ('unglq' tmonad (gelqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q * Q^_1 - I|| / (ε * n)
-  ('ungql' tmonad (geqlf`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q^_1 * Q - I|| / (ε * m)
-  ('ungqr' tmonad (geqrf`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q^_1 * Q - I|| / (ε * m)
-  ('ungrq' tmonad (gerqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q * Q^_1 - I|| / (ε * n)
+  ('unglq' tmonad (gelqf`]`((norm1 con ct)@])`(_."_)`(mp  gqberr c))) y
+  ('ungql' tmonad (geqlf`]`((norm1 con ct)@])`(_."_)`(mp~ gqberr #))) y
+  ('ungqr' tmonad (geqrf`]`((norm1 con ct)@])`(_."_)`(mp~ gqberr #))) y
+  ('ungrq' tmonad (gerqf`]`((norm1 con ct)@])`(_."_)`(mp  gqberr c))) y
 
   EMPTY
 )
@@ -538,10 +517,16 @@ NB. Syntax:
 NB.   testunghr A
 NB. where
 NB.   A - n×n-matrix
+NB.
+NB. Formula:
+NB. - for unghrl:
+NB.     berr := ||Q * Q^_1 - I|| / (ε * n)
+NB. - for ungql, ungqr :
+NB.     berr := ||Q^_1 * Q - I|| / (ε * m)
 
 testunghr=: 3 : 0
-  ('unghrl' tmonad ((gehrdl~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q * Q^_1 - I|| / (ε * n)
-  ('unghru' tmonad ((gehrdu~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q^_1 * Q - I|| / (ε * n)
+  ('unghrl' tmonad ((gehrdl~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp  gqberr c))) y
+  ('unghru' tmonad ((gehrdu~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp~ gqberr #))) y
 
   EMPTY
 )

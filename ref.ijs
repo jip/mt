@@ -175,9 +175,6 @@ NB.   'comparison tolerance tol>0'; otherwise (tol=0) x
 NB.   should be filled by zeros
 
 larfg=: 4 : 0
-if. 1 ~: # $ y do.
-  smoutput 'larfg: rank == ' , ": # $ y
-end.
   'ioalpha iotau'=. x
   alpha=. ioalpha ({,) y
   xnorm=. norms (0 (x"_) } y)                               NB. ||x||_2
@@ -198,9 +195,6 @@ end.
 )
 
 larfp=: 4 : 0
-if. 1 ~: # $ y do.
-  smoutput 'larfp: rank == ' , ": # $ y
-end.
   'ioalpha iotau'=. x
   alpha=. ioalpha ({,) y
   xnorm=. norms (0 (x"_) } y)                               NB. ||x||_2

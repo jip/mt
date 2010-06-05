@@ -21,8 +21,8 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-QFBS=: 32   NB. block size limit
-QFNX=: 128  NB. crossover point, QFNX ≥ QFBS
+QFNB=: 32   NB. block size limit
+QFNX=: 128  NB. crossover point, QFNX ≥ QFNB
 
 NB. ---------------------------------------------------------
 NB. gelq2
@@ -84,9 +84,20 @@ NB.   topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
 
-geql2=: ((] ,.~ ((((_1 ,  (1 -~ ({: @ $))) {. ]) ,~  ($: @ (_1 _1 & }.))) @ (larflcbc~ (1 & (_1 }))))) (larfpb  @ (IOSLC & {))) ^: (*./ @ (0 < (_1 0 + $)))
-geqr2=: ((] ,.  (((( 1 ,  (1 -  ({: @ $))) {. ]) ,   ($: @ ( 1  1 & }.))) @ (larflcfc~ (1 & ( 0 }))))) (larfpf  @ (IOSFC & {))) ^: (*./ @ (0 < (_1 0 + $)))
-gerq2=: ((] ,~  ((((_1 ,~ (1 -~ #)       ) {. ]) ,.~ ($: @ (_1 _1 & }.))) @ (larfrnbr~ (1 & (_1 }))))) (larfpbc @ (IOSLR & {))) ^: (*./ @ (0 < (0 _1 + $)))
+gelq2o=: ((] ,   (((( 1 ,~ (1 -  #)       ) {. ]) ,.  ($: @ ( 1  1 & }.))) @ (larfrnfr~ (1 & ( 0 }))))) (larfpfc @:  {.   )) ^: (*./ @ (0 < (0 _1 + $)))
+geql2o=: ((] ,.~ ((((_1 ,  (1 -~ ({: @ $))) {. ]) ,~  ($: @ (_1 _1 & }.))) @ (larflcbc~ (1 & (_1 }))))) (larfpb  @: ({:"1))) ^: (*./ @ (0 < (_1 0 + $)))
+geqr2o=: ((] ,.  (((( 1 ,  (1 -  ({: @ $))) {. ]) ,   ($: @ ( 1  1 & }.))) @ (larflcfc~ (1 & ( 0 }))))) (larfpf  @: ({."1))) ^: (*./ @ (0 < (_1 0 + $)))
+gerq2o=: ((] ,~  ((((_1 ,~ (1 -~ #)       ) {. ]) ,.~ ($: @ (_1 _1 & }.))) @ (larfrnbr~ (1 & (_1 }))))) (larfpbc @:  {:   )) ^: (*./ @ (0 < (0 _1 + $)))
+
+IOSFC=: < a: ; 0   NB. IOS 1st column
+IOSLC=: < a: ; _1  NB. IOS last column
+IOSFR=: 0          NB. IOS 1st row, or (< 0 ; < a:)
+IOSLR=: _1         NB. IOS last row, or (< _1 ; < a:)
+
+gelq2oo=: ((] ,   (((( 1 ,~ (1 -  #)       ) {. ]) ,.  ($: @ ( 1  1 & }.))) @ (larfrnfr~ (1 & ( 0 }))))) (larfpfc @ (IOSFR & {))) ^: (*./ @ (0 < (0 _1 + $)))
+geql2oo=: ((] ,.~ ((((_1 ,  (1 -~ ({: @ $))) {. ]) ,~  ($: @ (_1 _1 & }.))) @ (larflcbc~ (1 & (_1 }))))) (larfpb  @ (IOSLC & {))) ^: (*./ @ (0 < (_1 0 + $)))
+geqr2oo=: ((] ,.  (((( 1 ,  (1 -  ({: @ $))) {. ]) ,   ($: @ ( 1  1 & }.))) @ (larflcfc~ (1 & ( 0 }))))) (larfpf  @ (IOSFC & {))) ^: (*./ @ (0 < (_1 0 + $)))
+gerq2oo=: ((] ,~  ((((_1 ,~ (1 -~ #)       ) {. ]) ,.~ ($: @ (_1 _1 & }.))) @ (larfrnbr~ (1 & (_1 }))))) (larfpbc @ (IOSLR & {))) ^: (*./ @ (0 < (0 _1 + $)))
 
 NB. ---------------------------------------------------------
 NB. gelq3
@@ -132,7 +143,7 @@ NB.        Vtau=. (gexx2 @ (ios & {)) eA
 NB.   3) make Vtau unit triangular:
 NB.        Vtau=. [diag] trx vTau
 NB.   4) generate a block reflector from Vtau and apply it to
-NB.      eA:
+NB.      eA without block extracted:
 NB.        eAupd=. Vtau larfbxxxx eA
 NB.   5) extract two submatrices S0 and S1 from eAupd
 NB.   6) supply S1 to recursive call to itself:
@@ -144,9 +155,10 @@ NB. - input's and output's shapes are the same
 NB. - ge{lq,ql,qr,rq}2 and ge{lq,ql,qr,rq}3 respectively are
 NB.   topologic equivalents
 
-geql3=: geql2`(((0 , QFBS) & }.) (] ,.~ (((     QFBS  & {.) ,~  ($: @ (     (-QFBS)  & }.))) @ (larfblcbc~ (tru1~ (-~/@$))))) (geql2 @ ((_ , QFBS) & {.))) @. (*./ @ (QFNX < (_1 0 + $)))
-geqr3=: geqr2`(((0 , QFBS) & }.) (] ,.  (((     QFBS  & {.) ,   ($: @ (       QFBS   & }.))) @ (larfblcfc~  trl1          ))) (geqr2 @ ((_ , QFBS) & {.))) @. (*./ @ (QFNX < (_1 0 + $)))
-gerq3=: gerq2`((     QFBS  & }.) (] ,~  ((((_ , QFBS) & {.) ,.~ ($: @ ((0 , (-QFBS)) & }.))) @ (larfbrnbr~ (trl1~ (-~/@$))))) (gerq2 @ (     QFBS  & {.))) @. (*./ @ (QFNX < (0 _1 + $)))
+gelq3o=: gelq2o`((       QFNB   & }.) (] ,   ((((_ ,   QFNB)  & {.) ,.  ($: @ ((0 ,   QFNB ) & }.))) @ (larfbrnfr~  tru1          ))) (gelq2o @ (       QFNB   & {.))) @. (*./ @ (QFNX < (0 _1 + $)))
+geql3o=: geql2o`(((0 , (-QFNB)) & }.) (] ,.~ (((     (-QFNB)  & {.) ,~  ($: @ (     (-QFNB)  & }.))) @ (larfblcbc~ (tru1~ (-~/@$))))) (geql2o @ ((_ , (-QFNB)) & {.))) @. (*./ @ (QFNX < (_1 0 + $)))
+geqr3o=: geqr2o`(((0 ,   QFNB)  & }.) (] ,.  (((       QFNB   & {.) ,   ($: @ (       QFNB   & }.))) @ (larfblcfc~  trl1          ))) (geqr2o @ ((_ ,   QFNB)  & {.))) @. (*./ @ (QFNX < (_1 0 + $)))
+gerq3o=: gerq2o`((     (-QFNB)  & }.) (] ,~  ((((_ , (-QFNB)) & {.) ,.~ ($: @ ((0 , (-QFNB)) & }.))) @ (larfbrnbr~ (trl1~ (-~/@$))))) (gerq2o @ (     (-QFNB)  & {.))) @. (*./ @ (QFNX < (0 _1 + $)))
 
 NB. =========================================================
 NB. Interface
@@ -190,7 +202,9 @@ NB.
 NB. Notes:
 NB. - emulates LAPACK's xGELQF
 
-qfi=: (<.@(QFBS %~ (_1+QFBS-QFNX)&+))M.
+gelqfo=: gelq3o @ (,. & 0)
+
+qfi=: (<.@(QFNB %~ (_1+QFNB-QFNX)&+))M.
 
 updm=: (@:{) (`[) (`]) }  NB. [Jprogramming] Transform to Amend
                           NB. Dan Bron, Sat Mar 3 03:26:44 HKT 2007
@@ -198,24 +212,56 @@ updm=: (@:{) (`[) (`]) }  NB. [Jprogramming] Transform to Amend
 
 mapdi=: 2 : '((((0{n){[){])u(((1{n){[){]))`((2{n){[)`]}'
 
-NB. (] -: (clean@((trl) mp (unglq))@gelq2@(,.&0))) A
-NB. (] -: (clean@((trl) mp (unglq))@gelqf)) A
+NB. usage: (iv4C`ih4C`iv4z`ih4z geqfios)
+geqfios=: 1 : '_2 <@,\ (2{.m)/. , (2}.m)/. , ,.'
 
-gelqios=: 1 : '_2 <@,\ (u }. ])&.>`]/. , (u {. ])&.>`]/. , ,.'  NB. (QFBS gelqios) or ([: gelqios)
-gelq2step=: ((([:   gelqios)@}.) (((],(larfrnfr ~(1&(0})))) larfpfc) mapdi 0 1 2) (0&({::))) ; (     }.&.>@}.)
+gelq2ios=: ((        }.&.>)`]`(        {.&.>)`]) geqfios
+gelqfios=: ((  QFNB &}.&.>)`]`(  QFNB &{.&.>)`]) geqfios
+
+geql2ios=: (]`(        }:&.>)`]`(        {:&.>)) geqfios
+geqlfios=: (]`((-QFNB)&}.&.>)`]`((-QFNB)&{.&.>)) geqfios
+
+geqr2ios=: (]`(        }.&.>)`]`(        {.&.>)) geqfios
+geqrfios=: (]`(  QFNB &}.&.>)`]`(  QFNB &{.&.>)) geqfios
+
+gerq2ios=: ((        }:&.>)`]`(        {:&.>)`]) geqfios
+gerqfios=: (((-QFNB)&}.&.>)`]`((-QFNB)&{.&.>)`]) geqfios
+
+
+NB. (] -: (clean@(trl mp unglq)@gelq2@(,.&0))) A
+NB. (] -: (clean@(trl mp unglq)@gelqf)) A
+
+gelq2step=: ((gelq2ios@}.) (((],(larfrnfr ~(1&(0})))) larfpfc) mapdi 0 1 2) (0&({::))) ; (     }.&.>@}.)
 gelq2=: 0 {:: (gelq2step ^: ((0 _1&(ms $))`(];((;&i.)/@$))))
-gelqfstep=: (((QFBS gelqios)@}.) (((],(larfbrnfr~tru1    )) gelq2  ) mapdi 0 1 2) (0&({::))) ; (QFBS&}.&.>@}.)
+gelqfstep=: ((gelqfios@}.) (((],(larfbrnfr~tru1    )) gelq2  ) mapdi 0 1 2) (0&({::))) ; (QFNB&}.&.>@}.)
 gelqf=: (gelq2`(((<@}.) (gelq2 updm) (0&({::)))@(gelqfstep ^: ((qfi@(0 _1&(ms $)))`(];((;&i.)/@$)))))@.(*./@(QFNX<(0 _1+$))))@(,. & 0)
+
+
+NB. (] -: (clean@((trl~ (-~/ @ $)) mp~ ungql)@geql2@(,~&0))) A
+NB. (] -: (clean@((trl~ (-~/ @ $)) mp~ ungql)@geqlf)) A
+
+geql2step=: ((geql2ios@}.) (((],.~(larflcbc ~(1&(_1})))) larfpb ) mapdi 0 1 2) (0&({::))) ; (     }:&.>@}.)
+geql2=: 0 {:: (geql2step ^: ((_1 0&(ms $))`(];((;&i.)/@$))))
+geqlfstep=: ((geqlfios@}.) (((],.~(larfblcbc~(tru1~(-~/@$)))) geql2  ) mapdi 0 1 2) (0&({::))) ; ((-QFNB)&}.&.>@}.)
+geqlf=: (geql2`(((<@}.) (geql2 updm) (0&({::)))@(geqlfstep ^: ((qfi@(_1 0&(ms $)))`(];((;&i.)/@$)))))@.(*./@(QFNX<(_1 0+$))))@(,~ & 0)
+
 
 NB. (] -: (clean@(tru mp~ ungqr)@geqr2@(,&0))) A
 NB. (] -: (clean@(tru mp~ ungqr)@geqrf)) A
 
-geqrios=: 1 : '_2 <@,\ ]`((u }. ])&.>)/. , ]`((u {. ])&.>)/. , ,.'  NB. (QFBS geqrios) or ([: geqrios)
-geqr2step=: ((([:   geqrios)@}.) (((],.(larflcfc ~(1&(0})))) larfpf ) mapdi 0 1 2) (0&({::))) ; (     }.&.>@}.)
-geqr2=: 0 {:: (geqr2step^: ((_1 0&(ms $))`(];((;&i.)/@$))))
-geqrfstep=: (((QFBS geqrios)@}.) (((],.(larfblcfc~trl1    )) geqr2  ) mapdi 0 1 2) (0&({::))) ; (QFBS&}.&.>@}.)
+geqr2step=: ((geqr2ios@}.) (((],.(larflcfc ~(1&(0})))) larfpf ) mapdi 0 1 2) (0&({::))) ; (     }.&.>@}.)
+geqr2=: 0 {:: (geqr2step ^: ((_1 0&(ms $))`(];((;&i.)/@$))))
+geqrfstep=: ((geqrfios@}.) (((],.(larfblcfc~trl1    )) geqr2  ) mapdi 0 1 2) (0&({::))) ; (QFNB&}.&.>@}.)
 geqrf=: (geqr2`(((<@}.) (geqr2 updm) (0&({::)))@(geqrfstep ^: ((qfi@(_1 0&(ms $)))`(];((;&i.)/@$)))))@.(*./@(QFNX<(_1 0+$))))@(, & 0)
 
+
+NB. (] -: (clean@((tru~ (-~/ @ $)) mp ungrq)@gerq2@(,.~&0))) A
+NB. (] -: (clean@((tru~ (-~/ @ $)) mp ungrq)@gerqf)) A
+
+gerq2step=: ((gerq2ios@}.) (((],~(larfrnbr ~(1&(_1})))) larfpbc) mapdi 0 1 2) (0&({::))) ; (     }:&.>@}.)
+gerq2=: 0 {:: (gerq2step ^: ((0 _1&(ms $))`(];((;&i.)/@$))))
+gerqfstep=: ((gerqfios@}.) (((],~(larfbrnbr~(trl1~(-~/@$)))) gerq2  ) mapdi 0 1 2) (0&({::))) ; ((-QFNB)&}.&.>@}.)
+gerqf=: (gerq2`(((<@}.) (gerq2 updm) (0&({::)))@(gerqfstep ^: ((qfi@(0 _1&(ms $)))`(];((;&i.)/@$)))))@.(*./@(QFNX<(0 _1+$))))@(,.~ & 0)
 
 NB. ---------------------------------------------------------
 NB. geqlf
@@ -247,7 +293,7 @@ NB.
 NB. Notes:
 NB. - emulates LAPACK's xGEQLF
 
-geqlf=: geql3 @ (0 & ,)
+geqlfo=: geql3o @ (0 & ,)
 
 NB. ---------------------------------------------------------
 NB. geqrf
@@ -279,6 +325,7 @@ NB.
 NB. Notes:
 NB. - emulates LAPACK's xGEQRF
 
+geqrfo=: geqr3o @ (, & 0)
 
 NB. ---------------------------------------------------------
 NB. gerqf
@@ -310,7 +357,7 @@ NB.
 NB. Notes:
 NB. - emulates LAPACK's xGERQF
 
-gerqf=: gerq3 @ (0 & ,.)
+gerqfo=: gerq3o @ (0 & ,.)
 
 NB. =========================================================
 NB. Test suite
@@ -340,9 +387,13 @@ tgeqf=: 3 : 0
   ('2b1110 & gerqf_jlapack_' tmonad (]`({. , (,.~ &. > / @ }.))`(rcond"_)`(_."_)`((norm1@(- ((mp  ungrq) & > /)))%((FP_EPS*c*norm1)@[)))) y
 
   NB. rewrite as in LIN/cxxt01.f: ||R-Q'*A|| and so on
+  ('gelqfo' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         trl   @( 0 _1&}.)) mp  unglq)))%((FP_EPS*c*norm1)@[)))) y  NB. berr := ||A-L*Q||/(ε*n*||A||)
   ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         trl   @( 0 _1&}.)) mp  unglq)))%((FP_EPS*c*norm1)@[)))) y  NB. berr := ||A-L*Q||/(ε*n*||A||)
+  ('geqlfo' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*L||/(ε*m*||A||)
   ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*L||/(ε*m*||A||)
+  ('geqrfo' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         tru   @(_1  0&}.)) mp~ ungqr)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
   ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         tru   @(_1  0&}.)) mp~ ungqr)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
+  ('gerqfo' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)))%((FP_EPS*c*norm1)@[)))) y  NB. berr := ||A-R*Q||/(ε*n*||A||)
   ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)))%((FP_EPS*c*norm1)@[)))) y  NB. berr := ||A-R*Q||/(ε*n*||A||)
 
   EMPTY

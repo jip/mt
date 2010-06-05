@@ -1,12 +1,17 @@
 NB. chol.ijs
-NB. Cholesky factorization
+NB. Hermitian (symmetric) positive definite matrix Cholesky
+NB. factorization
 NB.
-NB. potf2l  Hermitian (symmetric) positive definite matrix
-NB.         unblocked Cholesky factorization for a lower
-NB.         triangular factor
-NB. potf2u  Hermitian (symmetric) positive definite matrix
-NB.         unblocked Cholesky factorization for a upper
-NB.         triangular factor
+NB. potf2l   factorization for a lower triangular factor
+NB. potf2u   factorization for a upper triangular factor
+NB. potrfl   factorization for a lower triangular factor,
+NB.          blocked version
+NB. potrfu   factorization for a upper triangular factor,
+NB.          blocked version
+NB. rpotrfl  factorization for a lower triangular factor,
+NB.          recursive blocked version
+NB. rpotrfu  factorization for a upper triangular factor,
+NB.          recursive blocked version
 NB.
 NB. Version: 1.0.0 2008-09-01
 NB. Copyright: Igor Zhuravlov, igor@uic.dvgu.ru
@@ -25,8 +30,8 @@ NB. Interface verbs
 
 NB. ---------------------------------------------------------
 NB. potf2l                                                  2
-NB. Hermitian (symmetric) positive definite matrix unblocked
-NB. Cholesky factorization for a lower triangular factor
+NB. Hermitian (symmetric) positive definite matrix Cholesky
+NB. factorization by a lower triangular factor
 NB.   L * L' = A
 NB.
 NB. Syntax:
@@ -46,34 +51,26 @@ NB.   As -: D mp Ap mp Dinv
 NB.   As -: Ap (] * (% " 1)) s
 NB.
 NB. Notes:
-NB.   - (3 2 1 1r2 p. n) flops
+NB.   - FLOPs: n/12*(n^2+17*n+2)
 NB.   - 
 NB.
 NB. References:
 NB. [1] 
 NB. [2] 
 
-NB. L*L'=A
-NB. FLOPs: n/12*(n^2+17*n+2)
-NB. занимает
-NB. - 6464 для 11×11, 8512 для 12×12
-NB. - 289280 для 127×127, 567808 для 128×128
-NB. - 2.37722e6 для 362×362, 4.47437e6 для 363×363
-
 potf2l=: (3 : 0) " 2
   n=. # y
-  qio=. 2 2 ($ " 1) 2 0 1 2 ({ " 1) 0 ,. (lio n , _1 , n) ,. i. n  NB. quad IOS of A21 at step j
-  for_j. i. n do.                      NB. traverse diagonal forward, j=0..(n-1)
-    ioc=. < (j + i. n - j) ; j         NB. A[i,j], i=j..(n-1)
-    c=. ioc { y                        NB. column on and under A[j][j]
-    A21=. (j_index { qio) (] ;. 0) y   NB. (n-j)×j-submatrix with upper right corner at A[j,j-1]
-    c=. c - (mp (+ @ {.)) A21          NB. GEMV(-1,A21,(conjugated A21 1st row),1,c)
-    Ljj=. 9 o. {. c                    NB. L[j][j] is always real
-    assert. Ljj > 0                    NB. check for positive definite
-    y=. (c % %: Ljj) ioc } y
+  for_j. i. n do.                           NB. traverse diagonal forward, j=0..(n-1)
+    ioc=. < (j + i. n - j) ; j              NB. A[i,j], i=j..(n-1)
+    c=. ioc { y                             NB. column on and under A[j][j]
+    A21=. (_1 0 ,: (n - j) , j) (] ;. 0) y  NB. (n-j)×j-submatrix with upper right corner at A[j,j-1]
+    c=. c - (mp (+ @ {.)) A21               NB. GEMV(-1,A21,(conjugated A21 1st row),1,c)
+    Ljj=. 9 o. {. c                         NB. L[j][j] is always real
+    assert. Ljj > 0                         NB. check for positive definite
+    y=. (c % %: Ljj) ioc } y                NB. scale and write back column c
   end.
 
-  y * (>:/~ i. n)                      NB. fill strict upper triangular by zeros
+  y * (>:/~ i. n)                           NB. fill strict upper triangle by zeros
 )
 
 NB. U*U'=A
@@ -96,14 +93,44 @@ potf2u=: (3 : 0) " 2
   y * (<:/~ i. n)                      NB. fill strict lower triangular by zeros
 )
 
+NB. ---------------------------------------------------------
+NB. potrfl                                                  2
+NB. Hermitian (symmetric) positive definite matrix Cholesky
+NB. blocked factorization by a lower triangular factor
+NB.   L * L' = A
+NB.
+NB. Syntax:
+NB.   L=. potrfl A
+NB. where
+NB.   A - N×N-matrix, Hermitian (symmetric), positive
+NB.       definite; strictly upper triangle is not referenced
+NB.   L  - N×N-matrix, lower triangular Cholesky factor
+NB.
+NB. If:
+NB.   >>>>>>>>>>>>>>>>>'HQ tau'=. gehrd A ; ss
+NB.   D=. diagmat s
+NB.   Dinv=. %. D
+NB. then
+NB.   Dinv -: diagmat % s
+NB.   As -: D mp Ap mp Dinv
+NB.   As -: Ap (] * (% " 1)) s
+NB.
+NB. Notes:
+NB.   - FLOPs: 
+NB.   - 
+NB.
+NB. References:
+NB. [1] 
+NB. [2] 
+
 potrfl=: (3 : 0) " 2
   n=. # y
   nb=. 32           NB. choosed experimentally
   for_j. range 0 , (n-1) , nb do.
-    jb=. nb <. n-j
-    bd=. ((j , j) ,: ((n - j) , jb)) ] ;. 0 y
-    ac=. ((j , 0) ,: ((n - j) , j)) ] ;. 0 y
-    ah=. ((j , 0) ,: (jb , j)) h ;. 0 y
+    jb=. nb <. n - j
+    bd=. ((2 $ j) ,: ((n - j) , jb)) ] ;. 0 y
+    ac=. (_1 0 ,: ((n - j) , j)) ] ;. 0 y
+    ah=. (0 0 ,: (jb , j)) h ;. 0 ac
     bd=. bd - ac mp ah
     b=. (2 $ jb) potf2l ;. 0 bd
     y=. b (< ;~ j + i. jb) } y
@@ -113,6 +140,57 @@ potrfl=: (3 : 0) " 2
     x=. d mp (128!:1) h b
     y=. x (< |. ios) } y
   end.
+)
+
+NB. ---------------------------------------------------------
+NB. rpotrfl                                                 2
+NB. Hermitian (symmetric) positive definite matrix Cholesky
+NB. recursive blocked factorization by a lower triangular
+NB. factor
+NB.   L * L' = A
+NB.
+NB. Syntax:
+NB.   L=. rpotrfl A
+NB. where
+NB.   A - N×N-matrix, Hermitian (symmetric), positive
+NB.       definite; strictly upper triangle is not referenced
+NB.   L  - N×N-matrix, lower triangular Cholesky factor
+NB.
+NB. If:
+NB.   >>>>>>>>>>>>>>>>>'HQ tau'=. gehrd A ; ss
+NB.   D=. diagmat s
+NB.   Dinv=. %. D
+NB. then
+NB.   Dinv -: diagmat % s
+NB.   As -: D mp Ap mp Dinv
+NB.   As -: Ap (] * (% " 1)) s
+NB.
+NB. Notes:
+NB.   - FLOPs: 
+NB.   - recursive calls: 3*k*(2^k)-2^(k+1)+3,
+NB.     where k  = ⌈log_2(⌈n/nb⌉)⌉
+NB.           nb = CPU_CACHE, block size
+NB.
+NB. References:
+NB. [1] F. G. Gustavson, I. Jonsson, "Minimal-storage high-
+NB.     performance Cholesky factorization via blocking
+NB.     recursion", IBM J. Res. Develop., vol. 44, No. 6,
+NB.     2000, pp. 823-850.
+
+rpotrfl=: (3 : 0) " 2
+ if. CPU_CACHE < 7!:5 < 'y' do.
+  n=. # y
+  p=. >. -: n
+  q=. n - p
+  Yh=. (_1 0 ,: (q , p)) ] ;. 0 y
+  Z=. (_1 _1 ,: (2 $ q)) ] ;. 0 y
+  L0=. (2 $ p) rpotrfl ;. 0 y
+  L2=. Yh mp (128!:1) (h L0)
+  L1=. rpotrfl Z - (mp h) L2
+  L0 , L2 ,. L1
+ else.
+  potf2l y
+ end.
 )
 
 NB. =========================================================
@@ -176,11 +254,12 @@ error
 
    A1000f=: ((+/ .*) |:) 10.1 + ? (2 $ 1000) $ 10
    A1000c=: ((+/ .*) (+ @ |:)) j./ ? (2 , (2 $ 1000)) $ 10
-   ts & > 'z=. potf2l_pjlap_ A1000f';'z=. potrfl_pjlap_ A1000f';'z=. Cholesky_pjlap_ A1000f'
+
+   ts & > 'z=. potf2l_pjlap_ A1000f';'z=. potrfl_pjlap_ A1000f';'z=. rpotrfl_pjlap_ A1000f'
 4.32201 1.78581e7
  1.0309 1.35258e7
 1.76633 2.93628e7
-   ts & > 'z=. potf2l_pjlap_ A1000c';'z=. potrfl_pjlap_ A1000c';'z=. Cholesky_pjlap_ A1000c'
+   ts & > 'z=. potf2l_pjlap_ A1000c';'z=. potrfl_pjlap_ A1000c';'z=. rpotrfl_pjlap_ A1000c'
 7.73323 5.14207e7
 2.44583 2.70426e7
 3.96861 5.87229e7
@@ -251,7 +330,7 @@ NB.  mff=. (2 $ y) $ 0  NB. FLOPs for float
 NB.    Ac=: ((+/ .*) (+ @ |:)) j./ ? (2 , (2 $ n)) $ 100
     for_b. lio 1 1 , n do. NB. log: ((, (>. @ -: @ {:)) ^: (1 ~: {:) ^: _ ) n
       >>>>>>>>>>>>CPU_CACHE=: b
-      tf=. (6!:2) 'z=. Cholesky Af'
+      tf=. (6!:2) 'z=. rpotrfl Af'
 NB.      ff=. ((nb flops_Chol n) % tf) % 1e6
       mtf=. tf (< n_index , b_index) } mtf
 NB.      mff=. ff (< n_index , b_index) } mff

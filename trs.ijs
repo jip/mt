@@ -175,6 +175,32 @@ trtrsl1x=:  trtrsl1x `{.`}.`(,~)`     mp      ` ,  `[          trtrs
 trtrsl1tx=: trtrsl1tx`}.`{.`(,~)`(|:@(mp~ |:))`(,~)`[          trtrs
 trtrsl1hx=: trtrsl1hx`}.`{.`(,~)`(ct@(mp~ ct))`(,~)`[          trtrs
 
+NB. без обрезания Ui и Bi, индекс ч/з hds2ios
+NB. Xi1=. (L1 ; B) step Xi
+NB. X=. U trtrsl1x2 B
+trtrsl1x2=: (4 : 0) ^: (;`(#@])`(0 {. ]))
+  'L1 B'=. x
+  Xi=. y
+  i=. # Xi
+  n=. # L1
+  li=. (hds2ios (i*n),1,i) ({,) L1
+  Xi , ((i { B) - (li mp Xi))
+)
+
+NB. без обрезания Ui и Bi, индекс ч/з hds2ios
+NB. Xi1=. (U ; B) step Xi
+NB. X=. U trtrsux2 B
+trtrsux2=: (4 : 0) ^: (;`(#@])`(0 {. ]))
+  'U B'=. x
+  Xi=. y
+  i=. # Xi
+  n=. # U
+  i1n=. i * _1 - n
+  ui=. (hds2ios i1n,1,i) ({,) U
+  uii=. (<: i1n) ({,) U
+  ((((_1-i) { B) - (ui mp Xi)) % uii) , Xi
+)
+
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:           Syntax:
 NB. trtrsxu        X * U    = B      X=. A trtrsxu B

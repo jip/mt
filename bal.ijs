@@ -47,7 +47,7 @@ NB.   Pinv=. %. P
 NB. then (with appropriate comparison tolerance)
 NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
-NB.   Ap -: p pp A
+NB.   Ap -: p sp A
 NB.   A11 -: (,.~ fs) (] ;. 0) Ap
 NB.
 NB. References:
@@ -96,7 +96,7 @@ NB.  nzr=. p { nzr                              NB. apply all permutations
     s=. <: s                                  NB. ...leading column
   end.
 
-  (p pp y) ; (f , s) ; p
+  (p sp y) ; (f , s) ; p
 )
 
 gebalp2=: 3 : 0
@@ -113,7 +113,7 @@ gebalp2=: 3 : 0
       if. 0 = ((iL ,: (iH - iL)) ((+/ @: |) ;. 0) i (x2b3 { {) y) do.
         swapped=. 1
         cp=. i ii2cp iH
-        y=. cp pp y
+        y=. cp sp y
         p=. cp C. p
         iH=. <: iH
       end.
@@ -124,7 +124,7 @@ gebalp2=: 3 : 0
       if. 0 = ((iL ,: (iH - iL)) ((+/ @: |) ;. 0) j (x2b3 { ({ " 1)) y) do.
         swapped=. 1
         cp=. j ii2cp iL
-        y=. cp pp y
+        y=. cp sp y
         p=. cp C. p
         iL=. >: iL
       end.
@@ -246,7 +246,7 @@ NB.   Dinv=. %. D
 NB. then (with appropriate comparison tolerance)
 NB.   Pinv -: |: P
 NB.   Ap -: P mp A mp Pinv
-NB.   Ap -: p pp A
+NB.   Ap -: p sp A
 NB.   Dinv -: diagmat % s
 NB.   Ab -: D mp Ap mp Dinv
 NB.   Ab -: Ap (] * (% " 1)) s
@@ -279,7 +279,7 @@ Note 'bal testing and timing'
    Pinv=. |: P
    Pinv -: %. P
    Aperm=. gebalp a1000f
-   Aperm -: p pp a1000f
+   Aperm -: p sp a1000f
    Aperm -: (P mp a1000f) mp Pinv
 
    5 ts 'gebal_jlapack_ a1000f'

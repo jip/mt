@@ -6,7 +6,7 @@ NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. pt        Pertranspose
 NB. cpt       Conjugate pertranspose
-NB. pp        Apply permutation to both rows and columns
+NB. sp        Symmetric permutation
 NB. p2P       Transform permutation vector to permutation
 NB.           matrix
 NB. ip2P      Transform inversed permutation vector to
@@ -145,7 +145,7 @@ trace=: +/ @ diag    NB. matrix trace
 ct=: + @ |:          NB. conjugate transpose
 pt=: |. @ |: @ |.    NB. pertranspose
 cpt=: + @ pt         NB. conjugate pertranspose
-pp=: [ C."1 C.       NB. apply permutation x to both rows and columns of table y
+sp=: [ C."1 C.       NB. Symmetric permutation
 p2P=: =/ (i. @ #)    NB. transform permutation vector to permutation matrix
 ip2P=: =/~ (i. @ #)  NB. transform inversed permutation vector to permutation
                      NB.   matrix, or permutation vector to inversed permutation matrix

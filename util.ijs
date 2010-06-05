@@ -6,6 +6,10 @@ NB. condneg    Conditional negate
 NB. copysign   Copy sign
 NB. fmtlog     Format log string
 NB. gi         Conj. to evoke n-th verb from gerund m
+NB. iofmax     IO 1st element with maximum sum of real and
+NB.            imagine parts' modules
+NB. iolmax     IO last element with maximum sum of real and
+NB.            imagine parts' modules
 NB. ms         Minimum in sum of vectors
 NB. ios2cp     Make cycle permutation from indices
 NB.
@@ -16,9 +20,9 @@ NB. normit     Taxicab-based ∞-norm of vector or matrix
 NB. norms      Square-based (Euclidean/Frobenius) norm of
 NB.            vector or matrix
 NB.
-NB. hds2ios    IOS from head, delta and size
-NB. ht2ios     IOS from head and tail
-NB. hs2ios     IOS from head and size
+NB. hds2ios    Form IOS from head, delta and size
+NB. ht2ios     Form IOS from head and tail
+NB. hs2ios     Form IOS from head and size
 NB. rios2ios   Convert rIOS to IOS
 NB. rios2lios  Convert rIOS to lIOS
 NB.
@@ -37,12 +41,11 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-rios2oios=: < @ hs2ios/ " 1 @: |:  NB. convert rIOS to opened (non-boxed) IOS
-gshapes=: $`($(;<)($ L: 0)) @. (0 < L.)   NB. get shapes, boxes are accepted, too
-
-NB. template adverbs to form norm verbs
-mocs=: >./ @ (+/     ) @:          NB. vector: sum of, matrix: max of column sums
-mors=: >./ @ (+/ " _1) @:          NB. vector: max of, matrix: max of row sums
+rios2oios=: < @ hs2ios/ " 1 @: |:        NB. convert rIOS to opened (non-boxed) IOS
+gshapes=: $`($(;<)($ L: 0)) @. (0 < L.)  NB. get shapes, boxes are accepted, too
+sorim=: +/"1 @: | @: +.                  NB. sum of real and imaginary parts' modules
+mocs=: >./ @ (+/   ) @:                  NB. vector: sum of, matrix: max of column sums
+mors=: >./ @ (+/"_1) @:                  NB. vector: max of, matrix: max of row sums
 
 NB. =========================================================
 NB. Interface
@@ -53,10 +56,15 @@ NB. Miscellaneous
 sgn=: 0&(<: - >)                                        NB. if y<0 then -1 else 1 endif
 condneg=: -@]^:(0>[)                                    NB. if x<0 then -y else y endif
 copysign=: -@]^:((=-)&*)                                NB. if x<0 then -|y| else |y| endif
-
 fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' vsprintf  NB. Format log string
-
 gi=: 2 : '(n{m)`:6'                                     NB. Conj. to evoke n-th verb from gerund m: m[n]
+
+NB. IO 1st element e with max(|Re(e)|+|Im(e)|) from list y
+NB. emulates LAPACK's IxAMAX
+iofmax=: (i.>./) @ sorim
+
+NB. IO last element e with max(|Re(e)|+|Im(e)|) from list y
+iolmax=: (i:>./) @ sorim
 
 NB. ---------------------------------------------------------
 NB. ms
@@ -100,12 +108,12 @@ NB. ---------------------------------------------------------
 NB. Norms
 
 NB. Magnitude-based norms |y|
-norm1=: | mocs                     NB. 1-norm of vector or matrix
-normi=: | mors                     NB. ∞-norm of vector or matrix
+norm1=: | mocs       NB. 1-norm of vector or matrix
+normi=: | mors       NB. ∞-norm of vector or matrix
 
 NB. Taxicab-based norms |Re(y)| + |Im(y)|
-norm1t=: (+/ " 1 @: | @: +.) mocs  NB. 1-norm of vector or matrix
-normit=: (+/ " 1 @: | @: +.) mors  NB. ∞-norm of vector or matrix
+norm1t=: sorim mocs  NB. 1-norm of vector or matrix
+normit=: sorim mors  NB. ∞-norm of vector or matrix
 
 NB. Square-based (Euclidean/Frobenius) norm of vector or matrix
 NB. for vector input emulates LAPACK's DZNRM2

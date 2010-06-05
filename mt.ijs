@@ -50,7 +50,6 @@ NB. ---------------------------------------------------------
 NB. System verbs
 
 script_z_ '~system/main/printf.ijs'                   NB. printf vsprintf
-script_z_ '~system/main/numeric.ijs'                  NB. range rounddown
 script_z_ '~system/main/myutil.ijs'                   NB. timespacex
 script_z_ '~system/packages/math/mathutil.ijs'        NB. mp
 

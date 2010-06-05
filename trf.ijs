@@ -70,7 +70,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFBS=: 3 NB. 32   NB. block size limit
+TRFBS=: 32   NB. block size limit
 
 NB. ---------------------------------------------------------
 
@@ -82,55 +82,28 @@ NB. Description:
 NB.   Single step of non-blocked version of algorithms
 NB.
 NB. Syntax
-NB.   'pi1 pfxAi1 sfxLAi1 sfxRi1=. getf2xxxxstep (pi ; pfxAi ; sfxLAi ; sfxRAi)
+NB.   'pi1 pfxi1 sfxLi1 sfxRi1=. getf2xxxxstep (pi ; pfxi ; sfxLi ; sfxRi)
 NB. where
-NB.   pi      - p(i), k-vector after i-th and before (i+1)-th
-NB.             step, permutation
-NB.   pfxAi   - pfxA(i), i*n-matrix, first i rows of matrix
-NB.             L1U(i)
-NB.   sfxLAi  - sfxLA(i), the left part of 
-NB.   sfxRAi  - sfxRA(i), the right part of 
-NB.   pi1     - p(i+1), k-vector after (i+1)-th step,
-NB.             permutation
-NB.   pfxAi1  - pfxA(i+1), (i+1)*n-matrix, first i rows of
-NB.             matrix L1U(i+1)
-NB.   sfxLAi1 - sfxLA(i+1), the left part of 
-NB.   sfxRAi1 - sfxRA(i+1), the right part of 
+NB.   pi     - p(i), m-vector after i-th and before (i+1)-th
+NB.            step, permutation
+NB.   pfxi   - pfx(i), i*n-matrix, first i rows of matrix
+NB.            L1U(i)
+NB.   sfxLi  - sfxL(i), the left part of 
+NB.   sfxRi  - sfxR(i), the right part of 
+NB.   pi1    - p(i+1), m-vector after (i+1)-th step,
+NB.            permutation
+NB.   pfxi1  - pfx(i+1), (i+1)*n-matrix, first i rows of
+NB.            matrix L1U(i+1)
+NB.   sfxLi1 - sfxL(i+1), the left part of 
+NB.   sfxRi1 - sfxR(i+1), the right part of 
 
-getf2pl1ustep=: 3 : 0
+getf2pl1ustep2=: 3 : 0
   'p pfx sfxL sfxR'=. y
-  c=. IOSFC { sfxR
+  c=. {."1 sfxR
   jp=. iofmaxm c
   r=. jp { sfxR
   c=. (}. ({. c) jp } c) % ({. r)
-  ((jp (+ ii2cp ]) # pfx) (C. dbg 'C.') p) ; (pfx , ((jp { sfxL) , (jp { sfxR))) ; ((}. ({. sfxL) jp } sfxL) ,. c) ; ((1 1 }. ({. sfxR) jp } sfxR) - (c */ }. r))
-)
-
-NB. ---------------------------------------------------------
-NB. Description:
-NB.   Single step of algorithms
-NB.
-NB. Syntax
-NB.   'pi1 A0i1 A10i1 A11i1'=. getf2xxxxstep (pi ; A0i ; A10i ; A11i)
-NB. where
-NB.   A0i   - A0(i), ##########
-NB.
-NB. a00 a00 a00 a00 a00
-NB. a00 a00 a00 a00 a00
-NB. a10 a10 a11 a12 a12
-NB. a10 a10 a21 a22 a22
-NB. a10 a10 a21 a22 a22
-NB.
-
-getrfpl1ustep=: 3 : 0
-  'p A0 A10 A11'=. y
-  'subp L1U'=. getf2pl1u (_,TRFBS) rt A11
-  A10=. pi C. A10
-  A1222=. pi C. (0,TRFBS) }. A11
-  A11=. TRFBS rt L1U
-  A21=. TRFBS }. L1U
-  A12=. A11 trtrsl1x (TRFBS rt A1222)
-  ((subp (i.@] , +) (# A0)) C. p) ; (A0 , ((TRFBS rt A10) ,. A11 ,. A12)) ; ((TRFBS }. A10) ,. A21) ; ((TRFBS }. A1222) - A21 mp A12)
+  ((jp (+ ii2cp ]) # pfx) C. p) ; (pfx , ((jp { sfxL) , r)) ; ((}. ({. sfxL) jp } sfxL) ,. c) ; ((1 1 }. ({. sfxR) jp } sfxR) - (c */ }. r))
 )
 
 NB. ---------------------------------------------------------
@@ -138,11 +111,43 @@ NB. Description:
 NB.   Non-blocked version of algorithms
 NB.
 NB. Syntax
-NB.   'p L1 U'=. getf2pl1u A
+NB.   'p L1U'=. getf2pl1u A
 NB. where
 NB.   A   - m*n-matrix
 
-getf2pl1u=: 2 {. (getf2pl1ustep dbg 'step') ^: ((<./@$)`((i.@(<./)@$);(0&{.);(_ 0&{.);]))
+getf2pl1u2=: ((0&{) , ((,&.>)/@(1 2&{))) @ (getf2pl1ustep2 ^: ((<./@$)`((i.@#);(0&{.);(_ 0&{.);])))
+
+NB. ---------------------------------------------------------
+NB. Description:
+NB.   Single step of algorithms
+NB.
+NB. Syntax
+NB.   'pi1 pfxi1 sfxLi1 sfxRi1'=. getf2xxxxstep (pi ; pfxi ; sfxLi ; sfxRi)
+NB. where
+NB.   pfxi   - pfx(i), ##########
+NB.
+NB. a00 a00 a00 a00      a00 a00 a00 a00
+NB. a10 a11 a12 a12      a00 a00 a00 a00
+NB. a10 a21 a22 a22      a10 a10 a11 a12
+NB. a10 a21 a22 a22      a10 a10 a21 a22
+NB.
+
+getrfpl1ustep2=: 3 : 0
+  'p pfx sfxL sfxR'=. y
+  nj=. -~/ 'j n'=. $ pfx
+  bs=. TRFBS <. (# sfxL) <. nj
+  'pi L1U'=. getf2pl1u2 bs {."1 sfxR
+  sfxL=. pi C. sfxL
+  A1222=. pi C. bs }."1 sfxR
+  A11=. bs {. L1U
+  A21=. bs }. L1U
+  A12=. A11 trtrsl1x (bs {. A1222)
+  p=. ((i.j),(j+pi)) C. p
+  pfx=. pfx , ((bs {. sfxL) ,. A11 ,. A12)
+  sfxL=. (bs }. sfxL) ,. A21
+  sfxR=. (bs }. A1222) - A21 mp A12
+  p ; pfx ; sfxL ; sfxR
+)
 
 NB. =========================================================
 NB. Interface
@@ -155,11 +160,14 @@ NB.   Triangular factorization of a general matrix:
 NB.     P * L1 * U = A
 NB.
 NB. Syntax
-NB.     'p L1 U'=. getrfpl1u A
+NB.     'p L1U'=. getrfpl1u A
 NB. where
 NB.   A  - m*n matrix
+NB.
+NB. Notes:
+NB. - this is a right-looking version of algorithm
 
-getrfpl1u2=: getf2pl1u`((getrfpl1ustep dbg 'STEP') ^: ((<./@$)`((i.@(<./)@$);(0&{.);(_ 0 rt ]);])))@.(TRFBS<(<./@$))
+getrfpl1u2=: getf2pl1u2`(((0&{),((,&.>)/@(1 2&{))) @ (getrfpl1ustep2 ^: ((>.@(TRFBS %~ (<./@$)))`((i.@#);(0&{.);(_ 0 {. ]);]))))@.(TRFBS<(<./@$))
 
 NB. =========================================================
 NB. Test suite
@@ -615,11 +623,11 @@ thetrfp=: 3 : 0
   if. (i. 0) -: $ y do.
     y=. (_1 1 0 16 _6 4 & (gemat j. gemat)) hemat y
   end.
-  'L T pi'=: hetrfpl y
+  'L T pi'=. hetrfpl y
   Asol=: (/: pi) pt (L mp T mp ct L)
   smoutput 'A' ; ($ y) ; y ; 'L' ; ($ L) ; L ; 'T' ; ($ T) ; T ; 'Asol' ; ($ Asol) ; Asol
   smoutput 'A -: Asol' ; (y -: Asol) ; '||A - Asol||/||A|| in 1-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & norm1) y) ; '||A - Asol||/||A|| in i-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & normi) y)
-  'U T pi'=: hetrfpu y
+  'U T pi'=. hetrfpu y
   Asol=: (/: pi) pt (U mp T mp ct U)
   smoutput 'A' ; ($ y) ; y ; 'U' ; ($ U) ; U ; 'T' ; ($ T) ; T ; 'Asol' ; ($ Asol) ; Asol
   smoutput 'A -: Asol' ; (y -: Asol) ; '||A - Asol||/||A|| in 1-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & norm1) y) ; '||A - Asol||/||A|| in i-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & normi) y)

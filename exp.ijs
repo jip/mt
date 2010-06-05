@@ -30,11 +30,11 @@ geexpm2r=: 4 : 0
   NB. U=. A*Σ(b[i+1]*(A^i),i=0,2,..,m-1)
   NB. V=.   Σ(b[i  ]*(A^i),i=0,2,..,m-1)
   if. x < 13 do.
-    NB. A powers (2 [4 [6 [8]]]), shape: p-by-N-by-N
+    NB. A powers (2 [4 [6 [8]]]), shape: p×N×N
     pA=. (+: }. i. >. -: x) gepow y
 
-    NB. - multiply each table in pA by corresp. scalar b[i], output: report 2-by-p-by-N-by-N
-    NB. - sum multiplied tables, output: report 2-by-N-by-N
+    NB. - multiply each table in pA by corresp. scalar b[i], output: report 2×p×N×N
+    NB. - sum multiplied tables, output: report 2×N×N
     NB. - shift 1st table's diagonal by b[0], 2nd table's diagonal by b[1]
     'V U'=. pA (b0b1 sdiag02 (vbyrs (0 1 & }.))) bc
   else.
@@ -66,8 +66,8 @@ NB.
 NB. Syntax:
 NB.   E=. geexp A
 NB. where
-NB.   A - N-by-N table, a general matrix
-NB.   E - N-by-N table, matrix exponent exp(A)
+NB.   A - N×N-matrix, a general matrix
+NB.   E - N×N-matrix, matrix exponent exp(A)
 NB.   N >= 0
 NB.
 NB. References:
@@ -75,26 +75,26 @@ NB. [1] N. J. Higham, The scaling and squaring method for the
 NB.     matrix exponential revisited, SIAM J. Matrix Anal.
 NB.     Appl. Vol. 26, No. 4, pp. 1179–1193
 NB.
-NB. Notes:
-NB. - works incorrectly for diagonal matrices (use diexp instead)
+NB. TODO:
+NB. - FIXME: geexp_pjlap_ 3 3 $ 5 0 1r10 0 1 0 0 0 4
+
 
 geexp=: (3 : 0) " 2
-
   NB. Padé approximant degrees m
   vm=. 3 5 7 9 13
 
   NB. coeffcients θ[m]
-  theta=. 0.01495585217958292 0.2539398330063230 0.9504178996162932 2.097847961257068 5.371920351148152
+  theta=. 24774315513739r1656496414665010 2287286674603605r9007199254740992 1070075424639547r1125899906842624  1180983412074661r562949953421312 1512061155730925r281474976710656
 
   NB. preprocess A
 
   NB. - shift
   mu=. (trace % #) y
   y=. (- mu) sdiag y
-
+smoutput 'shifted y' ; y
   NB. - balance to reduce 1-norm
   'y scale'=. 0 3 { gebals (] ; (0 , #) ; (a: " _)) y
-
+smoutput 'balanced y' ; y
   NB. find max m such that norm1(A) <= θ[m] , or let m=13
   m=. ((theta I. norm1 y) <. <: # vm) { vm
 
@@ -105,6 +105,7 @@ geexp=: (3 : 0) " 2
     s=. >. 2 ^. (norm1 y) % {: theta  NB. find a minimal integer such that norm1(A/2^s)<=θ[13]
     y=. y % 2 ^ s                     NB. scaling
     r=. m geexpm2r y
+smoutput 's' ; s ; 'r' ; r ; 'norm1 y' ; (norm1 y)
     r=. mp~ ^: s r                    NB. undo scaling
   end.
   E=. (^ mu) * r (] * (% " 1)) scale  NB. undo preprocessing
@@ -117,10 +118,10 @@ NB.
 NB. Syntax:
 NB.   E=. diexp (rv ; ev ; rvi)
 NB. where
-NB.   rv  - N-by-N table, right eigenvectors of A
+NB.   rv  - N×N-matrix, right eigenvectors of A
 NB.   ev  - N-vector, eigenvalues of A
-NB.   rvi - N-by-N table, inversion of rv
-NB.   E   - N-by-N table, matrix exponent exp(A)
+NB.   rvi - N×N-matrix, inversion of rv
+NB.   E   - N×N-matrix, matrix exponent exp(A)
 NB.   N  >= 0
 
 diexp=: (0 & {::) mp ((^ @: (1 & {::)) * (2 & {::)) : [: " 1
@@ -132,9 +133,9 @@ NB.
 NB. Syntax:
 NB.   E=. heexp (rv ; ev)
 NB. where
-NB.   rv - N-by-N table, right eigenvectors of A
+NB.   rv - N×N-matrix, right eigenvectors of A
 NB.   ev - N-vector, eigenvalues of A
-NB.   E  - N-by-N table, matrix exponent exp(A)
+NB.   E  - N×N-matrix, matrix exponent exp(A)
 NB.   N >= 0
 
 heexp=: ((0 & {::) ([ mp ((* (+ @ |:))~ ^)) (1 & {::)) : [: " 1

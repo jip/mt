@@ -1,4 +1,4 @@
-NB. trf.ijs
+NB. lu.ijs
 NB. LU factorization
 NB.
 NB. getrf  LU factorization of a general matrix
@@ -13,21 +13,21 @@ NB. Interface verbs
 
 NB. ---------------------------------------------------------
 NB. getrf                                                   2
-NB. LU factorization of a general M-by-N matrix using partial
+NB. LU factorization of a general M×N matrix using partial
 NB. pivoting with row interchanges:
 NB.   P * L * U = A
 NB.
 NB. Syntax:
 NB.   'p LU'=. getrf A
 NB. where
-NB.   A  - M-by-N matrix
-NB.   LU - M-by-N matrix, the factors L and U from
+NB.   A  - M×N matrix
+NB.   LU - M×N matrix, the factors L and U from
 NB.        factorization
 NB.   p  - N-vector, standart permutation vector to pivot
 NB.        rows
-NB.   L -  M-by-min(M,N) matrix, lower triangular, the unit
+NB.   L -  M×min(M,N) matrix, lower triangular, the unit
 NB.        diagonal elements are not stored
-NB.   U -  min(M,N)-by-N matrix, upper triangular
+NB.   U -  min(M,N)×N matrix, upper triangular
 NB.   M >= 0
 NB.   N >= 0
 NB.

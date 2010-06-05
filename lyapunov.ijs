@@ -29,13 +29,6 @@ NB. Version: 1.0.0 2008-03-30
 NB. Copyright: Igor Zhuravlov igor@uic.dvgu.ru
 NB. License: Version 3 of the GNU GPL or any later version
 
-script_z_ '~system/packages/math/matutil.ijs'  NB. diag
-
-require '~addons/math/lapack/lapack.ijs'
-need_jlapack_ 'gees geev gerqf potrf trtrs'
-
-require '~user/projects/tau/util.ijs'           NB. shiftdiag rndmat rndmatne
-
 coclass 'tau'
 
 NB. =========================================================
@@ -52,16 +45,16 @@ NB.
 NB. Syntax:
 NB.   'B1 ijupd Uupd'=. R sorzhouiter B ; ij ; U
 NB. where:
-NB.   R     - N-by-N upper triangular stable matrix, i.e. all
+NB.   R     - N×N upper triangular stable matrix, i.e. all
 NB.           eigenvalues of R must have negative real parts
-NB.   B     - N-by-M matrix, updated at step #j
+NB.   B     - N×M matrix, updated at step #j
 NB.   ij    - i. j
-NB.   U     - N-by-N upper triangular matrix with all but
+NB.   U     - N×N upper triangular matrix with all but
 NB.           first j columns updated
-NB.   B1    - (N-1)-by-M matrix B without last row and
+NB.   B1    - (N-1)×M matrix B without last row and
 NB.           updated after step #j
 NB.   ijupd - }: ij
-NB.   Uupd  - N-by-N matrix U with updated column #j
+NB.   Uupd  - N×N matrix U with updated column #j
 NB.   N     > 0
 NB.   M     > 0
 NB.
@@ -109,11 +102,11 @@ NB. Usage:
 NB.   U=. A lyapchol B
 NB.   U=. (R;Q) lyapchol B
 NB. where:
-NB.   A   - N-by-N stable matrix
-NB.   R,Q - N-by-N matrices from non-real Schur
+NB.   A   - N×N stable matrix
+NB.   R,Q - N×N matrices from non-real Schur
 NB.         factorization: Q*R*Q' = A
-NB.   B   - N-by-M matrix
-NB.   U   - N-by-N upper triangular matrix
+NB.   B   - N×M matrix
+NB.   U   - N×N upper triangular matrix
 NB.   N  >= 0
 NB.   M  >= 0
 NB.

@@ -23,7 +23,7 @@ NB.
 NB. Syntax:
 NB.   x=. b getrsu LU
 NB. where
-NB.   LU - N-by-N matrix, the factors L and U from
+NB.   LU - N-by-N-matrix, the factors L and U from
 NB.        factorization
 NB.   b  - N-vector, RHS
 NB.   x  - N-vector, solution
@@ -34,7 +34,7 @@ NB.   x1=. b getrsu LU
 NB.   U=. utri_jlapack_ LU
 NB.   x2=. b getrsu U
 NB. then
-NB.   b -: U mp x
+NB.   b -: U mp x1
 NB.   x1 -: x2
 NB.
 NB. Notes:
@@ -59,7 +59,7 @@ NB. Syntax:
 NB.   x=. b trtrsu U
 NB. where
 NB.   U - (N*(N+1)/2)-vector, upper triangle elements of
-NB.       N-by-N matrix A, i-th row elements (i=0..(N-1)) are
+NB.       N-by-N-matrix A, i-th row elements (i=0..(N-1)) are
 NB.       stored in (N-i)-vector with indices:
 NB.       (i*N-i*(i-1)/2)..((i+1)*N-i*(i+1)/2-1)
 NB.   b - N-vector, RHS
@@ -106,7 +106,7 @@ NB.
 NB. Syntax:
 NB.   x=. b getrl1 LU
 NB. where
-NB.   LU - N-by-N matrix, the factors L and U from
+NB.   LU - N-by-N-matrix, the factors L and U from
 NB.        factorization
 NB.   b  - N-vector, RHS
 NB.   x  - N-vector, solution
@@ -138,7 +138,7 @@ NB.
 NB. Syntax:
 NB.   x=. b gesv A
 NB. where
-NB.   A - N-by-N matrix
+NB.   A - N-by-N-matrix
 NB.   b - N-vector, RHS
 NB.   x - N-vector, solution
 NB.   N >= 0
@@ -160,9 +160,9 @@ NB.
 NB. Syntax:
 NB.   x=. b disv (rv ; ev ; rvi)
 NB. where
-NB.   rv  - N-by-N table, right eigenvectors of A
+NB.   rv  - N-by-N-matrix, right eigenvectors of A
 NB.   ev  - N-vector, eigenvalues of A
-NB.   rvi - N-by-N table, inversion of rv
+NB.   rvi - N-by-N-matrix, inversion of rv
 NB.   x   - N-vector, solution
 NB.   N  >= 0
 
@@ -175,7 +175,7 @@ NB.
 NB. Syntax:
 NB.   x=. b hesv (rv ; ev)
 NB. where
-NB.   rv - N-by-N table, right eigenvectors of A
+NB.   rv - N-by-N-matrix, right eigenvectors of A
 NB.   ev - N-vector, eigenvalues of A
 NB.   x  - N-vector, solution
 NB.   N >= 0
@@ -209,8 +209,9 @@ Note 'trs testing and timing'
    x1000=. 0.1 * ? 1000 $ 100
    bU1000=. U1000 mp x1000
    bL1000=. L1000 mp x1000
-   10 (ts & >) 'bU1000 getrsu_pjlap_ U1000';'bL1000 getrsl1_pjlap_ L1000';'bU1000 trtrsu_pjlap_ U1000tr'
-0.0334183 41984
-0.0268176 41344
-0.0407204 34176
+   10 (ts & >) 'bU1000 getrsu_pjlap_ U1000';'bL1000 getrsl1_pjlap_ L1000';'bU1000 trtrsu_pjlap_ U1000tr';'(128!:1 U1000) mp bU1000'
+0.0423727     41984
+0.0347479     41600
+0.0489226     34176
+  1.07046 3.35562e7
 )

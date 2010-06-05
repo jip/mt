@@ -18,7 +18,8 @@ NB. Interface verbs
 vnormi=: >./ @: |                       NB. inf-norm of vector y
 norm1=: >./ @: (+/) @: |                NB. 1-norm of table or vector y
 trace=: +/ @ diag                       NB. matrix trace
-ut2tr=: ((I. @ , @ (<:/~@i.) @ #) { ,)  NB. transform N-by-N upper triangular matrix to (N*(N+1)/2)-vector, packed form
+ut2tr=: ((I. @ , @ (<:/~@i.) @ #) { ,)  NB. transform N×N upper triangular matrix to (N*(N+1)/2)-vector, packed form
+lio=: + ` (* i.)/ " 1                   NB. integers grid (2{y) steps from (0{y) by (1{y)
 
 NB. ---------------------------------------------------------
 NB. sdiag                                                 1 2
@@ -28,9 +29,9 @@ NB.
 NB. Syntax:
 NB.   s=. x sdiag y
 NB. where
-NB.   y - N-by-N table
+NB.   y - N×N-matrix
 NB.   x - numeric scalar of N-vector, shift for y's diagonal
-NB.   s - N-by-N table, y+x*idmat(#y)
+NB.   s - N×N-matrix, y+x*idmat(#y)
 NB.   N >= 0
 
 NB. xplusdiagy=: + (< 0 1) & |:                 NB. new diagonal: x + diag(y)

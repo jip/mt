@@ -1,9 +1,9 @@
 NB. pow.ijs
-NB. Matrix power[s]
+NB. Matrix powers
 NB.
-NB. gepow  raise a general matrix y in integer powers x
-NB. dipow  raise a diagonalizable matrix y in integer powers x
-NB. hepow  raise a Hermitian matrix y in integer powers x
+NB. gepow  raise a general matrix in integer powers
+NB. dipow  raise a diagonalizable matrix in integer powers
+NB. hepow  raise a Hermitian matrix in integer powers
 
 coclass 'pjlap'
 
@@ -20,9 +20,9 @@ NB.
 NB. Syntax:
 NB.   P=. p gepow A
 NB. where
-NB.   A - N-by-N table, a general matrix
+NB.   A - N×N-matrix, a general matrix
 NB.   p - non-negative integers array of any shape sh, powers
-NB.   P - sh-by-N-by-N array, a matrix A in powers p
+NB.   P - sh×N×N-array, a matrix A in powers p
 NB.   N >= 0
 NB.
 NB. References:
@@ -46,11 +46,11 @@ NB.
 NB. Syntax:
 NB.   P=. p dipow (RV ; ev ; RVi)
 NB. where
-NB.   RV  - N-by-N matrix, right eigenvectors of input matrix A
+NB.   RV  - N×N-matrix, right eigenvectors of input matrix A
 NB.   ev  - N-vector, eigenvalues of input matrix A
-NB.   RVi - N-by-N matrix, inversion of RV
+NB.   RVi - N×N-matrix, inversion of RV
 NB.   p   - non-negative integers array of any shape sh, powers
-NB.   P   - sh-by-N-by-N array, a matrix A in powers p
+NB.   P   - sh×N×N-array, a matrix A in powers p
 NB.   N  >= 0
 NB.
 NB. If:
@@ -69,10 +69,10 @@ NB.
 NB. Syntax:
 NB.   P=. p dipow (RV ; ev)
 NB. where
-NB.   RV  - N-by-N matrix, right eigenvectors of input matrix A
+NB.   RV  - N×N-matrix, right eigenvectors of input matrix A
 NB.   ev  - N-vector, eigenvalues of input matrix A
 NB.   p   - non-negative integers array of any shape sh, powers
-NB.   P   - sh-by-N-by-N array, a matrix A in powers p
+NB.   P   - sh×N×N-array, a matrix A in powers p
 NB.   N  >= 0
 NB.
 NB. If:

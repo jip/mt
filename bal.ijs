@@ -31,8 +31,8 @@ NB.
 NB. Syntax:
 NB.   'Ap ss p'=. gebalp A
 NB. where
-NB.   A  - N-by-N matrix
-NB.   Ap - N-by-N matrix with isolated eigenvalues, being A
+NB.   A  - N×N-matrix
+NB.   Ap - N×N-matrix with isolated eigenvalues, being A
 NB.        with permuted rows and columns
 NB.   ss - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11
@@ -93,6 +93,43 @@ NB.  nzr=. p { nzr                              NB. apply all permutations
   (p pt y) ; (f , s) ; p
 )
 
+gebalp2=: 3 : 0
+  x2b3=. < @ < @ < @ [
+  mkcp=. < @ (, ` (, @ ]) @. =)               NB. make cycle permutation from x and y
+
+  n=. # y
+  p=. i. n
+  iL=. 0
+  iH=. <: n
+  whilst. swapped do.
+    swapped=. 0
+    i=. iL
+    while. (i <: iH) *. (-. swapped) do.
+      if. 0 = ((iL ,: (iH - iL)) ((+/ @: |) ;. 0) i (x2b3 { {) y) do.
+        swapped=. 1
+        cp=. i mkcp iH
+        y=. cp pt y
+        p=. cp C. p
+        iH=. <: iH
+      end.
+      i=. >: i
+    end.
+    j=. iL
+    while. (j <: iH) *. (-. swapped) do.
+      if. 0 = ((iL ,: (iH - iL)) ((+/ @: |) ;. 0) j (x2b3 { ({ " 1)) y) do.
+        swapped=. 1
+        cp=. j mkcp iL
+        y=. cp pt y
+        p=. cp C. p
+        iL=. >: iL
+      end.
+      j=. >: j
+    end.
+  end.
+
+  y ; (iL , (>: iH - iL)) ; p
+)
+
 NB. ---------------------------------------------------------
 NB. gebals
 NB. Apply a diagonal similarity transformation to rows and
@@ -104,13 +141,12 @@ NB.
 NB. Syntax:
 NB.   'As ss p s'=. gebals Ap ; ss ; p
 NB. where
-NB.   Ap - N-by-N matrix with isolated eigenvalues (see
-NB.        gebalp)
+NB.   Ap - N×N-matrix with isolated eigenvalues (see gebalp)
 NB.   ss - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11 (see gebalp)
 NB.   p  - N-vector, standart permutation vector to transform
 NB.        A to Ap (see gebalp)
-NB.   As - N-by-N matrix, scaled version of Ap
+NB.   As - N×N-matrix, scaled version of Ap
 NB.   s  - N-vector, diagonal of scaling matrix D
 NB.
 NB. If:
@@ -133,14 +169,25 @@ gebals=: 3 : 0
   'Ap ss p'=. y
   n=. # Ap
   s=. n $ 1x                                        NB. scaling matrix D diagonal
-  RADIX=. 2x                                        NB. floating point base
+  RADIX=. x: FP_BASE                                NB. floating point base
   whilst. noconv do.
     noconv=. 0                                      NB. don't repeat scaling by default
     for_i. ({. + (i. @ {:)) ss do.                  NB. traverse A11
       'c r'=. (ss ,. 0 2) (+/ @: |) ;. 0 (i ([ ((0:`[`]) }) ({ " 1 ,. {)) Ap)  NB. 1-norm of i-th col and i-th row of A11 without diagonal element
       if. r (*. & (~: & 0)) c do.                   NB. protect against zero row or col
-        f=. RADIX ^ >. -: <: RADIX ^. r % c         NB. scale[i] correction
-        if. (f ~: 1x) *. (((r % f) + (c * f)) < (0.95 * (c + r))) do.  NB. does correction f meaningful?
+        sum=. c + r
+        f=. 1x
+        while. c < r % RADIX do.
+          c=. c * RADIX
+          r=. r % RADIX
+          f=. f * RADIX
+        end.
+        while. c >: r * RADIX do.
+          c=. c % RADIX
+          r=. r * RADIX
+          f=. f % RADIX
+        end.
+        if. (f ~: 1x) *. ((c + r) < (0.95 * sum)) do.  NB. does correction f meaningful?
           s=. (f * (i { s)) i } s                   NB. correct scale[i]
           Ap=. ((i  {      Ap) % f)        i  } Ap  NB. scale i-th row
           Ap=. ((i ({ " 1) Ap) * f) (<a: ; i) } Ap  NB. scale i-th col
@@ -170,8 +217,8 @@ NB.
 NB. Syntax:
 NB.   'Ab ss p s'=. gebal A
 NB. where
-NB.   A  - N-by-N matrix
-NB.   Ab - N-by-N matrix, balanced version of A
+NB.   A  - N×N-matrix
+NB.   Ab - N×N-matrix, balanced version of A
 NB.   ss - 2-vector, corner start (left and up) and size
 NB.        (width and height) of A11 (see gebalp)
 NB.   p  - N-vector, standart permutation vector to transform
@@ -195,6 +242,8 @@ NB.   Ab -: Ap (] * (% " 1)) s
 NB.   A11 -: (,.~ ss) (] ;. 0) Ap
 
 gebal=: gebals @ gebalp
+gebal2=: gebals2 @ gebalp
+gebal3=: gebals3 @ gebalp
 
 NB. ---------------------------------------------------------
 NB. ggbal

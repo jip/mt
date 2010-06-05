@@ -24,317 +24,411 @@ UNGQBSMIN=: 2
 UNGQBSMAX=: 32
 
 NB. ---------------------------------------------------------
-NB. Differences between rIOSs at consequent iterations:
-NB.   rios(i+1)-rios(i)
+NB. Compute geometry for block versions of algorithms
+NB.
+NB. Symbols:
+NB.   shapeQf - 2-vector (heightQf,widthQf), the shape of Qf
+NB.   shapeQ  - 2-vector (heightQ,widthQ), the shape of Q
+NB.   dshape  - 2-vector to convert shapeQf to shapeQ:
+NB.               shapeQ=. dshape + shapeQf
+NB.   Qf      - Q's factored form
+NB.   Q       - matrix with orthonormal rows or columns which
+NB.             is defined as the product of k elementary
+NB.             reflectors
+NB.
+NB. Notes:
+NB. - maked as memo, since repetitive calls are expected
 
-NB. for non-blocked code
-UNGL2DCIOS=: 3 2 2 $ 0 0 0 0 _1 _1 1 1 _1 0 0 _1  NB. I,eC,rto0
-UNG2LDCIOS=: 3 2 2 $ 0 0 0 0 0 0 1 1 1 1 _1 0     NB. I,eC,cto0
-UNG2RDCIOS=: 3 2 2 $ 0 0 0 0 _1 _1 1 1 0 _1 _1 0  NB. I,eC,cto0
-UNGR2DCIOS=: 3 2 $ 1 0 0 0 0 0 0 1 1 1 1 0 _1     NB. I,eC,rto0
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. ungqk
+NB.
+NB. Description: Find minimum in Q's shape
+NB. Syntax:      k=. dshape ungqk shapeQf
+NB. Formula:     k = min(heightQ,widthQ)
+
+ungqk=: (<./ @: +) M.
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. ungqbs
+NB.
+NB. Description: Compute abjusted block size
+NB. Syntax:      bs=. dshape ungqbs shapeQf
+NB. Formula:     bs = max(UNGQBSMIN,min(UNGQBSMAX,k))
+
+ungqbs=: (UNGQBSMIN >. UNGQBSMAX <. ungqk) M.
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. ungqiters
+NB.
+NB. Description: Compute number of iterations
+NB. Syntax:      iters=. dshape ungqiters shapeQf
+NB. Formula:     iters = ⌊k % bs⌋
+
+ungqiters=: (ungqk (<. @ %) ungqbs) M.
 
 NB. ---------------------------------------------------------
-NB. mkrios0ungl2
-NB. mkrios0geql2
-NB. mkrios0geqr2
-NB. mkrios0gerq2
+NB. Apply reflector H or H' from either the left or the right
+NB. to the matrix C to update it, where
+NB.   H := H(v,τ) := I - τ*v*v'
 NB.
-NB. Create cIOS at 0-th iteration for corresp. method
+NB. Algorithm:
+NB.   Input:
+NB.     eC -: C with appended or stitched trash vector
+NB.     z   - vector in form:
+NB.             (0[0:any-1],1[any],v[any+1:n-1],τ)
+NB.           for forward direction, or:
+NB.             (τ,v[1:any-1],1[any],0[any+1:n])
+NB.           for backward direction
+NB.   Output:
+NB.     eCupd - Cupd, being updated C, with appended or
+NB.             stitched trash vector
+NB.   Actions:
+NB.     1) conjugate z (optionally): z=. + z
+NB.     2) replace τ (at z tail if forward direction, or at z
+NB.        head if backward one) by 0 to get ev, the
+NB.        extension of vector v: ev=. 0 i} z
+NB.     3) multiple C by ev:
+NB.        a) if side is left: deltaC=. ev*ev'*C
+NB.        b) if side is right: deltaC=. ev*ev'*C
+NB.     4) multiply deltaC by optionally conjugated τ:
+NB.          deltaC=. deltaC * 
+
+larfr1fcc=: [ - ((({: @ ]) * (larfr (0 & (_1 })))) +)  NB. forward direction, H := H(conj(v),conj(τ))
+larfl1bss=: [ - (({. @ ]) * (larfl (0 & (0 }))))       NB. backward direction, H := H(v,τ)
+larfl1fss=: [ - (({: @ ]) * (larfl (0 & (_1 }))))      NB. forward direction, H := H(v,τ)
+larfr1bcc=: [ - ((({. @ ]) * (larfr (0 & (0 })))) +)   NB. backward direction, H := H(conj(v),conj(τ))
+
+NB. ---------------------------------------------------------
+NB. ungl2step
+NB. ung2lstep
+NB. ung2rstep
+NB. ungr2step
+NB.
+NB. Description:
+NB.   Single step of non-blocked version of algorithms LQ QL
+NB.   QR RQ
 NB.
 NB. Syntax:
-NB.   rios0=. mkrios0ungl2 (p,m,n1)
-NB.   rios0=. mkrios0geql2 (m,n,k,p)
-NB.   rios0=. mkrios0geqr2 (m,n,k,p)
-NB.   rios0=. mkrios0gerq2 (m,n,k,p)
+NB.   eQi1=. Qf ungxxstep eQi
 NB. where
-NB.   kn    - 2-vector of integers (k,n), shape of matrix to
-NB.           generate
-NB.   rios0 - 6×2-table rios(0), cIOSs corresponding to
-NB.           iteration 0, see ung*step verbs
+NB.   eQi  - Qi with appended or stitched trash vector
+NB.   Qi   - Q(i), the matrix Q at i-th step
+NB.   Qf   - Q's factored form
+NB.   Q    - matrix with orthonormal rows or columns which is
+NB.          defined as the product of k elementary
+NB.          reflectors
+NB.   eQi1 - Qi1 with appended or stitched trash vector
+NB.   Qi1  - Q(i+1), the matrix Q after i-th step
+NB.
+NB. Algorithm:
+NB.   1) extract vector z(i) from Qf: zi=. io { Qf
+NB.   2) extract scalar τ from z(i), then negate and
+NB.      optionally conjugate it
+NB.   3) multiply z by new τ
+NB.   4) replace io-th element of new z by incremented new τ
+NB.   5) update eQi by new z, producing eQiupd
+NB.   6) append or stitch new z to eQiupd, producing eQi1
 
-mkrios0ungl2=: 3 : 0
-  'p1 k'=. 0 1 1 (<:`(<./))/. 'p m n'=. 0 0 _1 + y
-  3 2 2 $ p,0,(k-p),n,p1,p1,(k-p1),(n+1-p1),p1,0 1,p1
+ungl2step=: 4 : 0
+  io=. x (<: @ - & #) y
+  y ((((- @ + @ {:) ((>: @ [) (io }) *) ]) @ ]) , larfr1fcc) (io { x)
 )
 
-mkrios0ung2l=: 3 : 0
-  'p1 p2'=. (- & 1 2 @ {:) 'm n k p'=. y
-  3 2 2 $ 1,(n-k),m,(k-p),0,(n-k),(m-p2),(k-p1),(m-p2),(n-p),p1,1
+ung2lstep=: 4 : 0
+  io=. y (- & ({: @ $)) y
+  y (larfl1bss ,. (((- @ {.) ((>: @ [) (io }) *) ]) @ ])) ((< a: ; io) { x)
 )
 
-mkrios0ung2r=: 3 : 0
-  p1=. <: {: 'm n k p'=. y
-  3 2 2 $ 0,p,m,(k-p),p1,p1,(m+1-p1),(k-p1),0,p1,p1,1
+ung2rstep=: 4 : 0
+  io=. y (<: @ - & ({: @ $)) y
+  y ((((- @ {:) ((>: @ [) (io }) *) ]) @ ]) ,. larfl1fss) ((< a: ; io) { x)
 )
 
-mkrios0ungr2=: 3 : 0
-  'p1 p2'=. (- & 1 2 @ {:) 'm n k p'=. y
-  3 2 2 $ (m-k),1,(k-p),n,(m-k),0,(k-p1),(n-p2),(m-p),(n-p2),1,p1
+ungr2step=: 4 : 0
+  io=. y (- & #) x
+  y (larfr1bcc , (((- @ + @ {.) ((>: @ [) (io }) *) ]) @ ])) (io { x)
 )
-
-NB. ---------------------------------------------------------
-NB. Template adv. to form verbs ung((2[lr])|([lr]2))step
-NB. algo:
-NB. LQ2 eC == (β,v,τ) , (C ,. trash)
-NB.     r2z before z
-
-ungq2step=: 2 : '([ (0: setir 2) (((((- @ (m gi 1)) ((>:@[) (m gi 2) *) ]) (n}) ([ - (m gi 1) * (m gi 0))) (n&{)) updir 1)) step'
-
-ungl2step=: (larfr (+ @ (1 0 & (0 _1}))))`(+ @ (_1 { ]))`( 0}) ungq2step IOSFR
-ung2lstep=: (larfl (    (0 1 & (0 _1}))))`(    ( 0 { ]))`(_1}) ungq2step IOSLC
-ung2rstep=: (larfl (    (1 0 & (0 _1}))))`(    (_1 { ]))`( 0}) ungq2step IOSFC
-ungr2step=: (larfr (+ @ (0 1 & (0 _1}))))`(+ @ ( 0 { ]))`(_1}) ungq2step IOSLR
 
 NB. ---------------------------------------------------------
 NB. ungl2
-NB. Generate a matrix with orthonormal rows from output of
-NB. gelq2 or gelqf (non-blocked version)
-NB.
-NB. Syntax:
-NB.   eQ=. [p] ungl2 LQf
-NB. where
-NB.   LQf - m×(n+1)-matrix, output of gelqf
-NB.   p   - integer in range 0:k, default is k, the number of
-NB.         elementary reflectors, whose product defines the
-NB.         matrix Q
-NB.   eQ  - m×(n+1)-matrix containing Q:
-NB.           Q -: (k , n) {. eQ
-NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the first k rows of a product of p
-NB.         elementary reflectors of order n:
-NB.           Q = H(p)' ... H(2)' H(1)'
-NB.   k   = min(m,n)
-NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   k=. m <. n
-NB.   LQf=. gelq2 A
-NB.   L=. trl 0 _1 }. LQf
-NB.   Q=. (k,n) {. ungl2 LQf
-NB.   Q2=. ungl2 tru1 LQf
-NB. then
-NB.   Q -: Q2
-NB.   I -: (mp ct) Q
-NB.   A -: L mp Q
-NB.   (-: (((trl @ (0 _1 & }.)) mp (ungl2 @ tru1)) @ gelq2)) A
-NB.
-NB. Algo:
-NB.   p-th diagonal := 1
-
-ungl2=: ($:~ (<./ @ (0 _1 & +) @ $)) : '[ ((0&{::) @ (UNGL2DCIOS & ungl2step)) ((mkrios0ung2l @ (, $)) ((((0 ({,) [) idmat ((<0 1) { [)) setir 0) ; [) ])'
-
-NB. ---------------------------------------------------------
 NB. ung2l
-NB. Generate a matrix with orthonormal columns from output of
-NB. geql2 or geqlf (non-blocked version)
-NB.
-NB. Syntax:
-NB.   Q=. [p] ung2l QfL
-NB. where
-NB.   QfL - (m+1)×n-matrix, output of geql2 or geqlf
-NB.   p   - integer in range 0:k, default is k, the number of
-NB.         elementary reflectors, whose product defines the
-NB.         matrix Q
-NB.   Q   - m×k-matrix Q with orthonormal columns, which is
-NB.         defined as the last k columns of a product of p
-NB.         elementary reflectors of order m:
-NB.           Q = H(p) ... H(2) H(1)
-NB.   k   = min(m,n)
-NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   QfL=. geql2 A
-NB.   Q=. ung2l QfL
-NB.   L=. (n - m) trl }. QfL
-NB. then
-NB.   I -: (mp~ ct) Q
-NB.   A -: Q mp L
-NB.   (-: ((ung2l mp (((n - m) & trl) @ }.)) @ geql2)) A
-
-ung2l=: ($:~ (<./ @ (_1 0 & +) @ $)) :(4 : 0)
-  k=. <./ 'm n'=. _1 0 + $ y
-  rios0=. mkrios0ung2l (m , n , k , x)
-  y=. rios0 (((7 6 (>:@-/@({,)) [) idmat ((<0 1) { [)) setir 0) y  NB. 1+(k+1-p)-(m+2-p)=(k-m)-th diagonal := 1
-  (- (m , k)) {. 0 {:: x (UNG2LDCIOS & ung2lstep) (y ; rios0)
-)
-
-NB. ---------------------------------------------------------
 NB. ung2r
-NB. Generate a matrix with orthonormal columns from output of
-NB. geqr2 or geqrf (non-blocked version)
+NB. ungr2
+NB.
+NB. Description:
+NB.   Non-blocked version of algorithms LQ QL QR RQ
 NB.
 NB. Syntax:
-NB.   Q=. [p] ung2r QfR
+NB.   eQ=. ungxx Qf
 NB. where
-NB.   QfR - (m+1)×n-matrix, output of geqr2 or geqrf
-NB.   p   - integer in range 0:k, default is k, the number of
-NB.         elementary reflectors, whose product defines the
-NB.         matrix Q
-NB.   Q   - m×k-matrix Q with orthonormal columns, which is
-NB.         defined as the first k columns of a product of p
-NB.         elementary reflectors of order m:
-NB.           Q = H(1) H(2) ... H(p)
-NB.   k   = min(m,n)
+NB.   Qf  - unit triangular matrix, Q's factored form
+NB.   eQ  - Q with appended or stitched trash vector
+NB.   Q   - matrix with orthonormal rows or columns which is
+NB.         defined as the product of k elementary reflectors
 NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   QfR=. geqr2 A
-NB.   Q=. ung2r QfR
-NB.   R=. tru }: QfR
-NB. then
-NB.   I -: (mp~ ct) Q
-NB.   A -: Q mp R
-NB.   (-: ((ung2r mp (tru @ }:)) @ geqr2)) A
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for ungxxstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (ungxxstep ^: iters) eQ0
+NB.
+NB. Notes:
+NB. - following identity holds: 
+NB.   eQ (-: & $) Qf
 
-ung2r=: ($:~ (<./ @ (_1 0 & +) @ $)) :(4 : 0)
-  k=. <./ 'm n'=. _1 0 + $ y
-  rios0=. mkrios0ung2к (m , n , k , x)
-  y=. rios0 (((1 ({,) [) idmat ((<0 1) { [)) setir 0) y  NB. p-th diagonal := 1
-  (m , k) {. 0 {:: x (UNG2RDCIOS & ung2rstep) (y ; rios0)
-)
+ungl2=: (0 $~ (0 (0 }) $)) (ungl2step ^: (0 _1 ungqk ($ @ [)))~ ]  NB. Qf -: tru1 Qf
+ung2l=: (0 $~ (0 (1 }) $)) (ung2lstep ^: (_1 0 ungqk ($ @ [)))~ ]  NB. Qf -: ((-~/ @ $) tru1 ]) Qf
+ung2r=: (0 $~ (0 (1 }) $)) (ung2rstep ^: (_1 0 ungqk ($ @ [)))~ ]  NB. Qf -: trl1 Qf
+ungr2=: (0 $~ (0 (0 }) $)) (ungr2step ^: (0 _1 ungqk ($ @ [)))~ ]  NB. Qf -: ((-~/@$) trl1 ]) Qf
 
 NB. ---------------------------------------------------------
-NB. ungr2
-NB. Generate a matrix with orthonormal rows from output of
-NB. gerq2 or gerqf (non-blocked version)
+NB. unglqstep
+NB. ungqlstep
+NB. ungqrstep
+NB. ungrqstep
+NB.
+NB. Description:
+NB.   Single step of algorithms LQ QL QR RQ
 NB.
 NB. Syntax:
-NB.   Q=. [p] ungr2 RQf
+NB.   eQi1=. Qf ungxxstep eQi
 NB. where
-NB.   RQf - m×(n+1)-matrix, output of gerq2 or gerqf
-NB.   p   - integer in range 0:k, default is k, the number of
-NB.         elementary reflectors, whose product defines the
-NB.         matrix Q
-NB.   Q   - k×n-matrix Q with orthonormal rows, which is
-NB.         defined as the last k rows of a product of p
-NB.         elementary reflectors of order n:
-NB.           Q = H(1)' H(2)' ... H(p)'
-NB.   k   = min(m,n)
+NB.   eQi  - Qi with appended or stitched trash vector
+NB.   Qi   - Q(i), the matrix Q at i-th step
+NB.   Qf   - Q's factored form
+NB.   Q    - matrix with orthonormal rows or columns which is
+NB.          defined as the product of k elementary
+NB.          reflectors
+NB.   eQi1 - Qi1 with appended or stitched trash vector
+NB.   Qi1  - Q(i+1), the matrix Q after i-th step
 NB.
-NB. If:
-NB.   'm n'=. $ A
-NB.   RQf=. gerq2 A
-NB.   R=. (n - m) trl 0 1 }. RQf
-NB.   Q=. ungr2 RQf
-NB. then
-NB.   I -: (mp ct) Q
-NB.   A -: R mp Q
-NB.   (-: (((((n - m) & tru) @ (0 1 & }.)) mp ungr2) @ gerq2)) A
+NB. Algorithm:
+NB.   1) extend matrix eQi by zeros to form eCi - being
+NB.      matrix to update Ci with appended or stitched trash
+NB.      vector
+NB.   2) extract current block - the matrix Qfi from Qf
+NB.   3) supply eQi and Qfi to larfbxxxx, to produce eCiupd
+NB.   4) aplly non-blocked version of algorithm to Qfi to
+NB.      produce matrix eQi1part
+NB.   5) assemble eCiupd and eQi1part, to produce eQi1
 
-ungr2=: ($:~ (<./ @ (0 _1 & +) @ $)) :(4 : 0)
-  k=. <./ 'm n'=. 0 _1 + $ y
-  rios0=. mkrios0ungr2 (m , n , k , x)
-  y=. rios0 (((7 2 (-&2@-/@({,)) [) idmat ((<0 1) { [)) setir 0) y  NB. ((n+2-p)-(k-p))-2=(n-k)-th diagonal := 1
-  (- (k , n)) {. 0 {:: x (UNGR2DCIOS & ungr2step) (y ; rios0)
+unglqstep=: 4 : 0
+  'shx shy'=. x (,: & $) y
+  bs=. 0 _1 ungqbs shx
+  riosQfi=. ((shx - shy) - bs) ,: (bs + (0 (0 }) shy))
+  sizeeC=. - ((0 , bs) + shy)
+  (sizeeC {. y) ((ungl2 @ ]) , larfbrcfr) (riosQfi (] ;. 0) x)
+)
+
+ungqlstep=: 4 : 0
+  'shx shy'=. x (,: & $) y
+  bs=. _1 0 ungqbs shx
+  riosQfi=. (0 (0 }) shy) ,: (bs + (0 (1 }) shy))
+  sizeeC=. (bs , 0) + shy
+  (sizeeC {. y) (larfblcbc ,. (ung2l @ ])) (riosQfi (] ;. 0) x)
+)
+
+ungqrstep=: 4 : 0
+  'shx shy'=. x (,: & $) y
+  bs=. _1 0 ungqbs shx
+  riosQfi=. ((shx - shy) - bs) ,: (bs + (0 (1 }) shy))
+  sizeeC=. - ((bs , 0) + shy)
+  (sizeeC {. y) ((ung2r @ ]) ,. larfblnfc) (riosQfi (] ;. 0) x)
+)
+
+ungrqstep=: 4 : 0
+  'shx shy'=. x (,: & $) y
+  bs=. 0 _1 ungqbs shx
+  riosQfi=. (0 (1 }) shy) ,: (bs + (0 (0 }) shy))
+  sizeeC=. (0 , bs) + shy
+  (sizeeC {. y) (larfbrcbr , (ungr2 @ ])) (riosQfi (] ;. 0) x)
 )
 
 NB. =========================================================
 NB. Interface
 
-NB. for blocked code (see ung{lq,ql,qr,rq}step)
-NB. in 'block size' units
-UNGLQDCIOS=: 4 2 2 $ 0 0 0 0 0 0 0 0 _1 _1 0 1 _1 _1 1 1  NB. LQ0,T,LQi,C
-
-NB. rios0=. mkrios0unglq (t,l,m,n,bs,iters)
-mkrios0unglq=: 3 : 0
-  't l m n bs iters'=. y
-  ibs=. bs*iter
-  4 2 2 $ ibs,ibs,(m-ibs),(n+1-ibs),0,(n+1),bs,bs,(ibs-bs),(ibs-bs),bs,(n+1+bs-ibs),ibs,(ibs-bs),(m-ibs),(n+1+bs-ibs)
-)
-
-unglqstep=: [:
-
-NB. 'bs iters'=. sha ungenv riosQf
-NB. where shc - 2-vector to convert Qf shape to Q shape
-NB.       riosQf -: ((topQf,leftQf),:(heightQf,widthQf))
-NB. Note: ($ Q) -: (shc + (heightQf,widthQf))
+NB. ---------------------------------------------------------
+NB. unglq
 NB.
-NB. Formula:
-NB.   k := min(sha + (heightQf,widthQf))     NB. min(heightQ,widthQ)
-NB.   bs := max(UNGQBSMIN,min(UNGQBSMAX,k))  NB. adjusted block size
-NB.   iters := ⌊k % bs⌋                      NB. # of iterations
+NB. Description:
+NB.   Generate a matrix with orthonormal rows from output of
+NB.   gelqf
+NB.
+NB. Syntax:
+NB.   Q=. unglq LQf
+NB. where
+NB.   LQf - m×(n+1)-matrix, the output of gelqf
+NB.   Q   - k×n-matrix with orthonormal rows, which is
+NB.         defined as the product of k elementary reflectors
+NB.         of order n: Q = H(k-1)' * ... * H(1)' * H(0)'
+NB.   k   = min(m,n)
+NB.
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for unglqstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (unglqstep ^: iters) eQ0
+NB.   4) cut off last column from eQ to produce Q
+NB.
+NB. If:
+NB.   'm n'=. 0 _1 + $ LQf
+NB.   k=. m <. n
+NB.   Q=. unglq LQf
+NB. then
+NB.   Q -: unglq (k {. LQf)
+NB.   I -: (mp ct) Q
 
-ungenv=: ((] , (<:@%)) (UNGQBSMIN >. UNGQBSMAX <. ])) @ (<./ @ (+ {:))
-
-NB. Q=.           unglq Qf
-NB. Aupd=. riosQf unglq A
-
-unglq=: ((0 _1 + $) {. ((0 0 ,: $) $: ])) : (4 : 0)
-  'bs iters'=. 0 _1 ungenv x
-  drios=. bs * UNGLQDCIOS           NB. rIOS increment between iterations
-  iters (0 {:: (drios & unglqstep)) (x ((mkrios0unglq $) (([ (0: setir 1) ((0 { [) ungl2 ])) ; [) ]) y)
+unglq=: 3 : 0
+  'k n1'=. sizeQf=. ((0 _1 & ungqk) , {:) ($ y)
+  y=. tru1 sizeQf {. y
+  ibs=. */ 'bs iters'=. 0 _1 (ungqbs , ungqiters) sizeQf
+  sizeQf0=. - ((bs|k) , (n1-ibs))
+  Q=. 0 _1 }. (y unglqstep ^: iters (ungl2 (sizeQf0 {. y)))
 )
 
+NB. ---------------------------------------------------------
+NB. ungql
+NB.
+NB. Description:
+NB.   Generate a matrix with orthonormal columns from output
+NB.   of geqlf
+NB.
+NB. Syntax:
+NB.   Q=. ungql QfL
+NB. where
+NB.   QfL - (m+1)×n-matrix, the output of geqlf
+NB.   Q   - m×k-matrix with orthonormal columns, which is
+NB.         defined as the product of k elementary reflectors
+NB.         of order m: Q = H(k-1) * ... * H(1) * H(0)
+NB.   k   = min(m,n)
+NB.
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for ungqlstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (ungqlstep ^: iters) eQ0
+NB.   4) cut off first row from eQ to produce Q
+NB.
+NB. If:
+NB.   'm n'=. _1 0 + $ QfL
+NB.   k=. m <. n
+NB.   Q=. ungql QfL
+NB. then
+NB.   Q -: ungql (((m+1),(-n)) {. QfL)
+NB.   I -: (mp~ ct) Q
 
-
-iters (((0,(-bs)) & }.) @ ((1 {:: ]) (gelq2 updir 5) (0 {:: ])) @ (drios & unglqstep)) (y ; rios0)
-  
-  k=. <./ 'm n'=. 0 _1 + $ y
-  bs=. UNGQBSMIN >. UNGQBSMAX <. k  NB. adjusted block size
-  y=. (m , (n+1+bs)) {. y           NB. allocate space for T, filled by zeros
-  (0 0 ,: (m,n)) unglq y
-:
-  k=. <./ _2 {. 't l m n'=. , x     NB. top,left,height,width of Qf
-  bs=. UNGQBSMIN >. UNGQBSMAX <. k  NB. adjusted block size
-  iters=. <. k % bs                 NB. # of iterations
-  rios0=. mkrios0unglq (,x) , bs , iters
-  drios=. bs * UNGLQDCIOS
-   (y ; rios0)
-  iters (((0,(-bs)) & }.) @ ((1 {:: ]) (gelq2 updir 5) (0 {:: ])) @ (drios & unglqstep)) (y ; rios0)
+ungql=: 3 : 0
+  'm1 k'=. sizeQf=. ({. , (_1 0 & ungqk)) ($ y)
+  y=. ((-~/ @ $) tru1 ]) sizeQf {. y
+  ibs=. */ 'bs iters'=. _1 0 (ungqbs , ungqiters) sizeQf
+  sizeQf0=. (m1-ibs) , (bs|k)
+  Q=. 1 0 }. (y ungqlstep ^: iters (ung2l (sizeQf0 {. y)))
 )
 
---------
-gelqf=: 3 : 0
-  k=. <./ 'm n'=. $ y
-  bs=. GEQFBSMIN >. GEQFBSMAX <. k  NB. adjusted block size
-  y=. (m , (n+1+bs)) {. y           NB. allocate space for τ and T, filled by zeros
-  (m,n,bs,iters) gelqf y
-:
-  'bs iters'=. _2 {. x
-  rios0=. mkrios0gelqf x
-  drios=. bs * GELQFDRIOS
-  iters (((0,(-bs)) & }.) @ ((1 {:: ]) (gelq2 updir 5) (0 {:: ])) @ (drios & gelqfstep)) (y ; rios0)
+NB. ---------------------------------------------------------
+NB. ungqr
+NB.
+NB. Description:
+NB.   Generate a matrix with orthonormal columns from output
+NB.   of geqrf
+NB.
+NB. Syntax:
+NB.   Q=. ungqr QfR
+NB. where
+NB.   QfR - (m+1)×n-matrix, the output of geqrf
+NB.   Q   - m×k-matrix with orthonormal columns, which is
+NB.         defined as the product of k elementary reflectors
+NB.         of order m: Q = H(0) * H(1) * ... * H(k-1)
+NB.   k   = min(m,n)
+NB.
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for ungqrstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (ungqrstep ^: iters) eQ0
+NB.   4) cut off last row from eQ to produce Q
+NB.
+NB. If:
+NB.   'm n'=. _1 0 + $ QfR
+NB.   k=. m <. n
+NB.   Q=. ungqr QfR
+NB. then
+NB.   Q -: ungql (((m+1),n) {. QfR)
+NB.   I -: (mp~ ct) Q
+
+ungqr=: 3 : 0
+  'm1 k'=. sizeQf=. ({. , (_1 0 & ungqk)) ($ y)
+  y=. trl1 sizeQf {. y
+  ibs=. */ 'bs iters'=. _1 0 (ungqbs , ungqiters) sizeQf
+  sizeQf0=. - ((m1-ibs) , (bs|k))
+  Q=. _1 0 }. (y ungqrstep ^: iters (ung2r (sizeQf0 {. y)))
 )
---------
 
-NB. stubs
-ungql=: ung2l
-ungqr=: ung2r
-ungrq=: ungr2
+NB. ---------------------------------------------------------
+NB. ungrq
+NB.
+NB. Description:
+NB.   Generate a matrix with orthonormal rows from output of
+NB.   gerqf
+NB.
+NB. Syntax:
+NB.   Q=. ungrq RQf
+NB. where
+NB.   RQf - m×(n+1)-matrix, the output of gerqf
+NB.   Q   - k×n-matrix with orthonormal rows, which is
+NB.         defined as the product of k elementary reflectors
+NB.         of order n: Q = H(0)' * H(1)' * ... * H(k-1)'
+NB.   k   = min(m,n)
+NB.
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for ungrqstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (ungrqstep ^: iters) eQ0
+NB.   4) cut off first column from eQ to produce Q
+NB.
+NB. If:
+NB.   'm n'=. 0 _1 + $ RQf
+NB.   k=. m <. n
+NB.   Q=. ungrq RQf
+NB. then
+NB.   Q -: ungrq (((-k),(n+1)) {. RQf)
+NB.   I -: (mp ct) Q
 
-NB. TODO:
-NB. - template adv. ung2
+ungrq=: 3 : 0
+  'k n1'=. sizeQf=. ((0 _1 & ungqk) , {:) ($ y)
+  y=. ((-~/ @ $) tru1 ]) sizeQf {. y
+  ibs=. */ 'bs iters'=. 0 _1 (ungqbs , ungqiters) sizeQf
+  sizeQf0=. (bs|k) , (n1-ibs)
+  Q=. 0 1 }. (y ungrqstep ^: iters (ungr2 (sizeQf0 {. y)))
+)
 
 NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB.*tgq v test ung*
+NB. tungq
+NB. Test Q generation algorithms: unglq unql ungqr ungrq by
+NB. general matrix y
+NB.
+NB. Syntax: tungq A
+NB. where A - general m×n-matrix
 
-tgq=: 3 : 0
+tungq=: 3 : 0
+  NB. ### while no qf ###
+  'fuzzym fuzzyn'=. fuzzysh=. $ y
+  require '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ 'gelqf geqlf geqrf gerqf'
+  gelqf=. ((0&{::) (+ & (fuzzysh & {.)) ((tru0 @ (1&{::)) ,. (2&{::))) @ (2b1110 & gelqf_jlapack_)
+  NB. ### /while no qf ###
+
+  ('unglq' tmonad gelqf`]`(((%@mp&norm1) ct)@])`(_."_)`((((<: upddiag0)@(mp ct)) (%&norm1) ]) % (FP_EPS*#@]))) y
+
+  EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB.*testgq v test Q genberators
+NB. testgq
+NB. Test Q generators on random matrices with shape y
+NB. Syntax: mkge testgq (m,n)
+NB.
+NB. Application:
+NB. - with limited random matrix values' amplitudes
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testgq 500 500
 
-testgq=: 3 : 0
-  Ac6x6=. 6 6 $ 8j_7 _8j_8 1j_6 _4j1 4j_2 _7j_2 _4j9 _8j_2 _1j_4 1j_7 5j_8 6j_9 5j_9 1j_5 _9j_7 _6j7 _1j_5 1j8 5j5 5j6 _3j_7 2j2 _8j_7 9j8 _2j6 8j_1 _6j7 _5j_3 _5j_6 _8 1j7 _7j8 6j2 3 8j_5 _1
-  Ac6x4=. 6 4 $ _3j1 _5j_2 1 _9j6 8j_4 _2j2 _8j_1 _6j6 _2j5 _8j5 _5j_1 3j3 _7j_6 _7j_8 _3j_4 4j_2 5j4 8j8 6 3j6 _2j_6 9j5 _9 _1j1
-  Ac4x6=. 4 6 $ _3j_5 2j2 _1j_4 _5j_8 _4j8 8j_5 8j_2 2j4 _5j_3 _6j_5 8j4 9j_1 7j2 _6j_5 7j_1 _5j6 _1 _1j9 1j_5 _4j_7 _6 _1j_9 _6j1 _7j1
-
-  smoutput 'LQ 6x6' ; (; (((trl @ (0 _1 & }.)) mp ungl2) @ gelq2)) Ac6x6
-  smoutput 'LQ 6x4' ; (; (((trl @ (0 _1 & }.)) mp ungl2) @ gelq2)) Ac6x4
-  smoutput 'LQ 4x6' ; (; (((trl @ (0 _1 & }.)) mp ungl2) @ gelq2)) Ac4x6
-
-  smoutput 'QL 6x6' ; (; ((ung2lx mp (((6 - 6) & trl) @ }.)) @ geql2)) Ac6x6
-  smoutput 'QL 6x4' ; (; ((ung2lx mp (((4 - 6) & trl) @ }.)) @ geql2)) Ac6x4
-  smoutput 'QL 4x6' ; (; ((ung2lx mp (((6 - 4) & trl) @ }.)) @ geql2)) Ac4x6
-
-  smoutput 'QR 6x6' ; (; ((ung2rx mp (tru @ }:)) @ geqr2)) Ac6x6
-  smoutput 'QR 6x4' ; (; ((ung2rx mp (tru @ }:)) @ geqr2)) Ac6x4
-  smoutput 'QR 4x6' ; (; ((ung2rx mp (tru @ }:)) @ geqr2)) Ac4x6
-
-  smoutput 'RQ 6x6' ; (; (((((6 - 6) & tru) @ (0 1 & }.)) mp ungr2) @ gerq2)) Ac6x6
-  smoutput 'RQ 6x4' ; (; (((((4 - 6) & tru) @ (0 1 & }.)) mp ungr2) @ gerq2)) Ac6x4
-  smoutput 'RQ 4x6' ; (; (((((6 - 4) & tru) @ (0 1 & }.)) mp ungr2) @ gerq2)) Ac4x6
-)
+testgq=: 1 : 'EMPTY [ tungq @ u'

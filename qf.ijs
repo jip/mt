@@ -330,11 +330,7 @@ NB. - split on tgeqf_{nonblocked,builtin,lapack,blocked}
 
 tgeqf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
-  NB. need_jlapack_ 'gelqf geqlf geqrf gerqf'
-  load '/home/jip/j602-user/projects/lapack/gelqf.ijs'
-  load '/home/jip/j602-user/projects/lapack/geqlf.ijs'
-  load '/home/jip/j602-user/projects/lapack/geqrf.ijs'
-  load '/home/jip/j602-user/projects/lapack/gerqf.ijs'
+  need_jlapack_ 'gelqf geqlf geqrf gerqf'
 
   rcond=. ((_."_)`(norm1 con getir) @. (=/@$)) y
 
@@ -364,3 +360,163 @@ NB. Test orthogonal factorizations
 NB. Syntax: mkge testqf (m,n)
 
 testqf=: 1 : 'EMPTY [ tgeqf @ u'
+
+NB. ---------------------------------------------------------
+NB. unglq
+NB.
+NB. Description:
+NB.   Generate a matrix with orthonormal rows from output of
+NB.   gelqf
+NB.
+NB. Syntax:
+NB.   Q=. unglq LQf
+NB. where
+NB.   LQf - m×(n+1)-matrix, the output of gelqf
+NB.   Q   - k×n-matrix with orthonormal rows, which is
+NB.         defined as the product of k elementary reflectors
+NB.         of order n: Q = H(k-1)' * ... * H(1)' * H(0)'
+NB.   k   = min(m,n)
+NB.
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for unglqstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (unglqstep ^: iters) eQ0
+NB.   4) cut off last column from eQ to produce Q
+NB.
+NB. If:
+NB.   'm n'=. $ A
+NB.   k=. m <. n
+NB.   LQf=. gelqf A
+NB.   L=. trl (0 _1 }. LQf)
+NB.   Q=. unglq LQf
+NB. then
+NB.   Q -: unglq (k {. LQf)
+NB.   I -: (mp ct) Q
+NB.   A -: L mp Q
+NB.   (-: (((trl @ (0 _1 & }.)) mp unglq) @ gelqf)) A
+
+unglq=: 3 : 0
+  'k n1'=. sizeQf=. ((0 _1 & ungqk) , {:) ($ y)
+  y=. tru1 sizeQf {. y
+  ibs=. */ 'bs iters'=. 0 _1 (ungqbs , ungqiters) sizeQf
+  sizeQf0=. - ((bs|k) , (n1-ibs))
+  Q=. 0 _1 }. (y unglqstep ^: iters (ungl2 (sizeQf0 {. y)))
+)
+
+NB. ---------------------------------------------------------
+NB. ungql
+NB.
+NB. Description:
+NB.   Generate a matrix with orthonormal columns from output
+NB.   of geqlf
+NB.
+NB. Syntax:
+NB.   Q=. ungql QfL
+NB. where
+NB.   QfL - (m+1)×n-matrix, the output of geqlf
+NB.   Q   - m×k-matrix with orthonormal columns, which is
+NB.         defined as the product of k elementary reflectors
+NB.         of order m: Q = H(k-1) * ... * H(1) * H(0)
+NB.   k   = min(m,n)
+NB.
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for ungqlstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (ungqlstep ^: iters) eQ0
+NB.   4) cut off first row from eQ to produce Q
+NB.
+NB. If:
+NB.   'm n'=. $ A
+NB.   k=. m <. n
+NB.   QfL=. geqlf A
+NB.   Q=. ungql QfL
+NB.   L=. (n - m) trl (}. QfL)
+NB. then
+NB.   Q -: ungql (((m+1),(-n)) {. QfL)
+NB.   I -: (mp~ ct) Q
+NB.   A -: Q mp L
+NB.   (-: ((ungql mp (((n - m) & trl) @ }.)) @ geqlf)) A
+
+ungql=: 3 : 0
+  'm1 k'=. sizeQf=. ({. , (_1 0 & ungqk)) ($ y)
+  y=. ((-~/ @ $) tru1 ]) sizeQf {. y
+  ibs=. */ 'bs iters'=. _1 0 (ungqbs , ungqiters) sizeQf
+  sizeQf0=. (m1-ibs) , (bs|k)
+  Q=. 1 0 }. (y ungqlstep ^: iters (ung2l (sizeQf0 {. y)))
+)
+
+NB. ---------------------------------------------------------
+NB. ungqr
+NB.
+NB. Description:
+NB.   Generate a matrix with orthonormal columns from output
+NB.   of geqrf
+NB.
+NB. Syntax:
+NB.   Q=. ungqr QfR
+NB. where
+NB.   QfR - (m+1)×n-matrix, the output of geqrf
+NB.   Q   - m×k-matrix with orthonormal columns, which is
+NB.         defined as the product of k elementary reflectors
+NB.         of order m: Q = H(0) * H(1) * ... * H(k-1)
+NB.   k   = min(m,n)
+NB.
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for ungqrstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (ungqrstep ^: iters) eQ0
+NB.   4) cut off last row from eQ to produce Q
+NB.
+NB. If:
+NB.   'm n'=. $ A
+NB.   k=. m <. n
+NB.   QfR=. geqrf A
+NB.   Q=. ungqr QfR
+NB.   R=. tru (}: QfR)
+NB. then
+NB.   Q -: ungql (((m+1),n) {. QfR)
+NB.   I -: (mp~ ct) Q
+NB.   A -: Q mp R
+NB.   (-: ((ungqr mp (tru @ }:)) @ geqrf)) A
+
+ungqr=: 3 : 0
+  'm1 k'=. sizeQf=. ({. , (_1 0 & ungqk)) ($ y)
+  y=. trl1 sizeQf {. y
+  ibs=. */ 'bs iters'=. _1 0 (ungqbs , ungqiters) sizeQf
+  sizeQf0=. - ((m1-ibs) , (bs|k))
+  Q=. _1 0 }. (y ungqrstep ^: iters (ung2r (sizeQf0 {. y)))
+)
+
+NB. ---------------------------------------------------------
+NB. ungrq
+NB.
+NB. Description:
+NB.   Generate a matrix with orthonormal rows from output of
+NB.   gerqf
+NB.
+NB. Syntax:
+NB.   Q=. ungrq RQf
+NB. where
+NB.   RQf - m×(n+1)-matrix, the output of gerqf
+NB.   Q   - k×n-matrix with orthonormal rows, which is
+NB.         defined as the product of k elementary reflectors
+NB.         of order n: Q = H(0)' * H(1)' * ... * H(k-1)'
+NB.   k   = min(m,n)
+NB.
+NB. Algorithm:
+NB.   1) find iters, the number of iterations for ungrqstep
+NB.   2) form eQ0
+NB.   3) do iterations: eQ=. Qf (ungrqstep ^: iters) eQ0
+NB.   4) cut off first column from eQ to produce Q
+NB.
+NB. If:
+NB.   'm n'=. $ A
+NB.   k=. m <. n
+NB.   RQf=. gerqf A
+NB.   R=. (n - m) trl (0 1 }. RQf)
+NB.   Q=. ungrq RQf
+NB. then
+NB.   Q -: ungrq (((-k),(n+1)) {. RQf)
+NB.   I -: (mp ct) Q
+NB.   A -: R mp Q
+NB.   (-: (((((n - m) & tru) @ (0 1 & }.)) mp ungrq) @ gerqf)) A

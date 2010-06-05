@@ -1,5 +1,5 @@
-scriptdoc-conforming comments
-Formula before syntax
+[scriptdoc-conforming comments]
+Note: block- and vector- steppers are equivalent topologically
 
 trf.ijs
 - Hermitian

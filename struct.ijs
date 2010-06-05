@@ -63,6 +63,7 @@ NB. =========================================================
 NB. Concepts
 NB.
 NB. IO   - index of
+NB. lIO  - linear IO, is an integer
 NB. IOS  - indices of
 NB. lIOS - linear IOS, is a vector of integers
 NB. rIOS - rectangular IOS, for r-rank array is a 2×r-array
@@ -129,10 +130,10 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Nouns, IOS a priori known submatrices
 
-IOSFC=: < a: ; 0     NB. IOS 1st column
-IOSLC=: < a: ; _1    NB. IOS last column
-IOSFR=: < 0 ; < a:   NB. IOS 1st row
-IOSLR=: < _1 ; < a:  NB. IOS last row
+IOSFC=: < a: ; 0   NB. IOS 1st column
+IOSLC=: < a: ; _1  NB. IOS last column
+IOSFR=: 0          NB. IOS 1st row, or (< 0 ; < a:)
+IOSLR=: _1         NB. IOS last row, or (< _1 ; < a:)
 
 NB. ---------------------------------------------------------
 NB. Misc.
@@ -196,7 +197,7 @@ NB. Template conj. to make verbs to update subarray by pentad
 NB. indirectly, addressing mode is rIOS
 NB.
 NB. Syntax:
-NB.   vapp=. u0`u1`u2`u3`u4 upd3ir io0 io1 io2
+NB.   vapp=. u4`u3`u2`u1`u0 upd3ir io0 io1 io2
 NB. where
 NB.   rios     - k×2×2-array of integers, vector of rIOSs
 NB.   io0..io2 - integers, IOs in rios
@@ -205,12 +206,12 @@ NB.   A0..A2   - 2-rank arrays, submatrices in A:
 NB.                A0 -: (io0{rios) (] ;. 0) A
 NB.                A1 -: (io1{rios) (] ;. 0) A
 NB.                A2 -: (io2{rios) (] ;. 0) A
-NB.   u0 u2 u4 - monads to adjust A2 A1 A0, respectively
+NB.   u0 u2 u4 - monads to adjust A0 A1 A2, respectively
 NB.   u1 u3    - dyads to glue staff
 NB.   vapp     - verb to update A2, is called as:
 NB.                Aupd=. rios vapp A
 NB.   Aupd     - A with submatrix A2 replaced by value:
-NB.               (u0 A2) u1 (u2 A1) u3 (u4 A0)
+NB.               (u4 A2) u3 (u2 A1) u1 (u0 A0)
 NB.   k        > 0
 NB.
 NB. Example:
@@ -219,7 +220,7 @@ NB.     (3 2 2 $ 4 9 1 1 3 5 1 1 2 4 1 1) (-:`-`*:`+`%: upd3ir 0 1 2) i. 10 10
 NB.   since
 NB.     _1220 -: (-: 24) - (*: 35) + (%: 49)
 
-upd3ir=: 2 : '((m gici ((2{n),0)) (m gi 1) (m gici ((1{n),2)) (m gi 3) (m gici ((0{n),4)))`(rios2ios@(n nmx 2))`] }'
+upd3ir=: 2 : '((m gici ((2{n),4)) (m gi 3) (m gici ((1{n),2)) (m gi 1) (m gici ((0{n),0)))`(rios2ios@(n nmx 2))`] }'
 
 NB. Conj. to 'map' set of elements to another one, accepting IOS
 NB. Formula: y[x[1]] := u(y[x[0]])

@@ -67,13 +67,13 @@ require '~user/projects/mt/bal.ijs'     NB. balance
 require '~user/projects/mt/equ.ijs'     NB. equilibrate
 require '~user/projects/mt/ref.ijs'     NB. reflect
 require '~user/projects/mt/rot.ijs'     NB. rotate
-NB. require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ output
+require '~user/projects/mt/gq.ijs'      NB. generate Q from LQ QL QR RQ output
 NB. require '~user/projects/mt/mq.ijs'      NB. multiply by Q from LQ QL QR RQ output
 
 NB. mid-level
 NB. require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~user/projects/mt/pow.ijs'     NB. integer powers
-require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization LQ QL QR RQ
+NB. require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization LQ QL QR RQ
 require '~user/projects/mt/trf.ijs'     NB. triangular factorization
 require '~user/projects/mt/tri.ijs'     NB. inverse via trf
 require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation via trf
@@ -107,6 +107,11 @@ NB.   load '~addons/math/mt/mt.ijs'
 NB.   cocurrent 'mt'
 NB.   r=. (_1 1 0 16 _6 4 & gemat) test 500 500
 NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) test 500 500
+NB.
+NB. TODO:
+NB. - test0 - test scalar (0-rank) algos
+NB. - test1 - test vector (1-rank) algos
+NB. - test2 - test matrix (2-rank) algos
 
 test=: 1 : 0
   require 'printf'

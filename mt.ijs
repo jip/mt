@@ -40,13 +40,13 @@ TESTLOGFILE=: < jpath '~temp/mt.log'                  NB. assign a: to switch of
 TESTLOG=: ''                                          NB. literal array, being formatted test log
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NB. Debug level used by "dbg":
-NB.   0 - execute debuging verb transparently and silently
-NB.   1 - show for debuging verb its rank and valency,
-NB.       input's and output's shapes
-NB.   2 - case 1 plus input's and output's values
+NB. Debug level used by dbg conj., the constant function:
+NB.   0: - execute debuging verb transparently and silently
+NB.   1: - show for debuging verb its rank and valency,
+NB.        input's and output's shapes
+NB.   2: - case (1:) plus input's and output's values
 
-DEBUG=: 2
+DEBUG=: 2:
 
 NB. ---------------------------------------------------------
 NB. System config

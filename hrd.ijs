@@ -5,8 +5,7 @@ NB. gehrdx     Reduce a general matrix to Hessenberg form
 NB. gghrdx     Reduce a pair of general and triangular
 NB.            matrices to generalized Hessenberg form
 NB.
-NB. testgehrd  Test Hessenberg reduction algorithms by
-NB.            general matrix given
+NB. testgehrd  Test gehrdx by general matrix given
 NB. testhrd    Adv. to make verb to test gxhrdx by matrix of
 NB.            generator and shape given
 NB.

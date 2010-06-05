@@ -63,8 +63,7 @@ NB. dbg
 NB.
 NB. Description:
 NB.   Conj. to force verb to show debug info with verbosity
-NB.   defined by global constant DEBUG which is defined in
-NB.   mt.ijs
+NB.   defined by function DEBUG which is defined in mt.ijs
 NB.
 NB. Syntax:
 NB.   vdbg=. v dbg title

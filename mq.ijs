@@ -20,10 +20,8 @@ NB. unmbrxx    Multiply a general matrix by an unitary
 NB.            (orthogonal) matrix, which is represented in
 NB.            factored form, as returned by gebrdx
 NB.
-NB. testunmq   Test Q multiplication qf-algorithms by general
-NB.            matrix given
-NB. testunmhr  Test Q multiplication hrd-algorithms by square
-NB.            matrix given
+NB. testunmq   Test unmxxxx by general matrix given
+NB. testunmhr  Test unmhrxxx by square matrix given
 NB. testmq     Adv. to make verb to test unmxxxxx by matrix of
 NB.            generator and shape given
 NB.

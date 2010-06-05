@@ -243,3 +243,96 @@ fork5=: 1 : 0
   o2=. 0
   o0=. o0 e  o1
 )
+
+NB. ---------------------------------------------------------
+NB. fork6
+NB.
+NB. Description:
+NB.   6-fork, generalized fork with 6-depth execution graph
+NB.
+NB. Syntax:
+NB.   vapp=. a0`b0`a1`c0`b1`a2`d0`c1`b2`a3`e0`d1`c2`b3`a4`f`e1`d2`c3`b4`a5 fork5
+NB. where
+NB.   axx         - ambivalent verbs to define input nodes of
+NB.                 execution graph
+NB.   bx cx dx ex - dyads to define intermediate nodes of
+NB.                 execution graph
+NB.   f           - dyad to define output node of execution
+NB.                 graph
+NB.   vapp        - 6-fork, is evoked as:
+NB.                   out=.   vapp y
+NB.                   out=. x vapp y
+NB.
+NB. Execution graph:
+NB.             f
+NB.            / \
+NB.           e0  e1
+NB.          / \ / \
+NB.         d0  d1  d2
+NB.        / \ / \ / \
+NB.       c0  c1  c2  c3
+NB.      / \ / \ / \ / \
+NB.     b0  b1  b2  b3  b4
+NB.    / \ / \ / \ / \ / \
+NB.   a0  a1  a2  a3  a4  a5
+NB.
+NB. Notes:
+NB. - local nouns are re-used to reduce memory consumption
+NB. - another 2-fork compatible traverse order is possible:
+NB.     a0 b0 c0 d0 e0 f e1 d2 c3 b4 a5 a1 b1 c1 d1 c2 b3 a4 a2 b2 a3
+
+fork6=: 1 : 0
+  '`a0 b0 a1 c0 b1 a2 d0 c1 b2 a3 e0 d1 c2 b3 a4 f e1 d2 c3 b4 a5'=. m
+  o0=.    a0 y
+  o1=.    a1 y
+  o2=.    a2 y
+  o3=.    a3 y
+  o4=.    a4 y
+  o5=.    a5 y
+  o0=. o0 b0 o1
+  o1=. o1 b1 o2
+  o2=. o2 b2 o3
+  o3=. o3 b3 o4
+  o4=. o4 b4 o5
+  o5=. 0
+  o0=. o0 c0 o1
+  o1=. o1 c1 o2
+  o2=. o2 c2 o3
+  o3=. o3 c3 o4
+  o4=. 0
+  o0=. o0 d0 o1
+  o1=. o1 d1 o2
+  o2=. o2 d2 o3
+  o3=. 0
+  o0=. o0 e0 o1
+  o1=. o1 e1 o2
+  o2=. 0
+  o0=. o0 f  o1
+:
+  '`a0 b0 a1 c0 b1 a2 d0 c1 b2 a3 e0 d1 c2 b3 a4 f e1 d2 c3 b4 a5'=. m
+  o0=. x  a0 y
+  o1=. x  a1 y
+  o2=. x  a2 y
+  o3=. x  a3 y
+  o4=. x  a4 y
+  o5=. x  a5 y
+  o0=. o0 b0 o1
+  o1=. o1 b1 o2
+  o2=. o2 b2 o3
+  o3=. o3 b3 o4
+  o4=. o4 b4 o5
+  o5=. 0
+  o0=. o0 c0 o1
+  o1=. o1 c1 o2
+  o2=. o2 c2 o3
+  o3=. o3 c3 o4
+  o4=. 0
+  o0=. o0 d0 o1
+  o1=. o1 d1 o2
+  o2=. o2 d2 o3
+  o3=. 0
+  o0=. o0 e0 o1
+  o1=. o1 e1 o2
+  o2=. 0
+  o0=. o0 f  o1
+)

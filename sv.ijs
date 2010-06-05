@@ -261,7 +261,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testposv=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (potri@potrf))"2 (] ,: |:) A
+  'conA conAt'=. (norm1 con (potril@potrfl))"2 (] ,: |:) A
 
   ('posvax'  tdyad ((0 & {::)`(mp  & >/)`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X)
   ('posvatx' tdyad ((0 & {::)`(mp  & >/)`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X)
@@ -291,7 +291,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testptsv=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (pttri@pttrf))"2 (] ,: |:) A
+  'conA conAt'=. (norm1 con (pttril@pttrfl))"2 (] ,: |:) A
 
   ('ptsvax'  tdyad ((0 & {::)`(mp  & >/)`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X)
   ('ptsvatx' tdyad ((0 & {::)`(mp  & >/)`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X)

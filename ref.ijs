@@ -203,6 +203,8 @@ larftbc=: 3 : 0
   end.
 )
 
+larftbcf=: ( 1  1&{.)`((({."1) (0:`0:`(larftbcf@[)`]`[`(mp~ (ct@(0&(0}))))`[`(-@(mp~) )`(mp~)`(larftbcf@])`(({."1~ c), ])`,.`]`[`0: fork5) (}."1))~ (<.@-:@c))`(EMPTY"_)@.(*@<:@c)
+
 NB. ---------------------------------------------------------
 NB. larftbr
 NB.
@@ -246,6 +248,8 @@ larftbr=: 3 : 0
   end.
 )
 
+larftbrf=: ( 1  1&{.)`(({. (0:`0:`(larftbrf@[)`]`[`(((0&(0}))@ct@[)mp~])`[`(-@:(mp~))`(mp~)`(larftbrf@])`(({."1~ c), ])`,.`]`[`0: fork5) }.)~ (<.@-:@#))`(EMPTY"_)@.(*@<:@#)
+
 NB. ---------------------------------------------------------
 NB. larftfc
 NB.
@@ -281,7 +285,23 @@ NB.     Performance. IBM J. Research & Development, Vol. 44,
 NB.     No. 4, 2000, pp 605-624.
 NB.     http://www.research.ibm.com/journal/rd/444/elmroth.pdf
 
-larftfc=: (_1 _1&{.)`((0:`0:`(larftfc@[)`]`[`((ct@(0(_1})[))mp])`[`(-@mp)`mp`(larftfc@])`(({.~ #),.])`,`]`[`0: fork5)&>/@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
+larftfc=: 3 : 0
+  n=. c y
+  if. 1=n do.
+    _1 _1 {. y
+  elseif. 1<n do.
+    k=. <. -: n
+    Vl=. k {."1 y
+    Vr=. k }."1 y
+    T00=. larftfc Vl
+    T11=. larftfc Vr
+    (T00 ,. (- T00) mp ((ct 0 (_1}) Vl) mp Vr) mp T11) _1 append T11
+  elseif. do.  NB. 0=n
+    EMPTY
+  end.
+)
+
+larftfcf=: (_1 _1&{.)`((({."1) (0:`0:`(larftfcf@[)`]`[`((ct@(0(_1})[))mp ])`[`(-@mp )`mp`(larftfcf@])`(({.~ #),.])`, `]`[`0: fork5) (}."1))~ (<.@-:@c))`(EMPTY"_)@.(*@<:@c)
 
 NB. ---------------------------------------------------------
 NB. larftfr
@@ -325,6 +345,8 @@ larftfr=: 3 : 0
     EMPTY
   end.
 )
+
+larftfrf=: (_1 _1&{.)`(({. (0:`0:`(larftfrf@[)`]`[`(mp ((0&(_1}))@ct))`[`(-@mp )`mp`(larftfrf@])`(({.~ #),.])`, `]`[`0: fork5) }.)~ (<.@-:@#))`(EMPTY"_)@.(*@<:@#)
 
 NB. ---------------------------------------------------------
 NB. Verb       Action    Side    Tran   Dir   Layout     eC
@@ -467,12 +489,14 @@ testlarft=: 3 : 0
   AC=: y=. 0 {:: y
   rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
-NB.  ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
-NB.  ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftbcf' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftbrf' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftfc' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfcr' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftfcf' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
-NB.  ('larftfr' tmonad (gelqf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfr' tmonad (gelqf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfrf' tmonad (gelqf`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
 )

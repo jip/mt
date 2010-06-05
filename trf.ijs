@@ -472,10 +472,10 @@ hetrfpl=: 3 : 0
   T=. ($ y) $ 0
   ip=. i. n
   l1=. n {. 1
-  for_i. TRFNB dhs (0, (<. n % TRFNB)) do.
+  for_i. TRFNB dhs2lios (0, (<. n % TRFNB)) do.
     n=. # y
     nb=. TRFNB <. # y
-    'ipi L1i Ti'=. (l1 ; nb) hetf2l y
+    'ipi L1i Ti'=. (l1 ; nb) hetf2pl y
     T=. ((0 0,nb) (diag ; (i 1} [)) Ti) setdiag T
     k=. nb <. (n-i)
     d=. (1 0,k) diag Ti
@@ -565,6 +565,8 @@ potrfl=: 3 : 0
   end.
 )
 
+potrflf=: %:`((0:`0:`0:`]`]`(potrflf@(0 0 & {::))`,`(ct@])`trsmlx`(0 1 & {::)`[`mp`[`]`(1 1 & {::)`(_1 stitch)`(potrflf@:-~)`]`[`0:`0: fork6)@((<;.1)~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
+
 NB. ---------------------------------------------------------
 NB. potrfu
 NB.
@@ -643,6 +645,11 @@ NB.   A -: clean L1 (mp mp (ct@[)) D
 NB. where
 NB.   'L1 D'=. pttrfl A
 NB.
+NB. Notes:
+NB. - implements LAPACK's xPTTRF
+NB. - if A is indefinite then factors may have unacceptably
+NB.   large elements
+NB.
 NB. References:
 NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
@@ -696,6 +703,10 @@ NB.   A -: clean U1 (mp mp (ct@[)) D
 NB. where
 NB.   'U1 D'=. pttrfu A
 NB.
+NB. Notes:
+NB. - if A is indefinite then factors may have unacceptably
+NB.   large elements
+NB.
 NB. TODO:
 NB. - U1 and D would be sparse
 
@@ -730,6 +741,8 @@ NB. - for U * L1 * P = A :
 NB.     berr := ||U * L1 * P - A|| / (ε * ||A|| * m)
 
 testgetrf=: 3 : 0
+EMPTY
+return.
   require '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
@@ -766,6 +779,8 @@ NB. - for P * U * T * U^H * P^_1 = A :
 NB.     berr := ||P * U * T * U^H * P^_1 - A|| / (ε * ||A|| * n)
 
 testhetrf=: 3 : 0
+EMPTY
+return.
   rcond=. (norm1 con (hetripl@hetrfpl)) y
 
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
@@ -781,7 +796,7 @@ NB. Description:
 NB.   Test:
 NB.   - choleski (math/misc addon)
 NB.   - potrf (math/lapack addon)
-NB.   - potrfpx (math/mt addon)
+NB.   - potrfx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix given
 NB.
 NB. Syntax:
@@ -801,13 +816,14 @@ testpotrf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'potrf'
 
-  rcond=. (norm1 con (potri@potrf)) y
+  rcond=. (norm1 con (potril@potrfl)) y
 
-  ('choleski'       tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('choleski_mt_'       tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
 
   ('potrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
 
   ('potrfl'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('potrflf'        tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
   ('potrfu'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*#)@[))))) y
 
   EMPTY
@@ -833,7 +849,7 @@ NB. - for U1 * D * U1^H = A :
 NB.     berr := ||U1 * D * U1^H - A|| / (ε * ||A|| * n)
 
 testpttrf=: 3 : 0
-  rcond=. (norm1 con (pttri@pttrf)) y
+  rcond=. (norm1 con (pttril@pttrfl)) y
 
   ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*c)@[))))) y
   ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*#)@[))))) y

@@ -37,7 +37,7 @@ NB.   in 1-norm:
 NB.     gecon=: norm1 con (getriul1p@getrful1p)
 NB. - noun, estimated rcond(A) of a Hermitian (symmetric)
 NB.   positive definite matrix A in ∞-norm:
-NB.     rcondA=. normi con (potri@potrf) A
+NB.     rcondA=. normi con (potril@potrfl) A
 NB. - noun, estimated rcond(Q) of a unitary (orthogonal)
 NB.   matrix Q in Frobenius-norm
 NB.     rcondQ=. norms con ct Q

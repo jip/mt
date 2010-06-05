@@ -151,10 +151,7 @@ NB.          diagonal entries, Cholesky triangle
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
-NB. - models LAPACK's xPOTRS
-NB.
-NB. TODO:
-NB. - implement LAPACK's xPOTRS and choose the best
+NB. - implements LAPACK's xPOTRS
 
 potrsax=:   [   trsmlhx trsmlx
 potrsatx=: ([ +@trsmlhx trsmlx ) +
@@ -193,7 +190,7 @@ NB.      from L1
 NB.   1) prepare input:
 NB.        be=. Bv ,. (0,e)
 NB.   2) do iterations k=1:n-1 by reversed suffix scan:
-NB.        btrash=. u~/\.&.|. be
+NB.        btrash=. u/\.&.|. be
 NB.      to find :
 NB.        b[k] := b[k] - b[k-1]*e[k-1]
 NB.   3) cut off trash column to extract updated Bv:
@@ -214,17 +211,20 @@ NB. where
 NB.   L1D=. pttrfl A
 NB.   Bv=. A mp Xv
 NB.
+NB. Notes:
+NB. - implements LAPACK's xPTTS2(0)
+NB. - if A is singular then solution Xx will be wrong
+NB. - if A is indefinite then solution Xx may be wrong
+NB.
 NB. References:
 NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157
-NB.
-NB. Notes:
-NB. - implements LAPACK's xPTTRS
 
-pttrsax=: $@] ($,) (_2 }."1 (]`((}:"1)@((}:@](-,0:)((* }:)~ {:))~/\.&.|.)@(,. (0&,)))`(_1 diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))
-
-pttrsatx=: + @ (pttrsax +)
+pttrsax=:  $@] ($,) (_2 }."1 (   ]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1   diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))
+pttrsatx=: $@] ($,) (_2 }."1 (   ]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1 +@diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))  NB. pttrsatx=: (<@:+@(0 {:: [))`0:`[} pttrsax ]
+pttrsxa=:  $@] ($,) (_2 }."1 (|:@]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1 +@diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))  NB. pttrsxa=: pttrsatx |:
+pttrsxat=: $@] ($,) (_2 }."1 (|:@]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1   diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))  NB. pttrsxat=: pttrsax |:
 
 NB. =========================================================
 NB. Test suite
@@ -308,7 +308,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testpotrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. 2 # _. NB. (norm1 con (potri@potrf))"2 (] ,: |:) A
+  'conA conAt'=. 2 # _. NB. (norm1 con (potril@potrfl))"2 (] ,: |:) A
   L=. potrfl A
 
   ('potrsax'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
@@ -339,7 +339,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testpttrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. 2 # _. NB. (norm1 con (pttri@pttrf))"2 (] ,: |:) A NB. ##################
+  'conA conAt'=. 2 # _. NB. (norm1 con (pttril@pttrfl))"2 (] ,: |:) A NB. ##################
   'L1 D'=. pttrfpl A
 
   ('pttrsax'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)

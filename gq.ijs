@@ -7,10 +7,8 @@ NB. unghrx     Generate an unitary (orthogonal) matrix which
 NB.            is defined as the product of elementary
 NB.            reflectors as returned by gehrdx
 NB.
-NB. testungq   Test Q generation algorithms by general matrix
-NB.            given
-NB. testunghr  Test Q generation algorithms by square matrix
-NB.            given
+NB. testungq   Test ungxx by general matrix given
+NB. testunghr  Test unghrx by square matrix given
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.

@@ -13,8 +13,7 @@ NB. pt        Pertranspose
 NB. cpt       Conjugate pertranspose
 NB. updl      Conj. to update array accepting linear IOS
 NB. gi        Conj. to evoke n-th verb from gerund m
-NB. hc        Take the 1st column
-NB. tc        Take the last column
+NB. rt        Restrained Take
 NB.
 NB. uncut     To frame matrix by border of zeros
 NB. append    Template adv. to make verbs to enhance append
@@ -159,8 +158,34 @@ cpt=: + @ pt                             NB. conjugate pertranspose
 updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'  NB. Conj. to update array accepting linear IOS
 gi=: 2 : '(n{m)`:6'                      NB. Conj. to evoke n-th verb from gerund m: m[n]
 
-hc=: , @ (_  1 & {.)                     NB. take the head column as 1-rank array from 2-rank array, using standard fill
-tc=: , @ (_ _1 & {.)                     NB. take the tail column as 1-rank array from 2-rank array, using standard fill
+NB. ---------------------------------------------------------
+NB. rt
+NB.
+NB. Description:
+NB.   Restrained Take. Just like Take verb ({.), but without
+NB.   overtake feature. Overtaking sizes mean "all elements
+NB.   along this axis".
+NB.
+NB. Examples:
+NB.    2 rt i. 3 4                  _2 rt i. 3 4
+NB. 0 1 2 3                      4 5  6  7
+NB. 4 5 6 7                      8 9 10 11
+NB.    2 30 rt i. 3 4               2 _ rt i. 3 4
+NB. 0 1 2 3                      0 1 2 3
+NB. 4 5 6 7                      4 5 6 7
+NB.    20 3 rt i. 3 4               _ 3 rt i. 3 4
+NB. 0 1  2                       0 1  2
+NB. 4 5  6                       4 5  6
+NB. 8 9 10                       8 9 10
+NB.    _2 _30 rt i. 3 4             _2 __ rt i. 3 4
+NB. 4 5  6  7                    4 5  6  7
+NB. 8 9 10 11                    8 9 10 11
+NB.    _20 _3 rt i. 3 4             __ _3 rt i. 3 4
+NB. 1  2  3                      1  2  3
+NB. 5  6  7                      5  6  7
+NB. 9 10 11                      9 10 11
+
+rt=: ((({.~#)~$),:[)({.~(>|)/`(_,:{:)})~^:(((>+./@:*. _~:])|)/@[)]
 
 NB. ---------------------------------------------------------
 NB. uncut
@@ -347,14 +372,14 @@ NB.          part within d-th diagonal
 NB.   S    ≥ 0, the length of d-th diagonal
 NB.
 NB. Examples:
-NB.    idmat 3                        idmat 3 4
-NB. 1 0 0                          1 0 0 0
-NB. 0 1 0                          0 1 0 0
-NB. 0 0 1                          0 0 1 0
-NB.    1 idmat 3 4                    _1 idmat 3 4
-NB. 0 1 0 0                        0 0 0 0
-NB. 0 0 1 0                        1 0 0 0
-NB. 0 0 0 1                        0 1 0 0
+NB.    idmat 3                      idmat 3 4
+NB. 1 0 0                        1 0 0 0
+NB. 0 1 0                        0 1 0 0
+NB. 0 0 1                        0 0 1 0
+NB.    1 idmat 3 4                  _1 idmat 3 4
+NB. 0 1 0 0                      0 0 0 0
+NB. 0 0 1 0                      1 0 0 0
+NB. 0 0 0 1                      0 1 0 0
 
 idmat=: (0 0 _&$:) :((1 , [) setdiag (0 $~ 2 $ ]))
 
@@ -378,19 +403,19 @@ NB.       diagonal
 NB.   S ≥ 0, the length of h-th diagonal
 NB.
 NB. Examples:
-NB.    diagmat 3 5 7                  0j0 diagmat 3 5 7
-NB. 3 0 0                          3 0 0
-NB. 0 5 0                          0 5 0
-NB. 0 0 7                          0 0 7
-NB.    1j0 diagmat 3 5 7              _1j0 diagmat 3 5 7
-NB. 0 3 0 0                        0 0 0
-NB. 0 0 5 0                        3 0 0
-NB. 0 0 0 7                        0 5 0
-NB.                                0 0 7
-NB.    0j1 diagmat 3 5 7              0j_1 diagmat 3 5 7
-NB. 3 0 0                          3 0 0 0
-NB. 0 5 0                          0 5 0 0
-NB. 0 0 7                          0 0 7 0
+NB.    diagmat 3 5 7                0 0 diagmat 3 5 7
+NB. 3 0 0                        3 0 0
+NB. 0 5 0                        0 5 0
+NB. 0 0 7                        0 0 7
+NB.    1 0 diagmat 3 5 7            _1 0 diagmat 3 5 7
+NB. 0 3 0 0                      0 0 0
+NB. 0 0 5 0                      3 0 0
+NB. 0 0 0 7                      0 5 0
+NB.                              0 0 7
+NB.    0 1 diagmat 3 5 7            0 _1 diagmat 3 5 7
+NB. 3 0 0                        3 0 0 0
+NB. 0 5 0                        0 5 0 0
+NB. 0 0 7                        0 0 7 0
 NB. 0 0 0
 
 diagmat=: (0 & $:) :(4 : 0)
@@ -408,18 +433,18 @@ NB.   Extract lower triangular (trapezoidal) matrix with
 NB.   optional shrinking
 NB.
 NB. Examples:
-NB.    trl >: i. 3 4                  0 trl >: i. 3 4
-NB. 1  0  0                        1  0  0
-NB. 5  6  0                        5  6  0
-NB. 9 10 11                        9 10 11
-NB.    1 trl >: i. 3 4                _1 trl >: i. 3 4
-NB. 1  2  0  0                     5  0
-NB. 5  6  7  0                     9 10
+NB.    trl >: i. 3 4                0 trl >: i. 3 4
+NB. 1  0  0                      1  0  0
+NB. 5  6  0                      5  6  0
+NB. 9 10 11                      9 10 11
+NB.    1 trl >: i. 3 4              _1 trl >: i. 3 4
+NB. 1  2  0  0                   5  0
+NB. 5  6  7  0                   9 10
 NB. 9 10 11 12
-NB.    1 trl >: i. 4 3                _1 trl >: i. 4 3
-NB.  1  2  0                        4  0  0
-NB.  4  5  6                        7  8  0
-NB.  7  8  9                       10 11 12
+NB.    1 trl >: i. 4 3              _1 trl >: i. 4 3
+NB.  1  2  0                      4  0  0
+NB.  4  5  6                      7  8  0
+NB.  7  8  9                     10 11 12
 NB. 10 11 12
 
 trl=: (>:~ 0&>.) tr trlcut
@@ -432,19 +457,19 @@ NB.   Extract upper triangular (trapezoidal) matrix with
 NB.   optional shrinking
 NB.
 NB. Examples:
-NB.    tru >: i. 3 4                  0 tru >: i. 3 4
-NB. 1 2  3  4                      1 2  3  4
-NB. 0 6  7  8                      0 6  7  8
-NB. 0 0 11 12                      0 0 11 12
-NB.    1 tru >: i. 3 4                _1 tru >: i. 3 4
-NB. 2 3  4                         1  2  3  4
-NB. 0 7  8                         5  6  7  8
-NB. 0 0 12                         0 10 11 12
-NB.    1 tru >: i. 4 3                _1 tru >: i. 4 3
-NB. 2 3                            1 2  3
-NB. 0 6                            4 5  6
-NB.                                0 8  9
-NB.                                0 0 12
+NB.    tru >: i. 3 4                0 tru >: i. 3 4
+NB. 1 2  3  4                    1 2  3  4
+NB. 0 6  7  8                    0 6  7  8
+NB. 0 0 11 12                    0 0 11 12
+NB.    1 tru >: i. 3 4              _1 tru >: i. 3 4
+NB. 2 3  4                       1  2  3  4
+NB. 0 7  8                       5  6  7  8
+NB. 0 0 12                       0 10 11 12
+NB.    1 tru >: i. 4 3              _1 tru >: i. 4 3
+NB. 2 3                          1 2  3
+NB. 0 6                          4 5  6
+NB.                              0 8  9
+NB.                              0 0 12
 
 tru=: (<:~ 0&<.) tr trucut
 
@@ -456,19 +481,19 @@ NB.   Extract strictly lower triangular (trapezoidal) matrix
 NB.   with optional shrinking
 NB.
 NB. Examples:
-NB.    trl0 >: i. 4 3                 0 trl0 >: i. 4 3
-NB.  0  0  0                        0  0  0
-NB.  4  0  0                        4  0  0
-NB.  7  8  0                        7  8  0
-NB. 10 11 12                       10 11 12
-NB.    1 trl0 >: i. 4 3               _1 trl0 >: i. 4 3
-NB.  1  0  0                        0  0 0
-NB.  4  5  0                        7  0 0
-NB.  7  8  9                       10 11 0
+NB.    trl0 >: i. 4 3               0 trl0 >: i. 4 3
+NB.  0  0  0                      0  0  0
+NB.  4  0  0                      4  0  0
+NB.  7  8  0                      7  8  0
+NB. 10 11 12                     10 11 12
+NB.    1 trl0 >: i. 4 3             _1 trl0 >: i. 4 3
+NB.  1  0  0                      0  0 0
+NB.  4  5  0                      7  0 0
+NB.  7  8  9                     10 11 0
 NB. 10 11 12
-NB.    1 trl0 >: i. 3 4               _1 trl0 >: i. 3 4
-NB. 1  0  0 0                      0 0
-NB. 5  6  0 0                      9 0
+NB.    1 trl0 >: i. 3 4             _1 trl0 >: i. 3 4
+NB. 1  0  0 0                    0 0
+NB. 5  6  0 0                    9 0
 NB. 9 10 11 0
 
 trl0=: (>~ 0&>.) tr trlcut
@@ -481,19 +506,19 @@ NB.   Extract strictly upper triangular (trapezoidal) matrix
 NB.   with optional shrinking
 NB.
 NB. Examples:
-NB.    tru0 >: i. 3 4                 0 tru0 >: i. 3 4
-NB. 0 2 3  4                       0 2 3  4
-NB. 0 0 7  8                       0 0 7  8
-NB. 0 0 0 12                       0 0 0 12
-NB.    1 tru0 >: i. 3 4               _1 tru0 >: i. 3 4
-NB. 0 3 4                          1 2  3  4
-NB. 0 0 8                          0 6  7  8
-NB. 0 0 0                          0 0 11 12
-NB.    1 tru0 >: i. 4 3               _1 tru0 >: i. 4 3
-NB. 0 3                            1 2 3
-NB. 0 0                            0 5 6
-NB.                                0 0 9
-NB.                                0 0 0
+NB.    tru0 >: i. 3 4               0 tru0 >: i. 3 4
+NB. 0 2 3  4                     0 2 3  4
+NB. 0 0 7  8                     0 0 7  8
+NB. 0 0 0 12                     0 0 0 12
+NB.    1 tru0 >: i. 3 4             _1 tru0 >: i. 3 4
+NB. 0 3 4                        1 2  3  4
+NB. 0 0 8                        0 6  7  8
+NB. 0 0 0                        0 0 11 12
+NB.    1 tru0 >: i. 4 3             _1 tru0 >: i. 4 3
+NB. 0 3                          1 2 3
+NB. 0 0                          0 5 6
+NB.                              0 0 9
+NB.                              0 0 0
 
 tru0=: (<~ 0&<.) tr trucut
 
@@ -505,19 +530,19 @@ NB.   Extract unit lower triangular (trapezoidal) matrix with
 NB.   optional shrinking
 NB.
 NB. Examples:
-NB.    trl1 >: i. 4 3                 0 trl1 >: i. 4 3
-NB.  1  0  0                        1  0  0
-NB.  4  1  0                        4  1  0
-NB.  7  8  1                        7  8  1
-NB. 10 11 12                       10 11 12
-NB.    1 trl1 >: i. 4 3               _1 trl1 >: i. 4 3
-NB.  1  1  0                        1  0 0
-NB.  4  5  1                        7  1 0
-NB.  7  8  9                       10 11 1
+NB.    trl1 >: i. 4 3               0 trl1 >: i. 4 3
+NB.  1  0  0                      1  0  0
+NB.  4  1  0                      4  1  0
+NB.  7  8  1                      7  8  1
+NB. 10 11 12                     10 11 12
+NB.    1 trl1 >: i. 4 3             _1 trl1 >: i. 4 3
+NB.  1  1  0                      1  0 0
+NB.  4  5  1                      7  1 0
+NB.  7  8  9                     10 11 1
 NB. 10 11 12
-NB.    1 trl1 >: i. 3 4               _1 trl1 >: i. 3 4
-NB. 1  1  0 0                      1 0
-NB. 5  6  1 0                      9 1
+NB.    1 trl1 >: i. 3 4             _1 trl1 >: i. 3 4
+NB. 1  1  0 0                    1 0
+NB. 5  6  1 0                    9 1
 NB. 9 10 11 1
 
 trl1=: (0&$:) :([ trl ((1 , [) setdiag ]))
@@ -530,18 +555,18 @@ NB.   Extract unit upper triangular (trapezoidal) matrix with
 NB.   optional shrinking
 NB.
 NB. Examples:
-NB.    tru1 >: i. 3 4                 0 tru1 >: i. 3 4
-NB. 1 2 3  4                       1 2 3  4
-NB. 0 1 7  8                       0 1 7  8
-NB. 0 0 1 12                       0 0 1 12
-NB.    1 tru1 >: i. 3 4               _1 tru1 >: i. 3 4
-NB. 1 3 4                          1 2  3  4
-NB. 0 1 8                          1 6  7  8
-NB. 0 0 1                          0 1 11 12
-NB.    1 tru1 >: i. 4 3               _1 tru1 >: i. 4 3
-NB. 1 3                            1 2 3
-NB. 0 1                            1 5 6
-NB.                                0 1 9
-NB.                                0 0 1
+NB.    tru1 >: i. 3 4               0 tru1 >: i. 3 4
+NB. 1 2 3  4                     1 2 3  4
+NB. 0 1 7  8                     0 1 7  8
+NB. 0 0 1 12                     0 0 1 12
+NB.    1 tru1 >: i. 3 4             _1 tru1 >: i. 3 4
+NB. 1 3 4                        1 2  3  4
+NB. 0 1 8                        1 6  7  8
+NB. 0 0 1                        0 1 11 12
+NB.    1 tru1 >: i. 4 3             _1 tru1 >: i. 4 3
+NB. 1 3                          1 2 3
+NB. 0 1                          1 5 6
+NB.                              0 1 9
+NB.                              0 0 1
 
 tru1=: (0&$:) :([ tru ((1 , [) setdiag ]))

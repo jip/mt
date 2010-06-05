@@ -418,7 +418,7 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. tungq
-NB. Test Q generation algorithms: unglq unql ungqr ungrq by
+NB. Test Q generation algorithms: unglq ungql ungqr ungrq by
 NB. general matrix
 NB.
 NB. Syntax: tungq A

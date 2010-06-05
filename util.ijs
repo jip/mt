@@ -1,8 +1,11 @@
 NB. util.ijs
 NB. Linear time-invariant (LTI) system's utilities
 NB.
+NB. expm       calculate matrix exponent and Cauchy integral
+NB. logm       calculate matrix logarithm
 NB. powm       raise table y to power x
 NB. powsm      make report of table y powers
+NB.
 NB. shiftdiag  add element[s from] x to diagonal of table y
 NB. logspace   create vector of logarithmically spaced numbers
 NB. plot       plot data as multiplot or subplots grid
@@ -38,6 +41,47 @@ NB. Local utilities
 
 NB. =========================================================
 NB. Interface verbs
+
+NB. ---------------------------------------------------------
+NB. expm                                                  1 0
+NB. Calculate matrix exponent
+NB.   Φ(ts) = exp(A*ts)
+NB. and Cauchy integral
+NB.   Γ(ts) = Integral(exp(A*(ts-t))*dt,t=0..ts)*B
+NB. for sampe time ts
+NB.
+NB. Syntax:
+NB.   'Phi Gamma'=. VPIVB expm ts
+NB. where:
+NB.   VPIVB - boxed quad (V;Λ;inv(V);B), where
+NB.           V      - Nx-by-Nx matrix, where columns are
+NB.                    right eigenvector of A
+NB.           Λ      - Nx-vector of eigenvalues {λ[i]} of A,
+NB.                    also known as poles of system
+NB.           inv(V) - Nx-by-Nx matrix, inversion of V
+NB.           B      - Nx-by-Nu control input matrix
+NB.           A      - Nx-by-Nx state matrix
+NB.   ts    > 0, sample time
+NB.   Phi   - Nx-by-Nx table, matrix exponent
+NB.   Gamma - Nx-by-Nu table, Cauchy intergal
+NB.
+NB. Applications:
+NB.   'Phi Gamma'=. (A;B) ((prexpm @ [) expm ]) ts
+
+expm=: (4 : 0) " 1 0
+  'V Lambda invV B'=. x
+
+  NB. A*V=V*diagmat(Λ) <=> A=V*diagmat(Λ)*inv(V) =>
+  NB. exp(A*ts) = V*exp(diagmat(Λ*ts))*inv(V) = V*diagmat(exp(Λ*ts))*inv(V)
+  Phi=. V mp ((^ Lambda * y) * invV)
+
+  NB. Integral(exp(λ*(ts-t))*dt,t=0..ts) = γ = (exp(λ*ts)-1)/λ, if λ≠0
+  NB.                                        = ts,              if λ=0, =>
+  NB. Integral(exp(A*(ts-t))*dt,t=0..ts) = V*diagmat({γ[i]})*inv(V)
+  Gamma=. V mp ((y ([ ((I. @: (0 = ])) }) (((- & 1) @: (^ @: *)) % ])) Lambda) * invV) mp B
+
+  Phi;Gamma
+)
 
 NB. ---------------------------------------------------------
 NB. powm

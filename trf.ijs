@@ -149,6 +149,72 @@ getrfpl1ustepa=: 3 : 0
   p ; pfx ; sfxL ; sfxR
 )
 
+NB. (-: (clean@((/: @ (0&({::))) { ((trl1 mp tru)@(1&({::))))@getrfpl1ua)) A
+NB. 'ip L1U'=. getrfpl1ua A
+
+getrfpl1ua=: getf2pl1ua`(((0&{),((,&.>)/@(1 2&{))) @ (getrfpl1ustepa ^: ((>.@(TRFNB %~ (<./@$)))`((i.@#);(0&{.);(_ 0 {. ]);]))))@.(TRFNB<(<./@$))
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+getf2pl1ustepb=: (((1;0)&({::)) (([ C.~ (<@~.@(],]+({~(<@(_1&,)))))))~ ((<@}.) ((([ (0}"0 1) (] - ((0:`(_1,({:@[))`[}) */ (({~ {:)~))))~ ((({`[`([ _1} (]%{))})~ iofmaxm)@:({."1))) upd1) (0&({::)))) ; (     }.&.>@}.)
+
+getf2pl1ub=: 0 {:: (getf2pl1ustepb ^: ((_1 0&(ms $))`(];((;&i.)/@$))))
+
+
+NB. Aperm=. invpraw laswp A
+laswp=: (C.^:_1~ <@~."1@((+ ,. ]) i.@#))~
+
+NB. A=. invpraw swp2fw Aperm
+swp2fw=: (C.~ <@~."1@((+ ,. ]) i.@#))~
+
+NB.        0     1        2     3   4          5          6
+NB. input: 0:j-1 j:j+bs-1 j:m-1 j:m j+bs-1:m-1 j+bs-1:n-1 _1
+NB.
+NB. ioseY: 3;1
+NB. iospi: 6;1
+NB. iosL: 2;0
+NB. iosC: 2;5
+NB. iosA11: 1;1
+NB. iosA12: 1;5
+NB. iosA21: 4;1
+NB. iosA22: 4;5
+NB.
+NB.         0     1     2    3    4      5      6      7
+NB. output: ioseY iospi iosL iosC iosA11 iosA12 iosA21 iosA22
+NB.
+NB. 'ioseY iospi iosL iosC iosA11 iosA12 iosA21 iosA22'=. ios getrfpl1umkiosb A
+
+getrfpl1umkiosb=: <"1@((4 2,7 2,3 1,3 6,2 2,2 6,5 2,:5 6)&{)
+
+NB.         0         1               2         3       4              5              6
+NB. input:  0:j-1     j:j+NB-1        j:m-1     j:m     j+NB-1:m-1     j+NB-1:n-1     _1
+NB.
+NB.         0         1               2         3       4              5              6
+NB. output: 0:j+NB-1  j+NB:j+NB+bs-1  j+NB:m-1  j+NB:m  j+NB+nb-1:m-1  j+NB+nb-1:n-1  _1
+NB.
+NB. 'i0 i1 i2 i3 i4 i5 i6'=. getrfpl1uchgiosb (i0;i1;i2;i3;i4;i5;i6)
+
+getrfpl1uchgiosb=: 3 : 0
+  'i0 i1 i2 i3 i4 i5 i6'=. }. y
+  nb=. TRFNB <. (# i4) <. (# i5)
+  (i0 , i1) ; (nb rt i4) ; (TRFNB }. i2) ; (TRFNB }. i3) ; (TRFNB }. i4) ; (TRFNB }. i5) ; i6
+)
+
+getrfpl1ustepb=: (getrfpl1umkiosb ([ ([ ([ ([ (-`mp map3i 7 6 5 7) (trtrsl1x map2i 4 5 5)) (laswp map2i 1 3 3)) (laswp map2i 1 2 2)) (getf2pl1ub upd1i 0)) (0&({::))) ; getrfpl1uchgiosb
+
+NB. ios=. getrfpl1uios0b ((m+1),n)
+getrfpl1uios0b=: 3 : 0
+  m=. <: {. 'm1 n'=. y
+  nb=. TRFNB <. m <. n
+  (i.0);(i.nb);(i.m);(i.m1);(m ht2ios nb);(n ht2ios nb);_1
+)
+
+NB. 'invpraw L1 U'=. ({: ; ((trl1 ; tru)@}:))@getrfpl1ub A
+NB. (-: (clean@(((_1 0&ms@$) {. {:) swp2fw ((trl1 mp tru)@}:))@getrfpl1ub)) A
+
+getrfpl1ub=: (getf2pl1ub`(0 {:: (getrfpl1ustepb ^: ((>.@(TRFNB %~ (_1 0&(ms $))))`(];(getrfpl1uios0b@$)))))@.(TRFNB<(_1 0&(ms $)))) @ (,&0)
+
+
 NB. =========================================================
 NB. Interface
 
@@ -166,16 +232,6 @@ NB.   A  - m*n matrix
 NB.
 NB. Notes:
 NB. - this is a right-looking version of algorithm
-
-getrfpl1ua=: getf2pl1ua`(((0&{),((,&.>)/@(1 2&{))) @ (getrfpl1ustepa ^: ((>.@(TRFNB %~ (<./@$)))`((i.@#);(0&{.);(_ 0 {. ]);]))))@.(TRFNB<(<./@$))
-
-
-getf2pl1ustepb=: (((1;0)&({::)) (([ C.~ (<@~.@(],]+({~(<@(_1&,)))))))~ ((<@}.) ((([ (0}"0 1) (] - ((0:`(_1,({:@[))`[}) */ (({~ {:)~))))~ ((({`[`([ _1} (]%{))})~ iofmaxm)@:({."1))) upd1) (0&({::)))) ; (     }.&.>@}.)
-
-getf2pl1ub=: 0 {:: (getf2pl1ustepb ^: ((_1 0&(ms $))`(];((;&i.)/@$))))
-
-
-
 
 
 NB. =========================================================

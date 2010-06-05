@@ -178,6 +178,9 @@ NB.   (-: (((trl @ (0 _1 & }.)) mp unglq) @ gelqf)) A
 NB.
 NB. Notes:
 NB. - emulates LAPACK's xGELQF
+NB.
+NB. TODO:
+NB. - consider >. instead of <.
 
 qfi=: (<.@(QFNB %~ (_1+QFNB-QFNX)&+))M.
 

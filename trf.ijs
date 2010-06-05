@@ -32,7 +32,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFNB=: 3  NB. block size limit, >0
+TRFNB=: 64  NB. block size limit, >0
 
 NB. ---------------------------------------------------------
 NB. hetf2pl
@@ -75,59 +75,11 @@ NB.
 NB. TODO:
 NB. - T would be sparse
 
-NB. NB. gi        Conj. to evoke m-th verb from gerund n
-NB. gi=: 2 : '(m{n)`:6'                    NB. Conj. to evoke m-th verb from gerund n: n[m]
-NB. 
-NB. tile=: 1 : '[`((0 gi m)~)`((1 gi m)&#)`(2 gi m)`(0 gi m)`] fork3'
-NB. 
-NB. stitcht=: {.  `   >. `,. tile
-NB. stitchb=: {.  `(-@>.)`,. tile
-NB. appendl=: {."1`   >. `,  tile
-NB. appendr=: {."1`(-@>.)`,  tile
+appendl=: , `([, (({."1~    ({:@$) )~))`(({."1~    ({:@$) ), ]) @. (*@-&({:@$))
+appendr=: , `([, (({."1~ (-@({:@$)))~))`(({."1~ (-@({:@$))), ]) @. (*@-&({:@$))
 
-NB. stitcht=: ,.`([,.(({.~    # )~))`(({.~    # ),.]) @. (*@-&#)
-NB. stitchb=: ,.`([,.(({.~ (-@#))~))`(({.~ (-@#)),.]) @. (*@-&#)
-
-stitchrb=: [ ,. ({.~ (-@#))~            NB. stitch right aligned down to the left
-
-NB. ---------------------------------------------------------
-NB. xsh
-NB.
-NB. Description:
-NB.   Extend [dimensions within] shape
-NB.
-NB. Syntax:
-NB.   eA=. dsh xsh A
-NB. where
-NB.   A   - sh-array to extend by zeros
-NB.   dsh - r-vector or scalar, integer, delta of shape,
-NB.         negative element forces corresponding dimension
-NB.         extending from the head
-NB.   eA  - (|dsh|+sh)-array, being A extended by zeros
-NB.   sh  - r-vector, the shape of A
-NB.   r   ≥ 0, the rank of A and eA
-NB.
-NB. Examples:
-NB.    0 xsh 2 2 $ 2          _1 xsh 2 2 $ 2
-NB. 2 2                    0 0 0
-NB. 2 2                    0 2 2
-NB.                        0 2 2
-NB.    1 3 xsh 2 2 $ 2        1 _3 xsh 2 2 $ 2
-NB. 2 2 0 0 0              0 0 0 2 2
-NB. 2 2 0 0 0              0 0 0 2 2
-NB. 0 0 0 0 0              0 0 0 0 0
-NB.    _1 3 xsh 2 2 $ 2       _1 _3 xsh 2 2 $ 2
-NB. 0 0 0 0 0              0 0 0 0 0
-NB. 2 2 0 0 0              0 0 0 2 2
-NB. 2 2 0 0 0              0 0 0 2 2
-
-xsh=. [: : (((condneg"0 + [) $) {. ])
-
-jomat=: (((, 0:)~ #) xsh [) stitchrb ]  NB. make jordain matrix from blocks x and y
-
-NB. 'ip L1 T permHE5 H'=. 0 0 0 0 hetf2pl HE5
-NB. 'ip L1 T permA H'=. l0 hetf2pl A
-NB. 'ip L1 T permA H h'=. step (ip;L1;T;A;H;h)
+stitcht=: ,.`([,.(({.  ~        #  )~))`(({.~          #  ),.]) @. (*@-&    # )
+stitchb=: ,.`([,.(({.  ~ (-@    # ))~))`(({.~ (-@      # )),.]) @. (*@-&    # )
 
 NB. ---------------------------------------------------------
 NB. lahefpl
@@ -182,47 +134,26 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB. 
 
-NB. XXX lahefpl_mt_ ((i.5);(0 {."1 HE5);(5 ($!.0) 1);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
-NB. XXX lahefpl_mt_ ((i.10);(0 {."1 HEci10);(10 ($!.0) 1);(9 # 0);(0 ({,) HEci10);(i.0);HEci10;(1 {."1 HEci10);(9 # 0);((< (<0);0) { HEci10))
+NB.    clean lahefplc_mt_ ((i.10);(0 {."1 HE10);(10 ($!.0) 1);(,0);(0 ({,) HE10);(i.0);HE10;(0 {."1 HE10);({."1 HE10);((< (<0);0) { HE10))
+NB.    clean lahefpur_mt_ ((i.10);(0 {. HE10);(10 ($!.0) 1);(,0);(0 ({,) HE10);(i.0);HE10;(0 {. HE10);({. HE10);((< 0;(<<0)) { HE10))
+NB. 
+NB.    'ip U1 T'=. clean hetrfpur_mt_ HE10
+NB.    HE10 -: clean (/: ip) sp_mt_ U1 (mp~ mp~ (ct_mt_ @ [)) T
+NB. 1
+NB.    'ip L1 T'=. clean hetrfplc_mt_ HE10
+NB.    HE10 -: clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
+NB. 1
+NB.    HE1000=. (_1 1 0 4 _6 4 & (gemat_mt_ j. gemat_mt_)) hemat_mt_ 1000 1000
 
-NB. lahefplo_mt_ ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
-NB. lahefplo_mt_ ((i.10);(10 1 ($!.0) 1);(9 # 0);(9 # 0);(0 ({,) HEci10);(i.0);HEci10;(1 {."1 HEci10);(9 # 0);((< (<0);0) { HEci10))
+NB. column-wise traversing
 
-NB. lahefplo=: (3 : 0) ^: ((<:TRFNB)<.(#@(2 & {::)))
-NB.   'ip L1 l0 l1 t0 t1 A H h0 h1'=. y
-NB.   'n j'=. $ L1
-NB.   l1=. h1 - l0 * ({: t0)
-NB.   q=. liofmax l1
-NB.   dip0=. 0 lios2cp q
-NB.   dip=. j (+ &. >) dip0
-NB.   l0=. dip0 C. l0
-NB.   l1=. dip0 C. l1
-NB.   ip=. dip C. ip
-NB.   L1=. dip C. L1
-NB.   H=. dip C. H
-NB.   A=. dip sp A
-NB.   t01=. + t10=. {. l1
-NB.   l1=. l1 % t10
-NB.   h0=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j { L1)
-NB.   L1=. L1 stitchrb l1
-NB.   H=. H stitchrb (t01 , h0)
-NB.   h1=. h0 - l0 * t01
-NB.   t11=. {. h1
-NB.   t0=. t0 , t11
-NB.   t1=. t1 , t01
-NB.   ip ; L1 ; (}. l1) ; l0 ; t0 ; t1 ; A ; H ; (}. h0) ; (}. h1)
-NB. )
-
-NB. lahefpl_mt_ ((i.5);(0 {."1 HE5);(5 ($!.0) 1);(,0);(0 ({,) HE5);(i.0);HE5;(0 {."1 HE5);({."1 HE5);((< (<0);0) { HE5))
-NB. lahefpl_mt_ ((i.10);(0 {."1 HEci10);(10 ($!.0) 1);(,0);(0 ({,) HEci10);(i.0);HEci10;(0 {."1 HEci10);({."1 HEci10);((< (<0);0) { HEci10))
-
-lahefpl=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
+lahefplc=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
   'ip L1 l0 l1 t0 t1 A H h0 h1'=. y
-  L1=. L1 stitchrb l0
+  L1=. L1 stitchb l0
   l0=. }. l0
   'n j'=. $ L1
   l1=. h1 - l0 * ({: t0)
-  H=. H stitchrb h0                NB. h0 instead of (({: t1) , h0)
+  H=. H stitchb h0                NB. h0 instead of (({: t1) , h0)
   dip0=. < 0 , ((i.>./)@soris) l1  NB. non-standard cycle permutation!
   dip=. j (+ &. >) dip0            NB. non-standard cycle permutation!
   ip=. dip (C. :: ]) ip
@@ -247,7 +178,7 @@ NB. 'ip L1 T permA H'=. step (ip;L1;T;A;H)
 NB. 'ipi L1i Ti Ai Hi hi'=. (9 # 0) hetf2pl_mt_ HEci10
 NB. ((((] dhs2lios (_1,-))/@$) ({,) ]) L1i) hetf2pl_mt_ (((_1 ({,) Ti) , hi) (< a: ; 0)} (2 2 }. HEci10))
 
-hetrfpl=: 3 : 0
+hetrfplc=: 3 : 0
   n=. # y
   ip=. i. n
   t1=. i. 0
@@ -255,18 +186,75 @@ hetrfpl=: 3 : 0
   l0i=. n ($!.0) 1
   t0=. 0 ({,) y
   for_k. n (] dhs2lios (0,(>.@%))) TRFNB do.
-    'ipi L1i l0i l1i t0i t1i y Hi h0i h1i'=. (lahefpl dbg 'lahefpl') ((i. # y);(0 {."1 y);l0i;(,0);({:t0);(i.0);y;(0 {."1 y);({."1 y);((< (<0);0) { y))
+    'ipi L1i l0i l1i t0i t1i y Hi h0i h1i'=. lahefplc ((i. # y);(0 {."1 y);l0i;(,0);({:t0);(i.0);y;(0 {."1 y);({."1 y);((< (<0);0) { y))
     dip=. k (i.@[ , +) ipi         NB. force permutation to act on tail part only
     ip=. dip C. ip
-    L1=. (dip C. L1) stitchrb L1i
+    L1=. (dip C. L1) stitchb L1i
 NB.    l0i=. 1 (0}) l0i            NB. to guarantee 1 at head
     t0=. t0 , (}. t0i)
     t1=. t1 , t1i
-    y=. ((2 # TRFNB) }. y) - ((Hi ((((mp ct) dbg 'mpct') &(TRFNB&}.)) dbg 'mpct&NB}.') L1i) + ((l1i * {: t1i) */ + l0i))
+    y=. ((2 # TRFNB) }. y) - ((Hi ((mp ct) &(TRFNB&}.)) L1i) + ((l1i * {: t1i) */ + l0i))
   end.
   T=. ((+t1);_1) setdiag (t1;1) setdiag (t0;0) setdiag (2 # n) $ 0
   ip ; L1 ; T
 )
+
+NB. row-wise traversing
+
+lahefpur=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
+  'ip U1 u0 u1 t0 t1 A H h0 h1'=. y
+  U1=. U1 appendr u0
+  u0=. }. u0
+  'j n'=. $ U1
+  u1=. h1 - u0 * ({: t0)
+  H=. H appendr h0                 NB. h0 instead of (({: t1) , h0)
+  dip0=. < 0 , ((i.>./)@soris) u1  NB. non-standard cycle permutation!
+  dip=. j (+ &. >) dip0            NB. non-standard cycle permutation!
+  ip=. dip (C. :: ]) ip
+  U1=. dip (C."1 :: ]) U1
+  u0=. dip0 (C. :: ]) u0
+  u1=. dip0 (C. :: ]) u1
+  t10=. + t01=. (0&{ :: ]) u1
+  u1=. u1 % t01                    NB. 1 at head is not guaranteed!
+  A=. dip (sp :: ]) A
+  H=. dip (C."1 :: ]) H
+  h0=. ((j (dhs2lios@(((* >:)),-~)) n) ({,) A) - (+ j ({"1 :: 0:) U1) mp (j }."1  H)  NB. if j is n then use 0: instead of (j {"1 U1)
+  h1=. h0 - t10 * u0
+  t11=. 9 o. 0 ({ :: ]) h1         NB. CHECKME: is Re() necessary?; if h1 is (i.0) then use h1 instead of ({.h1)
+  t0=. t0 , t11
+  t1=. t1 , t10
+  ip ; U1 ; u1 ; u0 ; t0 ; t1 ; A ; H ; h0 ; (}. h1)
+)
+
+NB. 'ip U1 T'=. hetrfpu A
+NB. 'ip U1 T permA H'=. step (ip;U1;T;A;H)
+
+NB. 'ipi U1i Ti Ai Hi hi'=. (9 # 0) hetf2pl_mt_ HEci10
+NB. ((((] dhs2lios (_1,-))/@$) ({,) ]) U1i) hetf2pl_mt_ (((_1 ({,) Ti) , hi) (< a: ; 0)} (2 2 }. HEci10))
+
+hetrfpur=: 3 : 0
+  n=. # y
+  ip=. i. n
+  t1=. i. 0
+  U1=. 0 {. y
+  u0i=. n ($!.0) 1
+  t0=. 0 ({,) y
+  for_k. n (] dhs2lios (0,(>.@%))) TRFNB do.
+    'ipi U1i u0i u1i t0i t1i y Hi h0i h1i'=. lahefpur ((i. # y);(0 {. y);u0i;(,0);({:t0);(i.0);y;(0 {. y);({. y);((< 0;(<<0)) { y))
+    dip=. k (i.@[ , +) ipi         NB. force permutation to act on tail part only
+    ip=. dip C. ip
+    U1=. (dip C."1 U1) appendr U1i
+NB.    u0i=. 1 (0}) u0i            NB. to guarantee 1 at head
+    t0=. t0 , (}. t0i)
+    t1=. t1 , t1i
+    y=. ((2 # TRFNB) }. y) - ((Hi ((mp~ ct) &(TRFNB&(}."1))) U1i) + (((+ u0i) */ ({: t1i) * u1i)))
+  end.
+  T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
+  ip ; U1 ; T
+)
+
+
+
 NB. lahefpl ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))
 NB.   'ip L1 l0 l1 t0 t1 A H h0 h1'=. y
 NB.    lahefpl_mt_ ((i.5);(5 1 ($!.0) 1);(4 # 0);(4 # 0);(0 ({,) HE5);(i.0);HE5;(1 {."1 HE5);(4 # 0);((< (<0);0) { HE5))

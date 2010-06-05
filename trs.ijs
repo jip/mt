@@ -17,17 +17,17 @@ NB.            side (RHS), X is unknown solution
 NB. potrsxxx   Solve equation (op(A) * X = B) or
 NB.            (X * op(A) = B), where A is a Hermitian
 NB.            (symmetric) positive definite matrix,
-NB.            represented as Cholesky triangle; op(A) is
-NB.            either A itself, or A^T (the transposition of
-NB.            A); B is known right-hand side (RHS), X is
-NB.            unknown solution
+NB.            represented in factored form; op(A) is either
+NB.            A itself, or A^T (the transposition of A); B
+NB.            is known right-hand side (RHS), X is unknown
+NB.            solution
 NB. pttrsxxx   Solve equation (op(A) * X = B) or
 NB.            (X * op(A) = B), where A is a Hermitian
 NB.            (symmetric) positive definite tridiagonal
-NB.            matrix, represented as superdiagonal linked to
-NB.            diagonal; op(A) is either A itself, or A^T
-NB.            (the transposition of A); B is known
-NB.            right-hand side (RHS), X is unknown solution
+NB.            matrix, represented in factored form; op(A) is
+NB.            either A itself, or A^T (the transposition of
+NB.            A); B is known right-hand side (RHS), X is
+NB.            unknown solution
 NB.
 NB. testgetrs  Test getrsxxx by general matrix given
 NB. testhetrs  Test hetrsxxx by Hermitian (symmetric) matrix
@@ -75,6 +75,7 @@ NB.   ip   - n-vector, rows inversed permutation of A
 NB.   L1U  - n×n-matrix, upper triangle contains U, and
 NB.          strict lower triangle contains L1 without unit
 NB.          diagonal
+NB.   P    - n×n-matrix, rows permutation of A
 NB.   L1   - n×n-matrix, unit lower triangular
 NB.   U    - n×n-matrix, upper triangular
 NB.   nrhs ≥ 0
@@ -111,6 +112,7 @@ NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
 NB.   ip   - n-vector, full inversed permutation of A
+NB.   P    - n×n-matrix, full permutation of A
 NB.   L1   - n×n-matrix, unit lower triangular
 NB.   T    - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.   nrhs ≥ 0
@@ -232,7 +234,7 @@ NB. Notes:
 NB. - 'continued fractions' approach is useless here since
 NB.   infix scan is non-consequtive
 NB. - L1 and D should be sparse
-NB. - implement LAPACK's xPTTRS
+NB. - implements LAPACK's xPTTRS
 
 pttrsax=: 4 : 0
   'L1 D'=. x
@@ -385,8 +387,11 @@ NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - test by random square real matrix with limited values'
-NB.   amplitudes:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     (? @ $ 0:) testtrs_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
 NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtrs_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrs_mt_ 150 200

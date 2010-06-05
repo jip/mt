@@ -181,8 +181,11 @@ NB.   mkge - monadic verb to generate random non-singular
 NB.          general y-matrix (shape is taken from y)
 NB.
 NB. Application:
-NB. - test by random square real matrix with limited values'
-NB.   amplitudes:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     (? @ $ 0:) testfri_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
 NB.     (_1 1 0 16 _6 4 & gemat_mt_) testfri_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testfri_mt_ 150 200

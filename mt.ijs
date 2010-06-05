@@ -97,7 +97,7 @@ require '~user/projects/mt/util.ijs'    NB. Utilities
 require '~user/projects/mt/ios.ijs'     NB. IOS
 require '~user/projects/mt/norm.ijs'    NB. Norms
 require '~user/projects/mt/struct.ijs'  NB. Structure handlers
-require '~user/projects/mt/rand.ijs'    NB. Random objects
+require '~user/projects/mt/rand.ijs'    NB. Random arrays
 require '~user/projects/mt/con.ijs'     NB. Condition number
 
 NB. low-level
@@ -147,8 +147,11 @@ NB.   vtest - verb to test algorithms; is called as:
 NB.              vtest (m,n)
 NB.
 NB. Application:
-NB. - test by random square real matrix with limited values'
-NB.   amplitudes:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     (? @ $ 0:) test_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
 NB.     (_1 1 0 16 _6 4 & gemat_mt_) test_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200

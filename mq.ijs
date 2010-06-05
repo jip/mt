@@ -586,8 +586,11 @@ NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - test by random square real matrix with limited values'
-NB.   amplitudes:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     (? @ $ 0:) testmq_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
 NB.     (_1 1 0 16 _6 4 & gemat_mt_) testmq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testmq_mt_ 150 200

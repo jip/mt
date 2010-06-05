@@ -40,13 +40,14 @@ NB. Description:
 NB.   Triangular factorization with full pivoting of a
 NB.   Hermitian (symmetric) matrix:
 NB.     P * L1 * T * L1^H * P^_1 = A
-NB.    by non-blocked version of Aasen's algorithm
+NB.   by non-blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
 NB.     'ip L1 T'=. hetf2pl A
 NB. where
 NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
 NB.   ip  - n-vector, full inversed permutation of A
+NB.   P   - n×n-matrix, full permutation of A
 NB.   L1  - n×n-matrix, unit lower triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.
@@ -107,13 +108,14 @@ NB. Description:
 NB.   Triangular factorization with full pivoting of a
 NB.   Hermitian (symmetric) matrix:
 NB.     P * U1 * T * U1^H * P^_1 = A
-NB.    by non-blocked version of Aasen's algorithm
+NB.   by non-blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
 NB.     'ip U1 T'=. hetf2pu A
 NB. where
 NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
 NB.   ip  - n-vector, full inversed permutation of A
+NB.   P   - n×n-matrix, full permutation of A
 NB.   U1  - n×n-matrix, unit upper triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.
@@ -179,6 +181,7 @@ NB.   A   - m×n-matrix to factorize
 NB.   ip  - n-vector, columns inversed permutation of A
 NB.   LU1 - m×n-matrix, lower triangle contains L, and strict
 NB.         upper triangle contains U1 without unit diagonal
+NB.   P   - n×n-matrix, columns permutation of A
 NB.   L   - m×k-matrix, lower triangular
 NB.   U1  - k×n-matrix, unit upper triangular
 NB.   k   = min(m,n)
@@ -234,6 +237,7 @@ NB.   A   - m×n-matrix to factorize
 NB.   ip  - m-vector, rows inversed permutation of A
 NB.   L1U - m×n-matrix, upper triangle contains U, and strict
 NB.         lower triangle contains L1 without unit diagonal
+NB.   P   - n×n-matrix, rows permutation of A
 NB.   L1  - m×k-matrix, unit lower triangular
 NB.   U   - k×n-matrix, upper triangular
 NB.   k   = min(m,n)
@@ -292,6 +296,7 @@ NB.   ip  - m-vector, rows inversed permutation of A
 NB.   A   - m×n-matrix to factorize
 NB.   U1L - m×n-matrix, lower triangle contains L, and strict
 NB.         upper triangle contains U1 without unit diagonal
+NB.   P   - n×n-matrix, rows permutation of A
 NB.   L   - m×k-matrix, lower triangular
 NB.   U1  - k×n-matrix, unit upper triangular
 NB.   k   = min(m,n)
@@ -347,6 +352,7 @@ NB.   A   - m×n-matrix to factorize
 NB.   ip  - n-vector, columns inversed permutation of A
 NB.   UL1 - m×n-matrix, upper triangle contains U, and strict
 NB.         lower triangle contains L1 without unit diagonal
+NB.   P   - n×n-matrix, columns permutation of A
 NB.   L   - m×k-matrix, unit lower triangular
 NB.   U1  - k×n-matrix, upper triangular
 NB.   k   = min(m,n)
@@ -394,13 +400,14 @@ NB. Description:
 NB.   Triangular factorization with full pivoting of a
 NB.   Hermitian (symmetric) matrix:
 NB.     P * L1 * T * L1^H * P^_1 = A
-NB.    by blocked version of Aasen's algorithm
+NB.   by blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
 NB.     'ip L1 T'=. hetrfpl A
 NB. where
 NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
 NB.   ip  - n-vector, full inversed permutation of A
+NB.   P   - n×n-matrix, full permutation of A
 NB.   L1  - n×n-matrix, unit lower triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.
@@ -435,13 +442,14 @@ NB. Description:
 NB.   Triangular factorization with full pivoting of a
 NB.   Hermitian (symmetric) matrix:
 NB.     P * U1 * T * U1^H * P^_1 = A
-NB.    by blocked version of Aasen's algorithm
+NB.   by blocked version of Aasen's algorithm
 NB.
 NB. Syntax:
 NB.     'ip U1 T'=. hetrfpu A
 NB. where
 NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
 NB.   ip  - n-vector, full inversed permutation of A
+NB.   P   - n×n-matrix, full permutation of A
 NB.   U1  - n×n-matrix, unit upper triangular
 NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
 NB.
@@ -834,8 +842,11 @@ NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - test by random square real matrix with limited values'
-NB.   amplitudes:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     (? @ $ 0:) testtrf_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
 NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtrf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200

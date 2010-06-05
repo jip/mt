@@ -20,7 +20,7 @@ NB. Resources:
 NB. - http://www.jsoftware.com/jwiki/...
 NB. - http://www.dvgu.ru/forum/...
 NB.
-NB. 2008-02-27 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. 2008-02-28 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 script_z_ '~system/main/numeric.ijs'            NB. clean
@@ -29,7 +29,7 @@ require '~user/projects/lapack/lapack.ijs'      NB. '~addons/math/lapack/lapack.
 require '~user/projects/lapack/geev.ijs'        NB. need_jlapack_ 'geev gesvd gesvx'
 require '~user/projects/lapack/gesvd.ijs'       NB. (line above makes it excessive)
 require '~user/projects/lapack/gesvx.ijs'       NB. -//-
-require '~user/projects/tau/util.ijs'           NB. makeP gen_rand_mat gen_rand_mat_neg_eig
+require '~user/projects/tau/util.ijs'           NB. makeP rndmat rndmat_neig
 
 coclass 'tau'
 
@@ -171,7 +171,6 @@ NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
 NB.   At    - Ng-vector, solution A(t) of equation M*A(t)=L(t)
 NB.   Ng    = #G , matrix G minimal polynom's order
 
-NB. makeAt=: (9 & o.) @: gesvx_jlapack_ @ ((2 {:: [) ; ] makeLtM (3 {:: [))
 makeAt=: gesvx_jlapack_ @ ((2 {:: [) ; ] makeLtM (3 {:: [))
 
 NB. =========================================================
@@ -229,7 +228,7 @@ texpm=: 3 : 0
 'A B ts'=. y
 P =. 0 {:: (prexpm A;B) expm ts
 eigA=. /:~ ^ ts * (2 geev_jlapack_ A)
-eigP=. /:~ (2 geev_jlapack_ P)      NB. FIXME: this sort gives wrong result
+eigP=. /:~ (2 geev_jlapack_ P)
 err=. clean %: +/ *: | eigA - eigP
 0 = err
 )
@@ -237,8 +236,8 @@ err=. clean %: +/ *: | eigA - eigP
 NB. Syntax: testexpm ''
 
 testexpm=: 3 : 0
-'A0 A1 A2 A3'=. (gen_rand_mat_neg_eig &. >) 4;6;8;10
-'B0 B1 B2 B3'=. (gen_rand_mat &. >) 4 3;6 5;8 7;10 9
+'A0 A1 A2 A3'=. (rndmat_neig &. >) 4;6;8;10
+'B0 B1 B2 B3'=. (rndmat &. >) 4 3;6 5;8 7;10 9
 'ts0 ts1 ts2 ts3'=. 0.01 * >: ? 4 $ 100
 texpm &> (< A0;B0;ts0) , (< A1;B1;ts1) , (< A2;B2;ts2) , (< A3;B3;ts3)
 )

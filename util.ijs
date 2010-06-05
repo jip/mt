@@ -1,33 +1,35 @@
-NB. tau_utils.ijs
-NB. Utilities for Control Theory toolbox
+NB. util.ijs
+NB. Linear time-invariant (LTI) system's utilities
 NB.
-NB. makeP  make report of table y powers
+NB. makeP        make report of table y powers
+NB. mplot        plot the report as multi-plot
+NB. rndmat       generate random matrix
+NB. rndmat_neig  generate random matrix with negative eigenvalues
 NB.
 NB. Resources:
 NB. - http://www.jsoftware.com/jwiki/...
 NB. - http://www.dvgu.ru/forum/...
 NB.
-NB. TODO:
-NB. - consider s/@:/@/g when possible
-NB. - consider B is vector
-NB.
-NB. 2008-02-11 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. 2008-02-28 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
-require '~system/packages/math/mathutil.ijs'  NB. mp
-require '~system/packages/math/makemat.ijs'   NB. idmat
+script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
+script_z_ '~system/packages/math/makemat.ijs'   NB. idmat
+require '~user/projects/lapack/lapack.ijs'      NB. '~addons/math/lapack/lapack.ijs'
+require '~user/projects/lapack/gesvd.ijs'       NB. need_jlapack_ 'gesvd'
 
 coclass 'tau'
 
-NB. ===========================================================================
+NB. =========================================================
 NB. makeP
-NB. Make report of table y powers
+NB. Make report of table y powers: I y y^2 ... y^(x-1)
 NB.
 NB. Syntax:
 NB.   P=. [x] makeP y
 NB. where
-NB.   y - N-by-N matrix, N >= 0
-NB.   x - powers count, #y is default, x >= 0
+NB.   y - N-by-N matrix
+NB.   x >= 0, powers count, #y is default
 NB.   P - x-by-N-by-N report, powers 0..(x-1) of y
+NB.   N >= 0
 NB.
 NB. Test:
 NB.    ;/ makeP 3 3 $ 5 5 0 9 0 5 1 6 7
@@ -54,23 +56,63 @@ make0=: (0 $~ 0 , $ @ ]) " _      NB. make zero report: 0 N N $ 0
 check0=: make0`prepP @. (0 ~: [)  NB. choose report type depending on x=0
 makeP=: (# $: ]) :check0 M.       NB. force dyadic call: (#@]) check0 ]
 
-NB. ---------------------------------------------------------------------------
+NB. ---------------------------------------------------------
+NB. mplot
+NB. Plot the report as R-by-C multi-plot
+NB.
+NB. Synax:
+NB.   [titles] mplot [x;]data
+NB. where
+NB.   titles - optional titles for plot, rows and columns, in form:
+NB.              plot[;rows[;cols]]
+NB.            where
+NB.              plot - string, plot title
+NB.              rows - may be one of:
+NB.                       str                - prefix for row titles
+NB.                       str1;str2;...;strR - boxed row titles
+NB.              cols - may be one of:
+NB.                       str                - prefix for column titles
+NB.                       str1;str2;...;strC - boxed column titles
+NB.   x      - N-vector, x tics
+NB.   data   - data to plot in form:
+NB.              data1[;data2[;...]]
+NB.            where each datai is report of shape N-by-R-by-C. If
+NB.            more than one report is supplied, then all vectors
+NB.            ((<r,c) {"2 datai) are plotted in the same sub-plot
+NB.            with coordinate (<r,c)
+NB.   R >= 0
+NB.   C >= 0
+NB.   N >= 0
+NB.
+NB. Example:
+NB.   ('LTI output';(<'1st output';'2nd output');'Input ch. #') mplot t;(<Y1;Y2;Y3)
+NB.
+NB. TODO:
+NB. - check Nx|Ny|Nu == 0
+
+mplot=: (('Plot';'Out #';'In #')&$: :(4 : 0)) " 1 3
+0$0
+)
+
+NB. ---------------------------------------------------------
+NB. rndmat
 NB. Generate rectangular random matrix of values from range [0,10)
 NB. Syntax:
-NB.   mat=. gen_rand_mat size
-NB.   mat=. gen_rand_mat rows cols
+NB.   mat=. rndmat size
+NB.   mat=. rndmat rows cols
 
-gen_rand_mat=: 3 : 0
+rndmat=: 3 : 0
 sh=. ({. , {:) y
 m=. 0.1 * ? sh $ 100
 )
 
-NB. ---------------------------------------------------------------------------
+NB. ---------------------------------------------------------
+NB. rndmat_neig
 NB. Generate square random matrix with negative eigenvalues from range (-10,0]
 NB. Syntax:
-NB.   mat=. gen_rand_mat_neg_eig size
+NB.   mat=. rndmat_neig size
 
-gen_rand_mat_neg_eig=: 3 : 0
+rndmat_neig=: 3 : 0
 d=. diagmat _0.1 * ? y $ 100
 o=. 2b100 gesvd_jlapack_ 0.1 * ? (2 $ y) $ 100
 m=. o mp d mp +|:o

@@ -32,7 +32,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFNB=: 3  NB. block size limit
+TRFNB=: 3  NB. block size limit, >0
 
 NB. ---------------------------------------------------------
 NB. hetf2pl
@@ -129,40 +129,75 @@ NB. 'ip L1 T permHE5 H'=. 0 0 0 0 hetf2pl HE5
 NB. 'ip L1 T permA H'=. l0 hetf2pl A
 NB. 'ip L1 T permA H h'=. step (ip;L1;T;A;H;h)
 
-hetf2pl=: ((3 : 0) ^: (0>.(<: TRFNB)<.(<:@#@(3 & {::)))) @ ((i.@#@]);(,.@(1,[));(1 1 {. ]);];(1 {."1 ]);(}.@({."1 @ ])))
-  'ip L1 T A H h'=. y
+NB. ---------------------------------------------------------
+NB. lahefplstep
+NB.
+NB. Description:
+NB.   Single step of partial factorization of a Hermitian
+NB.   (symmetric) matrix using the combination of Parlett and
+NB.   Reid, and Aasen methods [1].
+NB.
+NB. Syntax:
+NB.   'ipi1 L1i1 Ti1 Ai1 Hi1 hi1 li1'=. lahefplstep (ipi;L1i;Ti;Ai;Hi;hi;li)
+NB. where
+NB.   Ai   - n×n-matrix A after i-th step and before
+NB.          (i+1)-th, Hermitian (symmetric)
+NB.   li   - (n-j)-vector, last column under diagonal in
+NB.          L1(i)
+NB.
+NB.  A  =  ( I  U12 ) ( A11  0  ) (  I    0   )  if UPLO = 'U', or:
+NB.        ( 0  U22 ) (  0   D  ) ( U12' U22' )
+NB.
+NB.  A  =  ( L11  0 ) (  D   0  ) ( L11' L21' )  if UPLO = 'L'
+NB.        ( L21  I ) (  0  A22 ) (  0    I   )
+NB.
+NB. References:
+NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
+NB.     Partitioned triangular tridiagonalization.
+NB.     26 September 2007.
+NB.     http://www.cs.cas.cz/miro/rst08.pdf
+NB. 
+
+lahefpl=: (3 : 0) ^: ((<: TRFNB)<.(#@(_1 & {::)))
+  'ip L1 T A H h l0'=. y
   'n j'=. $ L1
-  l0=. (n (] dhs2lios (_1,-)) j) ({,) L1  NB. last column under diagonal
   l1=. h - l0 * (_1 ({,) T)
   q=. liofmax l1
   dip0=. 0 lios2cp q
   dip=. j (+ &. >) dip0              NB. dip=. j ([ lios2cp +) q
-  A=. dip sp A
-  ip=. dip C. ip
   l0=. dip0 C. l0
+  l1=. dip0 C. l1
+  ip=. dip C. ip
+  L1=. dip C. L1
   H=. dip C. H
-  t01=. + t10=. q { l1
+  A=. dip sp A
+  t01=. + t10=. {. l1
   l1=. l1 % t10
-  h=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ (j+q) { L1)
-  L1=. dip C. L1 stitchrb l1
+  h=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j { L1)
+  L1=. L1 stitchrb l1
   H=. H stitchrb (t01 , h)
   h=. h - l0 * t01
   t11=. {. h
   T=. (t11,t10,t01) (_1 _2,(_1 - #@])) } 1 xsh T
-  ip ; L1 ; T ; A ; H ; (}. h)
+  ip ; L1 ; T ; A ; H ; (}. h) ; (}. l1)
 )
 
 NB. 'ip L1 T'=. hetrfpl A
 NB. 'ip L1 T permA H'=. step (ip;L1;T;A;H)
 
+NB. 'ipi L1i Ti Ai Hi hi'=. (9 # 0) hetf2pl_mt_ HEci10
+NB. ((((] dhs2lios (_1,-))/@$) ({,) ]) L1i) hetf2pl_mt_ (((_1 ({,) Ti) , hi) (< a: ; 0)} (2 2 }. HEci10))
+
 hetrfpl=: 3 : 0
   n=. # y
-  l=. (<: n) # 0
   ip=. i. n
-  L1=. 0 {."1 y
-  T=. 0 0 $ 0
+  L1=. (n,0) $ 1
+  T=. 1 1 {. y
+  H=. 1 {."1 y
+  h=. (< (<0);0) { y
+  l=. (<: n) # 0
   for_j. n (] dhs2lios (0,(>.@%))) TRFNB do.
-    'ipi L1i Ti y H'=. l hetf2pl y
+    'ipi L1i Ti y H h l'=. lahefpl (ip;L1;(_1 _1 {. T);y;H;l)
     dip=. (i. j) , (j+ipi)
     ip=. dip C. ip
     L1=. dip C. L1

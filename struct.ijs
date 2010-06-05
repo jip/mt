@@ -9,17 +9,13 @@ NB. sltri    extract strictly lower triangular (trapezoidal) matrix
 NB. sutri    extract strictly upper triangular (trapezoidal) matrix
 NB. ltri1    extract unit lower triangular matrix of shape m×min(m,n) <<<<<<<<
 NB. utri1    extract unit upper triangular matrix of shape min(m,n)×n <<<<<<<<
-NB.
-NB. XRef:
-NB. - system: mp normalrand rand01
-NB. - mt: ct qr
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
 
-qr=: 128!:0
+sh2id=: {. -~/&i. {:  NB. convert shape y to IOS differences table
 
 NB. =========================================================
 NB. Interface
@@ -41,7 +37,7 @@ NB. 0 1 0 0
 NB. 0 0 1 0
 NB. 0 0 0 1
 
-idmat=: (0 $: ]) :(= ({. -~/&i. {:)@])
+idmat=: (0 & $:) :(= sh2id)
 
 NB. ---------------------------------------------------------
 NB. diagmat
@@ -62,7 +58,7 @@ NB. 3 0 0 0
 NB. 0 5 0 0
 NB. 0 0 7 0
 
-diagmat=: (0 $: ]) :(((0 (>. , -@<.) [) + #@]) {. (* =@i.@#)@])
+diagmat=: (0 & $:) :(((0 (>. , -@<.) [) + #@]) {. (* =@i.@#)@])
 
 NB. ---------------------------------------------------------
 NB. ltri
@@ -77,7 +73,7 @@ NB. 2 2 0 0 0
 NB. 2 2 2 0 0
 NB. 2 2 2 2 0
 
-ltri=: (0 $: ]) : (] * (>: ({. -~/&i. {:)@$@]))
+ltri=: (0 & $:) :(] * (>: sh2id@$))
 
 NB. ---------------------------------------------------------
 NB. utri
@@ -92,7 +88,7 @@ NB. 0 2 2 2 2
 NB. 0 0 2 2 2
 NB. 0 0 0 2 2
 
-utri=: (0 $: ]) : (] * (<: ({. -~/&i. {:)@$@]))
+utri=: (0 & $:) :(] * (<: sh2id@$))
 
 NB. ---------------------------------------------------------
 NB. sltri
@@ -107,7 +103,7 @@ NB. 2 0 0 0 0
 NB. 2 2 0 0 0
 NB. 2 2 2 0 0
 
-sltri=: (0 $: ]) : (] * (> ({. -~/&i. {:)@$@]))
+sltri=: (0 & $:) :(] * (> sh2id@$))
 
 NB. ---------------------------------------------------------
 NB. sutri
@@ -122,18 +118,18 @@ NB. 0 0 2 2 2
 NB. 0 0 0 2 2
 NB. 0 0 0 0 2
 
-sutri=: (0 $: ]) : (] * (< ({. -~/&i. {:)@$@]))
+sutri=: (0 & $:) :(] * (< sh2id@$))
 
 NB. ---------------------------------------------------------
 NB. extract unit lower triangular matrix of shape m×min(m,n)
 
-ltri1=: sltri + ((idmat @ $) : (idmat $))
+ltri1=: (0 & $:) :(sltri + (idmat $))
 
 NB. ---------------------------------------------------------
 NB. extract unit upper triangular matrix of shape min(m,n)×n
 NB. ambivalent
 
-utri1=: sutri + ((idmat @ $) : (idmat $))
+utri1=: (0 & $:) :(sutri + (idmat $))
 
 NB. ---------------------------------------------------------
 NB. TODO:

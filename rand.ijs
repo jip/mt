@@ -12,13 +12,15 @@ NB. dimat   random diagonalizable matrix
 NB. pomat   random Hermitian (symmetric) positive defined matrix
 NB.
 NB. XRef:
-NB. - system: 
-NB. - mt: 
+NB. - system: mp
+NB. - mt: ct qr
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
+
+qr=: 128!:0           NB. built-in QR factorization (TODO: implement)
 
 NB. =========================================================
 NB. Interface
@@ -32,15 +34,21 @@ NB.   S=. [supp] randu sh
 NB. where
 NB.   sh   - n-vector, shape of S
 NB.   supp - optional 2-vector (a,b), a<b, support of
-NB.          distribution, default is open interval (0 1)
+NB.          distribution, open interval, default is (0 1)
 NB.   S    - sh-array of values s ~ U(a,b)
 NB.   n    ≥ 0
 
-randu=: (? @ $ 0:) : ((p.~ (-~/\))~ $:)
+randu=: (? @ $ 0:) :((p.~ (-~/\))~ $:)
 
 NB. ---------------------------------------------------------
 NB. rande                                               _ _ _
 NB. Exponential distribution E(μ) with mean μ
+NB.
+NB. Formula:
+NB.   e ← -μ*log(1-u)
+NB. where
+NB.   u ~ U(0,1)
+NB.   e ~ E(μ)
 NB.
 NB. Syntax:
 NB.   S=. [μ] rande sh
@@ -50,17 +58,11 @@ NB.   μ  > 0, optional mean, default is 1
 NB.   S  - sh-array of values s ~ E(μ)
 NB.   n  ≥ 0
 NB.
-NB. Formula:
-NB.   e ← -μ*log(1-u)
-NB. where
-NB.   u ~ U(0,1)
-NB.   e ~ E(μ)
-NB.
 NB. Notes:
 NB. - (randu) is used instead of (1-randu) since they are
 NB.   equivalent under following assumptions:
 NB.   - randu's support is open interval (0,1)
-NB.   - (randu) values aren't used outside elsewhere
+NB.   - randu's values aren't used outside elsewhere
 
 rande=: (- @ ^. @ randu) : (* $:)
 
@@ -69,6 +71,14 @@ NB. randnf                                              _ _ _
 NB. randnc                                              _ _ _
 NB. Normal distribution N(μ,σ²) of float (complex) numbers
 NB. with mean μ and variance σ²
+NB.
+NB. Formula:
+NB.   nf1 ← sqrt(-2*log(1-u1))*cos(2*π*u2)  NB. Box-Muller
+NB.   nf2 ← sqrt(-2*log(1-u1))*sin(2*π*u2)  NB.   algorithm
+NB.   nc  ← (nf1 + i*nf2)/sqrt(2)
+NB. where
+NB.   u1,u2      ~ U(0,1)
+NB.   nf1,nf2,nc ~ N(0,1)
 NB.
 NB. Syntax:
 NB.   S=. [par] randnf sh
@@ -79,43 +89,50 @@ NB.   par - optional 2-vector (μ,σ), σ>0, parameters of
 NB.         distribution, default is (0 1)
 NB.   S   - sh-array of values s ~ N(μ,σ²)
 NB.   n   ≥ 0
-NB.
-NB. Formula (Box-Muller algorithm):
-NB.   nf ← sqrt(-2*log(1-u1))*cos(2*π*u2)
-NB.   nc ← (nf1 + i*nf2)/sqrt(2)
-NB. where
-NB.   u1,u2         ~ U(0,1)
-NB.   nf,nf1,nf2,nc ~ N(0,1)
 
 randnf=: ((%: @ (2 & rande)) * (  2 o. (0 2p1 & randu))) : (p. $:)
 randnc=: ((%: @      rande ) * (_12 o. (0 2p1 & randu))) : (p. $:)
 
 NB. ---------------------------------------------------------
 NB. hemat
-NB. Make random Hermitian (symmetric) matrix with elements
-NB. distributed <<<<<<<<<<<<<#################
+NB. Adverb to make random Hermitian (symmetric) matrix with
+NB. elements of some probability distribution
 NB.
 NB. Syntax:
-NB.   he=. randx hemat n,n
+NB.   H=. randx hemat n
 NB. where
-NB.   n - 
-NB.   randx - monadic verb to generate elements
+NB.   n     ≥ 0, size of matrix H
+NB.   randx - monadic verb to generate random y-matrix (shape
+NB.           is taken from y)
+NB.   H     - random Hermitian (symmetric) (n,n)-matrix
+NB.
+NB. Notes:
+NB. - supplying verbs (randu rande randnf randnc) won't give
+NB.   values distributed exactly so, but closer
 
-hemat=: (+ ct) @
+hemat=: 2 : '(+ ct) @ u @ (2 & $)'
 
 NB. ---------------------------------------------------------
-NB. runmat                                                  1
-NB. rormat                                                  1
-NB. Make a random unitary (orthogonal) matrix with
+NB. unmat
+NB. Adverb to make a random unitary (orthogonal) matrix with
 NB. distribution given by Haar measure
 NB.
-NB. Syntax:
-NB.   Q=. runmat n,n
-NB.   Q=. rormat n,n
+NB. Formula:
+NB.   Z ← randn(n,n)
+NB.   (Q,R) ← QR(Z)
+NB.   d ← diag(R)
+NB.   Λ ← diagmat(d / |d|)
+NB.   Q ← Q*Λ
 NB. where
-NB.   n - size of unitary (orthogonal) matrix Q
-NB.   Q - n×n random unitary (orthogonal) matrix
-NB.   n ≥ 0
+NB.   n - output matrix Q's size
+NB.
+NB. Syntax:
+NB.   U=. randx unmat n
+NB. where
+NB.   n     ≥ 0, size of matrix U
+NB.   randx - monadic verb to generate random y-matrix (shape
+NB.           is taken from y)
+NB.   U     - random unitary (orthogonal) (n,n)-matrix
 NB.
 NB. References:
 NB. [1] Francesco Mezzadri (2007). How to generate random
@@ -123,41 +140,47 @@ NB.     matrices from the classical compact groups.
 NB.     Notices of the AMS, Vol. 54 (2007), 592-604
 NB.     http://arxiv.org/abs/math-ph/0609050v2
 
-runmat=: (3 : 0) " 1
-  z=. (j./ normalrand 2 , y) % %: 2
-  'q r'=. qr z
-  d=. (<0 1) |: r
-  ph=. (% |) d
-  q (* " 1) ph  NB. Q * diag(d/|d|)
-)
-
-rormat=: (3 : 0) " 1
-  z=. normalrand y
-  'q r'=. qr z
-  d=. (<0 1) |: r
-  ph=. (% |) d
-  q (* " 1) ph  NB. Q * diag(d/|d|)
-)
+unmat=: 1 : '((* " 1) ((% |) @ ((<0 1) & |:))) & >/ @ qr @ u @ (2 & $)'
 
 NB. ---------------------------------------------------------
-NB. rpomat
+NB. dimat
+NB. Conjunction to make a random diagonalizable non-Hermitian
+NB. (non-symmetric) square matrix
+NB.
+NB. Syntax:
+NB.   D=. randx dimat randq n
+NB. where
+NB.   n     ≥ 0, size of matrix D
+NB.   randq - monadic verb to generate random unitary
+NB.           (orthogonal) y-matrix (shape is taken from y)
+NB.   randx - monadic verb to generate random y-vector
+NB.           (length is taken from y)
+NB.   D     - random diagonalizable non-Hermitian (non-
+NB.           symmetric) square (n,n)-matrix
+NB.
+NB. tau/lti:
+NB.   NB. reconstruct inv(V) from U:
+NB.   NB. α=. diag(U^H * V)
+NB.   NB. inv(V)=. diagmat(1/α) * U^H
+NB.   invV=. U (((|: @ ]) % (+/ @: *)) +)~ V
+
+dimat=: 2 : ''
+
+NB. ---------------------------------------------------------
+NB. pomat
 NB. Adverb to make a random Hermitian (symmetric) positive
 NB. defined matrix
 NB.
-NB. Formula:
-NB.   Praw ← Q * diag(rand12(n)) * Q'
-NB.   P ← (Praw + Praw') / 2
-NB.
 NB. Syntax:
-NB.   P=. mkq rpomat n,n
+NB.   P=. randx pomat n
 NB. where
-NB.   n   - size of Hermitian (symmetric) positive defined
-NB.         matrix P
-NB.   mkq - verb to make random unitary (orthogonal) matrix,
-NB.         usually runmat or rormat
-NB.   P   - n×n random Hermitian (symmetric) positive defined
-NB.         matrix
-NB.   n   ≥ 0
+NB.   n     ≥ 0, size of matrix P
+NB.   randx - monadic verb to generate random non-singular
+NB.           (n,n)-matrix
+NB.   P     - random Hermitian (symmetric) positive defined
+NB.           (n,n)-matrix
+NB.
+NB. Application:
+NB.   P=. (2p1 & rande) pomat 4
 
-rpomat=: (>: @: rand01) ` (-: @ (+ ct) @ (] mp (* ct))) ` (`:6)
-
+pomat=: 1 : '(mp ct) @ u @ (2 & $)'

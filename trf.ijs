@@ -2,28 +2,36 @@ NB. trf.ijs
 NB. Triangular factorization for general (LU) and Hermitian
 NB. (symmetric) positive definite matrix (Cholesky)
 NB.
-NB. getrflu   LU factorization of a general matrix, both
-NB.           blocked and unblocked versions
-NB. getrful   UL factorization of a general matrix, both
-NB.           blocked and unblocked versions
-NB. rgetrflu  LU factorization of a general matrix, recursive
-NB.           version
-NB. rgetrful  UL factorization of a general matrix, recursive
-NB.           version
-NB. potrfl    Cholesky factorization of a Hermitian
-NB.           (symmetric) positive definite matrix for lower
-NB.           triangular factor, both blocked and unblocked
-NB.           versions
-NB. potrfu    Cholesky factorization of a Hermitian
-NB.           (symmetric) positive definite matrix for upper
-NB.           triangular factor, both blocked and unblocked
-NB.           versions
-NB. rpotrfl   Cholesky factorization of a Hermitian
-NB.           (symmetric) positive definite matrix for lower
-NB.           triangular factor, recursive version
-NB. rpotrfu   Cholesky factorization of a Hermitian
-NB.           (symmetric) positive definite matrix for upper
-NB.           triangular factor, recursive version
+NB. getrfl1u   LU factorization of a general matrix, both
+NB.            blocked and unblocked versions
+NB. getrflu1   LU factorization of a general matrix, both
+NB.            blocked and unblocked versions
+NB. getrfu1l   UL factorization of a general matrix, both
+NB.            blocked and unblocked versions
+NB. getrful1   UL factorization of a general matrix, both
+NB.            blocked and unblocked versions
+NB. rgetrfl1u  LU factorization of a general matrix, recursive
+NB.            version
+NB. rgetrflu1  LU factorization of a general matrix, recursive
+NB.            version
+NB. rgetrfu1l  UL factorization of a general matrix, recursive
+NB.            version
+NB. rgetrful1  UL factorization of a general matrix, recursive
+NB.            version
+NB. potrfl     Cholesky factorization of a Hermitian
+NB.            (symmetric) positive definite matrix for lower
+NB.            triangular factor, both blocked and unblocked
+NB.            versions
+NB. potrfu     Cholesky factorization of a Hermitian
+NB.            (symmetric) positive definite matrix for upper
+NB.            triangular factor, both blocked and unblocked
+NB.            versions
+NB. rpotrfl    Cholesky factorization of a Hermitian
+NB.            (symmetric) positive definite matrix for lower
+NB.            triangular factor, recursive version
+NB. rpotrfu    Cholesky factorization of a Hermitian
+NB.            (symmetric) positive definite matrix for upper
+NB.            triangular factor, recursive version
 NB.
 NB. References:
 NB. [1] J. J. Dongarra, I. Duff, D. Sorensen, H. Van der Vorst.
@@ -54,7 +62,7 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. IO element from list y with max magnitude
+NB. IO element with max magnitude from list y
 iomaxm=: (i.>./) @: |
 
 NB. extract rectangle:  0  j
@@ -294,7 +302,7 @@ NB.---    e=. b % d=. %: a
 NB.---    (d , bconj) ,: (e , (%: c - (abssq e)))
 NB.---  elseif. do.
   else.
-NB.---    assert. y > 0                         NB. check for positive definite
+    assert. y > 0                         NB. check for positive definite
     %: y
   end.
 )
@@ -306,22 +314,23 @@ NB.   A -: ((+/ .*) (+ @ |:)) potf2_mt_ &. ((] ;. 0) :. (] ;. 0)) A
 potrfu=: (BPOTRF&$: : (4 : 0)) " 0 2
   n=. # y
   if. n > 2 do.
-    for_j. range (n - x) , 0 , x do.
+    for_j. 0 ,~ range (n - x) , 0 , x do.
       jb=. x <. n - j
       ios=. (j + jb) ht2i j
 smoutput 'iosA' ; (ios iosA12A22 y) ; 'iosB' ; (ios iosA13A23 y) ; 'iosC' ; (ios iosA23 y)
       db=. ios kpotrfu y
-      b=. (,.~ _1 , jb) (1 & potrfu) ;. 0 db
+      b=. 1 potrfu) j }. db
       y=. b (< ;~ ios) } y
-      d=. ((j , jb) ] ;. 0 db) getrsxl ct b
+      d=. (j {. db) getrsxl ct b
       y=. d ((i. j) ; ios) } y
     end.
-  elseif. n = 2 do.
-    'a b bconj c'=. v=. , y
-    assert. a (*. & (> & 0)) c
-    e=. b % f=. %: c
-    ((%: a - (abssq e)) , e) ,: (bconj , f)
-  elseif. do.
+NB.---  elseif. n = 2 do.
+NB.---    'a b bconj c'=. v=. , y
+NB.---    assert. a (*. & (> & 0)) c
+NB.---    e=. b % f=. %: c
+NB.---    ((%: a - (abssq e)) , e) ,: (bconj , f)
+NB.---  elseif. do.
+  else.
     assert. y > 0                         NB. check for positive definite
     %: y
   end.
@@ -452,7 +461,7 @@ NB.smoutput 'tpotrf ($ y)' ; ($ y)
   r=. r , 'potrfl'         ((mp ct) @ ltri) ttrf y
   r=. r , 'potrfl_old'     ((mp ct) @ ltri) ttrf y
   r=. r , 'potrf_jlapack_' ((mp ct) @ ltri) ttrf y
-NB.  r=. r , 'potrfu'         ((mp ct) @ utri) ttrf y
+  r=. r , 'potrfu'         ((mp ct) @ utri) ttrf y
   r=. r , '1 & potrfl'     ((mp ct) @ ltri) ttrf y
   r=. r , 'potf2l_old'     ((mp ct) @ ltri) ttrf y
   r=. r , 'rpotrfl'        ((mp ct) @ ltri) ttrf y
@@ -462,7 +471,7 @@ NB.  r=. r , 'potrfu'         ((mp ct) @ utri) ttrf y
 NB. r=. testtrf m,n
 testtrf=: (3 : 0) " 1
   r=. 0 5 $ a:
-  r=. r , (tpotrf @ (runmat rpomat) ^: (=/)) y
+  r=. r , (tpotrf @ (unmat pomat) ^: (=/)) y
   r=. r , (tgetrf @ (rgemat j. rgemat)) y
 )
 

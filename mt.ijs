@@ -99,17 +99,19 @@ require '~user/projects/mt/ios.ijs'     NB. IOS
 require '~user/projects/mt/norm.ijs'    NB. Norms
 require '~user/projects/mt/struct.ijs'  NB. Structure handlers
 require '~user/projects/mt/rand.ijs'    NB. Random arrays
-require '~user/projects/mt/con.ijs'     NB. Condition number
 require '~user/projects/mt/test.ijs'    NB. Test
 
 NB. low-level
 require '~user/projects/mt/bak.ijs'     NB. Recover eigenvectors after balancing
 require '~user/projects/mt/bal.ijs'     NB. Balance
+require '~user/projects/mt/con.ijs'     NB. Condition number
+require '~user/projects/mt/eqr.ijs'     NB. Eigenvalues and eigenvectors of structured matrix
 require '~user/projects/mt/equ.ijs'     NB. Equilibrate
 require '~user/projects/mt/ref.ijs'     NB. Reflections
 require '~user/projects/mt/rot.ijs'     NB. Rotations
 require '~user/projects/mt/gq.ijs'      NB. Generate Q from its factored form
 require '~user/projects/mt/mq.ijs'      NB. Multiply by Q represented in factored form
+require '~user/projects/mt/scl.ijs'     NB. Try to scale without overflow or underflow
 require '~user/projects/mt/sm.ijs'      NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
@@ -117,7 +119,7 @@ require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~user/projects/mt/qf.ijs'      NB. Orthogonal factorization
 require '~user/projects/mt/trf.ijs'     NB. Triangular factorization
 require '~user/projects/mt/tri.ijs'     NB. Inverse by trf
-require '~user/projects/mt/trs.ijs'     NB. Solve linear monomial equation from trf
+require '~user/projects/mt/trs.ijs'     NB. Solve linear monomial equation by trf
 
 NB. hi-level
 require '~user/projects/mt/ev.ijs'      NB. eigenvalue decomposition

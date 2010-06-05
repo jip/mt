@@ -3,7 +3,7 @@ NB. mt manifest
 CAPTION=: 'Matrix toolbox'
 
 DESCRIPTION=: 0 : 0
-Library of verbs to solving some problems in matrix algebra: transforming, decomposing, reducing to condensed form, factorization, equation solving, function applying, condition number estimating. Is based on LAPACK algorithms, but doesn't require LAPACK.
+Library of verbs to solving some problems in matrix algebra: transforming, decomposing, reducing to condensed form, factorization, equation solving, function applying, condition number estimating. Is based mostly on LAPACK algorithms, but doesn't require LAPACK.
 )
 
 VERSION=: '0.4.0'
@@ -23,10 +23,12 @@ bal.ijs
 brd.ijs
 con.ijs
 dbg.ijs
+eqr.ijs
 equ.ijs
-evs(trash).ijs
+ev.ijs
+evs.ijs
 exp.ijs
-fri.ijs
+fork.ijs
 gq.ijs
 history.txt
 hrd.ijs
@@ -40,8 +42,11 @@ qf.ijs
 rand.ijs
 ref.ijs
 rot.ijs
+scl.ijs
+sm.ijs
 struct.ijs
 sv.ijs
+test.ijs
 trf.ijs
 tri.ijs
 trs.ijs

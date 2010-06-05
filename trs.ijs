@@ -1,4 +1,4 @@
-NB. Solve linear monomial equation from triangular
+NB. Solve linear monomial equation by triangular
 NB. factorization
 NB.
 NB. getrsxxx   Solve equation (op(A) * X = B) or

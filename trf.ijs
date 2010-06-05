@@ -191,17 +191,18 @@ NB.                    dip := (-(n-i-j),p-(n-i-j))
 NB.           note: don't waste time for standardizing the
 NB.                 transposition, use Adverse (::) later
 NB.                 instead
-NB.      2.6) try to apply transposition dip to ipi:
-NB.             ipi=. dip C. :: ] ipi
+NB.      2.6) try to apply the transposition dip to ipi:
+NB.             ipi[dip[0]] ↔ ipi[dip[1]]
 NB.           2.6.1) if failed (i.e. if p=0), then leave ipi
 NB.                  unchanged
-NB.      2.7) try to apply the transposition of rows and
-NB.           columns dip to subA:
-NB.             subA=. dip sp :: ] subA
+NB.      2.7) try to apply the transposition dip to rows and
+NB.           columns of subA:
+NB.             subA[dip[0],:] ↔ subA[dip[1],:]
+NB.             subA[:,dip[0]] ↔ subA[:,dip[1]]
 NB.           2.7.1) if failed (i.e. if p=0), then leave subA
 NB.                  unchanged
 NB.      2.8) try to apply the transposition dip to lti:
-NB.             lti=. dip C. :: ] lti
+NB.             lti[dip[0]] ↔ lti[dip[1]]
 NB.           note: now lti[0] contains T[j+1,j]
 NB.           2.8.1) if failed (i.e. if p=0), then leave lti
 NB.                  unchanged
@@ -419,17 +420,18 @@ NB.                    dip := (j,p)
 NB.           note: don't waste time for standardizing the
 NB.                 transposition, use Adverse (::) later
 NB.                 instead
-NB.      2.6) try to apply transposition dip to ipi:
-NB.             ipi=. dip C. :: ] ipi
-NB.           2.6.1) if failed (i.e. if p=j), then
-NB.                  leave ipi unchanged
-NB.      2.7) try to apply the transposition of rows and
-NB.           columns dip to subA:
-NB.             subA=. dip sp :: ] subA
-NB.           2.7.1) if failed (i.e. if p=j), then
-NB.                  leave subA unchanged
+NB.      2.6) try to apply the transposition dip to ipi:
+NB.             ipi[dip[0]] ↔ ipi[dip[1]]
+NB.           2.6.1) if failed (i.e. if p=j), then leave ipi
+NB.                  unchanged
+NB.      2.7) try to apply the transposition dip to rows and
+NB.           columns of subA:
+NB.             subA[dip[0],:] ↔ subA[dip[1],:]
+NB.             subA[:,dip[0]] ↔ subA[:,dip[1]]
+NB.           2.7.1) if failed (i.e. if p=j), then leave subA
+NB.                  unchanged
 NB.      2.8) try to apply the transposition dip to uti:
-NB.             uti=. dip C. :: ] uti
+NB.             uti[dip[0]] ↔ uti[dip[1]]
 NB.           note: now uti[j] contains T[j,j+1]
 NB.           2.8.1) if failed (i.e. if p=j), then leave uti
 NB.                  unchanged
@@ -502,9 +504,107 @@ NB.   ip  - n-vector, columns inversed permutation of A
 NB.   LU1 - m×n-matrix, lower triangle contains L, and strict
 NB.         upper triangle contains U1 without unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
-NB.   L   - m×k-matrix, lower triangular
-NB.   U1  - k×n-matrix, unit upper triangular
-NB.   k   = min(m,n)
+NB.   L   - m×min(m,n)-matrix, lower triangular
+NB.   U1  - min(m,n)×n-matrix, unit upper triangular
+NB.
+NB. Storage layout:
+NB.   A's partitioning:                       L's partitioning:
+NB.     k   ( Aaa  Aab  ) := ( Aa  ) := A       k   ( Laa             ) := L
+NB.     m-k ( Aba  Abb  )    ( Ab  )            m-k ( Lba     Lbb     )
+NB.           k    n-k         n                      k       n-k
+NB.   U1's partitioning:                      LU1's partitioning:
+NB.     k   ( U1aa U1ab ) := ( U1a ) := U1      k   ( LaaU1aa U1ab    ) := LU1
+NB.     m-k (      U1bb )    ( U1b )            m-k ( Lba     LbbU1bb )
+NB.           k    n-k         n                      k       n-k
+NB. where
+NB.   LaaU1aa - combined Laa and U1aa, U1aa's unit diagonal
+NB.             isn't stored
+NB.   LbbU1bb - combined Lbb and U1bb, U1bb's unit diagonal
+NB.             isn't stored
+NB.
+NB. Algorithm:
+NB.   In: A
+NB.   Out: ip LU1
+NB.   1) acquire geometry of A:
+NB.        sh := shape
+NB.        m  := quantity of rows
+NB.        n  := quantity of columns
+NB.   2) if m=0 or n=0 then:
+NB.      2.1) set output:
+NB.             ip  := i. n
+NB.             LU1 := A
+NB.   3) elseif m=1 then:
+NB.      3.1) prepare non-standard transposition dip:
+NB.           3.1.1) find lIO 1st element with max value in
+NB.                  1st row of A:
+NB.                    p := liofmax A[0,:]
+NB.                  note: to force U1 to be truly diagonally
+NB.                        dominant replace sorim by soris in
+NB.                        liofmax definition
+NB.           3.1.2) compose non-standard transposition:
+NB.                    dip := (0,p)
+NB.           note: don't waste time for standardizing the
+NB.                 transposition, use Adverse (::) later
+NB.                 instead
+NB.      3.2) prepare ip:
+NB.           3.2.1) init ip:
+NB.                    ip=. i. n
+NB.           3.2.2) try to apply the transposition dip to
+NB.                  ip:
+NB.                    ip[0] ↔ ip[p]
+NB.           3.2.3) if failed (i.e. if p=0), then leave ip
+NB.                  unchanged
+NB.      3.3) prepare LU1:
+NB.           3.3.1) try to apply the transposition dip to
+NB.                  columns of A:
+NB.                    A[:,0] ↔ A[:,p]
+NB.           3.3.2) if failed (i.e. if p=0), then leave A
+NB.                  unchanged
+NB.           3.3.3) factorize single row:
+NB.                    L  := A[0,0]
+NB.                    U1 := L^_1 * A
+NB.   4) else:
+NB.      4.1) find split point:
+NB.             k := min(n,⌈m/2⌉)
+NB.      4.2) factorize Aa recursively:
+NB.             Laa * U1a * P = Aa
+NB.           note1: P is represented by vector of inversed
+NB.                 permutation ip
+NB.           note2: Laa and U1a are stored in the same
+NB.                  matrix LaaU1a, U1a's unit diagonal isn't
+NB.                  stored
+NB.      4.3) permute columns of Ab according to P^_1 :
+NB.             Ab := Ab * P^_1
+NB.           note: purge original A, reuse name 'y' to
+NB.                 store Ab
+NB.      4.4) compute Lba:
+NB.           4.4.1) extract LaaU1aa:
+NB.                    LaaU1aa := LaaU1a[:,0:k-1]
+NB.           4.4.2) extract Aba:
+NB.                    Aba := Ab[:,0:k-1]
+NB.           4.4.3) solve:
+NB.                    Lba * U1aa = Aba
+NB.      4.5) update and factorize Abb recursively:
+NB.           4.5.1) extract Abb:
+NB.                    Abb := Ab[k:n-1,:]
+NB.           4.5.2) extract U1ab:
+NB.                    U1ab := LaaU1a[k:n-1,:]
+NB.           4.5.3) update Abb:
+NB.                    Abb := Abb - Lba * U1ab
+NB.           4.5.4) factorize Abb recursively:
+NB.                    Lbb * U1bb * Pb = Abb
+NB.                  note: Pb is represented by vector of
+NB.                        inversed permutation ipb
+NB.      4.6) prepare delta of inversed permutation dipb,
+NB.           which defines inversed permutation of tail part
+NB.      4.7) assemble output
+NB.           4.7.1) permute tail part of ip according to
+NB.                  Pb^_1 :
+NB.                    ip[k:n-1] := Pb^_1 * ip[k:n-1]
+NB.           4.7.2) permute columns of U1ab according to
+NB.                  Pb^_1 :
+NB.                    U1ab := U1ab * Pb^_1
+NB.           4.7.3) assemble triangular matrices L and U1
 NB.
 NB. Assertion:
 NB.   P -: %. iP
@@ -527,18 +627,18 @@ getrflu1p=: 3 : 0
   if. 0 e. sh do.
     (i. n) ; y
   elseif. 1=m do.
-    dip=. < 0 , liofmax {. y                                       NB. non-standard cycle permutation!
-    ip=. dip (C. :: ]) i. n
-    y=. ((] 0:} %) (0&({,))) dip ((C."1) :: ]) y                   NB. permute single row, scale by head, keep head unscaled
+    dip=. < 0 , liofmax {. y
+    ip=. dip C. :: ] i. n
+    y=. ((] 0:} %) (0&({,))) dip C."1 :: ] y
     ip ; y
   elseif. do.
     k=. n (<. >.@-:) m
-    'pia Afa'=. getrflu1p k {. y                                   NB. factorize 1st block recursively
-    y=. pia (C."1) k }. y                                          NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trsmxu1 & (k & ({."1))) y                          NB. calculate 2nd block's 1st sub-block
-    'pib Afbb'=. getrflu1p y ((- (Afba & mp)) & (k & (}."1))) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
-    dpib=. (i. k) , (k + pib)                                      NB. apply 2nd block's permutation to 1st block
-    (dpib (C."1) pia) ; ((dpib (C."1) Afa) , (Afba ,. Afbb))       NB. assemble solution
+    'ip LaaU1a'=. getrflu1p k {. y
+    y=. ip (C."1) k }. y
+    Lba=. LaaU1a (trsmxu1 & (k & ({."1))) y
+    'ipb LbbU1bb'=. getrflu1p y ((- (Lba & mp)) & (k & (}."1))) LaaU1a
+    dipb=. (i. k) , (k + ipb)
+    (dipb C. ip) ; ((dipb C."1 LaaU1a) , (Lba ,. LbbU1bb))
   end.
 )
 
@@ -558,9 +658,107 @@ NB.   ip  - m-vector, rows inversed permutation of A
 NB.   L1U - m×n-matrix, upper triangle contains U, and strict
 NB.         lower triangle contains L1 without unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
-NB.   L1  - m×k-matrix, unit lower triangular
-NB.   U   - k×n-matrix, upper triangular
-NB.   k   = min(m,n)
+NB.   L1  - m×min(m,n)-matrix, unit lower triangular
+NB.   U   - min(m,n)×n-matrix, upper triangular
+NB.
+NB. Storage layout:
+NB.   A's partitioning:                           U's partitioning:
+NB.     k   ( Aaa  Aab  ) := ( Aa  Ab  ) := A       k   ( Uaa     Uab     ) := U
+NB.     m-k ( Aba  Abb  )                           m-k (         Ubb     )
+NB.           k    n-k         k   n-k                    k       n-k
+NB.   L1's partitioning:                          L1U's partitioning:
+NB.     k   ( L1aa      ) := ( L1a L1b ) := L1      k   ( L1aaUaa Uab     ) := L1U
+NB.     m-k ( L1ba L1bb )                           m-k ( L1ba    L1bbUbb )
+NB.           k    n-k         k   n-k                    k       n-k
+NB. where
+NB.   L1aaUaa - combined L1aa and Uaa, L1aa's unit diagonal
+NB.             isn't stored
+NB.   L1bbUbb - combined L1bb and Ubb, L1bb's unit diagonal
+NB.             isn't stored
+NB.
+NB. Algorithm:
+NB.   In: A
+NB.   Out: ip L1U
+NB.   1) acquire geometry of A:
+NB.        sh := shape
+NB.        m  := quantity of rows
+NB.        n  := quantity of columns
+NB.   2) if m=0 or n=0 then:
+NB.      2.1) set output:
+NB.             ip  := i. m
+NB.             L1U := A
+NB.   3) elseif n=1 then:
+NB.      3.1) prepare non-standard transposition dip:
+NB.           3.1.1) find lIO 1st element with max value in
+NB.                  1st column of A:
+NB.                    p := liofmax A[:,0]
+NB.                  note: to force L1 to be truly diagonally
+NB.                        dominant replace sorim by soris in
+NB.                        liofmax definition
+NB.           3.1.2) compose non-standard transposition:
+NB.                    dip := (0,p)
+NB.           note: don't waste time for standardizing the
+NB.                 transposition, use Adverse (::) later
+NB.                 instead
+NB.      3.2) prepare ip:
+NB.           3.2.1) init ip:
+NB.                    ip=. i. m
+NB.           3.2.2) try to apply the transposition dip to
+NB.                  ip:
+NB.                    ip[0] ↔ ip[p]
+NB.           3.2.3) if failed (i.e. if p=0), then leave ip
+NB.                  unchanged
+NB.      3.3) prepare L1U:
+NB.           3.3.1) try to apply the transposition dip to
+NB.                  rows of A:
+NB.                    A[0,:] ↔ A[p,:]
+NB.           3.3.2) if failed (i.e. if p=0), then leave A
+NB.                  unchanged
+NB.           3.3.3) factorize single row:
+NB.                    U  := A[0,0]
+NB.                    L1 := U^_1 * A
+NB.   4) else:
+NB.      4.1) find split point:
+NB.             k := min(m,⌈n/2⌉)
+NB.      4.2) factorize Aa recursively:
+NB.             P * L1a * Uaa = Aa
+NB.           note1: P is represented by vector of inversed
+NB.                 permutation ip
+NB.           note2: L1a and Uaa are stored in the same
+NB.                  matrix L1aUaa, L1a's unit diagonal isn't
+NB.                  stored
+NB.      4.3) permute rows ############# of Ab according to P^_1 :
+NB.             Ab := Ab * P^_1
+NB.           note: purge original A, reuse name 'y' to
+NB.                 store Ab
+NB.      4.4) compute Lba:
+NB.           4.4.1) extract LaaU1aa:
+NB.                    LaaU1aa := LaaU1a[:,0:k-1]
+NB.           4.4.2) extract Aba:
+NB.                    Aba := Ab[:,0:k-1]
+NB.           4.4.3) solve:
+NB.                    Lba * U1aa = Aba
+NB.      4.5) update and factorize Abb recursively:
+NB.           4.5.1) extract Abb:
+NB.                    Abb := Ab[k:n-1,:]
+NB.           4.5.2) extract U1ab:
+NB.                    U1ab := LaaU1a[k:n-1,:]
+NB.           4.5.3) update Abb:
+NB.                    Abb := Abb - Lba * U1ab
+NB.           4.5.4) factorize Abb recursively:
+NB.                    Lbb * U1bb * Pb = Abb
+NB.                  note: Pb is represented by vector of
+NB.                        inversed permutation ipb
+NB.      4.6) prepare delta of inversed permutation dipb,
+NB.           which defines inversed permutation of tail part
+NB.      4.7) assemble output
+NB.           4.7.1) permute tail part of ip according to
+NB.                  Pb^_1 :
+NB.                    ip[k:n-1] := Pb^_1 * ip[k:n-1]
+NB.           4.7.2) permute columns of U1ab according to
+NB.                  Pb^_1 :
+NB.                    U1ab := U1ab * Pb^_1
+NB.           4.7.3) assemble triangular matrices L and U1
 NB.
 NB. Assertion:
 NB.   P -: %. iP
@@ -586,18 +784,18 @@ getrfpl1u=: 3 : 0
   if. 0 e. sh do.
     (i. m) ; y
   elseif. 1 = n do.
-    dip=. < 0 , liofmax y                                      NB. non-standard cycle permutation!
+    dip=. < 0 , liofmax y
     ip=. dip (C. :: ]) i. m
-    y=. ((] 0:} %) (0&({,))) dip (C. :: ]) y                   NB. permute single column, scale by head, keep head unscaled
+    y=. ((] 0:} %) (0&({,))) dip (C. :: ]) y
     ip ; y
   elseif. do.
     k=. m (<. >.@-:) n
-    'pia Afa'=. getrfpl1u k {."1 y                             NB. factorize 1st block recursively
-    y=. pia C. k }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trsml1x & (k & {.)) y                          NB. calculate 2nd block's 1st sub-block
-    'pib Afbb'=. getrfpl1u y ((- (mp & Afba)) & (k & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
+    'pi L1aUaa'=. getrfpl1u k {."1 y
+    y=. pi C. k }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
+    Afba=. L1aUaa (trsml1x & (k & {.)) y                          NB. calculate 2nd block's 1st sub-block
+    'pib Afbb'=. getrfpl1u y ((- (mp & Afba)) & (k & }.)) L1aUaa  NB. update 2nd block's 2nd sub-block and factorize it recursively
     dpib=. (i. k) , (k + pib)                                  NB. apply 2nd block's permutation to 1st block
-    (dpib C. pia) ; ((dpib C. Afa) ,. (Afba , Afbb))           NB. assemble solution
+    (dpib C. pi) ; ((dpib C. L1aUaa) ,. (Afba , Afbb))           NB. assemble solution
   end.
 )
 
@@ -656,7 +854,7 @@ getrfpu1l=: 3 : 0
     (dpib C. pia) ; ((Afbb , Afba) ,. (dpib C. Afa))              NB. assemble solution
   end.
 )
-  
+
 NB. ---------------------------------------------------------
 NB. getrful1p
 NB.
@@ -673,9 +871,107 @@ NB.   ip  - n-vector, columns inversed permutation of A
 NB.   UL1 - m×n-matrix, upper triangle contains U, and strict
 NB.         lower triangle contains L1 without unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
-NB.   L   - m×k-matrix, unit lower triangular
-NB.   U1  - k×n-matrix, upper triangular
-NB.   k   = min(m,n)
+NB.   L1  - m×min(m,n)-matrix, unit lower triangular
+NB.   U   - min(m,n)×n-matrix, upper triangular
+NB.
+NB. Storage layout:
+NB.   A's partitioning:                       U's partitioning:
+NB.     m-k ( Aaa  Aab  ) := ( Aa  ) := A       m-k ( Uaa     UaB     ) := U
+NB.     k   ( Aba  Abb  )    ( Ab  )            k   (         Ubb     )
+NB.           n-k  k           n                      n-k     k
+NB.   L1's partitioning:                      UL1's partitioning:
+NB.     m-k ( L1aa      ) := ( L1a ) := L1      m-k ( L1aaUaa Uab     ) := UL1
+NB.     k   ( L1ba L1bb )    ( L1b )            k   ( L1ba    L1bbUbb )
+NB.           n-k  k           n                      n-k     k
+NB. where
+NB.   L1aaUaa - combined L1aa and Uaa, L1aa's unit diagonal
+NB.             isn't stored
+NB.   L1bbUbb - combined L1bb and Ubb, L1bb's unit diagonal
+NB.             isn't stored
+NB.
+NB. Algorithm:
+NB.   In: A
+NB.   Out: ip UL1
+NB.   1) acquire geometry of A:
+NB.        sh := shape
+NB.        m  := quantity of rows
+NB.        n  := quantity of columns
+NB.   2) if m=0 or n=0 then:
+NB.      2.1) set output:
+NB.             ip  := i. n
+NB.             UL1 := A
+NB.   3) elseif m=1 then:
+NB.      3.1) prepare non-standard transposition dip:
+NB.           3.1.1) find lIO last element with max value in
+NB.                  1st row of A:
+NB.                    p := liolmax A[0,:]
+NB.                  note: to force L1 to be truly diagonally
+NB.                        dominant replace sorim by soris in
+NB.                        liolmax definition
+NB.           3.1.2) compose non-standard transposition:
+NB.                    dip := (_1,p)
+NB.           note: don't waste time for standardizing the
+NB.                 transposition, use Adverse (::) later
+NB.                 instead
+NB.      3.2) prepare ip:
+NB.           3.2.1) init ip:
+NB.                    ip=. i. n
+NB.           3.2.2) try to apply the transposition dip to
+NB.                  ip:
+NB.                    ip[n-1] ↔ ip[p]
+NB.           3.2.3) if failed (i.e. if p=n-1), then leave ip
+NB.                  unchanged
+NB.      3.3) prepare UL1:
+NB.           3.3.1) try to apply the transposition dip to
+NB.                  columns of A:
+NB.                    A[:,n-1] ↔ A[:,p]
+NB.           3.3.2) if failed (i.e. if p=n-1), then leave A
+NB.                  unchanged
+NB.           3.3.3) factorize single row:
+NB.                    U  := A[0,n-1]
+NB.                    L1 := L^_1 * A
+NB.   4) else:
+NB.      4.1) find split point:
+NB.             k := min(n,⌈m/2⌉)
+NB.      4.2) factorize Ab recursively:
+NB.             Ubb * L1b * P = Ab
+NB.           note1: P is represented by vector of inversed
+NB.                 permutation ip
+NB.           note2: L1b and Ubb are stored in the same
+NB.                  matrix L1bUbb, L1b's unit diagonal isn't
+NB.                  stored
+NB.      4.3) permute columns of Aa according to P^_1 :
+NB.             Aa := Aa * P^_1
+NB.           note: purge original A, reuse name 'y' to
+NB.                 store Aa
+NB.      4.4) compute Uab:
+NB.           4.4.1) extract L1bbUbb:
+NB.                    L1bbUbb := L1bUbb[:,n-k:n-1]
+NB.           4.4.2) extract Aab:
+NB.                    Aab := Aa[:,n-k:n-1]
+NB.           4.4.3) solve:
+NB.                    Uab * L1bb = Aab
+NB.      4.5) update and factorize Aaa recursively:
+NB.           4.5.1) extract Aaa:
+NB.                    Aaa := Aa[:,0:n-k-1]
+NB.           4.5.2) extract L1ba:
+NB.                    L1ba := L1bUbb[:,0:n-k-1]
+NB.           4.5.3) update Aaa:
+NB.                    Aaa := Aaa - Uab * L1ba
+NB.           4.5.4) factorize Aaa recursively:
+NB.                    Uaa * L1aa * Pa = Aaa
+NB.                  note: Pa is represented by vector of
+NB.                        inversed permutation ipa
+NB.      4.6) prepare delta of inversed permutation dipa,
+NB.           which defines inversed permutation of head part
+NB.      4.7) assemble output
+NB.           4.7.1) permute head part of ip according to
+NB.                  Pa^_1 :
+NB.                    ip[0:k-1] := Pa^_1 * ip[0:k-1]
+NB.           4.7.2) permute columns of L1ba according to
+NB.                  Pa^_1 :
+NB.                    L1ba := L1ba * Pa^_1
+NB.           4.7.3) assemble triangular matrices L1 and U
 NB.
 NB. Assertion:
 NB.   P -: %. iP
@@ -698,18 +994,18 @@ getrful1p=: 3 : 0
   if. 0 e. sh do.
     (i. n) ; y
   elseif. 1 = m do.
-    dip=. < _1 , liolmax {. y                                         NB. non-standard cycle permutation!
+    dip=. < _1 , liolmax {. y
     ip=. dip (C. :: ]) i. n
-    y=. ((] _1:} %) (_1&({,))) dip (C."1 :: ]) y                      NB. permute single row, scale by head, keep head unscaled
+    y=. ((] _1:} %) (_1&({,))) dip (C."1 :: ]) y
     ip ; y
   elseif. do.
     k=. n (<. >.@-:) m
-    'pia Afa'=. getrful1p (-k) {. y                                   NB. factorize 1st block recursively
-    y=. pia (C."1) (-k) }. y                                          NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trsmxl1 & ((-k) & ({."1))) y                          NB. calculate 2nd block's 1st sub-block
-    'pib Afbb'=. getrful1p y ((- (Afba & mp)) & ((-k) & (}."1))) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
-    dpib=. pib , ((n-k) + i. k)                                       NB. apply 2nd block permutation to 1st block
-    (dpib C."1 pia) ; ((Afbb ,. Afba) , (dpib C."1 Afa))              NB. assemble solution
+    'ip L1bUbb'=. getrful1p (-k) {. y
+    y=. ip (C."1) (-k) }. y
+    Uab=. L1bUbb (trsmxl1 & ((-k) & ({."1))) y
+    'ipa L1aaUaa'=. getrful1p y ((- (Uab & mp)) & ((-k) & (}."1))) L1bUbb
+    dipa=. ipa , ((n-k) + i. k)
+    (dipa C."1 ip) ; ((L1aaUaa ,. Uab) , (dipa C."1 L1bUbb))
   end.
 )
 
@@ -798,6 +1094,8 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
+NB. - avoid "for." control structure to guarantee proper
+NB.   execution order
 NB. - T would be sparse
 
 hetrfpl=: 3 : 0
@@ -899,6 +1197,8 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
+NB. - avoid "for." control structure to guarantee proper
+NB.   execution order
 NB. - T would be sparse
 
 hetrfpu=: 3 : 0
@@ -909,7 +1209,7 @@ hetrfpu=: 3 : 0
   t0=. t1=. i. 0
   for_i. n (] dhs2lios (_1,(-@>.@%))) TRFNB do.
     'ipi y ut t0 t1'=. lahefpu ((i. # ut);y;ut;t0;t1)
-    dip=. i (],((+(i.@(_1&-)))~#)) ipi         NB. delta of inversed permutation for head part
+    dip=. i (],((+(i.@(_1&-)))~#)) ipi
     ip=. dip C. ip
     subU1=. (tru1~(-~/@$)) (_,-TRFNB) rt y
     U1=. subU1 stitcht (dip C. U1)
@@ -934,27 +1234,42 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.   L - n×n-matrix, lower triangular with positive diagonal
 NB.       entries, Cholesky triangle
 NB.
+NB. Algorithm:
+NB.   In: A
+NB.   Out: L
+NB.   1) acquire n, the size of A
+NB.   2) if n>1 then:
+NB.      2.1) partition A
+NB.           2.1.1) prepare fret, the n-vector of zeros with
+NB.                  two units in positions 0 and ⌈n/2⌉
+NB.           2.1.2) partition A according to fret:
+NB.                    ⌈n/2⌉   ( A00   A01 ) := A
+NB.                    n-⌈n/2⌉ ( A01^H A11 )
+NB.                              ⌈n/2⌉ n-⌈n/2⌉
+NB.      2.2) recursively factorize A00:
+NB.             L00 := potrfl A00
+NB.      2.3) find L10^H:
+NB.             L10h := L00 trsmlx A01
+NB.           via solving:
+NB.             L00 * (L10^H) = A01
+NB.      2.4) find L10:
+NB.             L10 := L10h^H
+NB.      2.5) update A11 and recursively factorize it to find
+NB.           L11:
+NB.             L11 := potrfl A11 - L10 * L10h
+NB.      2.6) assemble L:
+NB.             L := ( L00       ) ⌈n/2⌉
+NB.                  ( L10   L11 ) n-⌈n/2⌉
+NB.                    ⌈n/2⌉ n-⌈n/2⌉
+NB.   3) else:
+NB.        L := sqrt(A)
+NB.
 NB. Assertion:
 NB.   A -: clean (mp ct) L
 NB. where
 NB.   L=. potrfl A
 
-potrfl=: 3 : 0
-  n=. # y
-  if. n > 1 do.
-    k=. >. -: n
-    Ta=. potrfl (2 # k) {. y     NB. recursively factorize square matrix from top left or bottom right corner
-    Ac=. (k ([ , -) n) {. y      NB. off-diagonal part of input matrix
-    Tb=. ct Tbh=. Ta trsmlx Ac   NB. off-diagonal part of output matrix
-    Aa=. (2 # k) }. y            NB. square matrix from opposite corner on diagonal of input matrix
-    Tc=. potrfl Aa - Tb mp Tbh   NB. recursively factorize square matrix from opposite corner on diagonal
-    Ta 0 append (Tb ,. Tc)       NB. assemble output as triangular matrix
-  else.
-    %: y
-  end.
-)
-
-potrflf=: %:`((0:`0:`0:`]`]`(potrflf@(0 0 & {::))`,`(ct@])`trsmlx`(0 1 & {::)`[`mp`[`]`(1 1 & {::)`(_1 stitch)`(potrflf@:-~)`]`[`0:`0: fork6)@((<;.1)~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
+potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0 & {::))`,`(ct@])`trsmlx`(0 1 & {::)`[`mp`[`]`(1 1 & {::)`(_1 stitch)`(potrfl@:-~)`]`[`0:`0: fork6)@((<;.1)~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
 NB. ---------------------------------------------------------
 NB. potrfu
@@ -971,25 +1286,42 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.   U - n×n-matrix, upper triangular with positive diagonal
 NB.       entries, Cholesky triangle
 NB.
+NB. Algorithm:
+NB.   In: A
+NB.   Out: U
+NB.   1) acquire n, the size of A
+NB.   2) if n>1 then:
+NB.      2.1) partition A
+NB.           2.1.1) prepare fret, the n-vector of zeros with
+NB.                  two units in positions 0 and ⌈n/2⌉
+NB.           2.1.2) partition A according to fret:
+NB.                    ⌈n/2⌉   ( A00   A10^H ) := A
+NB.                    n-⌈n/2⌉ ( A10   A11 )
+NB.                              ⌈n/2⌉ n-⌈n/2⌉
+NB.      2.2) recursively factorize A11:
+NB.             U11 := potrfu A11
+NB.      2.3) find U01^H:
+NB.             U01h := U11 trsmux A10
+NB.           via solving:
+NB.             U11 * (U01^H) = A10
+NB.      2.4) find U01:
+NB.             U01 := U01h^H
+NB.      2.5) update A00 and recursively factorize it to find
+NB.           U00:
+NB.             U00 := potrfu A00 - U01 * U01h
+NB.      2.6) assemble U:
+NB.             U := ( U00   U01 ) ⌈n/2⌉
+NB.                  (       U11 ) n-⌈n/2⌉
+NB.                    ⌈n/2⌉ n-⌈n/2⌉
+NB.   3) else:
+NB.        U := sqrt(A)
+NB.
 NB. Assertion:
 NB.   A -: clean (mp ct) U
 NB. where
 NB.   U=. potrfu A
 
-potrfu=: 3 : 0
-  n=. # y
-  if. n > 1 do.
-    k=. >. -: n
-    Ta=. potrfu (2 # k) }. y     NB. recursively factorize square matrix from top left or bottom right corner
-    Ac=. (k ([ , -) n) }. y      NB. off-diagonal part of input matrix
-    Tb=. ct Tbh=. Ta trsmux Ac   NB. off-diagonal part of output matrix
-    Aa=. (2 # k) {. y            NB. square matrix from opposite corner on diagonal of input matrix
-    Tc=. potrfu Aa - Tb mp Tbh   NB. recursively factorize square matrix from opposite corner on diagonal
-    (Tc ,. Tb) _1 append Ta      NB. assemble output as triangular matrix
-  else.
-    %: y
-  end.
-)
+potrfu=: %:`((0:`0:`0:`]`]`(potrfu@(1 1 & {::))`(,~)`(ct@])`trsmux`(1 0 & {::)`[`mp`[`]`(0 0 & {::)`(stitcht~)`(potrfu@:-~)`]`[`0:`0: fork6)@((<;.1)~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
 NB. ---------------------------------------------------------
 NB. pttrfl
@@ -1210,6 +1542,7 @@ testpotrf=: 3 : 0
   ('potrfl'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
   ('potrflf'        tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
   ('potrfu'         tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*#)@[))))) y
+  ('potrfuf'        tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*#)@[))))) y
 
   EMPTY
 )

@@ -6,3 +6,5 @@ TODO about computational methods see in MATRIX file
 Supply warning to all for.-having verbs about unordered evaluation
 
 Complete methods necessary to release TAU addon (Control Theory toolbox)
+
+add TODO: avoid "for" control structure to guarantee proper ordering

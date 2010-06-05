@@ -299,6 +299,9 @@ NB.     L=. ((0 1 0 1 __ _ & gemat) j. (_1 1 0 3 _6 4 & gemat)) trlmat 4
 NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
+NB.
+NB. TODO:
+NB. - fret should be sparse
 
 trlmat=:  1 : '1&([`(+/\@i.@{.@])`(0 $~ -:@(* >:)@{.@])}) ];.1 u@-:@(* >:)@{.'
 trl1mat=: 1 : '(1;a:) & setdiag_mt_ @ (u trlmat_mt_)'
@@ -523,11 +526,12 @@ NB.           e; is called as:
 NB.             d=. (| @ (9 o. randx)) n
 NB.             e=. randx (n-1)
 NB.   d     - n-vector of positive numbers, the main diagonal
-NB.           of T
-NB.   e     - (n-1)-vector, the subdiagonal and also the
-NB.           conjugated superdiagonal of T
+NB.           of D
+NB.   e     - (n-1)-vector, the subdiagonal of unit lower
+NB.           bidiagonal matrix L1
 NB.   T     - n×n-matrix, random Hermitian (symmetric)
-NB.           positive definite tridiagonal
+NB.           positive definite tridiagonal, defined as:
+NB.             T = L1 * D * L1^H
 NB.
 NB. Application:
 NB. - generate real symmetric positive definite tridiagonal
@@ -550,5 +554,8 @@ NB.     mantissa(Im(e)) ~ U(1,3)
 NB.     exponent(Im(e)) ~ TN(0,4^2,_5,6)
 NB.   :
 NB.     T=. (gemat j. (1 3 0 4 _5 6 & gemat)) ptmat 4
+NB.
+NB. TODO:
+NB. - T should be sparse
 
-ptmat=: 1 : '(u@<:@{.) (((+@[);1:) setdiag_mt_ (([;_1:) setdiag_mt_ ])) ((a:;~(|@(9 o. u)@{.)) setdiag_mt_ idmat_mt_)'
+ptmat=: 1 : '(((u@<: ; _1:) setdiag_mt_ idmat_mt_) (mp mp ct_mt_@[) (diagmat_mt_@:|@(9 o. u)))@{.'

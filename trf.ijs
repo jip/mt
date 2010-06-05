@@ -23,11 +23,6 @@ NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2010-06-01
-NB.
-NB. TODO:
-NB. - lahef: permut layout
-NB. - LaaU1aa - according to fact-n order
-NB. - 
 
 coclass 'mt'
 
@@ -66,7 +61,7 @@ NB.               permutation, corresponding to subP
 NB.   B         - (n-i)×(n-i)-matrix, contains subL110,
 NB.               subH10^H, strict lower triangle of subL100,
 NB.               strict upper triangle of subH00^H, and
-NB.               subA11upd (see layout below)
+NB.               subA11upd (see layout 1 below)
 NB.   lto       - max(0,n-i-TRFNB)-vector, aimed to be lti at
 NB.               the next call from hetrfpl
 NB.   t0o       - min(n,i+TRFNB)-vector, float, leading
@@ -104,7 +99,7 @@ NB.   L1        - n×n-matrix, unit lower triangular
 NB.   T         - n×n-matrix, Hermitian (symmetric)
 NB.               tridiagonal
 NB.
-NB. Storage layout (assume TRFNB<n):
+NB. Storage layout 1 (assume TRFNB<n):
 NB.   input subA:                      output B:
 NB.     ( subA00 subA10^H ) TRFNB        ( subL100H00h subH10^H  ) TRFNB
 NB.     ( subA10 subA11   ) n-i-TRFNB    ( subL110     subA11upd ) n-i-TRFNB
@@ -131,6 +126,23 @@ NB.   h00h      - elements of subH00^H
 NB.   h10h      - elements of subH10^H
 NB.   a11u      - elements of subA11upd
 NB.
+NB. Storage layout 2 (assume TRFNB<n):
+NB.   IOS from head:                 IOS from tail:
+NB.     ipi      subA     lti          ipi          subA         lti
+NB.     0        0                     -(n-i)       -(n-i)
+NB.     ...      ...                   ...          ...
+NB.   * j        j        0            -(n-i-j)     -(n-i-j)     -(n-i-j)
+NB.     ...      ...      ...          ...          ...          ...
+NB.   * j+p      j+p      p            p-(n-i-j)    p-(n-i-j)    p-(n-i-j)
+NB.     ...      ...      ...          ...          ...          ...
+NB.     n-i-1    n-i-1    n-i-j-1      -1           -1           -1
+NB. where
+NB.   ipi  - (n-i)-vector
+NB.   subA - (n-i)×(n-i)-matrix
+NB.   lti  - (n-i-j)-vector
+NB.   j    - integer in range 0:TRFNB-1
+NB.   *    - marked elements to be permuted
+NB.
 NB. Algorithm (assume 0<i<n-TRFNB):
 NB.   In:
 NB.     ipi  -: i. (n-i)
@@ -143,7 +155,7 @@ NB.            L1[i:n-1,i]
 NB.     ti   - any atom
 NB.   Out:
 NB.     ipo  - ip[i:n-1]
-NB.     B    - see layout
+NB.     B    - see layout 1
 NB.     lto  -: to 0 } lo
 NB.     t0o  - (T[0,0],T[1,1],...,T[i+TRFNB-1,i+TRFNB-1]) =
 NB.            (t0i[0],t0i[1],...,t0i[i-1],subT[0,0],subT[1,1],...,subT[TRFNB-1,TRFNB-1])
@@ -191,7 +203,7 @@ NB.                        dominant replace sorim by soris in
 NB.                        liofmax definition
 NB.           2.5.2) remap lIOS to measure from tail, making
 NB.                  possible to apply the same dip to arrays
-NB.                  of different lengths:
+NB.                  of different lengths (see layout 2):
 NB.                    dip := (-(n-i-j),p-(n-i-j))
 NB.           note: don't waste time for standardizing the
 NB.                 transposition, use Adverse (::) later
@@ -293,7 +305,7 @@ NB.               permutation, corresponding to subP
 NB.   B         - (n+i+1)×(n+i+1)-matrix, contains subU101,
 NB.               subH01^H, strict upper triangle of subU111,
 NB.               strict lower triangle of subH11^H, and
-NB.               subA00upd (see layout below)
+NB.               subA00upd (see layout 1 below)
 NB.   uto       - max(0,n+i+1-TRFNB)-vector, aimed to be uti
 NB.               at the next call from hetrfpu
 NB.   t0o       - min(n,i+1+TRFNB)-vector, float, tail
@@ -333,7 +345,7 @@ NB.   U1        - n×n-matrix, unit upper triangular
 NB.   T         - n×n-matrix, Hermitian (symmetric)
 NB.               tridiagonal
 NB.
-NB. Storage layout (assume TRFNB<n):
+NB. Storage layout 1 (assume TRFNB<n):
 NB.   input subA:                         output B:
 NB.     ( subA00    subA10^H ) n+i-TRFNB    ( subA00upd subU101     ) n+i-TRFNB
 NB.     ( subA10    subA11   ) TRFNB        ( subH01^H  subU111H11h ) TRFNB
@@ -359,6 +371,23 @@ NB.   h01h,h11h - elements of last TRFNB rows of subH^H
 NB.   h01h      - elements of subH01^H
 NB.   h11h      - elements of subH11^H
 NB.   a00u      - elements of subA00upd
+NB.
+NB. Storage layout 2 (assume TRFNB<n):
+NB.   IOS from head:
+NB.     ipi      subA     uti
+NB.     0        0        0
+NB.     ...      ...      ...
+NB.   * p        p        p
+NB.     ...      ...      ...
+NB.   * n-i-j-1  n-i-j-1  n-i-j-1
+NB.     ...      ...
+NB.     n-i-1    n-i-1
+NB. where
+NB.   ipi  - (n-i)-vector
+NB.   subA - (n-i)×(n-i)-matrix
+NB.   uti  - (n-i-j)-vector
+NB.   j    - integer in range 0:TRFNB-1
+NB.   *    - marked elements to be permuted
 NB.
 NB. Algorithm (assume TRFNB-n-1<i<-1):
 NB.   In:
@@ -418,28 +447,28 @@ NB.                    p := liolmax uti
 NB.                  note: to force U1 to be truly diagonally
 NB.                        dominant replace sorim by soris in
 NB.                        liolmax definition
-NB.           2.5.2) remap lIOS to measure from head, making
+NB.           2.5.2) form lIOS to measure from head, making
 NB.                  possible to apply the same dip to arrays
-NB.                  of different lengths:
-NB.                    dip := (j,p)
+NB.                  of different lengths (see layout 2):
+NB.                    dip := (n-i-j-1,p)
 NB.           note: don't waste time for standardizing the
 NB.                 transposition, use Adverse (::) later
 NB.                 instead
 NB.      2.6) try to apply the transposition dip to ipi:
 NB.             ipi[dip[0]] ↔ ipi[dip[1]]
-NB.           2.6.1) if failed (i.e. if p=j), then leave ipi
-NB.                  unchanged
+NB.           2.6.1) if failed (i.e. if p=n-i-j-1), then
+NB.                  leave ipi unchanged
 NB.      2.7) try to apply the transposition dip to rows and
 NB.           columns of subA:
 NB.             subA[dip[0],:] ↔ subA[dip[1],:]
 NB.             subA[:,dip[0]] ↔ subA[:,dip[1]]
-NB.           2.7.1) if failed (i.e. if p=j), then leave subA
-NB.                  unchanged
+NB.           2.7.1) if failed (i.e. if p=n-i-j-1), then
+NB.                  leave subA unchanged
 NB.      2.8) try to apply the transposition dip to uti:
 NB.             uti[dip[0]] ↔ uti[dip[1]]
 NB.           note: now uti[j] contains T[j,j+1]
-NB.           2.8.1) if failed (i.e. if p=j), then leave uti
-NB.                  unchanged
+NB.           2.8.1) if failed (i.e. if p=n-i-j-1), then
+NB.                  leave uti unchanged
 NB.      2.9) try to scale uti by tail, leaving tail itself
 NB.           unchanged:
 NB.             uti[0:j-2] := uti / uti[j-1]
@@ -829,13 +858,13 @@ NB.     m-k ( Aaa  Aba  ) := ( Aa  Ab  ) := A       m-k ( Laa             ) := L
 NB.     k   ( Aab  Abb  )                           k   ( Lab     Lbb     )
 NB.           n-k  k           n-k k                      n-k     k
 NB.   U1's partitioning:                          U1L's partitioning:
-NB.     m-k ( U1aa U1ba ) := ( U1a U1b ) := U1      m-k ( LaaU1aa U1ba    ) := U1L
-NB.     k   (      U1bb )                           k   ( Lab     LbbU1bb )
+NB.     m-k ( U1aa U1ba ) := ( U1a U1b ) := U1      m-k ( U1aaLaa U1ba    ) := U1L
+NB.     k   (      U1bb )                           k   ( Lab     U1bbLbb )
 NB.           n-k  k           n-k k                      n-k       k
 NB. where
-NB.   LaaU1aa - combined Laa and U1aa, U1aa's unit diagonal
+NB.   U1aaLaa - combined U1aa and Laa, U1aa's unit diagonal
 NB.             isn't stored
-NB.   LbbU1bb - combined Lbb and U1bb, U1bb's unit diagonal
+NB.   U1bbLbb - combined U1bb and Lbb, U1bb's unit diagonal
 NB.             isn't stored
 NB.
 NB. Algorithm:
@@ -887,15 +916,15 @@ NB.             P * U1b * Lbb = Ab
 NB.           note1: P is represented by vector of inversed
 NB.                 permutation ip
 NB.           note2: Lbb and U1b are stored in the same
-NB.                  matrix LbbU1b, U1b's unit diagonal isn't
+NB.                  matrix U1bLbb, U1b's unit diagonal isn't
 NB.                  stored
 NB.      4.3) permute rows of Aa according to P^_1 :
 NB.             Aa := P^_1 * Aa
 NB.           note: purge original A, reuse name 'y' to
 NB.                 store Aa
 NB.      4.4) compute Lab:
-NB.           4.4.1) extract LbbU1bb:
-NB.                    LbbU1bb := LbbU1b[m-k:m-1,:]
+NB.           4.4.1) extract U1bbLbb:
+NB.                    U1bbLbb := U1bLbb[m-k:m-1,:]
 NB.           4.4.2) extract Aab:
 NB.                    Aab := Aa[m-k:m-1,:]
 NB.           4.4.3) solve:
@@ -904,7 +933,7 @@ NB.      4.5) update and factorize Aaa recursively:
 NB.           4.5.1) extract Aaa:
 NB.                    Aaa := Aa[0:m-k-1,:]
 NB.           4.5.2) extract U1ba:
-NB.                    U1ba := LbbU1b[0:m-k-1,:]
+NB.                    U1ba := U1bLbb[0:m-k-1,:]
 NB.           4.5.3) update Aaa:
 NB.                    Aaa := Aaa - U1ba * Lab
 NB.           4.5.4) factorize Aaa recursively:
@@ -949,12 +978,12 @@ getrfpu1l=: 3 : 0
     ip ; y
   elseif. do.
     k=. m (<. >.@-:) n
-    'ip LbbU1b'=. getrfpu1l (-k) {."1 y
+    'ip U1bLbb'=. getrfpu1l (-k) {."1 y
     y=. ip C. (-k) }."1 y
-    Lab=. LbbU1b (trsmu1x & ((-k) & {.)) y
-    'ipa LaaU1aa'=. getrfpu1l y ((- (mp & Lab)) & ((-k) & }.)) LbbU1b
+    Lab=. U1bLbb (trsmu1x & ((-k) & {.)) y
+    'ipa U1aaLaa'=. getrfpu1l y ((- (mp & Lab)) & ((-k) & }.)) U1bLbb
     dipa=. ipa , ((m-k) + i. k)
-    (dipa C. ip) ; ((LaaU1aa , Lab) ,. (dipa C. LbbU1b))
+    (dipa C. ip) ; ((U1aaLaa , Lab) ,. (dipa C. U1bLbb))
   end.
 )
 
@@ -983,13 +1012,13 @@ NB.     m-k ( Aaa  Aab  ) := ( Aa  ) := A       m-k ( Uaa     Uab     ) := U
 NB.     k   ( Aba  Abb  )    ( Ab  )            k   (         Ubb     )
 NB.           n-k  k           n                      n-k     k
 NB.   L1's partitioning:                      UL1's partitioning:
-NB.     m-k ( L1aa      ) := ( L1a ) := L1      m-k ( L1aaUaa Uab     ) := UL1
-NB.     k   ( L1ba L1bb )    ( L1b )            k   ( L1ba    L1bbUbb )
+NB.     m-k ( L1aa      ) := ( L1a ) := L1      m-k ( UaaL1aa Uab     ) := UL1
+NB.     k   ( L1ba L1bb )    ( L1b )            k   ( L1ba    UbbL1bb )
 NB.           n-k  k           n                      n-k     k
 NB. where
-NB.   L1aaUaa - combined L1aa and Uaa, L1aa's unit diagonal
+NB.   UaaL1aa - combined Uaa and L1aa, L1aa's unit diagonal
 NB.             isn't stored
-NB.   L1bbUbb - combined L1bb and Ubb, L1bb's unit diagonal
+NB.   UbbL1bb - combined Ubb and L1bb, L1bb's unit diagonal
 NB.             isn't stored
 NB.
 NB. Algorithm:
@@ -1041,15 +1070,15 @@ NB.             Ubb * L1b * P = Ab
 NB.           note1: P is represented by vector of inversed
 NB.                 permutation ip
 NB.           note2: L1b and Ubb are stored in the same
-NB.                  matrix L1bUbb, L1b's unit diagonal isn't
+NB.                  matrix UbbL1b, L1b's unit diagonal isn't
 NB.                  stored
 NB.      4.3) permute columns of Aa according to P^_1 :
 NB.             Aa := Aa * P^_1
 NB.           note: purge original A, reuse name 'y' to
 NB.                 store Aa
 NB.      4.4) compute Uab:
-NB.           4.4.1) extract L1bbUbb:
-NB.                    L1bbUbb := L1bUbb[:,n-k:n-1]
+NB.           4.4.1) extract UbbL1bb:
+NB.                    UbbL1bb := UbbL1b[:,n-k:n-1]
 NB.           4.4.2) extract Aab:
 NB.                    Aab := Aa[:,n-k:n-1]
 NB.           4.4.3) solve:
@@ -1058,7 +1087,7 @@ NB.      4.5) update and factorize Aaa recursively:
 NB.           4.5.1) extract Aaa:
 NB.                    Aaa := Aa[:,0:n-k-1]
 NB.           4.5.2) extract L1ba:
-NB.                    L1ba := L1bUbb[:,0:n-k-1]
+NB.                    L1ba := UbbL1b[:,0:n-k-1]
 NB.           4.5.3) update Aaa:
 NB.                    Aaa := Aaa - Uab * L1ba
 NB.           4.5.4) factorize Aaa recursively:
@@ -1103,12 +1132,12 @@ getrful1p=: 3 : 0
     ip ; y
   elseif. do.
     k=. n (<. >.@-:) m
-    'ip L1bUbb'=. getrful1p (-k) {. y
+    'ip UbbL1b'=. getrful1p (-k) {. y
     y=. ip (C."1) (-k) }. y
-    Uab=. L1bUbb (trsmxl1 & ((-k) & ({."1))) y
-    'ipa L1aaUaa'=. getrful1p y ((- (Uab & mp)) & ((-k) & (}."1))) L1bUbb
+    Uab=. UbbL1b (trsmxl1 & ((-k) & ({."1))) y
+    'ipa UaaL1aa'=. getrful1p y ((- (Uab & mp)) & ((-k) & (}."1))) UbbL1b
     dipa=. ipa , ((n-k) + i. k)
-    (dipa C."1 ip) ; ((L1aaUaa ,. Uab) , (dipa C."1 L1bUbb))
+    (dipa C."1 ip) ; ((UaaL1aa ,. Uab) , (dipa C."1 UbbL1b))
   end.
 )
 
@@ -1456,7 +1485,7 @@ NB.   1) extract main diagonal d and suberdiagonal e from A
 NB.   2) prepare input:
 NB.        dee2 := d ,. (0,e) ,. (0,|e|^2)
 NB.   3) do iterations k=1:n-1 by reversed suffix scan:
-NB.        de=. u~/\.&.|. dee2
+NB.        de=. u/\.&.|. dee2
 NB.      to find :
 NB.        d[k] := d[k] - |e[k-1]|^2 / d[k-1]
 NB.        e[k-1] := e[k-1] / d[k-1]
@@ -1488,7 +1517,7 @@ NB.
 NB. TODO:
 NB. - L1 and D would be sparse
 
-pttrfl=: ({."1 (((setdiag idmat@#)~ ;&_1) ; diagmat@[) }.@(1&({"1)))@(({.@] ((- {:) , {.@]) ((% {.)~ }.))~/\.&.|.)@(diag (,. (,. soris)@(0&,)) _1&diag)
+pttrfl=: ({."1 (((setdiag idmat@#)~ ;&_1) ; diagmat@[) }.@(1&({"1)))@(({.@] ((- {:) , {.@]) ((%  {.)~ }.))~/\.&.|.)@(diag (,. (,. soris)@(0&,)) _1&diag)
 
 NB. ---------------------------------------------------------
 NB. pttrfu
@@ -1514,7 +1543,7 @@ NB.   1) extract main diagonal d and superdiagonal e from A
 NB.   2) prepare input:
 NB.        dee2 := d ,. (e,0) ,. ((|e|^2),0)
 NB.   3) do iterations k=n-2:0 by suffix scan:
-NB.        de=. u~/\. dee2
+NB.        de=. u/\. dee2
 NB.      to find :
 NB.        d[k] := d[k] - |e[k]|^2 / d[k+1]
 NB.        e[k] := e[k] / d[k+1]
@@ -1540,7 +1569,7 @@ NB.
 NB. TODO:
 NB. - U1 and D would be sparse
 
-pttrfu=: ({."1 (((setdiag idmat@#)~ ;&1) ; diagmat@[) }:@(1&({"1)))@(({.@[ ((- {:) , {.@]) ((%~ }.)~ {.))/\.)@(diag (,. (,. soris)@(,&0)) 1&diag)
+pttrfu=: ({."1 (((setdiag idmat@#)~ ;& 1) ; diagmat@[) }:@(1&({"1)))@(({.@[ ((- {:) , {.@]) ((%~ }.)~ {.)) /\.    )@(diag (,. (,. soris)@(,&0))  1&diag)
 
 NB. =========================================================
 NB. Test suite
@@ -1569,15 +1598,19 @@ NB. - for P * U1 * L = A :
 NB.     berr := ||P * U1 * L - A|| / (ε * ||A|| * n)
 NB. - for U * L1 * P = A :
 NB.     berr := ||U * L1 * P - A|| / (ε * ||A|| * m)
+NB.
+NB. Notes:
+NB. - use temporary locale mttmp to avoid mt's names
+NB.   redefinition
 
 testgetrf=: 3 : 0
-  require '~addons/math/misc/matfacto.ijs'
+  require_mttmp_ '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
 
   rcond=. ((_."_)`(norm1 con (getriul1p@getrful1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
 
-  ('lud' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %. (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('lud_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %. (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 
   ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_ (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 
@@ -1678,6 +1711,9 @@ NB. - for L1 * D * L1^H = A :
 NB.     berr := ||L1 * D * L1^H - A|| / (ε * ||A|| * n)
 NB. - for U1 * D * U1^H = A :
 NB.     berr := ||U1 * D * U1^H - A|| / (ε * ||A|| * n)
+NB.
+NB. TODO:
+NB. - A should be sparse
 
 testpttrf=: 3 : 0
   rcond=. _. NB. (norm1 con (pttril@pttrfl)) y

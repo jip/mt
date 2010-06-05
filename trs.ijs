@@ -79,13 +79,13 @@ NB.   L    - n×n-matrix, lower triangular
 NB.   U1   - n×n-matrix, unit upper triangular
 NB.   nrhs ≥ 0, number of RHSs
 
-getrslu1px=:  (0 {:: [) C.       ((] trsmu1x  trsmlx ~) (1 & {::))~
+getrslu1px=:  (0 {:: [) C.^:_1   ((] trsmu1x  trsmlx ~) (1 & {::))~
 getrsxlu1ph=: (0 {:: [) C.^:_1"1 ((] trsmxu1h trsmxlh~) (1 & {::))~
 getrsxlu1pt=: (0 {:: [) C.^:_1"1 ((] trsmxu1t trsmxlt~) (1 & {::))~
 
-getrslu1phx=: (1 {:: [) ([ trsmlhx trsmu1hx) ((0 {:: [) C.^:_1   ])
-getrslu1ptx=: (1 {:: [) ([ trsmltx trsmu1tx) ((0 {:: [) C.^:_1   ])
-getrsxlu1p=:  (1 {:: [) ([ trsmxl  trsmxu1 ) ((0 {:: [) C.       ])
+getrslu1phx=: (1 {:: [) ([ trsmlhx trsmu1hx) ((0 {:: [) C.   ])
+getrslu1ptx=: (1 {:: [) ([ trsmltx trsmu1tx) ((0 {:: [) C.   ])
+getrsxlu1p=:  (1 {:: [) ([ trsmxl  trsmxu1 ) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
 NB. Verb:         Solves:       Syntax:
@@ -118,13 +118,13 @@ NB.
 NB. Notes:
 NB. - implements LAPACK's xGETRS
 
-getrspl1ux=:  (1 {:: [) ([ trsmux  trsml1x ) ((0 {:: [) C.       ])
-getrsxpl1uh=: (1 {:: [) ([ trsmxuh trsmxl1h) ((0 {:: [) C.^:_1"1 ])
-getrsxpl1ut=: (1 {:: [) ([ trsmxut trsmxl1t) ((0 {:: [) C.^:_1"1 ])
+getrspl1ux=:  (1 {:: [) ([ trsmux  trsml1x ) ((0 {:: [) C.   ])
+getrsxpl1uh=: (1 {:: [) ([ trsmxuh trsmxl1h) ((0 {:: [) C."1 ])
+getrsxpl1ut=: (1 {:: [) ([ trsmxut trsmxl1t) ((0 {:: [) C."1 ])
 
-getrspl1uhx=: (0 {:: [) C.   ((] trsml1hx trsmuhx~) (1 & {::))~
-getrspl1utx=: (0 {:: [) C.   ((] trsml1tx trsmutx~) (1 & {::))~
-getrsxpl1u=:  (0 {:: [) C."1 ((] trsmxl1  trsmxu ~) (1 & {::))~
+getrspl1uhx=: (0 {:: [) C.^:_1   ((] trsml1hx trsmuhx~) (1 & {::))~
+getrspl1utx=: (0 {:: [) C.^:_1   ((] trsml1tx trsmutx~) (1 & {::))~
+getrsxpl1u=:  (0 {:: [) C.^:_1"1 ((] trsmxl1  trsmxu ~) (1 & {::))~
 
 NB. ---------------------------------------------------------
 NB. Verb:         Solves:       Syntax:
@@ -154,13 +154,13 @@ NB.   L    - n×n-matrix, lower triangular
 NB.   U1   - n×n-matrix, unit upper triangular
 NB.   nrhs ≥ 0, number of RHSs
 
-getrspu1lx=:  (1 {:: [) ([ trsmlx  trsmu1x ) ((0 {:: [) C.       ])
-getrsxpu1lh=: (1 {:: [) ([ trsmxlh trsmxu1h) ((0 {:: [) C.^:_1"1 ])
-getrsxpu1lt=: (1 {:: [) ([ trsmxlt trsmxu1t) ((0 {:: [) C.^:_1"1 ])
+getrspu1lx=:  (1 {:: [) ([ trsmlx  trsmu1x ) ((0 {:: [) C.   ])
+getrsxpu1lh=: (1 {:: [) ([ trsmxlh trsmxu1h) ((0 {:: [) C."1 ])
+getrsxpu1lt=: (1 {:: [) ([ trsmxlt trsmxu1t) ((0 {:: [) C."1 ])
 
-getrspu1lhx=: (0 {:: [) C.   ((] trsmu1hx trsmlhx~) (1 & {::))~
-getrspu1ltx=: (0 {:: [) C.   ((] trsmu1tx trsmltx~) (1 & {::))~
-getrsxpu1l=:  (0 {:: [) C."1 ((] trsmxu1  trsmxl ~) (1 & {::))~
+getrspu1lhx=: (0 {:: [) C.^:_1   ((] trsmu1hx trsmlhx~) (1 & {::))~
+getrspu1ltx=: (0 {:: [) C.^:_1   ((] trsmu1tx trsmltx~) (1 & {::))~
+getrsxpu1l=:  (0 {:: [) C.^:_1"1 ((] trsmxu1  trsmxl ~) (1 & {::))~
 
 NB. ---------------------------------------------------------
 NB. Verb:         Solves:       Syntax:
@@ -190,13 +190,13 @@ NB.   L1   - n×n-matrix, unit lower triangular
 NB.   U    - n×n-matrix, upper triangular
 NB.   nrhs ≥ 0, number of RHSs
 
-getrsul1px=:  (0 {:: [) C.       ((] trsml1x  trsmux ~) (1 & {::))~
+getrsul1px=:  (0 {:: [) C.^:_1   ((] trsml1x  trsmux ~) (1 & {::))~
 getrsxul1ph=: (0 {:: [) C.^:_1"1 ((] trsmxl1h trsmxuh~) (1 & {::))~
 getrsxul1pt=: (0 {:: [) C.^:_1"1 ((] trsmxl1t trsmxut~) (1 & {::))~
 
-getrsul1phx=: (1 {:: [) ([ trsmuhx trsml1hx) ((0 {:: [) C.^:_1   ])
-getrsul1ptx=: (1 {:: [) ([ trsmutx trsml1tx) ((0 {:: [) C.^:_1   ])
-getrsxul1p=:  (1 {:: [) ([ trsmxu  trsmxl1 ) ((0 {:: [) C.       ])
+getrsul1phx=: (1 {:: [) ([ trsmuhx trsml1hx) ((0 {:: [) C.   ])
+getrsul1ptx=: (1 {:: [) ([ trsmutx trsml1tx) ((0 {:: [) C.   ])
+getrsxul1p=:  (1 {:: [) ([ trsmxu  trsmxl1 ) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
 NB. Verb:         Solves:       Syntax:
@@ -225,10 +225,10 @@ NB. Notes:
 NB. - is similar to LAPACK's xHETRS, but uses another
 NB.   factorization, see hetrfx
 
-hetrsplx=:   (0 {:: ])    C.^:_1  ((1 {:: ]) trsml1hx ((2 {:: [) pttrsax  ((1 {:: [) trsml1x  ((0 {:: [) C.       ]))))
-hetrspltx=: ((0 {:: ]) +@(C.^:_1) ((1 {:: ]) trsml1hx ((2 {:: [) pttrsax  ((1 {:: [) trsml1x  ((0 {:: [) C.       ]))))) +
-hetrsxpl=:   (0 {:: ])    C."1    ((1 {:: ]) trsmxl1  ((2 {:: ]) pttrsxa  ((1 {:: ]) trsmxl1h ((0 {:: [) C.^:_1"1 ]))))
-hetrsxplt=: ((0 {:: ])    C."1    ((1 {:: ]) trsmxl1  ((2 {:: ]) pttrsxa  ((1 {:: ]) trsmxl1h ((0 {:: [) C.^:_1"1 ]))))) +
+hetrsplx=:   (0 {:: [)    C.^:_1    ((1 {:: [) trsml1hx (pttrfl@(2 {:: [) pttrslx ((1 {:: [) trsml1x  ((0 {:: [) C.   ]))))
+hetrspltx=: ((0 {:: [) +@(C.^:_1  ) ((1 {:: [) trsml1hx (pttrfl@(2 {:: [) pttrslx ((1 {:: [) trsml1x  ((0 {:: [) C.   ]))))) +
+hetrsxpl=:   (0 {:: [)    C.^:_1"1  ((1 {:: [) trsmxl1  (pttrfl@(2 {:: [) pttrsxl ((1 {:: [) trsmxl1h ((0 {:: [) C."1 ]))))
+hetrsxplt=: ((0 {:: [) +@(C.^:_1"1) ((1 {:: [) trsmxl1  (pttrfl@(2 {:: [) pttrsxl ((1 {:: [) trsmxl1h ((0 {:: [) C."1 ]))))) +
 
 NB. ---------------------------------------------------------
 NB. Verb:         Solves:       Syntax:
@@ -253,10 +253,10 @@ NB.   U1   - n×n-matrix, unit upper triangular
 NB.   T    - n×n-matrix, Hermitian (symmetric) tridiagonal
 NB.   nrhs ≥ 0
 
-hetrspux=:   (0 {:: ])    C.^:_1  ((1 {:: ]) trsmu1hx ((2 {:: [) pttrsax  ((1 {:: [) trsmu1x  ((0 {:: [) C.       ]))))
-hetrsputx=: ((0 {:: ]) +@(C.^:_1) ((1 {:: ]) trsmu1hx ((2 {:: [) pttrsax  ((1 {:: [) trsmu1x  ((0 {:: [) C.       ]))))) +
-hetrsxpu=:   (0 {:: ])    C."1    ((1 {:: ]) trsmxu1  ((2 {:: ]) pttrsxa  ((1 {:: ]) trsmxu1h ((0 {:: [) C.^:_1"1 ]))))
-hetrsxput=: ((0 {:: ])    C."1    ((1 {:: ]) trsmxu1  ((2 {:: ]) pttrsxa  ((1 {:: ]) trsmxu1h ((0 {:: [) C.^:_1"1 ]))))) +
+hetrspux=:   (0 {:: [)    C.^:_1    ((1 {:: [) trsmu1hx (pttrfu@(2 {:: [) pttrsux ((1 {:: [) trsmu1x  ((0 {:: [) C.   ]))))
+hetrsputx=: ((0 {:: [) +@(C.^:_1  ) ((1 {:: [) trsmu1hx (pttrfu@(2 {:: [) pttrsux ((1 {:: [) trsmu1x  ((0 {:: [) C.   ]))))) +
+hetrsxpu=:   (0 {:: [)    C.^:_1"1  ((1 {:: [) trsmxu1  (pttrfu@(2 {:: [) pttrsxu ((1 {:: [) trsmxu1h ((0 {:: [) C."1 ]))))
+hetrsxput=: ((0 {:: [) +@(C.^:_1"1) ((1 {:: [) trsmxu1  (pttrfu@(2 {:: [) pttrsxu ((1 {:: [) trsmxu1h ((0 {:: [) C."1 ]))))) +
 
 NB. ---------------------------------------------------------
 NB. Verb:         Solves:       Syntax:
@@ -341,26 +341,26 @@ NB.   D    - n×n-matrix, diagonal with positive diagonal
 NB.          entries
 NB.   nrhs ≥ 0
 NB.
-NB. Algorithm for pttrslx:
+NB. Algorithm [1] for pttrslx:
 NB.   In:  L1 D Bv
 NB.   Out: Xv
-NB.   0) extract main diagonal d from D and subdiagonal e
+NB.   1) extract main diagonal d from D and subdiagonal e
 NB.      from L1
-NB.   1) prepare input:
+NB.   2) prepare input:
 NB.        be=. Bv ,. (0,e)
-NB.   2) do iterations k=1:n-1 by reversed suffix scan:
+NB.   3) do iterations k=1:n-1 by reversed suffix scan:
 NB.        btrash=. u/\.&.|. be
 NB.      to find :
 NB.        b[k] := b[k] - b[k-1]*e[k-1]
-NB.   3) cut off trash column to extract updated Bv:
+NB.   4) cut off trash column to extract updated Bv:
 NB.        b=. (}:"1) btrash
-NB.   4) prepare intermediate input:
+NB.   5) prepare intermediate input:
 NB.        bde=. ((}: b) , (({: b) % ({: d))) ,. d ,. ((conj(e),0)
-NB.   5) do iterations k=n-2:0 by suffix scan:
+NB.   6) do iterations k=n-2:0 by suffix scan:
 NB.        btrash=. u/\. bde
 NB.      to find :
-NB.        b[k] := b[k]/d[k] - b[k+1]*e[k]
-NB.   6) cut off two last columns of trash to extract raw Xv
+NB.        b[k] := b[k]/d[k] - b[k+1]*conj(e[k])
+NB.   7) cut off two last columns of trash to extract raw Xv
 NB.      and re-shape to Bv's shape:
 NB.        Xv=. ($ Bv) ($,) _2 }."1 btrash
 NB.
@@ -379,11 +379,79 @@ NB. References:
 NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157
+NB.
+NB. TODO:
+NB. - L1 and D would be sparse
 
-pttrslx=:  $@] ($,) (_2 }."1 (   ]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1   diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))
-pttrsltx=: $@] ($,) (_2 }."1 (   ]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1 +@diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))  NB. pttrsltx=: (<@:+@(0 {:: [))`0:`[} pttrslx ]
-pttrsxl=:  $@] ($,) (_2 }."1 (|:@]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1 +@diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))  NB. pttrsxl=: pttrsltx |:
-pttrsxlt=: $@] ($,) (_2 }."1 (|:@]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1   diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))  NB. pttrsxlt=: pttrslx |:
+pttrslx=:  $@] ($,) (_2 }."1 (]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1   diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))
+pttrsltx=: $@] ($,) (_2 }."1 (]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1 +@diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))
+pttrsxl=:  |:@(pttrsltx |:)
+pttrsxlt=: |:@(pttrslx  |:)
+
+NB. ---------------------------------------------------------
+NB. Verb:         Solves:       Syntax:
+NB. pttrsux       A   * X = B   Xv=. (U1;D) pttrsux  Bv
+NB. pttrsutx      A^T * X = B   Xv=. (U1;D) pttrsutx Bv
+NB. pttrsxu       X * A   = B   Xh=. (U1;D) pttrsxu  Bh
+NB. pttrsxut      X * A^T = B   Xh=. (U1;D) pttrsxut Bh
+NB.
+NB. Description:
+NB.   Solve linear monomial equation with Hermitian
+NB.   (symmetric) positive definite tridiagonal matrix A,
+NB.   represented in factored form:
+NB.     U1 * D * U1^H = A
+NB. where:
+NB.   A    - n×n Hermitian (symmetric) positive definite
+NB.          tridiagonal matrix
+NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
+NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
+NB.   Xv   - same shape as Bv, the solution
+NB.   Xh   - same shape as Bh, the solution
+NB.   U1   - n×n-matrix, unit upper bidiangonal
+NB.   D    - n×n-matrix, diagonal with positive diagonal
+NB.          entries
+NB.   nrhs ≥ 0
+NB.
+NB. Algorithm for pttrsux:
+NB.   In:  U1 D Bv
+NB.   Out: Xv
+NB.   1) extract main diagonal d from D and superdiagonal e
+NB.      from U1
+NB.   2) prepare input:
+NB.        be=. Bv ,. (e,0)
+NB.   3) do iterations k=n-2:0 by suffix scan:
+NB.        btrash=. u/\. be
+NB.      to find :
+NB.        b[k] := b[k] - b[k+1]*e[k]
+NB.   4) cut off trash column to extract updated Bv:
+NB.        b=. (}:"1) btrash
+NB.   5) prepare intermediate input:
+NB.        bde=. ((({. b) % ({. d)) , (}. b)) ,. d ,. ((0,conj(e))
+NB.   6) do iterations k=1:n-1 by reversed suffix scan:
+NB.        btrash=. u/\.&.|. bde
+NB.      to find :
+NB.        b[k] := b[k]/d[k] - b[k-1]*conj(e[k-1])
+NB.   7) cut off two last columns of trash to extract raw Xv
+NB.      and re-shape to Bv's shape:
+NB.        Xv=. ($ Bv) ($,) _2 }."1 btrash
+NB.
+NB. Assertions:
+NB.   Xv -: clean U1D pttrsux Bv
+NB. where
+NB.   U1D=. pttrfu A
+NB.   Bv=. A mp Xv
+NB.
+NB. Notes:
+NB. - if A is singular then solution Xx will be wrong
+NB. - if A is indefinite then solution Xx may be wrong
+NB.
+NB. TODO:
+NB. - U1 and D would be sparse
+
+pttrsux=:  $@] ($,) (_2 }."1 (]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.    )@(,. (,&0)))`( 1   diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.&.|.@(c@[ ({.@] % ({,))` 0:`]} ,.))`((,. (0 ,+))~)`(diag@(1 {:: [)) fork3))
+pttrsutx=: $@] ($,) (_2 }."1 (]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.    )@(,. (,&0)))`( 1 +@diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.&.|.@(c@[ ({.@] % ({,))` 0:`]} ,.))`((,. (0 ,+))~)`(diag@(1 {:: [)) fork3))
+pttrsxu=:  |:@(pttrsutx |:)
+pttrsxut=: |:@(pttrsux  |:)
 
 NB. =========================================================
 NB. Test suite
@@ -402,19 +470,40 @@ NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (||ε * op(A)|| * ||X||))
+NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
   'conA conAh conAt'=. 3 # _. NB. (norm1 con (getriul1p@getrful1p))"2 (] , ct ,: |:) A
-  'LU1ip ipL1U ipU1L UL1ip'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; < @getrful1p) A
-##############
-  ('getrspl1ux'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;ipL1U)
-  ('getrspl1uhx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ ct) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((ct A);X;ipL1U)
-  ('getrspl1utx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;ipL1U)
-  ('getrsxpl1u'  tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;ipL1U)
-  ('getrsxpl1uh' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((ct A);X;ipL1U)
-  ('getrsxpl1ut' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;ipL1U)
+  'LU1ip ipL1U ipU1L UL1ip'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
+
+  ('getrslu1px'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;LU1ip)
+  ('getrslu1phx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((ct A);X;LU1ip)
+  ('getrslu1ptx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;LU1ip)
+  ('getrsxlu1p'  tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;LU1ip)
+  ('getrsxlu1ph' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((ct A);X;LU1ip)
+  ('getrsxlu1pt' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;LU1ip)
+
+  ('getrspl1ux'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;ipL1U)
+  ('getrspl1uhx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((ct A);X;ipL1U)
+  ('getrspl1utx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;ipL1U)
+  ('getrsxpl1u'  tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;ipL1U)
+  ('getrsxpl1uh' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((ct A);X;ipL1U)
+  ('getrsxpl1ut' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;ipL1U)
+
+  ('getrspu1lx'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;ipU1L)
+  ('getrspu1lhx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((ct A);X;ipU1L)
+  ('getrspu1ltx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;ipU1L)
+  ('getrsxpu1l'  tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;ipU1L)
+  ('getrsxpu1lh' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((ct A);X;ipU1L)
+  ('getrsxpu1lt' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;ipU1L)
+
+  ('getrsul1px'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;UL1ip)
+  ('getrsul1phx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((ct A);X;UL1ip)
+  ('getrsul1ptx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;UL1ip)
+  ('getrsxul1p'  tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;UL1ip)
+  ('getrsxul1ph' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAh"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((ct A);X;UL1ip)
+  ('getrsxul1pt' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;UL1ip)
 
   EMPTY
 )
@@ -437,13 +526,18 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (hetripl@hetrfpl))"2 (] ,: |:) A
-  Af=. hetrfpl A
+  'conA conAt'=. 2 # _. NB. (norm1 con (hetripl@hetrfpl))"2 (] ,: |:) A
+  'ipL1D ipU1D'=. (hetrfpl ; <@hetrfpu) A
 
-  ('hetrsax'  tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;Af)
-  ('hetrsatx' tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;Af)
-  ('hetrsxa'  tdyad ((_3&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;Af)
-  ('hetrsxat' tdyad ((_3&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;Af)
+  ('hetrsplx'  tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (    A ;X;ipL1D)
+  ('hetrspltx' tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) ((|: A);X;ipL1D)
+  ('hetrsxpl'  tdyad ((_3&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) (    A ;X;ipL1D)
+  ('hetrsxplt' tdyad ((_3&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) ((|: A);X;ipL1D)
+
+  ('hetrspux'  tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (    A ;X;ipU1D)
+  ('hetrsputx' tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) ((|: A);X;ipU1D)
+  ('hetrsxpu'  tdyad ((_3&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) (    A ;X;ipU1D)
+  ('hetrsxput' tdyad ((_3&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) ((|: A);X;ipU1D)
 
   EMPTY
 )
@@ -468,12 +562,17 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 testpotrs=: 3 : 0
   'A X'=. y
   'conA conAt'=. 2 # _. NB. (norm1 con (potril@potrfl))"2 (] ,: |:) A
-  L=. potrfl A
+  'L U'=. (potrfl ,: potrfu) A
 
-  ('potrsax'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
-  ('potrsatx' tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;L)
-  ('potrsxa'  tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;L)
-  ('potrsxat' tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;L)
+  ('potrslx'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
+  ('potrsltx' tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;L)
+  ('potrsxl'  tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;L)
+  ('potrsxlt' tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;L)
+
+  ('potrsux'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;U)
+  ('potrsutx' tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;U)
+  ('potrsxu'  tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;U)
+  ('potrsxut' tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;U)
 
   EMPTY
 )
@@ -495,16 +594,24 @@ NB.
 NB. Formula:
 NB. - ferr := max(||X - exactX|| / ||X||)
 NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
+NB.
+NB. TODO:
+NB. - A should be sparse
 
 testpttrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. 2 # _. NB. (norm1 con (pttril@pttrfl))"2 (] ,: |:) A NB. ##################
-  'L1 D'=. pttrfpl A
+  'conA conAt'=. 2 # _. NB. (norm1 con (pttril@pttrfl))"2 (,: |:) A
+  'L1D U1D'=. (pttrfl ; <@pttrfu) A
 
-  ('pttrsax'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ( mp~     (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
-  ('pttrsatx' tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - ((mp~ |:) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X;L)
-  ('pttrsxa'  tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ( mp      (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) (    A ;X;L)
-  ('pttrsxat' tdyad ((2 & {::)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - ((mp  ct) (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @]))))))) ((|: A);X;L)
+  ('pttrslx'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (    A ;X;L1D)
+  ('pttrsltx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) ((|: A);X;L1D)
+  ('pttrsxl'  tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) (    A ;X;L1D)
+  ('pttrsxlt' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) ((|: A);X;L1D)
+
+  ('pttrsux'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (    A ;X;U1D)
+  ('pttrsutx' tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) ((|: A);X;U1D)
+  ('pttrsxu'  tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) (    A ;X;U1D)
+  ('pttrsxut' tdyad ((_2&{.)`((mp~ & >/)@(2&{.))`]`(conAt"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @(((mp~ & >/)@(2 {. [)) - (mp  (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) ((|: A);X;U1D)
 
   EMPTY
 )

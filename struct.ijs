@@ -248,6 +248,9 @@ NB. References:
 NB. [1] JWiki/Essays/ Block Matrix Inverse
 NB.     Roger Hui
 NB.     http://www.jsoftware.com/jwiki/Essays/Block%20Matrix%20Inverse
+NB.
+NB. TODO:
+NB. - fret should be sparse
 
 icut=: [: > 3 : ',"(#$y)&.>/y'^:(#@$)
 

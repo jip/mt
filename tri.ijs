@@ -274,8 +274,6 @@ NB. - is similar to LAPACK's xHETRI, but uses another
 NB.   factorization, see hetrfx
 
 hetripl=: (/: @ (0 & {::)) sp (pttri @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))
-hetripl2=: (sp&:>)`(((ct @ [) mp mp~)&>)/ @ ((/:&.>)`(trtril1 &. >)`(pttri &. >) ag)
-hetripl3=: (sp&:>)`(((mp~ ct)~ mp [)&>)/ @ ((/:&.>)`(trtril1 &. >)`(pttri &. >) ag)
 hetripu=: (/: @ (0 & {::)) sp (pttri @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))
 
 NB. ---------------------------------------------------------
@@ -418,8 +416,6 @@ testhetri=: 3 : 0
   ('%.'      tmonad (] `]`(rcond"_)`(_."_)`(           (norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))   ))             y
 
   ('hetripl' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
-  ('hetripl2' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
-  ('hetripl3' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
   ('hetripu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpu) y
 
   EMPTY

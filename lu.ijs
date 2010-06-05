@@ -201,81 +201,50 @@ slubc=: (3 : 0) " 2
   p ; y
 )
 
-sluc2_kernel=: 1 : 0
-:
-  '`f g h'=. u
-  x ([ (}. - ((h & (x g y)) @ {.)) f) y
-)
-sluc2_col=: ({"1)`((- (0 & (1 }) @ $)) {. ])`(mp~) sluc2_kernel
-sluc2_row=:  {   `((- (0 & (0 }) @ $)) {. ])` mp   sluc2_kernel
-
-sluc2=: (3 : 0) " 2
-  si2i=. ] + (i. @ -)                    NB. y (y+1) ... (x-1)
-
-  mn=. <./ 'm n'=. $ y
-  p=. i. m
-
-  for_j. i. mn do.
-    c2=. j sluc2_col y                   NB. compute updated tail of j-th col
-    jp=. j + jp0=. {. \: | c2            NB. find pivot
-NB.smoutput 'SLUC' ; 'c' ; ($c) ; c ; 'c2' ; ($c2) ; c2 ; 'p' ; ($p) ; p ; 'jp' ; jp
-    if. jp0 do.
-      s=. < jp , j
-      p=. s C. p                         NB. accumulate permutations
-      y=. s C. y                         NB. swap j-th and jp-th rows of y
-      c2=. (< 0 , jp0) C. c2             NB. swap j-th and jp-th items of c
-NB.smoutput 'jp0≠0' ; 'p' ; ($p) ; p ; 'new c2' ; ($c2) ; c2 ; 'new y' ; ($y) ; y
-    end.
-    c2=. ({. 0 } (% {.)) c2              NB. scale c2's tail by its head
-    y=. c2 (< (m si2i j) ; j) } y        NB. write back c2
-NB.smoutput 'new c2' ; ($c2) ; c2 ; 'new y' ; ($y) ; y
-    y=. (({. c2) (0 }) j sluc2_row y) (< j ; (n si2i j)) } y     NB. compute and write back updated tail of j-th row
-NB.smoutput 'new y' ; ($y) ; y
-  end.
-
-  p ; y
-)
-
-slubc2_kernel=: 1 : 0
+NB. Kernel of LU Crout algo
+kluc=: 1 : 0
 :
   '`f g h i j'=. u
-  x ([ (i - ((h & (x g y)) @ j)) f) y
+  x ([ (i - (h & (x g y)) @ j) f) y
 )
-slubc2_col=: ({"1)`((- (0 & (1 }) @ $)) {. ])`(mp~) slubc2_kernel
-slubc2_row=:  {   `((- (0 & (0 }) @ $)) {. ])` mp   slubc2_kernel
 
-slubc2=: (3 : 0) " 2
+NB. Implement kernel for both directions
+kluc_col=: ({"1)`(((- (0 & (1 }) @ $))~ {.)~ {. ])`(mp~)`(( }.   ~ {.)~)`(( {.   ~ {.)~) kluc
+kluc_row=:  {   `(((- (0 & (0 }) @ $))~ {.)~ {. ])` mp  `(((}."1)~ {.)~)`((({."1)~ {.)~) kluc
+
+NB. LU Crout algo
+NB. 'p LU'=. nb luc A
+NB. where nb - block size, nb>0
+
+luc=: (4 : 0) " 0 2
+  mkcp=. < @ (, ` (, @ ]) @. =)          NB. make cycle permutation from x and y
   si2i=. ] + (i. @ -)                    NB. y (y+1) ... (x-1)
 
-  nb=. 32                                NB. choosed experimentally
   mn=. <./ 'm n'=. $ y
   p=. i. m
 
-  for_j. range 0 , (mn - 1) , nb do.
-    jb=. nb <. mn - j
-    iosc=. (_1 , j) ,: ((m - j) , jb)
-    iosa=. (j - m) , j
-    iosb=. (0 , j) ,: (j , jb)
-    'p2 c'=. sluc2 ((iosc & (] ;. 0)) - (iosa & {.) mp (iosb & (] ;. 0))) y  NB. update (c←c-a*b), then LU-factorize diagonal and subdiagonal blocks c
-    iosr=. m si2i j                      NB. where p2 will modify p
-    iosc=. (j + jb) si2i j
-    dp=. (i. j) , (j + p2)               NB. current iteration's rows permutation
-    y=. dp C. y                          NB. apply rows permutation starting from j-th row
+  if. n > 1 do.
+    for_j. range 0 , (mn - 1) , x do.
+      jb=. x <. mn - j
+      iosc=. (j + jb) si2i j
+      'p2 rc2'=. 1 luc iosc kluc_col y   NB. update (c←c-a*b), then factorize diagonal and subdiagonal blocks
+      dp=. (i. j) , (j + p2)             NB. current iteration's rows permutation
+      p=. dp C. p                        NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
+      y=. dp C. y                        NB. apply rows permutation starting from j-th row
+      y=. rc2 (< (m si2i j) ; iosc) } y  NB. write back diag. and subdiag. blocks and undo p2 permutation in it
+      rc2=. iosc kluc_row y              NB. update (r←r-a*b) diag. and behind diag. blocks
+      rc2=. jb ((}. " 1) getrslx1 ({. " 1)) rc2   NB. solve (L*x=c)
+      y=. rc2 (< iosc ; (n si2i (j + jb))) } y       NB. write back x
+    end.
+  else.
+    jp=. {. \: | y                       NB. find pivot
+    dp=. 0 mkcp jp
     p=. dp C. p                          NB. adjust p by p2: ((p2 { (iosr { p)) iosr } p)
-    y=. c (< iosr ; iosc) } y            NB. write back diagonal and subdiagonal blocks and hence undo p2 permutation in it
-    iosc=. (j , _1) ,: (jb , (n - (j + jb)))
-    iosa=. (j , 0) ,: (jb , j)
-    iosb=. j , ((j + jb) - n)
-    c=. ((iosc & (] ;. 0)) - (iosa & (] ;. 0)) mp (iosb & {.)) y  NB. update (c←c-a*b)
-    c=. c getrslx1 ((,.~ j , jb) (] ;. 0) y)                      NB. solve (L*x=c)
-    iosr=. (j + jb) si2i j
-    iosc=. n si2i (j + jb)
-    y=. c (< iosr ; iosc) } y            NB. write back x
+    y=. ({. 0 } (%"1 {.)) dp C. y        NB. apply rows permutation starting from j-th row, then scale by head
   end.
 
   p ; y
 )
-
 
 NB. recursive blocked
 
@@ -305,7 +274,7 @@ rgetrf=: (3 : 0) " 2
     p=. (k + p2) C. p1                          NB. ((i. k) , (k + p2)) C. p1
     p ; (UL11 ,. U12) , ((p2 C. L21) ,. UL22)
   else.
-    sluc2 y
+    sluc y
   end.
 )
 
@@ -338,10 +307,12 @@ tgetrf=: 3 : 0
   smoutput 'rgetrf (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
   'p LU'=. sluc y
   smoutput 'sluc (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
-  'p LU'=. sluc2 y
-  smoutput 'sluc2 (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
+  'p LU'=. 1 luc y
+  smoutput '1 & luc (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
   'p LU'=. slubc y
   smoutput 'slubc (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
+  'p LU'=. 32 luc y
+  smoutput '32 & luc (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
   'L U p'=. getrf_jlapack_ y
   smoutput 'LAPACK getrf (match error): ' , ": y (-: , error) p invperm_jlapack_~ L mp U
 NB.  'p L U'=. jLU y
@@ -353,7 +324,7 @@ NB.   mgetrf mat
 
 mgetrf=: 3 : 0
   ts=. 6!:2, 7!:2@]
-  ts & > 'pLU=. getf2 y';'pLU=. getf2fix y';'pLU=. rgetrf y';'pLU=. sluc y';'pLU=. sluc2 y';'pLU=. slubc y';'LUp=. getrf_jlapack_ y' NB.;'pLU=. jLU y'
+  ts & > 'pLU=. getf2 y';'pLU=. getf2fix y';'pLU=. rgetrf y';'pLU=. sluc y';'pLU=. 1 luc y';'pLU=. slubc y';'pLU=. 32 luc y';'LUp=. getrf_jlapack_ y' NB.;'pLU=. jLU y'
 )
 
 NB. test and measure interface verbs

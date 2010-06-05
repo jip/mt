@@ -12,16 +12,34 @@ NB. testunghr  Test unghrx by square matrix given
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
 
-gqberr=: 2 : '((norm1@(<: upddiag)@(u ct)) % (FP_EPS * v)) @ ]'  NB. conj. to form verb to calc. berr
+gqberr=: 2 : '((norm1_mt_@(<: upddiag_mt_)@(u ct_mt_)) % (FP_EPS_mt_ * v)) @ ]'  NB. conj. to form verb to calc. berr
 
 NB. ---------------------------------------------------------
 NB. Blocked code constants
@@ -241,7 +259,7 @@ NB.   Q=. unglq gelqf A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGLQ
-NB. - equivalent code
+NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
 unglq=: ($:~ ( 0 _1&(ms $))) : ( 0 _1 }. ([ (unglqstep^:(]`(gqi@#@])`((-(gqb@#)) ungl2 ((}.~ (2 # (  gqb@#)))@])))) ( tru1            @((   <. ( 0 _1&(ms $)) ) {.   ]))))
@@ -301,7 +319,7 @@ NB.   Q=. ungql geqlf A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGQL
-NB. - equivalent code
+NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
 ungql=: ($:~ (_1  0&(ms $))) : ( 1  0 }. ([ (ungqlstep^:(;`(gqi@c@])`((-(gqb@c)) ung2l ((}.~ (2 # (-@gqb@c)))@])))) ((tru1~ (-~/ @ $))@((-@(<. (_1  0&(ms $)))) {."1 ]))))
@@ -414,13 +432,13 @@ NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (idmat @ ms @ $ -: clean @ (mp ct)) Q
+NB.   (idmat @ ms @ $ -: clean @ po) Q
 NB. where
 NB.   Q=. ungrq gerqf A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xUNGRQ
-NB. - equivalent code
+NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
 ungrq=: ($:~ ( 0 _1&(ms $))) : ( 0  1 }. ([ (ungrqstep^:(;`(gqi@#@])`((-(gqb@#)) ungr2 ((}.~ (2 # (-@gqb@#)))@])))) ((trl1~ (-~/ @ $))@((-@(<. ( 0 _1&(ms $)))) {.   ]))))
@@ -499,10 +517,12 @@ NB. - for ungql, ungqr:
 NB.     berr := ||Q^_1 * Q - I|| / (ε * m)
 
 testungq=: 3 : 0
-  ('unglq' tmonad (gelqf`]`((norm1 con ct)@])`(_."_)`(mp  gqberr c))) y
-  ('ungql' tmonad (geqlf`]`((norm1 con ct)@])`(_."_)`(mp~ gqberr #))) y
-  ('ungqr' tmonad (geqrf`]`((norm1 con ct)@])`(_."_)`(mp~ gqberr #))) y
-  ('ungrq' tmonad (gerqf`]`((norm1 con ct)@])`(_."_)`(mp  gqberr c))) y
+  rcond=. ((_."_)`gecon1 @. (=/@$)) y  NB. meaninigful for square matrices only
+
+  ('unglq' tmonad (gelqf`]`(rcond"_)`(_."_)`(mp  gqberr c))) y
+  ('ungql' tmonad (geqlf`]`(rcond"_)`(_."_)`(mp~ gqberr #))) y
+  ('ungqr' tmonad (geqrf`]`(rcond"_)`(_."_)`(mp~ gqberr #))) y
+  ('ungrq' tmonad (gerqf`]`(rcond"_)`(_."_)`(mp  gqberr c))) y
 
   EMPTY
 )
@@ -525,8 +545,8 @@ NB. - for ungql, ungqr :
 NB.     berr := ||Q^_1 * Q - I|| / (ε * m)
 
 testunghr=: 3 : 0
-  ('unghrl' tmonad ((gehrdl~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp  gqberr c))) y
-  ('unghru' tmonad ((gehrdu~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp~ gqberr #))) y
+  ('unghrl' tmonad ((gehrdl~ (0,#))`]`(uncon1@])`(_."_)`(mp  gqberr c))) y
+  ('unghru' tmonad ((gehrdu~ (0,#))`]`(uncon1@])`(_."_)`(mp~ gqberr #))) y
 
   EMPTY
 )

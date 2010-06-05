@@ -9,9 +9,27 @@ NB. testgehrd  Test gehrdx by general matrix given
 NB. testhrd    Adv. to make verb to test gxhrdx by matrix of
 NB.            generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -148,28 +166,28 @@ NB.
 NB. Syntax:
 NB.   HQf=. hs gehd2l eA
 NB. where
-NB.   eA  - (n+1)×(n+1)-matrix, being A with appended trash
-NB.         row and column of τs, is already reduced in rows
-NB.         [0:h-1]
+NB.   eA  - (n+1)×(n+1)-matrix, being A with appended row of
+NB.         trash and column of τs, is already reduced in
+NB.         rows 0:h-1
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdl
 NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdl
 
 gehd2l=: 4 : 0
-  A=. ({. x) {. y                            NB. skip ...
-  y=. ({. x) }. y                            NB. ...reduced rows
-  'j jlimit'=. 1 0 + (+/\) x                 NB. 'j jlimit'=. (h+1),(h+s)
-  while. j < jlimit do.                      NB. (s-1)-vector: h+1,h+2,...,h+s-1
+  A=. ({. x) {. y                             NB. skip ...
+  y=. ({. x) }. y                             NB. ...reduced rows
+  'j jlimit'=. 1 0 + (+/\) x                  NB. 'j jlimit'=. (h+1),(h+s)
+  while. j < jlimit do.                       NB. (s-1)-vector: h+1,h+2,...,h+s-1
     r=. {. y
     z1=. 1 (0) } z=. larfgfc j }. r
-    eL=. z1 larflcfr (}. y)                  NB. L := H' * L
-    eR=. z1 larfrnfr (j }."1 eL)             NB. R := R * H
+    eL=. z1 larflcfr (}. y)                   NB. L := H' * L
+    eR=. z1 larfrnfr (j }."1 eL)              NB. R := R * H
     A=. A , ((j {. r) , z)
     y=. (j {."1 eL) ,. eR
     j=. >: j
   end.
-  0 ((A (+&#) y) ([ dhs2lios ((_1-[),])) ((c y) - (+/ x)))"_ } (A , y)  NB. clear τ[h+s-1:n-1]
+  0 (< ((c y) th2lios&<: jlimit);_1) } (A,y)  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -185,8 +203,8 @@ NB. Syntax:
 NB.   HQf=. hs gehd2u eA
 NB. where
 NB.   eA  - (n+1)×(n+1)-matrix, being A with appended row of
-NB.         τs and trash column, is already reduced in columns
-NB.         0:h-1
+NB.         τs and column of trash, is already reduced in
+NB.         columns 0:h-1
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdu
@@ -196,19 +214,19 @@ NB. Notes:
 NB. - implements LAPACK's xGEHD2 up to storage layout
 
 gehd2u=: 4 : 0
-  A=. ({. x) {."1 y                          NB. skip ...
-  y=. ({. x) }."1 y                          NB. ...reduced columns
-  'j jlimit'=. 1 0 + (+/\) x                 NB. 'j jlimit'=. (h+1),(h+s)
-  while. j < jlimit do.                      NB. (s-1)-vector: h+1,h+2,...,h+s-1
+  A=. ({. x) {."1 y                            NB. skip ...
+  y=. ({. x) }."1 y                            NB. ...reduced columns
+  'j jlimit'=. 1 0 + (+/\) x                   NB. 'j jlimit'=. (h+1),(h+s)
+  while. j < jlimit do.                        NB. (s-1)-vector: h+1,h+2,...,h+s-1
     c=. {."1 y
     z1=. 1 (0) } z=. larfgf j }. c
-    eR=. z1 larfrnfc (0 1 }. y)              NB. R := R * H
-    eL=. z1 larflcfc (j }. eR)               NB. L := H' * L
+    eR=. z1 larfrnfc (0 1 }. y)                NB. R := R * H
+    eL=. z1 larflcfc (j }. eR)                 NB. L := H' * L
     A=. A ,. ((j {. c) , z)
     y=. (j {. eR) , eL
     j=. >: j
   end.
-  0 (dhs2lios (_2,((# y) - (+/ x))))"_ } (A ,. y)  NB. clear τ[h+s-1:n-1]
+  0 (< _1;((# y) th2lios&<: jlimit)) } (A,.y)  NB. clear τ[h+s-1:n-1]
 )
 
 NB. =========================================================
@@ -272,7 +290,7 @@ NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  h        )
 NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a     )
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (idmat n) -: (mp ct) Q
+NB.   (idmat n) -: po Q
 NB.   H -: A (mp~ mp (ct @ ])) Q
 NB. where
 NB.   n=. # A
@@ -428,7 +446,7 @@ testgehrd=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gehrd'
 
-  rcond=. (norm1 con (getrilu1p@getrflu1p)) y
+  rcond=. gecon1 y
 
   ('2b1100 & gehrd_jlapack_' tmonad        ((];1:;#)`(,&>/)`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 

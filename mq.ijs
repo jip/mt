@@ -25,9 +25,27 @@ NB. testunmhr  Test unmhrxxx by square matrix given
 NB. testmq     Adv. to make verb to test unmxxxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -719,7 +737,7 @@ NB.   - for C * Q^H: berr := ||C * Q^H - C * Q^H|| / (ε * ||C|| * n)
 
 testunmq=: 3 : 0
   'A C'=. y
-  rcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$)) C  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`gecon1 @. (=/@$)) C  NB. meaninigful for square matrices only
   'LQf QfL QfR RQf'=. xQf=. (gelqf ; geqlf ; geqrf ; gerqf) A
   'Qlq Qql Qqr Qrq'=. (((unglq~ (<:@c))&.>)`((ungql~ (<:@#))&.>)`((ungqr~ (<:@#))&.>)`((ungrq~ (<:@c))&.>)) ag xQf
 
@@ -773,7 +791,7 @@ NB.   - for C * Q^H: berr := ||C * Q^H - C * Q^H|| / (ε * ||C|| * m)
 
 testunmhr=: 3 : 0
   'A C'=. y
-  rcond=. (norm1 con (getrilu1p@getrflu1p)) C
+  rcond=. gecon1 C
   'HlQf HuQf'=. xQf=. ((gehrdl~ (0,#)) ; (gehrdu~ (0,c))) A
   'Qhrl Qhru'=. ((unghrl&.>)`(unghru&.>)) ag xQf
 

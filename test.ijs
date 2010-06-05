@@ -5,9 +5,27 @@ NB.           computational monad
 NB. tdyad     Template conj. to make verbs to test
 NB.           computational dyad
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -74,7 +92,7 @@ NB.
 NB. Application:
 NB. - to test geqrf:
 NB.     NB. to estimate rcond in 1-norm
-NB.     vrcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$))@[
+NB.     vrcond=. ((_."_)`gecon1 @. (=/@$))@[
 NB.     NB. to calc. berr, assuming:
 NB.     NB.   berr := ||A - realA||_1 / (m * ε * ||A||_1)
 NB.     vberr=. ((- (% & norm1) [) % (FP_EPS * (norm1 * #) @ [)) unmqr
@@ -82,7 +100,7 @@ NB.     NB. do the job
 NB.     ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
 NB. - to test getrs:
 NB.     NB. to estimate rcond in ∞-norm
-NB.     vrcond=. ((_."_)`(normi con (getrilu1p@getrflu1p)) @. (=/@$)) @ (0 {:: [)
+NB.     vrcond=. ((_."_)`geconi @. (=/@$)) @ (0 {:: [)
 NB.     NB. to calc. ferr, assuming:
 NB.     NB.   ferr := ||x - realx||_inf / ||realx||_inf
 NB.     vferr=. ((- (% & normi) [) (1 & {::))~
@@ -100,6 +118,10 @@ tmonad=: 2 : 0
   try. rcond=. y vrcond out                           catch. rcond=. _        end.
   try. ferr=. y vferr out                             catch. ferr=. _.        end.
   try. berr=. y vberr out                             catch. berr=. _.        end.
+  NB. fix J6 prinf bug
+  if. rcond = _ do.
+    rcond=. FP_OVFL
+  end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
   (logline , LF) ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline
@@ -116,6 +138,10 @@ tdyad=: 2 : 0
   try. rcond=. y vrcond out                           catch. rcond=. _        end.
   try. ferr=. y vferr out                             catch. ferr=. _.        end.
   try. berr=. y vberr out                             catch. berr=. _.        end.
+  NB. fix J6 prinf bug
+  if. rcond = _ do.
+    rcond=. FP_OVFL
+  end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
   (logline , LF) ((1!:3) ^: (0 < (#@]))) TESTLOGFILE
   TESTLOG=: TESTLOG , logline

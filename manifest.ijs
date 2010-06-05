@@ -3,20 +3,21 @@ NB. mt manifest
 CAPTION=: 'Matrix toolbox'
 
 DESCRIPTION=: 0 : 0
-Library of verbs to solving some problems in matrix algebra: transforming, decomposing, reducing to condensed form, factorization, equation solving, function applying, condition number estimating. Is based mostly on LAPACK algorithms, but doesn't require LAPACK.
+Library to solve some problems in matrix algebra: transforming, decomposing, reducing to condensed form, factorization, equation solving, function applying, condition number estimating. Is based mostly on LAPACK algorithms, but doesn't require LAPACK.
 )
 
-VERSION=: '0.4.0'
+VERSION=: '0.6.0'
 
-RELEASE=: 'j602 j701'
+RELEASE=: 'j602'
 
 LABCATEGORY=: 'Math'
 
 FILES=: 0 : 0
-ChangeLog
+AUTHORS
 COPYING
-LICENSE
+COPYING.LESSER
 MATRIX
+README
 TODO
 bak.ijs
 bal.ijs

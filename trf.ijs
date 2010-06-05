@@ -20,9 +20,27 @@ NB.            definite tridiagonal matrix given
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -70,8 +88,8 @@ NB.   t1o       - min(n-1,i+TRFNB)-vector, leading elements
 NB.               of subdiagonal of T
 NB.   li        - (n-i)-vector, the 1st scaled column of
 NB.               subL1, having 1 in the 1st element
-NB.   ti        - atom, the max from li before it was scaled,
-NB.               can be any value when i=0
+NB.   ti        - scalar, the max from li before it was
+NB.               scaled, can be any value when i=0
 NB.   subL100   - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, unit
 NB.               lower triangular, top left part of subL1
 NB.   subL110   - max(0,n-i-TRFNB)×min(TRFNB,n-i)-matrix,
@@ -152,7 +170,7 @@ NB.     t0i  - (T[0,0],T[1,1],...,T[i-1,i-1])
 NB.     t1i  - (T[1,0],T[2,1],...,T[i,i-1])
 NB.     li   - vector to write into subL1[0:n-i-1,0] i.e.
 NB.            L1[i:n-1,i]
-NB.     ti   - any atom
+NB.     ti   - any scalar
 NB.   Out:
 NB.     ipo  - ip[i:n-1]
 NB.     B    - see layout 1
@@ -314,8 +332,8 @@ NB.   t1o       - min(n-1,i+1+TRFNB)-vector, tail elements of
 NB.               superdiagonal of T
 NB.   ui        - (n+i+1)-vector, the last scaled column of
 NB.               subU1, having 1 in the last element
-NB.   ti        - atom, the max from ui before it was scaled,
-NB.               can be any value when i=_1
+NB.   ti        - scalar, the max from ui before it was
+NB.               scaled, can be any value when i=_1
 NB.   subU111   - min(TRFNB,n+i+1)×min(TRFNB,n+i+1)-matrix,
 NB.               unit upper triangular, bottom right part of
 NB.               subU1
@@ -398,7 +416,7 @@ NB.     t0i  - (T[n+i+1,n+i+1],T[n+i+2,n+i+2],...,T[n-1,n-1])
 NB.     t1i  - (T[n+i,n+i+1],T[n+i+1,n+i+2],...,T[n-2,n-1])
 NB.     ui   - vector to write into subU1[0:n+i,n+i] i.e.
 NB.            U1[0:n+i,n+i]
-NB.     ti   - any atom
+NB.     ti   - any scalar
 NB.   Out:
 NB.     ipo  - ip[0:n+i]
 NB.     B    - see layout
@@ -1403,7 +1421,7 @@ NB.   3) else:
 NB.        L := sqrt(A)
 NB.
 NB. Assertions:
-NB.   A -: clean (mp ct) L
+NB.   A -: clean po L
 NB. where
 NB.   L=. potrfl A
 NB.
@@ -1459,7 +1477,7 @@ NB.   3) else:
 NB.        U := sqrt(A)
 NB.
 NB. Assertions:
-NB.   A -: clean (mp ct) U
+NB.   A -: clean po U
 NB. where
 NB.   U=. potrfu A
 
@@ -1493,6 +1511,7 @@ NB.        de=. u/\.&.|. dee2
 NB.      to find :
 NB.        d[k] := d[k] - |e[k-1]|^2 / d[k-1]
 NB.        e[k-1] := e[k-1] / d[k-1]
+NB.      for non-empty dee2 only
 NB.   4) extract d - D's main diagonal, and e - L1's
 NB.      subdiagonal from de:
 NB.        d=. {."1 de
@@ -1521,7 +1540,7 @@ NB.
 NB. TODO:
 NB. - L1 and D would be sparse
 
-pttrfl=: ({."1 (((setdiag idmat@#)~ ;&_1) ; diagmat@[) }.@(1&({"1)))@(({.@] ((- {:) , {.@]) ((%  {.)~ }.))~/\.&.|.)@(diag (,. (,. soris)@(0&,)) _1&diag)
+pttrfl=: ({."1 (((setdiag idmat@#)~ ;&_1) ; diagmat@[) }.@(1&({"1)))@(({.@] ((- {:) , {.@]) ((%  {.)~ }.))~/\.^:(0<#)&.|.)@(diag (stitchb (,. soris)) _1&diag)
 
 NB. ---------------------------------------------------------
 NB. pttrfu
@@ -1551,6 +1570,7 @@ NB.        de=. u/\. dee2
 NB.      to find :
 NB.        d[k] := d[k] - |e[k]|^2 / d[k+1]
 NB.        e[k] := e[k] / d[k+1]
+NB.      for non-empty dee2 only
 NB.   4) extract d - D's main diagonal, and e - L1's
 NB.      subdiagonal from de:
 NB.        d=. {."1 de
@@ -1578,7 +1598,7 @@ NB.
 NB. TODO:
 NB. - U1 and D would be sparse
 
-pttrfu=: ({."1 (((setdiag idmat@#)~ ;& 1) ; diagmat@[) }:@(1&({"1)))@(({.@[ ((- {:) , {.@]) ((%~ }.)~ {.)) /\.    )@(diag (,. (,. soris)@(,&0))  1&diag)
+pttrfu=: ({."1 (((setdiag idmat@#)~ ;& 1) ; diagmat@[) }:@(1&({"1)))@(({.@[ ((- {:) , {.@]) ((%~ }.)~ {.)) /\.^:(0<#)    )@(diag (stitcht (,. soris))  1&diag)
 
 NB. =========================================================
 NB. Test suite
@@ -1613,13 +1633,16 @@ NB. - use temporary locale mttmp to avoid mt's names
 NB.   redefinition
 
 testgetrf=: 3 : 0
-  require_mttmp_ '~addons/math/misc/matfacto.ijs'
+  load_mttmp_ '~addons/math/misc/makemat.ijs'   NB. FIXME: ...
+  load_mttmp_ '~addons/math/misc/matutil.ijs'   NB.   ... J doesn't ...
+  load_mttmp_ '~addons/math/misc/linear.ijs'    NB.   ... execute 'require' ...
+  load_mttmp_ '~addons/math/misc/matfacto.ijs'  NB.   ... recursively
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
 
-  rcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`gecon1 @. (=/@$)) y  NB. meaninigful for square matrices only
 
-  ('lud_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %. (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
+  ('lud_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) %. (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 
   ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_ (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y
 
@@ -1627,6 +1650,8 @@ testgetrf=: 3 : 0
   ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1   (( trl1           mp  tru           )@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
   ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1   (((tru1~ (-~/@$)) mp (trl ~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y
   ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((0 & {::) C.^:_1"1 (((tru ~ (-~/@$)) mp (trl1~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y
+
+  coerase <'mttmp'
 
   EMPTY
 )
@@ -1649,7 +1674,7 @@ NB. - for P * U1 * T * U1^H * P^_1 = A :
 NB.     berr := ||P * U1 * T * U1^H * P^_1 - A|| / (ε * ||A|| * n)
 
 testhetrf=: 3 : 0
-  rcond=. (norm1 con (hetripl@hetrfpl)) y
+  rcond=. hecon1 y
 
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
   ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y
@@ -1684,18 +1709,18 @@ NB. - use temporary locale mttmp to avoid mt's names
 NB.   redefinition
 
 testpotrf=: 3 : 0
-  require_mttmp_ '~addons/math/misc/matfacto.ijs'
+  load_mttmp_ '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'potrf'
 
-  rcond=. (norm1 con (potril@potrfl)) y
+  rcond=. pocon1 y
 
-  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- po))) % (FP_EPS*((norm1*c)@[))))) y
 
-  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- po))) % (FP_EPS*((norm1*c)@[))))) y
 
-  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*c)@[))))) y
-  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (mp ct)))) % (FP_EPS*((norm1*#)@[))))) y
+  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- po))) % (FP_EPS*((norm1*c)@[))))) y
+  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- po))) % (FP_EPS*((norm1*#)@[))))) y
 
   coerase <'mttmp'
 
@@ -1725,7 +1750,7 @@ NB. TODO:
 NB. - A should be sparse
 
 testpttrf=: 3 : 0
-  rcond=. (norm1 con pttril) y
+  rcond=. ptcon1 y
 
   ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/)))) % (FP_EPS*((norm1*c)@[))))) y
   ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/)))) % (FP_EPS*((norm1*#)@[))))) y

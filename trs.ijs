@@ -39,9 +39,27 @@ NB.              positive definite tridiagonal matrix given
 NB. testtrs      Adv. to make verb to test xxtrsxxx by matrix
 NB.              of generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -403,6 +421,7 @@ NB.   3) do iterations k=1:n-1 by reversed suffix scan:
 NB.        btrash=. u/\.&.|. be
 NB.      to find :
 NB.        b[k] := b[k] - b[k-1]*e[k-1]
+NB.      for non-empty be only
 NB.   4) cut off trash column to extract updated Bv:
 NB.        b=. (}:"1) btrash
 NB.   5) prepare intermediate input:
@@ -434,8 +453,8 @@ NB.
 NB. TODO:
 NB. - L1 and D would be sparse
 
-pttrslx=:  $@] ($,) (_2 }."1 (]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1   diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))
-pttrsltx=: $@] ($,) (_2 }."1 (]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@(,. (0&,)))`(_1 +@diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))
+pttrslx=:  $@] ($,) (_2 }."1 ((diag@(1 {:: [))`(stitcht +)`(_1   diag (0 {:: [))`((((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.~))^:(0<#@]))`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@stitchb~)`] fork3))
+pttrsltx=: $@] ($,) (_2 }."1 ((diag@(1 {:: [))`(stitcht +)`(_1 +@diag (0 {:: [))`((((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.~))^:(0<#@]))`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.&.|.)@stitchb~)`] fork3))
 pttrsxl=:  |:@(pttrsltx |:)
 pttrsxlt=: |:@(pttrslx  |:)
 
@@ -473,6 +492,7 @@ NB.   3) do iterations k=n-2:0 by suffix scan:
 NB.        btrash=. u/\. be
 NB.      to find :
 NB.        b[k] := b[k] - b[k+1]*e[k]
+NB.      for non-empty be only
 NB.   4) cut off trash column to extract updated Bv:
 NB.        b=. (}:"1) btrash
 NB.   5) prepare intermediate input:
@@ -503,8 +523,8 @@ NB.
 NB. TODO:
 NB. - U1 and D would be sparse
 
-pttrsux=:  $@] ($,) (_2 }."1 (]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.    )@(,. (,&0)))`( 1   diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.&.|.@(c@[ ({.@] % ({,))` 0:`]} ,.))`((,. (0 ,+))~)`(diag@(1 {:: [)) fork3))
-pttrsutx=: $@] ($,) (_2 }."1 (]`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.    )@(,. (,&0)))`( 1 +@diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.&.|.@(c@[ ({.@] % ({,))` 0:`]} ,.))`((,. (0 ,+))~)`(diag@(1 {:: [)) fork3))
+pttrsux=:  $@] ($,) (_2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1   diag (0 {:: [))`((((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.&.|.@(c@[ ({.@] % ({,))` 0:`]} ,.~))^:(0<#@]))`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.    )@stitcht~)`] fork3))
+pttrsutx=: $@] ($,) (_2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1 +@diag (0 {:: [))`((((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\.&.|.@(c@[ ({.@] % ({,))` 0:`]} ,.~))^:(0<#@]))`((}:"1)@((}:@[(-,0:)((* {:)~ }:))/\.    )@stitcht~)`] fork3))
 pttrsxu=:  |:@(pttrsutx |:)
 pttrsxut=: |:@(pttrsux  |:)
 
@@ -529,7 +549,7 @@ NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
-  'conA conAh conAt'=. (norm1 con (getrilu1p@getrflu1p))"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. gecon1"2 (] , ct ,: |:) A
   'LU1ip ipL1U ipU1L UL1ip'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
 
   ('getrslu1px'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;LU1ip)
@@ -581,7 +601,7 @@ NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (hetripl@hetrfpl))"2 (] ,: |:) A
+  'conA conAt'=. hecon1"2 (] ,: |:) A
   'ipL1D ipU1D'=. (hetrfpl ; <@hetrfpu) A
 
   ('hetrsplx'  tdyad ((_3&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (    A ;X;ipL1D)
@@ -616,7 +636,7 @@ NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testpotrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (potril@potrfl))"2 (] ,: |:) A
+  'conA conAt'=. pocon1"2 (] ,: |:) A
   'L U'=. (potrfl ,: potrfu) A
 
   ('potrslx'  tdyad ((2 & {::)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) (    A ;X;L)
@@ -655,7 +675,7 @@ NB. - A should be sparse
 
 testpttrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con pttril)"2 (,: |:) A
+  'conA conAt'=. ptcon1"2 (,: |:) A
   'L1D U1D'=. (pttrfl ; <@pttrfu) A
 
   ('pttrslx'  tdyad ((_2&{.)`((mp  & >/)@(2&{.))`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@(2 {. [)) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (    A ;X;L1D)

@@ -21,20 +21,20 @@ NB. setdiag   Assign value[s] to a solid part of diagonal
 NB. upddiag   Template adv. to make verbs to update a solid
 NB.           part of diagonal
 NB.
-NB. bdlpick   Zeroize elements located outside lower
-NB.           bidiagonal part of the matrix
-NB. bdupick   Zeroize elements located outside upper
-NB.           bidiagonal part of the matrix
-NB. hslpick   Zeroize elements located outside lower
-NB.           Hessenberg part of the matrix
-NB. hsupick   Zeroize elements located outside lower
-NB.           Hessenberg part of the matrix
-NB. tdpick    Zeroize elements located outside tridiagonal
-NB.           part of the matrix
-NB. trlpick   Zeroize elements located outside lower
-NB.           triangular part of the matrix
-NB. trupick   Zeroize elements located outside upper
-NB.           triangular part of the matrix
+NB. bdlpick   Zeroize elements outside lower bidiagonal part
+NB.           of the matrix
+NB. bdupick   Zeroize elements outside upper bidiagonal part
+NB.           of the matrix
+NB. hslpick   Zeroize elements outside lower Hessenberg part
+NB.           of the matrix
+NB. hsupick   Zeroize elements outside lower Hessenberg part
+NB.           of the matrix
+NB. tdpick    Zeroize elements outside tridiagonal part of
+NB.           the matrix
+NB. trlpick   Zeroize elements outside lower triangular part
+NB.           of the matrix
+NB. trupick   Zeroize elements outside upper triangular part
+NB.           of the matrix
 NB.
 NB. idmat     Make identity matrix with units on solid part
 NB.           of diagonal
@@ -50,15 +50,35 @@ NB.           matrix
 NB. tru1      Extract unit upper triangular (trapezoidal)
 NB.           matrix
 NB. tr2he     Make Hermitian (symmetric) matrix from
-NB.           triangular
-NB. he        Make Hermitian (symmetric) matrix from general
-NB.           square
+NB.           triangular one
+NB. he        Make Hermitian (symmetric) matrix from lower
+NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
-NB.           matrix from general square invertible
+NB.           matrix from general square invertible one
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2007 Oleg Kobchenko
+NB. Copyright 2008 Roger Hui
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -249,7 +269,7 @@ NB.   fret - some fret
 NB.
 NB. References:
 NB. [1] JWiki/Essays/ Block Matrix Inverse
-NB.     Roger Hui
+NB.     Roger Hui, 2005-11-24 03:53:19
 NB.     http://www.jsoftware.com/jwiki/Essays/Block%20Matrix%20Inverse
 NB.
 NB. TODO:
@@ -326,8 +346,8 @@ NB. -----                             -----
 NB.
 NB. References:
 NB. [1] [Jprogramming] Transform to Amend
-NB.     Dan Bron, Sat Mar 3 03:26:44 HKT 2007
-NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005425.html
+NB.     Oleg Kobchenko, 2007-03-02 22:15:54
+NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005415.html
 
 upd=: (@:{) (`[) (`]) }
 
@@ -427,10 +447,10 @@ NB.          diagonal, default is 0 (main diagonal)
 NB.   h    - integer in range [-S,S-1], optional lIO extreme
 NB.          element of solid part of diagonal, default is 0
 NB.          (take from head)
-NB.   s    - integer in range [-S,S] or ±∞ when e is atom, or
-NB.          any from set {±k,±∞} when e is vector; optional
-NB.          size of solid part of diagonal, default is +∞
-NB.          (all elements in forward direction)
+NB.   s    - integer in range [-S,S] or ±∞ when e is scalar,
+NB.          or any from set {±k,±∞} when e is vector;
+NB.          optional size of solid part of diagonal, default
+NB.          is +∞ (all elements in forward direction)
 NB.   Aupd - m×n-matrix A with value[s] e assigned to solid
 NB.          part of d-th diagonal
 NB.   S    ≥ 0, the length of d-th diagonal
@@ -509,8 +529,8 @@ NB. ---------------------------------------------------------
 NB. bdlpick
 NB.
 NB. Description:
-NB.   Zeroize elements located outside lower bidiagonal part
-NB.   of the matrix
+NB.   Zeroize elements outside lower bidiagonal part of the
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   B=. bdlpick A
@@ -527,8 +547,8 @@ NB. ---------------------------------------------------------
 NB. bdupick
 NB.
 NB. Description:
-NB.   Zeroize elements located outside upper bidiagonal part
-NB.   of the matrix
+NB.   Zeroize elements outside upper bidiagonal part of the
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   B=. bdupick A
@@ -545,8 +565,8 @@ NB. ---------------------------------------------------------
 NB. hslpick
 NB.
 NB. Description:
-NB.   Zeroize elements located outside lower Hessenberg part
-NB.   of the matrix
+NB.   Zeroize elements outside lower Hessenberg part of the
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   B=. hslpick A
@@ -560,8 +580,8 @@ NB. ---------------------------------------------------------
 NB. hsupick
 NB.
 NB. Description:
-NB.   Zeroize elements located outside upper Hessenberg part
-NB.   of the matrix
+NB.   Zeroize elements outside upper Hessenberg part of the
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   B=. hsupick A
@@ -575,8 +595,7 @@ NB. ---------------------------------------------------------
 NB. tdpick
 NB.
 NB. Description:
-NB.   Zeroize elements located outside tridiagonal part of
-NB.   the matrix
+NB.   Zeroize elements outside tridiagonal part of the matrix
 NB.
 NB. Syntax:
 NB.   B=. tdpick A
@@ -593,8 +612,8 @@ NB. ---------------------------------------------------------
 NB. trlpick
 NB.
 NB. Description:
-NB.   Zeroize elements located outside lower triangular part
-NB.   of the matrix
+NB.   Zeroize elements outside lower triangular part of the
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   B=. [d] trlpick A
@@ -610,8 +629,8 @@ NB. ---------------------------------------------------------
 NB. trupick
 NB.
 NB. Description:
-NB.   Zeroize elements located outside upper triangular part
-NB.   of the matrix
+NB.   Zeroize elements outside upper triangular part of the
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   B=. [d] trupick A
@@ -859,7 +878,7 @@ NB. tr2he
 NB.
 NB. Description:
 NB.   Make Hermitian (symmetric) matrix from lower or upper
-NB.   triangular
+NB.   triangular one
 NB.
 NB. Syntax:
 NB.   H=. tr2he T
@@ -873,7 +892,8 @@ NB. ---------------------------------------------------------
 NB. he
 NB.
 NB. Description:
-NB.   Make Hermitian (symmetric) matrix from general square
+NB.   Make Hermitian (symmetric) matrix from lower triangle
+NB.   of general square one
 NB.
 NB. Syntax:
 NB.   H=. he G
@@ -888,7 +908,7 @@ NB. po
 NB.
 NB. Description:
 NB.   Make Hermitian (symmetric) positive definite matrix
-NB.   from general square invertible
+NB.   from general square invertible one
 NB.
 NB. Syntax:
 NB.   P=. po G

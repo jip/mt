@@ -1,9 +1,20 @@
-TODO about computational methods see in MATRIX file
+1. replace v&}. v&{. by s&}."1 s&{."1 and so on (qg)
 
-Complete methods necessary to release TAU addon (Control Theory toolbox)
+2. (gghrd,ggbak,ggbal,hgeqz,tgevc) -> ggev -> [1]
 
-replace v&}. v&{. by s&}."1 s&{."1 and so on (qg)
+3. (lacn2,tgexc,tgsyl) -> tgsen
 
-s/blocked/partitioned/G
+4. (ggbak,ggbal,gghrd,hgeqz,tgevc,tgsen) -> gges
 
-check tests for 0x0 0xN Nx0
+5. (gges,tgsyl) -> [2]
+
+
+[1] Pradeep Misra and Paul Van Dooren and Andras Varga.
+    Computation of Structural Invariants of Generalized State Space Systems.
+    Automatica, 1994, vol. 30.
+    DOI: 10.1016/0005-1098(94)90052-3
+
+[2] Gerdin, Markus.
+    Computation of a canonical form for linear differential-algebraic equations.
+    Department of Electrical Engineering, Linköping University, 2004
+    LiTH-ISY-R-2602

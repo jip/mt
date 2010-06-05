@@ -1,10 +1,10 @@
-NB. Raise to an integer power
+NB. Raise matrix to an integer power[s]
 NB.
-NB. gepow      Raise a general matrix to integer power(s)
+NB. gepow      Raise a general matrix to integer power[s]
 NB. dipow      Raise a diagonalizable matrix to integer
-NB.            power(s)
+NB.            power[s]
 NB. hepow      Raise a Hermitian (symmetric) matrix to
-NB.            integer power(s)
+NB.            integer power[s]
 NB.
 NB. testgepow  Test gepow by general matrix given
 NB. testdipow  Test dipow by diagonalizable matrix given
@@ -13,9 +13,27 @@ NB.            given
 NB. testpow    Adv. to make verb to test xxpow by matrix of
 NB.            generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -29,20 +47,22 @@ NB. ---------------------------------------------------------
 NB. gepow
 NB.
 NB. Description:
-NB.   Raise a general matrix A to integer power(s)
+NB.   Raise a general matrix A to integer power[s]
 NB.
 NB. Syntax:
 NB.   P=. p gepow A
 NB. where
 NB.   A  - n×n-matrix, a general matrix
-NB.   p  - sh-array of positive integers, power(s)
-NB.   P  - sh×n×n-array if r>0,
-NB.        n×n-array    if r=0, a matrix A in power(s) p
+NB.   p  - sh-array of non-negative integers, power[s]
+NB.   P  - sh×n×n-array if r>0, a matrix A in power[s] p
+NB.        n×n-array    if r=0, a matrix A in power p
 NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
 NB.
 NB. References:
-NB. [1] http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
+NB. [1] Linear Recurrences and Matrix Powers
+NB.     Roger Hui, 2006-08-09 09:20:34
+NB.     http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
 
 gepow=: 4 : 0
 
@@ -59,7 +79,7 @@ NB. ---------------------------------------------------------
 NB. dipow
 NB.
 NB. Description:
-NB.   Raise a diagonalizable matrix to integer power(s)
+NB.   Raise a diagonalizable matrix to integer power[s]
 NB.
 NB. Syntax:
 NB.   P=. p dipow (iL ; v ; L)
@@ -72,9 +92,9 @@ NB.        right eigenvectors of A
 NB.   v  - n-vector, eigenvalues of A
 NB.   iL = L^_1
 NB.   iR = R^_1
-NB.   p  - sh-array of positive integers, power(s)
+NB.   p  - sh-array of positive integers, power[s]
 NB.   P  - sh×n×n-array if r>0,
-NB.        n×n-array    if r=0, a matrix A in power(s) p
+NB.        n×n-array    if r=0, a matrix A in power[s] p
 NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
 NB.
@@ -117,16 +137,16 @@ NB. ---------------------------------------------------------
 NB. hepow
 NB.
 NB. Description:
-NB.   Raise a Hermitian matrix to integer power(s)
+NB.   Raise a Hermitian matrix to integer power[s]
 NB.
 NB. Syntax:
 NB.   P=. p dipow (v ; R)
 NB. where
 NB.   v - n-vector, eigenvalues of A
 NB.   R - n×n-matrix, columns are eigenvectors of A
-NB.   p  - sh-array of positive integers, power(s)
+NB.   p  - sh-array of positive integers, power[s]
 NB.   P  - sh×n×n-array if r>0,
-NB.        n×n-array    if r=0, a matrix A in power(s) p
+NB.        n×n-array    if r=0, a matrix A in power[s] p
 NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
 NB.
@@ -147,7 +167,7 @@ NB.   P=. p gepow A
 NB.   f=. v ^1 0 p
 NB.   F=. p gepow V
 
-hepow=: (0 {:: ]) mp"2 ([ ^"1 0~ 1 {:: ]) *"1 2 ct@(0 {:: ])
+hepow=: (1 {:: ]) mp"2 ([ ^"1 0~ 0 {:: ]) *"1 2 ct@(1 {:: ])
 
 NB. =========================================================
 NB. Test suite
@@ -167,9 +187,9 @@ NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
 
 testgepow=: 3 : 0
-  rcond=. (norm1 con (getrilu1p@getrflu1p)) y
+  rcond=. gecon1 y
 
-  ('5 7&gepow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('5 7 & gepow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -195,16 +215,14 @@ testdipow=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'geev'
 
-  rcond=. (norm1 con (getrilu1p@getrflu1p)) y
+  rcond=. gecon1 y
 
   'Lh v R'=. geev_jlapack_ y         NB. do eigendecomposition
-  v=. j./ (*"1 (-@*@{.)) |: +. v     NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
-                                     NB. A to be negative definite, this will avoid NaN error in diexp
   assert ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
   L=. ct Lh                          NB. restore L
-  iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in diexp
+  iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in dipow
 
-  ('5 7&dipow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (R ; v ; iR)
+  ('5 7 & dipow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (R ; v ; iR)
 
   EMPTY
 )
@@ -227,16 +245,10 @@ testhepow=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'heev'
 
-  rcond=. (norm1 con (hetripl@hetrfpl)) y
+  rcond=. hecon1 y
 
-  NB. - do eigendecomposition: 'v R'=. heev A
-  NB. - for each v[i] in v, flip sign of v[i] if Re(v[i])>0,
-  NB.   to force A to be negative definite, this will avoid
-  NB.   NaN error in heexp
-  NB. - save adjusted boxed duplet back into y
-  y=. ((j./@(*"1 (-@*@{.))@:|:@:+.&.>)`] ag) heev_jlapack_ y
-
-  ('5 7&hepow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  NB. supply eigendecomposition ('v R'=. heev A) to tester
+  ('5 7 & hepow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) heev_jlapack_ y
 
   EMPTY
 )

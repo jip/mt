@@ -1,14 +1,32 @@
 NB. Rotations
 NB.
 NB. lartg      Generates a plane rotation of a 2-vector
-NB. rot        Applies a plane rotation(s) to a 2-vector(s)
+NB. rot        Applies a plane rotation[s] to a 2-vector[s]
 NB.
 NB. testlartg  Test lartg by vectors given
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -232,7 +250,7 @@ NB. ---------------------------------------------------------
 NB. rot
 NB.
 NB. Description:
-NB.   Applies a plane rotation(s) to a 2-vector(s):
+NB.   Applies a plane rotation[s] to a 2-vector[s]:
 NB.     ( x[i] ) :=  ( c[j]        s[j] ) * ( x[i] )
 NB.     ( y[i] )     ( -conj(s[j]) c[j] )   ( y[i] )
 NB.
@@ -316,9 +334,9 @@ NB.   8) find backward error:
 NB.        maxberr = max(BErr[:])
 NB.
 NB. References:
-NB. [1] http://www.jsoftware.com/pipermail/programming/2009-December/017071.html
-NB.     [Jprogramming] 128!:5] 0j_.
-NB.     Dan Bron, Wed Dec 2 02:22:37 HKT 2009
+NB. [1] [Jprogramming] 128!:5] 0j_.
+NB.     Dan Bron, 2009-12-02 02:22:37
+NB.     http://www.jsoftware.com/pipermail/programming/2009-December/017071.html
 
 testlartg=: 3 : 0
   NB. implement algorithm 1

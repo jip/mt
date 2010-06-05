@@ -34,9 +34,27 @@ NB.           definite tridiagonal matrix given
 NB. testsv    Adv. to make verb to test xxsvxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -71,7 +89,7 @@ NB.   U    - n×n-matrix, upper triangular
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
-NB. - implements LAPACK's xGESV
+NB. - gesvax implements LAPACK's xGESV
 
 gesvax=:  (getrspl1ux ~ getrfpl1u)~
 gesvahx=: (getrspl1uhx~ getrfpl1u)~
@@ -201,7 +219,7 @@ testgesv=: 3 : 0
   need_jlapack_ 'gesv'
 
   'A X'=. y
-  'conA conAh conAt'=. (norm1 con (getrilu1p@getrflu1p))"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. gecon1"2 (] , ct ,: |:) A
 
   ('%.' tdyad ((mp & >/)`(0 & {::)`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp & >/)@[) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) y
 
@@ -235,7 +253,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testhesv=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (hetripl@hetrfpl))"2 (] ,: |:) A
+  'conA conAt'=. hecon1"2 (] ,: |:) A
 
   ('hesvax'  tdyad (    (0 & {::) `(mp  & >/)`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) y
   ('hesvatx' tdyad ((|:@(0 & {::))`(mp  & >/)`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X)
@@ -264,7 +282,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testposv=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con (potril@potrfl))"2 (] ,: |:) A
+  'conA conAt'=. pocon1"2 (] ,: |:) A
 
   ('posvax'  tdyad (    (0 & {::) `(mp  & >/)`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) y
   ('posvatx' tdyad ((|:@(0 & {::))`(mp  & >/)`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X)
@@ -294,7 +312,7 @@ NB. - berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testptsv=: 3 : 0
   'A X'=. y
-  'conA conAt'=. (norm1 con pttril)"2 (] ,: |:) A
+  'conA conAt'=. ptcon1"2 (] ,: |:) A
 
   ('ptsvax'  tdyad (    (0 & {::) `(mp  & >/)`]`(conA "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) y
   ('ptsvatx' tdyad ((|:@(0 & {::))`(mp  & >/)`]`(conAt"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp  & >/)@[) - (mp~ (0 & {::))~)) % (((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@]))))))) ((|: A);X)

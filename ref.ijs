@@ -16,9 +16,27 @@ NB. testlarfb  Test larfbxxxx by general matrix given
 NB. testref    Adv. to make verb to test larfxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -35,10 +53,10 @@ NB.
 NB. Description:
 NB.   Generate an elementary reflector H of order n such that
 NB.   H'*y = β*e1, where H=I-v*τ*v', H'*H=I. H is represented
-NB.   in factored form by n-vector v and atom τ. Vector v can
-NB.   have either forward (α in head) or backward (α in tail)
-NB.   direction. Input and output vector directions are the
-NB.   same.
+NB.   in factored form by n-vector v and scalar τ. Vector v
+NB.   can have either forward (α in head) or backward (α in
+NB.   tail) direction. Input and output vector directions are
+NB.   the same.
 NB.
 NB. Syntax:
 NB.   z=. ios larfg y
@@ -46,18 +64,18 @@ NB.   z=. ios larfp y
 NB. where
 NB.   ios - 2-vector of integers (ioa,iot)
 NB.   ioa - lIO α in y
-NB.   iot - lIO pre-allocated atom for τ in y
+NB.   iot - lIO pre-allocated scalar for τ in y
 NB.   y   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
-NB.         having atom α at index ioa, any atom at index
+NB.         having scalar α at index ioa, any scalar at index
 NB.         iot, and vector x[1:n-1] in the rest elements,
 NB.         vector to reflect is (α,x[1:n-1]), α ∊ ℂ,
 NB.         x ∊ ℂⁿ⁻¹
 NB.   z   - (n+1)-vector or (n+1)×1-matrix or 1×(n+1)-matrix
-NB.         (y and z shapes are match) having atom β at index
-NB.         ioa, atom τ at index iot, and vector v[1:n-1] in
-NB.         the rest elements, reflection result is vector
-NB.         (1,v[1:n-1]), 1 is not stored, β ∊ ℝ, (larfp
-NB.         provides β≥0), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
+NB.         (y and z shapes are match) having scalar β at
+NB.         index ioa, scalar τ at index iot, and vector
+NB.         v[1:n-1] in the rest elements, reflection result
+NB.         is vector (1,v[1:n-1]), 1 is not stored, β ∊ ℝ,
+NB.         (larfp provides β≥0), v ∊ ℂⁿ⁻¹, τ ∊ ℂ
 NB.
 NB. Application:
 NB. - reflect vector (α,x) by larfg and store τ at tail:
@@ -312,7 +330,7 @@ NB. Syntax:
 NB.   eCupd=. vtau larfxxxx eC
 NB. where
 NB.   eC    - matrix C to update, augmented by trash vector
-NB.   vtau  - vector v augmented by atom τ
+NB.   vtau  - vector v augmented by scalar τ
 NB.   eCupd - being updated matrix C , augmented by modified
 NB.           trash vector
 NB.   v     - vector with 1 at head (forward direction) or
@@ -424,7 +442,7 @@ NB.   A - m×n-matrix, is used to get Qf
 
 testlarft=: 3 : 0
   AC=: y=. 0 {:: y
-  rcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`gecon1 @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
@@ -448,7 +466,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testlarfb=: 3 : 0
   'A C'=. y
-  rcond=. (norm1 con (getrilu1p@getrflu1p)) C
+  rcond=. gecon1 C
   'LQf QfL QfR RQf'=. (gelqf ; geqlf ; geqrf ; gerqf) A
 
   ('larfblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;(    C , ~0))
@@ -507,4 +525,4 @@ NB.   testgq, testmq, testqf
 NB. - larftxx and larfbxxxx are impractical for large
 NB.   matrices
 
-testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_) @ (u ; u) ^: (200 > (<./@$@(0 & {::)))'
+testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_) @ (u ; u) ^: (200 >: (<./@$@(0 & {::)))'

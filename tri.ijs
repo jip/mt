@@ -19,9 +19,27 @@ NB.            definite tridiagonal matrix given
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -357,11 +375,6 @@ NB. - unit diagonal is not referenced
 NB. - models LAPACK's xTRTRI with following differences:
 NB.   - blocked not partitioned algorithm is used
 NB.   - opposite triangle must be zeroed
-NB.
-NB. References:
-NB. [1] JWiki/Essays/Triangular Matrix Inverse
-NB.     Roger Hui
-NB.     http://www.jsoftware.com/jwiki/Essays/Triangular%20Matrix%20Inverse
 NB.
 NB. TODO:
 NB. - fret would be sparse
@@ -719,9 +732,53 @@ NB.   U1D - 2-vector of boxes, the output of pttrfu, the
 NB.         matrix A represented in factored form, optional
 NB.   iA  - n×n-matrix, inversion of A
 NB.
-NB. Algorithm for dyadic pttril:
-NB. Reflexive is used to emulate monadic gerund power:
-NB. u^:(v0`v1`v2)y ↔ (v0 y)u^:(v1 y)(v2 y)
+NB. Algorithm [1]:
+NB.   In:  A and, optionally, L1D
+NB.   Out: iA
+NB.   1) if called monatically then:
+NB.      1.1) factorize A:
+NB.             L1D=. pttrfl A
+NB.      1.2) call itself dyadically:
+NB.             iA=. L1D $: A
+NB.   2) else:
+NB.      2.1) calculate Y:
+NB.           2.1.1) extract 1st subdiagonal e from L1 and
+NB.                  main diagonal d from D:
+NB.           2.1.2) prepare iA[:,n-1]:
+NB.                    q := conj(e) , 1/d[n-1]
+NB.           2.1.3) update q by running products:
+NB.                    q[j] := Π{q[j],j=n-1-j:n-1}
+NB.                  via reversed infix scan
+NB.           2.1.4) negate each q[j] for either even j
+NB.                  if n is even, or odd j if n is odd:
+NB.                    q[j] := q[j] * (-1)^(n+j+1)
+NB.                  by negating each even element of
+NB.                  reversed q[j]
+NB.           2.1.5) stitch q, work around issue [2] for
+NB.                  empty vector, to produce Y = iA[:,n-1]
+NB.      2.2) calculate I:
+NB.             I := max(0,n-1)
+NB.      2.3) calculate X:
+NB.           2.3.1) extract 1st subdiagonal a and main
+NB.                  diagonal b from A
+NB.           2.3.2) form X:
+NB.                         (  conj(a[  0])  -b[  1]  -a[  1]  )
+NB.                         (  conj(a[  1])  -b[  2]  -a[  2]  )
+NB.                    X := (  ...           ...      ...      )
+NB.                         (  conj(a[n-3])  -b[n-2]  -a[n-2]  )
+NB.                         (  conj(a[n-2])  -b[n-1]  0        )
+NB.      2.4) do iterations i=1:I by Power (^:):
+NB.             iA=. X step^:I Y
+NB.           each iteration takes iA[:,n-i:n-1] and produces
+NB.           iA[:,n-i-1:n-1]
+NB.           2.4.1) find io:
+NB.                    io := -i
+NB.           2.4.2) find pi:
+NB.                    pi := X[io,:]
+NB.           2.4.3) calculate iA[:,n-i-1:n-1]
+NB.                  2.4.3.1) find new column iA[:,n-i-1]
+NB.                  2.4.3.2) stitch iA[:,n-i:n-1] to
+NB.                           iA[:,n-i-1]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   iA -: %. A
@@ -734,12 +791,15 @@ NB.     algorithm for inverting general tridiagonal and
 NB.     anti-tridiagonal matrices.
 NB.     Applied Mathematics and Computation 204 (2008) 368–372
 NB.     http://dx.doi.org/10.1016/j.amc.2008.06.053
+NB. [2] [Jprogramming] ravel items (,.) of empty list (i.0)
+NB.     Igor Zhuravlov, 2010-06-05 10:08:56
+NB.     http://jsoftware.com/pipermail/programming/2010-June/019617.html
 NB.
 NB. TODO:
 NB. - pttriu
 NB. - A should be sparse
 
-pttril=: ($:~ pttrfl) : ((4 : 0) ^: (((0:`(+@])`(_1&diag)`,.`((-@,. (1&(|.!.0)))~ }.)`diag fork3)@])`(<:@#@])`((,. @ ((]`- ag) @ (*/\)&.|.) @ (((, (%@{:))~ +)~&>/) @ ((_1&diag&.>)`(diag&.>) ag) @ [))))
+pttril=: ($:~ pttrfl) : ((4 : 0) ^: (((0:`(+@])`(_1&diag)`,.`((-@,. (1&(|.!.0)))~ }.)`diag fork3)@])`(0>.<:@#@])`((EMPTY"_`,.@.(0<#) @ ((]`- ag) @ (*/\)&.|.) @ (((, (%@(_1&{ :: ])))~ +)~&>/) @ ((_1&diag&.>)`(diag&.>) ag) @ [))))
   io=. -c y
   pi=. io { x
   ((io (>: upd) (+/"1) ((}. pi) (*"1) (2 {."1 y))) % ({. pi)) ,. y
@@ -797,7 +857,7 @@ NB. Formula:
 NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testgetri=: 3 : 0
-  rcond=. (norm1 con (getrilu1p@getrflu1p)) y
+  rcond=. gecon1 y
 
   ('%.'        tmonad (] `]`(rcond"_)`(_."_)`(           (norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@])))   ))               y
 
@@ -824,7 +884,7 @@ NB. Formula:
 NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testhetri=: 3 : 0
-  rcond=. (norm1 con (hetripl@hetrfpl)) y
+  rcond=. hecon1 y
 
   ('hetripl' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpl) y
   ('hetripu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; hetrfpu) y
@@ -848,7 +908,7 @@ NB. Formula:
 NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpotri=: 3 : 0
-  rcond=. (norm1 con (potril@potrfl)) y
+  rcond=. pocon1 y
 
   ('potril' tmonad ((1 & {::)`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; potrfl) y
   ('potriu' tmonad ((1 & {::)`]`(rcond"_)`(_."_)`((0 {:: [) ((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))) ]))) (; potrfu) y
@@ -873,7 +933,7 @@ NB. Formula:
 NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testpttri=: 3 : 0
-  rcond=. (norm1 con pttril) y
+  rcond=. ptcon1 y
 
   ('pttril' tdyad ((pttrfl@])`]`]`(rcond"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
 

@@ -9,9 +9,27 @@ NB. testgeqf  Test gexxx by general matrix given
 NB. testqf    Adv. to make verb to test gexxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -223,7 +241,7 @@ NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   Q -: unglq LQf
-NB.   I -: (mp ct) Q
+NB.   I -: po Q
 NB.   A -: L mp Q
 NB.   (] -: ((         trl   @:(}:"1)) mp  unglq)@gelqf) A
 NB. where
@@ -358,7 +376,7 @@ NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   Q -: ungrq RQf
-NB.   I -: (mp ct) Q
+NB.   I -: po Q
 NB.   A -: R mp Q
 NB.   (] -: ((((-~/@$) tru ])@:(}."1)) mp  ungrq)@gerqf) A
 NB. where
@@ -397,10 +415,10 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - berr for LQ: berr := ||L - A * Q^H|| / (ε * n * ||A||)
-NB. - berr for QL: berr := ||L - Q^H * A|| / (ε * m * ||A||)
-NB. - berr for QR: berr := ||R - Q^H * A|| / (ε * m * ||A||)
-NB. - berr for RQ: berr := ||R - A * Q^H|| / (ε * n * ||A||)
+NB. - LQ: berr := ||L - A * Q^H|| / (ε * n * ||A||)
+NB. - QL: berr := ||L - Q^H * A|| / (ε * m * ||A||)
+NB. - QR: berr := ||R - Q^H * A|| / (ε * m * ||A||)
+NB. - RQ: berr := ||R - A * Q^H|| / (ε * n * ||A||)
 NB. where
 NB.   matrix product is done indirectly via unmxxxx
 
@@ -408,7 +426,7 @@ testgeqf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gelqf geqlf geqrf gerqf'
 
-  rcond=. ((_."_)`(norm1 con (getrilu1p@getrflu1p)) @. (=/@$)) y  NB. meaninigful for square matrices only
+  rcond=. ((_."_)`gecon1 @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('128!:0' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (mp & >/)))%(FP_EPS*(#*norm1)@[)))) y
 

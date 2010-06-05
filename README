@@ -1,17 +1,18 @@
-"Matrix toolbox" addon for J programming language
-README file
+Copyright 2010 Igor Zhuravlov
 
-Date:
-Version:
-Author:
+See the accompanying file COPYING.LESSER, version 2007-Jun-29 or later
+for terms of use. If, for some reason it is missing, the mt license
+also may be found at: <http://www.gnu.org/licenses/>
 
-Contents:
+'Matrix toolbox' addon for J programming language
 
-1. What...? Who...? Where...?
-1.1. What's this addon is for?
-1.2. What's the difference with LAPACK addon?
-2. How to...?
-3. Why...?
-4. Some technical details
+mt is a set of routines for solving some problems in matrix algebra:
+transforming, decomposing, reducing to condensed form, factorization,
+equation solving, function applying, condition number estimating. It's
+based mostly on LAPACK algorithms, but doesn't require LAPACK.
 
-Q&A:
+Project homepage:
+http://www.jsoftware.com/jwiki/IgorZhuravlov/mt
+
+Authors:
+see AUTHORS file

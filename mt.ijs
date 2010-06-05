@@ -22,9 +22,27 @@ NB.
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -37,17 +55,17 @@ NB. User config
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Tests logging
 
-TESTLOGFILE=: < jpath '~temp/mt.log'                  NB. assign a: to switch off file logging
-TESTLOG=: ''                                          NB. literal array, being formatted test log
+TESTLOGFILE=: < jpath '~temp/mt.log'  NB. assign a: to switch off file logging
+TESTLOG=: ''                          NB. literal array, being formatted test log
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NB. Debug level used by dbg conj., the constant function:
-NB.   0: - execute debuging verb transparently and silently
-NB.   1: - show for debuging verb its rank and valency,
-NB.        input's and output's shapes
-NB.   2: - case (1:) plus input's and output's values
+NB. Debug level used by dbg conj., the atom:
+NB.   0 - execute debuging verb transparently and silently
+NB.   1 - show for debuging verb its rank and valency,
+NB.       input's and output's shapes
+NB.   2 - case (1) plus input's and output's values
 
-DEBUG=: 2:
+DEBUG=: 2
 
 NB. ---------------------------------------------------------
 NB. System config
@@ -90,41 +108,40 @@ script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 NB. ---------------------------------------------------------
 NB. Addon definitions
 NB.
-NB. TODO: s@user/projects@addons/math/mt@g
 
 NB. utilities
-require '~user/projects/mt/dbg.ijs'     NB. Debug
-require '~user/projects/mt/fork.ijs'    NB. Extended forks
-require '~user/projects/mt/util.ijs'    NB. Utilities
-require '~user/projects/mt/ios.ijs'     NB. IOS
-require '~user/projects/mt/norm.ijs'    NB. Norms
-require '~user/projects/mt/struct.ijs'  NB. Structure handlers
-require '~user/projects/mt/rand.ijs'    NB. Random arrays
-require '~user/projects/mt/test.ijs'    NB. Test
+require '~addons/math/mt/dbg.ijs'     NB. Debug
+require '~addons/math/mt/fork.ijs'    NB. Extended forks
+require '~addons/math/mt/util.ijs'    NB. Utilities
+require '~addons/math/mt/ios.ijs'     NB. IOS
+require '~addons/math/mt/norm.ijs'    NB. Norms
+require '~addons/math/mt/struct.ijs'  NB. Structure handlers
+require '~addons/math/mt/rand.ijs'    NB. Random arrays
+require '~addons/math/mt/test.ijs'    NB. Test
 
 NB. low-level
-require '~user/projects/mt/bak.ijs'     NB. Restore original eigenvectors
-require '~user/projects/mt/bal.ijs'     NB. Balance
-require '~user/projects/mt/con.ijs'     NB. Condition number
-require '~user/projects/mt/eqr.ijs'     NB. Eigenvalues and eigenvectors of structured matrix
-require '~user/projects/mt/ref.ijs'     NB. Reflections
-require '~user/projects/mt/rot.ijs'     NB. Rotations
-require '~user/projects/mt/gq.ijs'      NB. Generate Q from its factored form
-require '~user/projects/mt/mq.ijs'      NB. Multiply by Q represented in factored form
-require '~user/projects/mt/scl.ijs'     NB. Scale
-require '~user/projects/mt/sm.ijs'      NB. Solve linear monomial equation with triangular matrix
+require '~addons/math/mt/bak.ijs'     NB. Restore original eigenvectors
+require '~addons/math/mt/bal.ijs'     NB. Balance
+require '~addons/math/mt/con.ijs'     NB. Condition number
+NB. require '~addons/math/mt/eqr.ijs'     NB. Eigenvalues and eigenvectors of structured matrix
+require '~addons/math/mt/ref.ijs'     NB. Reflections
+require '~addons/math/mt/rot.ijs'     NB. Rotations
+require '~addons/math/mt/gq.ijs'      NB. Generate Q from its factored form
+require '~addons/math/mt/mq.ijs'      NB. Multiply by Q represented in factored form
+NB. require '~addons/math/mt/scl.ijs'     NB. Scale
+require '~addons/math/mt/sm.ijs'      NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
-require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
-require '~user/projects/mt/qf.ijs'      NB. Orthogonal factorization
-require '~user/projects/mt/trf.ijs'     NB. Triangular factorization
-require '~user/projects/mt/tri.ijs'     NB. Inverse by trf
-require '~user/projects/mt/trs.ijs'     NB. Solve linear monomial equation by trf
+require '~addons/math/mt/hrd.ijs'     NB. Hessenberg reduction
+require '~addons/math/mt/qf.ijs'      NB. Orthogonal factorization
+require '~addons/math/mt/trf.ijs'     NB. Triangular factorization
+require '~addons/math/mt/tri.ijs'     NB. Inverse by trf
+require '~addons/math/mt/trs.ijs'     NB. Solve linear monomial equation by trf
 
 NB. hi-level
-require '~user/projects/mt/exp.ijs'     NB. exponent
-require '~user/projects/mt/pow.ijs'     NB. power
-require '~user/projects/mt/sv.ijs'      NB. solve linear monomial equation
+require '~addons/math/mt/exp.ijs'     NB. Matrix exponential
+require '~addons/math/mt/pow.ijs'     NB. Raise matrix to an integer power[s]
+require '~addons/math/mt/sv.ijs'      NB. Solve linear monomial equation
 
 NB. =========================================================
 NB. Test suite
@@ -166,23 +183,23 @@ test=: 1 : 0
   NB. low-level algorithms
   (u testbak_mt_) y   NB. square matrices only
   (u testbal_mt_) y   NB. square matrices only
-  (u testref_mt_) y   NB. testlarfb is called only for relatively small matrices (min dim < 200)
-     testrot_mt_  ''  NB. y is ignored
+  (u testref_mt_) y   NB. matrices with min dimention ≤ 200 only
+     testrot_mt_  ''  NB. fixed non-random test matrix is used
   (u testgq_mt_ ) y
   (u testmq_mt_ ) y
-  (u testsm_mt_ ) y   NB. testtrsm is called only for relatively small matrices (size ≤ 500)
+  (u testsm_mt_ ) y   NB. square matrices with size ≤ 500 only
 
   NB. mid-level algorithms
-  (u testhrd_mt_) y
+  (u testhrd_mt_) y   NB. square matrices only
   (u testqf_mt_ ) y
   (u testtrf_mt_) y
-  (u testtri_mt_) y
-  (u testtrs_mt_) y
+  (u testtri_mt_) y   NB. square matrices only
+  (u testtrs_mt_) y   NB. square matrices only
 
   NB. hi-level algorithms
-  (u testexp_mt_) y
-  (u testpow_mt_) y
-  (u testsv_mt_ ) y
+  (u testexp_mt_) y   NB. square matrices only
+  (u testpow_mt_) y   NB. square matrices only
+  (u testsv_mt_ ) y   NB. square matrices only
 
   EMPTY_mt_
 )

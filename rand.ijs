@@ -1,25 +1,42 @@
 NB. Random arrays
 NB.
-NB. gemat    Make random array
 NB. trxxmat  Adv. to make verb to make random square
 NB.          triangular matrix
+NB. gemat    Make random array
+NB. dimat    Conj. to make verb to make random diagonalizable
+NB.          matrix
 NB. hemat    Adv. to make verb to make random Hermitian
 NB.          (symmetric) matrix
-NB. unmat    Adv. to make verb to make random unitary
-NB.          (orthogonal) matrix with distribution given by
-NB.          Haar measure
-NB. dimat    Conj. to make verb to make random diagonalizable
-NB.          square matrix
 NB. pomat    Adv. to make verb to make random Hermitian
 NB.          (symmetric) positive definite matrix
 NB. ptmat    Adv. to make verb to make random Hermitian
 NB.          (symmetric) positive definite tridiagonal
 NB.          matrix
+NB. unmat    Adv. to make verb to make random unitary
+NB.          (orthogonal) matrix
 NB. spmat    Conj. to make verb to make random sparse array
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -204,56 +221,6 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. gemat
-NB.
-NB. Description:
-NB.   Make random array
-NB.
-NB. Syntax:
-NB.   G=. [par] gemat sh
-NB. where
-NB.   sh  - r-vector of non-negative integers, shape of G
-NB.   par - optional 6-vector (ma,mb,μ,σ,ea,eb), σ>0, where
-NB.         (ma,mb) are mantissa's uniform distribution
-NB.         parameters, and (μ,σ,ea,eb) are exponent's
-NB.         truncated normal distribution parameters, default
-NB.         is: (_1 1 0 (FP_FLEN/2) FP_EMIN FP_EMAX)
-NB.   G   - sh-array, random
-NB.   r   ≥ 0, the rank of G
-NB.
-NB. Formula:
-NB.   g ← mantissa * 2 ^ exponent
-NB. where
-NB.   mantissa ~ U(ma,mb)
-NB.   exponent ~ TN(μ,σ,ea,eb)
-NB.
-NB. Application:
-NB. - make real 4×4-matrix G with elements g having:
-NB.     mantissa(g) ~ U(_1,1)
-NB.     exponent(g) ~ TN(0,3^2,_6,4)
-NB.   :
-NB.     G=. _1 1 0 3 _6 4 gemat 4 4
-NB. - make complex 4×4-matrix G with elements g having:
-NB.     mantissa(Re(g)),mantissa(Im(g)) ~ U(_1,1)
-NB.     exponent(Re(g)),exponent(Im(g)) ~ TN(0,3^2,_6,4)
-NB.   :
-NB.     G=. _1 1 0 3 _6 4 (gemat j. gemat) 4 4
-NB. - make complex 4×4-matrix G with elements g having:
-NB.     mantissa(Re(g)) ~ U(0,1)
-NB.     exponent(Re(g)) ~ TN(0,1,-∞,+∞)
-NB.     mantissa(Im(g)) ~ U(_1,1)
-NB.     exponent(Im(g)) ~ TN(0,3^2,_6,4)
-NB.   :
-NB.     G=. ((0 1 0 1 __ _ & gemat) j. (_1 1 0 3 _6 4 & gemat)) 4 4
-NB.
-NB. Notes:
-NB. - default par provides about 95% of g numbers falls into
-NB.   the range [-1/FP_EPS,-FP_EPS]U[FP_EPS,1/FP_EPS]
-NB.   ("68-95-99.7 rule")
-
-gemat=: ((_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX) & $:) :(((randu~ 2&{.) (* 2&^) (randtnf~ 2&}.))~)
-
-NB. ---------------------------------------------------------
 NB. Verb:      Syntax:                 Is called as:
 NB. trl1mat    vapp=. randx trl1mat    L1=. vapp sh
 NB. trlmat     vapp=. randx trlmat     L=.  vapp sh
@@ -327,114 +294,61 @@ trumat=:  1 : '|: @ (u trlmat_mt_)'
 tru1mat=: 1 : '|: @ (u trl1mat_mt_)'
 
 NB. ---------------------------------------------------------
-NB. hemat
+NB. gemat
 NB.
 NB. Description:
-NB.   Adv. to make verb to make random Hermitian (symmetric)
-NB.   matrix
+NB.   Make random array
 NB.
 NB. Syntax:
-NB.   vapp=. randx hemat
+NB.   G=. [par] gemat sh
 NB. where
-NB.   randx - monad to make random y-array; is called as:
-NB.             A=. randx y
-NB.   vapp  - monad to make H; is called as:
-NB.             H=. vapp sh
-NB.   sh    - size or shape, is either n or (n,any_number)
-NB.   H     - n×n-matrix, random Hermitian (symmetric)
-NB.
-NB. Assertions:
-NB.   (-: ct) H
-NB. where
-NB.   H=. randx hemat n
-NB.
-NB. Application:
-NB. - make real symmetric 4×4-matrix H with  elements h
-NB.  having:
-NB.     mantissa(h) ~ U(_1,1)
-NB.     exponent(h) ~ TN(0,3^2,_6,4)
-NB.   :
-NB.     H=. (_1 1 0 3 _6 4 & gemat) hemat 4 4
-NB. - make complex Hermitian 4×4-matrix L with elements h
-NB.   having:
-NB.     mantissa(Re(h)),mantissa(Im(h)) ~ U(_1,1)
-NB.     exponent(Re(h)),exponent(Im(h)) ~ TN(0,3^2,_6,4)
-NB.   :
-NB.     H=. (_1 1 0 3 _6 4 & (gemat j. gemat)) hemat 4
-NB. - make complex Hermitian 4×4-matrix L with elements h
-NB.   having:
-NB.     mantissa(Re(h)) ~ U(0,1)
-NB.     exponent(Re(h)) ~ TN(0,1,-∞,+∞)
-NB.     mantissa(Im(h)) ~ U(_1,1)
-NB.     exponent(Im(h)) ~ TN(0,3^2,_6,4)
-NB.   :
-NB.     H=. ((0 1 0 1 __ _ & gemat) j. (_1 1 0 3 _6 4 & gemat)) hemat 4
-NB.
-NB. Notes:
-NB. - only n*(n+1)/2 numbers from RNG are requested
-
-hemat=: 1 : 'tr2he_mt_ @ (u trlmat_mt_) @ (2 & $)'
-
-NB. ---------------------------------------------------------
-NB. unmat
-NB.
-NB. Description:
-NB.   Adv. to make verb to make random unitary (orthogonal)
-NB.   matrix with distribution given by Haar measure
-NB.
-NB. Syntax:
-NB.   vapp=. randnx unmat
-NB. where
-NB.   randnx - monad to make A, it is either randnf or
-NB.            randnc; is called as:
-NB.              A=. randnx y
-NB.   vapp   - monad to make Q; is called as:
-NB.              Q=. vapp sh
-NB.   sh     - size or shape, either n or (n,any_number)
-NB.   A      - n×n-matrix with elements distributed as N(0,1)
-NB.   Q      - n×n-matrix, random unitary (orthogonal)
+NB.   sh  - r-vector of non-negative integers, shape of G
+NB.   par - optional 6-vector (ma,mb,μ,σ,ea,eb), σ>0, where
+NB.         (ma,mb) are mantissa's uniform distribution
+NB.         parameters, and (μ,σ,ea,eb) are exponent's
+NB.         truncated normal distribution parameters, default
+NB.         is: (_1 1 0 (FP_FLEN/2) FP_EMIN FP_EMAX)
+NB.   G   - sh-array, random
+NB.   r   ≥ 0, the rank of G
 NB.
 NB. Formula:
-NB.   A     := randnx(n,n)
-NB.   (Q,R) := QR(A)
-NB.   d     := diag(R)
-NB.   Λ     := diagmat(d/|d|)
-NB.   Q     := Q*Λ
+NB.   g ← mantissa * 2 ^ exponent
 NB. where
-NB.   n - size of output matrix Q
-NB.
-NB. Assertions (with appropriate comparison tolerance):
-NB.   I -: clean (mp~ ct) Q
-NB. where
-NB.   I=. idmat n
-NB.   Q=. randnf unmat n
+NB.   mantissa ~ U(ma,mb)
+NB.   exponent ~ TN(μ,σ,ea,eb)
 NB.
 NB. Application:
-NB. - make real orthogonal 4×4-matrix Q, where Q is derived
-NB.   via QR-factorization from real matrix B:
-NB.     Q=. randnf unmat 4 4
-NB. - make complex unitary 4×4-matrix U, where U is derived
-NB.   via QR-factorization from complex matrix B:
-NB.     U=. randnc unmat 4
-NB.
-NB. References:
-NB. [1] Francesco Mezzadri (2007). How to generate random
-NB.     matrices from the classical compact groups.
-NB.     Notices of the AMS, Vol. 54 (2007), 592-604
-NB.     http://arxiv.org/abs/math-ph/0609050v2
+NB. - make real 4×4-matrix G with elements g having:
+NB.     mantissa(g) ~ U(_1,1)
+NB.     exponent(g) ~ TN(0,3^2,_6,4)
+NB.   :
+NB.     G=. _1 1 0 3 _6 4 gemat 4 4
+NB. - make complex 4×4-matrix G with elements g having:
+NB.     mantissa(Re(g)),mantissa(Im(g)) ~ U(_1,1)
+NB.     exponent(Re(g)),exponent(Im(g)) ~ TN(0,3^2,_6,4)
+NB.   :
+NB.     G=. _1 1 0 3 _6 4 (gemat j. gemat) 4 4
+NB. - make complex 4×4-matrix G with elements g having:
+NB.     mantissa(Re(g)) ~ U(0,1)
+NB.     exponent(Re(g)) ~ TN(0,1,-∞,+∞)
+NB.     mantissa(Im(g)) ~ U(_1,1)
+NB.     exponent(Im(g)) ~ TN(0,3^2,_6,4)
+NB.   :
+NB.     G=. ((0 1 0 1 __ _ & gemat) j. (_1 1 0 3 _6 4 & gemat)) 4 4
 NB.
 NB. Notes:
-NB. - current geqrf implementation provides d≥0, so since R
-NB.   isn't singular, hence d>0 and Λ is identity matrix
+NB. - default par provides about 95% of g numbers falls into
+NB.   the range [-1/FP_EPS,-FP_EPS]U[FP_EPS,1/FP_EPS]
+NB.   ("68-95-99.7 rule")
 
-unmat=: 1 : 'ungqr_mt_ @ geqrf_mt_ @ u @ (2 & $)'
+gemat=: ((_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX) & $:) :(((randu~ 2&{.) (* 2&^) (randtnf~ 2&}.))~)
 
 NB. ---------------------------------------------------------
 NB. dimat
 NB.
 NB. Description:
 NB.   Conj. to make verb to make random diagonalizable
-NB.   square matrix
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   vapp=. randx dimat randq
@@ -485,6 +399,55 @@ NB.   (non-complex), possibly non-distinct numbers
 NB. - A is diagonalizable iif A is normal (A^H * A = A * A^H)
 
 dimat=: 2 : 'u@{. (] mp (* ct_mt_)) v'
+
+NB. ---------------------------------------------------------
+NB. hemat
+NB.
+NB. Description:
+NB.   Adv. to make verb to make random Hermitian (symmetric)
+NB.   matrix
+NB.
+NB. Syntax:
+NB.   vapp=. randx hemat
+NB. where
+NB.   randx - monad to make random y-array; is called as:
+NB.             A=. randx y
+NB.   vapp  - monad to make H; is called as:
+NB.             H=. vapp sh
+NB.   sh    - size or shape, is either n or (n,any_number)
+NB.   H     - n×n-matrix, random Hermitian (symmetric)
+NB.
+NB. Assertions:
+NB.   (-: ct) H
+NB. where
+NB.   H=. randx hemat n
+NB.
+NB. Application:
+NB. - make real symmetric 4×4-matrix H with  elements h
+NB.  having:
+NB.     mantissa(h) ~ U(_1,1)
+NB.     exponent(h) ~ TN(0,3^2,_6,4)
+NB.   :
+NB.     H=. (_1 1 0 3 _6 4 & gemat) hemat 4 4
+NB. - make complex Hermitian 4×4-matrix L with elements h
+NB.   having:
+NB.     mantissa(Re(h)),mantissa(Im(h)) ~ U(_1,1)
+NB.     exponent(Re(h)),exponent(Im(h)) ~ TN(0,3^2,_6,4)
+NB.   :
+NB.     H=. (_1 1 0 3 _6 4 & (gemat j. gemat)) hemat 4
+NB. - make complex Hermitian 4×4-matrix L with elements h
+NB.   having:
+NB.     mantissa(Re(h)) ~ U(0,1)
+NB.     exponent(Re(h)) ~ TN(0,1,-∞,+∞)
+NB.     mantissa(Im(h)) ~ U(_1,1)
+NB.     exponent(Im(h)) ~ TN(0,3^2,_6,4)
+NB.   :
+NB.     H=. ((0 1 0 1 __ _ & gemat) j. (_1 1 0 3 _6 4 & gemat)) hemat 4
+NB.
+NB. Notes:
+NB. - only n*(n+1)/2 numbers from RNG are requested
+
+hemat=: 1 : 'tr2he_mt_ @ (u trlmat_mt_) @ (2 & $)'
 
 NB. ---------------------------------------------------------
 NB. pomat
@@ -582,7 +545,62 @@ NB.
 NB. TODO:
 NB. - T should be sparse
 
-ptmat=: 1 : '(mp ct_mt_) @ ((1:^:(0&=)@|) upddiag_mt_) @ (((setdiag_mt_ diagmat_mt_)~ (}: ; _1:))/)@u@(2,{.)'
+ptmat=: 1 : 'po_mt_ @ (>:@| upddiag_mt_) @ (((setdiag_mt_ diagmat_mt_)~ (}: ; _1:))/)@u@(2,{.)'
+
+NB. ---------------------------------------------------------
+NB. unmat
+NB.
+NB. Description:
+NB.   Adv. to make verb to make random unitary (orthogonal)
+NB.   matrix with distribution given by Haar measure
+NB.
+NB. Syntax:
+NB.   vapp=. randnx unmat
+NB. where
+NB.   randnx - monad to make A, it is either randnf or
+NB.            randnc; is called as:
+NB.              A=. randnx y
+NB.   vapp   - monad to make Q; is called as:
+NB.              Q=. vapp sh
+NB.   sh     - size or shape, either n or (n,any_number)
+NB.   A      - n×n-matrix, non-singular, with elements
+NB.            distributed as N(0,1)
+NB.   Q      - n×n-matrix, random unitary (orthogonal)
+NB.
+NB. Formula:
+NB.   A     := randnx(n,n)
+NB.   (Q,R) := QR(A)
+NB.   d     := diag(R)
+NB.   Λ     := diagmat(d/|d|)
+NB.   Q     := Q*Λ
+NB. where
+NB.   n - size of output matrix Q
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   I -: clean (mp~ ct) Q
+NB. where
+NB.   I=. idmat n
+NB.   Q=. randnf unmat n
+NB.
+NB. Application:
+NB. - make real orthogonal 4×4-matrix Q, where Q is derived
+NB.   via QR-factorization from real matrix B:
+NB.     Q=. randnf unmat 4 4
+NB. - make complex unitary 4×4-matrix U, where U is derived
+NB.   via QR-factorization from complex matrix B:
+NB.     U=. randnc unmat 4
+NB.
+NB. References:
+NB. [1] Francesco Mezzadri (2007). How to generate random
+NB.     matrices from the classical compact groups.
+NB.     Notices of the AMS, Vol. 54 (2007), 592-604
+NB.     http://arxiv.org/abs/math-ph/0609050v2
+NB.
+NB. Notes:
+NB. - current geqrf implementation provides d≥0, so since R
+NB.   isn't singular, hence d>0 and Λ is identity matrix
+
+unmat=: 1 : 'ungqr_mt_ @ geqrf_mt_ @ u @ (2 & $)'
 
 NB. ---------------------------------------------------------
 NB. spmat

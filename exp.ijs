@@ -12,9 +12,27 @@ NB.            given
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Version: 0.6.0 2010-06-05
+NB.
+NB. Copyright 2010 Igor Zhuravlov
+NB.
+NB. This file is part of mt
+NB.
+NB. mt is free software: you can redistribute it and/or
+NB. modify it under the terms of the GNU Lesser General
+NB. Public License as published by the Free Software
+NB. Foundation, either version 3 of the License, or (at your
+NB. option) any later version.
+NB.
+NB. mt is distributed in the hope that it will be useful, but
+NB. WITHOUT ANY WARRANTY; without even the implied warranty
+NB. of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+NB. See the GNU Lesser General Public License for more
+NB. details.
+NB.
+NB. You should have received a copy of the GNU Lesser General
+NB. Public License along with mt. If not, see
+NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
@@ -32,7 +50,7 @@ NB. Syntax:
 NB.   B=. s sdiag A
 NB. where
 NB.   A - n×n-matrix or m×n×n-report
-NB.   s - scalar or m-vector, shift of diagonal(s) in A
+NB.   s - scalar or m-vector, shift of diagonal[s] in A
 NB.   B - array of the same shape as A, the shifted A:
 NB.          B -: A + s (*"0 2) idmat n
 NB.
@@ -235,7 +253,7 @@ NB. where
 NB.   A - n×n-matrix
 
 testgeexp=: 3 : 0
-  rcond=. (norm1 con (getrilu1p@getrflu1p)) y
+  rcond=. gecon1 y
 
   ('geexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
 
@@ -260,7 +278,7 @@ testdiexp=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'geev'
 
-  rcond=. (norm1 con (getrilu1p@getrflu1p)) y
+  rcond=. gecon1 y
 
   'Lh v R'=. geev_jlapack_ y         NB. do eigendecomposition
   v=. j./ (*"1 (-@*@{.)) |: +. v     NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
@@ -292,7 +310,7 @@ testheexp=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'heev'
 
-  rcond=. (norm1 con (hetripl@hetrfpl)) y
+  rcond=. hecon1 y
 
   NB. - do eigendecomposition: 'v R'=. heev A
   NB. - for each v[i] in v, flip sign of v[i] if Re(v[i])>0,

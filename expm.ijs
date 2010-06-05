@@ -1,26 +1,28 @@
 NB. expm.ijs
-NB. Calculate matrix exponent and Cauchy integral from state-space
-NB. representation of LTI system via Lagrange-Sylvester interpolation
-NB. polynome
+NB. Matrix exponent and Cauchy integral from state-space
+NB. representation of LTI system
 NB.
 NB. prexpm  prepare time-invariant parts for expm
 NB. expm    calculate matrix exponent and Cauchy integral
 NB.
 NB. References:
-NB. [1] Podchukaev V.A. Theory of informational processes and systems. - M.,
-NB.     2006. (Подчукаев В. А. Теория информационных процессов и систем. -
-NB.     М.: Гардарики, 2006 - 209 с.)
+NB. [1] Podchukaev V.A. Theory of informational processes
+NB.     and systems. - M., 2006. (Подчукаев В. А. Теория
+NB.     информационных процессов и систем. - М.: Гардарики,
+NB.     2006 - 209 с.)
 NB.     URL: http://www.sgau.ru/uit/Book3.htm
-NB. [2] Andrievskiy B.R., Fradkov A.L. Selected chapters of automatic
-NB.     control theory with MATLAB examples. - SPb., 2000 (Андриевский Б.
-NB.     Р., Фрадков А. Л. Избранные главы теории автоматического управления
-NB.     с примерами на языке MATLAB. - СПб.: Наука, 2000. - 475 с., ил. 86)
+NB. [2] Andrievskiy B.R., Fradkov A.L. Selected chapters of
+NB.     automatic control theory with MATLAB examples. -
+NB.     SPb., 2000 (Андриевский Б.Р., Фрадков А. Л.
+NB.     Избранные главы теории автоматического управления
+NB.     с примерами на языке MATLAB. - СПб.: Наука, 2000. -
+NB.     475 с., ил. 86)
 NB.
 NB. Resources:
 NB. - http://www.jsoftware.com/jwiki/...
 NB. - http://www.dvgu.ru/forum/...
 NB.
-NB. 2008-02-28 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
+NB. 2008-02-29 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 script_z_ '~system/main/numeric.ijs'            NB. clean
@@ -115,7 +117,7 @@ NB. makeG
 NB. Build square matrix G of augmented LTI system: G = ( A  B )
 NB.                                                    ( 0  0 )
 NB. Syntax:
-NB.   G=. makeG A;B
+NB.   G=. makeG A;B[;trash]
 NB. where
 NB.   A - Nx-by-Nx state matrix of LTI system
 NB.   B - Nx-by-Nu control input matrix of LTI system
@@ -135,7 +137,7 @@ NB.   Lt=. ts makeLtM V
 NB.   M=. 0 makeLtM V
 NB. where:
 NB.   V  - (#vm)-by-3 matrix, prepared eigenvalues of G, output of prepV
-NB.   ts - sampling period, ts>0
+NB.   ts > 0, sample time
 NB.   M  - Ng-by-Ng matrix for equation M*A(t)=L(t)
 NB.   Lt - Ng-vector, RHS L(t) for equation M*A(t)=L(t)
 NB.   Ng = #G , matrix G minimal polynom's order
@@ -143,7 +145,6 @@ NB.
 NB. Tests:
 NB.    1.0 makeLtM prepV diagmat 4 4 3 2j2 2j_2 1j1 1j1
 NB. 54.5982 54.5982 20.0855 _3.07493j6.71885 _3.07493j_6.71885 1.46869j2.28736 1.46869j2.28736
-NB.
 NB.    0 makeLtM prepV diagmat 4 4 3 2j2 2j_2 1j1 1j1
 NB. 1    4   16      64  256      1024    4096
 NB. 0    1    8      48  256      1280    6144
@@ -166,7 +167,7 @@ NB.
 NB. Syntax:
 NB.   At=. NxPMV makeAt ts
 NB. where:
-NB.   ts    - sampling period, ts>0
+NB.   ts    > 0, sample time
 NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
 NB.   At    - Ng-vector, solution A(t) of equation M*A(t)=L(t)
 NB.   Ng    = #G , matrix G minimal polynom's order
@@ -178,7 +179,7 @@ NB. prexpm
 NB. Prepare time-invariant parts for expm
 NB.
 NB. Syntax:
-NB.   'Nx P M V'=. prexpm A;B
+NB.   'Nx P M V'=. prexpm A;B[;trash]
 NB. where:
 NB.   A - Nx-by-Nx state matrix of LTI system, should be stable,
 NB.       i.e. all eigenvalues of A must have negative real parts
@@ -199,14 +200,14 @@ NB. Calculate matrix exponent
 NB.   Phi(ts) = exp(A*ts)
 NB. and Cauchy integral
 NB.   Gamma(ts) = Integral(exp(A*(ts-t))*dt,t=0..ts)*B
-NB. for sampling period ts via Lagrange-Sylvester interpolation
+NB. for sampe time ts via Lagrange-Sylvester interpolation
 NB. polynome [1, p. 88]
 NB.
 NB. Syntax:
 NB.   'Phi Gamma'=. NxPMV expm ts
 NB. where:
 NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
-NB.   ts    - sampling period, ts>0
+NB.   ts    > 0, sample time
 NB.   Phi   - Nx-by-Nx matrix, matrix exponent
 NB.   Gamma - Nx-by-Nu matrix, Cauchy intergal
 NB.   Nu    = (#P)-Nx

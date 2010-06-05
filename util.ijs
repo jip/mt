@@ -2,7 +2,9 @@ NB. util.ijs
 NB. Linear time-invariant (LTI) system's utilities
 NB.
 NB. makeP        make report of table y powers
-NB. mplot        plot the report as multi-plot
+NB. timeplot     plot the report in time-domain as multi-plot
+NB. freqplot     plot the report in frequency-domain as multi-plot
+NB.
 NB. rndmat       generate random matrix
 NB. rndmat_neig  generate random matrix with negative eigenvalues
 NB.
@@ -13,7 +15,7 @@ NB.
 NB. 2008-02-28 1.0.0 Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
 
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
-script_z_ '~system/packages/math/makemat.ijs'   NB. idmat
+script_z_ '~system/packages/math/makemat.ijs'   NB. idmat diagmat
 require '~user/projects/lapack/lapack.ijs'      NB. '~addons/math/lapack/lapack.ijs'
 require '~user/projects/lapack/gesvd.ijs'       NB. need_jlapack_ 'gesvd'
 
@@ -44,6 +46,7 @@ NB. - powers are calculated via repeated squaring, see
 NB.   http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
 NB. - 0-th power (identity matrix) is substituted directly
 NB.   without calculation
+NB. - memoization in use
 
 p2b=: < @ I. @ |.                 NB. cvt bits of y to powers, then box it
 pows=: p2b"1 @ #: @ i. @ [        NB. call p2b for each power x represented binary
@@ -57,63 +60,58 @@ check0=: make0`prepP @. (0 ~: [)  NB. choose report type depending on x=0
 makeP=: (# $: ]) :check0 M.       NB. force dyadic call: (#@]) check0 ]
 
 NB. ---------------------------------------------------------
-NB. mplot
-NB. Plot the report as R-by-C multi-plot
+NB. timeplot
+NB. Plot the report in time-domain as R-by-C multi-plot
 NB.
 NB. Synax:
-NB.   [titles] mplot [x;]data
+NB.   [tplot[;trows[;tcols]]] timeplot [x;]data1[;data2[;...]]
 NB. where
-NB.   titles - optional titles for plot, rows and columns, in form:
-NB.              plot[;rows[;cols]]
-NB.            where
-NB.              plot - string, plot title
-NB.              rows - may be one of:
-NB.                       str                - prefix for row titles
-NB.                       str1;str2;...;strR - boxed row titles
-NB.              cols - may be one of:
-NB.                       str                - prefix for column titles
-NB.                       str1;str2;...;strC - boxed column titles
-NB.   x      - N-vector, x tics
-NB.   data   - data to plot in form:
-NB.              data1[;data2[;...]]
-NB.            where each datai is report of shape N-by-R-by-C. If
-NB.            more than one report is supplied, then all vectors
-NB.            ((<r,c) {"2 datai) are plotted in the same sub-plot
-NB.            with coordinate (<r,c)
+NB.   tplot - string, optional title for entire plot
+NB.   trows - string, optional title for rows, any one of:
+NB.           s            - string, prefix for row titles
+NB.           s1;s2;...;sR - boxed strings, row titles
+NB.   tcols - string, optional title for cols, any one of:
+NB.           s            - string, prefix for column titles
+NB.           s1;s2;...;sC - boxed strings, column titles
+NB.   x     - N-vector, optional x tics, default is
+NB.           (i. @ (# @ (0 & {:: ^: L.))) data1
+NB.   datai - N-by-R-by-C report, data to plot in R-by-C
+NB.           multi-plot. If more than one report is
+NB.           supplied, then all vectors ((<r,c) {"2 datai)
+NB.           are plotted in the same sub-plot with
+NB.           coordinate (<r,c)
 NB.   R >= 0
 NB.   C >= 0
 NB.   N >= 0
 NB.
-NB. Example:
-NB.   ('LTI output';(<'1st output';'2nd output');'Input ch. #') mplot t;(<Y1;Y2;Y3)
+NB. Applications:
+NB.   ('LTI output';(<'1st output ch.';'2nd output ch.');'Input ch. #') timeplot t;Y1;Y2;Y3
+NB.   (<'LTI #1';'LTI #2') (timeplot & >) (< t1;X11;X12;X13) , (< t2;Y21;Y22)
 NB.
 NB. TODO:
 NB. - check Nx|Ny|Nu == 0
 
-mplot=: (('Plot';'Out #';'In #')&$: :(4 : 0)) " 1 3
+timeplot=: (('Plot';'Out #';'In #')&$: :(4 : 0)) " 1 _
 0$0
 )
 
 NB. ---------------------------------------------------------
 NB. rndmat
-NB. Generate rectangular random matrix of values from range [0,10)
+NB. Generate rectangular random matrix of values in range [0,10)
 NB. Syntax:
 NB.   mat=. rndmat size
 NB.   mat=. rndmat rows cols
 
-rndmat=: 3 : 0
-sh=. ({. , {:) y
-m=. 0.1 * ? sh $ 100
-)
+rndmat=: 0.1 * (? @ (100 $~ ({. , {:)))
 
 NB. ---------------------------------------------------------
 NB. rndmat_neig
-NB. Generate square random matrix with negative eigenvalues from range (-10,0]
+NB. Generate square random matrix with negative eigenvalues in range [-10,0)
 NB. Syntax:
 NB.   mat=. rndmat_neig size
 
 rndmat_neig=: 3 : 0
-d=. diagmat _0.1 * ? y $ 100
-o=. 2b100 gesvd_jlapack_ 0.1 * ? (2 $ y) $ 100
+d=. diagmat _0.1 + _0.1 * ? y $ 100
+o=. 2b100 gesvd_jlapack_ rndmat y
 m=. o mp d mp +|:o
 )

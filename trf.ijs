@@ -32,7 +32,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFNB=: 64  NB. block size limit, >0
+TRFNB=: 3  NB. block size limit, >0
 
 NB. ---------------------------------------------------------
 NB. hetf2pl
@@ -85,38 +85,71 @@ NB. ---------------------------------------------------------
 NB. lahefpl
 NB.
 NB. Description:
-NB.   Partial factorization of a Hermitian (symmetric) matrix
+NB.   Partial factorization of a Hermitian (symmetric)
+NB.   matrix:
+NB.     P * L1 * T * L1^H * P^_1 = P * H * L1^H * P = A
+NB.     ( L00 0 ) * ( T00 0      ) * ( L00^H L10^H ) = ( A00 A10^H ) = P^_1 * A * P
+NB.     ( L10 I )   ( 0   A11upd )   ( 0     I     )   ( A10 A11   )
 NB.   using the combination of Parlett and Reid, and Aasen
 NB.   methods [1].
 NB.
 NB. Syntax:
-NB.   'ipo L1o l0o l1o t0o t1o Ao Ho h0o h1o'=. lahefpl (ipi;L1i;l0i;l1i;t0i;t1i;Ai;Hi;h0i;h1i)
+NB.   'ip B lto t0 t1'=. lahefpl (i.n);A;lti;(i.0);(i.0)
 NB. where
-NB.   ipi  - (n-k)-vector (i. (n-k)), pre-allocated space for
-NB.          inversed permutation after i-th step of
-NB.          partitioned algorithm and before (i+1)-th one
-NB.   L1i  - (n-k)×1-matrix L1 after i-th step of partitioned
-NB.          algorithm  and before (i+1)-th one, unit lower
-NB.          triangular
-NB.   l0i  - ##########(n-k)-vector (i. (n-k)), pre-allocated space for
-NB.          inversed permutation after i-th step of
-NB.          partitioned algorithm and before (i+1)-th one
-NB.   Ai   - (n-k)×(n-k)-matrix A after i-th step and before
-NB.          (i+1)-th one, Hermitian (symmetric)
-NB.   li   - (n-j)-vector, last column under diagonal in
-NB.          L1(i)
+NB.   A      - n×n-matrix to factorize, Hermitian (symmetric)
+NB.   lti    - n-vector, is defined as:
+NB.              lti=. ti 0 } li
+NB.   ip     - n-vector of integers, inversed permutation
+NB.   B      - n×n-matrix, contains subL1, subHh and subA11
+NB.   lto    - max(0,n-TRFNB)-vector, aimed to be lti while
+NB.            the next call from hetrfpl
+NB.   t0     - min(TRFNB,n)-vector, float, the main diagonal
+NB.            of T
+NB.   t1     - min(TRFNB,max(0,n-1))-vector, the subdiagonal
+NB.            of T
+NB.   li     - n-vector, the 1st scaled column of subL1
+NB.   ti     - scalar, the max from li before it was scaled,
+NB.            is meaningless for 1st call from hetrfpl
+NB.   subL1  - n×min(TRFNB,n)-matrix, unit lower triangular,
+NB.            the 1st min(TRFNB,n) columns of L1
+NB.   subHh  - min(TRFNB,n)×n-matrix, upper triangular,the 1st
+NB.            min(TRFNB,n) rows of H^H
+NB.   A11upd - max(0,n-TRFNB)×max(0,n-TRFNB), permuted 
+NB.   L1     - n×n-matrix, unit lower triangular
+NB.   H      - n×n-matrix, lower Hessenberg, is defined as:
+NB.              H=. L1 mp T
+NB.   T      - n×n-matrix, Hermitian (symmetric) tridiagonal
+NB.
+NB. Storage layout (note TRFNB as NB and assume NB<n for simplicity):
+NB.   input:                            output:
+NB.     ( A00 A10^H ) NB      ( L100H00h H10h   ) NB
+NB.     ( A10 A11   ) n-NB    ( L11      A11upd ) n-NB
+NB.       NB  n-NB              NB       n-NB
+NB. where
+NB.   A00        - NB×NB-matrix, Hermitian (symmetric)
+NB.   A11,A11upd - (n-NB)×(n-NB)-matrix, Hermitian (symmetric)
+NB.   A10,L11    - (n-NB)×NB-matrix
+NB.   H10h       - NB×(n-NB)-matrix, 1st NB rows of H^H
+NB.   L100H00h   - NB×NB-matrix, combined L100 and H00h
+NB.   L100       - NB×NB-matrix, unit lower triangular, unit
+NB.                diagonal is not stored
+NB.   H00h       - NB×NB-matrix, upper triangular matrices to be updated
+NB. Example for h=1, s=5, n=7:
+NB.   input  A                     output HQf
+NB.   (  a                    )    (  a                       )
+NB.   (  a  a  a  a  a  a     )    (  a  a  β1 v1 v1 v1    τ1 )
+NB.   (  a  a  a  a  a  a     )    (  h  h  h  β2 v2 v2    τ2 )
+NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  β3 v3    τ3 )
+NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  β4    τ4 )
+NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  h        )
+NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a     )
+NB.
 NB.
 NB.  A  =  ( I  U12 ) ( A11  0  ) (  I    0   )  if UPLO = 'U', or:
 NB.        ( 0  U22 ) (  0   D  ) ( U12' U22' )
 NB.
 NB.  A  =  ( L11  0 ) (  D   0  ) ( L11' L21' )  if UPLO = 'L'
 NB.        ( L21  I ) (  0  A22 ) (  0    I   )
-NB.
-NB. Storage layout:
-NB.   
-NB.
-NB.
-NB.
 NB.
 NB.
 NB. Algorithm:
@@ -134,9 +167,6 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB. 
 
-NB.    clean lahefplc_mt_ ((i.10);(0 {."1 HE10);(10 ($!.0) 1);(,0);(0 ({,) HE10);(i.0);HE10;(0 {."1 HE10);({."1 HE10);((< (<0);0) { HE10))
-NB.    clean lahefpur_mt_ ((i.10);(0 {. HE10);(10 ($!.0) 1);(,0);(0 ({,) HE10);(i.0);HE10;(0 {. HE10);({. HE10);((< 0;(<<0)) { HE10))
-NB. 
 NB.    'ip U1 T'=. clean hetrfpur_mt_ HE10
 NB.    HE10 -: clean (/: ip) sp_mt_ U1 (mp~ mp~ (ct_mt_ @ [)) T
 NB. 1
@@ -145,99 +175,42 @@ NB.    HE10 -: clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
 NB. 1
 NB.    HE1000=. (_1 1 0 4 _6 4 & (gemat_mt_ j. gemat_mt_)) hemat_mt_ 1000 1000
 
-NB. 'ip A l0'=. lahefplr_mt_ ip;A;l0;i
-NB. clean lahefplr_mt_ (i.n);HE;(n ($!.0) 1);0
+NB. 'ip A l0'=. lahefpl_mt_ ip;A;l0;i
+NB. clean lahefpl_mt_ (i.n);HE;(n ($!.0) 1);0
 
-NB. monolithic
-
-lahefpl=: (3 : 0) ^: (TRFNB<.(#@(2 & {::)))
-  'ip A l0 i'=. y                    NB. n n*n n-j, j=0:n-1
-  n=. # A
-  j=. n - # l0
-  k=. j-i
-  a=. (dhs2lios (i+j*n),(n-i)) ({,) A
-  h0=. (k }. a) - (k {. a) mp (((i,j),:(k,_)) (];.0) A)
-  if. j=i do.
-    h1=. h0
-  else.
-    h1=. h0 - ({. l0) * (+ l0 ((((_1 liosS)&c) ({,) ]) :: (0 (0}) [)) A)
-  end.
-  l1=. (+ }. h1) - (}. l0) * ({. h1)
-  dip0=. < 0 , ((i.>./)@soris) l1  NB. non-standard cycle permutation!
-  dip=. (>:j) (+ &. >) dip0        NB. non-standard cycle permutation!
-  ip=. dip (C. :: ]) ip
-  l1=. dip0 (C. :: ]) l1
-  A=. ((({. h1) 0 } h0) , l0) (((((0 liosE),(] (((-~ {.)`0:`])}) (0 liosS)))~ -:)~&c) } :: ((}.~ (>:@-:@#))@[ (((_1 liosS)&c) }) ])) A
-  A=. dip (sp :: ]) A
-  l1=. 0 (({`[`(] % {))} :: ]) l1
-  ip ; A ; l1 ; i
+lahefpl=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
+  'ip A lt t0 t1'=. y                    NB. (n-i) (n-i)*(n-i) (n-i)-j j j, j=0:n-1
+  w=. lt (((-~&#) { ]) ((}.~ #)-({.~ #) mp ]) ((-~,-@[)&# {. ])) A
+  A=. (w ,: lt) (((0 liosE),:(0 liosS)))&c } A
+  w=. w - lt (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
+  lt=. lt (+@}.@] - ((* }.)~ {.)) w
+  dip0=. < 0 , ((i.>./)@soris) lt  NB. non-standard cycle permutation!
+  dip=. (A -&# lt) +&.> dip0       NB. non-standard cycle permutation!
+  ip=. dip C. :: ] ip
+  A=. dip sp :: ] A
+  lt=. dip0 C. :: ] lt
+  lt=. 0 ({`[`(] % {))} :: ] lt
+  t0=. t0 , 9 o. {. w
+  t1=. t1 , 0 { :: ] lt
+  ip ; A ; lt ; t0 ; t1
 )
 
-NB. 'ip L1 T'=. hetrfplr A
+NB. 'ip L1 T'=. hetrfpl A
+NB.   clean lahefpl_mt_ (i. 6);HEc6;(6 ($!.0) 1);(i.0);(i.0)
 
 hetrfpl=: 3 : 0
   n=. # y
   ip=. i. n
-  l0=. n ($!.0) 1
-  for_i. TRFNB * i. n (>.@%) TRFNB do.
-    ios=. TRFNB (rt ; }.) y ([ th2lios -)&# l0
-    'ip y l0 trash'=. lahefpl (ip;y;l0;i)
-    subA=. ios ((<@(1 1{[)){]) y
-    subL=. ios ((<@(1 0{[)){]) y
-    subH=. ios ((<@(0 1{[)){]) y
-    l1=. l0 ((_1 liosS)&c ({,) ]) y
-    rank1upd=. ((0 { :: ] l0) * (1 (0}) :: ] l0)) */ + l1
-    subAupd=. subA - ((subL mp subH) + rank1upd)
-    y=. subAupd (< 1 1 { ios) } y
-    NB. y=. ios (((<@(0 0{[)){]) - (((<@(0 1{[)){]) mp ((<@(1 0{[)){])))`(<@(0 0{[))`] } y
-  end.
-  L1=. trl1 y
-  t0=. diag y
-  t1=. 1 diag y
-  T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
-  ip ; L1 ; T
-)
-
-NB. splitted
-NB. 'ipi1 subAi1 l0i1 t0i1 t1i1'=. lahefpls ipi;subAi;l0i;t0i;t1i
-NB. clean lahefpls_mt_ (i. 6);HEc6;(6 ($!.0) 1);(i.0);(i.0)
-
-lahefpls=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
-  'ip A l t0 t1'=. y                    NB. (n-i) (n-i)*(n-i) (n-i)-j j j, j=0:n-1
-  w=. l (((-~&#) { ]) ((}.~ #)-({.~ #) mp ]) ((-~,-@[)&# {. ])) A
-  A=. (w ,: l) (((0 liosE),:(0 liosS)))&c } A
-  w=. w - l (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
-  l=. l (+@}.@] - ((* }.)~ {.)) w
-  dip0=. < 0 , ((i.>./)@soris) l  NB. non-standard cycle permutation!
-  dip=. (A -&# l) +&.> dip0       NB. non-standard cycle permutation!
-  ip=. dip C. :: ] ip
-  A=. dip sp :: ] A
-  l=. dip0 C. :: ] l
-  l=. 0 ({`[`(] % {))} :: ] l
-  t0=. t0 , {. w
-  t1=. t1 , 0 { :: ] l
-  ip ; A ; l ; t0 ; t1
-)
-
-NB. 'ip L1 T'=. hetrfpls A
-NB.   clean lahefpls_mt_ (i. 6);HEc6;(6 ($!.0) 1);(i.0);(i.0)
-
-hetrfpls=: 3 : 0
-  n=. # y
-  ip=. i. n
   L1=. 0 {."1 y
-  l0=. n ($!.0) 1
+  lt=. n # 0
   t0=. t1=. i. 0
   for_i. n (] dhs2lios (0,(>.@%))) TRFNB do.
-    ios=. TRFNB (rt ; }.) i. # y
-    'ipi y l0 t0 t1'=. lahefpls ((i. # l0);y;l0;t0;t1)
+    'ipi y lt t0 t1'=. lahefpl ((i. # lt);y;lt;t0;t1)
     dip=. i (i.@[ , +) ipi         NB. force permutation to act on tail part only
     ip=. dip C. ip
-    L1i=. trl1 TRFNB {."1 y
+    L1i=. trl1 (_,TRFNB) rt y
     L1=. (dip C. L1) stitchb L1i
-    Hih=. tru TRFNB {. y
-    l1=. l0 ((_1 liosS)&c ({,) ]) y
-    y=. ((2 # TRFNB) }. y) - (((TRFNB }. L1i) mp TRFNB }."1 Hih) + ((0 { :: ] l0) * (1 (0}) :: ] l0)) */ + l1)
+    y=. ((2 # TRFNB) }. y) - (((TRFNB }. L1i) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 { :: ] lt) * (1 (0}) :: ] lt)) */ + (lt ((_1 liosS)&c ({,) ]) y))
   end.
   T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
   ip ; L1 ; T

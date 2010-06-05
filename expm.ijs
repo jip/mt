@@ -60,10 +60,10 @@ NB. 0 1 2 3  4  5   6
 NB. 0 0 2 6 12 20  30
 NB. 0 0 0 6 24 60 120
 
-phi=: (2 { ]) $ 1:                     NB. phi(lambdai) polynome coeffs
+phi=: {: $ 1:                          NB. phi(lambdai) polynome coeffs
 makeDphi=: p.. @ ] ^: [                NB. mi-by-Ng table of derivatives
 shiftDphi=: (-@[) shybyx makeDphi      NB. shift each row by #row to the right
-makeGi=: (i. @ (0 { ])) shiftDphi phi  NB. make coeffs table then shift
+makeGi=: (i. @ {.) shiftDphi phi       NB. make coeffs table then shift
 
 NB. ---------------------------------------------------------
 NB. makeTi
@@ -84,9 +84,9 @@ NB. 0   1 1j1  0j2 _2j2    _4 _4j_4
 NB. 0   0   1  1j1  0j2  _2j2    _4
 NB. 0   0   0    1  1j1   0j2  _2j2
 
-lipows=: (1 { ]) (^ i.) (2 { ])   NB. lambdai ^ i. Ng
-IOnmi=: - @ i. @ (0 { ])          NB. 0 _1 _2 ... -(mi-1)
-makeTi=: IOnmi shybyx lipows      NB. mi-by-Ng table from vector's shifts
+lipows=: (^ i.)/ @ (_2 & {.)  NB. lambdai ^ i. Ng
+IOnmi=: - @ i. @ (0 { ])      NB. 0 _1 _2 ... -(mi-1)
+makeTi=: IOnmi shybyx lipows  NB. mi-by-Ng table from vector's shifts
 
 NB. ---------------------------------------------------------
 NB. prepV
@@ -154,11 +154,11 @@ NB. 1 2j_2 0j_8 _16j_16  _64  _128j128   0j512
 NB. 1  1j1  0j2    _2j2   _4     _4j_4    0j_8
 NB. 0    1  2j2     0j6 _8j8       _20 _24j_24
 
-tspows=: [ (^ i.) (0 { ])               NB. ts ^ i. mi
-prepMi=: makeGi * makeTi                NB. prepare Mi=. Gi*Ti
-prepLti=: (^ @ ([ * (1 { ]))) * tspows  NB. prepare L[i](t)
-prepLtMi=: prepLti`prepMi @. (0 = [)    NB. choose L[i](t) or M[i] to prepare
-makeLtM=: ; @: (< @ prepLtMi " 1)       NB. make and merge all L[i](t) or M[i]
+tspows=: (^ i.) {.                    NB. ts ^ i. mi
+prepMi=: (makeGi * makeTi) @ ]        NB. prepare Mi=. Gi*Ti
+prepLti=: (^ @ (* (1 { ]))) * tspows  NB. prepare L[i](t)
+prepLtMi=: prepLti`prepMi @. (0 = [)  NB. choose L[i](t) or M[i] to prepare
+makeLtM=: ; @: (< @ prepLtMi " 1)     NB. make and merge all L[i](t) or M[i]
 
 NB. ---------------------------------------------------------
 NB. makeAt
@@ -172,7 +172,8 @@ NB.   NxPMV - output of prexpm, being (Nx;P;M;V)
 NB.   At    - Ng-vector, solution A(t) of equation M*A(t)=L(t)
 NB.   Ng    = #G , matrix G minimal polynom's order
 
-makeAt=: gesvx_jlapack_ @ ((2 {:: [) ; ] makeLtM (3 {:: [))
+makeLt=: (makeLtM (3 & {::))~
+makeAt=: gesvx_jlapack_ @ ((2 {:: [) ; makeLt)
 
 NB. =========================================================
 NB. prexpm
@@ -227,7 +228,7 @@ NB. Syntax: is_passed=. texpm A;B;ts
 
 texpm=: 3 : 0
 'A B ts'=. y
-P =. 0 {:: (prexpm A;B) expm ts
+P=. 0 {:: (prexpm A;B) expm ts
 eigA=. /:~ ^ ts * (2 geev_jlapack_ A)
 eigP=. /:~ (2 geev_jlapack_ P)
 err=. clean %: +/ *: | eigA - eigP

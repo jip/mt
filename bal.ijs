@@ -11,6 +11,10 @@ NB. ggbal   balance a pair of general square matrices
 NB. ggbak   restore an original matrix pair left or right
 NB.         eigenvectors from a balanced matrix pair
 NB.         eigenvectors
+NB.
+NB. Version: 1.0.0 2009-06-01
+NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
+NB. License: GNU GPL
 
 coclass 'mt'
 

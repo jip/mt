@@ -1,11 +1,14 @@
 NB. mt.ijs
 NB. Matrix toolbox
+NB.
+NB. Version: 1.0.0 2009-06-01
+NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
+NB. License: GNU GPL
 
 NB. =========================================================
 NB. Configuration
 
 coclass 'mt'
-NB.coinsert   'base'
 
 NB. ---------------------------------------------------------
 NB. IEEE 754-1985 double-precision 64 bit floating point
@@ -35,8 +38,6 @@ VERBOSE=: 1                                           NB. boolean 'is verbose?' 
 NB. =========================================================
 NB. Includes
 
-NB. ('mt';'z') copath 'base'
-
 NB. ---------------------------------------------------------
 NB. System verbs
 
@@ -44,25 +45,27 @@ script_z_ '~system/main/numeric.ijs'                  NB. range
 script_z_ '~system/main/myutil.ijs'                   NB. timespacex
 script_z_ '~system/packages/math/mathutil.ijs'        NB. mp
 script_z_ '~system/packages/math/matutil.ijs'         NB. diag
-script_z_ '~system/packages/stats/random.ijs'         NB. rand01
-script_z_ '~system/packages/stats/statdist.ijs'       NB. normalrand
 
 NB. ---------------------------------------------------------
 NB. Package verbs
 
+NB. utility verbs
 require '~user/projects/mt/util.ijs'                  NB. utilities
 require '~user/projects/mt/struct.ijs'                NB. struct handlers
+require '~user/projects/mt/con.ijs'                   NB. condition number
+require '~user/projects/mt/rand.ijs'                  NB. random objects
+
+NB. computational verbs
 require '~user/projects/mt/bal.ijs'                   NB. balance
 require '~user/projects/mt/equ.ijs'                   NB. equilibrate
-require '~user/projects/mt/exp.ijs'                   NB. exponent
-require '~user/projects/mt/hrd.ijs'                   NB. Hessenberg reduction
-NB. require '~user/projects/mt/orf.ijs'                   NB. orthogonal factorization (LQ QL QR RQ)
+NB. require '~user/projects/mt/hrd.ijs'                   NB. Hessenberg reduction
+NB. require '~user/projects/mt/orf.ijs'                   NB. orthogonal factorization
 require '~user/projects/mt/pow.ijs'                   NB. integer powers
-require '~user/projects/mt/rand.ijs'                  NB. random objects
-require '~user/projects/mt/rcond.ijs'                 NB. reciprocal of condition number
-require '~user/projects/mt/rot.ijs'                   NB. plane rotations
-require '~user/projects/mt/sv.ijs'                    NB. solve linear monomial equations
-require '~user/projects/mt/trf.ijs'                   NB. triangular factorization (Cholesky LU)
+require '~user/projects/mt/rot.ijs'                   NB. rotate plane
+require '~user/projects/mt/tri.ijs'                   NB. inverse
+require '~user/projects/mt/trs.ijs'                   NB. solve linear monomial equation via triangular factorization
+require '~user/projects/mt/trf.ijs'                   NB. triangular factorization
+require '~user/projects/mt/exp.ijs'                   NB. exponent
 
 NB. =========================================================
 NB. Interface
@@ -71,7 +74,7 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. test                                                    1
+NB. test
 NB. Adverb to test algorithms
 NB.
 NB. Syntax:
@@ -82,23 +85,30 @@ NB.          to test algorithms; if m≠n then algorithms that
 NB.          accept square matrices only are skipped
 NB.   mkge - monadic verb to generate random non-singular
 NB.          general y-matrix (shape is taken from y)
-NB.   r    - boxed table with 4 columns: 'algorithm name'
-NB.          'error' 'time, sec.' 'space, bytes'
+NB.   r    - boxed table with 6 columns:
+NB.          - algorithm name
+NB.          - the estimated reciprocal of the condition
+NB.            number of a matrix in 1-norm
+NB.          - relative backward error
+NB.          - relative forward error
+NB.          - execution time, sec.
+NB.          - execution space, bytes
 NB.
 NB. Application:
+NB. - with limited random matrix values' amplitudes
+NB.   load '~addons/math/mt/mt.ijs'
 NB.   cocurrent 'mt'
-NB.   r=. (_1 1 0 16 _6 4 & gemat) test 132 132
-NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) test 132 132
+NB.   r=. (_1 1 0 16 _6 4 & gemat) test 500 500
+NB.   r=. (_1 1 0 16 _6 4 & (gemat j. gemat)) test 500 500
 
-NB.--- test=: 1 : 'u testtrf'
 test=: 1 : 0
 
   require 'printf'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gesv getrf potrf'
 
-  '%-25s %-12s %-12s %-12s %-12s' & printf ^: (VERBOSE"_) 'Algorithm' ; 'Backward err' ; 'Forward err' ; 'Time, sec.' ; 'Space, bytes'
+  '%-25s %-12s %-12s %-12s %-12s %-12s' & printf ^: (VERBOSE"_) 'algorithm' ; 'rcond' ; 'backward err' ; 'forward err' ; 'time, sec.' ; 'space, bytes'
   assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
-  ((u testtrf) , (u testtrs)) y
+  ((u testtrf) , ((u testtri) ^: (=/)), ((u testtrs) ^: (=/))) y
 )
 

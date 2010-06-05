@@ -6,6 +6,10 @@ NB. diexp  matrix exponential of a diagonalizable matrix
 NB. heexp  matrix exponential of a Hermitian matrix
 NB.
 NB. XREF: gepow sdiag
+NB.
+NB. Version: 1.0.0 2009-06-01
+NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
+NB. License: GNU GPL
 
 coclass 'mt'
 

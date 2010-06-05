@@ -5,9 +5,9 @@ NB. lartg   generates a plane rotation of a 2-vector
 NB. lartv   applies a plane rotation to a 2-vector
 NB. lartvt  applies a transposed plane rotation to a 2-vector
 NB.
-NB. Version: 1.0.0 2008-07-30
-NB. Copyright: Igor Zhuravlov igor at uic.dvgu.ru
-NB. License: Version 3 of the GNU GPL or any later version
+NB. Version: 1.0.0 2009-06-01
+NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
+NB. License: GNU GPL
 
 coclass 'mt'
 

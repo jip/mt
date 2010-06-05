@@ -3,6 +3,10 @@ NB. Equilibrate a matrix
 NB.
 NB. geequ  equilibrate a matrix
 NB. poequ  equilibrate a Hermitian positive definite matrix
+NB.
+NB. Version: 1.0.0 2009-06-01
+NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
+NB. License: GNU GPL
 
 coclass 'mt'
 

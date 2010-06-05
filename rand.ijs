@@ -16,6 +16,10 @@ NB.
 NB. XRef:
 NB. - system: mp
 NB. - mt: ct qr
+NB.
+NB. Version: 1.0.0 2009-06-01
+NB. Copyright: Igor Zhuravlov, igor at uic.dvgu.ru
+NB. License: GNU GPL
 
 coclass 'mt'
 

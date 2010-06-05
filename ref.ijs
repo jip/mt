@@ -281,25 +281,7 @@ NB.     Performance. IBM J. Research & Development, Vol. 44,
 NB.     No. 4, 2000, pp 605-624.
 NB.     http://www.research.ibm.com/journal/rd/444/elmroth.pdf
 
-larftfc=: (        _1 &{) ([ * (EMPTY (((1 & (_1:})) @ (,&0) @ (]  ,.   (] mp (([ {. {)~ #)))) ^: (#@[))~ (               (* -)~ ((mp ct) {:)\  ))) (ct@(0&(        _1 })))
-
-larftfcr=: 3 : 0
-  n=. c y
-  if. 1=n do.
-    _1 _1 {. y
-  elseif. 1<n do.
-    k=. <. -: n
-    Vl=. k {."1 y
-    Vr=. k }."1 y
-    T00=. larftfcr Vl
-    T11=. larftfcr Vr
-    (T00 ,. (- T00) mp ((ct 0 (_1}) Vl) mp Vr) mp T11) _1 append T11
-  elseif. do.  NB. 0=n
-    EMPTY
-  end.
-)
-
-larftfcf=: (_1 _1&{.)`((0:`0:`(larftfcf@[)`]`[`((ct@(0(_1})[))mp])`[`(-@mp)`mp`(larftfcf@])`(({.~ #),.])`,`]`[`0: fork5)&>/@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
+larftfc=: (_1 _1&{.)`((0:`0:`(larftfc@[)`]`[`((ct@(0(_1})[))mp])`[`(-@mp)`mp`(larftfc@])`(({.~ #),.])`,`]`[`0: fork5)&>/@((<;.1)~ ('';((0) 1:`(, >.@-:)`(#~)} c))))`(EMPTY"_)@.(*@<:@c)
 
 NB. ---------------------------------------------------------
 NB. larftfr

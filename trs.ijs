@@ -190,46 +190,29 @@ NB.   In:  L1 D Bv
 NB.   Out: Xv
 NB.   0) extract main diagonal d from D and subdiagonal e
 NB.      from L1
-NB.   1) prepare input for iterations:
-NB.        ebin=. (e ,. (}. Bv))
-NB.        bout=. {. Bv
-NB.   2) start iterations k=1:n-1 by Power (^:)
-NB.      on (ebin;bout) :
-NB.      2.0) extract input for current k-th iteration:
-NB.             (e[k] b[k]) := ebin[k]
-NB.      2.1) extract b[k-1] produced during previous
-NB.           (k-1)-th iteration:
-NB.             b[k-1] := bout[-1]
-NB.      2.2) find new b[k]:
-NB.             b[k] := b[k] - b[k-1]*e[k-1]
-NB.      2.3) recombine (shift splitting edge) for next
-NB.           iteration:
-NB.             ebin=. }. ebin
-NB.             bout := bout , b[k]
-NB.      then rewrite b by bout
-NB.   3) prepare input for iterations:
-NB.        bdein=. ((}: b) ,. (}: d) ,. conj(e))
-NB.        bout := b[n-1] / d[n-1]
-NB.   4) start iterations k=n-2:0 by Power (^:)
-NB.      on (bdein;bout) :
-NB.      4.0) extract input for current k-th iteration:
-NB.             (b[k] d[k] e[k]) := bdein[k]
-NB.      4.1) extract b[k-1] produced during previous
-NB.           (k-1)-th iteration:
-NB.             b[k+1] := bout[0]
-NB.      4.2) find new b[k]:
-NB.             b[k] := b[k]/d[k] - b[k+1]*e[k]
-NB.      4.3) recombine (shift splitting edge) for next
-NB.           iteration:
-NB.             bdein=. }: bdein
-NB.             bout := b[k] , bout
-NB.      then rewrite b by bout
-NB.   5) return b
+NB.   1) prepare input:
+NB.        be=. Bv ,. (0,e)
+NB.   2) do iterations k=1:n-1 by reversed suffix scan:
+NB.        btrash=. u~/\.&.|. be
+NB.      to find :
+NB.        b[k] := b[k] - b[k-1]*e[k-1]
+NB.   3) cut off trash column to extract updated Bv:
+NB.        b=. (}:"1) btrash
+NB.   4) prepare intermediate input:
+NB.        bde=. ((}: b) , (({: b) % ({: d))) ,. d ,. ((conj(e),0)
+NB.   5) do iterations k=n-2:0 by suffix scan:
+NB.        btrash=. u/\. bde
+NB.      to find :
+NB.        b[k] := b[k]/d[k] - b[k+1]*e[k]
+NB.   6) cut off two last columns of trash to extract raw Xv
+NB.      and re-shape to Bv's shape:
+NB.        Xv=. ($ Bv) ($,) _2 }."1 btrash
 NB.
 NB. Assertions:
-NB.   A -: clean L1 (mp mp (ct@[)) D
+NB.   Xv -: clean L1D pttrsax Bv
 NB. where
-NB.   'L1 D'=. pttrfl A
+NB.   L1D=. pttrfl A
+NB.   Bv=. A mp Xv
 NB.
 NB. References:
 NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
@@ -237,17 +220,9 @@ NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157
 NB.
 NB. Notes:
-NB. - 'continued fractions' approach is useless here since
-NB.   infix scan is non-consequtive
 NB. - implements LAPACK's xPTTRS
 
-pttrsax=: 4 : 0
-  'L1 D'=. x
-  e=. _1 diag L1
-  d=. diag D
-  y=. _1 {:: ((}.@[ ; ] , (({.@[) ((}.@[) - ]) ((0 ({,) [) * {:@]))) & >/) ^: (# e) (e ((,. }.) ; 1 {. ]) y)
-  y=. _1 {:: (((}:@[) ; (({:@[) (((_2}.[)%(_2{[))-({:@[*])) ({.@])) , ]) & >/) ^: (# e) (((+e) ,.~ y (,. & }:) d) ; (y (% & (_1&{.)) d))
-)
+pttrsax=: $@] ($,) (_2 }."1 (]`((}:"1)@((}:@](-,0:)((* }:)~ {:))~/\.&.|.)@(,. (0&,)))`(_1 diag (0 {:: [))`(((_2 (}.%{)[)(-,0 0"_)((* {:)~ (_2&}.)))/\. @ (_2 ({:@] % ({,))`_1:`]} ,.))`((,. (+,0:))~)`(diag@(1 {:: [)) fork3))
 
 pttrsatx=: + @ (pttrsax +)
 

@@ -620,35 +620,22 @@ NB.
 NB. Algorithm:
 NB.   In:  A
 NB.   Out: L1 D
-NB.   0) extract main diagonal and subdiagonal from A to d
-NB.      and e, respectively
-NB.   1) prepare input for iterations:
-NB.        ee2din := (e ,. |e|^2 ,. (}. d))
-NB.        edout := 0 , ({. d)
-NB.   2) start iterations k=1:n-1 by Power (^:)
-NB.      on (ee2din;edout) :
-NB.      2.0) extract input for current k-th iteration:
-NB.             (e[k] |e[k]|^2 d[k]) := ee2din[k]
-NB.      2.1) extract d[k-1] produced during previous
-NB.           (k-1)-th iteration:
-NB.             d[k-1] := edout[_1,_1]
-NB.      2.2) find new e[k-1] and d[k]:
-NB.             e[k-1] := e[k-1] / d[k-1]
-NB.             d[k] := d[k] - |e[k-1]|^2 / d[k-1]
-NB.      2.3) recombine (shift splitting edge) for next
-NB.           iteration:
-NB.             ee2din=. }. ee2din
-NB.             edout=. edout , e[k-1] , d[k]
-NB.   3) now edout contains raw output, extract it:
-NB.        edout := 1 {:: (ee2din;edout)
-NB.   4) extract d - D's main diagonal, and e - L1's
-NB.      subdiagonal from edout:
-NB.        e=. }. {."1 edout
-NB.        d=. {:"1 edout
-NB.   5) form output matrices:
+NB.   0) extract main diagonal d and suberdiagonal e from A
+NB.   1) prepare input:
+NB.        dee2 := d ,. (0,e) ,. (0,|e|^2)
+NB.   2) do iterations k=1:n-1 by reversed suffix scan:
+NB.        de=. u~/\.&.|. dee2
+NB.      to find :
+NB.        d[k] := d[k] - |e[k-1]|^2 / d[k-1]
+NB.        e[k-1] := e[k-1] / d[k-1]
+NB.   3) extract d - D's main diagonal, and e - L1's
+NB.      subdiagonal from de:
+NB.        d=. {."1 de
+NB.        e=. }. 1 {"1 de
+NB.   4) form output matrices:
 NB.        L1=. (e;_1) setdiag idmat $ A
 NB.        D=. diagmat d
-NB.   6) link matrices L1 and D to form output:
+NB.   5) link matrices L1 and D to form output:
 NB.        L1 ; D
 NB.
 NB. Assertion:
@@ -661,20 +648,10 @@ NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157
 NB.
-NB. Notes:
-NB. - 'continued fractions' approach is useless here since
-NB.   infix scan is non-consequtive
-NB.
 NB. TODO:
 NB. - L1 and D would be sparse
 
-pttrfl=: 3 : 0
-  'e d'=. ((_1&diag) ; diag) y
-  'e d'=. ((}.@:({."1)) ; ({:"1)) 1 {:: (((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: (# e) e ((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) d
-  L1=. (e;_1) setdiag idmat $ y
-  D=. diagmat d
-  L1 ; D
-)
+pttrfl=: ({."1 (((setdiag idmat@#)~ ;&_1) ; diagmat@[) }.@(1&({"1)))@(({.@] ((- {:) , {.@]) ((% {.)~ }.))~/\.&.|.)@(diag (,. (,. soris)@(0&,)) _1&diag)
 
 NB. ---------------------------------------------------------
 NB. pttrfu
@@ -696,56 +673,33 @@ NB.
 NB. Algorithm:
 NB.   In:  A
 NB.   Out: U1 D
-NB.   0) extract main diagonal and superdiagonal from A to d
-NB.      and e, respectively
-NB.   1) prepare input for iterations:#######
-NB.        ee2din := (e ,. |e|^2 ,. (}. d))
-NB.        edout := 0 , ({. d)
-NB.   2) start iterations k=1:n-1 by Power (^:)
-NB.      on (ee2din;edout) :
-NB.      2.0) extract input for current k-th iteration:
-NB.             (e[k] |e[k]|^2 d[k]) := ee2din[k]
-NB.      2.1) extract d[k-1] produced during previous
-NB.           (k-1)-th iteration:
-NB.             d[k-1] := edout[_1,_1]
-NB.      2.2) find new e[k-1] and d[k]:
-NB.             e[k-1] := e[k-1] / d[k-1]
-NB.             d[k] := d[k] - |e[k-1]|^2 / d[k-1]
-NB.      2.3) recombine (shift splitting edge) for next
-NB.           iteration:
-NB.             ee2din=. }. ee2din
-NB.             edout=. edout , e[k-1] , d[k]
-NB.   3) now edout contains raw output, extract it:
-NB.        edout := 1 {:: (ee2din;edout)
-NB.   4) extract d - D's main diagonal, and e - L1's
-NB.      subdiagonal from edout:
-NB.        e=. }. {."1 edout
-NB.        d=. {:"1 edout
-NB.   5) form output matrices:
-NB.        L1=. (e;_1) setdiag idmat $ A
+NB.   0) extract main diagonal d and superdiagonal e from A
+NB.   1) prepare input:
+NB.        dee2 := d ,. (e,0) ,. ((|e|^2),0)
+NB.   2) do iterations k=n-2:0 by suffix scan:
+NB.        de=. u~/\. dee2
+NB.      to find :
+NB.        d[k] := d[k] - |e[k]|^2 / d[k+1]
+NB.        e[k] := e[k] / d[k+1]
+NB.   3) extract d - D's main diagonal, and e - L1's
+NB.      subdiagonal from de:
+NB.        d=. {."1 de
+NB.        e=. }: 1 {"1 de
+NB.   4) form output matrices:
+NB.        U1=. (e;1) setdiag idmat $ A
 NB.        D=. diagmat d
-NB.   6) link matrices L1 and D to form output:
-NB.        L1 ; D
+NB.   5) link matrices U1 and D to form output:
+NB.        U1 ; D
 NB.
 NB. Assertion:
 NB.   A -: clean U1 (mp mp (ct@[)) D
 NB. where
 NB.   'U1 D'=. pttrfu A
 NB.
-NB. Notes:
-NB. - 'continued fractions' approach is useless here since
-NB.   infix scan is non-consequtive
-NB.
 NB. TODO:
 NB. - U1 and D would be sparse
 
-pttrfu=: 3 : 0
-  'e d'=. ((1&diag) ; diag) y
-  'e d'=. ((}.@:({."1)) ; ({:"1)) 1 {:: (((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: (# e) e ((((,. soris)@[) ,. }.@]) ; ((,0) ,. _1{])) d
-  U1=. (e;1) setdiag idmat $ y
-  D=. diagmat d
-  U1 ; D
-)
+pttrfu=: ({."1 (((setdiag idmat@#)~ ;&1) ; diagmat@[) }:@(1&({"1)))@(({.@[ ((- {:) , {.@]) ((%~ }.)~ {.))/\.)@(diag (,. (,. soris)@(,&0)) 1&diag)
 
 NB. =========================================================
 NB. Test suite

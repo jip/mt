@@ -92,6 +92,7 @@ fork3=: 1 : 0
   o2=.    a2 y
   o0=. o0 b0 o1
   o1=. o1 b1 o2
+  o2=. 0
   o0=. o0 c  o1
 :
   '`a0 b0 a1 c b1 a2'=. m
@@ -100,6 +101,7 @@ fork3=: 1 : 0
   o2=. x  a2 y
   o0=. o0 b0 o1
   o1=. o1 b1 o2
+  o2=. 0
   o0=. o0 c  o1
 )
 
@@ -144,8 +146,10 @@ fork4=: 1 : 0
   o0=. o0 b0 o1
   o1=. o1 b1 o2
   o2=. o2 b2 o3
+  o3=. 0
   o0=. o0 c0 o1
   o1=. o1 c1 o2
+  o2=. 0
   o0=. o0 d  o1
 :
   '`a0 b0 a1 c0 b1 a2 d c1 b2 a3'=. m
@@ -156,8 +160,10 @@ fork4=: 1 : 0
   o0=. o0 b0 o1
   o1=. o1 b1 o2
   o2=. o2 b2 o3
+  o3=. 0
   o0=. o0 c0 o1
   o1=. o1 c1 o2
+  o2=. 0
   o0=. o0 d  o1
 )
 
@@ -207,11 +213,14 @@ fork5=: 1 : 0
   o1=. o1 b1 o2
   o2=. o2 b2 o3
   o3=. o3 b3 o4
+  o4=. 0
   o0=. o0 c0 o1
   o1=. o1 c1 o2
   o2=. o2 c2 o3
+  o3=. 0
   o0=. o0 d0 o1
   o1=. o1 d1 o2
+  o2=. 0
   o0=. o0 e  o1
 :
   '`a0 b0 a1 c0 b1 a2 d0 c1 b2 a3 e d1 c2 b3 a4'=. m
@@ -224,10 +233,13 @@ fork5=: 1 : 0
   o1=. o1 b1 o2
   o2=. o2 b2 o3
   o3=. o3 b3 o4
+  o4=. 0
   o0=. o0 c0 o1
   o1=. o1 c1 o2
   o2=. o2 c2 o3
+  o3=. 0
   o0=. o0 d0 o1
   o1=. o1 d1 o2
+  o2=. 0
   o0=. o0 e  o1
 )

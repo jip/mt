@@ -199,12 +199,12 @@ NB.   2) prepare V0r: V0r=. vV V0
 NB.   3) extract tau: tau=. iot { Vtau
 NB.   4) prepare coefficients matrix P: P=. tau vP V0r
 NB.   5) let T[i]=0×0-matrix, start loop i=0:k-1:
-NB.      a) extract vector p[i]: pi=P[i,0:i-1]
-NB.      b) calc new column: c[i]: ci=. pi mp Ti
-NB.      c) stitch c[i] to T[i]: Ti=. Ti vTi ci
-NB.      d) append zero row to T[i]: Ti=. (0 & va0) Ti
-NB.      e) write 1 in the diagonal element of appended zero
-NB.         row: Ti=. (1 & vs1) Ti
+NB.      5.1) extract vector p[i]: pi=P[i,0:i-1]
+NB.      5.2) calc new column: c[i]: ci=. pi mp Ti
+NB.      5.3) stitch c[i] to T[i]: Ti=. Ti vTi ci
+NB.      5.4) append zero row to T[i]: Ti=. (0 & va0) Ti
+NB.      5.5) write 1 in the diagonal element of appended
+NB.           zero row: Ti=. (1 & vs1) Ti
 NB.   6) multiply T[i] by tau (item-by-row): T=. tau * Ti
 NB.
 NB. Notes:

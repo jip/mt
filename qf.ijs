@@ -85,7 +85,7 @@ NB. Notes:
 NB. - ge{lq,ql,qr,rq}2 emulates LAPACK's xGE{LQ,QL,QR,RQ}2
 NB.   respectively
 NB. - input's and output's shapes are the same
-NB. - ge{lq,ql,qr,rq}2 and ge{lq,ql,qr,rq}fb respectively are
+NB. - ge{lq,ql,qr,rq}2 and ge{lq,ql,qr,rq}3 respectively are
 NB.   topologic equivalents
 
 gelq2=: ((] ,   (((( 1 ,~ (1 -  #)       ) {. ]) ,.  ($: @ ( 1  1 & }.))) @ (larfrnfr (1 & ( 0 }))))) (larfgfc @ (IOSFR & {))) ^: (*./ @ (0 < (0 _1 + $)))

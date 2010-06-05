@@ -214,6 +214,72 @@ NB. (-: (clean@(((_1 0&ms@$) {. {:) swp2fw ((trl1 mp tru)@}:))@getrfpl1ub)) A
 
 getrfpl1ub=: (getf2pl1ub`(0 {:: (getrfpl1ustepb ^: ((>.@(TRFNB %~ (_1 0&(ms $))))`(];(getrfpl1uios0b@$)))))@.(TRFNB<(_1 0&(ms $)))) @ (,&0)
 
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+NB. 'rawpi1 pfxi1 sfxLi1 sfxRi1'=. getf2pl1ustepc (rawpi ; pfxi ; sfxLi ; sfxRi)
+
+getf2pl1ustepc=: 3 : 0
+  'rawp pfx sfxL sfxR'=. y
+  c=. {."1 sfxR
+  jp=. iofmaxm c
+  r=. jp { sfxR
+  c=. c % ({. r)
+  rawp=. rawp , jp
+  pfx=. pfx , ((jp { sfxL) , r)
+  sfxL=. }. jp ({.@])`[`]} sfxL ,. c
+  sfxR=. 1 1 }. jp ({.@])`[`]} sfxR - (c */ r)
+  rawp ; pfx ; sfxL ; sfxR
+)
+
+NB. 'p L1U'=. getf2pl1u A
+
+getf2pl1uc=: ((0&{) , ((,&.>)/@(1 2&{))) @ (getf2pl1ustepc ^: ((<./@$)`(((i.0)"_);(0&{.);(_ 0&{.);])))
+
+NB. 'pi1 pfxi1 sfxLi1 sfxRi1'=. getf2xxxxstep (pi ; pfxi ; sfxLi ; sfxRi)
+
+getrfpl1ustepc=: 3 : 0
+  'p pfx sfxL sfxR'=. y
+  nj=. -~/ 'j n'=. $ pfx
+  bs=. TRFNB <. (# sfxL) <. nj
+  'pi L1U'=. getf2pl1uc bs {."1 sfxR
+  sfxL=. pi laswp sfxL
+  A1222=. pi laswp bs }."1 sfxR
+  A11=. bs {. L1U
+  A21=. bs }. L1U
+  A12=. A11 trtrsl1x (bs {. A1222)
+  p=. p , pi
+  pfx=. pfx , ((bs {. sfxL) ,. A11 ,. A12)
+  sfxL=. (bs }. sfxL) ,. A21
+  sfxR=. (bs }. A1222) - A21 mp A12
+  p ; pfx ; sfxL ; sfxR
+)
+
+NB. (-: (clean@((/: @ (0&({::))) { ((trl1 mp tru)@(1&({::))))@getrfpl1ua)) A
+NB. 'ip L1U'=. getrfpl1ua A
+
+getrfpl1uc=: getf2pl1uc`(((0&{),((,&.>)/@(1 2&{))) @ (getrfpl1ustepc ^: ((>.@(TRFNB %~ (<./@$)))`((i.@#);(0&{.);(_ 0 {. ]);]))))@.(TRFNB<(<./@$))
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+getrfpl1ud=: 3 : 0
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    (i. m) ; y
+  elseif. 1 = n do.
+    dpi=. 0 ii2cp iofmaxm y
+    pi=. dpi C. i. m
+    y=. ((] 0:} %) (0: ({,) ])) dpi C. y                        NB. permute single column (row), scale by head, keep head unscaled
+    pi ; y
+  elseif. do.
+    k=. m (<. >.@-:) n
+    'pia Afa'=. getrfpl1ud k {."1 y                             NB. factorize 1st block recursively
+    y=. pia C. k }."1 y                                         NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
+    Afba=. Afa (trtrsl1x & (k & {.)) y                          NB. calculate 2nd block's 1st sub-block
+    'pib Afbb'=. getrfpl1ud y ((- (mp & Afba)) & (k & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
+    dpib=. (i. k) , (k + pib)                                   NB. apply 2nd block's permutation to 1st block
+    (dpib C. pia) ; ((dpib C. Afa) ,. (Afba , Afbb))            NB. assemble solution
+  end.
+)
 
 NB. =========================================================
 NB. Interface

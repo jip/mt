@@ -94,6 +94,9 @@ sorzhouiter=: 4 : 0
 )
 
 NB. =========================================================
+NB. Interface verbs
+
+NB. ---------------------------------------------------------
 NB. lyapchol
 NB. Solve stable non-negative definite continuous-time
 NB. Lyapunov equation:

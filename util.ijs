@@ -1,14 +1,14 @@
 NB. util.ijs
 NB. Linear time-invariant (LTI) system's utilities
 NB.
+NB. shiftdiag  add element[s from] x to diagonal of matrix y
+NB. logspace   create vector of logarithmically spaced numbers
+NB. plot       plot data as multiplot or subplots grid
+NB.
 NB. expm       matrix exponent and Cauchy integral
 NB. logm       matrix logarithm
 NB. powm       matrix y to power x
 NB. powsm      X-Y-Z matrix (report) of matrix y powers 0..(x-1)
-NB.
-NB. shiftdiag  add element[s from] x to diagonal of matrix y
-NB. logspace   create vector of logarithmically spaced numbers
-NB. plot       plot data as multiplot or subplots grid
 NB.
 NB. rndmat     generate random matrix
 NB. rndmatpe   generate random matrix with positive eigenvalues
@@ -27,11 +27,11 @@ NB. Version: 1.0.0 2008-03-30
 NB. Copyright: Igor Zhuravlov igor@uic.dvgu.ru
 NB. License: Version 3 of the GNU GPL or any later version
 
+script_z_ '~system/main/numeric.ijs'            NB. clean
 script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
 script_z_ '~system/packages/math/makemat.ijs'   NB. idmat diagmat
-require '~user/projects/lapack/lapack.ijs'      NB. '~addons/math/lapack/lapack.ijs'
-require '~user/projects/lapack/gesvd.ijs'       NB. need_jlapack_ 'gesvd'
-
+require '~addons/math/lapack/lapack.ijs'
+need_jlapack_ 'gebal gesvd'
 require 'plot'
 
 coclass 'tau'
@@ -39,99 +39,12 @@ coclass 'tau'
 NB. =========================================================
 NB. Local utilities
 
+getCols=: {: @ $          NB. get columns count of table y
+tr=: (<0 1) & |:          NB. tr(y) is trace of table y
+norm1=: >./ @: (+/) @: |  NB. 1-norm of table y
+
 NB. =========================================================
 NB. Interface verbs
-
-NB. ---------------------------------------------------------
-NB. expm                                                  1 0
-NB. Calculate matrix exponent
-NB.   Φ(ts) = exp(A*ts)
-NB. and Cauchy integral
-NB.   Γ(ts) = Integral(exp(A*(ts-t))*dt,t=0..ts)*B
-NB. for sampe time ts.
-NB.
-NB. Syntax:
-NB.   'Phi Gamma'=. VPIVB expm ts
-NB. where:
-NB.   VPIVB - boxed quad (V;Λ;inv(V);B), where
-NB.           V      - Nx-by-Nx matrix, where columns are
-NB.                    right eigenvector of A
-NB.           Λ      - Nx-vector of eigenvalues {λ[i]} of A,
-NB.                    also known as poles of system
-NB.           inv(V) - Nx-by-Nx matrix, inversion of V
-NB.           B      - Nx-by-Nu control input matrix
-NB.           A      - Nx-by-Nx state matrix
-NB.   ts    > 0, sample time
-NB.   Phi   - Nx-by-Nx table, matrix exponent
-NB.   Gamma - Nx-by-Nu table, Cauchy intergal
-NB.
-NB. Applications:
-NB.   'Phi Gamma'=. (A;B) ((prexpm @ [) expm ]) ts
-
-expm=: (4 : 0) " 1 0
-  'V Lambda invV B'=. x
-
-  NB. A*V=V*diagmat(Λ) <=> A=V*diagmat(Λ)*inv(V) =>
-  NB. exp(A*ts) = V*exp(diagmat(Λ*ts))*inv(V) = V*diagmat(exp(Λ*ts))*inv(V)
-  Phi=. V mp ((^ Lambda * y) * invV)
-
-  NB. Integral(exp(λ*(ts-t))*dt,t=0..ts) = γ = (exp(λ*ts)-1)/λ, if λ≠0
-  NB.                                        = ts,              if λ=0, =>
-  NB. Integral(exp(A*(ts-t))*dt,t=0..ts) = V*diagmat({γ[i]})*inv(V)
-  Gamma=. V mp ((y ([ ((I. @: (0 = ])) }) (((- & 1) @: (^ @: *)) % ])) Lambda) * invV) mp B
-
-  Phi;Gamma
-)
-
-NB. ---------------------------------------------------------
-NB. powm
-NB. Raise matrix y to power x
-NB.
-NB. Syntax:
-NB.   P=. [x] powm y
-NB. where
-NB.   y - N-by-N table
-NB.   x - integer >= 0, power, default is #y
-NB.   P - N-by-N table, matrix y in power x
-NB.   N >= 0
-
-
-NB. ---------------------------------------------------------
-NB. powsm
-NB. Make report of table y powers: I y y^2 ... y^(x-1)
-NB.
-NB. Syntax:
-NB.   P=. [x] powsm y
-NB. where
-NB.   y - N-by-N table
-NB.   x - integer >= 0, powers count, default is #y
-NB.   P - x-by-N-by-N report, matrix y in powers 0..(x-1)
-NB.   N >= 0
-NB.
-NB. Test:
-NB.    ;/ powsm 3 3 $ 5 5 0 9 0 5 1 6 7
-NB. ┌─────┬─────┬────────┐
-NB. │1 0 0│5 5 0│70 25 25│
-NB. │0 1 0│9 0 5│50 75 35│
-NB. │0 0 1│1 6 7│66 47 79│
-NB. └─────┴─────┴────────┘
-NB.
-NB. Notes:
-NB. - powers are calculated via repeated squaring, see
-NB.   http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
-NB. - 0-th power (identity matrix) is substituted directly
-NB.   without calculation
-
-p2b=: < @ I. @ |.                 NB. cvt bits of y to powers, then box it
-pows=: p2b"1 @ #: @ i. @ [        NB. call p2b for each power x represented binary
-topow=: mp/ @ (mp~ @ ] ^: [)      NB. produce table y to powers from list x, then product all
-topows=: topow &. >               NB. apply dyad topow under boxes
-make1=: idmat @ # &. > @ ]        NB. make boxed identity matrix of size N
-repl1=: (make1) 0: } topows       NB. replace by identity matrix in 1st box
-prepP=: pows > @ repl1 < @ ]      NB. form report of y ^ i. x
-make0=: (0 $~ 0 , $ @ ]) " _      NB. make zero report: 0 N N $ 0
-check0=: make0`prepP @. (0 ~: [)  NB. choose report type depending on x=0
-powsm=: (# $: ]) :check0          NB. force dyadic call: (#@]) check0 ]
 
 NB. ---------------------------------------------------------
 NB. shiftdiag                                             1 2
@@ -325,6 +238,199 @@ smoutput 'plot pdat=' ; <pdat
 )
 
 NB. ---------------------------------------------------------
+NB. expm
+NB. Calculate matrix exponent
+NB.   Φ(ts) = exp(A*ts)
+NB. and Cauchy integral
+NB.   Γ(ts) = Integral(exp(A*(ts-t))*dt,t=0..ts)*B
+NB. for sampe time ts
+NB.
+NB. Syntax:
+NB.   'Phi Gamma'=. [ts] expm SYS
+NB. where:
+NB.   SYS   - either CTS or DTS in form of ss2sys output
+NB.   ts    > 0, optional sample time, is extracted from SYS
+NB.           when omited
+NB.   Phi   - Nx-by-Nx table, matrix exponent Φ
+NB.   Gamma - Nx-by-Nu table, Cauchy intergal Γ
+NB.
+NB. References:
+NB. [1] N. J. Higham, The scaling and squaring method for the
+NB.     matrix exponential revisited, SIAM J. Matrix Anal.
+NB.     Appl. Vol. 26, No. 4, pp. 1179–1193
+NB. [2] Andrievskiy B.R., Fradkov A.L. Selected chapters of
+NB.     automatic control theory with MATLAB examples. -
+NB.     SPb., 2000 (Андриевский Б.Р., Фрадков А. Л.
+NB.     Избранные главы теории автоматического управления
+NB.     с примерами на языке MATLAB. - СПб.: Наука, 2000. -
+NB.     475 с., ил. 86)
+NB.
+NB. Applications:
+NB.   'Phi Gamma'=. (A;B) ((prexpm @ [) expm ]) ts
+NB.
+NB. TODO:
+NB. - branch for diagonalizable A
+
+expm=: (($:~ getets) : (4 : 0)) " 0 1
+
+  NB. Padé approximant degrees m
+  vm=. 3 5 7 9 13
+
+  NB. coeffcients θ[m]
+  theta=. 0.01495585217958292 0.2539398330063230 0.9504178996162932 2.097847961257068 5.371920351148152
+
+  NB. coeffcients b[i] of degree 13 Padé approximant
+  b=. 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
+
+  NB. 1) stitch A and B to calc Φ and Γ simultaneously [2, p. ???]
+  NB. 2) multiply by ts
+  NB. 3) append rows to form square matrix
+  M=. x (getCols {. ]) @: (* (getA ,. getB)) y
+
+  NB. preprocess M
+  NB. - shift
+  mu=. (tr % #) M
+  M=. (- mu) shiftdiag M
+  NB. balance to reduce 1-norm of M
+  'Mbal ilo ihi scale'=. 2b1111 gebal_jlapack_ M
+  if. Mbal (>: & norm1) M do.
+    NB. balancing does not reduce the M, so ignore it
+    D=. DI=. idmat # M                NB. no balance
+  else.
+    dlen=. >: ihi-ilo                 NB. scaling vector length
+    IOSdinp=. (<: ilo) + i. dlen      NB. IOS d items in SCALE
+    p=. (>: IOSdinp) IOSdinp } scale  NB. permutation vector
+    P=. makepermat_jlapack_ p         NB. permutation matrix
+    iP=. |: P                         NB. (%. P) -: (|: P)
+    PAiP=. P mp A mp iP
+    bcut=. 1 (0) } ((<: ILO) , IHI) e.~ i. (#A)          NB. split bits
+    'T1 X Y Z10 B Z Z20 Z21 T2'=. , (;~ bcut) <;.1 PAiP  NB. split matrix PAiP on 3-by-3 submatrices
+    d=. IOSdinp { SCALE               NB. scaling vector
+    D=. diagmat d                     NB. scaling matrix
+    iD=. diagmat % d                  NB. iD -: %. D
+  end.
+
+
+  NB. A ← invD*A*D, where D is a balancing transformation (or set D=I if balancing does not reduce the A)
+  d=. (# M) $ 1  NB. no balance yet since gebal does balance+scale
+  di=. % d
+
+  NB. make report of matrices b[i]*M^i , where i=0..13
+  R=. b * 14 powsm M
+
+
+  for_m. vm do.
+    if. (norm1 M) <: (m { theta) do.
+      if. m <: 9 do.
+      else.
+      end.
+      X=. ((^ mu) * d) * X (* " 1) di  NB. undo preprocessing
+    end.
+  end.
+
+  s=. >. 2 ^. (norm1 M) % (13 { theta)
+  M=. M % 2x ^ s
+
+  NB. form [13/13] Padé approximant to expm(A)
+  VU=. (2 | i. 14) +/. (b (* " 0 2) (14 powsm M))
+  r13=. (gesvx @: (-/ ; +/)) VU
+
+  X=. (mp~ ^: s) r13
+  X=. ((^ mu) * d) * X (* " 1) di  NB. undo preprocessing
+)
+
+NB. ---------------------------------------------------------
+NB. expm                                                  1 0
+NB. Calculate matrix exponent
+NB.   Φ(ts) = exp(A*ts)
+NB. and Cauchy integral
+NB.   Γ(ts) = Integral(exp(A*(ts-t))*dt,t=0..ts)*B
+NB. for sampe time ts.
+NB.
+NB. Syntax:
+NB.   'Phi Gamma'=. VPIVB expm ts
+NB. where:
+NB.   VPIVB - boxed quad (V;Λ;inv(V);B), where
+NB.           V      - Nx-by-Nx matrix, where columns are
+NB.                    right eigenvector of A
+NB.           Λ      - Nx-vector of eigenvalues {λ[i]} of A,
+NB.                    also known as poles of system
+NB.           inv(V) - Nx-by-Nx matrix, inversion of V
+NB.           B      - Nx-by-Nu control input matrix
+NB.           A      - Nx-by-Nx state matrix
+NB.   ts    > 0, sample time
+NB.   Phi   - Nx-by-Nx table, matrix exponent
+NB.   Gamma - Nx-by-Nu table, Cauchy intergal
+NB.
+NB. Applications:
+NB.   'Phi Gamma'=. (A;B) ((prexpm @ [) expm ]) ts
+
+expm=: (4 : 0) " 1 0
+  'V Lambda invV B'=. x
+
+  NB. A*V=V*diagmat(Λ) <=> A=V*diagmat(Λ)*inv(V) =>
+  NB. exp(A*ts) = V*exp(diagmat(Λ*ts))*inv(V) = V*diagmat(exp(Λ*ts))*inv(V)
+  Phi=. V mp ((^ Lambda * y) * invV)
+
+  NB. Integral(exp(λ*(ts-t))*dt,t=0..ts) = γ = (exp(λ*ts)-1)/λ, if λ≠0
+  NB.                                        = ts,              if λ=0, =>
+  NB. Integral(exp(A*(ts-t))*dt,t=0..ts) = V*diagmat({γ[i]})*inv(V)
+  Gamma=. V mp ((y ([ ((I. @: (0 = ])) }) (((- & 1) @: (^ @: *)) % ])) Lambda) * invV) mp B
+
+  Phi;Gamma
+)
+
+NB. ---------------------------------------------------------
+NB. powm
+NB. Raise matrix y to power x
+NB.
+NB. Syntax:
+NB.   P=. [x] powm y
+NB. where
+NB.   y - N-by-N table
+NB.   x - integer >= 0, power, default is #y
+NB.   P - N-by-N table, matrix y in power x
+NB.   N >= 0
+
+
+NB. ---------------------------------------------------------
+NB. powsm
+NB. Make report of table y powers: I y y^2 ... y^(x-1)
+NB.
+NB. Syntax:
+NB.   P=. [x] powsm y
+NB. where
+NB.   y - N-by-N table
+NB.   x - integer >= 0, powers count, default is #y
+NB.   P - x-by-N-by-N report, matrix y in powers 0..(x-1)
+NB.   N >= 0
+NB.
+NB. Test:
+NB.    ;/ powsm 3 3 $ 5 5 0 9 0 5 1 6 7
+NB. ┌─────┬─────┬────────┐
+NB. │1 0 0│5 5 0│70 25 25│
+NB. │0 1 0│9 0 5│50 75 35│
+NB. │0 0 1│1 6 7│66 47 79│
+NB. └─────┴─────┴────────┘
+NB.
+NB. Notes:
+NB. - powers are calculated via repeated squaring, see
+NB.   http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
+NB. - 0-th power (identity matrix) is substituted directly
+NB.   without calculation
+
+p2b=: < @ I. @ |.                 NB. cvt bits of y to powers, then box it
+pows=: p2b"1 @ #: @ i. @ [        NB. call p2b for each power x represented binary
+topow=: mp/ @ (mp~ @ ] ^: [)      NB. produce table y to powers from list x, then product all
+topows=: topow &. >               NB. apply dyad topow under boxes
+make1=: idmat @ # &. > @ ]        NB. make boxed identity matrix of size N
+repl1=: (make1) 0: } topows       NB. replace by identity matrix in 1st box
+prepP=: pows > @ repl1 < @ ]      NB. form report of y ^ i. x
+make0=: (0 $~ 0 , $ @ ]) " _      NB. make zero report: 0 N N $ 0
+check0=: make0`prepP @. (0 ~: [)  NB. choose report type depending on x=0
+powsm=: (# $: ]) :check0          NB. force dyadic call: (#@]) check0 ]
+
+NB. ---------------------------------------------------------
 NB. rndmat
 NB. Generate rectangular random matrix of values in range [0,10)
 NB.
@@ -409,4 +515,27 @@ sdata=. ((? 4 5 $ 100);(? 4 5 $ 100)) (0 1;1 2) } <"1 i. (RC, 5)
 splot_tau_ po;spt;so;st;yt;xt;skt;sx;<sdata
 
 
+)
+
+NB. =========================================================
+NB. Test suite
+
+NB. Syntax: is_passed=. texpm A;B;ts
+
+texpm=: 3 : 0
+'A B ts'=. y
+W=. 0 {:: (prexpm A;B) expm ts
+eigA=. /:~ ^ ts * (2 geev_jlapack_ A)
+eigW=. /:~ (2 geev_jlapack_ W)
+err=. clean %: +/ *: | eigA - eigW
+0 = err
+)
+
+NB. Syntax: testexpm ''
+
+testexpm=: 3 : 0
+'A0 A1 A2 A3'=. (rndmatne &. >) 4;6;8;10
+'B0 B1 B2 B3'=. (rndmat &. >) 4 3;6 5;8 7;10 9
+'ts0 ts1 ts2 ts3'=. 0.01 * >: ? 4 $ 100
+texpm &> (< A0;B0;ts0) , (< A1;B1;ts1) , (< A2;B2;ts2) , (< A3;B3;ts3)
 )

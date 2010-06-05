@@ -1,0 +1,31 @@
+Matrix toolbox
+Copyright (C) 2010  Igor Zhuravlov
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+######################
+http://www.opennet.ru/openforum/vsluhforumID3/53454.html
+
+13. "Лицензии Apache и GPL с точки зрения opensource бизнеса"  
+Сообщение от uZver (ok) on 30-Апр-09, 13:32 
+>Вроде бы идеальный вариант -- двойное лицензирование. Заплатил денег -- делай с кодом что хочешь. Взял на халяву -- расплачивайся патчами. И законно и "по понятиям" непротиворечиво.
+
+А как вы патчи принимать будете?
+
+Байда двойного лицензирвоания в том, что для принятия патча имущественные права нужно передавать компании-производителю. Иначе они не смогут сделать лицензию "для денег".
+
+А передача прав - это нужно получить соглашение, подписать его и переслать. Куча лишних телодвижений которые далеко не каждый разработчик будет делать.
+
+######################
+see ~/tmp/schur.c

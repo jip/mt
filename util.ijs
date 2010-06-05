@@ -277,30 +277,30 @@ plot=: (3 : 0) " 0 1
   NB. expand key prefixes to key titles list strings; wrapping each key by double quotes
   kt=. dat ((p2k~ rsh)~ ` ($: L: _1) @. (ib @ [)) kt
 gkt=: kt
-NB. --- smoutput 'kt' ; <kt
+smoutput 'kt' ; <kt
 
   NB. pair-wise conditional append non-empty key titles (kt), prepended by string ';key', to subplot options (so)
   so=. so ((, ((';key' & ,) ^: (* @ #))) L: 0) kt
 gso=: so
-NB. --- smoutput 'so' ; <so
+smoutput 'so' ; <so
 
   NB. for each xx and dat pairs (xxi,dati): dati=. if empty(xxi) then (dati) else (xxi;dati)
   xdat=. xx ((; ^: (* @ # @ [)) ` ($: L: _1) @. (ib @ ])) dat
 gxdat=: xdat
-NB. --- smoutput 'xdat' ; <xdat
+smoutput 'xdat' ; <xdat
 
   NB. couple each leaf from so with corresp. rank-1 box from xdat
 NB. +++  sdat=. so ((, & <) L: 0 _1) xdat
   sdat=. so ((, & <) L: 0 _2) xdat
 gsdat=: sdat
-NB. --- smoutput 'sdat' ; <sdat
+smoutput 'sdat' ; <sdat
 
   NB. under each sdat box: if it is subsubplots data then convert
   NB. it from boxed Si-vector to boxed Si-by-2 table,
   NB. finally ravel whole [R-by-]C array to form multiplot pd data
   pdat=. , ((> ^: (ib @: (0 & {::))) &. >) sdat
 gpdat=: pdat
-NB. --- smoutput 'plot pdat=' ; <pdat
+smoutput 'plot pdat=' ; <pdat
 
   pd__x ps
 

@@ -5,9 +5,17 @@ NB. gebalxs    Make the rows and columns of a general square
 NB.            matrix as close in 1-norm as possible
 NB. gebalx     Balance a general square matrix
 NB.
+NB. ggbalxp    Isolate eigenvalues in a pair of general
+NB.            square matrices
+NB. ggbalxs    Make the rows and columns in a pair of general
+NB.            square matrices as close in 1-norm as possible
+NB. ggbalx     Balance a pair of general square matrices
+NB.
 NB. testgebal  Test gebalx by general matrix given
-NB. testbal    Adv. to make verb to test gebalx by matrix of
-NB.            generator and shape given
+NB. testggbal  Test ggbalx by pair of general square matrices
+NB.            given
+NB. testbal    Adv. to make verb to test gxbalx by
+NB.            matrix(-ces) of generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -50,8 +58,8 @@ NB. ---------------------------------------------------------
 NB. gebalxp1d
 NB.
 NB. Description:
-NB.   Traverse single direction (row-wise or column-wise)
-NB.   within gebalxp process
+NB.   Adv. to make verb to traverse single direction
+NB.   (row-wise or column-wise) within gebalxp process
 NB.
 NB. Syntax:
 NB.   vapp=. ioz`getv`mkt`dhs gebalxp1d
@@ -128,8 +136,8 @@ NB. ---------------------------------------------------------
 NB. gebalxp2d
 NB.
 NB. Description:
-NB.   Traverse both directions (row-wise and column-wise)
-NB.   within gebalxp process
+NB.   Adv. to make verb to traverse both directions (row-wise
+NB.   and column-wise) within gebalxp process
 NB.
 NB. Syntax:
 NB.   vapp=. getv0`getv1 gebalxp2d
@@ -229,8 +237,7 @@ NB.   transformation to isolate eigenvalues:
 NB.     B = P * A * P
 NB.
 NB. Syntax:
-NB.   'B p hs'=. geballp A
-NB.   'B p hs'=. gebalup A
+NB.   'B p hs'=. gebalxp A
 NB. where
 NB.   A  - n×n-matrix
 NB.   B  - n×n-matrix with isolated eigenvalues, being A
@@ -251,7 +258,7 @@ NB.      from top to bottom (geballp), or rows from bottom to
 NB.      top, then columns from left to right (gebalup), to
 NB.      produce p, hs
 NB.   3) apply full permutation p to A to produce B:
-NB.        B=. p sp A
+NB.        B=. p fp A
 NB.   7) link B, p, hs to assemple output
 NB.
 NB. Storage layout:
@@ -268,7 +275,7 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   Pinv -: |: P
 NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
-NB.   B -: p sp A
+NB.   B -: p fp A
 NB.   B11 -: (,.~ hs) (] ;. 0) B
 NB. where
 NB.   'B hs p'=. gebalxp A
@@ -284,8 +291,8 @@ NB.
 NB. Notes:
 NB. - gebalup models LAPACK's xGEBAL with 'P' option
 
-geballp=: ([ ((sp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) (-"1) diag)@:(0&~:))))
-gebalup=: ([ ((sp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) (-"1) diag)@:(0&~:))))
+geballp=: ([ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) (-"1) diag)@:(0&~:))))
+gebalup=: ([ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) (-"1) diag)@:(0&~:))))
 
 NB. ---------------------------------------------------------
 NB. gebals
@@ -384,11 +391,18 @@ NB. - models LAPACK's xGEBAL with 'S' option, with following
 NB.   difference: ra and ca never get value from diagonal
 NB.   element
 NB.
+NB. TODO:
+NB. - consider parallel approach described in [2]
+NB.
 NB. References:
 NB. [1] Kressner, D. 2004. Numerical methods and software for
 NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany.
+NB. [2] P. R. Amestoy, I. S. Duff, D. Ruiz, and B. Uçar.
+NB.     A parallel matrix scaling algorithm. May 6, 2008.
+NB.     Technical report RAL-TR-2008-013
+NB.     http://www.numerical.rl.ac.uk/reports/reports.html
 
 gebals=: 3 : 0
   'B p hs'=. y
@@ -402,29 +416,31 @@ gebals=: 3 : 0
     while. bt > i=. >: i do.
       rc=. rios (] ;. 0)"2 1 i ([ 0:`[`]}"1 { ,: {"1) B
       'r c'=. norm1t"1 rc
-      'ra ca'=. |@(liofmax { ])"1 rc
-      sum=. r + c
-      g=. r % BALSCLFAC
-      fup=. gebalsf c,1,g,(1>.c>.ca),(ra<.g)
-      c=. c * fup
-      g=. c % BALSCLFAC
-      r=. r % fup
-      fdn=. gebalsf r,1,g,(r>.ra%fup),(fup<.g<.ca*fup)
-      f=. fup % fdn
-      c=. c % fdn
-      r=. r * fdn
-      if. (r+c) < BALFACTOR*sum do.
-        di=. i { d
-        if. f (*. & (<&1)) di do.
-          if. BALSFMIN1 >: f*di do. continue. end.
+      if. r (*. & (0&~:)) c do.
+        'ra ca'=. |@(liofmax { ])"1 rc
+        sum=. r + c
+        g=. r % BALSCLFAC
+        fup=. gebalsf c,1,g,(1>.c>.ca),(ra<.g)
+        c=. c * fup
+        g=. c % BALSCLFAC
+        r=. r % fup
+        fdn=. gebalsf r,1,g,(r>.ra%fup),(fup<.g<.ca*fup)
+        f=. fup % fdn
+        c=. c % fdn
+        r=. r * fdn
+        if. (r+c) < BALFACTOR*sum do.
+          di=. i { d
+          if. f (*. & (<&1)) di do.
+            if. BALSFMIN1 >: f*di do. continue. end.
+          end.
+          if. f (*. & (>&1)) di do.
+            if. di >: BALSFMAX1%f do. continue. end.
+          end.
+          d=. (di*f) i } d
+          B=. i  (%&f) upd1    B
+          B=. i ((*&f) upd1)"1 B
+          noconv=. 1
         end.
-        if. f (*. & (>&1)) di do.
-          if. di >: BALSFMAX1%f do. continue. end.
-        end.
-        d=. (di*f) i } d
-        B=. i (%&f) upd1     B
-        B=. i ((*&f) upd1)"1 B
-        noconv=. 1
       end.
     end.
   end.
@@ -464,7 +480,7 @@ NB.   B11 -: (,.~ hs) (] ;. 0) B
 NB.   C11 -: (,.~ hs) (] ;. 0) C
 NB. where
 NB.   'C p hs d'=. gebalx A
-NB.   B=. p sp A
+NB.   B=. p fp A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB.   D=. diagmat d
@@ -486,7 +502,7 @@ NB. Description:
 NB.   Test:
 NB.   - gebal (math/lapack)
 NB.   - gebalx (math/mt)
-NB.   by general matrix given
+NB.   by general (possibly sparse) matrix given
 NB.
 NB. Syntax:
 NB.   testgebal A
@@ -494,13 +510,17 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
+NB.   berr := ######################||A - A^H|| / (ε * ||A|| * m)
 NB.   'C p hs d'=. gebalu A
-NB.   B=. p sp A
+NB.   B=. p fp A
 NB.   B11=. (,.~ hs) (] ;. 0) B
 NB.   C11=. (,.~ hs) (] ;. 0) C
 NB.   dispersion_orig=. >./ | 10 ^. %/"1 ((,. &: norm1t"1) |:) B11
 NB.   dispersion_bal=.  >./ | 10 ^. %/"1 ((,. &: norm1t"1) |:) C11
 NB.   quality=. dispersion_bal % dispersion_orig
+NB.
+NB. TODO:
+NB. - consider [1]
 NB.
 NB. References:
 NB. [1] Michael H. Schneider, Stavros A. Zenios. A
@@ -548,4 +568,4 @@ NB.     (_1 1 0 4 _6 4 & gemat_mt_) testbal_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 200
 
-testbal=: 1 : 'EMPTY_mt_ [ (testgebal_mt_ @ u ^: (=/))'
+testbal=: 1 : 'EMPTY_mt_ [ (testgebal_mt_ @ (u spmat_mt_ 0.25) ^: (=/))'

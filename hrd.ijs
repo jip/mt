@@ -263,15 +263,15 @@ NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  β4    τ4 )
 NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  h        )
 NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a     )
 NB.
-NB. If:
+NB. Assertions (with appropriate comparison tolerance):
+NB.   (idmat n) -: (mp ct) Q
+NB.   H -: A (mp~ mp (ct @ ])) Q
+NB. where
 NB.   n=. # A
 NB.   hs=. 0 , n
 NB.   HQf=. hs gehrdl A
 NB.   H=. 1 trl 0 _1 }. HQf
 NB.   Q=. unghrl HQf
-NB. then (with appropriate comparison tolerance)
-NB.   (idmat n) -: (mp ct) Q
-NB.   H -: A (mp~ mp (ct @ ])) Q
 
 gehrdl=: 4 : 0
   'h s'=. x
@@ -353,15 +353,15 @@ NB.   (     a  a  a  a  a  a  )    (     v1 v2 v3 β4 h  h  )
 NB.   (                    a  )    (                    a  )
 NB.                                (     τ1 τ2 τ3 τ4       )
 NB.
-NB. If:
+NB. Assertions (with appropriate comparison tolerance):
+NB.   (idmat n) -: (mp~ ct) Q
+NB.   H -: A ((ct @ ]) mp mp) Q
+NB. where
 NB.   n=. # A
 NB.   hs=. 0 , n
 NB.   HQf=. hs gehrdu A
 NB.   H=. _1 tru _1 0 }. HQf
 NB.   Q=. unghru HQf
-NB. then (with appropriate comparison tolerance)
-NB.   (idmat n) -: (mp~ ct) Q
-NB.   H -: A ((ct @ ]) mp mp) Q
 NB.
 NB. Notes:
 NB. - implements LAPACK's xGEHRD up to storage layout

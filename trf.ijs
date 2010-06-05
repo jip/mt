@@ -269,7 +269,7 @@ lahefpl=: (3 : 0) ^: (TRFNB<.#@(0 & {::))
   lt=. lt (+@}.@] - ((* }.)~ {.)) w
   dip=. (liofmax (-@] <@, -) #) lt
   ip=. dip C. :: ] ip
-  A=. dip sp :: ] A
+  A=. dip fp :: ] A
   lt=. dip C. :: ] lt
   lt=. 0 ({`[`(] % {))} :: ] lt
   t0=. t0 , {. w
@@ -511,7 +511,7 @@ lahefpu=: (3 : 0) ^: (TRFNB<.#@(0 & {::))
   ut=. ut (+@}:@] - ((* }:)~ {:)) w
   dip=. (<:@(1>.#) <@, liolmax) ut
   ip=. dip C. :: ] ip
-  A=. dip sp :: ] A
+  A=. dip fp :: ] A
   ut=. dip C. :: ] ut
   ut=. _1 ({`[`(] % {))} :: ] ut
   t0=. ({: w) , t0
@@ -1211,7 +1211,7 @@ NB.
 NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   A -: clean (/: ip) sp L1 (mp mp ct@[) T
+NB.   A -: clean (/: ip) fp L1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) L1 (mp mp ct@[) T
 NB. where
 NB.   'ip L1 T'=. hetrfpl A
@@ -1321,7 +1321,7 @@ NB.
 NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   A -: clean (/: ip) sp U1 (mp mp ct@[) T
+NB.   A -: clean (/: ip) fp U1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) U1 (mp mp ct@[) T
 NB. where
 NB.   'ip U1 T'=. hetrfpu A
@@ -1651,8 +1651,8 @@ NB.     berr := ||P * U1 * T * U1^H * P^_1 - A|| / (ε * ||A|| * n)
 testhetrf=: 3 : 0
   rcond=. _. NB. (norm1 con (hetripl@hetrfpl)) y
 
-  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
-  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y
+  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
+  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y
 
 EMPTY
 )

@@ -4,7 +4,7 @@ NB. c         Columns in noun
 NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. cp        Conjugate pertranspose
-NB. sp        Symmetric permutation
+NB. fp        Full (symmetric) permutation
 NB. p2P       Transform permutation vector to permutation
 NB.           matrix
 NB. ip2P      Transform inversed permutation vector to
@@ -217,7 +217,7 @@ trace=: +/ @ diag  NB. Matrix trace
 ct=: + @ |:        NB. Conjugate transpose
 cp=: |. @ ct @ |.  NB. Conjugate pertranspose
 
-sp=: [ C."1 C.     NB. Symmetric permutation
+fp=: [ C."1 C.     NB. Full (symmetric) permutation
 
 p2P=:  {    =      NB. Transform permutation vector to
                    NB.   permutation matrix

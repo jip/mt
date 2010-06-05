@@ -1,8 +1,17 @@
-NB. Raise to a power
+NB. Raise to an integer power
 NB.
-NB. gepow  Raise a general matrix in integer powers
-NB. dipow  Raise a diagonalizable matrix in integer powers
-NB. hepow  Raise a Hermitian matrix in integer powers
+NB. gepow      Raise a general matrix to integer powers
+NB. dipow      Raise a diagonalizable matrix to integer
+NB.            powers
+NB. hepow      Raise a Hermitian (symmetric) matrix to
+NB.            integer powers
+NB.
+NB. testgepow  Test gepow by general matrix given
+NB. testdipow  Test dipow by diagonalizable matrix given
+NB. testhepow  Test hepow by Hermitian (symmetric) matrix
+NB.            given
+NB. testpow    Adv. to make verb to test xxpow by matrix of
+NB.            generator and shape given
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -18,7 +27,9 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. gepow
-NB. Raise a general matrix A in integer powers
+NB.
+NB. Description:
+NB.   Raise a general matrix A to in integer powers
 NB.
 NB. Syntax:
 NB.   P=. p gepow A
@@ -44,7 +55,9 @@ gepow=: (4 :0) " _ 2
 
 NB. ---------------------------------------------------------
 NB. dipow
-NB. Raise a diagonalizable matrix A in integer powers
+NB.
+NB. Description:
+NB.   Raise a diagonalizable matrix A in integer powers
 NB.
 NB. Syntax:
 NB.   P=. p dipow (RV ; ev ; RVi)
@@ -67,7 +80,9 @@ dipow=: ((0 {:: ]) mp"2 ([ ^"1 0~ 1 {:: ]) (*"1 2) 2 {:: ]) " _ 1
 
 NB. ---------------------------------------------------------
 NB. hepow
-NB. Raise a Hermitian matrix A in integer powers
+NB.
+NB. Description:
+NB.   Raise a Hermitian matrix A in integer powers
 NB.
 NB. Syntax:
 NB.   P=. p dipow (RV ; ev)

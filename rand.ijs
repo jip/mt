@@ -12,6 +12,7 @@ NB. pomat    Random Hermitian (symmetric) positive definite
 NB.          matrix
 NB. ptmat    Random Hermitian (symmetric) positive definite
 NB.          tridiagonal matrix
+NB. spmat    Conj. to make verb to create sparse array
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -250,8 +251,8 @@ NB.   Adv. to make verb to generate random square triangular
 NB.   matrix
 NB. where
 NB.   sh    - size or shape, either n or (n,n)
-NB.   randx - monadic verb to generate random y-matrix (shape
-NB.           is taken from y)
+NB.   randx - monad to generate random y-matrix (shape is
+NB.           taken from y)
 NB.   L1    - n×n-matrix, random unit lower triangular
 NB.   L     - n×n-matrix, random lower triangular
 NB.   U1    - n×n-matrix, random unit upper triangular
@@ -319,8 +320,8 @@ NB. Syntax:
 NB.   H=. randx hemat sh
 NB. where
 NB.   sh    - size or shape, either n or (n,n)
-NB.   randx - monadic verb to generate random y-matrix (shape
-NB.           is taken from y)
+NB.   randx - monad to generate random y-matrix (shape is
+NB.           taken from y)
 NB.   H     - n×n-matrix, random Hermitian (symmetric)
 NB.
 NB. Assertion:
@@ -366,8 +367,8 @@ NB. Syntax:
 NB.   Q=. randnx unmat sh
 NB. where
 NB.   sh     - size or shape, either n or (n,n)
-NB.   randnx - monadic verb to generate random y-matrix (shape
-NB.            is taken from y) with elements distributed as
+NB.   randnx - monad to generate random y-matrix (shape is
+NB.            taken from y) with elements distributed as
 NB.            N(0,1), it is either randnf or randnc
 NB.   Q      - n×n-matrix, random unitary (orthogonal)
 NB.
@@ -419,12 +420,11 @@ NB. Syntax:
 NB.   A=. randx dimat randq sh
 NB. where
 NB.   sh    - size or shape, either n or (n,n)
-NB.   randq - monadic verb to generate random unitary
-NB.           (orthogonal) (y,y)-matrix (size is taken from
-NB.           y)
-NB.   randx - monadic verb to generate random y-vector
-NB.           (length is taken from y) of distinct or real
-NB.           (non-complex) numbers
+NB.   randq - monad to generate random unitary (orthogonal)
+NB.           (y,y)-matrix (size is taken from y)
+NB.   randx - monad to generate random y-vector (length is
+NB.           taken from y) of distinct or real (non-complex)
+NB.           numbers
 NB.   A     - n×n-matrix, random diagonalizable square
 NB.
 NB. Formula:
@@ -478,7 +478,7 @@ NB. Syntax:
 NB.   P=. randx pomat sh
 NB. where
 NB.   sh    - size or shape, either n or (n,n)
-NB.   randx - monadic verb to generate random non-singular
+NB.   randx - monad to generate random non-singular
 NB.           n×n-matrix
 NB.   P     - n×n-matrix, random Hermitian (symmetric)
 NB.           positive definite
@@ -504,6 +504,12 @@ NB.     mantissa(Im(p)) ~ U(1,3)
 NB.     exponent(Im(p)) ~ TN(0,4^2,_5,6)
 NB.   :
 NB.     P=. ((1 2 0 1 __ _ & gemat) j. (1 3 0 4 _5 6 & gemat)) pomat 4
+NB. - generate real symmetric negative definite 4×4-matrix P
+NB.   with elements p having:
+NB.     mantissa(p) ~ U(1,3)
+NB.     exponent(p) ~ TN(0,4^2,_5,6)
+NB.   :
+NB.     P=. -@((1 3 0 4 _5 6 & gemat) pomat) 4 4
 NB.
 NB. TODO:
 NB. - assertion
@@ -521,8 +527,8 @@ NB. Syntax:
 NB.   T=. randx ptmat sh
 NB. where
 NB.   sh    - size or shape, either n or (n,n)
-NB.   randx - monadic verb to generate random vectors d and
-NB.           e; is called as:
+NB.   randx - monad to generate random vectors d and e; is
+NB.           evoked as:
 NB.             d=. (| @ (9 o. randx)) n
 NB.             e=. randx (n-1)
 NB.   d     - n-vector of positive numbers, the main diagonal
@@ -559,3 +565,28 @@ NB. TODO:
 NB. - T should be sparse
 
 ptmat=: 1 : '(((u@<: ; _1:) setdiag_mt_ idmat_mt_) (mp mp ct_mt_@[) (diagmat_mt_@:|@(9 o. u)))@{.'
+
+NB. ---------------------------------------------------------
+NB. spmat
+NB.
+NB. Description:
+NB.   Conj. to make verb to create sparse array
+NB.
+NB. Syntax:
+NB.   vapp=. randx spmat ratio
+NB. where
+NB.   randx - monad to generate random numbers; is evoked as:
+NB.             A=. randx sh
+NB.   ratio - scalar in range [0,1], specifies desired
+NB.           portion of non-zero elements
+NB.   vapp  - monad to create sparse array; is evoked as:
+NB.             S=. vapp sh
+NB.   sh    - r-vector of non-negative integers, a shape of
+NB.           arrays A and S
+NB.   r     ≥ 0, rank of A and S
+NB.
+NB. TODO:
+NB. - S should be sparse
+
+spmat=: 2 : '(u@<.@(n*(*/))) ((?@$~ #)~ (*/@$)) } ($&0)'
+

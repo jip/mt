@@ -668,8 +668,8 @@ NB. - is similar to LAPACK's xHETRI, but uses another
 NB.   factorization, see hetrfx
 NB. - calls to pttril and pttriu are interchangeable here
 
-hetripl=: (/: @ (0 & {::)) sp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))
-hetripu=: (/: @ (0 & {::)) sp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))
+hetripl=: (/: @ (0 & {::)) fp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))
+hetripu=: (/: @ (0 & {::)) fp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))
 
 NB. ---------------------------------------------------------
 NB. Verb:     Factorization used:          Syntax:

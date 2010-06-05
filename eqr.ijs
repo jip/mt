@@ -20,7 +20,7 @@ NB. ---------------------------------------------------------
 NB. Name: laqr1
 NB. Description: 1st column of (H-s1*I)*(H-s2*I)
 NB. Syntax: vK=. (s1,s2) laqr1 H
-NB. where   H - 2×2- or 3×3-matrix
+NB. where   H - 2×2-matrix or 3×3-matrix
 NB. TODO: tacit
 
 laqr1=: 4 : 0

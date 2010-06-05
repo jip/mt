@@ -106,7 +106,6 @@ require '~user/projects/mt/bak.ijs'     NB. Restore original eigenvectors
 require '~user/projects/mt/bal.ijs'     NB. Balance
 require '~user/projects/mt/con.ijs'     NB. Condition number
 require '~user/projects/mt/eqr.ijs'     NB. Eigenvalues and eigenvectors of structured matrix
-require '~user/projects/mt/equ.ijs'     NB. Equilibrate
 require '~user/projects/mt/ref.ijs'     NB. Reflections
 require '~user/projects/mt/rot.ijs'     NB. Rotations
 require '~user/projects/mt/gq.ijs'      NB. Generate Q from its factored form
@@ -122,9 +121,7 @@ require '~user/projects/mt/tri.ijs'     NB. Inverse by trf
 require '~user/projects/mt/trs.ijs'     NB. Solve linear monomial equation by trf
 
 NB. hi-level
-require '~user/projects/mt/ev.ijs'      NB. eigenvalue decomposition
 require '~user/projects/mt/exp.ijs'     NB. exponent
-require '~user/projects/mt/log.ijs'     NB. logarithm
 require '~user/projects/mt/pow.ijs'     NB. power
 require '~user/projects/mt/sv.ijs'      NB. solve linear monomial equation
 
@@ -166,9 +163,8 @@ test=: 1 : 0
   '%-25s %-14s %-14s %-14s %-14s %-14s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
 
   NB. low-level algorithms
-  (u testbak_mt_) y
-  (u testbal_mt_) y
-  (u testequ_mt_) y
+  (u testbak_mt_) y  NB. square matrices only
+  (u testbal_mt_) y  NB. square matrices only
   (u testref_mt_) y  NB. testlarfb is called only for relatively small matrices (min dim < 200)
   (u testrot_mt_) y
   (u testgq_mt_) y
@@ -184,7 +180,6 @@ test=: 1 : 0
 
   NB. hi-level algorithms
   (u testexp_mt_) y
-  (u testlog_mt_) y
   (u testpow_mt_) y
   (u testsv_mt_) y
 

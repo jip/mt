@@ -1,33 +1,47 @@
-NB. sv.ijs
 NB. Solve linear monomial equation
 NB.
-NB. gesvxxx  Solve equation (op(A) * X = B) or
-NB.          (X * op(A) = B), where A is a general matrix;
-NB.          op(A) is either A itself, or A^T (the
-NB.          transposition of A), or A^H (the conjugate
-NB.          transposition of A); B is known right-hand side
-NB.          (RHS), X is unknown solution
-NB. hesvxxx  Solve equation (op(A) * X = B) or
-NB.          (X * op(A) = B), where A is a Hermitian
-NB.          (symmetric) matrix; op(A) is either A itself, or
-NB.          A^T (the transposition of A); B is known
-NB.          right-hand side (RHS), X is unknown solution
-NB. posvxxx  Solve equation (op(A) * X = B) or
-NB.          (X * op(A) = B), where A is a Hermitian
-NB.          (symmetric) positive definite matrix; op(A) is
-NB.          either A itself, or A^T (the transposition of
-NB.          A); B is known right-hand side (RHS), X is
-NB.          unknown solution
-NB. ptsvx    Solve equation (op(A) * X = B) or
-NB.          (X * op(A) = B), where A is a Hermitian
-NB.          (symmetric) positive definite tridiagonal
-NB.          matrix; op(A) is either A itself, or A^T (the
-NB.          transposition of A); B is known right-hand side
-NB.          (RHS), X is unknown solution
+NB. Interface:
+NB.   gesvxxx   Solve equation (op(A) * X = B) or
+NB.             (X * op(A) = B), where A is a general matrix;
+NB.             op(A) is either A itself, or A^T (the
+NB.             transposition of A), or A^H (the conjugate
+NB.             transposition of A); B is known right-hand
+NB.             side (RHS), X is unknown solution
+NB.   hesvxxx   Solve equation (op(A) * X = B) or
+NB.             (X * op(A) = B), where A is a Hermitian
+NB.             (symmetric) matrix; op(A) is either A itself,
+NB.             or A^T (the transposition of A); B is known
+NB.             right-hand side (RHS), X is unknown solution
+NB.   posvxxx   Solve equation (op(A) * X = B) or
+NB.             (X * op(A) = B), where A is a Hermitian
+NB.             (symmetric) positive definite matrix; op(A)
+NB.             is either A itself, or A^T (the transposition
+NB.             of A); B is known right-hand side (RHS), X is
+NB.             unknown solution
+NB.   ptsvx     Solve equation (op(A) * X = B) or
+NB.             (X * op(A) = B), where A is a Hermitian
+NB.             (symmetric) positive definite tridiagonal
+NB.             matrix; op(A) is either A itself, or A^T (the
+NB.             transposition of A); B is known right-hand
+NB.             side (RHS), X is unknown solution
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-10
+NB. Test suite:
+NB.   testgesv  Test linear monomial equation solving
+NB.             algorithms by general matrix given
+NB.   testhesv  Test linear monomial equation solving
+NB.             algorithms by Hermitian (symmetric) matrix
+NB.             given
+NB.   testposv  Test linear monomial equation solving
+NB.             algorithms by Hermitian (symmetric) positive
+NB.             definite matrix given
+NB.   testsv    Adv. to make verb to test triangular solver
+NB.             algorithms by matrix of generator and shape
+NB.             given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -48,7 +62,7 @@ NB. gesvxat        X * A^T = B     Xh=. A gesvxat Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with general matrix A
-NB.   via triangular factorization:
+NB.   by triangular factorization:
 NB.     P * L1 * U = A
 NB. where:
 NB.   A    - n×n-matrix
@@ -110,7 +124,7 @@ NB. posvxat        X * A^T = B     Xh=. A posvxat Bh
 NB.
 NB. Description:
 NB.   Solve Hermitian (symmetric) positive definite system
-NB.   via Cholesky factorization:
+NB.   by Cholesky factorization:
 NB.     L * L' = A
 NB. where:
 NB.   A    - n×n Hermitian (symmetric) positive definite
@@ -130,6 +144,39 @@ posvax=:  (potrsax ~ potrfl)~
 posvatx=: (potrsatx~ potrfl)~
 posvxa=:  (potrsxa ~ potrfl)~
 posvxat=: (potrsxat~ potrfl)~
+
+NB. ---------------------------------------------------------
+NB. Verb:          Solves:         Syntax:
+NB. ptsvax         A   * X = B     Xv=. A ptsvax  Bv
+NB. ptsvatx        A^T * X = B     Xv=. A ptsvatx Bv
+NB. ptsvxa         X * A   = B     Xh=. A ptsvxa  Bh
+NB. ptsvxat        X * A^T = B     Xh=. A ptsvxat Bh
+NB.
+NB. Description:
+NB.   Solve linear monomial equation with Hermitian
+NB.   (symmetric) positive definite tridiagonal matrix A via
+NB.   factorization:
+NB.     L1 * D * L^H = A
+NB. where:
+NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.          definite tridiagonal
+NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
+NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
+NB.   Xv   - same shape as Bv, the solution
+NB.   Xh   - same shape as Bh, the solution
+NB.   L1   - n×n-matrix, unit lower bidiangonal
+NB.   D    - n×n-matrix, diagonal with positive diagonal
+NB.   nrhs ≥ 0
+NB.
+NB. Notes:
+NB. - implements LAPACK's xPTSV
+NB. - based on (L*D*L^H) variant of factorization as the
+NB.   fastest among pttrfx
+
+ptsvax=:  pttrfl @ [ pttrsax ]  NB. ##################
+ptsvatx=: (potrsatx~ potrfl)~
+ptsvxa=:  (potrsxa ~ potrfl)~
+ptsvxat=: (potrsxat~ potrfl)~
 
 NB. =========================================================
 NB. Test suite
@@ -255,4 +302,4 @@ NB.     (_1 1 0 16 _6 4 & gemat_mt_) testsv_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testsv_mt_ 150 200
 
-testsv=: 1 : 'EMPTY_mt_ [ ((testposv_mt_ @ ((u pomat_mt_) ; u)) [ ((testhesv_mt_ @ ((u hemat_mt_) ; u))) [ (testgesv_mt_ @ (u ; u))) ^: (=/)'
+testsv=: 1 : 'EMPTY_mt_ [ ((testptsv_mt_ @ ((u ptmat_mt_) ; u)) [ (testposv_mt_ @ ((u pomat_mt_) ; u)) [ ((testhesv_mt_ @ ((u hemat_mt_) ; u))) [ (testgesv_mt_ @ (u ; u))) ^: (=/)'

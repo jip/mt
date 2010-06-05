@@ -1,38 +1,52 @@
-NB. trs.ijs
 NB. Solve linear monomial equation from triangular
 NB. factorization
 NB.
-NB. getrsxxx  Solve equation (op(A) * X = B) or
-NB.           (X * op(A) = B), where A is a general matrix,
-NB.           represented in factored form; op(A) is either
-NB.           A itself, or A^T (the transposition of A), or
-NB.           A^H (the conjugate transposition of A); B is
-NB.           known right-hand side (RHS), X is unknown
-NB.           solution
-NB. hetrsxxx  Solve equation (op(A) * X = B) or
-NB.           (X * op(A) = B), where A is a Hermitian
-NB.           (symmetric) matrix, represented in factored
-NB.           form; op(A) is either A itself, or A^T (the
-NB.           transposition of A); B is known right-hand
-NB.           side (RHS), X is unknown solution
-NB. potrsxxx  Solve equation (op(A) * X = B) or
-NB.           (X * op(A) = B), where A is a Hermitian
-NB.           (symmetric) positive definite matrix,
-NB.           represented as Cholesky triangle; op(A) is
-NB.           either A itself, or A^T (the transposition of
-NB.           A); B is known right-hand side (RHS), X is
-NB.           unknown solution
-NB. pttrsxxx  Solve equation (op(A) * X = B) or
-NB.           (X * op(A) = B), where A is a Hermitian
-NB.           (symmetric) positive definite tridiagonal
-NB.           matrix, represented as superdiagonal linked to
-NB.           diagonal; op(A) is either A itself, or A^T (the
-NB.           transposition of A); B is known right-hand side
-NB.           (RHS), X is unknown solution
+NB. Interface:
+NB.   getrsxxx   Solve equation (op(A) * X = B) or
+NB.              (X * op(A) = B), where A is a general
+NB.              matrix, represented in factored form; op(A)
+NB.              is either A itself, or A^T (the
+NB.              transposition of A), or A^H (the conjugate
+NB.              transposition of A); B is known right-hand
+NB.              side (RHS), X is unknown solution
+NB.   hetrsxxx   Solve equation (op(A) * X = B) or
+NB.              (X * op(A) = B), where A is a Hermitian
+NB.              (symmetric) matrix, represented in factored
+NB.              form; op(A) is either A itself, or A^T (the
+NB.              transposition of A); B is known right-hand
+NB.              side (RHS), X is unknown solution
+NB.   potrsxxx   Solve equation (op(A) * X = B) or
+NB.              (X * op(A) = B), where A is a Hermitian
+NB.              (symmetric) positive definite matrix,
+NB.              represented as Cholesky triangle; op(A) is
+NB.              either A itself, or A^T (the transposition
+NB.              of A); B is known right-hand side (RHS), X
+NB.              is unknown solution
+NB.   pttrsxxx   Solve equation (op(A) * X = B) or
+NB.              (X * op(A) = B), where A is a Hermitian
+NB.              (symmetric) positive definite tridiagonal
+NB.              matrix, represented as superdiagonal linked
+NB.              to diagonal; op(A) is either A itself, or
+NB.              A^T (the transposition of A); B is known
+NB.              right-hand side (RHS), X is unknown solution
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Test suite:
+NB.   testgetrs  Test linear monomial equation solving
+NB.              algorithms by general matrix given
+NB.   testhetrs  Test linear monomial equation solving
+NB.              algorithms by Hermitian (symmetric) matrix
+NB.              given
+NB.   testpotrs  Test linear monomial equation solving
+NB.              algorithms by Hermitian (symmetric)
+NB.              positive definite matrix given
+NB.   testtrs    Adv. to make verb to test triangular solver
+NB.              algorithms by matrix of generator and shape
+NB.              given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -127,8 +141,9 @@ NB. potrsxa        X * A   = B     Xh=. L potrsxa  Bh
 NB. potrsxat       X * A^T = B     Xh=. L potrsxat Bh
 NB.
 NB. Description:
-NB.   Solve Hermitian (symmetric) positive definite system
-NB.   via Cholesky factorization:
+NB.   Solve linear monomial equation with Hermitian
+NB.   (symmetric) positive definite matrix A, represented in
+NB.   factored form:
 NB.     L * L^H = A
 NB. where:
 NB.   A    - n×n Hermitian (symmetric) positive definite
@@ -153,23 +168,90 @@ potrsatx=: ([ +@trsmlhx trsmlx ) +
 potrsxa=:   [   trsmxl  trsmxlh
 potrsxat=: ([ +@trsmxl  trsmxlh) +
 
-pttrfsaxstep1=: 3 : 0
-  'ein Bin Bout'=. y
-  (}. ein) ; (}. Bin) ; (Bout , (({. Bin) - ({. ein) * ({: Bout)))
-)
+NB. ---------------------------------------------------------
+NB. Verb:          Solves:         Syntax:
+NB. pttrsax        A   * X = B     Xv=. (L1;D) pttrsax  Bv
+NB. pttrsatx       A^T * X = B     Xv=. (L1;D) pttrsatx Bv
+NB. pttrsxa        X * A   = B     Xh=. (L1;D) pttrsxa  Bh
+NB. pttrsxat       X * A^T = B     Xh=. (L1;D) pttrsxat Bh
+NB.
+NB. Description:
+NB.   Solve linear monomial equation with Hermitian
+NB.   (symmetric) positive definite tridiagonal matrix A,
+NB.   represented in factored form:
+NB.     L1 * D * L1^H = A
+NB. where:
+NB.   A    - n×n Hermitian (symmetric) positive definite
+NB.          tridiagonal matrix
+NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
+NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
+NB.   Xv   - same shape as Bv, the solution
+NB.   Xh   - same shape as Bh, the solution
+NB.   L1   - n×n-matrix, unit lower bidiangonal
+NB.   D    - n×n-matrix, diagonal with positive diagonal
+NB.          entries
+NB.   nrhs ≥ 0
+NB.
+NB. Algorithm:#################
+NB.   In:  A
+NB.   Out: L1 D
+NB.   0) extract main diagonal and subdiagonal from A to d
+NB.      and e, respectively
+NB.   1) prepare input for iterations:
+NB.        ee2din := (e ,. |e|^2 ,. (}. d))
+NB.        edout := 0 , ({. d)
+NB.   2) start iterations k=1:n-1 by Power (^:)
+NB.      on (ee2din;edout) :
+NB.      2.0) extract input for current k-th iteration:
+NB.             (e[k] |e[k]|^2 d[k]) := ee2din[k]
+NB.      2.1) extract d[k-1] produced during previous
+NB.           (k-1)-th iteration:
+NB.             d[k-1] := edout[_1,_1]
+NB.      2.2) find new e[k-1] and d[k]:
+NB.             e[k-1] := e[k-1] / d[k-1]
+NB.             d[k] := d[k] - |e[k-1]|^2 / d[k-1]
+NB.      2.3) recombine (shift splitting edge) for next
+NB.           iteration:
+NB.             ee2din=. }. ee2din
+NB.             edout=. edout , e[k-1] , d[k]
+NB.   3) now edout contains raw output, extract it:
+NB.        edout := 1 {:: (ee2din;edout)
+NB.   4) extract d - D's main diagonal, and e - L1's
+NB.      subdiagonal from edout:
+NB.        e=. }. {."1 edout
+NB.        d=. {:"1 edout
+NB.   5) form output matrices:
+NB.        L1=. (e;_1) setdiag idmat $ A
+NB.        D=. diagmat d
+NB.   6) link matrices L1 and D to form output:
+NB.        L1 ; D
+NB.
+NB. Assertions:
+NB.   A (-:!.(2^_34)) L1 (mp mp (ct@[)) D
+NB. where
+NB.   'L1 D'=. pttrfl A
+NB.
+NB. References:
+NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB.     Johns Hopkins University Press, Baltimore, Md, USA,
+NB.     3rd edition, 1996, p. 157
+NB.
+NB. Notes:
+NB. - 'continued fractions' approach is useless here since
+NB.   infix scan is non-consequtive
+NB. - L1 and D should be sparse
+NB. - based on (L1 * D * L1^H = A) variant of factorization
+NB.   as the fastest among pttrfx
+NB.
+NB. TODO:
+NB. - implement LAPACK's xPTTRS and choose the best
 
-pttrfsaxstep2=: 3 : 0
-  'ein din Bin Bout'=. y
-  (}: ein) ; (}: din) ; (}: Bin) ; (((Bin (% & {:) din) - (({: ein) * ({. Bout))) , Bout)
-)
-
-NB. X=. (L1 ,: D) pttrfsax B
-pttrfsax=: 4 : 0
+pttrsax=: 4 : 0
   'L1 D'=. x
   e=. _1 diag L1
   d=. diag D
-  y=. _1 {:: pttrfsaxstep1 ^: (<: # L1) (e ; (}. y) ; (1 {. y))
-  y=. _1 {:: pttrfsaxstep2 ^: (<: # L1) (e ; (}: d) ; (}: y) ; (y (% & (_1&{.)) d))
+  y=. _1 {:: ((}.@[ ; ] , (({.@[) ((}.@[) - ]) ((0 ({,) [) * {:@]))) & >/) ^: (# e) (e ((,. }.) ; 1 {. ]) y)
+  y=. _1 {:: (((}:@[) ; (({:@[) (((_2}.[)%(_2{[))-({:@[*])) ({.@])) , ]) & >/) ^: (# e) ((e ,.~ y (,. & }:) d) ; (y (% & (_1&{.)) d))
 )
 
 

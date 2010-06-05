@@ -1,23 +1,24 @@
-NB. rand.ijs
 NB. Random objects
 NB.
-NB. randu    Uniform distribution U(a,b)
-NB. rande    Exponential distribution E(μ)
-NB. randnf   Normal distribution N(μ,σ²) of float numbers
-NB. randnc   Normal distribution N(μ,σ²) of complex numbers
-NB. randtnf  Truncated normal distribution TN(μ,σ²,a,b) of
-NB.          float numbers
+NB. Interface:
+NB.   randu    Uniform distribution U(a,b)
+NB.   rande    Exponential distribution E(μ)
+NB.   randnf   Normal distribution N(μ,σ²) of float numbers
+NB.   randnc   Normal distribution N(μ,σ²) of complex numbers
+NB.   randtnf  Truncated normal distribution TN(μ,σ²,a,b) of
+NB.            float numbers
 NB.
-NB. gemat    Random general matrix
-NB. hemat    Random Hermitian (symmetric) matrix
-NB. unmat    Random unitary (orthogonal) matrix
-NB. dimat    Random diagonalizable matrix
-NB. pomat    Random Hermitian (symmetric) positive defined
-NB.          matrix
+NB.   gemat    Random general matrix
+NB.   hemat    Random Hermitian (symmetric) matrix
+NB.   unmat    Random unitary (orthogonal) matrix
+NB.   dimat    Random diagonalizable matrix
+NB.   pomat    Random Hermitian (symmetric) positive defined
+NB.            matrix
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

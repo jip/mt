@@ -1,20 +1,33 @@
-NB. gq.ijs
-NB. Generate Q from its factored form
+NB. Generate matrix with orthonormal rows or columns from its
+NB. factored form
 NB.
-NB. ungxx   Generate a matrix with orthonormal rows or
-NB.         columns from output of gexxf
-NB. unghrx  Generate an unitary (orthogonal) matrix which is
-NB.         defined as the product of elementary reflectors as
-NB.         returned by gehrdx
+NB. Interface:
+NB.   ungxx      Generate a matrix with orthonormal rows or
+NB.              columns from output of gexxf
+NB.   unghrx     Generate an unitary (orthogonal) matrix
+NB.              which is defined as the product of
+NB.              elementary reflectors as returned by gehrdx
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Test suite:
+NB.   testungq   Test Q generation algorithms by general
+NB.              matrix given
+NB.   testunghr  Test Q generation algorithms by square
+NB.              matrix given
+NB.   testgq     Adv. to make verb to test Q generation
+NB.              algorithms by matrix of generator and shape
+NB.              given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
+
+cberr=. 2 : '((norm1@(<: upddiag)@(u ct)) % (FP_EPS * v)) @ ]'  NB. conj. to form verb to calc. berr
 
 NB. ---------------------------------------------------------
 NB. Blocked code constants
@@ -202,8 +215,8 @@ NB.      rows
 NB.   2) make Qf the unit upper triangular
 NB.   3) call ungl2, the non-blocked version of algorithm,
 NB.      with arguments supplied: adjusted s, and Qf with
-NB.      part intended for blocked algorithm excluded, to
-NB.      produce eQ(0)
+NB.      part intended for blocked algorithm being excluded,
+NB.      to produce eQ(0)
 NB.   4) find iters, the number of iterations
 NB.   5) do iterations:
 NB.        eQ=.    Qf  (unglqstep ^: iters) eQ0
@@ -259,8 +272,8 @@ NB.      columns
 NB.   2) make Qf the unit upper triangular
 NB.   3) call ung2l, the non-blocked version of algorithm,
 NB.      with arguments supplied: adjusted s, and Qf with
-NB.      part intended for blocked algorithm excluded, to
-NB.      produce eQ(0)
+NB.      part intended for blocked algorithm being excluded,
+NB.      to produce eQ(0)
 NB.   4) find iters, the number of iterations
 NB.   5) do iterations:
 NB.        eQ=. (s;Qf) (ungqlstep ^: iters) eQ0
@@ -317,8 +330,8 @@ NB.      columns
 NB.   2) make Qf the unit lower triangular
 NB.   3) call ung2r, the non-blocked version of algorithm,
 NB.      with arguments supplied: adjusted s, and Qf with
-NB.      part intended for blocked algorithm excluded, to
-NB.      produce eQ(0)
+NB.      part intended for blocked algorithm being excluded,
+NB.      to produce eQ(0)
 NB.   4) find iters, the number of iterations
 NB.   5) do iterations:
 NB.        eQ=.    Qf  (ungqrstep ^: iters) eQ0
@@ -330,7 +343,7 @@ NB.   (  u  u  u  u  u  )         (  u  u  u  u   )
 NB.   (  v0 u  u  u  u  )         (  v0 u  u  u   )
 NB.   (  v0 v1 u  u  u  )         (  v0 v1 u  u   )
 NB.   (  v0 v1 v2 u  u  )         (  v0 v1 v2 u   )
-NB.   (  τ0 τ1 τ2 τ3  *  )         (  v0 v1 v2 v3  )
+NB.   (  τ0 τ1 τ2 τ3 *  )         (  v0 v1 v2 v3  )
 NB.                               (  τ0 τ1 τ2 τ3  )
 NB. where
 NB.   u         - elements of k×n-matrix R, upper triangular
@@ -375,8 +388,8 @@ NB.      rows
 NB.   2) make Qf the unit lower triangular
 NB.   3) call ungr2, the non-blocked version of algorithm,
 NB.      with arguments supplied: adjusted s, and Qf with
-NB.      part intended for blocked algorithm excluded, to
-NB.      produce eQ(0)
+NB.      part intended for blocked algorithm being excluded,
+NB.      to produce eQ(0)
 NB.   4) find iters, the number of iterations
 NB.   5) do iterations:
 NB.        eQ=. (s;Qf) (ungrqstep ^: iters) eQ0
@@ -384,11 +397,11 @@ NB.   6) cut off first column from eQ to produce Q
 NB.
 NB. Storage layout:
 NB.   example for m=4, n=5:       example for m=5, n=4:
-NB.   (  τ0 v0 u  u  u  u   )     (  *  u  u  u  u   )
-NB.   (  τ1 v1 v1 u  u  u   )     (  τ1 u  u  u  u   )
-NB.   (  τ2 v2 c2 v2 u  u   )     (  τ2 v2 u  u  u   )
-NB.   (  τ3 v3 v3 v3 v3 u   )     (  τ3 v3 v3 u  u   )
-NB.                               (  τ4 v4 v4 v4 u   )
+NB.   (  τ0 v0 u  u  u  u  )      (  *  u  u  u  u  )
+NB.   (  τ1 v1 v1 u  u  u  )      (  τ1 u  u  u  u  )
+NB.   (  τ2 v2 c2 v2 u  u  )      (  τ2 v2 u  u  u  )
+NB.   (  τ3 v3 v3 v3 v3 u  )      (  τ3 v3 v3 u  u  )
+NB.                               (  τ4 v4 v4 v4 u  )
 NB. where
 NB.   u         - elements of m×k-matrix R, upper triangular
 NB.   (1,vi,τi) - vector z(i) which defines an elementary
@@ -474,16 +487,29 @@ NB. where
 NB.   A - m×n-matrix
 
 testungq=: 3 : 0
-  cberr=. 2 : '((norm1@(<: upddiag)@(u ct)) % (FP_EPS * v)) @ ]'
-
   ('unglq' tmonad (gelqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q*Q'-I||/(ε*n)
   ('ungql' tmonad (geqlf`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q'*Q-I||/(ε*m)
   ('ungqr' tmonad (geqrf`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q'*Q-I||/(ε*m)
   ('ungrq' tmonad (gerqf`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q*Q'-I||/(ε*n)
 
-  NB. following are tested iif A is square
-  ('unghrl' tmonad ((gehrdl~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) ^: (=/ @ $) y  NB. berr := ||Q*Q'-I||/(ε*n)
-  ('unghru' tmonad ((gehrdu~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) ^: (=/ @ $) y  NB. berr := ||Q'*Q-I||/(ε*n)
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testunghr
+NB.
+NB. Description:
+NB.   Test Q generation algorithms by square matrix given
+NB.
+NB. Syntax:
+NB.   testunghr A
+NB. where
+NB.   A - n×n-matrix
+
+testunghr=: 3 : 0
+  ('unghrl' tmonad ((gehrdl~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp  cberr c))) y  NB. berr := ||Q*Q'-I||/(ε*n)
+  ('unghru' tmonad ((gehrdu~ (0,#))`]`((norm1 con ct)@])`(_."_)`(mp~ cberr #))) y  NB. berr := ||Q'*Q-I||/(ε*n)
+
   EMPTY
 )
 
@@ -511,4 +537,4 @@ NB.     (_1 1 0 16 _6 4 & gemat_mt_) testgq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
 
-testgq=: 1 : 'EMPTY_mt_ [ testungq_mt_ @ u'
+testgq=: 1 : 'EMPTY_mt_ [ (testunghr_mt_ ^: (=/@$) [ testungq_mt_) @ u'

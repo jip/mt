@@ -1,24 +1,24 @@
-NB. util.ijs
 NB. Utilities
 NB.
-NB. sgn       Simplified signum
-NB. condneg   Conditional negate
-NB. copysign  Copy sign
-NB. sorim     Sum of real and imaginary parts' modules
-NB. soris     Sum of real and imaginary parts' squares
-NB. fmtlog    Format log string
-NB. ag        Adv. to apply successive verbs from gerund to
-NB.           successive elements of list
-NB. ms        Minimum in sum of vectors
+NB. Interface:
+NB.   sgn       Simplified signum
+NB.   condneg   Conditional negate
+NB.   copysign  Copy sign
+NB.   sorim     Sum of real and imaginary parts' modules
+NB.   soris     Sum of real and imaginary parts' squares
+NB.   fmtlog    Format log string
+NB.   ag        Adv. to apply successive verbs from gerund to
+NB.             successive elements of list
+NB.   ms        Minimum in sum of vectors
+NB.   tmonad    Template conj. to make verbs to test
+NB.             computational monad
+NB.   tdyad     Template conj. to make verbs to test
+NB.             computational dyad
 NB.
-NB. tmonad    Template conj. to make verbs to test
-NB.           computational monad
-NB. tdyad     Template conj. to make verbs to test
-NB.           computational dyad
-NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

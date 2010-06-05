@@ -1,15 +1,22 @@
-NB. hrd.ijs
 NB. Reduce to Hessenberg form by an unitary similarity
 NB. transformation
 NB.
-NB. gehrdx  Reduce a general matrix to lower or upper
-NB.         Hessenberg form
-NB. gghrdx  Reduce a pair of general and triangular
-NB.         matrices to generalized Hessenberg form
+NB. Interface:
+NB.   gehrdx     Reduce a general matrix to Hessenberg form
+NB.   gghrdx     Reduce a pair of general and triangular
+NB.              matrices to generalized Hessenberg form
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Test suite:
+NB.   testgehrd  Test Hessenberg reduction algorithms by
+NB.              general matrix given
+NB.   testhrd    Adv. to make verb to test Hessenberg
+NB.              reduction algorithms gehrdx by matrix of
+NB.              generator and shape given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -136,7 +143,7 @@ NB.
 NB. Description:
 NB.   Reduce an augmented general matrix eA to lower
 NB.   Hessenberg form H by a unitary (orthogonal) similarity
-NB.   transformation via a non-blocked algorithm:
+NB.   transformation by non-blocked algorithm:
 NB.     Q * A * Q' = H
 NB.
 NB. Syntax:
@@ -170,7 +177,7 @@ NB.
 NB. Description:
 NB.   Reduce an augmented general matrix eA to upper
 NB.   Hessenberg form H by a unitary (orthogonal) similarity
-NB.   transformation via a non-blocked algorithm:
+NB.   transformation by non-blocked algorithm:
 NB.     Q' * A * Q = H
 NB.
 NB. Syntax:
@@ -391,6 +398,7 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. testgehrd
+NB.
 NB. Description:
 NB.   Test Hessenberg reduction algorithms:
 NB.   - gehrd (math/lapack addon)

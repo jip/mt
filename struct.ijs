@@ -1,47 +1,49 @@
-NB. struct.ijs
 NB. Structure handlers
 NB.
-NB. c         Columns in matrix
-NB. trace     Matrix trace
-NB. ct        Conjugate transpose
-NB. pt        Pertranspose
-NB. cpt       Conjugate pertranspose
-NB. sp        Symmetric permutation
-NB. p2P       Transform permutation vector to permutation
-NB.           matrix
-NB. ip2P      Transform inversed permutation vector to
-NB.           permutation matrix
-NB. rt        Restrained Take
+NB. Interface:
+NB.   c         Columns in matrix
+NB.   trace     Matrix trace
+NB.   ct        Conjugate transpose
+NB.   pt        Pertranspose
+NB.   cpt       Conjugate pertranspose
+NB.   sp        Symmetric permutation
+NB.   p2P       Transform permutation vector to permutation
+NB.             matrix
+NB.   ip2P      Transform inversed permutation vector to
+NB.             permutation matrix
+NB.   rt        Restrained Take
 NB.
-NB. upd1      Adv. to update subarray by a monad
-NB. append    Template adv. to make verbs to enhance append
-NB.           built-in verb (,)
-NB. stitch    Template adv. to make verbs to enhance stitch
-NB.           built-in verb (,.)
+NB.   upd1      Adv. to update subarray by a monad
+NB.   append    Template adv. to make verbs to enhance append
+NB.             built-in verb (,)
+NB.   stitch    Template adv. to make verbs to enhance stitch
+NB.             built-in verb (,.)
 NB.
-NB. diag      Return a solid part of diagonal
-NB. setdiag   Assign scalar value to a solid part of diagonal
-NB. upddiag   Template adv. to make verbs to update a solid
-NB.           part of diagonal
+NB.   diag      Return a solid part of diagonal
+NB.   setdiag   Assign scalar value to a solid part of
+NB.             diagonal
+NB.   upddiag   Template adv. to make verbs to update a solid
+NB.             part of diagonal
 NB.
-NB. idmat     Make identity matrix with units on solid part
-NB.           of diagonal
-NB. diagmat   Make diagonal matrix
+NB.   idmat     Make identity matrix with units on solid part
+NB.             of diagonal
+NB.   diagmat   Make diagonal matrix
 NB.
-NB. tru       Extract upper triangular (trapezoidal) matrix
-NB. trl       Extract lower triangular (trapezoidal) matrix
-NB. tru0      Extract strictly upper triangular (trapezoidal)
-NB.           matrix
-NB. trl0      Extract strictly lower triangular (trapezoidal)
-NB.           matrix
-NB. tru1      Extract unit upper triangular (trapezoidal)
-NB.           matrix
-NB. trl1      Extract unit lower triangular (trapezoidal)
-NB.           matrix
+NB.   tru       Extract upper triangular (trapezoidal) matrix
+NB.   trl       Extract lower triangular (trapezoidal) matrix
+NB.   tru0      Extract strictly upper triangular
+NB.             (trapezoidal) matrix
+NB.   trl0      Extract strictly lower triangular
+NB.             (trapezoidal) matrix
+NB.   tru1      Extract unit upper triangular (trapezoidal)
+NB.             matrix
+NB.   trl1      Extract unit lower triangular (trapezoidal)
+NB.             matrix
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

@@ -1,20 +1,30 @@
-NB. ref.ijs
 NB. Reflections
 NB.
-NB. larfx      Dyad to generate an elementary reflector
-NB. larfxxx    Monads to generate an elementary reflector
-NB. larftxx    Monads to form the triangular factor of a
-NB.            block reflector
-NB. larfxxxx   Dyads to apply an elementary reflector or its
-NB.            transpose to a matrix from either the left or
-NB.            the right
-NB. larfbxxxx  Dyads to build a block reflector by larftxx
-NB.            and to apply it or its transpose to a matrix
-NB.            from either the left or the right
+NB. Interface:
+NB.   larfx      Dyad to generate an elementary reflector
+NB.   larfxxx    Monads to generate an elementary reflector
+NB.   larftxx    Monads to form the triangular factor of a
+NB.              block reflector
+NB.   larfxxxx   Dyads to apply an elementary reflector or its
+NB.              transpose to a matrix from either the left or
+NB.              the right
+NB.   larfbxxxx  Dyads to build a block reflector by larftxx
+NB.              and to apply it or its transpose to a matrix
+NB.              from either the left or the right
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Test suite:
+NB.   testlarft  Test algorithms forming the triangular
+NB.              factor of a block reflector, by general
+NB.              matrix given
+NB.   testlarfb  Test algorithms applying a block reflector,
+NB.              by general matrix given
+NB.   testref    Adv. to make verb to test algorithms by
+NB.              matrix of generator and shape given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

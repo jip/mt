@@ -1,12 +1,13 @@
-NB. con.ijs
 NB. Condition number
 NB.
-NB. con  Conj. to make verbs estimating the reciprocal of the
-NB.      condition number of a matrix in a given norm
+NB. Interface:
+NB.   con  Conj. to make verb estimating the reciprocal of
+NB.        the condition number of a matrix in a given norm
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

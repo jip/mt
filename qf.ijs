@@ -1,14 +1,21 @@
-NB. qf.ijs
 NB. Orthogonal factorization
 NB.
-NB. gelqf  LQ factorization of a general matrix
-NB. geqlf  QL factorization of a general matrix
-NB. geqrf  QR factorization of a general matrix
-NB. gerqf  RQ factorization of a general matrix
+NB. Interface:
+NB.   gelqf     LQ factorization of a general matrix
+NB.   geqlf     QL factorization of a general matrix
+NB.   geqrf     QR factorization of a general matrix
+NB.   gerqf     RQ factorization of a general matrix
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Test suite:
+NB.   testgeqf  Test orthogonal factorization algorithms by
+NB.             general matrix given
+NB.   testqf    Test orthogonal factorization algorithms by
+NB.             matrix of generator and shape given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 

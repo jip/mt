@@ -16,4 +16,4 @@ math/mt - change history
  * iterative with cIOS
 
 == 0.0.0 ==
- * initial release, recursion via ($:)
+ * initial release, recursion by Self-Reference ($:)

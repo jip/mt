@@ -1,19 +1,35 @@
-NB. trf.ijs
 NB. Triangular factorization
 NB.
-NB. getrfxxxx  Triangular factorization with partial pivoting
-NB.            of a general matrix
-NB. hetrfpx    Triangular factorization with full pivoting of
-NB.            a Hermitian (symmetric) matrix
-NB. potrfx     Cholesky factorization of a Hermitian
-NB.            (symmetric) positive definite matrix
-NB. pttrfx     Triangular factorization of a Hermitian
-NB.            (symmetric) positive definite tridiagonal
-NB.            matrix
+NB. Interface:
+NB.   getrfxxxx  Triangular factorization with partial pivoting
+NB.              of a general matrix
+NB.   hetrfpx    Triangular factorization with full pivoting of
+NB.              a Hermitian (symmetric) matrix
+NB.   potrfx     Cholesky factorization of a Hermitian
+NB.              (symmetric) positive definite matrix
+NB.   pttrfx     Triangular factorization of a Hermitian
+NB.              (symmetric) positive definite tridiagonal
+NB.              matrix
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-10
+NB. Test suite:
+NB.   testgetrf  Test triangular factorization algorithms by
+NB.              general matrix given
+NB.   testhetrf  Test triangular factorization algorithms by
+NB.              Hermitian (symmetric) matrix given
+NB.   testpotrf  Test triangular factorization algorithms by
+NB.              Hermitian (symmetric) positive definite
+NB.              matrix given
+NB.   testpttrf  Test triangular factorization algorithms by
+NB.              Hermitian (symmetric) positive definite
+NB.              tridiagonal matrix given
+NB.   testtrf    Adv. to make verb to test triangular
+NB.              factorization algorithms by matrix of
+NB.              generator and shape given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -531,17 +547,11 @@ NB.
 NB. Syntax:
 NB.   'L1 D'=. pttrfl A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.       tridiagonal
-NB.   D - n×n-matrix, diagonal
-NB.   L - n×n-matrix, unit lower bidiangonal
-NB.
-NB. Formula:
-NB.   for k=1:n-1
-NB.   end
-NB. where
-NB.   d - n-vector, elements of D's main diagonal
-NB.   e - (n-1)-vector, elements of L1's subdiagonal
+NB.   A  - n×n-matrix, Hermitian (symmetric) positive
+NB.        definite tridiagonal
+NB.   L1 - n×n-matrix, unit lower bidiangonal
+NB.   D  - n×n-matrix, diagonal with positive diagonal
+NB.        entries
 NB.
 NB. Algorithm:
 NB.   In:  A
@@ -551,16 +561,20 @@ NB.      and e, respectively
 NB.   1) prepare input for iterations:
 NB.        ee2din := (e ,. |e|^2 ,. (}. d))
 NB.        edout := 0 , ({. d)
-NB.   2) start (n-1) iterations with k=1:n-1 via power (^:)
+NB.   2) start iterations k=1:n-1 by Power (^:)
 NB.      on (ee2din;edout) :
 NB.      2.0) extract input for current k-th iteration:
 NB.             (e[k] |e[k]|^2 d[k]) := ee2din[k]
-NB.      2.1) extract last d[k-1] from previous (k-1)-th
-NB.           iteration:
+NB.      2.1) extract d[k-1] produced during previous
+NB.           (k-1)-th iteration:
 NB.             d[k-1] := edout[_1,_1]
 NB.      2.2) find new e[k-1] and d[k]:
 NB.             e[k-1] := e[k-1] / d[k-1]
 NB.             d[k] := d[k] - |e[k-1]|^2 / d[k-1]
+NB.      2.3) recombine (shift splitting edge) for next
+NB.           iteration:
+NB.             ee2din=. }. ee2din
+NB.             edout=. edout , e[k-1] , d[k]
 NB.   3) now edout contains raw output, extract it:
 NB.        edout := 1 {:: (ee2din;edout)
 NB.   4) extract d - D's main diagonal, and e - L1's
@@ -588,24 +602,81 @@ NB. - 'continued fractions' approach is useless here since
 NB.   infix scan is non-consequtive
 NB. - L1 and D should be sparse
 
-pttrfl=: (((setdiag (idmat@$))~ (_1;~(}.@:({."1)))) ; (diagmat@:({:"1)@])) (1 {:: ((((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: ((# @ (0 & {::))`(((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) & >/))) @ ((_1&diag) ; diag))
+pttrfl=: 3 : 0
+  'e d'=. ((_1&diag) ; diag) y
+  'e d'=. ((}.@:({."1)) ; ({:"1)) 1 {:: (((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: (# e) e ((((,. soris)@[) ,. }.@]) ; ((,0) ,. 0{])) d
+  L1=. ((e;_1) setdiag idmat $ y
+  D=. diagmat d
+  L1 ; D
+)
 
-pttrflr=: 3 : 0
-  n=. # y
-  if. 2 = n do.
-    'd0 a10 a11'=. 0 2 3 ({,) y
-    d1=. a11 - (*: | a10) % d0
-    ;/ 2 2 2 $ (1 0 , (a10 % d0) , 1 , d0 , 0 0 , d1)
-  elseif. 2 < n do.
-    k=. >. -: n
-    'L00 D0'=. pttrflr (2 # k) {. y                  NB. L00 * D0 * L00^H = A00
-    a10=. (<k - 0 1) { y
-    l10=. a10 % _1 ({,) D0              NB. L10 = A10 * D0^_1 , since L10 * D0 * L00^H = L10 * D0 = A10
-    'L11 D1'=. pttrflr (<0 0) (-&(a10 * + l10)) upd1 (2 # k) }. y  NB. L11 * D1 * L11^H = A11 - A10 * D^_1 * A10^H
-    ((l10 (<k - 0 1) } n {. L00) ,. ((-n) {. L11)) ; ((n {. D0) ,. ((-n) {. D1))  NB. assemble result
-  elseif. do.
-    ((2 # n) $ 1) ; y
-  end.
+NB. ---------------------------------------------------------
+NB. pttrfu
+NB.
+NB. Description:
+NB.   Triangular factorization of a Hermitian (symmetric)
+NB.   positive definite tridiagonal matrix:
+NB.     U1 * D * U1^H = A
+NB.
+NB. Syntax:
+NB.   'U1 D'=. pttrfu A
+NB. where
+NB.   A  - n×n-matrix, Hermitian (symmetric) positive
+NB.        definite tridiagonal
+NB.   U1 - n×n-matrix, unit upper bidiangonal
+NB.   D  - n×n-matrix, diagonal with positive diagonal
+NB.        entries
+NB.
+NB. Algorithm:
+NB.   In:  A
+NB.   Out: U1 D
+NB.   0) extract main diagonal and superdiagonal from A to d
+NB.      and e, respectively
+NB.   1) prepare input for iterations:#######
+NB.        ee2din := (e ,. |e|^2 ,. (}. d))
+NB.        edout := 0 , ({. d)
+NB.   2) start iterations k=1:n-1 by Power (^:)
+NB.      on (ee2din;edout) :
+NB.      2.0) extract input for current k-th iteration:
+NB.             (e[k] |e[k]|^2 d[k]) := ee2din[k]
+NB.      2.1) extract d[k-1] produced during previous
+NB.           (k-1)-th iteration:
+NB.             d[k-1] := edout[_1,_1]
+NB.      2.2) find new e[k-1] and d[k]:
+NB.             e[k-1] := e[k-1] / d[k-1]
+NB.             d[k] := d[k] - |e[k-1]|^2 / d[k-1]
+NB.      2.3) recombine (shift splitting edge) for next
+NB.           iteration:
+NB.             ee2din=. }. ee2din
+NB.             edout=. edout , e[k-1] , d[k]
+NB.   3) now edout contains raw output, extract it:
+NB.        edout := 1 {:: (ee2din;edout)
+NB.   4) extract d - D's main diagonal, and e - L1's
+NB.      subdiagonal from edout:
+NB.        e=. }. {."1 edout
+NB.        d=. {:"1 edout
+NB.   5) form output matrices:
+NB.        L1=. (e;_1) setdiag idmat $ A
+NB.        D=. diagmat d
+NB.   6) link matrices L1 and D to form output:
+NB.        L1 ; D
+NB.
+NB. Assertions:
+NB.   A (-:!.(2^_34)) U1 (mp mp (ct@[)) D
+NB. where
+NB.   'U1 D'=. pttrfu A
+NB.
+NB. Notes:
+NB. - 'continued fractions' approach is useless here since
+NB.   infix scan is non-consequtive
+NB. - U1 and D should be sparse
+
+pttrfu=: 3 : 0
+  'e d'=. ((1&diag) ; diag) y NB. ###############
+  'e d'=. ((}.@:({."1)) ; ({:"1)) 1 {:: (((}.@[) ; (] , ((0{[) ((0{[) ((% {.) , (1{])) (],((2{[) - (1{[) % ]))) (_1 ({,) ])))) & >/) ^: (# e) e ((((,. soris)@[) ,. }.@]) ; ((,0) ,. _1{])) d
+  L1=. ((e;_1) setdiag idmat $ y
+  D=. diagmat d
+  L1 ; D
 )
 
 NB. =========================================================
@@ -719,12 +790,41 @@ testpotrf=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
+NB. testpttrf
+NB.
+NB. Description:
+NB.   Test triangular factorization algorithms:
+NB.   - pttrfpl pttrfpu (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite tridiagonal
+NB.   matrix given
+NB.
+NB. Syntax:
+NB.   testpttrf A
+NB. where
+NB.   A - n×n-matrix, Hermitian (symmetric) positive
+NB.       definite tridiagonal
+NB.
+NB. Formula:
+NB. - L1 * D * L1^H = A :
+NB.     berr := || L1 * D * L1^H - A ||/(ε * ||A|| * n)
+NB. - U1 * D * U1^H = A :
+NB.     berr := || U1 * D * U1^H - A ||/(ε * ||A|| * n)
+
+testpttrf=: 3 : 0
+  rcond=. (norm1 con pttri) y
+
+  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*#)@[))))) y
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
 NB. testtrf
 NB.
 NB. Description:
 NB.   Adv. to make verb to test triangular factorization
-NB.   algorithms algorithms by matrix of generator and shape
-NB.   given
+NB.   algorithms by matrix of generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testtrf
@@ -743,4 +843,4 @@ NB.     (_1 1 0 16 _6 4 & gemat_mt_) testtrf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 
-testtrf=: 1 : 'EMPTY_mt_ [ (((testpotrf_mt_ @ (u pomat_mt_)) [ (testhetrf_mt_ @ (u hemat_mt_))) ^: (=/)) [ testgetrf_mt_ @ u'
+testtrf=: 1 : 'EMPTY_mt_ [ (((testpttrf_mt_ @ (u ptmat_mt_)) [ (testpotrf_mt_ @ (u pomat_mt_)) [ (testhetrf_mt_ @ (u hemat_mt_))) ^: (=/)) [ testgetrf_mt_ @ u'

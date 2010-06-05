@@ -14,20 +14,20 @@ GE - general matrix
     BD - bidiagonal matrix
 
 TRF - triangular factorization
-TRS - solve monomial linear eq. of type A*X=B via TRF
-TRI - inverse a matrix via TRF
+TRS - solve monomial linear eq. of type A*X=B by TRF
+TRI - inverse a matrix by TRF
 
 EVD - eigenvalue decomposition
-EVS - solve monomial linear eq. of type A*X=B via EVD
-EVI - inverse a matrix via EVD
+EVS - solve monomial linear eq. of type A*X=B by EVD
+EVI - inverse a matrix by EVD
 
 SVD - singular value decomposition
-SVS - solve monomial linear eq. of type A*X=B via SVD
-SVI - inverse a matrix via SVD
+SVS - solve monomial linear eq. of type A*X=B by SVD
+SVI - inverse a matrix by SVD
 
 HRD - Hessenberg reduction
-HRS - solve monomial linear eq. of type A*X=B via HRD
-HRI - inverse a matrix via HRD
+HRS - solve monomial linear eq. of type A*X=B by HRD
+HRI - inverse a matrix by HRD
 
 EXP - matrix exponentioal
 LOG - matrix logarithm

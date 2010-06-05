@@ -1,29 +1,39 @@
-NB. mq.ijs
 NB. Multiply a general matrix by a matrix with orthonormal
 NB. rows or columns, which is represented in factored form
 NB.
-NB. unmlqxx   Multiply a general matrix by a matrix with
-NB.           orthonormal rows, which is represented in
-NB.           factored form, as returned by gelqf
-NB. unmqlxx   Multiply a general matrix by a matrix with
-NB.           orthonormal columns, which is represented in
-NB.           factored form, as returned by geqlf
-NB. unmqrxx   Multiply a general matrix by a matrix with
-NB.           orthonormal columns, which is represented in
-NB.           factored form, as returned by geqrf
-NB. unmrqxx   Multiply a general matrix by a matrix with
-NB.           orthonormal rows, which is represented in
-NB.           factored form, as returned by gerqf
-NB. unmhrxxx  Multiply a general matrix by an unitary
-NB.           (orthogonal) matrix, which is represented in
-NB.           factored form, as returned by gehrdl and gehrdu
-NB. unmbrxx   Multiply a general matrix by an unitary
-NB.           (orthogonal) matrix, which is represented in
-NB.           factored form, as returned by gebrd
+NB. Interface:
+NB.   unmlqxx    Multiply a general matrix by a matrix with
+NB.              orthonormal rows, which is represented in
+NB.              factored form, as returned by gelqf
+NB.   unmqlxx    Multiply a general matrix by a matrix with
+NB.              orthonormal columns, which is represented in
+NB.              factored form, as returned by geqlf
+NB.   unmqrxx    Multiply a general matrix by a matrix with
+NB.              orthonormal columns, which is represented in
+NB.              factored form, as returned by geqrf
+NB.   unmrqxx    Multiply a general matrix by a matrix with
+NB.              orthonormal rows, which is represented in
+NB.              factored form, as returned by gerqf
+NB.   unmhrxxx   Multiply a general matrix by an unitary
+NB.              (orthogonal) matrix, which is represented in
+NB.              factored form, as returned by gehrdx
+NB.   unmbrxx    Multiply a general matrix by an unitary
+NB.              (orthogonal) matrix, which is represented in
+NB.              factored form, as returned by gebrdx
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Test suite:
+NB.   testunmq   Test Q multiplication qf-algorithms by
+NB.              general matrix given
+NB.   testunmhr  Test Q multiplication hrd-algorithms by
+NB.              square matrix given
+NB.   testmq     Adv. to make verb to test Q multiplication
+NB.              algorithms by matrix of generator and shape
+NB.              given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -141,7 +151,7 @@ NB.   In: Qf , eC
 NB.   Out: eCprod
 NB.   0) form (pfxC;sfxC) as (aC;bC) or (bC;aC)
 NB.   1) find I, the decremented number of iterations
-NB.   2) start iterations via power (^:) on (pfxCi;sfxCi) as
+NB.   2) start iterations by Power (^:) on (pfxCi;sfxCi) as
 NB.      (aCi;bCi) or (bCi;aCi)
 NB.      2.0) apply unmxxxxstep:
 NB.             tmp=. Qf unmxxxxstep (pfxCi;sfxCi)
@@ -488,19 +498,19 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. testmqqf
+NB. testunmq
 NB.
 NB. Description:
 NB.   Test Q multiplication qf-algorithms by general matrix
 NB.   given
 NB.
 NB. Syntax:
-NB.   testmqqf (A;C)
+NB.   testunmq (A;C)
 NB. where
 NB.   A - m×n-matrix, is used to get Qf
 NB.   C - m×n-matrix, is used as multiplier
 
-testmqqf=: 3 : 0
+testunmq=: 3 : 0
   'A C'=. y
   rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) C  NB. meaninigful for square matrices only
   'LQf QfL QfR RQf'=. xQf=. (gelqf ; geqlf ; geqrf ; gerqf) A
@@ -530,19 +540,19 @@ testmqqf=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. testmqhrd
+NB. testunmhr
 NB.
 NB. Description:
 NB.   Test Q multiplication hrd-algorithms by square general
 NB.   matrix given
 NB.
 NB. Syntax:
-NB.   testmqhrd (A;C)
+NB.   testunmhr (A;C)
 NB. where
 NB.   A - n×n-matrix, is used to get Qf
 NB.   C - n×n-matrix, is used as multiplier
 
-testmqhrd=: 3 : 0
+testunmhr=: 3 : 0
   'A C'=. y
   rcond=. (norm1 con getri) C
   'HlQf HuQf'=. xQf=. ((gehrdl~ (0,#)) ; (gehrdu~ (0,c))) A
@@ -585,4 +595,4 @@ NB.     (_1 1 0 16 _6 4 & gemat_mt_) testmq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testmq_mt_ 150 200
 
-testmq=: 1 : 'EMPTY_mt_ [ (testmqhrd_mt_ ^: (=/@$@(0&({::))) [ testmqqf_mt_) @ (u ; u)'
+testmq=: 1 : 'EMPTY_mt_ [ (testunmhr_mt_ ^: (=/@$@(0&({::))) [ testunmq_mt_) @ (u ; u)'

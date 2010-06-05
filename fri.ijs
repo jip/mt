@@ -30,7 +30,7 @@ NB.   invA - n×n-matrix, inversion of A
 NB.   n    ≥ 0
 NB.
 NB. Notes:
-NB. - is less expensive than getri (inversion via PLU) when
+NB. - is less expensive than getri (inversion by PLU) when
 NB.   7*n^(log2(7)) < 2*n^3 (i.e. when n>667)
 NB.
 NB. References:
@@ -72,7 +72,7 @@ NB.   n    ≥ 0
 NB.
 NB. Notes:
 NB. - strict lower triangle is not used in calculations
-NB. - is less expensive than getri (inversion via PLU) when
+NB. - is less expensive than getri (inversion by PLU) when
 NB.   7*n^(log2(7)) < 2*n^3 (i.e. when n>667)
 NB.
 NB. References:

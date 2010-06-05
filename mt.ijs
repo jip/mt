@@ -1,18 +1,60 @@
-NB. mt.ijs
-NB. "Matrix toolbox" addon's main file
+NB. 'Matrix toolbox' addon's entry point
 NB.
-NB. test  Adv. to make verb to test algorithms
+NB. Interface:
+NB.   TESTLOGFILE  Log file name or a: to switch logging off
+NB.   TESTLOG      Literal array, being formatted test log
+NB.   DEBUG        Debug level
+NB.   FP_BASE      Floating point base
+NB.   FP_ELEN      Exponent field length (bits)
+NB.   FP_FLEN      Fraction field length (bits)
+NB.   FP_IGUNFL    Is gradual underflow? (boolean)
+NB.   FP_EBIAS     Exponent bias for normalized numbers
+NB.   FP_EPS       Machine epsilon
+NB.   FP_PREC      Machine precision 
+NB.   FP_EMIN      Min exponent for normalized numbers
+NB.   FP_UNFL      Min normalized positive number
+NB.   FP_EMAX      Max exponent for normalized numbers
+NB.   FP_OVFL      Max normalized positive number
+NB.   FP_SFMIN     Safe min, such that 1/FP_SFMIN does not
+NB.                overflow
+NB.   EMPTY        i. 0 0
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-01
+NB. Test suite:
+NB.   test         Adv. to make verb to test algorithms by
+NB.                matrix of generator and shape given
+NB.
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
 NB. =========================================================
-NB. Configuration
+NB. Interface
 
 NB. ---------------------------------------------------------
+NB. User config
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. Tests logging
+
+TESTLOGFILE=: < jpath '~temp/mt.log'                  NB. assign a: to switch off file logging
+TESTLOG=: ''                                          NB. literal array, being formatted test log
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. Debug level used by "dbg":
+NB.   0 - execute debuging verb transparently and silently
+NB.   1 - show for debuging verb its rank and valency,
+NB.       input's and output's shapes
+NB.   2 - case 1 plus input's and output's values
+
+DEBUG=: 2
+
+NB. ---------------------------------------------------------
+NB. System config
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. IEEE 754-1985 double-precision 64 bit floating point
 NB. constants
 
@@ -25,32 +67,15 @@ FP_IGUNFL=: 1                                         NB. is gradual underflow? 
 NB. derived values
 FP_EBIAS=: (FP_BASE ^ (FP_ELEN - 1)) - 1              NB. exponent bias for normalized numbers = 1023
 FP_EPS=: FP_BASE ^ (- FP_FLEN)                        NB. machine epsilon ε = 2^_53
-FP_PREC=: FP_BASE * FP_EPS                            NB. machine precision = 2^_52
+FP_PREC=: FP_BASE * FP_EPS                            NB. machine precision β = 2^_52
 FP_EMIN=: 1 - FP_EBIAS                                NB. min exponent for normalized numbers = _1022
 FP_UNFL=: FP_BASE ^ FP_EMIN                           NB. min normalized positive number = 2^_1022
 FP_EMAX=: ((FP_BASE ^ FP_ELEN) - FP_BASE) - FP_EBIAS  NB. max exponent for normalized numbers = 1023
 FP_OVFL=: (FP_BASE - FP_PREC) * (FP_BASE ^ FP_EMAX)   NB. max normalized positive number = (1-ε)*2^1024
-FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/SFMIN does not overflow
+FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/FP_SFMIN does not overflow
 
 NB. ---------------------------------------------------------
-NB. Tests logging
-
-TESTLOGFILE=: < jpath '~temp/mt.log'                  NB. assign a: to switch off file logging
-TESTLOG=: ''                                          NB. literal array, being formatted test log
-
-NB. ---------------------------------------------------------
-NB. Debug
-
-NB. debug level used by "dbg":
-NB.   0 - execute debuging verb transparently and silently
-NB.   1 - show for debuging verb its rank and valency,
-NB.       input's and output's shapes
-NB.   2 - case 1 plus input's and output's values
-
-DEBUG=: 2
-
-NB. ---------------------------------------------------------
-NB. Miscellaneous
+NB. Constants
 
 EMPTY=: i. 0 0
 
@@ -70,31 +95,31 @@ NB.
 NB. TODO: s@user/projects@addons/math/mt@g
 
 NB. utilities
-require '~user/projects/mt/dbg.ijs'     NB. debug
-require '~user/projects/mt/util.ijs'    NB. utilities
+require '~user/projects/mt/dbg.ijs'     NB. Debug
+require '~user/projects/mt/util.ijs'    NB. Utilities
 require '~user/projects/mt/ios.ijs'     NB. IOS
-require '~user/projects/mt/norm.ijs'    NB. norms
-require '~user/projects/mt/struct.ijs'  NB. structure handlers
-require '~user/projects/mt/rand.ijs'    NB. random objects
-require '~user/projects/mt/con.ijs'     NB. condition number
+require '~user/projects/mt/norm.ijs'    NB. Norms
+require '~user/projects/mt/struct.ijs'  NB. Structure handlers
+require '~user/projects/mt/rand.ijs'    NB. Random objects
+require '~user/projects/mt/con.ijs'     NB. Condition number
 
 NB. low-level
-require '~user/projects/mt/bak.ijs'     NB. recover eigenvectors after balancing
-require '~user/projects/mt/bal.ijs'     NB. balance
-require '~user/projects/mt/equ.ijs'     NB. equilibrate
-require '~user/projects/mt/ref.ijs'     NB. reflect
-require '~user/projects/mt/rot.ijs'     NB. rotate
-require '~user/projects/mt/gq.ijs'      NB. generate Q from its factored form
-require '~user/projects/mt/mq.ijs'      NB. multiply by Q represented in factored form
-require '~user/projects/mt/sm.ijs'      NB. solve linear monomial equation with triangular matrix
+require '~user/projects/mt/bak.ijs'     NB. Recover eigenvectors after balancing
+require '~user/projects/mt/bal.ijs'     NB. Balance
+require '~user/projects/mt/equ.ijs'     NB. Equilibrate
+require '~user/projects/mt/ref.ijs'     NB. Reflections
+require '~user/projects/mt/rot.ijs'     NB. Rotations
+require '~user/projects/mt/gq.ijs'      NB. Generate Q from its factored form
+require '~user/projects/mt/mq.ijs'      NB. Multiply by Q represented in factored form
+require '~user/projects/mt/sm.ijs'      NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
-require '~user/projects/mt/fri.ijs'     NB. inverse using the Frobenius formula
+require '~user/projects/mt/fri.ijs'     NB. Inverse using the Frobenius formula
 require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
-require '~user/projects/mt/qf.ijs'      NB. orthogonal factorization
-require '~user/projects/mt/trf.ijs'     NB. triangular factorization
-require '~user/projects/mt/tri.ijs'     NB. inverse via trf
-require '~user/projects/mt/trs.ijs'     NB. solve linear monomial equation from trf
+require '~user/projects/mt/qf.ijs'      NB. Orthogonal factorization
+require '~user/projects/mt/trf.ijs'     NB. Triangular factorization
+require '~user/projects/mt/tri.ijs'     NB. Inverse by trf
+require '~user/projects/mt/trs.ijs'     NB. Solve linear monomial equation from trf
 
 NB. hi-level
 require '~user/projects/mt/ev.ijs'      NB. eigenvalue decomposition
@@ -102,9 +127,6 @@ require '~user/projects/mt/exp.ijs'     NB. exponent
 require '~user/projects/mt/log.ijs'     NB. logarithm
 require '~user/projects/mt/pow.ijs'     NB. power
 require '~user/projects/mt/sv.ijs'      NB. solve linear monomial equation
-
-NB. =========================================================
-NB. Interface
 
 NB. =========================================================
 NB. Test suite

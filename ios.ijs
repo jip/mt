@@ -1,20 +1,21 @@
-NB. ios.ijs
 NB. IOS
 NB.
-NB. liofmax    lIO 1st element with maximum sum of real and
-NB.            imagine parts' modules
-NB. liolmax    lIO last element with maximum sum of real and
-NB.            imagine parts' modules
-NB. lios2cp    Convert lIOS to cycle permutation
-NB. ht2lios    Generate lIOS from head and tail
-NB. dhs2lios   Generate lIOS from head, size and optional
-NB.            delta
-NB. rios2ios   Convert rIOS to IOS
-NB. rios2lios  Convert rIOS to lIOS
+NB. Interface:
+NB.   liofmax    lIO 1st element with maximum sum of real and
+NB.              imagine parts' modules
+NB.   liolmax    lIO last element with maximum sum of real
+NB.              and imagine parts' modules
+NB.   lios2cp    Convert lIOS to cycle permutation
+NB.   ht2lios    Generate lIOS from head and tail
+NB.   dhs2lios   Generate lIOS from head, size and optional
+NB.              delta
+NB.   rios2ios   Convert rIOS to IOS
+NB.   rios2lios  Convert rIOS to lIOS
 NB.
-NB. Copyright (C) 2010 Igor Zhuravlov
-NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2010-06-10
+NB. Requisites:
+NB.   Copyright (C) 2010 Igor Zhuravlov
+NB.   For license terms, see the file COPYING in this distribution
+NB.   Version: 1.0.0 2010-06-01
 
 coclass 'mt'
 
@@ -53,7 +54,7 @@ NB. ---------------------------------------------------------
 NB. Miscellaneous
 
 NB. lIO 1st element e with max(|Re(e)|+|Im(e)|) from list y
-NB. implements LAPACK's IxAMAX
+NB. implements BLAS's IxAMAX
 liofmax=: (i.>./) @ sorim
 
 NB. lIO last element e with max(|Re(e)|+|Im(e)|) from list y

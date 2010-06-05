@@ -140,7 +140,7 @@ gebals=: 3 : 0
       'c r'=. (ss ,. 0 2) (+/ @: |) ;. 0 (i ([ ((0:`[`]) }) ({ " 1 ,. {)) Ap)  NB. 1-norm of i-th col and i-th row of A11 without diagonal element
       if. r (*. & (~: & 0)) c do.                   NB. protect against zero row or col
         f=. RADIX ^ >. -: <: RADIX ^. r % c         NB. scale[i] correction
-        if. (f ~: 1x) *. (((r % f) + (c * f)) < (0.95 * (c + r))) do.          NB. does correction f meaningful?
+        if. (f ~: 1x) *. (((r % f) + (c * f)) < (0.95 * (c + r))) do.  NB. does correction f meaningful?
           s=. (f * (i { s)) i } s                   NB. correct scale[i]
           Ap=. ((i  {      Ap) % f)        i  } Ap  NB. scale i-th row
           Ap=. ((i ({ " 1) Ap) * f) (<a: ; i) } Ap  NB. scale i-th col

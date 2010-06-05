@@ -168,7 +168,7 @@ thefri=: 3 : 0
 NB. ---------------------------------------------------------
 NB. testfri
 NB. Adverb to test inverse algorithms with random matrices of
-NB. shape y
+NB. generator and shape given
 NB.
 NB. Syntax:
 NB.   mkge testfri m,n

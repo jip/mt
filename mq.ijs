@@ -529,7 +529,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 tmqqf=: 3 : 0
   'A C'=. y
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) C
+  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) C  NB. meaninigful for square matrices only
   'LQf QfL QfR RQf'=. xQf=. (gelqf ; geqlf ; geqrf ; gerqf) A
   'Qlq Qql Qqr Qrq'=. (((unglq~ (<:@c))&.>)`((ungql~ (<:@#))&.>)`((ungqr~ (<:@#))&.>)`((ungrq~ (<:@c))&.>)) aag xQf
 
@@ -560,7 +560,7 @@ NB. ---------------------------------------------------------
 NB. tmqhrd
 NB.
 NB. Description:
-NB.   Test Q multiplication hrd-algorithms
+NB.   Test Q multiplication hrd-algorithms by matrix given
 NB.
 NB. Syntax:
 NB.   tmqhrd (A;C)

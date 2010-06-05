@@ -6,20 +6,17 @@ NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. pt        Pertranspose
 NB. cpt       Conjugate pertranspose
-NB. gi        Conj. to evoke n-th verb from gerund m
-NB. ms        Minimum in sum of vectors
 NB. rt        Restrained Take
 NB.
 NB. upd1      Adv. to update subarray by a monad
-NB. uncut     To frame matrix by border of zeros
 NB. append    Template adv. to make verbs to enhance append
-NB.           verb
+NB.           built-in verb (,)
 NB. stitch    Template adv. to make verbs to enhance stitch
-NB.           verb
+NB.           built-in verb (,.)
 NB.
 NB. diag      Return a solid part of diagonal
-NB. setdiag   Assign scalar value to solid part of diagonal
-NB. upddiag   Template adv. to make verbs to update solid
+NB. setdiag   Assign scalar value to a solid part of diagonal
+NB. upddiag   Template adv. to make verbs to update a solid
 NB.           part of diagonal
 NB.
 NB. idmat     Make identity matrix with units on solid part
@@ -143,26 +140,14 @@ trace=: +/ @ diag                        NB. matrix trace
 ct=: + @ |:                              NB. conjugate transpose
 pt=: |. @ |: @ |.                        NB. pertranspose
 cpt=: + @ pt                             NB. conjugate pertranspose
-gi=: 2 : '(n{m)`:6'                      NB. Conj. to evoke n-th verb from gerund m: m[n]
-
-NB. ---------------------------------------------------------
-NB. ms
-NB.
-NB. Description: Minimum in [sum of] vector[s]
-NB. Syntax:      k=. [(delta0,delta1,...)] ms (value0,value1,...)
-NB. where        default deltai is 0
-NB. Formula:     k = min(delta0+value0,delta1+value1,...)
-NB. Notes:       is memo, since repetitive calls are expected
-
-ms=: <./@:(] :+)M.
 
 NB. ---------------------------------------------------------
 NB. rt
 NB.
 NB. Description:
-NB.   Restrained Take. Just like Take verb ({.), but without
-NB.   overtake feature. Overtaking sizes mean "all elements
-NB.   along this axis".
+NB.   Restrained Take. Just like built-in Take verb ({.), but
+NB.   without overtake feature. Overtaking sizes mean "all
+NB.   elements along this axis".
 NB.
 NB. Examples:
 NB.    2 rt i. 3 4                  _2 rt i. 3 4
@@ -225,31 +210,11 @@ NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005425.html
 upd1=: (@:{) (`[) (`]) }
 
 NB. ---------------------------------------------------------
-NB. uncut
-NB.
-NB. Description:
-NB.   To frame matrix by border of zeros
-NB.
-NB. Syntax:
-NB.   A=. ((t,l),:(b,r)) uncut subA
-NB. where
-NB.   t l b r ≥ 0, integers, border widths at top, left,
-NB.             bottom and right, respectively
-NB.   subA    - m×n-matrix to border
-NB.   A       - (t+m+b)×(l+n+r)-matrix such that
-NB.               subA -: ((t,m),:(l,n)) (] ;. 0) A
-NB.             and other elements are zeros
-NB.
-NB. Note:
-NB. - this verb is some kind of the cut inversion
-
-uncut=: ((((_1 1 * (+"1)) (+/\))~ $)) (({:@[) {. (({.~ {.)~)) ]
-
-NB. ---------------------------------------------------------
 NB. append
 NB.
 NB. Description:
-NB.   Template adv. to make verbs to enhance append verb
+NB.   Template adv. to make verbs to enhance append built-in
+NB.   verb (,)
 NB.
 NB. Examples:
 NB.    (3 3$3) 0 append (2 2$2)     (3 3$3) _1 append (2 2$2)
@@ -274,7 +239,8 @@ NB. ---------------------------------------------------------
 NB. stitch
 NB.
 NB. Description:
-NB.   Template adv. to make verbs to enhance stitch verb
+NB.   Template adv. to make verbs to enhance stitch built-in
+NB.   verb (,.)
 NB.
 NB. Examples:
 NB.    (3 3$3) 0 stitch (2 2$2)     (3 3$3) _1 stitch (2 2$2)
@@ -462,8 +428,7 @@ NB. 0 0 0
 
 diagmat=: (0 & $:) :(4 : 0)
   sh=. (#y) + (2&(|.@}. - {.)@(0&(<. , >.))) x  NB. find D shape
-  h=. {. x                                      NB. IO diagonal
-  lios=. h diaglios sh                          NB. lIOS for h-th diagonal
+  lios=. ({. x) diaglios sh                     NB. lIOS for h-th diagonal
   y (lios"_) } sh $ 0                           NB. write e into matrix of zeros
 )
 

@@ -232,7 +232,7 @@ NB. ---------------------------------------------------------
 NB. tgetrf
 NB.
 NB. Description:
-NB.   Test general matrix TRF algorithms
+NB.   Test general matrix TRF algorithms by matrix given
 NB.
 NB. Syntax:
 NB.   tgetrf A
@@ -246,7 +246,7 @@ tgetrf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
 
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y
+  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_~      (2 & {::) ))) % (FP_EPS*((norm1*c)@(1 {:: [))))))) y NB. berr := ||P*L1*U - A ||/(ε*||A||*n)
 
@@ -262,7 +262,7 @@ NB. ---------------------------------------------------------
 NB. thetrf
 NB.
 NB. Description:
-NB.   Test Hermitian matrix TRF algorithms
+NB.   Test Hermitian matrix TRF algorithms by matrix given
 NB.
 NB. Syntax:
 NB.   thetrf A

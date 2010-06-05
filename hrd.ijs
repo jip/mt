@@ -392,7 +392,7 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. thrd
-NB. Test Hessenberg reduction algorithms by general matrix
+NB. Test Hessenberg reduction algorithms by matrix given
 NB.
 NB. Syntax: thrd A
 NB. where A - general n×n-matrix
@@ -403,17 +403,19 @@ thrd=: 3 : 0
 
   rcond=. (norm1 con getri) y
 
+NB. FIXME!  ('gehrd_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
+
   ('gehrdl'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@( 0 _1&}.)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q'*H*Q||/ε*n*||A||
   ('gehrdu'  tdyad ((0,#)`]`]`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@(_1  0&}.)) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*H*Q'||/ε*n*||A||
-
-NB. FIXME!  ('gehrd_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
 NB. testhrd
-NB. Test Hessenberg reduction
+NB. Test Hessenberg reduction algorithms by matrix of
+NB. generator and shape given
+NB.
 NB. Syntax: mkge testhrd (m,n)
 NB.
 NB. Application:

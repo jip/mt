@@ -64,12 +64,12 @@ NB. - gelq2 and gelqf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
 
-gelq2=: (0 stitch)&>/ @ }: @ ((3 : 0) ^: ((0 _1&(ms $))`((0&({."1));(0&{.);])))
+gelq2=: ((0&({::)) 0 stitch (1&({::))) @ ((3 : 0) ^: ((0 _1&(ms $))`((0&({."1));(0&{.);])))
   'pfx sfxT sfxB'=. y
   z=. larfpfc {. sfxB
   sfxT=. sfxT , z
   sfxB=. (1 (0}) z) larfrnfr }. sfxB
-  (pfx ,. (sfxT (, &: ({."1)) sfxB)) ; (}."1 sfxT) ; (}."1 sfxB)
+  (pfx ,. (sfxT (, &: ({."1)) sfxB)) ; (sfxT (; &: (}."1)) sfxB)
 )
 
 NB. ---------------------------------------------------------
@@ -104,12 +104,12 @@ NB. - geql2 and geqlf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
 
-geql2=: (_1 append)&>/ @ }. @ ((3 : 0) ^: ((_1 0&(ms $))`(];(0&({."1));(0&{.))))
+geql2=: ((1&({::)) _1 append (2&({::))) @ ((3 : 0) ^: ((_1 0&(ms $))`(];(0&({."1));(0&{.))))
   'pfxL pfxR sfx'=. y
   z=. larfpb {:"1 pfxL
   pfxR=. z ,. pfxR
   pfxL=. (1 (_1}) z) larflcbc }:"1 pfxL
-  (}: pfxL) ; (}: pfxR) ; ((pfxL (, &: {:) pfxR) , sfx)
+  (pfxL (; & }:) pfxR) , < ((pfxL (, & {:) pfxR) , sfx)
 )
 
 NB. ---------------------------------------------------------
@@ -144,12 +144,12 @@ NB. - gerq2 and geqrf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
 
-geqr2=: ,&>/ @ }: @ ((3 : 0) ^: ((_1 0&(ms $))`((0&{.);(0&({."1));])))
+geqr2=: ((0&({::)) , (1&({::))) @ ((3 : 0) ^: ((_1 0&(ms $))`((0&{.);(0&({."1));])))
   'pfx sfxL sfxR'=. y
   z=. larfpf {."1 sfxR
   sfxL=. sfxL ,. z
   sfxR=. (1 (0}) z) larflcfc }."1 sfxR
-  (pfx , (sfxL (, &: {.) sfxR)) ; (}. sfxL) ; (}. sfxR)
+  (pfx , (sfxL (, & {.) sfxR)) ; (sfxL (; & }.) sfxR)
 )
 
 NB. ---------------------------------------------------------
@@ -184,12 +184,12 @@ NB. - gerq2 and gerqf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is not
 NB.   required, then larfp* may be replaced by faster larfg*
 
-gerq2=: (_1 stitch)&>/ @ }. @ ((3 : 0) ^: ((0 _1&(ms $))`(];(0&{.);(0&({."1)))))
+gerq2=: ((1&({::)) _1 stitch (2&({::))) @ ((3 : 0) ^: ((0 _1&(ms $))`(];(0&{.);(0&({."1)))))
   'pfxT pfxB sfx'=. y
   z=. larfpbc {: pfxT
   pfxB=. z , pfxB
   pfxT=. (1 (_1}) z) larfrnbr }: pfxT
-  (}:"1 pfxT) ; (}:"1 pfxB) ; ((pfxT (, &: ({:"1)) pfxB) ,. sfx)
+  (pfxT (; &: (}:"1)) pfxB) , < ((pfxT (, &: ({:"1)) pfxB) ,. sfx)
 )
 
 NB. =========================================================
@@ -231,7 +231,7 @@ gelqf=: ((0&({::)) ,. (1&({::)) , (gelq2 @ (2&({::)))) @ ((3 : 0) ^: ((qfi@(0 _1
   Z=. gelq2 nb {. sfxB
   sfxT=. sfxT , Z
   sfxB=. (tru1 Z) larfbrnfr nb }. sfxB
-  (pfx ,. (sfxT (, &: (nb & ({."1))) sfxB)) ; (nb }."1 sfxT) ; (nb }."1 sfxB)
+  (pfx ,. (sfxT (, &: (nb & ({."1))) sfxB)) ; (sfxT (; &: (nb&(}."1))) sfxB)
 )
 
 NB. ---------------------------------------------------------
@@ -270,7 +270,7 @@ geqlf=: (((geql2 @ (0&({::))) ,. (1&({::))) , (2&({::))) @ ((3 : 0) ^: ((qfi@(_1
   Z=. geql2 nnb {."1 pfxL
   pfxR=. Z ,. pfxR
   pfxL=. ((tru1~ (-~/@$)) Z) larfblcbc nnb }."1 pfxL
-  (nnb }. pfxL) ; (nnb }. pfxR) ; ((pfxL (,. &: (nnb & {.)) pfxR) , sfx)
+  (pfxL (; & (nnb&}.)) pfxR) , < ((pfxL (,. & (nnb & {.)) pfxR) , sfx)
 )
 
 NB. ---------------------------------------------------------
@@ -309,7 +309,7 @@ geqrf=: ((0&({::)) , (1&({::)) ,. (geqr2 @ (2&({::)))) @ ((3 : 0) ^: ((qfi@(_1 0
   Z=. geqr2 nb {."1 sfxR
   sfxL=. sfxL ,. Z
   sfxR=. (trl1 Z) larfblcfc nb }."1 sfxR
-  (pfx , (sfxL (,. &: (nb & {.)) sfxR)) ; (nb }. sfxL) ; (nb }. sfxR)
+  (pfx , (sfxL (,. & (nb & {.)) sfxR)) ; (sfxL (; & (nb&}.)) sfxR)
 )
 
 NB. ---------------------------------------------------------
@@ -349,7 +349,7 @@ gerqf=: (((gerq2 @ (0&({::))) , (1&({::))) ,. (2&({::))) @ ((3 : 0) ^: ((qfi@(0 
   Z=. gerq2 nnb {. pfxT
   pfxB=. Z , pfxB
   pfxT=. ((trl1~ (-~/@$)) Z) larfbrnbr nnb }. pfxT
-  (nnb }."1 pfxT) ; (nnb }."1 pfxB) ; ((pfxT (, &: (nnb & ({."1))) pfxB) ,. sfx)
+  (pfxT (; &: (nnb&(}."1))) pfxB) , < ((pfxT (, &: (nnb & ({."1))) pfxB) ,. sfx)
 )
 
 NB. =========================================================
@@ -359,18 +359,24 @@ NB. ---------------------------------------------------------
 NB. tgeqf
 NB. Test orthogonal factorization algorithms:
 NB. - built-in: 128!:0
-NB. - LAPACK: gelqf geqlf geqrf gerqf
-NB. - mt package: gelqf geqlf geqrf gerqf
-NB. by general matrix
+NB. - LAPACK addon: gelqf geqlf geqrf gerqf
+NB. - mt addon: gelqf geqlf geqrf gerqf
+NB. by matrix given
 NB.
 NB. Syntax: tgeqf A
 NB. where A - general m×n-matrix
+NB.
+NB. Notes:
+NB. - berr for LQ: berr := ||A-L*Q||/(ε*n*||A||)
+NB. - berr for QL: berr := ||A-Q*L||/(ε*m*||A||)
+NB. - berr for QR: berr := ||A-Q*R||/(ε*m*||A||)
+NB. - berr for RQ: berr := ||A-R*Q||/(ε*n*||A||)
 
 tgeqf=: 3 : 0
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'gelqf geqlf geqrf gerqf'
 
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y
+  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('128!:0' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (mp & >/)))%(FP_EPS*(#*norm1)@[)))) y
 
@@ -379,10 +385,10 @@ tgeqf=: 3 : 0
   ('2b0111 & geqrf_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
   ('2b1110 & gerqf_jlapack_' tmonad (]`({. , (,.~ &. > / @ }.))`(rcond"_)`(_."_)`((norm1@(- ((mp  ungrq) & > /)))%((FP_EPS*c*norm1)@[)))) y
 
-  ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( trl         @:(}:"1)@]) (- dbg2 'lq-') unmlqrc~))%((FP_EPS*c*norm1)@[)))) y  NB. berr := ||A-L*Q||/(ε*n*||A||)
-  ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((trl~(-~/@$))@  }.   @]) (- dbg2 'ql-') unmqllc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*L||/(ε*m*||A||)
-  ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) (- dbg2 'qr-') unmqrlc~))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/(ε*m*||A||)
-  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((tru~(-~/@$))@:(}."1)@]) (- dbg2 'rq-') unmrqrc~))%((FP_EPS*c*norm1)@[)))) y  NB. berr := ||A-R*Q||/(ε*n*||A||)
+  ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( trl         @:(}:"1)@]) (- dbg2 'lq-') unmlqrc~))%((FP_EPS*c*norm1)@[)))) y
+  ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((trl~(-~/@$))@  }.   @]) (- dbg2 'ql-') unmqllc~))%((FP_EPS*#*norm1)@[)))) y
+  ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(( tru         @  }:   @]) (- dbg2 'qr-') unmqrlc~))%((FP_EPS*#*norm1)@[)))) y
+  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(((tru~(-~/@$))@:(}."1)@]) (- dbg2 'rq-') unmrqrc~))%((FP_EPS*c*norm1)@[)))) y
 
   EMPTY
 )
@@ -391,8 +397,8 @@ NB. ---------------------------------------------------------
 NB. testqf
 NB.
 NB. Description:
-NB.   Test orthogonal factorization algorithms by general
-NB.   matrix of given size
+NB.   Test orthogonal factorization algorithms by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   mkge testqf (m,n)

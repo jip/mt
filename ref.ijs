@@ -195,7 +195,7 @@ larftbc=: 3 : 0
     Vr=. k }."1 y
     T00=. larftbc Vl
     T11=. larftbc Vr
-    T00 , (((- T11) mp ((ct 0 (0}) Vr) mp Vl) mp T00) ,. T11)
+    T00 , ((T11 mp ((ct 0 (0}) Vr) mp Vl) mp - T00) ,. T11)
   elseif. do.  NB. 0=n
     EMPTY
   end.
@@ -238,7 +238,7 @@ larftbr=: 3 : 0
     Vb=. k }. y
     T00=. larftbr Vt
     T11=. larftbr Vb
-    T00 , (((- T11) mp (Vb mp 0 (0}) ct Vt) mp T00) ,. T11)
+    T00 , ((T11 mp (Vb mp 0 (0}) ct Vt) mp - T00) ,. T11)
   elseif. do.  NB. 0=m
     EMPTY
   end.
@@ -469,7 +469,7 @@ NB. trefrft
 NB.
 NB. Description:
 NB.   Test algorithms forming the triangular factor of a
-NB.   block reflector, by a general matrix
+NB.   block reflector, by matrix given
 NB.
 NB. Syntax:
 NB.   trefrft (A;trash)
@@ -478,7 +478,7 @@ NB.   A - m×n-matrix, is used to get Qf
 
 trefrft=: 3 : 0
   AC=: y=. 0 {:: y
-  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y
+  rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
 
   ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
@@ -492,8 +492,8 @@ NB. ---------------------------------------------------------
 NB. trefrfb
 NB.
 NB. Description:
-NB.   Test algorithms applying a block reflector, by a
-NB.   general matrix
+NB.   Test algorithms applying a block reflector, by matrix
+NB.   given
 NB.
 NB. Syntax:
 NB.   trefrfb (A;C)

@@ -5,6 +5,8 @@ NB. sgn        Simplified signum
 NB. condneg    Conditional negate
 NB. copysign   Copy sign
 NB. fmtlog     Format log string
+NB. gi         Conj. to evoke n-th verb from gerund m
+NB. ms         Minimum in sum of vectors
 NB. ios2cp     Make cycle permutation from indices
 NB.
 NB. norm1      Magnitude-based 1-norm of vector or matrix
@@ -49,13 +51,26 @@ NB. ---------------------------------------------------------
 NB. Miscellaneous
 
 sgn=: 0 & (<: - >)                 NB. if y<0 then -1 else 1 endif
-condneg=: (* sgn)~                 NB. if x<0 then -y else y endif
+condneg=: -@]^:(0>[)               NB. if x<0 then -y else y endif
 copysign=: condneg |               NB. if x<0 then -|y| else |y| endif
 
 fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' vsprintf  NB. Format log string
 
+gi=: 2 : '(n{m)`:6'                NB. Conj. to evoke n-th verb from gerund m: m[n]
+
 NB. ---------------------------------------------------------
-NB. ii2cp
+NB. ms
+NB.
+NB. Description: Minimum in [sum of] vector[s]
+NB. Syntax:      k=. [(delta0,delta1,...)] ms (value0,value1,...)
+NB. where        default deltai is 0
+NB. Formula:     k = min(delta0+value0,delta1+value1,...)
+NB. Notes:       is memo, since repetitive calls are expected
+
+ms=: <./@:(] :+)M.
+
+NB. ---------------------------------------------------------
+NB. ios2cp
 NB.
 NB. Description:
 NB.   Make cycle permutation from indices x and y
@@ -63,7 +78,7 @@ NB.
 NB. Syntax:
 NB.   cp=. io0 ios2cp io1
 NB. where
-NB.   io0 io1 - indices
+NB.   io0 io1 - IOS
 NB.   cp      - cycle permutation
 NB.
 NB. References:

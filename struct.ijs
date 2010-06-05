@@ -11,6 +11,7 @@ NB.           matrix
 NB. ip2P      Transform inversed permutation vector to
 NB.           permutation matrix
 NB. rt        Restrained Take
+NB. icut      Inversed cut
 NB.
 NB. upd1      Adv. to update subarray by a monad
 NB. append    Template adv. to make verbs to enhance append
@@ -129,6 +130,31 @@ sp=: [ C."1 C.     NB. Symmetric permutation
 p2P=: {=           NB. Transform permutation vector to permutation matrix
 ip2P=: {^:_1=      NB. Transform inversed permutation vector to permutation
                    NB.   matrix, or permutation vector to inversed permutation matrix
+
+NB. ---------------------------------------------------------
+NB. icut
+NB.
+NB. Description:
+NB.   Inversed cut to model <;.1^:_1
+NB.
+NB. Syntax:
+NB.   A=. icut bA
+NB. where
+NB.   bA - block array
+NB.   A  - sh-array
+NB.
+NB. Assertion:
+NB.   A -: icut fret <;.1 A
+NB. where
+NB.   A    - some array
+NB.   fret - some fret
+NB.
+NB. References:
+NB. [1] JWiki/Essays/ Block Matrix Inverse
+NB.     Roger Hui
+NB.     http://www.jsoftware.com/jwiki/Essays/Block%20Matrix%20Inverse
+
+icut=: [: > 3 : ',"(#$y)&.>/y'^:(#@$)
 
 NB. ---------------------------------------------------------
 NB. rt

@@ -111,7 +111,6 @@ require '~user/projects/mt/mq.ijs'      NB. Multiply by Q represented in factore
 require '~user/projects/mt/sm.ijs'      NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
-require '~user/projects/mt/fri.ijs'     NB. Inverse using the Frobenius formula
 require '~user/projects/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~user/projects/mt/qf.ijs'      NB. Orthogonal factorization
 require '~user/projects/mt/trf.ijs'     NB. Triangular factorization

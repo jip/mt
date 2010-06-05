@@ -66,7 +66,7 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
-NB. - T should be sparse
+NB. - T would be sparse
 
 hetf2pl=: 3 : 0
   n=. # y
@@ -128,7 +128,7 @@ NB.   iP=. p2P ip
 NB.   P=. p2P p
 NB.
 NB. TODO:
-NB. - T should be sparse
+NB. - T would be sparse
 
 hetf2pu=: 3 : 0
   n=. # y
@@ -427,7 +427,7 @@ NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
 NB. - implement partitioned algorithm
-NB. - T should be sparse
+NB. - T would be sparse
 
 hetrfpl=: hetf2pl
 
@@ -463,7 +463,7 @@ NB.   P=. p2P p
 NB.
 NB. TODO:
 NB. - implement partitioned algorithm
-NB. - T should be sparse
+NB. - T would be sparse
 
 hetrfpu=: hetf2pu
 
@@ -601,7 +601,9 @@ NB.
 NB. Notes:
 NB. - 'continued fractions' approach is useless here since
 NB.   infix scan is non-consequtive
-NB. - L1 and D should be sparse
+NB.
+NB. TODO:
+NB. - L1 and D would be sparse
 
 pttrfl=: 3 : 0
   'e d'=. ((_1&diag) ; diag) y
@@ -670,7 +672,9 @@ NB.
 NB. Notes:
 NB. - 'continued fractions' approach is useless here since
 NB.   infix scan is non-consequtive
-NB. - U1 and D should be sparse
+NB.
+NB. TODO:
+NB. - U1 and D would be sparse
 
 pttrfu=: 3 : 0
   'e d'=. ((1&diag) ; diag) y

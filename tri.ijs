@@ -114,94 +114,75 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:              Syntax:
-NB. trtril         L  * invL  = I       invL=.  trtril  A
-NB. trtril1        L1 * invL1 = I       invL1=. trtril1 A
-NB. trtriu         U  * invU  = I       invU=.  trtriu  A
-NB. trtriu1        U1 * invU1 = I       invU1=. trtriu1 A
+NB. trtril         L  * iL  = I         iL=.  trtril  A
+NB. trtril1        L1 * iL1 = I         iL1=. trtril1 A
+NB. trtriu         U  * iU  = I         iU=.  trtriu  A
+NB. trtriu1        U1 * iU1 = I         iU1=. trtriu1 A
 NB.
 NB. Description:
 NB.   Inverse triangular matrix
 NB. where:
-NB.   A     - n×n-matrix, containing triangular matrix
-NB.   U     - n×n upper triangular matrix
-NB.   U1    - n×n unit upper triangular matrix (diagonal is
-NB.           not saved)
-NB.   L     - n×n lower triangular matrix
-NB.   L1    - n×n unit lower triangular matrix (diagonal is
-NB.           not saved)
-NB.   invU  - n×n upper triangular matrix, inversion of U
-NB.   invU1 - n×n unit upper triangular matrix (diagonal is
-NB.           not saved), inversion of U1
-NB.   invL  - n×n lower triangular matrix, inversion of L
-NB.   invL1 - n×n unit lower triangular matrix (diagonal is
-NB.           not saved), inversion of L1
-NB.   n     ≥ 0
+NB.   A   - n×n-matrix, containing triangular matrix
+NB.   U   - n×n upper triangular matrix
+NB.   U1  - n×n unit upper triangular matrix (diagonal is not
+NB.         saved)
+NB.   L   - n×n lower triangular matrix
+NB.   L1  - n×n unit lower triangular matrix (diagonal is not
+NB.         saved)
+NB.   iU  - n×n upper triangular matrix, inversion of U
+NB.   iU1 - n×n unit upper triangular matrix (diagonal is not
+NB.         saved), inversion of U1
+NB.   iL  - n×n lower triangular matrix, inversion of L
+NB.   iL1 - n×n unit lower triangular matrix (diagonal is not
+NB.         saved), inversion of L1
+NB.   n   ≥ 0
+NB.
+NB. Algorithm for trtriu:
+NB.   In: A
+NB.   Out: iU
+NB.   0) if 1 < # A
+NB.      0.0) then
+NB.           0.0.0) form (#A)-vector of zeros:
+NB.                    fret=. (#A) $ 0
+NB.           0.0.1) find splitting edge:
+NB.                    k=. >. -: # A
+NB.           0.0.2) mark intervals:
+NB.                    fret=. 1 (0,k)} fret
+NB.           0.0.3) cut A by fret to block matrix bA:
+NB.                    bA = (  A00  A01  )  k
+NB.                         (  A10  A11  )  n-k
+NB.                            k    n-k
+NB.           0.0.4) apply trtriu itself to A00 and A11:
+NB.                    iA00=. $: A00
+NB.                    iA11=. $: A11
+NB.           0.0.5) replace A00 and A11 by iA00 and iA11,
+NB.                  respectively, in bA
+NB.           0.0.6) inverse A01:
+NB.                    iA01=. - iA00 mp A01 mp iA11
+NB.           0.0.7) replace A01 by iA01 in bA
+NB.           0.0.8) assemble iA from block matrix:
+NB.                    iA=. icut bA
+NB.     0.1) else return reciprocal:
+NB.            iA=. % A
 NB.
 NB. Notes:
-NB. - models LAPACK's xTRTRI, but uses recursive not
+NB. - models LAPACK's xTRTRI, but uses blocked not
 NB.   partitioned algorithm
 NB. - opposite triangle is not referenced
 NB. - unit diagonal is not referenced
+NB.
+NB. References:
+NB. [1] JWiki/Essays/Triangular Matrix Inverse
+NB.     Roger Hui
+NB.     http://www.jsoftware.com/jwiki/Essays/Triangular%20Matrix%20Inverse
+NB.
+NB. TODO:
+NB. - fret would be sparse
 
-trtril=: 3 : 0
-  n=. # y
-  if. n > 1 do.
-    k=. >. -: n
-    Ta=. (2 # k) }. y
-    invTa=. trtril Ta
-    invTb=. trtril (2 # k) {. y
-    Ac=. (k ,~ (k - n)) {. y
-    invAc=. - invTa mp Ac mp invTb
-    (invTa ,.~ invAc) ( 0 append~) invTb
-  else.
-    % y
-  end.
-)
-
-trtril1=: 3 : 0
-  n=. # y
-  if. n > 1 do.
-    k=. >. -: n
-    Ta=. (2 # k) }. y
-    invTa=. trtril1 Ta
-    invTb=. trtril1 (2 # k) {. y
-    Ac=. (k ,~ (k - n)) {. y
-    invAc=. - invTa mp Ac mp invTb
-    (invTa ,.~ invAc) ( 0 append~) invTb
-  else.
-    (1:"0) y
-  end.
-)
-
-trtriu=: 3 : 0
-  n=. # y
-  if. n > 1 do.
-    k=. >. -: n
-    Ta=. (2 # k) {. y
-    invTa=. trtriu Ta
-    invTb=. trtriu (2 # k) }. y
-    Ac=. (k , (k - n)) {. y
-    invAc=. - invTa mp Ac mp invTb
-    (invTa ,. invAc) (_1 append) invTb
-  else.
-    % y
-  end.
-)
-
-trtriu1=: 3 : 0
-  n=. # y
-  if. n > 1 do.
-    k=. >. -: n
-    Ta=. (2 # k) {. y
-    invTa=. trtriu1 Ta
-    invTb=. trtriu1 (2 # k) }. y
-    Ac=. (k , (k - n)) {. y
-    invAc=. - invTa mp Ac mp invTb
-    (invTa ,. invAc) (_1 append) invTb
-  else.
-    (1:"0) y
-  end.
-)
+trtril=:  %     `(icut@((2:}~ <@:-@((1 1 {:: ]) mp (1 0 {:: ]) mp 0 0 {:: ]))@(<@$:`<`<;.1~ ;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1 < #)
+trtril1=: (1:"0)`(icut@((2:}~ <@:-@((1 1 {:: ]) mp (1 0 {:: ]) mp 0 0 {:: ]))@(<@$:`<`<;.1~ ;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1 < #)
+trtriu=:  %     `(icut@((1:}~ <@:-@((0 0 {:: ]) mp (0 1 {:: ]) mp 1 1 {:: ]))@(<@$:`<`<;.1~ ;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1 < #)
+trtriu1=: (1:"0)`(icut@((1:}~ <@:-@((0 0 {:: ]) mp (0 1 {:: ]) mp 1 1 {:: ]))@(<@$:`<`<;.1~ ;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1 < #)
 
 NB. ---------------------------------------------------------
 NB. Verb:      Factorization used:  Syntax:

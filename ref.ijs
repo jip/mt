@@ -84,7 +84,7 @@ NB. - larfp models LAPACK's xLARFP
 NB. - larfp provides τ=2 ↔ ||x||_2 ≈ 0
 NB. - not zeroing v in larfp in case τ=2 relies on fact:
 NB.   'comparison tolerance tol>0'; otherwise (tol=0) x
-NB.   should be filled by zeros
+NB.   would be filled by zeros
 
 larfg=: 4 : 0
   'ioalpha iotau'=. x

@@ -208,7 +208,7 @@ NB.             ebin=. }. ebin
 NB.             bout := bout , b[k]
 NB.      then rewrite b by bout
 NB.   3) prepare input for iterations:
-NB.        bdein=. ((}: b) ,. (}: d) ,. e)
+NB.        bdein=. ((}: b) ,. (}: d) ,. conj(e))
 NB.        bout := b[n-1] / d[n-1]
 NB.   4) start iterations k=n-2:0 by Power (^:)
 NB.      on (bdein;bout) :
@@ -218,7 +218,7 @@ NB.      4.1) extract b[k-1] produced during previous
 NB.           (k-1)-th iteration:
 NB.             b[k+1] := bout[0]
 NB.      4.2) find new b[k]:
-NB.             b[k] := b[k]/d[k] - b[k+1]*conj(e[k])
+NB.             b[k] := b[k]/d[k] - b[k+1]*e[k]
 NB.      4.3) recombine (shift splitting edge) for next
 NB.           iteration:
 NB.             bdein=. }: bdein
@@ -239,7 +239,6 @@ NB.
 NB. Notes:
 NB. - 'continued fractions' approach is useless here since
 NB.   infix scan is non-consequtive
-NB. - L1 and D should be sparse
 NB. - implements LAPACK's xPTTRS
 
 pttrsax=: 4 : 0
@@ -247,10 +246,10 @@ pttrsax=: 4 : 0
   e=. _1 diag L1
   d=. diag D
   y=. _1 {:: ((}.@[ ; ] , (({.@[) ((}.@[) - ]) ((0 ({,) [) * {:@]))) & >/) ^: (# e) (e ((,. }.) ; 1 {. ]) y)
-  y=. _1 {:: (((}:@[) ; (({:@[) (((_2}.[)%(_2{[))-({:@[*])) ({.@])) , ]) & >/) ^: (# e) ((e ,.~ y (,. & }:) d) ; (y (% & (_1&{.)) d))
+  y=. _1 {:: (((}:@[) ; (({:@[) (((_2}.[)%(_2{[))-({:@[*])) ({.@])) , ]) & >/) ^: (# e) (((+e) ,.~ y (,. & }:) d) ; (y (% & (_1&{.)) d))
 )
 
-pttrsatx+; + @ (pttrsax +)
+pttrsatx=: + @ (pttrsax +)
 
 NB. =========================================================
 NB. Test suite

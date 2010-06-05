@@ -24,7 +24,7 @@ NB.          matrix
 NB. hesv     Solve system A*x=b, where A is a Hermitian
 NB.          matrix
 
-coclass 'pjlap'
+coclass 'mt'
 
 NB. =========================================================
 NB. Local verbs
@@ -35,6 +35,7 @@ getrs=: 2 : 0
   for_i. u i. n do.
     x=. (((i { x) - ((i { y) (mp & (i & v)) x)) % ((n1 * i) ({ ,) y)) i } x
   end.
+  x
 )
 
 getrs1=: 2 : 0
@@ -43,6 +44,7 @@ getrs1=: 2 : 0
   for_i. u i. n do.
     x=. ((i { x) - ((i { y) (mp & (i & v)) x)) i } x
   end.
+  x
 )
 
 NB. =========================================================
@@ -93,7 +95,7 @@ NB.
 NB. TODO:
 NB. - transform to adverb: ({ getrsu) to process (U*X=B) and ({"1 getrsu) to process (X*L=B)
 
-getrsux=: (|. getrs ((}.~ >:)~)) " 2 2      NB. equivalent to both (x %. y) or (x mp 128!:1 y)
+getrsux=: (|. getrs ((}.~ >:)~)) " 2 2      NB. equivalent to (x mp 128!:1 y)
 getrslx=: (] getrs {.) " 2 2
 getrsxl=: getrsux &. |:
 getrsxu=: getrslx &. |:
@@ -213,35 +215,35 @@ NB. =========================================================
 Note 'trs testing and timing'
    n=. 10
    A=. ? (2 $ n) $ 10
-   LU=. 1 {:: getrf_pjlap_ A
+   LU=. 1 {:: getrf_mt_ A
    x=. ? n $ 10
    U=. utri_jlapack_ LU
    bU=. U mp x
    L=. (sltri_jlapack_ LU) + (idmat_jlapack_ n)
    bL=. L mp x
    b=. A mp x
-   +/ | x - bU getrsu_pjlap_ U
+   +/ | x - bU getrsu_mt_ U
 1.98175e_14
-   +/ | x - bL getrsl1_pjlap_ L
+   +/ | x - bL getrsl1_mt_ L
 1.77636e_15
-   +/ | x - b gesv_pjlap_ A
+   +/ | x - b gesv_mt_ A
 5.86198e_14
-   +/ | x - bU trtrsu_pjlap_ trU
+   +/ | x - bU trtrsu_mt_ trU
 1.98175e_14
 
    ts=: 6!:2, 7!:2@]
-   L1000=. (sltri_jlapack_ 1 {:: getrf_pjlap_ 0.1 * ? 1000 1000 $ 100) + (idmat_jlapack_ 1000)
-   U1000=. utri_jlapack_ 1 {:: getrf_pjlap_ 0.1 * ? 1000 1000 $ 100
-   U1000tr=. ut2tr_pjlap_ U1000
+   L1000=. (sltri_jlapack_ 1 {:: getrf_mt_ 0.1 * ? 1000 1000 $ 100) + (idmat_jlapack_ 1000)
+   U1000=. utri_jlapack_ 1 {:: getrf_mt_ 0.1 * ? 1000 1000 $ 100
+   U1000tr=. ut2tr_mt_ U1000
    x1000=. 0.1 * ? 1000 $ 100
    bU1000=. U1000 mp x1000
    bL1000=. L1000 mp x1000
-   10 (ts & >) 'bU1000 getrsu_pjlap_ U1000';'bL1000 getrsl1_pjlap_ L1000';'bU1000 trtrsu_pjlap_ U1000tr';'(128!:1 U1000) mp bU1000'
+   10 (ts & >) 'bU1000 getrsu_mt_ U1000';'bL1000 getrsl1_mt_ L1000';'bU1000 trtrsu_mt_ U1000tr';'(128!:1 U1000) mp bU1000'
 0.0423727     41984
 0.0347479     41600
 0.0489226     34176
   1.07046 3.35562e7
-   ts 'xx1000=. B1000 gesv_pjlap_ A1000'
+   ts 'xx1000=. B1000 gesv_mt_ A1000'
 89.0654 3.78045e7
 )
 

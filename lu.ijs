@@ -3,10 +3,11 @@ NB. LU factorization
 NB.
 NB. getrf  LU factorization of a general matrix
 
-coclass 'pjlap'
+coclass 'mt'
 
 NB. =========================================================
 NB. Local verbs
+
 
 NB. =========================================================
 NB. Interface verbs
@@ -85,29 +86,32 @@ getf2fix=: (3 : 0) " 2
   mkcp=. < @ (, ` (, @ ]) @. =)          NB. make cycle permutation from x and y
   si2i=. ] + (i. @ -)                    NB. y (y+1) ... (x-1)
 
-  mn=. <./ 'm n'=. $ y
-  n1=. >: n
-  p=. iosr=. i. m
+  mn=. 'm n'=. $ y
+  p=. i. m
 
-  for_i. i. mn do.
-    c=. i ([ }. ({"1)) y                 NB. col on and under diag
-    ip=. i + {. \: | c                   NB. IO max of c abs values
-    cp=. i mkcp ip                       NB. new cycle permutation (no protection against 'all zeros' case)
-NB. smoutput 'swap rows: ' ; (i , ip) ; '$p' ; ($p) ; 'c' ; ($c) ; c
-    p=. cp C. p                          NB. accumulate permutations
-    y=. cp C. y                          NB. swap rows
-    iosr=. }. iosr
-    ios2=. < iosr ; (n si2i >: i)
-    c=. (}. % {.) i ([ }. ({"1)) y
-NB. c=. (}. % {.) co=. i ([ }. ({"1)) y
-NB.co=. }. co
-    y=. c (< iosr ; i) } y
-NB.zz=. (ios2 { y)
-    y=. ((ios2 { y) - c */ (i (>:@[ }. {) y)) ios2 } y
-NB.smoutput 'old c' ; co ; 'c' ; c ; 'A22 before upd' ; ($ zz) ; zz ; 'after' ; ($ ios2 { y) ; (ios2 { y)
+  for_j. i. m <. n do.
+    c2=. j ([ }. ({"1)) y                 NB. col on and under diag
+    jp=. j + jp0=. {. \: | c2                   NB. IO max of c2 abs values
+NB.smoutput 'getf2fix' ; 'j,jp' ; (j , jp) ; 'p' ; ($p) ; (,.p) ; 'c2' ; ($c2) ; (,.c2) ; 'y' ; ($y) ; y
+    if. jp0 do.
+      p=. (< jp , j) C. p                NB. accumulate permutations
+      y=. (< jp , j) C. y                NB. swap j-th and jp-th rows of y
+      c2=. (< 0 , jp0) C. c2             NB. swap j-th and jp-th items of c
+NB.smoutput 'jp0≠0' ; 'p' ; ($p) ; p ; 'new c2' ; ($c2) ; c2 ; 'new y' ; ($y) ; y
+    end.
+    iosr=. m <@(si2i >:) j
+    iosc=. n <@(si2i >:) j
+    c2=. (}. % {.) c2
+NB.c2o=. }. c2
+NB.c2=. c2o % {. c2
+NB.smoutput 'p' ; ($p) ; (,.p) ; 'old c2' ; ($c2o) ; (,.c2o) ; 'c2' ; ($c2) ; (,.c2) ; 'iosr' ; ($iosr) ; iosr ; 'iosc' ; iosc ; 'y' ; ($y) ; y
+    y=. c2 (< iosr , < j) } y
+NB.smoutput '((>: j) - mn)' ; (((>: j) - mn)) ; 'y' ; ($y) ; y
+    y=. ((((>: j) - mn) {. y) - c2 */ (j (>:@[ }. {) y)) (< iosr , iosc) } y
+NB.smoutput 'y' ; ($y) ; y
   end.
 
-  p ; y 
+  p ; y
 )
 
 NB. recursive blocked
@@ -163,6 +167,76 @@ jLU=: 3 : 0
  end.
 )
 
+NB. unblocked version
+NB. partial (rows) pivoting
+NB. Crout version of the algorithm
+
+NB. NETLIB slus.f
+
+sluc=: (3 : 0) " 2
+  si2i=. ] + (i. @ -)                    NB. y (y+1) ... (x-1)
+
+  mn=. <./ 'm n'=. $ y
+  p=. i. m
+
+  for_j. i. mn do.
+    c=. j ({"1) y                        NB. take j-th col
+    c2=. (j }. c) - (((j - m) , j) {. y) mp (j {. c)        NB. compute updated c's tail
+    jp=. j + jp0=. {. \: | c2            NB. find pivot
+NB.smoutput 'SLUC' ; 'c' ; ($c) ; c ; 'c2' ; ($c2) ; c2 ; 'p' ; ($p) ; p ; 'jp' ; jp
+    if. jp0 do.
+      p=. (< jp , j) C. p                NB. accumulate permutations
+      y=. (< jp , j) C. y                NB. swap j-th and jp-th rows of y
+      c2=. (< 0 , jp0) C. c2             NB. swap j-th and jp-th items of c
+NB.smoutput 'jp0≠0' ; 'p' ; ($p) ; p ; 'new c2' ; ($c2) ; c2 ; 'new y' ; ($y) ; y
+    end.
+    c2=. ({. 0 } (% {.)) c2              NB. scale c2's tail by its head
+    y=. c2 (< (m si2i j) ; j) } y        NB. write back c2
+NB.smoutput 'new c2' ; ($c2) ; c2 ; 'new y' ; ($y) ; y
+    r=. j { y
+    y=. (((>: j) }. r) - (j {. r) mp (j , (>: j - n)) {. y) (< j ; (n si2i >: j)) } y  NB. write back r2
+NB.smoutput 'r' ; ($r) ; r ; 'new y' ; ($y) ; y
+  end.
+
+  p ; y
+)
+
+slubc=: (3 : 0) " 2
+  si2i=. ] + (i. @ -)                    NB. y (y+1) ... (x-1)
+  mkcp=. < @ (, ` (, @ ]) @. =) " 1 1    NB. make cycle permutation from x and y
+  ipiv2scrp=. ((}: ^: ({. -: {:)) &. >)@(<"1)@(i.@# ,. <:)  NB. pivot indices to standard cycle representation of the permutatio
+  invperm=. C.~ ipiv2scrp                NB. inverse permutation of x by pivot indices from y
+
+  nb=. 2 NB. 32                                NB. choosed experimentally
+  mn=. <./ 'm n'=. $ y
+  p=. i. m
+
+  for_j. range 0 , (mn - 1) , nb do.
+    jb=. nb <. mn - j
+    iosc=. (_1 , j) ,: ((m - j) , jb)
+    iosa=. (j - m) , j
+    iosb=. (0 , j) ,: (j , jb)
+    'p2 c'=. sluc ((iosc & (] ;. 0)) - (iosa & {.) mp (iosb & (] ;. 0))) y  NB. update (c←c-a*b), then LU-factorize diagonal and subdiagonal blocks c
+    y=. (((j + jb) si2i j) mkcp (j + jb {. p2)) C. y   NB. apply permutations for diagonal block and shift from c frame to y frame
+    iosp2=. m si2i j                     NB. where p2 will modify p
+    p=. (p2 { (iosp2 { p)) iosp2 } p     NB. adjust p by p2
+    iosr=. m si2i j
+    iosc=. (j + jb) si2i j
+    y=. c (< iosr ; iosc) } y            NB. write back diagonal and subdiagonal blocks and undo p2 permutation in current column block
+    iosc=. (j , _1) ,: (jb , (n - (j + jb)))
+    iosa=. (j , 0) ,: (jb , j)
+    iosb=. j , ((j + jb) - n)
+    c=. ((iosc & (] ;. 0)) - (iosa & (] ;. 0)) mp (iosb & {.)) y  NB. update (c←c-a*b)
+    c=. c getrslx1 ((,.~ j , jb) (] ;. 0) y)                      NB. solve (L*x=c)
+    iosr=. (j + jb) si2i j
+    iosc=. n si2i (j + jb)
+    y=. c (< iosr ; iosc) } y            NB. write back x
+  end.
+
+  p ; y
+)
+
+
 NB. =========================================================
 NB. Test suite
 
@@ -190,10 +264,14 @@ tgetrf=: 3 : 0
   smoutput 'getf2fix (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
   'p LU'=. rgetrf y
   smoutput 'rgetrf (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
+  'p LU'=. sluc y
+  smoutput 'sluc (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
+  'p LU'=. slubc y
+  smoutput 'slubc (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
   'L U p'=. getrf_jlapack_ y
   smoutput 'LAPACK getrf (match error): ' , ": y (-: , error) p invperm_jlapack_~ L mp U
-  'p L U'=. jLU y
-  smoutput 'jwiki LU (match error): ' , ": y (-: , error) p {"1 L mp U
+NB.  'p L U'=. jLU y
+NB.  smoutput 'jwiki LU (match error): ' , ": y (-: , error) p {"1 L mp U
 )
 
 NB. measure time and space
@@ -201,7 +279,7 @@ NB.   mgetrf mat
 
 mgetrf=: 3 : 0
   ts=. 6!:2, 7!:2@]
-  ts & > 'pLU=. getf2 y';'pLU=. getf2fix y';'pLU=. rgetrf y';'LUp=. getrf_jlapack_ y';'pLU=. jLU y'
+  ts & > 'pLU=. getf2 y';'pLU=. getf2fix y';'pLU=. rgetrf y';'pLU=. sluc y';'pLU=. slubc y';'LUp=. getrf_jlapack_ y' NB.;'pLU=. jLU y'
 )
 
 NB. test and measure interface verbs
@@ -210,10 +288,10 @@ NB.   testgetrf n
 
 testgetrf=: 3 : 0
   y=. 2 {. y , {: y    NB. n->(n,n) , (m,n)->(m,n)
-  (tgetrf ] mgetrf) 0.1 * ? y $ 100
+  (tgetrf ] mgetrf) A=: 0.1 * ? y $ 100
 )
 
-NB.    testgetrf_pjlap_ 300 200
+NB.    testgetrf_mt_ 300 200
 NB. getrf (match error): 0 66.3405
 NB. getf2r (match error): 0 1.91554e_5
 NB. rgetrf (match error): 0 1.91554e_5
@@ -222,9 +300,9 @@ NB.  1.26323 2.38477e6
 NB. 0.622143 1.06835e6
 NB. 0.617834 1.06963e6
 NB. 0.076975   2.624e6
-NB.    testgetrf_pjlap_ 300 500
+NB.    testgetrf_mt_ 300 500
 NB. |NaN error: getf2r
 NB. |   y=.(((i((>:@[)}.({"1))y)-l)    %((n1*i)({,)y))(<(m si2i>:i);i)}y
-NB.    testgetrf_pjlap_ 500 300
+NB.    testgetrf_mt_ 500 300
 NB. |NaN error: getf2r
 NB. |   y=.(((i((>:@[)}.({"1))y)-l)    %((n1*i)({,)y))(<(m si2i>:i);i)}y

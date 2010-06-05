@@ -67,14 +67,14 @@ NB. Synax:
 NB.   [tplot[;trows[;tcols]]] timeplot [x;]data1[;data2[;...]]
 NB. where
 NB.   tplot - string, optional title for entire plot
-NB.   trows - string, optional title for rows, any one of:
+NB.   trows - optional title for rows, any one of:
 NB.           s            - string, prefix for row titles
 NB.           s1;s2;...;sR - boxed strings, row titles
-NB.   tcols - string, optional title for cols, any one of:
+NB.   tcols - optional title for cols, any one of:
 NB.           s            - string, prefix for column titles
 NB.           s1;s2;...;sC - boxed strings, column titles
 NB.   x     - N-vector, optional x tics, default is
-NB.           (i. @ (# @ (0 & {:: ^: L.))) data1
+NB.             (i. # data1)
 NB.   datai - N-by-R-by-C report, data to plot in R-by-C
 NB.           multi-plot. If more than one report is
 NB.           supplied, then all vectors ((<r,c) {"2 datai)
@@ -85,7 +85,7 @@ NB.   C >= 0
 NB.   N >= 0
 NB.
 NB. Applications:
-NB.   ('LTI output';(<'1st output ch.';'2nd output ch.');'Input ch. #') timeplot t;Y1;Y2;Y3
+NB.   ('LTI resp.';(<'1st output ch.';'2nd output ch.');'Input ch. #') timeplot t;Y1;Y2;Y3
 NB.   (<'LTI #1';'LTI #2') (timeplot & >) (< t1;X11;X12;X13) , (< t2;Y21;Y22)
 NB.
 NB. TODO:
@@ -98,6 +98,7 @@ timeplot=: (('Plot';'Out #';'In #')&$: :(4 : 0)) " 1 _
 NB. ---------------------------------------------------------
 NB. rndmat
 NB. Generate rectangular random matrix of values in range [0,10)
+NB.
 NB. Syntax:
 NB.   mat=. rndmat size
 NB.   mat=. rndmat rows cols
@@ -106,7 +107,9 @@ rndmat=: 0.1 * (? @ (100 $~ ({. , {:)))
 
 NB. ---------------------------------------------------------
 NB. rndmat_neig
-NB. Generate square random matrix with negative eigenvalues in range [-10,0)
+NB. Generate square random matrix with negative eigenvalues
+NB. in range [-10,0)
+NB.
 NB. Syntax:
 NB.   mat=. rndmat_neig size
 

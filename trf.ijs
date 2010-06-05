@@ -142,28 +142,8 @@ NB.   - FLOPs:
 NB.   - recursive calls: 3*k*(2^k)-2^(k+1)+3,
 NB.     where k = ⌈log_2(n)⌉
 
-NB. (-: (clean@((/: @ (0&({::))) { ((trl1 mp tru)@(1&({::))))@getrfpl1u)) A
-NB. 'ip L1U'=. getrfpl1u A
-
-getrfpl1u=: 3 : 0
-  'm n'=. sh=. $ y
-  if. 0 e. sh do.
-    (i. m) ; y
-  elseif. 1=n do.
-    dpi=. 0 ios2cp iofmaxm y
-    pi=. dpi C. i. m
-    y=. ((] 0:} %) (0&({,))) dpi C. y                          NB. permute single column (row), scale by head, keep head unscaled
-    pi ; y
-  elseif. do.
-    k=. m (<. >.@-:) n
-    'pia Afa'=. getrfpl1u k {."1 y                             NB. factorize 1st block recursively
-    y=. pia C. k }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (trtrsl1x & (k & {.)) y                         NB. calculate 2nd block's 1st sub-block
-    'pib Afbb'=. getrfpl1u y ((- (mp & Afba)) & (k & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
-    dpib=. (i. k) , (k + pib)                                  NB. apply 2nd block's permutation to 1st block
-    (dpib C. pia) ; ((dpib C. Afa) ,. (Afba , Afbb))           NB. assemble solution
-  end.
-)
+NB. (-: (clean@((/: @ (0&({::))) C."1 ((trl mp tru1)@(1&({::))))@getrflu1p))
+NB. 'ip LU1'=. getrflu1p A
 
 getrflu1p=: 3 : 0
   'm n'=. sh=. $ y
@@ -185,12 +165,38 @@ getrflu1p=: 3 : 0
   end.
 )
 
+NB. (-: (clean@((/: @ (0&({::))) C. ((trl1 mp tru)@(1&({::))))@getrfpl1u)) A
+NB. 'ip L1U'=. getrfpl1u A
+
+getrfpl1u=: 3 : 0
+  'm n'=. sh=. $ y
+  if. 0 e. sh do.
+    (i. m) ; y
+  elseif. 1 = n do.
+    dpi=. 0 ios2cp iofmaxm y
+    pi=. dpi C. i. m
+    y=. ((] 0:} %) (0&({,))) dpi C. y                          NB. permute single column (row), scale by head, keep head unscaled
+    pi ; y
+  elseif. do.
+    k=. m (<. >.@-:) n
+    'pia Afa'=. getrfpl1u k {."1 y                             NB. factorize 1st block recursively
+    y=. pia C. k }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
+    Afba=. Afa (trtrsl1x & (k & {.)) y                         NB. calculate 2nd block's 1st sub-block
+    'pib Afbb'=. getrfpl1u y ((- (mp & Afba)) & (k & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
+    dpib=. (i. k) , (k + pib)                                  NB. apply 2nd block's permutation to 1st block
+    (dpib C. pia) ; ((dpib C. Afa) ,. (Afba , Afbb))           NB. assemble solution
+  end.
+)
+
+NB. (-: (clean@((/: @ (0&({::))) C. (((tru1~ (-~/@$)) mp (trl~ (-~/@$)))@(1&({::))))@getrfpu1l)) A
+NB. 'ip U1L'=. getrfpu1l A
+
 getrfpu1l=: 3 : 0
   'm n'=. sh=. $ y
   if. 0 e. sh do.
     (i. m) ; y
   elseif. 1 = n do.
-    dpi=. (<:m) ii2cp iolmaxm y
+    dpi=. (<:m) ios2cp iolmaxm y
     pi=. dpi C. i. m
     y=. ((] _1:} %) (_1&({,))) dpi C. y                           NB. permute single column (row), scale by head, keep head unscaled
     pi ; y
@@ -205,19 +211,22 @@ getrfpu1l=: 3 : 0
   end.
 )
 
+NB. (-: (clean@((/: @ (0&({::))) C."1 (((tru~ (-~/@$)) mp (trl1~ (-~/@$)))@(1&({::))))@getrful1p)) A
+NB. 'ip UL1'=. getrful1p A
+
 getrful1p=: 3 : 0
   'm n'=. sh=. $ y
   if. 0 e. sh do.
     (i. n) ; y
   elseif. 1 = m do.
-    dpi=. (<:n) ii2cp iolmaxm y
+    dpi=. (<:n) ios2cp iolmaxm y
     pi=. dpi C. i. n
     y=. ((] _1:} %) (_1&({,))) dpi (C."1) y                           NB. permute single column (row), scale by head, keep head unscaled
     pi ; y
   elseif. do.
     k=. n (<. >.@-:) m
-    'pia Afa'=. getrful1p (-k) {."1 y                                 NB. factorize 1st block recursively
-    y=. pia (C."1) (-k) }."1 y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
+    'pia Afa'=. getrful1p (-k) {. y                                 NB. factorize 1st block recursively
+    y=. pia (C."1) (-k) }. y                                        NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
     Afba=. Afa (trtrsxl1 & ((-k) & ({."1))) y                         NB. calculate 2nd block's 1st sub-block
     'pib Afbb'=. getrful1p y ((- (Afba & mp)) & ((-k) & (}."1))) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
     dpib=. pib , ((n-k) + i. k)                                       NB. FIXME! remove 2nd; apply 2nd block's permutation to 1st block
@@ -248,12 +257,12 @@ tgetrf=: 3 : 0
 
   rcond=. ((_."_)`(norm1 con getri) @. (=/@$)) y  NB. meaninigful for square matrices only
 
-  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_~      (2 & {::) ))) % (FP_EPS*((norm1*c)@(1 {:: [))))))) y NB. berr := ||P*L1*U - A ||/(ε*||A||*n)
+  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- (((mp & >)/ @ }:) invperm_jlapack_~      (2 & {::) ))) % (FP_EPS*((norm1*c)@[)))))) y NB. berr := ||P*L1*U - A ||/(ε*||A||*n)
 
-  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::))  C.    ((trl1 mp tru )@(1 & {::))))) % (FP_EPS*((norm1*c)@(1 {:: [))))))) y NB. berr := ||P*L1*U - A ||/(ε*||A||*n)
-  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) (C."1) ((trl  mp tru1)@(1 & {::))))) % (FP_EPS*((norm1*#)@(1 {:: [))))))) y NB. berr := ||L*U1*P - A ||/(ε*||A||*m)
-  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::))  C.    ((tru1 mp trl )@(1 & {::))))) % (FP_EPS*((norm1*c)@(1 {:: [))))))) y NB. berr := ||P*U1*L - A ||/(ε*||A||*n)
-  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) (C."1) ((tru  mp trl1)@(1 & {::))))) % (FP_EPS*((norm1*#)@(1 {:: [))))))) y NB. berr := ||U*L1*P - A ||/(ε*||A||*m)
+  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C."1 (( trl            mp  tru1          )@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y NB. berr := ||L*U1*P - A ||/(ε*||A||*m)
+  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C.   (( trl1           mp  tru           )@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y NB. berr := ||P*L1*U - A ||/(ε*||A||*n)
+  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C.   (((tru1~ (-~/@$)) mp (trl ~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*c)@[)))))) y NB. berr := ||P*U1*L - A ||/(ε*||A||*n)
+  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((/: @ (0 & {::)) C."1 (((tru ~ (-~/@$)) mp (trl1~ (-~/@$)))@(1 & {::))))) % (FP_EPS*((norm1*#)@[)))))) y NB. berr := ||U*L1*P - A ||/(ε*||A||*m)
 
   EMPTY
 )

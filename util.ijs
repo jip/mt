@@ -50,13 +50,13 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-sgn=: 0 & (<: - >)                 NB. if y<0 then -1 else 1 endif
-condneg=: -@]^:(0>[)               NB. if x<0 then -y else y endif
-copysign=: condneg |               NB. if x<0 then -|y| else |y| endif
+sgn=: 0&(<: - >)                                        NB. if y<0 then -1 else 1 endif
+condneg=: -@]^:(0>[)                                    NB. if x<0 then -y else y endif
+copysign=: -@]^:((=-)&*)                                NB. if x<0 then -|y| else |y| endif
 
 fmtlog=: '%-25S %-12g %-12g %-12g %-12g %12d' vsprintf  NB. Format log string
 
-gi=: 2 : '(n{m)`:6'                NB. Conj. to evoke n-th verb from gerund m: m[n]
+gi=: 2 : '(n{m)`:6'                                     NB. Conj. to evoke n-th verb from gerund m: m[n]
 
 NB. ---------------------------------------------------------
 NB. ms

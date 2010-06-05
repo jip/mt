@@ -96,8 +96,13 @@ NB.   s    - integer, size of lios, if s<0 then lios's order
 NB.          is reversed
 NB.   d    - optional non-negative integer, delta of lios,
 NB.          default is 1
-NB.   lios - |s|-vector of integers, lIOS of solid part of
-NB.          diagonal
+NB.   lios - |s|-vector of integers
+NB.
+NB. Examples:
+NB.    2 dhs2lios 4 3                 2 dhs2lios _4 3
+NB. 4 6 8                          _8 _6 _4
+NB.    2 dhs2lios 4 _3                2 dhs2lios _4 _3
+NB. 8 6 4                          _4 _6 _8
 NB.
 NB. Notes:
 NB. - monadic case models rIOS in (u;.0) with following

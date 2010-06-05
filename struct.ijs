@@ -105,9 +105,9 @@ NB.   bs   - k×2-matrix of (b)s, or single b, or d, defines
 NB.          [anti-]bands to stencil
 NB.   b    - 2-vector (h,t), defines one [anti-]band to
 NB.          stencil
-NB.   h    - integer in range [-∞,t], lIO heading
+NB.   h    - integer in range [-∞,t], lIO head
 NB.          [anti-]diagonal
-NB.   t    - integer in range [h,+∞], lIO tailing
+NB.   t    - integer in range [h,+∞], lIO tail
 NB.          [anti-]diagonal
 NB.   d    - integer in range [-∞,+∞], lIO one
 NB.          [anti-]diagonal to stencil
@@ -137,9 +137,9 @@ NB.   A    - m×n-matrix
 NB.   s    - m×n-matrix, boolean, having 1s on [anti-]band[s]
 NB.   b    - 2-vector (h,t), defines one [anti-]band to
 NB.          stencil
-NB.   h    - integer in range [-∞,t], defines lIO heading
+NB.   h    - integer in range [-∞,t], defines lIO head
 NB.          [anti-]diagonal
-NB.   t    - integer in range [h,+∞], defines lIO tailing
+NB.   t    - integer in range [h,+∞], defines lIO tail
 NB.          [anti-]diagonal
 NB.   d    - integer in range [-∞,+∞], defines one
 NB.          [anti-]diagonal to stencil
@@ -210,21 +210,21 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Misc.
 
-c=: {:!.1 @ $          NB. Columns in scalar or array
+c=: {:!.1 @ $      NB. Columns in scalar or array
 
-trace=: +/ @ diag      NB. Matrix trace
+trace=: +/ @ diag  NB. Matrix trace
 
-ct=: + @      |:       NB. Conjugate transpose
-cp=: + @ |. @ |: @ |.  NB. Conjugate pertranspose
+ct=: + @ |:        NB. Conjugate transpose
+cp=: |. @ ct @ |.  NB. Conjugate pertranspose
 
-sp=: [ C."1 C.         NB. Symmetric permutation
+sp=: [ C."1 C.     NB. Symmetric permutation
 
-p2P=:  {    =          NB. Transform permutation vector to
-                       NB.   permutation matrix
-ip2P=: {^:_1=          NB. Transform inversed permutation
-                       NB.   vector to permutation matrix, or
-                       NB.   permutation vector to inversed
-                       NB.   permutation matrix
+p2P=:  {    =      NB. Transform permutation vector to
+                   NB.   permutation matrix
+ip2P=: {^:_1=      NB. Transform inversed permutation vector
+                   NB.   to permutation matrix, or
+                   NB.   permutation vector to inversed
+                   NB.   permutation matrix
 
 NB. ---------------------------------------------------------
 NB. icut
@@ -344,6 +344,14 @@ NB. Notes:
 NB. - 1-rank arrays (i.e. vectors) are also acceptable
 
 append=: 1 : '(,`([,({."1~ ((-^:m)@c))~)`(({."1~ ((-^:m)@c)),]) @. ((*@-)&c)) & (,: ^: (2 > (#@$)))'
+
+NB. USEME:
+appendl=: , `([, (({."1~    c )~))`(({."1~    c ), ]) @. (*@-&c)
+appendr=: , `([, (({."1~ (-@c))~))`(({."1~ (-@c)), ]) @. (*@-&c)
+
+stitcht=: ,.`([,.(({.  ~    # )~))`(({.  ~    # ),.]) @. (*@-&#)
+stitchb=: ,.`([,.(({.  ~ (-@#))~))`(({.  ~ (-@#)),.]) @. (*@-&#)
+
 
 NB. ---------------------------------------------------------
 NB. stitch

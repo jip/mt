@@ -113,7 +113,7 @@ NB.   Xh   - same shape as Bh, the solution
 NB.   ip   - n-vector, full inversed permutation of A
 NB.   P    - n×n-matrix, full permutation of A
 NB.   L1   - n×n-matrix, unit lower triangular
-NB.   T    - n×n-matrix, Hermitian (symmetric) 3-diagonal
+NB.   T    - n×n-matrix, Hermitian (symmetric) tridiagonal
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:

@@ -250,18 +250,18 @@ NB.   L1 - n×n-matrix, unit lower triangular, as returned by
 NB.        hetrfpl
 NB.   U1 - n×n-matrix, unit upper triangular, as returned by
 NB.        hetrfpu
-NB.   T  - n×n-matrix, Hermitian (symmetric) 3-diagonal, as
+NB.   T  - n×n-matrix, Hermitian (symmetric) tridiagonal, as
 NB.        returned by hetrfpx
 NB.   iA - n×n-matrix, inversion of A
 NB.   P  - n×n-matrix, full permutation of A
 NB.   A  - n×n-matrix to inverse, Hermitian (symmetric)
 NB.
 NB. Notes:
-NB. - models LAPACK's xHETRI, but uses Aasen factorization
-NB.   instead of Bunch-Kaufman one
+NB. - equivalent to LAPACK's xHETRI, but uses another
+NB.   factorization, see hetrfx
 
-hetripl=: (0 & {::) sp (httril @ httrfl @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))  NB. IMPLEMENTME
-hetripu=: (0 & {::) sp (httril @ httrfl @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))  NB. IMPLEMENTME
+hetripl=: (0 & {::) sp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))  NB. IMPLEMENTME
+hetripu=: (0 & {::) sp (pttriu @ (2 & {::)) ((ct @ ]) mp mp) (trtriu1 @ (1 & {::))  NB. IMPLEMENTME
 
 NB. ---------------------------------------------------------
 NB. Verb:     Factorization used:          Syntax:

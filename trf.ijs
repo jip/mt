@@ -32,250 +32,455 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFNB=: 3  NB. block size limit, >0
-
-NB. ---------------------------------------------------------
-NB. hetf2pl
-NB.
-NB. Description:
-NB.   Partial triangular factorization with full pivoting of
-NB.   a Hermitian (symmetric) matrix:
-NB.     P * L1 * T * L1^H * P^_1 = A
-NB.   by non-blocked version of Aasen's algorithm
-NB.
-NB. Syntax:
-NB.     'ip L1 T'=. (l1 ; nb) hetf2pl A
-NB. where
-NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
-NB.   l1  - n-vector, 1st column of L1
-NB.   nb  > 0, columns quantity to factorize
-NB.   ip  - n-vector, full inversed permutation of A
-NB.   L1  - n×n-matrix, unit lower triangular
-NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
-NB.   P   - n×n-matrix, full permutation of A
-NB.
-NB. Assertion:
-NB.   P -: %. iP
-NB.   P -: |: iP
-NB.   P -: ip2P ip
-NB.   A -: clean p sp T (] mp (mp ct)) L1
-NB.   A -: clean P (mp mp |:@[) T (] mp (mp ct)) L1
-NB. where
-NB.   'ip L1 T'=. hetf2pl A
-NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
-NB.
-NB. References:
-NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
-NB.     Partitioned triangular tridiagonalization.
-NB.     26 September 2007.
-NB.     http://www.cs.cas.cz/miro/rst08.pdf
-NB.
-NB. TODO:
-NB. - T would be sparse
-
-appendl=: , `([, (({."1~    c )~))`(({."1~    c ), ]) @. (*@-&c)
-appendr=: , `([, (({."1~ (-@c))~))`(({."1~ (-@c)), ]) @. (*@-&c)
-
-stitcht=: ,.`([,.(({.  ~    # )~))`(({.  ~    # ),.]) @. (*@-&#)
-stitchb=: ,.`([,.(({.  ~ (-@#))~))`(({.  ~ (-@#)),.]) @. (*@-&#)
+TRFNB=: 64  NB. block size limit, >0
 
 NB. ---------------------------------------------------------
 NB. lahefpl
 NB.
 NB. Description:
-NB.   Partial factorization of a Hermitian (symmetric)
-NB.   matrix:
-NB.     P * L1 * T * L1^H * P^_1 = P * H * L1^H * P = A
-NB.     ( L00 0 ) * ( T00 0      ) * ( L00^H L10^H ) = ( A00 A10^H ) = P^_1 * A * P
-NB.     ( L10 I )   ( 0   A11upd )   ( 0     I     )   ( A10 A11   )
+NB.   Partial triangular factorization of a Hermitian
+NB.   (symmetric) matrix:
+NB.     subP * subL1 * subT * subL1^H * subP^_1 = subA
 NB.   using the combination of Parlett and Reid, and Aasen
 NB.   methods [1].
 NB.
 NB. Syntax:
-NB.   'ip B lto t0 t1'=. lahefpl (i.n);A;lti;(i.0);(i.0)
+NB.   'ipo B lto t0o t1o'=. lahefpl ipi;subA;lti;t0i;t1i
 NB. where
-NB.   A      - n×n-matrix to factorize, Hermitian (symmetric)
-NB.   lti    - n-vector, is defined as:
-NB.              lti=. ti 0 } li
-NB.   ip     - n-vector of integers, inversed permutation
-NB.   B      - n×n-matrix, contains subL1, subHh and subA11
-NB.   lto    - max(0,n-TRFNB)-vector, aimed to be lti while
-NB.            the next call from hetrfpl
-NB.   t0     - min(TRFNB,n)-vector, float, the main diagonal
-NB.            of T
-NB.   t1     - min(TRFNB,max(0,n-1))-vector, the subdiagonal
-NB.            of T
-NB.   li     - n-vector, the 1st scaled column of subL1
-NB.   ti     - scalar, the max from li before it was scaled,
-NB.            is meaningless for 1st call from hetrfpl
-NB.   subL1  - n×min(TRFNB,n)-matrix, unit lower triangular,
-NB.            the 1st min(TRFNB,n) columns of L1
-NB.   subHh  - min(TRFNB,n)×n-matrix, upper triangular,the 1st
-NB.            min(TRFNB,n) rows of H^H
-NB.   A11upd - max(0,n-TRFNB)×max(0,n-TRFNB), permuted 
-NB.   L1     - n×n-matrix, unit lower triangular
-NB.   H      - n×n-matrix, lower Hessenberg, is defined as:
-NB.              H=. L1 mp T
-NB.   T      - n×n-matrix, Hermitian (symmetric) tridiagonal
+NB.   ipi       -: i. (n-i)
+NB.   subA      - (n-i)×(n-i)-matrix to factorize, Hermitian
+NB.               (symmetric), the bottom right part of A
+NB.   lti       - (n-i)-vector, is defined as:
+NB.                 lti=. ti 0 } li
+NB.   t0i       - i-vector, float, leading elements of main
+NB.               diagonal of T
+NB.   t1i       - max(0,min(i,n-1))-vector, leading elements
+NB.               of subdiagonal of T
+NB.   ipo       - (n-i)-vector of integers, inversed full
+NB.               permutation, corresponding to subP
+NB.   B         - (n-i)×(n-i)-matrix, contains subL110,
+NB.               subH10^H, strict lower triangle of subL100,
+NB.               strict upper triangle of subH00^H, and
+NB.               subA11upd (see layout below)
+NB.   lto       - max(0,n-i-TRFNB)-vector, aimed to be lti at
+NB.               the next call from hetrfpl
+NB.   t0o       - min(n,i+TRFNB)-vector, float, leading
+NB.               elements of main diagonal of T
+NB.   t1o       - min(n-1,i+TRFNB)-vector, leading elements
+NB.               of subdiagonal of T
+NB.   li        - (n-i)-vector, the 1st scaled column of
+NB.               subL1, having 1 in the 1st element
+NB.   ti        - scalar, the max from li before it was
+NB.               scaled, can be any value when i=0
+NB.   subL100   - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, unit
+NB.               lower triangular, top left part of subL1
+NB.   subL110   - max(0,n-i-TRFNB)×min(TRFNB,n-i)-matrix,
+NB.               bottom left part of subL1
+NB.   subH00    - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, lower
+NB.               Hessenberg, top left part of subH
+NB.   subH10    - max(0,n-i-TRFNB)×min(TRFNB,n-i)-matrix,
+NB.               bottom left part of subH
+NB.   subA11upd - max(0,n-i-TRFNB)×max(0,n-i-TRFNB), not yet
+NB.               factored bottom right part of subA
+NB.   subP      - (n-i)×(n-i)-matrix, boolean, full
+NB.               permutation of subA
+NB.   subL1     - (n-i)×(n-i)-matrix, unit lower triangular,
+NB.               being columns i:min(i+TRFNB,n) of L1
+NB.   subH      - (n-i)×(n-i)-matrix, lower Hessenberg, is
+NB.               defined as:
+NB.                 subH=. subL1 mp subT
+NB.   subT      - (n-i)×(n-i)-matrix, Hermitian (symmetric)
+NB.               tridiagonal, being bottom right part of T
+NB.   i         - integer from set:
+NB.                 {(0:⌈n/TRFNB⌉)*TRFNB} ,
+NB.               lIO subA's 1st row and column within A
+NB.   A         - n×n-matrix, Hermitian (symmetric)
+NB.   L1        - n×n-matrix, unit lower triangular
+NB.   T         - n×n-matrix, Hermitian (symmetric)
+NB.               tridiagonal
 NB.
-NB. Storage layout (note TRFNB as NB and assume NB<n for simplicity):
-NB.   input:                            output:
-NB.     ( A00 A10^H ) NB      ( L100H00h H10h   ) NB
-NB.     ( A10 A11   ) n-NB    ( L11      A11upd ) n-NB
-NB.       NB  n-NB              NB       n-NB
+NB. Storage layout (assume TRFNB<n):
+NB.   input subA:                      output B:
+NB.     ( subA00 subA10^H ) TRFNB        ( subL100H00h subH10^H  ) TRFNB
+NB.     ( subA10 subA11   ) n-i-TRFNB    ( subL110     subA11upd ) n-i-TRFNB
+NB.       TRFNB  n-i-TRFNB                 TRFNB       n-i-TRFNB
 NB. where
-NB.   A00        - NB×NB-matrix, Hermitian (symmetric)
-NB.   A11,A11upd - (n-NB)×(n-NB)-matrix, Hermitian (symmetric)
-NB.   A10,L11    - (n-NB)×NB-matrix
-NB.   H10h       - NB×(n-NB)-matrix, 1st NB rows of H^H
-NB.   L100H00h   - NB×NB-matrix, combined L100 and H00h
-NB.   L100       - NB×NB-matrix, unit lower triangular, unit
-NB.                diagonal is not stored
-NB.   H00h       - NB×NB-matrix, upper triangular matrices to be updated
-NB. Example for h=1, s=5, n=7:
-NB.   input  A                     output HQf
-NB.   (  a                    )    (  a                       )
-NB.   (  a  a  a  a  a  a     )    (  a  a  β1 v1 v1 v1    τ1 )
-NB.   (  a  a  a  a  a  a     )    (  h  h  h  β2 v2 v2    τ2 )
-NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  β3 v3    τ3 )
-NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  β4    τ4 )
-NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  h        )
-NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a     )
+NB.   subL100H00h - TRFNB×TRFNB-matrix, combined strict lower
+NB.                 triangle of L100, and strict upper
+NB.                 triangle of subH00^H, diagonal is
+NB.                 undefined
 NB.
+NB. Example for output B when TRFNB=2, n=5:
+NB.   ( *    h00h h10h h10h h10h )
+NB.   ( l100 *    h10h h10h h10h )
+NB.   ( l110 l110 a11u a11u a11u )
+NB.   ( l110 l110 a11u a11u a11u )
+NB.   ( l110 l110 a11u a11u a11u )
+NB. where
+NB.   *         - value is undefined
+NB.   l100,l110 - elements of 1st TRFNB columns of subL1
+NB.   l100      - elements of subL100
+NB.   l110      - elements of subL110
+NB.   h00h,h10h - elements of 1st TRFNB rows of subH^H
+NB.   h00h      - elements of subH00^H
+NB.   h10h      - elements of subH10^H
+NB.   a11u      - elements of subA11upd
 NB.
-NB.  A  =  ( I  U12 ) ( A11  0  ) (  I    0   )  if UPLO = 'U', or:
-NB.        ( 0  U22 ) (  0   D  ) ( U12' U22' )
+NB. Algorithm (assume 0<i<n-TRFNB):
+NB.   In:
+NB.     ipi  -: i. (n-i)
+NB.     subA - A[i:n-1,i:n-1]
+NB.     lti  -: ti 0 } li
+NB.     t0i  - (T[0,0],T[1,1],...,T[i-1,i-1])
+NB.     t1i  - (T[1,0],T[2,1],...,T[i,i-1])
+NB.     li   - vector to write into subL1[0:n-i-1,0] i.e.
+NB.            L1[i:n-1,i]
+NB.     ti   - any scalar
+NB.   Out:
+NB.     ipo  - ip[i:n-1]
+NB.     B    - see layout
+NB.     lto  -: to 0 } lo
+NB.     t0o  - (T[0,0],T[1,1],...,T[i+TRFNB-1,i+TRFNB-1]) =
+NB.            (t0i[0],t0i[1],...,t0i[i-1],subT[0,0],subT[1,1],...,subT[TRFNB-1,TRFNB-1])
+NB.     t1o  - (T[1,0],T[2,1],...,T[i+TRFNB,i+TRFNB-1]) =
+NB.            (t1i[0],t1i[1],...,t1i[i-1],subT[1,0],subT[2,1],...,subT[TRFNB,TRFNB-1])
+NB.     lo   - vector to write into subL1[TRFNB:n-i-1,TRFNB]
+NB.            i.e. L1[i+TRFNB:n-1,i+TRFNB]
+NB.     to   -: T[i+TRFNB+1,i+TRFNB]
+NB.   1) count amount of iterations to do:
+NB.        J := min(TRFNB,n-i)
+NB.   2) do iterations j=0:J-1 :
+NB.      2.1) reconstruct (subH[j:n-i-1,j])^H, the tail part
+NB.           of conjugated j-th column of subH:
+NB.             w := conj(subH[j:n-i-1,j]) :=
+NB.               := subA[j,j:n-i-1] - subL1[j,0:j-1]*(subH[j:n-i-1,0:j-1])^H ,
+NB.           note1: following omitted steps will reconstruct
+NB.                  full subH[0:n-i-1,j] (for j>0 only):
+NB.                    subH[0:j-2,j] := 0
+NB.                    subH[j-1,j]   := subT[j,j-1]
+NB.           note2: both vectors used are the only two parts
+NB.                  of subA j-th row, matrix used is located
+NB.                  above tail part
+NB.      2.2) batch write w and lti into subA:
+NB.             subA[j,j:n-i-1] := w
+NB.             subA[j:n-i-1,j] := lti
+NB.           note: heads of both w and lti will be writed in
+NB.                 the same place in the subA main diagonal,
+NB.                 so resulting value will be undefined, btw
+NB.                 it won't be used
+NB.      2.3) try to update w:
+NB.             w    := w - subT[j,j-1] * conj(subL1[j:n-i-1,j-1])
+NB.             w[0] := Re(w[0])
+NB.           note: now w[0] contains T[j,j], which must be
+NB.                 real
+NB.           2.3.1) if failed (i.e. if j=0) then leave w
+NB.                  unchanged:
+NB.                    w := w - 0
+NB.      2.4) build new non-transposed non-scaled lti:
+NB.             lti := conj(w[1:]) - subL1[j+1:n-i-1,j]*T[j,j]
+NB.      2.5) prepare non-standard transposition dip:
+NB.           2.5.1) find lIO 1st element with max value:
+NB.                    p := liofmax lti
+NB.                  note: to force L1 to be truly diagonally
+NB.                        dominant replace sorim by soris in
+NB.                        liofmax definition
+NB.           2.5.2) remap lIOS to measure from tail, making
+NB.                  possible to apply the same dip to arrays
+NB.                  of different lengths:
+NB.                    dip := (-(n-i-j),p-(n-i-j))
+NB.           note: don't waste time for standardizing the
+NB.                 transposition, use Adverse (::) later
+NB.                 instead
+NB.      2.6) try to apply transposition dip to ipi:
+NB.             ipi=. dip C. :: ] ipi
+NB.           2.6.1) if failed (i.e. if p=0), then leave ipi
+NB.                  unchanged
+NB.      2.7) try to apply the transposition of rows and
+NB.           columns dip to subA:
+NB.             subA=. dip sp :: ] subA
+NB.           2.7.1) if failed (i.e. if p=0), then leave subA
+NB.                  unchanged
+NB.      2.8) try to apply the transposition dip to lti:
+NB.             lti=. dip C. :: ] lti
+NB.           note: now lti[0] contains T[j+1,j]
+NB.           2.8.1) if failed (i.e. if p=0), then leave lti
+NB.                  unchanged
+NB.      2.9) try to scale lti by head, leaving head itself
+NB.           unchanged:
+NB.             lti[1:] := lti / lti[0]
+NB.           note: now lti[1:] contains subL1[j+1:n-i-1,j+1]
+NB.                 i.e. L1[i+j+1:n-1,i+j+1]
+NB.           2.9.1) if failed (i.e. if i+j=n-1 , the last
+NB.                  iteration in the last partition takes
+NB.                  place, and lti is empty vector), then
+NB.                  leave lti unchanged
+NB.      2.10) update t0i by appending subT[j,j]:
+NB.              t0i := t0i , T[j,j]
+NB.      2.11) try to update t1i by appending subT[j+1,j]):
+NB.              t1i := t1i , T[j+1,j]
+NB.            2.11.1) if failed (i.e. if i+j=n-1 , the last
+NB.                    iteration in the last partition takes
+NB.                    place, and lti is empty vector), then
+NB.                    leave t1i unchanged
+NB.      2.12) link modified arrays to form output of current
+NB.            iteration and input for next one:
+NB.              ipi ; subA ; lti ; t0i ; t1i
+NB.   3) use output from the last iteration as algorithm's
+NB.      output
 NB.
-NB.  A  =  ( L11  0 ) (  D   0  ) ( L11' L21' )  if UPLO = 'L'
-NB.        ( L21  I ) (  0  A22 ) (  0    I   )
-NB.
-NB.
-NB. Algorithm:
-NB.
-NB.
-NB.
-NB.
-NB.   'ipi1 L1i1 Ti1 Ai1 Hi1 hi1 li1'=. lahefplstep (ipi;L1i;Ti;Ai;Hi;hi;li)
-NB.
+NB. Notes:
+NB. - for n>TRFNB is equivalent to LAPACK's xLAHEF, but uses
+NB.   another factorization
+NB. - for n<:TRFNB is equivalent to LAPACK's xHETF2, but uses
+NB.   another factorization
+NB. - diagonals 0 and 1 of subH (main diagonal and
+NB.   subdiagonal of subH^H) aren't reconstructed since
+NB.   aren't used
 NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
 NB.     Partitioned triangular tridiagonalization.
 NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
-NB. 
 
-NB.    'ip U1 T'=. clean hetrfpur_mt_ HE10
-NB.    HE10 -: clean (/: ip) sp_mt_ U1 (mp~ mp~ (ct_mt_ @ [)) T
-NB. 1
-NB.    'ip L1 T'=. clean hetrfplc_mt_ HE10
-NB.    HE10 -: clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
-NB. 1
-NB.    HE1000=. (_1 1 0 4 _6 4 & (gemat_mt_ j. gemat_mt_)) hemat_mt_ 1000 1000
-
-NB. 'ip A l0'=. lahefpl_mt_ ip;A;l0;i
-NB. clean lahefpl_mt_ (i.n);HE;(n ($!.0) 1);0
-
-lahefpl=: (3 : 0) ^: (TRFNB<.(#@(0 & {::)))
-  'ip A lt t0 t1'=. y                    NB. (n-i) (n-i)*(n-i) (n-i)-j j j, j=0:n-1
-  w=. lt (((-~&#) { ]) ((}.~ #)-({.~ #) mp ]) ((-~,-@[)&# {. ])) A
-  A=. (w ,: lt) (((0 liosE),:(0 liosS)))&c } A
-  w=. w - lt (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
+lahefpl=: (3 : 0) ^: (TRFNB<.#@(0 & {::))
+  'ip A lt t0 t1'=. y
+  w=. lt ((-~&# { ]) ((}.~ #) - ({.~ #) mp ]) ((-~,-@[)&# {. ])) A
+  A=. (w,:lt) (((0 liosE),:(0 liosS)))&c } A
+  w=. 0 (9&o.) upd1 w - lt (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
   lt=. lt (+@}.@] - ((* }.)~ {.)) w
-  dip0=. < 0 , ((i.>./)@soris) lt  NB. non-standard cycle permutation!
-  dip=. (A -&# lt) +&.> dip0       NB. non-standard cycle permutation!
+  dip=. (liofmax (-@] <@, -) #) lt
   ip=. dip C. :: ] ip
   A=. dip sp :: ] A
-  lt=. dip0 C. :: ] lt
+  lt=. dip C. :: ] lt
   lt=. 0 ({`[`(] % {))} :: ] lt
-  t0=. t0 , 9 o. {. w
+  t0=. t0 , {. w
   t1=. t1 , 0 { :: ] lt
   ip ; A ; lt ; t0 ; t1
 )
 
-NB. 'ip L1 T'=. hetrfpl A
-NB.   clean lahefpl_mt_ (i. 6);HEc6;(6 ($!.0) 1);(i.0);(i.0)
-
-hetrfpl=: 3 : 0
-  n=. # y
-  ip=. i. n
-  L1=. 0 {."1 y
-  lt=. n # 0
-  t0=. t1=. i. 0
-  for_i. n (] dhs2lios (0,(>.@%))) TRFNB do.
-    'ipi y lt t0 t1'=. lahefpl ((i. # lt);y;lt;t0;t1)
-    dip=. i (i.@[ , +) ipi         NB. force permutation to act on tail part only
-    ip=. dip C. ip
-    L1i=. trl1 (_,TRFNB) rt y
-    L1=. (dip C. L1) stitchb L1i
-    y=. ((2 # TRFNB) }. y) - (((TRFNB }. L1i) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 { :: ] lt) * (1 (0}) :: ] lt)) */ + (lt ((_1 liosS)&c ({,) ]) y))
-  end.
-  T=. ((+t1);1) setdiag (t1;_1) setdiag (t0;0) setdiag (2 # n) $ 0
-  ip ; L1 ; T
-)
-
 NB. ---------------------------------------------------------
-NB. hetf2pu
+NB. lahefpu
 NB.
 NB. Description:
-NB.   Triangular factorization with full pivoting of a
-NB.   Hermitian (symmetric) matrix:
-NB.     P * U1 * T * U1^H * P^_1 = A
-NB.   by non-blocked version of Aasen's algorithm
+NB.   Partial triangular factorization of a Hermitian
+NB.   (symmetric) matrix:
+NB.     subP * subU1 * subT * subU1^H * subP^_1 = subA
+NB.   using the combination of Parlett and Reid, and Aasen
+NB.   methods, inspired by [1].
 NB.
 NB. Syntax:
-NB.     'ip U1 T'=. hetf2pu A
+NB.   'ipo B uto t0o t1o'=. lahefpu ipi;subA;uti;t0i;t1i
 NB. where
-NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
-NB.   ip  - n-vector, full inversed permutation of A
-NB.   P   - n×n-matrix, full permutation of A
-NB.   U1  - n×n-matrix, unit upper triangular
-NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
+NB.   ipi       -: i. (n+i+1)
+NB.   subA      - (n+i+1)×(n+i+1)-matrix to factorize,
+NB.               Hermitian (symmetric), the top left part of
+NB.               A
+NB.   uti       - (n+i+1)-vector, is defined as:
+NB.                 uti=. ti _1 } ui
+NB.   t0i       - (i+1)-vector, float, tail elements of main
+NB.               diagonal of T
+NB.   t1i       - max(0,min(i+1,n-1))-vector, tail elements
+NB.               of superdiagonal of T
+NB.   ipo       - (n+i+1)-vector of integers, inversed full
+NB.               permutation, corresponding to subP
+NB.   B         - (n+i+1)×(n+i+1)-matrix, contains subU101,
+NB.               subH01^H, strict upper triangle of subU111,
+NB.               strict lower triangle of subH11^H, and
+NB.               subA00upd (see layout below)
+NB.   uto       - max(0,n+i+1-TRFNB)-vector, aimed to be uti
+NB.               at the next call from hetrfpu
+NB.   t0o       - min(n,i+1+TRFNB)-vector, float, tail
+NB.               elements of main diagonal of T
+NB.   t1o       - min(n-1,i+1+TRFNB)-vector, tail elements of
+NB.               superdiagonal of T
+NB.   ui        - (n+i+1)-vector, the last scaled column of
+NB.               subU1, having 1 in the last element
+NB.   ti        - scalar, the max from ui before it was
+NB.               scaled, can be any value when i=_1
+NB.   subU111   - min(TRFNB,n+i+1)×min(TRFNB,n+i+1)-matrix,
+NB.               unit upper triangular, bottom right part of
+NB.               subU1
+NB.   subU101   - max(0,n+i+1-TRFNB)×min(TRFNB,n+i+1)-matrix,
+NB.               top right part of subU1
+NB.   subH11    - min(TRFNB,n+i+1)×min(TRFNB,n+i+1)-matrix,
+NB.               upper Hessenberg, bottom right part of subH
+NB.   subH01    - max(0,n+i+1-TRFNB)×min(TRFNB,n+i+1)-matrix,
+NB.               top right part of subH
+NB.   subA00upd - max(0,n+i+1-TRFNB)×max(0,n+i+1-TRFNB), not
+NB.               yet factored top left part of subA
+NB.   subP      - (n+i+1)×(n+i+1)-matrix, boolean, full
+NB.               permutation of subA
+NB.   subU1     - (n+i+1)×(n+i+1)-matrix, unit upper
+NB.               triangular, being columns 0:n+i of U1
+NB.   subH      - (n+i+1)×(n+i+1)-matrix, upper Hessenberg,
+NB.               is defined as:
+NB.                 subH=. subU1 mp subT
+NB.   subT      - (n+i+1)×(n+i+1)-matrix, Hermitian
+NB.               (symmetric) tridiagonal, being top left
+NB.               part of T
+NB.   i         - integer from set:
+NB.                 {_1-(0:⌈n/TRFNB⌉)*TRFNB},
+NB.               lIO subA's last row and column within A
+NB.   A         - n×n-matrix, Hermitian (symmetric)
+NB.   U1        - n×n-matrix, unit upper triangular
+NB.   T         - n×n-matrix, Hermitian (symmetric)
+NB.               tridiagonal
 NB.
-NB. Assertion:
-NB.   P -: %. iP
-NB.   P -: |: iP
-NB.   P -: ip2P ip
-NB.   A -: clean p sp T (] mp (mp ct)) U1
-NB.   A -: clean P (mp mp |:@[) T (] mp (mp ct)) U1
+NB. Storage layout (assume TRFNB<n):
+NB.   input subA:                         output B:
+NB.     ( subA00    subA10^H ) n+i-TRFNB    ( subA00upd subU101     ) n+i-TRFNB
+NB.     ( subA10    subA11   ) TRFNB        ( subH01^H  subU111H11h ) TRFNB
+NB.       n+i-TRFNB TRFNB                     n+i-TRFNB TRFNB
 NB. where
-NB.   'ip U1 T'=. hetf2pu A
-NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   subU111H11h - TRFNB×TRFNB-matrix, combined strict upper
+NB.                 triangle of U111, and strict lower
+NB.                 triangle of subH11^H, diagonal is
+NB.                 undefined
 NB.
-NB. TODO:
-NB. - T would be sparse
+NB. Example for output B when TRFNB=2, n=5:
+NB.   ( a00u a00u a00u u101 u101 )
+NB.   ( a00u a00u a00u u101 u101 )
+NB.   ( a00u a00u a00u u101 u101 )
+NB.   ( h01h h01h h01h *    u111 )
+NB.   ( h01h h01h h01h h11h *    )
+NB. where
+NB.   *         - value is undefined
+NB.   u101,u111 - elements of last TRFNB columns of subU1
+NB.   u101      - elements of subU101
+NB.   u111      - elements of subU111
+NB.   h01h,h11h - elements of last TRFNB rows of subH^H
+NB.   h01h      - elements of subH01^H
+NB.   h11h      - elements of subH11^H
+NB.   a00u      - elements of subA00upd
+NB.
+NB. Algorithm (assume TRFNB-n-1<i<-1):
+NB.   In:
+NB.     ipi  -: i. (n+i+1)
+NB.     subA - A[0:n+i,0:n+i]
+NB.     uti  -: ti _1 } ui
+NB.     t0i  - (T[n+i+1,n+i+1],T[n+i+2,n+i+2],...,T[n-1,n-1])
+NB.     t1i  - (T[n+i,n+i+1],T[n+i+1,n+i+2],...,T[n-2,n-1])
+NB.     ui   - vector to write into subU1[0:n+i,n+i] i.e.
+NB.            U1[0:n+i,n+i]
+NB.     ti   - any scalar
+NB.   Out:
+NB.     ipo  - ip[0:n+i]
+NB.     B    - see layout
+NB.     uto  -: to _1 } uo
+NB.     t0o  - (T[n+i-TRFNB+1,n+i-TRFNB+1],T[n+i-TRFNB+2,n+i-TRFNB+2],...,T[n-1,n-1]) =
+NB.            (subT[0,0],subT[1,1],...,subT[TRFNB-1,TRFNB-1],t0i[0],t0i[1],...,t0i[-i-2])
+NB.     t1o  - (T[n+i-TRFNB,n+i-TRFNB+1],T[n+i-TRFNB+1,n+i-TRFNB+2],...,T[n-2,n-1]) =
+NB.            (subT[0,1],subT[1,2],...,subT[TRFNB-1,TRFNB],t1i[0],t1i[1],...,t1i[-i-2])
+NB.     uo   - vector to write into subU1[0:n+i-TRFNB,n+i-TRFNB]
+NB.            i.e. U1[0:n+i-TRFNB,n+i-TRFNB]
+NB.     to   -: T[n+i-TRFNB-1,n+i-TRFNB]
+NB.   1) count amount of iterations to do:
+NB.        J := min(TRFNB,n+i+1)
+NB.   2) do iterations j={n+i,n+i-1,...,n+i-J+1}:
+NB.      2.1) reconstruct (subH[0:j,j])^H, the head part
+NB.           of conjugated j-th column of subH:
+NB.             w := conj(subH[0:j,j]) :=
+NB.               := subA[j,0:j] - subU1[j,j+1:n-i]*(subH[0:j,j+1:n-i])^H ,
+NB.           note1: following omitted steps will reconstruct
+NB.                  full subH[0:n+i+1,j] (for j<n+i only):
+NB.                    subH[j+1,j]       := subT[j-1,j]
+NB.                    subH[j+2:n+i+1,j] := 0
+NB.           note2: both vectors used are the only two parts
+NB.                  of subA j-th row, matrix used is located
+NB.                  below head part
+NB.      2.2) batch write uti and w into subA:
+NB.             subA[0:j,j] := uti
+NB.             subA[j,0:j] := w
+NB.           note: tails of both uti and w will be writed in
+NB.                 the same place in the subA main diagonal,
+NB.                 so resulting value will be undefined, btw
+NB.                 it won't be used
+NB.      2.3) try to update w:
+NB.             w    := w - subT[j-1,j] * conj(subU1[0:j,j+1])
+NB.             w[j] := Re(w[j])
+NB.           note: now w[j] contains T[j,j], which must be
+NB.                 real
+NB.           2.3.1) if failed (i.e. if j=n+i-J) then leave w
+NB.                  unchanged:
+NB.                    w := w - 0
+NB.      2.4) build new non-transposed non-scaled uti:
+NB.             uti := conj(w[0:j-1]) - subU1[0:j-1,j]*T[j,j]
+NB.      2.5) prepare non-standard transposition dip:
+NB.           2.5.1) find lIO last element with max value:
+NB.                    p := liolmax uti
+NB.                  note: to force U1 to be truly diagonally
+NB.                        dominant replace sorim by soris in
+NB.                        liolmax definition
+NB.           2.5.2) remap lIOS to measure from head, making
+NB.                  possible to apply the same dip to arrays
+NB.                  of different lengths:
+NB.                    dip := (j,p)
+NB.           note: don't waste time for standardizing the
+NB.                 transposition, use Adverse (::) later
+NB.                 instead
+NB.      2.6) try to apply transposition dip to ipi:
+NB.             ipi=. dip C. :: ] ipi
+NB.           2.6.1) if failed (i.e. if p=j), then
+NB.                  leave ipi unchanged
+NB.      2.7) try to apply the transposition of rows and
+NB.           columns dip to subA:
+NB.             subA=. dip sp :: ] subA
+NB.           2.7.1) if failed (i.e. if p=j), then
+NB.                  leave subA unchanged
+NB.      2.8) try to apply the transposition dip to uti:
+NB.             uti=. dip C. :: ] uti
+NB.           note: now uti[j] contains T[j,j+1]
+NB.           2.8.1) if failed (i.e. if p=j), then leave uti
+NB.                  unchanged
+NB.      2.9) try to scale uti by tail, leaving tail itself
+NB.           unchanged:
+NB.             uti[0:j-2] := uti / uti[j-1]
+NB.           note: now uti[0:j-2] contains subU1[0:j-2,j-1]
+NB.                 i.e. U1[0:j-2,j-1]
+NB.           2.9.1) if failed (i.e. if j=0 , the last
+NB.                  iteration in the last partition takes
+NB.                  place, and uti is empty vector), then
+NB.                  leave uti unchanged
+NB.      2.10) update t0i by prepending subT[j,j]:
+NB.              t0i := T[j,j] , t0i
+NB.      2.11) try to update t1i by prepending subT[j,j+1]):
+NB.              t1i := T[j,j+1] , t1i
+NB.            2.11.1) if failed (i.e. if j=0 , the last
+NB.                    iteration in the last partition takes
+NB.                    place, and uti is empty vector), then
+NB.                    leave t1i unchanged
+NB.      2.12) link modified arrays to form output of current
+NB.            iteration and input for next one:
+NB.              ipi ; subA ; uti ; t0i ; t1i
+NB.   3) use output from the last iteration as algorithm's
+NB.      output
+NB.
+NB. Notes:
+NB. - diagonals 0 and _1 of subH (main diagonal and
+NB.   superdiagonal of subH^H) aren't reconstructed since
+NB.   aren't used
+NB.
+NB. References:
+NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
+NB.     Partitioned triangular tridiagonalization.
+NB.     26 September 2007.
+NB.     http://www.cs.cas.cz/miro/rst08.pdf
 
-hetf2pu=: 3 : 0
-  n=. # y
-  U1=. (- $ y) {. 1                NB. last U1's column in Aasen method is e(n)-vector
-  T=. ((- @ $) {. (_1 _1&{.)) y    NB. T[n-1,n-1]=A[n-1,n-1]
-  ip=. i. n
-  h=. i. 1                         NB. h[0:n-j-1]=H[j+1:n-1,j+1], may be defined arbitrary before the 1st iteration only
-  ios=. i. <: n                    NB. 0:j
-  for_j. i. 1 - n do.              NB. n-2:0
-    a=. (< ios ; (>: j)) { y       NB. A[0:j,j+1]
-    lum=. ((>:j) ([ , -) n) {. U1  NB. U1[0:j,j+1:n-1]
-    v=. a - lum mp h               NB. v[0:j]=A[0:j,j+1]-U1[0:j,j+1:n-1]*H[j+1:n-1,j+1]=U1[0:j,j]*T[j,j+1] non-pivoted yet
-    q=. liolmax v                  NB. IO pivot from tail
-    dip=. < q , j                  NB. any[j]↔any[q], non-standard cycle permutation!
-    v=. dip (C. :: ]) v            NB. v[_1]↔v[q]
-    y=. dip (sp :: ]) y            NB. A[j,0:j]↔A[q,0:j], A[0:j,j]↔A[0:j,q]
-    ip=. dip (C. :: ]) ip          NB. ip[j]↔ip[q]
-    to=. {: v                      NB. T[j,j+1]
-    lu=. q { lum                   NB. U1[j,j+1:n-1] after pivoting
-    luecto=. to * + {. lu          NB. conj(U1[j,j+1])*T[j,j+1]
-    h=. to (((+ +)~ {.)`0:`]) } ((2 # >: j - n) {. T) mp + lu  NB. h[0:n-j-1]=H[j+1:n-1,j]=T[j+1:n-1,j+1:n-1]*conj(U1[j,j+1:n-1])
-    U1=. (1 (_1}) v % to) (< ios ; j) } dip C. U1              NB. U1[j,0:n-1]↔U1[q,0:n-1], U1[0:j,j]=v[0:j]/v[_1], v[_1] may be 0
-    td=. 9 o. ((< 2 # j) { y) - (luecto + lu mp h)             NB. T[j,j]=Re(A[j,j]-U1[j,j+1:n-1]*H[j+1:n-1,j]-conj(U1[j,j+1])*T[j,j+1])
-    T=. (td (,~ (, +)) to) (_2 <\ 0 1 1 0 0 0 + j) } T         NB. TODO: amend by lIOS NB. batch write diagonal and off-diagonal elements T[j,j+1] T[j+1,j] T[j,j]
-    h=. h ,~ luecto + td           NB. h[0:j]=H[0:j,j]=T[0:J,0:J]*conj(U1[j,0:j])
-    ios=. }: ios                   NB. 0:j-1
-  end.
-  ip ; U1 ; T
+lahefpu=: (3 : 0) ^: (TRFNB<.#@(0 & {::))
+  'ip A ut t0 t1'=. y
+  w=. ut ((<:@-&# { ]) (({.~ c) - (}.~ c) mp ]) ((-,[)&# {. ])) A
+  A=. (ut,:w) (((0 liosN),:(0 liosW)))&c } A
+  w=. _1 (9&o.) upd1 w - ut (({:@[ * +@((1 liosN)&# ({,) ])) :: 0:) A
+  ut=. ut (+@}:@] - ((* }:)~ {:)) w
+  dip=. (<:@(1>.#) <@, liolmax) ut
+  ip=. dip C. :: ] ip
+  A=. dip sp :: ] A
+  ut=. dip C. :: ] ut
+  ut=. _1 ({`[`(] % {))} :: ] ut
+  t0=. ({: w) , t0
+  t1=. (_1 { :: ] ut) , t1
+  ip ; A ; ut ; t0 ; t1
 )
 
 NB. =========================================================
@@ -512,31 +717,79 @@ NB. ---------------------------------------------------------
 NB. hetrfpl
 NB.
 NB. Description:
-NB.   Triangular factorization with full pivoting of a
-NB.   Hermitian (symmetric) matrix:
+NB.   Triangular factorization of a Hermitian (symmetric)
+NB.   matrix:
 NB.     P * L1 * T * L1^H * P^_1 = A
-NB.   by blocked version of Aasen's algorithm
+NB.   using the combination of Parlett and Reid, and Aasen
+NB.   methods [1].
 NB.
 NB. Syntax:
 NB.     'ip L1 T'=. hetrfpl A
 NB. where
-NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
-NB.   ip  - n-vector, full inversed permutation of A
-NB.   P   - n×n-matrix, full permutation of A
-NB.   L1  - n×n-matrix, unit lower triangular
-NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
+NB.   A  - n×n-matrix, Hermitian (symmetric)
+NB.   ip - n-vector of integers, full inversed permutation of
+NB.        A
+NB.   L1 - n×n-matrix, unit lower triangular
+NB.   T  - n×n-matrix, Hermitian (symmetric) tridiagonal
+NB.   P  - n×n-matrix, full permutation of A
+NB.
+NB. Algorithm (assume TRFNB<n-i):
+NB.   In: A
+NB.   Out: ip L1 T
+NB.   1) count n, the size of A
+NB.   2) form initial ip L1 t0 t1
+NB.   3) count amount of iterations to do:
+NB.        I=. ⌈n/TRFNB⌉
+NB.   4) do iterations i={0,TRFNB,2*TRFNB,...,(I-1)*TRFNB}:
+NB.      4.1) call lahefpl to reconstruct current block of L1
+NB.           and T, delta permutation ipi dictated by
+NB.           current block's factorization, the 1st column
+NB.           lt for next subL1 having T[j+1,j] in head
+NB.           instead of 1
+NB.      4.2) prepare delta of inversed permutation dip for
+NB.           tail part of ip
+NB.      4.3) update ip by dip
+NB.      4.4) extract subL1
+NB.      4.5) permute rows of L1 according to dip, stitch
+NB.           subL1 to it
+NB.      4.6) do rank-(TRFNB+1) update of
+NB.           A[i+TRFNB:n-1,i+TRFNB:n-1]:
+NB.           4.6.1) extract subL110:
+NB.                    subL110 := subL1[TRFNB:n-i-1,0:TRFNB-1]
+NB.           4.6.2) extract subH10^H:
+NB.                    subH10h := (subH[TRFNB:n-i-1,0:TRFNB-1])^H
+NB.           4.6.3) form rank-TRFNB update:
+NB.                    Arku := subL110 * subH10h
+NB.           4.6.4) extract last column of subL1 and
+NB.                  conjugate it:
+NB.                    cl0 := conj(subL1[TRFNB:n-1,TRFNB-1])
+NB.           4.6.5) restore 1st column of next subL1 and try
+NB.                  to multiply it by T[j+1,j]:
+NB.                    ml1 := subL1[TRFNB:n-1,TRFNB] * subT[j+1,j]
+NB.           4.6.6) form rank-1 update:
+NB.                    Ar1u := ml1 * cl0
+NB.           4.6.7) update subA:
+NB.                    subA := subA - (Arku + Ar1u)
+NB.                  note: sum of rank updates is Hermitian
+NB.                        (symmetric), so subA will have
+NB.                        kept symmetry after update
+NB.   5) form T from t0 t1
+NB.   6) return
+NB.        ip ; L1 ; T
 NB.
 NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
-NB.   A -: clean p sp T (] mp (mp ct)) L1
-NB.   A -: clean P (mp mp |:@[) T (] mp (mp ct)) L1
+NB.   A -: clean (/: ip) sp L1 (mp mp ct@[) T
+NB.   A -: clean P (mp mp |:@[) L1 (mp mp ct@[) T
 NB. where
 NB.   'ip L1 T'=. hetrfpl A
-NB.   p=. /: ip
 NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   P=. ip2P ip
+NB.
+NB. Notes:
+NB. - is equivalent to LAPACK's xHETRF, but uses another
+NB.   factorization
 NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
@@ -545,44 +798,126 @@ NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
-NB. - implement partitioned algorithm
 NB. - T would be sparse
+
+hetrfpl=: 3 : 0
+  n=. # y
+  ip=. i. n
+  L1=. 0 {."1 y
+  lt=. n # 0
+  t0=. t1=. i. 0
+  for_i. n (] dhs2lios (0,(>.@%))) TRFNB do.
+    'ipi y lt t0 t1'=. lahefpl ((i. # lt);y;lt;t0;t1)
+    dip=. i (i.@[ , +) ipi
+    ip=. dip C. ip
+    subL1=. trl1 (_,TRFNB) rt y
+    L1=. (dip C. L1) stitchb subL1
+    y=. ((2 # TRFNB) }. y) - (((TRFNB }. subL1) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 { :: ] lt) * (1 (0}) :: ] lt)) */ + (lt ((_1 liosS)&# ({,) ]) y))
+  end.
+  T=. t1 (((setdiag~ (;&_1)) (setdiag~ (+;1:)) ])~ diagmat) t0
+  ip ; L1 ; T
+)
 
 NB. ---------------------------------------------------------
 NB. hetrfpu
 NB.
 NB. Description:
-NB.   Triangular factorization with full pivoting of a
-NB.   Hermitian (symmetric) matrix:
+NB.   Triangular factorization of a Hermitian (symmetric)
+NB.   matrix:
 NB.     P * U1 * T * U1^H * P^_1 = A
-NB.   by blocked version of Aasen's algorithm
+NB.   using the combination of Parlett and Reid, and Aasen
+NB.   methods, inspired by [1].
 NB.
 NB. Syntax:
 NB.     'ip U1 T'=. hetrfpu A
 NB. where
-NB.   A   - n×n-matrix to factorize, Hermitian (symmetric)
-NB.   ip  - n-vector, full inversed permutation of A
-NB.   P   - n×n-matrix, full permutation of A
-NB.   U1  - n×n-matrix, unit upper triangular
-NB.   T   - n×n-matrix, Hermitian (symmetric) 3-diagonal
+NB.   A  - n×n-matrix, Hermitian (symmetric)
+NB.   ip - n-vector of integers, full inversed permutation of
+NB.        A
+NB.   U1 - n×n-matrix, unit upper triangular
+NB.   T  - n×n-matrix, Hermitian (symmetric) tridiagonal
+NB.   P  - n×n-matrix, full permutation of A
+NB.
+NB. Algorithm (assume TRFNB<n+i+1):
+NB.   In: A
+NB.   Out: ip U1 T
+NB.   1) count n, the size of A
+NB.   2) form initial ip U1 t0 t1
+NB.   3) count amount of iterations to do:
+NB.        I=. ⌈n/TRFNB⌉
+NB.   4) do iterations i={_1,_1-TRFNB,_1-2*TRFNB,...,_1-(I-1)*TRFNB}:
+NB.      4.1) call lahefpu to reconstruct current block of U1
+NB.           and T, delta permutation ipi dictated by
+NB.           current block's factorization, the last column
+NB.           ut for next subU1 having T[j,j+1] in head
+NB.           instead of 1
+NB.      4.2) prepare delta of inversed permutation dip for
+NB.           head part of ip
+NB.      4.3) update ip by dip
+NB.      4.4) extract subU1
+NB.      4.5) permute rows of U1 according to dip, and stitch
+NB.           it to subU1
+NB.      4.6) do rank-(TRFNB+1) update of
+NB.           A[0:n+i-TRFNB,0:n+i-TRFNB]:
+NB.           4.6.1) extract subU101:
+NB.                    subU101 := subU1[0:n+i-TRFNB+1,n+i-TRFNB+1:n+i]
+NB.           4.6.2) extract subH01^H:
+NB.                    subH01h := (subH[0:n+i-TRFNB+1,n+i-TRFNB+1:n+i])^H
+NB.           4.6.3) form rank-TRFNB update:
+NB.                    Arku := subU101 * subH01h
+NB.           4.6.4) extract 1st column of subU1 and
+NB.                  conjugate it:
+NB.                    cu0 := conj(subU1[0:n+i-TRFNB,n+i-TRFNB+1])
+NB.           4.6.5) restore last column of next subU1 and try
+NB.                  to multiply it by T[j,j+1]:
+NB.                    mu1 := subU1[0:n+i-TRFNB,n+i-TRFNB] * subT[j,j+1]
+NB.           4.6.6) form rank-1 update:
+NB.                    Ar1u := mu1 * cu0
+NB.           4.6.7) update subA:
+NB.                    subA := subA - (Arku + Ar1u)
+NB.                  note: sum of rank updates is Hermitian
+NB.                        (symmetric), so subA will have
+NB.                        kept symmetry after update
+NB.   5) form T from t0 t1
+NB.   6) return
+NB.        ip ; U1 ; T
 NB.
 NB. Assertion:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
-NB.   A -: clean p sp T (] mp (mp ct)) U1
-NB.   A -: clean P (mp mp |:@[) T (] mp (mp ct)) U1
+NB.   A -: clean (/: ip) sp U1 (mp mp ct@[) T
+NB.   A -: clean P (mp mp |:@[) U1 (mp mp ct@[) T
 NB. where
 NB.   'ip U1 T'=. hetrfpu A
-NB.   p=. /: ip
 NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   P=. ip2P ip
+NB.
+NB. References:
+NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
+NB.     Partitioned triangular tridiagonalization.
+NB.     26 September 2007.
+NB.     http://www.cs.cas.cz/miro/rst08.pdf
 NB.
 NB. TODO:
-NB. - implement partitioned algorithm
 NB. - T would be sparse
 
-hetrfpu=: hetf2pu
+hetrfpu=: 3 : 0
+  n=. # y
+  ip=. i. n
+  U1=. 0 {."1 y
+  ut=. n # 0
+  t0=. t1=. i. 0
+  for_i. n (] dhs2lios (_1,(-@>.@%))) TRFNB do.
+    'ipi y ut t0 t1'=. lahefpu ((i. # ut);y;ut;t0;t1)
+    dip=. i (],((+(i.@(_1&-)))~#)) ipi         NB. delta of inversed permutation for head part
+    ip=. dip C. ip
+    subU1=. (tru1~(-~/@$)) (_,-TRFNB) rt y
+    U1=. subU1 stitcht (dip C. U1)
+    y=. ((2 # -TRFNB) }. y) - ((((-TRFNB) }. subU1) mp ((-TRFNB) ((((0>.+)#),[) }. ]) y)) + ((_1 { :: ] ut) * (1 (_1}) :: ] ut)) */ + (ut ((1 liosN)&# ({,) ]) y))
+  end.
+  T=. t1 (((setdiag~ (;&1)) (setdiag~ (+;_1:)) ])~ diagmat) t0
+  ip ; U1 ; T
+)
 
 NB. ---------------------------------------------------------
 NB. potrfl
@@ -676,26 +1011,26 @@ NB.
 NB. Algorithm:
 NB.   In:  A
 NB.   Out: L1 D
-NB.   0) extract main diagonal d and suberdiagonal e from A
-NB.   1) prepare input:
+NB.   1) extract main diagonal d and suberdiagonal e from A
+NB.   2) prepare input:
 NB.        dee2 := d ,. (0,e) ,. (0,|e|^2)
-NB.   2) do iterations k=1:n-1 by reversed suffix scan:
+NB.   3) do iterations k=1:n-1 by reversed suffix scan:
 NB.        de=. u~/\.&.|. dee2
 NB.      to find :
 NB.        d[k] := d[k] - |e[k-1]|^2 / d[k-1]
 NB.        e[k-1] := e[k-1] / d[k-1]
-NB.   3) extract d - D's main diagonal, and e - L1's
+NB.   4) extract d - D's main diagonal, and e - L1's
 NB.      subdiagonal from de:
 NB.        d=. {."1 de
 NB.        e=. }. 1 {"1 de
-NB.   4) form output matrices:
+NB.   5) form output matrices:
 NB.        L1=. (e;_1) setdiag idmat $ A
 NB.        D=. diagmat d
-NB.   5) link matrices L1 and D to form output:
+NB.   6) link matrices L1 and D to form output:
 NB.        L1 ; D
 NB.
 NB. Assertion:
-NB.   A -: clean L1 (mp mp (ct@[)) D
+NB.   A -: clean L1 (mp mp ct@[) D
 NB. where
 NB.   'L1 D'=. pttrfl A
 NB.
@@ -734,26 +1069,26 @@ NB.
 NB. Algorithm:
 NB.   In:  A
 NB.   Out: U1 D
-NB.   0) extract main diagonal d and superdiagonal e from A
-NB.   1) prepare input:
+NB.   1) extract main diagonal d and superdiagonal e from A
+NB.   2) prepare input:
 NB.        dee2 := d ,. (e,0) ,. ((|e|^2),0)
-NB.   2) do iterations k=n-2:0 by suffix scan:
+NB.   3) do iterations k=n-2:0 by suffix scan:
 NB.        de=. u~/\. dee2
 NB.      to find :
 NB.        d[k] := d[k] - |e[k]|^2 / d[k+1]
 NB.        e[k] := e[k] / d[k+1]
-NB.   3) extract d - D's main diagonal, and e - L1's
+NB.   4) extract d - D's main diagonal, and e - L1's
 NB.      subdiagonal from de:
 NB.        d=. {."1 de
 NB.        e=. }: 1 {"1 de
-NB.   4) form output matrices:
+NB.   5) form output matrices:
 NB.        U1=. (e;1) setdiag idmat $ A
 NB.        D=. diagmat d
-NB.   5) link matrices U1 and D to form output:
+NB.   6) link matrices U1 and D to form output:
 NB.        U1 ; D
 NB.
 NB. Assertion:
-NB.   A -: clean U1 (mp mp (ct@[)) D
+NB.   A -: clean U1 (mp mp ct@[) D
 NB. where
 NB.   'U1 D'=. pttrfu A
 NB.
@@ -795,8 +1130,6 @@ NB. - for U * L1 * P = A :
 NB.     berr := ||U * L1 * P - A|| / (ε * ||A|| * m)
 
 testgetrf=: 3 : 0
-EMPTY
-return.
   require '~addons/math/misc/matfacto.ijs'
   require '~addons/math/lapack/lapack.ijs'
   need_jlapack_ 'getrf'
@@ -827,15 +1160,13 @@ NB. where
 NB.   A - n×n-matrix, Hermitian
 NB.
 NB. Formula:
-NB. - for P * L * T * L^H * P^_1 = A :
-NB.     berr := ||P * L * T * L^H * P^_1 - A|| / (ε * ||A|| * n)
-NB. - for P * U * T * U^H * P^_1 = A :
-NB.     berr := ||P * U * T * U^H * P^_1 - A|| / (ε * ||A|| * n)
+NB. - for P * L1 * T * L1^H * P^_1 = A :
+NB.     berr := ||P * L1 * T * L1^H * P^_1 - A|| / (ε * ||A|| * n)
+NB. - for P * U1 * T * U1^H * P^_1 = A :
+NB.     berr := ||P * U1 * T * U1^H * P^_1 - A|| / (ε * ||A|| * n)
 
 testhetrf=: 3 : 0
-EMPTY
-return.
-  rcond=. (norm1 con (hetripl@hetrfpl)) y
+  rcond=. _. NB. (norm1 con (hetripl@hetrfpl)) y
 
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
   ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (sp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y
@@ -905,8 +1236,8 @@ NB.     berr := ||U1 * D * U1^H - A|| / (ε * ||A|| * n)
 testpttrf=: 3 : 0
   rcond=. (norm1 con (pttril@pttrfl)) y
 
-  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*c)@[))))) y
-  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp (ct@[))&>/)))) % (FP_EPS*((norm1*#)@[))))) y
+  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/)))) % (FP_EPS*((norm1*c)@[))))) y
+  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/)))) % (FP_EPS*((norm1*#)@[))))) y
 
   EMPTY
 )
@@ -939,23 +1270,3 @@ NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 
 testtrf=: 1 : 'EMPTY_mt_ [ (((testpttrf_mt_ @ (u ptmat_mt_)) [ (testpotrf_mt_ @ (u pomat_mt_)) [ (testhetrf_mt_ @ (u hemat_mt_))) ^: (=/)) [ testgetrf_mt_ @ u'
-
-
-NB.   L1f5=. trl1_mt_ 0 (< a: ; 0) } 0.1 * _8 + ? 5 5 $ 18
-NB.   Tf5=. (+ ct_mt_) bdlpick_mt_ trl_mt_ 0.1 * >: ? 5 5 $ 9
-NB.   ipf5=. (?@!@<: A. i.) 5
-NB.   HEf5=. clean (/: ipf5) sp_mt_ L1f5 (mp mp (ct_mt_ @ [)) Tf5
-NB.   ipf5 ; L1f5 ; Tf5 ; (L1f5 mp Tf5)
-
-NB. L1=. trl1_mt_ 0 (< a: ; 0) } 0.1 * _8 + ? 6 6 $ 18
-NB. T=. (+ ct_mt_) bdlpick_mt_ trl_mt_ 0.1 * >: ? 6 6 $ 9
-NB. ip=. (?@!@<: A. i.) 6                                  NB. <: to force ip[0]==0
-NB. HE6=. clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
-
-NB. L1=. trl1_mt_ 0 (< a: ; 0) } j./ 0.1 * _7 + ? 2 10 10 $ 14
-NB. T=. (+ ct_mt_) bdlpick_mt_ trl_mt_ j./ 0.1 * >: ? 2 10 10 $ 9
-NB. ip=. (?@!@<: A. i.) 10
-NB. HE10=. clean (/: ip) sp_mt_ L1 (mp mp (ct_mt_ @ [)) T
-NB. ip ; L1 ; (i.0) ; (i.0) ; (diag_mt_ T) ; (1 diag_mt_ T) ; (ip sp_mt_ HE10) ; (L1 mp T) ; (i.0) ; (i.0)
-NB. clean lahefpl_mt_ ((i.10);(0 {."1 HE10);(10 ($!.0) 1);(,0);(0 ({,) HE10);(i.0);HE10;(0 {."1 HE10);({."1 HE10);((< (<0);0) { HE10))
-NB. clean hetrfpl_mt_ HE10

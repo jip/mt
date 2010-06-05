@@ -244,3 +244,46 @@ Note 'trs testing and timing'
    ts 'xx1000=. B1000 gesv_pjlap_ A1000'
 89.0654 3.78045e7
 )
+
+NB. =========================================================
+NB. Test suite
+
+NB. test for errors
+NB.   tgetrs mat
+
+tgetrs=: 3 : 0
+  mn=. <./ 'm n'=. $ y  NB. <<<<<<<<<<<<<<<
+  im=. i. m
+  in=. i. n
+  U=. im <:/ in                          NB. upper triangle rectangular matrix
+  L=. im >/ in                           NB. strict lower triangle rectangular matrix
+  I=. im =/ in                           NB. identity rectangular matrix
+
+  LU2L=. (mn & ({. " 1)) @: (I + L & *)  NB. L is m×min(m,n) matrix
+  LU2U=. (mn & {.) @: (U & *)            NB. U is min(m,n)×n matrix
+  error=. %: @ (+/) @: , @: | @: -
+
+  'p LU'=. getrf y
+  smoutput 'getrf (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
+  'p LU'=. getf2r y
+  smoutput 'getf2r (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
+  'p LU'=. rgetrf y
+  smoutput 'rgetrf (match error): ' , ": (p C. y) (-: , error) (LU2L LU) mp (LU2U LU)
+)
+
+NB. measure time and space
+NB.   mgetrf mat
+
+mgetrs=: 3 : 0
+  ts=. 6!:2, 7!:2@]
+  ts & > 'pLU=. getrf y';'pLU=. getf2r y';'pLU=. rgetrf y'
+)
+
+NB. test and measure interface verbs
+NB.   testgetrf m,n
+NB.   testgetrf n
+
+testgetrs=: 3 : 0
+  y=. 2 {. y , {: y    NB. n->(n,n) , (m,n)->(m,n)
+  (tgetrs ; mgetrs) 0.1 * ? y $ 10
+)

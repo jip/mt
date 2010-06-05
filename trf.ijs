@@ -32,7 +32,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFNB=: 64  NB. block size limit
+TRFNB=: 3  NB. block size limit
 
 NB. ---------------------------------------------------------
 NB. hetf2pl
@@ -75,31 +75,73 @@ NB.
 NB. TODO:
 NB. - T would be sparse
 
+NB. NB. gi        Conj. to evoke m-th verb from gerund n
+NB. gi=: 2 : '(m{n)`:6'                    NB. Conj. to evoke m-th verb from gerund n: n[m]
+NB. 
+NB. tile=: 1 : '[`((0 gi m)~)`((1 gi m)&#)`(2 gi m)`(0 gi m)`] fork3'
+NB. 
+NB. stitcht=: {.  `   >. `,. tile
+NB. stitchb=: {.  `(-@>.)`,. tile
+NB. appendl=: {."1`   >. `,  tile
+NB. appendr=: {."1`(-@>.)`,  tile
 
-stitchrb=: [ ,. ({.~ (-@#))~
-xsh=: 1 : '{.~ (m+$)'
+stitchrb=: [ ,. ({.~ (-@#))~            NB. stitch right aligned down to the left
 
+NB. ---------------------------------------------------------
+NB. xsh
+NB.
+NB. Description:
+NB.   Extend [dimensions within] shape
+NB.
+NB. Syntax:
+NB.   eA=. dsh xsh A
+NB. where
+NB.   A   - sh-array to extend by zeros
+NB.   dsh - r-vector or scalar, integer, delta of shape,
+NB.         negative element forces corresponding dimension
+NB.         extending from the head
+NB.   eA  - (|dsh|+sh)-array, being A extended by zeros
+NB.   sh  - r-vector, the shape of A
+NB.   r   ≥ 0, the rank of A and eA
+NB.
+NB. Examples:
+NB.    0 xsh 2 2 $ 2          _1 xsh 2 2 $ 2
+NB. 2 2                    0 0 0
+NB. 2 2                    0 2 2
+NB.                        0 2 2
+NB.    1 3 xsh 2 2 $ 2        1 _3 xsh 2 2 $ 2
+NB. 2 2 0 0 0              0 0 0 2 2
+NB. 2 2 0 0 0              0 0 0 2 2
+NB. 0 0 0 0 0              0 0 0 0 0
+NB.    _1 3 xsh 2 2 $ 2       _1 _3 xsh 2 2 $ 2
+NB. 0 0 0 0 0              0 0 0 0 0
+NB. 2 2 0 0 0              0 0 0 2 2
+NB. 2 2 0 0 0              0 0 0 2 2
+
+xsh=. [: : (((condneg"0 + [) $) {. ])
+
+jomat=: (((, 0:)~ #) xsh [) stitchrb ]  NB. make jordain matrix from blocks x and y
+
+NB. 'ip L1 T permHE5 H'=. 0 0 0 0 hetf2pl HE5
 NB. 'ip L1 T permA H'=. l0 hetf2pl A
 NB. 'ip L1 T permA H h'=. step (ip;L1;T;A;H;h)
 
-hetf2pla=: 5 {. ((3 : 0) ^: (0>.(<: TRFNB)<.(<:@#@(3 & {::)))) @ ((i.@#@]);(,.@[);(1 1 {. ]);];(1 {."1 ]);(}.@({."1 @ ])))
+hetf2pl=: ((3 : 0) ^: (0>.(<: TRFNB)<.(<:@#@(3 & {::)))) @ ((i.@#@]);(,.@(1,[));(1 1 {. ]);];(1 {."1 ]);(}.@({."1 @ ])))
   'ip L1 T A H h'=. y
   'n j'=. $ L1
-  l0=. (n (] dhs2lios (_1,-)) j) ({,) L1
+  l0=. (n (] dhs2lios (_1,-)) j) ({,) L1  NB. last column under diagonal
   l1=. h - l0 * (_1 ({,) T)
   q=. liofmax l1
   dip0=. 0 lios2cp q
-  dip=. j (+ &. >) dip0              NB. j ([ lios2cp +) q
-  l1=. dip0 C. l1
+  dip=. j (+ &. >) dip0              NB. dip=. j ([ lios2cp +) q
   A=. dip sp A
   ip=. dip C. ip
   l0=. dip0 C. l0
   H=. dip C. H
-  L1=. dip C. L1
-  t01=. + t10=. {. l1
+  t01=. + t10=. q { l1
   l1=. l1 % t10
-  h=. ((< (n th2lios j) ; j) { A) - (j }. H) mp (+ j { L1)
-  L1=. L1 stitchrb l1
+  h=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ (j+q) { L1)
+  L1=. dip C. L1 stitchrb l1
   H=. H stitchrb (t01 , h)
   h=. h - l0 * t01
   t11=. {. h
@@ -107,29 +149,27 @@ hetf2pla=: 5 {. ((3 : 0) ^: (0>.(<: TRFNB)<.(<:@#@(3 & {::)))) @ ((i.@#@]);(,.@[
   ip ; L1 ; T ; A ; H ; (}. h)
 )
 
-hetf2plb=: 5 {. ((3 : 0) ^: (0>.(<: TRFNB)<.(<:@#@(3 & {::)))) @ ((i.@#@]);(,.@[);(1 1 {. ]);];(1 {."1 ]);(}.@({."1 @ ])))
-  'ip L1 T A H h'=. y
-  'n j'=. $ L1
-  l0=. (n (] dhs2lios (_1,-)) j) ({,) L1
-  l1=. h - l0 * (_1 ({,) T)
-  q=. liofmax l1
-  dip0=. 0 lios2cp q
-  dip=. j (+ &. >) dip0              NB. j ([ lios2cp +) q
-  l1=. dip0 C. l1
-  A=. dip sp A
-  ip=. dip C. ip
-  l0=. dip0 C. l0
-  H=. dip C. H
-  L1=. dip C. L1
-  t01=. + t10=. {. l1
-  l1=. l1 % t10
-  h=. ((j (] dhs2lios (((* >:)),-~)) n) ({,) A) - (j }. H) mp (+ j { L1)
-  L1=. L1 stitchrb l1
-  H=. H stitchrb (t01 , h)
-  h=. h - l0 * t01
-  t11=. {. h
-  T=. (t11,t10,t01) (_1 _2,(_1 - #@])) } 1 xsh T
-  ip ; L1 ; T ; A ; H ; (}. h)
+NB. 'ip L1 T'=. hetrfpl A
+NB. 'ip L1 T permA H'=. step (ip;L1;T;A;H)
+
+hetrfpl=: 3 : 0
+  n=. # y
+  l=. (<: n) # 0
+  ip=. i. n
+  L1=. 0 {."1 y
+  T=. 0 0 $ 0
+  for_j. n (] dhs2lios (0,(>.@%))) TRFNB do.
+    'ipi L1i Ti y H'=. l hetf2pl y
+    dip=. (i. j) , (j+ipi)
+    ip=. dip C. ip
+    L1=. dip C. L1
+    L1=. L1 stitchrb L1i
+    T=. T jomat Ti
+    y=. (2 # TRFNB) }. y
+    y=. y - ((H mp ct L1i) + (L1i mp ############
+    l=. (((] dhs2lios (_1,-))/@$) ({,) ]) L1i  NB. last column under diagonal
+  end.
+  ip ; L1 ; T
 )
 
 NB. ---------------------------------------------------------
@@ -463,34 +503,6 @@ NB.
 NB. TODO:
 NB. - implement partitioned algorithm
 NB. - T would be sparse
-
-hetrfpl=: 3 : 0
-  n=. # y
-  L1=. idmat n
-  T=. ($ y) $ 0
-  ip=. i. n
-  l1=. n {. 1
-  for_i. TRFNB dhs2lios (0, (<. n % TRFNB)) do.
-    n=. # y
-    nb=. TRFNB <. # y
-    'ipi L1i Ti'=. (l1 ; nb) hetf2pl y
-    T=. ((0 0,nb) (diag ; (i 1} [)) Ti) setdiag T
-    k=. nb <. (n-i)
-    d=. (1 0,k) diag Ti
-    T=. (d;(1,i,k))) setdiag T
-    T=. ((+d);(_1,i,k))) setdiag T           NB. TODO: amend by lIOS
-    L1=. L1i (< (n th2lios i) ; (dhs2lios (i,nb))) } L1
-    l1=. ((n-i) dhs2lios (_1,(n-(i+nb)))) ({,) L1i
-    ipi=. (i. i) , (i+ipi)
-    y=. ipi sp y
-    L1=. ipi C. L1
-    ip=. ipi C. ip
-    A11=. A11 - H*L1^H - L1*T*L1^H       NB. FIXME!
-    recombine A = (  A00  A01  )
-                  (  A10  A11  )
-  end.
-  ip ; L1 ; T
-)
 
 NB. ---------------------------------------------------------
 NB. hetrfpu

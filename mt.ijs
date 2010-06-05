@@ -100,6 +100,7 @@ require '~user/projects/mt/norm.ijs'    NB. Norms
 require '~user/projects/mt/struct.ijs'  NB. Structure handlers
 require '~user/projects/mt/rand.ijs'    NB. Random arrays
 require '~user/projects/mt/con.ijs'     NB. Condition number
+require '~user/projects/mt/test.ijs'    NB. Test
 
 NB. low-level
 require '~user/projects/mt/bak.ijs'     NB. Recover eigenvectors after balancing
@@ -147,6 +148,9 @@ NB.   vtest - verb to test algorithms; is called as:
 NB.              vtest (m,n)
 NB.
 NB. Application:
+NB. - test by random square integer matrix with elements
+NB.   distributed uniformly with support [0,100):
+NB.    (? @ $ 100"_) test_mt_ 10 10
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
 NB.     (? @ $ 0:) test_mt_ 200 150

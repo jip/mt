@@ -8,6 +8,9 @@ NB.
 NB. hehrd   Reduce a general matrix to Hessenberg form
 NB.         (3-diagonal Hermitian matrix)
 NB.
+NB. unghr   Generate an unitary (orthogonal) matrix which is
+NB.         defined as the product of elementary reflectors
+NB.
 NB. Copyright (C) 2009 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
 NB. Version: 1.0.0 2009-06-01
@@ -163,6 +166,20 @@ gehd2u=: 3 : 0
 )
 
 gehrdu=: gehd2u  NB. stub for a while
+
+NB. ---------------------------------------------------------
+NB. unghr
+NB. Generate an unitary (orthogonal) matrix Q which is
+NB. defined as the product of ({:fs) elementary reflectors of
+NB. order n, as returned by gehrd:
+NB.    Q = H(f) H(f+1) ... H(f+s-1)
+NB.
+NB. Syntax:
+NB.   Q=. unghr A ; fs
+NB. where
+NB.   fs - (f,s), defines where Qf is in A
+
+
 
 NB. =========================================================
 NB. Test suite

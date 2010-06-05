@@ -1,58 +1,115 @@
 NB. struct.ijs
 NB. Structure handlers
 NB.
-NB. ioscv     Locate constant vector in matrix
+NB. ioscv     Locate constant rows or columns in matrix
 NB. ct1       Count trailing 1s in Boolean vector
 NB. ct0       Count trailing 0s in vector
 NB. ct0c      Count trailing zero columns in matrix
 NB. ct0r      Count trailing zero rows in matrix
+NB. nfv       Template conj. to make verbs negating 1st
+NB.           vector (either row or column)
+NB. trace     Matrix trace
+NB. ct        Conjugate transpose
 NB.
-NB. hds2ios   IOS from head, delta and size
-NB. ht2ios    IOS from head and tail
-NB. hs2ios    IOS from head and size
-NB. cios2ios  Convert complex IOS (cIOS) to IOS
+NB. fromc     Model direct 'from' accepting cIOS
 NB. fromi     Adv. to model indirect 'from'
 NB. fromci    Adv. to model 'fromi' accepting cIOS
-NB. updi      Conj. to update subarray by monad
+NB. amendci   Adv. to model indirect 'amend' accepting cIOS
+NB. upd       Adv. to update subarray by monad
+NB. updl      Conj. to model 'upd' accepting lIOS
+NB. updi      Conj. to model indirect 'upd'
 NB. updci     Conj. to model 'updi' accepting cIOS
-NB. upd2i     Conj. to update subarray by dyad
+NB. upd2i     Conj. to indirect update subarray by dyad
 NB. upd2ci    Conj. to model 'upd2i' accepting cIOS
-NB. mapi      Conj. to map subarray to another one by monad
+NB. upd3i     Conj. to indirect update subarray by triad
+NB. upd3ci    Conj. to model 'upd3i' accepting cIOS
+NB. mapi      Conj. to indirect map subarray to another one
+NB.           by monad
 NB. mapci     Conj. to model 'mapi' accepting cIOS
-NB. map2i     Conj. to map two subarrays to another one by
-NB.           dyad
+NB. mapli     Conj. to model 'mapi' accepting lIOS
+NB. map2i     Conj. to indirect map two subarrays to another
+NB.           one by dyad
 NB. map2ci    Conj. to model 'map2i' accepting cIOS
 NB.
-NB. append   Enhance append (A)
-NB. stitch   Enhance stitch (A)
+NB. append    Template adv. to make verbs to enhance append
+NB. stitch    Template adv. to make verbs to enhance stitch
 NB.
-NB. rws      Rows weighted sum
+NB. rws       Rows weighted sum
+NB. sdiag     Add element[s from] x to diagonal of matrix y
 NB.
-NB. idmat    Make rectangular identity matrix with shifted
-NB.          diagonal
-NB. diagmat  Make rectangular diagonal matrix with shifted
-NB.          diagonal
+NB. idmat     Make rectangular identity matrix with shifted
+NB.           diagonal
+NB. diagmat   Make rectangular diagonal matrix with shifted
+NB.           diagonal
 NB.
-NB. tru      Extract upper triangular (trapezoidal) matrix
-NB. trl      Extract lower triangular (trapezoidal) matrix
-NB. tru0     Extract strictly upper triangular (trapezoidal)
-NB.          matrix
-NB. trl0     Extract strictly lower triangular (trapezoidal)
-NB.          matrix
-NB. tru1     Extract unit upper triangular (trapezoidal)
-NB.          matrix
-NB. trl1     Extract unit lower triangular (trapezoidal)
-NB.          matrix
+NB. tru       Extract upper triangular (trapezoidal) matrix
+NB. trl       Extract lower triangular (trapezoidal) matrix
+NB. tru0      Extract strictly upper triangular (trapezoidal)
+NB.           matrix
+NB. trl0      Extract strictly lower triangular (trapezoidal)
+NB.           matrix
+NB. tru1      Extract unit upper triangular (trapezoidal)
+NB.           matrix
+NB. trl1      Extract unit lower triangular (trapezoidal)
+NB.           matrix
 NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-01-01
 
 coclass 'mt'
 
 NB. =========================================================
+NB. Concepts
+NB.
+NB. IO   = index of
+NB. IOS  = indices of
+NB. lIOS = linear IOS
+NB. rIOS = rectangular IOS
+NB. cIOS = complex IOS
+NB.
+NB. Following are equivalents:
+NB.   (3 5 _7 ,: 2 _3 4) ] ;. 0 report
+NB.   (< 3 4 ; 7 6 5 ; _10 _9 _8 _7) { report
+NB.   (cios2ios 3j2 5j_3 _7j4) { report
+NB.   (cios2rios 3j2 5j_3 _7j4) ] ;. 0 report
+NB.
+NB. Following are equivalents:
+NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4
+NB.   (4 lios2ios 1 6 11) { i. 3 4
+NB.   (4 ios2lios (0 1 ; 1 2 ; 2 3)) ({,) i. 3 4
+NB.   1 6 11 ({,) i. 3 4
+
+NB. =========================================================
 NB. Local definitions
 
+NB. ---------------------------------------------------------
+NB. Indirect extractors
+
+NB. m-th from y from x: x[y[m]]
+myx=: 1 : '{~ (m & {)'
+
+NB. m-th from n from y from x: x[y[n[m]]]
+mnyx=: 2 : '{~ ((m { n) & {)'
+
+NB. m-th from x: x[m]
+mx=: 1 : 'm { ['
+
+NB. m-th from n from x: x[n[m]]
+mnx=: 2 : '(m { n) { ['
+
+NB. aggregated extractor: u(x[y[n[0]]],x[y[n[1]]])
+mnyx01=: 2 : '(0 mnyx n) u (1 mnyx n)'
+
+NB. TODO: mnyx012
+
+NB. ---------------------------------------------------------
+NB. Wrappers
+
+NB. cIOS wrapper: u(cios2ios(x),y)
+cioswrap=: 1 : '(u~ cios2ios)~'
+
+NB. ---------------------------------------------------------
 NB. convert shape y to IOS differences table
 sh2id=: {. -~/&i. {:
 
@@ -72,16 +129,6 @@ NB. matrix starting from diagonal number x in the rectangular
 NB. circumscribing matrix y
 tr=: 2 : '0&$: : ([ (] * (u~ sh2id@$)) v)'
 
-NB. indirect extractors
-myx=: 1 : '{~ (m & {)'                  NB. indirect m from y from x: (m{y){x
-mnyx=: 2 : '{~ ((m { n) & {)'           NB. indirect m from n from y from x: ((m{n){y){x
-mx=: 1 : 'm { ['                        NB. indirect m from x: m{x
-mnx=: 2 : '(m { n) { ['                 NB. indirect m from n from x: (m{n){x
-mnyx01=: 2 : '(0 mnyx n) u (1 mnyx n)'  NB. aggregated extractor
-
-NB. cIOS wrapper
-cioswrap=: 1 : '(u~ cios2ios)~'
-
 NB. =========================================================
 NB. Interface
 
@@ -91,61 +138,27 @@ ct0=: ct1 @ (0&=)         NB. count trailing 0s in vector y
 ct0c=: ct1 @ (0 & ioscv)  NB. count trailing zero columns in matrix y
 ct0r=: ct1 @ (ioscv & 0)  NB. count trailing zero rows in matrix y
 
-NB. ---------------------------------------------------------
-NB. Linear IOS (lIOS)
-NB. Rectangular IOS (rIOS)
-NB. Complex IOS (cIOS)
-NB.
-NB. Following are equivalents:
-NB.    (3 5 _7 ,: 2 _3 4) ] ;. 0 report
-NB.    (< 3 4 ; 7 6 5 ; _10 _9 _8 _7) { report
-NB.    (cios2ios 3j2 5j_3 _7j4) { report
-NB.    (cios2rios 3j2 5j_3 _7j4) ] ;. 0 report
-
-NB. generators
-hds2ios=: + ` (* i.)/             NB. (2{y)-vector of integers from head (0{y) by delta (1{y)
-ht2ios=: ] + (i. @ -)             NB. (x-y)-vector of integers from head y to tail (x-1): y (y+1) ... (x-1)
-hs2ios=: [ + ((] * i. @ *) sgn)~  NB. y-vector of integers from head x of size y, models verb's (u;.0) rIOS
-
-NB. converters
-cios2ios=: < " 1 @ (< @ hs2ios/ " 1 @: +.)  NB. convert cIOS to IOS; side effect: output is incorrect for IOS with length less than array's rank
-
-NB. explorers
-NB. FIXME: sink cios2ios to low-level individual selectors
-fromi=: 1 : '(m myx)~'                          NB. model indirect 'from': (m{x){y
-fromc=: ({~ cios2ios)~                          NB. model direct 'from' accepting cIOS: x{y
-fromci=: 1 : '(m fromi) cioswrap'               NB. model 'fromi' accepting cIOS
-updi=: 2 : '((u @ (n myx))~)`(n mx)`] }'        NB. update subarray by monad: (u ((n{x){y)) (n{x) } y
-updci=: 2 : '(u updi n) cioswrap'               NB. model 'updi' accepting cIOS
-upd=: 1 : '(u @ {)`[`]}'                        NB. update items defined by IOS (x) in (y) by verb (u)
-updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'         NB. model 'upd' accepting lIOS
-upd2i=: 2 : '((u mnyx01 n)~)`(1 mnx n)`] }'     NB. update subarray by dyad: (((({.n){x){y) u ((({:n){x){y)) (({:n){x) } y
-upd2ci=: 2 : '(u upd2i n) cioswrap'             NB. model 'upd2i' accepting cIOS
-upd3i=: 2 : '(((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n))~)`(2 mnx n)`] }'  NB. update subarray by gerund
-upd3ci=: 2 : '(u upd3i n) cioswrap'             NB. model 'upd3i' accepting cIOS
-mapi=: 2 : '((u @ (0 mnyx n))~)`(1 mnx n)`] }'  NB. map subarray to another one by monad: (u ((({.n){x){y)) (({:n){x) } y
-mapci=: 2 : '(u mapi n) cioswrap'               NB. model 'mapi' accepting cIOS
-map2i=: 2 : '((u mnyx01 n)~)`(2 mnx n)`] }'     NB. map two subarrays to another one by dyad: (((({.n){x){y) u (((1{n){x){y)) (({:n){x) } y
-map2ci=: 2 : '(u map2i n) cioswrap'             NB. model 'map2i' accepting cIOS
+trace=: +/ @ diag         NB. matrix trace
+ct=: + @ |:               NB. conjugate transpose
 
 NB. ---------------------------------------------------------
 NB. nfv
-NB. Template conj to make verbs negating 1st vector (either
+NB. Template conj. to make verbs negating 1st vector (either
 NB. row or column)
 NB.
 NB. Syntax:
 NB.   vneg=. iocios nfv iovh
 NB. where
 NB.   iovh   - integer in range (-r:r-1), IO in cIOS
-NB.            (iocios{cios) to select axis to negate
+NB.            (cios[iocios]) to select axis to negate
 NB.   iocios - integer, IO in cIOS bundle (cios) to select
-NB.   vneg   - verb to negate, is called as: (cios vneg A),
-NB.            implements steps:
-NB.              1) take 2-vector (cIOS) (m{x)
-NB.              2) set imaginary part to 1 in its n-th item
-NB.              3) convert transformed cIOS to IOS
-NB.              4) use this IOS to update by verb (-)
-NB.                 submatrix in y
+NB.   vneg   - verb to negate, is called as: (cios vneg A)
+NB.
+NB. Algorighm for verb vneg:
+NB.   1) take cIOS from x[m]
+NB.   2) set imaginary part to 1 in its n-th item
+NB.   3) convert transformed cIOS to IOS
+NB.   4) use this IOS to update by verb (-) submatrix in y
 NB.
 NB. Application:
 NB. - let cios=. (ciosYZ , ciosT , ciosR ,: ciosL) is cIOS
@@ -162,8 +175,88 @@ NB.     vneg=: [ (3 nfv 0) (2 nfv 1)
 nfv=: 2 : '((- upd)~ (cios2ios @ ((9&o. j. 1:) updl n) @ (m&{)))~'
 
 NB. ---------------------------------------------------------
+NB. IOS explorers
+NB. TODO: sink cios2ios to low-level indirect extractors
+
+NB. Model direct 'from' accepting cIOS: y[x]
+fromc=: ({~ cios2ios)~
+
+NB. Adv. to model indirect 'from': y[x[m]]
+fromi=: 1 : '(m myx)~'
+
+NB. Adv. to model 'fromi' accepting cIOS
+fromci=: 1 : '(m fromi) cioswrap'
+
+NB. Adv. to model indirect 'amend' accepting cIOS
+NB. y[x[n]] := u(x,y)
+amendci=: 2 : 'u`(cios2ios @ (n mx))`] }'
+
+NB. Adv. to update subarray by monad: y[x] := u(y[x])
+upd=: 1 : '(u @ {)`[`]}'
+
+NB. Conj. to model 'upd' accepting lIOS
+updl=: 2 : '((n"_)})~ (u @ (n & ({,)))'
+
+NB. Conj. to model indirect 'upd':
+NB. y[x[n]] := u(y[x[n]])
+updi=: 2 : '((u @ (n myx))~)`(n mx)`] }'
+
+NB. Conj. to model 'updi' accepting cIOS
+updci=: 2 : '(u updi n) cioswrap'
+
+NB. Conj. to indirect update subarray by dyad:
+NB. y[x[n[1]]] := u(y[x[n[0]]],y[x[n[1]]])
+upd2i=: 2 : '((u mnyx01 n)~)`(1 mnx n)`] }'
+
+NB. Conj. to model 'upd2i' accepting cIOS
+upd2ci=: 2 : '(u upd2i n) cioswrap'
+
+NB. Conj. to indirect update subarray by triad:
+NB. y[x[n[2]]] := u[1](u[0](y[x[n[0]]],y[x[n[1]]]),y[x[n[2]]])
+upd3i=: 2 : '(((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n))~)`(2 mnx n)`] }'
+
+NB. Conj. to model 'upd3i' accepting cIOS
+upd3ci=: 2 : '(u upd3i n) cioswrap'
+
+NB. Conj. to indirect map subarray to another one by monad:
+NB. y[x[n[1]]] := u(y[x[n[0]]])
+mapi=: 2 : '((u @ (0 mnyx n))~)`(1 mnx n)`] }'
+
+NB. Conj. to model 'mapi' accepting cIOS
+mapci=: 2 : '(u mapi n) cioswrap'
+
+NB. Conj. to model 'mapi' accepting lIOS
+NB. y[x[n[1]]] := u(y[x[n[0]]])
+NB. FIXME!
+NB. mapli=: 2 : '((0 mnx n) (u @ ({,)) ]) ((1 mnx n) }) ]'
+NB. mapli=: 2 : '((0 {:: [) (u ;. 0) ]) ((1 {:: [) }) ]'    NB. (rIOSget ; lIOSwrite) (u mapli 0 1) A
+
+NB. Conj. to indirect map two subarrays to another one by
+NB. dyad: y[x[n[2]]] := u(y[x[n[0]]],y[x[n[1]]])
+map2i=: 2 : '((u mnyx01 n)~)`(2 mnx n)`] }'
+
+NB. Conj. to model 'map2i' accepting cIOS
+map2ci=: 2 : '(u map2i n) cioswrap'
+
+NB. Conj. to indirect map three subarrays to another one by
+NB. triad:
+NB. y[x[n[3]]] := u[1](u[0](y[x[n[0]]],y[x[n[1]]]),y[x[n[2]]])
+map3i=: 2 : '(((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n))~)`(3 mnx n)`] }'
+
+NB. Conj. to model 'map3i' accepting cIOS
+map3ci=: 2 : '(u map3i n) cioswrap'
+
+NB. Conj. to indirect map four subarrays to another one by
+NB. tetrad:
+NB. y[x[n[4]]] := u[2](u[1](u[0](y[x[n[0]]],y[x[n[1]]]),y[x[n[2]]]),y[x[n[3]]])
+map4i=: 2 : '((((((0{u)`:6) mnyx01 n) ((1{u)`:6) (2 mnyx n)) ((2{u)`:6) (3 mnyx n))~)`(4 mnx n)`] }'
+
+NB. Conj. to model 'map3i' accepting cIOS
+map4ci=: 2 : '(u map4i n) cioswrap'
+
+NB. ---------------------------------------------------------
 NB. append
-NB. Adverb to enhance append
+NB. Template adv. to make verbs to enhance append
 NB.
 NB. Examples:
 NB.    (3 3$3) 0 append (2 2$2)     (3 3$3) _1 append (2 2$2)
@@ -183,7 +276,7 @@ append=: 1 : ',`((({."_1~ (-@{:@$)),])`([,({."_1~ (-@{:@$))~)@.(>&({:@$)))@.(m"_
 
 NB. ---------------------------------------------------------
 NB. stitch
-NB. Adverb to enhance stitch
+NB. Template adv. to make verbs to enhance stitch
 NB.
 NB. Examples:
 NB.    (3 3$3) 0 stitch (2 2$2)     (3 3$3) _1 stitch (2 2$2)
@@ -209,6 +302,24 @@ NB. - to subtract from row 3 twiced row 4:
 NB.   ((1 _2) 3 4 rws (i. 5 5)
 
 rws=: 1 : '+/ @ (* (m & {))'
+
+NB. ---------------------------------------------------------
+NB. sdiag
+NB. Shift diagonal of y by values from x, i.e. make x*I+y
+NB. from scalar or vector x and matrix y
+NB.
+NB. Syntax:
+NB.   s=. x sdiag y
+NB. where
+NB.   y - n×n-matrix
+NB.   x - numeric scalar of n-vector, shift for y's diagonal
+NB.   s - n×n-matrix, equals to (y+x*idmat(#y))
+NB.   n >= 0
+NB.
+NB. TODO:
+NB. - implement for non-square matrices
+
+sdiag=: (+ diag) ((>: * i.) @ # @ ]) } ]
 
 NB. ---------------------------------------------------------
 NB. idmat

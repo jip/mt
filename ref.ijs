@@ -1,12 +1,30 @@
 NB. ref.ijs
 NB. Reflections
 NB.
-NB. larfg    Generate an elementary reflector
-NB. larfp    Generate an elementary reflector
+NB. larfgf   Generate an elementary reflector with forward
+NB.          direction
+NB. larfgb   Generate an elementary reflector with backward
+NB.          direction
+NB. larfgfc  Generate an elementary reflector with forward
+NB.          direction and conjugated τ
+NB. larfgbc  Generate an elementary reflector with backward
+NB.          direction and conjugated τ
+NB. larfpf   Generate an elementary reflector with forward
+NB.          direction and β≥0
+NB. larfpb   Generate an elementary reflector with backward
+NB.          direction and β≥0
+NB. larfpfc  Generate an elementary reflector with forward
+NB.          direction, β≥0 and conjugated τ
+NB. larfpbc  Generate an elementary reflector with backward
+NB.          direction, β≥0 and conjugated τ
 NB.
-NB. larfl    Apply an elementary reflector from the left
-NB. larfr    Apply an elementary reflector from the right
-NB.
+NB. larflsc  Template adv. to make verbs to apply an
+NB.          elementary reflector to a matrix from the left,
+NB.          τ is pre-conjugated
+NB. larfrcs  Template adv. to make verbs to apply an
+NB.          elementary reflector to a matrix from the right,
+NB.          v is pre-conjugated
+NB.########
 NB. larfL    Template adv. to make verbs to update submatrix
 NB.          by larfl
 NB. larfR    Template adv. to make verbs to update submatrix
@@ -28,12 +46,9 @@ NB. gerf02   Template conj. to make verbs to generate and
 NB.          conditionally apply an elementary reflector to a
 NB.          matrix
 NB.
-NB. unghr    Generate an unitary (orthogonal) matrix which is
-NB.          defined as the product of elementary reflectors
-NB.
-NB. Copyright (C) 2009 Igor Zhuravlov
+NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
-NB. Version: 1.0.0 2009-06-01
+NB. Version: 1.0.0 2010-01-01
 
 coclass 'mt'
 
@@ -220,24 +235,34 @@ NB. larfgf
 NB. larfgb
 NB. larfgfc
 NB. larfgbc
+NB. larfpf
+NB. larfpb
+NB. larfpfc
+NB. larfpbc
 NB.
 NB. Shortcuts to generate an elementary reflector H of order
 NB. n such that H'*y = β*e1, where H=I-τ*v*v', H'*H=I. H is
 NB. represented in factored form by n-vector v and scalar τ.
 NB. Vector v can have either forward (α in head) or backward
-NB. (α in tail) direction. Input and output vectors direction
-NB. is the same.
+NB. (α in tail) direction. Input and output vector directions
+NB. are the same.
 
 larfgf=: 0 _1 & larfg           NB. (β,v[1:n-1],τ)=. larfgf (α,x[1:n-1],0)
 larfgb=: _1 0 & larfg           NB. (τ,v[1:n-1],β)=. larfgb (0,x[1:n-1],α)
 larfgfc=: (+ updl _1) @ larfgf  NB. (β,v[1:n-1],conj(τ))=. larfgfc (α,x[1:n-1],0)
 larfgbc=: (+ updl 0) @ larfgb   NB. (conj(τ),v[1:n-1],β)=. larfgbc (0,x[1:n-1],α)
 
+larfpf=: 0 _1 & larfp           NB. (β,v[1:n-1],τ)=. larfpf (α,x[1:n-1],0)
+larfpb=: _1 0 & larfp           NB. (τ,v[1:n-1],β)=. larfpb (0,x[1:n-1],α)
+larfpfc=: (+ updl _1) @ larfpf  NB. (β,v[1:n-1],conj(τ))=. larfpfc (α,x[1:n-1],0)
+larfpbc=: (+ updl 0) @ larfpb   NB. (conj(τ),v[1:n-1],β)=. larfpbc (0,x[1:n-1],α)
+
 NB. ---------------------------------------------------------
 NB. larflsc
+NB. larflss
 NB. Template adv. to make verbs to apply an elementary
-NB. reflector H' to a matrix A from the left:
-NB.   H'*A = A - conj(tau) * v * (v' * A)
+NB. reflector H to a matrix A from the left: ########
+NB.   H*A = A - conj(τ) * v * (v' * A)
 NB.
 NB. Syntax:
 NB.   vapp=. (iob,iot) larflsc
@@ -259,17 +284,18 @@ NB.   m    ≥ 0
 NB.   n    ≥ 0
 NB.
 NB. Notes:
-NB. - differs from LAPACK's xLARF('L') in not scanning
-NB.   trailing zeros in v
+NB. - differs from LAPACK version 3.2's xLARF('L') in not
+NB.   scanning trailing zeros in v
 
 larflsc=: (larfl`]`+) larf  NB. pre-processing: the same v, conjugated τ
+larflss=: (larfl`]`]) larf  NB. pre-processing: the same v, the same τ
 
 NB. ---------------------------------------------------------
 NB. larfrss
 NB. larfrcs
 NB. Template adv. to make verbs to apply an elementary
 NB. reflector H to a matrix A from the right:
-NB.   A*H = A - tau * (A * v) * v'
+NB.   A*H = A - τ * (A * v) * v'
 NB.
 NB. Syntax:
 NB.   vapp=. (iob,iot) larfrss
@@ -292,24 +318,38 @@ NB.   m    ≥ 0
 NB.   n    ≥ 0
 NB.
 NB. Notes:
-NB. - differs from LAPACK's xLARF('R') in not scanning
-NB.   trailing zeros in v
+NB. - differs from LAPACK version 3.2's xLARF('R') in not
+NB.   scanning trailing zeros in v
 
-NB. larfrss=: (larfr`]`]) larf  NB. pre-processing: the same v, same τ
+larfrcc=: (larfr`+`+) larf  NB. pre-processing: conjugate v, conjugate τ
 larfrcs=: (larfr`+`]) larf  NB. pre-processing: conjugate v, the same τ
+NB. larfrss=: (larfr`]`]) larf  NB. pre-processing: the same v, same τ
 
 NB. ---------------------------------------------------------
-NB. larfLfcs
-NB. larfLbcs
-NB. larfRfcs
-NB. larfLbcs
+NB. Adverb:     Syntax:                Apply:
+NB. larfLbcc    vapp=. ios larfLbcc    conjugate(H(τ,v,β)) * Asub
+NB. larfLbcs    vapp=. ios larfLbcs    transpose(H(τ,v,β)) * Asub
+NB. larfLbsc    vapp=. ios larfLbsc    H(τ,v,β)' * Asub
+NB. larfLbss    vapp=. ios larfLbss    H(τ,v,β) * Asub
+NB. larfLfcc    vapp=. ios larfLfcc    conjugate(H(β,v,τ)) * Asub
+NB. larfLfcs    vapp=. ios larfLfcs    transpose(H(β,v,τ)) * Asub
+NB. larfLfsc    vapp=. ios larfLfsc    H(β,v,τ)' * Asub
+NB. larfLfss    vapp=. ios larfLfss    H(β,v,τ) * Asub
+NB. larfRfcc    vapp=. ios larfRfcs    Asub * conjugate(H(β,v,τ))
+NB. larfRfcs    vapp=. ios larfRfcs    Asub * transpose(H(β,v,τ))
+NB. larfRfsc    vapp=. ios larfRfsc    Asub * H(β,v,τ)'
+NB. larfRfss    vapp=. ios larfRfss    Asub * H(β,v,τ)
+NB. larfRbcc    vapp=. ios larfRbcs    Asub * conjugate(H(τ,v,β))  Q: cungl2 says A*H'
+NB. larfRbcs    vapp=. ios larfRbcs    Asub * transpose(H(τ,v,β))
+NB. larfRbsc    vapp=. ios larfRbsc    Asub * H(τ,v,β)'
+NB. larfRbss    vapp=. ios larfRbss    Asub * H(τ,v,β)
 NB.
-NB. Update submatrix by an elementary reflector from either
-NB. the left or the right. Reflector's layout is either a row
-NB. or a column in the matrix. Reflector's direction is
-NB. either forward (β is in head) or backward (β is in tail).
-NB. Vector v or scalar τ may be pre-conjugated or not
-NB. independently of each other.
+NB. Template adv. to make verbs to update submatrix by an
+NB. elementary reflector from either the left or the right.
+NB. Reflector's layout is either a row or a column.
+NB. Reflector's direction is either forward (β in the head)
+NB. or backward (β in the tail). Vector v or scalar τ may be
+NB. pre-conjugated or not independently of each other.
 NB.
 NB. Syntax:
 NB.   Aupd=. cios vapp A
@@ -339,15 +379,17 @@ NB.   k       ≥ max(iosz,ioss)+1
 NB.   m       ≥ 0
 NB.   n       ≥ 0
 
-NB. apply from: the left; z direction: forward;
-NB. pre-processing: the same v, conjugated τ; z cIOS is in
-NB. (0{cios); subA cIOS is in (2{cios)
-larfLfsc=: (0 _1 larflsc) upd2ci 0 2
+larfLfsc=: (0 _1 larflsc) upd2ci  NB. from the left; forward; the same v; conjugated τ
+larfLfss=: (0 _1 larflss) upd2ci  NB. from the left; forward; the same v; the same τ
 
-NB. apply from: the left; z direction: backward;
-NB. pre-processing: the same v, conjugated τ; z cIOS is in
-NB. (0{cios); subA cIOS is in (2{cios)
-larfLbsc=: (_1 0 larflsc) upd2ci 0 2
+larfLbsc=: (_1 0 larflsc) upd2ci  NB. from the left; backward; the same v; conjugated τ
+larfLbss=: (_1 0 larflss) upd2ci  NB. from the left; backward; the same v; conjugated τ
+
+larfRfcc=: (0 _1 larfrcc) upd2ci  NB. from the right; forward; conjugated v; conjugated τ
+larfRfcs=: (0 _1 larfrcs) upd2ci  NB. from the right; forward; conjugated v; the same τ
+
+larfRbcc=: (_1 0 larfrcc) upd2ci  NB. from the right; backward; conjugated v; conjugated τ
+larfRbcs=: (_1 0 larfrcs) upd2ci  NB. from the right; backward; conjugated v; the same τ
 
 NB. ######---------------------------------------------------------
 NB. larfL
@@ -412,16 +454,6 @@ NB.   and submatrices R, L, respectively; then to apply larfr
 NB.   to submatrix R:
 NB.     Aupd=. cios (1 3 larfR) A
 
-NB. apply from: the right; z direction: forward;
-NB. pre-processing: conjugated v, the same τ; z cIOS is in
-NB. (0{cios); subA cIOS is in (2{cios)
-larfRfcs=: (0 _1 larfrcs) upd2ci 0 2
-
-NB. apply from: the right; z direction: backward;
-NB. pre-processing: conjugated v, the same τ; z cIOS is in
-NB. (0{cios); subA cIOS is in (2{cios)
-larfRbcs=: (_1 0 larfrcs) upd2ci 0 2
-
 NB. ---------------------------------------------------------
 NB. larfRL
 NB. Template adv. to make verbs to update one submatrix by
@@ -457,7 +489,7 @@ NB.   and submatrices R, L, respectively; then to apply larfr
 NB.   to submatrix R and then larfl to submatrix L:
 NB.     Aupd=. cios (1 3 4 larfRL) A
 
-larfRL=: 1 : '[ ((0 2{m) larfL 0 _1) ((0 1{m) larfR 0 _1)'
+NB. larfRL=: 1 : '[ ((0 2{m) larfL 0 _1) ((0 1{m) larfR 0 _1)'
 
 NB. ---------------------------------------------------------
 NB. larfLs
@@ -761,34 +793,46 @@ NB.     Aupd=. cios ((vref`vneg`vapp) gerf02 0 1) A  NB. apply gerund and ios to
 gerf02=: 2 : '[ ((]`(}.u)) @. (0 2 i. (0 ({,) ((1{n) fromci)))) (((0{u)`:6) updci (0{n))'
 
 NB. ---------------------------------------------------------
-NB. unghr
-NB. Generate an unitary (orthogonal) matrix Q which is
-NB. defined as the product of ({:fs) elementary reflectors of
-NB. order n, as returned by gehrd:
-NB.    Q = H(f) H(f+1) ... H(f+s-1)
+NB. larft
+NB. Form the triangular factor T of a complex block reflector
+NB. H of order n, which is defined as a product of k
+NB. elementary reflectors. If direction is forward, then:
+NB.   H = H(1) H(2) ... H(k) and T is upper triangular
+NB. If direction is backward, then:
+NB.   H = H(k) ... H(2) H(1) and T is lower triangular
+NB. If layout is columnwise, then:
+NB.   H = I - V * T * V'
+NB. If layout is rowwise, then:
+NB.   H = I - V' * T * V
 NB.
 NB. Syntax:
-NB.   Q=. unghr A ; fs
+NB.   T=. (iociosV)larft V
 NB. where
-NB.   fs - (f,s), defines where Qf is in A
+NB.
+NB. TODO: scan trailing zeros
 
+LARFTFCDCIOS=: 5 2 $ 1j_1 0j1 1j_1 1 0 1 0j1 0j1 0j1 1  NB. A,v,τ,Ttru0,Tcol
 
-NB. for QR
-unghrfc=: 3 : 0
-  k=. <./ 'm n'=. _1 0 + $ y
-  Qf=. trl1 (_2 0 j. (2 $ k)) fromc y
-  Tau=. {. (_1 0 j. (1 , k)) fromc y
-NB. smoutput 'Qf' ; ($ Qf) ; Qf ; 'Tau' ; ($ Tau) ; Tau
-  mp/ (idmat # Qf) -"2 Tau * (* +)"0/~"1 |:Qf
+NB. cios1=. mkcios1larftfc (t,h,l,w)
+mkcios1larftfc=: 3 : 0
+  th1=. >: (+/) }: 't1 h1 l1'=. 1 _1 1 + }: 't h l w'=. y
+  5 2 $ (t1,l,t1,l1,(t+h),l1,th1,0,th1,1) j. (h1,1,h1,1 1 1 1 1 1 1)
 )
 
-NB. for QL
-unghrbc=: 3 : 0
-  k=. <./ 'm n'=. _1 0 + $ y
-  Qf=. |. tru1 (1 _1 j. (2 $ k)) fromc y
-  Tau=. {. (0 _1 j. (1 , k)) fromc y
-smoutput 'Qf' ; ($ Qf) ; Qf ; 'Tau' ; ($ Tau) ; Tau
-  mp/ (idmat # Qf) -"2 Tau * (* +)"0/~"1 |:Qf
+NB. Tr * ((v' * A) * (+ τ))'
+NB. larftfcstep=: (((((mp~ ((1 & (0:}))@ct)) dbg 'y''*x')`((ct@(* (+@(0&({,))))) dbg '(*+t)''')`((mp~) dbg 'mp~') map4ci 0 1 2 3 4) dbg 'map4')) step
+larftfcstep=: ((mp~ ((1 & (0:}))@ct))`(ct@(* (+@(0&({,)))))`(mp~) map4ci 0 1 2 3 4) step
+
+NB. VT=. ciosV larftfc A
+larftfc=: 4 : 0
+  'm n'=. $ y
+  'th th1'=. 0 1 + (+/) 2 {. 't h l w'=. thlw=. , +. x
+  liostau=. (l+n*th) hs2ios w         NB. current block's τ-s vector's lIOS
+  liosdiag=. hds2ios (n*th1),(>:n),w  NB. diagonal's lIOS of T=. (_1 1 * k) {. A
+  tau=.liostau ({,) y                 NB. FIXME! 
+  y=. tau ((liosdiag"_) }) y          NB. FIXME! copy τ-s vector to T's diagonal
+  cios1=. mkcios1larftfc thlw
+  0 {:: (<:w) (LARFTFCDCIOS & larftfcstep) (y ; cios1)
 )
 
 NB. =========================================================

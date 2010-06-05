@@ -34,7 +34,7 @@ script_z_ '~system/packages/math/matutil.ijs'  NB. diag
 require '~addons/math/lapack/lapack.ijs'
 need_jlapack_ 'gees geev gerqf potrf trtrs'
 
-require '~user/projects/tau/util.ijs'           NB. ht shiftdiag rndmat rndmatne
+require '~user/projects/tau/util.ijs'           NB. shiftdiag rndmat rndmatne
 
 coclass 'tau'
 
@@ -125,7 +125,7 @@ lyapchol=: 4 : 0
   n=. # y
   'Q R'=. (13 & gees_jlapack_ ^: (-. @ L.)) x  NB. Schur factorization Q*R*Q' = A
   R1=. 8 gerqf_jlapack_ y                      NB. RQ factorization R1*P1=B
-  R2=. 8 gerqf_jlapack_ (ht Q) mp R1           NB. RQ factorization R2*P2=Q'*R1
+  R2=. 8 gerqf_jlapack_ (+ |: Q) mp R1         NB. RQ factorization R2*P2=Q'*R1
 
   NB. solve triangular Luapunov equation directly for Cholesky factor V
   V=. 2 {:: R (sorzhouiter ^: n) R2 ; (i. n) ; ((2 $ n) $ 0)
@@ -173,8 +173,8 @@ NB. Syntax: is_passed=. tlyapchol A;B
 tlyapchol=: 3 : 0
 'A B'=. y
 U=. A lyapchol B
-X=. (mp ht) U
-err=. clean (A mp X) + (X (mp ht) A) + ((mp ht) B)
+X=. (mp (+ @ |:)) U
+err=. clean (A mp X) + (X (mp (+ @ |:)) A) + ((mp (+ @ |:)) B)
 (*./ ^: 2) 0 = err
 )
 

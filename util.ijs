@@ -1,12 +1,10 @@
 NB. util.ijs
 NB. Linear time-invariant (LTI) system's utilities
 NB.
-NB. ht         Hermitian (conjugate) transpose of table
 NB. powm       raise table y to power x
 NB. powsm      make report of table y powers
 NB. shiftdiag  add element[s from] x to diagonal of table y
 NB. logspace   create vector of logarithmically spaced numbers
-NB.
 NB. plot       plot data as multiplot or subplots grid
 NB.
 NB. rndmat     generate random matrix
@@ -39,9 +37,7 @@ NB. =========================================================
 NB. Local utilities
 
 NB. =========================================================
-
-NB. Hermitian (conjugate) transpose of table
-ht=: +@|:
+NB. Interface verbs
 
 NB. ---------------------------------------------------------
 NB. powm
@@ -132,8 +128,8 @@ NB. axes linked across. When subplots, each plot may have its
 NB. own options.
 NB.
 NB. Synax:
-NB.   p=. [p] plot ps;pf;so;rt;ct;kt;x;<dat
-NB.   p=. [p] plot ps;pf;so;kt;x;<dat
+NB.   p=. [p] plot ps;pf;so;rt;ct;kt;xx;<dat
+NB.   p=. [p] plot ps;pf;so;kt;xx;<dat
 NB. where
 NB.   ps  - string, plot start commands and options. For
 NB.         multiplot: 'multi' command, axes linking, plot
@@ -172,17 +168,17 @@ NB.                           or all #ij subsubplots' key
 NB.                           titles, empty means no titles
 NB.           s1;s2;...;sKi - boxed strings, key titles
 NB.         Only last subsubplot's key titles take effect.
-NB.   x   - abscissa grid[s], any one of:
+NB.   xx  - abscissa grid[s], any one of:
 NB.         - [K-by-]N array of non-complex numeric atoms,
 NB.           plot-wide x axis (axes), N=0 means default axis
 NB.         - boxed [R-by-]C array, x axes, each element #i
 NB.           contains under box any one of:
-NB.           - xi1          - [Ki-by-]Ni array of non-
-NB.                            complex numeric atoms, x axis
-NB.                            (axes) for subplot #i, or all
-NB.                            subsubplots #ij, Ni=0 means
-NB.                            default axis
-NB.           - xi1;...;xiSi - boxed x axes for subsubplots
+NB.           - xxi1           - [Ki-by-]Ni array of non-
+NB.                              complex numeric atoms, x axis
+NB.                              (axes) for subplot #i, or all
+NB.                              subsubplots #ij, Ni=0 means
+NB.                              default axis
+NB.           - xxi1;...;xxiSi - boxed x axes for subsubplots
 NB.   dat - boxed [R-by-]C array, data to plot; each element
 NB.         #i contains under box any one of:
 NB.         - dati1                  - data for subplot
@@ -211,8 +207,8 @@ NB.
 NB. TODO:
 NB. - check Nx|Ny|Nu == 0
 
-plot=: (3 : 0) " 1 1
-  (conew 'jzplot') plot y                    NB. supply new plot object
+plot=: (3 : 0) " 0 1
+  (conew 'jzplot') plot_tau_ y               NB. supply new plot object
 :
   ib=. * @ L.                                NB. is a box?
   ip=. -. @ (ib +. ('' & -:)) @ ]            NB. is a prefix?
@@ -221,51 +217,52 @@ plot=: (3 : 0) " 1 1
   p2t=. ((<"1 @: ((, ":) " 1 0)) i.)~ ^: ip  NB. convert prefix y to boxed key titles vector of length x
   p2k=. ; @ ((<'"') ,.~ (<' "') ,. p2t)      NB. wrap titles by double quotes, then raze to make keys list string
 
-  if. 7 -: # y do.
+  if. 8 -: # y do.
     NB. mplot special case: additional po preprocessing
 
-    'ps pf so rt ct kt x dat'=. y
+    'ps pf so rt ct kt xx dat'=. y
     'r c'=. fsh dat
 
     NB. expand row and column prefixes to titles list strings; wrapping each title by double quotes
     ps=. ps , ';ycaption' , (r p2k rt) , ';xcaption' , (c p2k ct)
 
   else.
-    'ps pf so kt x dat'=. y
+    'ps pf so kt xx dat'=. y
   end.
 
   NB. expand key prefixes to key titles list strings; wrapping each key by double quotes
   kt=. dat ((p2k~ rsh)~ ` ($: L: _1) @. (ib @ [)) kt
+NB. --- smoutput 'kt' ; <kt
 
   NB. pair-wise conditional append non-empty key titles (kt), prepended by string ';key', to subplot options (so)
   so=. so ((, ((';key' & ,) ^: (* @ #))) L: 0) kt
+NB. --- smoutput 'so' ; <so
 
-  NB. for each x and dat pairs (xi,dati): dati=. if empty(xi) then (dati) else (xi;dati)
-  xdat=. x ((; ^: (* @ # @ [)) ` ($: L: _1) @. (ib @ ])) dat
+  NB. for each xx and dat pairs (xxi,dati): dati=. if empty(xxi) then (dati) else (xxi;dati)
+  xdat=. xx ((; ^: (* @ # @ [)) ` ($: L: _1) @. (ib @ ])) dat
+NB. --- smoutput 'xdat' ; <xdat
 
   NB. couple each leaf from so with corresp. rank-1 box from xdat
-  sdat=. so ((, & <) L: 0 1) xdat
+  sdat=. so ((, & <) L: 0 _1) xdat
+NB. --- smoutput 'sdat' ; <sdat
 
   NB. under each sdat box: if it is subsubplots data then convert
   NB. it from boxed Si-vector to boxed Si-by-2 table,
   NB. finally ravel whole [R-by-]C array to form multiplot pd data
   pdat=. , ((> ^: (ib @: (0 & {::))) &. >) sdat
+NB. --- smoutput 'plot pdat=' ; <pdat
 
   pd__x ps
 
-  if. do.
+  if. 8 -: # y do.
     pd__x pdat
   else.
-    NB. subplots case: send each subplot's data to pd individually
+    NB. subplots case: send each [sub]subplot's data to pd consequently
 
-    NB. for each box in boxed (R*C)-vector pdat:
-    NB. - unbox to get subplot data as boxed 2-vector (subsubplots data will form boxed Si-by-2 table)
-    NB. - call (pd 'new')
-    NB. - for each row (soij;xdatij) of subplot data:
-    NB.   - call (pd soij)
-    NB.   - then call (pd xdatij)
-    NB. warning: proper [sub]subplots initialization order relies on "consequent execution order" anomaly
-    (((((pd__x & >) " 1) @ [) (pd__x @ ('new' " _))) & >) pdat
+    cct=. 2 : '((v @ }. @ [) (u @ (0 & {::))) ^: (0 < #)'  NB. consequencer conj: apply u to head, then v (usually $:) to tail
+    ss2p=. pd__x cct $:                                    NB. send subsubplot data (soij then xdatij) to pd
+    s2p=. (ss2p cct $:) @ ((, @ <) ^: (0 < #) " 1)         NB. box-then-ravel y if it's a non-empty list, then send subplot data rows to ss2p consequently
+    (s2p cct $:) pdat                                      NB. send pdat items (i.e. boxed subplot data (soij;xdatij)) to s2p consequently
 
   end.
 
@@ -294,7 +291,7 @@ NB.   mat=. rndmatpe size
 rndmatpe=: 3 : 0
 d=. diagmat 0.1 + 0.1 * ? y $ 100
 o=. 2b100 gesvd_jlapack_ rndmat y
-m=. o mp d mp +|:o
+m=. o mp d mp + |: o
 )
 
 NB. ---------------------------------------------------------
@@ -308,7 +305,7 @@ NB.   mat=. rndmatne size
 rndmatne=: 3 : 0
 d=. diagmat _0.1 + _0.1 * ? y $ 100
 o=. 2b100 gesvd_jlapack_ rndmat y
-m=. o mp d mp +|:o
+m=. o mp d mp + |: o
 )
 
 NB. =========================================================
@@ -318,7 +315,7 @@ NB. Syntax: testplot ''
 NB. TODO: rewrite
 
 testplot=: 3 : 0
-  mba=. < @: ? @ ($ & 10)
+  mba=. < @: ? @ ($ & 10)  NB. make random boxed array
 
   po=. 'multi 2 3;xgroup 0;ygroup 0;title Test mplot'
   so=. 2 3 $ (<'type line') , (<'type line;keypos ctie;keystyle lbhc;penstyle 0 1 2 3') , (<'type line';'type stick') , (<'type line';'type dot;penstyle 5;keypos ctie;keystyle lbhc;penstyle 0 1 2') , (<'type line;keypos ctie;keystyle lbhc';'type bar;keypos ctie;keystyle lbhc') , (<'type line;keypos ctie;keystyle lbhc';'type stick;keypos ctie;keystyle lbhc')
@@ -330,7 +327,7 @@ testplot=: 3 : 0
   p=. mplot po;so;rt;ct;kt;x;<dat
 
   po=. 'title Test splot;sub 0 0 _1x _36x;sub 2 3'
-  so=. 2 3 $ (<'type line;title Subplot #00;ycaption ycap00;xcaption xcap 00') , (<'type line;title Subplot #01;keypos ctie;keystyle lbhc;penstyle 0 1 2 3') , (<'type line;title Subplot #02';'type stick') , (<'type area;title Subplot #10';'type line;keypos ctie;keystyle lbhc;penstyle 0 1 2') , (<'type line;keypos ctie;keystyle lbhc';'type bar;title Subplot #11;keypos ctie;keystyle lbhc') , (<'type line;title Subplot #12;keypos ctie;keystyle lbhc';'type stick;keypos ctie;keystyle lbhc')
+  so=. 2 3 $ (<'new;type line;title Subplot #00;ycaption ycap00;xcaption xcap 00') , (<'new;type line;title Subplot #01;keypos ctie;keystyle lbhc;penstyle 0 1 2 3') , (<'new;type line;title Subplot #02';'type stick') , (<'new;type area;title Subplot #10';'type line;keypos ctie;keystyle lbhc;penstyle 0 1 2') , (<'new;type line;keypos ctie;keystyle lbhc';'type bar;title Subplot #11;keypos ctie;keystyle lbhc') , (<'new;type line;title Subplot #12;keypos ctie;keystyle lbhc';'type stick;keypos ctie;keystyle lbhc')
   kt=. 2 3 $ '' ; 'a' ; ('';'') ; ('' ; 'b') ; (('z1';'z2';'z3';'z4') ; (< 'c1';'c2';'c3')) ; (<'d' ; < 'e1';'e2')
   x=. 2 3 $ (< i.0) , (< i. 5) , (< i. 5) , (< (i.0) ; (i. 4)) , (< (i.0) ; (i. 3 6)) , (< (i. 5) ; (i. 6))
   dat=. 2 3 $ (mba 6) , (mba 4 5) , (< (mba 5) , (mba 5)) , (< (mba 6) , (mba 3 4)) , (< (mba 4 5) , (mba 3 6)) , (< (mba 3 5) , (mba 2 6))

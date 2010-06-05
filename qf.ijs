@@ -91,7 +91,7 @@ NB.   topologic equivalents
 gelq2=: ((] ,   (((( 1 ,~ (1 -  #)       ) {. ]) ,.  ($: @ ( 1  1 & }.))) @ (larfrnfr (1 & ( 0 }))))) (larfgfc @ (IOSFR & {))) ^: (*./ @ (0 < (0 _1 + $)))
 geql2=: ((] ,.~ ((((_1 ,  (1 -~ ({: @ $))) {. ]) ,~  ($: @ (_1 _1 & }.))) @ (larflcbc (1 & (_1 }))))) (larfgb  @ (IOSLC & {))) ^: (*./ @ (0 < (_1 0 + $)))
 geqr2=: ((] ,.  (((( 1 ,  (1 -  ({: @ $))) {. ]) ,   ($: @ ( 1  1 & }.))) @ (larflcfc (1 & ( 0 }))))) (larfgf  @ (IOSFC & {))) ^: (*./ @ (0 < (_1 0 + $)))
-gerq2=: ((] ,~  (((( 1 ,~ (1 -~ #)       ) {. ]) ,.~ ($: @ (_1 _1 & }.))) @ (larfrnbr (1 & (_1 }))))) (larfgbc @ (IOSLR & {))) ^: (*./ @ (0 < (0 _1 + $)))
+gerq2=: ((] ,~  ((((_1 ,~ (1 -~ #)       ) {. ]) ,.~ ($: @ (_1 _1 & }.))) @ (larfrnbr (1 & (_1 }))))) (larfgbc @ (IOSLR & {))) ^: (*./ @ (0 < (0 _1 + $)))
 
 gelq3=: (((     GEQFBS    <.   #     ) }. ]) (] ,   ((((_ , (GEQFBS    <.  ({:@$))) {. ]) ,.  ($: @ ((0 ,   GEQFBS ) }. ]))) @ (larfbrnfr          tru1   ))) (gelq2 @ ((     GEQFBS    <.  #      ) {. ]))) ^: (*./ @ (0 < (0 _1 + $)))
 geql3=: (((0 , (GEQFBS (-@<.) ({:@$))) }. ]) (] ,.~ ((((     GEQFBS (-@<.)     #  ) {. ]) ,~  ($: @ (     (-GEQFBS)  }. ]))) @ (larfblcbc ((-~/@$) tru1 ])))) (geql2 @ ((_ , (GEQFBS (-@<.) ({:@$))) {. ]))) ^: (*./ @ (0 < (_1 0 + $)))
@@ -266,15 +266,15 @@ tgeqf=: 3 : 0
 
   ('128!:0' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (mp & >/)))%(FP_EPS*(#*norm1)@[)))) y
 
-  ('2b1110 & gelqf_jlapack_' tmonad (]`({. , <@((1&{::) ,. (2&{::)))`(rcond"_)`(_."_)`((norm1@(- ((mp  unglq) & > /)))%((FP_EPS*#*norm1)@[)))) y
-  ('2b0111 & geqlf_jlapack_' tmonad (]`({: , <@((1&{::) ,  (0&{::)))`(rcond"_)`(_."_)`((norm1@(- ((mp~ (ungql dbg 'ungql')) & > /)))%((FP_EPS*#*norm1)@[)))) y
-  ('2b0111 & geqrf_jlapack_' tmonad (]`({: , <@((0&{::) ,  (1&{::)))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@])))) y
-  ('2b1110 & gerqf_jlapack_' tmonad (]`({. , <@((2&{::) ,.~ (1&{::)))`(rcond"_)`(_."_)`((norm1@(- ((mp  ungrq) & > /)))%((FP_EPS*#*norm1)@])))) y
+  ('2b1110 & gelqf_jlapack_' tmonad (]`({. , (,.  &. > / @ }.))`(rcond"_)`(_."_)`((norm1@(- ((mp  unglq) & > /)))%((FP_EPS*#*norm1)@[)))) y
+  ('2b0111 & geqlf_jlapack_' tmonad (]`({: , (,~  &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungql) & > /)))%((FP_EPS*#*norm1)@[)))) y
+  ('2b0111 & geqrf_jlapack_' tmonad (]`({: , (,   &. > / @ }:))`(rcond"_)`(_."_)`((norm1@(- ((mp~ ungqr) & > /)))%((FP_EPS*#*norm1)@[)))) y
+  ('2b1110 & gerqf_jlapack_' tmonad (]`({. , (,.~ &. > / @ }.))`(rcond"_)`(_."_)`((norm1@(- ((mp  ungrq) & > /)))%((FP_EPS*#*norm1)@[)))) y
 
-  ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         trl   @( 0 _1&}.)) mp  unglq)))%((FP_EPS*#*norm1)@[)))) y
-  ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)))%((FP_EPS*#*norm1)@[)))) y
-  ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         tru   @(_1  0&}.)) mp~ ungqr)))%((FP_EPS*#*norm1)@[)))) y
-  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)))%((FP_EPS*#*norm1)@[)))) y
+  ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         trl   @( 0 _1&}.)) mp  unglq)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-L*Q||/ε*m*||A||
+  ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) trl ])@( 1  0&}.)) mp~ ungql)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*L||/ε*m*||A||
+  ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((         tru   @(_1  0&}.)) mp~ ungqr)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-Q*R||/ε*m*||A||
+  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- ((((-~/@$) tru ])@( 0  1&}.)) mp  ungrq)))%((FP_EPS*#*norm1)@[)))) y  NB. berr := ||A-R*Q||/ε*m*||A||
 
   EMPTY
 )
@@ -283,5 +283,9 @@ NB. ---------------------------------------------------------
 NB. testqf
 NB. Test orthogonal factorizations
 NB. Syntax: mkge testqf (m,n)
+NB.
+NB. Application:
+NB. - with limited random matrix values' amplitudes
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testqf 150 100
 
 testqf=: 1 : 'EMPTY [ tgeqf @ u'

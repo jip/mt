@@ -115,7 +115,7 @@ NB. - test1 - test vector (1-rank) algos
 NB. - test2 - test matrix (2-rank) algos
 
 test=: 1 : 0
-  '%-25s %-12s %-12s %-12s %-12s %-12s' printf 'algorithm' ; 'rcond' ; 'rel fw err' ; 'rel bw err' ; 'time, sec.' ; 'space, bytes'
+  '%-25s %-12s %-12s %-12s %-12s %-12s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
   assert. 2 1 -: (# , #@$) y  NB. y must be 2-vector
 NB.  (u testtrf) y
 NB.  (u testtri) y

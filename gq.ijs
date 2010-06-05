@@ -22,9 +22,10 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. Block size limits for blocked code
-UNGQBSMIN=: 2
-UNGQBSMAX=: 32
+NB. ---------------------------------------------------------
+NB. Blocked code constants
+
+UNGQBS=: 32  NB. block size limit
 
 NB. ---------------------------------------------------------
 NB. Compute geometry for block versions of algorithms
@@ -52,22 +53,13 @@ NB. Formula:     k = min(heightQ,widthQ)
 ungqk=: (<./ @: +) M.
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NB. ungqbs
-NB.
-NB. Description: Compute abjusted block size
-NB. Syntax:      bs=. dshape ungqbs shapeQf
-NB. Formula:     bs = max(UNGQBSMIN,min(UNGQBSMAX,k))
-
-ungqbs=: (UNGQBSMIN >. UNGQBSMAX <. ungqk) M.
-
-NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. ungqiters
 NB.
 NB. Description: Compute number of iterations
 NB. Syntax:      iters=. dshape ungqiters shapeQf
-NB. Formula:     iters = ⌊k % bs⌋
+NB. Formula:     iters = ⌊k % UNGQBS⌋
 
-ungqiters=: (ungqk (<. @ %) ungqbs) M.
+ungqiters=: (<. @ (UNGQBS %~ ungqk)) M.
 
 NB. ---------------------------------------------------------
 NB. ungl2step
@@ -106,12 +98,12 @@ ungl2step=: 4 : 0
 )
 
 ung2lstep=: 4 : 0
-  io=. y (- & ({: @ $)) y
+  io=. y (- & ({: @ $)) x
   y (larflnbc ,. (((- @ {.) ((>: @ [) (io }) *) ]) @ ])) ((< a: ; io) { x)
 )
 
 ung2rstep=: 4 : 0
-  io=. y (<: @ - & ({: @ $)) y
+  io=. x (<: @ - & ({: @ $)) y
   y ((((- @ {:) ((>: @ [) (io }) *) ]) @ ]) ,. larflnfc) ((< a: ; io) { x)
 )
 
@@ -180,37 +172,35 @@ NB.   3) supply eQi and Qfi to larfbxxxx, to produce eCiupd
 NB.   4) apply non-blocked version of algorithm to Qfi to
 NB.      produce matrix eQi1part
 NB.   5) assemble eCiupd and eQi1part, to produce eQi1
+NB.
+NB. TODO:
+NB. - tacit versions
 
 unglqstep=: 4 : 0
   'shx shy'=. x (,: & $) y
-  bs=. 0 _1 ungqbs shx
-  riosQfi=. ((shx - shy) - bs) ,: (bs + (0 (0 }) shy))
-  sizeeC=. - ((0 , bs) + shy)
+  riosQfi=. ((shx - shy) - UNGQBS) ,: (UNGQBS + (0 (0 }) shy))
+  sizeeC=. - ((0 , UNGQBS) + shy)
   (sizeeC {. y) ((ungl2 @ ]) , larfbrcfr) (riosQfi (] ;. 0) x)
 )
 
 ungqlstep=: 4 : 0
   'shx shy'=. x (,: & $) y
-  bs=. _1 0 ungqbs shx
-  riosQfi=. (0 (0 }) shy) ,: (bs + (0 (1 }) shy))
-  sizeeC=. (bs , 0) + shy
-smoutput 'riosQfi' ; ($ riosQfi) ; riosQfi ; 'sizeeC' ; ($ sizeeC) ; sizeeC
+  riosQfi=. (0 (0 }) shy) ,: (UNGQBS + (0 (1 }) shy))
+  sizeeC=. (UNGQBS , 0) + shy
   (sizeeC {. y) (larfblnbc ,. (ung2l @ ])) (riosQfi (] ;. 0) x)
 )
 
 ungqrstep=: 4 : 0
   'shx shy'=. x (,: & $) y
-  bs=. _1 0 ungqbs shx
-  riosQfi=. ((shx - shy) - bs) ,: (bs + (0 (1 }) shy))
-  sizeeC=. - ((bs , 0) + shy)
+  riosQfi=. ((shx - shy) - UNGQBS) ,: (UNGQBS + (0 (1 }) shy))
+  sizeeC=. - ((UNGQBS , 0) + shy)
   (sizeeC {. y) ((ung2r @ ]) ,. larfblnfc) (riosQfi (] ;. 0) x)
 )
 
 ungrqstep=: 4 : 0
   'shx shy'=. x (,: & $) y
-  bs=. 0 _1 ungqbs shx
-  riosQfi=. (0 (1 }) shy) ,: (bs + (0 (0 }) shy))
-  sizeeC=. (0 , bs) + shy
+  riosQfi=. (0 (1 }) shy) ,: (UNGQBS + (0 (0 }) shy))
+  sizeeC=. (0 , UNGQBS) + shy
   (sizeeC {. y) (larfbrcbr , (ungr2 @ ])) (riosQfi (] ;. 0) x)
 )
 
@@ -253,13 +243,7 @@ NB.   parameter (amount of leading vectors from LQf to form
 NB.   Q) is assumed K=k; to emulate case K<k the last (k-K)
 NB.   elements in τ[0:k-1] must be zeroed
 
-unglq=: 3 : 0
-  'k n1'=. sizeQf=. ((0 _1 & ungqk) , {:) ($ y)
-  y=. tru1 sizeQf {. y
-  ibs=. */ 'bs iters'=. 0 _1 (ungqbs , ungqiters) sizeQf
-  sizeQf0=. - ((bs|k) , (n1-ibs))
-  Q=. 0 _1 }. (y unglqstep ^: iters (ungl2 (sizeQf0 {. y)))
-)
+unglq=: 0 _1 }. (unglqstep ^: ((0 _1 ungqiters $ @ [)`(ungl2 @ (}.~ (2 $ UNGQBS * 0 _1 ungqiters $)))))~ @ tru1 @ ((0 _1 ungqk $) {. ])
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -297,16 +281,7 @@ NB.   parameter (amount of concluding vectors from QfL to
 NB.   form Q) is assumed K=k; to emulate case K<k the first
 NB.   (k-K) elements in τ[0:k-1] must be zeroed
 
-ungql=: 3 : 0
-  'm1 k'=. sizeQf=. ({. , (_1 0 & ungqk)) ($ y)
-yo=. y
-  y=. ((-~/ @ $) tru1 ]) (1 _1 * sizeQf) {. y
-smoutput 'sizeQf' ; ($ sizeQf) ; sizeQf ; 'old y' ; ($ yo) ; yo ; 'new y' ; ($ y) ; y
-  ibs=. */ 'bs iters'=. _1 0 (ungqbs , ungqiters) sizeQf
-  sizeQf0=. (m1-ibs) , (bs|k)
-smoutput 'sizeQf0' ; ($ sizeQf0) ; sizeQf0 ; 'bs' ; ($ bs) ; bs ; 'iters' ; ($ iters) ; iters
-  Q=. 1 0 }. (y (ungqlstep dbg 'ungqlstep') ^: iters (ung2l (sizeQf0 {. y)))
-)
+ungql=: 1 0 }. (ungqlstep ^: ((_1 0 ungqiters $ @ [)`(ung2l @ (}.~ (2 $ (- UNGQBS) * _1 0 ungqiters $)))))~ @ ((-~/ @ $) tru1 ]) @ ((_ , (- @ (_1 0 ungqk $))) {. ])
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -344,13 +319,7 @@ NB.   parameter (amount of leading vectors from QfR to form
 NB.   Q) is assumed K=k; to emulate case K<k the last (k-K)
 NB.   elements in τ[0:k-1] must be zeroed
 
-ungqr=: 3 : 0
-  'm1 k'=. sizeQf=. ({. , (_1 0 & ungqk)) ($ y)
-  y=. trl1 sizeQf {. y
-  ibs=. */ 'bs iters'=. _1 0 (ungqbs , ungqiters) sizeQf
-  sizeQf0=. - ((m1-ibs) , (bs|k))
-  Q=. _1 0 }. (y ungqrstep ^: iters (ung2r (sizeQf0 {. y)))
-)
+ungqr=: _1 0 }. (ungqrstep ^: ((_1 0 ungqiters $ @ [)`(ung2r @ (}.~ (2 $ UNGQBS * _1 0 ungqiters $)))))~ @ trl1 @ ((_ , (_1 0 ungqk $)) {. ])
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -388,13 +357,7 @@ NB.   parameter (amount of concluding vectors from RQf to
 NB.   form Q) is assumed K=k; to emulate case K<k the first
 NB.   (k-K) elements in τ[0:k-1] must be zeroed
 
-ungrq=: 3 : 0
-  'k n1'=. sizeQf=. ((0 _1 & ungqk) , {:) ($ y)
-  y=. ((-~/ @ $) tru1 ]) (_1 1 * sizeQf) {. y
-  ibs=. */ 'bs iters'=. 0 _1 (ungqbs , ungqiters) sizeQf
-  sizeQf0=. (bs|k) , (n1-ibs)
-  Q=. 0 1 }. (y ungrqstep ^: iters (ungr2 (sizeQf0 {. y)))
-)
+ungrq=: 0 1 }. (ungrqstep ^: ((0 _1 ungqiters $ @ [)`(ungr2 @ (}.~ (2 $ (- UNGQBS) * 0 _1 ungqiters $)))))~ @ ((-~/ @ $) trl1 ]) @ ((- @ (0 _1 ungqk $)) {. ])
 
 NB. ---------------------------------------------------------
 NB. unghr
@@ -418,7 +381,10 @@ NB.
 NB. TODO: dyad
 
 unghr=: 3 : 0
-  riosQf=. 
+  riosQf=. (2 2 $ 1 1 0 _1) + ,.~ 1 {:: y
+  t=. l=. {. 1 {:: y
+  b=. r=. (# 0 {:: y) - +/ 1 {:: y
+  (1 0 _1,l) setdiag (1 0 0,t) setdiag ((t,l),:(b,r)) uncut riosQf (ungqr ;. 0) (0 {:: y)
 )
 
 NB. =========================================================
@@ -427,14 +393,16 @@ NB. Test suite
 NB. ---------------------------------------------------------
 NB. tungq
 NB. Test Q generation algorithms: unglq unql ungqr ungrq by
-NB. general matrix y
+NB. general matrix
 NB.
 NB. Syntax: tungq A
 NB. where A - general m×n-matrix
 
 tungq=: 3 : 0
-  ('unglq' tmonad (gelqf`]`(((%@mp&norm1) ct)@])`(_."_)`((((<: upddiag0)@(mp ct)) (%&norm1) ]) % (FP_EPS*#@])))) y
-
+  ('unglq' tmonad (gelqf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp  ct)) % (FP_EPS*{:@$))@]))) y  NB. berr := ||Q*Q'-I||/ε*n
+  ('ungql' tmonad (geqlf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp~ ct)) % (FP_EPS*#   ))@]))) y  NB. berr := ||Q'*Q-I||/ε*m
+  ('ungqr' tmonad (geqrf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp~ ct)) % (FP_EPS*#   ))@]))) y  NB. berr := ||Q'*Q-I||/ε*m
+  ('ungrq' tmonad (gerqf`]`(%@((*&norm1) ct)@])`(_."_)`(((norm1@(<: upddiag0)@(mp  ct)) % (FP_EPS*{:@$))@]))) y  NB. berr := ||Q*Q'-I||/ε*n
   EMPTY
 )
 
@@ -445,6 +413,6 @@ NB. Syntax: mkge testgq (m,n)
 NB.
 NB. Application:
 NB. - with limited random matrix values' amplitudes
-NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testgq 500 500
+NB.   (_1 1 0 16 _6 4 & (gemat j. gemat)) testgq 150 100
 
 testgq=: 1 : 'EMPTY [ tungq @ u'

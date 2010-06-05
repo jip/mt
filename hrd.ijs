@@ -80,6 +80,12 @@ NB.           iteration
 
 gehd2ustep=: (< @ (+ (1&{::))) 1} (((1 {:: ]) (< @ ((larfg`(1 3 4 larfRL)) gerf0 0 1 2)) (0 {:: ])) 0} ])
 
+NB. gehr2
+
+gehr2=: 3 : 0
+
+)
+
 NB. =========================================================
 NB. Interface
 
@@ -162,7 +168,13 @@ gehd2u=: 3 : 0
   0 {:: GEHD2UDCIOS (gehd2ustep ^: (<: @ (s"_))) y
 )
 
-gehrdu=: gehd2u  NB. stub for a while
+gehrd=: 3 : 0
+  for i=ilo,ihi-1-nx,bs
+  'HQfi T Y'=. lahr2 Ai
+  
+)
+
+
 
 NB. =========================================================
 NB. Test suite

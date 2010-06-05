@@ -7,9 +7,9 @@ NB.            reflector
 NB. larfxxxx   Dyads to build a reflector and to apply it or
 NB.            its transpose to a matrix from either the left
 NB.            or the right
-NB. larfbxxxx  Dyads to build a block reflector and to apply
-NB.            it or its transpose to a matrix from either
-NB.            the left or the right
+NB. larfbxxxx  Dyads to build a block reflector by larftxx
+NB.            and to apply it or its transpose to a matrix
+NB.            from either the left or the right
 NB.
 NB. Copyright (C) 2010 Igor Zhuravlov
 NB. For license terms, see the file COPYING in this distribution
@@ -95,6 +95,8 @@ larfg=: 4 : 0
     tau=. (- dzeta) % (iotau ({,) y)                        NB. τ=-ζ/β_scaled
     y=. y % dzeta                                           NB. y=y/ζ
     y=. (beta , tau) (x " _) } y                            NB. replace α_scaled by β_unscaled and β_scaled by τ
+  else.
+    y=. 0 (iotau " _) } y
   end.
   y
 )
@@ -287,11 +289,13 @@ larftfr=: ] `(             (* -)~ ((mp ct) {:)\  )` ,.  `(,~)`(_1:}) larft IOSLC
 
 NB. ---------------------------------------------------------
 NB. Verb       Action   Side   Transp  Direction  Layout      Used in
+NB. larflcbc   H' * C   left   ct      backward   columnwise  geql2
 NB. larflcfc   H' * C   left   ct      forward    columnwise  geqr2
 NB. larflnbc   H  * C   left   none    backward   columnwise  ung2l
 NB. larflnfc   H  * C   left   none    forward    columnwise  ung2r
 NB. larfrcbr   C  * H'  right  ct      backward   rowwise     ungr2
 NB. larfrcfr   C  * H'  right  ct      forward    rowwise     ungl2
+NB. larfrnbr   C  * H   right  none    backward   rowwise     gerq2
 NB. larfrnfr   C  * H   right  none    forward    rowwise     gelq2
 NB.
 NB. Description:
@@ -319,14 +323,14 @@ larflnbc=: [ - ] */ (mp~ ((+ @ (0 & ( 0 }))) * {.))  NB. C - v * ((τ * v') * C)
 larflnfc=: [ - ] */ (mp~ ((+ @ (0 & (_1 }))) * {:))  NB. C - v * ((τ * v') * C)
 larfrcbr=: [ - (mp (+ @ ((0 & ( 0 })) * {.))) */ ]   NB. C - (C * (τ * v)') * v
 larfrcfr=: [ - (mp (+ @ ((0 & (_1 })) * {:))) */ ]   NB. C - (C * (τ * v)') * v
+larfrnbr=: [ - (mp ((+ @ (0 & ( 0 }))) * {.)) */ ]   NB. C - (C * (v' * τ)) * v
 larfrnfr=: [ - (mp ((+ @ (0 & (_1 }))) * {:)) */ ]   NB. C - (C * (v' * τ)) * v
-
 
 NB. ---------------------------------------------------------
 NB. Verb       Action   Side   Transp  Direction  Layout      Used in
 NB. larfblcbc  H' * C   left   ct      backward   columnwise  geqlf
 NB. larfblcbr  H' * C   left   ct      backward   rowwise
-NB. larfblcfc  H' * C   left   ct      forward    columnwise  geqrf
+NB. larfblcfc  H' * C   left   ct      forward    columnwise  geqrf,gehrd
 NB. larfblcfr  H' * C   left   ct      forward    rowwise
 NB. larfblnbc  H  * C   left   none    backward   columnwise  ungql
 NB. larfblnbr  H  * C   left   none    backward   rowwise

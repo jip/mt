@@ -29,6 +29,7 @@ NB. map2i     Conj. to indirect map two subarrays to another
 NB.           one by dyad
 NB. map2ci    Conj. to model 'map2i' accepting cIOS
 NB.
+NB. uncut     To frame matrix by border of zeros
 NB. append    Template adv. to make verbs to enhance append
 NB. stitch    Template adv. to make verbs to enhance stitch
 NB.
@@ -293,6 +294,23 @@ NB.     _8525 -: (+: 19) + (-: 24) - (*: 35) * (%: 49)
 map4ir=: 2 : '((m gici ((3{n),0)) (m gi 1) ((m gici ((2{n),2)) (m gi 3) (m gici ((1{n),4)) (m gi 5) (m gici ((0{n),6))))`(rios2ios@(n nmx 4))`] }'
 
 NB. ---------------------------------------------------------
+NB. uncut
+NB. To frame matrix by border of zeros. This is some kind of
+NB. the cut inversion
+NB.
+NB. Syntax:
+NB.   A0=. ((t,l),:(b,r)) uncut subA
+NB. where
+NB.   t l b r ≥ 0, integers, border widths at top, left,
+NB.             bottom and right, respectively
+NB.   subA    - h×w-matrix to border
+NB.   A0      - (t+h+b)×(l+w+r)-matrix such that
+NB.               subA -: ((t,h),:(l,w)) (] ;. 0) A0
+NB.             and other elements are zeros
+
+uncut=: ((((_1 1 * (+"1)) (+/\))~ $)) (({:@[) {. (({.~ {.)~)) ]
+
+NB. ---------------------------------------------------------
 NB. append
 NB. Template adv. to make verbs to enhance append
 NB.
@@ -430,10 +448,10 @@ NB. - upddiag0 can't update diagonal partially
 NB. Aupd=. val setdiag0 A
 setdiag0=: (diaglios @ $ @ ]) }
 
-NB. Aupd=. (val[,diag]) setdiag A
+NB. Aupd=. (value[,diagonal[,first[,size]]]) setdiag A
 setdiag=: 4 : 0
-  'v d'=. 2 {. x , 0
-  lios=. d (diaglios $) y
+  'v d f s'=. (, (0 0 0 _ }.~ #)) x
+  lios=. (f ,: s) (] ;. 0) d (diaglios $) y
   v ((lios"_) }) y
 )
 

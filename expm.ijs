@@ -1,5 +1,6 @@
 NB. expm.ijs
-NB. Calculate matrix exponent and Cauchy integral
+NB. Calculate matrix exponent and Cauchy integral from state and
+NB. control input matrices of LTI system
 NB.
 NB. prexpm  prepare time-invariant parts for expm
 NB. expm    calculate matrix exponent and Cauchy integral
@@ -123,7 +124,7 @@ makeTi=: IOnmi shybyx lipows  NB. form mi-by-k table from vector's shifts
 
 NB. ---------------------------------------------------------
 NB. prepV
-NB. Prepare eigenvalues: remove dups and self-adjoiners,
+NB. Prepare eigenvalues from y: remove dups and self-adjoiners,
 NB. classify and count. Outputs 5 columns:
 NB. - lambdai, i-th eigenvalue
 NB. - ic, datatype flag: 0 for real, 1 for complex
@@ -133,16 +134,17 @@ NB. - Nm = # M
 NB. - k, matrix G minimal polynom's order, k = Ng
 NB.
 NB. If:
-NB.       'vlambda vic vm vIOs vNm vk' =. |: prepV eigenvalues_of_G
+NB.   'vlambda vic vm vIOs vNm vk' =. |: prepV eigenvalues_of_G
 NB. then
-NB.       vk -: (# vm) $ k
-NB.       vNm -: (# vm) $ Nm
-NB.       (+/ vm) = k
-NB.       (# vm) = (# vlambda) = (r - C)
-NB.       ic -: ((0 ~: im) vlambda)
-NB. where r - quantity of unique eigenvalues
-NB.       C - quantity of unique complex eigenvalues without
-NB.           self-adjoiners
+NB.   vk -: (# vm) $ k
+NB.   vNm -: (# vm) $ Nm
+NB.   (+/ vm) = k
+NB.   (# vm) = (# vlambda) = (r - C)
+NB.   ic -: ((0 ~: im) vlambda)
+NB. where
+NB.   r - quantity of unique eigenvalues
+NB.   C - quantity of unique complex eigenvalues without
+NB.       self-adjoiners
 NB.
 NB. Test:
 NB.    prepV 4 4 3 2j2 2j_2 1j1 1j_1 1j1 1j_1   NB. r=6, C=2
@@ -163,7 +165,8 @@ NB. makeG
 NB. Build G matrix of augmented LTI system: G = ( A  B ) Nx
 NB.                                             ( 0  0 ) Nu
 NB.                                               Nx Nu
-NB. Syntax: G=: makeG A;B
+NB. Syntax:
+NB.   G=. makeG A;B
 
 makeG=: getA ((+ & getCols) {. ,.) getB
 
@@ -178,7 +181,7 @@ NB.   G - Ng-by-Ng matrix, augmented LTI system, output of makeG
 NB.   P - Ng-by-Ng-by-Ng matrix, powers 0..(Ng-1) of G
 NB.
 NB. Test:
-NB.    ;/ makeP_tau_ ? 3 3 $ 10
+NB.    ;/ makeP_tau_ 3 3 $ 5 5 0 9 0 5 1 6 7
 NB. ┌─────┬─────┬────────┐
 NB. │1 0 0│5 5 0│70 25 25│
 NB. │0 1 0│9 0 5│50 75 35│
@@ -253,10 +256,6 @@ NB.   T    - sampling period, T>0
 NB.   MVPN - output of prexpm, being (M;V;P;Nx)
 NB.   At   - Nm-vector, solution A(t) of equation M*A(t)=L(t)
 NB.   Nm = +/ vm * (ic+1), see prepV
-NB.
-NB. Test:
-NB.    MVPN makeAt_tau_ Ts
-NB. 0.999842 0.147562 0.0104619 0.00040034 0.000429799
 
 makeAt=: gels_jlapack_ @: (getM ; ] makeLtM getV)
 
@@ -309,7 +308,7 @@ NB. Test suite
 NB. pass_result=: texpm A;B;T;EA;IE
 
 texpm=: 3 : 0
-match=. matchclean;;
+match=. matchclean_jlapack_;;
 smoutput 'EA IE'=. ((prexpm @ (0 1 & {)) expm (2 & {::)) y
 smoutput a=. EA match 3 {:: y
 smoutput b=. IE match 4 {:: y
@@ -327,5 +326,13 @@ IE0=. 4 3 $ 1.4393 2.4832 2.7270 1.0422 1.8137 1.9133 0.8258 2.1815 2.2029 1.699
 T1=. 0.35
 EA1=. 4 4 $ 1.415 0.4041 0.4353 0.1687 0.2383 1.071 0.2455 0.09722 0.1339 0.2975 1.333 0.1037 0.3373 0.2218 0.2581 1.302
 IE1=. 4 3 $ 0.1878 0.2837 0.3344 0.2219 0.3642 0.3825 0.1037 0.4019 0.394 0.3177 0.3173 0.3441
-texpm &> (< A;B;T0;EA0;IE0) , (< A;B;T1;EA1;IE1)
+
+Aocw=: 4 4 $ _0.0069 0.0139 0 _9.81 _0.0905 _0.3149 235.8928 0 0.0004 _0.0034 _0.4282 0 0 0 1 0
+Bocw=: 4 1 $ 0
+Tocw=: 0.1486
+EAocw=: 4 4 $ 0.9990 0.0020 _0.0709 _1.4566 _0.0121 0.9460 33.0649 0.0091 0.0001 _0.0005 0.9301 0 0 0 0.1435 1
+IEocw=: 4 1 $ 0
+
+NB. texpm &> (< A;B;T0;EA0;IE0) , (< A;B;T1;EA1;IE1) , (< Aocw;Bocw;Tocw;EAocw;IEocw)
+texpm &> (< Aocw;Bocw;Tocw;EAocw;IEocw)
 )

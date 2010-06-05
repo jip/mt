@@ -49,7 +49,7 @@ NB.   n    ≥ 0
 NB.
 NB. Application:
 NB. - verb to generate complex matrix S with elements s
-NB.   having Re(s) ~ U(0,1) and Im(s) ~ U(_1,1) :
+NB.   having Re(s) ~ U(0,1) and Im(s) ~ U(_1,1):
 NB.   randuc=: randu j. (_1 1 & randu)
 
 randu=: (? @ $ 0:) :((p.~ (-~/\))~ $:)
@@ -129,7 +129,7 @@ NB.   S   - sh-array of values s ~ N(μ,σ²), a ≤ s ≤ b
 NB.   n   ≥ 0
 NB.
 NB. Application:
-NB. - left-side truncated normal distribution TN(1,2²,3,∞) :
+NB. - left-side truncated normal distribution TN(1,2²,3,∞):
 NB.   randltnf=: (1 2 3 _) & randtnf
 
 randtnf=: (0 1 __ _ & $:) :(4 : 0)
@@ -154,13 +154,20 @@ NB. Syntax:
 NB.   G=. [par] gemat sh
 NB. where
 NB.   sh  - n-vector, shape of G
-NB.   par - optional 6-vector (ma,mb,μ,σ,ea,eb), σ>0, (ma,mb)
-NB.         are mantissa's uniform distribution parameters,
-NB.         and (μ,σ,ea,eb) are exponent's truncated normal
-NB.         distribution parameters, default is:
-NB.         (_1 1 0 (FP_FLEN/2) FP_EMIN FP_EMAX)
+NB.   par - optional 6-vector (ma,mb,μ,σ,ea,eb), σ>0, where
+NB.         (ma,mb) are mantissa's uniform distribution
+NB.         parameters, and (μ,σ,ea,eb) are exponent's
+NB.         truncated normal distribution parameters, default
+NB.         is: (_1 1 0 (FP_FLEN/2) FP_EMIN FP_EMAX)
 NB.   G   - random general sh-matrix
 NB.   n   ≥ 0
+NB.
+NB. Application:
+NB. - generate complex matrix with real and imagine parts
+NB.   both having mantissa with uniform distribution U(_1,1)
+NB.   and exponent with truncated normal distribution
+NB.   TN(0,16,_6,4):
+NB.   G=. _1 1 0 16 _6 4 (gemat j. gemat) 4 4
 NB.
 NB. Notes:
 NB. - default par provides about 95% of g numbers falls into
@@ -182,7 +189,10 @@ NB.           is taken from y)
 NB.   H     - random Hermitian (symmetric) (n,n)-matrix
 NB.
 NB. Application:
-NB.   P=. (_1 1 2 3 _4 8 & gemat) hemat 4
+NB. - generate symmetric matrix with certain distribution law
+NB.   H=. (_1 1 0 16 _6 4 & gemat) hemat 4
+NB. - generate Hermitian matrix with certain distribution law
+NB.   H=. (_1 1 0 16 _6 4 & (gemat j. gemat)) hemat 4
 
 hemat=: vu2y (+ ct)
 

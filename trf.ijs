@@ -31,7 +31,13 @@ NB. getrful1   Factorization without pivoting of a general
 NB.            matrix: U * L1 = A, where U is upper
 NB.            triangular and L1 is unit lower triangular
 NB.
-
+NB. hetrfu     UDU' factorization of a Hermitian (symmetric)
+NB.            matrix, where U is unit upper triangular and
+NB.            D is diagonal
+NB. hetrfl     LDL' factorization of a Hermitian (symmetric)
+NB.            matrix, where L is unit lower triangular and
+NB.            D is diagonal
+NB.
 NB. hetrfu     UDU' factorization of a Hermitian (symmetric)
 NB.            matrix, where U is unit upper triangular and
 NB.            D is diagonal
@@ -59,12 +65,12 @@ iofmaxm=: (i.>./) @: |  NB. IO 1st element with max magnitude from list y
 iolmaxm=: (i:>./) @: |  NB. IO last element with max magnitude from list y
 
 NB. ---------------------------------------------------------
-NB. getrfpp
+NB. getrfp
 NB. Template adverb to make verbs to triangular factorization
 NB. with partial pivoting of a general matrix
 NB.
 NB. Syntax:
-NB.   u0=. u0`u1`u2`u3`u4`u5`u6`u7`u8`u9`u10 getrfpp
+NB.   u0=. u0`u1`u2`u3`u4`u5`u6`u7`u8`u9`u10 getrfp
 NB. where
 NB.   u0  - factorization verb to do recursive call
 NB.         warning: avoid to change u0's name class!
@@ -82,7 +88,7 @@ NB.   u8  - unite 2nd block's permutation parts
 NB.   u9  - unite 1st and 2nd blocks
 NB.   u10 - unite 2nd block's 1st and 2nd sub-blocks
 
-getrfpp=: 1 : 0
+getrfp=: 1 : 0
   '`u0 u1 u2 u3 u4 u5 u6 u7 u8 u9 u10'=. u
   'm n'=. sh=. $ y
   if. 0 e. sh do.
@@ -144,68 +150,64 @@ getrf=: 1 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. hetrfpp
+NB. hetrfp
 NB. Template adverb to make verbs to triangular factorization
-NB. with partial pivoting of a Hermitian (symmetric) matrix
+NB. with full pivoting of a Hermitian (symmetric) matrix
 NB.
-NB. Syntax: <<<<<<<<<<<<<<<<<<<<<<<<<
-NB.   u0=. u0`u1`u2`u3`u4`u5`u6`u7`u8`u9`u10 hetrfpp
+NB. Syntax:
+NB.   u0=. u1`u2`u3`u4`u5`u6`u7`u8`u9`u10`u11`u12`u13`u14`u15`u16 hetrfp
 NB. where
-NB.   u0  - factorization verb to do recursive call
-NB.         warning: avoid to change u0's name class!
-NB.   u1  - select number of rows (columns) from shape
-NB.   u2  - find cycle permutation to swap pivot and head
-NB.         (tail)
-NB.   u3  - IO head (tail) in vector to pivot
-NB.   u4  - permute columns (rows)
-NB.   u5  - to form misc. rectangular IOS and deltas
-NB.   u6  - solve unit triangular system for 2nd block's 1st
-NB.         sub-block
-NB.   u7  - multiply 1st block's 2nd sub-block by 2nd block's
-NB.         1st sub-block
-NB.   u8  - unite 2nd block's permutation parts
-NB.   u9  - unite 1st and 2nd blocks
-NB.   u10 - unite 2nd block's 1st and 2nd sub-blocks
+NB.   u0  - factorization verb to find inv(P)*L*D*L'*P=A
+NB.         (inv(P)*U*D*U'*P=A)
+NB.   u1  - allocate L (U) and initialize 1st (last) column
+NB.   u2  - allocate T and initialize T[0,0] (T[n-1,n-1])
+NB.   u3  - cut off 1st (last) element
+NB.   u4  - to form iteration values
+NB.   u5  - A's column IO to take from
+NB.   u6  - select L (U) submatrix
+NB.   u7  - IO pivoting element
+NB.   u8  - IO element to pivot
+NB.   u9  - make boxed cycle permutation to pivot
+NB.   u10 - element off the T's diagonal
+NB.   u11 - extreme last (1st) element
+NB.   u12 - IO extreme last (1st) element
+NB.   u13 - select T submatrix
+NB.   u14 - IO extreme element to replace by 1
+NB.   u15 - IOS to write into T
+NB.   u16 - append (prepend) to form next h
+NB.
+NB. Notes:
+NB. - only A's lower (upper) triangle is referenced
+NB. - T should be sparse
 
-NB. <<<<<<<<<<<<<
-NB. hetrfpp
-
-NB. 'Lunit T'=. L1stcol hetrfpl1dl1p A
-
-hetrfpl1dl1p=: 1 : 0
+hetrfp=: 1 : 0
+  '`u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16'=. u
   n=. # y
-  if. 1 < n do.
-    k=. >. -: n
-    'L11 Ta'=. hetrfpl1dl1p (2 $ k) {. y
-    A21=. ((k-n), k) {. y
-    Hg=. Ta mp L11  NB. 3-diagonal Hermitian mp unit upper triangular produces upper Hessenberg
-    L21=. (k }. x) ,. ((1 _1 }. Hg) trtrsxu (0 _1 }. A21))
-    T21=. 
-  else. NB. 1=n
+  UL=. (u1 y) {. 1                                          NB. 1st (last) column in Aasen method is e1-vector (e_(n-1)-vector)
+  T=. (u1 {. u2) y                                          NB. T[0,0]=A[0,0] (T[n-1,n-1]=A[n-1,n-1])
+  pi=. i. n
+  h=. i. 1                                                  NB. h[0:j-1]=H[0:j-1,j-1] (h[0:n-j-1]=H[j+1:n-1,j+1]), may be defined arbitrary before the 1st iteration only
+  ios=. u3 i. n                                             NB. j..(n-1) (0..j)
+  for_j. }. i. u4 n do.                                     NB. 1..(n-1) ((n-2)..0)
+    a=. (< ios ; (u5 j)) { y                                NB. A[j:n-1,j-1] (A[0:j,j+1])
+    lum=. (j u6 n) {. UL                                    NB. L[j:n-1,0:j-1] (U[0:j,j+1:n-1])
+    v=. a - lum mp h                                        NB. v[0:n-j-1]=A[j:n-1,j-1]-UL[j:n-1,0:j-1]*H[0:j-1,j-1]=UL[j:n-1,j]*T[j,j-1] (v[0:j]=A[0:j,j+1]-U[0:j,j+1:n-1]*H[j+1:n-1,j+1]=U[0:j,j]*T[j,j+1]) non-pivoted yet
+    q=. u7 v                                                NB. IO pivot from head (tail)
+    v=. ((u8 j) ii2cp q) C. v                               NB. v[0]↔v[q] (v[_1]↔v[q])
+    dpi=. q u9 j                                            NB. any[j]↔any[j+q] (any[j]↔any[q])
+    y=. dpi pt y                                            NB. A[j,j:n-1]↔A[j+q,j:n-1], A[j:n-1,j]↔A[j:n-1,j+q] (A[j,0:j]↔A[q,0:j], A[0:j,j]↔A[0:j,q])
+    pi=. dpi C. pi                                          NB. pi[j]↔pi[j+q] (pi[j]↔pi[q])
+    to=. u10 v                                              NB. T[j,j-1] (T[j,j+1])
+    lu=. q { lum                                            NB. L[j,0:j-1] (U[j,j+1:n-1]) after pivoting
+    luceto=. (+ u11 lu) * to                                NB. conj(L[j,j-1])*T[j,j-1] (conj(U[j,j+1])*T[j,j+1])
+    h=. to (((+ +)~ u11)`u12`]) } ((j u13 n) {. T) mp + lu  NB. h[0:j-1]=H[0:j-1,j]=T[0:j-1,0:j-1]*conj(UL[j,0:j-1]) (h[0:n-j-1]=H[j+1:n-1,j]=T[j+1:n-1,j+1:n-1]*conj(U[j,j+1:n-1]))
+    UL=. (1 u14 } v % to) (< ios ; j) } dpi C. UL           NB. L[j,0:n-1]↔L[j+q,0:n-1], L[j:n-1,j]=v[0:n-j-1]/v[0], v[0] may be 0 (U[j,0:n-1]↔U[q,0:n-1], U[0:j,j]=v[0:j]/v[_1], v[_1] may be 0)
+    td=. 9 o. ((< 2 $ j) { y) - ((lu mp h) + luceto)        NB. T[j,j]=Re(A[j,j]-L[j,0:j-1]*H[0:j-1,j]-conj(L[j,j-1])*T[j,j-1]) (T[j,j]=Re(A[j,j]-U[j,j+1:n-1]*H[j+1:n-1,j]-conj(U[j,j+1])*T[j,j+1])
+    T=. (td (,~ (, +)) to) (u15 j) } T                      NB. batch write T[j,j-1] T[j-1,j] T[j,j] (T[j,j+1] T[j+1,j] T[j,j])
+    h=. h u16 luceto + td                                   NB. h[0:j]=H[0:j,j]=T[0:J,0:J]*conj(L[j,0:j]) (h[0:j]=H[0:j,j]=T[0:J,0:J]*conj(U[j,0:j]))
+    ios=. u3 ios                                            NB. (j+1)..(n-1) (0..(j-1))
   end.
-)
-
-
-
-  '`u0 u1 u2 u3 u4 u5 u6 u7 u8 u9 u10'=. u
-  'm n'=. sh=. $ y
-  if. 0 e. sh do.
-    (i. (m u1 n)) ; y
-  elseif. 1 = (m u1~ n) do.
-    dpi=. sh u2 y
-    pi=. dpi C. i. (m u1 n)
-    y=. ((] u3 } %) (u3 ({,) ])) dpi u4 y                NB. permute single column (row), scale by head, keep head unscaled
-    pi ; y
-  elseif. do.
-    k=. m (u1 (<. >.@-:) u1~) n
-    'i0 i1 i2 i3 d0 d1'=. u5 (0 _ 1 _1 * k) , sh
-    'pia Afa'=. u0 i0 {. y                               NB. factorize 1st block recursively
-    y=. pia u4 i1 }. y                                   NB. apply 1st block's permutation to 2nd block, purge original y, reuse name 'y'
-    Afba=. Afa (u6 & (i2 & {.)) y                        NB. calculate 2nd block's 1st sub-block
-    'pib Afbb'=. u0 y ((- (u7 & Afba)) & (i3 & }.)) Afa  NB. update 2nd block's 2nd sub-block and factorize it recursively
-    dpib=. ((-/ d0) + i. k) u8 ((+/ d1) + pib)           NB. apply 2nd block's permutation to 1st block
-    (dpib u4 pia) ; ((dpib u4 Afa) u9 (Afba u10 Afbb))   NB. assemble solution
-  end.
+  UL ; T ; pi
 )
 
 NB. ---------------------------------------------------------
@@ -288,10 +290,10 @@ NB.   - FLOPs:
 NB.   - recursive calls: 3*k*(2^k)-2^(k+1)+3,
 NB.     where k = ⌈log_2(n)⌉
 
-getrfpl1u=: getrfpl1u`[`((ii2cp~ 0:   )~ iofmaxm)` 0:` C.   `((4 2,0 2,2 1,2 0,0 0,:0 2)&{)`trtrsl1x` mp  ` ,  ` ,.  ` ,    getrfpp
-getrflu1p=: getrflu1p`]`((ii2cp~ 0:   )~ iofmaxm)` 0:`(C."1)`((2 5,2 0,1 2,0 2,0 0,:0 2)&{)`trtrsxu1`(mp~)` ,  ` ,   ` ,.   getrfpp
-getrfpu1l=: getrfpu1l`[`((ii2cp~ <:@[/)~ iolmaxm)`_1:` C.   `((4 3,0 3,3 1,3 0,4 2,:0 0)&{)`trtrsu1x` mp  `(,~)`(,.~)`(,~ ) getrfpp
-getrful1p=: getrful1p`]`((ii2cp~ <:@]/)~ iolmaxm)`_1:`(C."1)`((3 5,3 0,1 3,0 3,5 2,:0 0)&{)`trtrsxl1`(mp~)`(,~)`(,~ )`(,.~) getrfpp
+getrfpl1u=: getrfpl1u`[`((ii2cp~ 0:   )~ iofmaxm)` 0:` C.   `((4 2,0 2,2 1,2 0,0 0,:0 2)&{)`trtrsl1x` mp  ` ,  ` ,.  ` ,    getrfp
+getrflu1p=: getrflu1p`]`((ii2cp~ 0:   )~ iofmaxm)` 0:`(C."1)`((2 5,2 0,1 2,0 2,0 0,:0 2)&{)`trtrsxu1`(mp~)` ,  ` ,   ` ,.   getrfp
+getrfpu1l=: getrfpu1l`[`((ii2cp~ <:@[/)~ iolmaxm)`_1:` C.   `((4 3,0 3,3 1,3 0,4 2,:0 0)&{)`trtrsu1x` mp  `(,~)`(,.~)`(,~ ) getrfp
+getrful1p=: getrful1p`]`((ii2cp~ <:@]/)~ iolmaxm)`_1:`(C."1)`((3 5,3 0,1 3,0 3,5 2,:0 0)&{)`trtrsxl1`(mp~)`(,~)`(,~ )`(,.~) getrfp
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:                  Syntax:
@@ -303,7 +305,7 @@ NB.
 NB. Description:
 NB.   triangular factorization without pivoting of a
 NB.   general matrix
-NB. where:
+NB. where
 NB.   A  - m×n-matrix, containing either U, U1, L or L1
 NB.   Af - m×n-matrix, contains either U and L1, or U1 and L
 NB.   U  - ?×?-matrix, upper triangular factor
@@ -338,13 +340,24 @@ getrfu1l=: getrfpu1l`[`_1:` C.   `((4 3,0 3,3 1,3 0,4 2,:0 0)&{)`trtrsu1x` mp  `
 getrful1=: getrful1p`]`_1:`(C."1)`((3 5,3 0,1 3,0 3,5 2,:0 0)&{)`trtrsxl1`(mp~)`(,~ )`(,.~) getrf
 
 NB. ---------------------------------------------------------
-NB. hetrfl
-NB. Factorization of a  Hermitian (symmetric) matrix:
-NB.    L * D * L' = A
-NB. where L is unit lower triangular and D is diagonal
+NB. Verb:      Solves:                          Syntax:
+NB. hetrfpl    inv(P) * L1 * T * L1' * P = A    'L T pi'=. hetrfpl A
+NB. hetrfpu    inv(P) * U1 * T * U1' * P = A    'U T pi'=. hetrfpu A
+NB.
+NB. Description:
+NB.   Factorization of a  Hermitian (symmetric) matrix full
+NB.   pivoting by Aasen's method
+NB. where
+NB.   A  - n×n-matrix, Hermitian (symmetric)
+NB.   pi - n-vector, inversed rows and columns permutation
+NB.        of A
+NB.   U1 - n×n-matrix, unit upper triangular matrix
+NB.   L1 - n×n-matrix, unit lower triangular matrix
+NB.   D  - n×n-matrix, Hermitian (symmetric) 3-diagonal
+NB.   n  ≥ 0
 
-hetrfl=: 3 : 0
-)
+hetrfpl=: $    `(1 1&{.)  `}.`]`<:`(-,[)        `iofmaxm`0:`(] ii2cp +)`{.`{:`_1:`(2&$@[)     `0: `(_2 <\ 0 _1 _1 0 0 0&+)`,    hetrfp
+hetrfpu=: (-@$)`(_1 _1&{.)`}:`-`>:`(((],-~)>:)~)`iolmaxm`] `ii2cp      `{:`{.`0: `(2&$@(- <:))`_1:`(_2 <\ 0 1 1 0 0 0&+)  `(,~) hetrfp
 
 NB. ---------------------------------------------------------
 NB. potrfu
@@ -405,6 +418,24 @@ tgetrf=: 3 : 0
   'getrf_jlapack_' (((mp & >)/ @ (2 & {.)) invperm_jlapack_ (2 & {::)) ttrf y
   EMPTY
 )
+
+NB. thetrf A===============
+
+thetrfp=: 3 : 0
+  if. (i. 0) -: $ y do.
+    y=. (_1 1 0 16 _6 4 & (gemat j. gemat)) hemat y
+  end.
+  'L T pi'=: hetrfpl y
+  Asol=: (/: pi) pt (L mp T mp ct L)
+  smoutput 'A' ; ($ y) ; y ; 'L' ; ($ L) ; L ; 'T' ; ($ T) ; T ; 'Asol' ; ($ Asol) ; Asol
+  smoutput 'A -: Asol' ; (y -: Asol) ; '||A - Asol||/||A|| in 1-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & norm1) y) ; '||A - Asol||/||A|| in i-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & normi) y)
+  'U T pi'=: hetrfpu y
+  Asol=: (/: pi) pt (U mp T mp ct U)
+  smoutput 'A' ; ($ y) ; y ; 'U' ; ($ U) ; U ; 'T' ; ($ T) ; T ; 'Asol' ; ($ Asol) ; Asol
+  smoutput 'A -: Asol' ; (y -: Asol) ; '||A - Asol||/||A|| in 1-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & norm1) y) ; '||A - Asol||/||A|| in i-norm' ; ((y - Asol) ((% (FP_SFMIN & >.)) & normi) y)
+)
+
+
 
 NB. tpotrf A
 

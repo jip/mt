@@ -42,7 +42,7 @@ arounddown=: 1 : '- m&|'  NB. adv. to round down by an integer constant
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-MQNB=: 32   NB. block size limit
+MQNB=: 3 NB. 32   NB. block size limit
 
 NB. ---------------------------------------------------------
 NB. Description:
@@ -109,7 +109,7 @@ unmr2rnstep=: (1 {:: ]) ((,.   _  1&rt)  ;  0  1&}.@])~ (,;.0~ (1 _ ,:~ 2 # _1 -
 unmr2rcstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~ 0 _1&}.@[)~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&({::)))) larfrnbr 0 {:: ]
 
 NB. ---------------------------------------------------------
-NB. Verb:    Action:  Side:  Tran: Syntax:
+NB. Verb     Action   Side   Tran  Syntax
 NB. unml2ln  Q * C    left   none  eCprod=. Qf unml2ln (C, 0)
 NB. unml2lc  Q^H * C  left   ct    eCprod=. Qf unml2lc (C, 0)
 NB. unml2rn  C * Q    right  none  eCprod=. Qf unml2rn (C,.0)
@@ -173,11 +173,11 @@ NB.   (idmat n) (-: (clean@( 1  0&}.))) (( 1 trl1 gerqf A) unmr2lc ((   ungrq ge
 NB.   (idmat n) (-: (clean@( 0  1&}.))) (( 1 trl1 gerqf A) unmr2rn ((ct ungrq gerqf A) ,.~ 0))
 NB.   (idmat n) (-: (clean@( 0  1&}.))) (( 1 trl1 gerqf A) unmr2rc ((   ungrq gerqf A) ,.~ 0))
 NB. where
-NB.   2 -: # $ A        NB. A is a 2-rank array (i.e. matrix)
-NB.   -:/ @ $ A         NB. A is a square matrix (it's not
-NB.                     NB.   necessary and is assumed just
-NB.                     NB.   to simplify assertions)
-NB.   n=. # A           NB. size of matrix A
+NB.   2 -: # $ A  NB. A is a 2-rank array (i.e. matrix)
+NB.   -:/ @ $ A   NB. A is a square matrix (it's not
+NB.               NB.   necessary and is assumed just
+NB.               NB.   to simplify assertions)
+NB.   n=. # A     NB. size of matrix A
 NB.
 NB. Notes:
 NB. - input's and output's shapes are the same
@@ -281,201 +281,342 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:    Action:  Side:  Tran: Syntax:
-NB. unmlqln  Q * A    left   none  B=. LQf unmlqln A
-NB. unmlqlc  Q^H * A  left   ct    B=. LQf unmlqlc A
-NB. unmlqrn  A * Q    right  none  B=. LQf unmlqrn A
-NB. unmlqrc  A * Q^H  right  ct    B=. LQf unmlqrc A
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmlqln   Q * C    left   none  B=. LQf unmlqln C
+NB. unmlqlc   Q^H * C  left   ct    B=. LQf unmlqlc C
+NB. unmlqrn   C * Q    right  none  B=. LQf unmlqrn C
+NB. unmlqrc   C * Q^H  right  ct    B=. LQf unmlqrc C
 NB.
 NB. Description:
-NB.   Multiply a general matrix A by matrix Q, which is
-NB.   represented in factored form Qf as returned by gelqf
+NB.   Multiply a general matrix C by matrix Q, which is
+NB.   represented in factored form LQf as returned by gelqf
 NB. where
-NB.   A    - m×n-matrix
-NB.   LQf  - m×(n+1)-matrix, combined L and Qf (unit diagonal
-NB.          not stored), the output of gelqf
-NB.   B    - m×n-matrix
-NB.   Qf   - k×(n+1)-matrix, unit upper triangular, the Q
-NB.          represented in factored form
-NB.   Q    - m×m-matrix for unmlqln and unmlqlc, n×n-matrix
-NB.          for unmlqrn and unmlqrc, unitary (orthogonal),
-NB.          which is defined as a product of k elementary
-NB.          reflectors of order n:
-NB.            Q = Π{H(i)',i=k-1:0}
-NB.   k     = min(m,n)
+NB.   B,C - m×n-matrices
+NB.   LQf - n×(m+1)-matrix (ln,lc cases) or m×(n+1)-matrix
+NB.         (rn,rc), contains Qf (unit diagonal not stored),
+NB.         the output of gelqf
+NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
+NB.         unit upper triangular, the Q represented in
+NB.         factored form
+NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
+NB.         (orthogonal), which is defined as a product of k
+NB.         elementary reflectors:
+NB.           Q = Π{H(i)',i=k-1:0}
+NB.   k   = min(m,n)
 NB.
-NB. Algorithm for unmlqrn:
-NB.   In:  Qf C
-NB.   Out: eCQ################
-NB.   iters==⌊(#+BS-1)/BS⌋
 NB. Algorithm:
-NB.   1) augment C by zero column to produce extended C:
-NB.       eC=. C ,. 0
+NB.   In:  LQf C
+NB.   Out: B
+NB.   1) augment C by zero vector:
+NB.        aC=. C ,   0    NB. ln,lc
+NB.        aC=. C ,.  0    NB. rn,rc
 NB.   2) extract Qf from LQf
 NB.   3) if k>MQNB
-NB.      3.1) split eC on prefix pfxC(0) and suffix sfxC(0):
-NB.             pfxC(0) := eC[:,0:mqb]
-NB.      part intended for blocked algorithm being excluded,
-NB.      to produce eQ(0)
-NB.   4) find iters, the number of iterations
-NB.   5) do iterations:
-NB.        eQ=.    Qf  (unglqstep ^: iters) eQ0
-NB.   6) cut off last column from eQ to produce Q
+NB.      3.1) then
+NB.           3.1.1) split aC on prefix pfxaC and suffix sfxaC:
+NB.                    'pfxaC sfxaC'=. 0 ({. ;  }.)   eC    NB. ln
+NB.                    'pfxaC sfxaC'=. b ({. ;  }.)   eC    NB. lc
+NB.                    'pfxaC sfxaC'=. b ({. ;  }.)"1 eC    NB. rn
+NB.                    'pfxaC sfxaC'=. 0 ({. ;  }.)"1 eC    NB. rc
+NB.                  where
+NB.                    b := ⌊(k-1)/MQNB⌋*MQNB , size of part
+NB.                         processed by blocked algorithm
+NB.           3.1.2) find I, the number of iterations:
+NB.                    I := ⌈k/MQNB⌉
+NB.           3.1.3) do iterations:
+NB.                    'pfxaB sfxaB'=. Qf (unmlqxxstep ^: I) (pfxaC;sfxaC)
+NB.           3.1.4) unbox and merge pfxaB and sfxaB to produce aB,
+NB.                  being B augmented by trash vector:
+NB.                    aB=. pfxaB ,  sfxaB    NB. ln,lc
+NB.                    aB=. pfxaB ,. sfxaB    NB. rn,rc
+NB.      3.2) else process by non-blocked algorithm:
+NB.             aB=. Qf unml2xx aC
+NB.   4) cut off trash vector from aB to produce B:
+NB.        B=. }:   C    NB. ln,lc
+NB.        B=. }:"1 C    NB. rn,rc
 NB.
-NB. If:
-NB.   LQf=. gelqf A
-NB.   L=. trl (0 _1 }. LQf)
-NB.   Qf=. tru1 LQf
-NB.   Q=. unglq LQf
-NB.   k=. <./ $ A
-NB. then
-NB.   ((idmat @ c) (-: clean) ((tru1         ) unmlqln (ct @ unglq)) @ gelqf) A
-NB.   ((idmat @ c) (-: clean) ((tru1 @ (k&{.)) unmlqlc (     unglq)) @ gelqf) A
+NB. Assertions (with appropriate comparison tolerance):
+NB.   ((idmat @ c) (-: clean) (unmlqln (ct @ ((<:@c) unglq ]))) @ gelqf) A
+NB.   ((idmat @ c) (-: clean) (unmlqlc       ((<:@c) unglq ]) ) @ gelqf) A
+NB.   ((idmat @ c) (-: clean) (unmlqrn (ct @ ((<:@c) unglq ]))) @ gelqf) A
+NB.   ((idmat @ c) (-: clean) (unmlqrc       ((<:@c) unglq ]) ) @ gelqf) A
 NB.
 NB. Notes:
-NB. - input's and output's shapes are the same
 NB. - implements LAPACK's xUNMLQ
 NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmlqln=: _1  0 }. ((unml2ln`(, &>/@(  unmlqlnstep^:(>.@(MQNB %~ #@[)) (;~ 0  &{.                                             ) ))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,   &0)
-unmlqlc=: _1  0 }. ((unml2lc`(, &>/@([ unmlqlcstep^:(>.@(MQNB %~ #@[)) (( {.       ;   }.      )~ (MQNB arounddown @ (_1 + #)))~))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,   &0)
-unmlqrn=:  0 _1 }. ((unml2rn`(,.&>/@([ unmlqrnstep^:(>.@(MQNB %~ #@[)) ((({.~ _&,) ;  (}.~ 0&,))  (MQNB arounddown @ (_1 + #)))~))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
-unmlqrc=:  0 _1 }. ((unml2rc`(,.&>/@(  unmlqrcstep^:(>.@(MQNB %~ #@[)) (;~ _ 0&{.                                             ) ))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
+unmlqln=: }:   @ ((unml2ln`(, &>/@(  unmlqlnstep^:(>.@(MQNB %~ #@[)) (;~ 0& {.                                          ) ))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,   &0)
+unmlqlc=: }:   @ ((unml2lc`(, &>/@([ unmlqlcstep^:(>.@(MQNB %~ #@[)) (( {.     ;   }.  )~   (MQNB arounddown @ (_1 + #)))~))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,   &0)
+unmlqrn=: }:"1 @ ((unml2rn`(,.&>/@([ unmlqrnstep^:(>.@(MQNB %~ #@[)) ((({."1~) ;  (}."1~))  (MQNB arounddown @ (_1 + #)))~))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
+unmlqrc=: }:"1 @ ((unml2rc`(,.&>/@(  unmlqrcstep^:(>.@(MQNB %~ #@[)) (;~ 0&({."1)                                       ) ))@.(MQNB < #@[)~  tru1            @({.  ~     0 _1&(ms $) ))~ ,.  &0)
 
 NB. ---------------------------------------------------------
-NB. Verb:    Action:  Side:  Tran: Syntax:
-NB. unmqlln  Q * C    left   none  QeC=.  Qf unmqlln C
-NB. unmqllc  Q^H * C  left   ct    cQeC=. Qf unmqllc C
-NB. unmqlrn  C * Q    right  none  eCQ=.  Qf unmqlrn C
-NB. unmqlrc  C * Q^H  right  ct    eCcQ=. Qf unmqlrc C
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmqlln   Q * C    left   none  B=. QfL unmqlln C
+NB. unmqllc   Q^H * C  left   ct    B=. QfL unmqllc C
+NB. unmqlrn   C * Q    right  none  B=. QfL unmqlrn C
+NB. unmqlrc   C * Q^H  right  ct    B=. QfL unmqlrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
-NB.   represented in factored form Qf as returned by geqlf
+NB.   represented in factored form QfL as returned by geqlf
+NB. where
+NB.   B,C - m×n-matrices
+NB.   QfL - (m+1)×n-matrix (ln,lc cases), (n+1)×m-matrix
+NB.         (rn,rc), contains Qf (unit diagonal not stored),
+NB.         the output of geqlf
+NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
+NB.         unit upper triangular, the Q represented in
+NB.         factored form
+NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
+NB.         (orthogonal), which is defined as a product of k
+NB.         elementary reflectors:
+NB.           Q = Π{H(i),i=k-1:0}
+NB.   k   = min(m,n)
 NB.
-NB. ############Algorithm:
-NB.   iters==⌊(#+BS-1)/BS⌋
+NB. Algorithm:
+NB.   In:  QfL C
+NB.   Out: B
+NB.   1) augment C by zero vector:
+NB.        aC=. C , ~ 0    NB. ln,lc
+NB.        aC=. C ,.~ 0    NB. rn,rc
+NB.   2) extract Qf from QfL
+NB.   3) if k>MQNB
+NB.      3.1) then
+NB.           3.1.1) split aC on prefix pfxaC and suffix sfxaC:
+NB.                    'pfxaC sfxaC'=. b ({. ;~ }.)   eC    NB. ln
+NB.                    'pfxaC sfxaC'=. 0 ({. ;~ }.)   eC    NB. lc
+NB.                    'pfxaC sfxaC'=. 0 ({. ;~ }.)"1 eC    NB. rn
+NB.                    'pfxaC sfxaC'=. b ({. ;~ }.)"1 eC    NB. rc
+NB.                  where
+NB.                    b := MQNB - k , negated size of part
+NB.                         not processed by blocked
+NB.                         algorithm
+NB.           3.1.2) find I, the number of iterations:
+NB.                    I := ⌈k/MQNB⌉
+NB.           3.1.3) do iterations:
+NB.                    'pfxaB sfxaB'=. Qf (unmqlxxstep ^: I) (pfxaC;sfxaC)
+NB.           3.1.4) unbox and merge pfxaB and sfxaB to produce aB,
+NB.                  being B augmented by trash vector:
+NB.                    aB=. pfxaB ,  sfxaB    NB. ln,lc
+NB.                    aB=. pfxaB ,. sfxaB    NB. rn,rc
+NB.      3.2) else
+NB.             aB=. Qf unm2lxx aC
+NB.   4) cut off trash vector from aB to produce B:
+NB.        B=. }.   C    NB. ln,lc
+NB.        B=. }."1 C    NB. rn,rc
 NB.
-NB. If:
-NB.   LQf=. gelqf A
-NB.   L=. trl (0 _1 }. LQf)
-NB.   Qf=. tru1 LQf
-NB.   Q=. unglq LQf
-NB.   k=. <./ $ A
-NB. then
-NB.   ((idmat @ c) (-: clean) ((_1 & tru1 @ ((_ _10)&{.)) unmqllc (     ungql)) @ geqlf) A
+NB. Assertions (with appropriate comparison tolerance):
+NB.   ((idmat @ #) (-: clean) (unmqlln (ct @ ((<:@#) ungql ]))) @ geqlf) A
+NB.   ((idmat @ #) (-: clean) (unmqllc       ((<:@#) ungql ]) ) @ geqlf) A
+NB.   ((idmat @ #) (-: clean) (unmqlrn (ct @ ((<:@#) ungql ]))) @ geqlf) A
+NB.   ((idmat @ #) (-: clean) (unmqlrc       ((<:@#) ungql ]) ) @ geqlf) A
 NB.
 NB. Notes:
-NB. - input's and output's shapes are the same
-NB. - implements LAPACK's xUNMLQ
-NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
+NB. - implements LAPACK's xUNMQL
+NB. - unm2l{lc,ln,rc,rn} and unmql{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmqlln=:  1  0 }. ((unm2lln`(, &>/@([ unmqllnstep^:(>.@(MQNB %~ c@[)) (( {.       ;~  }.      )~ (MQNB                  - c ))~))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ , ~ &0)
-unmqllc=:  1  0 }. ((unm2llc`(, &>/@(  unmqllcstep^:(>.@(MQNB %~ c@[)) (;  0  &{.                                             ) ))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ , ~ &0)
-unmqlrn=:  0  1 }. ((unm2lrn`(,.&>/@(  unmqlrnstep^:(>.@(MQNB %~ c@[)) (;  _ 0&{.                                             ) ))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
-unmqlrc=:  0  1 }. ((unm2lrc`(,.&>/@([ unmqlrcstep^:(>.@(MQNB %~ c@[)) ((({.~ _&,) ;~ (}.~ 0&,))  (MQNB                  - c ))~))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
+unmqlln=: }.   @ ((unm2lln`(, &>/@([ unmqllnstep^:(>.@(MQNB %~ c@[)) (( {.     ;~  }.    )~ (MQNB                  - c ))~))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ , ~ &0)
+unmqllc=: }.   @ ((unm2llc`(, &>/@(  unmqllcstep^:(>.@(MQNB %~ c@[)) (;  0& {.                                          ) ))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ , ~ &0)
+unmqlrn=: }."1 @ ((unm2lrn`(,.&>/@(  unmqlrnstep^:(>.@(MQNB %~ c@[)) (;  0&({."1)                                       ) ))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
+unmqlrc=: }."1 @ ((unm2lrc`(,.&>/@([ unmqlrcstep^:(>.@(MQNB %~ c@[)) ((({."1~) ;~ (}."1~))  (MQNB                  - c ))~))@.(MQNB < c@[)~ (tru1~ (-~/ @ $))@({."1~ -@(_1  0&(ms $))))~ ,.~ &0)
 
 NB. ---------------------------------------------------------
-NB. Verb:    Action:  Side:  Tran: Syntax:
-NB. unmqrln  Q * C    left   none  QeC=.  Qf unmqrln C
-NB. unmqrlc  Q^H * C  left   ct    cQeC=. Qf unmqrlc C
-NB. unmqrrn  C * Q    right  none  eCQ=.  Qf unmqrrn C
-NB. unmqrrc  C * Q^H  right  ct    eCcQ=. Qf unmqrrc C
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmqrln   Q * C    left   none  B=. QfR unmqrln C
+NB. unmqrlc   Q^H * C  left   ct    B=. QfR unmqrlc C
+NB. unmqrrn   C * Q    right  none  B=. QfR unmqrrn C
+NB. unmqrrc   C * Q^H  right  ct    B=. QfR unmqrrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
-NB.   represented in factored form Qf as returned by geqrf
+NB.   represented in factored form QfR as returned by geqrf
+NB. where
+NB.   B,C - m×n-matrices
+NB.   QfR - (m+1)×n-matrix (ln,lc cases), (n+1)×m-matrix
+NB.         (rn,rc), contains Qf (unit diagonal not stored),
+NB.         the output of geqrf
+NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
+NB.         unit lower triangular, the Q represented in
+NB.         factored form
+NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
+NB.         (orthogonal), which is defined as a product of k
+NB.         elementary reflectors:
+NB.           Q = Π{H(i),i=0:k-1}
+NB.   k   = min(m,n)
 NB.
-NB. ############Algorithm:
-NB.   iters==⌊(#+BS-1)/BS⌋
+NB. Algorithm:
+NB.   In:  QfR C
+NB.   Out: B
+NB.   1) augment C by zero vector:
+NB.        aC=. C ,   0    NB. ln,lc
+NB.        aC=. C ,.  0    NB. rn,rc
+NB.   2) extract Qf from QfR
+NB.   3) if k>MQNB
+NB.      3.1) then
+NB.           3.1.1) split aC on prefix pfxaC and suffix sfxaC:
+NB.                    'pfxaC sfxaC'=. b ({. ;  }.)   eC    NB. ln
+NB.                    'pfxaC sfxaC'=. 0 ({. ;  }.)   eC    NB. lc
+NB.                    'pfxaC sfxaC'=. 0 ({. ;  }.)"1 eC    NB. rn
+NB.                    'pfxaC sfxaC'=. b ({. ;  }.)"1 eC    NB. rc
+NB.                  where
+NB.                    b := ⌊(k-1)/MQNB⌋*MQNB , size of part
+NB.                         processed by blocked algorithm
+NB.           3.1.2) find I, the number of iterations:
+NB.                    I := ⌈k/MQNB⌉
+NB.           3.1.3) do iterations:
+NB.                    'pfxaB sfxaB'=. Qf (unmqrxxstep ^: I) (pfxaC;sfxaC)
+NB.           3.1.4) unbox and merge pfxaB and sfxaB to produce aB,
+NB.                  being B augmented by trash vector:
+NB.                    aB=. pfxaB ,  sfxaB    NB. ln,lc
+NB.                    aB=. pfxaB ,. sfxaB    NB. rn,rc
+NB.      3.2) else
+NB.             aB=. Qf unm2rxx aC
+NB.   4) cut off trash vector from aB to produce B:
+NB.        B=. }:   C    NB. ln,lc
+NB.        B=. }:"1 C    NB. rn,rc
 NB.
-NB. If:
-NB.   LQf=. gelqf A
-NB.   L=. trl (0 _1 }. LQf)
-NB.   Qf=. tru1 LQf
-NB.   Q=. unglq LQf
-NB.   k=. <./ $ A
-NB. then
-NB.   ((idmat @ c) (-: clean) ((tru1         ) unmlqln (ct @ unglq)) @ gelqf) A
-NB.   ((idmat @ c) (-: clean) ((tru1 @ (k&{.)) unmlqlc (     unglq)) @ gelqf) A
+NB. Assertions (with appropriate comparison tolerance):
+NB.   ((idmat @ #) (-: clean) (unmqrln (ct @ ((<:@#) ungqr ]))) @ geqrf) A
+NB.   ((idmat @ #) (-: clean) (unmqrlc       ((<:@#) ungqr ]) ) @ geqrf) A
+NB.   ((idmat @ #) (-: clean) (unmqrrn (ct @ ((<:@#) ungqr ]))) @ geqrf) A
+NB.   ((idmat @ #) (-: clean) (unmqrrc       ((<:@#) ungqr ]) ) @ geqrf) A
 NB.
 NB. Notes:
-NB. - input's and output's shapes are the same
-NB. - implements LAPACK's xUNMLQ
-NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
+NB. - implements LAPACK's xUNMQR
+NB. - unm2r{lc,ln,rc,rn} and unmqr{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmqrln=: _1  0 }. ((unm2rln`(, &>/@([ unmqrlnstep^:(>.@(MQNB %~ c@[)) (( {.       ;   }.      )~ (MQNB arounddown @ (_1 + c)))~))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,   &0)
-unmqrlc=: _1  0 }. ((unm2rlc`(, &>/@(  unmqrlcstep^:(>.@(MQNB %~ c@[)) (;~ 0  &{.                                             ) ))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,   &0)
-unmqrrn=:  0 _1 }. ((unm2rrn`(,.&>/@(  unmqrrnstep^:(>.@(MQNB %~ c@[)) (;~ _ 0&{.                                             ) ))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
-unmqrrc=:  0 _1 }. ((unm2rrc`(,.&>/@([ unmqrrcstep^:(>.@(MQNB %~ c@[)) ((({.~ _&,) ;  (}.~ 0&,))  (MQNB arounddown @ (_1 + c)))~))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
+unmqrln=: }:   @ ((unm2rln`(, &>/@([ unmqrlnstep^:(>.@(MQNB %~ c@[)) (( {.     ;   }.    )~ (MQNB arounddown @ (_1 + c)))~))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,   &0)
+unmqrlc=: }:   @ ((unm2rlc`(, &>/@(  unmqrlcstep^:(>.@(MQNB %~ c@[)) (;~ 0& {.                                          ) ))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,   &0)
+unmqrrn=: }:"1 @ ((unm2rrn`(,.&>/@(  unmqrrnstep^:(>.@(MQNB %~ c@[)) (;~ 0&({."1)                                       ) ))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
+unmqrrc=: }:"1 @ ((unm2rrc`(,.&>/@([ unmqrrcstep^:(>.@(MQNB %~ c@[)) ((({."1~) ;  (}."1~))  (MQNB arounddown @ (_1 + c)))~))@.(MQNB < c@[)~  trl1            @({."1~    _1  0&(ms $) ))~ ,.  &0)
 
 NB. ---------------------------------------------------------
-NB. Verb:    Action:  Side:  Tran: Syntax:
-NB. unmrqln  Q * C    left   none  QeC=.  Qf unmrqln C
-NB. unmrqlc  Q^H * C  left   ct    cQeC=. Qf unmrqlc C
-NB. unmrqrn  C * Q    right  none  eCQ=.  Qf unmrqrn C
-NB. unmrqrc  C * Q^H  right  ct    eCcQ=. Qf unmrqrc C
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmrqln   Q * C    left   none  B=. RQf unmrqln C
+NB. unmrqlc   Q^H * C  left   ct    B=. RQf unmrqlc C
+NB. unmrqrn   C * Q    right  none  B=. RQf unmrqrn C
+NB. unmrqrc   C * Q^H  right  ct    B=. RQf unmrqrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
-NB.   represented in factored form Qf as returned by gerqf
+NB.   represented in factored form RQf as returned by gerqf
 NB.
-NB. ############Algorithm:
-NB.   iters==⌊(#+BS-1)/BS⌋
+NB. where
+NB.   B,C - m×n-matrices
+NB.   LQf - n×(m+1)-matrix (ln,lc cases) or m×(n+1)-matrix
+NB.         (rn,rc), contains Qf (unit diagonal not stored),
+NB.         the output of gerqf
+NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
+NB.         unit lower triangular, the Q represented in
+NB.         factored form
+NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
+NB.         (orthogonal), which is defined as a product of k
+NB.         elementary reflectors:
+NB.           Q = Π{H(i)',i=0:k-1}
+NB.   k   = min(m,n)
 NB.
-NB. If:
-NB.   LQf=. gelqf A
-NB.   L=. trl (0 _1 }. LQf)
-NB.   Qf=. tru1 LQf
-NB.   Q=. unglq LQf
-NB.   k=. <./ $ A
-NB. then
-NB.   ((idmat @ c) (-: clean) ((tru1         ) unmlqln (ct @ unglq)) @ gelqf) A
-NB.   ((idmat @ c) (-: clean) ((tru1 @ (k&{.)) unmlqlc (     unglq)) @ gelqf) A
+NB. Algorithm:
+NB.   In:  RQf C
+NB.   Out: B
+NB.   1) augment C by zero vector:
+NB.        aC=. C ,~  0    NB. ln,lc
+NB.        aC=. C ,.~ 0    NB. rn,rc
+NB.   2) extract Qf from RQf
+NB.   3) if k>MQNB
+NB.      3.1) then
+NB.           3.1.1) split aC on prefix pfxaC and suffix sfxaC:
+NB.                    'pfxaC sfxaC'=. 0 ({. ;~ }.)   eC    NB. ln
+NB.                    'pfxaC sfxaC'=. b ({. ;~ }.)   eC    NB. lc
+NB.                    'pfxaC sfxaC'=. b ({. ;~ }.)"1 eC    NB. rn
+NB.                    'pfxaC sfxaC'=. 0 ({. ;~ }.)"1 eC    NB. rc
+NB.                  where
+NB.                    b := MQNB - k , negated size of part
+NB.                         not processed by blocked
+NB.                         algorithm
+NB.           3.1.2) find I, the number of iterations:
+NB.                    I := ⌈k/MQNB⌉
+NB.           3.1.3) do iterations:
+NB.                    'pfxaB sfxaB'=. Qf (unmrqxxstep ^: I) (pfxaC;sfxaC)
+NB.           3.1.4) unbox and merge pfxaB and sfxaB to produce aB,
+NB.                  being B augmented by trash vector:
+NB.                    aB=. pfxaB ,  sfxaB    NB. ln,lc
+NB.                    aB=. pfxaB ,. sfxaB    NB. rn,rc
+NB.      3.2) else process by non-blocked algorithm:
+NB.             aB=. Qf unmr2xx aC
+NB.   4) cut off trash vector from aB to produce B:
+NB.        B=. }.   C    NB. ln,lc
+NB.        B=. }."1 C    NB. rn,rc
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   ((idmat @ c) (-: clean) (unmrqln (ct @ ((<:@c) ungrq ]))) @ gerqf) A
+NB.   ((idmat @ c) (-: clean) (unmrqlc       ((<:@c) ungrq ]) ) @ gerqf) A
+NB.   ((idmat @ c) (-: clean) (unmrqrn (ct @ ((<:@c) ungrq ]))) @ gerqf) A
+NB.   ((idmat @ c) (-: clean) (unmrqrc       ((<:@c) ungrq ]) ) @ gerqf) A
 NB.
 NB. Notes:
-NB. - input's and output's shapes are the same
-NB. - implements LAPACK's xUNMLQ
-NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
+NB. - implements LAPACK's xUNMRQ
+NB. - unmr2{lc,ln,rc,rn} and unmrq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmrqln=:  1  0 }. ((unmr2ln`(, &>/@(  unmrqlnstep^:(>.@(MQNB %~ #@[)) (;  0  &{.                                             ) ))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ , ~ &0)
-unmrqlc=:  1  0 }. ((unmr2lc`(, &>/@([ unmrqlcstep^:(>.@(MQNB %~ #@[)) (( {.       ;~  }.      )~ (MQNB                  - # ))~))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ , ~ &0)
-unmrqrn=:  0  1 }. ((unmr2rn`(,.&>/@([ unmrqrnstep^:(>.@(MQNB %~ #@[)) ((({.~ _&,) ;~ (}.~ 0&,))  (MQNB                  - # ))~))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
-unmrqrc=:  0  1 }. ((unmr2rc`(,.&>/@(  unmrqrcstep^:(>.@(MQNB %~ #@[)) (;  _ 0&{.                                             ) ))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
+unmrqln=: }.   @ ((unmr2ln`(, &>/@(  unmrqlnstep^:(>.@(MQNB %~ #@[)) (;  0& {.                                          ) ))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ , ~ &0)
+unmrqlc=: }.   @ ((unmr2lc`(, &>/@([ unmrqlcstep^:(>.@(MQNB %~ #@[)) (( {.     ;~  }.    )~ (MQNB                  - # ))~))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ , ~ &0)
+unmrqrn=: }."1 @ ((unmr2rn`(,.&>/@([ unmrqrnstep^:(>.@(MQNB %~ #@[)) ((({."1~) ;~ (}."1~))  (MQNB                  - # ))~))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
+unmrqrc=: }."1 @ ((unmr2rc`(,.&>/@(  unmrqrcstep^:(>.@(MQNB %~ #@[)) (;  0&({."1)                                       ) ))@.(MQNB < #@[)~ (trl1~ (-~/ @ $))@({.  ~ -@( 0 _1&(ms $))))~ ,.~ &0)
 
 NB. ---------------------------------------------------------
-NB. Verb:     Action:  Side:  Tran: Syntax:
-NB. unmhrlln  Q * C    left   none  QeC=.  Qf unmhrlln C
-NB. unmhrllc  Q^H * C  left   ct    cQeC=. Qf unmhrllc C
-NB. unmhrlrn  C * Q    right  none  eCQ=.  Qf unmhrlrn C
-NB. unmhrlrc  C * Q^H  right  ct    eCcQ=. Qf unmhrlrc C
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmhrlln  Q * C    left   none  B=. HQf unmhrlln C
+NB. unmhrllc  Q^H * C  left   ct    B=. HQf unmhrllc C
+NB. unmhrlrn  C * Q    right  none  B=. HQf unmhrlrn C
+NB. unmhrlrc  C * Q^H  right  ct    B=. HQf unmhrlrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by unitary (orthogonal)
-NB.   matrix Q, which is represented in factored form Qf as
+NB.   matrix Q, which is represented in factored form HQf as
 NB.   returned by gehrdl
+NB. where
+NB.   B,C - m×n-matrices
+NB.   HQf - m×(m+1)-matrix (ln,lc cases) or n×(n+1)-matrix
+NB.         (rn,rc), contains Qf (unit diagonal not stored),
+NB.         the output of gehrdl
+NB.   Qf  - (s-1)×(m-h)-matrix (ln,lc) or (s-1)×(n-h)-matrix
+NB.         (rn,rc), unit upper triangular, the Q represented
+NB.         in factored form, located in HQf[h:h+s-2,h+1:end]
+NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), being
+NB.         unit matrix with unitary (orthogonal) matrix
+NB.         inserted into elements Q[h:h+s-1,h:h+s-1] :
+NB.           Q = Π{H(i)',i=h+s-2:h}
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
+NB.         defines submatrix Qf position in matrix HQf, see
+NB.         see gehrdl
 NB.
-NB. ###########Algorithm:
-NB.   iters==⌊(#+BS-1)/BS⌋
+NB. Algorithm:
+NB.   In:  HQf C
+NB.   Out: B
+NB.   1) shift HQf down to produce Qf:
+NB.        Qf=. |. !. 0 HQf
+NB.   2) call correspondent unmlqxx to do the job:
+NB.        B=. Qf unmlqxx C
 NB.
-NB. If:
-NB.   LQf=. gelqf A
-NB.   L=. trl (0 _1 }. LQf)
-NB.   Qf=. tru1 LQf
-NB.   Q=. unglq LQf
-NB.   k=. <./ $ A
-NB. then
-NB.   
+NB. Assertions (with appropriate comparison tolerance):
+NB.   ((idmat @ c) (-: clean) (unmhrlln (ct @ unghrl)) @ gehrdl) A
+NB.   ((idmat @ c) (-: clean) (unmhrllc (ct @ unghrl)) @ gehrdl) A
+NB.   ((idmat @ c) (-: clean) (unmhrlrn (ct @ unghrl)) @ gehrdl) A
+NB.   ((idmat @ c) (-: clean) (unmhrlrc (ct @ unghrl)) @ gehrdl) A
 NB.
 NB. Notes:
 NB. - input's and output's shapes are the same
-NB. - implements LAPACK's xUNMLQ
-NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
-NB.   are topologic equivalents
+NB. - instead of using f and s parameters, the following
+NB.   product is really calculating:
+NB.     Q = Π{H(i)',i=n-1:0} ,
+NB.   where
+NB.     H(0:f-1) = H(f+s-1:n-1) = I .
+NB.   This approach delivers excessive calculations in rare
+NB.   case ((f>0) OR (f+s<n)).
 
 unmhrlln=: (unmlqln~ (|. !. 0))~
 unmhrllc=: (unmlqlc~ (|. !. 0))~
@@ -483,34 +624,55 @@ unmhrlrn=: (unmlqrn~ (|. !. 0))~
 unmhrlrc=: (unmlqrc~ (|. !. 0))~
 
 NB. ---------------------------------------------------------
-NB. Verb:     Action:  Side:  Tran: Syntax:
-NB. unmhruln  Q * C    left   none  QeC=.  Qf unmhruln C
-NB. unmhrulc  Q^H * C  left   ct    cQeC=. Qf unmhrulc C
-NB. unmhrurn  C * Q    right  none  eCQ=.  Qf unmhrurn C
-NB. unmhrurc  C * Q^H  right  ct    eCcQ=. Qf unmhrurc C
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmhruln  Q * C    left   none  B=. HQf unmhruln C
+NB. unmhrulc  Q^H * C  left   ct    B=. HQf unmhrulc C
+NB. unmhrurn  C * Q    right  none  B=. HQf unmhrurn C
+NB. unmhrurc  C * Q^H  right  ct    B=. HQf unmhrurc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by unitary (orthogonal)
-NB.   matrix Q, which is represented in factored form Qf as
+NB.   matrix Q, which is represented in factored form HQf as
 NB.   returned by gehrdu
+NB. where
+NB.   B,C - m×n-matrices
+NB.   HQf - (m+1)×m-matrix (ln,lc cases) or (n+1)×n-matrix
+NB.         (rn,rc), contains Qf (unit diagonal not stored),
+NB.         the output of gehrdu
+NB.   Qf  - (m-h)×(s-1)-matrix (ln,lc) or (n-h)×(s-1)-matrix
+NB.         (rn,rc), unit lower triangular, the Q represented
+NB.         in factored form, located in HQf[h+1:end,h:h+s-2]
+NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), being
+NB.         unit matrix with unitary (orthogonal) matrix
+NB.         inserted into elements Q[h:h+s-1,h:h+s-1] :
+NB.           Q = Π{H(i),i=h:h+s-2}
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
+NB.         defines submatrix Qf position in matrix HQf, see
+NB.         see gehrdu
 NB.
-NB. ###########Algorithm:
-NB.   iters==⌊(#+BS-1)/BS⌋
+NB. Algorithm:
+NB.   In:  HQf C
+NB.   Out: B
+NB.   1) shift HQf to the right to produce Qf:
+NB.        Qf=. 0 _1 |. !. 0 HQf
+NB.   2) call correspondent unmqrxx to do the job:
+NB.        B=. Qf unmqrxx C
 NB.
-NB. If:
-NB.   LQf=. gelqf A
-NB.   L=. trl (0 _1 }. LQf)
-NB.   Qf=. tru1 LQf
-NB.   Q=. unglq LQf
-NB.   k=. <./ $ A
-NB. then
-NB.   
+NB. Assertions (with appropriate comparison tolerance):
+NB.   ((idmat @ c) (-: clean) (unmhrlln (ct @ unghrl)) @ gehrdl) A
+NB.   ((idmat @ c) (-: clean) (unmhrllc (ct @ unghrl)) @ gehrdl) A
+NB.   ((idmat @ c) (-: clean) (unmhrlrn (ct @ unghrl)) @ gehrdl) A
+NB.   ((idmat @ c) (-: clean) (unmhrlrc (ct @ unghrl)) @ gehrdl) A
 NB.
 NB. Notes:
-NB. - input's and output's shapes are the same
-NB. - implements LAPACK's xUNMLQ
-NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
-NB.   are topologic equivalents
+NB. - implements LAPACK's xUNMHR
+NB. - instead of using f and s parameters, the following
+NB.   product is really calculating:
+NB.     Q = Π{H(i),i=0:n-1} ,
+NB.   where
+NB.     H(0:f-1) = H(f+s-1:n-1) = I .
+NB.   This approach delivers excessive calculations in rare
+NB.   case ((f>0) OR (f+s<n)).
 
 unmhruln=: (unmqrln~ (0 _1 & (|. !. 0)))~
 unmhrulc=: (unmqrlc~ (0 _1 & (|. !. 0)))~

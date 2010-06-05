@@ -221,7 +221,7 @@ NB.         where
 NB.           H(m-1:k)≡H(v(m-1:k),τ(m-1:k))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
-NB. Assertions (with appropriate comparison tolerance)
+NB. Assertions (with appropriate comparison tolerance):
 NB.   Q -: unglq LQf
 NB.   I -: (mp ct) Q
 NB.   A -: L mp Q
@@ -266,7 +266,7 @@ NB.         where
 NB.           H(n-1:k)≡H(v(n-1:k),τ(n-1:k))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
-NB. Assertions (with appropriate comparison tolerance)
+NB. Assertions (with appropriate comparison tolerance):
 NB.   Q -: ungql QfL
 NB.   I -: (mp~ ct) Q
 NB.   A -: Q mp L
@@ -311,7 +311,7 @@ NB.         where
 NB.           H(k:n-1)≡H(v(k:n-1),τ(k:n-1))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
-NB. Assertions (with appropriate comparison tolerance)
+NB. Assertions (with appropriate comparison tolerance):
 NB.   Q -: ungql QfR
 NB.   I -: (mp~ ct) Q
 NB.   A -: Q mp R
@@ -356,7 +356,7 @@ NB.         where
 NB.           H(k:m-1)≡H(v(k:m-1),τ(k:m-1))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
-NB. Assertions (with appropriate comparison tolerance)
+NB. Assertions (with appropriate comparison tolerance):
 NB.   Q -: ungrq RQf
 NB.   I -: (mp ct) Q
 NB.   A -: R mp Q

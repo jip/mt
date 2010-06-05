@@ -413,7 +413,7 @@ NB.               reflector H(i) (unit is not stored, v(i)
 NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
-NB. Assertions:
+NB. Assertions (with appropriate comparison tolerance):
 NB.   (idmat @ ms @ $ -: clean @ (mp ct)) Q
 NB. where
 NB.   Q=. ungrq gerqf A

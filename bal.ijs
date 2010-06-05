@@ -98,6 +98,7 @@ NB.  nzr=. p { nzr                              NB. apply all permutations
 )
 
 gebalp2=: 3 : 0
+  ii2cp=. <@~.@,
   x2b3=. < @ < @ < @ [
 
   n=. # y
@@ -135,16 +136,20 @@ gebalp2=: 3 : 0
 
 gebalp3=: 3 : 0
   n=. # y
-  f=. 0                                       NB. A11 upper left corner start
-  s=. n                                       NB. A11 size
-  p=. i. n                                    NB. permutations accumulator
-  'nzr nzc'=. (((+/ " 1 ,: (+/)) ((- " 1) dbg 'nzrc') diag) @ (0 & ~:)) y  NB. count non-zeros in rows and cols of A without diagonal
-  nzco=. (\: dbg 'nzco') nzc
-  pc=. (((\:~ dbg 'sorted') nzc) (<: dbg '<:') (i. - n)) (i. dbg 'pc') 0
-  y=. (<"1 (pc {. nzco) (}:@,. dbg ',.') (pc {. (i. - n))) ((C."1) dbg 'c C."1 A') y
-  nzro=. (/: dbg 'nzro') nzr
-  pr=. (((/:~ dbg 'sorted') nzr) (>: dbg '>:') (i. n)) (i: dbg 'pr') 0
-  y=. (<"1 (pr {. nzro) (,. dbg ',.') (pr {. (i. n))) (C. dbg 'r C. A') y
+  'nzr nzc'=. (((+/ " 1 ,: (+/)) (- " 1) diag) @ (0 & ~:)) y  NB. count non-zeros in rows and cols of A without diagonal
+
+  nzro=. /: nzr                                   NB. nzr ordered
+  prn=. ((nzro { nzr) <: (i. n)) i. 0             NB. rows to permute number
+  dpr=. <@~."1 (prn {. nzro) ,. (prn {. (i. - n))    NB. delta permutation of rows (at tail)
+
+  nzc=. dpr (C. dbg 'upd nzc') nzc                                NB. adjust nzc according to dpr
+
+  nzco=. /: nzc                                   NB. nzr ordered
+  pcn=. ((nzco { nzc) <: (i. n)) i. 0             NB. columns to permute number
+  dpc=. <@~."1 (pcn {. nzco) ,. (pcn {. (i. n))      NB. delta permutation of columns (at head)
+
+  p=. |. dpr , dpc                                NB. accumulate cyclic permutations
+  (p sp y) ; (pcn ([ , -~) n-prn) ; (p C. i. n)   NB. permute A ; assemble fs ; build p
 )
 
 NB. ---------------------------------------------------------

@@ -1,0 +1,21 @@
+At Fri, 26 Jan 2007 14:57:21 -0700,
+Patrick Alken wrote:
+>   After reviewing the BSD licenses, it appears that the lapack
+> license is identical to the "modified BSD" license, which is
+> compatible with the GPL according to www.gnu.org.
+> 
+>   To comply with lapack's license, it seems we need to include
+> a copy of it with GSL though, since eigen/nonsymmv.c and
+> eigen/schur.c contain a few lapack routines.
+
+That's ok, other GNU software also includes routines under the
+modified BSD license (e.g. the GNU C Library). Just add the notice in
+the affected files with a note "Based on original code from LAPACK:
+....".  If there are files where you have some independently written
+routines it may make sense to split them so it is clear which parts
+are covered each license.  
+
+I will add the disclaimer into the reference manual.
+
+-- 
+Brian Gough

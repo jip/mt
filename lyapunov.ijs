@@ -26,8 +26,8 @@ NB.   http://www.netlib.org/lapack/lug/node94.html
 NB. - equation pairs simultaneous solver
 NB.
 NB. Version: 1.0.0 2008-03-30
-NB. Copyright: Igor Zhuravlov |.'ur.ugvd.ciu@rogi'
-NB. License: GPL v3 or later
+NB. Copyright: Igor Zhuravlov igor@uic.dvgu.ru
+NB. License: Version 3 of the GNU GPL or any later version
 
 script_z_ '~system/packages/math/matutil.ijs'  NB. diag
 

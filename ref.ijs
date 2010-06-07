@@ -16,7 +16,7 @@ NB. testlarfb  Test larfbxxxx by general matrix given
 NB. testref    Adv. to make verb to test larfxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.1 2010-06-07
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -512,7 +512,7 @@ NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     (? @ $ 0:) testref_mt_ 200 150
+NB.     ?@$&0 testref_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
 NB.     (_1 1 0 4 _6 4 & gemat_mt_) testref_mt_ 200 200

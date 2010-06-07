@@ -16,7 +16,7 @@ NB. unmat    Adv. to make verb to make random unitary
 NB.          (orthogonal) matrix
 NB. spmat    Conj. to make verb to make random sparse array
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.1 2010-06-07
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -71,7 +71,7 @@ NB.     Im(s) ~ U(_1,1)
 NB.   :
 NB.     unirand=: randu j. (_1 1 & randu)
 
-randu=: (? @ $ 0:) :((p.~ (-~/\))~ $:)
+randu=: (?@$&0) :((p.~ (-~/\))~ $:)
 
 NB. ---------------------------------------------------------
 NB. rande

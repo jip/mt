@@ -25,7 +25,7 @@ NB. testunmhr  Test unmhrxxx by square matrix given
 NB. testmq     Adv. to make verb to test unmxxxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.1 2010-06-07
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -828,7 +828,7 @@ NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     (? @ $ 0:) testmq_mt_ 200 150
+NB.     ?@$&0 testmq_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
 NB.     (_1 1 0 4 _6 4 & gemat_mt_) testmq_mt_ 200 200

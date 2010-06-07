@@ -17,7 +17,7 @@ NB.            given
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.1 2010-06-07
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -567,13 +567,13 @@ NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - test by random rectangular real matrix with elements
+NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     (? @ $ 0:) testbal_mt_ 200 150
+NB.     ?@$&0 testbal_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 4 _6 4 & gemat_mt_) testbal_mt_ 200 200
-NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 200
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testbal_mt_ 150 150
+NB. - test by random square complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 150
 
 testbal=: 1 : 'EMPTY_mt_ [ (testgebal_mt_ @ (u spmat_mt_ 0.25) ^: (=/))'

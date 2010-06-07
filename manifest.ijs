@@ -8,7 +8,7 @@ Library to solve some problems in matrix algebra: transforming, decomposing, red
 
 VERSION=: '0.6.1'
 
-RELEASE=: 'j602 701'
+RELEASE=: 'j602 j701'
 
 LABCATEGORY=: 'Math'
 

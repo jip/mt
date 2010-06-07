@@ -23,3 +23,6 @@ math/mt - change history
 
 == 0.6.1 ==
  * little refactoring: use inlined randu in tests; little fix: square-only input for square-only tests
+
+== 0.6.2 ==
+ * fix manifest.ijs

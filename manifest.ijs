@@ -48,4 +48,7 @@ trs.ijs
 util.ijs
 )
 
-PLATFORMS=: 'win linux darwin'
+DEPENDS=: 0 : 0
+math/misc
+math/lapack 1.1.16
+)

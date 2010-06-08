@@ -1,4 +1,4 @@
-NB. Rotations
+NB. Rotation
 NB.
 NB. lartg      Generates a plane rotation of a 2-vector
 NB. rot        Applies a plane rotation[s] to a 2-vector[s]

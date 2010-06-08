@@ -1,4 +1,4 @@
-NB. Reflections
+NB. Reflection
 NB.
 NB. larfx      Dyads to generate an elementary reflector
 NB. larfxxx    Monads to generate an elementary reflector

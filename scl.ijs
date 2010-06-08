@@ -1,4 +1,4 @@
-NB. Scale
+NB. Scaling
 NB.
 NB. scl  Try to scale without overflow or underflow
 NB.

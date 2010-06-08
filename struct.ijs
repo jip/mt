@@ -29,7 +29,7 @@ NB. hslpick   Zeroize elements outside lower Hessenberg part
 NB.           of the matrix
 NB. hsupick   Zeroize elements outside lower Hessenberg part
 NB.           of the matrix
-NB. tdpick    Zeroize elements outside tridiagonal part of
+NB. gtpick    Zeroize elements outside tridiagonal part of
 NB.           the matrix
 NB. trlpick   Zeroize elements outside lower triangular part
 NB.           of the matrix
@@ -592,13 +592,13 @@ NB.   B - m×n-matrix, upper Hessenberg
 hsupick=: * _1 _ & mbstencil
 
 NB. ---------------------------------------------------------
-NB. tdpick
+NB. gtpick
 NB.
 NB. Description:
 NB.   Zeroize elements outside tridiagonal part of the matrix
 NB.
 NB. Syntax:
-NB.   B=. tdpick A
+NB.   B=. gtpick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, tridiagonal
@@ -606,7 +606,7 @@ NB.
 NB. TODO:
 NB. - B would be sparse
 
-tdpick=: * _1 1 & mbstencil
+gtpick=: * _1 1 & mbstencil
 
 NB. ---------------------------------------------------------
 NB. trlpick

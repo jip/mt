@@ -5,7 +5,7 @@ NB.         the condition number of a matrix in a given norm
 NB. xxconx  Calculate reciprocal of the condition number of a
 NB.         matrix in a given norm
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.2 2010-06-08
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -71,6 +71,14 @@ NB. pocon1
 NB. poconi
 NB. ptcon1
 NB. ptconi
+NB. trl1con1
+NB. trl1coni
+NB. trlcon1
+NB. trlconi
+NB. tru1con1
+NB. tru1coni
+NB. trucon1
+NB. truconi
 NB. uncon1
 NB.
 NB. Description:
@@ -82,6 +90,7 @@ NB.   normG=. geconx G
 NB.   normH=. heconx H
 NB.   normP=. poconx P
 NB.   normT=. ptconx T
+NB.   normR=. trxxconx R
 NB.   normQ=. uncon1 Q
 NB. where
 NB.   G     - n×n-matrix of type: general, band,
@@ -95,6 +104,8 @@ NB.   normP ≥ 0, reciprocal of the condition number of P
 NB.   T     - n×n-matrix of type: Hermitian (symmetric)
 NB.           positive definite tridiagonal
 NB.   normT ≥ 0, reciprocal of the condition number of T
+NB.   R     - n×n-matrix of type: triangular
+NB.   normR ≥ 0, reciprocal of the condition number of R
 NB.   Q     - n×n-matrix, unitary (orthogonal)
 NB.   normQ ≥ 0, reciprocal of the condition number of Q in
 NB.           1-norm
@@ -103,15 +114,23 @@ NB. Notes:
 NB. - extraneous values in triangular, band matrices must be
 NB.   zeroed
 NB. - gecon1 simulates LAPACK's xGECON('1'), xGBCON('1'),
-NB.   xGTCON('1'), xTBCON('1'), xTRCON('1')
-NB. - geconi simulates LAPACK's xGECON('I'), xGBCON('I'),
-NB.   xGTCON('I'), xTBCON('I'), xTRCON('I')
+NB.   xGTCON('1'), xTBCON('1')
+NB. - geconi simulates LAPACK's xGECON('i'), xGBCON('i'),
+NB.   xGTCON('i'), xTBCON('i')
 NB. - hecon1 simulates LAPACK's xHECON('1'), xSYCON('1')
-NB. - heconi simulates LAPACK's xHECON('I'), xSYCON('I')
+NB. - heconi simulates LAPACK's xHECON('i'), xSYCON('i')
 NB. - pocon1 simulates LAPACK's xPOCON('1'), xPBCON('1')
-NB. - poconi simulates LAPACK's xPOCON('I'), xPBCON('I')
+NB. - poconi simulates LAPACK's xPOCON('i'), xPBCON('i')
 NB. - ptcon1 simulates LAPACK's xPTCON('1')
-NB. - ptconi simulates LAPACK's xPTCON('I')
+NB. - ptconi simulates LAPACK's xPTCON('i')
+NB. - trl1con1 simulates LAPACK's xTRCON('1','L','U')
+NB. - trl1coni simulates LAPACK's xTRCON('i','L','U')
+NB. - trlcon1 simulates LAPACK's xTRCON('1','L','N')
+NB. - trlconi simulates LAPACK's xTRCON('i','L','N')
+NB. - tru1con1 simulates LAPACK's xTRCON('1','U','U')
+NB. - tru1coni simulates LAPACK's xTRCON('i','U','U')
+NB. - trucon1 simulates LAPACK's xTRCON('1','U','N')
+NB. - truconi simulates LAPACK's xTRCON('i','U','N')
 
 gecon1=: norm1 con (getrilu1p@getrflu1p)
 geconi=: normI con (getrilu1p@getrflu1p)
@@ -124,5 +143,14 @@ poconi=: normi con (potril@potrfl)
 
 ptcon1=: norm1 con pttril
 ptconi=: normi con pttril
+
+trl1con1=: norm1 con trtril1
+trl1coni=: normi con trtril1
+trlcon1=:  norm1 con trtril
+trlconi=:  normi con trtril
+tru1con1=: norm1 con trtriu1
+tru1coni=: normi con trtriu1
+trucon1=:  norm1 con trtriu
+truconi=:  normi con trtriu
 
 uncon1=: norm1 con ct

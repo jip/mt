@@ -827,17 +827,17 @@ NB.   berr := ||I - A * A^_1|| / (ε * ||A|| * ||A^_1|| * n)
 
 testtrtri=: 3 : 0
   L1=. |: U1=. tru1 U=. |: y
-  rcondU=.  (norm1 con trtriu ) U
-  rcondU1=. (norm1 con trtriu1) U1
-  rcondL=.  (norm1 con trtril ) y
-  rcondL1=. (norm1 con trtril1) L1
+  rcondL=.  trlcon1  y
+  rcondL1=. trl1con1 L1
+  rcondU=.  trucon1  U
+  rcondU1=. tru1con1 U1
 
-  ('(128!:1)'  tmonad (]`]`(rcondU "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U
+  ('128!:1'  tmonad (]`]`(rcondU "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U
 
-  ('trtril'    tmonad (]`]`(rcondL "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
-  ('trtril1'   tmonad (]`]`(rcondL1"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) L1
-  ('trtriu'    tmonad (]`]`(rcondU "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U
-  ('trtriu1'   tmonad (]`]`(rcondU1"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U1
+  ('trtril'  tmonad (]`]`(rcondL "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) y
+  ('trtril1' tmonad (]`]`(rcondL1"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) L1
+  ('trtriu'  tmonad (]`]`(rcondU "_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U
+  ('trtriu1' tmonad (]`]`(rcondU1"_)`(_."_)`((norm1@(<: upddiag)@mp)%(FP_EPS*(*&norm1)*(#@]))))) U1
 
   EMPTY
 )

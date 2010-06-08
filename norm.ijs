@@ -44,14 +44,17 @@ NB. ---------------------------------------------------------
 NB. Magnitude-based norms |y|
 NB.
 NB. Notes:
-NB. - norm1 implements LAPACK's DZSUM1, xLANGE('1')
-NB. - to force norm1 act like any of: xLANHE('1'),
-NB.   xLANHS('1'), xLANHT('1'), xLANST('1'), xLANTR('1');
-NB.   extraneous values in matrix must be zeroed
-NB. - normi implements LAPACK's xLANGE('i')
-NB. - to force normi act like any of: xLANHE('i'),
-NB.   xLANHS('i'), xLANHT('i'), xLANST('i'), xLANTR('i');
-NB.   extraneous values in matrix must be zeroed
+NB. - norm1 implements LAPACK's DZSUM1, xLANGE('1'),
+NB.   xLANHE('1')
+NB. - to force norm1 act like any of: xLANGB('1'),
+NB.   xLANGT('1'), xLANHB('1'), xLANHS('1'), xLANHT('1'),
+NB.   xLANSB('1'), xLANST('1'), xLANSY('1'), xLANTB('1'),
+NB.   xLANTR('1'); extraneous values in matrix must be zeroed
+NB. - normi implements LAPACK's xLANGE('i'), xLANHE('i')
+NB. - to force normi act like any of: xLANGB('i'),
+NB.   xLANGT('i'), xLANHB('i'), xLANHS('i'), xLANHT('i'),
+NB.   xLANSB('i'), xLANST('i'), xLANSY('i'), xLANTB('i'),
+NB.   xLANTR('i'); extraneous values in matrix must be zeroed
 
 norm1=: | mocs           NB. 1-norm of vector (matrix)
 normi=: | mors           NB. ∞-norm of vector (matrix)
@@ -71,9 +74,10 @@ NB. (matrix) |y|^2
 NB.
 NB. Notes:
 NB. - implements BLAS's DZNRM2 and partially xLASSQ, LAPACK's
-NB.   xLANGE('f')
-NB. - to force norms act like any of: xLANHE('f'),
-NB.   xLANHS('f'), xLANHT('f'), xLANST('f'), xLANTR('f');
-NB.   extraneous values in matrix must be zeroed
+NB.   xLANGE('f'), xLANHE('f')
+NB. - to force norms act like any of: xLANGB('1'),
+NB.   xLANGT('f'), xLANHB('f'), xLANHS('f'), xLANHT('f'),
+NB.   xLANSB('f'), xLANST('f'), xLANSY('f'), xLANTB('f'),
+NB.   xLANTR('f'); extraneous values in matrix must be zeroed
 
 norms=: (((((+/^:_) &.: *:) @: %) * ]) (>./^:_)) @: | @: +.

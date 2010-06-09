@@ -7,7 +7,7 @@ NB. normit  Taxicab-based ∞-norm of vector (matrix)
 NB. norms   Square-based Euclidean (Frobenius) norm of vector
 NB.         (matrix)
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.2 2010-06-08
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.

@@ -22,7 +22,7 @@ NB.
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.3 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -122,7 +122,7 @@ require '~addons/math/mt/test.ijs'    NB. Test
 NB. low-level
 require '~addons/math/mt/bak.ijs'     NB. Restore original eigenvectors
 require '~addons/math/mt/bal.ijs'     NB. Balance
-require '~addons/math/mt/con.ijs'     NB. Condition number
+require '~addons/math/mt/cond.ijs'    NB. Condition number
 NB. require '~addons/math/mt/eqr.ijs'     NB. Eigenvalues and eigenvectors of structured matrix
 require '~addons/math/mt/ref.ijs'     NB. Reflection
 require '~addons/math/mt/rot.ijs'     NB. Rotation

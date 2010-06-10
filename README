@@ -12,7 +12,10 @@ equation solving, function applying, condition number estimating. It's
 based mostly on LAPACK algorithms, but doesn't require LAPACK.
 
 Project homepage:
-http://www.jsoftware.com/jwiki/IgorZhuravlov/mt
+http://www.jsoftware.com/jwiki/Addons/math/mt
 
 Authors:
 see AUTHORS file
+
+TODO:
+see TODO file

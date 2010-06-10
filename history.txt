@@ -26,3 +26,6 @@ math/mt - change history
 
 == 0.6.2 ==
  * fix manifest.ijs
+
+== 0.6.3 ==
+ * fix for Windows: s/con.ijs/cond.ijs/

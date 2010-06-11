@@ -29,3 +29,6 @@ math/mt - change history
 
 == 0.6.3 ==
  * fix for Windows: s/con.ijs/cond.ijs/
+
+== 0.6.4 ==
+ * made tolerant to math/lapack and math/misc addons absence case

@@ -17,7 +17,7 @@ NB.            given
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.4 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -536,8 +536,8 @@ NB.     Comparative Study of Algorithms for Matrix Balancing.
 NB.     Operations Research. Vol. 38. No. 3. May-June 1990
 
 testgebal=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'gebal'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'gebal'
 
   rcond=. gecon1 y
 

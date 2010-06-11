@@ -13,7 +13,7 @@ NB.            given
 NB. testpow    Adv. to make verb to test xxpow by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.4 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -212,15 +212,19 @@ NB. TODO:
 NB. - replace geev_jlapack_ by geev
 
 testdipow=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'geev'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'geev'
 
   rcond=. gecon1 y
 
-  'Lh v R'=. geev_jlapack_ y         NB. do eigendecomposition
-  assert ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
-  L=. ct Lh                          NB. restore L
-  iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in dipow
+  try.
+    'Lh v R'=. geev_jlapack_ y         NB. do eigendecomposition
+    assert ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
+    L=. ct Lh                          NB. restore L
+    iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in dipow
+  catch.
+    R=. v=. iR=. _.
+  end.
 
   ('5 7 & dipow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (R ; v ; iR)
 
@@ -242,13 +246,15 @@ NB. TODO:
 NB. - replace heev_jlapack_ by heev
 
 testhepow=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'heev'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'heev'
 
   rcond=. hecon1 y
 
-  NB. supply eigendecomposition ('v R'=. heev A) to tester
-  ('5 7 & hepow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) heev_jlapack_ y
+  NB. try to make eigendecomposition: 'v R'=. heev A
+  y=. heev_jlapack_ :: ] y
+
+  ('5 7 & hepow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
 )

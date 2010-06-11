@@ -9,7 +9,7 @@ NB. testgehrd  Test gehrdx by general matrix given
 NB. testhrd    Adv. to make verb to test gxhrdx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.4 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -443,15 +443,15 @@ NB. Syntax: testgehrd A
 NB. where A - general n×n-matrix
 
 testgehrd=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'gehrd'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'gehrd'
 
   rcond=. gecon1 y
 
   ('2b1100 & gehrd_jlapack_' tmonad        ((];1:;#)`(,&>/)`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
-  ('gehrdl'                tdyad  ((0,#)`]        `]     `(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@:(}:"1)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
-  ('gehrdu'                tdyad  ((0,#)`]        `]     `(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdl'                  tdyad  ((0,#)`]        `]     `(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@:(}:"1)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdu'                  tdyad  ((0,#)`]        `]     `(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
   EMPTY
 )

@@ -9,7 +9,7 @@ NB. testgeqf  Test gexxx by general matrix given
 NB. testqf    Adv. to make verb to test gexxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.4 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -423,8 +423,8 @@ NB. where
 NB.   matrix product is done indirectly via unmxxxx
 
 testgeqf=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'gelqf geqlf geqrf gerqf'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'gelqf geqlf geqrf gerqf'
 
   rcond=. ((_."_)`gecon1 @. (=/@$)) y  NB. meaninigful for square matrices only
 

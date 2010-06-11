@@ -20,7 +20,7 @@ NB.            definite tridiagonal matrix given
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.4 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -1633,12 +1633,12 @@ NB. - use temporary locale mttmp to avoid mt's names
 NB.   redefinition
 
 testgetrf=: 3 : 0
-  load_mttmp_ '~addons/math/misc/makemat.ijs'   NB. FIXME: ...
-  load_mttmp_ '~addons/math/misc/matutil.ijs'   NB.   ... J doesn't ...
-  load_mttmp_ '~addons/math/misc/linear.ijs'    NB.   ... execute 'require' ...
-  load_mttmp_ '~addons/math/misc/matfacto.ijs'  NB.   ... recursively
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'getrf'
+  load_mttmp_ :: ] '~addons/math/misc/makemat.ijs'   NB. FIXME: ...
+  load_mttmp_ :: ] '~addons/math/misc/matutil.ijs'   NB.   ... J doesn't ...
+  load_mttmp_ :: ] '~addons/math/misc/linear.ijs'    NB.   ... execute 'require' ...
+  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'  NB.   ... recursively
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'getrf'
 
   rcond=. ((_."_)`gecon1 @. (=/@$)) y  NB. meaninigful for square matrices only
 
@@ -1709,9 +1709,9 @@ NB. - use temporary locale mttmp to avoid mt's names
 NB.   redefinition
 
 testpotrf=: 3 : 0
-  load_mttmp_ '~addons/math/misc/matfacto.ijs'
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'potrf'
+  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'potrf'
 
   rcond=. pocon1 y
 

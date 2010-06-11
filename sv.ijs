@@ -34,7 +34,7 @@ NB.           definite tridiagonal matrix given
 NB. testsv    Adv. to make verb to test xxsvxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.4 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -215,8 +215,8 @@ NB.   ferr := max(||X - exactX|| / ||X||)
 NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testgesv=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'gesv'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'gesv'
 
   'A X'=. y
   'conA conAh conAt'=. gecon1"2 (] , ct ,: |:) A

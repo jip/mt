@@ -12,7 +12,7 @@ NB.            given
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.4 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -275,17 +275,21 @@ NB. TODO:
 NB. - replace geev_jlapack_ by geev
 
 testdiexp=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'geev'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'geev'
 
   rcond=. gecon1 y
 
-  'Lh v R'=. geev_jlapack_ y         NB. do eigendecomposition
-  v=. j./ (*"1 (-@*@{.)) |: +. v     NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
-                                     NB. A to be negative definite, this will avoid NaN error in diexp
-  assert ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
-  L=. ct Lh                          NB. restore L
-  iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in diexp
+  try.
+    'Lh v R'=. geev_jlapack_ y         NB. make eigendecomposition
+    v=. j./ (*"1 (-@*@{.)) |: +. v     NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
+                                       NB. A to be negative definite, this will avoid NaN error in diexp
+    assert ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
+    L=. ct Lh                          NB. restore L
+    iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in diexp
+  catch.
+    R=. v=. iR=. _.
+  end.
 
   ('diexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (R ; v ; iR)
 
@@ -307,17 +311,21 @@ NB. TODO:
 NB. - replace heev_jlapack_ by heev
 
 testheexp=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'heev'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'heev'
 
   rcond=. hecon1 y
 
-  NB. - do eigendecomposition: 'v R'=. heev A
-  NB. - for each v[i] in v, flip sign of v[i] if Re(v[i])>0,
-  NB.   to force A to be negative definite, this will avoid
-  NB.   NaN error in heexp
-  NB. - save adjusted boxed duplet back into y
-  y=. ((j./@(*"1 (-@*@{.))@:|:@:+.&.>)`] ag) heev_jlapack_ y
+  try.
+    NB. - make eigendecomposition: 'v R'=. heev A
+    NB. - for each v[i] in v, flip sign of v[i] if Re(v[i])>0,
+    NB.   to force A to be negative definite, this will avoid
+    NB.   NaN error in heexp
+    NB. - save adjusted boxed duplet back into y
+    y=. ((j./@(*"1 (-@*@{.))@:|:@:+.&.>)`] ag) heev_jlapack_ y
+  catch.
+    y=. _.
+  end.
 
   ('heexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
 

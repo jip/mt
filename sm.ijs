@@ -12,7 +12,7 @@ NB. testtrsm  Test trsmxxxx by triangular matrix given
 NB. testsm    Adv. to make verb to test trsmxxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.4 2010-06-11
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -143,8 +143,8 @@ NB.   ferr := max(||X - exactX|| / ||X||)
 NB.   berr := max(||B - op(A) * X|| / (ε * ||op(A)|| * ||X||))
 
 testtrsm=: 3 : 0
-  require '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ 'trtrs'
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'trtrs'
 
   'A X'=. y
   'L L1 U U1'=. bT=. (trl ; trl1 ; tru ; tru1) A

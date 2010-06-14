@@ -1,0 +1,39 @@
+NB. project: ~Addons/math/mt
+NB.
+NB. files should be given with their extension.
+NB. path defaults to project directory.
+NB.
+NB. Build     - build script
+NB. Run       - run script
+NB. Source    - source scripts
+
+Build=: 'build.ijs'
+Run=: 'run.ijs'
+Source=: 0 : 0
+bak.ijs
+bal.ijs
+cond.ijs
+dbg.ijs
+eqr.ijs
+exp.ijs
+fork.ijs
+gq.ijs
+hrd.ijs
+ios.ijs
+mq.ijs
+mt.ijs
+norm.ijs
+pow.ijs
+qf.ijs
+rand.ijs
+ref.ijs
+rot.ijs
+scl.ijs
+sm.ijs
+struct.ijs
+sv.ijs
+trf.ijs
+tri.ijs
+trs.ijs
+util.ijs
+)

@@ -20,7 +20,7 @@ NB.            definite tridiagonal matrix given
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.4 2010-06-11
+NB. Version: 0.6.5 2010-06-18
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -265,10 +265,10 @@ NB.   3) use output from the last iteration as algorithm's
 NB.      output
 NB.
 NB. Notes:
-NB. - for n>TRFNB is similar to LAPACK's xLAHEF('L'), but
-NB.   uses another factorization
-NB. - for n<:TRFNB is similar to LAPACK's xHETF2('L'), but
-NB.   uses another factorization
+NB. - for n>TRFNB is similar to LAPACK's DLASYF('L') and
+NB.   ZLAHEF('L'), but uses another factorization
+NB. - for n<:TRFNB is similar to LAPACK's DSYTF2('L') and
+NB.   ZHETF2('L'), but uses another factorization
 NB. - diagonals 0 and 1 of subH (main diagonal and
 NB.   subdiagonal of subH^H) aren't reconstructed since
 NB.   aren't used
@@ -1237,8 +1237,8 @@ NB.   iP=. p2P ip
 NB.   P=. ip2P ip
 NB.
 NB. Notes:
-NB. - is similar to LAPACK's xHETRF, but uses another
-NB.   factorization
+NB. - is similar to LAPACK's DSYTRF and ZHETRF, but uses
+NB.   another factorization
 NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.

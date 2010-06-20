@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 Library to solve some problems in matrix algebra: transforming, decomposing, reducing to condensed form, factorization, equation solving, function applying, condition number estimating. Is based mostly on LAPACK algorithms, but doesn't require LAPACK.
 )
 
-VERSION=: '0.6.4'
+VERSION=: '0.6.5'
 
 RELEASE=: 'j602 j701'
 
@@ -49,6 +49,6 @@ util.ijs
 )
 
 DEPENDS=: 0 : 0
-math/misc
 math/lapack 1.1.16
+math/misc
 )

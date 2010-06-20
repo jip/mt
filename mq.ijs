@@ -25,7 +25,7 @@ NB. testunmhr  Test unmhrxxx by square matrix given
 NB. testmq     Adv. to make verb to test unmxxxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.5 2010-06-18
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -199,7 +199,7 @@ NB.   n=. # A     NB. size of matrix A
 NB.
 NB. Notes:
 NB. - input's and output's shapes are the same
-NB. - implements LAPACK's xUNM{L2,2L,2R,R2}
+NB. - implements LAPACK's {DOR,ZUN}M{L2,2L,2R,R2}
 NB. - unml2{ln,lc,rn,rc} and unmlq{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
@@ -360,7 +360,7 @@ NB.   ((idmat @ c) (-: clean) (unmlqrn (ct @ ((<:@c) unglq ]))) @ gelqf) A
 NB.   ((idmat @ c) (-: clean) (unmlqrc       ((<:@c) unglq ]) ) @ gelqf) A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNMLQ
+NB. - implements LAPACK's DORMLQ, ZUNMLQ
 NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
@@ -432,7 +432,7 @@ NB.   ((idmat @ #) (-: clean) (unmqlrn (ct @ ((<:@#) ungql ]))) @ geqlf) A
 NB.   ((idmat @ #) (-: clean) (unmqlrc       ((<:@#) ungql ]) ) @ geqlf) A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNMQL
+NB. - implements LAPACK's DORMQL, ZUNMQL
 NB. - unm2l{lc,ln,rc,rn} and unmql{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
@@ -503,7 +503,7 @@ NB.   ((idmat @ #) (-: clean) (unmqrrn (ct @ ((<:@#) ungqr ]))) @ geqrf) A
 NB.   ((idmat @ #) (-: clean) (unmqrrc       ((<:@#) ungqr ]) ) @ geqrf) A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNMQR
+NB. - implements LAPACK's DORMQR, ZUNMQR
 NB. - unm2r{lc,ln,rc,rn} and unmqr{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
@@ -576,7 +576,7 @@ NB.   ((idmat @ c) (-: clean) (unmrqrn (ct @ ((<:@c) ungrq ]))) @ gerqf) A
 NB.   ((idmat @ c) (-: clean) (unmrqrc       ((<:@c) ungrq ]) ) @ gerqf) A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNMRQ
+NB. - implements LAPACK's DORMRQ, ZUNMRQ
 NB. - unmr2{lc,ln,rc,rn} and unmrq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
@@ -683,7 +683,7 @@ NB.   ((idmat @ c) (-: clean) (unmhrlrn (ct @ unghrl)) @ gehrdl) A
 NB.   ((idmat @ c) (-: clean) (unmhrlrc (ct @ unghrl)) @ gehrdl) A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNMHR
+NB. - implements LAPACK's DORMHR, ZUNMHR
 NB. - instead of using f and s parameters, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i),i=0:n-1} ,

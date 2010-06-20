@@ -19,7 +19,7 @@ NB.            definite tridiagonal matrix given
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.5 2010-06-18
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -677,8 +677,8 @@ NB.   or
 NB.   iA=. hetripu hetrfpu A
 NB.
 NB. Notes:
-NB. - is similar to LAPACK's xHETRI, but uses another
-NB.   factorization, see hetrfx
+NB. - is similar to LAPACK's DSYTRI and ZHETRI, but uses
+NB.   another factorization, see hetrfx
 NB. - calls to pttril and pttriu are interchangeable here
 
 hetripl=: (/: @ (0 & {::)) fp (pttril @ (2 & {::)) ((ct @ ]) mp mp) (trtril1 @ (1 & {::))

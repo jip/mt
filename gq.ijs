@@ -12,7 +12,7 @@ NB. testunghr  Test unghrx by square matrix given
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.5 2010-06-18
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -147,6 +147,12 @@ NB.   (] -: clean @ ((((-~/@$) tru ])@:(}."1)) mp  ((}."1)@(# ungr2 ])@((-~/@$) 
 NB. where
 NB.   k=. <./ $ A
 NB.
+NB. Notes:
+NB. - ungl2 implements LAPACK's DORGL2, ZUNGL2
+NB. - ung2l implements LAPACK's DORG2L, ZUNG2L
+NB. - ung2r implements LAPACK's DORG2R, ZUNG2R
+NB. - ungr2 implements LAPACK's DORGR2, ZUNGR2
+NB.
 NB. TODO:
 NB. - case s<k must be allowed, too
 
@@ -258,7 +264,7 @@ NB. where
 NB.   Q=. unglq gelqf A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNGLQ
+NB. - implements LAPACK's DORGLQ, ZUNGLQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
@@ -318,7 +324,7 @@ NB. where
 NB.   Q=. ungql geqlf A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNGQL
+NB. - implements LAPACK's DORGQL, ZUNGQL
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
@@ -378,7 +384,7 @@ NB. where
 NB.   Q=. ungqr geqrf A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNGQR
+NB. - implements LAPACK's DORGQR, ZUNGQR
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
@@ -437,7 +443,7 @@ NB. where
 NB.   Q=. ungrq gerqf A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xUNGRQ
+NB. - implements LAPACK's DORGRQ, ZUNGRQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
@@ -485,7 +491,7 @@ NB.   HQf - (n+1)×n-matrix with packed H and Qf (see gehrdu)
 NB.   Q   - n×n-matrix, an unitary (orthogonal)
 NB.
 NB. Notes:
-NB. - models LAPACK's xUNGHR
+NB. - models LAPACK's DORGHR, ZUNGHR
 NB. - instead of using f and s parameters, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i),i=0:n-1} ,

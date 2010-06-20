@@ -34,7 +34,7 @@ NB.           definite tridiagonal matrix given
 NB. testsv    Adv. to make verb to test xxsvxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.6.4 2010-06-11
+NB. Version: 0.6.5 2010-06-18
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -121,7 +121,7 @@ NB.   T    - n×n-matrix, Hermitian (symmetric) tridiagonal
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
-NB. - implements LAPACK's xHESV('L')
+NB. - implements LAPACK's DSYSV('L'), ZHESV('L')
 
 hesvax=:  (hetrsplx ~ hetrfpl)~
 hesvatx=: (hetrspltx~ hetrfpl)~

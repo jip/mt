@@ -39,7 +39,7 @@ NB.              positive definite tridiagonal matrix given
 NB. testtrs      Adv. to make verb to test xxtrsxxx by matrix
 NB.              of generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.5 2010-06-18
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -266,8 +266,8 @@ NB. where
 NB.   pL1T=. hetrfpl A
 NB.
 NB. Notes:
-NB. - is similar to LAPACK's xHETRS('L'), but uses another
-NB.   factorization, see hetrfx
+NB. - is similar to LAPACK's DSYTRS('L') and ZHETRS('L'), but
+NB.   uses another factorization, see hetrfx
 
 hetrsplx=:   (0 {:: [)    C.^:_1    ((1 {:: [) trsml1hx (pttrfl@(2 {:: [) pttrslx ((1 {:: [) trsml1x  ((0 {:: [) C.   ]))))
 hetrspltx=: ((0 {:: [) +@(C.^:_1  ) ((1 {:: [) trsml1hx (pttrfl@(2 {:: [) pttrslx ((1 {:: [) trsml1x  ((0 {:: [) C.   ]))))) +

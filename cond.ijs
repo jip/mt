@@ -5,7 +5,7 @@ NB.         the condition number of a matrix in a given norm
 NB. xxconx  Calculate reciprocal of the condition number of a
 NB.         matrix in a given norm
 NB.
-NB. Version: 0.6.2 2010-06-08
+NB. Version: 0.6.5 2010-06-18
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -117,10 +117,10 @@ NB. - gecon1 simulates LAPACK's xGECON('1'), xGBCON('1'),
 NB.   xGTCON('1'), xTBCON('1')
 NB. - geconi simulates LAPACK's xGECON('i'), xGBCON('i'),
 NB.   xGTCON('i'), xTBCON('i')
-NB. - hecon1 simulates LAPACK's xHECON('1'), xSYCON('1')
-NB. - heconi simulates LAPACK's xHECON('i'), xSYCON('i')
-NB. - pocon1 simulates LAPACK's xPOCON('1'), xPBCON('1')
-NB. - poconi simulates LAPACK's xPOCON('i'), xPBCON('i')
+NB. - hecon1 simulates LAPACK's DSYCON('1'), ZHECON('1')
+NB. - heconi simulates LAPACK's DSYCON('i'), ZHECON('i')
+NB. - pocon1 simulates LAPACK's xPBCON('1'), xPOCON('1')
+NB. - poconi simulates LAPACK's xPBCON('i'), xPOCON('i')
 NB. - ptcon1 simulates LAPACK's xPTCON('1')
 NB. - ptconi simulates LAPACK's xPTCON('i')
 NB. - trl1con1 simulates LAPACK's xTRCON('1','L','U')

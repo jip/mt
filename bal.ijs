@@ -17,7 +17,7 @@ NB.            given
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.6.4 2010-06-11
+NB. Version: 0.6.6 2010-06-22
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -300,14 +300,14 @@ NB.   'B hs p'=. gebalxp A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB.
+NB. Notes:
+NB. - gebalup models LAPACK's xGEBAL('P')
+NB.
 NB. References:
 NB. [1] Kressner, D. 2004. Numerical methods and software for
 NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany.
-NB.
-NB. Notes:
-NB. - gebalup models LAPACK's xGEBAL with 'P' option
 
 geballp=: ([ ((fp~ (0 & {::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) (-"1) diag)@:(0&~:))))
 gebalup=: ([ ((fp~ (0 & {::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) (-"1) diag)@:(0&~:))))
@@ -405,9 +405,8 @@ NB.   i.e. balance without eigenvalues isolating step:
 NB.   'C p hs d'=. gebals (];(a:"_);(0,#)) A
 NB.
 NB. Notes:
-NB. - models LAPACK's xGEBAL with 'S' option, with following
-NB.   difference: ra and ca never get value from diagonal
-NB.   element
+NB. - models LAPACK's xGEBAL('S'), with following difference:
+NB.   ra and ca never get value from diagonal element
 NB.
 NB. TODO:
 NB. - consider parallel approach described in [2]
@@ -505,7 +504,7 @@ NB.   D=. diagmat d
 NB.   Dinv=. %. D
 NB.
 NB. Notes:
-NB. - gebalu models LAPACK's xGEBAL with 'B' option
+NB. - gebalu models LAPACK's xGEBAL('B')
 
 geball=: gebals @ geballp
 gebalu=: gebals @ gebalup

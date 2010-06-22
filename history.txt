@@ -32,3 +32,9 @@ math/mt - change history
 
 == 0.6.4 ==
  * made tolerant to math/lapack and math/misc addons absence case
+
+== 0.6.5 ==
+ * minor fixes in comments
+
+== 0.6.6 ==
+ * bal.ijs: minor fixes in comments, template.ijs: added

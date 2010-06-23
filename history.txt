@@ -37,4 +37,4 @@ math/mt - change history
  * minor fixes in comments
 
 == 0.6.6 ==
- * bal.ijs: minor fixes in comments, template.ijs: added
+ * bal.ijs: minor fixes in comments, eqr.ijs: fix comment, template.ijs: added

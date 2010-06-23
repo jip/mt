@@ -7,7 +7,7 @@ NB.        symmetric positive definite tridiagonal matrix
 NB. steqr  Eigenvalues and, optionally, eigenvectors of a
 NB.        symmetric tridiagonal matrix
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.6 2010-06-22
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -40,6 +40,7 @@ NB. Description: 1st column of (H-s1*I)*(H-s2*I)
 NB. Syntax: vK=. (s1,s2) laqr1 H
 NB. where   H - 2×2-matrix or 3×3-matrix
 NB. TODO: tacit
+NB. Notes: implements LAPACK's xLAQR1
 
 laqr1=: 4 : 0
   's1 s2'=. x

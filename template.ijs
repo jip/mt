@@ -56,9 +56,9 @@ NB. Constants <optional section>
 <OR>
 
 NB. <common description>
-<NAME>=: <definition>
+<LOCALNAME>=: <definition>
 ...
-<NAME>=: <definition>
+<LOCALNAME>=: <definition>
 
 NB. ---------------------------------------------------------
 NB. <LocalAdverb>
@@ -109,6 +109,16 @@ NB.
 NB. Examples: <optional section>
 NB.    <command to execute>
 NB. <output>
+NB. ...
+NB.    <command to execute>
+NB. <output>
+NB.
+NB. Application: <optional section>
+NB. - <description>
+NB.     <command to execute>
+NB. ...
+NB. - <description>
+NB.     <command to execute>
 NB.
 NB. Notes: <optional section>
 NB. - <text>
@@ -178,6 +188,16 @@ NB.
 NB. Examples: <optional section>
 NB.    <command to execute>
 NB. <output>
+NB. ...
+NB.    <command to execute>
+NB. <output>
+NB.
+NB. Application: <optional section>
+NB. - <description>
+NB.     <command to execute>
+NB. ...
+NB. - <description>
+NB.     <command to execute>
 NB.
 NB. Notes: <optional section>
 NB. - <text>
@@ -240,6 +260,16 @@ NB.
 NB. Examples: <optional section>
 NB.    <command to execute>
 NB. <output>
+NB. ...
+NB.    <command to execute>
+NB. <output>
+NB.
+NB. Application: <optional section>
+NB. - <description>
+NB.     <command to execute>
+NB. ...
+NB. - <description>
+NB.     <command to execute>
 NB.
 NB. Notes: <optional section>
 NB. - <text>
@@ -328,6 +358,16 @@ NB.
 NB. Examples: <optional section>
 NB.    <command to execute>
 NB. <output>
+NB. ...
+NB.    <command to execute>
+NB. <output>
+NB.
+NB. Application: <optional section>
+NB. - <description>
+NB.     <command to execute>
+NB. ...
+NB. - <description>
+NB.     <command to execute>
 NB.
 NB. Notes: <optional section>
 NB. - <text>
@@ -397,6 +437,16 @@ NB.
 NB. Examples: <optional section>
 NB.    <command to execute>
 NB. <output>
+NB. ...
+NB.    <command to execute>
+NB. <output>
+NB.
+NB. Application: <optional section>
+NB. - <description>
+NB.     <command to execute>
+NB. ...
+NB. - <description>
+NB.     <command to execute>
 NB.
 NB. Notes: <optional section>
 NB. - <text>
@@ -459,6 +509,16 @@ NB.
 NB. Examples: <optional section>
 NB.    <command to execute>
 NB. <output>
+NB. ...
+NB.    <command to execute>
+NB. <output>
+NB.
+NB. Application: <optional section>
+NB. - <description>
+NB.     <command to execute>
+NB. ...
+NB. - <description>
+NB.     <command to execute>
 NB.
 NB. Notes: <optional section>
 NB. - <text>
@@ -498,6 +558,41 @@ NB. ...
 NB. - <description>:
 NB.     <formula>
 NB.
+NB. Storage layout: <optional section>
+NB.   <layout>
+NB. where
+NB.   <description>
+NB.
+NB. Algorithm: <optional section>
+NB.   In: <input nouns; comma-separated list>
+NB.   Out: <output nouns; comma-separated list>
+NB.   1) <1st step description>
+NB.   ...
+NB.   x) <last step description>
+NB.
+NB. Assertions (with appropriate comparison tolerance): <optional section>
+NB.   <assertion>
+NB.   ...
+NB.   <assertion>
+NB. where
+NB.   <copula>
+NB.   ...
+NB.   <copula>
+NB.
+NB. Examples: <optional section>
+NB.    <command to execute>
+NB. <output>
+NB. ...
+NB.    <command to execute>
+NB. <output>
+NB.
+NB. Application: <optional section>
+NB. - <description>
+NB.     <command to execute>
+NB. ...
+NB. - <description>
+NB.     <command to execute>
+NB.
 NB. Notes: <optional section>
 NB. - <text>
 NB. ...
@@ -532,14 +627,61 @@ NB.           called as:
 NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
-NB. Application:
-NB. - test by random square real matrix with elements
-NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 <testname>_mt_ 150 150
-NB. - test by random square real matrix with elements with
-NB.   limited value's amplitude:
-NB.     (_1 1 0 4 _6 4 & gemat_mt_) <testname>_mt_ 150 150
-NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) <testname>_mt_ 150 150
+NB. Formula: <optional section>
+NB. - <description>:
+NB.     <formula>
+NB. ...
+NB. - <description>:
+NB.     <formula>
+NB.
+NB. Storage layout: <optional section>
+NB.   <layout>
+NB. where
+NB.   <description>
+NB.
+NB. Algorithm: <optional section>
+NB.   In: <input nouns; comma-separated list>
+NB.   Out: <output nouns; comma-separated list>
+NB.   1) <1st step description>
+NB.   ...
+NB.   x) <last step description>
+NB.
+NB. Assertions (with appropriate comparison tolerance): <optional section>
+NB.   <assertion>
+NB.   ...
+NB.   <assertion>
+NB. where
+NB.   <copula>
+NB.   ...
+NB.   <copula>
+NB.
+NB. Examples: <optional section>
+NB.    <command to execute>
+NB. <output>
+NB. ...
+NB.    <command to execute>
+NB. <output>
+NB.
+NB. Application: <optional section>
+NB. - <description>
+NB.     <command to execute>
+NB. ...
+NB. - <description>
+NB.     <command to execute>
+NB.
+NB. Notes: <optional section>
+NB. - <text>
+NB. ...
+NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
+NB.
+NB. TODO: <optional section>
+NB. - <text>
+NB. ...
+NB. - <text>
 
 <testname>=: 1 : 'EMPTY_mt_ [ <definition>'

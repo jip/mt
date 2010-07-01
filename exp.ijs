@@ -284,7 +284,7 @@ testdiexp=: 3 : 0
     'Lh v R'=. geev_jlapack_ y         NB. make eigendecomposition
     v=. j./ (*"1 (-@*@{.)) |: +. v     NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
                                        NB. A to be negative definite, this will avoid NaN error in diexp
-    assert ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
+    assert ((-: ~.) v) +. ((-: ct) y)  NB. A must be normal (diagonalizable)
     L=. ct Lh                          NB. restore L
     iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in diexp
   catch.

@@ -722,7 +722,7 @@ NB. pttriu    U1 * D * U1^H = A           iA=. [U1D] pttriu A
 NB.
 NB. Description:
 NB.   Inverse Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix A, represented in factored form [1]
+NB.   tridiagonal matrix A, represented in factored form
 NB. where
 NB.   A   - n×n-matrix, Hermitian (symmetric) positive definite
 NB.         tridiagonal
@@ -732,7 +732,7 @@ NB.   U1D - 2-vector of boxes, the output of pttrfu, the
 NB.         matrix A represented in factored form, optional
 NB.   iA  - n×n-matrix, inversion of A
 NB.
-NB. Algorithm [1]:
+NB. Algorithm for pttril [1]:
 NB.   In:  A and, optionally, L1D
 NB.   Out: iA
 NB.   1) if called monatically then:

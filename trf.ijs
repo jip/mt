@@ -1679,7 +1679,7 @@ testhetrf=: 3 : 0
   ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) (0&({::)))))) % (FP_EPS*((norm1*c)@[))))) y
   ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(((norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) (0&({::)))))) % (FP_EPS*((norm1*#)@[))))) y
 
-EMPTY
+  EMPTY
 )
 
 NB. ---------------------------------------------------------

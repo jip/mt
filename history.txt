@@ -38,3 +38,6 @@ math/mt - change history
 
 == 0.6.6 ==
  * bal.ijs: minor fixes in comments, eqr.ijs: fix comment, template.ijs: added
+
+== 0.6.7 ==
+ * bal: minor fix in code; exp: error fixed; template,trf,tri: minor fixes in comments

@@ -309,8 +309,8 @@ NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany.
 
-geballp=: ([ ((fp~ (0 & {::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) (-"1) diag)@:(0&~:))))
-gebalup=: ([ ((fp~ (0 & {::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) (-"1) diag)@:(0&~:))))
+geballp=: [ ((fp~ (0 & {::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) (-"1) diag)@:(0&~:)))
+gebalup=: [ ((fp~ (0 & {::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) (-"1) diag)@:(0&~:)))
 
 NB. ---------------------------------------------------------
 NB. gebals

@@ -1,14 +1,14 @@
 NB. <this file purpose; brief description>
 NB.
-NB. <name>      <brief description>
+NB. <name>        <brief description>
 NB. ...
-NB. <name>      <brief description>
+NB. <name>        <brief description>
 NB.
 NB. <testxxname>  Test <name> by <matrix of type xx> given
 NB. ...
 NB. <testxxname>  Test <name> by <matrix of type xx> given
-NB. <testname>   Adv. to make verb to test <names> by
-NB.              matrix of generator and shape given
+NB. <testname>    Adv. to make verb to test <names> by
+NB.               matrix of generator and shape given
 NB.
 NB. Version: <n.n.n> <yyyy-mm-dd>
 NB.
@@ -42,23 +42,58 @@ NB. <Any text>
 NB. =========================================================
 NB. Local definitions <optional section>
 
-<localname>=: <definition>  NB. <one-liner description>
-...
-<localname>=: <definition>  NB. <one-liner description>
+<isolated definitions, optional section>
 
-NB. ---------------------------------------------------------
-NB. Constants <optional section>
-
-<LOCALNAME>=: <definition>  NB. <individual description>
+<localname>=: <definition>  NB. <individual description>
 ...
-<LOCALNAME>=: <definition>  NB. <individual description>
+<localname>=: <definition>  NB. <individual description>
+
+<OR>
+
+NB. <multi-line...
+NB. ...individual description>
+<localname>=: <definition>
+
+...
+
+NB. <multi-line...
+NB. ...individual description>
+<localname>=: <definition>
 
 <OR>
 
 NB. <common description>
-<LOCALNAME>=: <definition>
+<localname>=: <definition>
 ...
-<LOCALNAME>=: <definition>
+<localname>=: <definition>
+
+<end of optional isolated definitions section>
+
+NB. ---------------------------------------------------------
+NB. <grouped definitions description, optional section>
+
+<localname>=: <definition>  NB. <individual description>
+...
+<localname>=: <definition>  NB. <individual description>
+
+<OR>
+
+NB. <multi-line...
+NB. ...individual description>
+<localname>=: <definition>
+
+...
+
+NB. <multi-line...
+NB. ...individual description>
+<localname>=: <definition>
+
+<OR>
+
+NB. <common description>
+<localname>=: <definition>
+...
+<localname>=: <definition>
 
 NB. ---------------------------------------------------------
 NB. <LocalAdverb>
@@ -291,23 +326,58 @@ NB. - <text>
 NB. =========================================================
 NB. Interface
 
-<name>=: <definition>  NB. <one-liner description>
-...
-<name>=: <definition>  NB. <one-liner description>
+<isolated definitions, optional section>
 
-NB. ---------------------------------------------------------
-NB. Constants <optional section>
-
-<NAME>=: <definition>  NB. <individual description>
+<name>=: <definition>  NB. <individual description>
 ...
-<NAME>=: <definition>  NB. <individual description>
+<name>=: <definition>  NB. <individual description>
+
+<OR>
+
+NB. <multi-line...
+NB. ...individual description>
+<name>=: <definition>
+
+...
+
+NB. <multi-line...
+NB. ...individual description>
+<name>=: <definition>
 
 <OR>
 
 NB. <common description>
-<NAME>=: <definition>
+<name>=: <definition>
 ...
-<NAME>=: <definition>
+<name>=: <definition>
+
+<end of optional isolated definitions section>
+
+NB. ---------------------------------------------------------
+NB. <grouped definitions description, optional section>
+
+<name>=: <definition>  NB. <individual description>
+...
+<name>=: <definition>  NB. <individual description>
+
+<OR>
+
+NB. <multi-line...
+NB. ...individual description>
+<name>=: <definition>
+
+...
+
+NB. <multi-line...
+NB. ...individual description>
+<name>=: <definition>
+
+<OR>
+
+NB. <common description>
+<name>=: <definition>
+...
+<name>=: <definition>
 
 NB. ---------------------------------------------------------
 NB. <Adverb>

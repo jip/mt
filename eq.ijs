@@ -384,6 +384,7 @@ hgezq=: 1 : 0
 
 hgeqz=: 1 : 0
 :
+HT=. y
   '`hgeqzxo init reset step'=. m
   e=. +/ 'h s'=. x
   dQ1=. dZ1=. 0 4 $ 0
@@ -464,15 +465,15 @@ smoutput 'ILAZRO OR ILAZR2 = .T.'
                 lios=. (>: ilastm) th2lios j
                 while. jch < ilast do.
 smoutput 'loop 20 JCH = ',":jch
-smoutput ": 'before rotation subHT' ; (< a: ; (jch + 0 1) ; lios) { y
-                  'y cs'=. (rot &. |:) rotga y ; (< 0 ; (jch + 0 1) ; lios) ; < < a: ; 0
+smoutput ": '(0)before rotation subHT' ; (< a: ; (jch + 0 1) ; lios) { y
+                  'y cs'=. (rot &. |:)"2 rotga y ; (< a: ; (jch + 0 1) ; lios) ; < < 0 ; a: ; 0
+smoutput ": '(0)after rotation subHT' ; (< a: ; (jch + 0 1) ; lios) { y
                   lios=. }. lios
-                  y=. (< 1 ; (jch + 0 1) ; lios) (cs & (rot &. |:)) upd y
-smoutput ": 'after rotation subHT' ; (< a: ; (jch + 0 1) ; lios) { y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
                   if. ilazr2 do.
                     y=. (< 0 , jch - 0 1) (* & ({. cs)) upd y
                     ilazr2=. 0
+smoutput 'ILAZR2 := .F.'
                   end.
                   if. btol <: sorim (< 1 , jch + 1 1) { y do.
 smoutput ": 'after loop 20 HT' ; y
@@ -489,6 +490,7 @@ smoutput '(3) GOTO 60'
                   jch=. >: jch
                 end.
 smoutput ": 'after loop 20 HT' ; y
+smoutput 'Verify(0): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
 smoutput '(2) GOTO 50'
               else.
 smoutput 'ILAZRO OR ILAZR2 = .F.'
@@ -500,21 +502,20 @@ smoutput 'ILAZRO OR ILAZR2 = .F.'
                 liosr=. (2 + j) th2lios ifrstm
                 while. jch < ilast do.
 smoutput 'loop 30 JCH = ',":jch
-smoutput ": 'before rotation subHT' ; (< a: ; (jch + 0 1) ; liosc) { y
-                  'y cs'=. (rot &. |:) rotga y ; (< 1 ; (jch + 0 1) ; (2 }. liosc)) ; < < a: ; 0
-                  y=. (< 0 ; (jch + 0 1) ; liosc) (cs & (rot &. |:)) upd y
-smoutput ": 'after rotation subHT' ; (< a: ; (jch + 0 1) ; liosc) { y
+smoutput ": '(1)before rotation subHT' ; (< a: ; (jch + 0 1) ; liosc) { y
+                  'y cs'=. (rot &. |:)"2 rotga y ; (< a: ; (jch + 0 1) ; liosc) ; < < 1 ; a: ; 2
+smoutput ": '(1)after rotation subHT' ; (< a: ; (jch + 0 1) ; liosc) { y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
-smoutput ": 'before rotation subHT' ; (< a: ; liosr ; (jch - 0 1)) { y
-                  'y cs'=. rot rotga y ; (< 0 ; liosr ; (jch - 0 1)) ; _1
-                  y=. (< 1 ; (_2 }. liosr) ; (jch - 0 1)) (cs & rot) upd y
-smoutput ": 'after rotation subHT' ; (< a: ; liosr ; (jch - 0 1)) { y
+smoutput ": '(2)before rotation subHT' ; (< a: ; liosr ; (jch - 0 1)) { y
+                  'y cs'=. rot"2 rotga y ; (< a: ; liosr ; (jch - 0 1)) ; < < 0 ; _1
+smoutput ": '(2)after rotation subHT' ; (< a: ; liosr ; (jch - 0 1)) { y
                   dZ1=. dZ1 , cs , jch - 0 1
                   liosc=. }. liosc
                   liosr=. liosr , 2 + jch
                   jch=. >: jch
                 end.
 smoutput ": 'after loop 30 HT' ; y
+smoutput 'Verify(1): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
               end.
 smoutput '(3) GOTO 50'
               goto_u50.
@@ -539,13 +540,14 @@ smoutput 'label 50'
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
         lios=. (>: ilast) th2lios ifrstm
-smoutput ": 'before rotation subHT' ; (< a: ; lios ; (ilast - 0 1)) { y
-        'y cs'=. rot rotga y ; (< 0 ; lios ; (ilast - 0 1)) ; _1
-        y=. (< 1 ; (}: lios) ; (ilast - 0 1)) (cs & rot) upd y
-smoutput ": 'after rotation subHT' ; (< a: ; lios ; (ilast - 0 1)) { y
+smoutput ": '(3)before rotation subHT' ; (< a: ; lios ; (ilast - 0 1)) { y
+        'y cs'=. rot"2 rotga y ; (< a: ; lios ; (ilast - 0 1)) ; < < 0 ; _1
+smoutput ": '(3)after rotation subHT' ; (< a: ; lios ; (ilast - 0 1)) { y
         dZ1=. dZ1 , cs , ilast - 0 1
+smoutput 'Verify(2): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
       else.
         y=. 0 (< 0 , ilast - 0 1) } y
+smoutput 'Verify(3): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
 smoutput '(2) GOTO 60'
       end.
 else.
@@ -591,7 +593,7 @@ smoutput 'Wilkinson shift'
         NB. We factor T as U*D, where U is unit upper
         NB. triangular, and compute (H*D^_1)*U^_1
 smoutput ": 'abscale' ; abscale
-smoutput ": 'HT[ilast-1,ilast-1]' ; (< a: ; ;~ ilast - 1) { y
+smoutput ": 'HT[ilast-1:ilast,ilast-1:ilast]' ; (< a: ; ;~ ilast - 1 0) { y
         'U12 AD11 AD21 AD12 AD22'=. %/ (5 0 2 1 3 ,: 7 4 4 7 7) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
         ABI22=. AD22 - U12 * AD21
 smoutput ": 'U12' ; U12 ; 'AD11' ; AD11 ; 'AD21' ; AD21 ; 'AD12' ; AD12 ; 'AD22' ; AD22 ; 'ABI22' ; ABI22
@@ -625,36 +627,44 @@ smoutput ": 'fg' ; ctemp , ascale * (< 0 , istart + 1 0) { y
       j=. istart
       liosc=. (>: ilastm) th2lios j
       liosr=. (j + 2) th2lios ifrstm
+smoutput 'Verify(31): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
       while. j < ilast do.
 smoutput 'loop 150 J = ',":j
         lios=. j + 0 1
         NB. is a first iteration?
-smoutput ": 'before rotation subHT' ; (< a: ; lios ; liosc) { y
+smoutput ": '(4)before rotation subHT' ; (< a: ; lios ; liosc) { y
         if. j = istart do.
           y=. (< a: ; lios ; liosc) (cs & (rot &. |:)"2) upd y
+lioschead=. i.0
         else.
 smoutput ": 'fg' ; (< 0 ; lios ; ({. liosc)) { y
-          'y cs'=. (rot &. |:) rotga y ; (< 0 ; lios ; liosc) ; < < a: ; 0
+          'y cs'=. (rot &. |:)"2 rotga y ; (< a: ; lios ; liosc) ; < < 0 ; a: ; 0
+lioschead=. {. liosc
           liosc=. }. liosc
-          y=. (< 1 ; lios ; liosc) (cs & (rot &. |:)) upd y
         end.
 smoutput ": 'cs' ; cs
-smoutput ": 'after rotation subHT' ; (< a: ; lios ; liosc) { y
+smoutput ": '(4)after rotation subHT' ; (< a: ; lios ; lioschead,liosc) { y
         dQ1=. dQ1 , (+ cs) , lios
+smoutput 'Verify(33): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
         lios=. j + 1 0
-smoutput ": 'before rotation subHT' ; (< a: ; liosr ; lios) { y
-        'y cs'=. rot rotga y ; (< 1 ; liosr ; lios) ; _1
         NB. isn't a last iteration?
         if. j < <: ilast do.
           liosr=. liosr , j + 2
+          io=. _2
+        else.
+          io=. _1
         end.
-        y=. (< 0 ; liosr ; lios) (cs & rot) upd y
-smoutput ": 'after rotation subHT' ; (< a: ; liosr ; lios) { y
+smoutput ": '(5)before rotation subHT' ; (< a: ; liosr ; lios) { y
+        'y cs'=. rot"2 rotga y ; (< a: ; liosr ; lios) ; < < 1 ; io
+smoutput ": '(5)after rotation subHT' ; (< a: ; liosr ; lios) { y
         dZ1=. dZ1 , cs , lios
+smoutput 'Verify(36): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
         j=. >: j
       end.
 smoutput ": 'after loop 150 HT' ; y
+smoutput 'Verify(4): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
     end.
+smoutput 'Verify(5): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
     jiter=. >: jiter
   end.
   NB. drop-through means non-convergence, set incorrect eigenvalues 0:ilast to NaN

@@ -126,13 +126,13 @@ NB.              form, is either hgeqzxeo or hgeqzxso, is
 NB.              called as:
 NB.                'HTupd signbc'=. hgeqzxxo hs ; HT
 NB.   init     - dyad to initialize counters, is called as:
-NB.                'ifirstm ilastm'=. (h , ilast) init (0 , n-1)
+NB.                'ifrstm ilastm'=. (h , ilast) init (0 , n-1)
 NB.   reset    - dyad to reset counters optionally, is called
 NB.              as:
-NB.                'ifirstm ilastm'=. (h , ilast) reset (ifirstm , ilastm)
+NB.                'ifrstm ilastm'=. (h , ilast) reset (ifrstm , ilastm)
 NB.   step     - monad to change counter optionally, is
 NB.              called as:
-NB.                ifirstm=. ifirst step ifirstm
+NB.                ifrstm=. ifirst step ifrstm
 NB.   vapp     - monad to find eigenvalues of lower (upper)
 NB.              Hessenberg-triangular pair (H,T) and,
 NB.              optionally, to reduce it to generalized
@@ -158,10 +158,10 @@ hgeqzunn=: 1 : 0
 
   NB. Initialize dynamic indices
   ilast=. <: e
-  'ifirstm ilastm'=. (h , ilast) init (0 , <: c HT)
-                  NB. ifirstm - the row of the last splitting
-                  NB.           row above row ilast, this is
-                  NB.           always at least h
+  'ifrstm ilastm'=. (h , ilast) init (0 , <: c HT)
+                  NB. ifrstm - the row of the last splitting
+                  NB.          row above row ilast, this is
+                  NB.          always at least h
   iiter=. 0       NB. counts iterations since the last
                   NB. eigenvalue was found, to tell when to
                   NB. use an extraordinary shift
@@ -170,9 +170,10 @@ hgeqzunn=: 1 : 0
   jiter=. 0
 
   NB. Main QZ iteration loop
-  NB. Column operations modify rows ifirstm:*
+  NB. Column operations modify rows ifrstm:*
   NB. Row operations modify columns *:ilastm
   while. jiter < maxit do.
+smoutput 'loop 170 jiter=',":jiter
     goto60=. 1  NB. set default branching
     NB. split the matrix if possible, by to tests:
     NB.   1. H[j,j-1]=0 OR j=h
@@ -183,6 +184,7 @@ hgeqzunn=: 1 : 0
           NB. general case: j < ilast
           j=. <: ilast
           while. j >: h do.
+smoutput 'loop 40 j=',":j
             NB. test 1: H[j,j-1]=0 OR j=h
             if. j = h do.
               ilazro=. 1
@@ -214,6 +216,7 @@ hgeqzunn=: 1 : 0
                 jch=. j
                 lios=. (>: ilastm) th2lios j
                 while. jch < ilast do.
+smoutput 'loop 20 jch=',":jch
                   'HT cs'=. (rot &. |:) rotga HT ; (< 0 ; (jch + 0 1) ; lios) ; < < a: ; 0
                   lios=. }. lios
                   HT=. (< 1 ; (jch + 0 1) ; lios) (cs & (rot &. |:)) upd HT
@@ -238,8 +241,9 @@ hgeqzunn=: 1 : 0
                 NB. case T[ilast,ilast]=0
                 jch=. j
                 liosc=. (>: ilastm) th2lios <: j
-                liosr=. (2 + j) th2lios ifirstm
+                liosr=. (2 + j) th2lios ifrstm
                 while. jch < ilast do.
+smoutput 'loop 30 jch=',":jch
                   'HT cs'=. (rot &. |:) rotga HT ; (< 1 ; (jch + 0 1) ; (2 }. liosc)) ; < < a: ; 0
                   HT=. (< 0 ; (jch + 0 1) ; liosc) (cs & (rot &. |:)) upd HT
                   dQ=. dQ , (+ cs) , jch + 0 1
@@ -252,6 +256,7 @@ hgeqzunn=: 1 : 0
                 end.
               end.
               goto_50.
+smoutput 'loop 20 jch=',":jch
             elseif. ilazro do.
               ifirst=. j
               goto60=. 0
@@ -268,7 +273,7 @@ hgeqzunn=: 1 : 0
         label_50.
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
-        lios=. (>: ilast) th2lios ifirstm
+        lios=. (>: ilast) th2lios ifrstm
         'HT cs'=. rot rotga HT ; (< 0 ; lios ; (ilast - 0 1)) ; _1
         HT=. (< 1 ; (}: lios) ; (ilast - 0 1)) (cs & rot) upd HT
         dZ=. dZ , cs , ilast - 0 1
@@ -294,14 +299,14 @@ hgeqzunn=: 1 : 0
       NB. reset counters
       iiter=. 0
       eshift=. 0
-      'ifirstm ilastm'=. (h , ilast) reset (ifirstm , ilastm)
+      'ifrstm ilastm'=. (h , ilast) reset (ifrstm , ilastm)
     else.
       NB. QZ step
       NB. This iteration only involves rows/columns
       NB. ifirst:ilast. We assume ifirst<ilast, and that the
       NB. diagonal of B is non-zero
       iiter=. >: iiter
-      ifirstm=. ifirst step ifirstm
+      ifrstm=. ifirst step ifrstm
       NB. Compute the shift.
       NB. At this point, ifirst<ilast, and the diagonal
       NB. elements of T[ifirst:ilast,ifirst:ilast] are larger
@@ -332,30 +337,32 @@ hgeqzunn=: 1 : 0
       temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr) } 1 , tempr ,: 1
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
       NB. do an implicit-shift QZ sweep
-      if. istart < ilast do.
-        NB. at least 1 iteration will be executed
-        NB. initial Q
-        cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { HT
-        NB. sweep
-        j=. istart
-        liosc=. (>: ilastm) th2lios istart
-        liosr=. (istart + 2) th2lios ifirstm
-        whilst.
-          ios=. < 0 ; 0 1 (+ ; (<:@])) j
-          cs=. }: csr=. lartg ios { HT
-          HT=. (({: csr) , 0) ios } HT
-          j < ilast
-        do.
-          ios=. < a: ; (j + 0 1) ; liosc
-          HT=. ios (cs & (rot &. |:)"2) upd HT
-          dQ=. dQ , (+ cs) , j + 0 1
-          'HT cs'=. rot rotga HT ; (< 1 ; liosr ; (j + 1 0)) ; _1
-          liosr=. (j + 2) ,~ ^: (j < <: ilast) liosr
-          HT=. (< 0 ; liosr ; (j + 1 0)) (cs & rot) upd HT
-          dZ=. dZ , cs , j + 1 0
+      NB. initial Q
+      cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { HT
+      NB. sweep
+      j=. istart
+      liosc=. (>: ilastm) th2lios <: j
+      liosr=. (j + 2) th2lios ifrstm
+      while. j < ilast do.
+        lios=. j + 0 1
+        NB. is a first iteration?
+        if. j = istart do.
+          HT=. (< a: ; lios ; (}. liosc)) (cs & (rot &. |:)"2) upd HT
+        else.
+          'HT cs'=. (rot &. |:) rotga HT ; (< 0 ; lios ; liosc) ; < < a: ; 0
           liosc=. }. liosc
-          j=. >: j
+          HT=. (< 1 ; lios ; liosc) (cs & (rot &. |:)) upd HT
         end.
+        dQ=. dQ , (+ cs) , lios
+        lios=. j + 1 0
+        'HT cs'=. rot rotga HT ; (< 1 ; liosr ; lios) ; _1
+        NB. isn't a last iteration?
+        if. j < <: ilast do.
+          liosr=. liosr , j + 2
+        end.
+        HT=. (< 0 ; liosr ; lios) (cs & rot) upd HT
+        dZ=. dZ , cs , lios
+        j=. >: j
       end.
     end.
     jiter=. >: jiter

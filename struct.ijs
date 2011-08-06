@@ -27,7 +27,7 @@ NB. bdupick   Zeroize elements outside upper bidiagonal part
 NB.           of the matrix
 NB. hslpick   Zeroize elements outside lower Hessenberg part
 NB.           of the matrix
-NB. hsupick   Zeroize elements outside lower Hessenberg part
+NB. hsupick   Zeroize elements outside upper Hessenberg part
 NB.           of the matrix
 NB. gtpick    Zeroize elements outside tridiagonal part of
 NB.           the matrix

@@ -198,7 +198,7 @@ hgeqzunn=: 1 : 0
               NB. test 2a: check for 2 consecutive small subdiagonals in H
               ilazr2=. 0
               if. -. ilazro do.
-                'Hjj1 Hj1j Hjj'=. ((<"1) 0 ,. (0 _1,1 0,:0 0) + j) { HT
+                'Hjj1 Hj1j Hjj'=. sorim ((<"1) 0 ,. (0 _1,1 0,:0 0) + j) { HT
                 if. 0 >: (Hjj1 , Hjj) mp (ascale * (Hj1j , -atol)) do.
                   ilazr2=. 1
                 end.
@@ -237,17 +237,17 @@ hgeqzunn=: 1 : 0
                 NB. T[ilast,ilast], then process as in the
                 NB. case T[ilast,ilast]=0
                 jch=. j
-                liosr=. (>: ilastm) th2lios <: j
-                liosc=. (2 + j) th2lios ifirstm
+                liosc=. (>: ilastm) th2lios <: j
+                liosr=. (2 + j) th2lios ifirstm
                 while. jch < ilast do.
-                  'HT cs'=. (rot &. |:) rotga HT ; (< 1 ; (jch + 0 1) ; (2 }. liosr)) ; < < a: ; 0
-                  HT=. (< 0 ; (jch + 0 1) ; liosr) (cs & (rot &. |:)) upd HT
+                  'HT cs'=. (rot &. |:) rotga HT ; (< 1 ; (jch + 0 1) ; (2 }. liosc)) ; < < a: ; 0
+                  HT=. (< 0 ; (jch + 0 1) ; liosc) (cs & (rot &. |:)) upd HT
                   dQ=. dQ , (+ cs) , jch + 0 1
-                  'HT cs'=. rot rotga HT ; (< 0 ; liosc ; (jch - 0 1)) ; < < _1 ; 1 0
-                  HT=. (< 1 ; (_2 }. th2liosc) ; (jch - 0 1)) (cs & rot) upd HT
+                  'HT cs'=. rot rotga HT ; (< 0 ; liosr ; (jch - 0 1)) ; _1
+                  HT=. (< 1 ; (_2 }. liosr) ; (jch - 0 1)) (cs & rot) upd HT
                   dZ=. dZ , cs , jch - 0 1
-                  liosr=. }. liosr
-                  liosc=. liosc , 2 + jch
+                  liosc=. }. liosc
+                  liosr=. liosr , 2 + jch
                   jch=. >: jch
                 end.
               end.
@@ -269,7 +269,7 @@ hgeqzunn=: 1 : 0
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
         lios=. (>: ilast) th2lios ifirstm
-        'HT cs'=. rot rotga HT ; (< 0 ; lios ; (ilast - 0 1)) ; < < _1 ; 1 0
+        'HT cs'=. rot rotga HT ; (< 0 ; lios ; (ilast - 0 1)) ; _1
         HT=. (< 1 ; (}: lios) ; (ilast - 0 1)) (cs & rot) upd HT
         dZ=. dZ , cs , ilast - 0 1
       else.
@@ -338,22 +338,22 @@ hgeqzunn=: 1 : 0
         cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { HT
         NB. sweep
         j=. istart
-        liosr=. (>: ilastm) th2lios istart
-        liosc=. (istart + 2) th2lios ifirstm
+        liosc=. (>: ilastm) th2lios istart
+        liosr=. (istart + 2) th2lios ifirstm
         whilst.
           ios=. < 0 ; 0 1 (+ ; (<:@])) j
           cs=. }: csr=. lartg ios { HT
           HT=. (({: csr) , 0) ios } HT
           j < ilast
         do.
-          ios=. < a: ; (j + 0 1) ; liosr
+          ios=. < a: ; (j + 0 1) ; liosc
           HT=. ios (cs & (rot &. |:)"2) upd HT
           dQ=. dQ , (+ cs) , j + 0 1
-          'HT cs'=. rot rotga HT ; (< 1 ; liosc ; (j + 1 0)) ; < < _1 ; 1 0
-          liosc=. (j + 2) ,~ ^: (j < <: ilast) liosc
-          HT=. (< 0 ; liosc ; (j + 1 0)) (cs & rot) upd HT
+          'HT cs'=. rot rotga HT ; (< 1 ; liosr ; (j + 1 0)) ; _1
+          liosr=. (j + 2) ,~ ^: (j < <: ilast) liosr
+          HT=. (< 0 ; liosr ; (j + 1 0)) (cs & rot) upd HT
           dZ=. dZ , cs , j + 1 0
-          liosr=. }. liosr
+          liosc=. }. liosc
           j=. >: j
         end.
       end.
@@ -381,7 +381,7 @@ NB.   HT    -: H ,: T
 NB.   ab    -: alpha ,: beta
 NB.   dQ,dZ - either (i.0) if QZ iteration did not converge,
 NB.           or any×4-matrix, accumulates scalings and
-NB.           rotations to form Q and Z later, see hgeqzxqz;
+NB.           rotations to form Q and Z later, see rotsclx;
 NB.           dQ and dZ may have the same shapes
 NB.   alpha - n-vector, defines eigenvalues
 NB.   beta  - n-vector, defines eigenvalues
@@ -417,7 +417,7 @@ NB.           and T, respectively (see ggbalxp)
 NB.   HT    -: H ,: T
 NB.   SP    -: S ,: P
 NB.   dQ,dZ - any×4-matrix, accumulates scalings and
-NB.           rotations to form Q and Z later, see hgeqzxqz;
+NB.           rotations to form Q and Z later, see rotsclx;
 NB.           dQ and dZ may have the same shapes
 NB.   H     - n×n-matrix, either lower (hgeqzlsnn) or upper
 NB.           (hgeqzusnn) Hessenberg inside the submatrix
@@ -444,8 +444,8 @@ NB. ---------------------------------------------------------
 NB.   ab=.                 hgeqzxe hs ; HT
 NB.   'ab Q Z'=. (Q1 ; Z1) hgeqzxe hs ; HT
 
-hgeqzle=: (0 {:: hgeqzlenn) : ((() rotscll &. > ()) hgeqzlenn)
-hgeqzue=: (0 {:: hgeqzuenn) : (rotsclu hgeqzuenn)
+hgeqzle=: (0 {:: hgeqzlenn) : (({.@] , (rotscll &. > }.)) hgeqzlenn)
+hgeqzue=: (0 {:: hgeqzuenn) : (({.@] , (rotsclu &. > }.)) hgeqzuenn)
 
 NB. ---------------------------------------------------------
 NB.   SP=.                 hgeqzxs hs ; HT
@@ -465,8 +465,8 @@ NB.   ] 'Q1 R'=. ((tru_mt_@}:) ;~ ungqr_mt_) geqrf_mt_ (0;1) {:: ggbalu_mt_ AB
 NB.   'HT Q Z'=. (Q1 ; idmat_mt_ 7) gghrdu_mt_ 2 3 ; R 1} 0 {:: ggbalu_mt_ AB
 NB.   'SP dQ dZ'=. hgeqzxsnn hs ; HT
 
-hgeqzls=: (0 {:: hgeqzlsnn) : (hgeqzlqz hgeqzlsnn)
-hgeqzus=: (0 {:: hgeqzusnn) : (hgeqzuqz hgeqzusnn)
+hgeqzls=: (0 {:: hgeqzlsnn) : (({.@] , (rotscll &. > }.)) hgeqzlsnn)
+hgeqzus=: (0 {:: hgeqzusnn) : (({.@] , (rotsclu &. > }.)) hgeqzusnn)
 
 NB. =========================================================
 NB. Test suite

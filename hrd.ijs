@@ -247,59 +247,57 @@ NB.     y = x * Q^_1
 NB.   and accumulate rotations to form Q and Z later
 NB.
 NB. Syntax:
-NB.   'hs HT dQZ'=. gghrdlnn hs ; AB
+NB.   'HT dQ dZ'=. gghrdlnn hs ; AB
 NB. where
-NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
-NB.         defines submatrices A11 and B11 to be reduced
-NB.         position in matrices A and B, respectively, see
-NB.         gehrdu
-NB.   AB  -: A ,: B
-NB.   A   - n×n-matrix, general
-NB.   B   - n×n-matrix, lower triangular
-NB.   HT  -: H ,: T
-NB.   H   - n×n-matrix, lower Hessenberg inside the submatrix
-NB.         H[h:h+s-1,h:h+s-1], and lower triangular outside
-NB.   T   - n×n-matrix, lower triangular
-NB.   dQZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
-NB.         is 2-vector of laminated rotations:
-NB.           ( cs(Q)[i,j]  sn(Q)[i,j] )
-NB.           ( cs(Z)[i,j]  sn(Z)[i,j] )
-NB.        accumulates rotations to form Q and Z later
+NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
+NB.           defines submatrices A11 and B11 to be reduced
+NB.           position in matrices A and B, respectively, see
+NB.           gehrdl
+NB.   AB    -: A ,: B
+NB.   A     - n×n-matrix, general
+NB.   B     - n×n-matrix, lower triangular
+NB.   HT    -: H ,: T
+NB.   H     - n×n-matrix, lower Hessenberg inside the
+NB.           submatrix H[h:h+s-1,h:h+s-1], and lower
+NB.           triangular outside
+NB.   T     - n×n-matrix, lower triangular
+NB.   dQ,dZ - any×4-matrix, accumulates rotations to form Q
+NB.           and Z later, see rotsclx; dQ and dZ may have
+NB.           the same shapes
 
 gghrdlnn=: 3 : 0
   'hs AB'=. y
   'h s'=. hs
   e=. h+s-1
   n=. c AB
-  dQZ=. 0 2 2 $ 0
+  dQ=. dZ=. 4 0 $ 0
   i=. h
-  iosrota=. < 0 ; 0
-  while. i < e do.                             NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+  liosr1a=. n th2lios h                        NB. (n-h)-vector h:n-1
+  liosc2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
+  while. i < <: e do.                          NB. (s-2)-vector: h:h+s-3
     j=. e
-    while. j > (i+1) do.                       NB. (h+s-i-2)-vector: h+s-1,h+s-2,...,i+2
+    liosr1b=. n th2lios <: j                   NB. (n-h-s+2)-vector h+s-2:n-1
+    liosc2b=. i. >: j                          NB. (j+1)-vector 0:h+s-1
+    while. j > >: i do.                        NB. (h+s-i-2)-vector (desc) h+s-1:i+2
       lios=. j - 1 0
-      iospair=. < a: ; (n th2lios i) ; lios
-      pair=. iospair { AB
-      'cs sn r'=. lartg iosrota { pair
-      z=. cs , sn
-      pair=. z & rot " 1 2 pair                NB. rotate rows
-      pair=. (r , 0) iosrota } pair            NB. place (r,0) explicitely
-      AB=. pair iospair } AB
+      NB. step 1: rotate columns lios to kill A[i,j]
+      'AB cs'=. rot rotga AB ; (< 0 ; liosr1a ; lios) ; 0
+      AB=. (< 1 ; liosr1b ; lios) (cs & rot) upd AB
+      dZ=. dZ , cs , lios
       lios=. j - 0 1
-      iospair=. < a: ; lios                    NB. overtake in B since pair must be unirectangular
-      pair=. iospair { AB
-      iosrotb=. < 1 ; a: ; j
-      'cs sn r'=. lartg iosrotb { pair
-      q=. cs , sn
-      pair=. (q & rot " 1 2) &. (|: " 2) pair  NB. rotate columns
-      pair=. (r , 0) iosrotb } pair            NB. place (r,0) explicitely
-      AB=. pair iospair } AB
-      dQZ=. dQZ , q ,: z
+      NB. step 2: rotate rows lios to kill B[j-1,j]
+      'AB cs'=. (rot &. |:) rotga AB ; (< 1 ; lios ; liosc2b) ; < < a: ; _1
+      AB=. (< 0 ; lios ; liosc2a) (cs & (rot &. |:)) upd AB
+      dQ=. dQ , cs , lios
+      NB. update IOS
+      liosr1b=. (j-2) , liosr1b
+      liosc2b=. liosc2b , >: j
       j=. <: j
     end.
+    liosr1a=. }. liosr1a
     i=. >: i
   end.
-  hs ; AB ; dQZ
+  AB ; dQ ; + dZ
 )
 
 NB. ---------------------------------------------------------
@@ -319,24 +317,23 @@ NB.     y = Z^_1 * x
 NB.   and accumulate rotations to form Q and Z later
 NB.
 NB. Syntax:
-NB.   'hs HT dQZ'=. gghrdunn hs ; AB
+NB.   'HT dQ dZ'=. gghrdunn hs ; AB
 NB. where
-NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
-NB.         defines submatrices A11 and B11 to be reduced
-NB.         position in matrices A and B, respectively, see
-NB.         gehrdu
-NB.   AB  -: A ,: B
-NB.   A   - n×n-matrix, general
-NB.   B   - n×n-matrix, upper triangular
-NB.   HT  -: H ,: T
-NB.   H   - n×n-matrix, upper Hessenberg inside the submatrix
-NB.         H[h:h+s-1,h:h+s-1], and upper triangular outside
-NB.   T   - n×n-matrix, upper triangular
-NB.   dQZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
-NB.         is 2-vector of laminated rotations:
-NB.           ( cs(Q)[i,j]  sn(Q)[i,j] )
-NB.           ( cs(Z)[i,j]  sn(Z)[i,j] )
-NB.        accumulates rotations to form Q and Z later
+NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
+NB.           defines submatrices A11 and B11 to be reduced
+NB.           position in matrices A and B, respectively, see
+NB.           gehrdu
+NB.   AB    -: A ,: B
+NB.   A     - n×n-matrix, general
+NB.   B     - n×n-matrix, upper triangular
+NB.   HT    -: H ,: T
+NB.   H     - n×n-matrix, upper Hessenberg inside the
+NB.           submatrix H[h:h+s-1,h:h+s-1], and upper
+NB.           triangular outside
+NB.   T     - n×n-matrix, upper triangular
+NB.   dQ,dZ - any×4-matrix, accumulates rotations to form Q
+NB.           and Z later, see rotsclx; dQ and dZ may have
+NB.           the same shapes
 NB.
 NB. Notes:
 NB. - models LAPACK's xGGHRD('N','N')
@@ -351,167 +348,34 @@ gghrdunn=: 3 : 0
   'h s'=. hs
   e=. h+s-1
   n=. c AB
-  dQZ=. 0 2 2 $ 0
+  dQ=. dZ=. 4 0 $ 0
   j=. h
-  iosrota=. < 0 ; a: ; 0
-  while. j < e do.                             NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+  liosc1a=. n th2lios h                        NB. (n-h)-vector h:n-1
+  liosr2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
+  while. j < <: e do.                          NB. (s-2)-vector h:h+s-3
     i=. e
-    while. i > (j+1) do.                       NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
+    liosc1b=. n th2lios <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
+    liosr2b=. i. >: i                          NB. (i+1)-vector 0:h+s-1
+    while. i > >: j do.                        NB. (h+s-j-2)-vector (desc) h+s-1:j+2
       lios=. i - 1 0
-      iospair=. < a: ; lios ; (n th2lios j)
-      pair=. iospair { AB
-      'cs sn r'=. lartg iosrota { pair
-      q=. cs , sn
-      pair=. (q & rot " 1 2) &. (|: " 2) pair  NB. rotate columns
-      pair=. (r , 0) iosrota } pair            NB. place (r,0) explicitely
-      AB=. pair iospair } AB
+      NB. step 1: rotate rows lios to kill A[i,j]
+      'AB cs'=. (rot &. |:) rotga AB ; (< 0 ; lios ; liosc1a) ; < < a: ; 0
+      AB=. (< 1 ; lios ; liosc1b) (cs & (rot &. |:)) upd AB
+      dQ=. dQ , cs , lios
       lios=. i - 0 1
-      iospair=. < a: ; a: ; lios               NB. overtake in B since pair must be unirectangular
-      pair=. iospair { AB
-      iosrotb=. < 1 ; i
-      'cs sn r'=. lartg iosrotb { pair
-      z=. cs , sn
-      pair=. z rot " 1 2 pair                  NB. rotate rows
-      pair=. (r , 0) iosrotb } pair            NB. place (r,0) explicitely
-      AB=. pair iospair } AB
-      dQZ=. dQZ , q ,: z
+      NB. step 2: rotate columns lios to kill B[i,i-1]
+      'AB cs'=. rot rotga AB ; (< 1 ; liosr2b ; lios) ; _1
+      AB=. (< 0 ; liosr2a ; lios) (cs & rot) upd AB
+      dZ=. dZ , cs , lios
+      NB. update IOS
+      liosc1b=. (i-2) , liosc1b
+      liosr2b=. liosr2b , >: i
       i=. <: i
     end.
+    liosc1a=. }. liosc1a
     j=. >: j
   end.
-  hs ; AB ; dQZ
-)
-
-NB. ---------------------------------------------------------
-NB. gghrdlqz
-NB.
-NB. Description:
-NB.   Apply rotations accumulated in dQZ to Q1 and/or Z1
-NB.   to produce Q and/or Z explicitely
-NB.
-NB. Syntax:
-NB.   'HT Q Z'=. (Q1 ; Z1) gghrdlqz hs ; HT ; dQZ
-NB. where
-NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
-NB.         defines Hessenberg submatrix H11 position in
-NB.         matrix H, see gehrdl
-NB.   HT  - pass-through noun
-NB.   dQZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
-NB.         is 2-vector of laminated rotations:
-NB.           ( cs(Q)[i,j]  sn(Q)[i,j] )
-NB.           ( cs(Z)[i,j]  sn(Z)[i,j] )
-NB.         to form Q and Z
-NB.   Q1  - n×n-matrix or (i.0), the unitary (orthogonal)
-NB.   Q   - either (i.0) when Q1 -: (i.0) , or n×n-matrix
-NB.         (ΔQ*Q1) otherwise
-NB.   Z1  - n×n-matrix or (i.0), the unitary (orthogonal),
-NB.         typically from the LQ factorization of B
-NB.   Z   - either (i.0) when Z1 -: (i.0) , or n×n-matrix
-NB.         (ΔZ*Z1) otherwise
-
-gghrdlqz=: 4 : 0
-  'Q1 Z1'=. x
-  'hs HT dQZ'=. y
-  'h s'=. hs
-  e=. h+s-1
-  if. Q1 -.@-: (i. 0) do.
-    j=. h
-    k=. 0
-    while. j < e do.                                         NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
-      i=. e
-      while. i > (j+1) do.                                   NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
-        iospair=. i - 0 1
-        q=. (< k , 0) { dQZ                                  NB. extract current rotation q[k]
-        Q1=. iospair (((q & rot " 1 2) &. (|: " 2)) upd) Q1  NB. update rows by q[k]
-        k=. >: k
-        i=. <: i
-      end.
-      j=. >: j
-    end.
-  end.
-  if. Z1 -.@-: (i. 0) do.
-    dQZ=. (< a: ; 1 ; 1) (+ upd) dQZ                         NB. conjugate all s of Z's part of dQZ
-    j=. h
-    k=. 0
-    while. j < e do.                                         NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
-      i=. e
-      while. i > (j+1) do.                                   NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
-        iospair=. i - 1 0
-        z=. (< k , 1) { dQZ                                  NB. extract current rotation z[k]
-        Z1=. iospair (((z & rot " 1 2) &. (|: " 2)) upd) Z1  NB. update rows by z[k]
-        k=. >: k
-        i=. <: i
-      end.
-      j=. >: j
-    end.
-  end.
-  HT ; Q1 ; Z1
-)
-
-NB. ---------------------------------------------------------
-NB. gghrduqz
-NB.
-NB. Description:
-NB.   Apply rotations accumulated in dQZ to Q1 and/or Z1
-NB.   to produce Q and/or Z explicitely
-NB.
-NB. Syntax:
-NB.   'HT Q Z'=. (Q1 ; Z1) gghrduqz hs ; HT ; dQZ
-NB. where
-NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
-NB.         defines Hessenberg submatrix H11 position in
-NB.         matrix H, see gehrdu
-NB.   HT  - pass-through noun
-NB.   dQZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
-NB.         is 2-vector of laminated rotations:
-NB.           ( cs(Q)[i,j]  sn(Q)[i,j] )
-NB.           ( cs(Z)[i,j]  sn(Z)[i,j] )
-NB.         to form Q and Z
-NB.   Q1  - n×n-matrix or (i.0), the unitary (orthogonal),
-NB.         typically from the QR factorization of B
-NB.   Q   - either (i.0) when Q1 -: (i.0) , or n×n-matrix
-NB.         (Q1*ΔQ) otherwise
-NB.   Z1  - n×n-matrix or (i.0), the unitary (orthogonal)
-NB.   Z   - either (i.0) when Z1 -: (i.0) , or n×n-matrix
-NB.         (Z1*ΔZ) otherwise
-
-gghrduqz=: 4 : 0
-  'Q1 Z1'=. x
-  'hs HT dQZ'=. y
-  'h s'=. hs
-  e=. h+s-1
-  if. Q1 -.@-: (i. 0) do.
-    dQZ=. (< a: ; 0 ; 1) (+ upd) dQZ     NB. conjugate all s of Q's part of dQZ
-    j=. h
-    k=. 0
-    while. j < e do.                     NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
-      i=. e
-      while. i > (j+1) do.               NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
-        iospair=. < a: ; (i - 1 0)
-        q=. (< k , 0) { dQZ              NB. extract current rotation q[k]
-        Q1=. iospair ((q & rot) upd) Q1  NB. update columns by q[k]
-        k=. >: k
-        i=. <: i
-      end.
-      j=. >: j
-    end.
-  end.
-  if. Z1 -.@-: (i. 0) do.
-    j=. h
-    k=. 0
-    while. j < e do.                     NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
-      i=. e
-      while. i > (j+1) do.               NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
-        iospair=. < a: ; (i - 0 1)
-        z=. (< k , 1) { dQZ              NB. extract current rotation z[k]
-        Z1=. iospair ((z & rot) upd) Z1  NB. update columns by z[k]
-        k=. >: k
-        i=. <: i
-      end.
-      j=. >: j
-    end.
-  end.
-  HT ; Q1 ; Z1
+  AB ; (+ dQ) ; dZ
 )
 
 NB. =========================================================
@@ -762,7 +626,7 @@ NB.     'HT Q Z'=. (Q1;Z1) gghrdl (hs;AB)
 NB. - calculate Q only:
 NB.     'HT Q'=. 2 {. (Q1;a:) gghrdl (hs;AB)
 
-gghrdl=: (1 {:: gghrdlnn) : (gghrdlqz gghrdlnn)
+gghrdl=: (0 {:: gghrdlnn) : (({.@] , (rotscll &. > }.)) gghrdlnn)
 
 NB. ---------------------------------------------------------
 NB. gghrdu
@@ -819,20 +683,20 @@ NB. Application:
 NB. - model LAPACK's xGGHRD('N','N'):
 NB.     HT=. gghrdu hs;AB
 NB.   or
-NB.     HT=. 0 {:: (2 # a:) gghrdu (hs;AB)
+NB.     HT=. 0 {:: (2 # a:) gghrdu hs;AB
 NB. - model LAPACK's xGGHRD('I','I'):
-NB.     'HT Q Z'=. (gghrdu~ (;~ @ idmat @ # @ (1 & {::))) (hs;AB)
+NB.     'HT Q Z'=. (gghrdu~ (;~ @ idmat @ c @ (1 & {::))) hs;AB
 NB. - model LAPACK's xGGHRD('V','V'):
-NB.     'HT Q Z'=. (Q1;Z1) gghrdu (hs;AB)
+NB.     'HT Q Z'=. (Q1;Z1) gghrdu hs;AB
 NB. - model LAPACK's xGGHRD('V','N'):
-NB.     'HT Q'=. 2 {. (Q1;a:) gghrdu (hs;AB)
+NB.     'HT Q'=. }: (Q1;a:) gghrdu hs;AB
 NB.
 NB. References:
 NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 378
 
-gghrdu=: (1 {:: gghrdunn) : (gghrduqz gghrdunn)
+gghrdu=: (0 {:: gghrdunn) : (({.@] , (rotsclu &. > }.)) gghrdunn)
 
 NB. =========================================================
 NB. Test suite

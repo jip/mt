@@ -7,7 +7,7 @@ NB. gebalx     Balance a general square matrix
 NB.
 NB. ggbalxp    Isolate eigenvalues in a pair of general
 NB.            square matrices
-NB. ggbalxs    Make the rows and columns in a pair of general
+NB. ggbals     Make the rows and columns in a pair of general
 NB.            square matrices as close in 1-norm as possible
 NB. ggbalx     Balance a pair of general square matrices
 NB.
@@ -601,8 +601,7 @@ ggbalup=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. ggballs
-NB. ggbalus
+NB. ggbals
 NB.
 NB. Description:
 NB.   Apply a diagonal similarity transformation:
@@ -612,7 +611,7 @@ NB.   to make the 1-norms of each row of E11 (F11) and its
 NB.   corresponding column as close as possible
 NB.
 NB. Syntax:
-NB.   'EF plr hs dlr'=. ggbalxs CD ; plr ; hs
+NB.   'EF plr hs dlr'=. ggbals CD ; plr ; hs
 NB. where
 NB.   CD  -: C ,: D
 NB.   C,D - n×n-matrix with isolated eigenvalues, the output
@@ -634,18 +633,18 @@ NB.   EF -: Dl mp"2 CD mp"2 Dr
 NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
 NB.   EF11 -: (0 2 ,. ,.~ hs) ] ;. 0 EF
 NB. where
-NB.   'EF plr hs dlr'=. ggbalxs CD ; plr ; hs
+NB.   'EF plr hs dlr'=. ggbals CD ; plr ; hs
 NB.   'Dl Dr'=. diagmat"1 dlr
 NB.
 NB. Application:
 NB. - scale non-permuted matrices A and B (default p and hs),
 NB.   i.e. balance without eigenvalues isolating step:
-NB.   'EF plr hs dlr'=. ggbalxs (];(a:"_);(0,c)) AB
+NB.   'EF plr hs dlr'=. ggbals (];(a:"_);(0,c)) AB
 NB.
 NB. Notes:
-NB. - ggbalus implements LAPACK's xGGBAL('S')
+NB. - ggbals implements LAPACK's xGGBAL('S')
 
-ggbalus=: 3 : 0
+ggbals=: 3 : 0
   m3x=. - 3&*
   mix=. ((* +/@:(+/"1))~ {.) + ((+/@:(+/@#"1)) {:)
 
@@ -703,7 +702,7 @@ NB.   involves, first, isolating eigenvalues (see ggbalxp):
 NB.     C = Pl * A * Pr
 NB.     D = Pl * B * Pr
 NB.   and second, making the rows and columns of E11 (F11) as
-NB.   close in 1-norm as possible (see ggbalxs):
+NB.   close in 1-norm as possible (see ggbals):
 NB.     E = Dl * C * Dr
 NB.     F = Dl * D * Dr
 NB.
@@ -745,8 +744,8 @@ NB.
 NB. Notes:
 NB. - ggbalu implements LAPACK's xGGBAL('B')
 
-ggball=: ggballs @ ggballp
-ggbalu=: ggbalus @ ggbalup
+ggball=: ggbals @ ggballp
+ggbalu=: ggbals @ ggbalup
 
 NB. =========================================================
 NB. Test suite

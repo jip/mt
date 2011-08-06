@@ -7,7 +7,7 @@ NB.            matrices to generalized Hessenberg form
 NB.
 NB. testgehrd  Test gehrdx by general matrix given
 NB. testgghrd  Test gghrdx by general matrices given
-NB. testhrd    Adv. to make verb to test gxhrdx by matrices
+NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
 NB. Version: 0.6.8 2010-11-30
@@ -162,7 +162,7 @@ NB. Description:
 NB.   Reduce an augmented general matrix eA to lower
 NB.   Hessenberg form H by a unitary (orthogonal) similarity
 NB.   transformation by non-blocked algorithm:
-NB.     Q * A * Q^_1 = H
+NB.     Q^_1 * H * Q = A
 NB.
 NB. Syntax:
 NB.   HQf=. hs gehd2l eA
@@ -198,7 +198,7 @@ NB. Description:
 NB.   Reduce an augmented general matrix eA to upper
 NB.   Hessenberg form H by a unitary (orthogonal) similarity
 NB.   transformation by non-blocked algorithm:
-NB.     Q^_1 * A * Q = H
+NB.     Q * H * Q^_1 = A
 NB.
 NB. Syntax:
 NB.   HQf=. hs gehd2u eA
@@ -237,38 +237,38 @@ NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized lower
 NB.   Hessenberg form (H,T) by a unitary (orthogonal)
 NB.   similarity transformation by non-blocked algorithm:
-NB.     Q * A * Z^_1 = H
-NB.     Q * B * Z^_1 = T
+NB.     Q1^_1 * H * Z1 = A
+NB.     Q1^_1 * T * Z1 = B
 NB.   in order to reduce the generalized eigenvalue problem:
 NB.     x * A = λ * x * B
 NB.   to its standard form:
 NB.     y * H = λ * y * T
-NB.     y = x * Q^_1
-NB.   and accumulate rotations to form Q and Z later
+NB.     y = x * Q1^_1
+NB.   and accumulate rotations to form Q1 and Z1 later
 NB.
 NB. Syntax:
-NB.   'HT dQ dZ'=. hs gghrdl A ,: B
+NB.   'HT dQ0 dZ0'=. hs gghrdl A ,: B
 NB. where
-NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
-NB.           defines submatrices A11 and B11 to be reduced
-NB.           position in matrices A and B, respectively, see
-NB.           gehrdl
-NB.   A     - n×n-matrix, general
-NB.   B     - n×n-matrix, lower triangular
-NB.   HT    -: H ,: T
-NB.   H     - n×n-matrix, lower Hessenberg inside the
-NB.           submatrix H[h:h+s-1,h:h+s-1], and lower
-NB.           triangular outside
-NB.   T     - n×n-matrix, lower triangular
-NB.   dQ,dZ - any×4-matrix, accumulates rotations to form Q
-NB.           and Z later, see rotsclx; dQ and dZ may have
-NB.           the same shapes
+NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
+NB.             defines submatrices A11 and B11 to be reduced
+NB.             position in matrices A and B, respectively,
+NB.             see gehrdl
+NB.   A       - n×n-matrix
+NB.   B       - n×n-matrix, lower triangular
+NB.   HT      -: H ,: T
+NB.   H       - n×n-matrix, lower Hessenberg inside the
+NB.             submatrix H[h:h+s-1,h:h+s-1], and lower
+NB.             triangular outside
+NB.   T       - n×n-matrix, lower triangular
+NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
+NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
+NB.             have the same shapes
 
 gghrdl=: 4 : 0
   'h s'=. x
   t=. h+s-1
   n=. c y
-  dQ=. dZ=. 0 4 $ 0
+  dQ0=. dZ0=. 0 4 $ 0
   i=. h
   liosr1a=. n th2lios i                        NB. (n-h)-vector h:n-1
   liosc2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
@@ -281,12 +281,12 @@ gghrdl=: 4 : 0
       NB. step 1: rotate columns lios to kill A[i,j]
       'y cs'=. rot rotga y ; (< 0 ; liosr1a ; lios) ; 0
       y=. (< 1 ; liosr1b ; lios) (cs & rot) upd y
-      dZ=. dZ , cs , lios
+      dZ0=. dZ0 , cs , lios
       lios=. j - 0 1
       NB. step 2: rotate rows lios to kill B[j-1,j]
       'y cs'=. (rot &. |:) rotga y ; (< 1 ; lios ; liosc2b) ; < < a: ; _1
       y=. (< 0 ; lios ; liosc2a) (cs & (rot &. |:)) upd y
-      dQ=. dQ , cs , lios
+      dQ0=. dQ0 , cs , lios
       NB. step 3: update IOS
       liosr1b=. (j-2) , liosr1b
       liosc2b=. }: liosc2b
@@ -295,7 +295,7 @@ gghrdl=: 4 : 0
     liosr1a=. }. liosr1a
     i=. >: i
   end.
-  y ; dQ ; + dZ
+  y ; dQ0 ; + dZ0
 )
 
 NB. ---------------------------------------------------------
@@ -305,32 +305,32 @@ NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
 NB.   Hessenberg form (H,T) by a unitary (orthogonal)
 NB.   similarity transformation by non-blocked algorithm [1]:
-NB.     Q^_1 * A * Z = H
-NB.     Q^_1 * B * Z = T
+NB.     Q1 * H * Z1^_1 = A
+NB.     Q1 * T * Z1^_1 = B
 NB.   in order to reduce the generalized eigenvalue problem:
 NB.     A * x = λ * B * x
 NB.   to its standard form:
 NB.     H * y = λ * T * y
-NB.     y = Z^_1 * x
-NB.   and accumulate rotations to form Q and Z later
+NB.     y = Z1^_1 * x
+NB.   and accumulate rotations to form Q1 and Z1 later
 NB.
 NB. Syntax:
-NB.   'HT dQ dZ'=. hs gghrdu A ,: B
+NB.   'HT dQ0 dZ0'=. hs gghrdu A ,: B
 NB. where
-NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
-NB.           defines submatrices A11 and B11 to be reduced
-NB.           position in matrices A and B, respectively, see
-NB.           gehrdu
-NB.   A     - n×n-matrix, general
-NB.   B     - n×n-matrix, upper triangular
-NB.   HT    -: H ,: T
-NB.   H     - n×n-matrix, upper Hessenberg inside the
-NB.           submatrix H[h:h+s-1,h:h+s-1], and upper
-NB.           triangular outside
-NB.   T     - n×n-matrix, upper triangular
-NB.   dQ,dZ - any×4-matrix, accumulates rotations to form Q
-NB.           and Z later, see rotsclx; dQ and dZ may have
-NB.           the same shapes
+NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
+NB.             defines submatrices A11 and B11 to be reduced
+NB.             position in matrices A and B, respectively,
+NB.             see gehrdu
+NB.   A       - n×n-matrix
+NB.   B       - n×n-matrix, upper triangular
+NB.   HT      -: H ,: T
+NB.   H       - n×n-matrix, upper Hessenberg inside the
+NB.             submatrix H[h:h+s-1,h:h+s-1], and upper
+NB.             triangular outside
+NB.   T       - n×n-matrix, upper triangular
+NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
+NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
+NB.             have the same shapes
 NB.
 NB. References:
 NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
@@ -341,7 +341,7 @@ gghrdu=: 4 : 0
   'h s'=. x
   t=. h+s-1
   n=. c y
-  dQ=. dZ=. 0 4 $ 0
+  dQ0=. dZ0=. 0 4 $ 0
   j=. h
   liosc1a=. n th2lios j                        NB. (n-h)-vector h:n-1
   liosr2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
@@ -354,12 +354,12 @@ gghrdu=: 4 : 0
       NB. step 1: rotate rows lios to kill A[i,j]
       'y cs'=. (rot &. |:) rotga y ; (< 0 ; lios ; liosc1a) ; < < a: ; 0
       y=. (< 1 ; lios ; liosc1b) (cs & (rot &. |:)) upd y
-      dQ=. dQ , cs , lios
+      dQ0=. dQ0 , cs , lios
       lios=. i - 0 1
       NB. step 2: rotate columns lios to kill B[i,i-1]
       'y cs'=. rot rotga y ; (< 1 ; liosr2b ; lios) ; _1
       y=. (< 0 ; liosr2a ; lios) (cs & rot) upd y
-      dZ=. dZ , cs , lios
+      dZ0=. dZ0 , cs , lios
       NB. step 3: update IOS
       liosc1b=. (i-2) , liosc1b
       liosr2b=. }: liosr2b
@@ -368,7 +368,7 @@ gghrdu=: 4 : 0
     liosc1a=. }. liosc1a
     j=. >: j
   end.
-  y ; (+ dQ) ; dZ
+  y ; (+ dQ0) ; dZ0
 )
 
 NB. =========================================================
@@ -380,7 +380,7 @@ NB.
 NB. Description:
 NB.   Reduce a general matrix A to lower Hessenberg form H
 NB.   by a unitary (orthogonal) similarity transformation:
-NB.     Q * A * Q^_1 = H
+NB.     Q^_1 * H * Q = A
 NB.
 NB. Syntax:
 NB.   HQf=. hs gehrdl A
@@ -472,7 +472,7 @@ NB.
 NB. Description:
 NB.   Reduce a general matrix A to upper Hessenberg form H
 NB.   by a unitary (orthogonal) similarity transformation:
-NB.     Q^_1 * A * Q = H
+NB.     Q * H * Q^_1 = A
 NB.
 NB. Syntax:
 NB.   HQf=. hs gehrdu A
@@ -561,32 +561,35 @@ gehrdu=: 4 : 0
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
-NB. gghrdlnn        'H T'=.     hs gghrdlnn A ,: B
-NB. gghrdlnv        'H T Z'=.   hs gghrdlnv A , B ,: Z1
-NB. gghrdlvn        'H T Q'=.   hs gghrdlvn A , B ,: Q1
-NB. gghrdlvv        'H T Q Z'=. hs gghrdlvv A , B , Q1 ,: Z1
+NB. gghrdlnn        'H T'=.       hs gghrdlnn A ,: B
+NB. gghrdlnv        'H T Z1'=.    hs gghrdlnv A , B ,: Z0
+NB. gghrdlvn        'H T Q1'=.    hs gghrdlvn A , B ,: Q0
+NB. gghrdlvv        'H T Q1 Z1'=. hs gghrdlvv A , B , Q0 ,: Z0
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized lower
 NB.   Hessenberg form (H,T) by a unitary (orthogonal)
 NB.   similarity transformation by non-blocked algorithm:
-NB.     Q * A * Z^_1 = H
-NB.     Q * B * Z^_1 = T
+NB.     ΔQ0^_1 * H * ΔZ0 = A
+NB.     ΔQ0^_1 * T * ΔZ0 = B
 NB.   in order to reduce the generalized eigenvalue problem:
-NB.     x * A = λ * x * B                                 (1)
+NB.     x * C = λ * x * D                                 (1)
 NB.   to its standard form:
-NB.     y * H = λ * y * T
-NB.     y = x * Q^_1
-NB.   The unitary (orthogonal) matrices Q and Z are
+NB.     y * H = λ * y * T                                 (2)
+NB.   The unitary (orthogonal) matrices ΔQ0 and ΔZ0 are
 NB.   determined as products of Givens rotations. They may
-NB.   either be formed explicitly, or they may be derived
-NB.   from input matrices Q1 and Z1, so that:
-NB.     Q1^_1 * A * Z1 = (ΔQ*Q1)^_1 * H * (ΔZ*Z1)
-NB.     Q1^_1 * B * Z1 = (ΔQ*Q1)^_1 * T * (ΔZ*Z1)
-NB.   If Q1 is the unitary (orthogonal) matrix from the LQ
-NB.   factorization of B in the original equation (1), then
-NB.   gghrdl reduces the original problem to generalized
-NB.   Hessenberg form
+NB.   either be formed explicitly, or they may be
+NB.   postmultiplied by input matrices Q0 and Z0, so that:
+NB.     (ΔQ0*Q0)^_1 * H * (ΔZ0*Z0) = Q0^_1 * A * Z0
+NB.     (ΔQ0*Q0)^_1 * T * (ΔZ0*Z0) = Q0^_1 * B * Z0
+NB.   If:
+NB.     B * Z0 := D  NB. LQ factorization of matrix B
+NB.     A      := C * Z0^_1
+NB.     Q1     := I
+NB.     y      := x * Q1^_1
+NB.     Q1     := ΔQ0 * Q0
+NB.     Z1     := ΔZ0 * Z0
+NB.   then gghrdlxx reduces (1) to (2)
 NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices A11 and B11 to be reduced
@@ -597,11 +600,11 @@ NB.   B    - n×n-matrix, lower triangular
 NB.   H    - n×n-matrix, lower Hessenberg inside the submatrix
 NB.          H[h:h+s-1,h:h+s-1], and lower triangular outside
 NB.   T    - n×n-matrix, lower triangular
-NB.   Q1   - n×n-matrix, the unitary (orthogonal), typically
+NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
 NB.          from the LQ factorization of B
-NB.   Q    - n×n-matrix (ΔQ*Q1)
+NB.   Q1   - n×n-matrix, the unitary (orthogonal)
+NB.   Z0   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z    - n×n-matrix (ΔZ*Z1)
 NB.
 NB. TODO:
 NB. - implement blocked version
@@ -613,32 +616,35 @@ gghrdlvv=: [: : ((2 }. ]) ((0 {:: ]) , (rotscll &: >"2 0 }.)) (gghrdl (2 & {.)))
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
-NB. gghrdunn        'H T'=.     hs gghrdunn A ,: B
-NB. gghrdunv        'H T Z'=.   hs gghrdunv A , B ,: Z1
-NB. gghrduvn        'H T Q'=.   hs gghrduvn A , B ,: Q1
-NB. gghrduvv        'H T Q Z'=. hs gghrduvv A , B , Q1 ,: Z1
+NB. gghrdunn        'H T'=.       hs gghrdunn A ,: B
+NB. gghrdunv        'H T Z1'=.    hs gghrdunv A , B ,: Z0
+NB. gghrduvn        'H T Q1'=.    hs gghrduvn A , B ,: Q0
+NB. gghrduvv        'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: Z0
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
 NB.   Hessenberg form (H,T) by a unitary (orthogonal)
 NB.   similarity transformation by non-blocked algorithm [1]:
-NB.     Q^_1 * A * Z = H
-NB.     Q^_1 * B * Z = T
+NB.     ΔQ0 * H * ΔZ0^_1 = A
+NB.     ΔQ0 * T * ΔZ0^_1 = B
 NB.   in order to reduce the generalized eigenvalue problem:
-NB.     A * x = λ * B * x                                 (1)
+NB.     C * x = λ * D * x                                 (1)
 NB.   to its standard form:
-NB.     H * y = λ * T * y
-NB.     y = Z^_1 * x
-NB.   The unitary (orthogonal) matrices Q and Z are
+NB.     H * y = λ * T * y                                 (2)
+NB.   The unitary (orthogonal) matrices ΔQ0 and ΔZ0 are
 NB.   determined as products of Givens rotations. They may
-NB.   either be formed explicitly, or they may be derived
-NB.   from input matrices Q1 and Z1, so that:
-NB.     Q1 * A * Z1^_1 = (Q1*ΔQ) * H * (Z1*ΔZ)^_1
-NB.     Q1 * B * Z1^_1 = (Q1*ΔQ) * T * (Z1*ΔZ)^_1
-NB.   If Q1 is the unitary (orthogonal) matrix from the QR
-NB.   factorization of B in the original equation (1), then
-NB.   gghrdu reduces the original problem to generalized
-NB.   Hessenberg form
+NB.   either be formed explicitly, or they may be
+NB.   premultiplied by input matrices Q0 and Z0, so that:
+NB.     (Q0*ΔQ0) * H * (Z0*ΔZ0)^_1 = Q0 * A * Z0^_1
+NB.     (Q0*ΔQ0) * T * (Z0*ΔZ0)^_1 = Q0 * B * Z0^_1
+NB.   If:
+NB.     Q0 * B := D          NB. QR factorization of matrix D
+NB.     A      := Q0^_1 * C
+NB.     Z0     := I
+NB.     y      := Z^_1 * x
+NB.     Q1     := Q0 * ΔQ0
+NB.     Z1     := Z0 * ΔZ0
+NB.   then gghrduxx reduces (1) to (2)
 NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices A11 and B11 to be reduced
@@ -649,11 +655,11 @@ NB.   B    - n×n-matrix, upper triangular
 NB.   H    - n×n-matrix, upper Hessenberg inside the submatrix
 NB.          H[h:h+s-1,h:h+s-1], and upper triangular outside
 NB.   T    - n×n-matrix, upper triangular
-NB.   Q1   - n×n-matrix, the unitary (orthogonal), typically
+NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
 NB.          from the QR factorization of B
-NB.   Q    - n×n-matrix (Q1*ΔQ)
+NB.   Q1   - n×n-matrix, the unitary (orthogonal)
+NB.   Z0   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z    - n×n-matrix (Z1*ΔZ)
 NB.
 NB. Notes:
 NB. - gghrdunn models LAPACK's xGGHRD('N','N')
@@ -711,8 +717,8 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
-NB. - Q * A * Q^_1 = H : berr := ||A - Q^_1 * H * Q|| / (ε * ||A|| * n)
-NB. - Q^_1 * A * Q = H : berr := ||A - Q * H * Q^_1|| / (ε * ||A|| * n)
+NB. - Q^_1 * H * Q = A : berr := ||A - Q^_1 * H * Q|| / (ε * ||A|| * n)
+NB. - Q * H * Q^_1 = A : berr := ||A - Q * H * Q^_1|| / (ε * ||A|| * n)
 
 testgehrd=: 3 : 0
   require :: ] '~addons/math/lapack/lapack.ijs'
@@ -722,8 +728,8 @@ testgehrd=: 3 : 0
 
   ('2b1100 & gehrd_jlapack_' tmonad ((];1:;#)`(,&>/)`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
-  ('gehrdl'                  tdyad ((0,#)`]       `]     `(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@:(}:"1)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
-  ('gehrdu'                  tdyad ((0,#)`]       `]     `(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdl'                  tdyad ((0,#)`]       `]`(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@:(}:"1)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdu'                  tdyad ((0,#)`]       `]`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
   EMPTY
 )
@@ -747,36 +753,36 @@ NB. where
 NB.   ||M|| := max(||M||_1 , FP_SFMIN)
 NB.   β - machine precision
 NB.   - gghrdl:
-NB.       berr0 := ||Q1^_1 * A * Z1 - Q^_1 * H * Z|| / (β * ||Q1^_1 * A * Z1|| * n)
-NB.       berr1 := ||Q1^_1 * L * Z1 - Q^_1 * T * Z|| / (β * ||Q1^_1 * L * Z1|| * n)
-NB.       berr2 := ||I - Q^_1 * Q|| / (β * n)
-NB.       berr3 := ||I - Z^_1 * Z|| / (β * n)
-NB.       (L,Z1) := B
-NB.       Q := ΔQ*Q1
-NB.       Z := ΔZ*Z1
+NB.       berr0 := ||Q0^_1 * A * Z0 - Q1^_1 * H * Z1|| / (β * ||Q0^_1 * A * Z0|| * n)
+NB.       berr1 := ||Q0^_1 * L * Z0 - Q1^_1 * T * Z1|| / (β * ||Q0^_1 * L * Z0|| * n)
+NB.       berr2 := ||I - Q1^_1 * Q1|| / (β * n)
+NB.       berr3 := ||I - Z1^_1 * Z1|| / (β * n)
+NB.       L * Z0 := B
+NB.       Q1 := ΔQ0 * Q0
+NB.       Z1 := ΔZ0 * Z0
 NB.   - gghrdu:
-NB.       berr0 := ||Q1 * A * Z1^_1 - Q * H * Z^_1|| / (β * ||Q1 * A * Z1^_1|| * n)
-NB.       berr1 := ||Q1 * R * Z1^_1 - Q * T * Z^_1|| / (β * ||Q1 * R * Z1^_1|| * n)
-NB.       berr2 := ||I - Q * Q^_1|| / (β * n)
-NB.       berr3 := ||I - Z * Z^_1|| / (β * n)
-NB.       (Q1,R) := B
-NB.       Q := Q1*ΔQ
-NB.       Z := Z1*ΔZ
+NB.       berr0 := ||Q0 * A * Z0^_1 - Q1 * H * Z1^_1|| / (β * ||Q0 * A * Z0^_1|| * n)
+NB.       berr1 := ||Q0 * R * Z0^_1 - Q1 * T * Z1^_1|| / (β * ||Q0 * R * Z0^_1|| * n)
+NB.       berr2 := ||I - Q1 * Q1^_1|| / (β * n)
+NB.       berr3 := ||I - Z1 * Z1^_1|| / (β * n)
+NB.       Q0 * R := B
+NB.       Q1 := Q0 * ΔQ0
+NB.       Z1 := Z0 * ΔZ0
 NB.
 NB. Notes:
-NB. - B is reconstructed from either (L*Z1) for gghrdl, or
-NB.   (Q1*R) for gghrdu, this unifies calculations and
+NB. - B is reconstructed from either (L*Z0) for gghrdl, or
+NB.   (Q0*R) for gghrdu, this unifies calculations and
 NB.   eliminates gelqf (geqrf) round-off errors
 
 testgghrd=: 3 : 0
-  prepl=. ((,~ <) ((3&{) mp~"2 (2&{.)))~ _2&(<\)                                                  NB. L: 'AB HT QZ'=. (A,L,I,:Z1) prepl (H,T,Q,:Z)
-  prepu=. ((,~ <) ((2&{) mp "2 (2&{.)))~ _2&(<\)                                                  NB. R: 'AB HT QZ'=. (A,R,Q1,:I) prepu (H,T,Q,:Z)
+  prepl=. ((,~ <) ((3&{) mp~"2 (2&{.)))~ _2&(<\)                                                  NB. L: 'updAB HT Q1Z1'=. (A,L,I,:Z0) prepl (H,T,Q1,:Z1)
+  prepu=. ((,~ <) ((2&{) mp "2 (2&{.)))~ _2&(<\)                                                  NB. R: 'updAB HT Q1Z1'=. (A,R,Q0,:I) prepu (H,T,Q1,:Z1)
   safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||updA - Q^_1 * H * Z|| , ||B - Q^_1 * T * Z||
-                                                                                                  NB. R: (] cdiff1 ct) : ||updA - Q * H * Z^_1|| , ||B - Q * T * Z^_1||
-  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - Q^_1 * Q|| , ||I - Z^_1 * Z||
-                                                                                                  NB. R: (mp  adiff2) : ||I - Q * Q^_1|| , ||I - Z * Z^_1||
-  denom1=. safenorm @ (0 & {::)                                                                   NB. ||updA|| , ||B||
+  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||updA - Q1^_1 * H * Z1|| , ||updB - Q1^_1 * T * Z1||
+                                                                                                  NB. R: (] cdiff1 ct) : ||updA - Q1 * H * Z1^_1|| , ||updB - Q1 * T * Z1^_1||
+  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - Q1^_1 * Q1|| , ||I - Z1^_1 * Z1||
+                                                                                                  NB. R: (mp  adiff2) : ||I - Q1 * Q1^_1|| , ||I - Z1 * Z1^_1||
+  denom1=. safenorm @ (0 & {::)                                                                   NB. ||updA|| , ||updB||
   getn=. c @ (0 & {::)                                                                            NB. n
   safediv=. ((({:<.(%/@}:))`((<./@(}:*(1,{:)))%(1&{))@.(1>(1&{)))`(%/@}:)@.(</@}:))%(FP_PREC*{:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
   cberr01=. 2 : 'safediv"1 @: ((u cdiff1 v) ,. denom1 ,. getn)'                                   NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
@@ -787,17 +793,17 @@ testgghrd=: 3 : 0
   berru=: (>./ @ ((] cberr01 ct) , (mp  aberr23)) @ prepu) f.
 
   rcond=. <./ gecon1"2 y
-  'L Z1 Q1 R'=. (((trl ; unglq) @ gelqf) , ((ungqr ; tru) @ geqrf)) {: y
+  'L Z0 Q0 R'=. (((trl ,: unglq) @ gelqf) , ((ungqr ,: tru) @ geqrf)) {: y
   I=. idmat c y
 
   ('gghrdlnn' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) y
   ('gghrdlnv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) (y,I)
   ('gghrdlvn' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) (y,I)
-  ('gghrdlvv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`berrl )) ((L 1} y),I,:Z1)
+  ('gghrdlvv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`berrl )) ((L 1} y),I,:Z0)
   ('gghrdunn' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) y
   ('gghrdunv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) (y,I)
   ('gghrduvn' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) (y,I)
-  ('gghrduvv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`berru )) ((R 1} y),Q1,:I)
+  ('gghrduvv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`berru )) ((R 1} y),Q0,:I)
 
   erase 'cdiff1 adiff2 berrl berru'
 
@@ -808,8 +814,8 @@ NB. ---------------------------------------------------------
 NB. testhrd
 NB.
 NB. Description:
-NB.   Adv. to make verb to test gxhrdx by matrix of generator
-NB.   and shape given
+NB.   Adv. to make verb to test gxhrdxxx by matrices of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testhrd
@@ -822,13 +828,13 @@ NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
 NB.
 NB. Application:
-NB. - test by random square real matrix with elements
+NB. - test by random square real matrices with elements
 NB.   distributed uniformly with support (0,1):
 NB.     ?@$&0 testhrd_mt_ 150 150
-NB. - test by random square real matrix with elements with
+NB. - test by random square real matrices with elements with
 NB.   limited value's amplitude:
 NB.     (_1 1 0 4 _6 4 & gemat_mt_) testhrd_mt_ 150 150
-NB. - test by random square complex matrix:
+NB. - test by random square complex matrices:
 NB.     (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
 
 testhrd=: 1 : 'EMPTY_mt_ [ ((testgghrd_mt_ @ u @ (2&,)) [ (testgehrd_mt_ @ u)) ^: (=/)'

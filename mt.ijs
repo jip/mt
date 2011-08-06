@@ -19,6 +19,15 @@ NB. FP_SFMIN     Safe min, such that 1/FP_SFMIN does not
 NB.              overflow
 NB. EMPTY        i. 0 0
 NB.
+NB. testlow      Adv. to make verb to test low-level
+NB.              algorithms by matrix of generator and shape
+NB.              given
+NB. testmid      Adv. to make verb to test mid-level
+NB.              algorithms by matrix of generator and shape
+NB.              given
+NB. testhigh     Adv. to make verb to test high-level
+NB.              algorithms by matrix of generator and shape
+NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
@@ -139,7 +148,7 @@ require '~addons/math/mt/trf.ijs'     NB. Triangular factorization
 require '~addons/math/mt/tri.ijs'     NB. Inverse by trf
 require '~addons/math/mt/trs.ijs'     NB. Solve linear monomial equation by trf
 
-NB. hi-level
+NB. high-level
 require '~addons/math/mt/ev.ijs'      NB. Eigenvalues and, optionally, eigenvectors
 require '~addons/math/mt/exp.ijs'     NB. Matrix exponential
 require '~addons/math/mt/pow.ijs'     NB. Raise matrix to an integer power[s]
@@ -147,6 +156,132 @@ require '~addons/math/mt/sv.ijs'      NB. Solve linear monomial equation
 
 NB. =========================================================
 NB. Test suite
+
+NB. ---------------------------------------------------------
+NB. testlow
+NB.
+NB. Description:
+NB.   Adv. to make verb to test low-level algorithms by
+NB.   matrix of generator and shape given
+NB.
+NB. Syntax:
+NB.   vtest=. mkge testlow
+NB. where
+NB.   (m,n) - 2-vector of integers, shape of random matrices
+NB.           to test algorithms; only algorithms which
+NB.           accept m and n given will be tested
+NB.   mkge  - monadic verb to generate random non-singular
+NB.           general y-matrix (shape is taken from y)
+NB.   vtest - verb to test algorithms; is called as:
+NB.             vtest (m,n)
+NB.
+NB. Application:
+NB. - test by random square integer matrix with elements
+NB.   distributed uniformly with support [0,100):
+NB.    ?@$&100 testlow_mt_ 10 10
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     ?@$&0 testlow_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testlow_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testlow_mt_ 150 200
+
+testlow=: 1 : 0
+  (u testbak_mt_) y   NB. square matrices only
+  (u testbal_mt_) y   NB. square matrices only
+  (u testref_mt_) y   NB. matrices with min dimention ≤ 200 only
+     testrot_mt_  ''  NB. fixed non-random test matrix is used
+  (u testgq_mt_ ) y
+  (u testmq_mt_ ) y
+  (u testsm_mt_ ) y   NB. square matrices with size ≤ 500 only
+
+  EMPTY_mt_
+)
+
+NB. ---------------------------------------------------------
+NB. testmid
+NB.
+NB. Description:
+NB.   Adv. to make verb to test mid-level algorithms by
+NB.   matrix of generator and shape given
+NB.
+NB. Syntax:
+NB.   vtest=. mkge testmid
+NB. where
+NB.   (m,n) - 2-vector of integers, shape of random matrices
+NB.           to test algorithms; only algorithms which
+NB.           accept m and n given will be tested
+NB.   mkge  - monadic verb to generate random non-singular
+NB.           general y-matrix (shape is taken from y)
+NB.   vtest - verb to test algorithms; is called as:
+NB.             vtest (m,n)
+NB.
+NB. Application:
+NB. - test by random square integer matrix with elements
+NB.   distributed uniformly with support [0,100):
+NB.    ?@$&100 testmid_mt_ 10 10
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     ?@$&0 testmid_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testmid_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testmid_mt_ 150 200
+
+testmid=: 1 : 0
+  (u testeq_mt_ ) y   NB. square matrices only
+  (u testevc_mt_) y   NB. square matrices only
+  (u testhrd_mt_) y   NB. square matrices only
+  (u testqf_mt_ ) y
+  (u testtrf_mt_) y
+  (u testtri_mt_) y   NB. square matrices only
+  (u testtrs_mt_) y   NB. square matrices only
+
+  EMPTY_mt_
+)
+
+NB. ---------------------------------------------------------
+NB. testhigh
+NB.
+NB. Description:
+NB.   Adv. to make verb to test high-level algorithms by
+NB.   matrix of generator and shape given
+NB.
+NB. Syntax:
+NB.   vtest=. mkge testhigh
+NB. where
+NB.   (m,n) - 2-vector of integers, shape of random matrices
+NB.           to test algorithms; only algorithms which
+NB.           accept m and n given will be tested
+NB.   mkge  - monadic verb to generate random non-singular
+NB.           general y-matrix (shape is taken from y)
+NB.   vtest - verb to test algorithms; is called as:
+NB.             vtest (m,n)
+NB.
+NB. Application:
+NB. - test by random square integer matrix with elements
+NB.   distributed uniformly with support [0,100):
+NB.    ?@$&100 testhigh_mt_ 10 10
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     ?@$&0 testhigh_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testhigh_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testhigh_mt_ 150 200
+
+testhigh=: 1 : 0
+  (u testev_mt_ ) y   NB. square matrices only
+  (u testexp_mt_) y   NB. square matrices only
+  (u testpow_mt_) y   NB. square matrices only
+  (u testsv_mt_ ) y   NB. square matrices only
+
+  EMPTY_mt_
+)
 
 NB. ---------------------------------------------------------
 NB. test
@@ -164,7 +299,7 @@ NB.           accept m and n given will be tested
 NB.   mkge  - monadic verb to generate random non-singular
 NB.           general y-matrix (shape is taken from y)
 NB.   vtest - verb to test algorithms; is called as:
-NB.              vtest (m,n)
+NB.             vtest (m,n)
 NB.
 NB. Application:
 NB. - test by random square integer matrix with elements
@@ -182,29 +317,9 @@ NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 test=: 1 : 0
   '%-25s %-16s %-16s %-16s %-16s %-16s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
 
-  NB. low-level algorithms
-  (u testbak_mt_) y   NB. square matrices only
-  (u testbal_mt_) y   NB. square matrices only
-  (u testref_mt_) y   NB. matrices with min dimention ≤ 200 only
-     testrot_mt_  ''  NB. fixed non-random test matrix is used
-  (u testgq_mt_ ) y
-  (u testmq_mt_ ) y
-  (u testsm_mt_ ) y   NB. square matrices with size ≤ 500 only
-
-  NB. mid-level algorithms
-  (u testeq_mt_ ) y   NB. square matrices only
-  (u testevc_mt_) y   NB. square matrices only
-  (u testhrd_mt_) y   NB. square matrices only
-  (u testqf_mt_ ) y
-  (u testtrf_mt_) y
-  (u testtri_mt_) y   NB. square matrices only
-  (u testtrs_mt_) y   NB. square matrices only
-
-  NB. hi-level algorithms
-  (u testev_mt_ ) y   NB. square matrices only
-  (u testexp_mt_) y   NB. square matrices only
-  (u testpow_mt_) y   NB. square matrices only
-  (u testsv_mt_ ) y   NB. square matrices only
+  (u testlow ) y  NB. low-level algorithms
+  (u testmid ) y  NB. mid-level algorithms
+  (u testhigh) y  NB. high-level algorithms
 
   EMPTY_mt_
 )

@@ -1,11 +1,21 @@
 NB. Norms
 NB.
-NB. norm1   Magnitude-based 1-norm of vector (matrix)
-NB. normi   Magnitude-based ∞-norm of vector (matrix)
-NB. norm1t  Taxicab-based 1-norm of vector (matrix)
-NB. normit  Taxicab-based ∞-norm of vector (matrix)
-NB. norms   Square-based Euclidean (Frobenius) norm of vector
-NB.         (matrix)
+NB. norm1    Magnitude-based 1-norm of vector (matrix)
+NB. norm1r   Magnitude-based 1-norm of vector (matrix rows)
+NB. norm1c   Magnitude-based 1-norm of vector (matrix
+NB.          columns)
+NB. normi    Magnitude-based ∞-norm of vector (matrix)
+NB. normir   Magnitude-based ∞-norm of vector (matrix rows)
+NB. normic   Magnitude-based ∞-norm of vector (matrix
+NB.          columns)
+NB. norm1t   Taxicab-based 1-norm of vector (matrix)
+NB. norm1tr  Taxicab-based 1-norm of vector (matrix rows)
+NB. norm1tc  Taxicab-based 1-norm of vector (matrix columns)
+NB. normit   Taxicab-based ∞-norm of vector (matrix)
+NB. normitr  Taxicab-based ∞-norm of vector (matrix rows)
+NB. normitc  Taxicab-based ∞-norm of vector (matrix columns)
+NB. norms    Square-based Euclidean (Frobenius) norm of
+NB.          vector (matrix)
 NB.
 NB. Version: 0.6.8 2010-11-30
 NB.

@@ -43,37 +43,33 @@ NB. Description:
 NB.   Calculate initial parameters for tgevclxx
 NB.
 NB. Syntax:
-NB.   'bignum d0 d1 d2 abnorm abrwork abscale cond1 cond2 abcoeff abcoeffa d'=. ios tgevci SP
+NB.   'bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. ios tgevci SP
 NB. where
 NB.   SP       - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.              produced by hgezqsxx
 NB.   ios      - k-vector, lIOS eigenvectors to compute
 NB.   bignum   > 0
-NB.   d0       - 2×n-matrix, diagonals of S and P
-NB.   d1       - 2×n-matrix
-NB.   d2       - 2×n-matrix
-NB.   abnorm   - 2-vector, being (norm1t"2 SP)
-NB.   abrwork  - 2×n-matrix, norm1t of rows of strict lower
-NB.              triangular part of S and P
-NB.   abscale  - 2-vector
+NB.   d2       - n×2-matrix
+NB.   abrwork  - n×2-matrix, stitched norm1t of rows of
+NB.              strict lower triangular part of S and P
 NB.   cond1    - n-vector, pre-calculated part of some
 NB.              condition
 NB.   cond2    - k×n-matrix, pre-calculated part of some
 NB.              condition
-NB.   abcoeff  - 2×n-matrix, (a,b) coeffs for pencil a*S-b*P
-NB.   abcoeffa - 2×n-matrix, coeffs for triangular solvers
+NB.   abcoeff  - n×2-matrix, (a,b) coeffs for pencil a*S-b*P
+NB.   abcoeffa - n×2-matrix, coeffs for triangular solvers
 NB.   d        - k×n-matrix
 
 tgevci=: 4 : 0
   bignum=. % FP_SFMIN * c y
   small=. % FP_PREC * bignum
-  d0=. diag"2 y
-  d1=. 0 1 ]`(9&o.) ag d0
+  d0=. diag"2 y                                                                NB. 2×n-matrix
+  d1=. 0 1 ]`(9&o.) ag d0                                                      NB. 2×n-matrix
   d2=. 0 1 sorim`| ag d1
   temp=. norm1tr"2 y                                                           NB. 2×n-matrix
-  abnorm=. >./"1 temp
+  abnorm=. >./"1 temp                                                          NB. 2-vector
   abrwork=. temp - sorim d0
-  abscale=. % FP_SFMIN >. abnorm
+  abscale=. % FP_SFMIN >. abnorm                                               NB. 2-vector
   temp=. % (>./) FP_SFMIN , abscale * d2                                       NB. n-vector
   sba=. |. abscale * temp *"1 d1                                               NB. 2×n-matrix
   abcoeff=. abscale * sba
@@ -89,7 +85,7 @@ tgevci=: 4 : 0
   d=. (dmin < sorim d) } dmin ,: d
   cond2=. bignum (((1>]),.*) sorim) d
 
-  bignum ; d0 ; d1 ; d2 ; abnorm ; abrwork ; abscale ; cond1 ; cond2 ; abcoeff ; abcoeffa ; d
+  bignum ; (|:d2) ; (|:abrwork) ; cond1 ; cond2 ; (|:abcoeff) ; (|:abcoeffa) ; d
 )
 
 NB. ---------------------------------------------------------
@@ -121,13 +117,13 @@ NB.   (tgevcurb SP , Z) -: ct (tgevcllb ct"2 SP , Q)
 NB.   (tgevculb SP , Z) -: ct (tgevclrb ct"2 SP , Q)
 
 tgevcly=: 4 : 0
-  'ios bignum d0 d1 d2 abnorm abrwork abscale cond1 cond2 abcoeff abcoeffa d'=. x
+  'ios bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. x
   n=. c y
   k=. # ios
   W=. (0,n) $ 0
   je=. <: k
   while. je >: 0 do.
-    if. *./ FP_SFMIN >: (je { ios) {"1 d2 do.
+    if. *./ FP_SFMIN >: (je { ios) { d2 do.
       NB. singular matrix pencil - return unit eigenvector
       work=. 1 je } n $ 0
     else.
@@ -136,7 +132,7 @@ tgevcly=: 4 : 0
       NB. columnwise in (a*A - b*B)^H, rowwise in (a*A - b*B)
       NB. work[0:j-1] contains sums w
       NB. work[j+1:je] contains x
-      work=. 1 ,~ (-/) ((je { ios) {"1 abcoeff) * (((0,],0:),:(2 1,])) je { ios) ({.@(1 0 2&|:)) ;. 0 y
+      work=. 1 ,~ (-/) ((je { ios) { abcoeff) * (((0,],0:),:(2 1,])) je { ios) ({.@(1 0 2&|:)) ;. 0 y
       di=. je { d
       j=. <: je { ios
       while. j >: 0 do.
@@ -151,10 +147,10 @@ tgevcly=: 4 : 0
         abs1wj=. sorim j { work
         if. j > 0 do.
           NB. w = w + x[j] * (a*S[:,j] - b*P[:,j]) with scaling
-          if. ((abcoeffa mp & (j&({"1)) abrwork) >: (bignum % abs1wj)) *. (1 < abs1wj) do.
+          if. ((abcoeffa mp & (j&{) abrwork) >: (bignum % abs1wj)) *. (1 < abs1wj) do.
             work=. work % abs1wj
           end.
-          workadd=. (((je { ios) {"1 abcoeff) * j { work) * (((0,],0:),:(2 1,])) j) ({.@(1 0 2&|:)) ;. 0 y
+          workadd=. (((je { ios) { abcoeff) * j { work) * (((0,],0:),:(2 1,])) j) ({.@(1 0 2&|:)) ;. 0 y
           work=. (i. j) (+`-/@(,&workadd)) upd work
         end.
         j=. <: j
@@ -202,14 +198,14 @@ NB.   Y     - n×k-matrix, some or all of left eigenvectors
 NB.   k     - integer in range [0,n]
 
 tgevclx=: 4 : 0
-  'ios bignum d0 d1 d2 abnorm abrwork abscale cond1 cond2 abcoeff abcoeffa d'=. x
+  'ios bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. x
   d=. + d
   n=. c y
   k=. # ios
   W=. (0,n) $ 0
   je=. 0
   while. je < k do.
-    if. *./ FP_SFMIN >: (je { ios) {"1 d2 do.
+    if. *./ FP_SFMIN >: (je { ios) { d2 do.
       NB. singular matrix pencil - return unit eigenvector
       work=. 1 je } n $ 0
     else.
@@ -230,7 +226,7 @@ tgevclx=: 4 : 0
           work=. work % xmax
           xmax=. 1
         end.
-        sum=. -/ (0 1 ]`+ ag (je { ios) {"1 abcoeff) * work mp"1 (j ((0,, ),:(2 1,- )) je { ios) (+@{.@(1 0 2&|:)) ;. 0 y
+        sum=. -/ (0 1 ]`+ ag (je { ios) { abcoeff) * work mp (j ((0,, ),:(2 1,- )) je { ios) (+@{.@(0&|:)) ;. 0 y
         NB. form:
         NB.   x[j] = - sum / conjg(a*S[j,j] - b*P[j,j])
         NB. with scaling and perturbation of the denominator
@@ -264,9 +260,9 @@ tgevcll=:  ($:~ i.@c) : (([;tgevci) tgevcs  @ tgevcly           ])
 tgevclr=:  ($:~ i.@c) : (([;tgevci) tgevcs  @          tgevclx  ])
 tgevclb=:  ($:~ i.@c) : (([;tgevci) tgevcs"2@(tgevcly,:tgevclx) ])
 
-tgevcul=: (($:~ i.@c) : (([;tgevci) tgevcs  @ tgevclx           ])) &.: (|:"2)
-tgevcur=: (($:~ i.@c) : (([;tgevci) tgevcs  @(         tgevcly) ])) &.: (|:"2)
-tgevcub=: (($:~ i.@c) : (([;tgevci) tgevcs"2@(tgevclx,:tgevcly) ])) &.: (|:"2)
+tgevcul=: ($:~ i.@c) : ((([;tgevci) tgevcs  @ tgevclx           ]) &.: (|:"2))
+tgevcur=: ($:~ i.@c) : ((([;tgevci) tgevcs  @          tgevcly  ]) &.: (|:"2))
+tgevcub=: ($:~ i.@c) : ((([;tgevci) tgevcs"2@(tgevclx,:tgevcly) ]) &.: (|:"2))
 
 NB. ---------------------------------------------------------
 NB.   Y=.     tgevcxlb S , P ,: Q
@@ -285,3 +281,4 @@ tgevcubb=: ((i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]),:(tgevcly mp _1{])
 
 NB. =========================================================
 NB. Test suite
+

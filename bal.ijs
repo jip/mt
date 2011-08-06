@@ -555,8 +555,8 @@ NB. Notes:
 NB. - ggbalup implements LAPACK's xGGBAL('P')
 
 ggballp=: 3 : 0
-  n=. c y
-  'h s'=. 0 , n
+  s=. n=. c y
+  h=. 0
   pl=. pr=. i. n
   j=. h+s-1
   while. j >: h do.
@@ -600,8 +600,8 @@ ggballp=: 3 : 0
 )
 
 ggbalup=: 3 : 0
-  n=. c y
-  'h s'=. 0 , n
+  s=. n=. c y
+  h=. 0
   pl=. pr=. i. n
   i=. h+s-1
   while. i >: h do.

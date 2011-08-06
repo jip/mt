@@ -5,8 +5,7 @@ NB.             eigenvectors of generalized Schur form
 NB. tgevcxxb    Backtransformed right and/or left
 NB.             eigenvectors of generalized Schur form
 NB.
-NB. testtgevc   Test tgevcxx by general matrices given
-NB. testtgevcb  Test tgevcxxb by general matrices given
+NB. testtgevc   Test tgevcxxx by general matrices given
 NB. testevc     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
@@ -47,9 +46,20 @@ NB.
 NB. Syntax:
 NB.   'small big bignum d0 d1 d2 abnorm abrwork abscale'=. tgevcxi SP
 NB. where
-NB.   abrwork - x-vector
-NB.   SP    - 2×n×n-matrix, Schur form, output of hgexxsxx
-NB.   ...
+NB.   SP      - 2×n×n-matrix (S,:P), generalized Schur form,
+NB.             produced by hgexxsxx
+NB.   small   ≥ 0
+NB.   big     > 0
+NB.   bignum  > 0
+NB.   d0      - 2×n-matrix, diagonals of S,P
+NB.   d1      - 2×n-matrix
+NB.   d2      - 2×n-matrix
+NB.   abnorm  - 2-vector, some parameters of S,P
+NB.   abrwork - 2×n-matrix, norms either of rows of strict
+NB.             lower triangular part of S,P (tgevcli), or of
+NB.             columns of strict upper triangular part of
+NB.             S,P (tgevcui)
+NB.   abscale - 2-vector, some parameters of S,P
 
 tgevcui=: 3 : 0
   bignum=. % FP_SFMIN * c y
@@ -58,8 +68,9 @@ tgevcui=: 3 : 0
   d0=. diag"2 y
   d1=. (]`(9&o.) ag) d0
   d2=. (sorim`| ag) d1
-  abnorm=. norm1tc SP
-  abrwork=. abnorm - sorim d0
+  temp=. norm1tc"2 y  NB. 2×n-matrix
+  abnorm=. >./"1 temp
+  abrwork=. temp - sorim d0
   abscale=. % FP_SFMIN >. abnorm
   small ; big ; bignum ; d0 ; d1 ; d2 ; abnorm ; abrwork ; abscale
 )
@@ -75,15 +86,20 @@ NB.
 NB. Syntax:
 NB.   'cond1 cond2 abcoeff abcoeffa d bigd'=. i tgevcxii init
 NB. where
-NB.   i     ≥ 0, integer, the iteration
-NB.   init  - 9-vector of boxes, the output of tgevcxi
-NB.   cond1 - 2×n×n-matrix, Schur form, output of hgexxsxx
-NB.   ...
+NB.   i        ≥ 0, integer, lIO processing eigenvector
+NB.   init     - 9-vector of boxes, the output of tgevcxi
+NB.   cond1    - n-vector, pre-calculated part of some
+NB.              condition
+NB.   cond2    - n-vector, some pre-calculated condition
+NB.   abcoeff  - 2×n-matrix
+NB.   abcoeffa - 2×n-matrix
+NB.   d        - n-vector
+NB.   bigd     - n-vector, the scaled d
 
 tgevcuii=: 4 : 0
   'small big bignum d0 d1 d2 abnorm abrwork abscale'=. y
-  temp=. % (>./) FP_SFMIN , abscale * x {"1 d2
-  sab=. abscale * temp * x {"1 d1
+  temp=. % (>./) FP_SFMIN ,: abscale * x {"1 d2  NB. n-vector
+  sab=. abscale * (x {"1 d1) */ temp             NB. 2×n-matrix
   abcoeff=. abscale * |. sab
   NB. scale
   lsab=. *./ ((>:&FP_SFMIN)`(<&small) ag) (|`sorim ag"1) (|. sab) ,: abcoeff
@@ -111,10 +127,11 @@ NB.   Calculate right eigenvectors
 NB.
 NB. Syntax:
 NB.   vapp=. vbt tgevcux
-NB.   X=. (ios ; init) tgevcux SP
+NB.   X=. (ios ; init) tgevcux SPW
 NB. where
 NB.   ios  - k-vector, 
 NB.   init - 9-vector of boxes, the output of tgevcxi
+NB.   SPW  - either SP, or SPQ, or SPZ, or SPQZ
 NB.   SP   - 2×n×n-matrix, Schur form, output of hgexxsxx
 NB.   ...
 
@@ -170,10 +187,11 @@ NB.   Calculate left eigenvectors
 NB.
 NB. Syntax:
 NB.   vapp=. vbt tgevcuy
-NB.   X=. (ios ; init) tgevcuy SP
+NB.   X=. (ios ; init) tgevcuy SPW
 NB. where
 NB.   ios  - k-vector, 
 NB.   init - 9-vector of boxes, the output of tgevcxi
+NB.   SPW  - either SP, or SPQ, or SPZ, or SPQZ
 NB.   SP   - 2×n×n-matrix, Schur form, output of hgexxsxx
 NB.   ...
 
@@ -230,36 +248,30 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB.   Y=.  tgevcll  S ,: P
-NB.   X=.  tgevclr  S ,: P
-NB.   XY=. tgevclb  S ,: P
-NB.   Y=.  tgevcllb S , P ,: Q
-NB.   X=.  tgevclrb S , P ,: Z
-NB.   XY=. tgevclbb S , P , Q ,: Z
+NB.   Y=.  [ios] tgevcxl  S ,: P
+NB.   X=.  [ios] tgevcxr  S ,: P
+NB.   YX=. [ios] tgevcxb  S ,: P
 
 tgevcll=: ($:~ (i.@c)) : ((; tgevcli) (] tgevcly) ])
 tgevclr=: ($:~ (i.@c)) : ((; tgevcli) (] tgevclx) ])
 tgevclb=: ($:~ (i.@c)) : ((; tgevcli) ((] tgevcly) ,: (] tgevclx)) ])
 
-tgevcllb=: ($:~ (i.@c)) : ((; tgevcli) (mp tgevcly) ])
-tgevclrb=: ($:~ (i.@c)) : ((; tgevcli) (mp tgevclx) ])
-tgevclbb=: ($:~ (i.@c)) : ((; tgevcli) ((mp tgevcly) ,: (mp tgevclx)) ])
-
-NB. ---------------------------------------------------------
-NB.   Y=.  tgevcul  S ,: P
-NB.   X=.  tgevcur  S ,: P
-NB.   XY=. tgevcub  S ,: P
-NB.   Y=.  tgevculb S , P ,: Q
-NB.   X=.  tgevcurb S , P ,: Z
-NB.   XY=. tgevcubb S , P , Q ,: Z
-
 tgevcul=: ($:~ (i.@c)) : ((; tgevcui) (] tgevcuy) ])
 tgevcur=: ($:~ (i.@c)) : ((; tgevcui) (] tgevcux) ])
 tgevcub=: ($:~ (i.@c)) : ((; tgevcui) ((] tgevcuy) ,: (] tgevcux)) ])
 
-tgevculb=: ($:~ (i.@c)) : ((; tgevcui) (mp tgevcuy) ])
-tgevcurb=: ($:~ (i.@c)) : ((; tgevcui) (mp tgevcux) ])
-tgevcubb=: ($:~ (i.@c)) : ((; tgevcui) ((mp tgevcuy) ,: (mp tgevcux)) ])
+NB. ---------------------------------------------------------
+NB.   Y=.  tgevclxb S , P ,: Q
+NB.   X=.  tgevclxb S , P ,: Z
+NB.   YX=. tgevclxb S , P , Q ,: Z
+
+tgevcllb=: (((i.@c) ; tgevcli @ (2&{.)) (mp tgevcly) ]) : [:
+tgevclrb=: (((i.@c) ; tgevcli @ (2&{.)) (mp tgevclx) ]) : [:
+tgevclbb=: (((i.@c) ; tgevcli @ (2&{.)) ((mp tgevcly) ,: (mp tgevclx)) ]) : [:
+
+tgevculb=: (((i.@c) ; tgevcui @ (2&{.)) (mp tgevcuy) ]) : [:
+tgevcurb=: (((i.@c) ; tgevcui @ (2&{.)) (mp tgevcux) ]) : [:
+tgevcubb=: (((i.@c) ; tgevcui @ (2&{.)) ((mp tgevcuy) ,: (mp tgevcux)) ]) : [:
 
 NB. =========================================================
 NB. Test suite

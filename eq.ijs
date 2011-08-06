@@ -629,19 +629,10 @@ NB. hgeqze
 NB. hgeqzs
 NB.
 NB. Description:
-NB.   Find eigenvalues of either lower (hgezqx) or upper
-NB.   (hgeqzx) Hessenberg-triangular pair
-NB.   (H,T) and, optionally, to reduce this pair to
-NB.   generalized Schur form (hgexxs)
+NB.   Shortcuts, see hgeqzxxxx
 NB.
 NB. Syntax:
 NB.   'HTupd dQ dZ'=. hs hgexxx HT
-NB. where
-NB.   HTupd - ########
-NB.             see hgeqzxxxx
-NB.
-NB. Notes:
-NB. - non-converged eigenvalues will be set to NaN
 
 hgezqe=: hgezqeo`[`(2 1&{@,`[@.((<{:)~{.))`[ hgezq
 hgezqs=: hgezqso`]`]                      `] hgezq

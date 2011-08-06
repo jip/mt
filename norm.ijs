@@ -34,8 +34,16 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-mocs=: >./`0:@.(0=#) @ (+/   ) @:  NB. vector: sum of, matrix: max of column sums
-mors=: >./`0:@.(0=#) @ (+/"_1) @:  NB. vector: max of, matrix: max of row sums
+mo=: >./`0:@.(0=#) @  NB. max of, 0 for empty list
+
+moc=: (" 2) mo        NB. vector: max of, matrix: column maxs
+mor=: ("_1) mo        NB. vector: max of, matrix: row maxs
+
+csum=: +/" 2 @:       NB. vector: sum of, matrix: column sums
+rsum=: +/"_1 @:       NB. vector: of, matrix: row sums
+
+mocsum=: csum mo      NB. vector: sum of, matrix: max of column sums
+morsum=: rsum mo      NB. vector: max of, matrix: max of row sums
 
 NB. =========================================================
 NB. Interface
@@ -57,8 +65,14 @@ NB.   DLANST('i'), xLANGB('i'), xLANGT('i'), xLANHS('i'),
 NB.   xLANTB('i'), xLANTR('i'), ZLANHB('i'), ZLANHT('i'),-
 NB.   extraneous values in matrix must be zeroed
 
-norm1=: | mocs           NB. 1-norm of vector (matrix)
-normi=: | mors           NB. ∞-norm of vector (matrix)
+norm1=: | mocsum           NB. 1-norm of vector (matrix)
+normi=: | morsum           NB. ∞-norm of vector (matrix)
+
+norm1c=: | csum            NB. 1-norm of vector (matrix columns)
+norm1r=: | rsum            NB. 1-norm of vector elements (matrix rows)
+
+normic=: | moc             NB. ∞-norm of vector (matrix columns)
+normir=: | mor             NB. ∞-norm of vector elements (matrix rows) - FIXME!!!
 
 NB. ---------------------------------------------------------
 NB. Taxicab-based norms |Re(y)| + |Im(y)|
@@ -66,8 +80,14 @@ NB.
 NB. Notes:
 NB. - norm1t implements BLAS's DASUM, DZASUM
 
-norm1t=: sorim mocs      NB. 1-norm of vector (matrix)
-normit=: sorim mors      NB. ∞-norm of vector (matrix)
+norm1t=: sorim mocsum      NB. 1-norm of vector (matrix)
+normit=: sorim morsum      NB. ∞-norm of vector (matrix)
+
+norm1tc=: sorim csum       NB. 1-norm of vector (matrix columns)
+norm1tr=: sorim rsum       NB. 1-norm of vector elements (matrix rows)
+
+normitc=: sorim moc        NB. ∞-norm of vector (matrix columns)
+normitr=: sorim mor        NB. ∞-norm of vector elements (matrix rows) - FIXME!!!
 
 NB. ---------------------------------------------------------
 NB. Square-based Euclidean (Frobenius) norm of vector

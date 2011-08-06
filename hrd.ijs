@@ -383,12 +383,12 @@ NB.   by a unitary (orthogonal) similarity transformation:
 NB.     Q * A * Q^_1 = H
 NB.
 NB. Syntax:
-NB.   HQf=. [hs] gehrdl A
+NB.   HQf=. hs gehrdl A
 NB. where
 NB.   A   - n×n-matrix to reduce
-NB.   hs  - optional 2-vector of integers (h,s) 'head' and
-NB.         'size', defines submatrix A11 to be reduced
-NB.         position in matrix A, default is (0,n)
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
+NB.         defines submatrix A11 to be reduced position in
+NB.         matrix A, see geballp and storage layout below
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gebalpl and storage layout below
@@ -442,7 +442,7 @@ NB.   HQf=. gehrdl A
 NB.   H=. 1 trl 0 _1 }. HQf
 NB.   Q=. unghrl HQf
 
-gehrdl=: ($:~ (0,c)) : (4 : 0)
+gehrdl=: 4 : 0
   'h s'=. x
   n1=. >: n=. # y
   y=. (2 $ n1) {. y
@@ -475,12 +475,12 @@ NB.   by a unitary (orthogonal) similarity transformation:
 NB.     Q^_1 * A * Q = H
 NB.
 NB. Syntax:
-NB.   HQf=. [hs] gehrdu A
+NB.   HQf=. hs gehrdu A
 NB. where
 NB.   A   - n×n-matrix to reduce
-NB.   hs  - optional 2-vector of integers (h,s) 'head' and
-NB.         'size', defines submatrix A11 to be reduced
-NB.         position in matrix A, default is (0,n)
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
+NB.         defines submatrix A11 to be reduced position in
+NB.         matrix A, see gebalup and storage layout below
 NB.   HQf - (n+1)×n-matrix, combined H and Qf
 NB.   H   - n×n-matrix, it has zeros under 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros below
@@ -535,7 +535,7 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGEHRD
 
-gehrdu=: ($:~ (0,c)) : (4 : 0)
+gehrdu=: 4 : 0
   'h s'=. x
   n1=. >: n=. # y
   y=. (2 $ n1) {. y
@@ -561,10 +561,10 @@ gehrdu=: ($:~ (0,c)) : (4 : 0)
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
-NB. gghrdlnn        HT=.   [hs] gghrdlnn A ,: B
-NB. gghrdlnv        HTZ=.  [hs] gghrdlnv A , B ,: Z1
-NB. gghrdlvn        HTQ=.  [hs] gghrdlvn A , B ,: Q1
-NB. gghrdlvv        HTQZ=. [hs] gghrdlvv A , B , Q1 ,: Z1
+NB. gghrdlnn        HT=.   hs gghrdlnn A ,: B
+NB. gghrdlnv        HTZ=.  hs gghrdlnv A , B ,: Z1
+NB. gghrdlvn        HTQ=.  hs gghrdlvn A , B ,: Q1
+NB. gghrdlvv        HTQZ=. hs gghrdlvv A , B , Q1 ,: Z1
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized lower
@@ -588,10 +588,10 @@ NB.   factorization of B in the original equation (1), then
 NB.   gghrdl reduces the original problem to generalized
 NB.   Hessenberg form
 NB. where
-NB.   hs   - optional 2-vector of integers (h,s) 'head' and
-NB.          'size', defines submatrices A11 and B11 to be
-NB.          reduced position in matrices A and B,
-NB.          respectively, see gehrdl, default is (0,n)
+NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
+NB.          defines submatrices A11 and B11 to be reduced
+NB.          position in matrices A and B, respectively, see
+NB.          geballp and gehrdl
 NB.   A    - n×n-matrix, general
 NB.   B    - n×n-matrix, lower triangular
 NB.   HT   -: H ,: T
@@ -610,17 +610,17 @@ NB.
 NB. TODO:
 NB. - implement blocked version
 
-gghrdlnn=: ($:~ (0,c)) : (0 {:: gghrdl)
-gghrdlnv=: ($:~ (0,c)) : (({: @ ]) ((0 {:: ]) , (rotscll (2 {:: ]))) (gghrdl }:))
-gghrdlvn=: ($:~ (0,c)) : (({: @ ]) ((0 {:: ]) , (rotscll (1 {:: ]))) (gghrdl }:))
-gghrdlvv=: ($:~ (0,c)) : ((2 }. ]) ((0 {:: ]) , (rotscll &: >"2 0 }.)) (gghrdl (2 & {.)))
+gghrdlnn=: 0 {:: gghrdl
+gghrdlnv=: ({: @ ]) ((0 {:: ]) , (rotscll (2 {:: ]))) (gghrdl }:)
+gghrdlvn=: ({: @ ]) ((0 {:: ]) , (rotscll (1 {:: ]))) (gghrdl }:)
+gghrdlvv=: (2 }. ]) ((0 {:: ]) , (rotscll &: >"2 0 }.)) (gghrdl (2 & {.))
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
-NB. gghrdunn        HT=.   [hs] gghrdunn A ,: B
-NB. gghrdunv        HTZ=.  [hs] gghrdunv A , B ,: Z1
-NB. gghrduvn        HTQ=.  [hs] gghrduvn A , B ,: Q1
-NB. gghrduvv        HTQZ=. [hs] gghrduvv A , B , Q1 ,: Z1
+NB. gghrdunn        HT=.   hs gghrdunn A ,: B
+NB. gghrdunv        HTZ=.  hs gghrdunv A , B ,: Z1
+NB. gghrduvn        HTQ=.  hs gghrduvn A , B ,: Q1
+NB. gghrduvv        HTQZ=. hs gghrduvv A , B , Q1 ,: Z1
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
@@ -644,10 +644,10 @@ NB.   factorization of B in the original equation (1), then
 NB.   gghrdu reduces the original problem to generalized
 NB.   Hessenberg form
 NB. where
-NB.   hs   - optional 2-vector of integers (h,s) 'head' and
-NB.          'size', defines submatrices A11 and B11 to be
-NB.          reduced position in matrices A and B,
-NB.          respectively, see gehrdu, default is (0,n)
+NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
+NB.          defines submatrices A11 and B11 to be reduced
+NB.          position in matrices A and B, respectively, see
+NB.          gebalup and gehrdu
 NB.   A    - n×n-matrix, general
 NB.   B    - n×n-matrix, upper triangular
 NB.   HT   -: H ,: T
@@ -696,10 +696,10 @@ NB.
 NB. TODO:
 NB. - implement blocked version [2]
 
-gghrdunn=: ($:~ (0,c)) : (0 {:: gghrdu)
-gghrdunv=: ($:~ (0,c)) : (({: @ ]) ((0 {:: ]) , (rotsclu (2 {:: ]))) (gghrdu }:))
-gghrduvn=: ($:~ (0,c)) : (({: @ ]) ((0 {:: ]) , (rotsclu (1 {:: ]))) (gghrdu }:))
-gghrduvv=: ($:~ (0,c)) : ((2 }. ]) ((0 {:: ]) , (rotsclu &: >"2 0 }.)) (gghrdu (2 & {.)))
+gghrdunn=: 0 {:: gghrdu
+gghrdunv=: ({: @ ]) ((0 {:: ]) , (rotsclu (2 {:: ]))) (gghrdu }:)
+gghrduvn=: ({: @ ]) ((0 {:: ]) , (rotsclu (1 {:: ]))) (gghrdu }:)
+gghrduvv=: (2 }. ]) ((0 {:: ]) , (rotsclu &: >"2 0 }.)) (gghrdu (2 & {.))
 
 NB. =========================================================
 NB. Test suite
@@ -730,8 +730,8 @@ testgehrd=: 3 : 0
 
   ('2b1100 & gehrd_jlapack_' tmonad ((];1:;#)`(,&>/)`(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
-  ('gehrdl'                  tmonad (]       `]     `(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@:(}:"1)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
-  ('gehrdu'                  tmonad (]       `]     `(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdl'                  tdyad ((0,#)`]       `]     `(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@:(}:"1)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
+  ('gehrdu'                  tdyad ((0,#)`]       `]     `(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
 
   EMPTY
 )
@@ -798,14 +798,14 @@ testgghrd=: 3 : 0
   'L Z1 Q1 R'=. (((trl ; unglq) @ gelqf) , ((ungqr ; tru) @ geqrf)) {: y
   I=. idmat c y
 
-  ('gghrdlnn' tmonad  (]`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gghrdlnv' tmonad  (]`]`(rcond"_)`(_."_)`berrl)) (y,I)
-  ('gghrdlvn' tmonad  (]`]`(rcond"_)`(_."_)`berrl)) (y,I)
-  ('gghrdlvv' tmonad  (]`]`(rcond"_)`(_."_)`berrl)) ((L 1} y),I,:Z1)
-  ('gghrdunn' tmonad  (]`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gghrdunv' tmonad  (]`]`(rcond"_)`(_."_)`berrl)) (y,I)
-  ('gghrduvn' tmonad  (]`]`(rcond"_)`(_."_)`berrl)) (y,I)
-  ('gghrduvv' tmonad  (]`]`(rcond"_)`(_."_)`berru)) ((R 1} y),Q1,:I)
+  ('gghrdlnn' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gghrdlnv' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) (y,I)
+  ('gghrdlvn' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) (y,I)
+  ('gghrdlvv' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) ((L 1} y),I,:Z1)
+  ('gghrdunn' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gghrdunv' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) (y,I)
+  ('gghrduvn' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) (y,I)
+  ('gghrduvv' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berru)) ((R 1} y),Q1,:I)
 
   erase 'cdiff1 adiff2 berrl berru'
 

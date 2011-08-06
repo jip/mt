@@ -368,10 +368,9 @@ rotscll=: (4 : 0) ^: (+:&(0=#))
   x
 )
 
-rotsclu=: ((4 : 0) dbg 'explicit')^: ((+:&(0=#)) dbg 'check')
+rotsclu=: (4 : 0) ^: (+:&(0=#))
   i=. 0
   while. i < # y do.                    NB. traverse dA rows down
-smoutput 'rotsclu(): loop i = ',(": i),'  i{dA = ',(": i { y)
     'cs iofg'=. _2 ]\ i { y
     if. 0 0 -: iofg do.
       if. -. 0 0 -: cs do.

@@ -272,7 +272,7 @@ gghrdlnn=: 3 : 0
   n=. c AB
   dQ=. dZ=. 0 4 $ 0
   i=. h
-  liosr1a=. n th2lios h                        NB. (n-h)-vector h:n-1
+  liosr1a=. n th2lios i                        NB. (n-h)-vector h:n-1
   liosc2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
   while. i < <: e do.                          NB. (s-2)-vector: h:h+s-3
     j=. e
@@ -291,7 +291,7 @@ gghrdlnn=: 3 : 0
       dQ=. dQ , cs , lios
       NB. update IOS
       liosr1b=. (j-2) , liosr1b
-      liosc2b=. liosc2b , >: j
+      liosc2b=. }: liosc2b
       j=. <: j
     end.
     liosr1a=. }. liosr1a

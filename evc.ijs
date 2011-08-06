@@ -282,3 +282,208 @@ tgevcubb=: ((i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]),:(tgevcly mp _1{])
 NB. =========================================================
 NB. Test suite
 
+NB. ---------------------------------------------------------
+NB. testtgevc
+NB.
+NB. Description:
+NB.   Test tgevcxxx by general matrices given
+NB.
+NB. Syntax:
+NB.   testtgevc AB
+NB. where
+NB.   AB - 2×n×n-report
+NB.
+NB. Formula:
+NB.   berr := max(berr0,berr1)
+NB. where
+NB.   ||M|| := max(||M||_1 , FP_SFMIN)
+NB.   ||v|| := max(|Re(v(i))|+Im(v(i))|)
+NB.   β     - machine precision
+NB.   α(i)  - i-th eigenvalue, also i-th element on S
+NB.           diagonal
+NB.   β(i)  - i-th eigenvalue, also i-th element on P
+NB.           diagonal
+NB.   l(i)  - i-th left eigenvector, also i-th column of L
+NB.   lb(i) - i-th back transformed left eigenvector, also
+NB.           i-th column of LB
+NB.   r(i)  - i-th right eigenvector, also i-th column of R
+NB.   rb(i) - i-th back transformed right eigenvector, also
+NB.           i-th column of RB
+NB.   S P dQ1 dZ1'=. (0,n) hgexxsvv H , T , ,:~ I
+NB.   - tgevcll:
+NB.       berr0 := 
+NB.       berr1 := (max(||l(i)||) - 1) / (ulp * n)
+NB.   - tgevclr:
+NB.       berr0 := 
+NB.       berr1 := (max(||r(i)||) - 1) / (ulp * n)
+NB.   - tgevclb:
+NB.       berr0 := berr(tgevcll)
+NB.       berr1 := berr(tgevclr)
+NB.   - tgevcllb:
+NB.       berr0 := 
+NB.       berr1 := (max(||lb(i)||) - 1) / (ulp * n)
+NB.   - tgevclrb:
+NB.       berr0 := 
+NB.       berr1 := (max(||rb(i)||) - 1) / (ulp * n)
+NB.   - tgevclbb:
+NB.       berr0 := berr(tgevcllb)
+NB.       berr1 := berr(tgevclrb)
+NB.   - tgevcul:
+NB.       berr0 := max(||(β(i)*S - α(i)*P)^H * l(i)|| / (ulp * max(||β(i)*S||,||α(i)*P||)))
+NB.       berr1 := (max(||l(i)||) - 1) / (ulp * n)
+NB.   - tgevcur:
+NB.       berr0 := max(||(β(i)*S - α(i)*P)   * r(i)|| / (ulp * max(||β(i)*S||,||α(i)*P||)))
+NB.       berr1 := (max(||r(i)||) - 1) / (ulp * n)
+NB.   - tgevcub:
+NB.       berr0 := berr(tgevcul)
+NB.       berr1 := berr(tgevcur)
+NB.   - tgevculb:
+NB.       berr0 := max(||(β(i)*H - α(i)*T)^H * l(i)|| / (ulp * max(||β(i)*H||,||α(i)*T||)))
+NB.       berr1 := (max(||lb(i)||) - 1) / (ulp * n)
+NB.   - tgevcurb:
+NB.       berr0 := max(||(β(i)*H - α(i)*T)   * r(i)|| / (ulp * max(||β(i)*H||,||α(i)*T||)))
+NB.       berr1 := (max(||rb(i)||) - 1) / (ulp * n)
+NB.   - tgevcubb:
+NB.       berr0 := berr(tgevculb)
+NB.       berr1 := berr(tgevcurb)
+
+############
+   I=. idmat_mt_ 7
+   'H T'=. 0 7 gghrdunn_mt_ ((unmqrlc_mt_~ ,: tru_mt_@]) geqrf_mt_)/ AB
+   'S P Q2 Z2'=. 0 7 hgeqzsvv_mt_ H , T , ,:~ I
+
+   L=. tgevcul_mt_ S ,: P
+   (ct_mt_ ((i { diag_mt_ P) * S) - ((i { diag_mt_ S) * P)) mp i {"1 L
+   LB=. tgevculb_mt_ S , P ,: Q2
+   (ct_mt_ ((i { diag_mt_ P) * H) - ((i { diag_mt_ S) * T)) mp i {"1 LB
+   R=. tgevcur_mt_ S ,: P
+   (((i { diag_mt_ P) * S) - ((i { diag_mt_ S) * P)) mp i {"1 R
+   RB=. tgevcurb_mt_ S , P ,: Z2
+   (((i { diag_mt_ P) * H) - ((i { diag_mt_ S) * T)) mp i {"1 RB
+############
+   NB. HT=. mkHT AB
+   mkHT=. geqrf@(1{]) ((0,#@]) gghrdunn unmqrlc ,: tru@[) (0{])
+   NB. SPQ2Z2=. mkSPQ2Z2 HT
+   mkSPQ2Z2=. ((0,]) hgeqzsvv (, (,:~)@idmat)) c
+############
+   berr=. (vberr vgeto @ tgevcul @ vgety) AB                     berr <- AB
+   vgety=. mkSPQ2Z2 @ mkHT                                       SPQ2Z2 <- AB
+   tgevcul                                                       L <- SPQ2Z2
+  BAD
+############
+y=. SPQ2Z2
+   SPQ2Z2=. mkSPQ2Z2 @ mkHT AB
+   vgety=. 2&{.                                                  SP <- SPQ2Z2
+   tgevcul                                                       Y <- SP
+   vgeto=. ]                                                     Y <- Y
+   vberr=.                                                       berr <- SPQ2Z2 vberr Y
+   vEnorm=. (normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]
+   
+    ba=. |:@|.@:(diag"2) SP
+    SP *"_ 1 ba
+############
+NB.   - tgevcul:
+NB.       berr0 := max(||(β(i)*S - α(i)*P)^H * l(i)|| / (ulp * max(||β(i)*S||,||α(i)*P||)))
+NB.       berr1 := (max(||l(i)||) - 1) / (ulp * n)
+
+   vberr=. ((vberr0>.vberr1)~(2&{.))~                                  berr=.  SPxxxx vberr  Y
+   vberr1=. (normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]                 berr1=. xxxx vberr1 Y
+   vberr0=. normir@:(((vnom%vden)~vbSaP)~)                             berr0=. SP vberr0 Y
+   vbSaP=. *"_ 1|:@|.@:(diag"2)                                        bSaP=. vbSaP SP
+   vden=. (FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)            den=. bSaP vden Y
+   vnom=. norm1r@:((mp"1 2(-/"3))~ct)                                  nom=. bSaP vnom Y
+
+(((normir@:((((norm1r@:((mp"1 2(-/"3))~ct))%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~(*"_ 1|:@|.@:(diag"2)))~))>.((normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]))~(2&{.))~
+############
+NB.   - tgevcur:
+NB.       berr0 := max(||(β(i)*S - α(i)*P)   * r(i)|| / (ulp * max(||β(i)*S||,||α(i)*P||)))
+NB.       berr1 := (max(||r(i)||) - 1) / (ulp * n)
+
+   vberr=. ((vberr0>.vberr1)~(2&{.))~                                  berr=.  SPxxxx vberr  Y
+   vberr1=. (normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]                 berr1=. xxxx vberr1 X
+   vberr0=. normir@:(((vnom%vden)~vbSaP)~)                             berr0=. SP vberr0 X
+   vbSaP=. *"_ 1|:@|.@:(diag"2)                                        bSaP=. vbSaP SP
+   vden=. (FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)            den=. bSaP vden X
+   vnom=. norm1r@:((mp"2 1~(-/"3))~|:)                                 nom=. bSaP vnom X
+
+(((normir@:((((norm1r@:((mp"2 1~(-/"3))~|:))%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~(*"_ 1|:@|.@:(diag"2)))~))>.((normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]))~(2&{.))~
+############
+NB.   - tgevcub:
+
+   vberr=. ((vberr0>.vberr1)~(2&{.))~                                  berr=.  SPxxxx vberr  Y
+   vberr1=. (>./@:normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]            berr1=. xxxx vberr1 YX
+   vberr0=. >./@:normir@:(((vnom%vden)~vbSaP)~)                        berr0=. SP vberr0 YX
+   vbSaP=. *"_ 1|:@|.@:(diag"2)                                        bSaP=. vbSaP SP
+   vden=. (FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)            den=. bSaP vden YX
+   vnom=. ((norm1r@:(mp"1 2~ct@{.)>.norm1r@:((mp"2 1)|:@{:))~(-/"3))~  nom=. bSaP vnom YX
+
+(((>./@:normir@:((((((norm1r@:(mp"1 2~ct@{.)>.norm1r@:((mp"2 1)|:@{:))~(-/"3))~)%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~(*"_ 1|:@|.@:(diag"2)))~))>.((>./@:normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]))~(2&{.))~
+############
+NB.   - tgevculb:
+NB.       berr0 := max(||(β(i)*H - α(i)*T)^H * l(i)|| / (ulp * max(||β(i)*H||,||α(i)*T||)))
+NB.       berr1 := (max(||lb(i)||) - 1) / (ulp * n)
+
+the same!
+############
+testtgevc=: 3 : 0
+  berrul=:  (((     normir@:((((  norm1r@:((mp"1 2 (-/"3))~ct   )                                           )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~(*"_ 1|:@|.@:(diag"2)))~))>.((     normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]))~(2&{.))~ f.
+  berrur=:  (((     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~|:   )          )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~(*"_ 1|:@|.@:(diag"2)))~))>.((     normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]))~(2&{.))~ f.
+  berrub=:  (((>./@:normir@:((((((norm1r@:( mp"1 2        ~ct@{.)>.norm1r@:((mp"2 1       ) |:@{:))~(-/"3))~)%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~(*"_ 1|:@|.@:(diag"2)))~))>.((>./@:normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@]))~(2&{.))~ f.
+
+  n=. c y
+  hs=. 0,n
+  HTl=. hs gghrdlnn ((unmqllc~ ,: trl@]) geqlf)/ y           NB. FIXME
+  HTu=. hs gghrdunn ((unmqrlc~ ,: tru@]) geqrf)/ y
+  HTSPQZl=. HTl , hs hgezqsvv HTl , ,:~ idmat n
+  HTSPQZu=. HTu , hs hgeqzsvv HTu , ,:~ idmat n
+  SPl=. 2 3 { HTSPQZl
+  SPu=. 2 3 { HTSPQZu
+  rcondl=. <./ trlcon1"2 SPl
+  rcondu=. <./ trucon1"2 SPu
+
+  ('tgevcll'  tmonad (]`]          `(rcondl"_)`(_."_)`berrul)) SPl
+  ('tgevclr'  tmonad (]`]          `(rcondl"_)`(_."_)`berrur)) SPl
+  ('tgevclb'  tmonad (]`]          `(rcondl"_)`(_."_)`berrub)) SPl
+  ('tgevcllb' tmonad (]`(2 3 4  &{)`(rcondl"_)`(_."_)`berrul)) HTSPQZl
+  ('tgevclrb' tmonad (]`(2 3   5&{)`(rcondl"_)`(_."_)`berrur)) HTSPQZl
+  ('tgevclbb' tmonad (]`(2 3 4 5&{)`(rcondl"_)`(_."_)`berrub)) HTSPQZl
+  ('tgevcul'  tmonad (]`]          `(rcondu"_)`(_."_)`berrul)) SPu
+  ('tgevcur'  tmonad (]`]          `(rcondu"_)`(_."_)`berrur)) SPu
+  ('tgevcub'  tmonad (]`]          `(rcondu"_)`(_."_)`berrub)) SPu
+  ('tgevculb' tmonad (]`(2 3 4  &{)`(rcondu"_)`(_."_)`berrul)) HTSPQZu
+  ('tgevcurb' tmonad (]`(2 3   5&{)`(rcondu"_)`(_."_)`berrur)) HTSPQZu
+  ('tgevcubb' tmonad (]`(2 3 4 5&{)`(rcondu"_)`(_."_)`berrub)) HTSPQZu
+
+  erase 'berrll berrlr berrlb berrul berrur berrub'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testevc
+NB.
+NB. Description:
+NB.   Adv. to make verb to test tgevcxxx by matrices of
+NB.   generator and shape given
+NB.
+NB. Syntax:
+NB.   vtest=. mkmat testevc
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.             mat=. mkmat (m,n)
+NB.   vtest - monad to test algorithms by matrix mat; is
+NB.           called as:
+NB.             vtest (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.
+NB. Application:
+NB. - test by random square real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     ?@$&0 testevc_mt_ 150 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
+NB.     (_1 1 0 4 _6 4 & gemat_mt_) testevc_mt_ 150 150
+NB. - test by random square complex matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testevc_mt_ 150 150
+
+testevc=: 1 : 'EMPTY_mt_ [ (testtgevc_mt_ @ u @ (2&,)) ^: (=/)'

@@ -333,7 +333,7 @@ hgezq=: 1 : 0
         t1=. -: DA11 + IBA22
         rtdisc=. %: (t1 , DA21 , -DA11) mp (t1 , DA12 , DA22)
         temp=. +/ (*/) +. rtdisc , t1 - IBA22
-        shift=. t1 - temp condneg rtdisc
+        shift=. t1 - temp negneg rtdisc
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason
@@ -557,7 +557,7 @@ hgeqz=: 1 : 0
         t1=. -: AD11 + ABI22
         rtdisc=. %: (t1 , AD12 , -AD11) mp (t1 , AD21 , AD22)
         temp=. +/ (*/) +. rtdisc , t1 - ABI22
-        shift=. t1 - temp condneg rtdisc
+        shift=. t1 - temp negneg rtdisc
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason

@@ -126,24 +126,24 @@ NB.   would be filled by zeros
 larfg=: 4 : 0
   'ioa iot'=. x
   alpha=. ioa{y
-  y=. 0 iot} y                              NB. τ := 0
+  y=. 0 iot} y                            NB. τ := 0
   ynorm=. norms y
-  if. ynorm =!.0 | 9 o. alpha do.           NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ ?
-    y                                       NB. (α,0,0) i.e. H==I, τ==0, β==α, v==0
+  if. ynorm =!.0 | 9 o. alpha do.         NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ ?
+    y                                     NB. (α,0,0) i.e. H==I, τ==0, β==α, v==0
   else.
-    if. REFSAFMIN>ynorm do.                 NB. xnorm, β may be inaccurate; scale x and recompute them
-      y=. y%REFSAFMIN                       NB. (α_scaled,x_scaled,0)
-      beta=. (9 o. alpha) condnegi norms y  NB. use Re(α) instead Re(α_ascaled) since sign(Re(α)) == sign(Re(α_scaled)); |β_scaled| ∊ [REFSAFMIN,1)
-      dzeta=. beta-ioa{y                    NB. ζ := β_scaled-α_scaled
-      tau=. dzeta%beta                      NB. τ := ζ/β_scaled
-      beta=. REFSAFMIN*beta                 NB. unscale β; if α is subnormal, it may lose relative accuracy
+    if. REFSAFMIN>ynorm do.               NB. xnorm, β may be inaccurate; scale x and recompute them
+      y=. y%REFSAFMIN                     NB. (α_scaled,x_scaled,0)
+      beta=. (9 o. alpha) negpos norms y  NB. use Re(α) instead Re(α_ascaled) since sign(Re(α)) == sign(Re(α_scaled)); |β_scaled| ∊ [REFSAFMIN,1)
+      dzeta=. beta-ioa{y                  NB. ζ := β_scaled-α_scaled
+      tau=. dzeta%beta                    NB. τ := ζ/β_scaled
+      beta=. REFSAFMIN*beta               NB. unscale β; if α is subnormal, it may lose relative accuracy
     else.
-      beta=. (9 o. alpha) condnegi ynorm    NB. β := -copysign(||y||,Re(α)), since ||y|| ≥ 0
+      beta=. (9 o. alpha) negpos ynorm    NB. β := -copysign(||y||,Re(α)), since ||y|| ≥ 0
       dzeta=. beta-alpha
       tau=. dzeta%beta
     end.
-    y=. y%-dzeta                            NB. z := (trash,v,0)
-    y=. (beta,tau)x}y                       NB. z := (β_scaled,v,τ)
+    y=. y%-dzeta                          NB. z := (trash,v,0)
+    y=. (beta,tau)x}y                     NB. z := (β_scaled,v,τ)
   end.
 )
 
@@ -154,7 +154,7 @@ larfp=: 4 : 0
   if. 0 = xnorm do.
     y=. ((|,(1-*))alpha) x}y                        NB. replace in-place α by |β| and τ by (1-α/|α|)
   else.
-    beta=. (9 o. alpha) condnegi norms alpha,xnorm  NB. β := -copysign(||y||,Re(α))
+    beta=. (9 o. alpha) negpos norms alpha,xnorm    NB. β := -copysign(||y||,Re(α))
     y=. (|beta) iot} y                              NB. write in-place |β|
     if. FP_SFMIN>|beta do.
       y=. y%FP_SFMIN                                NB. scale (α,x[1],...,x[n-1],|β|)

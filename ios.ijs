@@ -126,7 +126,7 @@ NB. Notes:
 NB. - monadic case models rIOS in (u;.0) with following
 NB.   difference: s cannot be ±∞
 
-dhs2lios=: 1&$: :({.@] + (condneg~ {.) * i.@(condneg/)@])
+dhs2lios=: 1&$: :({.@] + (negneg~ {.) * i.@(negneg/)@])
 
 NB. ---------------------------------------------------------
 NB. rios2ios

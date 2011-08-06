@@ -743,45 +743,37 @@ NB.   - gghrdx (math/mt addon)
 NB.   by general matrices given
 NB.
 NB. Syntax:
-NB.   testgehrd CD
+NB.   testgghrd AB
 NB. where
-NB.   CD - 2×n×n-report
+NB.   AB - 2×n×n-report
 NB.
 NB. Formula:
 NB.   berr := max(berr0,berr1,berr2,berr3)
 NB. where
 NB.   ||M|| := max(||M||_1 , FP_SFMIN)
 NB.   β - machine precision
-NB.   'H T Q1 Z1'=. (0,n) gghrdxvv A , B , Q0 ,: Z0
+NB.   'H T dQ0 dZ0'=. (0,n) gghrdxvv A , B , ,:~ I
 NB.   - gghrdl:
-NB.       berr0 := ||C - Q1^_1 * H * Z1|| / (β * ||C|| * n)
-NB.       berr1 := ||D - Q1^_1 * T * Z1|| / (β * ||D|| * n)
-NB.       berr2 := ||I - Q1^_1 * Q1|| / (β * n)
-NB.       berr3 := ||I - Z1^_1 * Z1|| / (β * n)
-NB.       B * Z0 := D
-NB.       A := C * Z0^_1
-NB.       Q0 := I
-NB.       Q1 := ΔQ0 * Q0
-NB.       Z1 := ΔZ0 * Z0
+NB.       berr0 := ||A - dQ0^_1 * H * dZ0|| / (β * ||A|| * n)
+NB.       berr1 := ||B - dQ0^_1 * T * dZ0|| / (β * ||B|| * n)
+NB.       berr2 := ||I - dQ0^_1 * dQ0|| / (β * n)
+NB.       berr3 := ||I - dZ0^_1 * dZ0|| / (β * n)
+NB.       B - lower triangular with real diagonal
 NB.   - gghrdu:
-NB.       berr0 := ||C - Q1 * H * Z1^_1|| / (β * ||C|| * n)
-NB.       berr1 := ||D - Q1 * T * Z1^_1|| / (β * ||D|| * n)
-NB.       berr2 := ||I - Q1 * Q1^_1|| / (β * n)
-NB.       berr3 := ||I - Z1 * Z1^_1|| / (β * n)
-NB.       Q0 * B := D
-NB.       A := Q0^_1 * C
-NB.       Z0 := I
-NB.       Q1 := Q0 * ΔQ0
-NB.       Z1 := Z0 * ΔZ0
+NB.       berr0 := ||A - dQ0 * H * dZ0^_1|| / (β * ||A|| * n)
+NB.       berr1 := ||B - dQ0 * T * dZ0^_1|| / (β * ||B|| * n)
+NB.       berr2 := ||I - dQ0 * dQ0^_1|| / (β * n)
+NB.       berr3 := ||I - dZ0 * dZ0^_1|| / (β * n)
+NB.       B - upper triangular with real diagonal
 
 testgghrd=: 3 : 0
-  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'CD HT Q1Z1'=. (C,D,trash) prep (H,T,Q1,:Z1)
+  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'AB HT dQ0dZ0'=. (A,B,I,:I) prep (H,T,dQ0,:dZ0)
   safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||C - Q1^_1 * H * Z1|| , ||D - Q1^_1 * T * Z1||
-                                                                                                  NB. R: (] cdiff1 ct) : ||C - Q1 * H * Z1^_1|| , ||D - Q1 * T * Z1^_1||
-  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - Q1^_1 * Q1|| , ||I - Z1^_1 * Z1||
-                                                                                                  NB. R: (mp  adiff2) : ||I - Q1 * Q1^_1|| , ||I - Z1 * Z1^_1||
-  denom1=. safenorm @ (0 & {::)                                                                   NB. ||C|| , ||D||
+  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||A - dQ0^_1 * H * dZ0|| , ||B - Q1^_1 * T * dZ0||
+                                                                                                  NB. R: (] cdiff1 ct) : ||A - dQ0 * H * dZ0^_1|| , ||B - Q1 * T * dZ0^_1||
+  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - dQ0^_1 * dQ0|| , ||I - dZ0^_1 * dZ0||
+                                                                                                  NB. R: (mp  adiff2) : ||I - dQ0 * dQ0^_1|| , ||I - dZ0 * dZ0^_1||
+  denom1=. safenorm @ (0 & {::)                                                                   NB. ||A|| , ||B||
   getn=. c @ (0 & {::)                                                                            NB. n
   safediv=. ((({:<.(%/@}:))`((<./@(}:*(1,{:)))%(1&{))@.(1>(1&{)))`(%/@}:)@.(</@}:))%(FP_PREC*{:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
   cberr01=. 2 : 'safediv"1 @: ((u cdiff1 v) ,. denom1 ,. getn)'                                   NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
@@ -791,17 +783,20 @@ testgghrd=: 3 : 0
   berrl=: (>./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prep) f.
   berru=: (>./ @ ((] cberr01 ct) , (mp  aberr23)) @ prep) f.
 
-  rcond=. <./ gecon1"2 y
-  y=. (, ((mp ct)/@(0 3&{)) , ((mp~ ct)~/@(4 0&{)) ,: (idmat@c)) @ (, (((trl ,: unglq) @ gelqf) , ((ungqr ,: tru) @ geqrf))@{:) y  NB. C D Bl Z0l Q0u Bu Al Au I
+  I=. idmat c y
+  ABl=. (,: trl)/ y
+  ABu=. (,: tru)/ y
+  rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag ABl
+  rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag ABu
 
-  ('gghrdlnn' tdyad ((0,c)`]     `]`(rcond"_)`(_."_)`(_."_)))     6 2     { y  NB. Al Bl
-  ('gghrdlnv' tdyad ((0,c)`]     `]`(rcond"_)`(_."_)`(_."_)))     6 2   3 { y  NB. Al Bl Z0l
-  ('gghrdlvn' tdyad ((0,c)`]     `]`(rcond"_)`(_."_)`(_."_)))     6 2 8   { y  NB. Al Bl I
-  ('gghrdlvv' tdyad ((0,c)`(2&}.)`]`(rcond"_)`(_."_)`berrl )) 0 1 6 2 8 3 { y  NB. C D Al Bl I Z0l
-  ('gghrdunn' tdyad ((0,c)`]     `]`(rcond"_)`(_."_)`(_."_)))     7 5     { y  NB. Au Bu
-  ('gghrdunv' tdyad ((0,c)`]     `]`(rcond"_)`(_."_)`(_."_)))     7 5   8 { y  NB. Au Bu I
-  ('gghrduvn' tdyad ((0,c)`]     `]`(rcond"_)`(_."_)`(_."_)))     7 5 4   { y  NB. Au Bu Q0u
-  ('gghrduvv' tdyad ((0,c)`(2&}.)`]`(rcond"_)`(_."_)`berru )) 0 1 7 5 4 8 { y  NB. C D Au Bu Q0u I
+  ('gghrdlnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
+  ('gghrdlnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
+  ('gghrdlvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
+  ('gghrdlvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`berrl )) ABl , ,:~ I
+  ('gghrdunn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu
+  ('gghrdunv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
+  ('gghrduvn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
+  ('gghrduvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`berru )) ABu , ,:~ I
 
   erase 'cdiff1 adiff2 berrl berru'
 

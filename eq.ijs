@@ -840,11 +840,6 @@ NB. [1] C.B. Moler & G.W. Stewart, "An Algorithm for
 NB.     Generalized Matrix Eigenvalue Problems",
 NB.     SIAM J. Numer. Anal., 10(1973), pp. 241-256.
 
-NB.   hgeqzsnn_mt_ 2 3 ; 0 {:: ggbalu_mt_ AB
-NB.   ] 'Q1 R'=. ((tru_mt_@}:) ;~ ungqr_mt_) geqrf_mt_ (0;1) {:: ggbalu_mt_ AB
-NB.   'HT Q Z'=. (Q1 ; idmat_mt_ 7) gghrdu_mt_ 2 3 ; R 1} 0 {:: ggbalu_mt_ AB
-NB.   'SP dQ1 dZ1'=. hgexxsnn hs ; HT
-
 hgeqzenn=:            diag"2 @ (0 {::                               hgeqze         )
 hgeqzenv=: (2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotsclu  (2 & {::))) (hgeqze (2 & {.))
 hgeqzevn=: (2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotsclu  (1 & {::))) (hgeqze (2 & {.))
@@ -875,25 +870,26 @@ NB.   berr := max(berr0,berr1,berr2,berr3)
 NB. where
 NB.   ||M|| := max(||M||_1 , FP_SFMIN)
 NB.   β - machine precision
+NB.   'S P dQ1 dZ1'=. (0,n) hgexxsvv H , T , ,:~ I
 NB.   - hgezqxxx:
-NB.       berr0 := ||H - Q^_1 * S * Z|| / (β * ||H|| * n)
-NB.       berr1 := ||T - Q^_1 * P * Z|| / (β * ||T|| * n)
-NB.       berr2 := ||I - Q^_1 * Q|| / (β * n)
-NB.       berr3 := ||I - Z^_1 * Z|| / (β * n)
+NB.       berr0 := ||H - dQ1^_1 * S * dZ1|| / (β * ||H|| * n)
+NB.       berr1 := ||T - dQ1^_1 * P * dZ1|| / (β * ||T|| * n)
+NB.       berr2 := ||I - dQ1^_1 * dQ1|| / (β * n)
+NB.       berr3 := ||I - dZ1^_1 * dZ1|| / (β * n)
 NB.   - hgeqzxxx:
-NB.       berr0 := ||H - Q * S * Z^_1|| / (β * ||H|| * n)
-NB.       berr1 := ||T - Q * P * Z^_1|| / (β * ||T|| * n)
-NB.       berr2 := ||I - Q * Q^_1|| / (β * n)
-NB.       berr3 := ||I - Z * Z^_1|| / (β * n)
+NB.       berr0 := ||H - dQ1 * S * dZ1^_1|| / (β * ||H|| * n)
+NB.       berr1 := ||T - dQ1 * P * dZ1^_1|| / (β * ||T|| * n)
+NB.       berr2 := ||I - dQ1 * dQ1^_1|| / (β * n)
+NB.       berr3 := ||I - dZ1 * dZ1^_1|| / (β * n)
 
 testhgeq=: 3 : 0
-  prep=. (;~ 2&{.)~ _2&(<\)                                                                       NB. L,R: 'HT SP QZ'=. (H,T,Q1,:Z1) prep (S,P,Q,:Z)
+  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'HT SP dQ1dZ1'=. (H,T,I,:I) prep (S,P,dQ1,:dZ1)
   safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||H - Q^_1 * S * Z|| , ||T - Q^_1 * P * Z||
-                                                                                                  NB. R: (] cdiff1 ct) : ||H - Q * S * Z^_1|| , ||T - Q * P * Z^_1||
-  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - Q^_1 * Q|| , ||I - Z^_1 * Z||
-                                                                                                  NB. R: (mp  adiff2) : ||I - Q * Q^_1|| , ||I - Z * Z^_1||
-  denom1=. safenorm @ (0 & {::)                                                                   NB. ||updA|| , ||B||
+  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||H - dQ1^_1 * S * dZ1|| , ||T - dQ1^_1 * P * dZ1||
+                                                                                                  NB. R: (] cdiff1 ct) : ||H - dQ1 * S * dZ1^_1|| , ||T - dQ1 * P * dZ1^_1||
+  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - dQ1^_1 * dQ1|| , ||I - dZ1^_1 * dZ1||
+                                                                                                  NB. R: (mp  adiff2) : ||I - dQ1 * dQ1^_1|| , ||I - dZ1 * dZ1^_1||
+  denom1=. safenorm @ (0 & {::)                                                                   NB. ||H|| , ||T||
   getn=. c @ (0 & {::)                                                                            NB. n
   safediv=. ((({:<.(%/@}:))`((<./@(}:*(1,{:)))%(1&{))@.(1>(1&{)))`(%/@}:)@.(</@}:))%(FP_PREC*{:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
   cberr01=. 2 : 'safediv"1 @: ((u cdiff1 v) ,. denom1 ,. getn)'                                   NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
@@ -902,35 +898,29 @@ testhgeq=: 3 : 0
                                                                                                   NB. R: (mp  aberr23) : (berr2 , berr3) for R
   berrl=: (>./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prep) f.
   berru=: (>./ @ ((] cberr01 ct) , (mp  aberr23)) @ prep) f.
-] AB=. 0 ((<(<a:);(<0);0),(<(<a:);_1;<<_1)) } j./ _9 + ? 2 2 7 7 $ 19
-  n=. c y
-  'Z1f L Q1f R'=. (((; trl) @ gelqf) , ((; tru) @ geqrf)) {: y
-  I=. idmat n
-  HTQZl=. (0,n) gghrdlvv (Z1f unmlqrn {. y) , L , I ,: (unglq Z1f)
-  HTl=. 2 {. HTQZl
-  rcondl=. <./ 0 1 (gecon1 &. {.)`(trlcon1 &. {.) ag HTl
-  HTIl=. HTl , I
-  HTQZu=. (0,n) gghrduvv (Q1f unmqrlc {. y) , R , (ungqr Q1f) ,: I
-  HTu=. 2 {. HTQZu
-  rcondu=. <./ 0 1 (gecon1 &. {.)`(trucon1 &. {.) ag HTu
-  HTIu=. HTu , I
+
+  I=. idmat c y
+  HTl=. (gghrdlnn~ (0,c)) @ ((,: trl)/) y
+  HTu=. (gghrdunn~ (0,c)) @ ((,: tru)/) y
+  rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag HTl
+  rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag HTu
 
   ('hgezqenn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqenv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTIl
-  ('hgezqevn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTIl
-  ('hgezqevv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTQZl
+  ('hgezqenv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqevn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqevv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , ,:~ I
   ('hgezqsnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqsnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTIl
-  ('hgezqsvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTIl
-  ('hgeqzsvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`berrl )) HTQZl
-  ('hgeqzenn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTu
-  ('hgeqzenv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTIu
-  ('hgeqzevn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTIu
-  ('hgeqzevv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTQZu
-  ('hgeqzsnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTu
-  ('hgeqzsnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTIu
-  ('hgeqzsvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTIu
-  ('hgeqzsvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`berru )) HTQZu
+  ('hgezqsnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqsvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqsvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`berrl )) HTl , ,:~ I
+  ('hgeqzenn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
+  ('hgeqzenv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzevn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzevv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , ,:~ I
+  ('hgeqzsnn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
+  ('hgeqzsnv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzsvn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzsvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`berru )) HTu , ,:~ I
 
   erase 'cdiff1 adiff2 berrl berru'
 

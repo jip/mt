@@ -389,12 +389,6 @@ NB.   Q2                        -: dQ1 mp Q1
 NB.   Z2                        -: dZ1 mp Z1
 NB.   dQ1dQ0                    -: dQ1 mp dQ0
 NB.   dZ1dZ0                    -: dZ1 mp dZ0
-NB.   YdQ1                      -: Y mp dQ1
-NB.   XdZ1                      -: X mp dZ1
-NB.   YdQ1dQ0                   -: Y mp dQ1dQ0
-NB.   XdZ1dZ0                   -: X mp dZ1dZ0
-NB.   YQ2                       -: Y mp Q2
-NB.   XZ2                       -: X mp Z2
 NB.   (E2 mp Y mp S)            -: (E1 mp Y mp P)
 NB.   (S mp (ct X) mp E2)       -: (P mp (ct X) mp E1)
 NB.   (E2 mp YdQ1 mp H)         -: (E1 mp YdQ1 mp T)
@@ -473,12 +467,6 @@ NB.   Q2                        -: Q1 mp dQ1
 NB.   Z2                        -: Z1 mp dZ1
 NB.   dQ0dQ1                    -: dQ0 mp dQ1
 NB.   dZ0dZ1                    -: dZ0 mp dZ1
-NB.   dQ1Y                      -: dQ1 mp Y
-NB.   dZ1X                      -: dZ1 mp X
-NB.   dQ0dQ1Y                   -: dQ0dQ1 mp Y
-NB.   dZ0dZ1X                   -: dZ0dZ1 mp X
-NB.   Q2Y                       -: Q2 mp Y
-NB.   Z2X                       -: Z2 mp X
 NB.   (E2 mp (ct Y) mp S)       -: (E1 mp (ct Y) mp P)
 NB.   (S mp X mp E2)            -: (P mp X mp E1)
 NB.   (E2 mp (ct dQ1Y) mp H)    -: (E1 mp (ct dQ1Y) mp T)

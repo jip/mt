@@ -232,8 +232,8 @@ c=: {:!.1 @ $      NB. Columns in noun
 
 trace=: +/ @ diag  NB. Matrix trace
 
-ct=: + @ |:        NB. Conjugate transpose
-cp=: |. @ ct @ |.  NB. Conjugate pertranspose
+ct=: + @: |:       NB. Conjugate transpose
+cp=: ct &. |.      NB. Conjugate pertranspose
 
 fp=: [ C."1 C.     NB. Full (symmetric) permutation
 

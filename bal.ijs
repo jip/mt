@@ -239,6 +239,8 @@ NB.   and provides:
 NB.     y <: c { x
 NB. - alternative (open) insertion point is calculated by:
 NB.     o=. x I. (1 + FP_PREC) * y
+NB.   or:
+NB.     o=. ((1 - FP_EPS) * x) I. y
 NB.   and provides:
 NB.     y < o { x
 

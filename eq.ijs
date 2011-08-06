@@ -731,15 +731,15 @@ NB.     128!:5 < ab
 NB.     128!:5 < S,:P         NB. too expensive, use the next
 NB.     128!:5 < diag"2 S,:P
 
-hgezqenn=:            diag"2 @ (0 {::                               hgezqe         )
-hgezqenv=: (2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotscll  (2 & {::))) (hgezqe (2 & {.))
-hgezqevn=: (2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotscll  (1 & {::))) (hgezqe (2 & {.))
-hgezqevv=: (2 }. ]) ((diag"2 @ (0 {:: ])) ;  (rotscll"2 &.: > }.)) (hgezqe (2 & {.))
+hgezqenn=:            diag"2 @ (0 {::                              hgezqe         )
+hgezqenv=: (2 {  ]) ((diag"2 @ (0 {:: ])) ; (rotscll  (2 & {::))) (hgezqe (2 & {.))
+hgezqevn=: (2 {  ]) ((diag"2 @ (0 {:: ])) ; (rotscll  (1 & {::))) (hgezqe (2 & {.))
+hgezqevv=: (2 }. ]) ((diag"2 @ (0 {:: ])) ; (rotscll"2 &.: > }.)) (hgezqe (2 & {.))
 
-hgezqsnn=:                      0 {::                               hgezqs
-hgezqsnv=: (2 {  ]) ((         (0 {:: ])) ,: (rotscll  (2 & {::))) (hgezqs (2 & {.))
-hgezqsvn=: (2 {  ]) ((         (0 {:: ])) ,: (rotscll  (1 & {::))) (hgezqs (2 & {.))
-hgezqsvv=: (2 }. ]) ((         (0 {:: ])) ,  (rotscll"2 &: > }. )) (hgezqs (2 & {.))
+hgezqsnn=:                      0 {::                              hgezqs
+hgezqsnv=: (2 {  ]) ((         (0 {:: ])) , (rotscll  (2 & {::))) (hgezqs (2 & {.))
+hgezqsvn=: (2 {  ]) ((         (0 {:: ])) , (rotscll  (1 & {::))) (hgezqs (2 & {.))
+hgezqsvv=: (2 }. ]) ((         (0 {:: ])) , (rotscll"2 &: > }. )) (hgezqs (2 & {.))
 
 NB. ---------------------------------------------------------
 NB. hgeqzenn
@@ -878,15 +878,15 @@ NB. [1] C.B. Moler & G.W. Stewart, "An Algorithm for
 NB.     Generalized Matrix Eigenvalue Problems",
 NB.     SIAM J. Numer. Anal., 10(1973), pp. 241-256.
 
-hgeqzenn=:            diag"2 @ (0 {::                               hgeqze         )
-hgeqzenv=: (2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotsclu  (2 & {::))) (hgeqze (2 & {.))
-hgeqzevn=: (2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotsclu  (1 & {::))) (hgeqze (2 & {.))
-hgeqzevv=: (2 }. ]) ((diag"2 @ (0 {:: ])) ;  (rotsclu"2 &.: > }.)) (hgeqze (2 & {.))
+hgeqzenn=:            diag"2 @ (0 {::                              hgeqze         )
+hgeqzenv=: (2 {  ]) ((diag"2 @ (0 {:: ])) ; (rotsclu  (2 & {::))) (hgeqze (2 & {.))
+hgeqzevn=: (2 {  ]) ((diag"2 @ (0 {:: ])) ; (rotsclu  (1 & {::))) (hgeqze (2 & {.))
+hgeqzevv=: (2 }. ]) ((diag"2 @ (0 {:: ])) ; (rotsclu"2 &.: > }.)) (hgeqze (2 & {.))
 
-hgeqzsnn=:                      0 {::                               hgeqzs
-hgeqzsnv=: (2 {  ]) ((         (0 {:: ])) ,: (rotsclu  (2 & {::))) (hgeqzs (2 & {.))
-hgeqzsvn=: (2 {  ]) ((         (0 {:: ])) ,: (rotsclu  (1 & {::))) (hgeqzs (2 & {.))
-hgeqzsvv=: (2 }. ]) ((         (0 {:: ])) ,  (rotsclu"2 &: > }. )) (hgeqzs (2 & {.))
+hgeqzsnn=:                      0 {::                              hgeqzs
+hgeqzsnv=: (2 {  ]) ((         (0 {:: ])) , (rotsclu  (2 & {::))) (hgeqzs (2 & {.))
+hgeqzsvn=: (2 {  ]) ((         (0 {:: ])) , (rotsclu  (1 & {::))) (hgeqzs (2 & {.))
+hgeqzsvv=: (2 }. ]) ((         (0 {:: ])) , (rotsclu"2 &: > }. )) (hgeqzs (2 & {.))
 
 NB. =========================================================
 NB. Test suite

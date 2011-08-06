@@ -276,9 +276,9 @@ NB.   X   - k×n-matrix, some or all of right eigenvectors
 NB.   k   - integer in range [0,n]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevcll -: tgevcur &.: (ct"2)) SP
-NB.   (tgevclr -: tgevcul &.: (ct"2)) SP
-NB.   (tgevclb -: tgevcub &.: (ct"2)) SP
+NB.   (tgevcll -:      tgevcur &.: (ct"2)) SP
+NB.   (tgevclr -:      tgevcul &.: (ct"2)) SP
+NB.   (tgevclb -: 1 A. tgevcub &.: (ct"2)) SP
 NB.   (E2 mp Y mp S) -: (E1 mp Y mp P)
 NB.   (S mp (ct X) mp E2) -: (P mp (ct X) mp E1)
 NB. where
@@ -324,9 +324,9 @@ NB.   X   - n×k-matrix, some or all of right eigenvectors
 NB.   k   - integer in range [0,n]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevcul -: tgevclr &.: (ct"2)) SP
-NB.   (tgevcur -: tgevcll &.: (ct"2)) SP
-NB.   (tgevcub -: tgevclb &.: (ct"2)) SP
+NB.   (tgevcul -:      tgevclr &.: (ct"2)) SP
+NB.   (tgevcur -:      tgevcll &.: (ct"2)) SP
+NB.   (tgevcub -: 1 A. tgevclb &.: (ct"2)) SP
 NB.   (E2 mp (ct Y) mp S) -: (E1 mp (ct Y) mp P)
 NB.   (S mp X mp E2) -: (P mp X mp E1)
 NB. where
@@ -337,9 +337,6 @@ NB. Notes:
 NB. - tgevcul models LAPACK's xTGEVC('L','S')
 NB. - tgevcur models LAPACK's xTGEVC('R','S')
 NB. - tgevcub models LAPACK's xTGEVC('B','S')
-NB.
-NB. TODO:
-NB. - express via tgevclx
 
 tgevcul=: ($:~ i.@c) : ((([;tgevci) tgevcs  @ tgevclx           ]) &.: (ct"2))
 tgevcur=: ($:~ i.@c) : ((([;tgevci) tgevcs  @          tgevcly  ]) &.: (ct"2))
@@ -570,6 +567,9 @@ NB.       berr1 := (max(||rb(i)||) - 1) / (ulp * n)
 NB.   - tgevcubb:
 NB.       berr0 := berr(tgevculb)
 NB.       berr1 := berr(tgevcurb)
+NB.
+NB. Notes:
+NB. - berrxx are non-iterative and require O(N^3) RAM
 
 testtgevc=: 3 : 0
   berrll=:  (     normir@:((((  norm1r@:((mp"1 2 (-/"3))~     )                                           )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitr%(FP_EPS*FP_BASE)*c)@])

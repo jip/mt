@@ -455,17 +455,17 @@ NB.   k    ≤ S, the length of vector e
 NB.
 NB. Examples:
 NB. 
-NB.    (2; a:) setdiag 4 4 $ 0         (2; _1 1 1) setdiag 4 4 $ 0
+NB.    (2;a:) setdiag 4 4 $ 0          (2;_1 1 1) setdiag 4 4 $ 0
 NB. 2 0 0 0                         0 0 0 0
 NB. 0 2 0 0                         0 0 0 0
 NB. 0 0 2 0                         0 2 0 0
 NB. 0 0 0 2                         0 0 0 0
-NB.    (2; _1) setdiag 4 4 $ 0         (1 2 3; _1) setdiag 4 4 $ 0
+NB.    (2;_1) setdiag 4 4 $ 0          (1 2 3;_1) setdiag 4 4 $ 0
 NB. 0 0 0 0                         0 0 0 0
 NB. 2 0 0 0                         1 0 0 0
 NB. 0 2 0 0                         0 2 0 0
 NB. 0 0 2 0                         0 0 3 0
-NB.    (2; _1 1) setdiag 4 4 $ 0       (1 2 3; _1 _1 _3) setdiag 4 4 $ 0
+NB.    (2;_1 1) setdiag 4 4 $ 0        (1 2 3;_1 _1 _3) setdiag 4 4 $ 0
 NB. 0 0 0 0                         0 0 0 0
 NB. 0 0 0 0                         3 0 0 0
 NB. 0 2 0 0                         0 2 0 0

@@ -74,7 +74,7 @@ NB.   Eupd = rank-1 array (e0upd,e1upd,...)
 NB.
 NB. Application:
 NB. - process each table in the report individually:
-NB.     0 1 2 ((+:&.+:)`(-:&.-:)`(*:&.+:) ag) i. 3 4 4
+NB.     0 1 2 (+:&.+:)`(-:&.-:)`(*:&.+:) ag i. 3 4 4
 NB.
 NB. References:
 NB. [1] [Jforum] gerund apply

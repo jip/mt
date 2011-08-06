@@ -10,9 +10,9 @@ NB. testgghrd  Test gghrdx by general matrices given
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.8 2010-11-30
+NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010 Igor Zhuravlov
+NB. Copyright 2010-2011 Igor Zhuravlev
 NB.
 NB. This file is part of mt
 NB.

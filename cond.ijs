@@ -5,9 +5,9 @@ NB.         the condition number of a matrix in a given norm
 NB. xxconx  Calculate reciprocal of the condition number of a
 NB.         matrix in a given norm
 NB.
-NB. Version: 0.6.5 2010-06-18
+NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010 Igor Zhuravlov
+NB. Copyright 2010-2011 Igor Zhuravlev
 NB.
 NB. This file is part of mt
 NB.

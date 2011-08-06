@@ -12,9 +12,9 @@ NB. rios2lios  Convert rIOS to lIOS
 NB. liosX      lIOS of vector laying between diagonal and
 NB.            matrix edge
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010 Igor Zhuravlov
+NB. Copyright 2010-2011 Igor Zhuravlev
 NB.
 NB. This file is part of mt
 NB.

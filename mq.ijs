@@ -25,9 +25,9 @@ NB. testunmhr  Test unmhrxxx by square matrix given
 NB. testmq     Adv. to make verb to test unmxxxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.5 2010-06-18
+NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010 Igor Zhuravlov
+NB. Copyright 2010-2011 Igor Zhuravlev
 NB.
 NB. This file is part of mt
 NB.

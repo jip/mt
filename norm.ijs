@@ -17,9 +17,9 @@ NB. normitc  Taxicab-based ∞-norm of vector (matrix columns)
 NB. norms    Square-based Euclidean (Frobenius) norm of
 NB.          vector (matrix)
 NB.
-NB. Version: 0.6.8 2010-11-30
+NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010 Igor Zhuravlov
+NB. Copyright 2010-2011 Igor Zhuravlev
 NB.
 NB. This file is part of mt
 NB.

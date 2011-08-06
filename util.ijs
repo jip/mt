@@ -11,9 +11,9 @@ NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
 NB. ms        Minimum in sum of vectors
 NB.
-NB. Version: 0.6.8 2010-11-30
+NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010 Igor Zhuravlov
+NB. Copyright 2005-2011 Henry Rich, Igor Zhuravlev
 NB.
 NB. This file is part of mt
 NB.

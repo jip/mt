@@ -190,6 +190,8 @@ tgevclyb=: (,~)`, `((0,],0:),:(2 1,]))`(1 0 2&|:)` {.   `(mp~)`appendl tgevclyux
 tgevcux=:   ,  `,.`((0 0,]),:(2,],1:))`(2 0 1&|:)`({."1)`]    `stitcht tgevclyux
 tgevcuxb=:  ,  `,.`((0 0,]),:(2,],1:))`(2 0 1&|:)`({."1)` mp  `stitcht tgevclyux
 
+tgevcuxb2=:  tgevclyb &.: (ct"2)
+
 NB. ---------------------------------------------------------
 NB. tgevcly
 NB. tgevcuy

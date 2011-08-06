@@ -270,7 +270,7 @@ gghrdlnn=: 3 : 0
   'h s'=. hs
   e=. h+s-1
   n=. c AB
-  dQ=. dZ=. 4 0 $ 0
+  dQ=. dZ=. 0 4 $ 0
   i=. h
   liosr1a=. n th2lios h                        NB. (n-h)-vector h:n-1
   liosc2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
@@ -348,9 +348,9 @@ gghrdunn=: 3 : 0
   'h s'=. hs
   e=. h+s-1
   n=. c AB
-  dQ=. dZ=. 4 0 $ 0
+  dQ=. dZ=. 0 4 $ 0
   j=. h
-  liosc1a=. n th2lios h                        NB. (n-h)-vector h:n-1
+  liosc1a=. n th2lios j                        NB. (n-h)-vector h:n-1
   liosr2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
   while. j < <: e do.                          NB. (s-2)-vector h:h+s-3
     i=. e
@@ -369,7 +369,7 @@ gghrdunn=: 3 : 0
       dZ=. dZ , cs , lios
       NB. update IOS
       liosc1b=. (i-2) , liosc1b
-      liosr2b=. liosr2b , >: i
+      liosr2b=. }: liosr2b
       i=. <: i
     end.
     liosc1a=. }. liosc1a
@@ -625,6 +625,9 @@ NB. - calculate both Q and Z:
 NB.     'HT Q Z'=. (Q1;Z1) gghrdl (hs;AB)
 NB. - calculate Q only:
 NB.     'HT Q'=. 2 {. (Q1;a:) gghrdl (hs;AB)
+NB.
+NB. TODO:
+NB. - implement blocked version
 
 gghrdl=: (0 {:: gghrdlnn) : (({.@] , (rotscll &. > }.)) gghrdlnn)
 
@@ -695,6 +698,16 @@ NB. References:
 NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 378
+NB. [2] Bo Kågström, Daniel Kressner, Enrique S.
+NB.     Quintana-Ortí, and Gregorio Quintana-Ortí
+NB.     Blocked Algorithms for the Reduction to
+NB.     Hessenberg-Triangular Form Revisited.
+NB.     February 2008.
+NB.     LAPACK Working Note 198
+NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB.
+NB. TODO:
+NB. - implement blocked version [2]
 
 gghrdu=: (0 {:: gghrdunn) : (({.@] , (rotsclu &. > }.)) gghrdunn)
 

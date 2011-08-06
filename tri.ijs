@@ -169,7 +169,7 @@ NB.
 NB. References:
 NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
 NB.     Inversion, UT-CS-90-119, October, 1990.
-NB.     LAPACK Working Note 27.
+NB.     LAPACK Working Note 27
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 getripl1ustep=: 3 : 0
@@ -511,7 +511,7 @@ NB.
 NB. References:
 NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
 NB.     Inversion, UT-CS-90-119, October, 1990.
-NB.     LAPACK Working Note 27.
+NB.     LAPACK Working Note 27
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 getripl1u=: 3 : 0

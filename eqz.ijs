@@ -66,7 +66,7 @@ hgeqzueo=: 3 : 0
   'hs HT'=. y
   'Hd Td'=. (0 , hs) diag"2 HT
   absb=. | Td
-  'signbc Td'=. (,:~ FP_SFMIN < absb) } (1 ,: + * Td) ,: (0 ,: absb)
+  'signbc Td'=. (,:~ FP_SFMIN < absb) } 1 0 2 |: (1 ,: + * Td) ,: (0 ,: absb)
   ((((Hd * signbc) ,: Td) (;"1) 0 , hs) setdiag"1 2 HT) ; signbc
 )
 
@@ -102,9 +102,9 @@ NB.   signbc - s-vector, scaling factors to form Q,Z later
 hgeqzuso=: 3 : 0
   'hs HT'=. y
   lios=. dhs2lios hs
-  'HT signbc'=. (hgeqzueo dbg 'hgeqzueo') y
+  'HT signbc'=. hgeqzueo y
   subHT=. lios {"1 HT
-  (((,:~ (i. c HT) </ lios) } subHT ,: subHT *"1 signbc) ((lios }"1) dbg 'alpha&beta subHT') HT) ; signbc
+  (((,:~ (i. c HT) </ lios) } subHT ,: subHT *"1 signbc) lios }"1 HT) ; signbc
 )
 
 NB. ---------------------------------------------------------
@@ -147,7 +147,7 @@ hgeqzunn=: 1 : 0
   '`hgeqzuxo init reset step'=. m
   'hs HT'=. y
   e=. +/ 'h s'=. hs
-  dQ=. dZ=. 4 0 $ 0
+  dQ=. dZ=. 0 4 $ 0
   abnorm=. (0 2 ,. ,.~ hs) norms"2 ;. 0 HT
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
@@ -300,8 +300,8 @@ smoutput '(2) GOTO 60'
 smoutput '(1) GOTO 60'
     end.
     label_60.
-smoutput 'label 60'
     if. goto60 do.
+smoutput 'label 60'
       NB. H[ilast,ilast-1]=0 - standartize B, set alpha and
       NB. beta
       'HT signbc'=. hgeqzuxo (ilast , 1) ; HT  NB. process ilast-th eigenvalue (column)
@@ -362,14 +362,14 @@ smoutput 'label 90'
       cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { HT
       NB. sweep
       j=. istart
-      liosc=. (>: ilastm) th2lios <: j
+      liosc=. (>: ilastm) th2lios j
       liosr=. (j + 2) th2lios ifrstm
       while. j < ilast do.
 smoutput 'loop 150 J = ',":j
         lios=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          HT=. (< a: ; lios ; (}. liosc)) (((cs & (rot &. |:)"2) upd) dbg 'rot(HT)') HT
+          HT=. (< a: ; lios ; liosc) (((cs & (rot &. |:)"2) upd) dbg 'rot(HT)') HT
         else.
           'HT cs'=. (((rot &. |:) rotga) dbg 'rotga(H)') HT ; (< 0 ; lios ; liosc) ; < < a: ; 0
           liosc=. }. liosc
@@ -495,7 +495,7 @@ NB.   'HT Q Z'=. (Q1 ; idmat_mt_ 7) gghrdu_mt_ 2 3 ; R 1} 0 {:: ggbalu_mt_ AB
 NB.   'SP dQ dZ'=. hgeqzxsnn hs ; HT
 
 hgeqzls=: (0 {:: hgeqzlsnn) : (({.@] , (rotscll &. > }.)) hgeqzlsnn)
-hgeqzus=: (0 {:: hgeqzusnn) : (({.@] , (rotsclu &. > }.)) hgeqzusnn)
+hgeqzus=: (0 {:: hgeqzusnn) : (({.@] , ((rotsclu dbg 'rotsclu') &. > }.)) hgeqzusnn)
 
 NB. =========================================================
 NB. Test suite

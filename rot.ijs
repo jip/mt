@@ -188,12 +188,12 @@ NB. References:
 NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. (2001) On
 NB.     Computing Givens rotations reliably and efficiently.
 NB.     LAPACK Working Note 148, University of Tennessee,
-NB.     UT-CS-00-449, January 31, 2001.
+NB.     UT-CS-00-449, January 31, 2001
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB. [2] Anderson, Edward. (2000) Discontinuous Plane
 NB.     Rotations and the Symmetric Eigenvalue Problem.
 NB.     LAPACK Working Note 150, University of Tennessee,
-NB.     UT-CS-00-454, December 4, 2000.
+NB.     UT-CS-00-454, December 4, 2000
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 lartg=: 3 : 0
@@ -368,9 +368,10 @@ rotscll=: (4 : 0) ^: (+:&(0=#))
   x
 )
 
-rotsclu=: (4 : 0) ^: (+:&(0=#))
+rotsclu=: ((4 : 0) dbg 'explicit')^: ((+:&(0=#)) dbg 'check')
   i=. 0
   while. i < # y do.                    NB. traverse dA rows down
+smoutput 'rotsclu(): loop i = ',(": i),'  i{dA = ',(": i { y)
     'cs iofg'=. _2 ]\ i { y
     if. 0 0 -: iofg do.
       if. -. 0 0 -: cs do.

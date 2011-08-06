@@ -92,7 +92,7 @@ NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, and E.
 NB.     Jason Riedy. (2008) Non-Negative Diagonals and High
 NB.     Performance on Low-Profile Matrices from Householder
 NB.     QR. UCB/EECS-2008-76, May 30, 2008
-NB.     LAPACK Working Note 203.
+NB.     LAPACK Working Note 203
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. Notes:

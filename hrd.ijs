@@ -10,7 +10,7 @@ NB. testgghrd  Test gghrdx by general matrices given
 NB. testhrd    Adv. to make verb to test gxhrdx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.8 2010-09-24
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -601,13 +601,11 @@ NB.   HTQZ -: HTQ , Z
 NB.   H    - n×n-matrix, lower Hessenberg inside the submatrix
 NB.          H[h:h+s-1,h:h+s-1], and lower triangular outside
 NB.   T    - n×n-matrix, lower triangular
-NB.   Q1   - n×n-matrix or (i.0), the unitary (orthogonal),
-NB.          typically from the LQ factorization of B
-NB.   Q    - either (i.0) when Q1 -: (i.0) , or n×n-matrix
-NB.          (ΔQ*Q1) otherwise
-NB.   Z1   - n×n-matrix or (i.0), the unitary (orthogonal)
-NB.   Z    - either (i.0) when Z1 -: (i.0) , or n×n-matrix
-NB.         (ΔZ*Z1) otherwise
+NB.   Q1   - n×n-matrix, the unitary (orthogonal), typically
+NB.          from the LQ factorization of B
+NB.   Q    - n×n-matrix (ΔQ*Q1)
+NB.   Z1   - n×n-matrix, the unitary (orthogonal)
+NB.   Z    - n×n-matrix (ΔZ*Z1)
 NB.
 NB. TODO:
 NB. - implement blocked version
@@ -659,13 +657,11 @@ NB.   HTQZ -: HTQ , Z
 NB.   H    - n×n-matrix, upper Hessenberg inside the submatrix
 NB.          H[h:h+s-1,h:h+s-1], and upper triangular outside
 NB.   T    - n×n-matrix, upper triangular
-NB.   Q1   - n×n-matrix or (i.0), the unitary (orthogonal),
-NB.          typically from the QR factorization of B
-NB.   Q    - either (i.0) when Q1 -: (i.0) , or n×n-matrix
-NB.          (Q1*ΔQ) otherwise
-NB.   Z1   - n×n-matrix or (i.0), the unitary (orthogonal)
-NB.   Z    - either (i.0) when Z1 -: (i.0) , or n×n-matrix
-NB.         (Z1*ΔZ) otherwise
+NB.   Q1   - n×n-matrix, the unitary (orthogonal), typically
+NB.          from the QR factorization of B
+NB.   Q    - n×n-matrix (Q1*ΔQ)
+NB.   Z1   - n×n-matrix, the unitary (orthogonal)
+NB.   Z    - n×n-matrix (Z1*ΔZ)
 NB.
 NB. Notes:
 NB. - gghrdunn models LAPACK's xGGHRD('N','N')

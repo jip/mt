@@ -41,3 +41,18 @@ math/mt - change history
 
 == 0.6.7 ==
  * bal: minor fix in code; exp: error fixed; template,trf,tri: minor fixes in comments
+
+== 0.6.8 ==
+ * bak: appnotes for generalized case
+ * bal: new interfaces and test for generalized case
+ + eq: interfaces and test for generalized case
+ - eqr: merged with eq
+ + ev: new interfaces and test for generalized case
+ + evc: new interfaces and test for generalized case
+ * hrd: new interfaces and test for generalized case
+ * norm: better code refactoring
+ * qf: larfp replaced by larfg (synced with LAPACK version 3.2.2)
+ * rand: unmat rollbacked to base on larfg instead of larfp
+ * ref: synced with LAPACK version 3.2.2
+ * rot: new utilities were added
+ * scl: transformed to tacit

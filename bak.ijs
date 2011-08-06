@@ -9,7 +9,7 @@ NB. testgebak  Test gebakxx by general matrix given
 NB. testbak    Adv. to make verb to test gebakxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.8 2010-11-05
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -58,9 +58,9 @@ NB.   B    - n×n-matrix, transformed eigenvectors
 NB.
 NB. Application:
 NB. - model xGGBAK('S','L')
-NB.     'CD plr'=. gebakxsx EF ; ({. plr) ; ({. dlr)
+NB.     'CD pl'=. gebakxsx EF ; ({. plr) ; ({. dlr)
 NB. - model xGGBAK('S','R')
-NB.     'CD plr'=. gebakxsx EF ; ({: plr) ; ({: dlr)
+NB.     'CD pr'=. gebakxsx EF ; ({: plr) ; ({: dlr)
 NB.
 NB. Notes:
 NB. - gebakusl models LAPACK's xGxBAK('S','L')

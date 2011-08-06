@@ -16,7 +16,7 @@ NB. unmat    Adv. to make verb to make random unitary
 NB.          (orthogonal) matrix
 NB. spmat    Conj. to make verb to make random sparse array
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.

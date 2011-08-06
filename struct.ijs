@@ -56,11 +56,9 @@ NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.8 2010-11-30
 NB.
-NB. Copyright 2007 Oleg Kobchenko
-NB. Copyright 2008 Roger Hui
-NB. Copyright 2010 Igor Zhuravlov
+NB. Copyright 2007-2010 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -153,18 +151,17 @@ NB. Syntax:
 NB.   s=. bs mbstencil  A
 NB.   s=. bs mabstencil A
 NB. where
-NB.   bs   - k×2-matrix of (b)s, or single b, or d, defines
-NB.          [anti-]bands to stencil
-NB.   A    - m×n-matrix
-NB.   s    - m×n-matrix, boolean, having 1s on [anti-]band[s]
-NB.   b    - 2-vector (h,t), defines one [anti-]band to
-NB.          stencil
-NB.   h    - integer in range [-∞,t], defines lIO head of
-NB.          [anti-]diagonal
-NB.   t    - integer in range [h,+∞], defines lIO tail of
-NB.          [anti-]diagonal
-NB.   d    - integer in range [-∞,+∞], defines one
-NB.          [anti-]diagonal to stencil
+NB.   bs - k×2-matrix of (b)s, or single b, or d, defines
+NB.        [anti-]bands to stencil
+NB.   A  - m×n-matrix
+NB.   s  - m×n-matrix, boolean, having 1s on [anti-]band[s]
+NB.   b  - 2-vector (h,t), defines one [anti-]band to stencil
+NB.   h  - integer in range [-∞,t], defines lIO head of
+NB.        [anti-]diagonal
+NB.   t  - integer in range [h,+∞], defines lIO tail of
+NB.        [anti-]diagonal
+NB.   d  - integer in range [-∞,+∞], defines one
+NB.        [anti-]diagonal to stencil
 NB.
 NB. Examples:
 NB.    1 mbstencil i. 3 5                    1 mabstencil i. 3 5
@@ -315,14 +312,14 @@ NB.
 NB. Syntax:
 NB.   vapp=. u upd
 NB. where
-NB.   u       - monad to update subA; is called as:
-NB.               subAupd=. u subA
-NB.   vapp    - verb to update A; is called as:
-NB.               Aupd=. ios vapp A
-NB.   ios     - IOS of subA in the A
-NB.   subA    - subarray in the A
-NB.   A       - array
-NB.   Aupd    - A with subA being replaced by subAupd
+NB.   u    - monad to update subA; is called as:
+NB.            subAupd=. u subA
+NB.   vapp - verb to update A; is called as:
+NB.            Aupd=. ios vapp A
+NB.   ios  - IOS of subA in the A
+NB.   subA - subarray in the A
+NB.   A    - array
+NB.   Aupd - A with subA being replaced by subAupd
 NB.
 NB. Assertions:
 NB.   Aupd -: ios vapp A
@@ -652,20 +649,19 @@ NB.
 NB. Syntax:
 NB.   I=. [(d[,h[,s]])] idmat [m,]n
 NB. where
-NB.   m    ≥ 0, integer, optional rows in matrix I, default
-NB.          is n
-NB.   n    ≥ 0, integer, columns in matrix I
-NB.   d    - integer in range [1-m,n-1], optional lIO
-NB.          diagonal, default is 0 (main diagonal)
-NB.   h    - integer in range [-S,S-1], optional lIO extreme
-NB.          element of solid part of diagonal, default is 0
-NB.          (take from head)
-NB.   s    - integer in range [-S,S] or ±∞, optional size of
-NB.          solid part of diagonal, default is +∞ (all
-NB.          elements in forward direction)
-NB.   I    - m×n-matrix of zeros with unit assigned to solid
-NB.          part of d-th diagonal
-NB.   S    ≥ 0, the length of d-th diagonal
+NB.   m ≥ 0, integer, optional rows in matrix I, default is n
+NB.   n ≥ 0, integer, columns in matrix I
+NB.   d - integer in range [1-m,n-1], optional lIO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   h - integer in range [-S,S-1], optional lIO extreme
+NB.       element of solid part of diagonal, default is 0
+NB.       (take from head)
+NB.   s - integer in range [-S,S] or ±∞, optional size of
+NB.       solid part of diagonal, default is +∞ (all elements
+NB.       in forward direction)
+NB.   I - m×n-matrix of zeros with unit assigned to solid
+NB.       part of d-th diagonal
+NB.   S ≥ 0, the length of d-th diagonal
 NB.
 NB. Examples:
 NB.    idmat 3                      idmat 3 4

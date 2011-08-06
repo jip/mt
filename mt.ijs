@@ -22,7 +22,7 @@ NB.
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.6.3 2010-06-11
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.

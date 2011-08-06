@@ -17,7 +17,7 @@ NB.            given
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.6.8 2010-10-30
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -541,7 +541,7 @@ NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrices C11 and D11 position in C and
 NB.         D, respectively
 NB.
-NB. Assertions (with appropriate comparison tolerance):
+NB. Assertions:
 NB.   Prinv -: |: Pr
 NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
 NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr

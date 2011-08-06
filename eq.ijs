@@ -9,7 +9,7 @@ NB. testhgeqs  Test hgexxs by general matrices given
 NB. testeqz    Adv. to make verb to test hgexxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.8 2010-11-05
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -57,11 +57,10 @@ NB. Description:
 NB.   Calculate generalized eigenvalues of hs-segment
 NB.
 NB. Syntax:
-NB.   'HTupd signbc'=. hs hgexxeo HT
+NB.   'HTupd signbc'=. hs hgexxeo H ,: T
 NB. where
 NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
 NB.           defines eigenvalues range
-NB.   HT    -: H ,: T
 NB.   H     - n×n-matrix, either lower (hgezqeo) or upper
 NB.           (hgeqzeo) Hessenberg inside the submatrix
 NB.           H[h:h+s-1,h:h+s-1], and lower (hgezqeo) or
@@ -99,11 +98,10 @@ NB.   reduce corresponding rows (hgezqso) or columns
 NB.   (hgeqzso) to generalized Schur form
 NB.
 NB. Syntax:
-NB.   'HTupd signbc'=. hs hgexxso HT
+NB.   'HTupd signbc'=. hs hgexxso H ,: T
 NB. where
 NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
 NB.           defines eigenvalues range
-NB.   HT    -: H ,: T
 NB.   H     - n×n-matrix, either lower (hgezqso) or upper
 NB.           (hgeqzso) Hessenberg inside the submatrix
 NB.           H[h:h+s-1,h:h+s-1], and lower (hgezqso) or
@@ -138,9 +136,10 @@ NB. hgezq
 NB. hgeqz
 NB.
 NB. Description:
-NB.   Adv. to make verbs to find eigenvalues of lower (upper)
-NB.   Hessenberg-triangular pair (H,T) and, optionally, to
-NB.   reduce this pair to generalized Schur form
+NB.   Adv. to make verbs to find eigenvalues of either lower
+NB.   (hgezq) or upper (hgeqz) Hessenberg-triangular pair
+NB.   (H,T) and, optionally, to reduce this pair to
+NB.   generalized Schur form
 NB.
 NB. Syntax:
 NB.   vapp=. hgexxxo`init`reset`step hgexx
@@ -342,52 +341,52 @@ hgezq=: 1 : 0
         NB. bottom-right 2x2 block of T^_1*H which is nearest
         NB. to the bottom-right element.
         NB. We factor T as D*L, where L is unit lower
-        NB. triangular, and compute L^_1*(D^_1*H)############
-        'U12 AD11 AD21 AD12 AD22'=. %/ (5 0 2 1 3 ,: 7 4 4 7 7) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
-        ABI22=. AD22 - U12 * AD21
-        t1=. -: AD11 + ABI22
-        rtdisc=. %: (t1 , AD12 , -AD11) mp (t1 , AD21 , AD22)
-        temp=. +/ (*/) +. rtdisc , t1 - ABI22
+        NB. triangular, and compute L^_1*(D^_1*H)
+        'L21 DA11 DA12 DA21 DA22'=. %/ (6 0 1 2 3 ,: 7 4 4 7 7) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
+        IBA22=. DA22 - L21 * DA12
+        t1=. -: DA11 + IBA22
+        rtdisc=. %: (t1 , DA21 , -DA11) mp (t1 , DA12 , DA22)
+        temp=. +/ (*/) +. rtdisc , t1 - IBA22
         shift=. t1 - temp condneg rtdisc
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason
-        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (_1 0 ,: _1 _1)+ ilast) { y
+        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (0 _1 ,: _1 _1) + ilast) { y
         shift=. eshift
       end.
       NB. now check for two consecutive small subdiagonals
-      HTd=. (0 _1 ,"0 1 ilast (] , -) ifirst) diag"1 2/ y
+      HTd=. (0 1 ,"0 1 ilast (] , -) ifirst) diag"1 2/ y
       ctemp=. (- (shift&*))/ abscale * {. HTd
       temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
       tempr=. >./ temp
       temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr) } 1 , tempr ,: 1
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
       NB. do an implicit-shift ZQ sweep
-      NB. initial Q
-      cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { y
+      NB. initial Z
+      cs=. }: lartg ctemp , ascale * (< 0 , istart + 0 1) { y
       NB. sweep
       j=. istart
-      liosc=. (>: ilastm) th2lios j
-      liosr=. (j + 2) th2lios ifrstm
+      liosr=. (>: ilastm) th2lios j
+      liosc=. (j + 2) th2lios ifrstm
       while. j < ilast do.
         lios=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          y=. (< a: ; lios ; liosc) (cs & (rot &. |:)"2) upd y
+          y=. (< a: ; liosr ; lios) (cs & rot"2) upd y
         else.
-          'y cs'=. (rot &. |:) rotga y ; (< 0 ; lios ; liosc) ; < < a: ; 0
-          liosc=. }. liosc
-          y=. (< 1 ; lios ; liosc) (cs & (rot &. |:)) upd y
+          'y cs'=. rot rotga y ; (< 0 ; liosr ; lios) ; 0
+          liosr=. }. liosr
+          y=. (< 1 ; liosr ; lios) (cs & rot) upd y
         end.
-        dQ=. dQ , (+ cs) , lios
+        dZ=. dZ , (+ cs) , lios
         lios=. j + 1 0
-        'y cs'=. rot rotga y ; (< 1 ; liosr ; lios) ; _1
+        'y cs'=. (rot &. |:) rotga y ; (< 1 ; lios ; liosc) ; < < a: ; _1
         NB. isn't a last iteration?
         if. j < <: ilast do.
-          liosr=. liosr , j + 2
+          liosc=. liosc , j + 2
         end.
-        y=. (< 0 ; liosr ; lios) (cs & rot) upd y
-        dZ=. dZ , cs , lios
+        y=. (< 0 ; lios ; liosc) (cs & (rot &. |:)) upd y
+        dQ=. dQ , cs , lios
         j=. >: j
       end.
     end.
@@ -578,7 +577,7 @@ hgeqz=: 1 : 0
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason
-        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (_1 0 ,: _1 _1)+ ilast) { y
+        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (_1 0 ,: _1 _1) + ilast) { y
         shift=. eshift
       end.
       NB. now check for two consecutive small subdiagonals
@@ -623,59 +622,169 @@ hgeqz=: 1 : 0
   ((_. ; 0 0 , >: ilast) setdiag"2 y) ; ,~ a:
 )
 
+NB. ---------------------------------------------------------
+NB. hgezqe
+NB. hgezqs
+NB. hgeqze
+NB. hgeqzs
+NB.
+NB. Description:
+NB.   Find eigenvalues of either lower (hgezqx) or upper
+NB.   (hgeqzx) Hessenberg-triangular pair
+NB.   (H,T) and, optionally, to reduce this pair to
+NB.   generalized Schur form (hgexxs)
+NB.
+NB. Syntax:
+NB.   'HTupd dQ dZ'=. hs hgexxx HT
+NB. where
+NB.   HTupd - ########
+NB.             see hgeqzxxxx
+NB.
+NB. Notes:
+NB. - non-converged eigenvalues will be set to NaN
+
+hgezqe=: hgezqeo`[`(2 1&{@,`[@.((<{:)~{.))`[ hgezq
+hgezqs=: hgezqso`]`]                      `] hgezq
+
+hgeqze=: hgeqzeo`[`(2 1&{@,`[@.((<{:)~{.))`[ hgeqz
+hgeqzs=: hgeqzso`]`]                      `] hgeqz
+
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:           Syntax:
-NB. hgezqenn        ab=.      [hs] hgezqenn H ,: T
-NB. hgezqenv        'ab Z'=.  [hs] hgezqenv H , T ,: Z1
-NB. hgezqevn        'ab Q'=.  [hs] hgezqevn H , T ,: Q1
-NB. hgezqevv        'ab QZ'=. [hs] hgezqevv H , T , Q1 ,: Z1
+NB. hgezqenn
+NB. hgezqenv
+NB. hgezqevn
+NB. hgezqevv
+NB. hgezqsnn
+NB. hgezqsnv
+NB. hgezqsvn
+NB. hgezqsvv
 NB.
 NB. Description:
-NB.   Eigenvalues of pair of structured matrices
+NB.   Eigenvalues and, optionally, generalized Schur form of
+NB.   pair of structured matrices
+NB.
+NB. Syntax:
+NB.   ab=.      [hs] hgezqenn H ,: T
+NB.   'ab Z'=.  [hs] hgezqenv H , T ,: Z1
+NB.   'ab Q'=.  [hs] hgezqevn H , T ,: Q1
+NB.   'ab QZ'=. [hs] hgezqevv H , T , Q1 ,: Z1
+NB.   SP=.      [hs] hgezqsnn H ,: T
+NB.   SPZ=.     [hs] hgezqsnv H , T ,: Z1
+NB.   SPQ=.     [hs] hgezqsvn H , T ,: Q1
+NB.   SPQZ=.    [hs] hgezqsvv H , T , Q1 ,: Z1
 NB. where
-NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
-NB.           defines submatrices H11 and T11 position in H
-NB.           and T, respectively (see ggballp)
-NB.   H     - n×n-matrix, either lower (hgezqenn) or upper
-NB.           (hgeqzenn) Hessenberg inside the submatrix
-NB.           H[h:h+s-1,h:h+s-1], and lower (hgezqenn) or
-NB.           upper (hgeqzenn) triangular outside
-NB.   T     - n×n-matrix, either lower (hgezqenn) or upper
-NB.           (hgeqzenn) triangular
-NB.   ab    -: alpha ,: beta
-NB.   alpha - n-vector, defines eigenvalues
-NB.   beta  - n-vector, defines eigenvalues
+NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
+NB.          defines submatrices H11 and T11 position in H
+NB.          and T, respectively, see ggballp, default is
+NB.          (0,n)
+NB.   H    - n×n-matrix, lower Hessenberg inside the
+NB.          submatrix H[h:h+s-1,h:h+s-1], and lower
+NB.          triangular outside
+NB.   T    - n×n-matrix, lower triangular
+NB.   ab   -: a ,: b
+NB.   a    - n-vector, defines eigenvalues
+NB.   b    - n-vector, defines eigenvalues
+NB.   Q1   - n×n-matrix, the unitary (orthogonal)
+NB.   Q    - n×n-matrix (ΔQ*Q1)
+NB.   Z1   - n×n-matrix, the unitary (orthogonal)
+NB.   Z    - n×n-matrix (ΔZ*Z1)
+NB.   QZ   -: Q ,: Z
+NB.   SP   -: S ,: P
+NB.   SPQ  -: SP , Q
+NB.   SPZ  -: SP , Z
+NB.   SPQZ -: SPQ , Z
+NB.   S    - n×n-matrix, lower triangular from the
+NB.          generalized Schur factorization
+NB.   P    - n×n-matrix, lower triangular from the
+NB.          generalized Schur factorization
+NB.
+NB. Assertions:
+NB.   ab -: diag"2 SP  NB. generalized eigenvalues alpha,beta
+NB.                    NB. are defined by diagonals of S,P ,
+NB.                    NB. respectively
 NB.
 NB. Notes:
 NB. - non-converged eigenvalues are set to NaN
 
-hgezqenn=: 0 ((diag"2&.>) upd) (hgezqeo`[`(2 1&{@,`[@.((<{:)~{.))`[ hgezq)
+hgezqenn=: ($:~ (0,c)) : (           diag"2 @ (0 {::                               hgezqe         ))
+hgezqenv=: ($:~ (0,c)) : ((2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotscll  (2 & {::))) (hgezqe (2 & {.)))
+hgezqevn=: ($:~ (0,c)) : ((2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotscll  (1 & {::))) (hgezqe (2 & {.)))
+hgezqevv=: ($:~ (0,c)) : ((2 }. ]) ((diag"2 @ (0 {:: ])) ;  (rotscll"2 &.: > }.)) (hgezqe (2 & {.)))
+
+hgezqsnn=: ($:~ (0,c)) : (                     0 {::                               hgezqs          )
+hgezqsnv=: ($:~ (0,c)) : ((2 {  ]) ((         (0 {   ])) ,: (rotscll  (2 & {::))) (hgezqs (2 & {.)))
+hgezqsvn=: ($:~ (0,c)) : ((2 {  ]) ((         (0 {   ])) ,: (rotscll  (1 & {::))) (hgezqs (2 & {.)))
+hgezqevv=: ($:~ (0,c)) : ((2 }. ]) ((         (0 {   ])) ,  (rotscll"2 &.: > }.)) (hgezqs (2 & {.)))
 
 NB. ---------------------------------------------------------
-NB. Verb:           Syntax:
-NB. hgeqzenn        ab=.      [hs] hgeqzenn H ,: T
-NB. hgeqzenv        'ab Z'=.  [hs] hgeqzenv H , T ,: Z1
-NB. hgeqzevn        'ab Q'=.  [hs] hgeqzevn H , T ,: Q1
-NB. hgeqzevv        'ab QZ'=. [hs] hgeqzevv H , T , Q1 ,: Z1
+NB. hgeqzenn
+NB. hgeqzenv
+NB. hgeqzevn
+NB. hgeqzevv
+NB. hgeqzsnn
+NB. hgeqzsnv
+NB. hgeqzsvn
+NB. hgeqzsvv
 NB.
 NB. Description:
-NB.   Eigenvalues of pair of structured matrices
+NB.   Eigenvalues and, optionally, Schur form:
+NB.     H = Q * S * Z**H
+NB.     T = Q * P * Z**H
+NB.   of pair of structured matrices
+NB.
+NB. Syntax:
+NB.   ab=.      [hs] hgeqzenn H ,: T
+NB.   'ab Z'=.  [hs] hgeqzenv H , T ,: Z1
+NB.   'ab Q'=.  [hs] hgeqzevn H , T ,: Q1
+NB.   'ab QZ'=. [hs] hgeqzevv H , T , Q1 ,: Z1
+NB.   SP=.      [hs] hgeqzsnn H ,: T
+NB.   SPZ=.     [hs] hgeqzsnv H , T ,: Z1
+NB.   SPQ=.     [hs] hgeqzsvn H , T ,: Q1
+NB.   SPQZ=.    [hs] hgeqzsvv H , T , Q1 ,: Z1
 NB. where
-NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
-NB.           defines submatrices H11 and T11 position in H
-NB.           and T, respectively (see ggballp)
-NB.   H     - n×n-matrix, either lower (hgezqenn) or upper
-NB.           (hgeqzenn) Hessenberg inside the submatrix
-NB.           H[h:h+s-1,h:h+s-1], and lower (hgezqenn) or
-NB.           upper (hgeqzenn) triangular outside
-NB.   T     - n×n-matrix, either lower (hgezqenn) or upper
-NB.           (hgeqzenn) triangular
-NB.   ab    -: alpha ,: beta
-NB.   alpha - n-vector, defines eigenvalues
-NB.   beta  - n-vector, defines eigenvalues
+NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
+NB.          defines submatrices H11 and T11 position in H
+NB.          and T, respectively, see ggbalup, default is
+NB.          (0,n)
+NB.   H    - n×n-matrix, upper Hessenberg inside the
+NB.          submatrix H[h:h+s-1,h:h+s-1], and upper
+NB.          triangular outside
+NB.   T    - n×n-matrix, upper triangular
+NB.   ab   -: a ,: b
+NB.   a    - n-vector, defines eigenvalues
+NB.   b    - n-vector, defines eigenvalues
+NB.   Q1   - n×n-matrix, the unitary (orthogonal)
+NB.   Q    - n×n-matrix (Q1*ΔQ)
+NB.   Z1   - n×n-matrix, the unitary (orthogonal)
+NB.   Z    - n×n-matrix (Z1*ΔZ)
+NB.   QZ   -: Q ,: Z
+NB.   SP   -: S ,: P
+NB.   SPQ  -: SP , Q
+NB.   SPZ  -: SP , Z
+NB.   SPQZ -: SPQ , Z
+NB.   S    - n×n-matrix, upper triangular from the
+NB.          generalized Schur factorization
+NB.   P    - n×n-matrix, upper triangular from the
+NB.          generalized Schur factorization
+NB.
+NB. Notes:
+NB. - non-converged eigenvalues are set to NaN
+NB. - hgeqzenn models LAPACK's xHGEQZ('E','N','N')
+NB. - hgeqzenv models LAPACK's xHGEQZ('E','N','V')
+NB. - hgeqzevn models LAPACK's xHGEQZ('E','V','N')
+NB. - hgeqzevv models LAPACK's xHGEQZ('E','V','V')
+NB. - hgeqzsnn models LAPACK's xHGEQZ('S','N','N')
+NB. - hgeqzsnv models LAPACK's xHGEQZ('S','N','V')
+NB. - hgeqzsvn models LAPACK's xHGEQZ('S','V','N')
+NB. - hgeqzsvv models LAPACK's xHGEQZ('S','V','V')
+NB.
+NB. Assertions:
+NB.   ab -: diag"2 SP  NB. generalized eigenvalues alpha,beta
+NB.                    NB. are defined by diagonals of S,P ,
+NB.                    NB. respectively
 NB.
 NB. Application:
 NB. - model LAPACK's xHGEQZ('N','I'):
@@ -688,96 +797,26 @@ NB. - model LAPACK's xHGEQZ('I','V'):
 NB.     gghrduiv=: hgeqzevv ((1 & A.) @ , (idmat @ c))
 NB. - model LAPACK's xHGEQZ('V','I'):
 NB.     gghrduvi=: hgeqzevv (, (idmat @ c))
+NB. - detect case of non-convergence (0=converged,
+NB.   1=non-converged), any of:
+NB.     128!:5 < ab
+NB.     128!:5 < SP
+NB.     128!:5 < diag"2 SP
 NB.
-NB. Notes:
-NB. - non-converged eigenvalues are set to NaN
-NB. - gghrdunn models LAPACK's xGGHRD('N','N')
-NB. - gghrdunv models LAPACK's xGGHRD('N','V')
-NB. - gghrduvn models LAPACK's xGGHRD('V','N')
-NB. - gghrduvv models LAPACK's xGGHRD('V','V')
-
-hgeqzenn=: 0 ((diag"2&.>) upd) (hgeqzeo`[`(2 1&{@,`[@.((<{:)~{.))`[ hgeqz)
-
-NB. ---------------------------------------------------------
-NB. Verb:           Syntax:
-NB. hgezqenn        SP=.   [hs] hgezqenn H ,: T
-NB. hgezqenv        SPZ=.  [hs] gghrdlnv H , T ,: Z1
-NB. hgezqevn        SPQ=.  [hs] gghrdlvn H , T ,: Q1
-NB. hgezqevv        SPQZ=. [hs] gghrdlvv H , T , Q1 ,: Z1
-
-NB. hgezqsnn
-NB. hgeqzsnn
-NB.
-NB. Description:
-NB.   Reduce Hessenberg-triangular pair (H,T) to generalized
-NB.   Schur form:
-NB.     H = Q*S*Z**H
-NB.     T = Q*P*Z**H
-NB.
-NB. Syntax:
-NB.   'SP dQ dZ'=. hgexxsnn hs ; HT
-NB. where
-NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
-NB.           defines submatrices H11 and T11 position in H
-NB.           and T, respectively (see ggbalxp)
-NB.   HT    -: H ,: T
-NB.   SP    -: S ,: P
-NB.   dQ,dZ - any×4-matrix, accumulates scalings and
-NB.           rotations to form Q and Z later, see rotsclx;
-NB.           dQ and dZ may have the same shapes
-NB.   H     - n×n-matrix, either lower (hgezqsnn) or upper
-NB.           (hgeqzsnn) Hessenberg inside the submatrix
-NB.           H[h:h+s-1,h:h+s-1], and lower (hgezqenn) or
-NB.           upper (hgeqzenn) triangular outside
-NB.   T     - n×n-matrix, either lower (hgezqsnn) or upper
-NB.           (hgeqzsnn) triangular
-NB.   S     - n×n-matrix, , ...
-NB.   P     - n×n-matrix, , ...
-NB.
-NB. Notes:
-NB. - hgeqzsnn implements LAPACK's xHGEQZ('S','N')
-NB. - non-converged eigenvalues are set to NaN
-NB. - generalized eigenvalues are defined by diagonals:
-NB.     alpha -: diag S
-NB.     beta -: diag P
-
-hgeqzsnn=:                      hgeqzso`]`]                      `] hgeqz
-
-NB. ---------------------------------------------------------
-NB.   ab=.                 hgexxe hs ; HT
-NB.   'ab Q Z'=. (Q1 ; Z1) hgexxe hs ; HT
-NB.
-NB. Application:
-NB. - detecting case of non-convergence:
-NB.     128!:5 < ab  NB. 0=converged, 1=non-converged
-
-hgezqe=: (0 {:: hgezqenn) : (({.@] , (rotscll &. > }.)) hgezqenn)
-hgeqze=: (0 {:: hgeqzenn) : (({.@] , (rotsclu &. > }.)) hgeqzenn)
-
-NB. ---------------------------------------------------------
-NB.   SP=.                 hgexxs hs ; HT
-NB.   'SP Q Z'=. (Q1 ; Z1) hgexxs hs ; HT
-NB.
-NB. Assertions (with appropriate comparison tolerance):#############
-NB.   Q -: ungql QfR
-NB.   I -: (mp~ ct) Q
-NB.   A -: Q mp R
-NB.   (] -: ((         tru   @  }:   ) mp~ ungqr)@geqrf) A
-NB. where
-NB.   QfR=. geqrf A
-NB.   Q=. ungqr QfR
-NB.   R=. tru }: QfR
 NB.   hgeqzsnn_mt_ 2 3 ; 0 {:: ggbalu_mt_ AB
 NB.   ] 'Q1 R'=. ((tru_mt_@}:) ;~ ungqr_mt_) geqrf_mt_ (0;1) {:: ggbalu_mt_ AB
 NB.   'HT Q Z'=. (Q1 ; idmat_mt_ 7) gghrdu_mt_ 2 3 ; R 1} 0 {:: ggbalu_mt_ AB
 NB.   'SP dQ dZ'=. hgexxsnn hs ; HT
-NB.
-NB. Application:
-NB. - detecting case of non-convergence:
-NB.     128!:5 < diag"2 SP  NB. 0=converged, 1=non-converged
 
-hgezqs=: (0 {:: hgezqsnn) : (({.@] , (rotscll &. > }.)) hgezqsnn)
-hgeqzs=: (0 {:: hgeqzsnn) : (({.@] , (rotsclu &. > }.)) hgeqzsnn)
+hgeqzenn=: ($:~ (0,c)) : (           diag"2 @ (0 {::                               hgeqze         ))
+hgeqzenv=: ($:~ (0,c)) : ((2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotsclu  (2 & {::))) (hgeqze (2 & {.)))
+hgeqzevn=: ($:~ (0,c)) : ((2 {  ]) ((diag"2 @ (0 {:: ])) ;  (rotsclu  (1 & {::))) (hgeqze (2 & {.)))
+hgeqzevv=: ($:~ (0,c)) : ((2 }. ]) ((diag"2 @ (0 {:: ])) ;  (rotsclu"2 &.: > }.)) (hgeqze (2 & {.)))
+
+hgeqzsnn=: ($:~ (0,c)) : (                     0 {::                               hgeqzs          )
+hgeqzsnv=: ($:~ (0,c)) : ((2 {  ]) ((         (0 {   ])) ,: (rotsclu  (2 & {::))) (hgeqzs (2 & {.)))
+hgeqzsvn=: ($:~ (0,c)) : ((2 {  ]) ((         (0 {   ])) ,: (rotsclu  (1 & {::))) (hgeqzs (2 & {.)))
+hgeqzevv=: ($:~ (0,c)) : ((2 }. ]) ((         (0 {   ])) ,  (rotsclu"2 &.: > }.)) (hgeqzs (2 & {.)))
 
 NB. =========================================================
 NB. Test suite

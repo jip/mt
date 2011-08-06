@@ -77,7 +77,7 @@ NB.   signbc - s-vector, scaling factors to form Q,Z later
 hgezqeo=: 4 : 0
   'Hd Td'=. (0 , x) diag"2 y
   absb=. | Td
-  'signbc Td'=. (,:~ FP_SFMIN < absb) } 1 0 2 |: (1 ,: * Td) ,: (0 ,: absb)
+  'signbc Td'=. (,:~ FP_SFMIN < absb) } 1 0 2 |: (1 ,: + * Td) ,: (0 ,: absb)
   ((((Hd * signbc) ,: Td) (;"1) 0 , x) setdiag"1 2 y) ; signbc
 )
 
@@ -344,7 +344,9 @@ smoutput '(1) GOTO 60'
 smoutput 'label 60'
       NB. H[ilast-1,ilast]=0 - standartize B, set alpha and
       NB. beta
+smoutput ": 'before hgezqxo HT' ; y
       'y signbc'=. (ilast , 1) hgezqxo y  NB. process ilast-th eigenvalue (column)
+smoutput ": 'after hgezqxo HT' ; y
       dQ=. dQ , 4 {."1 signbc ,. ilast
       NB. goto next block - exit if finished
       ilast=. <: ilast
@@ -443,6 +445,7 @@ smoutput ": 'after rotation subHT' ; (< a: ; lios ; liosc) { y
       end.
 smoutput ": 'after loop 150 HT' ; y
     end.
+smoutput ": 'end of loop 170 HT' ; y
     jiter=. >: jiter
   end.
   NB. drop-through means non-convergence, set incorrect eigenvalues 0:ilast to NaN
@@ -623,7 +626,9 @@ smoutput '(1) GOTO 60'
 smoutput 'label 60'
       NB. H[ilast,ilast-1]=0 - standartize B, set alpha and
       NB. beta
+smoutput ": 'before hgeqzxo HT' ; y
       'y signbc'=. (ilast , 1) hgeqzxo y  NB. process ilast-th eigenvalue (column)
+smoutput ": 'after hgeqzxo HT' ; y
       dZ=. dZ , 4 {."1 signbc ,. ilast
       NB. goto next block - exit if finished
       ilast=. <: ilast
@@ -722,6 +727,7 @@ smoutput ": 'after rotation subHT' ; (< a: ; liosr ; lios) { y
       end.
 smoutput ": 'after loop 150 HT' ; y
     end.
+smoutput ": 'end of loop 170 HT' ; y
     jiter=. >: jiter
   end.
   NB. drop-through means non-convergence, set incorrect eigenvalues 0:ilast to NaN

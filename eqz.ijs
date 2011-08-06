@@ -38,23 +38,22 @@ NB. hgeqzelo
 NB. hgeqzeuo
 NB.
 NB. Description:
-NB.   Calculate generalized eigenvalues, which are correspond
-NB.   to diagonal elements of H, T given
+NB.   Calculate generalized eigenvalues of hs-segment
 NB.
 NB. Syntax:
-NB.   'HTdupd signbc'=. hgeqzexo HTd
+NB.   'HTupd signbc'=. hgeqzexo hs ; HT
 NB. where
 NB.
 NB. Notes:
-NB. - unfortunately, the following produces rank error:
-NB.     'signbc Td'=. mask } &. |: (1 ,. + * Td) ,: (0 ,. absb)
+NB. - hs applied here marks segment either before or after
+NB.   orginal hs-segment, supplied to hgeqzxxxx
 
 hgeqzeuo=: 3 : 0
-  'Hd Td'=. y
+  'hs HT'=. y
+  'Hd Td'=. (0 , hs) diag"2 HT
   absb=. | Td
-  mask=. FP_SFMIN < absb
-  signbc=. mask } 1 ,. + * Td
-  ((Hd * signbc) ,: (mask } 0 ,. absb)) ; signbc
+  'signbc Td'=. (,.~ FP_SFMIN < absb) } &. |: (1 ,. + * Td) ,: (0 ,. absb)
+  ((((Hd * signbc) ,: Td) (;"1) 0 , hs) setdiag"1 2 HT) ; signbc
 )
 
 NB. ---------------------------------------------------------
@@ -76,9 +75,9 @@ NB.   orginal hs-segment, supplied to hgeqzxxxx
 hgeqzsuo=: 3 : 0
   'hs HT'=. y
   lios=. dhs2lios hs
-  'HTd signbc'=. hgeqzeuo (0 , hs) diag"2 HT
-  subHT=. (HTd ;"1 a:) setdiag"1 2 lios {"1 HT
-  (((i. c HT) </ lios } subHT ,: subHT *"1 signbc) lios }"1 HT) ; signbc
+  'HT signbc'=. hgeqzeuo y
+  subHT=. lios {"1 HT
+  (((,:~ (i. c HT) </ lios) } subHT ,: subHT *"1 signbc) lios }"1 HT) ; signbc
 )
 
 NB. ---------------------------------------------------------
@@ -123,72 +122,72 @@ rotga=: 1 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. hgeqzelnn
-NB. hgeqzeunn
+NB. hgeqzlnn
+NB. hgeqzunn
 NB.
 NB. Description:
-NB.   Eigenvalues of pair of structured matrices
+NB.   Adv. to make verbs to find eigenvalues of lower (upper)
+NB.   Hessenberg-triangular pair (H,T) and, optionally, to
+NB.   reduce it to generalized Schur form
 NB.
 NB. Syntax:
-NB.   'ab dQ dZ'=. hgeqzexnn hs ; HT
+NB.   vapp=. hgeqzxo`init`reset`change hgeqzxnn
 NB. where
-NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
-NB.           defines submatrices H11 and T11 position in H
-NB.           and T, respectively (see ggbalxp)
-NB.   HT    -: H ,: T
-NB.   ab    -: alpha ,: beta
-NB.   dQ,dZ - either (i.0) if QZ iteration did not converge,
-NB.           or any×4-matrix, accumulates scalings and
-NB.           rotations to form Q and Z later, see hgeqzxqz;
-NB.           dQ and dZ may have the same shapes
-NB.   alpha - n-vector, ...
-NB.   beta  - n-vector, ...
-NB.   H     - n×n-matrix, either lower (hgeqzelnn) or upper
-NB.           (hgeqzeunn) Hessenberg inside the submatrix
-NB.           H[h:h+s-1,h:h+s-1], and lower (hgeqzelnn) or
-NB.           upper (hgeqzeunn) triangular outside
-NB.   T     - n×n-matrix, either lower (hgeqzelnn) or upper
-NB.           triangular
+NB.   hgeqzxo - monad to calculate generalized eigenvalues of
+NB.             hs-segment and, optionally, to reduce
+NB.             corresponding columns to generalized Schur
+NB.             form, is either hgeqzexo or hgeqzsxo, is
+NB.             called as:
+NB.               'HTupd signbc'=. hgeqzxo hs ; HT
+NB.   init    - dyad to initialize counters, is called as:
+NB.               'ifirstm ilastm'=. (h , ilast) init (0 , n-1)
+NB.   reset   - dyad to reset counters optionally, is called
+NB.             as:
+NB.               'ifirstm ilastm'=. (h , ilast) reset (ifirstm , ilastm)
+NB.   change  - monad to change counter optionally, is called
+NB.             as:
+NB.               ifirstm=. ifirst change ifirstm
+NB.   vapp    - monad to find eigenvalues of lower (upper)
+NB.             Hessenberg-triangular pair (H,T) and,
+NB.             optionally, to reduce it to generalized Schur
+NB.             form, is called as:
+NB.               'HTupd dQ dZ'=. vapp hs ; HT
+NB.             see hgeqzxxnn
 NB.
 NB. Notes:
-NB. - hgeqzeunn implements LAPACK's xHGEQZ('E','N')
 NB. - non-converged eigenvalues are set to NaN
 
-hgeqzeunn=: 3 : 0
+hgeqzunn=: 1 : 0
+  '`hgeqzuo init reset change'=. m
   'hs HT'=. y
   e=. +/ 'h s'=. hs
   dQ=. dZ=. 4 0 $ 0
-  abnorm=. (,.~ hs) norms"2 ;. 0 HT
+  abnorm=. (0 2 ,. ,.~ hs) norms"2 ;. 0 HT
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
-  'HTd signbc'=. hgeqzeuo (0 , e) diag"2 HT  NB. calculate eigenvalues h+s:n-1
-  HT=. (HTd (;"1) 0 , e) setdiag"1 2 HT
-  dZ=. dZ , 4 {."1 signbc ,. (c HT) ht2lios e
+  'HT signbc'=. hgeqzuo ((c HT) (] , -) e) ; HT  NB. process eigenvalues (columns) h+s:n-1
+  dZ=. dZ , 4 {."1 signbc ,. (c HT) th2lios e
 
-  NB. main QZ iteration loop
-
-  NB. initialize dynamic indices
-  NB.
   NB. Eigenvalues h+s:n-1 have been found.
-  NB. Column operations modify rows ifirstm:*
-  NB. Column operations modify columns *:ilastm
-  NB. ifirstm - the row of the last splitting row above row
-  NB.           ilast, this is always at least h
-  NB. iiter   - counts iterations since the last eigenvalue
-  NB.           was found, to tell when to use an
-  NB.           extraordinary shift
-  NB. maxit   - the maximum number of QZ sweep allowed
 
+  NB. Initialize dynamic indices
   ilast=. <: e
-  ifirstm=. h
-  ilastm=. ilast
-  iiter=. 0
+  'ifirstm ilastm'=. (h , ilast) init (0 , <: c HT)
+                  NB. ifirstm - the row of the last splitting
+                  NB.           row above row ilast, this is
+                  NB.           always at least h
+  iiter=. 0       NB. counts iterations since the last
+                  NB. eigenvalue was found, to tell when to
+                  NB. use an extraordinary shift
   eshift=. 0
-  maxit=. 30 * s
+  maxit=. 30 * s  NB. the maximum number of QZ sweep allowed
   jiter=. 0
 
+  NB. Main QZ iteration loop
+  NB. Column operations modify rows ifirstm:*
+  NB. Column operations modify columns *:ilastm
   while. jiter < maxit do.
-    goto60=. 1  NB. mark default branching
+    goto60=. 1  NB. set default branching
     NB. split the matrix if possible, by to tests:
     NB.   1. H[j,j-1]=0 OR j=h
     NB.   2. T[j,j]=0
@@ -228,8 +227,8 @@ hgeqzeunn=: 3 : 0
               if. ilazro +. ilazr2 do.
                 jch=. j
                 while. jch < ilast do.
-                  'HT cs'=. (rot &. |:) rotga HT ; (< 0 ; (jch + 0 1) ; ((>: ilastm) ht2lios jch)) ; (< a: ; 0)
-                  HT=. (< 1 ; (jch + 0 1) ; (ilastm ht2lios & >: jch)) (cs & (rot &. |:)) upd HT
+                  'HT cs'=. (rot &. |:) rotga HT ; (< 0 ; (jch + 0 1) ; ((>: ilastm) th2lios jch)) ; < < a: ; 0
+                  HT=. (< 1 ; (jch + 0 1) ; (ilastm th2lios & >: jch)) (cs & (rot &. |:)) upd HT
                   dQ=. dQ , (+ cs) , jch + 0 1
                   if. ilazr2 do.
                     HT=. (< 0 , jch - 0 1) (* & ({. cs)) upd HT
@@ -251,11 +250,11 @@ hgeqzeunn=: 3 : 0
                 NB. case T[ilast,ilast]=0
                 jch=. j
                 while. jch < ilast do.
-                  'HT cs'=. (rot &. |:) rotga HT ; (< 1 ; (jch + 0 1) ; (ilastm ht2lios & >: jch)) ; (< a: ; 0)
-                  HT=. (< 0 ; (jch + 0 1) ; ((>: ilastm) ht2lios <: jch)) (cs & (rot &. |:)) upd HT
+                  'HT cs'=. (rot &. |:) rotga HT ; (< 1 ; (jch + 0 1) ; (ilastm th2lios & >: jch)) ; < < a: ; 0
+                  HT=. (< 0 ; (jch + 0 1) ; ((>: ilastm) th2lios <: jch)) (cs & (rot &. |:)) upd HT
                   dQ=. dQ , (+ cs) , jch + 0 1
-                  'HT cs'=. rot rotga HT ; (< 0 ; ((2 + jch) ht2lios ifirstm) ; (jch - 0 1)) ; (< _1 ; _1 0)
-                  HT=. (< 1 ; (jch ht2lios ifirstm) ; (jch - 0 1)) (cs & rot) upd HT
+                  'HT cs'=. rot rotga HT ; (< 0 ; ((2 + jch) th2lios ifirstm) ; (jch - 0 1)) ; < < _1 ; _1 0
+                  HT=. (< 1 ; (jch th2lios ifirstm) ; (jch - 0 1)) (cs & rot) upd HT
                   dZ=. dZ , cs , jch - 0 1
                   jch=. >: jch
                 end.
@@ -269,7 +268,7 @@ hgeqzeunn=: 3 : 0
             j=. <: j
           end.
           NB. drop-through is impossible
-          ((2 , c HT) $ _.) ; ,~ a:  NB. set all eigenvalues to NaN
+          ((< _.) setdiag"2 HT) ; ,~ a:  NB. set all eigenvalues to NaN
           return.
         else.
           HT=. 0 (< 1 , ,~ ilast) } HT
@@ -277,8 +276,8 @@ hgeqzeunn=: 3 : 0
         label_50.
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
-        'HT cs'=. rot rotga HT ; (< 0 ; ((>: ilast) ht2lios ifirstm) ; (ilast - 0 1)) ; (< _1 ; 1 0)
-        HT=. (< 1 ; (ilast ht2lios ifirstm) ; (ilast - 0 1)) (cs & rot) upd HT
+        'HT cs'=. rot rotga HT ; (< 0 ; ((>: ilast) th2lios ifirstm) ; (ilast - 0 1)) ; < < _1 ; 1 0
+        HT=. (< 1 ; (ilast th2lios ifirstm) ; (ilast - 0 1)) (cs & rot) upd HT
         dZ=. dZ , cs , ilast - 0 1
       else.
         HT=. 0 (< 0 , ilast - 0 1) } HT
@@ -288,33 +287,28 @@ hgeqzeunn=: 3 : 0
     if. goto60 do.
       NB. H[ilast,ilast-1]=0 - standartize B, set alpha and
       NB. beta
-      'HTd signbc'=. hgeqzeuo (0 , ilast , 1) diag"2 HT  NB. ilast-th eigenvalue
-      HT=. (, HTd) (< a: ; ;~ ilast) } HT
+      'HT signbc'=. hgeqzuo (ilast , 1) ; HT  NB. process ilast-th eigenvalue (column)
       dZ=. dZ , 4 {."1 signbc , ilast
       NB. goto next block - exit if finished
       ilast=. <: ilast
       if. ilast < h do.
         NB. normal exit
-        'HTd signbc'=. hgeqzeuo (0 0 , 0 >. <: h) diag"2 HT  NB. calc eigenvalues 0:h-1
-        HTd=. HTd ,. (0 , h) diag"1 2 HT                     NB. augment by eigenvalues h:n-1
+        'HT signbc'=. hgeqzuo (0 , 0 >. <: h) ; HT  NB. process eigenvalues (columns) 0:h-1
         dZ=. dZ , 4 {."1 signbc ,. i. 0 >. <: h
-        HTd ; dQ ; dZ
+        HT ; dQ ; dZ
         return.
       end.
       NB. reset counters
       iiter=. 0
       eshift=. 0
-      ilastm=. ilast
-      if. ifirstm > ilast do.
-        ifirstm=. h
-      end.
+      'ifirstm ilastm'=. (h , ilast) reset (ifirstm , ilastm)
     else.
       NB. QZ step
       NB. This iteration only involves rows/columns
       NB. ifirst:ilast. We assume ifirst<ilast, and that the
       NB. diagonal of B is non-zero
       iiter=. >: iiter
-      ifirstm=. ifirst
+      ifirstm=. ifirst change ifirstm
       NB. Compute the shift.
       NB. At this point, ifirst<ilast, and the diagonal
       NB. elements of T[ifirst:ilast,ifirst:ilast] are larger
@@ -338,42 +332,34 @@ hgeqzeunn=: 3 : 0
         shift=. eshift
       end.
       NB. now check for two consecutive small subdiagonals
-      HTd=. (0 _1 ,"0 1 ilast (] , -) ifirst) diag"1 2 HT
+      HTd=. (0 _1 ,"0 1 ilast (] , -) ifirst) diag"1 2/ HT
       ctemp=. (- (shift&*))/ abscale * {. HTd
       temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
       tempr=. >./ temp
-      temp=. temp % ((0 , 1 - FP_EPS) I. tempr) } 1 , tempr ,: 1
-      flags=. >:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd
-      io=. flags i: 1
-      if. io < # flags do.
-        istart=. >: io + ifirst
-        ctemp=. (>: io) { ctemp
-      else.
-        istart=. ifirst
-        ctemp=. {. ctemp
-      end.
+      temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr) } 1 , tempr ,: 1
+      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
       NB. do an implicit-shift QZ sweep
       if. istart < ilast do.
         NB. initial Q
-        cs=. }: clartg ctemp , ascale * (< 0 , istart + 1 0) { HT
+        cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { HT
         NB. sweep
         j=. istart
-        whilest.
+        whilst.
           ios=. < 0 ; 0 1 (+ ; (<:@])) j
           csr=. lartg ios { HT
           HT=. (({: csr) , 0) ios } HT
           cs=. }: csr
           j < ilast
         do.
-          ios=. < a: ; (j + 0 1) ; ((>: ilastm) ht2lios j)
+          ios=. < a: ; (j + 0 1) ; ((>: ilastm) th2lios j)
           HT=. ios (cs & (rot &. |:)"2) upd HT
           dQ=. dQ , cs , j + 0 1
           ios=. < 1 ([ ; + ; + , ]) j
           cs=. }: csr=. lartg ios { HT
           HT=. (({: csr) , 0) ios } HT
-          ios=. < 0 ; (((>: ilastm) <. j + 2) ht2lios ifirstm) ; (j + 1 0)
+          ios=. < 0 ; (((>: ilastm) <. j + 2) th2lios ifirstm) ; (j + 1 0)
           HT=. ios (cs & rot) upd HT
-          ios=. < 1 ; ((>: j) ht2lios ifirstm) ; (j + 1 0)
+          ios=. < 1 ; ((>: j) th2lios ifirstm) ; (j + 1 0)
           HT=. ios (cs & rot) upd HT
           dZ=. dZ , cs , j + 1 0
           j=. >: j
@@ -382,9 +368,43 @@ hgeqzeunn=: 3 : 0
     end.
     jiter=. >: jiter
   end.
-  NB. drop-through means non-convergence, set incorrect eigenvalues[0:ilast] to NaN
-  (_. (< a: ; i. >: ilast) } diag"2 HT) ; ,~ a:
+  NB. drop-through means non-convergence, set incorrect eigenvalues 0:ilast to NaN
+  ((_. ; 0 0 , >: ilast) setdiag"2 HT) ; ,~ a:
 )
+
+NB. ---------------------------------------------------------
+NB. hgeqzelnn
+NB. hgeqzeunn
+NB.
+NB. Description:
+NB.   Eigenvalues of pair of structured matrices
+NB.
+NB. Syntax:
+NB.   'ab dQ dZ'=. hgeqzexnn hs ; HT
+NB. where
+NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
+NB.           defines submatrices H11 and T11 position in H
+NB.           and T, respectively (see ggbalxp)
+NB.   HT    -: H ,: T
+NB.   ab    -: alpha ,: beta
+NB.   dQ,dZ - either (i.0) if QZ iteration did not converge,
+NB.           or any×4-matrix, accumulates scalings and
+NB.           rotations to form Q and Z later, see hgeqzxqz;
+NB.           dQ and dZ may have the same shapes
+NB.   alpha - n-vector, defines eigenvalues
+NB.   beta  - n-vector, defines eigenvalues
+NB.   H     - n×n-matrix, either lower (hgeqzelnn) or upper
+NB.           (hgeqzeunn) Hessenberg inside the submatrix
+NB.           H[h:h+s-1,h:h+s-1], and lower (hgeqzelnn) or
+NB.           upper (hgeqzeunn) triangular outside
+NB.   T     - n×n-matrix, either lower (hgeqzelnn) or upper
+NB.           (hgeqzeunn) triangular
+NB.
+NB. Notes:
+NB. - hgeqzeunn implements LAPACK's xHGEQZ('E','N')
+NB. - non-converged eigenvalues are set to NaN
+
+hgeqzeunn=: 0 ((diag"2&.>) upd) (hgeqzeuo`[`(2 1&{@,`[@.((<{:)~{.))`[ hgeqzunn)
 
 NB. ---------------------------------------------------------
 NB. hgeqzslnn
@@ -397,7 +417,7 @@ NB.     H = Q*S*Z**H
 NB.     T = Q*P*Z**H
 NB.
 NB. Syntax:
-NB.   'SP dQ dZ'=. hgeqzexnn hs ; HT
+NB.   'SP dQ dZ'=. hgeqzsxnn hs ; HT
 NB. where
 NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
 NB.           defines submatrices H11 and T11 position in H
@@ -407,24 +427,26 @@ NB.   SP    -: S ,: P
 NB.   dQ,dZ - any×4-matrix, accumulates scalings and
 NB.           rotations to form Q and Z later, see hgeqzxqz;
 NB.           dQ and dZ may have the same shapes
-NB.   H     - n×n-matrix, either lower (hgeqzelnn) or upper
-NB.           (hgeqzeunn) Hessenberg inside the submatrix
+NB.   H     - n×n-matrix, either lower (hgeqzslnn) or upper
+NB.           (hgeqzsunn) Hessenberg inside the submatrix
 NB.           H[h:h+s-1,h:h+s-1], and lower (hgeqzelnn) or
 NB.           upper (hgeqzeunn) triangular outside
-NB.   T     - n×n-matrix, either lower (hgeqzelnn) or upper
-NB.           triangular
+NB.   T     - n×n-matrix, either lower (hgeqzslnn) or upper
+NB.           (hgeqzsunn) triangular
 NB.   S     - n×n-matrix, , ...
 NB.   P     - n×n-matrix, , ...
 NB.
 NB. Notes:
 NB. - hgeqzsunn implements LAPACK's xHGEQZ('S','N')
-NB.
-NB. TODO:
-NB. - 
+NB. - non-converged eigenvalues are set to NaN
+NB. - generalized eigenvalues are defined by vectors:
+NB.     alpha -: diag S
+NB.     beta -: diag P
 
-hgeqzsunn=: [:
+hgeqzsunn=:                      hgeqzsuo`]`]                      `] hgeqzunn
 
 NB. ---------------------------------------------------------
+NB. hgeqzlqz
 NB. hgeqzuqz
 NB.
 NB. Description:
@@ -460,7 +482,7 @@ hgeqzuqz=: 4 : 0
   'Q1 Z1'=. x
   'a dQ dZ'=. y
   if. Q1 -.@-: (i. 0) do.
-    #############
+    NB. #############
     rQZ=. (< a: ; 0 ; 1) (+ upd) rQZ     NB. conjugate all s of Q's part of rQZ
     j=. h
     k=. 0
@@ -507,6 +529,20 @@ hgeqzeu=: (0 {:: hgeqzeunn) : (hgeqzeuqz hgeqzeunn)
 NB. ---------------------------------------------------------
 NB.   SP=.                 hgeqzsx hs ; HT
 NB.   'SP Q Z'=. (Q1 ; Z1) hgeqzsx hs ; HT
+NB.
+NB. Assertions (with appropriate comparison tolerance):#############
+NB.   Q -: ungql QfR
+NB.   I -: (mp~ ct) Q
+NB.   A -: Q mp R
+NB.   (] -: ((         tru   @  }:   ) mp~ ungqr)@geqrf) A
+NB. where
+NB.   QfR=. geqrf A
+NB.   Q=. ungqr QfR
+NB.   R=. tru }: QfR
+NB.   hgeqzsunn_mt_ 2 3 ; 0 {:: ggbalu_mt_ AB
+NB.   ] 'Q1 R'=. ((tru_mt_@}:) ;~ ungqr_mt_) geqrf_mt_ (0;1) {:: ggbalu_mt_ AB
+NB.   'HT Q Z'=. (Q1 ; idmat_mt_ 7) gghrdu_mt_ 2 3 ; R 1} 0 {:: ggbalu_mt_ AB
+NB.   'SP dQ dZ'=. hgeqzsxnn hs ; HT
 
 hgeqzsl=: (0 {:: hgeqzslnn) : (hgeqzslqz hgeqzslnn)
 hgeqzsu=: (0 {:: hgeqzsunn) : (hgeqzsuqz hgeqzsunn)

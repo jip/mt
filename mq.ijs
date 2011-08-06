@@ -96,14 +96,14 @@ NB.
 NB. Algorithm:
 NB.   In:  Qf pfxC(i) sfxC(i)
 NB.   Out: pfxC(i+1) sfxC(i+1)
-NB.   0) form rios, rIOS of vtau[i] which defines an
+NB.   1) form rios, rIOS of vtau[i] which defines an
 NB.      elementary reflector, depending on aC(i)'s size
-NB.   1) extract vtau[i] from Qf and ravel it:
+NB.   2) extract vtau[i] from Qf and ravel it:
 NB.        vtaui=. rios (, ;. 0) Qf
-NB.   2) apply an elementary reflector defined by vtau[i] to
+NB.   3) apply an elementary reflector defined by vtau[i] to
 NB.      either pfxC(i) or sfxC(i) to produce tmp:
 NB.        tmp=. vtaui larfxxxx xfxCi
-NB.   3) combine tmp and either pfxC(i) or sfxC(i) to
+NB.   4) combine tmp and either pfxC(i) or sfxC(i) to
 NB.      produce pfxC(i+1) and sfxC(i+1)
 
 unml2lnstep=: (0 {:: ]) ((,    1  _&rt)  ;  }.   @])  (,;.0~ (1 _ ,:~ 2 #      #@(0&({::)))) larflcfr 1 {:: ]
@@ -162,16 +162,16 @@ NB.
 NB. Algorithm:
 NB.   In: Qf , eC
 NB.   Out: eCprod
-NB.   0) form (pfxC;sfxC) as (aC;bC) or (bC;aC)
-NB.   1) find I, the decremented number of iterations
-NB.   2) start iterations by Power (^:) on (pfxCi;sfxCi) as
+NB.   1) form (pfxC;sfxC) as (aC;bC) or (bC;aC)
+NB.   2) find I, the decremented number of iterations
+NB.   3) start iterations by Power (^:) on (pfxCi;sfxCi) as
 NB.      (aCi;bCi) or (bCi;aCi)
-NB.      2.0) apply unmxxxxstep:
+NB.      3.1) apply unmxxxxstep:
 NB.             tmp=. Qf unmxxxxstep (pfxCi;sfxCi)
-NB.      2.1) combine aCi and tmp to produce (pfxCi1;sfxCi1)
+NB.      3.2) combine aCi and tmp to produce (pfxCi1;sfxCi1)
 NB.           as (aCi1;bCi1) or (bCi1;aCi1)
-NB.   3) apply unmxxxxstep to (pfxCi1;sfxCi1) to produce bCi1
-NB.   4) combine aCi1 and bCi1 to produce eCprod
+NB.   4) apply unmxxxxstep to (pfxCi1;sfxCi1) to produce bCi1
+NB.   5) combine aCi1 and bCi1 to produce eCprod
 NB.
 NB. Assertions:
 NB.   (idmat n) (-: (clean@:( }:   ))) ((   tru1 gelqf A) unml2ln ((ct unglq gelqf A) ,   0))
@@ -257,18 +257,18 @@ NB.
 NB. Algorithm:
 NB.   In:  Qf pfxC(i) sfxC(i)
 NB.   Out: pfxC(i+1) sfxC(i+1)
-NB.   0) form rios, rIOS of matrix VTau[i] which defines the
+NB.   1) form rios, rIOS of matrix VTau[i] which defines the
 NB.      block reflector, it depends on aC(i)'s size
-NB.   1) try to extract VTau[i] from Qf:
+NB.   2) try to extract VTau[i] from Qf:
 NB.        VTaui=. rios (] ;. 0) Qf
-NB.      1.0) if failure occures (i.e. execution is at first
+NB.      2.1) if failure occures (i.e. execution is at first
 NB.           or last step and 0<MQNB|k ), then replace in
 NB.           rios wrong explicit length (MQNB) by implicit
 NB.           one (∞) and retry
-NB.   2) apply a block reflector defined by VTau[i] to either
+NB.   3) apply a block reflector defined by VTau[i] to either
 NB.      pfxC(i) or sfxC(i) to produce tmp:
 NB.        tmp=. VTaui larfbxxxx xfxCi
-NB.   3) combine tmp and either pfxC(i) or sfxC(i) to
+NB.   4) combine tmp and either pfxC(i) or sfxC(i) to
 NB.      produce pfxC(i+1) and sfxC(i+1)
 NB.
 NB. Notes:

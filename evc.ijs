@@ -44,7 +44,7 @@ NB. Description:
 NB.   Calculate initial parameters for tgevcxxx
 NB.
 NB. Syntax:
-NB.   'small big bignum d0 d1 d2 abnorm abrwork abscale cond1 cond2 abcoeff abcoeffa d bigd'=. tgevcxi SP
+NB.   'small big bignum d0 d1 d2 abnorm abrwork abscale cond1 abcoeff abcoeffa dmin'=. tgevcxi SP
 NB. where
 NB.   SP       - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.              produced by hgexxsxx
@@ -62,11 +62,9 @@ NB.              of S,P (tgevcui)
 NB.   abscale  - 2-vector, some parameters of S,P
 NB.   cond1    - n-vector, pre-calculated part of some
 NB.              condition
-NB.   cond2    - n-vector, some pre-calculated condition
 NB.   abcoeff  - 2×n-matrix
 NB.   abcoeffa - 2×n-matrix
-NB.   d        - n-vector
-NB.   bigd     - n-vector, the scaled d
+NB.   dmin     - n-vector
 
 tgevcui=: 3 : 0
   bignum=. % FP_SFMIN * c y
@@ -77,25 +75,31 @@ tgevcui=: 3 : 0
   d2=. 0 1 sorim`| ag d1
   temp=. norm1tc"2 y                                                           NB. 2×n-matrix
   abnorm=. >./"1 temp
+smoutput ": 'abnorm' ; abnorm
   abrwork=. temp - sorim d0
   abscale=. % FP_SFMIN >. abnorm
-  temp=. % (>./) FP_SFMIN ,: abscale * d2                                      NB. n-vector
+smoutput ": 'abscale' ; abscale
+  temp=. % (>./) FP_SFMIN , abscale * d2                                       NB. n-vector
+smoutput 'temp ' , ": temp
   sba=. |. abscale * temp *"1 d1                                               NB. 2×n-matrix
+NB. smoutput ": 'd1' ; d1
+NB. smoutput ": 'temp *"1 d1' ; (temp *"1 d1)
+NB. smoutput ": 'sba' ; sba
   abcoeff=. abscale * sba
+smoutput ": 'abcoeff non-scaled' ; abcoeff
   NB. scale to avoid underflow
   lsab=. *./ 0 1 (>:&FP_SFMIN)`(<&small) ag 0 1 (|`sorim ag)"2 sba ,: abcoeff  NB. 2×n-matrix
   scale=. >./ lsab } 1 ,: (big <. abnorm) * small % 0 1 |`sorim ag sba         NB. n-vector
   scale=. (+./ lsab) } scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
   abcoeff=. lsab } (abcoeff *"1 scale) ,: (abscale * scale *"1 sba)
+smoutput ": 'abcoeff scaled' ; abcoeff
   abcoeffa=. 0 1 |`sorim ag abcoeff                                            NB. coeffs for triangular solvers
+smoutput ": 'abcoeffa' ; abcoeffa
   cond1=. +/ abcoeffa * abrwork
   dmin=. >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa
-  d=. + (-/) abcoeff * d0
-  d=. (dmin >: sorim d) } d ,: dmin
-  abs1d=. sorim d
-  cond2=. 1 > abs1d
-  bigd=. bignum * abs1d
-  small ; big ; bignum ; d0 ; d1 ; d2 ; abnorm ; abrwork ; abscale ; cond1 ; cond2 ; abcoeff ; abcoeffa ; d ; bigd
+smoutput 'dmin ' , ": dmin
+
+  small ; big ; bignum ; d0 ; d1 ; d2 ; abnorm ; abrwork ; abscale ; cond1 ; abcoeff ; abcoeffa ; dmin
 )
 
 NB. ---------------------------------------------------------
@@ -125,12 +129,13 @@ NB. - wildcard char is '?' here instead of 'x' used in names
 
 tgevcux=: 1 : 0
 :
-  'ios small big bignum d0 d1 d2 abnorm abrwork abscale cond1 cond2 abcoeff abcoeffa d bigd'=. x
+  'ios small big bignum d0 d1 d2 abnorm abrwork abscale cond1 abcoeff abcoeffa dmin'=. x
   n=. c y
   k=. # ios
   X=. (n , 0) $ 0
   je=. <: k
   while. je >: 0 do.
+smoutput 'JE = ' , ": je
     if. *./ FP_SFMIN >: (je { ios) {"1 d2 do.
       NB. singular matrix pencil - return unit eigenvector
       X=. (1 je } n $ 0) ,. X
@@ -138,34 +143,62 @@ tgevcux=: 1 : 0
       NB. non-singular eigenvalue: triangular solve of:
       NB.   (a*A - b*B) * x = 0 ,
       NB. columnwise
+
+NB.   cond2    - n-vector, some pre-calculated condition
+NB.   d        - n-vector
+NB.   bigd     - n-vector, the scaled d
+  d=. -/ ((je { ios) {"1 abcoeff) * d0          NB. or * ((je { ios) }."1 d0)
+smoutput ": 'd before replace ' ; d
+smoutput ": '(je { ios) {"1 abcoeff' ; ((je { ios) {"1 abcoeff)
+NB. smoutput ": '(je { ios) }."1 d0' ; ((je { ios) }."1 d0)
+smoutput ": '-/ ((je { ios) {"1 abcoeff) * d0' ; (-/ ((je { ios) {"1 abcoeff) * d0)
+smoutput ": '+ -/ ((je { ios) {"1 abcoeff) * d0' ; (+ -/ ((je { ios) {"1 abcoeff) * d0)
+  d=. (dmin >: sorim d) } d ,: dmin
+smoutput 'd ' , ": d
+  abs1d=. sorim d
+  cond2=. 1 > abs1d
+smoutput 'cond2 ' , ": cond2
+  bigd=. bignum * abs1d
+smoutput 'bigd ' , ": bigd
+
+
       NB. work[0:j-1] contains sums w
       NB. work[j+1:je] contains x
       work=. 1 ,~ (-/) ((je { ios) {"1 abcoeff) * (((0 0,]),:(2,],1:)) je { ios) ({.@(2 0 1&|:)) ;. 0 y
       j=. <: je { ios
       while. j >: 0 do.
+smoutput 'J = ' , ": j
         NB. form:
         NB.   x[j] = - w[j] / d
         NB. with scaling and perturbation of the denominator
         abs1wj=. sorim j { work
         if. (abs1wj >: (j { bigd)) *. (j { cond2) do.
           work=. work % abs1wj
+smoutput 'work[] after %abs1wj ' , ": work
         end.
         work=. j (-@(%&(j{d))) upd work
+smoutput 'work[] after upd ' , ": work
         abs1wj=. sorim j { work
+smoutput 'abs1wj ' , ": abs1wj
         if. j > 0 do.
           NB. w = w + x[j] * (a*S[:,j] - b*P[:,j]) with scaling
           if. ((abcoeffa mp & (j&({"1)) abrwork) >: (bignum % abs1wj)) *. (1 < abs1wj) do.
             work=. work % abs1wj
+smoutput 'work[] after %abs1wj ' , ": work
           end.
           workadd=. (((je { ios) {"1 abcoeff) * j { work) * (((0 0,]),:(2,],1:)) j) ({.@(2 0 1&|:)) ;. 0 y
+smoutput 'workadd ' , ": workadd
           work=. (i. j) (+`-/@(,&workadd)) upd work
+smoutput 'work after add ' , ": work
         end.
         j=. <: j
       end.
       NB. optional back transforming
       work=. ((>: je) ({."1) _1 { y) u work  NB. when backtransform, (ios -: i. n) <=> (je -: je { ios)
+smoutput 'work[] after back-transforming ' , ": work
       NB. scale eigenvector and stitch X to it
       xmax=. normit work
+smoutput 'xmax ' , ": xmax
       if. FP_SFMIN < xmax do.
         X=. (work % xmax) stitcht X
       else.
@@ -201,12 +234,13 @@ NB.   k     - integer in range [0,n]
 
 tgevcuy=: 1 : 0
 :
-  'ios small big bignum d0 d1 d2 abnorm abrwork abscale cond1 cond2 abcoeff abcoeffa d bigd'=. x
+  'ios small big bignum d0 d1 d2 abnorm abrwork abscale cond1 abcoeff abcoeffa dmin'=. x
   n=. c y
   k=. # ios
   Y=. (n , 0) $ 0
   je=. 0
   while. je < k do.
+smoutput 'JE = ' , ": je
     if. *./ FP_SFMIN >: (je { ios) {"1 d2 do.
       NB. singular matrix pencil - return unit eigenvector
       Y=. Y ,. (1 je } n $ 0)
@@ -214,10 +248,29 @@ tgevcuy=: 1 : 0
       NB. non-singular eigenvalue: triangular solve of:
       NB.   (a*A - b*B)^H * y = 0 ,
       NB. rowwise in (a*A - b*B)^H , or columnwise in (a*A - b*B)
+
+NB.   cond2    - n-vector, some pre-calculated condition
+NB.   d        - n-vector
+NB.   bigd     - n-vector, the scaled d
+  d=. + -/ ((je { ios) {"1 abcoeff) * d0          NB. or * ((je { ios) }."1 d0)
+smoutput ": 'd before replace ' ; d
+smoutput ": '(je { ios) {"1 abcoeff' ; ((je { ios) {"1 abcoeff)
+NB. smoutput ": '(je { ios) }."1 d0' ; ((je { ios) }."1 d0)
+smoutput ": '-/ ((je { ios) {"1 abcoeff) * d0' ; (-/ ((je { ios) {"1 abcoeff) * d0)
+smoutput ": '+ -/ ((je { ios) {"1 abcoeff) * d0' ; (+ -/ ((je { ios) {"1 abcoeff) * d0)
+  d=. (dmin >: sorim d) } d ,: dmin
+smoutput 'd ' , ": d
+  abs1d=. sorim d
+  cond2=. 1 > abs1d
+smoutput 'cond2 ' , ": cond2
+  bigd=. bignum * abs1d
+smoutput 'bigd ' , ": bigd
+
       work=. 1
       xmax=. 1
       j=. >: je { ios
       while. j < n do.
+smoutput 'J = ' , ": j
         NB. compute:
         NB.         j-1
         NB.   sum = Σ  conjg(a*S[k,j] - b*P[k,j]) * x[k] ,
@@ -225,29 +278,42 @@ tgevcuy=: 1 : 0
         NB. scale if necessary
         if. (j { cond1) > (bignum % xmax) do.
           work=. work % xmax
+smoutput 'work[] after %xmax ' , ": work
           xmax=. 1
+smoutput 'xmax=. 1'
         end.
-        sum=. -/ ((je { ios) {"1 abcoeff) * work mp"1 (j ((0,,~),:(2,-,1:)) je { ios) (+@{.@(2 0 1&|:)) ;. 0 y
+        sum=. -/ (0 1 ]`+ ag (je { ios) {"1 abcoeff) * work mp"1 (j ((0,,~),:(2,-,1:)) je { ios) (+@{.@(2 0 1&|:)) ;. 0 y
+smoutput 'SUM = ' , ": sum
+smoutput 'D = ' , ": j { d
         NB. form:
         NB.   x[j] = - sum / conjg(a*S[j,j] - b*P[j,j])
         NB. with scaling and perturbation of the denominator
         abs1sum=. sorim sum
         if. (abs1sum >: j { bigd) *. (j { cond2) do.
           work=. work % abs1sum
+smoutput 'rescaled work[] ' , ": work
           xmax=. xmax % abs1sum
+smoutput 'rescaled xmax ' , ": xmax
           sum=. sum % abs1sum
+smoutput 'rescaled sum ' , ": sum
         end.
         workj=. - sum % j { d
+smoutput 'work[j] ' , ": workj
         work=. work , workj
+smoutput 'new work ' , ": work
         xmax=. xmax >. sorim workj
+smoutput 'new xmax ' , ": xmax
         j=. >: j
       end.
+smoutput 'after loop(j) work ' , ": work
       NB. optional back transforming
-      work=. (je (}."1) 2 ({ :: 0:) y) u work  NB. when backtransform, (ios -: i. n) <=> (je -: je { ios)
+      work=. (je (}."1) 2 ({ :: 0:) y) (u dbg 'BT') work  NB. when backtransform, (ios -: i. n) <=> (je -: je { ios)
+smoutput 'work[] after back-transforming ' , ": work
       NB. scale eigenvector and stitch to Y
       xmax=. normit work
+smoutput 'xmax ' , ": xmax
       if. FP_SFMIN < xmax do.
-        Y=. Y stitchb work % xmax
+        Y=. Y stitchb work (% dbg 'VL[:,IEIG]') xmax
       else.
         Y=. Y ,. 0
       end.

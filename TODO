@@ -9,6 +9,7 @@
 4. Implement blocked generalized Hessenberg reduction [3]
    in gghrdxxx
 
+
 [1] Pradeep Misra and Paul Van Dooren and Andras Varga.
     Computation of Structural Invariants of Generalized State Space Systems.
     Automatica, 1994, vol. 30.

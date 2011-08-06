@@ -102,7 +102,7 @@ NB.   signbc - s-vector, scaling factors to form Q,Z later
 hgeqzuso=: 3 : 0
   'hs HT'=. y
   lios=. dhs2lios hs
-  'HT signbc'=. hgeqzueo y
+  'HT signbc'=. (hgeqzueo dbg 'hgeqzueo') y
   subHT=. lios {"1 HT
   (((,:~ (i. c HT) </ lios) } subHT ,: subHT *"1 signbc) ((lios }"1) dbg 'alpha&beta subHT') HT) ; signbc
 )

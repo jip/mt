@@ -285,7 +285,7 @@ hgezq=: 1 : 0
         NB. T[ilast,ilast]=0 - clear H[ilast-1,ilast] to
         NB. split off a 1x1 block
         lios=. (>: ilast) th2lios ifrstm
-        'y cs'=. (rot &. |:) rotga y ; (< 0 ; (ilast - 0 1) ; lios) ; < a: ; _1
+        'y cs'=. (rot &. |:) rotga y ; (< 0 ; (ilast - 0 1) ; lios) ; < < a: ; _1
         y=. (< 1 ; (ilast - 0 1) ; (}: lios)) (cs & (rot &. |:)) upd y
         dQ1=. dQ1 , cs , ilast - 0 1
       else.

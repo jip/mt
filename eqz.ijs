@@ -104,7 +104,7 @@ hgeqzuso=: 3 : 0
   lios=. dhs2lios hs
   'HT signbc'=. hgeqzueo y
   subHT=. lios {"1 HT
-  (((,:~ (i. c HT) </ lios) } subHT ,: subHT *"1 signbc) lios }"1 HT) ; signbc
+  (((,:~ (i. c HT) </ lios) } subHT ,: subHT *"1 signbc) ((lios }"1) dbg 'alpha&beta subHT') HT) ; signbc
 )
 
 NB. ---------------------------------------------------------
@@ -173,7 +173,7 @@ hgeqzunn=: 1 : 0
   NB. Column operations modify rows ifrstm:*
   NB. Row operations modify columns *:ilastm
   while. jiter < maxit do.
-smoutput 'loop 170 jiter=',":jiter
+smoutput 'loop 170 JITER = ',":jiter
     goto60=. 1  NB. set default branching
     NB. split the matrix if possible, by to tests:
     NB.   1. H[j,j-1]=0 OR j=h
@@ -184,18 +184,22 @@ smoutput 'loop 170 jiter=',":jiter
           NB. general case: j < ilast
           j=. <: ilast
           while. j >: h do.
-smoutput 'loop 40 j=',":j
+smoutput 'loop 40 J = ',":j
             NB. test 1: H[j,j-1]=0 OR j=h
             if. j = h do.
               ilazro=. 1
+smoutput 'ILAZRO = .T.'
             elseif. atol >: sorim (< 0 , j - 0 1) { HT do.
               HT=. 0 (< 0 , j - 0 1) } HT
               ilazro=. 1
+smoutput 'ILAZRO = .T.'
             elseif. do.
               ilazro=. 0
+smoutput 'ILAZRO = .F.'
             end.
             NB. test 2: T[j,j]=0
             if. btol > | (< 1 , ,~ j) { HT do.
+smoutput 'Test 2 = .T.'
               HT=. 0 (< 1 , ,~ j) } HT
               NB. test 2a: check for 2 consecutive small subdiagonals in H
               ilazr2=. 0
@@ -203,6 +207,7 @@ smoutput 'loop 40 j=',":j
                 'Hjj1 Hj1j Hjj'=. sorim ((<"1) 0 ,. (0 _1,1 0,:0 0) + j) { HT
                 if. 0 >: (Hjj1 , Hjj) mp (ascale * (Hj1j , -atol)) do.
                   ilazr2=. 1
+smoutput 'ILAZR2 = .T.'
                 end.
               end.
               NB. If both tests (1 & 2) pass, i.e., the
@@ -213,13 +218,14 @@ smoutput 'loop 40 j=',":j
               NB. can also be zero, so this may have to be
               NB. done repeatedly.
               if. ilazro +. ilazr2 do.
+smoutput 'ILAZRO OR ILAZR2 = .T.'
                 jch=. j
                 lios=. (>: ilastm) th2lios j
                 while. jch < ilast do.
-smoutput 'loop 20 jch=',":jch
-                  'HT cs'=. (rot &. |:) rotga HT ; (< 0 ; (jch + 0 1) ; lios) ; < < a: ; 0
+smoutput 'loop 20 JCH = ',":jch
+                  'HT cs'=. (((rot &. |:) rotga) dbg 'rotga(H)') HT ; (< 0 ; (jch + 0 1) ; lios) ; < < a: ; 0
                   lios=. }. lios
-                  HT=. (< 1 ; (jch + 0 1) ; lios) (cs & (rot &. |:)) upd HT
+                  HT=. (< 1 ; (jch + 0 1) ; lios) (((cs & (rot &. |:)) upd) dbg 'rot(T)') HT
                   dQ=. dQ , (+ cs) , jch + 0 1
                   if. ilazr2 do.
                     HT=. (< 0 , jch - 0 1) (* & ({. cs)) upd HT
@@ -229,13 +235,18 @@ smoutput 'loop 20 jch=',":jch
                     if. ilast > >: jch do.
                       ifirst=. >: jch
                       goto60=. 0
+smoutput '(1) GOTO 70'
+                    else.
+smoutput '(3) GOTO 60'
                     end.
                     goto_60.
                   end.
                   HT=. 0 (< 1 , jch + 1 1) } HT
                   jch=. >: jch
                 end.
+smoutput '(2) GOTO 50'
               else.
+smoutput 'ILAZRO OR ILAZR2 = .F.'
                 NB. Only test 2 passed - chase the zero to
                 NB. T[ilast,ilast], then process as in the
                 NB. case T[ilast,ilast]=0
@@ -243,23 +254,25 @@ smoutput 'loop 20 jch=',":jch
                 liosc=. (>: ilastm) th2lios <: j
                 liosr=. (2 + j) th2lios ifrstm
                 while. jch < ilast do.
-smoutput 'loop 30 jch=',":jch
-                  'HT cs'=. (rot &. |:) rotga HT ; (< 1 ; (jch + 0 1) ; (2 }. liosc)) ; < < a: ; 0
-                  HT=. (< 0 ; (jch + 0 1) ; liosc) (cs & (rot &. |:)) upd HT
+smoutput 'loop 30 JCH = ',":jch
+                  'HT cs'=. (((rot &. |:) rotga) dbg 'rotga(T)') HT ; (< 1 ; (jch + 0 1) ; (2 }. liosc)) ; < < a: ; 0
+                  HT=. (< 0 ; (jch + 0 1) ; liosc) (((cs & (rot &. |:)) upd) dbg 'rot(H)') HT
                   dQ=. dQ , (+ cs) , jch + 0 1
-                  'HT cs'=. rot rotga HT ; (< 0 ; liosr ; (jch - 0 1)) ; _1
-                  HT=. (< 1 ; (_2 }. liosr) ; (jch - 0 1)) (cs & rot) upd HT
+                  'HT cs'=. ((rot rotga) dbg 'rotga(H)') HT ; (< 0 ; liosr ; (jch - 0 1)) ; _1
+                  HT=. (< 1 ; (_2 }. liosr) ; (jch - 0 1)) (((cs & rot) upd) dbg 'rot(T)') HT
                   dZ=. dZ , cs , jch - 0 1
                   liosc=. }. liosc
                   liosr=. liosr , 2 + jch
                   jch=. >: jch
                 end.
               end.
+smoutput '(3) GOTO 50'
               goto_50.
-smoutput 'loop 20 jch=',":jch
             elseif. ilazro do.
+smoutput 'ILAZRO = .T.'
               ifirst=. j
               goto60=. 0
+smoutput '(2) GOTO 70'
               goto_60.
             end.
             j=. <: j
@@ -269,19 +282,25 @@ smoutput 'loop 20 jch=',":jch
           return.
         else.
           HT=. 0 (< 1 , ,~ ilast) } HT
+smoutput '(1) GOTO 50'
         end.
         label_50.
+smoutput 'label 50'
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
         lios=. (>: ilast) th2lios ifrstm
-        'HT cs'=. rot rotga HT ; (< 0 ; lios ; (ilast - 0 1)) ; _1
-        HT=. (< 1 ; (}: lios) ; (ilast - 0 1)) (cs & rot) upd HT
+        'HT cs'=. ((rot rotga) dbg 'rotga(H)') HT ; (< 0 ; lios ; (ilast - 0 1)) ; _1
+        HT=. (< 1 ; (}: lios) ; (ilast - 0 1)) (((cs & rot) upd) dbg 'rot(T)') HT
         dZ=. dZ , cs , ilast - 0 1
       else.
         HT=. 0 (< 0 , ilast - 0 1) } HT
+smoutput '(2) GOTO 60'
       end.
+    else.
+smoutput '(1) GOTO 60'
     end.
     label_60.
+smoutput 'label 60'
     if. goto60 do.
       NB. H[ilast,ilast-1]=0 - standartize B, set alpha and
       NB. beta
@@ -301,6 +320,7 @@ smoutput 'loop 20 jch=',":jch
       eshift=. 0
       'ifrstm ilastm'=. (h , ilast) reset (ifrstm , ilastm)
     else.
+smoutput 'label 70'
       NB. QZ step
       NB. This iteration only involves rows/columns
       NB. ifirst:ilast. We assume ifirst<ilast, and that the
@@ -336,6 +356,7 @@ smoutput 'loop 20 jch=',":jch
       tempr=. >./ temp
       temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr) } 1 , tempr ,: 1
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
+smoutput 'label 90'
       NB. do an implicit-shift QZ sweep
       NB. initial Q
       cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { HT
@@ -344,23 +365,24 @@ smoutput 'loop 20 jch=',":jch
       liosc=. (>: ilastm) th2lios <: j
       liosr=. (j + 2) th2lios ifrstm
       while. j < ilast do.
+smoutput 'loop 150 J = ',":j
         lios=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          HT=. (< a: ; lios ; (}. liosc)) (cs & (rot &. |:)"2) upd HT
+          HT=. (< a: ; lios ; (}. liosc)) (((cs & (rot &. |:)"2) upd) dbg 'rot(HT)') HT
         else.
-          'HT cs'=. (rot &. |:) rotga HT ; (< 0 ; lios ; liosc) ; < < a: ; 0
+          'HT cs'=. (((rot &. |:) rotga) dbg 'rotga(H)') HT ; (< 0 ; lios ; liosc) ; < < a: ; 0
           liosc=. }. liosc
-          HT=. (< 1 ; lios ; liosc) (cs & (rot &. |:)) upd HT
+          HT=. (< 1 ; lios ; liosc) (((cs & (rot &. |:)) upd) dbg 'rot(T)') HT
         end.
         dQ=. dQ , (+ cs) , lios
         lios=. j + 1 0
-        'HT cs'=. rot rotga HT ; (< 1 ; liosr ; lios) ; _1
+        'HT cs'=. ((rot rotga) dbg 'rotga(T)') HT ; (< 1 ; liosr ; lios) ; _1
         NB. isn't a last iteration?
         if. j < <: ilast do.
           liosr=. liosr , j + 2
         end.
-        HT=. (< 0 ; liosr ; lios) (cs & rot) upd HT
+        HT=. (< 0 ; liosr ; lios) (((cs & rot) upd) dbg 'rot(H)') HT
         dZ=. dZ , cs , lios
         j=. >: j
       end.

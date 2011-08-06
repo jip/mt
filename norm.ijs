@@ -34,22 +34,27 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-mo=: >./`0:@.(0=#) @  NB. max of, 0 for empty list
+max=: >./`0:@.(0 = #)               NB. max of, 0 for empty list
 
-moc=: (" 2) mo        NB. vector: max of, matrix: column maxs
-mor=: ("_1) mo        NB. vector: max of, matrix: row maxs
+rsum=: +/"1 @:                      NB. vector: sum of, matrix: row sums
+csum=: +/"2 @:                      NB. vector: sum of, matrix: column sums
 
-csum=: +/" 2 @:       NB. vector: sum of, matrix: column sums
-rsum=: +/"_1 @:       NB. vector: of, matrix: row sums
-
-mocsum=: csum mo      NB. vector: sum of, matrix: max of column sums
-morsum=: rsum mo      NB. vector: max of, matrix: max of row sums
+rmax=: max"1 @:                     NB. vector: max of, matrix: row maximums
+cmax=: max"2 @:                     NB. vector: max of, matrix: column maximums
 
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Magnitude-based norms |y|
+NB. norm1
+NB. norm1r
+NB. norm1c
+NB. normi
+NB. normir
+NB. normic
+NB.
+NB. Description:
+NB.   Magnitude-based norms |y|
 NB.
 NB. Notes:
 NB. - norm1 implements LAPACK's DZSUM1, DLANSY('1'),
@@ -65,29 +70,35 @@ NB.   DLANST('i'), xLANGB('i'), xLANGT('i'), xLANHS('i'),
 NB.   xLANTB('i'), xLANTR('i'), ZLANHB('i'), ZLANHT('i'),-
 NB.   extraneous values in matrix must be zeroed
 
-norm1=: | mocsum           NB. 1-norm of vector (matrix)
-normi=: | morsum           NB. ∞-norm of vector (matrix)
+norm1=:  | csum (max @)             NB. 1-norm of vector (matrix)
+norm1r=: | rsum                     NB. 1-norm of vector (matrix rows)
+norm1c=: | csum                     NB. 1-norm of vector (matrix columns)
 
-norm1c=: | csum            NB. 1-norm of vector (matrix columns)
-norm1r=: | rsum            NB. 1-norm of vector elements (matrix rows)
-
-normic=: | moc             NB. ∞-norm of vector (matrix columns)
-normir=: (| mor)"_1        NB. ∞-norm of vector elements (matrix rows)
+normi=:  | (+/"_1 @:) (max @)       NB. ∞-norm of vector (matrix)
+normir=: | rmax                     NB. ∞-norm of vector (matrix rows)
+normic=: | cmax                     NB. ∞-norm of vector (matrix columns)
 
 NB. ---------------------------------------------------------
-NB. Taxicab-based norms |Re(y)| + |Im(y)|
+NB. norm1
+NB. norm1r
+NB. norm1c
+NB. normi
+NB. normir
+NB. normic
+NB.
+NB. Description:
+NB.   Taxicab-based norms |Re(y)| + |Im(y)|
 NB.
 NB. Notes:
 NB. - norm1t implements BLAS's DASUM, DZASUM
 
-norm1t=: sorim mocsum      NB. 1-norm of vector (matrix)
-normit=: sorim morsum      NB. ∞-norm of vector (matrix)
+norm1t=:  sorim csum (max @)        NB. 1-norm of vector (matrix)
+norm1tr=: sorim rsum                NB. 1-norm of vector (matrix rows)
+norm1tc=: sorim csum                NB. 1-norm of vector (matrix columns)
 
-norm1tc=: sorim csum       NB. 1-norm of vector (matrix columns)
-norm1tr=: sorim rsum       NB. 1-norm of vector elements (matrix rows)
-
-normitc=: sorim moc        NB. ∞-norm of vector (matrix columns)
-normitr=: (sorim mor)"_1   NB. ∞-norm of vector elements (matrix rows)
+normit=:  sorim (+/"_1 @:) (max @)  NB. ∞-norm of vector (matrix)
+normitr=: sorim rmax                NB. ∞-norm of vector (matrix rows)
+normitc=: sorim cmax                NB. ∞-norm of vector (matrix columns)
 
 NB. ---------------------------------------------------------
 NB. Square-based Euclidean (Frobenius) norm of vector

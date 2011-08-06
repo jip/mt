@@ -333,27 +333,27 @@ hgeqzunn=: 1 : 0
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
       NB. do an implicit-shift QZ sweep
       if. istart < ilast do.
+        NB. at least 1 iteration will be executed
         NB. initial Q
         cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { HT
         NB. sweep
         j=. istart
         liosr=. (>: ilastm) th2lios istart
-        liosc=. ((>: ilastm) <. (istart + 3)) th2lios ifirstm
+        liosc=. (istart + 2) th2lios ifirstm
         whilst.
           ios=. < 0 ; 0 1 (+ ; (<:@])) j
-          csr=. lartg ios { HT
+          cs=. }: csr=. lartg ios { HT
           HT=. (({: csr) , 0) ios } HT
-          cs=. }: csr
           j < ilast
         do.
           ios=. < a: ; (j + 0 1) ; liosr
           HT=. ios (cs & (rot &. |:)"2) upd HT
-          dQ=. dQ , cs , j + 0 1
+          dQ=. dQ , (+ cs) , j + 0 1
           'HT cs'=. rot rotga HT ; (< 1 ; liosc ; (j + 1 0)) ; < < _1 ; 1 0
-          HT=. (< 0 ; (}:^:(j < <: ilast) liosc) ; (j + 1 0)) (cs & rot) upd HT
+          liosc=. (j + 2) ,~ ^: (j < <: ilast) liosc
+          HT=. (< 0 ; liosc ; (j + 1 0)) (cs & rot) upd HT
           dZ=. dZ , cs , j + 1 0
           liosr=. }. liosr
-          liosc=. liosc , j + 3
           j=. >: j
         end.
       end.
@@ -444,8 +444,8 @@ NB. ---------------------------------------------------------
 NB.   ab=.                 hgeqzxe hs ; HT
 NB.   'ab Q Z'=. (Q1 ; Z1) hgeqzxe hs ; HT
 
-hgeqzle=: (0 {:: hgeqzlenn) : (hgeqzlqz hgeqzlenn)
-hgeqzue=: (0 {:: hgeqzuenn) : (hgeqzuqz hgeqzuenn)
+hgeqzle=: (0 {:: hgeqzlenn) : ((() rotscll &. > ()) hgeqzlenn)
+hgeqzue=: (0 {:: hgeqzuenn) : (rotsclu hgeqzuenn)
 
 NB. ---------------------------------------------------------
 NB.   SP=.                 hgeqzxs hs ; HT

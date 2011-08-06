@@ -3,6 +3,8 @@ NB.
 NB. lartg      Generates a plane rotation of a 2-vector
 NB. rot        Applies a plane rotation[s] to a 2-vector[s]
 NB. rotga      Adv. to make verb to get and apply rotation
+NB. rotsclx    Update array by rotations and scalings
+NB.            accumulated
 NB.
 NB. testlartg  Test lartg by vectors given
 NB. testrot    Test rotation algorithms by predefined matrix
@@ -315,66 +317,72 @@ rotga=: 1 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. rotsl
-NB. rotsu
+NB. rotscll
+NB. rotsclu
 NB.
 NB. Description:
-NB.   Apply scalings and rotations accumulated in dU to U1 to
-NB.   produce U explicitely
+NB.   Update A by rotations and scalings accumulated in dA
 NB.
 NB. Syntax:
-NB.   U=. U1 rotsx dU
+NB.   Aupd=. A rotsclx dA
 NB. where
-NB.   dU      - any×4-matrix, where each row is 4-vector of
+NB.   dA      - any×4-matrix, where each row is 4-vector of
 NB.             values, either:
-NB.               m , io , 0 , 0
+NB.               0 0 0 0            NB. no action
 NB.             or:
-NB.               c , s , iof , iog
-NB.             accumulates scalings and rotations to form U
-NB.   U1      - n×n-matrix or (i.0), the unitary
-NB.             (orthogonal), output from the gghrdxnn,
-NB.             hgeqzxnn
-NB.   U       - either (i.0) when U1 -: (i.0) , or n×n-matrix
-NB.             (U1*ΔU) otherwise
-NB.   m       - scalar to scale column
-NB.   io      - IO column to scale
+NB.               m , io , 0 0       NB. defines scaling
+NB.             or:
+NB.               c , s , iof , iog  NB. defines rotation
+NB.             accumulates scalings and rotations
+NB.   A       - n×n-matrix or (i.0)
+NB.   Aupd    - either (i.0) when A -: (i.0) , or n×n-matrix
+NB.             (A*ΔA) otherwise
+NB.   m       - multiplier to scale either row (rotscll) or
+NB.             column (rotsclu)
+NB.   io      - IO either row (rotscll) or column (rotsclu)
+NB.             to scale
 NB.   (c,s)   - 2-vector, defines rotation for 2-vectors
 NB.             (f,g), being a curtailed output of larfg
-NB.   iof,iog - IOS columns to form 2-vectors (f,g) to rotate
+NB.   iof,iog - IOS either rows (rotscll) or columns
+NB.             (rotsclu) which contain 2-vectors (f,g) to
+NB.             rotate, iof≠iog
+NB.
+NB. TODO:
+NB. - aggregate non-intersecting groups of vectors to change
+NB.   them simultaneously
 
-hgeqzuqz=: 4 : 0
-  if. 0 < # x do.
-    
-    j=. h
-    k=. 0
-    while. j < e do.                     NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
-      i=. e
-      while. i > (j+1) do.               NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
-        iospair=. < a: ; (i - 1 0)
-        q=. (< k , 0) { rQZ              NB. extract current rotation q[k]
-        Q1=. iospair ((q & rot) upd) Q1  NB. update columns by q[k]
-        k=. >: k
-        i=. <: i
+rotscll=: (4 : 0) ^: (+:&(0=#))
+  i=. 0
+  while. i < # y do.                    NB. traverse dA rows down
+    'cs iofg'=. _2 ]\ i { y
+    if. 0 0 -: iofg do.
+      if. -. 0 0 -: cs do.
+        'm io'=. cs
+        x=. io (m&*) upd x             NB. do scale
       end.
-      j=. >: j
+    else.
+      x=. iofg (cs&(rot &. |:)) upd x  NB. do rotation
     end.
+    i=. >: i
   end.
-  if. Z1 -.@-: (i. 0) do.
-    j=. h
-    k=. 0
-    while. j < e do.                     NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
-      i=. e
-      while. i > (j+1) do.               NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
-        iospair=. < a: ; (i - 0 1)
-        z=. (< k , 1) { rQZ              NB. extract current rotation z[k]
-        Z1=. iospair ((z & rot) upd) Z1  NB. update columns by z[k]
-        k=. >: k
-        i=. <: i
+  x
+)
+
+rotsclu=: (4 : 0) ^: (+:&(0=#))
+  i=. 0
+  while. i < # y do.                    NB. traverse dA rows down
+    'cs iofg'=. _2 ]\ i { y
+    if. 0 0 -: iofg do.
+      if. -. 0 0 -: cs do.
+        'm io'=. cs
+        x=. (< a: ; io) (m&*) upd x     NB. do scale
       end.
-      j=. >: j
+    else.
+      x=. (< a: ; iofg) (cs&rot) upd x  NB. do rotation
     end.
+    i=. >: i
   end.
-  a ; Q1 ; Z1
+  x
 )
 
 NB. =========================================================

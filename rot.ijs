@@ -9,7 +9,7 @@ NB.
 NB. testlartg  Test lartg by vectors given
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.6.8 2010-10-20
+NB. Version: 0.6.8 2010-10-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -328,11 +328,11 @@ NB.   Aupd=. A rotsclx dA
 NB. where
 NB.   dA      - any×4-matrix, where each row is 4-vector of
 NB.             values, either:
-NB.               0 0 0 0            NB. no action
+NB.               0 0 0 0         NB. no action
 NB.             or:
-NB.               m , io , 0 0       NB. defines scaling
+NB.               m , io , 0 0    NB. defines scaling
 NB.             or:
-NB.               c , s , iof , iog  NB. defines rotation
+NB.               cs , iof , iog  NB. defines rotation
 NB.             accumulates scalings and rotations
 NB.   A       - n×n-matrix or (i.0)
 NB.   Aupd    - either (i.0) when A -: (i.0) , or n×n-matrix
@@ -341,8 +341,8 @@ NB.   m       - multiplier to scale either row (rotscll) or
 NB.             column (rotsclu)
 NB.   io      - IO either row (rotscll) or column (rotsclu)
 NB.             to scale
-NB.   (c,s)   - 2-vector, defines rotation for 2-vectors
-NB.             (f,g), being a curtailed output of larfg
+NB.   cs      - 2-vector (c,s), curtailed output of lartg,
+NB.             defines rotation matrix
 NB.   iof,iog - IOS either rows (rotscll) or columns
 NB.             (rotsclu) which contain 2-vectors (f,g) to
 NB.             rotate, iof≠iog

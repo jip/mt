@@ -17,7 +17,7 @@ NB.            given
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.6.6 2010-06-22
+NB. Version: 0.6.8 2010-10-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -560,47 +560,39 @@ ggballp=: 3 : 0
   pl=. pr=. i. n
   j=. h+s-1
   while. j >: h do.
-smoutput 'j h s = ',":j,h,s
     v=. (0 2 ,. (h,s) ,. (j,1)) ,@(+./)@:(0&~:) ;. 0 y
     lios=. I. 0 ~: v
     select. # lios
       fcase. 1 do.
         nst=. < j , (h+s-1)
-smoutput 'fcase 1, nst = ',":>nst
         pr=. nst C. :: ] pr
-        y=. nst ((C."1 :: ]) dbg 'swap_cols(AB)') y
+        y=. nst C."1 :: ] y
       case. 0 do.
         nst=. < (h + {. lios) , (h+s-1)
-smoutput 'case 0, nst = ',":>nst
         pl=. nst C. :: ] pl
-        y=. nst ((C."2 :: ]) dbg 'swap_rows(AB)') y
+        y=. nst C."2 :: ] y
         s=. <: s
         j=. h+s-1
       case. do.
-smoutput 'case default, #lios = ',":#lios
         j=. <: j
     end.
   end.
   i=. h
   while. i < (h+s) do.
-smoutput 'i h s = ',":i,h,s
     v=. (0 2 ,. (i,1) ,. (h,s)) ,@(+./)@:(0&~:) ;. 0 y
     lios=. I. 0 ~: v
     select. # lios
       fcase. 1 do.
         nst=. < i , h
-smoutput 'fcase 1, nst = ',":>nst
         pl=. nst C. :: ] pl
-        y=. nst ((C."2 :: ]) dbg 'swap_rows(AB)') y
+        y=. nst C."2 :: ] y
       case. 0 do.
         nst=. < (h + {. lios) , h
-smoutput 'case 0, nst = ',":>nst
         pr=. nst C. :: ] pr
-        y=. nst ((C."1 :: ]) dbg 'swap_cols(AB)') y
+        y=. nst C."1 :: ] y
         i=. h=. >: h
         s=. <: s
       case. do.
-smoutput 'case default, #lios = ',":#lios
         i=. >: i
     end.
   end.
@@ -613,47 +605,39 @@ ggbalup=: 3 : 0
   pl=. pr=. i. n
   i=. h+s-1
   while. i >: h do.
-smoutput 'i h s = ',":i,h,s
     v=. (0 2 ,. (i,1) ,. (h,s)) ,@(+./)@:(0&~:) ;. 0 y
     lios=. I. 0 ~: v
     select. # lios
       fcase. 1 do.
         nst=. < i , (h+s-1)
-smoutput 'fcase 1, nst = ',":>nst
         pl=. nst C. :: ] pl
-        y=. nst ((C."2 :: ]) dbg 'swap_rows(AB)') y
+        y=. nst C."2 :: ] y
       case. 0 do.
         nst=. < (h + {. lios) , (h+s-1)
-smoutput 'case 0, nst = ',":>nst
         pr=. nst C. :: ] pr
-        y=. nst ((C."1 :: ]) dbg 'swap_cols(AB)') y
+        y=. nst C."1 :: ] y
         s=. <: s
         i=. h+s-1
       case. do.
-smoutput 'case default, #lios = ',":#lios
         i=. <: i
     end.
   end.
   j=. h
   while. j < (h+s) do.
-smoutput 'j h s = ',":j,h,s
     v=. (0 2 ,. (h,s) ,. (j,1)) ,@(+./)@:(0&~:) ;. 0 y
     lios=. I. 0 ~: v
     select. # lios
       fcase. 1 do.
         nst=. < j , h
-smoutput 'fcase 1, nst = ',":>nst
         pr=. nst C. :: ] pr
-        y=. nst ((C."1 :: ]) dbg 'swap_cols(AB)') y
+        y=. nst C."1 :: ] y
       case. 0 do.
         nst=. < (h + {. lios) , h
-smoutput 'case 0, nst = ',":>nst
         pl=. nst C. :: ] pl
-        y=. nst ((C."2 :: ]) dbg 'swap_rows(AB)') y
+        y=. nst C."2 :: ] y
         j=. h=. >: h
         s=. <: s
       case. do.
-smoutput 'case default, #lios = ',":#lios
         j=. >: j
     end.
   end.
@@ -697,9 +681,9 @@ NB.   'EF plr hs dlr'=. ggbals CD ; plr ; hs
 NB.   'Dl Dr'=. diagmat"1 dlr
 NB.
 NB. Application:
-NB. - scale non-permuted matrices A and B (default p and hs),
-NB.   i.e. balance without eigenvalues isolating step:
-NB.   'EF plr hs dlr'=. ggbals (];(a:"_);(0,c)) AB
+NB. - scale non-permuted matrices A and B (default plr and
+NB.   hs), i.e. balance without eigenvalues isolating step:
+NB.     'EF plr hs dlr'=. ggbals (];(a:"_);(0,c)) AB
 NB.
 NB. Notes:
 NB. - ggbals implements LAPACK's xGGBAL('S')
@@ -817,7 +801,7 @@ NB. Description:
 NB.   Test:
 NB.   - gebal (math/lapack)
 NB.   - gebalx (math/mt)
-NB.   by general (possibly sparse) matrix given
+NB.   by general matrix given
 NB.
 NB. Syntax:
 NB.   testgebal A
@@ -847,10 +831,30 @@ testgebal=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
+NB. testggbal
+NB.
+NB. Description:
+NB.   Test ggbalx by pair of general matrices given
+NB.
+NB. Syntax:
+NB.   testggbal (A ,: B)
+NB. where
+NB.   A,B - n×n-matrix
+
+testggbal=: 3 : 0
+  rcond=. <./ gecon1"2 y
+
+  ('ggball' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('ggbalu' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
 NB. testbal
 NB.
 NB. Description:
-NB.   Adv. to make verb to test gebalx by matrix of
+NB.   Adv. to make verb to test gxbalx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
@@ -873,4 +877,4 @@ NB.     (_1 1 0 4 _6 4 & gemat_mt_) testbal_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 150
 
-testbal=: 1 : 'EMPTY_mt_ [ (testgebal_mt_ @ (u spmat_mt_ 0.25) ^: (=/))'
+testbal=: 1 : 'EMPTY_mt_ [ (testggbal_mt_ @ (u spmat_mt_ 0.25) @ (2&,) ^: (=/)) [ (testgebal_mt_ @ (u spmat_mt_ 0.25) ^: (=/))'

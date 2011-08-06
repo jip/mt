@@ -447,6 +447,10 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB.   ab=.                 hgeqzxe hs ; HT
 NB.   'ab Q Z'=. (Q1 ; Z1) hgeqzxe hs ; HT
+NB.
+NB. Application:
+NB. - detecting case of non-convergence:
+NB.     128!:5 < ab  NB. 0=converged, 1=non-converged
 
 hgeqzle=: (0 {:: hgeqzlenn) : (({.@] , (rotscll &. > }.)) hgeqzlenn)
 hgeqzue=: (0 {:: hgeqzuenn) : (({.@] , (rotsclu &. > }.)) hgeqzuenn)
@@ -468,6 +472,10 @@ NB.   hgeqzusnn_mt_ 2 3 ; 0 {:: ggbalu_mt_ AB
 NB.   ] 'Q1 R'=. ((tru_mt_@}:) ;~ ungqr_mt_) geqrf_mt_ (0;1) {:: ggbalu_mt_ AB
 NB.   'HT Q Z'=. (Q1 ; idmat_mt_ 7) gghrdu_mt_ 2 3 ; R 1} 0 {:: ggbalu_mt_ AB
 NB.   'SP dQ dZ'=. hgeqzxsnn hs ; HT
+NB.
+NB. Application:
+NB. - detecting case of non-convergence:
+NB.     128!:5 < diag"2 SP  NB. 0=converged, 1=non-converged
 
 hgeqzls=: (0 {:: hgeqzlsnn) : (({.@] , (rotscll &. > }.)) hgeqzlsnn)
 hgeqzus=: (0 {:: hgeqzusnn) : (({.@] , (rotsclu &. > }.)) hgeqzusnn)

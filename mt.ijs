@@ -133,7 +133,7 @@ require '~addons/math/mt/sm.ijs'      NB. Solve linear monomial equation with tr
 NB. mid-level
 NB. require '~addons/math/mt/eqr.ijs'     NB. Eigenvalues and Schur form of structured matrix
 require '~addons/math/mt/eqz.ijs'     NB. Eigenvalues and Schur form of pair of structured matrices
-NB. require '~addons/math/mt/evc.ijs'     NB. Eigenvectors
+require '~addons/math/mt/evc.ijs'     NB. Eigenvectors
 require '~addons/math/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~addons/math/mt/qf.ijs'      NB. Orthogonal factorization
 require '~addons/math/mt/trf.ijs'     NB. Triangular factorization
@@ -141,7 +141,7 @@ require '~addons/math/mt/tri.ijs'     NB. Inverse by trf
 require '~addons/math/mt/trs.ijs'     NB. Solve linear monomial equation by trf
 
 NB. hi-level
-NB. require '~addons/math/mt/ev.ijs'      NB. Eigen-decomposition
+require '~addons/math/mt/ev.ijs'      NB. Eigenvalues and, optionally, eigenvectors
 require '~addons/math/mt/exp.ijs'     NB. Matrix exponential
 require '~addons/math/mt/pow.ijs'     NB. Raise matrix to an integer power[s]
 require '~addons/math/mt/sv.ijs'      NB. Solve linear monomial equation

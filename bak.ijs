@@ -1,22 +1,16 @@
 NB. Restore original eigenvectors by backward transformation
 NB. from a balanced matrix or matrix pair
 NB.
-NB. gebakxp    Undo permutations maden by gebalxp
-NB. gebakxsx   Undo scaling maden by gebals
-NB. gebakxx    Form eigenvectors by backward transformation
-NB.            of the matrix balanced by gebalx
+NB. gxbakxp    Undo permutations maden by gxbalxp
+NB. gxbakxsx   Undo scaling maden by gxbals
+NB. gxbakxx    Form eigenvectors by backward transformation
+NB.            of the matrix balanced by gxbalx
 NB.
-NB. ggbakxp    Undo permutations maden by ggbalxp
-NB. ggbakxsx   Undo scaling maden by ggbalxs
-NB. ggbakxx    Form eigenvectors by backward transformation
-NB.            of the pair of matrices balanced by ggbalx
+NB. testgxbak  Test gxbakxx by general matrix given
+NB. testbak    Adv. to make verb to test gxbakxx by matrix of
+NB.            generator and shape given
 NB.
-NB. testgebak  Test gebakxx by general matrix given
-NB. testggbak  Test ggbakxx by pair of general matrices given
-NB. testbak    Adv. to make verb to test gxbakxx by matrix or
-NB.            matrix pair of generator and shape given
-NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.8 2010-10-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -47,16 +41,16 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. gebaklsl
-NB. gebaklsr
-NB. gebakusl
-NB. gebakusr
+NB. gxbaklsl
+NB. gxbaklsr
+NB. gxbakusl
+NB. gxbakusr
 NB.
 NB. Description:
 NB.   Do backward scaling for left or right eigenvectors
 NB.
 NB. Syntax:
-NB.   'B p'=. gebakxsx A ; p ; d
+NB.   'B p'=. gxbakxsx A ; p ; d
 NB. where
 NB.   A    - n×n-matrix, eigenvectors to be transformed
 NB.   p    - some parameter, transmitted immutably
@@ -64,40 +58,40 @@ NB.   d    - n-vector, diagonal of scaling matrix D
 NB.   B    - n×n-matrix, transformed eigenvectors
 NB.
 NB. Notes:
-NB. - gebakusl models LAPACK's xGEBAK('S','L')
-NB. - gebakusr models LAPACK's xGEBAK('S','R')
+NB. - gxbakusl models LAPACK's xGxBAK('S','L')
+NB. - gxbakusr models LAPACK's xGxBAK('S','R')
 
-gebaklsl=: ((0 & {::) %"1 (2 & {::)) ; (1 & {::)
-gebaklsr=: ((0 & {::) *"1 (2 & {::)) ; (1 & {::)
-gebakusl=: ((0 & {::) %   (2 & {::)) ; (1 & {::)
-gebakusr=: ((0 & {::) *   (2 & {::)) ; (1 & {::)
+gxbaklsl=: ((0 & {::) %"1 (2 & {::)) ; (1 & {::)
+gxbaklsr=: ((0 & {::) *"1 (2 & {::)) ; (1 & {::)
+gxbakusl=: ((0 & {::) %   (2 & {::)) ; (1 & {::)
+gxbakusr=: ((0 & {::) *   (2 & {::)) ; (1 & {::)
 
 NB. ---------------------------------------------------------
-NB. gebaklp
-NB. gebakup
+NB. gxbaklp
+NB. gxbakup
 NB.
 NB. Description:
 NB.   Do backward permutation for left or right eigenvectors
 NB.
 NB. Syntax:
-NB.   C=. gebakxp B ; p
+NB.   C=. gxbakxp B ; p
 NB. where
 NB.   B  - n×n-matrix, eigenvectors to be transformed
 NB.   p  - n-vector, permutation of B
 NB.   C  - n×n-matrix, transformed eigenvectors
 NB.
 NB. Notes:
-NB. - gebakup models LAPACK's xGEBAK('P')
+NB. - gxbakup models LAPACK's xGxBAK('P')
 
-gebaklp=: C."1~ & >/
-gebakup=: C.  ~ & >/
+gxbaklp=: C."1~ & >/
+gxbakup=: C.  ~ & >/
 
 NB. ---------------------------------------------------------
 NB. Verb:      Balancer used:     Eigenvectors to form:
-NB. gebakll    geball (lower)     left
-NB. gebaklr    geball (lower)     right
-NB. gebakul    gebalu (upper)     left
-NB. gebakur    gebalu (upper)     right
+NB. gxbakll    gxball (lower)     left
+NB. gxbaklr    gxball (lower)     right
+NB. gxbakul    gxbalu (upper)     left
+NB. gxbakur    gxbalu (upper)     right
 NB.
 NB. Description:
 NB.   Form eigenvectors of a general matrix by backward
@@ -106,7 +100,7 @@ NB.   returned by hsein or trevc. This involves, first,
 NB.   backward balance, and second, backward permutation
 NB.
 NB. Syntax:
-NB.   C=. gebakxx A ; p ; d
+NB.   C=. gxbakxx A ; p ; d
 NB. where
 NB.   A - n×n-matrix, eigenvectors to be transformed
 NB.   p - n-vector, permutation of A
@@ -114,35 +108,35 @@ NB.   d - n-vector, diagonal of scaling matrix D
 NB.   C - n×n-matrix, transformed eigenvectors
 NB.
 NB. Notes:
-NB. - gebakul models LAPACK's xGEBAK('B','L')
-NB. - gebakur models LAPACK's xGEBAK('B','R')
+NB. - gxbakul models LAPACK's xGxBAK('B','L')
+NB. - gxbakur models LAPACK's xGxBAK('B','R')
 
-gebakll=: gebaklp @ gebaklsl
-gebaklr=: gebaklp @ gebaklsr
-gebakul=: gebakup @ gebakusl
-gebakur=: gebakup @ gebakusr
+gxbakll=: gxbaklp @ gxbaklsl
+gxbaklr=: gxbaklp @ gxbaklsr
+gxbakul=: gxbakup @ gxbakusl
+gxbakur=: gxbakup @ gxbakusr
 
 NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. testgebak
+NB. testgxbak
 NB.
 NB. Description:
-NB.   Test gebakxx by general matrix given
+NB.   Test gxbakxx by general matrix given
 NB.
 NB. Syntax:
-NB.   testgebak A
+NB.   testgxbak A
 NB. where
 NB.   A - n×n-matrix
 
-testgebak=: 3 : 0
+testgxbak=: 3 : 0
   rcond=. gecon1 y
 
-  ('gebakll' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebaklr' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebakul' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebakur' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gxbakll' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gxbaklr' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gxbakul' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gxbakur' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -151,7 +145,7 @@ NB. ---------------------------------------------------------
 NB. testbak
 NB.
 NB. Description:
-NB.   Adv. to make verb to test gebakxx by matrix of
+NB.   Adv. to make verb to test gxbakxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
@@ -174,4 +168,4 @@ NB.     (_1 1 0 4 _6 4 & gemat_mt_) testbak_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testbak_mt_ 150 150
 
-testbak=: 1 : 'EMPTY_mt_ [ (testgebak_mt_ @ u ^: (=/))'
+testbak=: 1 : 'EMPTY_mt_ [ (testgxbak_mt_ @ u ^: (=/))'

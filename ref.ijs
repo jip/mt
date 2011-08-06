@@ -17,7 +17,7 @@ NB. testlarfb  Test larfbxxxx by general matrix given
 NB. testref    Adv. to make verb to test larfxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.8 2010-11-30
+NB. Version: 0.7.0 2011-07-29
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -59,56 +59,52 @@ NB. larfp
 NB.
 NB. Description:
 NB.   Generate an elementary reflector H of order n such that
-NB.   H'*y = β*e1, where H=I-v*τ*v', H'*H=I. H is represented
-NB.   in factored form by n-vector v and scalar τ. Vector v
-NB.   can have either forward (α in head) or backward (α in
-NB.   tail) direction. Input and output vector directions are
-NB.   the same.
+NB.     H^H * (α,x) = (β,0),
+NB.   where
+NB.     H = I - (1,v) * τ * (1,v)^H,
+NB.     H^H * H = I.
+NB.   H is represented in factored form by n-vector (1,v) and
+NB.   scalar τ.
 NB.
 NB. Syntax:
-NB.   ez=. ios larfg ey
-NB.   ez=. ios larfp ey
+NB.   z=. ios larfg y
+NB.   z=. ios larfp y
 NB. where
 NB.   ios - 2-vector of integers (ioa,iot)
 NB.   ioa - lIO α in y
-NB.   iot - lIO pre-allocated scalar for τ in y
-NB.   ey  - (n+1)-vector having scalar α ∊ ℂ at index ioa,
-NB.         any scalar at index iot, and vector x[1:n-1] ∊
-NB.         ℂ^(n-1) in the rest elements, vector to reflect
-NB.         is:
-NB.           y -: (<<< iot) { ey
-NB.   ez  - (n+1)-vector having scalar β ∊ ℝ (larfp provides
-NB.         β≥0) at index ioa, scalar τ ∊ ℂ at index iot, and
-NB.         vector v[1:n-1] ∊ ℂ^(n-1) in the rest elements,
+NB.   iot - lIO pre-allocated scalar in y
+NB.   y   - (n+1)-vector having scalar α ∊ ℂ at index ioa,
+NB.         any scalar at index iot, and vector x ∊ ℂ^(n-1)
+NB.         in the rest elements, vector to reflect is:
+NB.           (<<< iot) { y
+NB.   z   - (n+1)-vector having scalar β ∊ ℝ (larfp [1]
+NB.         provides β≥0) at index ioa, scalar τ ∊ ℂ at index
+NB.         iot, and vector v ∊ ℂ^(n-1) in the rest elements,
 NB.         reflected vector is:
-NB.           z -: beta iot } n $ 0
-NB.         v[0]==1 is not stored, v ∊ ℂ^n:
-NB.           v -: 1 ioa } (<<< iot) { ez
+NB.           beta ioa } n $ 0
 NB.
 NB. Application:
 NB. - reflect vector (α,x) by larfg and store τ at tail:
-NB.     ez=. 0 _1 larfg (alpha,x,1.23)
-NB.     v=. 1 (0}) }: ez
-NB.     'beta tau'=. 0 _1 { ez
+NB.     z=. 0 _1 larfg (alpha , x , _.)
+NB.     v=. (<<<0 _1) { z
+NB.     'beta tau'=. 0 _1 { z
 NB. - reflect vector (x,α) by larfp and store τ at head:
-NB.     ez=. _1 0 larfp (12.3,x,alpha)
-NB.     v=. 1 (_1}) }. ez
-NB.     'beta tau'=. _1 0 { ez
+NB.     z=. _1 0 larfp (_. , x , alpha)
+NB.     v=. (<<<_1 0) { z
+NB.     'beta tau'=. _1 0 { z
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.    z -: H (mp~ ct)~ y
-NB.    I -:   (mp~ ct)~ H
+NB.    (n {. beta) -: H (mp~ ct)~ }: y
+NB.    I           -:   (mp~ ct)~ H
 NB. where
-NB.   x     - n-vector
+NB.   x     - (n-1)-vector
 NB.   alpha - scalar
-NB.   y=. alpha,x             NB. n-vector to reflect
-NB.   ey=. y , 12.3           NB. y, extended by any scalar
-NB.   ez=. 0 _1 larfg ey      NB. ez -: (beta 0} v),tau
-NB.   v=. 1 (0}) }: ez        NB. n-vector for reflector H
-NB.  'beta tau'=. 0 _1 { ez
-NB.   z=. n {. beta           NB. reflected y
+NB.   y=. alpha , x , _.
+NB.   z=. 0 _1 larfg y
+NB.   v=. (<<<0 _1) { z
+NB.   'beta tau'=. 0 _1 { z
 NB.   I=. idmat n
-NB.   H=. I - v */ tau * + v  NB. n×n-matrix, the reflector
+NB.   H=. I - tau (] */ (* +)) (1,v)
 NB.
 NB. References:
 NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, and E.
@@ -130,53 +126,53 @@ NB.   would be filled by zeros
 larfg=: 4 : 0
   'ioa iot'=. x
   alpha=. ioa{y
-  y=. 0 iot} y                                              NB. τ := 0
+  y=. 0 iot} y                              NB. τ := 0
   ynorm=. norms y
-  if. (ynorm =!.0 |alpha) *. 0 =!.0 (11 o. alpha) do.       NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ
-    y                                                       NB. (α,0,0) i.e. H==I, τ==0, β==α, 
+  if. ynorm =!.0 | 9 o. alpha do.           NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ ?
+    y                                       NB. (α,0,0) i.e. H==I, τ==0, β==α, v==0
   else.
-    beta=. (9 o. alpha) condnegi ynorm                      NB. β := -copysign(||y||,Re(α)), since sign(Re(α))==sign(Re(α_scaled))
-    if. REFSAFMIN>|beta do.
-      y=. y%REFSAFMIN                                       NB. (α_scaled,x_scaled,0)
-      beta=. (9 o. alpha) condnegi norms y                  NB. use Re(α) instead Re(α_ascaled) since their signs are match; |β_scaled| ∊ [REFSAFMIN,1)
-      dzeta=. beta-~ioa{y                                   NB. ζ := α_scaled-β_scaled
-      tau=. -dzeta%beta                                     NB. τ := -ζ/β_scaled
-      beta=. REFSAFMIN*beta                                 NB. unscale β; if α is subnormal, it may lose relative accuracy
+    if. REFSAFMIN>ynorm do.                 NB. xnorm, β may be inaccurate; scale x and recompute them
+      y=. y%REFSAFMIN                       NB. (α_scaled,x_scaled,0)
+      beta=. (9 o. alpha) condnegi norms y  NB. use Re(α) instead Re(α_ascaled) since sign(Re(α)) == sign(Re(α_scaled)); |β_scaled| ∊ [REFSAFMIN,1)
+      dzeta=. beta-ioa{y                    NB. ζ := β_scaled-α_scaled
+      tau=. dzeta%beta                      NB. τ := ζ/β_scaled
+      beta=. REFSAFMIN*beta                 NB. unscale β; if α is subnormal, it may lose relative accuracy
     else.
-      dzeta=. alpha-beta
-      tau=. -dzeta%beta
+      beta=. (9 o. alpha) condnegi ynorm    NB. β := -copysign(||y||,Re(α)), since ||y|| ≥ 0
+      dzeta=. beta-alpha
+      tau=. dzeta%beta
     end.
-    y=. y%dzeta                                             NB. z := (trash,v,0)
-    y=. (beta,tau)x}y                                       NB. z := (β_scaled,v,τ)
+    y=. y%-dzeta                            NB. z := (trash,v,0)
+    y=. (beta,tau)x}y                       NB. z := (β_scaled,v,τ)
   end.
 )
 
 larfp=: 4 : 0
   'ioa iot'=. x
-  alpha=. ioa { y
-  xnorm=. norms (0 x } y)                                   NB. ||x||
-  if. (0 = xnorm) do.
-    y=. ((| , (1 - *)) alpha) x } y                         NB. replace in-place α by |β| and τ by (1-α/|α|)
+  alpha=. ioa{y
+  xnorm=. norms 0 x}y                               NB. ||x||
+  if. 0 = xnorm do.
+    y=. ((|,(1-*))alpha) x}y                        NB. replace in-place α by |β| and τ by (1-α/|α|)
   else.
-    beta=. - (9 o. alpha) condneg norms alpha , xnorm       NB. β := -copysign(||y||,Re(α))
-    y=. (| beta) iot } y                                    NB. write in-place |β|
-    if. FP_SFMIN > | beta do.
-      y=. y % FP_SFMIN                                      NB. scale (α,x[1],...,x[n-1],|β|)
-      xnorm=. xnorm % FP_SFMIN
+    beta=. (9 o. alpha) condnegi norms alpha,xnorm  NB. β := -copysign(||y||,Re(α))
+    y=. (|beta) iot} y                              NB. write in-place |β|
+    if. FP_SFMIN>|beta do.
+      y=. y%FP_SFMIN                                NB. scale (α,x[1],...,x[n-1],|β|)
+      xnorm=. xnorm%FP_SFMIN
     end.
-    if. 0 <: beta do.
-      dzeta=. -/ x { y                                      NB. ζ := α_scaled-|β_scaled|
-      tau=. (- dzeta) % (iot { y)                           NB. τ := -ζ/|β_scaled|
+    if. 0<:beta do.
+      dzeta=. -/x{y                                 NB. ζ := α_scaled-|β_scaled|
+      tau=. -dzeta%iot{y                            NB. τ := -ζ/|β_scaled|
     else.
-      beta=. - beta                                         NB. |β_unscaled|
-      'realpha imalpha'=. +. ioa { y                        NB. Re(α_scaled) , Im(α_scaled)
-      gamma=. realpha + iot { y                             NB. γ := Re(α_scaled)+|β_scaled|
-      delta=. (imalpha , xnorm) (- @ (+/) @ ([ * %)) gamma  NB. δ := -(Im(α_scaled)*(Im(α_scaled)/γ)+||x||*(||x||/γ))
-      dzeta=. delta j. imalpha                              NB. ζ := δ+i*Im(α_scaled)
-      tau=. - dzeta % iot { y                               NB. τ := -ζ/|β_scaled|
+      beta=. -beta                                  NB. |β_unscaled|
+      'realpha imalpha'=. +.ioa{y                   NB. Re(α_scaled) , Im(α_scaled)
+      gamma=. realpha+iot{y                         NB. γ := Re(α_scaled)+|β_scaled|
+      delta=. (imalpha,xnorm) (-@(+/)@([*%)) gamma  NB. δ := -(Im(α_scaled)*(Im(α_scaled)/γ)+||x||*(||x||/γ))
+      dzeta=. delta j. imalpha                      NB. ζ := δ+i*Im(α_scaled)
+      tau=. -dzeta%iot{y                            NB. τ := -ζ/|β_scaled|
     end.
-    y=. y % dzeta
-    y=. (beta , tau) x } y                                  NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
+    y=. y%dzeta
+    y=. (beta,tau)x}y                               NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
   end.
 )
 

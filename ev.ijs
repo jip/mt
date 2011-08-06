@@ -108,6 +108,8 @@ NB.   is a diagonal matrix of eigenvalues, and GNEP (1), (2)
 NB.   can be expressed as:
 NB.     E * L * A = L * B                                 (5)
 NB.     A * R^H * E = B * R^H * E                         (6)
+NB.   Eigenvectors are normalized to have taxicab-based
+NB.   ∞-norm equal to 1
 NB.
 NB. Syntax:
 NB.   e1e2=.      ggevlnn AB
@@ -115,14 +117,14 @@ NB.   'e1e2 R'=.  ggevlnv AB
 NB.   'e1e2 L'=.  ggevlvn AB
 NB.   'e1e2 LR'=. ggevlvv AB
 NB. where
-NB.   AB    - 2×n×n-matrix, matrix pair (A,B):
-NB.             AB -: A ,: B
-NB.   e1e2  - 2×n-matrix of eigenvalues e1 and e2:
-NB.             e1e2 -: e1 ,: e2
-NB.   L     - n×n-matrix. left eigenvectors (rows)
-NB.   R     - n×n-matrix. right eigenvectors (rows)
-NB.   LR    - 2×n×n-matrix. left and right eigenvectors:
-NB.             LR -: L ,: R
+NB.   AB   - 2×n×n-matrix, matrix pair (A,B):
+NB.            AB -: A ,: B
+NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
+NB.            e1e2 -: e1 ,: e2
+NB.   L    - n×n-matrix. left eigenvectors (rows)
+NB.   R    - n×n-matrix. right eigenvectors (rows)
+NB.   LR   - 2×n×n-matrix. left and right eigenvectors:
+NB.            LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   (ggevlnn -:                           +@:ggevunn@:(ct"2) ) A ,: B
@@ -138,6 +140,31 @@ NB.   B - n×n-matrix, general
 NB.   'e1e2 LR'=. ggevlvv A ,: B
 NB.   'E1 E2'=. diagmat"1 e1e2
 NB.   'L R'=. LR
+NB.
+NB. Application:
+NB. - simulate LAPACK's xGEEV('N','N'):
+NB.     NB. e=. geevxnn A
+NB.     geevlnn=: {.@ggevlnn@(,:(idmat@c))
+NB. - simulate LAPACK's xGEEV('N','V') (see notes):
+NB.     NB. 'e R'=. geevxnv A
+NB.     geevlnv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)      &.>)ag ggevlnv@(,:(idmat@c))
+NB. - simulate LAPACK's xGEEV('V','N') (see notes):
+NB.     NB. 'e L'=. geevxvn A
+NB.     geevlvn=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)      &.>)ag ggevlvn@(,:(idmat@c))
+NB. - simulate LAPACK's xGEEV('V','V') (see notes):
+NB.     NB. 'e LR'=. geevxvv A
+NB.     geevlvv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)    "2&.>)ag ggevlvv@(,:(idmat@c))
+NB. - simulate LAPACK's xHEEV('N'):
+NB.     NB. e=. heevxn A
+NB.     heevln=: 9 o.{.@ggevlnn@(,:(idmat@c))
+NB. - simulate LAPACK's xHEEV('V') (see notes):
+NB.     NB. 'e V'=. heevxv A
+NB.     heevlv=: 0 1 ((9 o.{.)&.>)`((%  %:@diag@(mp ct))&.>)ag ggevlvn@(,:(idmat@c))
+NB.
+NB. Notes:
+NB. - eigenvectors from LAPACK's xGEEV are normalized to have
+NB.   Euclidean norm equal to 1 and largest component real
+NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevlnn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
@@ -232,6 +259,8 @@ NB.   is a diagonal matrix of eigenvalues, and GNEP (7), (8)
 NB.   can be expressed as:
 NB.     E * L^H * A = L^H * B                            (11)
 NB.     A * R * E = B * R * E                            (12)
+NB.   Eigenvectors are normalized to have taxicab-based
+NB.   ∞-norm equal to 1
 NB.
 NB. Syntax:
 NB.   e1e2=.      ggevunn AB
@@ -239,14 +268,14 @@ NB.   'e1e2 R'=.  ggevunv AB
 NB.   'e1e2 L'=.  ggevuvn AB
 NB.   'e1e2 LR'=. ggevuvv AB
 NB. where
-NB.   AB    - 2×n×n-matrix, matrix pair (A,B):
-NB.             AB -: A ,: B
-NB.   e1e2  - 2×n-matrix of eigenvalues e1 and e2:
-NB.             e1e2 -: e1 ,: e2
-NB.   L     - n×n-matrix. left eigenvectors (columns)
-NB.   R     - n×n-matrix. right eigenvectors (columns)
-NB.   LR    - 2×n×n-matrix. left and right eigenvectors:
-NB.             LR -: L ,: R
+NB.   AB   - 2×n×n-matrix, matrix pair (A,B):
+NB.            AB -: A ,: B
+NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
+NB.            e1e2 -: e1 ,: e2
+NB.   L    - n×n-matrix. left eigenvectors (columns)
+NB.   R    - n×n-matrix. right eigenvectors (columns)
+NB.   LR   - 2×n×n-matrix. left and right eigenvectors:
+NB.            LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   (ggevunn -:                           +@:ggevlnn@:(ct"2) ) A ,: B
@@ -264,30 +293,33 @@ NB.   'E1 E2'=. diagmat"1 e1e2
 NB.   'L R'=. LR
 NB.
 NB. Application:
-NB. - model LAPACK's xGEEV('N','N'):
-NB.     geevlnn=: {.@ggevlnn@(,:(idmat@c))
+NB. - simulate LAPACK's xGEEV('N','N'):
+NB.     NB. e=. geevxnn A
 NB.     geevunn=: {.@ggevunn@(,:(idmat@c))
-NB. - model LAPACK's xGEEV('N','V'):
-NB.     geevlnv=: ({.&.>)`((%   %:@diag@(mp ct))&.>)ag@ggevlnv(,:(idmat@c))
-NB.     geevunv=: ({.&.>)`((%"1 %:@diag@(mp~ct))&.>)ag@ggevunv(,:(idmat@c))
-NB. - model LAPACK's xGEEV('V','N'):
-NB.     geevlvn=: ({.&.>)`((%   %:@diag@(mp ct))&.>)ag@ggevlvn(,:(idmat@c))
-NB.     geevuvn=: ({.&.>)`((%"1 %:@diag@(mp~ct))&.>)ag@ggevuvn(,:(idmat@c))
-NB. - model LAPACK's xGEEV('V','V'):
-NB.     geevlvv=: ({.&.>)`((%   %:@diag@(mp ct))"2&.>)ag@ggevlvv(,:(idmat@c))
-NB.     geevuvv=: ({.&.>)`((%"1 %:@diag@(mp~ct))"2&.>)ag@ggevuvv(,:(idmat@c))
-NB. - model LAPACK's xHEEV('N'):
-NB.     heevln=: (9 o.{.)@ggevlnn@(,:(idmat@c))
-NB.     heevun=: (9 o.{.)@ggevunn@(,:(idmat@c))
-NB. - model LAPACK's xHEEV('V'):
-NB.     heevlv=: ((9 o.{.)&.>)`((%   %:@diag@(mp ct))&.>)ag@ggevlnv(,:(idmat@c))
-NB.     heevuv=: ((9 o.{.)&.>)`((%"1 %:@diag@(mp~ct))&.>)ag@ggevunv(,:(idmat@c))
+NB. - simulate LAPACK's xGEEV('N','V') (see notes):
+NB.     NB. 'e R'=. geevxnv A
+NB.     geevunv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)&.|:  &.>)ag ggevunv@(,:(idmat@c))
+NB. - simulate LAPACK's xGEEV('V','N') (see notes):
+NB.     NB. 'e L'=. geevxvn A
+NB.     geevuvn=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)&.|:  &.>)ag ggevuvn@(,:(idmat@c))
+NB. - simulate LAPACK's xGEEV('V','V') (see notes):
+NB.     NB. 'e LR'=. geevxvv A
+NB.     geevuvv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)&.|:"2&.>)ag ggevuvv@(,:(idmat@c))
+NB. - simulate LAPACK's xHEEV('N'):
+NB.     NB. e=. heevxn A
+NB.     heevun=: 9 o.{.@ggevunn@(,:(idmat@c))
+NB. - simulate LAPACK's xHEEV('V') (see notes):
+NB.     NB. 'e V'=. heevxv A
+NB.     heevuv=: 0 1 ((9 o.{.)&.>)`((%"1%:@diag@(mp~ct))&.>)ag ggevunv@(,:(idmat@c))
 NB.
 NB. Notes:
 NB. - ggevunn models LAPACK's xGGEV('N','N')
 NB. - ggevunv models LAPACK's xGGEV('N','V')
 NB. - ggevuvn models LAPACK's xGGEV('V','N')
 NB. - ggevuvv models LAPACK's xGGEV('V','V')
+NB. - eigenvectors from LAPACK's xGEEV are normalized to have
+NB.   Euclidean norm equal to 1 and largest component real
+NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevunn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
@@ -407,7 +439,7 @@ testggev=: 3 : 0
   vberruvn=:  (     normir@:((*"_ 1|:@|.@(0&{::))((  norm1r@:((mp"1 2 (-/"3))~ct   )                                           )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:( normi       "2)@[)))(1 {:: ])))>.((     normir@:<:@:normitc%FP_PREC*c)@(1 {:: ]))
   vberrunv=:  (     normir@:((*"_ 1|:@|.@(0&{::))((                                   norm1r@:((mp"2 1~(-/"3))~|:   )          )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:(       norm1 "2)@[)))(1 {:: ])))>.((     normir@:<:@:normitc%FP_PREC*c)@(1 {:: ]))
   vberruvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::))((((norm1r@:( mp"1 2        ~ct@{.),:norm1r@:((mp"2 1       ) |:@{:))~(-/"3))~)(>./@:%)(FP_PREC*(FP_SFMIN>.|:@:(>./"1)@:((normi,norm1)"2)@[)))(1 {:: ])))>.((>./@:normir@:<:@:normitc%FP_PREC*c)@(1 {:: ]))
-gy=: y
+
   rcond=. <./ gecon1"2 y
 
   ('ggevlnn' tmonad (]`]`(rcond"_)`(_."_)`(_."_)  )) y

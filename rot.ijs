@@ -11,7 +11,7 @@ NB. testrot    Test rotation algorithms by predefined matrix
 NB.
 NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlev
+NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -87,8 +87,8 @@ ROTSCL21=: |. ROTSCL20
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-morim=: >./"1 @: | @: +.  NB. monad: max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
-sgn=: (*!.0)`1:@.(0&=)    NB. monad: (if y<0 then -1 else 1 endif), for reals equiv. to: (0&(<:->))
+morim=: >./"1@:|@:+.    NB. monad: max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
+sgn=: (*!.0)`1:@.(0&=)  NB. monad: (if y<0 then -1 else 1 endif), for reals equiv. to: (0&(<:->))
 
 NB. ---------------------------------------------------------
 NB. lartgc1
@@ -274,7 +274,7 @@ NB. Notes:
 NB. - for 1-rank cs implements LAPACK's xROT
 NB. - for 2-rank cs implements LAPACK's xLARTV
 
-rot=: (mp"2 1~ (,:"1 ((-@+@:({:"1)) ,. {."1)))~
+rot=: (mp"2 1~ (,:"1 (-@+@:({:"1) ,. {."1)))~
 
 NB. ---------------------------------------------------------
 NB. rotga
@@ -288,8 +288,8 @@ NB. where
 NB.   vrota   - dyad to apply rotation; is called as:
 NB.               subAupd=. cs vrota subA
 NB.             and is any of:
-NB.               rot        NB. apply rotation to rows
-NB.               rot &. |:  NB. apply rotation to columns
+NB.               rot      NB. apply rotation to rows
+NB.               rot&.|:  NB. apply rotation to columns
 NB.   vapp    - monad to generate and apply rotation; is
 NB.             called as:
 NB.               'Aupd cs'=. vapp A ; iossubA ; iosfg
@@ -354,15 +354,15 @@ NB.   them simultaneously
 
 rotscll=: (4 : 0)
   i=. 0
-  while. i < # y do.                    NB. traverse dA rows down
+  while. i < # y do.                 NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y
     if. 0 0 -: iofg do.
       if. -. 0 0 -: cs do.
         'm io'=. cs
-        x=. io (m&*) upd x             NB. do scale
+        x=. io (m&*) upd x           NB. do scale
       end.
     else.
-      x=. iofg (cs&(rot &. |:)) upd x  NB. do rotation
+      x=. iofg (cs&(rot&.|:)) upd x  NB. do rotation
     end.
     i=. >: i
   end.
@@ -428,7 +428,7 @@ NB.        R      := [R[0],      R[1],      ...] := CSRboth[:,2]
 NB.        Rexact := [Rexact[0], Rexact[1], ...] := CSRboth[:,5]
 NB.   6) calculate backward error for each pair
 NB.      (R[i],Rexact[i]):
-NB.        BErr[i] := ||R[i]| - |Rexact[i]|| / max(ε * |Rexact[i]|, SDN)
+NB.        BErr[i] := ||R[i]| - |Rexact[i]|| / max(FP_EPS * |Rexact[i]|, SDN)
 NB.      where
 NB.        SDN       = FP_SFMIN * FP_PREC, the smallest
 NB.                    denormalized number
@@ -458,10 +458,10 @@ testlartg=: 3 : 0
   algo1=. 3 : 'if. 0 = {: y do. (sgn,0:,]) {. y elseif. 0 = {. y do. (0,(sgn@+),|) {: y elseif. do. try. ((d*|f),(sgnf*(+g)*d),(sgnf % d)) [ sgnf=. sgn f [ d=. % %: (+/) soris ''f g''=. y catch. 3 # _. end. end.'
 
   NB. exclude rows containing NaN from the table y
-  xrNaN=. #~(-.@(+./)@|:@:(j./"1@(128!:5)@:+.))
+  xrNaN=. #~ -.@(+./)@|:@:(j./"1@(128!:5)@:+.)
 
   NB. exclude rows containing ±∞ from the table y
-  xrInf=. #~(-.@(+./)@|:@:(_=|))
+  xrInf=. #~ -.@(+./)@|:@:(_=|)
 
   NB. backward error calculator:
   vberr=. ((|@:(-&:|) >./@:xrInf@:% (FP_SFMIN * FP_PREC) >. FP_EPS * |@])/@(2 5&{)@|:@xrInf@xrNaN@,. algo1"1)~
@@ -485,4 +485,4 @@ NB.
 NB. Notes:
 NB. - niladic verb
 
-testrot=: EMPTY [ testlartg @ rottestmat
+testrot=: EMPTY [ testlartg@rottestmat

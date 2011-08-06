@@ -33,7 +33,7 @@ NB.              matrix of generator and shape given
 NB.
 NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlev
+NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -111,7 +111,7 @@ NB. ---------------------------------------------------------
 NB. System definitions
 
 require       '~addons/math/misc/mathutil.ijs'  NB. mp_mt_
-require^:IFJ6 '~system/main/myutil.ijs'         NB. timespacex_z_ (J7: stdlib.ijs)
+require^:IFJ6 '~system/main/myutil.ijs'         NB. timespacex_z_ (J7: already in stdlib.ijs)
 
 NB. ---------------------------------------------------------
 NB. Addon definitions
@@ -150,7 +150,7 @@ require '~addons/math/mt/trs.ijs'     NB. Solve linear monomial equation by trf
 NB. high-level
 require '~addons/math/mt/ev.ijs'      NB. Eigenvalues and eigenvectors
 require '~addons/math/mt/exp.ijs'     NB. Matrix exponential
-require '~addons/math/mt/pow.ijs'     NB. Raise matrix to an integer power[s]
+require '~addons/math/mt/pow.ijs'     NB. Raise matrix to integer power[s]
 require '~addons/math/mt/sv.ijs'      NB. Solve linear monomial equation
 
 NB. =========================================================
@@ -183,7 +183,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     ?@$&0 testlow_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 4 _6 4 & gemat_mt_) testlow_mt_ 200 200
+NB.     _1 1 0 4 _6 4&gemat_mt_ testlow_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testlow_mt_ 150 200
 
@@ -226,7 +226,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     ?@$&0 testmid_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 4 _6 4 & gemat_mt_) testmid_mt_ 200 200
+NB.     _1 1 0 4 _6 4&gemat_mt_ testmid_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testmid_mt_ 150 200
 
@@ -269,7 +269,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     ?@$&0 testhigh_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 4 _6 4 & gemat_mt_) testhigh_mt_ 200 200
+NB.     _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testhigh_mt_ 150 200
 
@@ -309,7 +309,7 @@ NB.   distributed uniformly with support (0,1):
 NB.     ?@$&0 test_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     (_1 1 0 4 _6 4 & gemat_mt_) test_mt_ 200 200
+NB.     _1 1 0 4 _6 4&gemat_mt_ test_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 

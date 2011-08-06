@@ -8,7 +8,7 @@
 
 4. hrd.ijs: gghrdxxx: implement blocked generalized Hessenberg reduction [3]
 
-5. sm.ijs: trsmxxxx: replace column-wise algos by row-wise
+5. sm.ijs: trsmxxxx: replace column-wise algorithms by row-wise
 
 6. ev.ijs: testggev: test ggev_jlapack_ to compare against ggevxxx
 

@@ -447,10 +447,6 @@ larfbrnfr=: ] - (mp ((ct @ (0 & ((< a: ; _1)}))) mp larftfr))~ mp [    NB. C - (
 
 NB. =========================================================
 NB. Test suite
-NB.
-NB. Notes:
-NB. - interface verbs above are also testing implicitly in
-NB.   testgq, testmq, testqf
 
 NB. ---------------------------------------------------------
 NB. testlarf

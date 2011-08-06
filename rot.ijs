@@ -184,7 +184,8 @@ NB. Notes:
 NB. - models LAPACK's xLARTG described in [1]
 NB.
 NB. TODO:
-NB. - make plane rotations continuous [2]
+NB. - make version with continuous plane rotations [2] for
+NB.   [G]SEP
 NB.
 NB. References:
 NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. (2001) On

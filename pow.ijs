@@ -82,46 +82,87 @@ NB. Description:
 NB.   Raise a diagonalizable matrix to integer power[s]
 NB.
 NB. Syntax:
-NB.   P=. p dipow (iL ; v ; L)
-NB.   P=. p dipow (R ; v ; iR)
+NB.   P=. p dipow iLl ; vl ; Ll
+NB.   P=. p dipow (ct Rl) ; vl ; ct iRl
+NB.   P=. p dipow (ct iLu) ; vu ; ct Lu
+NB.   P=. p dipow Ru ; vu ; iRu
 NB. where
-NB.   L  - n×n-matrix, unitary (orthogonal), rows are left
-NB.        eigenvectors of A
-NB.   R  - n×n-matrix, unitary (orthogonal), columns are
-NB.        right eigenvectors of A
-NB.   v  - n-vector, eigenvalues of A
-NB.   iL = L^_1
-NB.   iR = R^_1
-NB.   p  - sh-array of positive integers, power[s]
-NB.   P  - sh×n×n-array if r>0,
-NB.        n×n-array    if r=0, a matrix A in power[s] p
-NB.   sh - r-vector of non-negative integers, the shape of p
-NB.   r  ≥ 0, the rank of p
+NB.   Ll  - n×n-matrix, rows are left eigenvectors of A,
+NB.         output of geevlvx
+NB.   Lu  - n×n-matrix, columns are left eigenvectors of A,
+NB.         output of geevuvx
+NB.   Rl  - n×n-matrix, rows are right eigenvectors of A,
+NB.         output of geevlxv
+NB.   Ru  - n×n-matrix, columns are right eigenvectors of A,
+NB.         output of geevuxv
+NB.   vl  - n-vector, eigenvalues of A, output of geevlxx
+NB.   vu  - n-vector, eigenvalues of A, output of geevuxx
+NB.   iLl -: Ll^_1
+NB.   iLu -: Lu^_1
+NB.   iRl -: Rl^_1
+NB.   iRu -: Ru^_1
+NB.   p   - sh-array of positive integers, power[s]
+NB.   P   - sh×n×n-array if r>0,
+NB.         n×n-array    if r=0, a matrix A in power[s] p
+NB.   sh  - r-vector of non-negative integers, the shape of p
+NB.   r   ≥ 0, the rank of p
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB. - lower case:
 NB.   ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
-NB.   C -: L mp R                 NB. LAPACK doesn't guarantee (C -: idmat # A)
-NB.   iL -: R %"1 c               NB. see [1]
-NB.   iR -: L % c                 NB. see [1]
+NB.   (L mp A) -: V mp L          NB. verify...
+NB.   (A mp ct R) -: (ct R) mp V  NB. ...eigendecomposition
+NB.   W -: L mp (ct R)            NB. LAPACK doesn't guarantee (W -: idmat # A)
+NB.   iL -: (ct R) %"1 w          NB. see [1]
+NB.   (ct iR) -: L % w            NB. see [1]
 NB.   A -: iL mp V mp L
 NB.   A -: iL mp v * L
-NB.   A -: R mp V mp iR
-NB.   A -: R mp v * iR
+NB.   A -: (ct R) mp V mp ct iR
+NB.   A -: (ct R) mp v * ct iR
 NB.   F -: diagmat"1 f
 NB.   P -: iL mp"2 F mp"2 L
 NB.   P -: iL mp"2 f *"1 2 L
-NB.   P -: R mp"2 F mp"2 iR
-NB.   P -: R mp f *"1 2 iR
+NB.   P -: (ct R) mp"2 F mp"2 ct iR
+NB.   P -: (ct R) mp f *"1 2 ct iR
 NB.   P -: p dipow iL ; v ; L
-NB.   P -: p dipow R ; v ; iR
+NB.   P -: p dipow (ct R) ; v ; (ct iR)
 NB. where
-NB.   'Lh v R'=. geev A           NB. conjugated left eigenvectors in columns ; eigenvalues ; right eigenvectors in columns
-NB.   L=. ct Lh                   NB. left eigenvectors in rows
+NB.   'v LR'=. geevuvv A  NB. use definition from ggevuxx application notes
+NB.   'L R'=. LR
 NB.   iL=. %. L
 NB.   iR=. %. R
 NB.   V=. diagmat v
-NB.   c=. L mp"1 |: R
-NB.   C=. diagmat c
+NB.   w=. (ct L) mp"1 |: R
+NB.   W=. diagmat w
+NB.   P=. p gepow A
+NB.   f=. v ^1 0 p
+NB.   F=. p gepow V
+NB. - upper case:
+NB.   ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
+NB.   ((ct L) mp A) -: V mp ct L  NB. verify...
+NB.   (A mp R) -: R mp V          NB. ...eigendecomposition
+NB.   W -: (ct L) mp R            NB. LAPACK doesn't guarantee (W -: idmat # A)
+NB.   (ct iL) -: R %"1 w          NB. see [1]
+NB.   iR -: (ct L) % w            NB. see [1]
+NB.   A -: (ct iL) mp V mp ct L
+NB.   A -: (ct iL) mp v * ct L
+NB.   A -: R mp V mp iR
+NB.   A -: R mp v * iR
+NB.   F -: diagmat"1 f
+NB.   P -: (ct iL) mp"2 F mp"2 ct L
+NB.   P -: (ct iL) mp"2 f *"1 2 ct L
+NB.   P -: R mp"2 F mp"2 iR
+NB.   P -: R mp f *"1 2 iR
+NB.   P -: p dipow (ct iL) ; v ; ct L
+NB.   P -: p dipow R ; v ; iR
+NB. where
+NB.   'v LR'=. geevuvv A  NB. use definition from ggevuxx application notes
+NB.   'L R'=. LR
+NB.   iL=. %. L
+NB.   iR=. %. R
+NB.   V=. diagmat v
+NB.   w=. (ct L) mp"1 |: R
+NB.   W=. diagmat w
 NB.   P=. p gepow A
 NB.   f=. v ^1 0 p
 NB.   F=. p gepow V
@@ -137,13 +178,20 @@ NB. ---------------------------------------------------------
 NB. hepow
 NB.
 NB. Description:
-NB.   Raise a Hermitian matrix to integer power[s]
+NB.   Raise a Hermitian (symmetric) matrix to integer
+NB.   power[s]
 NB.
 NB. Syntax:
-NB.   P=. p dipow (v ; R)
+NB.   P=. p dipow vl ; iRl
+NB.   P=. p dipow vu ; Ru
 NB. where
-NB.   v - n-vector, eigenvalues of A
-NB.   R - n×n-matrix, columns are eigenvectors of A
+NB.   Rl  - n×n-matrix, rows are eigenvectors of A, output of
+NB.         heevlv
+NB.   Ru  - n×n-matrix, columns are eigenvectors of A, output
+NB.         of heevuv
+NB.   vl  - n-vector, eigenvalues of A, output of heevlx
+NB.   vu  - n-vector, eigenvalues of A, output of heevux
+NB.   iRl -: Rl^_1
 NB.   p  - sh-array of positive integers, power[s]
 NB.   P  - sh×n×n-array if r>0,
 NB.        n×n-array    if r=0, a matrix A in power[s] p
@@ -151,7 +199,26 @@ NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   ((-: ct) A)     NB. A must be Hermitian (symmetric)
+NB. - lower case:
+NB.   (-: ct) A           NB. A must be Hermitian (symmetric)
+NB.   (R mp A) -: V mp R  NB. verify eigendecomposition
+NB.   iR -: ct R
+NB.   A -: iR mp V mp R
+NB.   A -: iR mp v * R
+NB.   F -: diagmat"1 f
+NB.   P -: iR mp"2 F mp"2 R
+NB.   P -: iR mp"2 f *"1 2 R
+NB.   P -: p hepow v ; R
+NB. where
+NB.   'v R'=. heevlv A  NB. use definition from ggevlxx application notes
+NB.   iR=. %. R
+NB.   V=. diagmat v
+NB.   P=. p gepow A
+NB.   f=. v ^1 0 p
+NB.   F=. p gepow V
+NB. - upper case:
+NB.   (-: ct) A           NB. A must be Hermitian (symmetric)
+NB.   (A mp R) -: R mp V  NB. verify eigendecomposition
 NB.   iR -: ct R
 NB.   A -: R mp V mp iR
 NB.   A -: R mp v * iR
@@ -160,7 +227,7 @@ NB.   P -: R mp"2 F mp"2 iR
 NB.   P -: R mp"2 f *"1 2 iR
 NB.   P -: p hepow v ; R
 NB. where
-NB.   'v R'=. heev A  NB. eigenvalues ; right eigenvectors in columns
+NB.   'v R'=. heevuv A  NB. use definition from ggevuxx application notes
 NB.   iR=. %. R
 NB.   V=. diagmat v
 NB.   P=. p gepow A
@@ -207,26 +274,22 @@ NB.   A - n×n-matrix, diagonalizable
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
-NB.
-NB. TODO:
-NB. - replace geev_jlapack_ by geev
 
 testdipow=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'geev'
+  NB. use for a while the definition from ggevlxx application notes
+  geevlvv=. 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)"2&.>)ag ggevlvv@(,:(idmat@c))
 
   rcond=. gecon1 y
-
   try.
-    'Lh v R'=. geev_jlapack_ y         NB. do eigendecomposition
-    assert ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
-    L=. ct Lh                          NB. restore L
-    iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in dipow
+    'v LR'=. geevlvv y                 NB. eigendecomposition
+    'L R'=. LR
+    assert ((-: ~.) v) +. ((-: ct) y)  NB. A must be normal (diagonalizable)
+    iRh=. L ([ % (mp"1 +)) R           NB. reconstruct R^_1^H , see [1] in dipow
   catch.
-    R=. v=. iR=. _.
+    R=. v=. iRh=. _.
   end.
 
-  ('5 7 & dipow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (R ; v ; iR)
+  ('5 7 & dipow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (ct R) ; v ; iRh
 
   EMPTY
 )
@@ -241,20 +304,19 @@ NB. Syntax:
 NB.   testhepow A
 NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric)
-NB.
-NB. TODO:
-NB. - replace heev_jlapack_ by heev
 
 testhepow=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'heev'
+  NB. use for a while the definition from ggevlxx application notes
+  heevlv=. 0 1 ((9 o.{.)&.>)`((%%:@diag@(mp ct))&.>)ag ggevlvn@(,:(idmat@c))
 
   rcond=. hecon1 y
+  try.
+    'v R'=. heevlv y  NB. eigendecomposition
+  catch.
+    v=. R=. _.
+  end.
 
-  NB. try to make eigendecomposition: 'v R'=. heev A
-  y=. heev_jlapack_ :: ] y
-
-  ('5 7 & hepow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('5 7 & hepow' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) v ; ct R
 
   EMPTY
 )

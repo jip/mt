@@ -3,8 +3,11 @@ NB.
 NB. ggevxxx   Eigenvalues and, optionally, eigenvectors of
 NB.           pair of matrices
 NB.
+NB. testgeev  Test geevxxx by general matrix given
+NB. testheev  Test heevxx by Hermitian (symmetric) matrix
+NB.           given
 NB. testggev  Test ggevxxx by general matrices given
-NB. testev    Adv. to make verb to test gxevxxx by matrices
+NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
 NB. Version: 0.6.8 2011-07-14
@@ -386,6 +389,98 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
+NB. testgeev
+NB.
+NB. Description:
+NB.   Test geev (math/lapack) by general matrix given
+NB.
+NB. Syntax:
+NB.   testgeev A
+NB. where
+NB.   A - n×n-matrix
+NB.
+NB. Formula:
+NB.   berr := max(berrL,berrR,berrl,berrr)
+NB. where
+NB.   ||A|| := max(||A||_1 , FP_SFMIN)
+NB.   L - matrix of left eigenvectors
+NB.   R - matrix of right eigenvectors
+NB.   E - diagonal matrix of eigenvalues
+NB.   - geev_jlapack_:
+NB.       berrL := min((||L^H * A - E * L^H||_1 / max(||L||_1 , FP_PREC)) / ||A|| , 1) / FP_PREC
+NB.       berrR := min((||A   * R - R * E  ||_1 / max(||R||_1 , FP_PREC)) / ||A|| , 1) / FP_PREC
+NB.       if max(|Re(X[i,j])|) / max(|X[i,j]|) < 1 - 2*FP_PREC then
+NB.         berrx := 1/FP_PREC
+NB.       else
+NB.         berrx := max(min(1/FP_PREC , | ||X[:,j]||_E - 1 |) / FP_PREC
+NB.       endif
+NB.       where berrx is either berrl or berrr, and corresponding X is either L or R
+
+testgeev=: 3 : 0
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'geev'
+
+  rcond=. gecon1 y
+
+  vberruL=: FP_PREC%~1<.norm1@[%~(((mp~ ct)~(1;0)&{::)normi@:-((0+@{::])*"1(1;0){::]))%(FP_PREC>.norm1@((1;0){::]))
+  vberruR=: FP_PREC%~1<.norm1@[%~(( mp      (1;1)&{::)norm1@:-((0  {::])*"1(1;1){::]))%(FP_PREC>.norm1@((1;1){::]))
+  vberrux=: 1(((%FP_PREC)>./"1@:<.FP_PREC%~|@:<:@:(norms"1@|:"2))([`((%FP_PREC)"_)@.])"0((1-+:FP_PREC)>(|@(9&o.))%&:(>./"1)|)@:(,"2))@{::]
+  vberruvv=: >./@(vberruL,vberruR,vberrux)  NB. STUDYME: verb is invisible from base locale when erase below is commented out (???)
+
+  ('geev_jlapack_' tmonad (]`(1&({::) ; (0,:2)&({::))`(rcond"_)`(_."_)`vberruvv)) y
+
+  erase 'vberruL vberruR vberrux vberruvv'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testheev
+NB.
+NB. Description:
+NB.   Test heev (math/lapack) by Hermitian (symmetric) matrix
+NB.   given
+NB.
+NB. Syntax:
+NB.   testheev A
+NB. where
+NB.   A - n×n-matrix, Hermitian (symmetric)
+NB.
+NB. Formula:
+NB.   berr := max(berr0,berr1)
+NB. where
+NB.   ||A|| := max(||A||_1 , FP_SFMIN)
+NB.   V - matrix of eigenvectors
+NB.   E - diagonal matrix of eigenvalues
+NB.   - heev_jlapack_:
+NB.       wnorm := ||A - V * E * V^H||_1
+NB.       if ||A|| > wnorm then
+NB.         berr0 := (wnorm / ||A||) / (FP_PREC * n)
+NB.       elseif ||A|| < 1 then
+NB.         berr0 := (min(wnorm , n * ||A||) / ||A||) / (FP_PREC * n)
+NB.       else
+NB.         berr0 := min(wnorm / ||A|| , n) / (FP_PREC * n)
+NB.       endif
+NB.       berr1 := min(||V * V^H - I||_1 , n) / (FP_PREC * n)
+
+testheev=: 3 : 0
+  require :: ] '~addons/math/lapack/lapack.ijs'
+  need_jlapack_ :: ] 'heev'
+
+  rcond=. hecon1 y
+
+  vberru0=: [((((%~{.)<.1{])`(((0{])<.(*{:))%[)@.(1>[)`(%~{.)@.(>{.)%FP_PREC*1{])~(FP_SFMIN>.{.))~&(norm1,#)(-(]mp(*ct))&>/)
+  vberru1=: 1((#<.norm1@(<:upddiag)@(mp ct))%(FP_PREC*#))@{::]
+  vberruv=: vberru0>.vberru1
+
+  ('heev_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`vberruv)) y
+
+  erase 'vberru0 vberru1 vberruv'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
 NB. testggev
 NB.
 NB. Description:
@@ -483,4 +578,4 @@ NB.     (_1 1 0 4 _6 4 & gemat_mt_) testev_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testev_mt_ 150 150
 
-testev=: 1 : 'EMPTY_mt_ [ (testggev_mt_ @ u @ (2&,)) ^: (=/)'
+testev=: 1 : 'EMPTY_mt_ [ (testggev_mt_ @ u @ (2&,) [ testheev_mt_ @ (u hemat_mt_) [ testgeev_mt_ @ u) ^: (=/)'

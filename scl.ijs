@@ -39,7 +39,7 @@ NB. Description:
 NB.   Try to scale a noun without overflow or underflow
 NB.
 NB. Syntax:
-NB.   Ascl=. (f,t) scl A
+NB.   B=. (f,t) scl A
 NB. where
 NB.   A - r-rank array
 NB.   f ≠ 0, numeric scalar
@@ -71,11 +71,13 @@ NB.      1.1) form vector (|f|,|t|)
 NB.      1.2) form matrix:
 NB.             ( |t|*FP_SFMIN*FP_SFMIN  |t|*FP_SFMIN )
 NB.             ( |f|*FP_SFMIN*FP_SFMIN  |f|*FP_SFMIN )
-NB.      1.3) form 2-vector ioft, where
-NB.             ioft[0] := (|t|*FP_SFMIN*FP_SFMIN,|t|*FP_SFMIN) I. |f|
-NB.             ioft[1] := (|f|*FP_SFMIN*FP_SFMIN,|f|*FP_SFMIN) I. |t|
+NB.      1.3) form 2-vector:
+NB.             ioft -: iof,iot
+NB.           where
+NB.             iof == (|t|*FP_SFMIN*FP_SFMIN,|t|*FP_SFMIN) I. |f|
+NB.             iot == (|f|*FP_SFMIN*FP_SFMIN,|f|*FP_SFMIN) I. |t|
 NB.   2) find io:
-NB.        io := ioft[0]-ioft[1]
+NB.        io := iof-iot
 NB.   3) scale A
 NB.      3.1) find scaled ratio (f/t)
 NB.           3.1.1) form scaling vector
@@ -87,7 +89,7 @@ NB.                    ft := f/t
 NB.      3.2) scale A up or down
 NB.             B := FP_SFMIN (* ^: io) A
 NB.      3.3) scale A by ratio
-NB.             B := ft * Ascl
+NB.             B := ft * B
 NB.
 NB. Notes:
 NB. - models LAPACK's xLASCL('G'), when A is a matrix
@@ -98,4 +100,4 @@ scl=: 4 : 0
   io=. -/ ioft
   (%~/ (({&(1 1,FP_SFMIN)) ioft) *^:(| io) x) * (FP_SFMIN&* ^: io y)
 )
-NB. scl=: (((],(0>:-),(0&>:))@(-&2)@((I.~(FP_SFMIN&*^:2 1 _1 _2))/)@:|@[) ((*&>)`(%&>)/@:((FP_SFMIN&*@[&0&.>)"0)) ((;(;~/))~)) :. (($^:_1~|.)~)
+NB. scl=: ((],(0>:-),(0&>:))@(-&2)@((I.~(FP_SFMIN&*^:2 1 _1 _2))/)@:|@[) ((*&>)`(%&>)/@:((FP_SFMIN&*@[&0&.>)"0)) ((;(;~/))~)

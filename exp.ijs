@@ -159,42 +159,83 @@ NB. Description:
 NB.   Matrix exponential of a diagonalizable matrix
 NB.
 NB. Syntax:
-NB.   E=. diexp (iL ; v ; L)
-NB.   E=. diexp (R ; v ; iR)
+NB.   E=. diexp iLl ; vl ; Ll
+NB.   E=. diexp (ct Rl) ; vl ; ct iRl
+NB.   E=. diexp (ct iLu) ; vu ; ct Lu
+NB.   E=. diexp Ru ; vu ; iRu
 NB. where
-NB.   L  - n×n-matrix, unitary (orthogonal), rows are left
-NB.        eigenvectors of A
-NB.   R  - n×n-matrix, unitary (orthogonal), columns are
-NB.        right eigenvectors of A
-NB.   v  - n-vector, eigenvalues of A
-NB.   iL = L^_1
-NB.   iR = R^_1
-NB.   E  - n×n-matrix, matrix exponential e^A
+NB.   Ll  - n×n-matrix, rows are left eigenvectors of A,
+NB.         output of geevlvx
+NB.   Lu  - n×n-matrix, columns are left eigenvectors of A,
+NB.         output of geevuvx
+NB.   Rl  - n×n-matrix, rows are right eigenvectors of A,
+NB.         output of geevlxv
+NB.   Ru  - n×n-matrix, columns are right eigenvectors of A,
+NB.         output of geevuxv
+NB.   vl  - n-vector, eigenvalues of A, output of geevlxx
+NB.   vu  - n-vector, eigenvalues of A, output of geevuxx
+NB.   iLl -: Ll^_1
+NB.   iLu -: Lu^_1
+NB.   iRl -: Rl^_1
+NB.   iRu -: Ru^_1
+NB.   E   - n×n-matrix, matrix exponential e^A
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB. - lower case:
 NB.   ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
-NB.   C -: L mp R                 NB. LAPACK doesn't guarantee (C -: idmat # A)
-NB.   iL -: R %"1 c               NB. see [1]
-NB.   iR -: L % c                 NB. see [1]
+NB.   (L mp A) -: V mp L          NB. verify...
+NB.   (A mp ct R) -: (ct R) mp V  NB. ...eigendecomposition
+NB.   W -: L mp (ct R)            NB. LAPACK doesn't guarantee (W -: idmat # A)
+NB.   iL -: (ct R) %"1 w          NB. see [1]
+NB.   (ct iR) -: L % w            NB. see [1]
 NB.   A -: iL mp V mp L
 NB.   A -: iL mp v * L
-NB.   A -: R mp V mp iR
-NB.   A -: R mp v * iR
+NB.   A -: (ct R) mp V mp ct iR
+NB.   A -: (ct R) mp v * ct iR
 NB.   F -: diagmat f
 NB.   E -: iL mp F mp L
 NB.   E -: iL mp f * L
-NB.   E -: R mp F mp iR
-NB.   E -: R mp f * iR
+NB.   E -: (ct R) mp F mp ct iR
+NB.   E -: (ct R) mp f * ct iR
 NB.   E -: diexp iL ; v ; L
-NB.   E -: diexp R ; v ; iR
+NB.   E -: diexp (ct R) ; v ; ct iR
 NB. where
-NB.   'Lh v R'=. geev A           NB. conjugated left eigenvectors in columns ; eigenvalues ; right eigenvectors in columns
-NB.   L=. ct Lh                   NB. left eigenvectors in rows
+NB.   'v LR'=. geevlvv A  NB. use definition from ggevlxx application notes
+NB.   'L R'=. LR
 NB.   iL=. %. L
 NB.   iR=. %. R
 NB.   V=. diagmat v
-NB.   c=. L mp"1 |: R
-NB.   C=. diagmat c
+NB.   w=. L mp"1 + R
+NB.   W=. diagmat w
+NB.   E=. geexp A
+NB.   f=. ^ v
+NB.   F=. geexp V
+NB. - upper case:
+NB.   ((-: ~.) v) +. ((-: ct) A)  NB. A must be normal (diagonalizable)
+NB.   ((ct L) mp A) -: V mp ct L  NB. verify...
+NB.   (A mp R) -: R mp V          NB. ...eigendecomposition
+NB.   W -: (ct L) mp R            NB. LAPACK doesn't guarantee (W -: idmat # A)
+NB.   (ct iL) -: R %"1 w          NB. see [1]
+NB.   iR -: (ct L) % w            NB. see [1]
+NB.   A -: (ct iL) mp V mp ct L
+NB.   A -: (ct iL) mp v * ct L
+NB.   A -: R mp V mp iR
+NB.   A -: R mp v * iR
+NB.   F -: diagmat f
+NB.   E -: (ct iL) mp F mp ct L
+NB.   E -: (ct iL) mp f * ct L
+NB.   E -: R mp F mp iR
+NB.   E -: R mp f * iR
+NB.   E -: diexp (ct iL) ; v ; ct L
+NB.   E -: diexp R ; v ; iR
+NB. where
+NB.   'v LR'=. geevuvv A  NB. use definition from ggevuxx application notes
+NB.   'L R'=. LR
+NB.   iL=. %. L
+NB.   iR=. %. R
+NB.   V=. diagmat v
+NB.   w=. (ct L) mp"1 |: R
+NB.   W=. diagmat w
 NB.   E=. geexp A
 NB.   f=. ^ v
 NB.   F=. geexp V
@@ -213,14 +254,39 @@ NB. Description:
 NB.   Matrix exponential of a Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   E=. heexp (v ; R)
+NB.   E=. heexp vl ; iRl
+NB.   E=. heexp vu ; Ru
 NB. where
-NB.   v - n-vector, eigenvalues of A
-NB.   R - n×n-matrix, columns are eigenvectors of A
-NB.   E - n×n-matrix, matrix exponential e^A
+NB.   Rl  - n×n-matrix, rows are eigenvectors of A, output of
+NB.         heevlv
+NB.   Ru  - n×n-matrix, columns are eigenvectors of A, output
+NB.         of heevuv
+NB.   vl  - n-vector, eigenvalues of A, output of heevlx
+NB.   vu  - n-vector, eigenvalues of A, output of heevux
+NB.   iRl -: Rl^_1
+NB.   E   - n×n-matrix, matrix exponential e^A
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   ((-: ct) A)     NB. A must be Hermitian (symmetric)
+NB. - lower case:
+NB.   (-: ct) A           NB. A must be Hermitian (symmetric)
+NB.   (R mp A) -: V mp R  NB. verify eigendecomposition
+NB.   iR -: ct R
+NB.   A -: iR mp V mp R
+NB.   A -: iR mp v * R
+NB.   F -: diagmat f
+NB.   E -: iR mp F mp R
+NB.   E -: iR mp f * R
+NB.   E -: heexp v ; iR
+NB. where
+NB.   'v R'=. heevlv A  NB. use definition from ggevlxx application notes
+NB.   iR=. %. R
+NB.   V=. diagmat v
+NB.   E=. geexp A
+NB.   f=. ^ v
+NB.   F=. geexp V
+NB. - upper case:
+NB.   (-: ct) A           NB. A must be Hermitian (symmetric)
+NB.   (A mp R) -: R mp V  NB. verify eigendecomposition
 NB.   iR -: ct R
 NB.   A -: R mp V mp iR
 NB.   A -: R mp v * iR
@@ -229,7 +295,7 @@ NB.   E -: R mp F mp iR
 NB.   E -: R mp f * iR
 NB.   E -: heexp v ; R
 NB. where
-NB.   'v R'=. heev A  NB. eigenvalues ; right eigenvectors in columns
+NB.   'v R'=. heevuv A  NB. use definition from ggevuxx application notes
 NB.   iR=. %. R
 NB.   V=. diagmat v
 NB.   E=. geexp A
@@ -270,28 +336,24 @@ NB. Syntax:
 NB.   testdiexp A
 NB. where
 NB.   A - n×n-matrix, diagonalizable
-NB.
-NB. TODO:
-NB. - replace geev_jlapack_ by geev
 
 testdiexp=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'geev'
+  NB. use for a while the definition from ggevlxx application notes
+  geevlvv=. 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)"2&.>)ag ggevlvv@(,:(idmat@c))
 
   rcond=. gecon1 y
-
   try.
-    'Lh v R'=. geev_jlapack_ y         NB. make eigendecomposition
+    'v LR'=. geevlvv y                 NB. eigendecomposition
+    'L R'=. LR
     v=. j./ (*"1 (-@*@{.)) |: +. v     NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
                                        NB. A to be negative definite, this will avoid NaN error in diexp
     assert ((-: ~.) v) +. ((-: ct) y)  NB. A must be normal (diagonalizable)
-    L=. ct Lh                          NB. restore L
-    iR=. L ([ % (mp"1 |:)) R           NB. reconstruct R^_1 , see [1] in diexp
+    iRh=. L ([ % (mp"1 +)) R           NB. reconstruct R^_1^H , see [1] in diexp
   catch.
-    R=. v=. iR=. _.
+    R=. v=. iRh=. _.
   end.
 
-  ('diexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (R ; v ; iR)
+  ('diexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (ct R) ; v ; iRh
 
   EMPTY
 )
@@ -306,28 +368,21 @@ NB. Syntax:
 NB.   testheexp A
 NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric)
-NB.
-NB. TODO:
-NB. - replace heev_jlapack_ by heev
 
 testheexp=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'heev'
+  NB. use for a while the definition from ggevlxx application notes
+  heevlv=. 0 1 ((9 o.{.)&.>)`((%%:@diag@(mp ct))&.>)ag ggevlvn@(,:(idmat@c))
 
   rcond=. hecon1 y
-
   try.
-    NB. - make eigendecomposition: 'v R'=. heev A
-    NB. - for each v[i] in v, flip sign of v[i] if Re(v[i])>0,
-    NB.   to force A to be negative definite, this will avoid
-    NB.   NaN error in heexp
-    NB. - save adjusted boxed duplet back into y
-    y=. (j./@(*"1 (-@*@{.))@:|:@:+.&.>)`] ag heev_jlapack_ y
+    'v R'=. heevlv y                NB. eigendecomposition
+    v=. j./ (*"1 (-@*@{.)) |: +. v  NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
+                                    NB. A to be negative definite, this will avoid NaN error in heexp
   catch.
-    y=. _.
+    v=. R=. _.
   end.
 
-  ('heexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('heexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) v ; ct R
 
   EMPTY
 )

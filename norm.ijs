@@ -122,4 +122,4 @@ NB.   DLANST('f'), xLANGB('f'), xLANGT('f'), xLANHS('f'),
 NB.   xLANTB('f'), xLANTR('f'), ZLANHB('f'), ZLANHT('f'),-
 NB.   extraneous values in matrix must be zeroed
 
-norms=: (((((+/^:_) &.: *:) @: %) * ]) (>./^:_)) @: | @: +.
+norms=: ((+/&.:*:@:% * ]) >./)@:|@,@:+.

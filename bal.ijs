@@ -518,42 +518,45 @@ NB. ggbalu
 NB. 'CD plr hs'=. ggbalup AB
 
 ggbalup=: 3 : 0
-  n=. # y
+  n=. c y
   'h s'=. 0 , n
   pl=. pr=. i. n
   i=. h+s-1
   while. i >: h do.
-    v=. (i ,.!.1 (h,s)) {. ;. 0 y
+    v=. (0 2 ,. (i,1) ,. (h,s)) ,@(+./)@:(0&~:) ;. 0 y
     lios=. I. v ~: 0
     select. # lios
       fcase. 1 do.
-        nst=. < (h + {. lios) , (h+s-1)
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-      case. 0 do.
         nst=. < i , (h+s-1)
         pl=. nst C. :: ] pl
         y=. nst C."2 :: ] y
+      case. 0 do.
+        nst=. < (h + {. lios) , (h+s-1)
+        pr=. nst C. :: ] pr
+        y=. nst C."1 :: ] y
         s=. <: s
+        i=. h+s
     end.
     i=. <: i
   end.
   j=. h
   while. j < (h+s) do.
-    v=. ((h,s) ,.!.1 j) ({."1) ;. 0 y
+    v=. (0 2 ,. (h,s) ,. (j,1)) ,@(+./)@:(0&~:) ;. 0 y
     lios=. I. v ~: 0
     select. # lios
       fcase. 1 do.
-        nst=. < (h + {. lios) , h
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-      case. 0 do.
         nst=. < j , h
         pr=. nst C. :: ] pr
         y=. nst C."1 :: ] y
+      case. 0 do.
+        nst=. < (h + {. lios) , h
+        pl=. nst C. :: ] pl
+        y=. nst C."2 :: ] y
+        j=. h
         h=. >: h
+        s=. <: s
     end.
-    j=. >: i
+    j=. >: j
   end.
   y ; (pl ,: pr) ; (h , s)
 )
@@ -562,7 +565,7 @@ NB. 'EF plr hs dlr'=. ggbalus CD ; plr ; hs
 
 ggbalus=: 3 : 0
   m3x=. - 3&*
-  mix=. ((* (+/@(+/"1)))~ {.) + ((+/@:(+/@#"1)) {:)
+  mix=. ((* +/@:(+/"1))~ {.) + ((+/@:(+/@#"1)) {:)
 
   'CD plr hs'=. y
   nzCDcut=. 0 ~: CDcut=. (,.~ hs) ] ;. 0 CD
@@ -575,6 +578,7 @@ ggbalus=: 3 : 0
   beta=. k=. 0
   NB. start generalized conjugate gradient iteration
   while. k < s + 2 do.
+    smoutput 'loop(2), k = ' , ": k
     gamma=. (+&(mp~))/ w45
     ewewc=. +/"1 w45
     gamma=. (coef , - coef2 , coef5) mp (gamma , (((+&*:),(*:@-))/ ewewc))
@@ -583,21 +587,6 @@ ggbalus=: 3 : 0
     w10=. (beta * w10) + (coef * w45) + (coef5 * ((m3x~,m3x)/ ewewc))
     NB. apply matrix to vector
     w23=. nzCDcut (mix ,: ((mix~ (|:"2))~ |.)) w10
-
-    w23=. (((+/"1 (+/) nzCDcut) * ({. w10)) + (nzCDcut +/@:(+/@#"1) ({: w10))) ,: (((+/^:2 nzCDcut) * ({: w10)) + ((0 2 1 |: nzCDcut) +/@:(+/@#"1) ({. w10)))
-
-    w23=. (((+/"1 (+/)           nzCDcut)  * w1) + (          nzCDcut  +/@:(+/@#"1) w0)) ,:
-          (((+/"1 (+/) (0 2 1 |: nzCDcut)) * w0) + ((0 2 1 |: nzCDcut) +/@:(+/@#"1) w1))
-
-    w23=. (((+/^:2 (|:"2 nzCDcut)) * w1) + (      nzCDcut  +/@:(+/@#"1) w0)) ,:
-          (((+/^:2       nzCDcut ) * w0) + ((|:"2 nzCDcut) +/@:(+/@#"1) w1))
-
-    w23=. (((+/^:2 (|:"2 nzCDcut)) *            w1) + (       nzCDcut  +/@:(+/@#"1) w0)) ,:
-          (((       |:"2 nzCDcut ) +/@:(+/@#"1) w1) + ((+/^:2 nzCDcut) *            w0))
-
-    w23=. (((+/ (+/"1)       nzCDcut ) * w1) + (      nzCDcut  +/@:(+/@#"1) w0)) ,:
-          (((+/ (+/"1) (|:"2 nzCDcut)) * w0) + ((|:"2 nzCDcut) +/@:(+/@#"1) w1))
-
     alpha=. gamma % (+/) w10 mp"1 w23
     NB. determine correction to current iteration
     aw10=. alpha * w10
@@ -611,19 +600,19 @@ ggbalus=: 3 : 0
   NB. end generalized conjugate gradient iteration
   'lsfmin lsfmax'=. <. 1 0 + GGBALSCLFAC ^. (],%) FP_SFMIN
   dlr=. dlr ([ + copysign) 0.5
-  irab=. h + (0 _ ,. hs ,. (h , _)) liofmax"1 ;. 0 CD
-  icab=. (0 _ ,. (0 , (h + s)) ,. hs) liofmax"1@:|: ;. 0 CD
-  rab=. >./"1 (<"1 (dhs2lios hs) ,."1 irab) { CD
-  cab=.
-  ir=.
-  jc=.
-  
+  irab=. h + (0 2 ,. hs ,. (h , _)) liofmax"1 ;. 0 CD
+  icab=. (0 2 ,. (0 , (h + s)) ,. hs) liofmax"1@:|: ;. 0 CD
+  rab=. >./    | (<"1 irab ,.~"1 (dhs2lios hs)) {"1 2 CD
+  cab=. >./ |: | (<"1 icab ,. "1 (dhs2lios hs)) {"1 2 CD
+  lxab=. <. >: GGBALSCLFAC ^. FP_SFMIN + rab ,: cab
+  dlr=. GGBALSCLFAC ^  (lsfmax <. (lsfmax - lxab) <. lsfmin >. dlr
+  NB. adjust dlr's shape
+  dlr=. (-h) |. (c CD) {."1 dlr
   NB. row scaling of matrices C and D
-  
+  CD=. ({. dlr) *"1 2 CD
   NB. column scaling of matrices C and D
-  
-  NB. TODO: adjust dlr's shape!
-  EF ; plr ; hs ; dlr
+  CD=. ({: dlr) *"1 1 CD
+  CD ; plr ; hs ; dlr
 )
 
 NB. 'EF plr hs dlr'=. ggball AB

@@ -705,10 +705,26 @@ NB.
 NB. Notes:
 NB. - non-converged eigenvalues are set to NaN
 NB.
-NB. Assertions:
-NB.   ab -: diag"2 SP  NB. generalized eigenvalues a, b are
-NB.                    NB. defined by diagonals of S, P,
-NB.                    NB. respectively
+NB. Assertions (with appropriate comparison tolerance):
+NB.   ab -: diag"2 SP
+NB.   Q2 -: dQ1 mp Q1
+NB.   Z2 -: dZ1 mp Z1
+NB.   HT -: dQ1 (mp~ ct)~"2 SP mp"2 dZ1
+NB.   CD -: Q2 (mp~ ct)~"2 SP mp"2 Z2
+NB. where
+NB.   'C D'=. CD
+NB.   n=. c CD
+NB.   hs=. 0 , n
+NB.   I=. idmat n
+NB.   'B Z0'=. (trl ,: unglq) @ gelqf D
+NB.   A=. C (mp ct) Z0
+NB.   AB=. A ,: B
+NB.   'H T Q1 Z1'=. hs gghrdlvv AB , I ,: Z0
+NB.   HT=. H ,: T
+NB.   ab=. hs hgezqenn HT
+NB.   'S P Q2 Z2'=. hs hgezqsvv HT , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgezqsvv HT , ,:~ I
+NB.   SP=. S ,: P
 NB.
 NB. Application:
 NB. - detect case of non-convergence (0=converged,
@@ -813,22 +829,48 @@ NB. - hgeqzsnv models LAPACK's xHGEQZ('S','N','V')
 NB. - hgeqzsvn models LAPACK's xHGEQZ('S','V','N')
 NB. - hgeqzsvv models LAPACK's xHGEQZ('S','V','V')
 NB.
-NB. Assertions:
-NB.   ab -: diag"2 SP  NB. generalized eigenvalues a, b are
-NB.                    NB. defined by diagonals of S, P,
-NB.                    NB. respectively
+NB. Assertions (with appropriate comparison tolerance):
+NB.   ab -: diag"2 SP
+NB.   Q2 -: Q1 mp dQ1
+NB.   Z2 -: Z1 mp dZ1
+NB.   HT -: dQ1 mp"2 SP (mp ct)"2 dZ1
+NB.   CD -: Q2 mp"2 SP (mp ct)"2 Z2
+NB. where
+NB.   'C D'=. CD
+NB.   n=. c CD
+NB.   hs=. 0 , n
+NB.   I=. idmat n
+NB.   'Q0 B'=. (ungqr ,: tru) @ geqrf D
+NB.   A=. Q0 (mp~ ct)~ C
+NB.   AB=. A ,: B
+NB.   'H T Q1 Z1'=. hs gghrduvv AB , Q0 ,: I
+NB.   HT=. H ,: T
+NB.   ab=. hs hgeqzenn HT
+NB.   'S P Q2 Z2'=. hs hgeqzsvv HT , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgeqzsvv HT , ,:~ I
+NB.   SP=. S ,: P
 NB.
 NB. Application:
-NB. - model LAPACK's xHGEQZ('N','I'):
-NB.     gghrduni=: hgeqzenv (, (idmat @ c))
-NB. - model LAPACK's xHGEQZ('I','N'):
-NB.     gghrduin=: hgeqzevn (, (idmat @ c))
-NB. - model LAPACK's xHGEQZ('I','I'):
-NB.     gghrduii=: hgeqzevv (,~^:2~ (idmat @ c))
-NB. - model LAPACK's xHGEQZ('I','V'):
-NB.     gghrduiv=: hgeqzevv ((1 & A.) @ , (idmat @ c))
-NB. - model LAPACK's xHGEQZ('V','I'):
-NB.     gghrduvi=: hgeqzevv (, (idmat @ c))
+NB. - model LAPACK's xHGEQZ('E','N','I'):
+NB.     hgeqzeni=: hgeqzenv (, (idmat @ c))
+NB. - model LAPACK's xHGEQZ('E','I','N'):
+NB.     hgeqzein=: hgeqzevn (, (idmat @ c))
+NB. - model LAPACK's xHGEQZ('E','I','I'):
+NB.     hgeqzeii=: hgeqzevv (,~^:2~ (idmat @ c))
+NB. - model LAPACK's xHGEQZ('E','I','V'):
+NB.     hgeqzeiv=: hgeqzevv ((1 & A.) @ , (idmat @ c))
+NB. - model LAPACK's xHGEQZ('E','V','I'):
+NB.     hgeqzevi=: hgeqzevv (, (idmat @ c))
+NB. - model LAPACK's xHGEQZ('S','N','I'):
+NB.     hgeqzsni=: hgeqzsnv (, (idmat @ c))
+NB. - model LAPACK's xHGEQZ('S','I','N'):
+NB.     hgeqzsin=: hgeqzsvn (, (idmat @ c))
+NB. - model LAPACK's xHGEQZ('S','I','I'):
+NB.     hgeqzsii=: hgeqzsvv (,~^:2~ (idmat @ c))
+NB. - model LAPACK's xHGEQZ('S','I','V'):
+NB.     hgeqzsiv=: hgeqzsvv ((1 & A.) @ , (idmat @ c))
+NB. - model LAPACK's xHGEQZ('S','V','I'):
+NB.     hgeqzsvi=: hgeqzsvv (, (idmat @ c))
 NB. - detect case of non-convergence (0=converged,
 NB.   1=non-converged), any of:
 NB.     128!:5 < ab

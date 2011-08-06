@@ -237,14 +237,15 @@ NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized lower
 NB.   Hessenberg form (H,T) by a unitary (orthogonal)
 NB.   similarity transformation by non-blocked algorithm:
-NB.     Q1^_1 * H * Z1 = A
-NB.     Q1^_1 * T * Z1 = B
+NB.     ΔQ0^_1 * H * ΔZ0 = A
+NB.     ΔQ0^_1 * T * ΔZ0 = B
 NB.   in order to reduce the generalized eigenvalue problem:
-NB.     x * A = λ * x * B
+NB.     x * C = λ * x * D                                 (1)
 NB.   to its standard form:
-NB.     y * H = λ * y * T
-NB.     y = x * Q1^_1
+NB.     y * H = λ * y * T                                 (2)
 NB.   and accumulate rotations to form Q1 and Z1 later
+NB.   The unitary (orthogonal) matrices ΔQ0 and ΔZ0 are
+NB.   determined as products of Givens rotations.
 NB.
 NB. Syntax:
 NB.   'HT dQ0 dZ0'=. hs gghrdl A ,: B
@@ -305,14 +306,15 @@ NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
 NB.   Hessenberg form (H,T) by a unitary (orthogonal)
 NB.   similarity transformation by non-blocked algorithm [1]:
-NB.     Q1 * H * Z1^_1 = A
-NB.     Q1 * T * Z1^_1 = B
+NB.     ΔQ0 * H * ΔZ0^_1 = A
+NB.     ΔQ0 * T * ΔZ0^_1 = B
 NB.   in order to reduce the generalized eigenvalue problem:
-NB.     A * x = λ * B * x
+NB.     C * x = λ * D * x                                 (1)
 NB.   to its standard form:
-NB.     H * y = λ * T * y
-NB.     y = Z1^_1 * x
+NB.     H * y = λ * T * y                                 (2)
 NB.   and accumulate rotations to form Q1 and Z1 later
+NB.   The unitary (orthogonal) matrices ΔQ0 and ΔZ0 are
+NB.   determined as products of Givens rotations.
 NB.
 NB. Syntax:
 NB.   'HT dQ0 dZ0'=. hs gghrdu A ,: B
@@ -606,6 +608,21 @@ NB.   Q1   - n×n-matrix, the unitary (orthogonal)
 NB.   Z0   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
 NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   Q1 -: dQ0 mp Q0
+NB.   CD -: Q1 (mp~ ct)~"2 HT mp"2 Z1
+NB. where
+NB.   'C D'=. CD
+NB.   n=. c CD
+NB.   hs=. 0 , n
+NB.   I=. idmat n
+NB.   'B Z0'=. (trl ,: unglq) @ gelqf D
+NB.   A=. C (mp ct) Z0
+NB.   AB=. A ,: B
+NB.   'H T Q1 Z1'=. hs gghrdlvv AB , I ,: Z0
+NB.   'H T dQ0 dZ0'=. hs gghrdlvv AB , ,:~ I
+NB.   HT=. H ,: T
+NB.
 NB. TODO:
 NB. - implement blocked version
 
@@ -666,6 +683,21 @@ NB. - gghrdunn models LAPACK's xGGHRD('N','N')
 NB. - gghrdunv models LAPACK's xGGHRD('N','V')
 NB. - gghrduvn models LAPACK's xGGHRD('V','N')
 NB. - gghrduvv models LAPACK's xGGHRD('V','V')
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   Q1 -: Q0 mp dQ0
+NB.   CD -: Q1 mp"2 HT (mp ct)"2 Z1
+NB. where
+NB.   'C D'=. CD
+NB.   n=. c CD
+NB.   hs=. 0 , n
+NB.   I=. idmat n
+NB.   'Q0 B'=. (ungqr ,: tru) @ geqrf D
+NB.   A=. Q0 (mp~ ct)~ C
+NB.   AB=. A ,: B
+NB.   'H T Q1 Z1'=. hs gghrduvv AB , Q0 ,: I
+NB.   'H T dQ0 dZ0'=. hs gghrduvv AB , ,:~ I
+NB.   HT=. H ,: T
 NB.
 NB. Application:
 NB. - model LAPACK's xGGHRD('N','I'):
@@ -758,13 +790,13 @@ NB.       berr0 := ||A - dQ0^_1 * H * dZ0|| / (β * ||A|| * n)
 NB.       berr1 := ||B - dQ0^_1 * T * dZ0|| / (β * ||B|| * n)
 NB.       berr2 := ||I - dQ0^_1 * dQ0|| / (β * n)
 NB.       berr3 := ||I - dZ0^_1 * dZ0|| / (β * n)
-NB.       B - lower triangular with real diagonal
+NB.       B - lower triangular
 NB.   - gghrdu:
 NB.       berr0 := ||A - dQ0 * H * dZ0^_1|| / (β * ||A|| * n)
 NB.       berr1 := ||B - dQ0 * T * dZ0^_1|| / (β * ||B|| * n)
 NB.       berr2 := ||I - dQ0 * dQ0^_1|| / (β * n)
 NB.       berr3 := ||I - dZ0 * dZ0^_1|| / (β * n)
-NB.       B - upper triangular with real diagonal
+NB.       B - upper triangular
 
 testgghrd=: 3 : 0
   prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'AB HT dQ0dZ0'=. (A,B,I,:I) prep (H,T,dQ0,:dZ0)

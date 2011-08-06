@@ -73,8 +73,8 @@ tgevcui=: 3 : 0
   small=. % FP_PREC * bignum
   big=. % small
   d0=. diag"2 y
-  d1=. ]`(9&o.) ag d0
-  d2=. sorim`| ag d1
+  d1=. 0 1 ]`(9&o.) ag d0
+  d2=. 0 1 sorim`| ag d1
   temp=. norm1tc"2 y                                                           NB. 2×n-matrix
   abnorm=. >./"1 temp
   abrwork=. temp - sorim d0
@@ -84,9 +84,9 @@ tgevcui=: 3 : 0
   abcoeff=. abscale * sba
   NB. scale to avoid underflow
   lsab=. *./ 0 1 (>:&FP_SFMIN)`(<&small) ag 0 1 (|`sorim ag)"2 sba ,: abcoeff  NB. 2×n-matrix
-  scale=. >./ lsab } 1 ,: (big <. abnorm) * small % 0 1 |`sorim ag sba         NB. n-vector
-  scale=. (+./ lsab) } scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
-  abcoeff=. lsab } (abcoeff * scale) ,: (abscale * scale *"1 sba)
+  scale=. >./ ((lsab }) dbg '}') 1 ,: (big <. abnorm) * small % 0 1 |`sorim ag sba         NB. n-vector
+  scale=. (((+./ lsab) }) dbg '}') scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
+  abcoeff=. lsab } (abcoeff (*"1 dbg '*') scale) ,: (abscale * scale *"1 sba)
   abcoeffa=. 0 1 |`sorim ag abcoeff                                            NB. coeffs for triangular solvers
   cond1=. +/ abcoeffa * abrwork
   dmin=. >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa
@@ -225,7 +225,7 @@ tgevcuy=: 1 : 0
           work=. work % xmax
           xmax=. 1
         end.
-        sum=. +/ (1 _1 * abcoeff) * work mp"1 (j ((0,,~),:(2,-,1:)) je { ios) (+@{.@(2 0 1&|:)) ,. 0 y
+        sum=. +/ (1 _1 * abcoeff) * work mp"1 (j ((0,,~),:(2,-,1:)) je { ios) (+@{.@(2 0 1&|:)) ;. 0 y
         NB. form:
         NB.   x[j] = - sum / conjg(a*S[j,j] - b*P[j,j])
         NB. with scaling and perturbation of the denominator

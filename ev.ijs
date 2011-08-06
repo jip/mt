@@ -1,4 +1,4 @@
-NB. Eigenvalues and, optionally, eigenvectors
+NB. Eigenvalues and eigenvectors
 NB.
 NB. ggevxxx   Eigenvalues and, optionally, eigenvectors of
 NB.           pair of matrices
@@ -37,42 +37,41 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Constants
 
+NB. Scale limits
 EVBIGNUM=: % EVSMLNUM=: (%: FP_SFMIN) % FP_PREC
 
+NB. Scale vector
+EVSCL=: 1,EVSMLNUM,1,EVBIGNUM
+
 NB. ---------------------------------------------------------
-NB. ggevli
-NB. ggevui
+NB. ggevi
 NB.
 NB. Description:
-NB.   Calculate initial parameters for ggevxxx
+NB.   Adv. to make verb to calculate initial parameters for
+NB.   ggevxxx
 NB.
 NB. Syntax:
-NB.   'abnrm abio ABupd plr hs'=. ggevxi AB
+NB.   vapp=. ggbalp ggevi
 NB. where
-NB.   AB    - 2×n×n-matrix, matrix pair (A,B)
-NB.   abnrm - 2-vector, norms of A and B
-NB.   abio  - 2-vector of integers, defines necessity and
-NB.           value of scaling for A and B
-NB.   ABupd - 2×n×n-matrix, scaled and balanced version on AB
-NB.   plr   - 2×n-matrix of integers, permutations of A and
-NB.           B, produced by ggbalxp
-NB.   hs    - 2-vector of integers, defines submatrices
-NB.           position, produced by ggbalxp
-NB.
-NB. TODO:
-NB. - re-factorize to tacit adverb ggevi
+NB.   ggbalp  - monadic verb to permute matrix pair (A,B) to
+NB.             isolate eigenvalues, is either ggballp or
+NB.             ggbalup, is called as:
+NB.               'CD plr hs'=. ggbalxp AB
+NB.   vapp    - monadic verb to calculate initial parameters
+NB.             for ggevxxx, is called as:
+NB.               'abnrmio ABupd plr hs'=. vapp AB
+NB.   AB      - 2×n×n-matrix, matrix pair (A,B)
+NB.   abnrmio -: abnrm ,. abio
+NB.   abnrm   - 2-vector, norms of A and B
+NB.   abio    - 2-vector of integers, defines both necessity
+NB.             and value of scaling for A and B
+NB.   ABupd   - 2×n×n-matrix, scaled and balanced AB
+NB.   plr     - 2×n-matrix of integers, permutations of A and
+NB.             B, produced by ggbalxp
+NB.   hs      - 2-vector of integers, defines submatrices
+NB.             position, produced by ggbalxp
 
-ggevli=: 3 : 0
-  abnrm=. (>./@,)"2 | y
-  abio=. (0,(EVSMLNUM*1-FP_EPS),EVBIGNUM) I. abnrm
-  abnrm ; abio ; ggballp (abnrm,.abio) scl^:((,{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 2 y
-)
-
-ggevui=: 3 : 0
-  abnrm=. (>./@,)"2 | y
-  abio=. (0,(EVSMLNUM*1-FP_EPS),EVBIGNUM) I. abnrm
-  abnrm ; abio ; ggbalup (abnrm,.abio) scl^:((,{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 2 y
-)
+ggevi=: 1 : '(,.(0,(EVSMLNUM_mt_*1-FP_EPS_mt_),EVBIGNUM_mt_)&I.)@:(>./@,"2)@:| ([ ; u@:(scl_mt_^:((,{&EVSCL_mt_)/@[`({&0 1 0 1@{:@[)`])"1 2)) ]'
 
 NB. =========================================================
 NB. Interface
@@ -85,7 +84,7 @@ NB. ggevlvv
 NB.
 NB. Description:
 NB.   Generalized nonsymmetric eigenvalue problem (GNEP):
-NB.   find eigenvalues e1, e2 and, optionally, left
+NB.   find eigenvalue vectors e1, e2 and, optionally, left
 NB.   eigenvectors L:
 NB.     E2 * L * A = E1 * L * B                           (1)
 NB.   and/or right eigenvectors R:
@@ -94,7 +93,7 @@ NB.   of pair of matrices (A,B). To avoid overflow,
 NB.   eigenvalues of the matrix pair (A,B) are computed as a
 NB.   pair of values. Each i-th eigenvector (row) from L and
 NB.   R has a corresponding eigenvalue represented as a pair
-NB.   of i-th elements from vectors e1 and e2:
+NB.   of i-th elements from e1 and e2:
 NB.     E1=. diagmat(e1)
 NB.     E2=. diagmat(e2)
 NB.   If E2 is nonsingular then:
@@ -120,9 +119,9 @@ NB.   AB    - 2×n×n-matrix, matrix pair (A,B):
 NB.             AB -: A ,: B
 NB.   e1e2  - 2×n-matrix of eigenvalues e1 and e2:
 NB.             e1e2 -: e1 ,: e2
-NB.   L     - n×n-matrix of left eigenvectors
-NB.   R     - n×n-matrix of right eigenvectors
-NB.   LR    - 2×n×n-matrix of left and right eigenvectors:
+NB.   L     - n×n-matrix. left eigenvectors (rows)
+NB.   R     - n×n-matrix. right eigenvectors (rows)
+NB.   LR    - 2×n×n-matrix. left and right eigenvectors:
 NB.             LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -130,24 +129,25 @@ NB.   (ggevlnn -: ggevunn &.: (ct"2)) A ,: B                   CHECKME!
 NB.   (ggevlnv -: ggevunv &.: (ct"2)) A ,: B                   CHECKME!
 NB.   (ggevlvn -: ggevuvn &.: (ct"2)) A ,: B                   CHECKME!
 NB.   (ggevlvv -: ggevuvv &.: (ct"2)) A ,: B                   CHECKME!
-NB.   (E2 mp L mp C) -: (E1 mp L mp D)
-NB.   (C mp (ct R) mp E2) -: (D mp (ct R) mp E1)
+NB.   (E2 mp L mp A) -: (E1 mp L mp B)
+NB.   (A mp (ct R) mp E2) -: (B mp (ct R) mp E1)
 NB. where
 NB.   A - n×n-matrix, general
 NB.   B - n×n-matrix, general
 NB.   'e1e2 LR'=. ggevlvv A ,: B
+NB.   'E1 E2'=. diagmat"1 e1e2
 NB.   'L R'=. LR
 
 ggevlnn=: 3 : 0
-  'abnrm abio y plr hs'=. ggevli y
+  'abnrmio y plr hs'=. ggballp ggevi y
   y=. (<0 1;;~dhs2lios hs) ([ (((0(0})hs)&gghrdlnn) upd) ((unmlqrc~,:trl@])gelqf)/@{`[`] }) y
   e1e2=. hs hgezqenn y
-  e1e2=. (abnrm,.abio) scl^:((,~{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
+  e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
 
 ggevlnv=: 3 : 0
-  'abnrm abio y plr hs'=. ggevli y
-  y=. (0 1;(i.{.hs);<<dhs2lios hs) ((unmlqrc~,trl@],:unglq@])gelqf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@]) } y
+  'abnrmio y plr hs'=. ggballp ggevi y
+  y=. (0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,trl@],:unglq@])gelqf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@]) } y
   y=. (0,c y) gghrdlnv y
   y=. hs hgezqsnv y
   e1e2=. 2 {. diag"2 y
@@ -158,14 +158,14 @@ ggevlnv=: 3 : 0
     y=. tgevclrb y
     y=. gebaklp y ; {: plr
     y=. (% (EVSMLNUM&>`(,:&1))}@:normitr) y
-    e1e2=. (abnrm,.abio) scl^:((,~{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
+    e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
     e1e2 ; y
   end.
 )
 
 ggevlvn=: 3 : 0
-  'abnrm abio y plr hs'=. ggevli y
-  y=. (<0 1;(i.{.hs);<<dhs2lios hs) ((unmlqrc~,:trl@])gelqf)/@{`[`] } y
+  'abnrmio y plr hs'=. ggballp ggevi y
+  y=. (<0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,:trl@])gelqf)/@{`[`] } y
   y=. (((0,]) gghrdlvn (,idmat)) c) y
   y=. hs hgezqsvn y
   e1e2=. 2 {. diag"2 y
@@ -176,14 +176,14 @@ ggevlvn=: 3 : 0
     y=. tgevculb y
     y=. gebaklp y ; {. plr
     y=. (% (EVSMLNUM&>`(,:&1))}@:normitr) y
-    e1e2=. (abnrm,.abio) scl^:((,~{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
+    e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
     e1e2 ; y
   end.
 )
 
 ggevlvv=: 3 : 0
-  'abnrm abio y plr hs'=. ggevli y
-  y=. (0 1;(i.{.hs);<<dhs2lios hs) ((unmlqrc~,trl@],:unglq@])gelqf)/@({~<)~`((<0 1 3)<@(0})[)`((, ,:~@idmat@c)@]) } y
+  'abnrmio y plr hs'=. ggballp ggevi y
+  y=. (0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,trl@],:unglq@])gelqf)/@({~<)~`((<0 1 3)<@(0})[)`((, ,:~@idmat@c)@]) } y
   y=. (0,c y) gghrdlvv y
   y=. hs hgezqsvv y
   e1e2=. 2 {. diag"2 y
@@ -194,7 +194,7 @@ ggevlvv=: 3 : 0
     y=. tgevcubb y
     y=. y gebaklp@;"2 1 plr
     y=. (% (EVSMLNUM&>`(,:&1))}@:normitr)"2 y
-    e1e2=. (abnrm,.abio) scl^:((,~{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
+    e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
     e1e2 ; y
   end.
 )
@@ -207,7 +207,7 @@ NB. ggevuvv
 NB.
 NB. Description:
 NB.   Generalized nonsymmetric eigenvalue problem (GNEP):
-NB.   find eigenvalues e1, e2 and, optionally, left
+NB.   find eigenvalue vectors e1, e2 and, optionally, left
 NB.   eigenvectors L:
 NB.     E2 * L^H * A = E1 * L^H * B                       (7)
 NB.   and/or right eigenvectors R:
@@ -216,7 +216,7 @@ NB.   of pair of matrices (A,B). To avoid overflow,
 NB.   eigenvalues of the matrix pair (A,B) are computed as a
 NB.   pair of values. Each i-th eigenvector (column) from L
 NB.   and R has a corresponding eigenvalue represented as a
-NB.   pair of i-th elements from vectors e1 and e2:
+NB.   pair of i-th elements from e1 and e2:
 NB.     E1=. diagmat(e1)
 NB.     E2=. diagmat(e2)
 NB.   If E2 is nonsingular then:
@@ -242,9 +242,9 @@ NB.   AB    - 2×n×n-matrix, matrix pair (A,B):
 NB.             AB -: A ,: B
 NB.   e1e2  - 2×n-matrix of eigenvalues e1 and e2:
 NB.             e1e2 -: e1 ,: e2
-NB.   L     - n×n-matrix of left eigenvectors
-NB.   R     - n×n-matrix of right eigenvectors
-NB.   LR    - 2×n×n-matrix of left and right eigenvectors:
+NB.   L     - n×n-matrix. left eigenvectors (columns)
+NB.   R     - n×n-matrix. right eigenvectors (columns)
+NB.   LR    - 2×n×n-matrix. left and right eigenvectors:
 NB.             LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -252,12 +252,13 @@ NB.   (ggevunn -: ggevlnn &.: (ct"2)) A ,: B                   CHECKME!
 NB.   (ggevunv -: ggevlnv &.: (ct"2)) A ,: B                   CHECKME!
 NB.   (ggevuvn -: ggevlvn &.: (ct"2)) A ,: B                   CHECKME!
 NB.   (ggevuvv -: ggevlvv &.: (ct"2)) A ,: B                   CHECKME!
-NB.   (E2 mp (ct L) mp C) -: (E1 mp (ct L) mp D)
-NB.   (C mp R mp E2) -: (D mp R mp E1)
+NB.   (E2 mp (ct L) mp A) -: (E1 mp (ct L) mp B)
+NB.   (A mp R mp E2) -: (B mp R mp E1)
 NB. where
 NB.   A - n×n-matrix, general
 NB.   B - n×n-matrix, general
 NB.   'e1e2 LR'=. ggevuvv A ,: B
+NB.   'E1 E2'=. diagmat"1 e1e2
 NB.   'L R'=. LR
 NB.
 NB. Notes:
@@ -267,14 +268,14 @@ NB. - ggevuvn models LAPACK's xGGEV('V','N')
 NB. - ggevuvv models LAPACK's xGGEV('V','V')
 
 ggevunn=: 3 : 0
-  'abnrm abio y plr hs'=. ggevui y
+  'abnrmio y plr hs'=. ggbalup ggevi y
   y=. (<0 1;;~dhs2lios hs) ([ (((0(0})hs)&gghrdunn) upd) ((unmqrlc~,:tru@])geqrf)/@{`[`] }) y
   e1e2=. hs hgeqzenn y
-  e1e2=. (abnrm,.abio) scl^:((,~{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
+  e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
 
 ggevuvn=: 3 : 0
-  'abnrm abio y plr hs'=. ggevui y
+  'abnrmio y plr hs'=. ggbalup ggevi y
   y=. (0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,tru@],:ungqr@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@]) } y
   y=. (0,c y) gghrduvn y
   y=. hs hgeqzsvn y
@@ -286,13 +287,13 @@ ggevuvn=: 3 : 0
     y=. tgevculb y
     y=. gebakup y ; {. plr
     y=. (%"1 (EVSMLNUM&>`(,:&1))}@:normitc) y
-    e1e2=. (abnrm,.abio) scl^:((,~{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
+    e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
     e1e2 ; y
   end.
 )
 
 ggevunv=: 3 : 0
-  'abnrm abio y plr hs'=. ggevui y
+  'abnrmio y plr hs'=. ggbalup ggevi y
   y=. (<0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,:tru@])geqrf)/@{`[`] } y
   y=. (((0,]) gghrdunv (,idmat)) c) y
   y=. hs hgeqzsnv y
@@ -304,13 +305,13 @@ ggevunv=: 3 : 0
     y=. tgevcurb y
     y=. gebakup y ; {: plr
     y=. (%"1 (EVSMLNUM&>`(,:&1))}@:normitc) y
-    e1e2=. (abnrm,.abio) scl^:((,~{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
+    e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
     e1e2 ; y
   end.
 )
 
 ggevuvv=: 3 : 0
-  'abnrm abio y plr hs'=. ggevui y
+  'abnrmio y plr hs'=. ggbalup ggevi y
   y=. (0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,tru@],:ungqr@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, ,:~@idmat@c)@]) } y
   y=. (0,c y) gghrduvv y
   y=. hs hgeqzsvv y
@@ -322,7 +323,7 @@ ggevuvv=: 3 : 0
     y=. tgevcubb y
     y=. y gebakup@;"2 1 plr
     y=. (%"1 (EVSMLNUM&>`(,:&1))}@:normitc)"2 y
-    e1e2=. (abnrm,.abio) scl^:((,~{&(1,EVSMLNUM,1,EVBIGNUM))/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
+    e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
     e1e2 ; y
   end.
 )

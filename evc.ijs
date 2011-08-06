@@ -259,8 +259,8 @@ NB.     Q^H * P * Z = B
 NB.   Each i-th eigenvector (row) from Y and X has a
 NB.   corresponding eigenvalue represented as a pair of i-th
 NB.   diagonal elements in matrices E1, E2:
-NB.     E1 = diagmat(diag(S))
-NB.     E2 = diagmat(diag(P))
+NB.     E1=. diagmat(diag(S))
+NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
 NB.   Y=.     [ios] tgevcll SP
@@ -276,9 +276,9 @@ NB.   X   - k×n-matrix, some or all of right eigenvectors
 NB.   k   - integer in range [0,n]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevcll -:      tgevcur &.: (ct"2)) SP
-NB.   (tgevclr -:      tgevcul &.: (ct"2)) SP
-NB.   (tgevclb -: 1 A. tgevcub &.: (ct"2)) SP
+NB.   (tgevcll -:      tgevcur &.: (|:"2)) SP
+NB.   (tgevclr -:      tgevcul &.: (|:"2)) SP
+NB.   (tgevclb -: 1 A. tgevcub &.: (|:"2)) SP
 NB.   (E2 mp Y mp S) -: (E1 mp Y mp P)
 NB.   (S mp (ct X) mp E2) -: (P mp (ct X) mp E1)
 NB. where
@@ -307,8 +307,8 @@ NB.     Q * P * Z^H = B
 NB.   Each i-th eigenvector (column) from Y and X has a
 NB.   corresponding eigenvalue represented as a pair of i-th
 NB.   diagonal elements in matrices E1, E2:
-NB.     E1 = diagmat(diag(S))
-NB.     E2 = diagmat(diag(P))
+NB.     E1=. diagmat(diag(S))
+NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
 NB.   Y=.     [ios] tgevcul SP
@@ -324,9 +324,9 @@ NB.   X   - n×k-matrix, some or all of right eigenvectors
 NB.   k   - integer in range [0,n]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevcul -:      tgevclr &.: (ct"2)) SP
-NB.   (tgevcur -:      tgevcll &.: (ct"2)) SP
-NB.   (tgevcub -: 1 A. tgevclb &.: (ct"2)) SP
+NB.   (tgevcul -:      tgevclr &.: (|:"2)) SP
+NB.   (tgevcur -:      tgevcll &.: (|:"2)) SP
+NB.   (tgevcub -: 1 A. tgevclb &.: (|:"2)) SP
 NB.   (E2 mp (ct Y) mp S) -: (E1 mp (ct Y) mp P)
 NB.   (S mp X mp E2) -: (P mp X mp E1)
 NB. where
@@ -338,9 +338,9 @@ NB. - tgevcul models LAPACK's xTGEVC('L','S')
 NB. - tgevcur models LAPACK's xTGEVC('R','S')
 NB. - tgevcub models LAPACK's xTGEVC('B','S')
 
-tgevcul=: ($:~ i.@c) : ((([;tgevci) tgevcs  @ tgevclx           ]) &.: (ct"2))
-tgevcur=: ($:~ i.@c) : ((([;tgevci) tgevcs  @          tgevcly  ]) &.: (ct"2))
-tgevcub=: ($:~ i.@c) : ((([;tgevci) tgevcs"2@(tgevclx,:tgevcly) ]) &.: (ct"2))
+tgevcul=: ($:~ i.@c) : ((([;tgevci) tgevcs  @ tgevclx           ]) &.: (|:"2))
+tgevcur=: ($:~ i.@c) : ((([;tgevci) tgevcs  @          tgevcly  ]) &.: (|:"2))
+tgevcub=: ($:~ i.@c) : ((([;tgevci) tgevcs"2@(tgevclx,:tgevcly) ]) &.: (|:"2))
 
 NB. ---------------------------------------------------------
 NB. tgevcllb
@@ -359,8 +359,8 @@ NB.     Q^H * P * Z = B
 NB.   Each i-th eigenvector (row) from Y*Q and X*Z has a
 NB.   corresponding eigenvalue represented as a pair of i-th
 NB.   diagonal elements in matrices E1, E2:
-NB.     E1 = diagmat(diag(S))
-NB.     E2 = diagmat(diag(P))
+NB.     E1=. diagmat(diag(S))
+NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
 NB.   YQ=.      tgevcllb SP , Q
@@ -373,9 +373,9 @@ NB.   YQ  - n×n-matrix, left eigenvectors Y*Q
 NB.   XZ  - n×n-matrix, right eigenvectors X*Z
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevcllb -: tgevcurb &.: (ct"2        )) SP , Q
-NB.   (tgevclrb -: tgevculb &.: (ct"2        )) SP , Z
-NB.   (tgevclbb -: tgevcubb &.: (ct"2@:(1&A.))) SP , Q ,: Z
+NB.   (tgevcllb -: tgevcurb &.: (|:"2        )) SP , Q2
+NB.   (tgevclrb -: tgevculb &.: (|:"2        )) SP , Z2
+NB.   (tgevclbb -: tgevcubb &.: (|:"2@:(1&A.))) SP , Q2 ,: Z2
 NB.   D                         -: B mp Z0
 NB.   D                         -: BZ0f unmlqrn B
 NB.   A                         -: BZ0f unmlqrc C
@@ -437,8 +437,8 @@ NB.     Q * P * Z^H = B
 NB.   Each i-th eigenvector (column) from Q*Y and Z*X has a
 NB.   corresponding eigenvalue represented as a pair of i-th
 NB.   diagonal elements in matrices E1, E2:
-NB.     E1 = diagmat(diag(S))
-NB.     E2 = diagmat(diag(P))
+NB.     E1=. diagmat(diag(S))
+NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
 NB.   QY=.      tgevculb SP , Q
@@ -451,9 +451,9 @@ NB.   QY  - n×n-matrix, left eigenvectors Q*Y
 NB.   ZX  - n×n-matrix, right eigenvectors Z*X
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevculb -: tgevclrb &.: (ct"2        )) SP , Q
-NB.   (tgevcurb -: tgevcllb &.: (ct"2        )) SP , Z
-NB.   (tgevcubb -: tgevclbb &.: (ct"2@:(1&A.))) SP , Q ,: Z
+NB.   (tgevculb -: tgevclrb &.: (|:"2        )) SP , Q2
+NB.   (tgevcurb -: tgevcllb &.: (|:"2        )) SP , Z2
+NB.   (tgevcubb -: tgevclbb &.: (|:"2@:(1&A.))) SP , Q2 ,: Z2
 NB.   D                         -: Q0 mp B
 NB.   D                         -: Q0fB unmqrln B
 NB.   A                         -: Q0fB unmqrlc C
@@ -499,9 +499,9 @@ NB. - tgevculb models LAPACK's xTGEVC('L','B')
 NB. - tgevcurb models LAPACK's xTGEVC('R','B')
 NB. - tgevcubb models LAPACK's xTGEVC('B','B')
 
-tgevculb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @( tgevclx mp 2{]                    ) ]) &.: (ct"2)
-tgevcurb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevcly mp _1{] ) ]) &.: (ct"2)
-tgevcubb=: ((i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]),:(tgevcly mp _1{])) ]) &.: (ct"2)
+tgevculb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @( tgevclx mp 2{]                    ) ]) &.: (|:"2)
+tgevcurb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevcly mp _1{] ) ]) &.: (|:"2)
+tgevcubb=: ((i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]),:(tgevcly mp _1{])) ]) &.: (|:"2)
 
 NB. =========================================================
 NB. Test suite

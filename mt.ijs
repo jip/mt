@@ -149,7 +149,7 @@ require '~addons/math/mt/tri.ijs'     NB. Inverse by trf
 require '~addons/math/mt/trs.ijs'     NB. Solve linear monomial equation by trf
 
 NB. high-level
-require '~addons/math/mt/ev.ijs'      NB. Eigenvalues and, optionally, eigenvectors
+require '~addons/math/mt/ev.ijs'      NB. Eigenvalues and eigenvectors
 require '~addons/math/mt/exp.ijs'     NB. Matrix exponential
 require '~addons/math/mt/pow.ijs'     NB. Raise matrix to an integer power[s]
 require '~addons/math/mt/sv.ijs'      NB. Solve linear monomial equation

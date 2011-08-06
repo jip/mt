@@ -47,30 +47,32 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Scaler constants
 
-BALSCLFAC=:  2
-BALFACTOR=:  0.95
-BALESFMIN1=: FP_EMIN + FP_FLEN - 1  NB. _1022 + 53 - 1 = _970 , CHECKME: for no gradual underflow case only
-BALESFMAX1=: - BALESFMIN1
-BALSFMIN1=: BALSCLFAC ^ BALESFMIN1
-BALSFMAX1=: BALSCLFAC ^ BALESFMAX1
-BALSFMIN2=: BALSFMIN1 * BALSCLFAC
-BALSFMAX2=: BALSFMAX1 % BALSCLFAC
+GEBALSCLFAC=:  2
+GEBALFACTOR=:  0.95
+GEBALESFMIN1=: FP_EMIN + FP_FLEN - 1  NB. _1022 + 53 - 1 = _970 , CHECKME: for no gradual underflow case only
+GEBALESFMAX1=: - GEBALESFMIN1
+GEBALSFMIN1=: GEBALSCLFAC ^ GEBALESFMIN1
+GEBALSFMAX1=: GEBALSCLFAC ^ GEBALESFMAX1
+GEBALSFMIN2=: GEBALSFMIN1 * GEBALSCLFAC
+GEBALSFMAX2=: GEBALSFMAX1 % GEBALSCLFAC
+
+GGBALSCLFAC=: 10
 
 NB. Vector of values:
-NB.   BALSFMIN2 * BALSCLFAC^i
+NB.   GEBALSFMIN2 * GEBALSCLFAC^i
 NB. where
 NB.   i = {0,1,...,z}
-NB.   z = ⌈log_{BALSCLFAC}(BALSFMAX2)⌉
+NB.   z = ⌈log_{GEBALSCLFAC}(GEBALSFMAX2)⌉
 
-BALPOWMIN=: BALSFMIN2 * BALSCLFAC ^ i.  1 + >. BALSCLFAC ^. BALSFMAX2
+GEBALPOWMIN=: GEBALSFMIN2 * GEBALSCLFAC ^ i.  1 + >. GEBALSCLFAC ^. GEBALSFMAX2
 
 NB. Vector of values:
-NB.   BALSFMAX2 / BALSCLFAC^(z-i)
+NB.   GEBALSFMAX2 / GEBALSCLFAC^(z-i)
 NB. where
 NB.   i = {0,1,...,z}
-NB.   z = ⌈log_{BALSCLFAC}(BALSFMAX2)⌉
+NB.   z = ⌈log_{GEBALSCLFAC}(GEBALSFMAX2)⌉
 
-BALPOWMAX=: BALSFMAX2 % BALSCLFAC ^ i. _1 - >. BALSCLFAC ^. BALSFMAX2
+GEBALPOWMAX=: GEBALSFMAX2 % GEBALSCLFAC ^ i. _1 - >. GEBALSCLFAC ^. GEBALSFMAX2
 
 NB. ---------------------------------------------------------
 NB. gebalxp1d
@@ -219,16 +221,16 @@ NB.   b = 1, scalar to scale up
 NB.   c - scalar to scale down
 NB.   d - scalar to control overflow
 NB.   e - scalar to control underflow
-NB.   f = BALSCLFAC^min(i,j,k)
-NB.   i = ⌈log_{BALSCLFAC}(c/a)⌉, i.e. maximal integer
+NB.   f = GEBALSCLFAC^min(i,j,k)
+NB.   i = ⌈log_{GEBALSCLFAC}(c/a)⌉, i.e. maximal integer
 NB.       safisfying:
 NB.         a*f < c/f
-NB.   j = ⌈log_{BALSCLFAC}(BALSFMAX2/d)⌉, i.e. maximal
+NB.   j = ⌈log_{GEBALSCLFAC}(GEBALSFMAX2/d)⌉, i.e. maximal
 NB.       integer safisfying:
-NB.         d*f < BALSFMAX2
-NB.   k = ⌈log_{BALSCLFAC}(e/BALSFMIN2)⌉, i.e. maximal
+NB.         d*f < GEBALSFMAX2
+NB.   k = ⌈log_{GEBALSCLFAC}(e/GEBALSFMIN2)⌉, i.e. maximal
 NB.       integer safisfying:
-NB.         e/f > BALSFMIN2
+NB.         e/f > GEBALSFMIN2
 NB.
 NB. Note:
 NB. - conventional (closed) insertion point is calculated by:
@@ -240,7 +242,7 @@ NB.     o=. x I. (1 + FP_PREC) * y
 NB.   and provides:
 NB.     y < o { x
 
-gebalsf=: BALPOWMAX {~ (BALPOWMAX i. (1 { (BALSCLFAC ^ 1 1 _1) & ((*^:(({.<{:)@])^:_) (3&{.)))) <. (BALESFMAX1 - BALPOWMAX I. (1+FP_PREC)*(3{])) <. (BALPOWMIN I. (4{]))
+gebalsf=: GEBALPOWMAX {~ (GEBALPOWMAX i. (1 { (GEBALSCLFAC ^ 1 1 _1) & ((*^:(({.<{:)@])^:_) (3&{.)))) <. (GEBALESFMAX1 - GEBALPOWMAX I. (1+FP_PREC)*(3{])) <. (GEBALPOWMIN I. (4{]))
 
 NB. =========================================================
 NB. Interface
@@ -351,26 +353,26 @@ NB.                  column
 NB.           3.2.3) calculate ra and ca, the magnitudes of
 NB.                  largest element in row and column
 NB.           3.2.4) calculate
-NB.                    fup := BALSCLFAC^i
+NB.                    fup := GEBALSCLFAC^i
 NB.                  where i is mininal integer safisfying:
-NB.                    (c*fup) >= (r/(fup*BALSCLFAC))
+NB.                    (c*fup) >= (r/(fup*GEBALSCLFAC))
 NB.                  or
-NB.                    max(fup,c*fup,ca*fup) >= BALSFMAX2
+NB.                    max(fup,c*fup,ca*fup) >= GEBALSFMAX2
 NB.                  or
-NB.                    min(r/(fup*BALSCLFAC),ra/fup) <= BALSFMIN2
+NB.                    min(r/(fup*GEBALSCLFAC),ra/fup) <= GEBALSFMIN2
 NB.           3.2.5) scale up c and ca, scale down r and ra:
 NB.                    c  := c  * fup
 NB.                    ca := ca * fup
 NB.                    r  := r  / fup
 NB.                    ra := ra / fup
 NB.           3.2.6) calculate
-NB.                    fdn := BALSCLFAC^i
+NB.                    fdn := GEBALSCLFAC^i
 NB.                  where i is mininal integer safisfying:
-NB.                    (r*fdn) >= (c/(fdn*BALSCLFAC))
+NB.                    (r*fdn) >= (c/(fdn*GEBALSCLFAC))
 NB.                  or
-NB.                    max(r*fdn,ra*fdn) >= BALSFMAX2
+NB.                    max(r*fdn,ra*fdn) >= GEBALSFMAX2
 NB.                  or
-NB.                    min(fdn,c/(fdn*BALSCLFAC),ca/fdn) <= BALSFMIN2
+NB.                    min(fdn,c/(fdn*GEBALSCLFAC),ca/fdn) <= GEBALSFMIN2
 NB.           3.2.7) scale down c and scale up r:
 NB.                    c := c / fdn
 NB.                    r := r * fdn
@@ -378,9 +380,9 @@ NB.           3.2.8) calculate scale factor:
 NB.                    f := fup / fdn
 NB.           3.2.9) if r and c are changed by f
 NB.                  considerably, and the following holds:
-NB.                    f >= 1 OR d[i] >= 1 OR f*d[i] > BALSFMIN1
+NB.                    f >= 1 OR d[i] >= 1 OR f*d[i] > GEBALSFMIN1
 NB.                  and
-NB.                    f <= 1 OR d[i] <= 1 OR d[i] < BALSFMAX1/BALSCLFAC
+NB.                    f <= 1 OR d[i] <= 1 OR d[i] < GEBALSFMAX1/GEBALSCLFAC
 NB.                  then:
 NB.                  3.2.9.1) scale d[i] by f up
 NB.                  3.2.9.2) scale B[i,:] by f down
@@ -436,22 +438,22 @@ gebals=: 3 : 0
       if. r (*. & (0&~:)) c do.
         'ra ca'=. |@(liofmax { ])"1 rc
         sum=. r + c
-        g=. r % BALSCLFAC
+        g=. r % GEBALSCLFAC
         fup=. gebalsf c,1,g,(1>.c>.ca),(ra<.g)
         c=. c * fup
-        g=. c % BALSCLFAC
+        g=. c % GEBALSCLFAC
         r=. r % fup
         fdn=. gebalsf r,1,g,(r>.ra%fup),(fup<.g<.ca*fup)
         f=. fup % fdn
         c=. c % fdn
         r=. r * fdn
-        if. (r+c) < BALFACTOR*sum do.
+        if. (r+c) < GEBALFACTOR*sum do.
           di=. i { d
           if. f (*. & (<&1)) di do.
-            if. BALSFMIN1 >: f*di do. continue. end.
+            if. GEBALSFMIN1 >: f*di do. continue. end.
           end.
           if. f (*. & (>&1)) di do.
-            if. di >: BALSFMAX1%f do. continue. end.
+            if. di >: GEBALSFMAX1%f do. continue. end.
           end.
           d=. (di*f) i } d
           B=. i  (%&f) upd    B
@@ -513,7 +515,7 @@ NB. ---------------------------------------------------------
 NB. ggball
 NB. ggbalu
 
-NB. 'AB plr hs'=. ggbalup AB
+NB. 'CD plr hs'=. ggbalup AB
 
 ggbalup=: 3 : 0
   n=. # y
@@ -555,6 +557,80 @@ ggbalup=: 3 : 0
   end.
   y ; (pl ,: pr) ; (h , s)
 )
+
+NB. 'EF plr hs dlr'=. ggbalus CD ; plr ; hs
+
+ggbalus=: 3 : 0
+  m3x=. - 3&*
+  mix=. ((* (+/@(+/"1)))~ {.) + ((+/@:(+/@#"1)) {:)
+
+  'CD plr hs'=. y
+  nzCDcut=. 0 ~: CDcut=. (,.~ hs) ] ;. 0 CD
+  'h s'=. hs
+  w10=. w23=. dlr=. (2 , s) $ 0
+
+  NB. compute RHS vector in resulting linear equations
+  w45=. (+/"1,:(+/)) - (+/) GGBALSCLFAC ^. sorim nzCDcut } 1 ,: CDcut
+  coef5=. -: coef2=. *: coef=. % +: s
+  beta=. k=. 0
+  NB. start generalized conjugate gradient iteration
+  while. k < s + 2 do.
+    gamma=. (+&(mp~))/ w45
+    ewewc=. +/"1 w45
+    gamma=. (coef , - coef2 , coef5) mp (gamma , (((+&*:),(*:@-))/ ewewc))
+    if. gamma = 0 do. break. end.
+    if. k ~: 0 do. beta=. gamma % pgamma end.
+    w10=. (beta * w10) + (coef * w45) + (coef5 * ((m3x~,m3x)/ ewewc))
+    NB. apply matrix to vector
+    w23=. nzCDcut (mix ,: ((mix~ (|:"2))~ |.)) w10
+
+    w23=. (((+/"1 (+/) nzCDcut) * ({. w10)) + (nzCDcut +/@:(+/@#"1) ({: w10))) ,: (((+/^:2 nzCDcut) * ({: w10)) + ((0 2 1 |: nzCDcut) +/@:(+/@#"1) ({. w10)))
+
+    w23=. (((+/"1 (+/)           nzCDcut)  * w1) + (          nzCDcut  +/@:(+/@#"1) w0)) ,:
+          (((+/"1 (+/) (0 2 1 |: nzCDcut)) * w0) + ((0 2 1 |: nzCDcut) +/@:(+/@#"1) w1))
+
+    w23=. (((+/^:2 (|:"2 nzCDcut)) * w1) + (      nzCDcut  +/@:(+/@#"1) w0)) ,:
+          (((+/^:2       nzCDcut ) * w0) + ((|:"2 nzCDcut) +/@:(+/@#"1) w1))
+
+    w23=. (((+/^:2 (|:"2 nzCDcut)) *            w1) + (       nzCDcut  +/@:(+/@#"1) w0)) ,:
+          (((       |:"2 nzCDcut ) +/@:(+/@#"1) w1) + ((+/^:2 nzCDcut) *            w0))
+
+    w23=. (((+/ (+/"1)       nzCDcut ) * w1) + (      nzCDcut  +/@:(+/@#"1) w0)) ,:
+          (((+/ (+/"1) (|:"2 nzCDcut)) * w0) + ((|:"2 nzCDcut) +/@:(+/@#"1) w1))
+
+    alpha=. gamma % (+/) w10 mp"1 w23
+    NB. determine correction to current iteration
+    aw10=. alpha * w10
+    dlr=. dlr + aw10
+    cmax=. normi , aw10
+    if. cmax < 0.5 do. break. end.
+    w45=. w45 - alpha * w23
+    pgamma=. gamma
+    k=. >: k
+  end.
+  NB. end generalized conjugate gradient iteration
+  'lsfmin lsfmax'=. <. 1 0 + GGBALSCLFAC ^. (],%) FP_SFMIN
+  dlr=. dlr ([ + copysign) 0.5
+  irab=. h + (0 _ ,. hs ,. (h , _)) liofmax"1 ;. 0 CD
+  icab=. (0 _ ,. (0 , (h + s)) ,. hs) liofmax"1@:|: ;. 0 CD
+  rab=. >./"1 (<"1 (dhs2lios hs) ,."1 irab) { CD
+  cab=.
+  ir=.
+  jc=.
+  
+  NB. row scaling of matrices C and D
+  
+  NB. column scaling of matrices C and D
+  
+  NB. TODO: adjust dlr's shape!
+  EF ; plr ; hs ; dlr
+)
+
+NB. 'EF plr hs dlr'=. ggball AB
+NB. 'EF plr hs dlr'=. ggbalu AB
+
+ggball=: ggballs @ ggballp
+ggbalu=: ggbalus @ ggbalup
 
 NB. =========================================================
 NB. Test suite

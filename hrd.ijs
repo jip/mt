@@ -289,7 +289,7 @@ gghrdlnn=: 3 : 0
       'AB cs'=. (rot &. |:) rotga AB ; (< 1 ; lios ; liosc2b) ; < < a: ; _1
       AB=. (< 0 ; lios ; liosc2a) (cs & (rot &. |:)) upd AB
       dQ=. dQ , cs , lios
-      NB. update IOS
+      NB. step 3: update IOS
       liosr1b=. (j-2) , liosr1b
       liosc2b=. }: liosc2b
       j=. <: j
@@ -367,7 +367,7 @@ gghrdunn=: 3 : 0
       'AB cs'=. rot rotga AB ; (< 1 ; liosr2b ; lios) ; _1
       AB=. (< 0 ; liosr2a ; lios) (cs & rot) upd AB
       dZ=. dZ , cs , lios
-      NB. update IOS
+      NB. step 3: update IOS
       liosc1b=. (i-2) , liosc1b
       liosr2b=. }: liosr2b
       i=. <: i

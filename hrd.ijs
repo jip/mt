@@ -352,15 +352,17 @@ gghrdu=: 4 : 0
     liosc1b=. n th2lios <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
     liosr2b=. i. >: i                          NB. (i+1)-vector 0:h+s-1
     while. i > >: j do.                        NB. (h+s-j-2)-vector (desc) h+s-1:j+2
+smoutput 'i = ',":i
+smoutput 'j = ',":j
       lios=. i - 1 0
       NB. step 1: rotate rows lios to kill A[i,j]
-      'y cs'=. (rot &. |:) rotga y ; (< 0 ; lios ; liosc1a) ; < < a: ; 0
-      y=. (< 1 ; lios ; liosc1b) (cs & (rot &. |:)) upd y
+      'y cs'=. (((rot &. |:) rotga) dbg 'subA') y ; (< 0 ; lios ; liosc1a) ; < < a: ; 0
+      y=. (< 1 ; lios ; liosc1b) (((cs & (rot &. |:)) upd) dbg 'subB') y
       dQ0=. dQ0 , cs , lios
       lios=. i - 0 1
       NB. step 2: rotate columns lios to kill B[i,i-1]
-      'y cs'=. rot rotga y ; (< 1 ; liosr2b ; lios) ; _1
-      y=. (< 0 ; liosr2a ; lios) (cs & rot) upd y
+      'y cs'=. ((rot rotga) dbg 'subB') y ; (< 1 ; liosr2b ; lios) ; _1
+      y=. (< 0 ; liosr2a ; lios) (((cs & rot) upd) dbg 'subA') y
       dZ0=. dZ0 , cs , lios
       NB. step 3: update IOS
       liosc1b=. (i-2) , liosc1b

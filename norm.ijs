@@ -72,7 +72,7 @@ norm1c=: | csum            NB. 1-norm of vector (matrix columns)
 norm1r=: | rsum            NB. 1-norm of vector elements (matrix rows)
 
 normic=: | moc             NB. ∞-norm of vector (matrix columns)
-normir=: | mor             NB. ∞-norm of vector elements (matrix rows) - FIXME!!!
+normir=: (| mor)"_1        NB. ∞-norm of vector elements (matrix rows)
 
 NB. ---------------------------------------------------------
 NB. Taxicab-based norms |Re(y)| + |Im(y)|
@@ -87,7 +87,7 @@ norm1tc=: sorim csum       NB. 1-norm of vector (matrix columns)
 norm1tr=: sorim rsum       NB. 1-norm of vector elements (matrix rows)
 
 normitc=: sorim moc        NB. ∞-norm of vector (matrix columns)
-normitr=: sorim mor        NB. ∞-norm of vector elements (matrix rows) - FIXME!!!
+normitr=: (sorim mor)"_1   NB. ∞-norm of vector elements (matrix rows)
 
 NB. ---------------------------------------------------------
 NB. Square-based Euclidean (Frobenius) norm of vector

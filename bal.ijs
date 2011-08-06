@@ -435,7 +435,7 @@ gebals=: 3 : 0
     i=. <: h
     while. bt > i=. >: i do.
       rc=. rios (] ;. 0)"2 1 i ([ 0:`[`]}"1 { ,: {"1) B
-      'r c'=. norm1t"1 rc
+      'r c'=. norm1tr rc
       if. r (*. & (0&~:)) c do.
         'ra ca'=. |@(liofmax { ])"1 rc
         sum=. r + c

@@ -12,7 +12,7 @@ NB. testtrsm  Test trsmxxxx by triangular matrix given
 NB. testsm    Adv. to make verb to test trsmxxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.6.4 2010-06-11
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -150,32 +150,32 @@ testtrsm=: 3 : 0
   'L L1 U U1'=. bT=. (trl ; trl1 ; tru ; tru1) A
   'conL conL1 conU conU1'=. (((trlcon1&.>)`(trl1con1&.>)`(trucon1&.>)`(tru1con1&.>)) ag) bT
 
-  ('trtrs_jlapack_' tmonad (({.,(mp &. >/))`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@(((mp & >/)@[) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (U;X)
+  ('trtrs_jlapack_' tmonad (({.,(mp &. >/))`]`(conU "_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@(((mp & >/)@[) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tc@])))))) (U;X)
 
-  ('trsmlx'   tdyad ((0 & {::)`( mp       & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (L ;X)
-  ('trsml1x'  tdyad ((0 & {::)`( mp       & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (L1;X)
-  ('trsml1hx' tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@])))))) (L1;X)
-  ('trsml1tx' tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@])))))) (L1;X)
-  ('trsmlhx'  tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@])))))) (L ;X)
-  ('trsmltx'  tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@])))))) (L ;X)
-  ('trsmux'   tdyad ((0 & {::)`( mp       & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (U ;X)
-  ('trsmu1x'  tdyad ((0 & {::)`( mp       & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1@|:@])))))) (U1;X)
-  ('trsmu1hx' tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@])))))) (U1;X)
-  ('trsmu1tx' tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@])))))) (U1;X)
-  ('trsmuhx'  tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@])))))) (U ;X)
-  ('trsmutx'  tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1@|:)) [) (1 & {::))~))`(normi@((norm1t"1@|:@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1@|:@])))))) (U ;X)
-  ('trsmxl'   tdyad ((0 & {::)`( mp~      & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) (L ;X)
-  ('trsmxl1'  tdyad ((0 & {::)`( mp~      & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) (L1;X)
-  ('trsmxl1h' tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1   @])))))) (L1;X)
-  ('trsmxl1t' tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conL1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1   @])))))) (L1;X)
-  ('trsmxlh'  tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1   @])))))) (L ;X)
-  ('trsmxlt'  tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conL "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1   @])))))) (L ;X)
-  ('trsmxu'   tdyad ((0 & {::)`( mp~      & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) (U ;X)
-  ('trsmxu1'  tdyad ((0 & {::)`( mp~      & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1t"1   @])))))) (U1;X)
-  ('trsmxu1h' tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1   @])))))) (U1;X)
-  ('trsmxu1t' tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conU1"_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1   @])))))) (U1;X)
-  ('trsmxuh'  tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1   @])))))) (U ;X)
-  ('trsmxut'  tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conU "_)`(normi@(((- (% & (normi"1   )) [) (1 & {::))~))`(normi@((norm1t"1   @((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1t"1   @])))))) (U ;X)
+  ('trsmlx'   tdyad ((0 & {::)`( mp       & >/)`]`(conL "_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tc@])))))) (L ;X)
+  ('trsml1x'  tdyad ((0 & {::)`( mp       & >/)`]`(conL1"_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tc@])))))) (L1;X)
+  ('trsml1hx' tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conL1"_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tc@])))))) (L1;X)
+  ('trsml1tx' tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conL1"_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tc@])))))) (L1;X)
+  ('trsmlhx'  tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conL "_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tc@])))))) (L ;X)
+  ('trsmltx'  tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conL "_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tc@])))))) (L ;X)
+  ('trsmux'   tdyad ((0 & {::)`( mp       & >/)`]`(conU "_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tc@])))))) (U ;X)
+  ('trsmu1x'  tdyad ((0 & {::)`( mp       & >/)`]`(conU1"_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((( mp       & >/)@[) - ( mp~     (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tc@])))))) (U1;X)
+  ('trsmu1hx' tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conU1"_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tc@])))))) (U1;X)
+  ('trsmu1tx' tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conU1"_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tc@])))))) (U1;X)
+  ('trsmuhx'  tdyad ((0 & {::)`((mp~ ct)~ & >/)`]`(conU "_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((((mp~ ct)~ & >/)@[) - ((mp~ ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tc@])))))) (U ;X)
+  ('trsmutx'  tdyad ((0 & {::)`((mp~ |:)~ & >/)`]`(conU "_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@((((mp~ |:)~ & >/)@[) - ((mp~ |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tc@])))))) (U ;X)
+  ('trsmxl'   tdyad ((0 & {::)`( mp~      & >/)`]`(conL "_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tr@])))))) (L ;X)
+  ('trsmxl1'  tdyad ((0 & {::)`( mp~      & >/)`]`(conL1"_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tr@])))))) (L1;X)
+  ('trsmxl1h' tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conL1"_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tr@])))))) (L1;X)
+  ('trsmxl1t' tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conL1"_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tr@])))))) (L1;X)
+  ('trsmxlh'  tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conL "_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tr@])))))) (L ;X)
+  ('trsmxlt'  tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conL "_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tr@])))))) (L ;X)
+  ('trsmxu'   tdyad ((0 & {::)`( mp~      & >/)`]`(conU "_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tr@])))))) (U ;X)
+  ('trsmxu1'  tdyad ((0 & {::)`( mp~      & >/)`]`(conU1"_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((( mp     ~ & >/)@[) - ( mp      (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tr@])))))) (U1;X)
+  ('trsmxu1h' tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conU1"_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tr@])))))) (U1;X)
+  ('trsmxu1t' tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conU1"_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tr@])))))) (U1;X)
+  ('trsmxuh'  tdyad ((0 & {::)`((mp  ct)~ & >/)`]`(conU "_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((((mp  ct)~ & >/)@[) - ((mp  ct) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tr@])))))) (U ;X)
+  ('trsmxut'  tdyad ((0 & {::)`((mp  |:)~ & >/)`]`(conU "_)`(normi@(((- (% & normir) [) (1 & {::))~))`(normi@((norm1tr@((((mp  |:)~ & >/)@[) - ((mp  |:) (0 & {::))~)) % ((FP_EPS*normi@(0 {:: [))*(norm1tr@])))))) (U ;X)
 
   EMPTY
 )

@@ -92,16 +92,16 @@ NB. ---------------------------------------------------------
 NB. tgevcly
 NB.
 NB. Description:
-NB.   Compute some or all of left eigenvectors
+NB.   Compute some or all of non-scaled left eigenvectors
 NB.
 NB. Syntax:
-NB.   Yns=. (ios ; init) tgevcly SP
+NB.   W=. (ios ; init) tgevcly SP
 NB. where
 NB.   ios   - k-vector, lIOS eigenvectors to compute
 NB.   init  - boxed 8-vector, the output of tgevci
 NB.   SP    - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.           produced by hgezqsxx
-NB.   Yns   - k×n-matrix, some or all of left eigenvectors,
+NB.   W     - k×n-matrix, some or all of left eigenvectors,
 NB.           non-scaled
 NB.   k     - integer in range [0,n]
 
@@ -153,16 +153,16 @@ NB. ---------------------------------------------------------
 NB. tgevclx
 NB.
 NB. Description:
-NB.   Compute some or all of right eigenvectors
+NB.   Compute some or all of non-scaled right eigenvectors
 NB.
 NB. Syntax:
-NB.   Xns=. (ios ; init) tgevclx SP
+NB.   W=. (ios ; init) tgevclx SP
 NB. where
 NB.   ios   - k-vector, lIOS eigenvectors to compute
 NB.   init  - boxed 8-vector, the output of tgevci
 NB.   SP    - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.           produced by hgezqsxx
-NB.   Xns   - k×n-matrix, some or all of right eigenvectors,
+NB.   W     - k×n-matrix, some or all of right eigenvectors,
 NB.           non-scaled
 NB.   k     - integer in range [0,n]
 
@@ -221,7 +221,7 @@ NB. ---------------------------------------------------------
 NB. tgevcs
 NB.
 NB. Description:
-NB.   Scale eigenvectors
+NB.   Scale left or right eigenvectors
 NB.
 NB. Syntax:
 NB.   V=. tgevcs W
@@ -246,36 +246,43 @@ NB. tgevclr
 NB. tgevclb
 NB.
 NB. Description:
-NB.   Compute some or all of left eigenvectors Y and/or right
-NB.   eigenvectors X:
+NB.   Compute some or all of left eigenvectors Y:
 NB.     E2 * Y * S = E1 * Y * P
+NB.   and/or right eigenvectors X:
 NB.     S * X^H * E2 = P * X^H * E1
-NB.   corresponding to eigenvalues represented as a pair of
-NB.   values (α[i],β[i]):
-NB.     E1 = diagmat(α[0:n-1]) = diagmat(diag(S))
-NB.     E2 = diagmat(β[0:n-1]) = diagmat(diag(P))
 NB.   for matrix pair (S,P) of lower triangular matrices
 NB.   produced by the generalized Schur factorization
 NB.   hgezqsxx:
 NB.     Q^H * S * Z = A
 NB.     Q^H * P * Z = B
+NB.   Each i-th eigenvector (row) from Y and X has a
+NB.   corresponding eigenvalue represented as a pair of i-th
+NB.   diagonal elements in matrices E1, E2:
+NB.     E1 = diagmat(diag(S))
+NB.     E2 = diagmat(diag(P))
 NB.
 NB. Syntax:
 NB.   Y=.     [ios] tgevcll SP
 NB.   X=.     [ios] tgevclr SP
 NB.   'Y X'=. [ios] tgevclb SP
 NB. where
-NB.   ios - k-vector, lIOS eigenvectors to compute, default
-NB.         is "all eigenvectors"
+NB.   ios - k-vector, optional lIOS eigenvectors to compute,
+NB.         default is "all eigenvectors"
 NB.   SP  - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.         produced by hgezqsxx
 NB.   Y   - k×n-matrix, some or all of left eigenvectors
 NB.   X   - k×n-matrix, some or all of right eigenvectors
+NB.   k   - integer in range [0,n]
 NB.
-NB. Assertions:
+NB. Assertions (with appropriate comparison tolerance):
 NB.   (tgevcll -: tgevcur &.: (ct"2)) SP
 NB.   (tgevclr -: tgevcul &.: (ct"2)) SP
 NB.   (tgevclb -: tgevcub &.: (ct"2)) SP
+NB.   (E2 mp Y mp S) -: (E1 mp Y mp P)
+NB.   (S mp (ct X) mp E2) -: (P mp (ct X) mp E1)
+NB. where
+NB.   'Y X'=. tgevclb SP
+NB.   'E1 E2'=. diagmat@diag"2 SP
 
 tgevcll=:  ($:~ i.@c) : (([;tgevci) tgevcs  @ tgevcly           ])
 tgevclr=:  ($:~ i.@c) : (([;tgevci) tgevcs  @          tgevclx  ])
@@ -287,45 +294,55 @@ NB. tgevcur
 NB. tgevcub
 NB.
 NB. Description:
-NB.   Compute some or all of left eigenvectors Y and/or right
-NB.   eigenvectors X:
+NB.   Compute some or all of left eigenvectors Y:
 NB.     E2 * Y^H * S = E1 * Y^H * P
+NB.   and/or right eigenvectors X:
 NB.     S * X * E2 = P * X * E1
-NB.   corresponding to eigenvalues represented as a pair of
-NB.   values (α[i],β[i]):
-NB.     E1 = diagmat(α[0:n-1]) = diagmat(diag(S))
-NB.     E2 = diagmat(β[0:n-1]) = diagmat(diag(P))
 NB.   for matrix pair (S,P) of upper triangular matrices
 NB.   produced by the generalized Schur factorization
-NB.   hgeqzsxx
+NB.   hgeqzsxx:
 NB.     Q * S * Z^H = A
 NB.     Q * P * Z^H = B
+NB.   Each i-th eigenvector (column) from Y and X has a
+NB.   corresponding eigenvalue represented as a pair of i-th
+NB.   diagonal elements in matrices E1, E2:
+NB.     E1 = diagmat(diag(S))
+NB.     E2 = diagmat(diag(P))
 NB.
 NB. Syntax:
 NB.   Y=.     [ios] tgevcul SP
 NB.   X=.     [ios] tgevcur SP
 NB.   'Y X'=. [ios] tgevcub SP
 NB. where
-NB.   ios - k-vector, lIOS eigenvectors to compute, default
-NB.         is "all eigenvectors"
+NB.   ios - k-vector, optional lIOS eigenvectors to compute,
+NB.         default is "all eigenvectors"
 NB.   SP  - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.         produced by hgeqzsxx
 NB.   Y   - n×k-matrix, some or all of left eigenvectors
 NB.   X   - n×k-matrix, some or all of right eigenvectors
+NB.   k   - integer in range [0,n]
 NB.
-NB. Assertions:
+NB. Assertions (with appropriate comparison tolerance):
 NB.   (tgevcul -: tgevclr &.: (ct"2)) SP
 NB.   (tgevcur -: tgevcll &.: (ct"2)) SP
 NB.   (tgevcub -: tgevclb &.: (ct"2)) SP
+NB.   (E2 mp (ct Y) mp S) -: (E1 mp (ct Y) mp P)
+NB.   (S mp X mp E2) -: (P mp X mp E1)
+NB. where
+NB.   'Y X'=. tgevcub SP
+NB.   'E1 E2'=. diagmat@diag"2 SP
 NB.
 NB. Notes:
 NB. - tgevcul implements LAPACK's xTGEVC('L','S')
 NB. - tgevcur implements LAPACK's xTGEVC('R','S')
 NB. - tgevcub implements LAPACK's xTGEVC('B','S')
+NB.
+NB. TODO:
+NB. - express via tgevclx
 
-tgevcul=: ($:~ i.@c) : ((([;tgevci) tgevcs  @ tgevclx           ]) &.: (|:"2))
-tgevcur=: ($:~ i.@c) : ((([;tgevci) tgevcs  @          tgevcly  ]) &.: (|:"2))
-tgevcub=: ($:~ i.@c) : ((([;tgevci) tgevcs"2@(tgevclx,:tgevcly) ]) &.: (|:"2))
+tgevcul=: ($:~ i.@c) : ((([;tgevci) tgevcs  @ tgevclx           ]) &.: (ct"2))
+tgevcur=: ($:~ i.@c) : ((([;tgevci) tgevcs  @          tgevcly  ]) &.: (ct"2))
+tgevcub=: ($:~ i.@c) : ((([;tgevci) tgevcs"2@(tgevclx,:tgevcly) ]) &.: (ct"2))
 
 NB. ---------------------------------------------------------
 NB. tgevcllb
@@ -333,19 +350,20 @@ NB. tgevclrb
 NB. tgevclbb
 NB.
 NB. Description:
-NB.   Compute left eigenvectors Y*Q and/or right eigenvectors
-NB.   X*Z:
+NB.   Compute left eigenvectors Y*Q:
 NB.     E2 * (Y * Q) * S = E1 * (Y * Q) * P
+NB.   and/or right eigenvectors X*Z:
 NB.     S * (X * Z)^H * E2 = P * (X * Z)^H * E1
-NB.   corresponding to eigenvalues represented as a pair of
-NB.   values (α[i],β[i]):
-NB.     E1 = diagmat(α[0:n-1]) = diagmat(diag(S))
-NB.     E2 = diagmat(β[0:n-1]) = diagmat(diag(P))
 NB.   for matrix pair (S,P) of lower triangular matrices
 NB.   produced by the generalized Schur factorization
 NB.   hgezqsxx:
 NB.     Q^H * S * Z = A
 NB.     Q^H * P * Z = B
+NB.   Each i-th eigenvector (row) from Y*Q and X*Z has a
+NB.   corresponding eigenvalue represented as a pair of i-th
+NB.   diagonal elements in matrices E1, E2:
+NB.     E1 = diagmat(diag(S))
+NB.     E2 = diagmat(diag(P))
 NB.
 NB. Syntax:
 NB.   YQ=.      tgevcllb SP , Q
@@ -357,10 +375,18 @@ NB.         produced by hgezqsxx
 NB.   YQ  - n×n-matrix, left eigenvectors Y*Q
 NB.   XZ  - n×n-matrix, right eigenvectors X*Z
 NB.
-NB. Assertions:
-NB.   (tgevcllb -: tgevcurb &.: (ct"2)) SP , Q
-NB.   (tgevclrb -: tgevculb &.: (ct"2)) SP , Z
-NB.   (tgevclbb -: tgevcubb &.: (ct"2)) SP , Q ,: Z
+NB. Assertions (with appropriate comparison tolerance):
+NB.   (tgevcllb -: tgevcurb &.: (ct"2        )) SP , Q
+NB.   (tgevclrb -: tgevculb &.: (ct"2        )) SP , Z
+NB.   (tgevclbb -: tgevcubb &.: (ct"2@:(1&A.))) SP , Q ,: Z
+NB.   (E2 mp YQ mp H) -: (E1 mp YQ mp T)
+NB.   (H mp (ct XZ) mp E2) -: (T mp (ct XZ) mp E1)
+NB. where
+NB.   n=. c HT
+NB.   I=. idmat n
+NB.   SPQZ=. (0,n) hgezqsvv HT , ,:~ I
+NB.   'YQ XZ'=. tgevclbb SPQZ
+NB.   'E1 E2'=. diagmat@diag"2 (2 {. SPQZ)
 
 tgevcllb=:  (i.@c ([;tgevci) 2&{.) tgevcs  @( tgevcly mp 2{]                    ) ]
 tgevclrb=:  (i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevclx mp _1{] ) ]
@@ -372,19 +398,20 @@ NB. tgevcurb
 NB. tgevcubb
 NB.
 NB. Description:
-NB.   Compute left eigenvectors Q*Y and/or right eigenvectors
-NB.   Z*X:
+NB.   Compute left eigenvectors Q*Y:
 NB.     E2 * (Q * Y)^H * S = E1 * (Q * Y)^H * P
+NB.   and/or right eigenvectors Z*X:
 NB.     S * (Z * X) * E2 = P * (Z * X) * E1
-NB.   corresponding to eigenvalues represented as a pair of
-NB.   values (α[i],β[i]):
-NB.     E1 = diagmat(α[0:n-1]) = diagmat(diag(S))
-NB.     E2 = diagmat(β[0:n-1]) = diagmat(diag(P))
 NB.   for matrix pair (S,P) of upper triangular matrices
 NB.   produced by the generalized Schur factorization
 NB.   hgeqzsxx
 NB.     Q * S * Z^H = A
 NB.     Q * P * Z^H = B
+NB.   Each i-th eigenvector (column) from Q*Y and Z*X has a
+NB.   corresponding eigenvalue represented as a pair of i-th
+NB.   diagonal elements in matrices E1, E2:
+NB.     E1 = diagmat(diag(S))
+NB.     E2 = diagmat(diag(P))
 NB.
 NB. Syntax:
 NB.   QY=.      tgevculb SP , Q
@@ -396,19 +423,27 @@ NB.         produced by hgeqzsxx
 NB.   QY  - n×n-matrix, left eigenvectors Q*Y
 NB.   ZX  - n×n-matrix, right eigenvectors Z*X
 NB.
-NB. Assertions:
-NB.   (tgevculb -: tgevclrb &.: (ct"2)) SP , Q
-NB.   (tgevcurb -: tgevcllb &.: (ct"2)) SP , Z
-NB.   (tgevcubb -: tgevclbb &.: (ct"2)) SP , Q ,: Z
+NB. Assertions (with appropriate comparison tolerance):
+NB.   (tgevculb -: tgevclrb &.: (ct"2        )) SP , Q
+NB.   (tgevcurb -: tgevcllb &.: (ct"2        )) SP , Z
+NB.   (tgevcubb -: tgevclbb &.: (ct"2@:(1&A.))) SP , Q ,: Z
+NB.   (E2 mp (ct QY) mp H) -: (E1 mp (ct QY) mp T)
+NB.   (H mp ZX mp E2) -: (T mp ZX mp E1)
+NB. where
+NB.   n=. c HT
+NB.   I=. idmat n
+NB.   SPQZ=. (0,n) hgeqzsvv HT , ,:~ I
+NB.   'QY ZX'=. tgevcubb SPQZ
+NB.   'E1 E2'=. diagmat@diag"2 (2 {. SPQZ)
 NB.
 NB. Notes:
 NB. - tgevculb implements LAPACK's xTGEVC('L','B')
 NB. - tgevcurb implements LAPACK's xTGEVC('R','B')
 NB. - tgevcubb implements LAPACK's xTGEVC('B','B')
 
-tgevculb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @( tgevclx mp 2{]                    ) ]) &.: (|:"2)
-tgevcurb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevcly mp _1{] ) ]) &.: (|:"2)
-tgevcubb=: ((i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]),:(tgevcly mp _1{])) ]) &.: (|:"2)
+tgevculb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @( tgevclx mp 2{]                    ) ]) &.: (ct"2)
+tgevcurb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevcly mp _1{] ) ]) &.: (ct"2)
+tgevcubb=: ((i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]),:(tgevcly mp _1{])) ]) &.: (ct"2)
 
 NB. =========================================================
 NB. Test suite
@@ -422,39 +457,36 @@ NB.
 NB. Syntax:
 NB.   testtgevc AB
 NB. where
-NB.   AB - 2×n×n-report
+NB.   AB - 2×n×n-report (A,:B)
 NB.
 NB. Formula:
 NB.   berr := max(berr0,berr1)
 NB. where
 NB.   ||M|| := max(||M||_1 , FP_SFMIN)
-NB.   ||v|| := max(|Re(v(i))|+Im(v(i))|)
+NB.   ||v|| := max(|Re(v(i))|+|Im(v(i))|)
 NB.   β     - machine precision
 NB.   α(i)  - i-th eigenvalue, also i-th element on S
 NB.           diagonal
 NB.   β(i)  - i-th eigenvalue, also i-th element on P
 NB.           diagonal
-NB.   l(i)  - i-th left eigenvector, also i-th column of L
-NB.   lb(i) - i-th back transformed left eigenvector, also
-NB.           i-th column of LB
-NB.   r(i)  - i-th right eigenvector, also i-th column of R
-NB.   rb(i) - i-th back transformed right eigenvector, also
-NB.           i-th column of RB
-NB.   S P dQ1 dZ1'=. (0,n) hgexxsvv H , T , ,:~ I
+NB.   l(i)  - i-th left eigenvector
+NB.   lb(i) - i-th back transformed left eigenvector
+NB.   r(i)  - i-th right eigenvector
+NB.   rb(i) - i-th back transformed right eigenvector
 NB.   - tgevcll:
-NB.       berr0 := 
+NB.       berr0 := max(||l(i) * (β(i)*S - α(i)*P)|| / (ulp * max(||β(i)*S||,||α(i)*P||)))
 NB.       berr1 := (max(||l(i)||) - 1) / (ulp * n)
 NB.   - tgevclr:
-NB.       berr0 := 
+NB.       berr0 := max(||r(i) * (β(i)*S - α(i)*P)^H|| / (ulp * max(||β(i)*S||,||α(i)*P||)))
 NB.       berr1 := (max(||r(i)||) - 1) / (ulp * n)
 NB.   - tgevclb:
 NB.       berr0 := berr(tgevcll)
 NB.       berr1 := berr(tgevclr)
 NB.   - tgevcllb:
-NB.       berr0 := 
+NB.       berr0 := max(||l(i) * (β(i)*H - α(i)*T)|| / (ulp * max(||β(i)*H||,||α(i)*T||)))
 NB.       berr1 := (max(||lb(i)||) - 1) / (ulp * n)
 NB.   - tgevclrb:
-NB.       berr0 := 
+NB.       berr0 := max(||r(i) * (β(i)*H - α(i)*T)^H|| / (ulp * max(||β(i)*H||,||α(i)*T||)))
 NB.       berr1 := (max(||rb(i)||) - 1) / (ulp * n)
 NB.   - tgevclbb:
 NB.       berr0 := berr(tgevcllb)
@@ -479,12 +511,13 @@ NB.       berr0 := berr(tgevculb)
 NB.       berr1 := berr(tgevcurb)
 
 testtgevc=: 3 : 0
-  berrll=:  (     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~     )          )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2 _1&{)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitr%(FP_EPS*FP_BASE)*c)@])
-  berrlr=:  (     normir@:((((  norm1r@:((mp"1 2 (-/"3))~+    )                                           )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2 _1&{)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitr%(FP_EPS*FP_BASE)*c)@])
-  berrlb=:  (>./@:normir@:((((((norm1r@:( mp"1 2        ~+ @{.)>.norm1r@:((mp"2 1       )    {:))~(-/"3))~)%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2 _1&{)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((>./@:normir@:<:@:normitr%(FP_EPS*FP_BASE)*c)@])
-  berrul=:  (     normir@:((((  norm1r@:((mp"1 2 (-/"3))~ct   )                                           )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2 _1&{)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@])
-  berrur=:  (     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~|:   )          )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2 _1&{)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@])
-  berrub=:  (>./@:normir@:((((((norm1r@:( mp"1 2        ~ct@{.)>.norm1r@:((mp"2 1       ) |:@{:))~(-/"3))~)%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2 _1&{)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((>./@:normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@])
+  berrll=:  (     normir@:((((  norm1r@:((mp"1 2 (-/"3))~     )                                           )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitr%(FP_EPS*FP_BASE)*c)@])
+  berrlr=:  (     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~+    )          )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitr%(FP_EPS*FP_BASE)*c)@])
+  berrlb=:  (>./@:normir@:((((((norm1r@:( mp"1 2        ~   {.)>.norm1r@:((mp"2 1       ) + @{:))~(-/"3))~)%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((>./@:normir@:<:@:normitr%(FP_EPS*FP_BASE)*c)@])
+
+  berrul=:  (     normir@:((((  norm1r@:((mp"1 2 (-/"3))~ct   )                                           )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@])
+  berrur=:  (     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~|:   )          )%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((     normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@])
+  berrub=:  (>./@:normir@:((((((norm1r@:( mp"1 2        ~ct@{.)>.norm1r@:((mp"2 1       ) |:@{:))~(-/"3))~)%((FP_EPS*FP_BASE)*(FP_SFMIN>.(>./"1)@:(norm1"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.((>./@:normir@:<:@:normitc%(FP_EPS*FP_BASE)*c)@])
 
   rcondl=. <./ trlcon1"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ (0&,))~((unmlqrc~ ,: trl@]) gelqf)/))~ c) y
   rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ (0&,))~((unmqrlc~ ,: tru@]) geqrf)/))~ c) y

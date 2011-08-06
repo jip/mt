@@ -58,7 +58,7 @@ NB.
 NB. Description:
 NB.   Partial triangular factorization of a Hermitian
 NB.   (symmetric) matrix:
-NB.     subP * subL1 * subT * subL1^H * subP^_1 = subA
+NB.     subP * subL1 * subT * subL1^H * subP^H = subA
 NB.   using the combination of Parlett and Reid, and Aasen
 NB.   methods [1].
 NB.
@@ -301,7 +301,7 @@ NB.
 NB. Description:
 NB.   Partial triangular factorization of a Hermitian
 NB.   (symmetric) matrix:
-NB.     subP * subU1 * subT * subU1^H * subP^_1 = subA
+NB.     subP * subU1 * subT * subU1^H * subP^H = subA
 NB.   using the combination of Parlett and Reid, and Aasen
 NB.   methods, inspired by [1].
 NB.
@@ -625,8 +625,8 @@ NB.                 permutation ip
 NB.           note2: Laa and U1a are stored in the same
 NB.                  matrix LaaU1a, U1a's unit diagonal isn't
 NB.                  stored
-NB.      4.3) permute columns of Ab according to P^_1 :
-NB.             Ab := Ab * P^_1
+NB.      4.3) permute columns of Ab according to P^H :
+NB.             Ab := Ab * P^H
 NB.           note: purge original A, reuse name 'y' to
 NB.                 store Ab
 NB.      4.4) compute Lba:
@@ -651,11 +651,11 @@ NB.      4.6) prepare delta of inversed permutation dipb,
 NB.           which defines inversed permutation of tail part
 NB.      4.7) assemble output
 NB.           4.7.1) permute tail part of ip according to
-NB.                  Pb^_1 :
-NB.                    ip[k:n-1] := Pb^_1 * ip[k:n-1]
+NB.                  Pb^H :
+NB.                    ip[k:n-1] := Pb^H * ip[k:n-1]
 NB.           4.7.2) permute columns of U1ab according to
-NB.                  Pb^_1 :
-NB.                    U1ab := U1ab * Pb^_1
+NB.                  Pb^H :
+NB.                    U1ab := U1ab * Pb^H
 NB.           4.7.3) assemble triangular matrices L and U1
 NB.
 NB. Assertions:
@@ -779,8 +779,8 @@ NB.                 permutation ip
 NB.           note2: L1a and Uaa are stored in the same
 NB.                  matrix L1aUaa, L1a's unit diagonal isn't
 NB.                  stored
-NB.      4.3) permute rows of Ab according to P^_1 :
-NB.             Ab := P^_1 * Ab
+NB.      4.3) permute rows of Ab according to P^H :
+NB.             Ab := P^H * Ab
 NB.           note: purge original A, reuse name 'y' to
 NB.                 store Ab
 NB.      4.4) compute Uab:
@@ -805,11 +805,11 @@ NB.      4.6) prepare delta of inversed permutation dipb,
 NB.           which defines inversed permutation of tail part
 NB.      4.7) assemble output
 NB.           4.7.1) permute tail part of ip according to
-NB.                  Pb^_1 :
-NB.                    ip[k:m-1] := Pb^_1 * ip[k:m-1]
+NB.                  Pb^H :
+NB.                    ip[k:m-1] := Pb^H * ip[k:m-1]
 NB.           4.7.2) permute rows of L1ab according to
-NB.                  Pb^_1 :
-NB.                    L1ab := Pb^_1 * L1ab
+NB.                  Pb^H :
+NB.                    L1ab := Pb^H * L1ab
 NB.           4.7.3) assemble triangular matrices L1 and U
 NB.
 NB. Assertions:
@@ -936,8 +936,8 @@ NB.                 permutation ip
 NB.           note2: Lbb and U1b are stored in the same
 NB.                  matrix U1bLbb, U1b's unit diagonal isn't
 NB.                  stored
-NB.      4.3) permute rows of Aa according to P^_1 :
-NB.             Aa := P^_1 * Aa
+NB.      4.3) permute rows of Aa according to P^H :
+NB.             Aa := P^H * Aa
 NB.           note: purge original A, reuse name 'y' to
 NB.                 store Aa
 NB.      4.4) compute Lab:
@@ -962,11 +962,11 @@ NB.      4.6) prepare delta of inversed permutation dipa,
 NB.           which defines inversed permutation of head part
 NB.      4.7) assemble output
 NB.           4.7.1) permute head part of ip according to
-NB.                  Pa^_1 :
-NB.                    ip[0:m-k-1] := Pa^_1 * ip[0:m-k-1]
+NB.                  Pa^H :
+NB.                    ip[0:m-k-1] := Pa^H * ip[0:m-k-1]
 NB.           4.7.2) permute rows of U1ba according to
-NB.                  Pa^_1 :
-NB.                    U1ba := Pa^_1 * U1ba
+NB.                  Pa^H :
+NB.                    U1ba := Pa^H * U1ba
 NB.           4.7.3) assemble triangular matrices U1 and L
 NB.
 NB. Assertions:
@@ -1079,7 +1079,7 @@ NB.           3.3.2) if failed (i.e. if p=n-1), then leave A
 NB.                  unchanged
 NB.           3.3.3) factorize single row:
 NB.                    U  := A[0,n-1]
-NB.                    L1 := L^_1 * A
+NB.                    L1 := U^_1 * A
 NB.   4) else:
 NB.      4.1) find split point:
 NB.             k := min(n,⌈m/2⌉)
@@ -1090,8 +1090,8 @@ NB.                 permutation ip
 NB.           note2: L1b and Ubb are stored in the same
 NB.                  matrix UbbL1b, L1b's unit diagonal isn't
 NB.                  stored
-NB.      4.3) permute columns of Aa according to P^_1 :
-NB.             Aa := Aa * P^_1
+NB.      4.3) permute columns of Aa according to P^H :
+NB.             Aa := Aa * P^H
 NB.           note: purge original A, reuse name 'y' to
 NB.                 store Aa
 NB.      4.4) compute Uab:
@@ -1116,11 +1116,11 @@ NB.      4.6) prepare delta of inversed permutation dipa,
 NB.           which defines inversed permutation of head part
 NB.      4.7) assemble output
 NB.           4.7.1) permute head part of ip according to
-NB.                  Pa^_1 :
-NB.                    ip[0:k-1] := Pa^_1 * ip[0:k-1]
+NB.                  Pa^H :
+NB.                    ip[0:k-1] := Pa^H * ip[0:k-1]
 NB.           4.7.2) permute columns of L1ba according to
-NB.                  Pa^_1 :
-NB.                    L1ba := L1ba * Pa^_1
+NB.                  Pa^H :
+NB.                    L1ba := L1ba * Pa^H
 NB.           4.7.3) assemble triangular matrices L1 and U
 NB.
 NB. Assertions:
@@ -1165,7 +1165,7 @@ NB.
 NB. Description:
 NB.   Triangular factorization of a Hermitian (symmetric)
 NB.   matrix:
-NB.     P * L1 * T * L1^H * P^_1 = A
+NB.     P * L1 * T * L1^H * P^H = A
 NB.   using the combination of Parlett and Reid, and Aasen
 NB.   methods [1].
 NB.
@@ -1275,7 +1275,7 @@ NB.
 NB. Description:
 NB.   Triangular factorization of a Hermitian (symmetric)
 NB.   matrix:
-NB.     P * U1 * T * U1^H * P^_1 = A
+NB.     P * U1 * T * U1^H * P^H = A
 NB.   using the combination of Parlett and Reid, and Aasen
 NB.   methods, inspired by [1].
 NB.
@@ -1668,10 +1668,10 @@ NB. where
 NB.   A - n×n-matrix, Hermitian
 NB.
 NB. Formula:
-NB. - for P * L1 * T * L1^H * P^_1 = A :
-NB.     berr := ||P * L1 * T * L1^H * P^_1 - A|| / (ε * ||A|| * n)
-NB. - for P * U1 * T * U1^H * P^_1 = A :
-NB.     berr := ||P * U1 * T * U1^H * P^_1 - A|| / (ε * ||A|| * n)
+NB. - for P * L1 * T * L1^H * P^H = A :
+NB.     berr := ||P * L1 * T * L1^H * P^H - A|| / (ε * ||A|| * n)
+NB. - for P * U1 * T * U1^H * P^H = A :
+NB.     berr := ||P * U1 * T * U1^H * P^H - A|| / (ε * ||A|| * n)
 
 testhetrf=: 3 : 0
   rcond=. hecon1 y

@@ -640,20 +640,20 @@ NB.
 NB. Description:
 NB.   Compute eigenvalues (hgezqxxx) and reduce to
 NB.   generalized Schur form (hgezqsxx):
-NB.     ΔQ1^_1 * S * ΔZ1 = H
-NB.     ΔQ1^_1 * P * ΔZ1 = T
+NB.     dQ1^H * S * dZ1 = H
+NB.     dQ1^H * P * dZ1 = T
 NB.   the generalized lower Hessenberg form (H,T) using
 NB.   single-shift ZQ method. Matrix pairs of this type are
 NB.   produced by the reduction to generalized lower
 NB.   Hessenberg form of a matrix pair (A,B):
-NB.     Q1^_1 * H * Z1 = A
-NB.     Q1^_1 * T * Z1 = B
+NB.     Q1^H * H * Z1 = A
+NB.     Q1^H * T * Z1 = B
 NB.   as computed by gghrdlxx. The unitary (orthogonal)
-NB.   matrices ΔQ1 and ΔZ1 may either be formed explicitly,
+NB.   matrices dQ1 and dZ1 may either be formed explicitly,
 NB.   or they may be postmultiplied by input matrices Q1 and
 NB.   Z1, so that:
-NB.     (ΔQ1*Q1)^_1 * S * (ΔZ1*Z1) = Q1^_1 * H * Z1
-NB.     (ΔQ1*Q1)^_1 * P * (ΔZ1*Z1) = Q1^_1 * T * Z1
+NB.     (dQ1*Q1)^H * S * (dZ1*Z1) = Q1^H * H * Z1
+NB.     (dQ1*Q1)^H * P * (dZ1*Z1) = Q1^H * T * Z1
 NB.   To avoid overflow, eigenvalues of the matrix pair (H,T)
 NB.   (equivalently, of (A,B)) are computed as a pair of
 NB.   values (α,β). If:
@@ -754,20 +754,20 @@ NB.
 NB. Description:
 NB.   Compute eigenvalues (hgeqzxxx) and reduce to
 NB.   generalized Schur form (hgeqzsxx):
-NB.     ΔQ1 * S * ΔZ1^_1 = H
-NB.     ΔQ1 * P * ΔZ1^_1 = T
+NB.     dQ1 * S * dZ1^H = H
+NB.     dQ1 * P * dZ1^H = T
 NB.   the generalized upper Hessenberg form (H,T) using
 NB.   single-shift QZ method. Matrix pairs of this type are
 NB.   produced by the reduction to generalized upper
 NB.   Hessenberg form of a matrix pair (A,B):
-NB.     Q1 * H * Z1^_1 = A
-NB.     Q1 * T * Z1^_1 = B
+NB.     Q1 * H * Z1^H = A
+NB.     Q1 * T * Z1^H = B
 NB.   as computed by gghrduxx. The unitary (orthogonal)
-NB.   matrices ΔQ1 and ΔZ1 may either be formed explicitly,
+NB.   matrices dQ1 and dZ1 may either be formed explicitly,
 NB.   or they may be premultiplied by input matrices Q1 and
 NB.   Z1, so that:
-NB.     (Q1*ΔQ1) * S * (Z1*ΔZ1)^_1 = Q1 * H * Z1^_1
-NB.     (Q1*ΔQ1) * P * (Z1*ΔZ1)^_1 = Q1 * T * Z1^_1
+NB.     (Q1*dQ1) * S * (Z1*dZ1)^H = Q1 * H * Z1^H
+NB.     (Q1*dQ1) * P * (Z1*dZ1)^H = Q1 * T * Z1^H
 NB.   To avoid overflow, eigenvalues of the matrix pair (H,T)
 NB.   (equivalently, of (A,B)) are computed as a pair of
 NB.   values (α,β). If:
@@ -910,23 +910,23 @@ NB.   ||M|| := max(||M||_1 , FP_SFMIN)
 NB.   β - machine precision
 NB.   'S P dQ1 dZ1'=. (0,n) hgexxsvv H , T , ,:~ I
 NB.   - hgezqxxx:
-NB.       berr0 := ||H - dQ1^_1 * S * dZ1|| / (β * ||H|| * n)
-NB.       berr1 := ||T - dQ1^_1 * P * dZ1|| / (β * ||T|| * n)
-NB.       berr2 := ||I - dQ1^_1 * dQ1|| / (β * n)
-NB.       berr3 := ||I - dZ1^_1 * dZ1|| / (β * n)
+NB.       berr0 := ||H - dQ1^H * S * dZ1|| / (β * ||H|| * n)
+NB.       berr1 := ||T - dQ1^H * P * dZ1|| / (β * ||T|| * n)
+NB.       berr2 := ||I - dQ1^H * dQ1|| / (β * n)
+NB.       berr3 := ||I - dZ1^H * dZ1|| / (β * n)
 NB.   - hgeqzxxx:
-NB.       berr0 := ||H - dQ1 * S * dZ1^_1|| / (β * ||H|| * n)
-NB.       berr1 := ||T - dQ1 * P * dZ1^_1|| / (β * ||T|| * n)
-NB.       berr2 := ||I - dQ1 * dQ1^_1|| / (β * n)
-NB.       berr3 := ||I - dZ1 * dZ1^_1|| / (β * n)
+NB.       berr0 := ||H - dQ1 * S * dZ1^H|| / (β * ||H|| * n)
+NB.       berr1 := ||T - dQ1 * P * dZ1^H|| / (β * ||T|| * n)
+NB.       berr2 := ||I - dQ1 * dQ1^H|| / (β * n)
+NB.       berr3 := ||I - dZ1 * dZ1^H|| / (β * n)
 
 testhgeq=: 3 : 0
   prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'HT SP dQ1dZ1'=. (H,T,I,:I) prep (S,P,dQ1,:dZ1)
   safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||H - dQ1^_1 * S * dZ1|| , ||T - dQ1^_1 * P * dZ1||
-                                                                                                  NB. R: (] cdiff1 ct) : ||H - dQ1 * S * dZ1^_1|| , ||T - dQ1 * P * dZ1^_1||
-  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - dQ1^_1 * dQ1|| , ||I - dZ1^_1 * dZ1||
-                                                                                                  NB. R: (mp  adiff2) : ||I - dQ1 * dQ1^_1|| , ||I - dZ1 * dZ1^_1||
+  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||H - dQ1^H * S * dZ1|| , ||T - dQ1^H * P * dZ1||
+                                                                                                  NB. R: (] cdiff1 ct) : ||H - dQ1 * S * dZ1^H|| , ||T - dQ1 * P * dZ1^H||
+  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - dQ1^H * dQ1|| , ||I - dZ1^H * dZ1||
+                                                                                                  NB. R: (mp  adiff2) : ||I - dQ1 * dQ1^H|| , ||I - dZ1 * dZ1^H||
   denom1=. safenorm @ (0 & {::)                                                                   NB. ||H|| , ||T||
   getn=. c @ (0 & {::)                                                                            NB. n
   safediv=. ((({:<.(%/@}:))`((<./@(}:*(1,{:)))%(1&{))@.(1>(1&{)))`(%/@}:)@.(</@}:))%(FP_PREC*{:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)

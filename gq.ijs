@@ -518,9 +518,9 @@ NB.   A - m×n-matrix
 NB.
 NB. Formula:
 NB. - for unglq, ungrq:
-NB.     berr := ||Q * Q^_1 - I|| / (ε * n)
+NB.     berr := ||Q * Q^H - I|| / (ε * n)
 NB. - for ungql, ungqr:
-NB.     berr := ||Q^_1 * Q - I|| / (ε * m)
+NB.     berr := ||Q^H * Q - I|| / (ε * m)
 
 testungq=: 3 : 0
   rcond=. ((_."_)`gecon1 @. (=/@$)) y  NB. meaninigful for square matrices only
@@ -546,9 +546,9 @@ NB.   A - n×n-matrix
 NB.
 NB. Formula:
 NB. - for unghrl:
-NB.     berr := ||Q * Q^_1 - I|| / (ε * n)
+NB.     berr := ||Q * Q^H - I|| / (ε * n)
 NB. - for ungql, ungqr :
-NB.     berr := ||Q^_1 * Q - I|| / (ε * m)
+NB.     berr := ||Q^H * Q - I|| / (ε * m)
 
 testunghr=: 3 : 0
   ('unghrl' tmonad ((gehrdl~ (0,#))`]`(uncon1@])`(_."_)`(mp  gqberr c))) y

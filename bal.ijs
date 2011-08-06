@@ -79,7 +79,7 @@ NB. gebalxp1d
 NB.
 NB. Description:
 NB.   Adv. to make verb to traverse single direction
-NB.   (row-wise or column-wise) within gebalxp process
+NB.   (rowwise or columnwise) within gebalxp process
 NB.
 NB. Syntax:
 NB.   vapp=. ioz`getv`mkt`dhs gebalxp1d
@@ -156,8 +156,8 @@ NB. ---------------------------------------------------------
 NB. gebalxp2d
 NB.
 NB. Description:
-NB.   Adv. to make verb to traverse both directions (row-wise
-NB.   and column-wise) within gebalxp process
+NB.   Adv. to make verb to traverse both directions (rowwise
+NB.   and columnwise) within gebalxp process
 NB.
 NB. Syntax:
 NB.   vapp=. getv0`getv1 gebalxp2d
@@ -188,12 +188,12 @@ NB.   In: A, nz0, nz1
 NB.   Out: p, hs
 NB.   1) initialize p, hs so that B = B11 = A
 NB.   2) extract nz0, which defines 1st traverse direction
-NB.      (row-wise or column-wise), from y
+NB.      (rowwise or columnwise), from y
 NB.   3) use A, p, hs, nz0 to traverse A through the 1st
 NB.      direction to accumulate permutations and to reduce
 NB.      B11
 NB.   4) extract nz1, which defines 2nd traverse direction
-NB.      (row-wise or column-wise), opposite to nz0, from y,
+NB.      (rowwise or columnwise), opposite to nz0, from y,
 NB.      then apply p to nz1
 NB.   5) use A, p, hs, nz1 to traverse A through the 2nd
 NB.      direction to accumulate permutations and to further

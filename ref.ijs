@@ -303,23 +303,23 @@ NB.   Vb  = V[k:m-1,0:n-1]
 larftfr=: (_1 _1&{.)`(( {.    (0:`0:`(larftfr@[)`]`[`( mp  ((0&(_1}))@ct)  )`[`(-@mp )` mp  `(larftfr@])`(({.~   #),.])`, `]`[`0: fork5)  }.   )~ (<.@-:@#))`(EMPTY"_)@.(*@<:@#)
 
 NB. ---------------------------------------------------------
-NB. Verb:      Action:   Side:   Tran:  Dir:  Layout:    eC:
-NB. larflcbc   H' * C    left    ct     bwd   col-wise   0, C
-NB. larflcbr   H' * C    left    ct     bwd   rowwise    0, C
-NB. larflcfc   H' * C    left    ct     fwd   col-wise   C, 0
-NB. larflcfr   H' * C    left    ct     fwd   rowwise    C, 0
-NB. larflnbc   H  * C    left    none   bwd   col-wise   0, C
-NB. larflnbr   H  * C    left    none   bwd   rowwise    0, C
-NB. larflnfc   H  * C    left    none   fwd   col-wise   C, 0
-NB. larflnfr   H  * C    left    none   fwd   rowwise    C, 0
-NB. larfrcbc   C  * H'   right   ct     bwd   col-wise   0,.C
-NB. larfrcbr   C  * H'   right   ct     bwd   rowwise    0,.C
-NB. larfrcfc   C  * H'   right   ct     fwd   col-wise   C,.0
-NB. larfrcfr   C  * H'   right   ct     fwd   rowwise    C,.0
-NB. larfrnbc   C  * H    right   none   bwd   col-wise   0,.C
-NB. larfrnbr   C  * H    right   none   bwd   rowwise    0,.C
-NB. larfrnfc   C  * H    right   none   fwd   col-wise   C,.0
-NB. larfrnfr   C  * H    right   none   fwd   rowwise    C,.0
+NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
+NB. larflcbc   H' * C   left    ct     bwd   columnwise  0, C
+NB. larflcbr   H' * C   left    ct     bwd   rowwise     0, C
+NB. larflcfc   H' * C   left    ct     fwd   columnwise  C, 0
+NB. larflcfr   H' * C   left    ct     fwd   rowwise     C, 0
+NB. larflnbc   H  * C   left    none   bwd   columnwise  0, C
+NB. larflnbr   H  * C   left    none   bwd   rowwise     0, C
+NB. larflnfc   H  * C   left    none   fwd   columnwise  C, 0
+NB. larflnfr   H  * C   left    none   fwd   rowwise     C, 0
+NB. larfrcbc   C  * H'  right   ct     bwd   columnwise  0,.C
+NB. larfrcbr   C  * H'  right   ct     bwd   rowwise     0,.C
+NB. larfrcfc   C  * H'  right   ct     fwd   columnwise  C,.0
+NB. larfrcfr   C  * H'  right   ct     fwd   rowwise     C,.0
+NB. larfrnbc   C  * H   right   none   bwd   columnwise  0,.C
+NB. larfrnbr   C  * H   right   none   bwd   rowwise     0,.C
+NB. larfrnfc   C  * H   right   none   fwd   columnwise  C,.0
+NB. larfrnfr   C  * H   right   none   fwd   rowwise     C,.0
 NB.
 NB. Description:
 NB.   Dyads to apply an elementary reflector H or its
@@ -362,23 +362,23 @@ larfrnfc=: ] - (mp ((0 & (_1 })) * {:))~ */ (+ @ [)     NB. C - (C * (v * τ)) *
 larfrnfr=: ] - (mp ((+ @ (0 & (_1 }))) * {:))~ */ [     NB. C - (C * (v' * τ)) * v
 
 NB. ---------------------------------------------------------
-NB. Verb:      Action:   Side:   Tran:  Dir:  Layout:    eC:
-NB. larfblcbc  H' * C    left    ct     bwd   col-wise   0, C
-NB. larfblcbr  H' * C    left    ct     bwd   rowwise    0, C
-NB. larfblcfc  H' * C    left    ct     fwd   col-wise   C, 0
-NB. larfblcfr  H' * C    left    ct     fwd   rowwise    C, 0
-NB. larfblnbc  H  * C    left    none   bwd   col-wise   0, C
-NB. larfblnbr  H  * C    left    none   bwd   rowwise    0, C
-NB. larfblnfc  H  * C    left    none   fwd   col-wise   C, 0
-NB. larfblnfr  H  * C    left    none   fwd   rowwise    C, 0
-NB. larfbrcbc  C  * H'   right   ct     bwd   col-wise   0,.C
-NB. larfbrcbr  C  * H'   right   ct     bwd   rowwise    0,.C
-NB. larfbrcfc  C  * H'   right   ct     fwd   col-wise   C,.0
-NB. larfbrcfr  C  * H'   right   ct     fwd   rowwise    C,.0
-NB. larfbrnbc  C  * H    right   none   bwd   col-wise   0,.C
-NB. larfbrnbr  C  * H    right   none   bwd   rowwise    0,.C
-NB. larfbrnfc  C  * H    right   none   fwd   col-wise   C,.0
-NB. larfbrnfr  C  * H    right   none   fwd   rowwise    C,.0
+NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
+NB. larfblcbc  H' * C   left    ct     bwd   columnwise  0, C
+NB. larfblcbr  H' * C   left    ct     bwd   rowwise     0, C
+NB. larfblcfc  H' * C   left    ct     fwd   columnwise  C, 0
+NB. larfblcfr  H' * C   left    ct     fwd   rowwise     C, 0
+NB. larfblnbc  H  * C   left    none   bwd   columnwise  0, C
+NB. larfblnbr  H  * C   left    none   bwd   rowwise     0, C
+NB. larfblnfc  H  * C   left    none   fwd   columnwise  C, 0
+NB. larfblnfr  H  * C   left    none   fwd   rowwise     C, 0
+NB. larfbrcbc  C  * H'  right   ct     bwd   columnwise  0,.C
+NB. larfbrcbr  C  * H'  right   ct     bwd   rowwise     0,.C
+NB. larfbrcfc  C  * H'  right   ct     fwd   columnwise  C,.0
+NB. larfbrcfr  C  * H'  right   ct     fwd   rowwise     C,.0
+NB. larfbrnbc  C  * H   right   none   bwd   columnwise  0,.C
+NB. larfbrnbr  C  * H   right   none   bwd   rowwise     0,.C
+NB. larfbrnfc  C  * H   right   none   fwd   columnwise  C,.0
+NB. larfbrnfr  C  * H   right   none   fwd   rowwise     C,.0
 NB.
 NB. Description:
 NB.   Dyads to build and apply a block reflector H or its

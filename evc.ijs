@@ -180,7 +180,8 @@ tgevclx=: 4 : 0
     else.
       NB. non-singular eigenvalue: triangular solve of:
       NB.   x * (a*A - b*B)^H = 0 ,
-      NB. colwise in (a*A - b*B)^H , or rowwise in (a*A - b*B)
+      NB. columnwise in (a*A - b*B)^H , or rowwise in
+      NB. (a*A - b*B)
       work=. 1
       xmax=. 1
       di=. je { d
@@ -333,9 +334,9 @@ NB.   'Y X'=. tgevcub SP
 NB.   'E1 E2'=. diagmat@diag"2 SP
 NB.
 NB. Notes:
-NB. - tgevcul implements LAPACK's xTGEVC('L','S')
-NB. - tgevcur implements LAPACK's xTGEVC('R','S')
-NB. - tgevcub implements LAPACK's xTGEVC('B','S')
+NB. - tgevcul models LAPACK's xTGEVC('L','S')
+NB. - tgevcur models LAPACK's xTGEVC('R','S')
+NB. - tgevcub models LAPACK's xTGEVC('B','S')
 NB.
 NB. TODO:
 NB. - express via tgevclx
@@ -351,12 +352,11 @@ NB. tgevclbb
 NB.
 NB. Description:
 NB.   Compute left eigenvectors Y*Q:
-NB.     E2 * (Y * Q) * S = E1 * (Y * Q) * P
+NB.     E2 * (Y * Q) * A = E1 * (Y * Q) * B
 NB.   and/or right eigenvectors X*Z:
-NB.     S * (X * Z)^H * E2 = P * (X * Z)^H * E1
-NB.   for matrix pair (S,P) of lower triangular matrices
-NB.   produced by the generalized Schur factorization
-NB.   hgezqsxx:
+NB.     A * (X * Z)^H * E2 = B * (X * Z)^H * E1
+NB.   for matrix pair (A,B) and matrices Q, Z produced by the
+NB.   generalized Schur factorization hgezqsxx:
 NB.     Q^H * S * Z = A
 NB.     Q^H * P * Z = B
 NB.   Each i-th eigenvector (row) from Y*Q and X*Z has a
@@ -379,14 +379,51 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   (tgevcllb -: tgevcurb &.: (ct"2        )) SP , Q
 NB.   (tgevclrb -: tgevculb &.: (ct"2        )) SP , Z
 NB.   (tgevclbb -: tgevcubb &.: (ct"2@:(1&A.))) SP , Q ,: Z
-NB.   (E2 mp YQ mp H) -: (E1 mp YQ mp T)
-NB.   (H mp (ct XZ) mp E2) -: (T mp (ct XZ) mp E1)
+NB.   D                         -: B mp Z0
+NB.   D                         -: BZ0f unmlqrn B
+NB.   A                         -: BZ0f unmlqrc C
+NB.   Q1                        -: dQ0 mp Q0
+NB.   Q1                        -: dQ0
+NB.   Z1                        -: dZ0 mp Z0
+NB.   Q2                        -: dQ1 mp Q1
+NB.   Z2                        -: dZ1 mp Z1
+NB.   dQ1dQ0                    -: dQ1 mp dQ0
+NB.   dZ1dZ0                    -: dZ1 mp dZ0
+NB.   YdQ1                      -: Y mp dQ1
+NB.   XdZ1                      -: X mp dZ1
+NB.   YdQ1dQ0                   -: Y mp dQ1dQ0
+NB.   XdZ1dZ0                   -: X mp dZ1dZ0
+NB.   YQ2                       -: Y mp Q2
+NB.   XZ2                       -: X mp Z2
+NB.   (E2 mp Y mp S)            -: (E1 mp Y mp P)
+NB.   (S mp (ct X) mp E2)       -: (P mp (ct X) mp E1)
+NB.   (E2 mp YdQ1 mp H)         -: (E1 mp YdQ1 mp T)
+NB.   (H mp (ct XdZ1) mp E2)    -: (T mp (ct XdZ1) mp E1)
+NB.   (E2 mp YdQ1dQ0 mp A)      -: (E1 mp YdQ1dQ0 mp B)
+NB.   (A mp (ct XdZ1dZ0) mp E2) -: (B mp (ct XdZ1dZ0) mp E1)
+NB.   (E2 mp YQ2 mp C)          -: (E1 mp YQ2 mp D)
+NB.   (C mp (ct XZ2) mp E2)     -: (D mp (ct XZ2) mp E1)
 NB. where
-NB.   n=. c HT
+NB.   C - n×n-matrix, general
+NB.   D - n×n-matrix, general
+NB.   n=. # C
+NB.   hs=. 0 , n
 NB.   I=. idmat n
-NB.   SPQZ=. (0,n) hgezqsvv HT , ,:~ I
-NB.   'YQ XZ'=. tgevclbb SPQZ
-NB.   'E1 E2'=. diagmat@diag"2 (2 {. SPQZ)
+NB.   BZ0f=. gelqf D
+NB.   B=. trl BZ0f
+NB.   Q0=. I
+NB.   Z0=. unglq BZ0f
+NB.   A=. C mp ct Z0
+NB.   'H T Q1 Z1'=. hs gghrdlvv A , B , Q0 ,: Z0
+NB.   'H T dQ0 dZ0'=. hs gghrdlvv A , B , ,:~ I
+NB.   'S P Q2 Z2'=. hs hgezqsvv H , T , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgezqsvv H , T , ,:~ I
+NB.   'S P dQ1dQ0 dZ1dZ0'=. hs hgezqsvv H , T , dQ0 ,: dZ0
+NB.   'Y X'=. tgevclb S ,: P
+NB.   'YdQ1 XdZ1'=. tgevclbb S , P , dQ1 ,: dZ1
+NB.   'YdQ1dQ0 XdZ1dZ0'=. tgevclbb S , P , dQ1dQ0 ,: dZ1dZ0
+NB.   'YQ2 XZ2'=. tgevclbb S , P , Q2 ,: Z2
+NB.   'E1 E2'=. diagmat@diag"2 S ,: P
 
 tgevcllb=:  (i.@c ([;tgevci) 2&{.) tgevcs  @( tgevcly mp 2{]                    ) ]
 tgevclrb=:  (i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevclx mp _1{] ) ]
@@ -399,12 +436,11 @@ NB. tgevcubb
 NB.
 NB. Description:
 NB.   Compute left eigenvectors Q*Y:
-NB.     E2 * (Q * Y)^H * S = E1 * (Q * Y)^H * P
+NB.     E2 * (Q * Y)^H * A = E1 * (Q * Y)^H * B
 NB.   and/or right eigenvectors Z*X:
-NB.     S * (Z * X) * E2 = P * (Z * X) * E1
-NB.   for matrix pair (S,P) of upper triangular matrices
-NB.   produced by the generalized Schur factorization
-NB.   hgeqzsxx
+NB.     A * (Z * X) * E2 = B * (Z * X) * E1
+NB.   for matrix pair (A,B) and matrices Q, Z produced by the
+NB.   generalized Schur factorization hgeqzsxx:
 NB.     Q * S * Z^H = A
 NB.     Q * P * Z^H = B
 NB.   Each i-th eigenvector (column) from Q*Y and Z*X has a
@@ -427,19 +463,56 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   (tgevculb -: tgevclrb &.: (ct"2        )) SP , Q
 NB.   (tgevcurb -: tgevcllb &.: (ct"2        )) SP , Z
 NB.   (tgevcubb -: tgevclbb &.: (ct"2@:(1&A.))) SP , Q ,: Z
-NB.   (E2 mp (ct QY) mp H) -: (E1 mp (ct QY) mp T)
-NB.   (H mp ZX mp E2) -: (T mp ZX mp E1)
+NB.   D                         -: Q0 mp B
+NB.   D                         -: Q0fB unmqrln B
+NB.   A                         -: Q0fB unmqrlc C
+NB.   Q1                        -: Q0 mp dQ0
+NB.   Z1                        -: Z0 mp dZ0
+NB.   Z1                        -: dZ0
+NB.   Q2                        -: Q1 mp dQ1
+NB.   Z2                        -: Z1 mp dZ1
+NB.   dQ0dQ1                    -: dQ0 mp dQ1
+NB.   dZ0dZ1                    -: dZ0 mp dZ1
+NB.   dQ1Y                      -: dQ1 mp Y
+NB.   dZ1X                      -: dZ1 mp X
+NB.   dQ0dQ1Y                   -: dQ0dQ1 mp Y
+NB.   dZ0dZ1X                   -: dZ0dZ1 mp X
+NB.   Q2Y                       -: Q2 mp Y
+NB.   Z2X                       -: Z2 mp X
+NB.   (E2 mp (ct Y) mp S)       -: (E1 mp (ct Y) mp P)
+NB.   (S mp X mp E2)            -: (P mp X mp E1)
+NB.   (E2 mp (ct dQ1Y) mp H)    -: (E1 mp (ct dQ1Y) mp T)
+NB.   (H mp dZ1X mp E2)         -: (T mp dZ1X mp E1)
+NB.   (E2 mp (ct dQ0dQ1Y) mp A) -: (E1 mp (ct dQ0dQ1Y) mp B)
+NB.   (A mp dZ0dZ1X mp E2)      -: (B mp dZ0dZ1X mp E1)
+NB.   (E2 mp (ct Q2Y) mp C)     -: (E1 mp (ct Q2Y) mp D)
+NB.   (C mp Z2X mp E2)          -: (D mp Z2X mp E1)
 NB. where
-NB.   n=. c HT
+NB.   C - n×n-matrix, general
+NB.   D - n×n-matrix, general
+NB.   n=. # C
+NB.   hs=. 0 , n
 NB.   I=. idmat n
-NB.   SPQZ=. (0,n) hgeqzsvv HT , ,:~ I
-NB.   'QY ZX'=. tgevcubb SPQZ
-NB.   'E1 E2'=. diagmat@diag"2 (2 {. SPQZ)
+NB.   Q0fB=. geqrf D
+NB.   B=. tru Q0fB
+NB.   Q0=. ungqr Q0fB
+NB.   Z0=. I
+NB.   A=. Q0 (mp~ ct)~ C
+NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: Z0
+NB.   'H T dQ0 dZ0'=. hs gghrduvv A , B , ,:~ I
+NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgeqzsvv H , T , ,:~ I
+NB.   'S P dQ0dQ1 dZ0dZ1'=. hs hgeqzsvv H , T , dQ0 ,: dZ0
+NB.   'Y X'=. tgevcub S ,: P
+NB.   'dQ1Y dZ1X'=. tgevcubb S , P , dQ1 ,: dZ1
+NB.   'dQ0dQ1Y dZ0dZ1X'=. tgevcubb S , P , dQ0dQ1 ,: dZ0dZ1
+NB.   'Q2Y Z2X'=. tgevcubb S , P , Q2 ,: Z2
+NB.   'E1 E2'=. diagmat@diag"2 S ,: P
 NB.
 NB. Notes:
-NB. - tgevculb implements LAPACK's xTGEVC('L','B')
-NB. - tgevcurb implements LAPACK's xTGEVC('R','B')
-NB. - tgevcubb implements LAPACK's xTGEVC('B','B')
+NB. - tgevculb models LAPACK's xTGEVC('L','B')
+NB. - tgevcurb models LAPACK's xTGEVC('R','B')
+NB. - tgevcubb models LAPACK's xTGEVC('B','B')
 
 tgevculb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @( tgevclx mp 2{]                    ) ]) &.: (ct"2)
 tgevcurb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevcly mp _1{] ) ]) &.: (ct"2)

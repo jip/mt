@@ -434,7 +434,7 @@ NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getrilu1pstep ^: I (pfx ; sfx)
 NB.      6.4) extract sfx produced by the last iteration
 NB.      6.5) apply permutation P to the rows of sfx by
-NB.           obversed applying of inversed permutation P^_1,
+NB.           obversed applying of inversed permutation P^H,
 NB.           to produce final A^_1
 NB.
 NB. Assertions:
@@ -499,7 +499,7 @@ NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getripl1ustep ^: I (pfx ; sfx)
 NB.      6.4) extract sfx produced by the last iteration
 NB.      6.5) apply permutation P to the columns of sfx by
-NB.           obversed applying of inversed permutation P^_1,
+NB.           obversed applying of inversed permutation P^H,
 NB.           to produce final A^_1
 NB.
 NB. Assertions:
@@ -573,7 +573,7 @@ NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getripu1lstep ^: I (pfx ; sfx)
 NB.      6.4) extract pfx produced by the last iteration
 NB.      6.5) apply permutation P to the columns of pfx by
-NB.           obversed applying of inversed permutation P^_1,
+NB.           obversed applying of inversed permutation P^H,
 NB.           to produce final A^_1
 NB.
 NB. Assertions:
@@ -638,7 +638,7 @@ NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getriul1pstep ^: I (pfx ; sfx)
 NB.      6.4) extract pfx produced by the last iteration
 NB.      6.5) apply permutation P to the rows of pfx by
-NB.           obversed applying of inversed permutation P^_1,
+NB.           obversed applying of inversed permutation P^H,
 NB.           to produce final A^_1
 NB.
 NB. Assertions:
@@ -655,8 +655,8 @@ getriul1p=: 3 : 0
 
 NB. ---------------------------------------------------------
 NB. Verb:    Factorization used:            Syntax:
-NB. hetripl  P * L1 * T * L1^H * P^_1 = A   iA=. hetripl pL1T
-NB. hetripu  P * U1 * T * U1^H * P^_1 = A   iA=. hetripu pU1T
+NB. hetripl  P * L1 * T * L1^H * P^H = A    iA=. hetripl pL1T
+NB. hetripu  P * U1 * T * U1^H * P^H = A    iA=. hetripu pU1T
 NB.
 NB. Description:
 NB.   Inverse Hermitian (symmetric) matrix A, represented in

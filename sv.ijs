@@ -108,7 +108,7 @@ NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) matrix A via triangular factorization:
-NB.     P * L1 * T * L1^H * P^_1 = A
+NB.     P * L1 * T * L1^H * P^H = A
 NB. where:
 NB.   A    - n×n-matrix, Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS

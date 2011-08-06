@@ -336,7 +336,7 @@ NB.               cs , iof , iog  NB. defines rotation
 NB.             accumulates scalings and rotations
 NB.   A       - n×n-matrix or (i.0)
 NB.   Aupd    - either (i.0) when A -: (i.0) , or n×n-matrix
-NB.             (A*ΔA) otherwise
+NB.             (A*dA) otherwise
 NB.   m       - multiplier to scale either row (rotscll) or
 NB.             column (rotsclu)
 NB.   io      - IO either row (rotscll) or column (rotsclu)

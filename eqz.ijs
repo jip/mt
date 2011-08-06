@@ -44,16 +44,17 @@ NB.
 NB. Syntax:
 NB.   'HTdupd signbc'=. hseqzexo HTd
 NB. where
+NB.
+NB. Notes:
+NB. - unfortunately, the following produces rank error:
+NB.     'signbc Td'=. mask } &. |: (1 ,. + * Td) ,: (0 ,. absb)
 
 hseqzeuo=: 3 : 0
   'Hd Td'=. y
   absb=. | Td
   mask=. FP_SFMIN < absb
-  signbc=. mask } 1 ,: + * Td
-  Hd=. Hd * mask } 1 ,: signbc
-  Td=.      mask } 0 ,: absb
-  HTd=. Hd ,: Td
-  HTd ; signbc
+  signbc=. mask } 1 ,. + * Td
+  ((Hd * signbc) ,: (mask } 0 ,. absb)) ; signbc
 )
 
 NB. ---------------------------------------------------------
@@ -65,60 +66,56 @@ NB.   Eigenvalues of pair of structured matrices outside of
 NB.   hs-segment, is called from hseqzsxnn
 NB.
 NB. Syntax:
-NB.   'HTupd signbc'=. hseqzexo HT ; hs
+NB.   'HTupd signbc'=. hseqzsxo hs ; HT
 NB. where
 
 hseqzsuo=: 3 : 0
-  'HT hs'=. y
-  n=. c HT
+  'hs HT'=. y
   lios=. dhs2lios hs
-  HTd=. (0 , hs) diag"2 HT
-  'HTd signbc'=. hseqzexo HTd
-  subHT=. lios {"1 HT
-  mask=. (i. n) </ lios
-  subHT=. mask } subHT ,: subHT *"1 signbc
-  subHT=. (<"1 HTd) setdiag"1 2 subHT
-  HT=. subHT (< a: ; a: ; lios) } HT
-  HT ; signbc
+  'HTd signbc'=. hseqzeuo (0 , hs) diag"2 HT
+  subHT=. (HTd ;"1 0 a:) setdiag"1 2 lios {"1 HT
+  (((i. c HT) </ lios } subHT ,: subHT *"1 signbc) lios }"1 HT) ; signbc
 )
 
 NB. ---------------------------------------------------------
-NB. hseqzslo
-NB. hseqzsuo
+NB. rotga
 NB.
 NB. Description:
 NB.   Adv. to make verb to generate and apply rotation
 NB.
 NB. Syntax:
-NB.   vapp=. varot rotga
+NB.   vapp=. vrota rotga
 NB. where
-NB.   varot   - dyad to apply rotation; is called as:
-NB.               subArot=. cs varot subA
+NB.   vrota   - dyad to apply rotation; is called as:
+NB.               subAupd=. cs vrota subA
 NB.             and is any of:
 NB.               rot        NB. apply rotation to rows
 NB.               rot &. |:  NB. apply rotation to columns
 NB.   vapp    - monad to generate and apply rotation; is
 NB.             called as:
 NB.               'Aupd cs'=. vapp A ; iossubA ; iosfg
-NB.   cs      - 2-vector (c,s), curtailed output of lartg
+NB.   cs      - 2-vector (c,s), curtailed output of lartg,
+NB.             defines rotation matrix
 NB.   A       - n×n-matrix to update
-NB.   Aupd    - n×n-matrix, updated A
+NB.   Aupd    - n×n-matrix, updated A, being A with subA
+NB.             replaced by subAupd
 NB.   subA    - 2×m-matrix or m×2-matrix, array of 2-vectors
 NB.             to apply rotation
-NB.   iossubA - ios for subA within A
-NB.   iosfg   - ios within subA of 2-vector to generate
+NB.   subAupd - matrix of the same shape as subA, the rotated
+NB.             subA
+NB.   iossubA - ios for subA (subAupd) within A (Aupd)
+NB.   iosfg   - ios within subA of 2-vector (f,g) to generate
 NB.             rotation
 NB.
 NB. Notes:
-NB. - rotated 2-vector (r,0) is writed into A explicitely to
+NB. - rotated 2-vector (r,0) is written into A explicitely to
 NB.   avoid rotation roundoff errors
 
 rotga=: 1 : 0
   'A iossubA iosfg'=. y
   subA=. iossubA { A
-  'cs r'=. (}: ; {:) lartg iosfg { subA
-  A=. ((0 ,~ r) iosfg } cs u subA) iossubA } A
-  A ; cs
+  csr=. lartg iosfg { subA
+  (((({: csr) , 0) iosfg } (}: csr) u subA) iossubA } A) ; (}: csr)
 )
 
 NB. ---------------------------------------------------------
@@ -129,7 +126,7 @@ NB. Description:
 NB.   Eigenvalues of pair of structured matrices
 NB.
 NB. Syntax:
-NB.   'hs ab rsQZ'=. hseqzexnn hs ; HT
+NB.   'hs ab dQZ'=. hseqzexnn hs ; HT
 NB. where
 NB.   HT    -: H ,: T
 NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
@@ -153,6 +150,9 @@ NB.
 NB. Notes:
 NB. - hseqzeunn implements LAPACK's xHGEQZ('E','N')
 NB. - hseqzsunn implements LAPACK's xHGEQZ('S','N')
+NB.
+NB. TODO:
+NB. - init ab by NaN
 
 hseqzeunn=: 3 : 0
   'hs HT'=. y
@@ -161,8 +161,8 @@ hseqzeunn=: 3 : 0
   abnorm=. (,.~ hs) norms"2 ;. 0 HT
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
-  'HTd signbc'=. hseqzexo (0 , (+/ hs)) diag"2 HT  NB. eigenvalues[h+s:n-1]
-  HT=. (HTd ;"1 (+/ hs)) setdiag"1 2 HT
+  'HTd signbc'=. hseqzeuo (0 , (+/ hs)) diag"2 HT  NB. eigenvalues[h+s:n-1]
+  HT=. (HTd (;"1) 0 , +/ hs) setdiag"1 2 HT
 
   NB. main QZ iteration loop
 
@@ -201,7 +201,7 @@ hseqzeunn=: 3 : 0
               ilazr2=. 0
               if. -. ilazro do.
                 'Hjj1 Hj1j Hjj'=. (<"1 (0 ,. (0 _1,1 0,:0 0) + j)) { HT
-                if. 0 >: (Hjj1 , Hjj) mp (ascale * (Hj1j , - atol)) do.
+                if. 0 >: (Hjj1 , Hjj) mp (ascale * (Hj1j , -atol)) do.
                   ilazr2=. 1
                 end.
               end.
@@ -248,11 +248,14 @@ hseqzeunn=: 3 : 0
             end.
             j=. <: j
           end.
+          NB. drop-through is impossible
+          hs ; (_. (< a: ; i. >: ilast) } diag"2 HT) ; dQZ  NB. set incorrect eigenvalues[0:ilast] to NaN
+          return.
+        else.
+          HT=. 0 (< 1 , 2 # ilast) } HT
         end.
-        NB. drop-through is impossible
-        error return.
-        NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to split off a 1x1 block
         label_50.
+        NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to split off a 1x1 block
         'HT cs'=. rot rotga HT ; (< 0 ; (ilast ht2lios ifirstm) ; (ilast - 0 1)) ; (< _1 ; _1 0)
         HT=. (< 1 ; ((<: ilast) ht2lios ifirstm) ; (ilast - 0 1)) (cs & rot) upd HT
         dZ=. dZ , cs , ilast
@@ -260,14 +263,18 @@ hseqzeunn=: 3 : 0
         HT=. 0 (< 0 , ilast - 0 1) } HT
       end.
     end.
-    NB. H[ilast,ilast-1]=0 - standartize B, set alpha and beta
     label_60.
-    'HTd signbc'=. hseqzexo (0 , ilast , 1) diag"2 HT  NB. eigenvalues[ilast]
+    NB. H[ilast,ilast-1]=0 - standartize B, set alpha and beta
+    'HTd signbc'=. hseqzeuo (0 , ilast , 1) diag"2 HT  NB. eigenvalues[ilast]
     HT=. (, HTd) (< a: ; ;~ ilast) } HT
     NB. goto next block - exit if finished
     ilast=. <: ilast
     if. ilast < h do.
-      goto_190.
+      NB. normal exit
+      'HTd signbc'=. hseqzeuo (0 0 , 0 >. <: h) diag"2 HT  NB. calc eigenvalues[0:h-1]
+      HTd=. HTd ,. (0 , h) diag"1 2 HT                     NB. read eigenvalues[h:]
+      hs ; HTd ; dQZ
+      return.
     end.
     NB. reset counters
     iiter=. 0
@@ -331,40 +338,37 @@ hseqzeunn=: 3 : 0
     ctemp=. (1 , -shift) mp abscale * (< a: ; ;~ ifirst) { HT
     label_90.
     NB. do an implicit-shift QZ sweep
-    NB. initial Q
-    cs=. }: clartg ctemp , ascale * (< 0 , istart + 1 0) { HT
-    NB. sweep
-    j=. istart
-    while. j < ilast do.
-      NB. TODO: move to the loop end!
-      if. j > istart do.
+    if. istart < ilast do.
+      NB. initial Q
+      cs=. }: clartg ctemp , ascale * (< 0 , istart + 1 0) { HT
+      NB. sweep
+      j=. istart
+      whilest.
         ios=. < 0 ; 0 1 (+ ; ]) j
         csr=. lartg ios { HT
         HT=. (({: csr) , 0) ios } HT
         cs=. }: csr
+        j < ilast
+      do.
+        ios=. < a: ; (j + 0 1) ; (ilastm ht2lios j)
+        HT=. ios (cs & (rot &. |:)"2) upd HT
+        dQ=. dQ , (cs , j + 0 1)  NB. FIXME!
+        ios=. < 1 ; j ; (j + 1 0)
+        csr=. lartg ios { HT
+        HT=. (({: csr) , 0) ios } HT
+        ios=. < 0 ; ((ilastm <. j + 2) ht2lios ifirstm) ; (j + 1 0)
+        HT=. ios (cs & rot) upd HT
+        ios=. < 1 ; (j ht2lios ifirstm) ; (j + 1 0)
+        HT=. ios (cs & rot) upd HT
+        dZ=. dZ , (cs , j + 1 0)  NB. FIXME!
+        j=. >: j
       end.
-      ios=. < a: ; (j + 0 1) ; (ilastm ht2lios j)
-      HT=. ios (cs & (rot &. |:)"2) upd HT
-      dQ=. dQ , (cs , j + 0 1)  NB. FIXME!
-      ios=. < 1 ; j ; (j + 1 0)
-      csr=. lartg ios { HT
-      HT=. (({: csr) , 0) ios } HT
-      ios=. < 0 ; ((ilastm <. j + 2) ht2lios ifirstm) ; (j + 1 0)
-      HT=. ios (cs & rot) upd HT
-      ios=. < 1 ; (j ht2lios ifirstm) ; (j + 1 0)
-      HT=. ios (cs & rot) upd HT
-      dZ=. dZ , (cs , j + 1 0)  NB. FIXME!
-      j=. >: j
     end.
     label_160.
     jiter=. >: jiter
   end.
-  NB. drop-through means non-convergence
-  error return.
-  label_190.
-  'HTd signbc'=. hseqzexo (0 0 , (<: h)) diag"2 HT  NB. eigenvalues[0:h-1]
-  HT=. (HTd (;"1) 0 0 (<: h)) setdiag"1 2 HT
-  hs ; (diag"2 HT) ; dQZ
+  NB. drop-through means non-convergence, set incorrect eigenvalues[0:ilast] to NaN
+  hs ; (_. (< a: ; i. >: ilast) } diag"2 HT) ; dQZ
 )
 
 NB. =========================================================

@@ -54,7 +54,7 @@ NB.   bignum   > 0
 NB.   d0       - 2×n-matrix, diagonals of S,P
 NB.   d1       - 2×n-matrix
 NB.   d2       - 2×n-matrix
-NB.   abnorm   - 2-vector, being is (norm1t"2 SP)
+NB.   abnorm   - 2-vector, being (norm1t"2 SP)
 NB.   abrwork  - 2×n-matrix, norm1t either of rows of strict
 NB.              lower triangular part of S,P (tgevcli), or
 NB.              of columns of strict upper triangular part
@@ -84,13 +84,13 @@ tgevcui=: 3 : 0
   abcoeff=. abscale * sba
   NB. scale to avoid underflow
   lsab=. *./ 0 1 (>:&FP_SFMIN)`(<&small) ag 0 1 (|`sorim ag)"2 sba ,: abcoeff  NB. 2×n-matrix
-  scale=. >./ ((lsab }) dbg '}') 1 ,: (big <. abnorm) * small % 0 1 |`sorim ag sba         NB. n-vector
-  scale=. (((+./ lsab) }) dbg '}') scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
-  abcoeff=. lsab } (abcoeff (*"1 dbg '*') scale) ,: (abscale * scale *"1 sba)
+  scale=. >./ lsab } 1 ,: (big <. abnorm) * small % 0 1 |`sorim ag sba         NB. n-vector
+  scale=. (+./ lsab) } scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
+  abcoeff=. lsab } (abcoeff *"1 scale) ,: (abscale * scale *"1 sba)
   abcoeffa=. 0 1 |`sorim ag abcoeff                                            NB. coeffs for triangular solvers
   cond1=. +/ abcoeffa * abrwork
   dmin=. >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa
-  d=. + (+/) (1 _1 * abcoeff) * d0
+  d=. + (-/) abcoeff * d0
   d=. (dmin >: sorim d) } d ,: dmin
   abs1d=. sorim d
   cond2=. 1 > abs1d
@@ -140,28 +140,30 @@ tgevcux=: 1 : 0
       NB. columnwise
       NB. work[0:j-1] contains sums w
       NB. work[j+1:je] contains x
-      work=. 1 ,~ +/ (1 _1 * abcoeff) * (((0 0,]),:(2,],1:)) je { ios) ({.@(2 0 1&|:)) ,. 0 y
+      work=. 1 ,~ (-/) ((je { ios) {"1 abcoeff) * (((0 0,]),:(2,],1:)) je { ios) ({.@(2 0 1&|:)) ;. 0 y
       j=. <: je { ios
       while. j >: 0 do.
         NB. form:
         NB.   x[j] = - w[j] / d
         NB. with scaling and perturbation of the denominator
-        if. ((sorim j { work) >: (j { bigd)) *. (j { cond2) do.
-          work=. work % sorim j { work
+        abs1wj=. sorim j { work
+        if. (abs1wj >: (j { bigd)) *. (j { cond2) do.
+          work=. work % abs1wj
         end.
         work=. j (-@(%&(j{d))) upd work
+        abs1wj=. sorim j { work
         if. j > 0 do.
           NB. w = w + x[j] * (a*S[:,j] - b*P[:,j]) with scaling
-          if. ((abcoeffa mp j {"1 abrwork) >: (bignum % sorim j { work)) *. (1 < sorim j { work) do.
-            work=. work % sorim j { work
+          if. ((abcoeffa mp & (j&({"1)) abrwork) >: (bignum % abs1wj)) *. (1 < abs1wj) do.
+            work=. work % abs1wj
           end.
-          workadd=. (1 _1 * abcoeff * j { work) * (((0 0,]),:(2,],1:)) j) ] ;. 0 y
-          work=. (i. j) (+/@(,&workadd)) upd work
+          workadd=. (((je { ios) {"1 abcoeff) * j { work) * (((0 0,]),:(2,],1:)) j) ({.@(2 0 1&|:)) ;. 0 y
+          work=. (i. j) (+`-/@(,&workadd)) upd work
         end.
         j=. <: j
       end.
       NB. optional back transforming
-      work=. (je ({."1) _1 { y) u work  NB. when backtransform, (ios -: i. n) <=> (je -: je { ios)
+      work=. ((>: je) ({."1) _1 { y) u work  NB. when backtransform, (ios -: i. n) <=> (je -: je { ios)
       NB. scale eigenvector and stitch X to it
       xmax=. normit work
       if. FP_SFMIN < xmax do.
@@ -225,12 +227,12 @@ tgevcuy=: 1 : 0
           work=. work % xmax
           xmax=. 1
         end.
-        sum=. +/ (1 _1 * abcoeff) * work mp"1 (j ((0,,~),:(2,-,1:)) je { ios) (+@{.@(2 0 1&|:)) ;. 0 y
+        sum=. -/ ((je { ios) {"1 abcoeff) * work mp"1 (j ((0,,~),:(2,-,1:)) je { ios) (+@{.@(2 0 1&|:)) ;. 0 y
         NB. form:
         NB.   x[j] = - sum / conjg(a*S[j,j] - b*P[j,j])
         NB. with scaling and perturbation of the denominator
-        if. ((sorim sum) >: (j { bigd)) *. (j { cond2) do.
-          abs1sum=. sorim sum
+        abs1sum=. sorim sum
+        if. (abs1sum >: j { bigd) *. (j { cond2) do.
           work=. work % abs1sum
           xmax=. xmax % abs1sum
           sum=. sum % abs1sum
@@ -259,9 +261,9 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB.   Y=.  [ios] tgevcxl  S ,: P
-NB.   X=.  [ios] tgevcxr  S ,: P
-NB.   YX=. [ios] tgevcxb  S ,: P
+NB.   Y=.     [ios] tgevcxl  S ,: P
+NB.   X=.     [ios] tgevcxr  S ,: P
+NB.   'Y X'=. [ios] tgevcxb  S ,: P
 
 tgevcll=: ($:~ (i.@c)) : ((; tgevcli) (] tgevcly) ])
 tgevclr=: ($:~ (i.@c)) : ((; tgevcli) (] tgevclx) ])
@@ -272,9 +274,9 @@ tgevcur=: ($:~ (i.@c)) : ((; tgevcui) (] tgevcux) ])
 tgevcub=: ($:~ (i.@c)) : ((; tgevcui) ((] tgevcuy) ,: (] tgevcux)) ])
 
 NB. ---------------------------------------------------------
-NB.   Y=.  tgevcxxb S , P ,: Q
-NB.   X=.  tgevcxxb S , P ,: Z
-NB.   YX=. tgevcxxb S , P , Q ,: Z
+NB.   Y=.     tgevcxlb S , P ,: Q
+NB.   X=.     tgevcxrb S , P ,: Z
+NB.   'Y X'=. tgevcxbb S , P , Q ,: Z
 
 tgevcllb=: (((i.@c) (; tgevcli) (2&{.)) (mp tgevcly) ]) : [:
 tgevclrb=: (((i.@c) (; tgevcli) (2&{.)) (mp tgevclx) ]) : [:

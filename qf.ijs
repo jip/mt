@@ -82,12 +82,12 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGELQ2
 NB. - gelq2 and gelqf are topologic equivalents
-NB. - if triangular matrix diagonal's non-negativity is not
-NB.   required, then larfp* may be replaced by faster larfg*
+NB. - if triangular matrix diagonal's non-negativity is
+NB.   required, then larfg* should be replaced by larfp*
 
 gelq2=: ((0&({::)) stitcht (1&({::))) @ ((3 : 0) ^: ((0 _1&(ms $))`((0&({."1));(0&{.);])))
   'pfx sfxT sfxB'=. y
-  z=. larfpfc {. sfxB
+  z=. larfgfc {. sfxB
   sfxT=. sfxT , z
   sfxB=. (1 (0}) z) larfrnfr }. sfxB
   (pfx ,. (sfxT (, &: ({."1)) sfxB)) ; (sfxT (; &: (}."1)) sfxB)
@@ -122,12 +122,12 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGEQL2
 NB. - geql2 and geqlf are topologic equivalents
-NB. - if triangular matrix diagonal's non-negativity is not
-NB.   required, then larfp* may be replaced by faster larfg*
+NB. - if triangular matrix diagonal's non-negativity is
+NB.   required, then larfg* should be replaced by larfp*
 
 geql2=: ((1&({::)) appendr (2&({::))) @ ((3 : 0) ^: ((_1 0&(ms $))`(];(0&({."1));(0&{.))))
   'pfxL pfxR sfx'=. y
-  z=. larfpb {:"1 pfxL
+  z=. larfgb {:"1 pfxL
   pfxR=. z ,. pfxR
   pfxL=. (1 (_1}) z) larflcbc }:"1 pfxL
   (pfxL (; & }:) pfxR) , < ((pfxL (, & {:) pfxR) , sfx)
@@ -162,12 +162,12 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGEQR2
 NB. - gerq2 and geqrf are topologic equivalents
-NB. - if triangular matrix diagonal's non-negativity is not
-NB.   required, then larfp* may be replaced by faster larfg*
+NB. - if triangular matrix diagonal's non-negativity is
+NB.   required, then larfg* should be replaced by larfp*
 
 geqr2=: ((0&({::)) , (1&({::))) @ ((3 : 0) ^: ((_1 0&(ms $))`((0&{.);(0&({."1));])))
   'pfx sfxL sfxR'=. y
-  z=. larfpf {."1 sfxR
+  z=. larfgf {."1 sfxR
   sfxL=. sfxL ,. z
   sfxR=. (1 (0}) z) larflcfc }."1 sfxR
   (pfx , (sfxL (, & {.) sfxR)) ; (sfxL (; & }.) sfxR)
@@ -202,12 +202,12 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGERQ2
 NB. - gerq2 and gerqf are topologic equivalents
-NB. - if triangular matrix diagonal's non-negativity is not
-NB.   required, then larfp* may be replaced by faster larfg*
+NB. - if triangular matrix diagonal's non-negativity is
+NB.   required, then larfg* should be replaced by larfp*
 
 gerq2=: ((1&({::)) stitchb (2&({::))) @ ((3 : 0) ^: ((0 _1&(ms $))`(];(0&{.);(0&({."1)))))
   'pfxT pfxB sfx'=. y
-  z=. larfpbc {: pfxT
+  z=. larfgbc {: pfxT
   pfxB=. z , pfxB
   pfxT=. (1 (_1}) z) larfrnbr }: pfxT
   (pfxT (; &: (}:"1)) pfxB) , < ((pfxT (, &: ({:"1)) pfxB) ,. sfx)

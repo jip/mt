@@ -125,10 +125,11 @@ NB.   LR    - 2×n×n-matrix. left and right eigenvectors:
 NB.             LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (ggevlnn -: ggevunn &.: (ct"2)) A ,: B                   CHECKME!
-NB.   (ggevlnv -: ggevunv &.: (ct"2)) A ,: B                   CHECKME!
-NB.   (ggevlvn -: ggevuvn &.: (ct"2)) A ,: B                   CHECKME!
-NB.   (ggevlvv -: ggevuvv &.: (ct"2)) A ,: B                   CHECKME!
+NB.   (ggevlnn -:                           +@:ggevunn@:(ct"2) ) A ,: B
+NB.   (ggevlnn -:&(/:~@(%/))                   ggevunn         ) A ,: B
+NB.   (ggevlnv -: (0 1 (+&.>)`(ct&.>)       ag ggevuvn@:(ct"2))) A ,: B
+NB.   (ggevlvn -: (0 1 (+&.>)`(ct&.>)       ag ggevunv@:(ct"2))) A ,: B
+NB.   (ggevlvv -: (0 1 (+&.>)`(ct"2@:|.&.>) ag ggevuvv@:(ct"2))) A ,: B
 NB.   (E2 mp L mp A) -: (E1 mp L mp B)
 NB.   (A mp (ct R) mp E2) -: (B mp (ct R) mp E1)
 NB. where
@@ -248,10 +249,11 @@ NB.   LR    - 2×n×n-matrix. left and right eigenvectors:
 NB.             LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (ggevunn -: ggevlnn &.: (ct"2)) A ,: B                   CHECKME!
-NB.   (ggevunv -: ggevlnv &.: (ct"2)) A ,: B                   CHECKME!
-NB.   (ggevuvn -: ggevlvn &.: (ct"2)) A ,: B                   CHECKME!
-NB.   (ggevuvv -: ggevlvv &.: (ct"2)) A ,: B                   CHECKME!
+NB.   (ggevunn -:                           +@:ggevlnn@:(ct"2) ) A ,: B
+NB.   (ggevunn -:&(/:~@(%/))                   ggevlnn         ) A ,: B
+NB.   (ggevunv -: (0 1 (+&.>)`(ct&.>)       ag ggevlvn@:(ct"2))) A ,: B
+NB.   (ggevuvn -: (0 1 (+&.>)`(ct&.>)       ag ggevlnv@:(ct"2))) A ,: B
+NB.   (ggevuvv -: (0 1 (+&.>)`(ct"2@:|.&.>) ag ggevlvv@:(ct"2))) A ,: B
 NB.   (E2 mp (ct L) mp A) -: (E1 mp (ct L) mp B)
 NB.   (A mp R mp E2) -: (B mp R mp E1)
 NB. where
@@ -263,17 +265,23 @@ NB.   'L R'=. LR
 NB.
 NB. Application:
 NB. - model LAPACK's xGEEV('N','N'):
-NB.     geevlnn=: ggevlnn @ (, (idmat @ c))
-NB.     geevunn=: ggevunn @ (, (idmat @ c))
+NB.     geevlnn=: {.@ggevlnn@(,:(idmat@c))
+NB.     geevunn=: {.@ggevunn@(,:(idmat@c))
 NB. - model LAPACK's xGEEV('N','V'):
-NB.     geevlnv=: ggevlnv @ (, (idmat @ c))
-NB.     geevunv=: ggevunv @ (, (idmat @ c))
+NB.     geevlnv=: ({.&.>)`((%   %:@diag@(mp ct))&.>)ag@ggevlnv(,:(idmat@c))
+NB.     geevunv=: ({.&.>)`((%"1 %:@diag@(mp~ct))&.>)ag@ggevunv(,:(idmat@c))
 NB. - model LAPACK's xGEEV('V','N'):
-NB.     geevlvn=: ggevlvn @ (, (idmat @ c))
-NB.     geevuvn=: ggevuvn @ (, (idmat @ c))
+NB.     geevlvn=: ({.&.>)`((%   %:@diag@(mp ct))&.>)ag@ggevlvn(,:(idmat@c))
+NB.     geevuvn=: ({.&.>)`((%"1 %:@diag@(mp~ct))&.>)ag@ggevuvn(,:(idmat@c))
 NB. - model LAPACK's xGEEV('V','V'):
-NB.     geevlvv=: ggevlvv @ (, (idmat @ c))
-NB.     geevuvv=: ggevuvv @ (, (idmat @ c))
+NB.     geevlvv=: ({.&.>)`((%   %:@diag@(mp ct))"2&.>)ag@ggevlvv(,:(idmat@c))
+NB.     geevuvv=: ({.&.>)`((%"1 %:@diag@(mp~ct))"2&.>)ag@ggevuvv(,:(idmat@c))
+NB. - model LAPACK's xHEEV('N'):
+NB.     heevln=: (9 o.{.)@ggevlnn@(,:(idmat@c))
+NB.     heevun=: (9 o.{.)@ggevunn@(,:(idmat@c))
+NB. - model LAPACK's xHEEV('V'):
+NB.     heevlv=: ((9 o.{.)&.>)`((%   %:@diag@(mp ct))&.>)ag@ggevlnv(,:(idmat@c))
+NB.     heevuv=: ((9 o.{.)&.>)`((%"1 %:@diag@(mp~ct))&.>)ag@ggevunv(,:(idmat@c))
 NB.
 NB. Notes:
 NB. - ggevunn models LAPACK's xGGEV('N','N')

@@ -384,12 +384,10 @@ hgezq=: 1 : 0
 
 hgeqz=: 1 : 0
 :
-HT=. y
   '`hgeqzxo init reset step'=. m
   e=. +/ 'h s'=. x
   dQ1=. dZ1=. 0 4 $ 0
   abnorm=. (0 2 ,. ,.~ x) norms"2 ;. 0 y
-smoutput 'abnorm ' , ": abnorm
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgeqzxo y  NB. process eigenvalues (columns) h+s:n-1
@@ -414,7 +412,6 @@ smoutput 'abnorm ' , ": abnorm
   NB. Column operations modify rows ifrstm:*
   NB. Row operations modify columns *:ilastm
   while. jiter < maxit do.
-smoutput 'loop 170 JITER = ',":jiter
     goto60=. 1  NB. set default branching
     NB. split the matrix if possible, by to tests:
     NB.   1. H[j,j-1]=0 OR j=h
@@ -425,22 +422,17 @@ smoutput 'loop 170 JITER = ',":jiter
           NB. general case: j < ilast
           j=. <: ilast
           while. j >: h do.
-smoutput 'loop 40 J = ',":j
             NB. test 1: H[j,j-1]=0 OR j=h
             if. j = h do.
               ilazro=. 1
-smoutput 'ILAZRO = .T.'
             elseif. atol >: sorim (< 0 , j - 0 1) { y do.
               y=. 0 (< 0 , j - 0 1) } y
               ilazro=. 1
-smoutput 'ILAZRO = .T.'
             elseif. do.
               ilazro=. 0
-smoutput 'ILAZRO = .F.'
             end.
             NB. test 2: T[j,j]=0
             if. btol > | (< 1 , ,~ j) { y do.
-smoutput 'Test 2 = .T.'
               y=. 0 (< 1 , ,~ j) } y
               NB. test 2a: check for 2 consecutive small
               NB. subdiagonals in H
@@ -449,7 +441,6 @@ smoutput 'Test 2 = .T.'
                 'Hjj1 Hj1j Hjj'=. sorim ((<"1) 0 ,. (0 _1,1 0,:0 0) + j) { y
                 if. 0 >: (Hjj1 , Hjj) mp (ascale * (Hj1j , -atol)) do.
                   ilazr2=. 1
-smoutput 'ILAZR2 = .T.'
                 end.
               end.
               NB. If both tests (1 & 2) pass, i.e., the
@@ -460,40 +451,28 @@ smoutput 'ILAZR2 = .T.'
               NB. can also be zero, so this may have to be
               NB. done repeatedly.
               if. ilazro +. ilazr2 do.
-smoutput 'ILAZRO OR ILAZR2 = .T.'
                 jch=. j
                 lios=. (>: ilastm) th2lios j
                 while. jch < ilast do.
-smoutput 'loop 20 JCH = ',":jch
-smoutput ": '(0)before rotation subHT' ; (< a: ; (jch + 0 1) ; lios) { y
-                  'y cs'=. (rot &. |:)"2 rotga y ; (< a: ; (jch + 0 1) ; lios) ; < < 0 ; a: ; 0
-smoutput ": '(0)after rotation subHT' ; (< a: ; (jch + 0 1) ; lios) { y
+                  'y cs'=. (rot &. |:) rotga y ; (< 0 ; (jch + 0 1) ; lios) ; < < a: ; 0
                   lios=. }. lios
+                  y=. (< 1 ; (jch + 0 1) ; lios) (cs & (rot &. |:)) upd y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
                   if. ilazr2 do.
                     y=. (< 0 , jch - 0 1) (* & ({. cs)) upd y
                     ilazr2=. 0
-smoutput 'ILAZR2 := .F.'
                   end.
                   if. btol <: sorim (< 1 , jch + 1 1) { y do.
-smoutput ": 'after loop 20 HT' ; y
                     if. ilast > >: jch do.
                       ifirst=. >: jch
                       goto60=. 0
-smoutput '(1) GOTO 70'
-else.
-smoutput '(3) GOTO 60'
                     end.
                     goto_u60.
                   end.
                   y=. 0 (< 1 , jch + 1 1) } y
                   jch=. >: jch
                 end.
-smoutput ": 'after loop 20 HT' ; y
-smoutput 'Verify(0): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
-smoutput '(2) GOTO 50'
               else.
-smoutput 'ILAZRO OR ILAZR2 = .F.'
                 NB. Only test 2 passed - chase the zero to
                 NB. T[ilast,ilast], then process as in the
                 NB. case T[ilast,ilast]=0
@@ -501,29 +480,21 @@ smoutput 'ILAZRO OR ILAZR2 = .F.'
                 liosc=. (>: ilastm) th2lios <: j
                 liosr=. (2 + j) th2lios ifrstm
                 while. jch < ilast do.
-smoutput 'loop 30 JCH = ',":jch
-smoutput ": '(1)before rotation subHT' ; (< a: ; (jch + 0 1) ; liosc) { y
-                  'y cs'=. (rot &. |:)"2 rotga y ; (< a: ; (jch + 0 1) ; liosc) ; < < 1 ; a: ; 2
-smoutput ": '(1)after rotation subHT' ; (< a: ; (jch + 0 1) ; liosc) { y
+                  'y cs'=. (rot &. |:) rotga y ; (< 1 ; (jch + 0 1) ; (2 }. liosc)) ; < < a: ; 0
+                  y=. (< 0 ; (jch + 0 1) ; liosc) (cs & (rot &. |:)) upd y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
-smoutput ": '(2)before rotation subHT' ; (< a: ; liosr ; (jch - 0 1)) { y
-                  'y cs'=. rot"2 rotga y ; (< a: ; liosr ; (jch - 0 1)) ; < < 0 ; _1
-smoutput ": '(2)after rotation subHT' ; (< a: ; liosr ; (jch - 0 1)) { y
+                  'y cs'=. rot rotga y ; (< 0 ; liosr ; (jch - 0 1)) ; _1
+                  y=. (< 1 ; (_2 }. liosr) ; (jch - 0 1)) (cs & rot) upd y
                   dZ1=. dZ1 , cs , jch - 0 1
                   liosc=. }. liosc
                   liosr=. liosr , 2 + jch
                   jch=. >: jch
                 end.
-smoutput ": 'after loop 30 HT' ; y
-smoutput 'Verify(1): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
               end.
-smoutput '(3) GOTO 50'
               goto_u50.
             elseif. ilazro do.
-smoutput 'ILAZRO = .T.'
               ifirst=. j
               goto60=. 0
-smoutput '(2) GOTO 70'
               goto_u60.
             end.
             j=. <: j
@@ -533,28 +504,19 @@ smoutput '(2) GOTO 70'
           return.
         else.
           y=. 0 (< 1 , ,~ ilast) } y
-smoutput '(1) GOTO 50'
         end.
         label_u50.
-smoutput 'label 50'
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
         lios=. (>: ilast) th2lios ifrstm
-smoutput ": '(3)before rotation subHT' ; (< a: ; lios ; (ilast - 0 1)) { y
-        'y cs'=. rot"2 rotga y ; (< a: ; lios ; (ilast - 0 1)) ; < < 0 ; _1
-smoutput ": '(3)after rotation subHT' ; (< a: ; lios ; (ilast - 0 1)) { y
+        'y cs'=. rot rotga y ; (< 0 ; lios ; (ilast - 0 1)) ; _1
+        y=. (< 1 ; (}: lios) ; (ilast - 0 1)) (cs & rot) upd y
         dZ1=. dZ1 , cs , ilast - 0 1
-smoutput 'Verify(2): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
       else.
         y=. 0 (< 0 , ilast - 0 1) } y
-smoutput 'Verify(3): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
-smoutput '(2) GOTO 60'
       end.
-else.
-smoutput '(1) GOTO 60'
     end.
     label_u60.
-smoutput 'label 60'
     if. goto60 do.
       NB. H[ilast,ilast-1]=0 - standartize B, set alpha and
       NB. beta
@@ -574,7 +536,6 @@ smoutput 'label 60'
       eshift=. 0
       'ifrstm ilastm'=. (h , ilast) reset (ifrstm , ilastm)
     else.
-smoutput 'label 70'
       NB. QZ step
       NB. This iteration only involves rows/columns
       NB. ifirst:ilast. We assume ifirst<ilast, and that the
@@ -586,27 +547,21 @@ smoutput 'label 70'
       NB. elements of T[ifirst:ilast,ifirst:ilast] are larger
       NB. than btol in magnitude
       if. 10 | iiter do.
-smoutput 'Wilkinson shift'
         NB. The Wilkinson shift, i.e., the eigenvalues of the
         NB. bottom-right 2x2 block of H*T^_1 which is nearest
         NB. to the bottom-right element.
         NB. We factor T as U*D, where U is unit upper
         NB. triangular, and compute (H*D^_1)*U^_1
-smoutput ": 'abscale' ; abscale
-smoutput ": 'HT[ilast-1:ilast,ilast-1:ilast]' ; (< a: ; ;~ ilast - 1 0) { y
         'U12 AD11 AD21 AD12 AD22'=. %/ (5 0 2 1 3 ,: 7 4 4 7 7) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
         ABI22=. AD22 - U12 * AD21
-smoutput ": 'U12' ; U12 ; 'AD11' ; AD11 ; 'AD21' ; AD21 ; 'AD12' ; AD12 ; 'AD22' ; AD22 ; 'ABI22' ; ABI22
         t1=. -: AD11 + ABI22
         rtdisc=. %: (t1 , AD12 , -AD11) mp (t1 , AD21 , AD22)
         temp=. +/ (*/) +. rtdisc , t1 - ABI22
         shift=. t1 - temp negneg rtdisc
-smoutput ": 't1' ; t1 ; 'rtdisc' ; rtdisc ; 'temp' ; temp ; 'shift' ; shift
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason
         eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (_1 0 ,: _1 _1) + ilast) { y
-smoutput ": 'eshift' ; eshift
         shift=. eshift
       end.
       NB. now check for two consecutive small subdiagonals
@@ -614,57 +569,37 @@ smoutput ": 'eshift' ; eshift
       ctemp=. (- (shift&*))/ abscale * {. HTd
       temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
       tempr=. >./ temp
-smoutput ": 'HTd' ; HTd ; 'ctemp' ; ctemp ; 'temp' ; temp ; 'tempr' ; tempr
       temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr) } 1 , tempr ,: 1
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
-smoutput ": 'temp' ; temp ; 'istart' ; istart ; 'ctemp' ; ctemp
-smoutput 'label 90'
       NB. do an implicit-shift QZ sweep
       NB. initial Q
-smoutput ": 'fg' ; ctemp , ascale * (< 0 , istart + 1 0) { y
       cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { y
       NB. sweep
       j=. istart
       liosc=. (>: ilastm) th2lios j
       liosr=. (j + 2) th2lios ifrstm
-smoutput 'Verify(31): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
       while. j < ilast do.
-smoutput 'loop 150 J = ',":j
         lios=. j + 0 1
         NB. is a first iteration?
-smoutput ": '(4)before rotation subHT' ; (< a: ; lios ; liosc) { y
         if. j = istart do.
           y=. (< a: ; lios ; liosc) (cs & (rot &. |:)"2) upd y
-lioschead=. i.0
         else.
-smoutput ": 'fg' ; (< 0 ; lios ; ({. liosc)) { y
-          'y cs'=. (rot &. |:)"2 rotga y ; (< a: ; lios ; liosc) ; < < 0 ; a: ; 0
-lioschead=. {. liosc
+          'y cs'=. (rot &. |:) rotga y ; (< 0 ; lios ; liosc) ; < < a: ; 0
           liosc=. }. liosc
+          y=. (< 1 ; lios ; liosc) (cs & (rot &. |:)) upd y
         end.
-smoutput ": 'cs' ; cs
-smoutput ": '(4)after rotation subHT' ; (< a: ; lios ; lioschead,liosc) { y
         dQ1=. dQ1 , (+ cs) , lios
-smoutput 'Verify(33): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
         lios=. j + 1 0
+        'y cs'=. rot rotga y ; (< 1 ; liosr ; lios) ; _1
         NB. isn't a last iteration?
         if. j < <: ilast do.
           liosr=. liosr , j + 2
-          io=. _2
-        else.
-          io=. _1
         end.
-smoutput ": '(5)before rotation subHT' ; (< a: ; liosr ; lios) { y
-        'y cs'=. rot"2 rotga y ; (< a: ; liosr ; lios) ; < < 1 ; io
-smoutput ": '(5)after rotation subHT' ; (< a: ; liosr ; lios) { y
+        y=. (< 0 ; liosr ; lios) (cs & rot) upd y
         dZ1=. dZ1 , cs , lios
-smoutput 'Verify(36): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
         j=. >: j
       end.
-smoutput ": 'after loop 150 HT' ; y
-smoutput 'Verify(4): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
     end.
-smoutput 'Verify(5): HT vs. dQ*SP*dZ^H';HT +/^:3@:|@:- (y ((mp"2~ {.) (mp"2 ct@{:) ]) ((,:~idmat c HT) rotsclu"2 &: > dQ1 ; dZ1))
     jiter=. >: jiter
   end.
   NB. drop-through means non-convergence, set incorrect eigenvalues 0:ilast to NaN

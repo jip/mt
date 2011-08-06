@@ -89,17 +89,15 @@ NB. Miscellaneous
 
 morim=: >./"1 @: | @: +.  NB. monad: max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
 sgn=: (*!.0)`1:@.(0&=)    NB. monad: (if y<0 then -1 else 1 endif), for reals equiv. to: (0&(<:->))
-sgnr=: sgn @ (9 & o.)     NB. monad: sgn(Re(y))
 
 NB. ---------------------------------------------------------
 NB. lartgc1
 NB. algorithm 3 for case 1: f≠0, g≠0, neither f nor g too big
 NB. or small, minimal work
-NB. Note: (% sgnr) = (* sgnr)
 
 lartgc1=: 3 : 0
   'f2 g2'=. soris 'f g'=. y
-  d1=. (sgnr f) % %: f2 * fg2=. f2 + g2
+  d1=. % %: f2 * fg2=. f2 + g2
   fd1=. f * d1
   (f2 * d1) , (fd1 * + g) , (fd1 * fg2)
 )
@@ -183,8 +181,10 @@ NB.   G1=. 2 2 $ c , s , (- + s) , c
 NB.   G2=. |: G1
 NB.
 NB. Notes:
-NB. - models LAPACK's xLARTG described in [1] with fix
-NB.   described in [2]
+NB. - models LAPACK's xLARTG described in [1]
+NB.
+NB. TODO:
+NB. - make plane rotations continuous [2]
 NB.
 NB. References:
 NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. (2001) On
@@ -204,9 +204,7 @@ lartg=: 3 : 0
 
   if. scaleg = 0 do.
     NB. algorithm 2E for case g=0, f may be 0
-    c=. sgnr f
-    s=. 0
-    r=. c * f
+    'c s r'=. 1 0,f
 
   elseif. scalef = 0 do.
     NB. algorithm 2E for case f=0, g≠0
@@ -228,15 +226,15 @@ lartg=: 3 : 0
     iog=. {: iofg=. ROTINT0 I. scalefg  NB. io{f,g}={scalef,-scaleg}={{_1,0,1},{_1,0,1}}, pair {_1,_1} never takes place
     dscalefg=. iofg { ROTSCL00
     'fs gs'=. y * dscalefg
-    c=. sgnr f
-    s=. c * (iog { ROTSCL01) * ({. dscalefg) * (fs * + gs) % soris fs
-    r=. c * f
+    c=. 1
+    s=. (iog { ROTSCL01) * ({. dscalefg) * (fs * + gs) % soris fs
+    r=. f
 
   elseif. scalef < ROTSQRTEPS * scaleg do.
     NB. algorithm 7 for case 3: f≠0, g≠0, |f|^2 + |g|^2 rounds to |g|^2
     iofg=. ROTINT1 I. scalefg                  NB. io{f,g} = count{f,g}+2 = {_2,_1,0,1,2}+2 = {0,1,2,3,4}
     'f2 g2'=. soris 'fs gs'=. y * iofg { ROTSCL10
-    d1=. (sgnr f) % %: f2 * g2
+    d1=. % %: f2 * g2
     c=. ((-~/ iofg) { ROTSCL11) * d1 * f2      NB. (countf-countg)≤0 => form non-neg. io={0,1,2,3,4}, c *=  (z^2)^(countf-countg)
     s=. d1 * fs * + gs
     r=. (({: iofg) { ROTSCL12) * fs * d1 * g2  NB. r *= (z^2)^countg
@@ -456,7 +454,7 @@ NB.     http://www.jsoftware.com/pipermail/programming/2009-December/017071.html
 
 testlartg=: 3 : 0
   NB. implement algorithm 1
-  algo1=. 3 : 'if. 0 = {: y do. (sgn,0:,]) {. y elseif. 0 = {. y do. (0,(sgn@+),|) {: y elseif. do. try. ((d*|f),(sgnf*(+g)*d),(sgnf % d)) [ sgnf=. sgn f [ d=. (sgnr f) % %: (+/) soris ''f g''=. y catch. 3 # _. end. end.'
+  algo1=. 3 : 'if. 0 = {: y do. (sgn,0:,]) {. y elseif. 0 = {. y do. (0,(sgn@+),|) {: y elseif. do. try. ((d*|f),(sgnf*(+g)*d),(sgnf % d)) [ sgnf=. sgn f [ d=. % %: (+/) soris ''f g''=. y catch. 3 # _. end. end.'
 
   NB. exclude rows containing NaN from the table y
   xrNaN=. #~(-.@(+./)@|:@:(j./"1@(128!:5)@:+.))
@@ -479,7 +477,7 @@ NB. Description:
 NB.   Test rotation algorithms by predefined matrix
 NB.
 NB. Syntax:
-NB.   testtri y
+NB.   testrot y
 NB. where
 NB.   y - any noun
 NB.

@@ -379,7 +379,7 @@ hgezq=: 1 : 0
     jiter=. >: jiter
   end.
   NB. drop-through means non-convergence, set incorrect eigenvalues 0:ilast to NaN
-  ((_. ; 0 0 , >: ilast) setdiag"2 y) ; ,~ a:
+  ((_. ; 0 0 , >: ilast) setdiag"2 y) ; dQ1 ; dZ1
 )
 
 hgeqz=: 1 : 0
@@ -603,7 +603,7 @@ hgeqz=: 1 : 0
     jiter=. >: jiter
   end.
   NB. drop-through means non-convergence, set incorrect eigenvalues 0:ilast to NaN
-  ((_. ; 0 0 , >: ilast) setdiag"2 y) ; ,~ a:
+  ((_. ; 0 0 , >: ilast) setdiag"2 y) ; dQ1 ; dZ1
 )
 
 NB. ---------------------------------------------------------
@@ -717,7 +717,7 @@ NB.   D - n×n-matrix, general
 NB.   n=. # C
 NB.   hs=. 0 , n
 NB.   I=. idmat n
-NB.   'B Z0'=. (trl ,: unglq) @ gelqf D
+NB.   'B Z0'=. (trl@:(}:"1) ,: unglq) @ gelqf D
 NB.   A=. C (mp ct) Z0
 NB.   'H T Q1 Z1'=. hs gghrdlvv A , B , I ,: Z0
 NB.   ab=. hs hgezqenn H ,: T
@@ -839,7 +839,7 @@ NB.   D - n×n-matrix, general
 NB.   n=. # C
 NB.   hs=. 0 , n
 NB.   I=. idmat n
-NB.   'Q0 B'=. (ungqr ,: tru) @ geqrf D
+NB.   'Q0 B'=. (ungqr ,: tru@}:) @ geqrf D
 NB.   A=. Q0 (mp~ ct)~ C
 NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: I
 NB.   ab=. hs hgeqzenn H ,: T
@@ -934,8 +934,8 @@ testhgeq=: 3 : 0
                                                                                                   NB. R: (] cberr01 ct) : (berr0 , berr1) for R
   aberr23=. 1 : '((<. (u adiff2))~ % (FP_PREC * ])) getn'                                         NB. L: (mp~ aberr23) : (berr2 , berr3) for L
                                                                                                   NB. R: (mp  aberr23) : (berr2 , berr3) for R
-  berrl=: (>./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prep) f.
-  berru=: (>./ @ ((] cberr01 ct) , (mp  aberr23)) @ prep) f.
+  vberrl=: (>./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prep) f.
+  vberru=: (>./ @ ((] cberr01 ct) , (mp  aberr23)) @ prep) f.
 
   I=. idmat c y
   HTl=. (gghrdlnn~ (0,c)) @ ((,: trl)/) y
@@ -950,7 +950,7 @@ testhgeq=: 3 : 0
   ('hgezqsnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
   ('hgezqsnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
   ('hgezqsvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`berrl )) HTl , ,:~ I
+  ('hgezqsvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`vberrl)) HTl , ,:~ I
   ('hgeqzenn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
   ('hgeqzenv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
   ('hgeqzevn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
@@ -958,9 +958,9 @@ testhgeq=: 3 : 0
   ('hgeqzsnn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
   ('hgeqzsnv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
   ('hgeqzsvn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`berru )) HTu , ,:~ I
+  ('hgeqzsvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`vberru)) HTu , ,:~ I
 
-  erase 'cdiff1 adiff2 berrl berru'
+  erase 'cdiff1 adiff2 vberrl vberru'
 
   EMPTY
 )

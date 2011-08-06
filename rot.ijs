@@ -353,7 +353,7 @@ NB. TODO:
 NB. - aggregate non-intersecting groups of vectors to change
 NB.   them simultaneously
 
-rotscll=: (4 : 0) ^: (+:&(0=#))
+rotscll=: (4 : 0)
   i=. 0
   while. i < # y do.                    NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y
@@ -370,7 +370,7 @@ rotscll=: (4 : 0) ^: (+:&(0=#))
   x
 )
 
-rotsclu=: (4 : 0) ^: (+:&(0=#))
+rotsclu=: (4 : 0)
   i=. 0
   while. i < # y do.                    NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y

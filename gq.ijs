@@ -39,7 +39,7 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-gqberr=: 2 : '((norm1_mt_@(<: upddiag_mt_)@(u ct_mt_)) % (FP_EPS_mt_ * v)) @ ]'  NB. conj. to form verb to calc. berr
+gqvberr=: 2 : '((norm1_mt_@(<: upddiag_mt_)@(u ct_mt_)) % (FP_EPS_mt_ * v)) @ ]'  NB. conj. to form verb to calc. berr
 
 NB. ---------------------------------------------------------
 NB. Blocked code constants
@@ -525,10 +525,10 @@ NB.     berr := ||Q^H * Q - I|| / (ε * m)
 testungq=: 3 : 0
   rcond=. ((_."_)`gecon1 @. (=/@$)) y  NB. meaninigful for square matrices only
 
-  ('unglq' tmonad (gelqf`]`(rcond"_)`(_."_)`(mp  gqberr c))) y
-  ('ungql' tmonad (geqlf`]`(rcond"_)`(_."_)`(mp~ gqberr #))) y
-  ('ungqr' tmonad (geqrf`]`(rcond"_)`(_."_)`(mp~ gqberr #))) y
-  ('ungrq' tmonad (gerqf`]`(rcond"_)`(_."_)`(mp  gqberr c))) y
+  ('unglq' tmonad (gelqf`]`(rcond"_)`(_."_)`(mp  gqvberr c))) y
+  ('ungql' tmonad (geqlf`]`(rcond"_)`(_."_)`(mp~ gqvberr #))) y
+  ('ungqr' tmonad (geqrf`]`(rcond"_)`(_."_)`(mp~ gqvberr #))) y
+  ('ungrq' tmonad (gerqf`]`(rcond"_)`(_."_)`(mp  gqvberr c))) y
 
   EMPTY
 )
@@ -551,8 +551,8 @@ NB. - for ungql, ungqr :
 NB.     berr := ||Q^H * Q - I|| / (ε * m)
 
 testunghr=: 3 : 0
-  ('unghrl' tmonad ((gehrdl~ (0,#))`]`(uncon1@])`(_."_)`(mp  gqberr c))) y
-  ('unghru' tmonad ((gehrdu~ (0,#))`]`(uncon1@])`(_."_)`(mp~ gqberr #))) y
+  ('unghrl' tmonad ((gehrdl~ (0,#))`]`(uncon1@])`(_."_)`(mp  gqvberr c))) y
+  ('unghru' tmonad ((gehrdu~ (0,#))`]`(uncon1@])`(_."_)`(mp~ gqvberr #))) y
 
   EMPTY
 )

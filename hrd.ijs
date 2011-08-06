@@ -812,8 +812,8 @@ testgghrd=: 3 : 0
                                                                                                   NB. R: (] cberr01 ct) : (berr0 , berr1) for R
   aberr23=. 1 : '((<. (u adiff2))~ % (FP_PREC * ])) getn'                                         NB. L: (mp~ aberr23) : (berr2 , berr3) for L
                                                                                                   NB. R: (mp  aberr23) : (berr2 , berr3) for R
-  berrl=: (>./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prep) f.
-  berru=: (>./ @ ((] cberr01 ct) , (mp  aberr23)) @ prep) f.
+  vberrl=: (>./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prep) f.
+  vberru=: (>./ @ ((] cberr01 ct) , (mp  aberr23)) @ prep) f.
 
   I=. idmat c y
   ABl=. (,: trl)/ y
@@ -824,13 +824,13 @@ testgghrd=: 3 : 0
   ('gghrdlnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
   ('gghrdlnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
   ('gghrdlvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`berrl )) ABl , ,:~ I
+  ('gghrdlvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`vberrl)) ABl , ,:~ I
   ('gghrdunn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu
   ('gghrdunv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
   ('gghrduvn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`berru )) ABu , ,:~ I
+  ('gghrduvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`vberru)) ABu , ,:~ I
 
-  erase 'cdiff1 adiff2 berrl berru'
+  erase 'cdiff1 adiff2 vberrl vberru'
 
   EMPTY
 )

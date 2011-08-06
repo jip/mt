@@ -43,6 +43,7 @@ math/mt - change history
  * bal: minor fix in code; exp: error fixed; template,trf,tri: minor fixes in comments
 
 == 0.6.8 ==
+ GNEP solver added
  * bak: appnotes for generalized case
  * bal: new interfaces and test for generalized case
  + eq: interfaces and test for generalized case

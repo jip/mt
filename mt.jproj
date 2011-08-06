@@ -7,7 +7,9 @@ bak.ijs
 bal.ijs
 cond.ijs
 dbg.ijs
-eqr.ijs
+eq.ijs
+ev.ijs
+evc.ijs
 exp.ijs
 fork.ijs
 gq.ijs
@@ -25,6 +27,8 @@ scl.ijs
 sm.ijs
 struct.ijs
 sv.ijs
+template.ijs
+test.ijs
 trf.ijs
 tri.ijs
 trs.ijs

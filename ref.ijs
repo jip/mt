@@ -16,7 +16,7 @@ NB. testlarfb  Test larfbxxxx by general matrix given
 NB. testref    Adv. to make verb to test larfxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.1 2010-06-07
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.

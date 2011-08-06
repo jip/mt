@@ -293,7 +293,7 @@ NB.               isolated eigenvalues in diagonal
 NB.   Bu00 Bu22 - square upper triangular matrices with
 NB.               isolated eigenvalues in diagonal
 NB.
-NB. Assertions (with appropriate comparison tolerance):
+NB. Assertions:
 NB.   Pinv -: |: P
 NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
 NB.   B -: p fp A
@@ -411,18 +411,11 @@ NB. Notes:
 NB. - models LAPACK's xGEBAL('S'), with following difference:
 NB.   ra and ca never get value from diagonal element
 NB.
-NB. TODO:
-NB. - consider parallel approach described in [2]
-NB.
 NB. References:
 NB. [1] Kressner, D. 2004. Numerical methods and software for
 NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany.
-NB. [2] P. R. Amestoy, I. S. Duff, D. Ruiz, and B. Uçar.
-NB.     A parallel matrix scaling algorithm. May 6, 2008.
-NB.     Technical report RAL-TR-2008-013
-NB.     http://www.numerical.rl.ac.uk/reports/reports.html
 
 gebals=: 3 : 0
   'B p hs'=. y

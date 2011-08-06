@@ -1,20 +1,21 @@
 1. replace v&}. v&{. by s&}."1 s&{."1 and so on (qg)
 
-2. (gghrd,ggbak,ggbal,hgeqz,tgevc) -> ggev -> [1]
+2. (lacn2,tgexc,tgsyl) -> tgsen -> gges
 
-3. (lacn2,tgexc,tgsyl) -> tgsen
+3. (gges,tgsyl) -> [1]
 
-4. (ggbak,ggbal,gghrd,hgeqz,tgevc,tgsen) -> gges
+4. Implement blocked generalized Hessenberg reduction [2]
+   in gghrdxxx
 
-5. (gges,tgsyl) -> [2]
-
-
-[1] Pradeep Misra and Paul Van Dooren and Andras Varga.
-    Computation of Structural Invariants of Generalized State Space Systems.
-    Automatica, 1994, vol. 30.
-    DOI: 10.1016/0005-1098(94)90052-3
-
-[2] Gerdin, Markus.
+[1] Gerdin, Markus.
     Computation of a canonical form for linear differential-algebraic equations.
     Department of Electrical Engineering, Linköping University, 2004
     LiTH-ISY-R-2602
+
+[2] Bo Kågström, Daniel Kressner, Enrique S.
+    Quintana-Ortí, and Gregorio Quintana-Ortí
+    Blocked Algorithms for the Reduction to
+    Hessenberg-Triangular Form Revisited.
+    February 2008.
+    LAPACK Working Note 198
+    http://www.netlib.org/lapack/lawns/downloads/

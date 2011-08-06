@@ -706,25 +706,23 @@ NB. Notes:
 NB. - non-converged eigenvalues are set to NaN
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   ab -: diag"2 SP
-NB.   Q2 -: dQ1 mp Q1
-NB.   Z2 -: dZ1 mp Z1
-NB.   HT -: dQ1 (mp~ ct)~"2 SP mp"2 dZ1
-NB.   CD -: Q2 (mp~ ct)~"2 SP mp"2 Z2
+NB.   ab       -: diag"2 (S ,: P)
+NB.   Q2       -: dQ1 mp Q1
+NB.   Z2       -: dZ1 mp Z1
+NB.   (H ,: T) -: dQ1 (mp~ ct)~"2 (S ,: P) mp"2 dZ1
+NB.   (C ,: D) -: Q2 (mp~ ct)~"2 (S ,: P) mp"2 Z2
 NB. where
-NB.   'C D'=. CD
-NB.   n=. c CD
+NB.   C - n×n-matrix, general
+NB.   D - n×n-matrix, general
+NB.   n=. # C
 NB.   hs=. 0 , n
 NB.   I=. idmat n
 NB.   'B Z0'=. (trl ,: unglq) @ gelqf D
 NB.   A=. C (mp ct) Z0
-NB.   AB=. A ,: B
-NB.   'H T Q1 Z1'=. hs gghrdlvv AB , I ,: Z0
-NB.   HT=. H ,: T
-NB.   ab=. hs hgezqenn HT
-NB.   'S P Q2 Z2'=. hs hgezqsvv HT , Q1 ,: Z1
-NB.   'S P dQ1 dZ1'=. hs hgezqsvv HT , ,:~ I
-NB.   SP=. S ,: P
+NB.   'H T Q1 Z1'=. hs gghrdlvv A , B , I ,: Z0
+NB.   ab=. hs hgezqenn H ,: T
+NB.   'S P Q2 Z2'=. hs hgezqsvv H , T , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgezqsvv H , T , ,:~ I
 NB.
 NB. Application:
 NB. - detect case of non-convergence (0=converged,
@@ -830,25 +828,23 @@ NB. - hgeqzsvn models LAPACK's xHGEQZ('S','V','N')
 NB. - hgeqzsvv models LAPACK's xHGEQZ('S','V','V')
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   ab -: diag"2 SP
-NB.   Q2 -: Q1 mp dQ1
-NB.   Z2 -: Z1 mp dZ1
-NB.   HT -: dQ1 mp"2 SP (mp ct)"2 dZ1
-NB.   CD -: Q2 mp"2 SP (mp ct)"2 Z2
+NB.   ab       -: diag"2 (S ,: P)
+NB.   Q2       -: Q1 mp dQ1
+NB.   Z2       -: Z1 mp dZ1
+NB.   (H ,: T) -: dQ1 mp"2 (S ,: P) (mp ct)"2 dZ1
+NB.   (C ,: D) -: Q2 mp"2 (S ,: P) (mp ct)"2 Z2
 NB. where
-NB.   'C D'=. CD
-NB.   n=. c CD
+NB.   C - n×n-matrix, general
+NB.   D - n×n-matrix, general
+NB.   n=. # C
 NB.   hs=. 0 , n
 NB.   I=. idmat n
 NB.   'Q0 B'=. (ungqr ,: tru) @ geqrf D
 NB.   A=. Q0 (mp~ ct)~ C
-NB.   AB=. A ,: B
-NB.   'H T Q1 Z1'=. hs gghrduvv AB , Q0 ,: I
-NB.   HT=. H ,: T
-NB.   ab=. hs hgeqzenn HT
-NB.   'S P Q2 Z2'=. hs hgeqzsvv HT , Q1 ,: Z1
-NB.   'S P dQ1 dZ1'=. hs hgeqzsvv HT , ,:~ I
-NB.   SP=. S ,: P
+NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: I
+NB.   ab=. hs hgeqzenn H ,: T
+NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgeqzsvv H , T , ,:~ I
 NB.
 NB. Application:
 NB. - model LAPACK's xHGEQZ('E','N','I'):

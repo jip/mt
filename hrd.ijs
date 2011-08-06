@@ -609,19 +609,19 @@ NB.   Z0   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   Q1 -: dQ0 mp Q0
-NB.   CD -: Q1 (mp~ ct)~"2 HT mp"2 Z1
+NB.   Q1       -: dQ0
+NB.   Z1       -: dZ0 mp Z0
+NB.   (C ,: D) -: Q1 (mp~ ct)~"2 (H ,: T) mp"2 Z1
 NB. where
-NB.   'C D'=. CD
-NB.   n=. c CD
+NB.   C - n×n-matrix, general
+NB.   D - n×n-matrix, general
+NB.   n=. # C
 NB.   hs=. 0 , n
 NB.   I=. idmat n
 NB.   'B Z0'=. (trl ,: unglq) @ gelqf D
 NB.   A=. C (mp ct) Z0
-NB.   AB=. A ,: B
-NB.   'H T Q1 Z1'=. hs gghrdlvv AB , I ,: Z0
-NB.   'H T dQ0 dZ0'=. hs gghrdlvv AB , ,:~ I
-NB.   HT=. H ,: T
+NB.   'H T Q1 Z1'=. hs gghrdlvv A , B , I ,: Z0
+NB.   'H T dQ0 dZ0'=. hs gghrdlvv A , B , ,:~ I
 NB.
 NB. TODO:
 NB. - implement blocked version
@@ -685,19 +685,19 @@ NB. - gghrduvn models LAPACK's xGGHRD('V','N')
 NB. - gghrduvv models LAPACK's xGGHRD('V','V')
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   Q1 -: Q0 mp dQ0
-NB.   CD -: Q1 mp"2 HT (mp ct)"2 Z1
+NB.   Q1       -: Q0 mp dQ0
+NB.   Z1       -: dZ0
+NB.   (C ,: D) -: Q1 mp"2 (H ,: T) (mp ct)"2 Z1
 NB. where
-NB.   'C D'=. CD
-NB.   n=. c CD
+NB.   C - n×n-matrix, general
+NB.   D - n×n-matrix, general
+NB.   n=. # C
 NB.   hs=. 0 , n
 NB.   I=. idmat n
 NB.   'Q0 B'=. (ungqr ,: tru) @ geqrf D
 NB.   A=. Q0 (mp~ ct)~ C
-NB.   AB=. A ,: B
-NB.   'H T Q1 Z1'=. hs gghrduvv AB , Q0 ,: I
-NB.   'H T dQ0 dZ0'=. hs gghrduvv AB , ,:~ I
-NB.   HT=. H ,: T
+NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: I
+NB.   'H T dQ0 dZ0'=. hs gghrduvv A , B , ,:~ I
 NB.
 NB. Application:
 NB. - model LAPACK's xGGHRD('N','I'):

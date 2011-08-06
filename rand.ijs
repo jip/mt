@@ -595,12 +595,9 @@ NB. [1] Francesco Mezzadri (2007). How to generate random
 NB.     matrices from the classical compact groups.
 NB.     Notices of the AMS, Vol. 54 (2007), 592-604
 NB.     http://arxiv.org/abs/math-ph/0609050v2
-NB.
-NB. Notes:
-NB. - current geqrf implementation provides d≥0, so since R
-NB.   isn't singular, hence d>0 and Λ is identity matrix
 
 unmat=: 1 : 'ungqr_mt_ @ geqrf_mt_ @ u @ (2 & $)'
+NB. unmat=: ((* " 1) ((% |) @ ((<0 1) & |:))) & >/ @ geqrf vu2y
 
 NB. ---------------------------------------------------------
 NB. spmat

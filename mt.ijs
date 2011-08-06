@@ -127,12 +127,11 @@ require '~addons/math/mt/ref.ijs'     NB. Reflection
 require '~addons/math/mt/rot.ijs'     NB. Rotation
 require '~addons/math/mt/gq.ijs'      NB. Generate Q from its factored form
 require '~addons/math/mt/mq.ijs'      NB. Multiply by Q represented in factored form
-NB. require '~addons/math/mt/scl.ijs'     NB. Scaling
+require '~addons/math/mt/scl.ijs'     NB. Scaling
 require '~addons/math/mt/sm.ijs'      NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
-NB. require '~addons/math/mt/eqr.ijs'     NB. Eigenvalues and Schur form of structured matrix
-require '~addons/math/mt/eqz.ijs'     NB. Eigenvalues and Schur form of pair of structured matrices
+require '~addons/math/mt/eq.ijs'      NB. Eigenvalues and Schur form
 require '~addons/math/mt/evc.ijs'     NB. Eigenvectors
 require '~addons/math/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~addons/math/mt/qf.ijs'      NB. Orthogonal factorization

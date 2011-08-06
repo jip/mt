@@ -261,7 +261,8 @@ NB.   'B p hs'=. gebalxp A
 NB. where
 NB.   A  - n×n-matrix
 NB.   B  - n×n-matrix with isolated eigenvalues, being A
-NB.        with permuted rows and columns
+NB.        with permuted rows and columns, see storage
+NB.        layout
 NB.   p  - n-vector, full permutation of A
 NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
 NB.        defines submatrix B11 position in B
@@ -296,9 +297,9 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   Pinv -: |: P
 NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
 NB.   B -: p fp A
-NB.   B11 -: (,.~ hs) (] ;. 0) B
+NB.   B11 -: (,.~ hs) ] ;. 0 B
 NB. where
-NB.   'B hs p'=. gebalxp A
+NB.   'B p hs'=. gebalxp A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB.
@@ -490,16 +491,19 @@ NB.   d  - n-vector, diagonal of scaling matrix D (see
 NB.        gebals)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   p -: pp
+NB.   hs -: hsp
 NB.   Pinv -: |: P
 NB.   Dinv -: diagmat % d
-NB.   B -: P mp A mp Pinv
+NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
+NB.   B -: p fp A
 NB.   C -: Dinv mp B mp D
 NB.   C -: B (*"1 % ]) d
 NB.   B11 -: (,.~ hs) (] ;. 0) B
 NB.   C11 -: (,.~ hs) (] ;. 0) C
 NB. where
+NB.   'B pp hsp'=. gebalxp A
 NB.   'C p hs d'=. gebalx A
-NB.   B=. p fp A
 NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB.   D=. diagmat d
@@ -512,10 +516,43 @@ geball=: gebals @ geballp
 gebalu=: gebals @ gebalup
 
 NB. ---------------------------------------------------------
-NB. ggball
-NB. ggbalu
-
-NB. 'CD plr hs'=. ggbalup AB
+NB. ggballp
+NB. ggbalup
+NB.
+NB. Description:
+NB.   Permute general square matrices A and B by a similarity
+NB.   transformation to isolate eigenvalues:
+NB.     C = Pl * A * Pr
+NB.     D = Pl * B * Pr
+NB.
+NB. Syntax:
+NB.   'CD plr hs'=. ggbalxp AB
+NB. where
+NB.   AB  -: A ,: B
+NB.   CD  -: C ,: D
+NB.   A,B - n×n-matrix
+NB.   C,D - n×n-matrix with isolated eigenvalues, being A and
+NB.          B with permuted rows and columns, for storage
+NB.          layout see gebalxp
+NB.   plr -: pl ,: pr
+NB.   pl  - n-vector, rows permutation of A and B
+NB.   pr  - n-vector, columns permutation of A and B
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
+NB.         defines submatrices C11 and D11 position in C and
+NB.         D, respectively
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   Prinv -: |: Pr
+NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
+NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr
+NB.   CD11 -: (0 2 ,. ,.~ hs) ] ;. 0 CD
+NB. where
+NB.   'CD plr hs'=. ggbalxp AB
+NB.   'Pl Pr'=. p2P"1 plr
+NB.   Prinv=. %. Pr
+NB.
+NB. Notes:
+NB. - ggbalup implements LAPACK's xGGBAL('P')
 
 ggbalup=: 3 : 0
   n=. c y
@@ -535,9 +572,10 @@ ggbalup=: 3 : 0
         pr=. nst C. :: ] pr
         y=. nst C."1 :: ] y
         s=. <: s
-        i=. h+s
+        i=. h+s-1
+      case. do.
+        i=. <: i
     end.
-    i=. <: i
   end.
   j=. h
   while. j < (h+s) do.
@@ -552,23 +590,67 @@ ggbalup=: 3 : 0
         nst=. < (h + {. lios) , h
         pl=. nst C. :: ] pl
         y=. nst C."2 :: ] y
-        j=. h
-        h=. >: h
+        j=. h=. >: h
         s=. <: s
+        j=. h
+      case. do.
+        j=. >: j
     end.
-    j=. >: j
   end.
   y ; (pl ,: pr) ; (h , s)
 )
 
-NB. 'EF plr hs dlr'=. ggbalus CD ; plr ; hs
+NB. ---------------------------------------------------------
+NB. ggballs
+NB. ggbalus
+NB.
+NB. Description:
+NB.   Apply a diagonal similarity transformation:
+NB.     E = Dl * C * Dr
+NB.     F = Dl * D * Dr
+NB.   to make the 1-norms of each row of E11 (F11) and its
+NB.   corresponding column as close as possible
+NB.
+NB. Syntax:
+NB.   'EF plr hs dlr'=. ggbalxs CD ; plr ; hs
+NB. where
+NB.   CD  -: C ,: D
+NB.   C,D - n×n-matrix with isolated eigenvalues, the output
+NB.        of ggbalxp
+NB.   plr - some not changing parameter, the output of
+NB.         ggbalxp
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
+NB.         defines submatrices E11 and F11 position in E and
+NB.         F, respectively, the output of ggbalxp
+NB.   EF  -: E ,: F
+NB.   E   - n×n-matrix, scaled version of C
+NB.   F   - n×n-matrix, scaled version of D
+NB.   dlr -: dl ,: dr
+NB.   dl  - n-vector, diagonal of scaling matrix Dl
+NB.   dr  - n-vector, diagonal of scaling matrix Dr
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   EF -: Dl mp"2 CD mp"2 Dr
+NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
+NB.   EF11 -: (0 2 ,. ,.~ hs) ] ;. 0 EF
+NB. where
+NB.   'EF plr hs dlr'=. ggbalxs CD ; plr ; hs
+NB.   'Dl Dr'=. diagmat"1 dlr
+NB.
+NB. Application:
+NB. - scale non-permuted matrices A and B (default p and hs),
+NB.   i.e. balance without eigenvalues isolating step:
+NB.   'EF plr hs dlr'=. ggbalxs (];(a:"_);(0,c)) AB
+NB.
+NB. Notes:
+NB. - ggbalus implements LAPACK's xGGBAL('S')
 
 ggbalus=: 3 : 0
   m3x=. - 3&*
   mix=. ((* +/@:(+/"1))~ {.) + ((+/@:(+/@#"1)) {:)
 
   'CD plr hs'=. y
-  nzCDcut=. 0 ~: CDcut=. (,.~ hs) ] ;. 0 CD
+  nzCDcut=. 0 ~: CDcut=. (0 2 ,. ,.~ hs) ] ;. 0 CD
   'h s'=. hs
   w10=. w23=. dlr=. (2 , s) $ 0
 
@@ -578,7 +660,6 @@ ggbalus=: 3 : 0
   beta=. k=. 0
   NB. start generalized conjugate gradient iteration
   while. k < s + 2 do.
-    smoutput 'loop(2), k = ' , ": k
     gamma=. (+&(mp~))/ w45
     ewewc=. +/"1 w45
     gamma=. (coef , - coef2 , coef5) mp (gamma , (((+&*:),(*:@-))/ ewewc))
@@ -598,25 +679,71 @@ ggbalus=: 3 : 0
     k=. >: k
   end.
   NB. end generalized conjugate gradient iteration
-  'lsfmin lsfmax'=. <. 1 0 + GGBALSCLFAC ^. (],%) FP_SFMIN
-  dlr=. dlr ([ + copysign) 0.5
+  lsfmin=. >. >: GGBALSCLFAC ^.   FP_SFMIN
+  lsfmax=. <.    GGBALSCLFAC ^. % FP_SFMIN
   irab=. h + (0 2 ,. hs ,. (h , _)) liofmax"1 ;. 0 CD
-  icab=. (0 2 ,. (0 , (h + s)) ,. hs) liofmax"1@:|: ;. 0 CD
-  rab=. >./    | (<"1 irab ,.~"1 (dhs2lios hs)) {"1 2 CD
-  cab=. >./ |: | (<"1 icab ,. "1 (dhs2lios hs)) {"1 2 CD
-  lxab=. <. >: GGBALSCLFAC ^. FP_SFMIN + rab ,: cab
-  dlr=. GGBALSCLFAC ^  (lsfmax <. (lsfmax - lxab) <. lsfmin >. dlr
-  NB. adjust dlr's shape
-  dlr=. (-h) |. (c CD) {."1 dlr
-  NB. row scaling of matrices C and D
-  CD=. ({. dlr) *"1 2 CD
-  NB. column scaling of matrices C and D
-  CD=. ({: dlr) *"1 1 CD
+  icab=. (0 2 ,. (0 , (h + s)) ,. hs) liofmax"1@:(|:"2) ;. 0 CD
+  rab=. >./ | (<"1 irab ,.~"1 (dhs2lios hs)) {"1 2 CD
+  cab=. >./ | (<"1 icab ,. "1 (dhs2lios hs)) {"1 2 CD
+  lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab ,: cab
+  dlr=. GGBALSCLFAC ^ lsfmax <. (lsfmax - lxab) <. lsfmin >. <. 0.5 + dlr
+  dlr=. (-h) |."1 (c CD) {.!.1"1 dlr  NB. adjust dlr's shape
+  CD=. ({. dlr) *"1 2 CD              NB. row scaling of matrices C and D
+  CD=. ({: dlr) *"1 1 CD              NB. column scaling of matrices C and D
   CD ; plr ; hs ; dlr
 )
 
-NB. 'EF plr hs dlr'=. ggball AB
-NB. 'EF plr hs dlr'=. ggbalu AB
+NB. ---------------------------------------------------------
+NB. ggball
+NB. ggbalu
+NB.
+NB. Description:
+NB.   Balance a general square matrices A abd B. This
+NB.   involves, first, isolating eigenvalues (see ggbalxp):
+NB.     C = Pl * A * Pr
+NB.     D = Pl * B * Pr
+NB.   and second, making the rows and columns of E11 (F11) as
+NB.   close in 1-norm as possible (see ggbalxs):
+NB.     E = Dl * C * Dr
+NB.     F = Dl * D * Dr
+NB.
+NB. Syntax:
+NB.   'EF plr hs dlr'=. ggbalx AB
+NB. where
+NB.   AB  -: A ,: B
+NB.   EF  -: E ,: F
+NB.   plr -: pl ,: pr
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
+NB.         defines submatrices E11 and F11 position in E and
+NB.         F, respectively (see ggbalxp)
+NB.   dlr -: dl ,: dr
+NB.   A,B - n×n-matrix
+NB.   E   - n×n-matrix, balanced version of A
+NB.   F   - n×n-matrix, balanced version of B
+NB.   pl  - n-vector, rows permutation of A and B
+NB.   pr  - n-vector, columns permutation of A and B
+NB.   dl  - n-vector, diagonal of scaling matrix Dl
+NB.   dr  - n-vector, diagonal of scaling matrix Dr
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   plr -: plrp
+NB.   hs -: hsp
+NB.   Prinv -: |: Pr
+NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
+NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr
+NB.   EF -: Dl mp"2 CD mp"2 Dr
+NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
+NB.   CD11 -: (0 2 ,. ,.~ hs) ] ;. 0 CD
+NB.   EF11 -: (0 2 ,. ,.~ hs) ] ;. 0 EF
+NB. where
+NB.   'CD plrp hsp'=. ggbalxp AB
+NB.   'EF plr hs dlr'=. ggbalx AB
+NB.   'Pl Pr'=. p2P"1 plr
+NB.   Prinv=. %. Pr
+NB.   'Dl Dr'=. diagmat"1 dlr
+NB.
+NB. Notes:
+NB. - ggbalu implements LAPACK's xGGBAL('B')
 
 ggball=: ggballs @ ggballp
 ggbalu=: ggbalus @ ggbalup

@@ -192,6 +192,8 @@ test=: 1 : 0
   (u testsm_mt_ ) y   NB. square matrices with size ≤ 500 only
 
   NB. mid-level algorithms
+  (u testeq_mt_ ) y   NB. square matrices only
+  (u testevc_mt_) y   NB. square matrices only
   (u testhrd_mt_) y   NB. square matrices only
   (u testqf_mt_ ) y
   (u testtrf_mt_) y
@@ -199,6 +201,7 @@ test=: 1 : 0
   (u testtrs_mt_) y   NB. square matrices only
 
   NB. hi-level algorithms
+  (u testev_mt_ ) y   NB. square matrices only
   (u testexp_mt_) y   NB. square matrices only
   (u testpow_mt_) y   NB. square matrices only
   (u testsv_mt_ ) y   NB. square matrices only

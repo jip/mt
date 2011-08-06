@@ -10,7 +10,7 @@ NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
 NB. ms        Minimum in sum of vectors
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -66,6 +66,10 @@ NB.          is called as:
 NB.             Eupd=. vapp E
 NB.   E    = rank-1 array (e0,e1,...)
 NB.   Eupd = rank-1 array (e0upd,e1upd,...)
+NB.
+NB. Application:
+NB. - process each table in the report individually:
+NB.     0 1 2 ((+: &. +:)`(-: &. -:)`(*: &. +:) ag) i. 3 4 4
 NB.
 NB. References:
 NB. [1] [Jforum] gerund apply

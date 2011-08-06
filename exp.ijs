@@ -12,7 +12,7 @@ NB.            given
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.6.4 2010-06-11
+NB. Version: 0.6.8 2010-11-30
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -322,7 +322,7 @@ testheexp=: 3 : 0
     NB.   to force A to be negative definite, this will avoid
     NB.   NaN error in heexp
     NB. - save adjusted boxed duplet back into y
-    y=. ((j./@(*"1 (-@*@{.))@:|:@:+.&.>)`] ag) heev_jlapack_ y
+    y=. (j./@(*"1 (-@*@{.))@:|:@:+.&.>)`] ag heev_jlapack_ y
   catch.
     y=. _.
   end.

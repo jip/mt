@@ -561,10 +561,10 @@ gehrdu=: 4 : 0
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
-NB. gghrdlnn        HT=.   hs gghrdlnn A ,: B
-NB. gghrdlnv        HTZ=.  hs gghrdlnv A , B ,: Z1
-NB. gghrdlvn        HTQ=.  hs gghrdlvn A , B ,: Q1
-NB. gghrdlvv        HTQZ=. hs gghrdlvv A , B , Q1 ,: Z1
+NB. gghrdlnn        'H T'=.     hs gghrdlnn A ,: B
+NB. gghrdlnv        'H T Z'=.   hs gghrdlnv A , B ,: Z1
+NB. gghrdlvn        'H T Q'=.   hs gghrdlvn A , B ,: Q1
+NB. gghrdlvv        'H T Q Z'=. hs gghrdlvv A , B , Q1 ,: Z1
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized lower
@@ -594,10 +594,6 @@ NB.          position in matrices A and B, respectively, see
 NB.          geballp and gehrdl
 NB.   A    - n×n-matrix, general
 NB.   B    - n×n-matrix, lower triangular
-NB.   HT   -: H ,: T
-NB.   HTQ  -: HT , Q
-NB.   HTZ  -: HT , Z
-NB.   HTQZ -: HTQ , Z
 NB.   H    - n×n-matrix, lower Hessenberg inside the submatrix
 NB.          H[h:h+s-1,h:h+s-1], and lower triangular outside
 NB.   T    - n×n-matrix, lower triangular
@@ -610,17 +606,17 @@ NB.
 NB. TODO:
 NB. - implement blocked version
 
-gghrdlnn=: 0 {:: gghrdl
-gghrdlnv=: ({: @ ]) ((0 {:: ]) , (rotscll (2 {:: ]))) (gghrdl }:)
-gghrdlvn=: ({: @ ]) ((0 {:: ]) , (rotscll (1 {:: ]))) (gghrdl }:)
-gghrdlvv=: (2 }. ]) ((0 {:: ]) , (rotscll &: >"2 0 }.)) (gghrdl (2 & {.))
+gghrdlnn=: [: : (0 {:: gghrdl)
+gghrdlnv=: [: : (({: @ ]) ((0 {:: ]) , (rotscll (2 {:: ]))) (gghrdl }:))
+gghrdlvn=: [: : (({: @ ]) ((0 {:: ]) , (rotscll (1 {:: ]))) (gghrdl }:))
+gghrdlvv=: [: : ((2 }. ]) ((0 {:: ]) , (rotscll &: >"2 0 }.)) (gghrdl (2 & {.)))
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
-NB. gghrdunn        HT=.   hs gghrdunn A ,: B
-NB. gghrdunv        HTZ=.  hs gghrdunv A , B ,: Z1
-NB. gghrduvn        HTQ=.  hs gghrduvn A , B ,: Q1
-NB. gghrduvv        HTQZ=. hs gghrduvv A , B , Q1 ,: Z1
+NB. gghrdunn        'H T'=.     hs gghrdunn A ,: B
+NB. gghrdunv        'H T Z'=.   hs gghrdunv A , B ,: Z1
+NB. gghrduvn        'H T Q'=.   hs gghrduvn A , B ,: Q1
+NB. gghrduvv        'H T Q Z'=. hs gghrduvv A , B , Q1 ,: Z1
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
@@ -650,10 +646,6 @@ NB.          position in matrices A and B, respectively, see
 NB.          gebalup and gehrdu
 NB.   A    - n×n-matrix, general
 NB.   B    - n×n-matrix, upper triangular
-NB.   HT   -: H ,: T
-NB.   HTQ  -: HT , Q
-NB.   HTZ  -: HT , Z
-NB.   HTQZ -: HTQ , Z
 NB.   H    - n×n-matrix, upper Hessenberg inside the submatrix
 NB.          H[h:h+s-1,h:h+s-1], and upper triangular outside
 NB.   T    - n×n-matrix, upper triangular
@@ -696,10 +688,10 @@ NB.
 NB. TODO:
 NB. - implement blocked version [2]
 
-gghrdunn=: 0 {:: gghrdu
-gghrdunv=: ({: @ ]) ((0 {:: ]) , (rotsclu (2 {:: ]))) (gghrdu }:)
-gghrduvn=: ({: @ ]) ((0 {:: ]) , (rotsclu (1 {:: ]))) (gghrdu }:)
-gghrduvv=: (2 }. ]) ((0 {:: ]) , (rotsclu &: >"2 0 }.)) (gghrdu (2 & {.))
+gghrdunn=: [: : (0 {:: gghrdu)
+gghrdunv=: [: : (({: @ ]) ((0 {:: ]) , (rotsclu (2 {:: ]))) (gghrdu }:))
+gghrduvn=: [: : (({: @ ]) ((0 {:: ]) , (rotsclu (1 {:: ]))) (gghrdu }:))
+gghrduvv=: [: : ((2 }. ]) ((0 {:: ]) , (rotsclu &: >"2 0 }.)) (gghrdu (2 & {.)))
 
 NB. =========================================================
 NB. Test suite
@@ -777,8 +769,8 @@ NB.   (Q1*R) for gghrdu, this unifies calculations and
 NB.   eliminates gelqf (geqrf) round-off errors
 
 testgghrd=: 3 : 0
-  prepl=. ((,~ <) (mp/@(1 3&{) 1} 2&{.))~ _2&(<\)                                                 NB. L: 'AB HT QZ'=. (A,L,I,:Z1) prep (H,T,Q,:Z)
-  prepu=. ((,~ <) (mp/@(2 1&{) 1} 2&{.))~ _2&(<\)                                                 NB. R: 'AB HT QZ'=. (A,R,Q1,:I) prep (H,T,Q,:Z)
+  prepl=. ((,~ <) ((3&{) mp~"2 (2&{.)))~ _2&(<\)                                                  NB. L: 'AB HT QZ'=. (A,L,I,:Z1) prepl (H,T,Q,:Z)
+  prepu=. ((,~ <) ((2&{) mp "2 (2&{.)))~ _2&(<\)                                                  NB. R: 'AB HT QZ'=. (A,R,Q1,:I) prepu (H,T,Q,:Z)
   safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
   cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||updA - Q^_1 * H * Z|| , ||B - Q^_1 * T * Z||
                                                                                                   NB. R: (] cdiff1 ct) : ||updA - Q * H * Z^_1|| , ||B - Q * T * Z^_1||
@@ -791,21 +783,21 @@ testgghrd=: 3 : 0
                                                                                                   NB. R: (] cberr01 ct) : (berr0 , berr1) for R
   aberr23=. 1 : '((<. (u adiff2))~ % (FP_PREC * ])) getn'                                         NB. L: (mp~ aberr23) : (berr2 , berr3) for L
                                                                                                   NB. R: (mp  aberr23) : (berr2 , berr3) for R
-  berrl=: (<./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prepl) f.
-  berru=: (<./ @ ((] cberr01 ct) , (mp  aberr23)) @ prepu) f.
+  berrl=: (>./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prepl) f.
+  berru=: (>./ @ ((] cberr01 ct) , (mp  aberr23)) @ prepu) f.
 
   rcond=. <./ gecon1"2 y
   'L Z1 Q1 R'=. (((trl ; unglq) @ gelqf) , ((ungqr ; tru) @ geqrf)) {: y
   I=. idmat c y
 
-  ('gghrdlnn' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gghrdlnv' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) (y,I)
-  ('gghrdlvn' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) (y,I)
-  ('gghrdlvv' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) ((L 1} y),I,:Z1)
-  ('gghrdunn' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gghrdunv' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) (y,I)
-  ('gghrduvn' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berrl)) (y,I)
-  ('gghrduvv' tdyad ((0,#)`]`]`(rcond"_)`(_."_)`berru)) ((R 1} y),Q1,:I)
+  ('gghrdlnn' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gghrdlnv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) (y,I)
+  ('gghrdlvn' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) (y,I)
+  ('gghrdlvv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`berrl )) ((L 1} y),I,:Z1)
+  ('gghrdunn' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gghrdunv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) (y,I)
+  ('gghrduvn' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`(_."_))) (y,I)
+  ('gghrduvv' tdyad ((0,c)`]`]`(rcond"_)`(_."_)`berru )) ((R 1} y),Q1,:I)
 
   erase 'cdiff1 adiff2 berrl berru'
 

@@ -148,7 +148,7 @@ testtrsm=: 3 : 0
 
   'A X'=. y
   'L L1 U U1'=. bT=. (trl ; trl1 ; tru ; tru1) A
-  'conL conL1 conU conU1'=. (((trlcon1&.>)`(trl1con1&.>)`(trucon1&.>)`(tru1con1&.>)) ag) bT
+  'conL conL1 conU conU1'=. ((trlcon1&.>)`(trl1con1&.>)`(trucon1&.>)`(tru1con1&.>)) ag bT
 
   ('trtrs_jlapack_' tmonad (({.,(mp &. >/))`]`(conU "_)`(normi@(((- (% & normic) [) (1 & {::))~))`(normi@((norm1tc@(((mp & >/)@[) - (mp~ (0 & {::))~)) % ((FP_EPS*norm1@(0 {:: [))*(norm1tc@])))))) (U;X)
 

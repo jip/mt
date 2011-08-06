@@ -398,7 +398,7 @@ NB. - A will be Hermitian (symmetric) if randx produces real
 NB.   (non-complex), possibly non-distinct numbers
 NB. - A is diagonalizable iif A is normal (A^H * A = A * A^H)
 
-dimat=: 2 : 'u@{. (] mp (* ct_mt_)) v'
+dimat=: 2 : 'u@{. (] mp_mt_ (* ct_mt_)) v'
 
 NB. ---------------------------------------------------------
 NB. hemat
@@ -545,7 +545,7 @@ NB.
 NB. TODO:
 NB. - T should be sparse
 
-ptmat=: 1 : 'po_mt_ @ (>:@| upddiag_mt_) @ (((setdiag_mt_ diagmat_mt_)~ (}: ; _1:))/)@u@(2,{.)'
+ptmat=: 1 : 'po_mt_@(>:@| upddiag_mt_)@(((setdiag_mt_ diagmat_mt_)~ (}: ; _1:))/)@:u@(2,{.)'
 
 NB. ---------------------------------------------------------
 NB. unmat
@@ -596,8 +596,7 @@ NB.     matrices from the classical compact groups.
 NB.     Notices of the AMS, Vol. 54 (2007), 592-604
 NB.     http://arxiv.org/abs/math-ph/0609050v2
 
-unmat=: 1 : 'ungqr_mt_ @ geqrf_mt_ @ u @ (2 & $)'
-NB. unmat=: ((* " 1) ((% |) @ ((<0 1) & |:))) & >/ @ geqrf vu2y
+unmat=: 1 : '(ungqr_mt_*"1*@diag_mt_)@geqrf_mt_@:u@(2&$)'
 
 NB. ---------------------------------------------------------
 NB. spmat

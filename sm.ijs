@@ -94,6 +94,9 @@ NB.   difference: alpha parameter is assumed to be always
 NB.   equal to 1; to workaround this limitation use the
 NB.   following pattern:
 NB.     X=. A trsmxxxx alpha*B
+NB.
+NB. TODO:
+NB. - replace column-wise algos by row-wise
 
 trsmlx=:   ((((    (#@])  {   (1 {:: [)) - (] mp~ ((( 1 liosW)&# (0 & {::))~   ({,) (0 {:: [)))) % ((    (*>:) &# (0 & {::))~   ({,) (0 {:: [))) ,    ~ ]) ^: (;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
 trsml1x=:  ( ((    (#@])  {   (1 {:: [)) - (] mp~ ((( 1 liosW)&# (0 & {::))~   ({,) (0 {:: [)))                                                ) ,    ~ ]) ^: (;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))

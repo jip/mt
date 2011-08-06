@@ -44,12 +44,12 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-negneg=: -@]^:(0>[)                                     NB. if x<0 then -y else y endif
-negpos=: -@]^:(0<:[)                                    NB. if x≥0 then -y else y endif
-copysign=: -@]^:((=-)&*)                                NB. if x<0 then -|y| else |y| endif
-sorim=: +/"1 @: |  @: +.                                NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
-soris=: +/"1 @: *: @: +.                                NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
-fmtlog=: '%-25S %-16g %-16g %-16g %-16g %16d' vsprintf  NB. log string format
+negneg=: -@]^:(0>[)                                             NB. if x<0 then -y else y endif
+negpos=: -@]^:(0<:[)                                            NB. if x≥0 then -y else y endif
+copysign=: -@]^:((=-)&*)                                        NB. if x<0 then -|y| else |y| endif
+sorim=: +/"1 @: |  @: +.                                        NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
+soris=: +/"1 @: *: @: +.                                        NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
+fmtlog=: ;@:(26 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))  NB. log string format
 
 NB. ---------------------------------------------------------
 NB. ag

@@ -182,8 +182,8 @@ NB.   Raise a Hermitian (symmetric) matrix to integer
 NB.   power[s]
 NB.
 NB. Syntax:
-NB.   P=. p dipow vl ; iRl
-NB.   P=. p dipow vu ; Ru
+NB.   P=. p hepow vl ; iRl
+NB.   P=. p hepow vu ; Ru
 NB. where
 NB.   Rl  - n×n-matrix, rows are eigenvectors of A, output of
 NB.         heevlv

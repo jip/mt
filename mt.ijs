@@ -110,9 +110,8 @@ NB. Includes
 NB. ---------------------------------------------------------
 NB. System definitions
 
-script_z_ '~system/main/printf.ijs'             NB. printf vsprintf
-script_z_ '~system/main/myutil.ijs'             NB. timespacex
-script_z_ '~system/packages/math/mathutil.ijs'  NB. mp
+require       '~addons/math/misc/mathutil.ijs'  NB. mp_mt_
+require^:IFJ6 '~system/main/myutil.ijs'         NB. timespacex_z_ (J7: stdlib.ijs)
 
 NB. ---------------------------------------------------------
 NB. Addon definitions
@@ -315,11 +314,11 @@ NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
 test=: 1 : 0
-  '%-25s %-16s %-16s %-16s %-16s %-16s' printf 'algorithm' ; 'rcond' ; 'rel fwd err' ; 'rel bwd err' ; 'time, sec.' ; 'space, bytes'
+  fmtlog_mt_ 'algorithm';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'
 
-  (u testlow ) y  NB. low-level algorithms
-  (u testmid ) y  NB. mid-level algorithms
-  (u testhigh) y  NB. high-level algorithms
+  (u testlow_mt_ ) y  NB. low-level algorithms
+  (u testmid_mt_ ) y  NB. mid-level algorithms
+  (u testhigh_mt_) y  NB. high-level algorithms
 
   EMPTY_mt_
 )

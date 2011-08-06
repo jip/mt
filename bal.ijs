@@ -509,6 +509,53 @@ NB. - gebalu models LAPACK's xGEBAL('B')
 geball=: gebals @ geballp
 gebalu=: gebals @ gebalup
 
+NB. ---------------------------------------------------------
+NB. ggball
+NB. ggbalu
+
+NB. 'AB plr hs'=. ggbalup AB
+
+ggbalup=: 3 : 0
+  n=. # y
+  'h s'=. 0 , n
+  pl=. pr=. i. n
+  i=. h+s-1
+  while. i >: h do.
+    v=. (i ,.!.1 (h,s)) {. ;. 0 y
+    lios=. I. v ~: 0
+    select. # lios
+      fcase. 1 do.
+        nst=. < (h + {. lios) , (h+s-1)
+        pr=. nst C. :: ] pr
+        y=. nst C."1 :: ] y
+      case. 0 do.
+        nst=. < i , (h+s-1)
+        pl=. nst C. :: ] pl
+        y=. nst C."2 :: ] y
+        s=. <: s
+    end.
+    i=. <: i
+  end.
+  j=. h
+  while. j < (h+s) do.
+    v=. ((h,s) ,.!.1 j) ({."1) ;. 0 y
+    lios=. I. v ~: 0
+    select. # lios
+      fcase. 1 do.
+        nst=. < (h + {. lios) , h
+        pl=. nst C. :: ] pl
+        y=. nst C."2 :: ] y
+      case. 0 do.
+        nst=. < j , h
+        pr=. nst C. :: ] pr
+        y=. nst C."1 :: ] y
+        h=. >: h
+    end.
+    j=. >: i
+  end.
+  y ; (pl ,: pr) ; (h , s)
+)
+
 NB. =========================================================
 NB. Test suite
 

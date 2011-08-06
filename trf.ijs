@@ -20,7 +20,7 @@ NB.            definite tridiagonal matrix given
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.5 2010-06-18
+NB. Version: 0.6.6 2010-08-20
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -282,7 +282,7 @@ NB.     http://www.cs.cas.cz/miro/rst08.pdf
 lahefpl=: (3 : 0) ^: (TRFNB<.#@(0 & {::))
   'ip A lt t0 t1'=. y
   w=. lt ((-~&# { ]) ((}.~ #) - ({.~ #) mp ]) ((-~,-@[)&# {. ])) A
-  A=. (w,:lt) (((0 liosE),:(0 liosS)))&c } A
+  A=. (w,:lt) ((0 liosE),:(0 liosS))&c } A
   w=. 0 (9&o.) upd w - lt (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
   lt=. lt (+@}.@] - ((* }.)~ {.)) w
   dip=. (liofmax (-@] <@, -) #) lt
@@ -524,7 +524,7 @@ NB.     http://www.cs.cas.cz/miro/rst08.pdf
 lahefpu=: (3 : 0) ^: (TRFNB<.#@(0 & {::))
   'ip A ut t0 t1'=. y
   w=. ut ((<:@-&# { ]) (({.~ c) - (}.~ c) mp ]) ((-,[)&# {. ])) A
-  A=. (ut,:w) (((0 liosN),:(0 liosW)))&c } A
+  A=. (ut,:w) ((0 liosN),:(0 liosW))&c } A
   w=. _1 (9&o.) upd w - ut (({:@[ * +@((1 liosN)&# ({,) ])) :: 0:) A
   ut=. ut (+@}:@] - ((* }:)~ {:)) w
   dip=. (<:@(1>.#) <@, liolmax) ut

@@ -123,7 +123,6 @@ NB. low-level
 require '~addons/math/mt/bak.ijs'     NB. Restore original eigenvectors
 require '~addons/math/mt/bal.ijs'     NB. Balance
 require '~addons/math/mt/cond.ijs'    NB. Condition number
-NB. require '~addons/math/mt/eqr.ijs'     NB. Eigenvalues and eigenvectors of structured matrix
 require '~addons/math/mt/ref.ijs'     NB. Reflection
 require '~addons/math/mt/rot.ijs'     NB. Rotation
 require '~addons/math/mt/gq.ijs'      NB. Generate Q from its factored form
@@ -132,6 +131,8 @@ NB. require '~addons/math/mt/scl.ijs'     NB. Scaling
 require '~addons/math/mt/sm.ijs'      NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
+NB. require '~addons/math/mt/eqr.ijs'     NB. Eigenvalues and eigenvectors of structured matrix
+NB. require '~addons/math/mt/eqz.ijs'     NB. Eigenvalues and eigenvectors of pair of structured matrices
 require '~addons/math/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~addons/math/mt/qf.ijs'      NB. Orthogonal factorization
 require '~addons/math/mt/trf.ijs'     NB. Triangular factorization
@@ -139,6 +140,7 @@ require '~addons/math/mt/tri.ijs'     NB. Inverse by trf
 require '~addons/math/mt/trs.ijs'     NB. Solve linear monomial equation by trf
 
 NB. hi-level
+NB. require '~addons/math/mt/ev.ijs'      NB. Eigen-decomposition
 require '~addons/math/mt/exp.ijs'     NB. Matrix exponential
 require '~addons/math/mt/pow.ijs'     NB. Raise matrix to an integer power[s]
 require '~addons/math/mt/sv.ijs'      NB. Solve linear monomial equation

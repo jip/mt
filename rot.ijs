@@ -6,7 +6,7 @@ NB.
 NB. testlartg  Test lartg by vectors given
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.6.0 2010-06-05
+NB. Version: 0.6.8 2010-10-20
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -113,14 +113,14 @@ NB.   k ≥ 0, optional size of generated permutations, default
 NB.       is n
 NB.   p - (n^k)×k-matrix, k-permutations
 NB.
+NB. Notes:
+NB. - extends perm from system/packages/stats/statfns.ijs
+NB. - see also [1]
+NB.
 NB. References:
 NB. [1] [Jprogramming] Choosing k items out of n
 NB.     R.E. Boss, Sat Aug 2 13:49:59 HKT 2008
 NB.     http://www.jsoftware.com/pipermail/programming/2008-August/011576.html
-NB.
-NB. Notes:
-NB. - extends perm from system/packages/stats/statfns.ijs
-NB. - see also [1]
 
 perm=: (! A.&i. ]) :(((# #: i.@<.@(^~)) #) { ])
 
@@ -178,7 +178,8 @@ NB.   G1=. 2 2 $ c , s , (- + s) , c
 NB.   G2=. |: G1
 NB.
 NB. Notes:
-NB. - models LAPACK's xLARTG, but with fix described in [2]
+NB. - models LAPACK's xLARTG described in [1] with fix
+NB.   described in [2]
 NB.
 NB. References:
 NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. (2001) On

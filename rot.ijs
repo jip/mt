@@ -2,6 +2,7 @@ NB. Rotation
 NB.
 NB. lartg      Generates a plane rotation of a 2-vector
 NB. rot        Applies a plane rotation[s] to a 2-vector[s]
+NB. rotga      Adv. to make verb to get and apply rotation
 NB.
 NB. testlartg  Test lartg by vectors given
 NB. testrot    Test rotation algorithms by predefined matrix
@@ -271,6 +272,110 @@ NB. - for 1-rank cs implements LAPACK's xROT
 NB. - for 2-rank cs implements LAPACK's xLARTV
 
 rot=: (mp"2 1~ (,:"1 ((-@+@:({:"1)) ,. {."1)))~
+
+NB. ---------------------------------------------------------
+NB. rotga
+NB.
+NB. Description:
+NB.   Adv. to make verb to get and apply rotation
+NB.
+NB. Syntax:
+NB.   vapp=. vrota rotga
+NB. where
+NB.   vrota   - dyad to apply rotation; is called as:
+NB.               subAupd=. cs vrota subA
+NB.             and is any of:
+NB.               rot        NB. apply rotation to rows
+NB.               rot &. |:  NB. apply rotation to columns
+NB.   vapp    - monad to generate and apply rotation; is
+NB.             called as:
+NB.               'Aupd cs'=. vapp A ; iossubA ; iosfg
+NB.   cs      - 2-vector (c,s), curtailed output of lartg,
+NB.             defines rotation matrix
+NB.   A       - n×n-matrix to update
+NB.   Aupd    - n×n-matrix, updated A, being A with subA
+NB.             replaced by subAupd
+NB.   subA    - 2×any-matrix or any×2-matrix, array of
+NB.             2-vectors to apply rotation
+NB.   subAupd - matrix of the same shape as subA, the rotated
+NB.             subA
+NB.   iossubA - ios of subA (subAupd) within A (Aupd)
+NB.   iosfg   - ios within subA of 2-vector (f,g) which
+NB.             defines rotation
+NB.
+NB. Notes:
+NB. - rotated 2-vector (r,0) is written into subA explicitely
+NB.   to avoid lartg roundoff errors
+
+rotga=: 1 : 0
+  'A iossubA iosfg'=. y
+  subA=. iossubA { A
+  csr=. lartg iosfg { subA
+  (((({: csr) , 0) iosfg } (}: csr) u subA) iossubA } A) ; (}: csr)
+)
+
+NB. ---------------------------------------------------------
+NB. rotsl
+NB. rotsu
+NB.
+NB. Description:
+NB.   Apply scalings and rotations accumulated in dU to U1 to
+NB.   produce U explicitely
+NB.
+NB. Syntax:
+NB.   U=. U1 rotsx dU
+NB. where
+NB.   dU      - any×4-matrix, where each row is 4-vector of
+NB.             values, either:
+NB.               m , io , 0 , 0
+NB.             or:
+NB.               c , s , iof , iog
+NB.             accumulates scalings and rotations to form U
+NB.   U1      - n×n-matrix or (i.0), the unitary
+NB.             (orthogonal), output from the gghrdxnn,
+NB.             hgeqzxnn
+NB.   U       - either (i.0) when U1 -: (i.0) , or n×n-matrix
+NB.             (U1*ΔU) otherwise
+NB.   m       - scalar to scale column
+NB.   io      - IO column to scale
+NB.   (c,s)   - 2-vector, defines rotation for 2-vectors
+NB.             (f,g), being a curtailed output of larfg
+NB.   iof,iog - IOS columns to form 2-vectors (f,g) to rotate
+
+hgeqzuqz=: 4 : 0
+  if. 0 < # x do.
+    
+    j=. h
+    k=. 0
+    while. j < e do.                     NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+      i=. e
+      while. i > (j+1) do.               NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
+        iospair=. < a: ; (i - 1 0)
+        q=. (< k , 0) { rQZ              NB. extract current rotation q[k]
+        Q1=. iospair ((q & rot) upd) Q1  NB. update columns by q[k]
+        k=. >: k
+        i=. <: i
+      end.
+      j=. >: j
+    end.
+  end.
+  if. Z1 -.@-: (i. 0) do.
+    j=. h
+    k=. 0
+    while. j < e do.                     NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+      i=. e
+      while. i > (j+1) do.               NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
+        iospair=. < a: ; (i - 0 1)
+        z=. (< k , 1) { rQZ              NB. extract current rotation z[k]
+        Z1=. iospair ((z & rot) upd) Z1  NB. update columns by z[k]
+        k=. >: k
+        i=. <: i
+      end.
+      j=. >: j
+    end.
+  end.
+  a ; Q1 ; Z1
+)
 
 NB. =========================================================
 NB. Test suite

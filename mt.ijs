@@ -131,8 +131,9 @@ NB. require '~addons/math/mt/scl.ijs'     NB. Scaling
 require '~addons/math/mt/sm.ijs'      NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
-NB. require '~addons/math/mt/eqr.ijs'     NB. Eigenvalues and eigenvectors of structured matrix
-require '~addons/math/mt/eqz.ijs'     NB. Eigenvalues and eigenvectors of pair of structured matrices
+NB. require '~addons/math/mt/eqr.ijs'     NB. Eigenvalues and Schur form of structured matrix
+require '~addons/math/mt/eqz.ijs'     NB. Eigenvalues and Schur form of pair of structured matrices
+NB. require '~addons/math/mt/evc.ijs'     NB. Eigenvectors
 require '~addons/math/mt/hrd.ijs'     NB. Hessenberg reduction
 require '~addons/math/mt/qf.ijs'      NB. Orthogonal factorization
 require '~addons/math/mt/trf.ijs'     NB. Triangular factorization

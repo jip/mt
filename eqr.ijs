@@ -1,4 +1,4 @@
-NB. Eigenvalues and eigenvectors of structured matrix
+NB. Eigenvalues and Schur form of structured matrix
 NB.
 NB. hseqr  Eigenvalues and, optionally, the Schur decomposition
 NB.        of a Hessenberg matrix
@@ -7,7 +7,7 @@ NB.        symmetric positive definite tridiagonal matrix
 NB. steqr  Eigenvalues and, optionally, eigenvectors of a
 NB.        symmetric tridiagonal matrix
 NB.
-NB. Version: 0.6.6 2010-06-22
+NB. Version: 0.6.8 2010-10-14
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.

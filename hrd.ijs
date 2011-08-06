@@ -395,7 +395,7 @@ NB. where
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines Hessenberg submatrix H11 position in
 NB.         matrix H, see gehrdl
-NB.   HT  - pass-through argument
+NB.   HT  - pass-through noun
 NB.   dQZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
 NB.         is 2-vector of laminated rotations:
 NB.           ( cs(Q)[i,j]  sn(Q)[i,j] )
@@ -461,7 +461,7 @@ NB. where
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines Hessenberg submatrix H11 position in
 NB.         matrix H, see gehrdu
-NB.   HT  - pass-through argument
+NB.   HT  - pass-through noun
 NB.   dQZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
 NB.         is 2-vector of laminated rotations:
 NB.           ( cs(Q)[i,j]  sn(Q)[i,j] )

@@ -10,7 +10,7 @@ NB. testgghrd  Test gghrdx by general matrices given
 NB. testhrd    Adv. to make verb to test gxhrdx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.6.8 2010-08-20
+NB. Version: 0.6.8 2010-09-24
 NB.
 NB. Copyright 2010 Igor Zhuravlov
 NB.
@@ -231,7 +231,79 @@ gehd2u=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. gghrdus
+NB. gghrdlnn
+NB.
+NB. Description:
+NB.   Reduce a pair of matrices (A,B) to generalized lower
+NB.   Hessenberg form (H,T) by a unitary (orthogonal)
+NB.   similarity transformation by non-blocked algorithm:
+NB.     Q * A * Z^_1 = H
+NB.     Q * B * Z^_1 = T
+NB.   in order to reduce the generalized eigenvalue problem:
+NB.     x * A = λ * x * B
+NB.   to its standard form:
+NB.     y * H = λ * y * T
+NB.     y = x * Q^_1
+NB.   and accumulate rotations to form Q and Z later
+NB.
+NB. Syntax:
+NB.   'hs HT QZ'=. gghrdlnn hs ; AB
+NB. where
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrices A11 and B11 to be reduced
+NB.        position in matrices A and B, respectively, see
+NB.        gehrdu
+NB.   AB -: A ,: B
+NB.   A  - n×n-matrix, general
+NB.   B  - n×n-matrix, lower triangular
+NB.   HT -: H ,: T
+NB.   H  - n×n-matrix, lower Hessenberg inside the submatrix
+NB.        H[h:h+s-1,h:h+s-1], and lower triangular outside
+NB.   T  - n×n-matrix, lower triangular
+NB.   QZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
+NB.        is 2-vector of laminated rotations:
+NB.          ( cs(Q)[i,j]  sn(Q)[i,j] )
+NB.          ( cs(Z)[i,j]  sn(Z)[i,j] )
+NB.       accumulates rotations to form Q and Z later
+
+gghrdlnn=: 3 : 0
+  'hs AB'=. y
+  'h s'=. hs
+  e=. h+s-1
+  n=. c AB
+  QZ=. 0 2 2 $ 0
+  i=. h
+  iosrota=. < 0 ; 0
+  while. i < e do.                             NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+    j=. e
+    while. j > (i+1) do.                       NB. (h+s-i-2)-vector: h+s-1,h+s-2,...,i+2
+      lios=. j - 1 0
+      iospair=. < a: ; (n th2lios i) ; lios
+      pair=. iospair { AB
+      'cs sn r'=. lartg iosrota { pair
+      z=. cs , sn
+      pair=. z & rot " 1 2 pair                NB. rotate rows
+      pair=. (r , 0) iosrota } pair            NB. place (r,0) explicitely
+      AB=. pair iospair } AB
+      lios=. j - 0 1
+      iospair=. < a: ; lios                    NB. overtake in B since pair must be unirectangular
+      pair=. iospair { AB
+      iosrotb=. < 1 ; a: ; j
+      'cs sn r'=. lartg iosrotb { pair
+      q=. cs , sn
+      pair=. (q & rot " 1 2) &. (|: " 2) pair  NB. rotate columns
+      pair=. (r , 0) iosrotb } pair            NB. place (r,0) explicitely
+      AB=. pair iospair } AB
+      QZ=. QZ , q ,: z
+      j=. <: j
+    end.
+    i=. >: i
+  end.
+  hs ; AB ; QZ
+)
+
+NB. ---------------------------------------------------------
+NB. gghrdunn
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
@@ -244,111 +316,181 @@ NB.     A * x = λ * B * x
 NB.   to its standard form:
 NB.     H * y = λ * T * y
 NB.     y = Z^_1 * x
-NB.   and to accumulate rotations to (optionally) form Q and
-NB.   Z later.
+NB.   and accumulate rotations to form Q and Z later
 NB.
 NB. Syntax:
-NB.   'hs HT QZcs'=. gghrdus hs ; AB
+NB.   'hs HT QZ'=. gghrdunn hs ; AB
 NB. where
-NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
-NB.          defines submatrices A11 and B11 to be reduced
-NB.          position in matrices A and B, respectively, see
-NB.          gehrdu
-NB.   AB   -: A ,: B
-NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, upper triangular
-NB.   HT   -: H ,: T
-NB.   H    - n×n-matrix, upper Hessenberg in
-NB.          H[h:h+s-1,h:h+s-1], and upper triangular outside
-NB.   T    - n×n-matrix, upper triangular
-NB.   QZcs - ((s-2)*(s-1)/2)×2×2-report, where each
-NB.          2×2-matrix is 2-vector of laminated rotations:
-NB.            ( c(Q)[i,j]  s(Q)[i,j] )
-NB.            ( c(Z)[i,j]  s(Z)[i,j] )
-NB.         accumulates rotations to form Q and Z later
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrices A11 and B11 to be reduced
+NB.        position in matrices A and B, respectively, see
+NB.        gehrdu
+NB.   AB -: A ,: B
+NB.   A  - n×n-matrix, general
+NB.   B  - n×n-matrix, upper triangular
+NB.   HT -: H ,: T
+NB.   H  - n×n-matrix, upper Hessenberg inside the submatrix
+NB.        H[h:h+s-1,h:h+s-1], and upper triangular outside
+NB.   T  - n×n-matrix, upper triangular
+NB.   QZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
+NB.        is 2-vector of laminated rotations:
+NB.          ( cs(Q)[i,j]  sn(Q)[i,j] )
+NB.          ( cs(Z)[i,j]  sn(Z)[i,j] )
+NB.       accumulates rotations to form Q and Z later
 NB.
 NB. Notes:
 NB. - models LAPACK's xGGHRD('N','N')
 NB.
-NB. TODO:
-NB. - re-factor to chain of 2 evokings of the same actor
+NB. References:
+NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB.     Johns Hopkins University Press, Baltimore, Md, USA,
+NB.     3rd edition, 1996, p. 378
 
-gghrdus=: 3 : 0
+gghrdunn=: 3 : 0
   'hs AB'=. y
-  'h sz'=. hs
-  QZcs=. 0 2 2 $ 0
+  'h s'=. hs
+  e=. h+s-1
+  n=. c AB
+  QZ=. 0 2 2 $ 0
   j=. h
-  while. j < (h+sz-2) do.                          NB. (s-2)-vector: h,h+1,h+2,...,h+s-3
-    i=. h+sz-1
-    while. i > (j+1) do.                           NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
+  iosrota=. < 0 ; a: ; 0
+  while. j < e do.                             NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+    i=. e
+    while. i > (j+1) do.                       NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
       lios=. i - 1 0
       iospair=. < a: ; lios ; (n th2lios j)
       pair=. iospair { AB
-      iosrot=. < 0 ; a: ; 0
-      'c s r'=. lartg iosrot { pair
-      qcs=. c , s
-      pair=. (qcs & (rot " 1 2)) &. (|: " 2) pair  NB. rotate columns
-      pair=. (r , 0) iosrot } pair                 NB. place (r,0) explicitely
+      'cs sn r'=. lartg iosrota { pair
+      q=. cs , sn
+      pair=. (q & rot " 1 2) &. (|: " 2) pair  NB. rotate columns
+      pair=. (r , 0) iosrota } pair            NB. place (r,0) explicitely
       AB=. pair iospair } AB
       lios=. i - 0 1
-      iospair=. < a: ; a: ; lios                   NB. overtake in B since pair must be unirectangular
+      iospair=. < a: ; a: ; lios               NB. overtake in B since pair must be unirectangular
       pair=. iospair { AB
-      iosrot=. < 1 ; i ; < a:
-      'c s r'=. lartg iosrot { pair
-      zcs=. c , s
-      pair=. zcs rot " 1 2 pair                    NB. rotate rows
-      pair=. (r , 0) iosrot } pair                 NB. place (r,0) explicitely
+      iosrotb=. < 1 ; i
+      'cs sn r'=. lartg iosrotb { pair
+      z=. cs , sn
+      pair=. z rot " 1 2 pair                  NB. rotate rows
+      pair=. (r , 0) iosrotb } pair            NB. place (r,0) explicitely
       AB=. pair iospair } AB
-      QZcs=. QZcs , qcs ,: zcs
+      QZ=. QZ , q ,: z
       i=. <: i
     end.
     j=. >: j
   end.
-  hs ; AB ; QZcs
+  hs ; AB ; QZ
+)
+
+NB. ---------------------------------------------------------
+NB. gghrdlqz
+NB.
+NB. Description:
+NB.   Apply rotations accumulated in QZ to Q1 and/or Z1
+NB.   to produce Q and/or Z explicitely
+NB.
+NB. Syntax:
+NB.   'HT Q Z'=. (Q1 ; Z1) gghrdlqz hs ; HT ; QZ
+NB. where
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines Hessenberg submatrix H11 position in
+NB.        matrix H, see gehrdl
+NB.   HT - pass-through argument
+NB.   QZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
+NB.        is 2-vector of laminated rotations:
+NB.          ( cs(Q)[i,j]  sn(Q)[i,j] )
+NB.          ( cs(Z)[i,j]  sn(Z)[i,j] )
+NB.        to form Q and Z
+NB.   Q1 - n×n-matrix or (i.0), the unitary (orthogonal)
+NB.   Q  - either (i.0) when Q1 -: (i.0) , or  n×n-matrix
+NB.        (ΔQ*Q1) otherwise
+NB.   Z1 - n×n-matrix or (i.0), the unitary (orthogonal),
+NB.        typically from the LQ factorization of B
+NB.   Z  - either (i.0) when Z1 -: (i.0) , or  n×n-matrix
+NB.        (ΔZ*Z1) otherwise
+
+gghrdlqz=: 4 : 0
+  'Q1 Z1'=. x
+  'hs HT QZ'=. y
+  'h s'=. hs
+  e=. h+s-1
+  if. Q1 -.@-: (i. 0) do.
+    j=. h
+    k=. 0
+    while. j < e do.                                         NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+      i=. e
+      while. i > (j+1) do.                                   NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
+        iospair=. i - 0 1
+        q=. (< k , 0) { QZ                                   NB. extract current rotation q[k]
+        Q1=. iospair (((q & rot " 1 2) &. (|: " 2)) upd) Q1  NB. update rows by q[k]
+        k=. >: k
+        i=. <: i
+      end.
+      j=. >: j
+    end.
+  end.
+  if. Z1 -.@-: (i. 0) do.
+    QZ=. (< a: ; 1 ; 1) (+ upd) QZ                           NB. conjugate all s of Z's part of QZ
+    j=. h
+    k=. 0
+    while. j < e do.                                         NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+      i=. e
+      while. i > (j+1) do.                                   NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
+        iospair=. i - 1 0
+        z=. (< k , 1) { QZ                                   NB. extract current rotation z[k]
+        Z1=. iospair (((z & rot " 1 2) &. (|: " 2)) upd) Z1  NB. update rows by z[k]
+        
+        k=. >: k
+        i=. <: i
+      end.
+      j=. >: j
+    end.
+  end.
+  HT ; Q1 ; Z1
 )
 
 NB. ---------------------------------------------------------
 NB. gghrduqz
 NB.
 NB. Description:
-NB.   Apply accumulated rotations from QZcs to Q1 and/or Z1
+NB.   Apply rotations accumulated in QZ to Q1 and/or Z1
 NB.   to produce Q and/or Z explicitely
 NB.
 NB. Syntax:
-NB.   'HT Q Z'=. (Q1 ; Z1) gghrduqz hs ; HT ; QZcs
+NB.   'HT Q Z'=. (Q1 ; Z1) gghrduqz hs ; HT ; QZ
 NB. where
-NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
-NB.          defines Hessenberg submatrix H11 position in
-NB.          matrix H, see gehrdu
-NB.   HT   - pass-through argument
-NB.   QZcs - ((s-2)*(s-1)/2)×2×2-report, where each
-NB.          2×2-matrix is 2-vector of laminated rotations:
-NB.            ( c(Q)[i,j]  s(Q)[i,j] )
-NB.            ( c(Z)[i,j]  s(Z)[i,j] )
-NB.         to form Q and Z later
-NB.   Q1  - n×n-matrix or (i.0), the unitary (orthogonal),
-NB.         typically from the QR factorization of B
-NB.   Q   - either (Q1*dQ) or (i.0)
-NB.   Z1  - n×n-matrix or (i.0), the unitary (orthogonal)
-NB.   Z   - either (Z1*dZ) or (i.0)
-NB.
-NB. TODO:
-NB. - re-factor to chain of 2 evokings of the same actor
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines Hessenberg submatrix H11 position in
+NB.        matrix H, see gehrdu
+NB.   HT - pass-through argument
+NB.   QZ - ((s-2)*(s-1)/2)×2×2-report, where each 2×2-matrix
+NB.        is 2-vector of laminated rotations:
+NB.          ( cs(Q)[i,j]  sn(Q)[i,j] )
+NB.          ( cs(Z)[i,j]  sn(Z)[i,j] )
+NB.        to form Q and Z
+NB.   Q1 - n×n-matrix or (i.0), the unitary (orthogonal),
+NB.        typically from the QR factorization of B
+NB.   Q  - either (i.0) when Q1 -: (i.0) , or  n×n-matrix
+NB.        (Q1*ΔQ) otherwise
+NB.   Z1 - n×n-matrix or (i.0), the unitary (orthogonal)
+NB.   Z  - either (i.0) when Z1 -: (i.0) , or  n×n-matrix
+NB.        (Z1*ΔZ) otherwise
 
 gghrduqz=: 4 : 0
   'Q1 Z1'=. x
-  'hs HT QZcs'=. y
+  'hs HT QZ'=. y
   'h s'=. hs
+  e=. h+s-1
   if. Q1 -.@-: (i. 0) do.
+    QZ=. (< a: ; 0 ; 1) (+ upd) QZ       NB. conjugate all s of Q's part of QZ
     j=. h
     k=. 0
-    QZcs=. (< a: ; 0 ; 0) (+ upd) QZcs     NB. conjugate all s of Qcs
-    while. j < (h+s-2) do.
-      i=. h+s-1
-      while. i > (j+1) do.
+    while. j < e do.                     NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+      i=. e
+      while. i > (j+1) do.               NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
         iospair=. < a: ; (i - 1 0)
-        qcs=. (< k , 0) { QZcs             NB. extract current rotation qcs[k] from Qcs
-        Q1=. iospair ((qcs & rot) upd) Q1  NB. update columns by qcs[k]
+        q=. (< k , 0) { QZ               NB. extract current rotation q[k]
+        Q1=. iospair ((q & rot) upd) Q1  NB. update columns by q[k]
         k=. >: k
         i=. <: i
       end.
@@ -358,12 +500,12 @@ gghrduqz=: 4 : 0
   if. Z1 -.@-: (i. 0) do.
     j=. h
     k=. 0
-    while. j < (h+s-2) do.
-      i=. h+s-1
-      while. i > (j+1) do.
+    while. j < e do.                     NB. (s-1)-vector: h,h+1,h+2,...,h+s-2
+      i=. e
+      while. i > (j+1) do.               NB. (h+s-j-2)-vector: h+s-1,h+s-2,...,j+2
         iospair=. < a: ; (i - 0 1)
-        zcs=. (< k , 1)  { Zcs             NB. extract current rotation zcs[k] from Zcs
-        Z1=. iospair ((zcs & rot) upd) Z1  NB. update columns by zcs[k]
+        z=. (< k , 1) { QZ               NB. extract current rotation z[k]
+        Z1=. iospair ((z & rot) upd) Z1  NB. update columns by z[k]
         k=. >: k
         i=. <: i
       end.
@@ -401,7 +543,7 @@ NB.         form:
 NB.           Q = Π{H(i)',i=h+s-2:h} ,
 NB.         where each elementary reflector Q(i) is
 NB.         represented as:
-NB.           Q(i) = I - v[i] * τ[i] * v[i]' ,
+NB.           Q(i) = I - v[i]' * τ[i] * v[i] ,
 NB.         and values v[i][i-h+1:s-2] and τ[i] are
 NB.         stored in (i-h)-th row of Qf:
 NB.           Qf[i-h,0:s-1] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...0,τ[i])
@@ -563,6 +705,67 @@ gehrdu=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
+NB. gghrdl
+NB.
+NB. Description:
+NB.   Reduce a pair of matrices (A,B) to generalized lower
+NB.   Hessenberg form (H,T) by a unitary (orthogonal)
+NB.   similarity transformation by non-blocked algorithm:
+NB.     Q * A * Z^_1 = H
+NB.     Q * B * Z^_1 = T
+NB.   in order to reduce the generalized eigenvalue problem:
+NB.     x * A = λ * x * B                                 (1)
+NB.   to its standard form:
+NB.     y * H = λ * y * T
+NB.     y = x * Q^_1
+NB.   The unitary (orthogonal) matrices Q and Z are
+NB.   determined as products of Givens rotations. They may
+NB.   either be formed explicitly, or they may be
+NB.   premultiplied into input matrices Q1 and Z1, so that
+NB.     Q1^_1 * A * Z1 = (Q*Q1)^_1 * H * (Z*Z1)
+NB.     Q1^_1 * B * Z1 = (Q*Q1)^_1 * T * (Z*Z1)
+NB.   If Q1 is the unitary (orthogonal) matrix from the LQ
+NB.   factorization of B in the original equation (1), then
+NB.   gghrdl reduces the original problem to generalized
+NB.   Hessenberg form
+NB.
+NB. Syntax:
+NB.   HT=.                 gghrdl hs ; AB
+NB.   'HT Q Z'=. (Q1 ; Z1) gghrdl hs ; AB
+NB. where
+NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
+NB.         defines submatrices A11 and B11 to be reduced
+NB.         position in matrices A and B, respectively, see
+NB.         gehrdl
+NB.   AB  -: A ,: B
+NB.   A   - n×n-matrix, general
+NB.   B   - n×n-matrix, lower triangular
+NB.   HT  -: H ,: T
+NB.   H   - n×n-matrix, lower Hessenberg inside the submatrix
+NB.         H[h:h+s-1,h:h+s-1], and lower triangular outside
+NB.   T   - n×n-matrix, lower triangular
+NB.   Q1 - n×n-matrix or (i.0), the unitary (orthogonal),
+NB.        typically from the LQ factorization of B
+NB.   Q  - either (i.0) when Q1 -: (i.0) , or  n×n-matrix
+NB.        (ΔQ*Q1) otherwise
+NB.   Z1 - n×n-matrix or (i.0), the unitary (orthogonal)
+NB.   Q  - either (i.0) when Z1 -: (i.0) , or  n×n-matrix
+NB.        (ΔZ*Z1) otherwise
+NB.
+NB. Application:
+NB. - don't calculate both Q and Z:
+NB.     HT=. gghrdl hs;AB
+NB.     HT=. 0 {:: (2 # a:) gghrdl (hs;AB)
+NB. - calculate both Q and Z assuming Q1 = Z1 = I :
+NB.     'HT Q Z'=. (gghrdl~ (;~ @ idmat @ # @ (1 & {::))) (hs;AB)
+NB. - calculate both Q and Z:
+NB.     'HT Q Z'=. (Q1;Z1) gghrdl (hs;AB)
+NB. - calculate Q only:
+NB.     'HT Q'=. 2 {. (Q1;a:) gghrdl (hs;AB)
+
+gghrdl=: (1 {:: gghrdlnn) : (gghrdlqz gghrdlnn)
+
+NB. ---------------------------------------------------------
 NB. gghrdu
 NB.
 NB. Description:
@@ -599,14 +802,16 @@ NB.   AB  -: A ,: B
 NB.   A   - n×n-matrix, general
 NB.   B   - n×n-matrix, upper triangular
 NB.   HT  -: H ,: T
-NB.   H   - n×n-matrix, upper Hessenberg in
+NB.   H   - n×n-matrix, upper Hessenberg inside the submatrix
 NB.         H[h:h+s-1,h:h+s-1], and upper triangular outside
 NB.   T   - n×n-matrix, upper triangular
-NB.   Q1  - n×n-matrix or (i.0), the unitary (orthogonal),
-NB.         typically from the QR factorization of B
-NB.   Q   - either (Q1*dQ) or (i.0)
-NB.   Z1  - n×n-matrix or (i.0), the unitary (orthogonal)
-NB.   Z   - either (Z1*dZ) or (i.0)
+NB.   Q1 - n×n-matrix or (i.0), the unitary (orthogonal),
+NB.        typically from the QR factorization of B
+NB.   Q  - either (i.0) when Q1 -: (i.0) , or  n×n-matrix
+NB.        (Q1*ΔQ) otherwise
+NB.   Z1 - n×n-matrix or (i.0), the unitary (orthogonal)
+NB.   Q  - either (i.0) when Z1 -: (i.0) , or  n×n-matrix
+NB.        (Z1*ΔZ) otherwise
 NB.
 NB. Notes:
 NB. - models LAPACK's xGGHRD
@@ -627,7 +832,7 @@ NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 378
 
-gghrdu=: (1 {:: gghrdus) : (gghrduqz gghrdus)
+gghrdu=: (1 {:: gghrdunn) : (gghrduqz gghrdunn)
 
 NB. =========================================================
 NB. Test suite
@@ -649,9 +854,6 @@ NB.
 NB. Formula:
 NB. - Q * A * Q^_1 = H : berr := ||A - Q^_1 * H * Q|| / (ε * ||A|| * n)
 NB. - Q^_1 * A * Q = H : berr := ||A - Q * H * Q^_1|| / (ε * ||A|| * n)
-NB.
-NB. Syntax: testgehrd A
-NB. where A - general n×n-matrix
 
 testgehrd=: 3 : 0
   require :: ] '~addons/math/lapack/lapack.ijs'
@@ -663,6 +865,75 @@ testgehrd=: 3 : 0
 
   ('gehrdl'                  tdyad  ((0,#)`]        `]     `(rcond"_)`(_."_)`((norm1@(- ((( 1 & trl)@:(}:"1)) (] mp~ (mp~ ct)) unghrl)))%((FP_EPS*#*norm1)@[)))) y
   ('gehrdu'                  tdyad  ((0,#)`]        `]     `(rcond"_)`(_."_)`((norm1@(- (((_1 & tru)@:(}:  )) (] mp  (mp  ct)) unghru)))%((FP_EPS*#*norm1)@[)))) y
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testgghrd
+NB.
+NB. Description:
+NB.   Test Hessenberg reduction algorithms:
+NB.   - gghrdx (math/mt addon)
+NB.   by general matrices given
+NB.
+NB. Syntax:
+NB.   testgehrd AB
+NB. where
+NB.   AB - 2×n×n-report
+NB.
+NB. Formula:
+NB.   berr := max(berr0,berr1,berr2,berr3)
+NB. where
+NB.   ||M|| := max(||M||_1 , FP_SFMIN)
+NB.   β - machine precision
+NB.   - gghrdl:
+NB.       berr0 := ||Q1^_1 * A * Z1 - Q^_1 * H * Z|| / (β * ||Q1^_1 * A * Z1|| * n)
+NB.       berr1 := ||Q1^_1 * L * Z1 - Q^_1 * T * Z|| / (β * ||Q1^_1 * L * Z1|| * n)
+NB.       berr2 := ||I - Q^_1 * Q|| / (β * n)
+NB.       berr3 := ||I - Z^_1 * Z|| / (β * n)
+NB.       (L,Z1) := B
+NB.       Q := ΔQ*Q1
+NB.       Z := ΔZ*Z1
+NB.   - gghrdu:
+NB.       berr0 := ||Q1 * A * Z1^_1 - Q * H * Z^_1|| / (β * ||Q1 * A * Z1^_1|| * n)
+NB.       berr1 := ||Q1 * R * Z1^_1 - Q * T * Z^_1|| / (β * ||Q1 * R * Z1^_1|| * n)
+NB.       berr2 := ||I - Q * Q^_1|| / (β * n)
+NB.       berr3 := ||I - Z * Z^_1|| / (β * n)
+NB.       (Q1,R) := B
+NB.       Q := Q1*ΔQ
+NB.       Z := Z1*ΔZ
+NB.
+NB. Notes:
+NB. - B is reconstructed from either (L*Z1) for gghrdl, or
+NB.   (Q1*R) for gghrdu, this unifies calculations and
+NB.   eliminates gelqf (geqrf) round-off errors
+
+testgghrd=: 3 : 0
+  prep=. (,~ (mp"2 &. >/))~ (0 1 1 & (]`(<@:>) ag))                                               NB. L: 'updAB HT QZ'=. (AL;Z1) prep (HT;Q;Z)
+                                                                                                  NB. R: 'updAB HT QZ'=. (Q1;AR) prep (HT;Q;Z)
+  safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
+  cdiff1=: 2 : '(0 & {::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                    NB. L: (ct cdiff1 ]) : ||updA - Q^_1 * H * Z|| , ||B - Q^_1 * T * Z||
+                                                                                                  NB. R: (] cdiff1 ct) : ||updA - Q * H * Z^_1|| , ||B - Q * T * Z^_1||
+  adiff2=: 1 : '(safenorm @ (<: upddiag) @ (u ct)"2) @ (2 & {::)'                                 NB. L: (mp~ adiff2) : ||I - Q^_1 * Q|| , ||I - Z^_1 * Z||
+                                                                                                  NB. R: (mp  adiff2) : ||I - Q * Q^_1|| , ||I - Z * Z^_1||
+  denom1=. safenorm @ (0 & {::)                                                                   NB. ||updA|| , ||B||
+  getn=. c @ (0 & {::)                                                                            NB. n
+  safediv=. ((({:<.(%/@}:))`((<./@(}:*(1,{:)))%(1&{))@.(1>(1&{)))`(%/@}:)@.(</@}:))%(FP_PREC*{:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
+  cberr01=. 2 : 'safediv"1 @: ((u cdiff1 v) ,. denom1 ,. getn)'                                   NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
+                                                                                                  NB. R: (] cberr01 ct) : (berr0 , berr1) for R
+  aberr23=. 1 : '((<. (u adiff2))~ % (FP_PREC * ])) getn'                                         NB. L: (mp~ aberr23) : (berr2 , berr3) for L
+                                                                                                  NB. R: (mp  aberr23) : (berr2 , berr3) for R
+  berrl=: (<./ @ ((ct cberr01 ]) , (mp~ aberr23)) @ prep) f.
+  berru=: (<./ @ ((] cberr01 ct) , (mp  aberr23)) @ prep) f.
+
+  rcond=. <./ gecon1"2 y
+  'L Z1 Q1 R'=. (((trl ; unglq) @ gelqf) , ((ungqr ; tru) @ geqrf)) {: y
+
+  ('gghrdl' tdyad  (((;~ (idmat@#))@(1 & {::))`((;~ (0,c))@(0 & {::))`]`(rcond"_)`(_."_)`berrl)) ((L 1} y);Z1)
+  ('gghrdu' tdyad  (((;  (idmat@#))@(0 & {::))`((;~ (0,c))@(1 & {::))`]`(rcond"_)`(_."_)`berru)) (Q1;(R 1} y))
+
+  erase 'cdiff1 adiff2 berrl berru'
 
   EMPTY
 )
@@ -694,4 +965,4 @@ NB.     (_1 1 0 4 _6 4 & gemat_mt_) testhrd_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
 
-testhrd=: 1 : 'EMPTY_mt_ [ (testgehrd_mt_ @ u) ^: (=/)'
+testhrd=: 1 : 'EMPTY_mt_ [ ((testgghrd_mt_ @ u @ (2&,)) [ (testgehrd_mt_ @ u)) ^: (=/)'

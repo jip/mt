@@ -16,7 +16,7 @@ NB. unmat    Adv. to make verb to make random unitary
 NB.          (orthogonal) matrix
 NB. spmat    Conj. to make verb to make random sparse array
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.1 2011-10-29
 NB.
 NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
@@ -176,7 +176,7 @@ NB. References:
 NB. [1] G. E. P. Box and Mervin E. Muller, A Note on the
 NB.     Generation of Random Normal Deviates, The Annals of
 NB.     Mathematical Statistics (1958), Vol. 29, No. 2 pp.
-NB.     610–611
+NB.     610-611
 NB. [2] D.R.Brillinger "Time series. Data analysis and
 NB.     theory", The University of California, Berkeley, 1975
 NB.     (Д. Бриллинджер "Временные ряды. Обработка данных и

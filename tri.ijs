@@ -19,7 +19,7 @@ NB.            definite tridiagonal matrix given
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.1 2011-10-29
 NB.
 NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
@@ -789,7 +789,7 @@ NB. References:
 NB. [1] Moawwad El-Mikkawy, El-Desouky Rahmo. A new recursive
 NB.     algorithm for inverting general tridiagonal and
 NB.     anti-tridiagonal matrices.
-NB.     Applied Mathematics and Computation 204 (2008) 368–372
+NB.     Applied Mathematics and Computation 204 (2008) 368-372
 NB.     http://dx.doi.org/10.1016/j.amc.2008.06.053
 NB. [2] [Jprogramming] ravel items (,.) of empty list (i.0)
 NB.     Igor Zhuravlov, 2010-06-05 10:08:56

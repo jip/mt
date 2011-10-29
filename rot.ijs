@@ -9,7 +9,7 @@ NB.
 NB. testlartg  Test lartg by vectors given
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.8.1 2011-10-29
 NB.
 NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
@@ -49,14 +49,14 @@ NB. Description:
 NB.   Generate left multiplier cs to make plane rotation
 NB.   from fg to r0:
 NB.     r0 := cs * fg
-NB.   such that cs's 1st Cayley–Dickson half is real; r0's
-NB.   2nd Cayley–Dickson half is 0. fg, cs and r0 are of the
+NB.   such that cs's 1st Cayley-Dickson half is real; r0's
+NB.   2nd Cayley-Dickson half is 0. fg, cs and r0 are of the
 NB.   same type: either complex or quaternion.
 NB.
 NB. Formula:
 NB.   cs := sgn(cd1st(fg)) * sgn(qnconik(fg))
 NB. where
-NB.   cd1st()   - extract 1st half from Cayley–Dickson pair:
+NB.   cd1st()   - extract 1st half from Cayley-Dickson pair:
 NB.                 cd1st(a + b*i) = a
 NB.                 cd1st(a + b*i + c*j + d*k) = a + b*i
 NB.   qnconik() - conjugate i and k components:
@@ -108,11 +108,11 @@ NB.
 NB. Syntax:
 NB.     oxy=. cs rot ixy
 NB. where
-NB.   ixy - 2-vector of Cayley–Dickson halves (ix,iy) or
-NB.         2×n-matrix of stitched Cayley–Dickson halves
+NB.   ixy - 2-vector of Cayley-Dickson halves (ix,iy) or
+NB.         2×n-matrix of stitched Cayley-Dickson halves
 NB.         (ix[i],iy[i]), defines number[s] to rotate
 NB.         (complex or quaternion)
-NB.   cs  - 2-vector of Cayley–Dickson halves (c,s), defines
+NB.   cs  - 2-vector of Cayley-Dickson halves (c,s), defines
 NB.         rotating number (complex or quaternion)
 NB.   oxy - array of the same shape as ixy, the rotated
 NB.         number[s]
@@ -135,13 +135,13 @@ NB.
 NB. Syntax:
 NB.   oxy=. cs lartv ixy
 NB. where
-NB.   ixy - 2-vector of Cayley–Dickson halves (ix,iy) or
-NB.         n×2-matrix of laminated Cayley–Dickson halves
+NB.   ixy - 2-vector of Cayley-Dickson halves (ix,iy) or
+NB.         n×2-matrix of laminated Cayley-Dickson halves
 NB.         (ix[i],iy[i]), defines number[s] to rotate
 NB.         (complex or quaternion)
 NB.   cs  - array of the same shape as ixy, 2-vector of
-NB.         Cayley–Dickson halves (c,s) or n×2-matrix of
-NB.         laminated Cayley–Dickson halves (c[i],s[i]),
+NB.         Cayley-Dickson halves (c,s) or n×2-matrix of
+NB.         laminated Cayley-Dickson halves (c[i],s[i]),
 NB.         defines rotating number[s] (complex or
 NB.         quaternion)
 NB.   oxy - array of the same shape as ixy, the rotated

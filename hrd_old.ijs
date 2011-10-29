@@ -6,11 +6,11 @@ NB. gghrdx     Reduce a pair of general and triangular
 NB.            matrices to generalized Hessenberg form
 NB.
 NB. testgehrd  Test gehrdx by general matrix given
-NB. testgghrd  Test gghrdx by general matrices given
-NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
+NB. testgghrd_old  Test gghrdx by general matrices given
+NB. testhrd_old    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.7.0 2011-08-06
 NB.
 NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
@@ -231,7 +231,7 @@ gehd2u=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. gghrdl
+NB. gghrdl_old
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized lower
@@ -248,7 +248,7 @@ NB.   The unitary (orthogonal) matrices dQ0 and dZ0 are
 NB.   determined as products of Givens rotations.
 NB.
 NB. Syntax:
-NB.   'HT dQ0 dZ0'=. hs gghrdl A ,: B
+NB.   'HT dQ0 dZ0'=. hs gghrdl_old A ,: B
 NB. where
 NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
 NB.             defines submatrices A11 and B11 to be reduced
@@ -265,7 +265,7 @@ NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
 NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
 NB.             have the same shapes
 
-gghrdl=: 4 : 0
+gghrdl_old=: 4 : 0
   'h s'=. x
   t=. h+s-1
   n=. c y
@@ -280,13 +280,13 @@ gghrdl=: 4 : 0
     while. j > >: i do.                        NB. (h+s-i-2)-vector (desc) h+s-1:i+2
       lios=. j - 1 0
       NB. step 1: rotate columns lios to kill A[i,j]
-      'y cs'=. rot&.|: rotga y ; (< 0 ; liosr1a ; lios) ; 0
-      y=. (< 1 ; liosr1b ; lios) cs&(rot&.|:) upd y
+      'y cs'=. rot_old rotga_old y ; (< 0 ; liosr1a ; lios) ; 0
+      y=. (< 1 ; liosr1b ; lios) (cs&rot_old) upd y
       dZ0=. dZ0 , cs , lios
       lios=. j - 0 1
       NB. step 2: rotate rows lios to kill B[j-1,j]
-      'y cs'=. rot rotga y ; (< 1 ; lios ; liosc2b) ; < < a: ; _1
-      y=. (< 0 ; lios ; liosc2a) cs&rot upd y
+      'y cs'=. (rot_old&.|:) rotga_old y ; (< 1 ; lios ; liosc2b) ; < < a: ; _1
+      y=. (< 0 ; lios ; liosc2a) (cs&(rot_old&.|:)) upd y
       dQ0=. dQ0 , cs , lios
       NB. step 3: update IOS
       liosr1b=. (j-2) , liosr1b
@@ -300,7 +300,7 @@ gghrdl=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. gghrdu
+NB. gghrdu_old
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
@@ -317,7 +317,7 @@ NB.   The unitary (orthogonal) matrices dQ0 and dZ0 are
 NB.   determined as products of Givens rotations.
 NB.
 NB. Syntax:
-NB.   'HT dQ0 dZ0'=. hs gghrdu A ,: B
+NB.   'HT dQ0 dZ0'=. hs gghrdu_old A ,: B
 NB. where
 NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
 NB.             defines submatrices A11 and B11 to be reduced
@@ -339,7 +339,7 @@ NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 378
 
-gghrdu=: 4 : 0
+gghrdu_old=: 4 : 0
   'h s'=. x
   t=. h+s-1
   n=. c y
@@ -354,13 +354,13 @@ gghrdu=: 4 : 0
     while. i > >: j do.                        NB. (h+s-j-2)-vector (desc) h+s-1:j+2
       lios=. i - 1 0
       NB. step 1: rotate rows lios to kill A[i,j]
-      'y cs'=. rot rotga y ; (< 0 ; lios ; liosc1a) ; < < a: ; 0
-      y=. (< 1 ; lios ; liosc1b) cs&rot upd y
+      'y cs'=. (rot_old&.|:) rotga_old y ; (< 0 ; lios ; liosc1a) ; < < a: ; 0
+      y=. (< 1 ; lios ; liosc1b) (cs&(rot_old&.|:)) upd y
       dQ0=. dQ0 , cs , lios
       lios=. i - 0 1
       NB. step 2: rotate columns lios to kill B[i,i-1]
-      'y cs'=. rot&.|: rotga y ; (< 1 ; liosr2b ; lios) ; _1
-      y=. (< 0 ; liosr2a ; lios) cs&(rot&.|:) upd y
+      'y cs'=. rot_old rotga_old y ; (< 1 ; liosr2b ; lios) ; _1
+      y=. (< 0 ; liosr2a ; lios) (cs&rot_old) upd y
       dZ0=. dZ0 , cs , lios
       NB. step 3: update IOS
       liosc1b=. (i-2) , liosc1b
@@ -563,10 +563,10 @@ gehrdu=: 4 : 0
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
-NB. gghrdlnn        'H T'=.       hs gghrdlnn A ,: B
-NB. gghrdlnv        'H T Z1'=.    hs gghrdlnv A , B ,: Z0
-NB. gghrdlvn        'H T Q1'=.    hs gghrdlvn A , B ,: Q0
-NB. gghrdlvv        'H T Q1 Z1'=. hs gghrdlvv A , B , Q0 ,: Z0
+NB. gghrdlnn_old        'H T'=.       hs gghrdlnn_old A ,: B
+NB. gghrdlnv_old        'H T Z1'=.    hs gghrdlnv_old A , B ,: Z0
+NB. gghrdlvn_old        'H T Q1'=.    hs gghrdlvn_old A , B ,: Q0
+NB. gghrdlvv_old        'H T Q1 Z1'=. hs gghrdlvv_old A , B , Q0 ,: Z0
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized lower
@@ -620,23 +620,23 @@ NB.   hs=. 0 , n
 NB.   I=. idmat n
 NB.   'B Z0'=. (trl ,: unglq)@gelqf D
 NB.   A=. C (mp ct) Z0
-NB.   'H T Q1 Z1'=. hs gghrdlvv A , B , I ,: Z0
-NB.   'H T dQ0 dZ0'=. hs gghrdlvv A , B , ,:~ I
+NB.   'H T Q1 Z1'=. hs gghrdlvv_old A , B , I ,: Z0
+NB.   'H T dQ0 dZ0'=. hs gghrdlvv_old A , B , ,:~ I
 NB.
 NB. TODO:
 NB. - implement blocked version
 
-gghrdlnn=: [: : (0 {:: gghrdl)
-gghrdlnv=: [: : (   {:@]  ((0 {:: ]) , (rotscll 2 {:: ]  )) (gghrdl   }:))
-gghrdlvn=: [: : (   {:@]  ((0 {:: ]) , (rotscll 1 {:: ]  )) (gghrdl   }:))
-gghrdlvv=: [: : ((2 }. ]) ((0 {:: ]) , (rotscll&:>"2 0 }.)) (gghrdl 2&{.))
+gghrdlnn_old=: [: : (0 {:: gghrdl_old)
+gghrdlnv_old=: [: : (   {:@]  ((0 {:: ]) , (rotscll_old 2 {:: ]  )) (gghrdl_old   }:))
+gghrdlvn_old=: [: : (   {:@]  ((0 {:: ]) , (rotscll_old 1 {:: ]  )) (gghrdl_old   }:))
+gghrdlvv_old=: [: : ((2 }. ]) ((0 {:: ]) , (rotscll_old&:>"2 0 }.)) (gghrdl_old 2&{.))
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
-NB. gghrdunn        'H T'=.       hs gghrdunn A ,: B
-NB. gghrdunv        'H T Z1'=.    hs gghrdunv A , B ,: Z0
-NB. gghrduvn        'H T Q1'=.    hs gghrduvn A , B ,: Q0
-NB. gghrduvv        'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: Z0
+NB. gghrdunn_old        'H T'=.       hs gghrdunn_old A ,: B
+NB. gghrdunv_old        'H T Z1'=.    hs gghrdunv_old A , B ,: Z0
+NB. gghrduvn_old        'H T Q1'=.    hs gghrduvn_old A , B ,: Q0
+NB. gghrduvv_old        'H T Q1 Z1'=. hs gghrduvv_old A , B , Q0 ,: Z0
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
@@ -679,10 +679,10 @@ NB.   Z0   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
 NB.
 NB. Notes:
-NB. - gghrdunn models LAPACK's xGGHRD('N','N')
-NB. - gghrdunv models LAPACK's xGGHRD('N','V')
-NB. - gghrduvn models LAPACK's xGGHRD('V','N')
-NB. - gghrduvv models LAPACK's xGGHRD('V','V')
+NB. - gghrdunn_old models LAPACK's xGGHRD('N','N')
+NB. - gghrdunv_old models LAPACK's xGGHRD('N','V')
+NB. - gghrduvn_old models LAPACK's xGGHRD('V','N')
+NB. - gghrduvv_old models LAPACK's xGGHRD('V','V')
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   Q1       -: Q0 mp dQ0
@@ -696,25 +696,25 @@ NB.   hs=. 0 , n
 NB.   I=. idmat n
 NB.   'Q0 B'=. (ungqr ,: tru)@geqrf D
 NB.   A=. Q0 (mp~ ct)~ C
-NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: I
-NB.   'H T dQ0 dZ0'=. hs gghrduvv A , B , ,:~ I
+NB.   'H T Q1 Z1'=. hs gghrduvv_old A , B , Q0 ,: I
+NB.   'H T dQ0 dZ0'=. hs gghrduvv_old A , B , ,:~ I
 NB.
 NB. Application:
 NB. - model LAPACK's xGGHRD('N','I'):
 NB.     NB. 'H T dZ0'=. hs gghrduni A ,: B
-NB.     gghrduni=: gghrdunv (, idmat@c)
+NB.     gghrduni=: gghrdunv_old (, idmat@c)
 NB. - model LAPACK's xGGHRD('I','N'):
 NB.     NB. 'H T dQ0'=. hs gghrduin A ,: B
-NB.     gghrduin=: gghrduvn (, idmat@c)
+NB.     gghrduin=: gghrduvn_old (, idmat@c)
 NB. - model LAPACK's xGGHRD('I','I'):
 NB.     NB. 'H T dQ0 dZ0'=. hs gghrduii A ,: B
-NB.     gghrduii=: gghrduvv (,~^:2~ idmat@c)
+NB.     gghrduii=: gghrduvv_old (,~^:2~ idmat@c)
 NB. - model LAPACK's xGGHRD('I','V'):
 NB.     NB. 'H T dQ0 Z1'=. hs gghrduiv A , B ,: Z0
-NB.     gghrduiv=: gghrduvv (1&A.@, idmat@c)
+NB.     gghrduiv=: gghrduvv_old (1&A.@, idmat@c)
 NB. - model LAPACK's xGGHRD('V','I'):
 NB.     NB. 'H T Q1 dZ0'=. hs gghrduvi A , B ,: Q0
-NB.     gghrduvi=: gghrduvv (, idmat@c)
+NB.     gghrduvi=: gghrduvv_old (, idmat@c)
 NB.
 NB. References:
 NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
@@ -731,10 +731,10 @@ NB.
 NB. TODO:
 NB. - implement blocked version [2]
 
-gghrdunn=: [: : (0 {:: gghrdu)
-gghrdunv=: [: : (   {:@]  ((0 {:: ]) , (rotsclu 2 {:: ]  )) (gghrdu }:  ))
-gghrduvn=: [: : (   {:@]  ((0 {:: ]) , (rotsclu 1 {:: ]  )) (gghrdu }:  ))
-gghrduvv=: [: : ((2 }. ]) ((0 {:: ]) , (rotsclu&:>"2 0 }.)) (gghrdu 2&{.))
+gghrdunn_old=: [: : (0 {:: gghrdu_old)
+gghrdunv_old=: [: : (   {:@]  ((0 {:: ]) , (rotsclu_old 2 {:: ]  )) (gghrdu_old }:  ))
+gghrduvn_old=: [: : (   {:@]  ((0 {:: ]) , (rotsclu_old 1 {:: ]  )) (gghrdu_old }:  ))
+gghrduvv_old=: [: : ((2 }. ]) ((0 {:: ]) , (rotsclu_old&:>"2 0 }.)) (gghrdu_old 2&{.))
 
 NB. =========================================================
 NB. Test suite
@@ -772,7 +772,7 @@ testgehrd=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. testgghrd
+NB. testgghrd_old
 NB.
 NB. Description:
 NB.   Test Hessenberg reduction algorithms:
@@ -780,7 +780,7 @@ NB.   - gghrdx (math/mt addon)
 NB.   by general matrices given
 NB.
 NB. Syntax:
-NB.   testgghrd AB
+NB.   testgghrd_old AB
 NB. where
 NB.   AB - 2×n×n-report
 NB.
@@ -789,20 +789,20 @@ NB.   berr := max(berr0,berr1,berr2,berr3)
 NB. where
 NB.   ||M|| := max(||M||_1 , FP_SFMIN)
 NB.   'H T dQ0 dZ0'=. (0,n) gghrdxvv A , B , ,:~ I
-NB.   - gghrdl:
+NB.   - gghrdl_old:
 NB.       berr0 := ||A - dQ0^H * H * dZ0|| / (FP_PREC * ||A|| * n)
 NB.       berr1 := ||B - dQ0^H * T * dZ0|| / (FP_PREC * ||B|| * n)
 NB.       berr2 := ||I - dQ0^H * dQ0|| / (FP_PREC * n)
 NB.       berr3 := ||I - dZ0^H * dZ0|| / (FP_PREC * n)
 NB.       B - lower triangular
-NB.   - gghrdu:
+NB.   - gghrdu_old:
 NB.       berr0 := ||A - dQ0 * H * dZ0^H|| / (FP_PREC * ||A|| * n)
 NB.       berr1 := ||B - dQ0 * T * dZ0^H|| / (FP_PREC * ||B|| * n)
 NB.       berr2 := ||I - dQ0 * dQ0^H|| / (FP_PREC * n)
 NB.       berr3 := ||I - dZ0 * dZ0^H|| / (FP_PREC * n)
 NB.       B - upper triangular
 
-testgghrd=: 3 : 0
+testgghrd_old=: 3 : 0
   prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'AB HT dQ0dZ0'=. (A,B,I,:I) prep (H,T,dQ0,:dZ0)
   safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
   cdiff1=: 2 : '(0&{::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                      NB. L: (ct cdiff1 ]) : ||A - dQ0^H * H * dZ0|| , ||B - Q1^H * T * dZ0||
@@ -825,14 +825,14 @@ testgghrd=: 3 : 0
   rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag ABl
   rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag ABu
 
-  ('gghrdlnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
-  ('gghrdlnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`vberrl)) ABl , ,:~ I
-  ('gghrdunn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu
-  ('gghrdunv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`vberru)) ABu , ,:~ I
+  ('gghrdlnn_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
+  ('gghrdlnv_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
+  ('gghrdlvn_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
+  ('gghrdlvv_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`vberrl)) ABl , ,:~ I
+  ('gghrdunn_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu
+  ('gghrdunv_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
+  ('gghrduvn_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
+  ('gghrduvv_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`vberru)) ABu , ,:~ I
 
   erase 'cdiff1 adiff2 vberrl vberru'
 
@@ -840,14 +840,14 @@ testgghrd=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. testhrd
+NB. testhrd_old
 NB.
 NB. Description:
 NB.   Adv. to make verb to test gxhrdxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testhrd
+NB.   vtest=. mkmat testhrd_old
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
@@ -866,4 +866,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testhrd_mt_ 150 150
 NB. - test by random square complex matrices:
 NB.     (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
 
-testhrd=: 1 : 'EMPTY_mt_ [ (testgghrd_mt_@u@(2&,) [ testgehrd_mt_@u)^:(=/)'
+testhrd_old=: 1 : 'EMPTY_mt_ [ (testgghrd_old_mt_@u@(2&,) [ testgehrd_mt_@u)^:(=/)'

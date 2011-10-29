@@ -17,7 +17,7 @@ NB.            given
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.0 2011-10-29
 NB.
 NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
@@ -452,8 +452,8 @@ gebals=: 3 : 0
             if. di >: GEBALSFMAX1%f do. continue. end.
           end.
           d=. (di*f) i } d
-          B=. i  (%&f) upd    B
-          B=. i ((*&f) upd)"1 B
+          B=. i  %&f upd    B
+          B=. i (*&f upd)"1 B
           noconv=. 1
         end.
       end.

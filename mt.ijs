@@ -31,7 +31,7 @@ NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.7.1 2011-08-06
+NB. Version: 0.8.0 2011-10-29
 NB.
 NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
@@ -190,13 +190,13 @@ NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testlow_mt_ 150 200
 
 testlow=: 1 : 0
-  (u testbak_mt_) y   NB. square matrices only
-  (u testbal_mt_) y   NB. square matrices only
-  (u testref_mt_) y   NB. matrices with min dimention ≤ 200 only
-     testrot_mt_  ''  NB. fixed non-random test matrix is used
+  (u testbak_mt_) y  NB. square matrices only
+  (u testbal_mt_) y  NB. square matrices only
+  (u testref_mt_) y  NB. matrices with min dimention ≤ 200 only
+  (u testrot_mt_) y  NB. matrix of shape (2 1:} y) is used
   (u testgq_mt_ ) y
   (u testmq_mt_ ) y
-  (u testsm_mt_ ) y   NB. square matrices with size ≤ 500 only
+  (u testsm_mt_ ) y  NB. square matrices with size ≤ 500 only
 
   EMPTY_mt_
 )
@@ -236,6 +236,7 @@ testmid=: 1 : 0
   (u testeq_mt_ ) y   NB. square matrices only
   (u testevc_mt_) y   NB. square matrices only
   (u testhrd_mt_) y   NB. square matrices only
+  (u testpf_mt_ ) y
   (u testqf_mt_ ) y
   (u testtrf_mt_) y
   (u testtri_mt_) y   NB. square matrices only

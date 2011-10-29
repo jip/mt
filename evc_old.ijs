@@ -5,11 +5,11 @@ NB.             eigenvectors of generalized Schur form
 NB. tgevcxxb    Backtransformed left and/or right
 NB.             eigenvectors of generalized Schur form
 NB.
-NB. testtgevc   Test tgevcxxx by general matrices given
-NB. testevc     Adv. to make verb to test tgevcxxx by
+NB. testtgevc_old   Test tgevcxxx by general matrices given
+NB. testevc_old     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.7.0 2011-08-06
 NB.
 NB. Copyright 2011 Igor Zhuravlov
 NB.
@@ -37,13 +37,13 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. tgevci
+NB. tgevci_old
 NB.
 NB. Description:
-NB.   Calculate initial parameters for tgevcly and tgevclx
+NB.   Calculate initial parameters for tgevcly_old and tgevclx_old
 NB.
 NB. Syntax:
-NB.   'bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. ios tgevci SP
+NB.   'bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. ios tgevci_old SP
 NB. where
 NB.   SP       - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.              produced by hgezqsxx
@@ -60,7 +60,7 @@ NB.   abcoeff  - n×2-matrix, (a,b) coeffs for pencil a*S-b*P
 NB.   abcoeffa - n×2-matrix, coeffs for triangular solvers
 NB.   d        - k×n-matrix
 
-tgevci=: 4 : 0
+tgevci_old=: 4 : 0
   bignum=. % FP_SFMIN * c y
   small=. % FP_PREC * bignum
   d0=. diag"2 y                                                                NB. 2×n-matrix
@@ -89,23 +89,23 @@ tgevci=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. tgevcly
+NB. tgevcly_old
 NB.
 NB. Description:
 NB.   Compute some or all of non-scaled left eigenvectors
 NB.
 NB. Syntax:
-NB.   W=. (ios ; init) tgevcly SP
+NB.   W=. (ios ; init) tgevcly_old SP
 NB. where
 NB.   ios   - k-vector, lIOS eigenvectors to compute
-NB.   init  - boxed 8-vector, the output of tgevci
+NB.   init  - boxed 8-vector, the output of tgevci_old
 NB.   SP    - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.           produced by hgezqsxx
 NB.   W     - k×n-matrix, some or all of left eigenvectors,
 NB.           non-scaled
 NB.   k     - integer in range [0,n]
 
-tgevcly=: 4 : 0
+tgevcly_old=: 4 : 0
   'ios bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. x
   n=. c y
   k=. # ios
@@ -131,7 +131,7 @@ tgevcly=: 4 : 0
         if. *.`<:/ (j { cond2) , abs1wj do.
           work=. work % abs1wj
         end.
-        work=. j -@(%&(j{di)) upd work
+        work=. j (-@(%&(j{di))) upd work
         abs1wj=. sorim j { work
         if. j > 0 do.
           NB. w = w + y[j] * (a*S[:,j] - b*P[:,j]) with scaling
@@ -139,7 +139,7 @@ tgevcly=: 4 : 0
             work=. work % abs1wj
           end.
           workadd=. (((je { ios) { abcoeff) * j { work) * (((0,],0:),:(2 1,])) j) ({.@(1 0 2&|:)) ;. 0 y
-          work=. (i. j) +`-/@(,&workadd) upd work
+          work=. (i. j) (+`-/@(,&workadd)) upd work
         end.
         j=. <: j
       end.
@@ -151,23 +151,23 @@ tgevcly=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. tgevclx
+NB. tgevclx_old
 NB.
 NB. Description:
 NB.   Compute some or all of non-scaled right eigenvectors
 NB.
 NB. Syntax:
-NB.   W=. (ios ; init) tgevclx SP
+NB.   W=. (ios ; init) tgevclx_old SP
 NB. where
 NB.   ios   - k-vector, lIOS eigenvectors to compute
-NB.   init  - boxed 8-vector, the output of tgevci
+NB.   init  - boxed 8-vector, the output of tgevci_old
 NB.   SP    - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.           produced by hgezqsxx
 NB.   W     - k×n-matrix, some or all of right eigenvectors,
 NB.           non-scaled
 NB.   k     - integer in range [0,n]
 
-tgevclx=: 4 : 0
+tgevclx_old=: 4 : 0
   'ios bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. x
   d=. + d
   n=. c y
@@ -221,19 +221,19 @@ tgevclx=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. tgevcs
+NB. tgevcs_old
 NB.
 NB. Description:
 NB.   Scale left or right eigenvectors
 NB.
 NB. Syntax:
-NB.   V=. tgevcs W
+NB.   V=. tgevcs_old W
 NB. where
 NB.   W - k×n-matrix, some or all of left or right
 NB.       eigenvectors, non-scaled
 NB.   V - k×n-matrix, scaled W
 
-tgevcs=: 3 : 0
+tgevcs_old=: 3 : 0
   norm=. normitr y
   ios=. (#y) #"0 FP_SFMIN < norm
   y=. y % norm
@@ -244,9 +244,9 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. tgevcll
-NB. tgevclr
-NB. tgevclb
+NB. tgevcll_old
+NB. tgevclr_old
+NB. tgevclb_old
 NB.
 NB. Description:
 NB.   Compute some or all of left eigenvectors Y:
@@ -265,9 +265,9 @@ NB.     E1=. diagmat(diag(S))
 NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
-NB.   Y=.     [ios] tgevcll SP
-NB.   X=.     [ios] tgevclr SP
-NB.   'Y X'=. [ios] tgevclb SP
+NB.   Y=.     [ios] tgevcll_old SP
+NB.   X=.     [ios] tgevclr_old SP
+NB.   'Y X'=. [ios] tgevclb_old SP
 NB. where
 NB.   ios - k-vector, optional lIOS eigenvectors to compute,
 NB.         default is "all eigenvectors"
@@ -278,23 +278,23 @@ NB.   X   - k×n-matrix, some or all of right eigenvectors
 NB.   k   - integer in range [0,n]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevcll -:      tgevcur&.:(|:"2)) SP
-NB.   (tgevclr -:      tgevcul&.:(|:"2)) SP
-NB.   (tgevclb -: 1 A. tgevcub&.:(|:"2)) SP
+NB.   (tgevcll_old -:      tgevcur_old&.:(|:"2)) SP
+NB.   (tgevclr_old -:      tgevcul_old&.:(|:"2)) SP
+NB.   (tgevclb_old -: 1 A. tgevcub_old&.:(|:"2)) SP
 NB.   (E2 mp Y mp S) -: (E1 mp Y mp P)
 NB.   (S mp (ct X) mp E2) -: (P mp (ct X) mp E1)
 NB. where
-NB.   'Y X'=. tgevclb SP
+NB.   'Y X'=. tgevclb_old SP
 NB.   'E1 E2'=. diagmat@diag"2 SP
 
-tgevcll=:  ($:~ i.@c) : (([;tgevci) tgevcs  @ tgevcly           ])
-tgevclr=:  ($:~ i.@c) : (([;tgevci) tgevcs  @          tgevclx  ])
-tgevclb=:  ($:~ i.@c) : (([;tgevci) tgevcs"2@(tgevcly,:tgevclx) ])
+tgevcll_old=:  ($:~ i.@c) : (([;tgevci_old) tgevcs_old  @ tgevcly_old           ])
+tgevclr_old=:  ($:~ i.@c) : (([;tgevci_old) tgevcs_old  @          tgevclx_old  ])
+tgevclb_old=:  ($:~ i.@c) : (([;tgevci_old) tgevcs_old"2@(tgevcly_old,:tgevclx_old) ])
 
 NB. ---------------------------------------------------------
-NB. tgevcul
-NB. tgevcur
-NB. tgevcub
+NB. tgevcul_old
+NB. tgevcur_old
+NB. tgevcub_old
 NB.
 NB. Description:
 NB.   Compute some or all of left eigenvectors Y:
@@ -313,9 +313,9 @@ NB.     E1=. diagmat(diag(S))
 NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
-NB.   Y=.     [ios] tgevcul SP
-NB.   X=.     [ios] tgevcur SP
-NB.   'Y X'=. [ios] tgevcub SP
+NB.   Y=.     [ios] tgevcul_old SP
+NB.   X=.     [ios] tgevcur_old SP
+NB.   'Y X'=. [ios] tgevcub_old SP
 NB. where
 NB.   ios - k-vector, optional lIOS eigenvectors to compute,
 NB.         default is "all eigenvectors"
@@ -326,28 +326,28 @@ NB.   X   - n×k-matrix, some or all of right eigenvectors
 NB.   k   - integer in range [0,n]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevcul -:      tgevclr&.:(|:"2)) SP
-NB.   (tgevcur -:      tgevcll&.:(|:"2)) SP
-NB.   (tgevcub -: 1 A. tgevclb&.:(|:"2)) SP
+NB.   (tgevcul_old -:      tgevclr_old&.:(|:"2)) SP
+NB.   (tgevcur_old -:      tgevcll_old&.:(|:"2)) SP
+NB.   (tgevcub_old -: 1 A. tgevclb_old&.:(|:"2)) SP
 NB.   (E2 mp (ct Y) mp S) -: (E1 mp (ct Y) mp P)
 NB.   (S mp X mp E2) -: (P mp X mp E1)
 NB. where
-NB.   'Y X'=. tgevcub SP
+NB.   'Y X'=. tgevcub_old SP
 NB.   'E1 E2'=. diagmat@diag"2 SP
 NB.
 NB. Notes:
-NB. - tgevcul models LAPACK's xTGEVC('L','S')
-NB. - tgevcur models LAPACK's xTGEVC('R','S')
-NB. - tgevcub models LAPACK's xTGEVC('B','S')
+NB. - tgevcul_old models LAPACK's xTGEVC('L','S')
+NB. - tgevcur_old models LAPACK's xTGEVC('R','S')
+NB. - tgevcub_old models LAPACK's xTGEVC('B','S')
 
-tgevcul=: ($:~ i.@c) : ((([;tgevci) tgevcs  @ tgevclx           ])&.:(|:"2))
-tgevcur=: ($:~ i.@c) : ((([;tgevci) tgevcs  @          tgevcly  ])&.:(|:"2))
-tgevcub=: ($:~ i.@c) : ((([;tgevci) tgevcs"2@(tgevclx,:tgevcly) ])&.:(|:"2))
+tgevcul_old=: ($:~ i.@c) : ((([;tgevci_old) tgevcs_old  @ tgevclx_old           ])&.:(|:"2))
+tgevcur_old=: ($:~ i.@c) : ((([;tgevci_old) tgevcs_old  @          tgevcly_old  ])&.:(|:"2))
+tgevcub_old=: ($:~ i.@c) : ((([;tgevci_old) tgevcs_old"2@(tgevclx_old,:tgevcly_old) ])&.:(|:"2))
 
 NB. ---------------------------------------------------------
-NB. tgevcllb
-NB. tgevclrb
-NB. tgevclbb
+NB. tgevcllb_old
+NB. tgevclrb_old
+NB. tgevclbb_old
 NB.
 NB. Description:
 NB.   Compute left eigenvectors Y*Q:
@@ -365,9 +365,9 @@ NB.     E1=. diagmat(diag(S))
 NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
-NB.   YQ=.      tgevcllb SP , Q
-NB.   XZ=.      tgevclrb SP , Z
-NB.   'YQ XZ'=. tgevclbb SP , Q ,: Z
+NB.   YQ=.      tgevcllb_old SP , Q
+NB.   XZ=.      tgevclrb_old SP , Z
+NB.   'YQ XZ'=. tgevclbb_old SP , Q ,: Z
 NB. where
 NB.   SP  - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.         produced by hgezqsxx
@@ -375,9 +375,9 @@ NB.   YQ  - n×n-matrix, left eigenvectors Y*Q
 NB.   XZ  - n×n-matrix, right eigenvectors X*Z
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevcllb -: tgevcurb&.:(|:"2        )) SP , Q2
-NB.   (tgevclrb -: tgevculb&.:(|:"2        )) SP , Z2
-NB.   (tgevclbb -: tgevcubb&.:(|:"2@:(1&A.))) SP , Q2 ,: Z2
+NB.   (tgevcllb_old -: tgevcurb_old&.:(|:"2        )) SP , Q2
+NB.   (tgevclrb_old -: tgevculb_old&.:(|:"2        )) SP , Z2
+NB.   (tgevclbb_old -: tgevcubb_old&.:(|:"2@:(1&A.))) SP , Q2 ,: Z2
 NB.   D                         -: B mp Z0
 NB.   D                         -: BZ0f unmlqrn B
 NB.   A                         -: BZ0f unmlqrc C
@@ -407,25 +407,25 @@ NB.   B=. trl }:"1 BZ0f
 NB.   Q0=. I
 NB.   Z0=. unglq BZ0f
 NB.   A=. C mp ct Z0
-NB.   'H T Q1 Z1'=. hs gghrdlvv A , B , Q0 ,: Z0
-NB.   'H T dQ0 dZ0'=. hs gghrdlvv A , B , ,:~ I
-NB.   'S P Q2 Z2'=. hs hgezqsvv H , T , Q1 ,: Z1
-NB.   'S P dQ1 dZ1'=. hs hgezqsvv H , T , ,:~ I
-NB.   'S P dQ1dQ0 dZ1dZ0'=. hs hgezqsvv H , T , dQ0 ,: dZ0
-NB.   'Y X'=. tgevclb S ,: P
-NB.   'YdQ1 XdZ1'=. tgevclbb S , P , dQ1 ,: dZ1
-NB.   'YdQ1dQ0 XdZ1dZ0'=. tgevclbb S , P , dQ1dQ0 ,: dZ1dZ0
-NB.   'YQ2 XZ2'=. tgevclbb S , P , Q2 ,: Z2
+NB.   'H T Q1 Z1'=. hs gghrdlvv_old A , B , Q0 ,: Z0
+NB.   'H T dQ0 dZ0'=. hs gghrdlvv_old A , B , ,:~ I
+NB.   'S P Q2 Z2'=. hs hgezqsvv_old H , T , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgezqsvv_old H , T , ,:~ I
+NB.   'S P dQ1dQ0 dZ1dZ0'=. hs hgezqsvv_old H , T , dQ0 ,: dZ0
+NB.   'Y X'=. tgevclb_old S ,: P
+NB.   'YdQ1 XdZ1'=. tgevclbb_old S , P , dQ1 ,: dZ1
+NB.   'YdQ1dQ0 XdZ1dZ0'=. tgevclbb_old S , P , dQ1dQ0 ,: dZ1dZ0
+NB.   'YQ2 XZ2'=. tgevclbb_old S , P , Q2 ,: Z2
 NB.   'E1 E2'=. diagmat@diag"2 S ,: P
 
-tgevcllb=:  (i.@c ([;tgevci) 2&{.) tgevcs  @( tgevcly mp 2{]                    ) ]
-tgevclrb=:  (i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevclx mp _1{] ) ]
-tgevclbb=:  (i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevcly mp 2{]),:(tgevclx mp _1{])) ]
+tgevcllb_old=:  (i.@c ([;tgevci_old) 2&{.) tgevcs_old  @( tgevcly_old mp 2{]                    ) ]
+tgevclrb_old=:  (i.@c ([;tgevci_old) 2&{.) tgevcs_old  @(                   tgevclx_old mp _1{] ) ]
+tgevclbb_old=:  (i.@c ([;tgevci_old) 2&{.) tgevcs_old"2@((tgevcly_old mp 2{]),:(tgevclx_old mp _1{])) ]
 
 NB. ---------------------------------------------------------
-NB. tgevculb
-NB. tgevcurb
-NB. tgevcubb
+NB. tgevculb_old
+NB. tgevcurb_old
+NB. tgevcubb_old
 NB.
 NB. Description:
 NB.   Compute left eigenvectors Q*Y:
@@ -443,9 +443,9 @@ NB.     E1=. diagmat(diag(S))
 NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
-NB.   QY=.      tgevculb SP , Q
-NB.   ZX=.      tgevcurb SP , Z
-NB.   'QY ZX'=. tgevcubb SP , Q ,: Z
+NB.   QY=.      tgevculb_old SP , Q
+NB.   ZX=.      tgevcurb_old SP , Z
+NB.   'QY ZX'=. tgevcubb_old SP , Q ,: Z
 NB. where
 NB.   SP  - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.         produced by hgeqzsxx
@@ -453,9 +453,9 @@ NB.   QY  - n×n-matrix, left eigenvectors Q*Y
 NB.   ZX  - n×n-matrix, right eigenvectors Z*X
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (tgevculb -: tgevclrb&.:(|:"2        )) SP , Q2
-NB.   (tgevcurb -: tgevcllb&.:(|:"2        )) SP , Z2
-NB.   (tgevcubb -: tgevclbb&.:(|:"2@:(1&A.))) SP , Q2 ,: Z2
+NB.   (tgevculb_old -: tgevclrb_old&.:(|:"2        )) SP , Q2
+NB.   (tgevcurb_old -: tgevcllb_old&.:(|:"2        )) SP , Z2
+NB.   (tgevcubb_old -: tgevclbb_old&.:(|:"2@:(1&A.))) SP , Q2 ,: Z2
 NB.   D                         -: Q0 mp B
 NB.   D                         -: Q0fB unmqrln B
 NB.   A                         -: Q0fB unmqrlc C
@@ -485,37 +485,37 @@ NB.   B=. tru }: Q0fB
 NB.   Q0=. ungqr Q0fB
 NB.   Z0=. I
 NB.   A=. Q0 (mp~ ct)~ C
-NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: Z0
-NB.   'H T dQ0 dZ0'=. hs gghrduvv A , B , ,:~ I
-NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
-NB.   'S P dQ1 dZ1'=. hs hgeqzsvv H , T , ,:~ I
-NB.   'S P dQ0dQ1 dZ0dZ1'=. hs hgeqzsvv H , T , dQ0 ,: dZ0
-NB.   'Y X'=. tgevcub S ,: P
-NB.   'dQ1Y dZ1X'=. tgevcubb S , P , dQ1 ,: dZ1
-NB.   'dQ0dQ1Y dZ0dZ1X'=. tgevcubb S , P , dQ0dQ1 ,: dZ0dZ1
-NB.   'Q2Y Z2X'=. tgevcubb S , P , Q2 ,: Z2
+NB.   'H T Q1 Z1'=. hs gghrduvv_old A , B , Q0 ,: Z0
+NB.   'H T dQ0 dZ0'=. hs gghrduvv_old A , B , ,:~ I
+NB.   'S P Q2 Z2'=. hs hgeqzsvv_old H , T , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgeqzsvv_old H , T , ,:~ I
+NB.   'S P dQ0dQ1 dZ0dZ1'=. hs hgeqzsvv_old H , T , dQ0 ,: dZ0
+NB.   'Y X'=. tgevcub_old S ,: P
+NB.   'dQ1Y dZ1X'=. tgevcubb_old S , P , dQ1 ,: dZ1
+NB.   'dQ0dQ1Y dZ0dZ1X'=. tgevcubb_old S , P , dQ0dQ1 ,: dZ0dZ1
+NB.   'Q2Y Z2X'=. tgevcubb_old S , P , Q2 ,: Z2
 NB.   'E1 E2'=. diagmat@diag"2 S ,: P
 NB.
 NB. Notes:
-NB. - tgevculb models LAPACK's xTGEVC('L','B')
-NB. - tgevcurb models LAPACK's xTGEVC('R','B')
-NB. - tgevcubb models LAPACK's xTGEVC('B','B')
+NB. - tgevculb_old models LAPACK's xTGEVC('L','B')
+NB. - tgevcurb_old models LAPACK's xTGEVC('R','B')
+NB. - tgevcubb_old models LAPACK's xTGEVC('B','B')
 
-tgevculb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @( tgevclx mp 2{]                    ) ])&.:(|:"2)
-tgevcurb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevcly mp _1{] ) ])&.:(|:"2)
-tgevcubb=: ((i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]),:(tgevcly mp _1{])) ])&.:(|:"2)
+tgevculb_old=: ((i.@c ([;tgevci_old) 2&{.) tgevcs_old  @( tgevclx_old mp 2{]                    ) ])&.:(|:"2)
+tgevcurb_old=: ((i.@c ([;tgevci_old) 2&{.) tgevcs_old  @(                   tgevcly_old mp _1{] ) ])&.:(|:"2)
+tgevcubb_old=: ((i.@c ([;tgevci_old) 2&{.) tgevcs_old"2@((tgevclx_old mp 2{]),:(tgevcly_old mp _1{])) ])&.:(|:"2)
 
 NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. testtgevc
+NB. testtgevc_old
 NB.
 NB. Description:
 NB.   Test tgevcxxx by general matrices given
 NB.
 NB. Syntax:
-NB.   testtgevc AB
+NB.   testtgevc_old AB
 NB. where
 NB.   AB - 2×n×n-report (A,:B)
 NB.
@@ -532,47 +532,47 @@ NB.   l(i)  - i-th left eigenvector
 NB.   lb(i) - i-th back transformed left eigenvector
 NB.   r(i)  - i-th right eigenvector
 NB.   rb(i) - i-th back transformed right eigenvector
-NB.   - tgevcll:
+NB.   - tgevcll_old:
 NB.       berr0 := max(||l(i) * (e2(i)*S - e1(i)*P)  || / (FP_PREC * max(|| e2(i)*S   ||,|| e1(i)*P   ||)))
 NB.       berr1 := max(| ||l(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevclr:
+NB.   - tgevclr_old:
 NB.       berr0 := max(||r(i) * (e2(i)*S - e1(i)*P)^H|| / (FP_PREC * max(||(e2(i)*S)^H||,||(e1(i)*P)^H||)))
 NB.       berr1 := max(| ||r(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevclb:
-NB.       berr0 := berr(tgevcll)
-NB.       berr1 := berr(tgevclr)
-NB.   - tgevcllb:
+NB.   - tgevclb_old:
+NB.       berr0 := berr(tgevcll_old)
+NB.       berr1 := berr(tgevclr_old)
+NB.   - tgevcllb_old:
 NB.       berr0 := max(||l(i) * (e2(i)*H - e1(i)*T)  || / (FP_PREC * max(|| e2(i)*H   ||,|| e1(i)*T   ||)))
 NB.       berr1 := max(| ||lb(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevclrb:
+NB.   - tgevclrb_old:
 NB.       berr0 := max(||r(i) * (e2(i)*H - e1(i)*T)^H|| / (FP_PREC * max(||(e2(i)*H)^H||,||(e1(i)*T)^H||)))
 NB.       berr1 := max(| ||rb(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevclbb:
-NB.       berr0 := berr(tgevcllb)
-NB.       berr1 := berr(tgevclrb)
-NB.   - tgevcul:
+NB.   - tgevclbb_old:
+NB.       berr0 := berr(tgevcllb_old)
+NB.       berr1 := berr(tgevclrb_old)
+NB.   - tgevcul_old:
 NB.       berr0 := max(||(e2(i)*S - e1(i)*P)^H * l(i)|| / (FP_PREC * max(||(e2(i)*S)^H||,||(e1(i)*P)^H||)))
 NB.       berr1 := max(| ||l(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevcur:
+NB.   - tgevcur_old:
 NB.       berr0 := max(||(e2(i)*S - e1(i)*P)   * r(i)|| / (FP_PREC * max(|| e2(i)*S   ||,|| e1(i)*P   ||)))
 NB.       berr1 := max(| ||r(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevcub:
-NB.       berr0 := berr(tgevcul)
-NB.       berr1 := berr(tgevcur)
-NB.   - tgevculb:
+NB.   - tgevcub_old:
+NB.       berr0 := berr(tgevcul_old)
+NB.       berr1 := berr(tgevcur_old)
+NB.   - tgevculb_old:
 NB.       berr0 := max(||(e2(i)*H - e1(i)*T)^H * l(i)|| / (FP_PREC * max(||(e2(i)*H)^H||,||(e1(i)*T)^H||)))
 NB.       berr1 := max(| ||lb(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevcurb:
+NB.   - tgevcurb_old:
 NB.       berr0 := max(||(e2(i)*H - e1(i)*T)   * r(i)|| / (FP_PREC * max(|| e2(i)*H   ||,|| e1(i)*T   ||)))
 NB.       berr1 := max(| ||rb(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevcubb:
-NB.       berr0 := berr(tgevculb)
-NB.       berr1 := berr(tgevcurb)
+NB.   - tgevcubb_old:
+NB.       berr0 := berr(tgevculb_old)
+NB.       berr1 := berr(tgevcurb_old)
 NB.
 NB. Notes:
 NB. - berrxx are non-iterative and are require O(N^3) RAM
 
-testtgevc=: 3 : 0
+testtgevc_old=: 3 : 0
   vberrll=:  (     normir@:((((  norm1r@:((mp"1 2 (-/"3))~     )                                           )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:( norm1       "2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitr%FP_PREC*c)@]
   vberrlr=:  (     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~+    )          )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:(       normi "2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitr%FP_PREC*c)@]
   vberrlb=:  (>./@:normir@:((((((norm1r@:( mp"1 2        ~   {.),:norm1r@:((mp"2 1       ) + @{:))~(-/"3))~)(>./@:%)(FP_PREC*(FP_SFMIN>.|:@:(>./"2)@:((norm1,normi)"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitr%FP_PREC*c)@]
@@ -581,21 +581,21 @@ testtgevc=: 3 : 0
   vberrur=:  (     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~|:   )          )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:(       norm1 "2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitc%FP_PREC*c)@]
   vberrub=:  (>./@:normir@:((((((norm1r@:( mp"1 2        ~ct@{.),:norm1r@:((mp"2 1       ) |:@{:))~(-/"3))~)(>./@:%)(FP_PREC*(FP_SFMIN>.|:@:(>./"2)@:((normi,norm1)"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitc%FP_PREC*c)@]
 
-  rcondl=. <./ trlcon1"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
-  rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ 0&,)~((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
+  rcondl=. <./ trlcon1"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv_old (, ,:~@idmat)~) , ]) ((gghrdlnn_old~ 0&,)~((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
+  rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv_old (, ,:~@idmat)~) , ]) ((gghrdunn_old~ 0&,)~((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
 
-  ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrll)) SPl
-  ('tgevclr'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrlr)) SPl
-  ('tgevclb'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrlb)) SPl
-  ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`(_."_)`vberrll)) SPQZHTl
-  ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`(_."_)`vberrlr)) SPQZHTl
-  ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`(_."_)`vberrlb)) SPQZHTl
-  ('tgevcul'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrul)) SPu
-  ('tgevcur'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrur)) SPu
-  ('tgevcub'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrub)) SPu
-  ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`(_."_)`vberrul)) SPQZHTu
-  ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`(_."_)`vberrur)) SPQZHTu
-  ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`(_."_)`vberrub)) SPQZHTu
+  ('tgevcll_old'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrll)) SPl
+  ('tgevclr_old'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrlr)) SPl
+  ('tgevclb_old'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrlb)) SPl
+  ('tgevcllb_old' tmonad ((0 1 2  &{)`]`(rcondl"_)`(_."_)`vberrll)) SPQZHTl
+  ('tgevclrb_old' tmonad ((0 1   3&{)`]`(rcondl"_)`(_."_)`vberrlr)) SPQZHTl
+  ('tgevclbb_old' tmonad ((0 1 2 3&{)`]`(rcondl"_)`(_."_)`vberrlb)) SPQZHTl
+  ('tgevcul_old'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrul)) SPu
+  ('tgevcur_old'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrur)) SPu
+  ('tgevcub_old'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrub)) SPu
+  ('tgevculb_old' tmonad ((0 1 2  &{)`]`(rcondu"_)`(_."_)`vberrul)) SPQZHTu
+  ('tgevcurb_old' tmonad ((0 1   3&{)`]`(rcondu"_)`(_."_)`vberrur)) SPQZHTu
+  ('tgevcubb_old' tmonad ((0 1 2 3&{)`]`(rcondu"_)`(_."_)`vberrub)) SPQZHTu
 
   erase 'vberrll vberrlr vberrlb vberrul vberrur vberrub'
 
@@ -603,14 +603,14 @@ testtgevc=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. testevc
+NB. testevc_old
 NB.
 NB. Description:
 NB.   Adv. to make verb to test tgevcxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testevc
+NB.   vtest=. mkmat testevc_old
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
@@ -629,4 +629,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testevc_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testevc_mt_ 150 150
 
-testevc=: 1 : 'EMPTY_mt_ [ testtgevc_mt_@u@(2&,)^:(=/)'
+testevc_old=: 1 : 'EMPTY_mt_ [ testtgevc_old_mt_@u@(2&,)^:(=/)'

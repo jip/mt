@@ -4,11 +4,11 @@ NB. hgexxe    Eigenvalues of pair of structured matrices
 NB. hgexxs    Eigenvalues and the Schur form of pair of
 NB.           structured matrices
 NB.
-NB. testhgeq  Test hgexxxxx by general matrices given
-NB. testeq    Adv. to make verb to test hgexxxxx by matrices
+NB. testhgeq_old  Test hgexxxxx by general matrices given
+NB. testeq_old    Adv. to make verb to test hgexxxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.7.0 2011-08-06
 NB.
 NB. Copyright 2011 Igor Zhuravlov
 NB.
@@ -45,17 +45,17 @@ NB. Notes: implements LAPACK's xLAQR1
 
 laqr1=: 4 : 0
   's1 s2'=. x
-  ((-&s1 upddiag ]) (mp (% norm1t)) ((-&s2 updl 0) {."1 ])) y
+  (((-&s1) upddiag ]) (mp (% norm1t)) (((-&s2) updl 0) {."1 ])) y
 )
 
 NB. ---------------------------------------------------------
-NB. hgexxeo
+NB. hgexxeo_old
 NB.
 NB. Description:
 NB.   Compute generalized eigenvalues of hs-segment
 NB.
 NB. Syntax:
-NB.   'HTupd signbc'=. hs hgexxeo H ,: T
+NB.   'HTupd signbc'=. hs hgexxeo_old H ,: T
 NB. where
 NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
 NB.           defines eigenvalues range
@@ -70,7 +70,7 @@ NB.   Tupd  - n×n-matrix, being T with hs-segment of diagonal
 NB.           replaced by beta (see hgexx)
 NB.   signbc - s-vector, scaling factors to form Q,Z later
 
-hgexxeo=: 4 : 0
+hgexxeo_old=: 4 : 0
   'Hd Td'=. (0 , x) diag"2 y
   absb=. | Td
   'signbc Td'=. (,:~ FP_SFMIN < absb) } 1 0 2 |: (1 ,: + * Td) ,: (0 ,: absb)
@@ -78,55 +78,55 @@ hgexxeo=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. hgezqso
-NB. hgeqzso
+NB. hgezqso_old
+NB. hgeqzso_old
 NB.
 NB. Description:
 NB.   Compute generalized eigenvalues of hs-segment and
-NB.   reduce corresponding rows (hgezqso) or columns
-NB.   (hgeqzso) to generalized Schur form
+NB.   reduce corresponding rows (hgezqso_old) or columns
+NB.   (hgeqzso_old) to generalized Schur form
 NB.
 NB. Syntax:
 NB.   'HTupd signbc'=. hs hgexxso H ,: T
 NB. where
 NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
 NB.           defines eigenvalues range
-NB.   H     - n×n-matrix, either lower (hgezqso) or upper
-NB.           (hgeqzso) Hessenberg inside the submatrix
-NB.           H[h:h+s-1,h:h+s-1], and lower (hgezqso) or
-NB.           upper (hgeqzso) triangular outside
-NB.   T     - n×n-matrix, either lower (hgezqso) or upper
-NB.           (hgeqzso) triangular
+NB.   H     - n×n-matrix, either lower (hgezqso_old) or upper
+NB.           (hgeqzso_old) Hessenberg inside the submatrix
+NB.           H[h:h+s-1,h:h+s-1], and lower (hgezqso_old) or
+NB.           upper (hgeqzso_old) triangular outside
+NB.   T     - n×n-matrix, either lower (hgezqso_old) or upper
+NB.           (hgeqzso_old) triangular
 NB.   HTupd -: Hupd ,: Tupd
-NB.   Hupd  - n×n-matrix, being H with rows (hgezqso) or
-NB.           columns (hgeqzso) from hs-segment transformed
+NB.   Hupd  - n×n-matrix, being H with rows (hgezqso_old) or
+NB.           columns (hgeqzso_old) from hs-segment transformed
 NB.           to Shur form
-NB.   Tupd  - n×n-matrix, being T with rows (hgezqso) or
-NB.           columns (hgeqzso) from hs-segment transformed
+NB.   Tupd  - n×n-matrix, being T with rows (hgezqso_old) or
+NB.           columns (hgeqzso_old) from hs-segment transformed
 NB.           to Shur form
 NB.   signbc - s-vector, scaling factors to form Q,Z later
 
-hgezqso=: 4 : 0
+hgezqso_old=: 4 : 0
   lios=. dhs2lios x
-  'y signbc'=. x hgexxeo y
+  'y signbc'=. x hgexxeo_old y
   subHT=. lios {"2 y
   (((,:~ lios >/ (i. c y)) } subHT ,: subHT *"2 signbc) lios }"2 y) ; signbc
 )
 
-hgeqzso=: 4 : 0
+hgeqzso_old=: 4 : 0
   lios=. dhs2lios x
-  'y signbc'=. x hgexxeo y
+  'y signbc'=. x hgexxeo_old y
   subHT=. lios {"1 y
   (((,:~ (i. c y) </ lios) } subHT ,: subHT *"1 signbc) lios }"1 y) ; signbc
 )
 
 NB. ---------------------------------------------------------
-NB. hgezq
-NB. hgeqz
+NB. hgezq_old
+NB. hgeqz_old
 NB.
 NB. Description:
 NB.   Adv. to make verbs to find eigenvalues of either lower
-NB.   (hgezq) or upper (hgeqz) Hessenberg-triangular pair
+NB.   (hgezq_old) or upper (hgeqz_old) Hessenberg-triangular pair
 NB.   (H,T) and, optionally, to reduce this pair to
 NB.   generalized Schur form
 NB.
@@ -136,8 +136,8 @@ NB. where
 NB.   hgexxxo - monad to compute generalized eigenvalues of
 NB.             hs-segment and, optionally, to reduce
 NB.             corresponding columns to generalized Schur
-NB.             form, is either hgezqso (hgezq only), hgeqzso
-NB.             (hgeqz only) or hgexxeo, is called as:
+NB.             form, is either hgezqso_old (hgezq_old only), hgeqzso_old
+NB.             (hgeqz_old only) or hgexxeo_old, is called as:
 NB.               'HTupd signbc'=. hgexxxo hs ; HT
 NB.   init    - dyad to initialize counters, is called as:
 NB.               'ifrstm ilastm'=. (h , ilast) init (0 , n-1)
@@ -157,7 +157,7 @@ NB.
 NB. Notes:
 NB. - non-converged eigenvalues are set to NaN
 
-hgezq=: 1 : 0
+hgezq_old=: 1 : 0
 :
   '`hgezqxo init reset step'=. m
   e=. +/ 'h s'=. x
@@ -230,12 +230,12 @@ hgezq=: 1 : 0
                 jch=. j
                 lios=. (>: ilastm) th2lios j
                 while. jch < ilast do.
-                  'y cs'=. rot&.|: rotga y ; (< 0 ; lios ; (jch + 0 1)) ; 0
+                  'y cs'=. rot_old rotga y ; (< 0 ; lios ; (jch + 0 1)) ; 0
                   lios=. }. lios
-                  y=. (< 1 ; lios ; (jch + 0 1)) cs&(rot&.|:) upd y
+                  y=. (< 1 ; lios ; (jch + 0 1)) (cs&rot_old) upd y
                   dZ1=. dZ1 , (+ cs) , jch + 0 1
                   if. ilazr2 do.
-                    y=. (< 0 , jch - 1 0) *&({. cs) upd y
+                    y=. (< 0 , jch - 1 0) (*&({. cs)) upd y
                     ilazr2=. 0
                   end.
                   if. btol <: sorim (< 1 , jch + 1 1) { y do.
@@ -256,11 +256,11 @@ hgezq=: 1 : 0
                 liosr=. (>: ilastm) th2lios <: j
                 liosc=. (2 + j) th2lios ifrstm
                 while. jch < ilast do.
-                  'y cs'=. rot&.|: rotga y ; (< 1 ; (2 }. liosr) ; (jch + 0 1)) ; 0
-                  y=. (< 0 ; liosr ; (jch + 0 1)) cs&(rot&.|:) upd y
+                  'y cs'=. rot_old rotga y ; (< 1 ; (2 }. liosr) ; (jch + 0 1)) ; 0
+                  y=. (< 0 ; liosr ; (jch + 0 1)) (cs&rot_old) upd y
                   dZ1=. dZ1 , (+ cs) , jch + 0 1
-                  'y cs'=. rot rotga y ; (< 0 ; (jch - 0 1) ; liosc) ; < < a: ; _1
-                  y=. (< 1 ; (jch - 0 1) ; (_2 }. liosc)) cs&rot upd y
+                  'y cs'=. (rot_old&.|:) rotga y ; (< 0 ; (jch - 0 1) ; liosc) ; < < a: ; _1
+                  y=. (< 1 ; (jch - 0 1) ; (_2 }. liosc)) (cs&(rot_old&.|:)) upd y
                   dQ1=. dQ1 , cs , jch - 0 1
                   liosr=. }. liosr
                   liosc=. liosc , 2 + jch
@@ -285,8 +285,8 @@ hgezq=: 1 : 0
         NB. T[ilast,ilast]=0 - clear H[ilast-1,ilast] to
         NB. split off a 1x1 block
         lios=. (>: ilast) th2lios ifrstm
-        'y cs'=. rot rotga y ; (< 0 ; (ilast - 0 1) ; lios) ; < < a: ; _1
-        y=. (< 1 ; (ilast - 0 1) ; (}: lios)) cs&rot upd y
+        'y cs'=. (rot_old&.|:) rotga y ; (< 0 ; (ilast - 0 1) ; lios) ; < < a: ; _1
+        y=. (< 1 ; (ilast - 0 1) ; (}: lios)) (cs&(rot_old&.|:)) upd y
         dQ1=. dQ1 , cs , ilast - 0 1
       else.
         y=. 0 (< 0 , ilast - 1 0) } y
@@ -349,7 +349,7 @@ hgezq=: 1 : 0
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
       NB. do an implicit-shift ZQ sweep
       NB. initial Z
-      cs=. lartg ctemp , ascale * (< 0 , istart + 0 1) { y
+      cs=. }: lartg ctemp , ascale * (< 0 , istart + 0 1) { y
       NB. sweep
       j=. istart
       liosr=. (>: ilastm) th2lios j
@@ -358,20 +358,20 @@ hgezq=: 1 : 0
         lios=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          y=. (< a: ; liosr ; lios) cs&(rot&.|:)"2 upd y
+          y=. (< a: ; liosr ; lios) (cs&rot_old"2) upd y
         else.
-          'y cs'=. rot&.|: rotga y ; (< 0 ; liosr ; lios) ; 0
+          'y cs'=. rot_old rotga y ; (< 0 ; liosr ; lios) ; 0
           liosr=. }. liosr
-          y=. (< 1 ; liosr ; lios) cs&(rot&.|:) upd y
+          y=. (< 1 ; liosr ; lios) (cs&rot_old) upd y
         end.
         dZ1=. dZ1 , (+ cs) , lios
         lios=. j + 1 0
-        'y cs'=. rot rotga y ; (< 1 ; lios ; liosc) ; < < a: ; _1
+        'y cs'=. (rot_old&.|:) rotga y ; (< 1 ; lios ; liosc) ; < < a: ; _1
         NB. isn't a last iteration?
         if. j < <: ilast do.
           liosc=. liosc , j + 2
         end.
-        y=. (< 0 ; lios ; liosc) cs&rot upd y
+        y=. (< 0 ; lios ; liosc) (cs&(rot_old&.|:)) upd y
         dQ1=. dQ1 , cs , lios
         j=. >: j
       end.
@@ -382,7 +382,7 @@ hgezq=: 1 : 0
   ((_. ; 0 0 , >: ilast) setdiag"2 y) ; dQ1 ; dZ1
 )
 
-hgeqz=: 1 : 0
+hgeqz_old=: 1 : 0
 :
   '`hgeqzxo init reset step'=. m
   e=. +/ 'h s'=. x
@@ -454,12 +454,12 @@ hgeqz=: 1 : 0
                 jch=. j
                 lios=. (>: ilastm) th2lios j
                 while. jch < ilast do.
-                  'y cs'=. rot rotga y ; (< 0 ; (jch + 0 1) ; lios) ; < < a: ; 0
+                  'y cs'=. (rot_old&.|:) rotga y ; (< 0 ; (jch + 0 1) ; lios) ; < < a: ; 0
                   lios=. }. lios
-                  y=. (< 1 ; (jch + 0 1) ; lios) cs&rot upd y
+                  y=. (< 1 ; (jch + 0 1) ; lios) (cs&(rot_old&.|:)) upd y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
                   if. ilazr2 do.
-                    y=. (< 0 , jch - 0 1) *&({. cs) upd y
+                    y=. (< 0 , jch - 0 1) (*&({. cs)) upd y
                     ilazr2=. 0
                   end.
                   if. btol <: sorim (< 1 , jch + 1 1) { y do.
@@ -480,11 +480,11 @@ hgeqz=: 1 : 0
                 liosc=. (>: ilastm) th2lios <: j
                 liosr=. (2 + j) th2lios ifrstm
                 while. jch < ilast do.
-                  'y cs'=. rot rotga y ; (< 1 ; (jch + 0 1) ; (2 }. liosc)) ; < < a: ; 0
-                  y=. (< 0 ; (jch + 0 1) ; liosc) cs&rot upd y
+                  'y cs'=. (rot_old&.|:) rotga y ; (< 1 ; (jch + 0 1) ; (2 }. liosc)) ; < < a: ; 0
+                  y=. (< 0 ; (jch + 0 1) ; liosc) (cs&(rot_old&.|:)) upd y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
-                  'y cs'=. rot&.|: rotga y ; (< 0 ; liosr ; (jch - 0 1)) ; _1
-                  y=. (< 1 ; (_2 }. liosr) ; (jch - 0 1)) cs&(rot&.|:) upd y
+                  'y cs'=. rot_old rotga y ; (< 0 ; liosr ; (jch - 0 1)) ; _1
+                  y=. (< 1 ; (_2 }. liosr) ; (jch - 0 1)) (cs&rot_old) upd y
                   dZ1=. dZ1 , cs , jch - 0 1
                   liosc=. }. liosc
                   liosr=. liosr , 2 + jch
@@ -509,8 +509,8 @@ hgeqz=: 1 : 0
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
         lios=. (>: ilast) th2lios ifrstm
-        'y cs'=. rot&.|: rotga y ; (< 0 ; lios ; (ilast - 0 1)) ; _1
-        y=. (< 1 ; (}: lios) ; (ilast - 0 1)) cs&(rot&.|:) upd y
+        'y cs'=. rot_old rotga y ; (< 0 ; lios ; (ilast - 0 1)) ; _1
+        y=. (< 1 ; (}: lios) ; (ilast - 0 1)) (cs&rot_old) upd y
         dZ1=. dZ1 , cs , ilast - 0 1
       else.
         y=. 0 (< 0 , ilast - 0 1) } y
@@ -573,7 +573,7 @@ hgeqz=: 1 : 0
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
       NB. do an implicit-shift QZ sweep
       NB. initial Q
-      cs=. lartg ctemp , ascale * (< 0 , istart + 1 0) { y
+      cs=. }: lartg ctemp , ascale * (< 0 , istart + 1 0) { y
       NB. sweep
       j=. istart
       liosc=. (>: ilastm) th2lios j
@@ -582,20 +582,20 @@ hgeqz=: 1 : 0
         lios=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          y=. (< a: ; lios ; liosc) cs&rot"2 upd y
+          y=. (< a: ; lios ; liosc) (cs&(rot_old&.|:)"2) upd y
         else.
-          'y cs'=. rot rotga y ; (< 0 ; lios ; liosc) ; < < a: ; 0
+          'y cs'=. (rot_old&.|:) rotga y ; (< 0 ; lios ; liosc) ; < < a: ; 0
           liosc=. }. liosc
-          y=. (< 1 ; lios ; liosc) cs&rot upd y
+          y=. (< 1 ; lios ; liosc) (cs&(rot_old&.|:)) upd y
         end.
         dQ1=. dQ1 , (+ cs) , lios
         lios=. j + 1 0
-        'y cs'=. rot&.|: rotga y ; (< 1 ; liosr ; lios) ; _1
+        'y cs'=. rot_old rotga y ; (< 1 ; liosr ; lios) ; _1
         NB. isn't a last iteration?
         if. j < <: ilast do.
           liosr=. liosr , j + 2
         end.
-        y=. (< 0 ; liosr ; lios) cs&(rot&.|:) upd y
+        y=. (< 0 ; liosr ; lios) (cs&rot_old) upd y
         dZ1=. dZ1 , cs , lios
         j=. >: j
       end.
@@ -607,10 +607,10 @@ hgeqz=: 1 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. hgezqe
-NB. hgezqs
-NB. hgeqze
-NB. hgeqzs
+NB. hgezqe_old
+NB. hgezqs_old
+NB. hgeqze_old
+NB. hgeqzs_old
 NB.
 NB. Description:
 NB.   Shortcuts, see hgeqzxxxx
@@ -618,24 +618,24 @@ NB.
 NB. Syntax:
 NB.   'HTupd dQ1 dZ1'=. hs hgexxx HT
 
-hgezqe=: hgexxeo`[`(2 1&{@,`[@.((<{:)~{.))`[ hgezq
-hgezqs=: hgezqso`]`]                      `] hgezq
+hgezqe_old=: hgexxeo_old`[`(2 1&{@,`[@.((<{:)~{.))`[ hgezq_old
+hgezqs_old=: hgezqso_old`]`]                      `] hgezq_old
 
-hgeqze=: hgexxeo`[`(2 1&{@,`[@.((<{:)~{.))`[ hgeqz
-hgeqzs=: hgeqzso`]`]                      `] hgeqz
+hgeqze_old=: hgexxeo_old`[`(2 1&{@,`[@.((<{:)~{.))`[ hgeqz_old
+hgeqzs_old=: hgeqzso_old`]`]                      `] hgeqz_old
 
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. hgezqenn
-NB. hgezqenv
-NB. hgezqevn
-NB. hgezqevv
-NB. hgezqsnn
-NB. hgezqsnv
-NB. hgezqsvn
-NB. hgezqsvv
+NB. hgezqenn_old
+NB. hgezqenv_old
+NB. hgezqevn_old
+NB. hgezqevv_old
+NB. hgezqsnn_old
+NB. hgezqsnv_old
+NB. hgezqsvn_old
+NB. hgezqsvv_old
 NB.
 NB. Description:
 NB.   Compute eigenvalues (hgezqxxx) and reduce to
@@ -675,14 +675,14 @@ NB.     E * L * A = L * B
 NB.     A * R^H * E = B * R^H * E
 NB.
 NB. Syntax:
-NB.   e1e2=.        hs hgezqenn H ,: T
-NB.   'e1e2 Z2'=.   hs hgezqenv H , T ,: Z1
-NB.   'e1e2 Q2'=.   hs hgezqevn H , T ,: Q1
-NB.   'e1e2 Q2Z2'=. hs hgezqevv H , T , Q1 ,: Z1
-NB.   'S P'=.       hs hgezqsnn H ,: T
-NB.   'S P Z2'=.    hs hgezqsnv H , T ,: Z1
-NB.   'S P Q2'=.    hs hgezqsvn H , T ,: Q1
-NB.   'S P Q2 Z2'=. hs hgezqsvv H , T , Q1 ,: Z1
+NB.   e1e2=.        hs hgezqenn_old H ,: T
+NB.   'e1e2 Z2'=.   hs hgezqenv_old H , T ,: Z1
+NB.   'e1e2 Q2'=.   hs hgezqevn_old H , T ,: Q1
+NB.   'e1e2 Q2Z2'=. hs hgezqevv_old H , T , Q1 ,: Z1
+NB.   'S P'=.       hs hgezqsnn_old H ,: T
+NB.   'S P Z2'=.    hs hgezqsnv_old H , T ,: Z1
+NB.   'S P Q2'=.    hs hgezqsvn_old H , T ,: Q1
+NB.   'S P Q2 Z2'=. hs hgezqsvv_old H , T , Q1 ,: Z1
 NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices H11 and T11 position in H
@@ -719,9 +719,9 @@ NB.   I=. idmat n
 NB.   'B Z0'=. (trl@:(}:"1) ,: unglq)@gelqf D
 NB.   A=. C (mp ct) Z0
 NB.   'H T Q1 Z1'=. hs gghrdlvv A , B , I ,: Z0
-NB.   e1e2=. hs hgezqenn H ,: T
-NB.   'S P Q2 Z2'=. hs hgezqsvv H , T , Q1 ,: Z1
-NB.   'S P dQ1 dZ1'=. hs hgezqsvv H , T , ,:~ I
+NB.   e1e2=. hs hgezqenn_old H ,: T
+NB.   'S P Q2 Z2'=. hs hgezqsvv_old H , T , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgezqsvv_old H , T , ,:~ I
 NB.
 NB. Application:
 NB. - detect case of non-convergence (0=converged,
@@ -730,25 +730,25 @@ NB.     128!:5 < e1e2
 NB.     128!:5 < S,:P         NB. too expensive, use the next
 NB.     128!:5 < diag"2 S,:P
 
-hgezqenn=:            diag"2@(0 {::                            hgezqe     )
-hgezqenv=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotscll  2&{::  )) (hgezqe 2&{.)
-hgezqevn=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotscll  1&{::  )) (hgezqe 2&{.)
-hgezqevv=: (2 }. ]) ((diag"2@(0 {:: ])) ; (rotscll"2&.:> }.)) (hgezqe 2&{.)
+hgezqenn_old=:            diag"2@(0 {::                            hgezqe_old     )
+hgezqenv_old=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotscll  2&{::  )) (hgezqe_old 2&{.)
+hgezqevn_old=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotscll  1&{::  )) (hgezqe_old 2&{.)
+hgezqevv_old=: (2 }. ]) ((diag"2@(0 {:: ])) ; (rotscll"2&.:> }.)) (hgezqe_old 2&{.)
 
-hgezqsnn=:                    0 {::                            hgezqs
-hgezqsnv=: (2 {  ]) ((       (0 {:: ])) , (rotscll  2&{::  )) (hgezqs 2&{.)
-hgezqsvn=: (2 {  ]) ((       (0 {:: ])) , (rotscll  1&{::  )) (hgezqs 2&{.)
-hgezqsvv=: (2 }. ]) ((       (0 {:: ])) , (rotscll"2&: > }.)) (hgezqs 2&{.)
+hgezqsnn_old=:                    0 {::                            hgezqs_old
+hgezqsnv_old=: (2 {  ]) ((       (0 {:: ])) , (rotscll  2&{::  )) (hgezqs_old 2&{.)
+hgezqsvn_old=: (2 {  ]) ((       (0 {:: ])) , (rotscll  1&{::  )) (hgezqs_old 2&{.)
+hgezqsvv_old=: (2 }. ]) ((       (0 {:: ])) , (rotscll"2&: > }.)) (hgezqs_old 2&{.)
 
 NB. ---------------------------------------------------------
-NB. hgeqzenn
-NB. hgeqzenv
-NB. hgeqzevn
-NB. hgeqzevv
-NB. hgeqzsnn
-NB. hgeqzsnv
-NB. hgeqzsvn
-NB. hgeqzsvv
+NB. hgeqzenn_old
+NB. hgeqzenv_old
+NB. hgeqzevn_old
+NB. hgeqzevv_old
+NB. hgeqzsnn_old
+NB. hgeqzsnv_old
+NB. hgeqzsvn_old
+NB. hgeqzsvv_old
 NB.
 NB. Description:
 NB.   Compute eigenvalues (hgeqzxxx) and reduce to
@@ -788,14 +788,14 @@ NB.     E * L^H * A = L^H * B
 NB.     A * R * E = B * R * E
 NB.
 NB. Syntax:
-NB.   e1e2=.        hs hgeqzenn H ,: T
-NB.   'e1e2 Z2'=.   hs hgeqzenv H , T ,: Z1
-NB.   'e1e2 Q2'=.   hs hgeqzevn H , T ,: Q1
-NB.   'e1e2 Q2Z2'=. hs hgeqzevv H , T , Q1 ,: Z1
-NB.   'S P'=.       hs hgeqzsnn H ,: T
-NB.   'S P Z2'=.    hs hgeqzsnv H , T ,: Z1
-NB.   'S P Q2'=.    hs hgeqzsvn H , T ,: Q1
-NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
+NB.   e1e2=.        hs hgeqzenn_old H ,: T
+NB.   'e1e2 Z2'=.   hs hgeqzenv_old H , T ,: Z1
+NB.   'e1e2 Q2'=.   hs hgeqzevn_old H , T ,: Q1
+NB.   'e1e2 Q2Z2'=. hs hgeqzevv_old H , T , Q1 ,: Z1
+NB.   'S P'=.       hs hgeqzsnn_old H ,: T
+NB.   'S P Z2'=.    hs hgeqzsnv_old H , T ,: Z1
+NB.   'S P Q2'=.    hs hgeqzsvn_old H , T ,: Q1
+NB.   'S P Q2 Z2'=. hs hgeqzsvv_old H , T , Q1 ,: Z1
 NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices H11 and T11 position in H
@@ -816,14 +816,14 @@ NB.   P    - n×n-matrix, upper triangular
 NB.
 NB. Notes:
 NB. - non-converged eigenvalues are set to NaN
-NB. - hgeqzenn models LAPACK's xHGEQZ('E','N','N')
-NB. - hgeqzenv models LAPACK's xHGEQZ('E','N','V')
-NB. - hgeqzevn models LAPACK's xHGEQZ('E','V','N')
-NB. - hgeqzevv models LAPACK's xHGEQZ('E','V','V')
-NB. - hgeqzsnn models LAPACK's xHGEQZ('S','N','N')
-NB. - hgeqzsnv models LAPACK's xHGEQZ('S','N','V')
-NB. - hgeqzsvn models LAPACK's xHGEQZ('S','V','N')
-NB. - hgeqzsvv models LAPACK's xHGEQZ('S','V','V')
+NB. - hgeqzenn_old models LAPACK's xHGEQZ('E','N','N')
+NB. - hgeqzenv_old models LAPACK's xHGEQZ('E','N','V')
+NB. - hgeqzevn_old models LAPACK's xHGEQZ('E','V','N')
+NB. - hgeqzevv_old models LAPACK's xHGEQZ('E','V','V')
+NB. - hgeqzsnn_old models LAPACK's xHGEQZ('S','N','N')
+NB. - hgeqzsnv_old models LAPACK's xHGEQZ('S','N','V')
+NB. - hgeqzsvn_old models LAPACK's xHGEQZ('S','V','N')
+NB. - hgeqzsvv_old models LAPACK's xHGEQZ('S','V','V')
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   e1e2     -: diag"2 (S ,: P)
@@ -840,41 +840,41 @@ NB.   I=. idmat n
 NB.   'Q0 B'=. (ungqr ,: tru@}:)@geqrf D
 NB.   A=. Q0 (mp~ ct)~ C
 NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: I
-NB.   e1e2=. hs hgeqzenn H ,: T
-NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
-NB.   'S P dQ1 dZ1'=. hs hgeqzsvv H , T , ,:~ I
+NB.   e1e2=. hs hgeqzenn_old H ,: T
+NB.   'S P Q2 Z2'=. hs hgeqzsvv_old H , T , Q1 ,: Z1
+NB.   'S P dQ1 dZ1'=. hs hgeqzsvv_old H , T , ,:~ I
 NB.
 NB. Application:
 NB. - model LAPACK's xHGEQZ('E','N','I'):
 NB.     NB. 'e1e2 dZ1'=. hs hgeqzeni H ,: T
-NB.     hgeqzeni=: hgeqzenv (, idmat@c)
+NB.     hgeqzeni=: hgeqzenv_old (, idmat@c)
 NB. - model LAPACK's xHGEQZ('E','I','N'):
 NB.     NB. 'e1e2 dQ1'=. hs hgeqzein H ,: T
-NB.     hgeqzein=: hgeqzevn (, idmat@c)
+NB.     hgeqzein=: hgeqzevn_old (, idmat@c)
 NB. - model LAPACK's xHGEQZ('E','I','I'):
 NB.     NB. 'e1e2 dQ1dZ1'=. hs hgeqzeii H ,: T
-NB.     hgeqzeii=: hgeqzevv (,~^:2~ idmat@c)
+NB.     hgeqzeii=: hgeqzevv_old (,~^:2~ idmat@c)
 NB. - model LAPACK's xHGEQZ('E','I','V'):
 NB.     NB. 'e1e2 dQ1Z2'=. hs hgeqzeiv H , T ,: Z1
-NB.     hgeqzeiv=: hgeqzevv (1&A.@, idmat@c)
+NB.     hgeqzeiv=: hgeqzevv_old (1&A.@, idmat@c)
 NB. - model LAPACK's xHGEQZ('E','V','I'):
 NB.     NB. 'e1e2 Q2dZ1'=. hs hgeqzevi H , T ,: Q1
-NB.     hgeqzevi=: hgeqzevv (, idmat@c)
+NB.     hgeqzevi=: hgeqzevv_old (, idmat@c)
 NB. - model LAPACK's xHGEQZ('S','N','I'):
 NB.     NB. 'S P dZ1'=. hs hgeqzsni H ,: T
-NB.     hgeqzsni=: hgeqzsnv (, idmat@c)
+NB.     hgeqzsni=: hgeqzsnv_old (, idmat@c)
 NB. - model LAPACK's xHGEQZ('S','I','N'):
 NB.     NB. 'S P dQ1'=. hs hgeqzsin H ,: T
-NB.     hgeqzsin=: hgeqzsvn (, idmat@c)
+NB.     hgeqzsin=: hgeqzsvn_old (, idmat@c)
 NB. - model LAPACK's xHGEQZ('S','I','I'):
 NB.     NB. 'S P dQ1 dZ1'=. hs hgeqzsii H ,: T
-NB.     hgeqzsii=: hgeqzsvv (,~^:2~ idmat@c)
+NB.     hgeqzsii=: hgeqzsvv_old (,~^:2~ idmat@c)
 NB. - model LAPACK's xHGEQZ('S','I','V'):
 NB.     NB. 'S P dQ1 Z2'=. hs hgeqzsiv H , T ,: Z1
-NB.     hgeqzsiv=: hgeqzsvv (1&A.@, idmat@c)
+NB.     hgeqzsiv=: hgeqzsvv_old (1&A.@, idmat@c)
 NB. - model LAPACK's xHGEQZ('S','V','I'):
 NB.     NB. 'S P Q2 dZ1'=. hs hgeqzsvi H , T ,: Q1
-NB.     hgeqzsvi=: hgeqzsvv (, idmat@c)
+NB.     hgeqzsvi=: hgeqzsvv_old (, idmat@c)
 NB. - detect case of non-convergence (0=converged,
 NB.   1=non-converged), any of:
 NB.     128!:5 < e1e2
@@ -886,28 +886,28 @@ NB. [1] C.B. Moler & G.W. Stewart, "An Algorithm for
 NB.     Generalized Matrix Eigenvalue Problems",
 NB.     SIAM J. Numer. Anal., 10(1973), pp. 241-256.
 
-hgeqzenn=:            diag"2@(0 {::                            hgeqze     )
-hgeqzenv=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotsclu  2&{::  )) (hgeqze 2&{.)
-hgeqzevn=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotsclu  1&{::  )) (hgeqze 2&{.)
-hgeqzevv=: (2 }. ]) ((diag"2@(0 {:: ])) ; (rotsclu"2&.:> }.)) (hgeqze 2&{.)
+hgeqzenn_old=:            diag"2@(0 {::                            hgeqze_old     )
+hgeqzenv_old=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotsclu  2&{::  )) (hgeqze_old 2&{.)
+hgeqzevn_old=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotsclu  1&{::  )) (hgeqze_old 2&{.)
+hgeqzevv_old=: (2 }. ]) ((diag"2@(0 {:: ])) ; (rotsclu"2&.:> }.)) (hgeqze_old 2&{.)
 
-hgeqzsnn=:                    0 {::                            hgeqzs
-hgeqzsnv=: (2 {  ]) ((       (0 {:: ])) , (rotsclu  2&{::  )) (hgeqzs 2&{.)
-hgeqzsvn=: (2 {  ]) ((       (0 {:: ])) , (rotsclu  1&{::  )) (hgeqzs 2&{.)
-hgeqzsvv=: (2 }. ]) ((       (0 {:: ])) , (rotsclu"2&: > }.)) (hgeqzs 2&{.)
+hgeqzsnn_old=:                    0 {::                            hgeqzs_old
+hgeqzsnv_old=: (2 {  ]) ((       (0 {:: ])) , (rotsclu  2&{::  )) (hgeqzs_old 2&{.)
+hgeqzsvn_old=: (2 {  ]) ((       (0 {:: ])) , (rotsclu  1&{::  )) (hgeqzs_old 2&{.)
+hgeqzsvv_old=: (2 }. ]) ((       (0 {:: ])) , (rotsclu"2&: > }.)) (hgeqzs_old 2&{.)
 
 NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. testhgeq
+NB. testhgeq_old
 NB.
 NB. Description:
 NB.   Test ZQ and QZ algorithms hgexxxxx by general matrices
 NB.   given
 NB.
 NB. Syntax:
-NB.   testhgeq AB
+NB.   testhgeq_old AB
 NB. where
 NB.   AB - 2×n×n-report
 NB.
@@ -927,7 +927,7 @@ NB.       berr1 := ||T - dQ1 * P * dZ1^H|| / (FP_PREC * ||T|| * n)
 NB.       berr2 := ||I - dQ1 * dQ1^H|| / (FP_PREC * n)
 NB.       berr3 := ||I - dZ1 * dZ1^H|| / (FP_PREC * n)
 
-testhgeq=: 3 : 0
+testhgeq_old=: 3 : 0
   prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'HT SP dQ1dZ1'=. (H,T,I,:I) prep (S,P,dQ1,:dZ1)
   safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
   cdiff1=: 2 : '(0&{::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                      NB. L: (ct cdiff1 ]) : ||H - dQ1^H * S * dZ1|| , ||T - dQ1^H * P * dZ1||
@@ -945,27 +945,27 @@ testhgeq=: 3 : 0
   vberru=: (>./@((] cberr01 ct) , (mp  aberr23))@prep) f.
 
   I=. idmat c y
-  HTl=. (gghrdlnn~ (0,c))@((,: trl)/) y
-  HTu=. (gghrdunn~ (0,c))@((,: tru)/) y
+  HTl=. (gghrdlnn_old~ (0,c))@((,: trl)/) y
+  HTu=. (gghrdunn_old~ (0,c))@((,: tru)/) y
   rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag HTl
   rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag HTu
 
-  ('hgezqenn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqenv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqevn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqevv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , ,:~ I
-  ('hgezqsnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqsnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`vberrl)) HTl , ,:~ I
-  ('hgeqzenn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
-  ('hgeqzenv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzevn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzevv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , ,:~ I
-  ('hgeqzsnn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
-  ('hgeqzsnv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`vberru)) HTu , ,:~ I
+  ('hgezqenn_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
+  ('hgezqenv_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqevn_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqevv_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , ,:~ I
+  ('hgezqsnn_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
+  ('hgezqsnv_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqsvn_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqsvv_old' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`vberrl)) HTl , ,:~ I
+  ('hgeqzenn_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
+  ('hgeqzenv_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzevn_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzevv_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , ,:~ I
+  ('hgeqzsnn_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
+  ('hgeqzsnv_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzsvn_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzsvv_old' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`vberru)) HTu , ,:~ I
 
   erase 'cdiff1 adiff2 vberrl vberru'
 
@@ -973,14 +973,14 @@ testhgeq=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. testeq
+NB. testeq_old
 NB.
 NB. Description:
 NB.   Adv. to make verb to test hgexxxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testeq
+NB.   vtest=. mkmat testeq_old
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
@@ -999,4 +999,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testeq_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testeq_mt_ 150 150
 
-testeq=: 1 : 'EMPTY_mt_ [ testhgeq_mt_@u@(2&,)^:(=/)'
+testeq_old=: 1 : 'EMPTY_mt_ [ testhgeq_old_mt_@u@(2&,)^:(=/)'

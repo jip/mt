@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 Library to solve some problems in matrix algebra: transforming, decomposing, reducing to condensed form, factorization, equation solving, function applying, condition number estimating. Is based mostly on LAPACK algorithms, but doesn't require LAPACK.
 )
 
-VERSION=: '0.7.0'
+VERSION=: '0.8.0'
 
 RELEASE=: 'j602 j701'
 
@@ -34,8 +34,10 @@ ios.ijs
 mq.ijs
 mt.ijs
 norm.ijs
+pf.ijs
 pow.ijs
 qf.ijs
+quatern.ijs
 rand.ijs
 ref.ijs
 rot.ijs

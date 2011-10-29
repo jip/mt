@@ -184,14 +184,14 @@ ggevlnv=: 3 : 0
   e1e2=. 2 {. diag"2 y
   if. 128!:5 < e1e2 do.
     NB. non-converged
-    e1e2;_.$~2#c y
+    y=. _. $~ 2 #c y
   else.
     y=. tgevclrb y
     y=. gebaklp y ; {: plr
     y=. (% (EVSMLNUM&>`(,:&1))}@:normitr) y
     e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
-    e1e2 ; y
   end.
+  e1e2 ; y
 )
 
 ggevlvn=: 3 : 0
@@ -202,14 +202,14 @@ ggevlvn=: 3 : 0
   e1e2=. 2 {. diag"2 y
   if. 128!:5 < e1e2 do.
     NB. non-converged
-    e1e2;_.$~2#c y
+    y=. _. $~ 2 #c y
   else.
     y=. tgevcllb y
     y=. gebaklp y ; {. plr
     y=. (% (EVSMLNUM&>`(,:&1))}@:normitr) y
     e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
-    e1e2 ; y
   end.
+  e1e2 ; y
 )
 
 ggevlvv=: 3 : 0
@@ -220,14 +220,14 @@ ggevlvv=: 3 : 0
   e1e2=. 2 {. diag"2 y
   if. 128!:5 < e1e2 do.
     NB. non-converged
-    e1e2;_.$~2,2#c y
+    y=. _. $~ $ y
   else.
     y=. tgevclbb y
     y=. y gebaklp@;"2 1 plr
     y=. (% (EVSMLNUM&>`(,:&1))}@:normitr)"2 y
     e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
-    e1e2 ; y
   end.
+  e1e2 ; y
 )
 
 NB. ---------------------------------------------------------
@@ -339,14 +339,14 @@ ggevuvn=: 3 : 0
   e1e2=. 2 {. diag"2 y
   if. 128!:5 < e1e2 do.
     NB. non-converged
-    e1e2;_.$~2#c y
+    y=. _. $~ 2 #c y
   else.
     y=. tgevculb y
     y=. gebakup y ; {. plr
     y=. (%"1 (EVSMLNUM&>`(,:&1))}@:normitc) y
     e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
-    e1e2 ; y
   end.
+  e1e2 ; y
 )
 
 ggevunv=: 3 : 0
@@ -357,14 +357,14 @@ ggevunv=: 3 : 0
   e1e2=. 2 {. diag"2 y
   if. 128!:5 < e1e2 do.
     NB. non-converged
-    e1e2;_.$~2#c y
+    y=. _. $~ 2 #c y
   else.
     y=. tgevcurb y
     y=. gebakup y ; {: plr
     y=. (%"1 (EVSMLNUM&>`(,:&1))}@:normitc) y
     e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
-    e1e2 ; y
   end.
+  e1e2 ; y
 )
 
 ggevuvv=: 3 : 0
@@ -375,14 +375,14 @@ ggevuvv=: 3 : 0
   e1e2=. 2 {. diag"2 y
   if. 128!:5 < e1e2 do.
     NB. non-converged
-    e1e2;_.$~2,2#c y
+    y=. _. $~ $ y
   else.
     y=. tgevcubb y
     y=. y gebakup@;"2 1 plr
     y=. (%"1 (EVSMLNUM&>`(,:&1))}@:normitc)"2 y
     e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
-    e1e2 ; y
   end.
+  e1e2 ; y
 )
 
 NB. =========================================================

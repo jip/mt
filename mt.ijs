@@ -31,7 +31,7 @@ NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.7.1 2011-08-06
 NB.
 NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
@@ -123,6 +123,7 @@ require '~addons/math/mt/fork.ijs'    NB. Extended forks
 require '~addons/math/mt/util.ijs'    NB. Utilities
 require '~addons/math/mt/ios.ijs'     NB. IOS
 require '~addons/math/mt/norm.ijs'    NB. Norms
+require '~addons/math/mt/quatern.ijs' NB. Quaternions
 require '~addons/math/mt/struct.ijs'  NB. Structure handlers
 require '~addons/math/mt/rand.ijs'    NB. Random arrays
 require '~addons/math/mt/test.ijs'    NB. Test
@@ -142,6 +143,7 @@ NB. mid-level
 require '~addons/math/mt/eq.ijs'      NB. Eigenvalues and Schur form
 require '~addons/math/mt/evc.ijs'     NB. Eigenvectors
 require '~addons/math/mt/hrd.ijs'     NB. Hessenberg reduction
+require '~addons/math/mt/pf.ijs'      NB. Orthogonal factorization with pivoting
 require '~addons/math/mt/qf.ijs'      NB. Orthogonal factorization
 require '~addons/math/mt/trf.ijs'     NB. Triangular factorization
 require '~addons/math/mt/tri.ijs'     NB. Inverse by trf

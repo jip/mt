@@ -9,7 +9,7 @@ NB.
 NB. testlartg  Test lartg by vectors given
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.7.1 2011-08-06
 NB.
 NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
@@ -87,8 +87,8 @@ ROTSCL21=: |. ROTSCL20
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-morim=: >./"1@:|@:+.    NB. monad: max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
-sgn=: (*!.0)`1:@.(0&=)  NB. monad: (if y<0 then -1 else 1 endif), for reals equiv. to: (0&(<:->))
+morim=: >./"1@:|@:+.                                                NB. monad: max of real and imaginary parts' modules, max(|Re(y)|,|Im(y)|)
+sgn=: (1:^:(0&(=!.0))@(*!.0))`(1 0"_^:(0 0&(-:!.0))@qnsign)@.(2=#)  NB. monad, sgn(0)=1
 
 NB. ---------------------------------------------------------
 NB. lartgc1
@@ -251,6 +251,13 @@ lartg=: 3 : 0
   c , s , r
 )
 
+NB. complex rotator from real f and g, quaternion rotator from complex f and/or g
+NB. Syntax: cs=. lartgqn fg
+NB. where fg,cs are quaternons, fg encodes (f,g); cs encodes (c,s); r=. fg mp cs
+NB. Formula: cs = sgn(f) * sgn(mkqn(conj(f),conj(g)))
+
+lartgqn=: {. *&sgn +
+
 NB. ---------------------------------------------------------
 NB. rot
 NB.
@@ -352,7 +359,7 @@ NB. TODO:
 NB. - aggregate non-intersecting groups of vectors to change
 NB.   them simultaneously
 
-rotscll=: (4 : 0)
+rotscll=: 4 : 0
   i=. 0
   while. i < # y do.                 NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y
@@ -369,7 +376,7 @@ rotscll=: (4 : 0)
   x
 )
 
-rotsclu=: (4 : 0)
+rotsclu=: 4 : 0
   i=. 0
   while. i < # y do.                    NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y
@@ -466,7 +473,8 @@ testlartg=: 3 : 0
   NB. backward error calculator:
   vberr=. ((|@:(-&:|) >./@:xrInf@:% (FP_SFMIN * FP_PREC) >. FP_EPS * |@])/@(2 5&{)@|:@xrInf@xrNaN@,. algo1"1)~
 
-  ('lartg"1' tmonad (]`]`(_."_)`(_."_)`(vberr f.))) y  NB. fix vberr to allow trans-locale calling
+  ('lartg"1' tmonad (]`]`(_."_)`(_."_)`(vberr f.))) y            NB. fix vberr to allow trans-locale calling
+  ('((],mp)lartgqn)"1' tmonad (]`]`(_."_)`(_."_)`(vberr f.))) y  NB. fix vberr to allow trans-locale calling
 
   EMPTY
 )
@@ -478,9 +486,7 @@ NB. Description:
 NB.   Test rotation algorithms by predefined matrix
 NB.
 NB. Syntax:
-NB.   testrot y
-NB. where
-NB.   y - any noun
+NB.   testrot ''
 NB.
 NB. Notes:
 NB. - niladic verb

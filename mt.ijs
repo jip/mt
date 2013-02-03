@@ -111,7 +111,7 @@ NB. ---------------------------------------------------------
 NB. System definitions
 
 require       '~addons/math/misc/mathutil.ijs'  NB. mp_mt_
-require^:IFJ6 '~system/main/myutil.ijs'         NB. timespacex_z_ (J7: already in stdlib.ijs)
+timespacex_z_=: 6!:2 , 7!:2@]                   NB. timespacex_z_ (J7: already in stdlib.ijs)
 
 NB. ---------------------------------------------------------
 NB. Addon definitions

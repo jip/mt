@@ -70,5 +70,5 @@ math/mt - change history
  + quatern: quaternions support
  * rot: reworked to rely on quaternions
 
-== 0.8.3 ==
+== 0.8.3/4 ==
  * chg: update for j801

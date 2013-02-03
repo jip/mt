@@ -69,3 +69,6 @@ math/mt - change history
  + pf: rank-revealing orthogonal factorization with pivoting, initial draft
  + quatern: quaternions support
  * rot: reworked to rely on quaternions
+
+== 0.8.3 ==
+ * chg: update for j801

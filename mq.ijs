@@ -167,20 +167,6 @@ NB.            reflectors
 NB.   eCprod - being product of matrix Q and augmented matrix
 NB.            C, trash vector is modified on exit
 NB.
-NB. Algorithm:
-NB.   In: Qf , eC
-NB.   Out: eCprod
-NB.   1) form (pfxC;sfxC) as (aC;bC) or (bC;aC)
-NB.   2) find I, the decremented number of iterations
-NB.   3) start iterations by Power (^:) on (pfxCi;sfxCi) as
-NB.      (aCi;bCi) or (bCi;aCi)
-NB.      3.1) apply unmxxxxstep:
-NB.             tmp=. Qf unmxxxxstep (pfxCi;sfxCi)
-NB.      3.2) combine aCi and tmp to produce (pfxCi1;sfxCi1)
-NB.           as (aCi1;bCi1) or (bCi1;aCi1)
-NB.   4) apply unmxxxxstep to (pfxCi1;sfxCi1) to produce bCi1
-NB.   5) combine aCi1 and bCi1 to produce eCprod
-NB.
 NB. Assertions:
 NB.   (idmat n) (-: clean@: }:   ) ((   tru1 gelqf A) unml2ln ((ct unglq gelqf A) ,   0))
 NB.   (idmat n) (-: clean@: }:   ) ((   tru1 gelqf A) unml2lc ((   unglq gelqf A) ,   0))
@@ -211,48 +197,40 @@ NB. - implements LAPACK's {DOR,ZUN}M{L2,2L,2R,R2}
 NB. - unml2{ln,lc,rn,rc} and unmlq{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
-unml2ln=: , &>/@(  unml2lnstep^:(#@[) (;~ 0& {.                          ) )
-unml2lc=: , &>/@([ unml2lcstep^:(#@[) (( {.       ;   }.      )~ (_1 + #))~)
-unml2rn=: ,.&>/@([ unml2rnstep^:(#@[) ((({.~ _&,) ;  (}.~ 0&,))  (_1 + #))~)
-unml2rc=: ,.&>/@(  unml2rcstep^:(#@[) (;~ 0&({."1)                       ) )
-
-unml2ln_7=: (larflcfr&:>/@,~ 1  <@{.\ |.)~ <
-unml2ln_8=: (larflcfr&:>/@,~ (-@c <\ ,)@|.)~ <
-unml2ln_9=: ((larflcfr~ {.)~&:>/@,~ 1  <\ |.)~ <
-
-unml2lc_7=: (larflnfr&:>/@,~ 1&(<\)  )~ <
-unml2rn_7=: (larfrcfr&:>/@,~ 1&(<\)  )~ <
-unml2rc_7=: (larfrnfr&:>/@,~ 1  <\ |.)~ <
+unml2ln_8=: (larflcfr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unml2lc_8=: (larflnfr&:>/@,~ (-@c <\ ,)      )~ <
+unml2rn_8=: (larfrcfr&:>/@,~ (-@c <\ ,)      )~ <
+unml2rc_8=: (larfrnfr&:>/@,~ (-@c <\ ,)@|.   )~ <
 
 unm2lln=: , &>/@([ unm2llnstep^:(c@[) (( {.       ;~  }.      )~ ( 1 - c))~)
 unm2llc=: , &>/@(  unm2llcstep^:(c@[) (;  0& {.                          ) )
 unm2lrn=: ,.&>/@(  unm2lrnstep^:(c@[) (;  0&({."1)                       ) )
 unm2lrc=: ,.&>/@([ unm2lrcstep^:(c@[) ((({.~ _&,) ;~ (}.~ 0&,))  ( 1 - c))~)
 
-unm2lln_7=: (larflnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(1 ,~ #)))~
-unm2llc_7=: (larflcbc&:>/@,~      {.   @(<;.3~ ,:~@(1 ,~ #)))~
-unm2lrn_7=: (larfrnbc&:>/@,~      {.   @(<;.3~ ,:~@(1 ,~ #)))~
-unm2lrc_7=: (larfrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(1 ,~ #)))~
+unm2lln_8=: (larflnbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm2llc_8=: (larflcbc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm2lrn_8=: (larfrnbc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm2lrc_8=: (larfrcbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
 
 unm2rln=: , &>/@([ unm2rlnstep^:(c@[) (( {.       ;   }.      )~ (_1 + c))~)
 unm2rlc=: , &>/@(  unm2rlcstep^:(c@[) (;~ 0& {.                          ) )
 unm2rrn=: ,.&>/@(  unm2rrnstep^:(c@[) (;~ 0&({."1)                       ) )
 unm2rrc=: ,.&>/@([ unm2rrcstep^:(c@[) ((({.~ _&,) ;  (}.~ 0&,))  (_1 + c))~)
 
-unm2rln_7=: (larflnfc&:>/@,~      {.   @(<;.3~ ,:~@(1 ,~ #)))~
-unm2rlc_7=: (larflcfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(1 ,~ #)))~
-unm2rrn_7=: (larfrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(1 ,~ #)))~
-unm2rrc_7=: (larfrcfc&:>/@,~      {.   @(<;.3~ ,:~@(1 ,~ #)))~
+unm2rln_8=: (larflnfc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm2rlc_8=: (larflcfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm2rrn_8=: (larfrnfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm2rrc_8=: (larfrcfc&:>/@,~ (-@c <\ ,)   @|:)~ <
 
 unmr2ln=: , &>/@(  unmr2lnstep^:(#@[) (;  0& {.                          ) )
 unmr2lc=: , &>/@([ unmr2lcstep^:(#@[) (( {.       ;~  }.      )~ ( 1 - #))~)
 unmr2rn=: ,.&>/@([ unmr2rnstep^:(#@[) ((({.~ _&,) ;~ (}.~ 0&,))  ( 1 - #))~)
 unmr2rc=: ,.&>/@(  unmr2rcstep^:(#@[) (;  0&({."1)                       ) )
 
-unmr2ln_7=: (larflcbr&:>/@,~      {."1 @(<;.3~ ,:~@(1 ,  c)))~
-unmr2lc_7=: (larflnbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(1 ,  c)))~
-unmr2rn_7=: (larfrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(1 ,  c)))~
-unmr2rc_7=: (larfrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(1 ,  c)))~
+unmr2ln_8=: (larflcbr&:>/@,~ (-@c <\ ,)      )~ <
+unmr2lc_8=: (larflnbr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unmr2rn_8=: (larfrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unmr2rc_8=: (larfrnbr&:>/@,~ (-@c <\ ,)      )~ <
 
 NB. =========================================================
 NB. Interface

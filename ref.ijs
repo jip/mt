@@ -914,5 +914,4 @@ NB.   testgq, testmq, testqf
 NB. - larxtxx and larxbxxxx are impractical for large
 NB.   matrices
 
-NB. testref=: 1 : 'EMPTY_mt_ [ (testlarzb_mt_ [ testlarfb_mt_ [ testlarzt_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'
-testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'
+testref=: 1 : 'EMPTY_mt_ [ (testlarzb_mt_ [ testlarfb_mt_ [ testlarzt_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'

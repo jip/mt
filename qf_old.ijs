@@ -5,17 +5,11 @@ NB. geqlf     QL factorization of a general matrix
 NB. geqrf     QR factorization of a general matrix
 NB. gerqf     RQ factorization of a general matrix
 NB.
-NB. tzlzf     LQ factorization of a trapezoidal matrix
-NB. tzzlf     QL factorization of a trapezoidal matrix
-NB. tzzrf     QR factorization of a trapezoidal matrix
-NB. tzrzf     RQ factorization of a trapezoidal matrix
+NB. testgeqf  Test gexxx by general matrix given
+NB. testqf    Adv. to make verb to test gexxx by matrix of
+NB.           generator and shape given
 NB.
-NB. testgeqf  Test gexxf by general matrix given
-NB. testtzqf  Test tzxxf by trapezoidal matrix
-NB. testqf    Adv. to make verb to test gexxf and tzxxf by
-NB.           matrix of generator and shape given
-NB.
-NB. Version: 0.9.0 2012-11-15
+NB. Version: 0.8.2 2012-02-23
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -45,8 +39,19 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-QFNB=: 32   NB. block size limit
-QFNX=: 128  NB. crossover point, QFNX ≥ QFNB
+QFNB_old=: 32   NB. block size limit
+QFNX_old=: 128  NB. crossover point, QFNX ≥ QFNB
+
+NB. ---------------------------------------------------------
+NB. qfi
+NB.
+NB. Description: Number of iterations
+NB. Syntax:      iters=. ungi k
+NB. where        k = min(rows,columns)
+NB. Formula:     iters = max(0,⌊(k+NB-NX-1)/NB⌋)
+NB. Notes:       is memo, since repetitive calls are expected
+
+qfi_old=: (0 >. <.@(QFNB_old %~ (_1+QFNB_old-QFNX_old)&+))M.
 
 NB. ---------------------------------------------------------
 NB. gelq2
@@ -80,18 +85,12 @@ NB. - gelq2 and gelqf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is
 NB.   required, then larfg* should be replaced by larfp*
 
-gelq2=: 3 : 0
-  pfx=. 0 {."1 y
-  sfxT=. 0 {. y
-  while. -. 0 e. 0 _1 + $ y do.
-    z=. larfgfc {. y
-    sfxT=. sfxT , z
-    y=. ((1) 0} z) larfrnfr }. y
-    pfx=. pfx ,. sfxT ,&:({."1) y
-    sfxT=. }."1 sfxT
-    y=. }."1 y
-  end.
-  pfx stitcht sfxT
+gelq2_old=: (0&{:: stitcht 1&{::)@((3 : 0)^:((0 _1&(ms $))`(0&({."1) ; 0&{. ; ])))
+  'pfx sfxT sfxB'=. y
+  z=. larfgfc {. sfxB
+  sfxT=. sfxT , z
+  sfxB=. (1 (0}) z) larfrnfr }. sfxB
+  (pfx ,. (sfxT ,&:({."1) sfxB)) ; (sfxT ;&:(}."1) sfxB)
 )
 
 NB. ---------------------------------------------------------
@@ -126,18 +125,12 @@ NB. - geql2 and geqlf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is
 NB.   required, then larfg* should be replaced by larfp*
 
-geql2=: 3 : 0
-  pfxR=. 0 {."1 y
-  sfx=. 0 {. y
-  while. -. 0 e. _1 0 + $ y do.
-    z=. larfgb {:"1 y
-    pfxR=. z ,. pfxR
-    y=. ((1) _1} z) larflcbc }:"1 y
-    sfx=. sfx ,~ y ,&{: pfxR
-    y=. }: y
-    pfxR=. }: pfxR
-  end.
-  pfxR appendr sfx
+geql2_old=: (1&{:: appendr 2&{::)@((3 : 0)^:((_1 0&(ms $))`(] ; 0&({."1) ; 0&{.)))
+  'pfxL pfxR sfx'=. y
+  z=. larfgb {:"1 pfxL
+  pfxR=. z ,. pfxR
+  pfxL=. (1 (_1}) z) larflcbc }:"1 pfxL
+  (pfxL ;&}: pfxR) , < ((pfxL ,&{: pfxR) , sfx)
 )
 
 NB. ---------------------------------------------------------
@@ -172,18 +165,12 @@ NB. - gerq2 and geqrf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is
 NB.   required, then larfg* should be replaced by larfp*
 
-geqr2=: 3 : 0
-  pfx=. 0 {. y
-  sfxL=. 0 {."1 y
-  while. -. 0 e. _1 0 + $ y do.
-    z=. larfgf {."1 y
-    sfxL=. sfxL ,. z
-    y=. ((1) 0} z) larflcfc }."1 y
-    pfx=. pfx , sfxL ,&{. y
-    sfxL=. }. sfxL
-    y=. }. y
-  end.
-  pfx , sfxL
+geqr2_old=: (0&{:: , 1&{::)@((3 : 0)^:((_1 0&(ms $))`(0&{. ; 0&({."1) ; ])))
+  'pfx sfxL sfxR'=. y
+  z=. larfgf {."1 sfxR
+  sfxL=. sfxL ,. z
+  sfxR=. (1 (0}) z) larflcfc }."1 sfxR
+  (pfx , (sfxL ,&{. sfxR)) ; (sfxL ;&}. sfxR)
 )
 
 NB. ---------------------------------------------------------
@@ -218,18 +205,12 @@ NB. - gerq2 and gerqf are topologic equivalents
 NB. - if triangular matrix diagonal's non-negativity is
 NB.   required, then larfg* should be replaced by larfp*
 
-gerq2=: 3 : 0
-  pfxB=. 0 {. y
-  sfx=. 0 {."1 y
-  while. -. 0 e. 0 _1 + $ y do.
-    z=. larfgbc {: y
-    pfxB=. z , pfxB
-    y=. ((1) _1} z) larfrnbr }: y
-    sfx=. sfx ,.~ y ,&:({:"1) pfxB
-    y=. }:"1 y
-    pfxB=. }:"1 pfxB
-  end.
-  pfxB stitchb sfx
+gerq2_old=: (1&{:: stitchb 2&{::)@((3 : 0)^:((0 _1&(ms $))`(] ; 0&{. ; 0&({."1))))
+  'pfxT pfxB sfx'=. y
+  z=. larfgbc {: pfxT
+  pfxB=. z , pfxB
+  pfxT=. (1 (_1}) z) larfrnbr }: pfxT
+  (pfxT ;&:(}:"1) pfxB) , < ((pfxT ,&:({:"1) pfxB) ,. sfx)
 )
 
 NB. =========================================================
@@ -270,20 +251,13 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGELQF
 
-gelqf=: 3 : 0
-  y=. y ,. 0
-  pfx=. 0 {."1 y
-  sfxT=. 0 {. y
-  while. -. 0 e. QFNX < 0 _1 + $ y do.
-    nb=. <./ QFNB , 0 _1 + $ y
-    Z=. gelq2 nb {. y
-    sfxT=. sxT , Z
-    y=. (tru1 Z) larfbrnfr nb }. y
-    pfx=. pfx ,. sfxT ,&(nb&({."1)) y
-    sfxT=. nb }."1 sfxT
-    y=. nb }."1 y
-  end.
-  pfx ,. sfxT , gelq2 y
+gelqf_old=: (0&{:: ,. 1&{:: , gelq2_old@(2&{::))@((3 : 0)^:((qfi_old@(0 _1&(ms $)))`((0&({."1));(0&{.);])))@(,.&0)
+  'pfx sfxT sfxB'=. y
+  nb=. QFNB_old <. k=. 0 _1 ms $ sfxB
+  Z=. gelq2_old nb {. sfxB
+  sfxT=. sfxT , Z
+  sfxB=. (tru1 Z) larfbrnfr nb }. sfxB
+  (pfx ,. (sfxT ,&:(nb&({."1)) sfxB)) ; (sfxT ;&:(nb&(}."1)) sfxB)
 )
 
 NB. ---------------------------------------------------------
@@ -312,29 +286,22 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   I -: (mp~ ct) Q
 NB.   A -: Q mp L
-NB.   (] -: (((trl~ -~/@$)@  }.   ) mp~ ungql)@geqlf) A
+NB.   (] -: ((((-~/@$) trl ])@  }.   ) mp~ ungql)@geqlf) A
 NB. where
 NB.   QfL=. geqlf A
 NB.   Q=. ungql QfL
-NB.   L=. ((trl~ -~/@$)@}.) QfL
+NB.   L=. (((-~/@$) trl ])@}.) QfL
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQLF
 
-geqlf=: 3 : 0
-  y=. 0 , y
-  pfxR=. 0 {."1 y
-  sfx=. 0 {. y
-  while. -. 0 e. QFNX < _1 0 + $ y do.
-    nb=. - <./ QFNB , _1 0 + $ y
-    Z=. geql2 nb {."1 y
-    pfxR=. Z ,. pfxR
-    y=. ((tru1~ -~/@$) Z) larfblcbc nb }."1 y
-    sfx=. sfx ,~ y ,.&(nb&{.) pfxR
-    y=. nb }. y
-    pfxR=. nb }. pfxR
-  end.
-  sfx ,~ pfxR ,.~ geql2 y
+geqlf_old=: ((geql2_old@(0&{::) ,. 1&{::) , 2&{::)@((3 : 0)^:((qfi_old@(_1 0&(ms $)))`(] ; 0&({."1) ; 0&{.)))@(0&,)
+  'pfxL pfxR sfx'=. y
+  nnb=. - QFNB_old <. k=. _1 0 ms $ pfxL
+  Z=. geql2_old nnb {."1 pfxL
+  pfxR=. Z ,. pfxR
+  pfxL=. ((tru1~ -~/@$) Z) larfblcbc nnb }."1 pfxL
+  (pfxL ;&(nnb&}.) pfxR) , < ((pfxL ,.&(nnb&{.) pfxR) , sfx)
 )
 
 NB. ---------------------------------------------------------
@@ -372,20 +339,13 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGEQRF
 
-geqrf=: 3 : 0
-  y=. y , 0
-  pfx=. 0 {. y
-  sfxL=. 0 {."1 y
-  while. -. 0 e. QFNX < _1 0 + $ y do.
-    nb=. <./ QFNB , _1 0 + $ y
-    Z=. geqr2 nb {."1 y
-    sfxL=. sfxL ,. Z
-    y=. (trl1 Z) larfblcfc nb }."1 y
-    pfx=. pfx , sfxL ,.&(nb&{.) y
-    sfxL=. nb }. sfxL
-    y=. nb }. y
-  end.
-  pfx , sfxL ,. geqr2 y
+geqrf_old=: (0&{:: , 1&{:: ,. geqr2_old@(2&{::))@((3 : 0)^:((qfi_old@(_1 0&(ms $)))`(0&{. ; 0&({."1) ; ])))@(,&0)
+  'pfx sfxL sfxR'=. y
+  nb=. QFNB_old <. k=. _1 0 ms $ sfxR
+  Z=. geqr2_old nb {."1 sfxR
+  sfxL=. sfxL ,. Z
+  sfxR=. (trl1 Z) larfblcfc nb }."1 sfxR
+  (pfx , (sfxL ,.&(nb&{.) sfxR)) ; (sfxL ;&(nb&}.) sfxR)
 )
 
 NB. ---------------------------------------------------------
@@ -414,29 +374,22 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   I -: po Q
 NB.   A -: R mp Q
-NB.   (] -: (((tru~ -~/@$)@:(}."1)) mp  ungrq)@gerqf) A
+NB.   (] -: ((((-~/@$) tru ])@:(}."1)) mp  ungrq)@gerqf) A
 NB. where
 NB.   RQf=. gerqf A
-NB.   R=. ((tru~ -~/@$)@:(}."1)) RQf
+NB.   R=. (((-~/@$) tru ])@:(}."1)) RQf
 NB.   Q=. ungrq RQf
 NB.
 NB. Notes:
 NB. - models LAPACK's xGERQF
 
-gerqf=: 3 : 0
-  y=. 0 ,. y
-  pfxB=. 0 {. y
-  sfx=. 0 {."1 y
-  while. -. 0 e. QFNX < 0 _1 + $ y do.
-    nb=. - <./ QFNB , 0 _1 + $ y
-    Z=. gerq2 nb {. y
-    pfxB=. Z , pfxB
-    y=. ((trl1~ -~/@$) Z) larfbrnbr nb }. y
-    sfx=. sfx ,.~ y ,&(nb&({."1)) pfxB
-    y=. nb }."1 y
-    pfxB=. nb }."1 pfxB
-  end.
-  sfx ,.~ pfxB ,~ gerq2 y
+gerqf_old=: ((gerq2_old@(0&{::) , 1&{::) ,. 2&{::)@((3 : 0)^:((qfi_old@(0 _1&(ms $)))`(] ; 0&{. ; 0&({."1))))@(0&,.)
+  'pfxT pfxB sfx'=. y
+  nnb=. - QFNB_old <. k=. 0 _1 ms $ pfxT
+  Z=. gerq2_old nnb {. pfxT
+  pfxB=. Z , pfxB
+  pfxT=. ((trl1~ -~/@$) Z) larfbrnbr nnb }. pfxT
+  (pfxT ;&:(nnb&(}."1)) pfxB) , < ((pfxT ,&:(nnb&({."1)) pfxB) ,. sfx)
 )
 
 NB. =========================================================
@@ -463,7 +416,7 @@ NB. - QL berr := max( ||L - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / 
 NB. - QR berr := max( ||R - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
 NB. - RQ berr := max( ||R - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
 
-testgeqf=: 3 : 0
+testgeqf_old=: 3 : 0
   require :: ] '~addons/math/lapack/lapack.ijs'
   need_jlapack_ :: ] 'gelqf geqlf geqrf gerqf'
 
@@ -476,10 +429,10 @@ testgeqf=: 3 : 0
   ('2b0111&geqrf_jlapack_' tmonad (]`({: ,~ ,  &.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((   <./ @$@]) {.   unmqrlc)~ 0&{::)) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqrlc ungqr)@(0&{::))))) y
   ('2b1110&gerqf_jlapack_' tmonad (]`({. ,  ,.~&.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((-@(<./)@$@]) {."1 unmrqrc)~ 1&{::)) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmrqrc ungrq)@(1&{::))))) y
 
-  ('gelqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( trl        @:(}:"1)@] -  ((   <./ @$@]) {."1 unmlqrc)~       ) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmlqrc unglq)        )))) y
-  ('geqlf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((trl~ -~/@$)@  }.   @] -  ((-@(<./)@$@]) {.   unmqllc)~       ) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqllc ungql)        )))) y
-  ('geqrf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( tru        @  }:   @] -  ((   <./ @$@]) {.   unmqrlc)~       ) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqrlc ungqr)        )))) y
-  ('gerqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((tru~ -~/@$)@:(}."1)@] -  ((-@(<./)@$@]) {."1 unmrqrc)~       ) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmrqrc ungrq)        )))) y
+  ('gelqf_old'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( trl        @:(}:"1)@] -  ((   <./ @$@]) {."1 unmlqrc)~       ) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmlqrc unglq)        )))) y
+  ('geqlf_old'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((trl~ -~/@$)@  }.   @] -  ((-@(<./)@$@]) {.   unmqllc)~       ) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqllc ungql)        )))) y
+  ('geqrf_old'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( tru        @  }:   @] -  ((   <./ @$@]) {.   unmqrlc)~       ) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqrlc ungqr)        )))) y
+  ('gerqf_old'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((tru~ -~/@$)@:(}."1)@] -  ((-@(<./)@$@]) {."1 unmrqrc)~       ) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmrqrc ungrq)        )))) y
 
   EMPTY
 )
@@ -511,4 +464,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testqf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testqf_mt_ 150 200
 
-testqf=: 1 : 'EMPTY_mt_ [ testgeqf_mt_@u'
+testqf_old=: 1 : 'EMPTY_mt_ [ testgeqf_old_mt_@u'

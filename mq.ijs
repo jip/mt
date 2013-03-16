@@ -335,37 +335,6 @@ NB.         elementary reflectors:
 NB.           Q = Π{H(i)',i=k-1:0}
 NB.   k   = min(m,n)
 NB.
-NB. Algorithm:
-NB.   In:  LQf C
-NB.   Out: B
-NB.   1) augment C by zero vector:
-NB.        aC=. C ,   0    NB. ln,lc
-NB.        aC=. C ,.  0    NB. rn,rc
-NB.   2) extract Qf from LQf
-NB.   3) if k>MQNB
-NB.      3.1) then
-NB.           3.1.1) split aC on prefix pfxaC and suffix sfxaC:
-NB.                    'pfxaC sfxaC'=. 0 ({. ;  }.)   eC    NB. ln
-NB.                    'pfxaC sfxaC'=. b ({. ;  }.)   eC    NB. lc
-NB.                    'pfxaC sfxaC'=. b ({. ;  }.)"1 eC    NB. rn
-NB.                    'pfxaC sfxaC'=. 0 ({. ;  }.)"1 eC    NB. rc
-NB.                  where
-NB.                    b := ⌊(k-1)/MQNB⌋*MQNB , size of part
-NB.                         processed by blocked algorithm
-NB.           3.1.2) find I, the number of iterations:
-NB.                    I := ⌈k/MQNB⌉
-NB.           3.1.3) do iterations:
-NB.                    'pfxaB sfxaB'=. Qf (unmlqxxstep^:I) (pfxaC;sfxaC)
-NB.           3.1.4) unbox and merge pfxaB and sfxaB to produce aB,
-NB.                  being B augmented by trash vector:
-NB.                    aB=. pfxaB ,  sfxaB    NB. ln,lc
-NB.                    aB=. pfxaB ,. sfxaB    NB. rn,rc
-NB.      3.2) else process by non-blocked algorithm:
-NB.             aB=. Qf unml2xx aC
-NB.   4) cut off trash vector from aB to produce B:
-NB.        B=. }:   C    NB. ln,lc
-NB.        B=. }:"1 C    NB. rn,rc
-NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   (idmat@c (-: clean) (unmlqln ct@(<:@c unglq ]))@gelqf) A
 NB.   (idmat@c (-: clean) (unmlqlc    (<:@c unglq ]))@gelqf) A
@@ -381,6 +350,11 @@ unmlqln=: }:  @((unml2ln`(, &>/@(  unmlqlnstep^:(>.@(MQNB %~ #@[)) (;~ 0& {.    
 unmlqlc=: }:  @((unml2lc`(, &>/@([ unmlqlcstep^:(>.@(MQNB %~ #@[)) (( {.     ;   }.  )~   (MQNB arounddown@(_1 + #)))~))@.(MQNB < #@[)~  tru1        @({.  ~    0 _1  <./ @:+ $))~ ,   &0)
 unmlqrn=: }:"1@((unml2rn`(,.&>/@([ unmlqrnstep^:(>.@(MQNB %~ #@[)) ((({."1~) ;  (}."1~))  (MQNB arounddown@(_1 + #)))~))@.(MQNB < #@[)~  tru1        @({.  ~    0 _1  <./ @:+ $))~ ,.  &0)
 unmlqrc=: }:"1@((unml2rc`(,.&>/@(  unmlqrcstep^:(>.@(MQNB %~ #@[)) (;~ 0&({."1)                                     ) ))@.(MQNB < #@[)~  tru1        @({.  ~    0 _1  <./ @:+ $))~ ,.  &0)
+
+unmlqln_7=: }:  @(((unml2ln`((larfblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,  &0)
+unmlqlc_7=: }:  @(((unml2lc`((larfblnfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,  &0)
+unmlqrn_7=: }:"1@(((unml2rn`((larfbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,. &0)
+unmlqrc_7=: }:"1@(((unml2rc`((larfbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,. &0)
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -406,38 +380,6 @@ NB.         elementary reflectors:
 NB.           Q = Π{H(i),i=k-1:0}
 NB.   k   = min(m,n)
 NB.
-NB. Algorithm:
-NB.   In:  QfL C
-NB.   Out: B
-NB.   1) augment C by zero vector:
-NB.        aC=. C , ~ 0    NB. ln,lc
-NB.        aC=. C ,.~ 0    NB. rn,rc
-NB.   2) extract Qf from QfL
-NB.   3) if k>MQNB
-NB.      3.1) then
-NB.           3.1.1) split aC on prefix pfxaC and suffix sfxaC:
-NB.                    'pfxaC sfxaC'=. b ({. ;~ }.)   eC    NB. ln
-NB.                    'pfxaC sfxaC'=. 0 ({. ;~ }.)   eC    NB. lc
-NB.                    'pfxaC sfxaC'=. 0 ({. ;~ }.)"1 eC    NB. rn
-NB.                    'pfxaC sfxaC'=. b ({. ;~ }.)"1 eC    NB. rc
-NB.                  where
-NB.                    b := MQNB - k , negated size of part
-NB.                         not processed by blocked
-NB.                         algorithm
-NB.           3.1.2) find I, the number of iterations:
-NB.                    I := ⌈k/MQNB⌉
-NB.           3.1.3) do iterations:
-NB.                    'pfxaB sfxaB'=. Qf (unmqlxxstep^:I) (pfxaC;sfxaC)
-NB.           3.1.4) unbox and merge pfxaB and sfxaB to produce aB,
-NB.                  being B augmented by trash vector:
-NB.                    aB=. pfxaB ,  sfxaB    NB. ln,lc
-NB.                    aB=. pfxaB ,. sfxaB    NB. rn,rc
-NB.      3.2) else
-NB.             aB=. Qf unm2lxx aC
-NB.   4) cut off trash vector from aB to produce B:
-NB.        B=. }.   C    NB. ln,lc
-NB.        B=. }."1 C    NB. rn,rc
-NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   (idmat@# (-: clean) (unmqlln ct@(<:@# ungql ]))@geqlf) A
 NB.   (idmat@# (-: clean) (unmqllc    (<:@# ungql ]))@geqlf) A
@@ -449,10 +391,15 @@ NB. - implements LAPACK's DORMQL, ZUNMQL
 NB. - unm2l{lc,ln,rc,rn} and unmql{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmqlln=: }.  @((unm2lln`(, &>/@([ unmqllnstep^:(>.@(MQNB %~ c@[)) (( {.     ;~  }.    )~ (MQNB                - c ))~))@.(MQNB < c@[)~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~ &0)
-unmqllc=: }.  @((unm2llc`(, &>/@(  unmqllcstep^:(>.@(MQNB %~ c@[)) (;  0& {.                                        ) ))@.(MQNB < c@[)~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~ &0)
-unmqlrn=: }."1@((unm2lrn`(,.&>/@(  unmqlrnstep^:(>.@(MQNB %~ c@[)) (;  0&({."1)                                     ) ))@.(MQNB < c@[)~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~ &0)
-unmqlrc=: }."1@((unm2lrc`(,.&>/@([ unmqlrcstep^:(>.@(MQNB %~ c@[)) ((({."1~) ;~ (}."1~))  (MQNB                - c ))~))@.(MQNB < c@[)~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~ &0)
+unmqlln=: }.  @((unm2lln`(, &>/@([ unmqllnstep^:(>.@(MQNB %~ c@[)) (( {.     ;~  }.    )~ (MQNB                - c ))~))@.(MQNB < c@[)~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)
+unmqllc=: }.  @((unm2llc`(, &>/@(  unmqllcstep^:(>.@(MQNB %~ c@[)) (;  0& {.                                        ) ))@.(MQNB < c@[)~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)
+unmqlrn=: }."1@((unm2lrn`(,.&>/@(  unmqlrnstep^:(>.@(MQNB %~ c@[)) (;  0&({."1)                                     ) ))@.(MQNB < c@[)~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)
+unmqlrc=: }."1@((unm2lrc`(,.&>/@([ unmqlrcstep^:(>.@(MQNB %~ c@[)) ((({."1~) ;~ (}."1~))  (MQNB                - c ))~))@.(MQNB < c@[)~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)
+
+unmqlln_7=: }.  @(((unm2lln`((larfblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)
+unmqllc_7=: }.  @(((unm2llc`((larfblcbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)
+unmqlrn_7=: }."1@(((unm2lrn`((larfbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)
+unmqlrc_7=: }."1@(((unm2lrc`((larfbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -478,37 +425,6 @@ NB.         elementary reflectors:
 NB.           Q = Π{H(i),i=0:k-1}
 NB.   k   = min(m,n)
 NB.
-NB. Algorithm:
-NB.   In:  QfR C
-NB.   Out: B
-NB.   1) augment C by zero vector:
-NB.        aC=. C ,   0    NB. ln,lc
-NB.        aC=. C ,.  0    NB. rn,rc
-NB.   2) extract Qf from QfR
-NB.   3) if k>MQNB
-NB.      3.1) then
-NB.           3.1.1) split aC on prefix pfxaC and suffix sfxaC:
-NB.                    'pfxaC sfxaC'=. b ({. ;  }.)   eC    NB. ln
-NB.                    'pfxaC sfxaC'=. 0 ({. ;  }.)   eC    NB. lc
-NB.                    'pfxaC sfxaC'=. 0 ({. ;  }.)"1 eC    NB. rn
-NB.                    'pfxaC sfxaC'=. b ({. ;  }.)"1 eC    NB. rc
-NB.                  where
-NB.                    b := ⌊(k-1)/MQNB⌋*MQNB , size of part
-NB.                         processed by blocked algorithm
-NB.           3.1.2) find I, the number of iterations:
-NB.                    I := ⌈k/MQNB⌉
-NB.           3.1.3) do iterations:
-NB.                    'pfxaB sfxaB'=. Qf (unmqrxxstep^:I) (pfxaC;sfxaC)
-NB.           3.1.4) unbox and merge pfxaB and sfxaB to produce aB,
-NB.                  being B augmented by trash vector:
-NB.                    aB=. pfxaB ,  sfxaB    NB. ln,lc
-NB.                    aB=. pfxaB ,. sfxaB    NB. rn,rc
-NB.      3.2) else
-NB.             aB=. Qf unm2rxx aC
-NB.   4) cut off trash vector from aB to produce B:
-NB.        B=. }:   C    NB. ln,lc
-NB.        B=. }:"1 C    NB. rn,rc
-NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   (idmat@# (-: clean) (unmqrln ct@(<:@# ungqr ]))@geqrf) A
 NB.   (idmat@# (-: clean) (unmqrlc    (<:@# ungqr ]))@geqrf) A
@@ -520,10 +436,15 @@ NB. - implements LAPACK's DORMQR, ZUNMQR
 NB. - unm2r{lc,ln,rc,rn} and unmqr{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmqrln=: }:  @((unm2rln`(, &>/@([ unmqrlnstep^:(>.@(MQNB %~ c@[)) (( {.     ;   }.    )~ (MQNB arounddown@(_1 + c)))~))@.(MQNB < c@[)~  trl1        @({."1~   _1  0  <./ @:+ $))~ ,   &0)
-unmqrlc=: }:  @((unm2rlc`(, &>/@(  unmqrlcstep^:(>.@(MQNB %~ c@[)) (;~ 0& {.                                        ) ))@.(MQNB < c@[)~  trl1        @({."1~   _1  0  <./ @:+ $))~ ,   &0)
-unmqrrn=: }:"1@((unm2rrn`(,.&>/@(  unmqrrnstep^:(>.@(MQNB %~ c@[)) (;~ 0&({."1)                                     ) ))@.(MQNB < c@[)~  trl1        @({."1~   _1  0  <./ @:+ $))~ ,.  &0)
-unmqrrc=: }:"1@((unm2rrc`(,.&>/@([ unmqrrcstep^:(>.@(MQNB %~ c@[)) ((({."1~) ;  (}."1~))  (MQNB arounddown@(_1 + c)))~))@.(MQNB < c@[)~  trl1        @({."1~   _1  0  <./ @:+ $))~ ,.  &0)
+unmqrln=: }:  @((unm2rln`(, &>/@([ unmqrlnstep^:(>.@(MQNB %~ c@[)) (( {.     ;   }.    )~ (MQNB arounddown@(_1 + c)))~))@.(MQNB < c@[)~  trl1        @({."1~   _1  0  <./ @:+ $))~ ,  &0)
+unmqrlc=: }:  @((unm2rlc`(, &>/@(  unmqrlcstep^:(>.@(MQNB %~ c@[)) (;~ 0& {.                                        ) ))@.(MQNB < c@[)~  trl1        @({."1~   _1  0  <./ @:+ $))~ ,  &0)
+unmqrrn=: }:"1@((unm2rrn`(,.&>/@(  unmqrrnstep^:(>.@(MQNB %~ c@[)) (;~ 0&({."1)                                     ) ))@.(MQNB < c@[)~  trl1        @({."1~   _1  0  <./ @:+ $))~ ,. &0)
+unmqrrc=: }:"1@((unm2rrc`(,.&>/@([ unmqrrcstep^:(>.@(MQNB %~ c@[)) ((({."1~) ;  (}."1~))  (MQNB arounddown@(_1 + c)))~))@.(MQNB < c@[)~  trl1        @({."1~   _1  0  <./ @:+ $))~ ,. &0)
+
+unmqrln_7=: }:  @(((unm2rln`((larfblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,  &0)
+unmqrlc_7=: }:  @(((unm2rlc`((larfblcfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,  &0)
+unmqrrn_7=: }:"1@(((unm2rrn`((larfbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,. &0)
+unmqrrc_7=: }:"1@(((unm2rrc`((larfbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,. &0)
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -550,38 +471,6 @@ NB.         elementary reflectors:
 NB.           Q = Π{H(i)',i=0:k-1}
 NB.   k   = min(m,n)
 NB.
-NB. Algorithm:
-NB.   In:  RQf C
-NB.   Out: B
-NB.   1) augment C by zero vector:
-NB.        aC=. C ,~  0    NB. ln,lc
-NB.        aC=. C ,.~ 0    NB. rn,rc
-NB.   2) extract Qf from RQf
-NB.   3) if k>MQNB
-NB.      3.1) then
-NB.           3.1.1) split aC on prefix pfxaC and suffix sfxaC:
-NB.                    'pfxaC sfxaC'=. 0 ({. ;~ }.)   eC    NB. ln
-NB.                    'pfxaC sfxaC'=. b ({. ;~ }.)   eC    NB. lc
-NB.                    'pfxaC sfxaC'=. b ({. ;~ }.)"1 eC    NB. rn
-NB.                    'pfxaC sfxaC'=. 0 ({. ;~ }.)"1 eC    NB. rc
-NB.                  where
-NB.                    b := MQNB - k , negated size of part
-NB.                         not processed by blocked
-NB.                         algorithm
-NB.           3.1.2) find I, the number of iterations:
-NB.                    I := ⌈k/MQNB⌉
-NB.           3.1.3) do iterations:
-NB.                    'pfxaB sfxaB'=. Qf (unmrqxxstep^:I) (pfxaC;sfxaC)
-NB.           3.1.4) unbox and merge pfxaB and sfxaB to produce aB,
-NB.                  being B augmented by trash vector:
-NB.                    aB=. pfxaB ,  sfxaB    NB. ln,lc
-NB.                    aB=. pfxaB ,. sfxaB    NB. rn,rc
-NB.      3.2) else process by non-blocked algorithm:
-NB.             aB=. Qf unmr2xx aC
-NB.   4) cut off trash vector from aB to produce B:
-NB.        B=. }.   C    NB. ln,lc
-NB.        B=. }."1 C    NB. rn,rc
-NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   (idmat@c (-: clean) (unmrqln ct@(<:@c ungrq ]))@gerqf) A
 NB.   (idmat@c (-: clean) (unmrqlc    (<:@c ungrq ]))@gerqf) A
@@ -597,6 +486,11 @@ unmrqln=: }.  @((unmr2ln`(, &>/@(  unmrqlnstep^:(>.@(MQNB %~ #@[)) (;  0& {.    
 unmrqlc=: }.  @((unmr2lc`(, &>/@([ unmrqlcstep^:(>.@(MQNB %~ #@[)) (( {.     ;~  }.    )~ (MQNB                - # ))~))@.(MQNB < #@[)~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ , ~ &0)
 unmrqrn=: }."1@((unmr2rn`(,.&>/@([ unmrqrnstep^:(>.@(MQNB %~ #@[)) ((({."1~) ;~ (}."1~))  (MQNB                - # ))~))@.(MQNB < #@[)~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~ &0)
 unmrqrc=: }."1@((unmr2rc`(,.&>/@(  unmrqrcstep^:(>.@(MQNB %~ #@[)) (;  0&({."1)                                     ) ))@.(MQNB < #@[)~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~ &0)
+
+unmrqln_7=: }.  @(((unmr2ln`((larfblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ , ~&0)
+unmrqlc_7=: }.  @(((unmr2lc`((larfblnbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ , ~&0)
+unmrqrn_7=: }."1@(((unmr2rn`((larfbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~&0)
+unmrqrc_7=: }."1@(((unmr2rc`((larfbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~&0)
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -624,14 +518,6 @@ NB.           Q = Π{H(i)',i=h+s-2:h}
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix Qf position in matrix HQf, see
 NB.         see gehrdl
-NB.
-NB. Algorithm:
-NB.   In:  HQf C
-NB.   Out: B
-NB.   1) shift HQf down to produce Qf:
-NB.        Qf=. |.!.0 HQf
-NB.   2) call correspondent unmlqxx to do the job:
-NB.        B=. Qf unmlqxx C
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   (idmat@c (-: clean) (unmhrlln ct@unghrl)@gehrdl) A
@@ -746,121 +632,10 @@ NB. - implements LAPACK's xORMRZ, xUNMRZ
 NB. - unmr2{lc,ln,rc,rn} and unmrz{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-NB. Prod=. Qf unmr2ln_2 eC
-NB. splitted eC, dense z
-unmr2ln_2=: 4 : 0
-  eCsfx=. 0 {. y
-  while. eCsfx <&# x do.
-    y=. (((2 # _1 - # eCsfx) ,: 1 _) ,;.0 x) larflcbr y
-    eCsfx=. ({: y) , eCsfx
-    y=. }: y
-  end.
-  y , eCsfx
-)
-
-NB. QbyeC=. Qf unmr2ln_3 eC
-NB. monolithic eC, sparse z
-unmr2ln_3=: 4 : 0
-  j=. <: # x
-  while. 0 <: j do.
-    y=. (j { x) larflcbr y
-    j=. <: j
-  end.
-  y
-)
-
-NB. QbyC=. RQf unmrqln_2 C
-NB. splitted eC, dense Z
-NB.    load '/home/jip/j701/addons/math/mt/mq.ijs'
-NB.    'A C'=. (j./"3) _99 + ? 2 2 100 200 $ 199
-NB.    RQf=. gerqf_mt_ |: A
-NB.    RQf (unmrqln_mt_ -: unmrqln_2_mt_) C
-NB. 1
-unmrqln_2=: 4 : 0
-  x=. (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $) x
-  y=. 0 , y
-  if. MQNB < # x do.
-    eCsfx=. 0 {. y
-    j=. 0
-    while. j < >. (# x) % MQNB do.
-      rios=. (((- MQNB&|) <: x -&# eCsfx) , ((# y) - (c x) + 1)) ,: MQNB , _
-      saferios=. _ 2:} rios
-      Z=. (rios ,: saferios) ((0 { [) ];.0 ]) :: ((1 { [) ];.0 ]) x
-      y=. Z larfblcbr y
-      a=. _1 - MQNB | <: x -&# eCsfx
-      eCsfx=. (a {. y) , eCsfx
-      y=. a }. y
-      j=. >: j
-    end.
-    y=. y , eCsfx
-  else.
-    y=. x unmr2ln_2 y
-  end.
-  y=. }. y
-)
-
-NB. QbyC=. RQf unmrqln_3 C
-NB. monolithic RQf and eC, boxed lIOS curtailing
-unmrqln_3=: 4 : 0
-  x=. (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $) x
-  y=. 0 , y
-  if. MQNB < # x do.
-    ios=. (- MQNB) <\ i. # x
-    while. # ios do.
-      y=. ((_1 {:: ios) { x) larfblcbr y
-      ios=. }: ios
-    end.
-  else.
-    y=. x unmr2ln_3 y
-  end.
-  y=. }. y
-)
-
-NB. QbyC=. RQf unmrqln_4 C
-NB. monolithic RQf and eC, boxed lIOS scanning
-unmrqln_4=: 4 : 0
-  x=. (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $) x
-  y=. 0 , y
-  if. MQNB < # x do.
-    ios=. (- MQNB) <\ i. # x
-    j=. <: # ios
-    while. 0 <: j do.
-      y=. ((j {:: ios) { x) larfblcbr y
-      j=. <: j
-    end.
-  else.
-    y=. x unmr2ln_3 y
-  end.
-  y=. }. y
-)
-
-NB. QbyC=. RQf unmrqln_5 C
-NB. infixed & boxed RQf, linked monolithic eC, scan by insert
-NB. }. -: 0&, ^: _1
-unmrqln_5=: 4 : 0
-  x=. (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $) x
-  y=. 0 , y
-  if. MQNB < # x do.
-    y=. larfblcbr&:>/ ((- MQNB) <\ x) , < y
-  else.
-    y=. x unmr2ln_3 y
-  end.
-  y=. }. y
-)
-
-NB. QbyC=. RQf unmrqln_6 C
-NB. monolithic RQf and eC, boxed lIOS scanning via xbtl
-NB. }. -: 0&, ^: _1
-unmrqln_6=: 4 : 0
-  x=. (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $) x
-  y=. (x&((larflcbr xbt 1)`(larfblcbr xbt MQNB)@.(MQNB < #@[)))&.(0&,) y
-)
-
-NB. QbyC=. RQf unmrqln_7 C
-NB. infixed & boxed RQf, linked monolithic eC, scan by insert
-unmrqln_7=: }.@(((unmr2ln`((larfblcbr&:>/@,~ (- MQNB)&(<\))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $))~ 0&,)
-
-NB. unmrqln_2=: (}.@((1 unmrxln_2_core)`(MQNB unmrxln_2_core)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $))~ 0&,
+unmrzln_7=: }:  @(((unmr3ln`((larzblcbr&:>/@,~     (- MQNB)&(<\) )~ <)@.(MQNB < #@[))~  tru1                                )~ ,  &0)
+unmrzlc_7=: }:  @(((unmr3lc`((larzblnbr&:>/@,~ |.@((- MQNB)&(<\)))~ <)@.(MQNB < #@[))~  tru1                                )~ ,  &0)
+unmrzrn_7=: }:"1@(((unmr3rn`((larzbrcbr&:>/@,~ |.@((- MQNB)&(<\)))~ <)@.(MQNB < #@[))~  tru1                                )~ ,. &0)
+unmrzrc_7=: }:"1@(((unmr3rc`((larzbrnbr&:>/@,~     (- MQNB)&(<\) )~ <)@.(MQNB < #@[))~  tru1                                )~ ,. &0)
 
 NB. =========================================================
 NB. Test suite

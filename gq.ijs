@@ -77,12 +77,11 @@ NB.   Q=. unglq LQf
 NB. where
 NB.   LQf - m×(n+1)-matrix, the output of gelqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the first k rows of a product of m
+NB.         defined as the first k rows of a product of k
 NB.         elementary reflectors of order n:
-NB.           Q = Π{H(i)',i=m-1:0}
+NB.           Q = Π{H(i)',i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -131,12 +130,11 @@ NB.   Q=. ungql QfL
 NB. where
 NB.   QfL - (m+1)×n-matrix, the output of geqlf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the last k columns of a product of n
+NB.         defined as the last k columns of a product of k
 NB.         elementary reflectors of order m:
-NB.           Q = Π{H(i),i=n-1:0}
+NB.           Q = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.           H(n-k-1:0) ≡ H(u(n-k-1:0),τ(0:n-k-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -186,12 +184,11 @@ NB.   Q=. ungqr QfR
 NB. where
 NB.   QfR - (m+1)×n-matrix, the output of geqrf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the first k columns of a product of n
+NB.         defined as the first k columns of a product of k
 NB.         elementary reflectors of order m:
-NB.           Q = Π{H(i),i=0:n-1}
+NB.           Q = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.           H(k:n-1) ≡ H(u(k:n-1),τ(k:n-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -241,12 +238,11 @@ NB.   Q=. ungrq RQf
 NB. where
 NB.   RQf - m×(n+1)-matrix, the output of gerqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the last k rows of a product of m
+NB.         defined as the last k rows of a product of k
 NB.         elementary reflectors of order n:
-NB.           Q = Π{H(i)',i=0:m-1}
+NB.           Q = Π{H(i)',i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(0:m-k-1) ≡ H(u(0:m-k-1),τ(0:m-k-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -291,17 +287,16 @@ NB.   Generate a matrix with orthonormal rows from output of
 NB.   tzlzf
 NB.
 NB. Syntax:
-NB.   Z=. unglz LZf
+NB.   Z=. [k] unglz LZf
 NB. where
-NB.   LZf - k×(n+1)-matrix, the output of tzlzf
-NB.   Z   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the last k rows of a product of m
+NB.   LZf - m×(n+1)-matrix, the output of tzlzf
+NB.   Z   - m×n-matrix with orthonormal rows, which is
+NB.         defined as the last k rows of a product of k
 NB.         elementary reflectors of order n:
-NB.           Z = Π{H(i)',i=m-1:0}
+NB.           Z = Π{H(i)',i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(m-k-1:0) ≡ H(u(m-k-1:0),τ(m-k-1:0)) = H(0,0) = I
-NB.   k   ≤ m
+NB.   k   ≤ m, optional, default is m
 NB.   m   ≤ n
 NB.
 NB. Storage layout:
@@ -322,11 +317,11 @@ NB.   NB. I = Z * (Z^H)
 NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlzrc unglz)) LZf
 NB.
 NB. Application:
-NB. - change Z's size k:
-NB.     NB. Z=. k unglzk LZf
-NB.     unglzk=: (unglz@  {.   ~ -)~
+NB. - change Z's size m:
+NB.     NB. Z=. m unglzm LZf
+NB.     unglzm=: #@] unglz ({.~ -)~
 
-unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@]`(a: <@; dhs2lios@(_1 , ]))`[} #)
+unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@# :(((0 >. - ) idmat <. ,  [) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ])
 
 NB. ---------------------------------------------------------
 NB. ungzl
@@ -336,17 +331,16 @@ NB.   Generate a matrix with orthonormal columns from output
 NB.   of tzzlf
 NB.
 NB. Syntax:
-NB.   Z=. ungzl ZfL
+NB.   Z=. [k] ungzl ZfL
 NB. where
-NB.   ZfL - (m+1)×k-matrix, the output of tzzlf
-NB.   Z   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the first k columns of a product of n
+NB.   ZfL - (m+1)×n-matrix, the output of tzzlf
+NB.   Z   - m×n-matrix with orthonormal columns, which is
+NB.         defined as the first k columns of a product of k
 NB.         elementary reflectors of order m:
-NB.           Q = Π{H(i),i=n-1:0}
+NB.           Q = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.           H(n-1:k) ≡ H(u(n-1:k),τ(n-1:k)) = H(0,0) = I
-NB.   k   ≤ n
+NB.   k   ≤ n, optional, default is n
 NB.   n   ≤ m
 NB.
 NB. Storage layout:
@@ -372,11 +366,11 @@ NB.   NB. I = (Z^H) * Z
 NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmzllc ungzl)) ZfL
 NB.
 NB. Application:
-NB. - change Z's size k:
-NB.     NB. Z=. k ungzlk ZfL
-NB.     ungzlk=: ungzl@:({."1)
+NB. - change Z's size n:
+NB.     NB. Z=. n ungzln ZfL
+NB.     ungzln=: c@] ungzl {."1
 
-ungzl=: }:  @((( ((GQNB ,~ _) ,:~ 0 ,       c@]     ) ];.0 [) larzblnbc (1 ; 0 _1 , GQNB) setdiag          ({."1~    GQNB  + c)@])^:(GQNB %~ -&c) (larzblnbc  idmat      @$)@(}."1~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@]`(       dhs2lios@( 0 , ]))`[} c)
+ungzl=: }:  @((( ((GQNB ,~ _) ,:~ 0 ,       c@]     ) ];.0 [) larzblnbc (1 ; 0 _1 , GQNB) setdiag          ({."1~    GQNB  + c)@])^:(GQNB %~ -&c) (larzblnbc  idmat      @$)@(}."1~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@c :(( 0        idmat <. ,~ [) c) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ])
 
 NB. ---------------------------------------------------------
 NB. ungzr
@@ -386,17 +380,16 @@ NB.   Generate a matrix with orthonormal columns from output
 NB.   of tzzrf
 NB.
 NB. Syntax:
-NB.   Z=. ungzr ZfR
+NB.   Z=. [k] ungzr ZfR
 NB. where
-NB.   ZfR - (m+1)×k-matrix, the output of tzzrf
-NB.   Z   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the last k columns of a product of n
+NB.   ZfR - (m+1)×n-matrix, the output of tzzrf
+NB.   Z   - m×n-matrix with orthonormal columns, which is
+NB.         defined as the last k columns of a product of k
 NB.         elementary reflectors of order m:
-NB.           Q = Π{H(i),i=0:n-1}
+NB.           Q = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.           H(0:n-k-1) ≡ H(u(0:n-k-1),τ(0:n-k-1)) = H(0,0) = I
-NB.   k   ≤ n
+NB.   k   ≤ n, optional, default is n
 NB.   n   ≤ m
 NB.
 NB. Storage layout:
@@ -422,11 +415,11 @@ NB.   NB. I = (Z^H) * Z
 NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmzrlc ungzr)) ZfR
 NB.
 NB. Application:
-NB. - change Z's size k:
-NB.     NB. Z=. k ungzrk ZfR
-NB.     ungzrk=: (ungzr@:({."1)~ -)~
+NB. - change Z's size n:
+NB.     NB. Z=. n ungzrn ZfR
+NB.     ungzrn=: c@] ungzr ({."1~ -)~
 
-ungzr=: }.  @((( ((GQNB ,~ _) ,:~ 0 ,  _1 - c@]     ) ];.0 [) larzblnfc (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({."1~ (- GQNB) - c)@])^:(GQNB %~ -&c) (larzblnfc (idmat~ -~/)@$)@(}."1~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@]`(       dhs2lios@(_1 , ]))`[} c)
+ungzr=: }.  @((( ((GQNB ,~ _) ,:~ 0 ,  _1 - c@]     ) ];.0 [) larzblnfc (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({."1~ (- GQNB) - c)@])^:(GQNB %~ -&c) (larzblnfc (idmat~ -~/)@$)@(}."1~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@c :(((0 <. -~) idmat <. ,~ [) c) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ])
 
 NB. ---------------------------------------------------------
 NB. ungrz
@@ -436,17 +429,16 @@ NB.   Generate a matrix with orthonormal rows from output of
 NB.   tzrzf
 NB.
 NB. Syntax:
-NB.   Z=. ungrz RZf
+NB.   Z=. [k] ungrz RZf
 NB. where
-NB.   RZf - k×(n+1)-matrix, the output of tzrzf
-NB.   Z   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the first k rows of a product of m
+NB.   RZf - m×(n+1)-matrix, the output of tzrzf
+NB.   Z   - m×n-matrix with orthonormal rows, which is
+NB.         defined as the first k rows of a product of k
 NB.         elementary reflectors of order n:
-NB.           Q = Π{H(i)',i=0:m-1}
+NB.           Q = Π{H(i)',i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(k:m-1) ≡ H(u(k:m-1),τ(k:m-1)) = H(0,0) = I
-NB.   k   ≤ m
+NB.   k   ≤ m, optional, default is m
 NB.   m   ≤ n
 NB.
 NB. Storage layout:
@@ -467,11 +459,11 @@ NB.   NB. I = Z * (Z^H)
 NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrzrc ungrz)) RZf
 NB.
 NB. Application:
-NB. - change Z's size k:
-NB.     NB. Z=. k ungrzk RZf
-NB.     ungrzk=: ungrz@  {.
+NB. - change Z's size m:
+NB.     NB. Z=. m ungrzm RZf
+NB.     ungrzm=: #@] ungrz {.
 
-ungrz=: }:"1@((( ((GQNB ,  _) ,:~ 0 ,~      #@]     ) ];.0 [) larzbrcbr (1 ; 0 _1 , GQNB) setdiag          ({.  ~    GQNB  + #)@])^:(GQNB %~ -&#) (larzbrcbr  idmat      @$)@(}.  ~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@]`(a: <@; dhs2lios@( 0 , ]))`[} #)
+ungrz=: }:"1@((( ((GQNB ,  _) ,:~ 0 ,~      #@]     ) ];.0 [) larzbrcbr (1 ; 0 _1 , GQNB) setdiag          ({.  ~    GQNB  + #)@])^:(GQNB %~ -&#) (larzbrcbr  idmat      @$)@(}.  ~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@# :(( 0        idmat <. ,  [) #) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ])
 
 NB. ---------------------------------------------------------
 NB. unghrl

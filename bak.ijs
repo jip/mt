@@ -5,13 +5,13 @@ NB. gebakxsx   Undo scaling maden by gebals
 NB. gebakxx    Form eigenvectors by backward transformation
 NB.            of the matrix balanced by gebalx
 NB.
-NB. testgebak  Test gebakxx by general matrix given
+NB. testgebak  Test gebakxx by square matrix
 NB. testbak    Adv. to make verb to test gebakxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.9.0 2012-12-29
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -140,7 +140,7 @@ NB. ---------------------------------------------------------
 NB. testgebak
 NB.
 NB. Description:
-NB.   Test gebakxx by general matrix given
+NB.   Test gebakxx by square matrix
 NB.
 NB. Syntax:
 NB.   testgebak A
@@ -150,10 +150,10 @@ NB.   A - n×n-matrix
 testgebak=: 3 : 0
   rcond=. gecon1 y
 
-  ('gebakll' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebaklr' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebakul' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebakur' tmonad ((];(i.;($&1))@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
 )

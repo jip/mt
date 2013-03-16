@@ -5,13 +5,13 @@ NB.             eigenvectors of generalized Schur form
 NB. tgevcxxb    Backtransformed left and/or right
 NB.             eigenvectors of generalized Schur form
 NB.
-NB. testtgevc   Test tgevcxxx by general matrices given
+NB. testtgevc   Test tgevcxxx by square matrices
 NB. testevc     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.9.0 2012-12-29
 NB.
-NB. Copyright 2011 Igor Zhuravlov
+NB. Copyright 2011-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -75,14 +75,14 @@ tgevci=: 4 : 0
   abcoeff=. abscale * sba
   NB. scale to avoid underflow
   lsab=. *./ 0 1 (>:&FP_SFMIN)`(<&small) ag 0 1 (|`sorim ag)"2 sba ,: abcoeff  NB. 2×n-matrix
-  scale=. >./ lsab } 1 ,: ((% small) <. abnorm) * small % 0 1 |`sorim ag sba   NB. n-vector
-  scale=. (+./ lsab) } scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
-  abcoeff=. lsab } (abcoeff *"1 scale) ,: (abscale * scale *"1 sba)
+  scale=. >./ lsab} 1 ,: ((% small) <. abnorm) * small % 0 1 |`sorim ag sba    NB. n-vector
+  scale=. (+./ lsab)} scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
+  abcoeff=. lsab} (abcoeff *"1 scale) ,: (abscale * scale *"1 sba)
   abcoeffa=. 0 1 |`sorim ag abcoeff
   cond1=. +/ abcoeffa * abrwork
   dmin=. (# x) # ,: >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa                 NB. k×n-matrix
   d=. (x { |: abcoeff) mp 0 1 ]`- ag d0
-  d=. (dmin < sorim d) } dmin ,: d
+  d=. (dmin < sorim d)} dmin ,: d
   cond2=. bignum (((1>]),.*) sorim) d
 
   bignum ; (|:d2) ; (|:abrwork) ; cond1 ; cond2 ; (|:abcoeff) ; (|:abcoeffa) ; d
@@ -114,7 +114,7 @@ tgevcly=: 4 : 0
   while. je >: 0 do.
     if. *./ FP_SFMIN >: (je { ios) { d2 do.
       NB. singular matrix pencil - return unit eigenvector
-      work=. 1 je } n $ 0
+      work=. 1 je} n $ 0
     else.
       NB. non-singular eigenvalue: triangular solve of:
       NB.   y * (a*A - b*B) = 0  (rowwise)
@@ -177,7 +177,7 @@ tgevclx=: 4 : 0
   while. je < k do.
     if. *./ FP_SFMIN >: (je { ios) { d2 do.
       NB. singular matrix pencil - return unit eigenvector
-      work=. 1 je } n $ 0
+      work=. 1 je} n $ 0
     else.
       NB. non-singular eigenvalue: triangular solve of:
       NB.   x * (a*A - b*B)^H = 0 ,
@@ -237,7 +237,7 @@ tgevcs=: 3 : 0
   norm=. normitr y
   ios=. (#y) #"0 FP_SFMIN < norm
   y=. y % norm
-  y=. ios } 0 ,: y
+  y=. ios} 0 ,: y
 )
 
 NB. =========================================================
@@ -512,12 +512,12 @@ NB. ---------------------------------------------------------
 NB. testtgevc
 NB.
 NB. Description:
-NB.   Test tgevcxxx by general matrices given
+NB.   Test tgevcxxx by pair of square matrices
 NB.
 NB. Syntax:
 NB.   testtgevc AB
 NB. where
-NB.   AB - 2×n×n-report (A,:B)
+NB.   AB - 2×n×n-report
 NB.
 NB. Formula:
 NB.   berr := max(berr0,berr1)

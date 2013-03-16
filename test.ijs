@@ -1,11 +1,9 @@
 NB. Test
 NB.
-NB. tmonad    Template conj. to make verbs to test
-NB.           computational monad
-NB. tdyad     Template conj. to make verbs to test
-NB.           computational dyad
+NB. tmonad    Conj. to make verbs to test computational monad
+NB. tdyad     Conj. to make verbs to test computational dyad
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -38,7 +36,9 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. tmonad
 NB. tdyad
-NB. Template conj. to make monad to test computational verb
+NB.
+NB. Description:
+NB.   Conj. to make monad to test computational verb
 NB.
 NB. Syntax:
 NB.   vtestm=. mname tmonad        vgety`vgeto`vrcond`vferr`vberr

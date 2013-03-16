@@ -5,10 +5,9 @@ NB. diexp      Matrix exponential of a diagonalizable matrix
 NB. heexp      Matrix exponential of a Hermitian (symmetric)
 NB.            matrix
 NB.
-NB. testgeexp  Test geexp by general matrix given
-NB. testdiexp  Test diexp by diagonalizable matrix given
+NB. testgeexp  Test geexp by square matrix
+NB. testdiexp  Test diexp by diagonalizable matrix
 NB. testheexp  Test heexp by Hermitian (symmetric) matrix
-NB.            given
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
@@ -319,7 +318,7 @@ NB. ---------------------------------------------------------
 NB. testgeexp
 NB.
 NB. Description:
-NB.   Test geexp by general matrix given
+NB.   Test geexp by square matrix
 NB.
 NB. Syntax:
 NB.   testgeexp A
@@ -338,7 +337,7 @@ NB. ---------------------------------------------------------
 NB. testdiexp
 NB.
 NB. Description:
-NB.   Test diexp by diagonalizable matrix given
+NB.   Test diexp by diagonalizable matrix
 NB.
 NB. Syntax:
 NB.   testdiexp A
@@ -347,13 +346,13 @@ NB.   A - n×n-matrix, diagonalizable
 
 testdiexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  geevlvv=. 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)"2&.>)ag ggevlvv@(,:(idmat@c))
+  geevlvv=. 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1])) % norms"1)"2&.>)ag ggevlvv@(,: idmat@c)
 
   rcond=. gecon1 y
   try.
     'v LR'=. geevlvv y                 NB. eigendecomposition
     'L R'=. LR
-    v=. j./ (*"1 (-@*@{.)) |: +. v     NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
+    v=. j./ (*"1 -@*@{.) |: +. v       NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
                                        NB. A to be negative definite, this will avoid NaN error in diexp
     assert ((-: ~.) v) +. ((-: ct) y)  NB. A must be normal (diagonalizable)
     iRh=. L ([ % (mp"1 +)) R           NB. reconstruct R^_1^H , see [1] in diexp
@@ -370,7 +369,7 @@ NB. ---------------------------------------------------------
 NB. testheexp
 NB.
 NB. Description:
-NB.   Test heexp by Hermitian (symmetric) matrix given
+NB.   Test heexp by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testheexp A

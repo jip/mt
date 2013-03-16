@@ -16,7 +16,7 @@ NB. unmat    Adv. to make verb to make random unitary
 NB.          (orthogonal) matrix
 NB. spmat    Conj. to make verb to make random sparse array
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -213,7 +213,7 @@ randtnf=: 0 1 __ _&$: :(4 : 0)
   'mu sigma a b'=. x
   mrandnf=. (mu,sigma)&randnf
   NB. replace out-bounded elements recursively
-  rober=. I.@(a&> +. b&<) $:@mrandnf@#@[`[`] }^:(0 < #@[) ]
+  rober=. I.@(a&> +. b&<) $:@mrandnf@#@[`[`]}^:(0 < #@[) ]
   ($ rober@mrandnf@(*/)) y
 )
 
@@ -255,7 +255,7 @@ NB.             f=. ne $ 0
 NB.      2.1) make lIOS for start of an interval marks:
 NB.             lios=. +/\ i. ne
 NB.      2.2) write in marks:
-NB.             f=. 1 lios } f
+NB.             f=. 1 lios} f
 NB.   3) cut ve on pieces of length (1 2 3 ... n) and stack
 NB.      them into lower triangular matrix:
 NB.        L=. f ];.1 ve
@@ -622,4 +622,4 @@ NB.
 NB. TODO:
 NB. - S should be sparse
 
-spmat=: 2 : 'u@<.@(n * */) ((?@$~ #)~ (*/@$)) } $&0'
+spmat=: 2 : 'u@<.@(n * */) ((?@$~ #)~ (*/@$))} $&0'

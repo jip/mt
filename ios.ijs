@@ -12,9 +12,9 @@ NB. rios2lios  Convert rIOS to lIOS
 NB. liosX      lIOS of vector laying between diagonal and
 NB.            matrix edge
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.9.0 2012-12-29
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -103,7 +103,7 @@ NB. ---------------------------------------------------------
 NB. dhs2lios
 NB.
 NB. Description:
-NB.   Generate lIOS from head, size and optional delta
+NB.   Generate lIOS from head, size and delta
 NB.
 NB. Syntax:
 NB.   lios=. [d] dhs2lios (h,s)
@@ -112,8 +112,7 @@ NB.   h    - integer, head of lios, if h<0 then lios is
 NB.          pointed to h, otherwise away from h
 NB.   s    - integer, size of lios, if s<0 then lios's order
 NB.          is reversed
-NB.   d    - optional non-negative integer, delta of lios,
-NB.          default is 1
+NB.   d    ≥ 0 integer, optional delta of lios, default is 1
 NB.   lios - |s|-vector of integers
 NB.
 NB. Examples:
@@ -202,25 +201,25 @@ NB.             v -: lios ({,) A
 NB.   A     - m×n-matrix
 NB.
 NB. Examples:
-NB.    '***' ((((0 liosE)&c) }),.' ',.(((1 liosE)&c) }),.' ',.(((_1 liosE)&c) })) 5 6$'-'
+NB.    '***' ((((0 liosE)&c)}),.' ',.(((1 liosE)&c)}),.' ',.(((_1 liosE)&c)})) 5 6$'-'
 NB. ------ ------ ------
 NB. ------ --***- ---***
 NB. ---*** ------ ------
 NB. ------ ------ ------
 NB. ------ ------ ------
-NB.    '***' ((((0 liosN)&c) }),.' ',.(((1 liosN)&c) }),.' ',.(((_1 liosN)&c) })) 5 6$'-'
+NB.    '***' ((((0 liosN)&c)}),.' ',.(((1 liosN)&c)}),.' ',.(((_1 liosN)&c)})) 5 6$'-'
 NB. --*--- ---*-- ------
 NB. --*--- ---*-- ---*--
 NB. --*--- ---*-- ---*--
 NB. ------ ------ ---*--
 NB. ------ ------ ------
-NB.    '***' ((((0 liosS)&c) }),.' ',.(((1 liosS)&c) }),.' ',.(((_1 liosS)&c) })) 5 6$'-'
+NB.    '***' ((((0 liosS)&c)}),.' ',.(((1 liosS)&c)}),.' ',.(((_1 liosS)&c)})) 5 6$'-'
 NB. ------ ------ ------
 NB. ------ --*--- ------
 NB. ---*-- --*--- --*---
 NB. ---*-- --*--- --*---
 NB. ---*-- ------ --*---
-NB.    '***' ((((0 liosW)&c) }),.' ',.(((1 liosW)&c) }),.' ',.(((_1 liosW)&c) })) 5 6$'-'
+NB.    '***' ((((0 liosW)&c)}),.' ',.(((1 liosW)&c)}),.' ',.(((_1 liosW)&c)})) 5 6$'-'
 NB. ------ ------ ------
 NB. ------ ------ ------
 NB. ***--- ------ ------

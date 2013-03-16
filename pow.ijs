@@ -6,10 +6,9 @@ NB.            power[s]
 NB. hepow      Raise a Hermitian (symmetric) matrix to
 NB.            integer power[s]
 NB.
-NB. testgepow  Test gepow by general matrix given
-NB. testdipow  Test dipow by diagonalizable matrix given
+NB. testgepow  Test gepow by square matrix
+NB. testdipow  Test dipow by diagonalizable matrix
 NB. testhepow  Test hepow by Hermitian (symmetric) matrix
-NB.            given
 NB. testpow    Adv. to make verb to test xxpow by matrix of
 NB.            generator and shape given
 NB.
@@ -243,7 +242,7 @@ NB. ---------------------------------------------------------
 NB. testgepow
 NB.
 NB. Description:
-NB.   Test gepow by general matrix given
+NB.   Test gepow by square matrix
 NB.
 NB. Syntax:
 NB.   testgepow A
@@ -265,7 +264,7 @@ NB. ---------------------------------------------------------
 NB. testdipow
 NB.
 NB. Description:
-NB.   Test dipow by diagonalizable matrix given
+NB.   Test dipow by diagonalizable matrix
 NB.
 NB. Syntax:
 NB.   testdipow A
@@ -277,14 +276,14 @@ NB. - fixed powers vector (p -: 5 7) is used
 
 testdipow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  geevlvv=. 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)"2&.>)ag ggevlvv@(,:(idmat@c))
+  geevlvv=. 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1 ])) % normsr)"2&.>)ag ggevlvv@(,: idmat@c)
 
   rcond=. gecon1 y
   try.
-    'v LR'=. geevlvv y                 NB. eigendecomposition
+    'v LR'=. geevlvv y               NB. eigendecomposition
     'L R'=. LR
-    assert ((-: ~.) v) +. ((-: ct) y)  NB. A must be normal (diagonalizable)
-    iRh=. L ([ % (mp"1 +)) R           NB. reconstruct R^_1^H , see [1] in dipow
+    assert ((-: ~.) v) +. (-: ct) y  NB. A must be normal (diagonalizable)
+    iRh=. L ([ % (mp"1 +)) R         NB. reconstruct R^_1^H , see [1] in dipow
   catch.
     R=. v=. iRh=. _.
   end.
@@ -298,7 +297,7 @@ NB. ---------------------------------------------------------
 NB. testhepow
 NB.
 NB. Description:
-NB.   Test hepow by Hermitian (symmetric) matrix given
+NB.   Test hepow by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testhepow A

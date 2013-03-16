@@ -3,14 +3,13 @@ NB.
 NB. ggevxxx   Eigenvalues and, optionally, eigenvectors of
 NB.           pair of matrices
 NB.
-NB. testgeev  Test geevxxx by general matrix given
+NB. testgeev  Test geevxxx by square matrix
 NB. testheev  Test heevxx by Hermitian (symmetric) matrix
-NB.           given
-NB. testggev  Test ggevxxx by general matrices given
+NB. testggev  Test ggevxxx by pair of square matrices
 NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.8.2 2012-05-01
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2011-2012 Igor Zhuravlov
 NB.
@@ -150,13 +149,13 @@ NB.     NB. e=. geevlnn A
 NB.     geevlnn=: {.@ggevlnn@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('N','V') (see notes):
 NB.     NB. 'e R'=. geevlnv A
-NB.     geevlnv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)      &.>)ag ggevlnv@(,:(idmat@c))
+NB.     geevlnv=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)      &.>)ag ggevlnv@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('V','N') (see notes):
 NB.     NB. 'e L'=. geevlvn A
-NB.     geevlvn=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)      &.>)ag ggevlvn@(,:(idmat@c))
+NB.     geevlvn=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)      &.>)ag ggevlvn@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('V','V') (see notes):
 NB.     NB. 'e LR'=. geevlvv A
-NB.     geevlvv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)    "2&.>)ag ggevlvv@(,:(idmat@c))
+NB.     geevlvv=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)    "2&.>)ag ggevlvv@(,:(idmat@c))
 NB. - simulate LAPACK's xHEEV('N'):
 NB.     NB. e=. heevln A
 NB.     heevln=: 9 o.{.@ggevlnn@(,:(idmat@c))
@@ -171,14 +170,14 @@ NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevlnn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (<0 1;;~dhs2lios hs) ([ ((gghrdlnn~0,c) upd) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`] }) y
+  y=. (<0 1;;~dhs2lios hs) ([ ((gghrdlnn~0,c) upd) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`]}) y
   e1e2=. hs hgezqenn y
   e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
 
 ggevlnv=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@]) } y
+  y=. (0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
   y=. (gghrdlnv~0,c) y
   y=. hs hgezqsnv y
   e1e2=. 2 {. diag"2 y
@@ -196,7 +195,7 @@ ggevlnv=: 3 : 0
 
 ggevlvn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (<0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`] } y
+  y=. (<0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`]} y
   y=. (((0,]) gghrdlvn (,idmat)) c) y
   y=. hs hgezqsvn y
   e1e2=. 2 {. diag"2 y
@@ -214,7 +213,7 @@ ggevlvn=: 3 : 0
 
 ggevlvv=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 3)<@(0})[)`((, ,:~@idmat@c)@]) } y
+  y=. (0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 3)<@(0})[)`((, ,:~@idmat@c)@])} y
   y=. (gghrdlvv~0,c) y
   y=. hs hgezqsvv y
   e1e2=. 2 {. diag"2 y
@@ -301,13 +300,13 @@ NB.     NB. e=. geevunn A
 NB.     geevunn=: {.@ggevunn@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('N','V') (see notes):
 NB.     NB. 'e R'=. geevunv A
-NB.     geevunv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)&.|:  &.>)ag ggevunv@(,:(idmat@c))
+NB.     geevunv=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:  &.>)ag ggevunv@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('V','N') (see notes):
 NB.     NB. 'e L'=. geevuvn A
-NB.     geevuvn=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)&.|:  &.>)ag ggevuvn@(,:(idmat@c))
+NB.     geevuvn=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:  &.>)ag ggevuvn@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('V','V') (see notes):
 NB.     NB. 'e LR'=. geevuvv A
-NB.     geevuvv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)&.|:"2&.>)ag ggevuvv@(,:(idmat@c))
+NB.     geevuvv=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:"2&.>)ag ggevuvv@(,:(idmat@c))
 NB. - simulate LAPACK's xHEEV('N'):
 NB.     NB. e=. heevun A
 NB.     heevun=: 9 o.{.@ggevunn@(,:(idmat@c))
@@ -326,14 +325,14 @@ NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevunn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (<0 1;;~dhs2lios hs) ([ ((gghrdunn~0,c) upd) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`] }) y
+  y=. (<0 1;;~dhs2lios hs) ([ ((gghrdunn~0,c) upd) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`]}) y
   e1e2=. hs hgeqzenn y
   e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
 
 ggevuvn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@]) } y
+  y=. (0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
   y=. (gghrduvn~0,c) y
   y=. hs hgeqzsvn y
   e1e2=. 2 {. diag"2 y
@@ -351,7 +350,7 @@ ggevuvn=: 3 : 0
 
 ggevunv=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (<0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`] } y
+  y=. (<0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`]} y
   y=. (((0,]) gghrdunv (,idmat)) c) y
   y=. hs hgeqzsnv y
   e1e2=. 2 {. diag"2 y
@@ -369,7 +368,7 @@ ggevunv=: 3 : 0
 
 ggevuvv=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, ,:~@idmat@c)@]) } y
+  y=. (0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, ,:~@idmat@c)@])} y
   y=. (gghrduvv~0,c) y
   y=. hs hgeqzsvv y
   e1e2=. 2 {. diag"2 y
@@ -392,7 +391,7 @@ NB. ---------------------------------------------------------
 NB. testgeev
 NB.
 NB. Description:
-NB.   Test geev (math/lapack) by general matrix given
+NB.   Test geev (math/lapack) by square matrix
 NB.
 NB. Syntax:
 NB.   testgeev A
@@ -484,12 +483,12 @@ NB. ---------------------------------------------------------
 NB. testggev
 NB.
 NB. Description:
-NB.   Test ggevxxx by general matrices given
+NB.   Test ggevxxx by pair of square matrices
 NB.
 NB. Syntax:
 NB.   testggev AB
 NB. where
-NB.   AB - 2×n×n-report (A,:B)
+NB.   AB - 2×n×n-report
 NB.
 NB. Formula:
 NB.   berr := max(berr0,berr1)
@@ -527,13 +526,13 @@ NB. Notes:
 NB. - berrxxx are non-iterative and are require O(N^3) RAM
 
 testggev=: 3 : 0
-  vberrlvn=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((  norm1r@:((mp"1 2 -/"3)~      )                                          )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:( norm1       "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
-  vberrlnv=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((                                  norm1r@:((mp"2 1~ -/"3)~ +    )         )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:(       normi "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
-  vberrlvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::)) ((((norm1r@:( mp"1 2      ~    {.),:norm1r@:((mp"2 1      )  + @{:))~ -/"3)~) (>./@:%) FP_PREC * (FP_SFMIN >. |:@:(>./"1)@:((norm1,normi)"2)@[)) (1 {:: ]))) >. (>./@:normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
+  vberrlvn=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((  norm1r@:((mp"1 2 -/"3)~      )                                          )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:( norm1         "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
+  vberrlnv=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((                                  norm1r@:((mp"2 1~ -/"3)~ +    )         )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:(         normi "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
+  vberrlvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::)) ((((norm1r@:( mp"1 2      ~    {.),:norm1r@:((mp"2 1      )  + @{:))~ -/"3)~) (>./@:%) FP_PREC * (FP_SFMIN >. |:@:(>./"1)@:((norm1 , normi)"2)@[)) (1 {:: ]))) >. (>./@:normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
 
-  vberruvn=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((  norm1r@:((mp"1 2 -/"3)~ ct   )                                          )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:( normi       "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
-  vberrunv=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((                                  norm1r@:((mp"2 1~ -/"3)~ |:   )         )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:(       norm1 "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
-  vberruvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::)) ((((norm1r@:( mp"1 2      ~ ct@{.),:norm1r@:((mp"2 1      )  |:@{:))~ -/"3)~) (>./@:%) FP_PREC * (FP_SFMIN >. |:@:(>./"1)@:((normi,norm1)"2)@[)) (1 {:: ]))) >. (>./@:normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
+  vberruvn=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((  norm1r@:((mp"1 2 -/"3)~ ct   )                                          )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:( normi         "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
+  vberrunv=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((                                  norm1r@:((mp"2 1~ -/"3)~ |:   )         )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:(         norm1 "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
+  vberruvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::)) ((((norm1r@:( mp"1 2      ~ ct@{.),:norm1r@:((mp"2 1      )  |:@{:))~ -/"3)~) (>./@:%) FP_PREC * (FP_SFMIN >. |:@:(>./"1)@:((normi , norm1)"2)@[)) (1 {:: ]))) >. (>./@:normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
 
   rcond=. <./ gecon1"2 y
 

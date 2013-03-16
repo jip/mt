@@ -8,18 +8,17 @@ NB.            definite matrix
 NB. pttrix     Inverse Hermitian (symmetric) positive
 NB.            definite tridiagonal matrix
 NB.
-NB. testtrtri  Test trtrixx by triangular matrix given
-NB. testgetri  Test getrixxxx by general matrix given
+NB. testtrtri  Test trtrixx by triangular matrix
+NB. testgetri  Test getrixxxx by square matrix
 NB. testhetri  Test hetripx by Hermitian (symmetric) matrix
-NB.            given
 NB. testpotri  Test potrix by Hermitian (symmetric) positive
-NB.            definite matrix given
+NB.            definite matrix
 NB. testpttri  Test pttrix by Hermitian (symmetric) positive
-NB.            definite tridiagonal matrix given
+NB.            definite tridiagonal matrix
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -109,7 +108,7 @@ getrilu1pstep=: 3 : 0
   U0i=. (,.~ j , TRINB) ];.0 pfx
   U1i=. (- TRINB , # sfx) {. pfx
   Ri=. (-TRINB) {. pfx
-  Ri=. ((i. TRINB) </ (i. n) - j) } Ri ,: 0  NB. spec code
+  Ri=. ((i. TRINB) </ (i. n) - j)} Ri ,: 0  NB. spec code
   Ri=. Ri - U1i mp sfx
   Ri=. U0i trsmu1x Ri
   ((-TRINB) }. pfx) ; Ri , sfx
@@ -179,7 +178,7 @@ getripl1ustep=: 3 : 0
   L0i=. (,.~ j , TRINB) ];.0 pfx
   L1i=. (- (c sfx),TRINB) {. pfx
   Ci=. (-TRINB) {."1 pfx
-  Ci=. (((i. n) - j) >/ i. TRINB) } Ci ,: 0  NB. spec code
+  Ci=. (((i. n) - j) >/ i. TRINB)} Ci ,: 0  NB. spec code
   Ci=. Ci - sfx mp L1i
   Ci=. L0i trsmxl1 Ci
   ((-TRINB) }."1 pfx) ; Ci ,. sfx
@@ -197,7 +196,7 @@ NB. where
 NB.   pfxi  - n×j-matrix after i-th step and before
 NB.           (i+1)-th one, contains already processed part
 NB.   sfxi  - n×(n-j)-matrix after i-th step and before
-NB.           (i+1)-th one, contains тще нуе processed part
+NB.           (i+1)-th one, contains not yet processed part
 NB.   pfxi1 - n×(j+TRINB)-matrix, being pfxi after (i+1)-th
 NB.           step
 NB.   sfxi1 - n×(n-j-TRINB)-matrix, being sfxi after (i+1)-th
@@ -244,7 +243,7 @@ getripu1lstep=: 3 : 0
   U0i=. ((j , 0) ,: 2 # TRINB) ];.0 sfx
   U1i=. (j , TRINB) {. sfx
   Ci=. TRINB {."1 sfx
-  Ci=. (((i. n) - j) </ i. TRINB) } Ci ,: 0  NB. spec code
+  Ci=. (((i. n) - j) </ i. TRINB)} Ci ,: 0  NB. spec code
   Ci=. Ci - pfx mp U1i
   Ci=. U0i trsmxu1 Ci
   (pfx ,. Ci) ; TRINB }."1 sfx
@@ -310,7 +309,7 @@ getriul1pstep=: 3 : 0
   L0i=. ((0 , j) ,: 2 # TRINB) ];.0 sfx
   L1i=. (TRINB , j) {. sfx
   Ri=. TRINB {. sfx
-  Ri=. ((i. TRINB) >/ (i. n) - j) } Ri ,: 0  NB. spec code
+  Ri=. ((i. TRINB) >/ (i. n) - j)} Ri ,: 0  NB. spec code
   Ri=. Ri - L1i mp pfx
   Ri=. L0i trsml1x Ri
   (pfx , Ri) ; TRINB }. sfx
@@ -444,7 +443,7 @@ getrilu1p=: 3 : 0
   'ip LU1'=. y
   n=. c LU1
   y=. trtril trl LU1
-  y=. (</~ i. n) } y ,: LU1  NB. spec code
+  y=. (</~ i. n)} y ,: LU1  NB. spec code
   I=. <. n % TRINB
   ip (C.^:_1) 1 {:: getrilu1pstep^:I (TRINB * I) ({. ; ([ (tru1 trsmu1x trl) }.)) y
 )
@@ -518,7 +517,7 @@ getripl1u=: 3 : 0
   'ip L1U'=. y
   n=. # L1U
   y=. trtriu tru L1U
-  y=. (>/~ i. n) } y ,: L1U  NB. spec code
+  y=. (>/~ i. n)} y ,: L1U  NB. spec code
   I=. <. n % TRINB
   ip (C.^:_1"1) 1 {:: getripl1ustep^:I (TRINB * I) ({."1 ; (-@[ (trl1 trsmxl1 tru) }."1)) y
 )
@@ -583,7 +582,7 @@ getripu1l=: 3 : 0
   'ip U1L'=. y
   n=. c U1L
   y=. trtril trl U1L
-  y=. (</~ i. n) } y ,: U1L  NB. spec code
+  y=. (</~ i. n)} y ,: U1L  NB. spec code
   I=. <. n % TRINB
   ip (C.^:_1"1) 0 {:: getripu1lstep^:I (TRINB | n) ((((2 # [) {. ]) trsmxu1 trl@:({."1)) ; }."1) y
 )
@@ -648,7 +647,7 @@ getriul1p=: 3 : 0
   'ip UL1'=. y
   n=. # UL1
   y=. trtriu tru UL1
-  y=. (>/~ i. n) } y ,: UL1  NB. spec code
+  y=. (>/~ i. n)} y ,: UL1  NB. spec code
   I=. <. n % TRINB
   ip (C.^:_1) 0 {:: getriul1pstep^:I (TRINB | n) ((((2 # [) {. ]) trsml1x tru@{.) ; }.) y
 )
@@ -847,7 +846,7 @@ NB. ---------------------------------------------------------
 NB. testgetri
 NB.
 NB. Description:
-NB.   Test getrixxxx by general matrix given
+NB.   Test getrixxxx by square matrix
 NB.
 NB. Syntax:
 NB.   testgetri A
@@ -874,7 +873,7 @@ NB. ---------------------------------------------------------
 NB. testhetri
 NB.
 NB. Description:
-NB.   Test hetripx by Hermitian (symmetric) matrix given
+NB.   Test hetripx by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testhetri A
@@ -898,7 +897,7 @@ NB. testpotri
 NB.
 NB. Description:
 NB.   Test hetripx by Hermitian (symmetric) positive definite
-NB.   matrix given
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   testpotri A
@@ -922,7 +921,7 @@ NB. testpttri
 NB.
 NB. Description:
 NB.   Test pttri by Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix given
+NB.   tridiagonal matrix
 NB.
 NB. Syntax:
 NB.   testpttri A

@@ -11,13 +11,12 @@ NB. ggbals     Make the rows and columns in a pair of general
 NB.            square matrices as close in 1-norm as possible
 NB. ggbalx     Balance a pair of general square matrices
 NB.
-NB. testgebal  Test gebalx by general matrix given
-NB. testggbal  Test ggbalx by pair of general square matrices
-NB.            given
+NB. testgebal  Test gebalx by square matrix
+NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -140,14 +139,14 @@ gebalxp1d=: 1 : 0
   'p hs nz'=. y
   'h s'=. hs
   while.
-    zi=. h + (h ,: s) (ioz&0 ;. 0) nz
+    zi=. h + (h ,: s) ioz&0;.0 nz
     zi < h + s
   do.
-    nza=. (zi { p) (0:`[`(0 ~: getv)) } x
+    nza=. (zi { p) (0:`[`(0 ~: getv))} x
     nst=. < (h mkt s) , zi
     p=. nst C. :: ] p
-    nz=. (nst C. :: ] nz) - (p { nza)
-    'h s'=. dhs h,s
+    nz=. (nst C. :: ] nz) - p { nza
+    'h s'=. dhs h , s
   end.
   p ; (h , s)
 )
@@ -203,8 +202,8 @@ NB.   6) return p, hs
 gebalxp2d=: 1 : 0
 :
   n=. # x
-  'p hs'=. x i:`(({.u)`:6)`(+ <:)`(+&0 _1) gebalxp1d ((i. n) ; (0,n) ;       ({. y) )
-  'p hs'=. x i.`(({:u)`:6)`[     `(+&1 _1) gebalxp1d (p      ; hs    ; (p C. ({: y)))
+  'p hs'=. x i:`(({.u)`:6)`(+ <:)`(+&0 _1) gebalxp1d ((i. n) ; (0 , n) ;      {. y)
+  'p hs'=. x i.`(({:u)`:6)`[     `(+&1 _1) gebalxp1d (p      ; hs      ; p C. {: y)
 )
 
 NB. ---------------------------------------------------------
@@ -299,7 +298,7 @@ NB. Assertions:
 NB.   Pinv -: |: P
 NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
 NB.   B -: p fp A
-NB.   B11 -: (,.~ hs) ] ;. 0 B
+NB.   B11 -: (,.~ hs) ];.0 B
 NB. where
 NB.   'B p hs'=. gebalxp A
 NB.   P=. p2P p
@@ -314,8 +313,8 @@ NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany, 2004.
 
-geballp=: [ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) -"1 diag)@:(0&~:)))
-gebalup=: [ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) -"1 diag)@:(0&~:)))
+geballp=: [ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/ ,: +/"1) -"1 diag)@:(0&~:)))
+gebalup=: [ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1 ,: +/) -"1 diag)@:(0&~:)))
 
 NB. ---------------------------------------------------------
 NB. gebals
@@ -429,29 +428,29 @@ gebals=: 3 : 0
     noconv=. 0
     i=. <: h
     while. bt > i=. >: i do.
-      rc=. rios (] ;. 0)"2 1 i ([ 0:`[`]}"1 { ,: {"1) B
+      rc=. rios (];.0)"2 1 i ([ 0:`[`]}"1 { ,: {"1) B
       'r c'=. norm1tr rc
-      if. r (*.&(0&~:)) c do.
+      if. r *.&(0&~:) c do.
         'ra ca'=. |@(liofmax { ])"1 rc
         sum=. r + c
         g=. r % GEBALSCLFAC
-        fup=. gebalsf c,1,g,(1>.c>.ca),(ra<.g)
+        fup=. gebalsf c , 1 , g , (1 >. c >. ca) , ra <. g
         c=. c * fup
         g=. c % GEBALSCLFAC
         r=. r % fup
-        fdn=. gebalsf r,1,g,(r>.ra%fup),(fup<.g<.ca*fup)
+        fdn=. gebalsf r , 1 , g , (r >. ra % fup) , fup <. g <. ca * fup
         f=. fup % fdn
         c=. c % fdn
         r=. r * fdn
-        if. (r+c) < GEBALFACTOR*sum do.
+        if. (r + c) < GEBALFACTOR * sum do.
           di=. i { d
-          if. f (*.&(<&1)) di do.
-            if. GEBALSFMIN1 >: f*di do. continue. end.
+          if. f *.&(<&1) di do.
+            if. GEBALSFMIN1 >: f * di do. continue. end.
           end.
-          if. f (*.&(>&1)) di do.
-            if. di >: GEBALSFMAX1%f do. continue. end.
+          if. f *.&(>&1) di do.
+            if. di >: GEBALSFMAX1 % f do. continue. end.
           end.
-          d=. (di*f) i } d
+          d=. (di * f) i} d
           B=. i  %&f upd    B
           B=. i (*&f upd)"1 B
           noconv=. 1
@@ -494,8 +493,8 @@ NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
 NB.   B -: p fp A
 NB.   C -: Dinv mp B mp D
 NB.   C -: B (*"1 % ]) d
-NB.   B11 -: (,.~ hs) (] ;. 0) B
-NB.   C11 -: (,.~ hs) (] ;. 0) C
+NB.   B11 -: (,.~ hs) ];.0 B
+NB.   C11 -: (,.~ hs) ];.0 C
 NB. where
 NB.   'B pp hsp'=. gebalxp A
 NB.   'C p hs d'=. gebalx A
@@ -540,7 +539,7 @@ NB. Assertions:
 NB.   Prinv -: |: Pr
 NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
 NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr
-NB.   CD11 -: (0 2 ,. ,.~ hs) ] ;. 0 CD
+NB.   CD11 -: (0 2 ,. ,.~ hs) ];.0 CD
 NB. where
 NB.   'CD plr hs'=. ggbalxp AB
 NB.   'Pl Pr'=. p2P"1 plr
@@ -553,28 +552,28 @@ ggballp=: 3 : 0
   s=. n=. c y
   h=. 0
   pl=. pr=. i. n
-  j=. h+s-1
+  j=. h + s - 1
   while. j >: h do.
-    v=. (0 2 ,. (h,s) ,. (j,1)) ,@(+./)@:(0&~:) ;. 0 y
+    v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
     lios=. I. 0 ~: v
     select. # lios
       fcase. 1 do.
-        nst=. < j , (h+s-1)
+        nst=. < j , h + s - 1
         pr=. nst C. :: ] pr
         y=. nst C."1 :: ] y
       case. 0 do.
-        nst=. < (h + {. lios) , (h+s-1)
+        nst=. < (h + {. lios) , h + s - 1
         pl=. nst C. :: ] pl
         y=. nst C."2 :: ] y
         s=. <: s
-        j=. h+s-1
+        j=. h + s - 1
       case. do.
         j=. <: j
     end.
   end.
   i=. h
-  while. i < (h+s) do.
-    v=. (0 2 ,. (i,1) ,. (h,s)) ,@(+./)@:(0&~:) ;. 0 y
+  while. i < h + s do.
+    v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
     lios=. I. 0 ~: v
     select. # lios
       fcase. 1 do.
@@ -591,35 +590,35 @@ ggballp=: 3 : 0
         i=. >: i
     end.
   end.
-  y ; (pl ,: pr) ; (h , s)
+  y ; (pl ,: pr) ; h , s
 )
 
 ggbalup=: 3 : 0
   s=. n=. c y
   h=. 0
   pl=. pr=. i. n
-  i=. h+s-1
+  i=. h + s - 1
   while. i >: h do.
-    v=. (0 2 ,. (i,1) ,. (h,s)) ,@(+./)@:(0&~:) ;. 0 y
+    v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
     lios=. I. 0 ~: v
     select. # lios
       fcase. 1 do.
-        nst=. < i , (h+s-1)
+        nst=. < i , h + s - 1
         pl=. nst C. :: ] pl
         y=. nst C."2 :: ] y
       case. 0 do.
-        nst=. < (h + {. lios) , (h+s-1)
+        nst=. < (h + {. lios) , h + s - 1
         pr=. nst C. :: ] pr
         y=. nst C."1 :: ] y
         s=. <: s
-        i=. h+s-1
+        i=. h + s - 1
       case. do.
         i=. <: i
     end.
   end.
   j=. h
-  while. j < (h+s) do.
-    v=. (0 2 ,. (h,s) ,. (j,1)) ,@(+./)@:(0&~:) ;. 0 y
+  while. j < h + s do.
+    v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
     lios=. I. 0 ~: v
     select. # lios
       fcase. 1 do.
@@ -636,7 +635,7 @@ ggbalup=: 3 : 0
         j=. >: j
     end.
   end.
-  y ; (pl ,: pr) ; (h , s)
+  y ; (pl ,: pr) ; h , s
 )
 
 NB. ---------------------------------------------------------
@@ -670,7 +669,7 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   EF -: Dl mp"2 CD mp"2 Dr
 NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
-NB.   EF11 -: (0 2 ,. ,.~ hs) ] ;. 0 EF
+NB.   EF11 -: (0 2 ,. ,.~ hs) ];.0 EF
 NB. where
 NB.   'EF plr hs dlr'=. ggbals CD ; plr ; hs
 NB.   'Dl Dr'=. diagmat"1 dlr
@@ -688,25 +687,25 @@ ggbals=: 3 : 0
   mix=. ((* +/@:(+/"1))~ {.) + ((+/@:(+/@#"1)) {:)
 
   'CD plr hs'=. y
-  nzCDcut=. 0 ~: CDcut=. (0 2 ,. ,.~ hs) ] ;. 0 CD
+  nzCDcut=. 0 ~: CDcut=. (0 2 ,. ,.~ hs) ];.0 CD
   'h s'=. hs
   w10=. w23=. dlr=. (2 , s) $ 0
 
   NB. compute RHS vector in resulting linear equations
-  w45=. (+/"1,:(+/)) - (+/) GGBALSCLFAC ^. sorim nzCDcut } 1 ,: CDcut
+  w45=. (+/"1 ,: +/) - +/ GGBALSCLFAC ^. sorim nzCDcut} 1 ,: CDcut
   coef5=. -: coef2=. *: coef=. % +: s
   beta=. k=. 0
   NB. start generalized conjugate gradient iteration
   while. k < s + 2 do.
-    gamma=. (+&(mp~))/ w45
+    gamma=. +&(mp~)/ w45
     ewewc=. +/"1 w45
-    gamma=. (coef , - coef2 , coef5) mp (gamma , (((+&*:),(*:@-))/ ewewc))
+    gamma=. (coef , - coef2 , coef5) mp gamma , (+&*: , *:@-)/ ewewc
     if. gamma = 0 do. break. end.
     if. k ~: 0 do. beta=. gamma % pgamma end.
-    w10=. (beta * w10) + (coef * w45) + (coef5 * ((m3x~,m3x)/ ewewc))
+    w10=. (beta * w10) + (coef * w45) + coef5 * (m3x~ , m3x)/ ewewc
     NB. apply matrix to vector
-    w23=. nzCDcut (mix ,: ((mix~ (|:"2))~ |.)) w10
-    alpha=. gamma % (+/) w10 mp"1 w23
+    w23=. nzCDcut (mix ,: ((mix~ |:"2)~ |.)) w10
+    alpha=. gamma % +/ w10 mp"1 w23
     NB. determine correction to current iteration
     aw10=. alpha * w10
     dlr=. dlr + aw10
@@ -719,10 +718,10 @@ ggbals=: 3 : 0
   NB. end generalized conjugate gradient iteration
   lsfmin=. >. >: GGBALSCLFAC ^.   FP_SFMIN
   lsfmax=. <.    GGBALSCLFAC ^. % FP_SFMIN
-  irab=. h + (0 2 ,. hs ,. (h , _)) liofmax"1 ;. 0 CD
-  icab=. (0 2 ,. (0 , (h + s)) ,. hs) liofmax"1@:(|:"2) ;. 0 CD
-  rab=. >./ | (<"1 irab ,.~"1 (dhs2lios hs)) {"1 2 CD
-  cab=. >./ | (<"1 icab ,. "1 (dhs2lios hs)) {"1 2 CD
+  irab=. h + (0 2 ,. hs ,. h , _) liofmax"1;.0 CD
+  icab=. (0 2 ,. (0 , h + s) ,. hs) liofmax"1@:(|:"2);.0 CD
+  rab=. >./ | (<"1 irab ,.~"1 dhs2lios hs) {"1 2 CD
+  cab=. >./ | (<"1 icab ,. "1 dhs2lios hs) {"1 2 CD
   lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab ,: cab
   dlr=. GGBALSCLFAC ^ lsfmax <. (lsfmax - lxab) <. lsfmin >. <. 0.5 + dlr
   dlr=. (-h) |."1 (c CD) {.!.1"1 dlr  NB. adjust dlr's shape
@@ -771,8 +770,8 @@ NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
 NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr
 NB.   EF -: Dl mp"2 CD mp"2 Dr
 NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
-NB.   CD11 -: (0 2 ,. ,.~ hs) ] ;. 0 CD
-NB.   EF11 -: (0 2 ,. ,.~ hs) ] ;. 0 EF
+NB.   CD11 -: (0 2 ,. ,.~ hs) ];.0 CD
+NB.   EF11 -: (0 2 ,. ,.~ hs) ];.0 EF
 NB. where
 NB.   'CD plrp hsp'=. ggbalxp AB
 NB.   'EF plr hs dlr'=. ggbalx AB
@@ -796,7 +795,7 @@ NB. Description:
 NB.   Test:
 NB.   - gebal (math/lapack)
 NB.   - gebalx (math/mt)
-NB.   by general matrix given
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   testgebal A
@@ -829,12 +828,12 @@ NB. ---------------------------------------------------------
 NB. testggbal
 NB.
 NB. Description:
-NB.   Test ggbalx by pair of general matrices given
+NB.   Test ggbalx by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testggbal (A ,: B)
+NB.   testggbal AB
 NB. where
-NB.   A,B - n×n-matrix
+NB.   AB - 2×n×n-report
 
 testggbal=: 3 : 0
   rcond=. <./ gecon1"2 y
@@ -872,4 +871,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testbal_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 150
 
-testbal=: 1 : 'EMPTY_mt_ [ (testggbal_mt_@(u spmat_mt_ 0.25)@(2&,) [ testgebal_mt_@(u spmat_mt_ 0.25)) ^: (=/)'
+testbal=: 1 : 'EMPTY_mt_ [ (testggbal_mt_@(u spmat_mt_ 0.25)@(2&,) [ testgebal_mt_@(u spmat_mt_ 0.25))^:(=/)'

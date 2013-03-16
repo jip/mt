@@ -7,19 +7,21 @@ NB.            block reflector
 NB. larxxxxx   Dyads to apply an elementary reflector or its
 NB.            transpose to a matrix from either the left or
 NB.            the right
-NB. larxbxxxx  Dyads to build a block reflector by larztxx
-NB.            and to apply it or its transpose to a matrix
-NB.            from either the left or the right
+NB. larxbxxxx  Dyads to build and apply a block reflector or
+NB.            its transpose to a matrix from either the left
+NB.            or the right
 NB.
-NB. testlarf   Test larfx by general vector given
-NB. testlarft  Test larftxx by general matrix given
-NB. testlarfb  Test larfbxxxx by general matrix given
-NB. testlarzt  Test larztxx by general matrix given
-NB. testlarzb  Test larzbxxxx by general matrix given
-NB. testref    Adv. to make verb to test larzxxxxx by matrix
+NB. testlarfg  Test larfx by general vector
+NB. testlarf   Test larfxxxx by general matrix
+NB. testlarz   Test larzxxxx by general matrix
+NB. testlarft  Test larftxx by general matrix
+NB. testlarzt  Test larztxx by general matrix
+NB. testlarfb  Test larfbxxxx by general matrix
+NB. testlarzb  Test larzbxxxx by general matrix
+NB. testref    Adv. to make verb to test larxxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.9.0 2012-11-13
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -65,17 +67,17 @@ NB. where
 NB.   ioTau - IOs Tau in VTau:
 NB.             Tau -: ioTau { VTau
 NB.   mprod - dyad to multiply matrices, is called as:
-NB.             M1byM2=. M1 mprod M2
+NB.             M3=. M1 mprod M2
 NB.   vapp  - monad to calculate Τ, is called as:
 NB.             T=. vapp VTau
 NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, combined V and Tau
 NB.   T     - k×k-matrix, triangular
 NB.   V     - m×k- or k×n-matrix, unit triangular
 NB.           (trapezoidal)
-NB.   Tau   - k-vector τ[0:k-1] corresp. to V
+NB.   Tau   - k-vector, τ[0:k-1] corresp. to V
 
-larxtf=: 2 : '(] (] ((0 ,~ [) ,.  (mp }:) , _1 { ]) ({~ (<@;~ i.@>:)@#       )) ^: (-&#)  1  1&rt)@(-@(m&{) *"1 (_1;a:) tru@setdiag (v ct)@(0&(m})))'
-larxtb=: 2 : '(] (] ((0 ,  [) ,.~ (mp }.) ,~ 0 { ]) ((<@;~ <@i.)@<:@(-&#) { [)) ^: (-&#) _1 _1&rt)@(-@(m&{) *"1 (_1;a:) trl@setdiag (v ct)@(0&(m})))'
+larxtf=: 2 : '(] (] ((0 ,~ [) ,.  (mp }:) , _1 { ]) ({~ (<@;~ i.@>:)@#       ))^:(-&#)  1  1&rt)@(-@(m&{) *"1 (_1;a:) tru@setdiag (v ct)@(0&(m})))'
+larxtb=: 2 : '(] (] ((0 ,  [) ,.~ (mp }.) ,~ 0 { ]) ((<@;~ <@i.)@<:@(-&#) { [))^:(-&#) _1 _1&rt)@(-@(m&{) *"1 (_1;a:) trl@setdiag (v ct)@(0&(m})))'
 
 NB. ---------------------------------------------------------
 NB. larxxxxx
@@ -88,11 +90,11 @@ NB.
 NB. Syntax:
 NB.   vapp=. iotau larxxxxx
 NB. where
-NB.   iotau - IO tau in vtau:
-NB.             tau -: iotau { vtau
+NB.   iotau - IO tau in Vtau:
+NB.             tau -: iotau { Vtau
 NB.   vapp  - dyad to calculate Τ, is called as:
-NB.             eCupd=. vtau larxxxxx eC
-NB.   vtau  - vector v augmented by scalar τ
+NB.             eCupd=. Vtau larxxxxx eC
+NB.   Vtau  - vector V augmented by scalar τ
 NB.   eC    - matrix C to update, augmented by trash vector
 NB.   eCupd - being updated matrix C, augmented by modified
 NB.           trash vector
@@ -175,7 +177,7 @@ NB.   z   - (n+1)-vector having scalar β ∊ ℝ (larfp [1]
 NB.         provides β≥0) at index ioa, scalar τ ∊ ℂ at index
 NB.         iot, and vector v ∊ ℂ^(n-1) in the rest elements,
 NB.         reflected vector is:
-NB.           beta ioa } n $ 0
+NB.           beta ioa} n $ 0
 NB.
 NB. Application:
 NB. - reflect vector (α,x) by larfg and store τ at tail:
@@ -219,54 +221,54 @@ NB.   would be filled by zeros
 
 larfg=: 4 : 0
   'ioa iot'=. x
-  alpha=. ioa{y
+  alpha=. ioa { y
   y=. 0 iot} y                            NB. τ := 0
   ynorm=. norms y
   if. ynorm =!.0 | 9 o. alpha do.         NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ ?
     y                                     NB. (α,0,0) i.e. H==I, τ==0, β==α, v==0
   else.
-    if. REFSAFMIN>ynorm do.               NB. xnorm, β may be inaccurate; scale x and recompute them
-      y=. y%REFSAFMIN                     NB. (α_scaled,x_scaled,0)
+    if. REFSAFMIN > ynorm do.             NB. xnorm, β may be inaccurate; scale x and recompute them
+      y=. y % REFSAFMIN                   NB. (α_scaled,x_scaled,0)
       beta=. (9 o. alpha) negpos norms y  NB. use Re(α) instead Re(α_ascaled) since sign(Re(α)) == sign(Re(α_scaled)); |β_scaled| ∊ [REFSAFMIN,1)
-      dzeta=. beta-ioa{y                  NB. ζ := β_scaled-α_scaled
-      tau=. dzeta%beta                    NB. τ := ζ/β_scaled
-      beta=. REFSAFMIN*beta               NB. unscale β; if α is subnormal, it may lose relative accuracy
+      dzeta=. beta - ioa { y              NB. ζ := β_scaled-α_scaled
+      tau=. dzeta % beta                  NB. τ := ζ/β_scaled
+      beta=. REFSAFMIN * beta             NB. unscale β; if α is subnormal, it may lose relative accuracy
     else.
       beta=. (9 o. alpha) negpos ynorm    NB. β := -copysign(||y||,Re(α)), since ||y|| ≥ 0
-      dzeta=. beta-alpha
-      tau=. dzeta%beta
+      dzeta=. beta - alpha
+      tau=. dzeta % beta
     end.
-    y=. y%-dzeta                          NB. z := (trash,v,0)
-    y=. (beta,tau)x}y                     NB. z := (β_scaled,v,τ)
+    y=. y % - dzeta                       NB. z := (trash,v,0)
+    y=. (beta , tau) x} y                 NB. z := (β_scaled,v,τ)
   end.
 )
 
 larfp=: 4 : 0
   'ioa iot'=. x
-  alpha=. ioa{y
-  xnorm=. norms 0 x}y                               NB. ||x||
+  alpha=. ioa { y
+  xnorm=. norms 0 x} y                                NB. ||x||
   if. 0 = xnorm do.
-    y=. ((|,(1-*))alpha) x}y                        NB. replace in-place α by |β| and τ by (1-α/|α|)
+    y=. ((| , 1 - *) alpha) x} y                      NB. replace in-place α by |β| and τ by (1-α/|α|)
   else.
-    beta=. (9 o. alpha) negpos norms alpha,xnorm    NB. β := -copysign(||y||,Re(α))
-    y=. (|beta) iot} y                              NB. write in-place |β|
-    if. FP_SFMIN>|beta do.
-      y=. y%FP_SFMIN                                NB. scale (α,x[1],...,x[n-1],|β|)
-      xnorm=. xnorm%FP_SFMIN
+    beta=. (9 o. alpha) negpos norms alpha , xnorm    NB. β := -copysign(||y||,Re(α))
+    y=. (| beta) iot} y                               NB. write in-place |β|
+    if. FP_SFMIN > | beta do.
+      y=. y % FP_SFMIN                                NB. scale (α,x[1],...,x[n-1],|β|)
+      xnorm=. xnorm % FP_SFMIN
     end.
-    if. 0<:beta do.
-      dzeta=. -/x{y                                 NB. ζ := α_scaled-|β_scaled|
-      tau=. -dzeta%iot{y                            NB. τ := -ζ/|β_scaled|
+    if. 0 <: beta do.
+      dzeta=. -/ x { y                                NB. ζ := α_scaled-|β_scaled|
+      tau=. - dzeta % iot { y                         NB. τ := -ζ/|β_scaled|
     else.
-      beta=. -beta                                  NB. |β_unscaled|
-      'realpha imalpha'=. +.ioa{y                   NB. Re(α_scaled) , Im(α_scaled)
-      gamma=. realpha+iot{y                         NB. γ := Re(α_scaled)+|β_scaled|
-      delta=. (imalpha,xnorm) (-@(+/)@([*%)) gamma  NB. δ := -(Im(α_scaled)*(Im(α_scaled)/γ)+||x||*(||x||/γ))
-      dzeta=. delta j. imalpha                      NB. ζ := δ+i*Im(α_scaled)
-      tau=. -dzeta%iot{y                            NB. τ := -ζ/|β_scaled|
+      beta=. - beta                                   NB. |β_unscaled|
+      'realpha imalpha'=. +. ioa { y                  NB. Re(α_scaled) , Im(α_scaled)
+      gamma=. realpha + iot { y                       NB. γ := Re(α_scaled)+|β_scaled|
+      delta=. (imalpha , xnorm) -@(+/)@([ * %) gamma  NB. δ := -(Im(α_scaled)*(Im(α_scaled)/γ)+||x||*(||x||/γ))
+      dzeta=. delta j. imalpha                        NB. ζ := δ+i*Im(α_scaled)
+      tau=. - dzeta % iot { y                         NB. τ := -ζ/|β_scaled|
     end.
-    y=. y%dzeta
-    y=. (beta,tau)x}y                               NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
+    y=. y % dzeta
+    y=. (beta , tau) x} y                             NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
   end.
 )
 
@@ -286,18 +288,18 @@ NB.   Monads to generate an elementary reflector, see larfg,
 NB.   larfp for details.
 
 larfgf=: 0 _1&larfg
-larfgfc=: _1 + upd larfgf
+larfgfc=: _1 +upd larfgf
 larfgb=: _1 0&larfg
-larfgbc=: 0 + upd larfgb
+larfgbc=: 0 +upd larfgb
 
 larfpf=: 0 _1&larfp
-larfpfc=: _1 + upd larfpf
+larfpfc=: _1 +upd larfpf
 larfpb=: _1 0&larfp
-larfpbc=: 0 + upd larfpb
+larfpbc=: 0 +upd larfpb
 
 NB. ---------------------------------------------------------
 NB. larftbc
-NB. larxtbc
+NB. larztbc
 NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
@@ -652,7 +654,7 @@ NB. ---------------------------------------------------------
 NB. testlarfg
 NB.
 NB. Description:
-NB.   Test larfx by general vector given
+NB.   Test larfx by general vector
 NB.
 NB. Syntax:
 NB.   testlarfg ey
@@ -672,7 +674,7 @@ NB. ---------------------------------------------------------
 NB. testlarf
 NB.
 NB. Description:
-NB.   Test larfxxxx by general matrix given
+NB.   Test larfxxxx by general matrix
 NB.
 NB. Syntax:
 NB.   testlarf (trash;C)
@@ -684,25 +686,25 @@ testlarf=: 3 : 0
   y=. 1 {:: y
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y , ~0
-  ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y), ~0
-  ('larflcfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,  0
-  ('larflcfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),  0
+  ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
+  ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
+  ('larflcfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
+  ('larflcfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
 
-  ('larflnbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y , ~0
-  ('larflnbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y), ~0
-  ('larflnfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,  0
-  ('larflnfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),  0
+  ('larflnbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
+  ('larflnbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
+  ('larflnfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
+  ('larflnfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
 
-  ('larfrcbc' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),.~0
-  ('larfrcbr' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,.~0
-  ('larfrcfc' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),. 0
-  ('larfrcfr' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,. 0
+  ('larfrcbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
+  ('larfrcbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
+  ('larfrcfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
+  ('larfrcfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
 
-  ('larfrnbc' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),.~0
-  ('larfrnbr' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,.~0
-  ('larfrnfc' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),. 0
-  ('larfrnfr' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,. 0
+  ('larfrnbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
+  ('larfrnbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
+  ('larfrnfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
+  ('larfrnfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
 
   EMPTY
 )
@@ -711,7 +713,7 @@ NB. ---------------------------------------------------------
 NB. testlarz
 NB.
 NB. Description:
-NB.   Test larzxxxx by general matrix given
+NB.   Test larzxxxx by general matrix
 NB.
 NB. Syntax:
 NB.   testlarz (trash;C)
@@ -723,25 +725,25 @@ testlarz=: 3 : 0
   y=. 1 {:: y
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,  0
-  ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),  0
-  ('larzlcfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y , ~0
-  ('larzlcfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y), ~0
+  ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
+  ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
+  ('larzlcfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
+  ('larzlcfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
 
-  ('larzlnbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,  0
-  ('larzlnbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),  0
-  ('larzlnfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y , ~0
-  ('larzlnfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y), ~0
+  ('larzlnbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
+  ('larzlnbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
+  ('larzlnfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
+  ('larzlnfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
 
-  ('larzrcbc' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),. 0
-  ('larzrcbr' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,. 0
-  ('larzrcfc' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),.~0
-  ('larzrcfr' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,.~0
+  ('larzrcbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
+  ('larzrcbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
+  ('larzrcfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
+  ('larzrcfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
 
-  ('larzrnbc' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),. 0
-  ('larzrnbr' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,. 0
-  ('larzrnfc' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),.~0
-  ('larzrnfr' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,.~0
+  ('larzrnbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
+  ('larzrnbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
+  ('larzrnfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
+  ('larzrnfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
 
   EMPTY
 )
@@ -750,7 +752,7 @@ NB. ---------------------------------------------------------
 NB. testlarft
 NB.
 NB. Description:
-NB.   Test larftxx by general matrix given
+NB.   Test larftxx by general matrix
 NB.
 NB. Syntax:
 NB.   testlarft (A;trash)
@@ -773,7 +775,7 @@ NB. ---------------------------------------------------------
 NB. testlarzt
 NB.
 NB. Description:
-NB.   Test larztxx by general matrix given
+NB.   Test larztxx by general matrix
 NB.
 NB. Syntax:
 NB.   testlarzt (A;trash)
@@ -796,7 +798,7 @@ NB. ---------------------------------------------------------
 NB. testlarfb
 NB.
 NB. Description:
-NB.   Test larfbxxxx by general matrix given
+NB.   Test larfbxxxx by general matrix
 NB.
 NB. Syntax:
 NB.   testlarfb (A;C)
@@ -813,25 +815,25 @@ testlarfb=: 3 : 0
   Qffc=.  trl1         geqrf A
   Qffr=.  tru1         gelqf A
 
-  ('larfblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C , ~0))
-  ('larfblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C), ~0))
-  ('larfblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C ,  0))
-  ('larfblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C),  0))
+  ('larfblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  , ~ 0
+  ('larfblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) , ~ 0
+  ('larfblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  ,   0
+  ('larfblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) ,   0
 
-  ('larfblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C , ~0))
-  ('larfblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C), ~0))
-  ('larfblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C ,  0))
-  ('larfblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C),  0))
+  ('larfblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  , ~ 0
+  ('larfblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) , ~ 0
+  ('larfblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  ,   0
+  ('larfblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) ,   0
 
-  ('larfbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),.~0))
-  ('larfbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,.~0))
-  ('larfbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),. 0))
-  ('larfbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,. 0))
+  ('larfbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.~ 0
+  ('larfbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.~ 0
+  ('larfbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.  0
+  ('larfbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.  0
 
-  ('larfbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),.~0))
-  ('larfbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,.~0))
-  ('larfbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),. 0))
-  ('larfbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,. 0))
+  ('larfbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.~ 0
+  ('larfbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.~ 0
+  ('larfbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.  0
+  ('larfbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.  0
 
   EMPTY
 )
@@ -840,7 +842,7 @@ NB. ---------------------------------------------------------
 NB. testlarzb
 NB.
 NB. Description:
-NB.   Test larzbxxxx by general matrix given
+NB.   Test larzbxxxx by general matrix
 NB.
 NB. Syntax:
 NB.   testlarzb (A;C)
@@ -858,25 +860,25 @@ testlarzb=: 3 : 0
   Qffc=. I (       (-~ i.) k)} tzzrf (tru~ -~/@$) A
   Qffr=. I (< a: ; (-~ i.) k)} tzlzf (trl~ -~/@$) A
 
-  ('larzblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C ,  0))
-  ('larzblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C),  0))
-  ('larzblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C , ~0))
-  ('larzblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C), ~0))
+  ('larzblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  ,   0
+  ('larzblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) ,   0
+  ('larzblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  , ~ 0
+  ('larzblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) , ~ 0
 
-  ('larzblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C ,  0))
-  ('larzblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C),  0))
-  ('larzblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C , ~0))
-  ('larzblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C), ~0))
+  ('larzblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  ,   0
+  ('larzblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) ,   0
+  ('larzblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  , ~ 0
+  ('larzblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) , ~ 0
 
-  ('larzbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),. 0))
-  ('larzbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,. 0))
-  ('larzbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),.~0))
-  ('larzbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,.~0))
+  ('larzbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.  0
+  ('larzbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.  0
+  ('larzbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.~ 0
+  ('larzbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.~ 0
 
-  ('larzbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),. 0))
-  ('larzbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,. 0))
-  ('larzbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),.~0))
-  ('larzbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,.~0))
+  ('larzbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.  0
+  ('larzbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.  0
+  ('larzbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.~ 0
+  ('larzbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.~ 0
 
   EMPTY
 )

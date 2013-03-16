@@ -4,9 +4,9 @@ NB. <name>        <brief description>
 NB. ...
 NB. <name>        <brief description>
 NB.
-NB. <testxxname>  Test <name> by <matrix of type xx> given
+NB. <testxxname>  Test <name> by <matrix of type xx>
 NB. ...
-NB. <testxxname>  Test <name> by <matrix of type xx> given
+NB. <testxxname>  Test <name> by <matrix of type xx>
 NB. <testname>    Adv. to make verb to test <names> by
 NB.               matrix of generator and shape given
 NB.
@@ -614,7 +614,7 @@ NB. ---------------------------------------------------------
 NB. <testxxname>
 NB.
 NB. Description:
-NB.   Test <description> by <matrix of type xx> given
+NB.   Test <description> by <matrix of type xx>
 NB.
 NB. Syntax:
 NB.   <testxxname> <y>

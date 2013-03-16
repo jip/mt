@@ -9,9 +9,9 @@ NB. qndivl     Divide (left quotient)
 NB. qndivr     Divide (right quotient)
 NB. qnmod      Magnitude
 NB. qnsign     Signum
-NB. qnf        Adv. to make quaternion verb
+NB. qnf        Adv. to quaternificate verb
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2011-2012 Igor Zhuravlov
 NB.
@@ -82,8 +82,8 @@ qnk=: 11&o.@{: : ((j. qnj) 1} ])
 
 qn1i=: {.            : (0})
 qnjk=: {:            : (1})
-qn1j=: j./@(9   &o.) : ((j.~+.)~ 11&o.)
-qn1k=: j./@(9 11&o.) : ((2 2 $ 0 0;2 0;1 1;0 1)j./@:{(,&:+.))
+qn1j=: j./@(9   &o.) : ((j.~ +.)~ 11&o.)
+qn1k=: j./@(9 11&o.) : ((2 2 $ 0 0 ; 2 0 ; 1 1 ; 0 1) j./@:{ ,&:+.)
 
 NB. ---------------------------------------------------------
 NB. Markers

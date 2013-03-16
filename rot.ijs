@@ -6,10 +6,10 @@ NB. rotga      Adv. to make verb to get and apply rotation
 NB. rotsclx    Update array by rotations and scalings
 NB.            accumulated
 NB.
-NB. testlartg  Test lartg by vectors given
+NB. testlartg  Test lartg by vectors
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -150,7 +150,7 @@ NB.
 NB. Notes:
 NB. - implements LAPACK's xLARTV
 
-lartv=: (mp"2 1~(,:"1 (-@:({:"1) ,. {."1)@:+))~
+lartv=: (mp"2 1~ (,:"1 (-@:({:"1) ,. {."1)@:+))~
 
 NB. ---------------------------------------------------------
 NB. rotga
@@ -186,7 +186,7 @@ rotga=: 1 : 0
   'A iossubA iosfg'=. y
   subA=. iossubA { A
   cs=. lartg iosfg { subA
-  ((cs u subA) iossubA } A) ; cs
+  ((cs u subA) iossubA} A) ; cs
 )
 
 NB. ---------------------------------------------------------
@@ -265,7 +265,7 @@ NB. ---------------------------------------------------------
 NB. testlartg
 NB.
 NB. Description:
-NB.   Test lartg by vectors given
+NB.   Test lartg by vectors
 NB.
 NB. Syntax:
 NB.   testlartg FG
@@ -323,16 +323,16 @@ NB.     http://www.jsoftware.com/pipermail/programming/2009-December/017071.html
 
 testlartg=: 3 : 0
   NB. implement Algorithm 1 [1]
-  algo1=: 3 : 'if. 0 = {: y do. (sgn,0:) {. y elseif. 0 = {. y do. (0,sgn@+) {: y elseif. do. try. ((|f),((sgn f)*(+g))) % %: (+/) soris ''f g''=. y catch. 2 # _. end. end.'
+  algo1=: 3 : 'if. 0 = {: y do. (sgn , 0:) {. y elseif. 0 = {. y do. (0 , sgn@+) {: y elseif. do. try. ((| f),((sgn f) * (+ g))) % %: +/ soris ''f g''=. y catch. 2 # _. end. end.'
 
   NB. exclude rows containing NaN from the table y
   xrNaN=: #~ -.@(+./^:2)@|:@(128!:5)@:+.
 
   NB. exclude rows containing ±∞ from the table y
-  xrInf=: #~ -.@(+./)@|:@:(_=|)
+  xrInf=: #~ -.@(+./)@|:@:(_ = |)
 
   NB. exclude elements ±∞ from the table y
-  xeInf=: #~ (_~:|)
+  xeInf=: #~ _ ~: |
 
   NB. backward error calculator:
   vberrlartg=: (mp algo1)"1@[ (|@:- >./@:xeInf@:% (FP_SFMIN * FP_PREC) >. FP_EPS * |@[)/@|:@xrInf@xrNaN@,. mp"1

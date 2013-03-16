@@ -19,7 +19,7 @@ NB.          vector (matrix)
 NB. normsc   Square-based Euclidean norm of matrix columns
 NB. normsr   Square-based Euclidean norm of matrix rows
 NB.
-NB. Version: 0.8.2 2012-05-01
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -82,13 +82,13 @@ NB.   DLANST('i'), xLANGB('i'), xLANGT('i'), xLANHS('i'),
 NB.   xLANTB('i'), xLANTR('i'), ZLANHB('i'), ZLANHT('i'),-
 NB.   extraneous values in matrix must be zeroed
 
-norm1=:  | csum (max @)        NB. 1-norm of vector (matrix)
-norm1c=: | csum                NB. 1-norm of vector (matrix columns)
-norm1r=: | rsum                NB. 1-norm of vector (matrix rows)
+norm1=:  | csum      (max@)  NB. 1-norm of vector (matrix)
+norm1c=: | csum              NB. 1-norm of vector (matrix columns)
+norm1r=: | rsum              NB. 1-norm of vector (matrix rows)
 
-normi=:  | (+/"_1 @:) (max @)  NB. ∞-norm of vector (matrix)
-normic=: | cmax                NB. ∞-norm of vector (matrix columns)
-normir=: | rmax                NB. ∞-norm of vector (matrix rows)
+normi=:  | (+/"_1@:) (max@)  NB. ∞-norm of vector (matrix)
+normic=: | cmax              NB. ∞-norm of vector (matrix columns)
+normir=: | rmax              NB. ∞-norm of vector (matrix rows)
 
 NB. ---------------------------------------------------------
 NB. norm1
@@ -104,13 +104,13 @@ NB.
 NB. Notes:
 NB. - norm1t implements BLAS's DASUM, DZASUM
 
-norm1t=:  sorim csum (max @)       NB. 1-norm of vector (matrix)
-norm1tc=: sorim csum               NB. 1-norm of vector (matrix columns)
-norm1tr=: sorim rsum               NB. 1-norm of vector (matrix rows)
+norm1t=:  sorim csum (max@)       NB. 1-norm of vector (matrix)
+norm1tc=: sorim csum              NB. 1-norm of vector (matrix columns)
+norm1tr=: sorim rsum              NB. 1-norm of vector (matrix rows)
 
-normit=:  sorim (+/"_1@:) (max @)  NB. ∞-norm of vector (matrix)
-normitc=: sorim cmax               NB. ∞-norm of vector (matrix columns)
-normitr=: sorim rmax               NB. ∞-norm of vector (matrix rows)
+normit=:  sorim (+/"_1@:) (max@)  NB. ∞-norm of vector (matrix)
+normitc=: sorim cmax              NB. ∞-norm of vector (matrix columns)
+normitr=: sorim rmax              NB. ∞-norm of vector (matrix rows)
 
 NB. ---------------------------------------------------------
 NB. norms

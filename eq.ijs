@@ -4,11 +4,11 @@ NB. hgexxe    Eigenvalues of pair of structured matrices
 NB. hgexxs    Eigenvalues and the Schur form of pair of
 NB.           structured matrices
 NB.
-NB. testhgeq  Test hgexxxxx by general matrices given
+NB. testhgeq  Test hgexxxxx by square matrices
 NB. testeq    Adv. to make verb to test hgexxxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2011-2012 Igor Zhuravlov
 NB.
@@ -73,7 +73,7 @@ NB.   signbc - s-vector, scaling factors to form Q,Z later
 hgexxeo=: 4 : 0
   'Hd Td'=. (0 , x) diag"2 y
   absb=. | Td
-  'signbc Td'=. (,:~ FP_SFMIN < absb) } 1 0 2 |: (1 ,: + * Td) ,: (0 ,: absb)
+  'signbc Td'=. (,:~ FP_SFMIN < absb)} 1 0 2 |: (1 ,: + * Td) ,: 0 ,: absb
   ((((Hd * signbc) ,: Td) (;"1) 0 , x) setdiag"1 2 y) ; signbc
 )
 
@@ -110,14 +110,14 @@ hgezqso=: 4 : 0
   lios=. dhs2lios x
   'y signbc'=. x hgexxeo y
   subHT=. lios {"2 y
-  (((,:~ lios >/ (i. c y)) } subHT ,: subHT *"2 signbc) lios }"2 y) ; signbc
+  (((,:~ lios >/ (i. c y))} subHT ,: subHT *"2 signbc) lios}"2 y) ; signbc
 )
 
 hgeqzso=: 4 : 0
   lios=. dhs2lios x
   'y signbc'=. x hgexxeo y
   subHT=. lios {"1 y
-  (((,:~ (i. c y) </ lios) } subHT ,: subHT *"1 signbc) lios }"1 y) ; signbc
+  (((,:~ (i. c y) </ lios)} subHT ,: subHT *"1 signbc) lios}"1 y) ; signbc
 )
 
 NB. ---------------------------------------------------------
@@ -202,14 +202,14 @@ hgezq=: 1 : 0
             if. j = h do.
               ilazro=. 1
             elseif. atol >: sorim (< 0 , j - 1 0) { y do.
-              y=. 0 (< 0 , j - 1 0) } y
+              y=. 0 (< 0 , j - 1 0)} y
               ilazro=. 1
             elseif. do.
               ilazro=. 0
             end.
             NB. test 2: T[j,j]=0
             if. btol > | (< 1 , ,~ j) { y do.
-              y=. 0 (< 1 , ,~ j) } y
+              y=. 0 (< 1 , ,~ j)} y
               NB. test 2a: check for 2 consecutive small
               NB, superdiagonals in H
               ilazr2=. 0
@@ -245,7 +245,7 @@ hgezq=: 1 : 0
                     end.
                     goto_l60.
                   end.
-                  y=. 0 (< 1 , jch + 1 1) } y
+                  y=. 0 (< 1 , jch + 1 1)} y
                   jch=. >: jch
                 end.
               else.
@@ -279,7 +279,7 @@ hgezq=: 1 : 0
           ((< _.) setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
           return.
         else.
-          y=. 0 (< 1 , ,~ ilast) } y
+          y=. 0 (< 1 , ,~ ilast)} y
         end.
         label_l50.
         NB. T[ilast,ilast]=0 - clear H[ilast-1,ilast] to
@@ -289,7 +289,7 @@ hgezq=: 1 : 0
         y=. (< 1 ; (ilast - 0 1) ; (}: lios)) cs&rot upd y
         dQ1=. dQ1 , cs , ilast - 0 1
       else.
-        y=. 0 (< 0 , ilast - 1 0) } y
+        y=. 0 (< 0 , ilast - 1 0)} y
       end.
     end.
     label_l60.
@@ -345,7 +345,7 @@ hgezq=: 1 : 0
       ctemp=. (- (shift&*))/ abscale * {. HTd
       temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
       tempr=. >./ temp
-      temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr) } 1 , tempr ,: 1
+      temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr)} 1 , tempr ,: 1
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
       NB. do an implicit-shift ZQ sweep
       NB. initial Z
@@ -426,14 +426,14 @@ hgeqz=: 1 : 0
             if. j = h do.
               ilazro=. 1
             elseif. atol >: sorim (< 0 , j - 0 1) { y do.
-              y=. 0 (< 0 , j - 0 1) } y
+              y=. 0 (< 0 , j - 0 1)} y
               ilazro=. 1
             elseif. do.
               ilazro=. 0
             end.
             NB. test 2: T[j,j]=0
             if. btol > | (< 1 , ,~ j) { y do.
-              y=. 0 (< 1 , ,~ j) } y
+              y=. 0 (< 1 , ,~ j)} y
               NB. test 2a: check for 2 consecutive small
               NB. subdiagonals in H
               ilazr2=. 0
@@ -469,7 +469,7 @@ hgeqz=: 1 : 0
                     end.
                     goto_u60.
                   end.
-                  y=. 0 (< 1 , jch + 1 1) } y
+                  y=. 0 (< 1 , jch + 1 1)} y
                   jch=. >: jch
                 end.
               else.
@@ -503,7 +503,7 @@ hgeqz=: 1 : 0
           ((< _.) setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
           return.
         else.
-          y=. 0 (< 1 , ,~ ilast) } y
+          y=. 0 (< 1 , ,~ ilast)} y
         end.
         label_u50.
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
@@ -513,7 +513,7 @@ hgeqz=: 1 : 0
         y=. (< 1 ; (}: lios) ; (ilast - 0 1)) cs&(rot&.|:) upd y
         dZ1=. dZ1 , cs , ilast - 0 1
       else.
-        y=. 0 (< 0 , ilast - 0 1) } y
+        y=. 0 (< 0 , ilast - 0 1)} y
       end.
     end.
     label_u60.
@@ -569,7 +569,7 @@ hgeqz=: 1 : 0
       ctemp=. (- (shift&*))/ abscale * {. HTd
       temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
       tempr=. >./ temp
-      temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr) } 1 , tempr ,: 1
+      temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr)} 1 , tempr ,: 1
       'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
       NB. do an implicit-shift QZ sweep
       NB. initial Q
@@ -903,8 +903,8 @@ NB. ---------------------------------------------------------
 NB. testhgeq
 NB.
 NB. Description:
-NB.   Test ZQ and QZ algorithms hgexxxxx by general matrices
-NB.   given
+NB.   Test ZQ and QZ algorithms hgexxxxx by pair of square
+NB.   matrices
 NB.
 NB. Syntax:
 NB.   testhgeq AB

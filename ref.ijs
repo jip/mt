@@ -2,22 +2,24 @@ NB. Reflection
 NB.
 NB. larfx      Dyads to generate an elementary reflector
 NB. larfxxx    Monads to generate an elementary reflector
-NB. larftxx    Monads to form the triangular factor of a
+NB. larxtxx    Monads to form the triangular factor of a
 NB.            block reflector
-NB. larfxxxx   Dyads to apply an elementary reflector or its
+NB. larxxxxx   Dyads to apply an elementary reflector or its
 NB.            transpose to a matrix from either the left or
 NB.            the right
-NB. larfbxxxx  Dyads to build a block reflector by larftxx
+NB. larxbxxxx  Dyads to build a block reflector by larztxx
 NB.            and to apply it or its transpose to a matrix
 NB.            from either the left or the right
 NB.
 NB. testlarf   Test larfx by general vector given
 NB. testlarft  Test larftxx by general matrix given
 NB. testlarfb  Test larfbxxxx by general matrix given
-NB. testref    Adv. to make verb to test larfxxxxx by matrix
+NB. testlarzt  Test larztxx by general matrix given
+NB. testlarzb  Test larzbxxxx by general matrix given
+NB. testref    Adv. to make verb to test larzxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-11-13
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -49,6 +51,98 @@ NB. Constants
 
 NB. Safe minimum
 REFSAFMIN=: FP_SFMIN % FP_EPS
+
+NB. ---------------------------------------------------------
+NB. larxtx
+NB.
+NB. Description:
+NB.   Conj. to make monads to form the triangular factor Τ of
+NB.   a block reflector
+NB.
+NB. Syntax:
+NB.   vapp=. ioTau larxtx mprod
+NB. where
+NB.   ioTau - IOs Tau in VTau:
+NB.             Tau -: ioTau { VTau
+NB.   mprod - dyad to multiply matrices, is called as:
+NB.             M1byM2=. M1 mprod M2
+NB.   vapp  - monad to calculate Τ, is called as:
+NB.             T=. vapp VTau
+NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, combined V and Tau
+NB.   T     - k×k-matrix, triangular
+NB.   V     - m×k- or k×n-matrix, unit triangular
+NB.           (trapezoidal)
+NB.   Tau   - k-vector τ[0:k-1] corresp. to V
+
+larxtf=: 2 : '(] (] ((0 ,~ [) ,.  (mp }:) , _1 { ]) ({~ (<@;~ i.@>:)@#       )) ^: (-&#)  1  1&rt)@(-@(m&{) *"1 (_1;a:) tru@setdiag (v ct)@(0&(m})))'
+larxtb=: 2 : '(] (] ((0 ,  [) ,.~ (mp }.) ,~ 0 { ]) ((<@;~ <@i.)@<:@(-&#) { [)) ^: (-&#) _1 _1&rt)@(-@(m&{) *"1 (_1;a:) trl@setdiag (v ct)@(0&(m})))'
+
+NB. ---------------------------------------------------------
+NB. larxxxxx
+NB.
+NB. Description:
+NB.   Adv. to make dyads to apply an elementary reflector H
+NB.   or its transpose H' to a matrix, from either the left
+NB.   or the right. H is defined by pair (v,τ).
+NB.
+NB. Syntax:
+NB.   vapp=. iotau larxxxxx
+NB. where
+NB.   iotau - IO tau in vtau:
+NB.             tau -: iotau { vtau
+NB.   vapp  - dyad to calculate Τ, is called as:
+NB.             eCupd=. vtau larxxxxx eC
+NB.   vtau  - vector v augmented by scalar τ
+NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eCupd - being updated matrix C, augmented by modified
+NB.           trash vector
+
+larxlcxc=: 1 : '] - [ */ (mp~ +@(0&(m}) * m&{))~'  NB. C - v * ((v * τ)' * C)
+larxlcxr=: 1 : '] - +@(* m&{)@[ */ (0 m} [) mp ]'  NB. C - (τ * v)' * (v * C)
+
+larxlnxc=: 1 : '] - [ */ (mp~ m&{ * +@(0&(m})))~'  NB. C - v * ((τ * v') * C)
+larxlnxr=: 1 : '] - (+ * m&{)@[ */ (mp~ 0&(m}))~'  NB. C - (v' * τ) * (v * C)
+
+larxrcxc=: 1 : '] - (mp 0&(m}))~ */ +@(* m&{)@['   NB. C - (C * v) * (v * τ)'
+larxrcxr=: 1 : '] - (mp +@(m&{ * 0&(m})))~ */ ['   NB. C - (C * (τ * v)') * v
+
+larxrnxc=: 1 : '] - (mp 0&(m}) * m&{)~ */ +@['     NB. C - (C * (v * τ)) * v'
+larxrnxr=: 1 : '] - (mp +@(0&(m})) * m&{)~ */ ['   NB. C - (C * (v' * τ)) * v
+
+NB. ---------------------------------------------------------
+NB. larxbxxxx
+NB.
+NB. Description:
+NB.   Conj. to make dyads to apply an elementary reflector H
+NB.   or its transpose H' to a matrix, from either the left
+NB.   or the right. H is defined by pair (V,Τ).
+NB.
+NB. Syntax:
+NB.   vapp=. ioTau larxbxxxx makeT
+NB. where
+NB.   ioTau - IO tau in VTau:
+NB.             Tau -: ioTau { VTau
+NB.   makeT - monad to make Τ, usually one of larxtxx, is
+NB.           called as:
+NB.             T=. makeT VTau
+NB.   vapp  - dyad to calculate Τ, is called as:
+NB.             eCupd=. VTau larxbxxxx eC
+NB.   VTau  - matrix V augmented by vector τ
+NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eCupd - being updated matrix C, augmented by modified
+NB.           trash vector
+
+larxblcxc=: 2 : '] - [ mp (mp~ ct@(0&(m}) mp v))~'   NB. C - V * ((V * Τ)' * C)
+larxblcxr=: 2 : '] - ct@(mp~ v)@[ mp (0 m} [) mp ]'  NB. C - (Τ * V)' * (V * C)
+
+larxblnxc=: 2 : '] - [ mp (mp~ v mp ct@(0&(m})))~'   NB. C - V * ((Τ * V') * C)
+larxblnxr=: 2 : '] - (ct mp v)@[ mp (mp~ 0&(m}))~'   NB. C - (V' * Τ) * (V * C)
+
+larxbrcxc=: 2 : '] - (mp 0&(m}))~ mp ct@(mp v)@['    NB. C - (C * V) * (V * Τ)'
+larxbrcxr=: 2 : '] - (mp ct@(v mp 0&(m})))~ mp ['    NB. C - (C * (Τ * V)') * V
+
+larxbrnxc=: 2 : '] - (mp 0&(m}) mp v)~ mp ct@['      NB. C - (C * (V * Τ)) * V'
+larxbrnxr=: 2 : '] - (mp ct@(0&(m})) mp v)~ mp ['    NB. C - (C * (V' * Τ)) * V
 
 NB. =========================================================
 NB. Interface
@@ -203,127 +297,107 @@ larfpbc=: 0 + upd larfpb
 
 NB. ---------------------------------------------------------
 NB. larftbc
+NB. larxtbc
 NB.
 NB. Description:
-NB.   Monad to form the triangular factor T of a block
+NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(k-1) * ... * H(1) * H(0) = I - V * T * V' ,
-NB.   where T is lower triangular.
+NB.     H = H(k-1) * ... * H(1) * H(0) = I - V * Τ * V' ,
+NB.   where Τ is lower triangular.
 NB.
 NB. Syntax:
-NB.   T=. larftbc eV
+NB.   T=. larxtbc VTau
 NB. where
-NB.   eV  - (m+1)×k-matrix (tau,V)
-NB.   V   - m×k-matrix, unit upper triangular (trapezoidal)
-NB.         with 1s on (k-m)-th diagonal and 0s below
-NB.   tau - k-vector τ[0:k-1] corresp. to V
-NB.   T   - k×k-matrix, lower triangular
+NB.   VTau - (m+1)×k-matrix (tau,V)
+NB.   V    - m×k-matrix, unit upper triangular (trapezoidal)
+NB.          with 1s on (k-m)-th diagonal and 0s below
+NB.   tau  - k-vector τ[0:k-1] corresp. to V
+NB.   T    - k×k-matrix, lower triangular
 NB.
-NB. Storage layout:
-NB.   (  T00       )  k
-NB.   (  T10  T11  )  n-k
-NB.       k   n-k
-NB. where
-NB.   T10 = - T11 * (Vr' * Vl) * T00
-NB.   Vl  = V[0:m-1,0:k-1]
-NB.   Vr  = V[0:m-1,k:n-1]
+NB. Notes:
+NB. - larftbc models LAPACK's xLARFT('B','C')
+NB. - larztbc models LAPACK's xLARZT('B','C')
 
-larftbc=: ( 1  1&{.)`(({."1 (0:`0:`(larftbc@[)`]`[`( mp~ ct@(0&( 0}))  )`[`(-@mp~)`(mp~)`(larftbc@])`(({."1~ c), ])`,.`]`[`0: fork5) }."1)~ (<.@-:@c))`(EMPTY"_)@.(*@<:@c)
+larftbc=:          0  larxtb (mp~)
+larztbc=:         _1  larxtb (mp~)
 
 NB. ---------------------------------------------------------
 NB. larftbr
+NB. larztbr
 NB.
 NB. Description:
-NB.   Monad to form the triangular factor T of a block
+NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(k-1) * ... * H(1) * H(0) = I - V' * T * V ,
-NB.   where T is lower triangular.
+NB.     H = H(k-1) * ... * H(1) * H(0) = I - V' * Τ * V ,
+NB.   where Τ is lower triangular.
 NB.
 NB. Syntax:
-NB.   T=. larftbr eV
+NB.   T=. larxtbr VTau
 NB. where
-NB.   eV  - k×(n+1)-matrix (tau,.V)
-NB.   V   - k×n-matrix, unit lower triangular (trapezoidal)
-NB.         with 1s on (n-k)-th diagonal and 0s above
-NB.   tau - k-vector τ[0:k-1] corresp. to V
-NB.   T   - k×k-matrix, lower triangular
+NB.   VTau - k×(n+1)-matrix (tau,.V)
+NB.   V    - k×n-matrix, unit lower triangular (trapezoidal)
+NB.          with 1s on (n-k)-th diagonal and 0s above
+NB.   tau  - k-vector τ[0:k-1] corresp. to V
+NB.   T    - k×k-matrix, lower triangular
 NB.
-NB. Storage layout:
-NB.   (  T00       )  k
-NB.   (  T10  T11  )  m-k
-NB.       k   m-k
-NB. where
-NB.   T10 = - T11 * (Vb * Vt') * T11
-NB.   Vt  = V[0:k-1,0:n-1]
-NB.   Vb  = V[k:m-1,0:n-1]
+NB. Notes:
+NB. - larftbr models LAPACK's xLARFT('B','R')
+NB. - larztbr models LAPACK's xLARZT('B','R')
 
-larftbr=: ( 1  1&{.)`(({.   (0:`0:`(larftbr@[)`]`[`((mp  (0&( 0}))@ct)~)`[`(-@mp~)`(mp~)`(larftbr@])`(({."1~ c), ])`,.`]`[`0: fork5) }.  )~ (<.@-:@#))`(EMPTY"_)@.(*@<:@#)
+larftbr=: (< a: ;  0) larxtb mp
+larztbr=: (< a: ; _1) larxtb mp
 
 NB. ---------------------------------------------------------
 NB. larftfc
+NB. larztfc
 NB.
 NB. Description:
-NB.   Monad to form the triangular factor T of a block
+NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(0) * H(1) * ... * H(k-1) = I - V * T * V' ,
-NB.   where T is upper triangular.
+NB.     H = H(0) * H(1) * ... * H(k-1) = I - V * Τ * V' ,
+NB.   where Τ is upper triangular.
 NB.
 NB. Syntax:
-NB.   T=. larftfc eV
+NB.   T=. larxtfc VTau
 NB. where
-NB.   eV  - (m+1)×n-matrix (V,tau)
-NB.   V   - m×n-matrix, unit lower triangular (trapezoidal)
-NB.         with 1s on 0-th diagonal and 0s above
-NB.   tau - n-vector τ[0:n-1] corresp. to V
-NB.   T   - n×n-matrix, upper triangular
+NB.   VTau - (m+1)×n-matrix (V,tau)
+NB.   V    - m×n-matrix, unit lower triangular (trapezoidal)
+NB.          with 1s on 0-th diagonal and 0s above
+NB.   tau  - n-vector τ[0:n-1] corresp. to V
+NB.   T    - n×n-matrix, upper triangular
 NB.
-NB. Storage layout:
-NB.   (  T00  T01  )  k
-NB.   (       T11  )  n-k
-NB.       k   n-k
-NB. where
-NB.   T01 := - T00 * (Vl' * Vr) * T11
-NB.   Vl  := V[0:m-1,0:k-1]
-NB.   Vr  := V[0:m-1,k:n-1]
-NB.   k   := ⌈n/2⌉
-NB.
-NB. References:
-NB. [1] E. Elmroth, F. Gustavson. Applying Recursion to
-NB.     Serial and Parallel QR Factorization Leads to Better
-NB.     Performance. IBM J. Research & Development, 2000,
-NB.     Vol. 44, No. 4, pp. 605-624.
-NB.     http://www.research.ibm.com/journal/rd/444/elmroth.pdf
+NB. Notes:
+NB. - larftfc models LAPACK's xLARFT('F','C')
+NB. - larztfc models LAPACK's xLARZT('F','C')
 
-larftfc=: (_1 _1&{.)`(({."1 (0:`0:`(larftfc@[)`]`[`((mp~ ct@(0&(_1})))~)`[`(-@mp )` mp  `(larftfc@])`(({.~   #),.])`, `]`[`0: fork5) }."1)~ (<.@-:@c))`(EMPTY"_)@.(*@<:@c)
+larftfc=:         _1  larxtf (mp~)
+larztfc=:          0  larxtf (mp~)
 
 NB. ---------------------------------------------------------
 NB. larftfr
+NB. larztfr
 NB.
 NB. Description:
-NB.   Monad to form the triangular factor T of a block
+NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(0) * H(1) * ... * H(k-1) = I - V' * T * V ,
-NB.   where T is upper triangular.
+NB.     H = H(0) * H(1) * ... * H(k-1) = I - V' * Τ * V ,
+NB.   where Τ is upper triangular.
 NB.
 NB. Syntax:
-NB.   T=. larftfr eV
+NB.   T=. larxtfr VTau
 NB. where
-NB.   eV  - k×(n+1)-matrix (V,.tau)
-NB.   V   - k×n-matrix, unit upper triangular (trapezoidal)
-NB.         with 1s on 0-th diagonal and 0s below
-NB.   tau - k-vector τ[0:k-1] corresp. to V
-NB.   T   - k×k-matrix, upper triangular
+NB.   VTau - k×(n+1)-matrix (V,.tau)
+NB.   V    - k×n-matrix, unit upper triangular (trapezoidal)
+NB.          with 1s on 0-th diagonal and 0s below
+NB.   tau  - k-vector τ[0:k-1] corresp. to V
+NB.   T    - k×k-matrix, upper triangular
 NB.
-NB. Storage layout:
-NB.   (  T00  T01  )  k
-NB.   (       T11  )  m-k
-NB.       k   m-k
-NB. where
-NB.   T01 = - T00 * (Vt * Vb') * T11
-NB.   Vt  = V[0:k-1,0:n-1]
-NB.   Vb  = V[k:m-1,0:n-1]
+NB. Notes:
+NB. - larftfr models LAPACK's xLARFT('F','R')
+NB. - larztfr models LAPACK's xLARZT('F','R')
 
-larftfr=: (_1 _1&{.)`(({.   (0:`0:`(larftfr@[)`]`[`( mp  (0&(_1}))@ct  )`[`(-@mp )` mp  `(larftfr@])`(({.~   #),.])`, `]`[`0: fork5) }.  )~ (<.@-:@#))`(EMPTY"_)@.(*@<:@#)
+larftfr=: (< a: ; _1) larxtf mp
+larztfr=: (< a: ;  0) larxtf mp
 
 NB. ---------------------------------------------------------
 NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
@@ -347,14 +421,14 @@ NB.
 NB. Description:
 NB.   Dyads to apply an elementary reflector H or its
 NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (v,τ) .
+NB.   right. H is defined by pair (v,τ).
 NB.
 NB. Syntax:
 NB.   eCupd=. vtau larfxxxx eC
 NB. where
 NB.   eC    - matrix C to update, augmented by trash vector
 NB.   vtau  - vector v augmented by scalar τ
-NB.   eCupd - being updated matrix C , augmented by modified
+NB.   eCupd - being updated matrix C, augmented by modified
 NB.           trash vector
 NB.   v     - vector with 1 at head (forward direction) or
 NB.           tail (backward direction)
@@ -362,27 +436,89 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xLARF
 NB. - larfxxxx and larfbxxxx are topological equivalents
+NB. - larfxxxx and larzxxxx are equivalent up to τ position
 NB. - if τ=0 then v can have any element values
 
-larflcbc=: ] - [ */ (mp~ +@(0&( 0 }) * {.))~    NB. C - v * ((v * τ)' * C)
-larflcbr=: ] - +@(* {.)@[ */ (0 ( 0) } [) mp ]  NB. C - (τ * v)' * (v * C)
-larflcfc=: ] - [ */ (mp~ +@(0&(_1 }) * {:))~    NB. C - v * ((v * τ)' * C)
-larflcfr=: ] - +@(* {:)@[ */ (0 (_1) } [) mp ]  NB. C - (τ * v)' * (v * C)
+larflcbc=:  0 larxlcxc
+larflcbr=:  0 larxlcxr
+larflcfc=: _1 larxlcxc
+larflcfr=: _1 larxlcxr
 
-larflnbc=: ] - [ */ (mp~ {. * +@(0&( 0 })))~    NB. C - v * ((τ * v') * C)
-larflnbr=: ] - (+ * {.)@[ */ (mp~ 0&( 0 }))~    NB. C - (v' * τ) * (v * C)
-larflnfc=: ] - [ */ (mp~ {: * +@(0&(_1 })))~    NB. C - v * ((τ * v') * C)
-larflnfr=: ] - (+ * {:)@[ */ (mp~ 0&(_1 }))~    NB. C - (v' * τ) * (v * C)
+larflnbc=:  0 larxlnxc
+larflnbr=:  0 larxlnxr
+larflnfc=: _1 larxlnxc
+larflnfr=: _1 larxlnxr
 
-larfrcbc=: ] - (mp 0&( 0 }))~ */ +@(* {.)@[     NB. C - (C * v) * (v * τ)'
-larfrcbr=: ] - (mp +@({. * 0&( 0 })))~ */ [     NB. C - (C * (τ * v)') * v
-larfrcfc=: ] - (mp 0&(_1 }))~ */ +@(* {:)@[     NB. C - (C * v) * (v * τ)'
-larfrcfr=: ] - (mp +@({: * 0&(_1 })))~ */ [     NB. C - (C * (τ * v)') * v
+larfrcbc=:  0 larxrcxc
+larfrcbr=:  0 larxrcxr
+larfrcfc=: _1 larxrcxc
+larfrcfr=: _1 larxrcxr
 
-larfrnbc=: ] - (mp 0&( 0 }) * {.)~ */ +@[       NB. C - (C * (v * τ)) * v'
-larfrnbr=: ] - (mp +@(0&( 0 })) * {.)~ */ [     NB. C - (C * (v' * τ)) * v
-larfrnfc=: ] - (mp 0&(_1 }) * {:)~ */ +@[       NB. C - (C * (v * τ)) * v'
-larfrnfr=: ] - (mp +@(0&(_1 })) * {:)~ */ [     NB. C - (C * (v' * τ)) * v
+larfrnbc=:  0 larxrnxc
+larfrnbr=:  0 larxrnxr
+larfrnfc=: _1 larxrnxc
+larfrnfr=: _1 larxrnxr
+
+NB. ---------------------------------------------------------
+NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
+NB. larzlcbc   H' * C   left    ct     bwd   columnwise  C, 0
+NB. larzlcbr   H' * C   left    ct     bwd   rowwise     C, 0
+NB. larzlcfc   H' * C   left    ct     fwd   columnwise  0, C
+NB. larzlcfr   H' * C   left    ct     fwd   rowwise     0, C
+NB. larzlnbc   H  * C   left    none   bwd   columnwise  C, 0
+NB. larzlnbr   H  * C   left    none   bwd   rowwise     C, 0
+NB. larzlnfc   H  * C   left    none   fwd   columnwise  0, C
+NB. larzlnfr   H  * C   left    none   fwd   rowwise     0, C
+NB. larzrcbc   C  * H'  right   ct     bwd   columnwise  C,.0
+NB. larzrcbr   C  * H'  right   ct     bwd   rowwise     C,.0
+NB. larzrcfc   C  * H'  right   ct     fwd   columnwise  0,.C
+NB. larzrcfr   C  * H'  right   ct     fwd   rowwise     0,.C
+NB. larzrnbc   C  * H   right   none   bwd   columnwise  C,.0
+NB. larzrnbr   C  * H   right   none   bwd   rowwise     C,.0
+NB. larzrnfc   C  * H   right   none   fwd   columnwise  0,.C
+NB. larzrnfr   C  * H   right   none   fwd   rowwise     0,.C
+NB.
+NB. Description:
+NB.   Dyads to apply an elementary reflector H or its
+NB.   transpose H' to a matrix, from either the left or the
+NB.   right. H is defined by pair (v,τ).
+NB.
+NB. Syntax:
+NB.   eCupd=. vtau larzxxxx eC
+NB. where
+NB.   eC    - matrix C to update, augmented by trash vector
+NB.   vtau  - vector v augmented by scalar τ
+NB.   eCupd - being updated matrix C, augmented by modified
+NB.           trash vector
+NB.   v     - vector with 1 at head (backward direction) or
+NB.           tail (forward direction), and 0s in atoms to be
+NB.           ignored
+NB.
+NB. Notes:
+NB. - models LAPACK's xLARZ
+NB. - larzxxxx and larzbxxxx are topological equivalents
+NB. - larzxxxx and larfxxxx are equivalent up to τ position
+NB. - if τ=0 then v can have any element values
+
+larzlcbc=: _1 larxlcxc
+larzlcbr=: _1 larxlcxr
+larzlcfc=:  0 larxlcxc
+larzlcfr=:  0 larxlcxr
+
+larzlnbc=: _1 larxlnxc
+larzlnbr=: _1 larxlnxr
+larzlnfc=:  0 larxlnxc
+larzlnfr=:  0 larxlnxr
+
+larzrcbc=: _1 larxrcxc
+larzrcbr=: _1 larxrcxr
+larzrcfc=:  0 larxrcxc
+larzrcfr=:  0 larxrcxr
+
+larzrnbc=: _1 larxrnxc
+larzrnbr=: _1 larxrnxr
+larzrnfc=:  0 larxrnxc
+larzrnfr=:  0 larxrnxr
 
 NB. ---------------------------------------------------------
 NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
@@ -407,63 +543,205 @@ NB. Description:
 NB.   Dyads to build and apply a block reflector H or its
 NB.   transpose H' to a matrix, from either the left or the
 NB.   right. H is defined by pair (V,Τ) , where Τ is the
-NB.   triangular factor produced from pair (V,tau) by
-NB.   larftxx .
+NB.   triangular factor produced from pair (V,Τ) by larftxx.
 NB.
 NB. Syntax:
-NB.   eCupd=. Vtau larfbxxxx eC
+NB.   eCupd=. VTau larfbxxxx eC
 NB. where
 NB.   eC    - matrix C to update, augmented by trash vector
-NB.   Vtau  - matrix V augmented by vector tau
-NB.   eCupd - being updated matrix C , augmented by modified
+NB.   VTau  - matrix V augmented by vector Tau
+NB.   eCupd - being updated matrix C, augmented by modified
 NB.           trash vector
 NB.   V     - unit triangular (trapezoidal) matrix
-NB.   tau   - k-vector τ[0:k-1] corresp. to V
+NB.   Tau   - k-vector τ[0:k-1] corresp. to V
 NB.
 NB. Notes:
 NB. - models sequence of calls to LAPACK's xLARFT and then
 NB.   to xLARFB
 NB. - larfxxxx and larfbxxxx are topological equivalents
+NB. - larfbxxxx and larzbxxxx are equivalent up to Tau
+NB.   position
 
-larfblcbc=: ] - [ mp (mp~ ct@(0&( 0}) mp larftbc))~            NB. C - V * ((V * T)' * C)
-larfblcbr=: ] - ct@(mp~ larftbr)@[ mp (0 (< a: ;  0)} [) mp ]  NB. C - (T * V)' * (V * C)
-larfblcfc=: ] - [ mp (mp~ ct@(0&(_1}) mp larftfc))~            NB. C - V * ((V * T)' * C)
-larfblcfr=: ] - ct@(mp~ larftfr)@[ mp (0 (< a: ; _1)} [) mp ]  NB. C - (T * V)' * (V * C)
+larfblcbc=:          0  larxblcxc larftbc
+larfblcbr=: (< a: ;  0) larxblcxr larftbr
+larfblcfc=:         _1  larxblcxc larftfc
+larfblcfr=: (< a: ; _1) larxblcxr larftfr
 
-larfblnbc=: ] - [ mp (mp~ larftbc mp ct@(0&( 0})))~            NB. C - V * ((T * V') * C)
-larfblnbr=: ] - (ct mp larftbr)@[ mp (mp~ 0&((< a: ;  0)}))~   NB. C - (V' * T) * (V * C)
-larfblnfc=: ] - [ mp (mp~ larftfc mp ct@(0&(_1})))~            NB. C - V * ((T * V') * C)
-larfblnfr=: ] - (ct mp larftfr)@[ mp (mp~ 0&((< a: ; _1)}))~   NB. C - (V' * T) * (V * C)
+larfblnbc=:          0  larxblnxc larftbc
+larfblnbr=: (< a: ;  0) larxblnxr larftbr
+larfblnfc=:         _1  larxblnxc larftfc
+larfblnfr=: (< a: ; _1) larxblnxr larftfr
 
-larfbrcbc=: ] - (mp 0&(0}))~ mp ct@(mp larftbc)@[              NB. C - (C * V) * (V * T)'
-larfbrcbr=: ] - (mp ct@(larftbr mp 0&((< a: ;  0)})))~ mp [    NB. C - (C * (T * V)') * V
-larfbrcfc=: ] - (mp 0&(_1}))~ mp ct@(mp larftfc)@[             NB. C - (C * V) * (V * T)'
-larfbrcfr=: ] - (mp ct@(larftfr mp 0&((< a: ; _1)})))~ mp [    NB. C - (C * (T * V)') * V
+larfbrcbc=:          0  larxbrcxc larftbc
+larfbrcbr=: (< a: ;  0) larxbrcxr larftbr
+larfbrcfc=:         _1  larxbrcxc larftfc
+larfbrcfr=: (< a: ; _1) larxbrcxr larftfr
 
-larfbrnbc=: ] - (mp 0&( 0}) mp larftbc)~ mp ct@[               NB. C - (C * (V * T)) * V'
-larfbrnbr=: ] - (mp ct@(0&((< a: ;  0)})) mp larftbr)~ mp [    NB. C - (C * (V' * T)) * V
-larfbrnfc=: ] - (mp 0&(_1}) mp larftfc)~ mp ct@[               NB. C - (C * (V * T)) * V'
-larfbrnfr=: ] - (mp ct@(0&((< a: ; _1)})) mp larftfr)~ mp [    NB. C - (C * (V' * T)) * V
+larfbrnbc=:          0  larxbrnxc larftbc
+larfbrnbr=: (< a: ;  0) larxbrnxr larftbr
+larfbrnfc=:         _1  larxbrnxc larftfc
+larfbrnfr=: (< a: ; _1) larxbrnxr larftfr
+
+NB. ---------------------------------------------------------
+NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
+NB. larzblcbc  H' * C   left    ct     bwd   columnwise  C, 0
+NB. larzblcbr  H' * C   left    ct     bwd   rowwise     C, 0
+NB. larzblcfc  H' * C   left    ct     fwd   columnwise  0, C
+NB. larzblcfr  H' * C   left    ct     fwd   rowwise     0, C
+NB. larzblnbc  H  * C   left    none   bwd   columnwise  C, 0
+NB. larzblnbr  H  * C   left    none   bwd   rowwise     C, 0
+NB. larzblnfc  H  * C   left    none   fwd   columnwise  0, C
+NB. larzblnfr  H  * C   left    none   fwd   rowwise     0, C
+NB. larzbrcbc  C  * H'  right   ct     bwd   columnwise  C,.0
+NB. larzbrcbr  C  * H'  right   ct     bwd   rowwise     C,.0
+NB. larzbrcfc  C  * H'  right   ct     fwd   columnwise  0,.C
+NB. larzbrcfr  C  * H'  right   ct     fwd   rowwise     0,.C
+NB. larzbrnbc  C  * H   right   none   bwd   columnwise  C,.0
+NB. larzbrnbr  C  * H   right   none   bwd   rowwise     C,.0
+NB. larzbrnfc  C  * H   right   none   fwd   columnwise  0,.C
+NB. larzbrnfr  C  * H   right   none   fwd   rowwise     0,.C
+NB.
+NB. Description:
+NB.   Dyads to build and apply a block reflector H or its
+NB.   transpose H' to a matrix, from either the left or the
+NB.   right. H is defined by pair (V,Τ) , where Τ is the
+NB.   triangular factor produced from pair (V,Τ) by larztxx.
+NB.
+NB. Syntax:
+NB.   eCupd=. VTau larzbxxxx eC
+NB. where
+NB.   eC    - matrix C to update, augmented by trash vector
+NB.   VTau  - matrix V augmented by vector Tau
+NB.   eCupd - being updated matrix C, augmented by modified
+NB.           trash vector
+NB.   V     - unit triangular (trapezoidal) matrix, with 0s
+NB.           in atoms to be ignored
+NB.   Tau   - k-vector τ[0:k-1] corresp. to V
+NB.
+NB. Notes:
+NB. - models sequence of calls to LAPACK's xLARZT and then
+NB.   to xLARZB
+NB. - larzxxxx and larzbxxxx are topological equivalents
+NB. - larzbxxxx and larfbxxxx are equivalent up to Tau
+NB.   position
+
+larzblcbc=:         _1  larxblcxc larztbc
+larzblcbr=: (< a: ; _1) larxblcxr larztbr
+larzblcfc=:          0  larxblcxc larztfc
+larzblcfr=: (< a: ;  0) larxblcxr larztfr
+
+larzblnbc=:         _1  larxblnxc larztbc
+larzblnbr=: (< a: ; _1) larxblnxr larztbr
+larzblnfc=:          0  larxblnxc larztfc
+larzblnfr=: (< a: ;  0) larxblnxr larztfr
+
+larzbrcbc=:         _1  larxbrcxc larztbc
+larzbrcbr=: (< a: ; _1) larxbrcxr larztbr
+larzbrcfc=:          0  larxbrcxc larztfc
+larzbrcfr=: (< a: ;  0) larxbrcxr larztfr
+
+larzbrnbc=:         _1  larxbrnxc larztbc
+larzbrnbr=: (< a: ; _1) larxbrnxr larztbr
+larzbrnfc=:          0  larxbrnxc larztfc
+larzbrnfr=: (< a: ;  0) larxbrnxr larztfr
 
 NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. testlarf
+NB. testlarfg
 NB.
 NB. Description:
 NB.   Test larfx by general vector given
 NB.
 NB. Syntax:
-NB.   testlarf ey
+NB.   testlarfg ey
 NB. where
 NB.   ey - (n+1)-vector
 
-testlarf=: 3 : 0
+testlarfg=: 3 : 0
   ios=. (2 ?@$ <:@#) y
 
   ('larfg' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) ios ; y
   ('larfp' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) ios ; y
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testlarf
+NB.
+NB. Description:
+NB.   Test larfxxxx by general matrix given
+NB.
+NB. Syntax:
+NB.   testlarf (trash;C)
+NB. where
+NB.   C - m×n-matrix, is used as multiplier, the 1st row or
+NB.       column is used to form reflector
+
+testlarf=: 3 : 0
+  y=. 1 {:: y
+  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+
+  ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y , ~0
+  ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y), ~0
+  ('larflcfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,  0
+  ('larflcfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),  0
+
+  ('larflnbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y , ~0
+  ('larflnbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y), ~0
+  ('larflnfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,  0
+  ('larflnfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),  0
+
+  ('larfrcbc' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),.~0
+  ('larfrcbr' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,.~0
+  ('larfrcfc' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),. 0
+  ('larfrcfr' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,. 0
+
+  ('larfrnbc' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),.~0
+  ('larfrnbr' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,.~0
+  ('larfrnfc' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),. 0
+  ('larfrnfr' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,. 0
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testlarz
+NB.
+NB. Description:
+NB.   Test larzxxxx by general matrix given
+NB.
+NB. Syntax:
+NB.   testlarz (trash;C)
+NB. where
+NB.   C - m×n-matrix, is used as multiplier, the 1st row or
+NB.       column is used to form reflector
+
+testlarz=: 3 : 0
+  y=. 1 {:: y
+  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+
+  ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,  0
+  ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),  0
+  ('larzlcfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y , ~0
+  ('larzlcfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y), ~0
+
+  ('larzlnbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,  0
+  ('larzlnbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),  0
+  ('larzlnfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y , ~0
+  ('larzlnfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y), ~0
+
+  ('larzrcbc' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),. 0
+  ('larzrcbr' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,. 0
+  ('larzrcfc' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),.~0
+  ('larzrcfr' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,.~0
+
+  ('larzrnbc' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),. 0
+  ('larzrnbr' tdyad ((1&( 0})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,. 0
+  ('larzrnfc' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y),.~0
+  ('larzrnfr' tdyad ((1&(_1})^:(1 < #)@:({.  ))`]`]`(rcond"_)`(_."_)`(_."_)))     y ,.~0
 
   EMPTY
 )
@@ -477,16 +755,39 @@ NB.
 NB. Syntax:
 NB.   testlarft (A;trash)
 NB. where
-NB.   A - m×n-matrix, is used to get Qf
+NB.   A - m×n-matrix, is used to form Qf
 
 testlarft=: 3 : 0
   y=. 0 {:: y
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larftbc' tmonad (geqlf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftbr' tmonad (gerqf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfc' tmonad (geqrf`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfr' tmonad (gelqf`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftbc' tmonad (((tru1~ -~/@$)@geqlf)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftbr' tmonad (((trl1~ -~/@$)@gerqf)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfc' tmonad (( trl1        @geqrf)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larftfr' tmonad (( tru1        @gelqf)`]`(rcond"_)`(_."_)`(_."_))) y
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testlarzt
+NB.
+NB. Description:
+NB.   Test larztxx by general matrix given
+NB.
+NB. Syntax:
+NB.   testlarzt (A;trash)
+NB. where
+NB.   A - m×n-matrix, is used to form Qf
+
+testlarzt=: 3 : 0
+  y=. 0 {:: y
+  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+
+  ('larztbc' tmonad ((((idmat@]`(           i. @])`[)} c)@tzzlf@ trl        )`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larztbr' tmonad ((((idmat@]`(a: <@;     i. @])`[)} #)@tzrzf@ tru        )`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larztfc' tmonad ((((idmat@]`(       (-~ i.)@])`[)} c)@tzzrf@(tru~ -~/@$))`]`(rcond"_)`(_."_)`(_."_))) y
+  ('larztfr' tmonad ((((idmat@]`(a: <@; (-~ i.)@])`[)} #)@tzlzf@(trl~ -~/@$))`]`(rcond"_)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -500,33 +801,82 @@ NB.
 NB. Syntax:
 NB.   testlarfb (A;C)
 NB. where
-NB.   A - m×n-matrix, is used to get Qf
+NB.   A - m×n-matrix, is used to form Qf
 NB.   C - m×n-matrix, is used as multiplier
 
 testlarfb=: 3 : 0
   'A C'=. y
-  rcond=. gecon1 C
-  'LQf QfL QfR RQf'=. (gelqf ; geqlf ; geqrf ; gerqf) A
+  rcond=. (_."_)`gecon1@.(=/@$) C  NB. meaninigful for square matrices only
 
-  ('larfblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;(    C , ~0))
-  ('larfblcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (RQf;((ct C), ~0))
-  ('larfblcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfR;(    C ,  0))
-  ('larfblcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (LQf;((ct C),  0))
+  Qfbc=. (tru1~ -~/@$) geqlf A
+  Qfbr=. (trl1~ -~/@$) gerqf A
+  Qffc=.  trl1         geqrf A
+  Qffr=.  tru1         gelqf A
 
-  ('larfblnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;(    C , ~0))
-  ('larfblnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (RQf;((ct C), ~0))
-  ('larfblnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfR;(    C ,  0))
-  ('larfblnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (LQf;((ct C),  0))
+  ('larfblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C , ~0))
+  ('larfblcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C), ~0))
+  ('larfblcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C ,  0))
+  ('larfblcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C),  0))
 
-  ('larfbrcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;((ct C),.~0))
-  ('larfbrcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (RQf;(    C ,.~0))
-  ('larfbrcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfR;((ct C),. 0))
-  ('larfbrcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (LQf;(    C ,. 0))
+  ('larfblnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C , ~0))
+  ('larfblnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C), ~0))
+  ('larfblnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C ,  0))
+  ('larfblnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C),  0))
 
-  ('larfbrnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfL;((ct C),.~0))
-  ('larfbrnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (RQf;(    C ,.~0))
-  ('larfbrnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (QfR;((ct C),. 0))
-  ('larfbrnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (LQf;(    C ,. 0))
+  ('larfbrcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),.~0))
+  ('larfbrcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,.~0))
+  ('larfbrcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),. 0))
+  ('larfbrcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,. 0))
+
+  ('larfbrnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),.~0))
+  ('larfbrnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,.~0))
+  ('larfbrnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),. 0))
+  ('larfbrnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,. 0))
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testlarzb
+NB.
+NB. Description:
+NB.   Test larzbxxxx by general matrix given
+NB.
+NB. Syntax:
+NB.   testlarzb (A;C)
+NB. where
+NB.   A - m×n-matrix, is used to form Qf
+NB.   C - m×n-matrix, is used as multiplier
+
+testlarzb=: 3 : 0
+  'A C'=. y
+  rcond=. (_."_)`gecon1@.(=/@$) C  NB. meaninigful for square matrices only
+
+  I=. idmat k=. <./ $ A
+  Qfbc=. I (           i.  k)} tzzlf  trl         A
+  Qfbr=. I (< a: ;     i.  k)} tzrzf  tru         A
+  Qffc=. I (       (-~ i.) k)} tzzrf (tru~ -~/@$) A
+  Qffr=. I (< a: ; (-~ i.) k)} tzlzf (trl~ -~/@$) A
+
+  ('larzblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C ,  0))
+  ('larzblcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C),  0))
+  ('larzblcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C , ~0))
+  ('larzblcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C), ~0))
+
+  ('larzblnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C ,  0))
+  ('larzblnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C),  0))
+  ('larzblnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C , ~0))
+  ('larzblnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C), ~0))
+
+  ('larzbrcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),. 0))
+  ('larzbrcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,. 0))
+  ('larzbrcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),.~0))
+  ('larzbrcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,.~0))
+
+  ('larzbrnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),. 0))
+  ('larzbrnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,. 0))
+  ('larzbrnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),.~0))
+  ('larzbrnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,.~0))
 
   EMPTY
 )
@@ -561,7 +911,8 @@ NB.
 NB. Notes:
 NB. - non-blocked larfxxxx algos are tested implicitly in
 NB.   testgq, testmq, testqf
-NB. - larftxx and larfbxxxx are impractical for large
+NB. - larxtxx and larxbxxxx are impractical for large
 NB.   matrices
 
-testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_)@(u ; u)^:(200 >: <./) [ testlarf_mt_@u@>:@{.'
+NB. testref=: 1 : 'EMPTY_mt_ [ (testlarzb_mt_ [ testlarfb_mt_ [ testlarzt_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'
+testref=: 1 : 'EMPTY_mt_ [ (testlarfb_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'

@@ -1,14 +1,29 @@
 NB. Generate matrix with orthonormal rows or columns from its
 NB. factored form
 NB.
-NB. ungxx      Generate a matrix with orthonormal rows or
-NB.            columns from output of gexxf
+NB. unglq      Generate a matrix with orthonormal rows from
+NB.            output of gelqf
+NB. ungql      Generate a matrix with orthonormal columns
+NB.            from output of geqlf
+NB. ungqr      Generate a matrix with orthonormal columns
+NB.            from output of geqrf
+NB. ungrq      Generate a matrix with orthonormal rows from
+NB.            output of gerqf
+NB. unglz      Generate a matrix with orthonormal rows from
+NB.            output of tzlzf
+NB. ungzl      Generate a matrix with orthonormal columns
+NB.            from output of tzzlf
+NB. ungzr      Generate a matrix with orthonormal columns
+NB.            from output of tzzrf
+NB. ungrz      Generate a matrix with orthonormal rows from
+NB.            output of tzrzf
 NB. unghrx     Generate an unitary (orthogonal) matrix which
 NB.            is defined as the product of elementary
 NB.            reflectors as returned by gehrdx
 NB.
-NB. testungq   Test ungxx by general matrix given
-NB. testunghr  Test unghrx by square matrix given
+NB. testungq   Test ung{lq,ql,qr,rq} by general matrix
+NB. testungz   Test ung{lz,zl,zr,rz} by trapezoidal matrix
+NB. testunghr  Test unghrx by square matrix
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
@@ -44,8 +59,8 @@ gqvberr=: 2 : '(norm1_mt_@(<: upddiag_mt_)@(u ct_mt_) % FP_EPS_mt_ * v)@]'  NB. 
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-GQNB=: 32   NB. block size limit
-GQNX=: 128  NB. crossover point, GQNX ≥ GQNB
+GQNB=: 3 NB. 32   NB. block size limit
+GQNX=: 5 NB. 128  NB. crossover point, GQNX ≥ GQNB
 
 NB. ---------------------------------------------------------
 NB. ungl2
@@ -102,6 +117,85 @@ ung2l=: (((_ 1 ,:~    -~&c) ,;.0 [) (((>:@] _1} *)   -@{.)@[ ,.~ larflnbc) 0 , ~
 ung2r=: (((_ 1 ,:~ <:@- &c) ,;.0 [) (((>:@]  0} *)   -@{:)@[ ,.  larflnfc) 0 ,   ])^:(c@[) (0 $~ 0 ,~ - /@$)
 ungr2=: (((1 _ ,:~    -~&#) ,;.0 [) (((>:@] _1} *) +@-@{.)@[ , ~ larfrcbr) 0 ,.~ ])^:(#@[) (0 $~ 0 ,  -~/@$)
 
+NB. form e(i), then append to eQ(i)
+ungr2_2=: ([ larfrcbr ((, (1:`[`(0 $~ #@])}~ 1&(=i:1:)))~ _ _&{. :: (0 $~ 0 , #)))/@(0 , ~ |.)
+
+NB. append row of zeros to eQ(i), then place unit in that last row to turn it into e(i)
+ungr2_3=: ([ larfrcbr 1:`(_1 <@; 1 (=i:1:) [)`((, 0:)~  _ _&{. :: (0 $~ 0 , #))})/@(0 , ~ |.)
+
+NB. original ungr2 with idea of ungr2_2 and ungr2_3 of unified vectors processing
+ungr2_4=: (((1 _ ,:~    -~&#) ,;.0 [) ([ larfrcbr (, 1 {.~ -@#)~) 0 ,.~ ])^:(#@[) (0 $~ 0 ,  -~/@$)
+
+NB. ungr2_4 with two steps ((eQ(i) ,. 0) , e(i)) merged into one: (eQ(i) , e(i))
+ungr2_5=: (((1 _ ,:~    -~&#) ,;.0 [) ([ larfrcbr (, 1 {.~ -@#)~) ])^:(#@[) (0 $~ 0 ,  -~/@$)
+
+NB. ---------------------------------------------------------
+NB. ungl3
+NB. ung3l
+NB. ung3r
+NB. ungr3
+NB.
+NB. Description:
+NB.   Reconstruct matrix Q, augmented by trash vector, from
+NB.   its elementary reflectors. Non-blocked version of
+NB.   algorithms
+NB.
+NB. Syntax:
+NB.   eQ=. ungxx Qf
+NB. where
+NB.   Qf - k×(n+1)-matrix for ungx3, or (m+1)×k-matrix for
+NB.        ung3x, unit triangular, the Q's factored form
+NB.   eQ - Q augmented by trash vector
+NB.   Q  - k×n-matrix for ungx3, or m×k-matrix for ung3x,
+NB.        with orthonormal rows/columns which is defined as
+NB.        the first/last rows/columns of a product of k
+NB.        elementary reflectors, see corresp.
+NB.        ung{lz,zl,zr,rz}
+NB.   k  ≤ n for ungx3, or ≤ m for ung3x
+NB.
+NB. Assertions (with appropriate comparison tolerance):##############
+NB.   (] -: ( trl        @:(}:"1) mp  }:"1@ungl2@ tru1        @({.  ~  0 _1    <./ @:+ $))@gelqf) A
+NB.   (] -: ((trl~ -~/@$)@  }.    mp~ }.  @ung2l@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))@geqlf) A
+NB.   (] -: ( tru        @  }:    mp~ }:  @ung2r@ trl1        @({."1~ _1  0    <./ @:+ $))@geqrf) A
+NB.   (] -: ((tru~ -~/@$)@:(}."1) mp  }."1@ungr2@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))@gerqf) A
+NB.
+NB. Application:#################
+NB. - change eQ's size k:
+NB.     NB. eQf=. k ungl2k Qf
+NB.     ungl2k=: ungl2@{.
+NB.     NB. eQf=. k ung2lk Qf
+NB.     ung2lk=: (ung2l@:({."1)~ -)~
+NB.     NB. eQf=. k ung2rk Qf
+NB.     ung2rk=: ung2r@:({."1)
+NB.     NB. eQf=. k ungr2k Qf
+NB.     ungr2k=: (ungr2@{.~ -)~
+
+NB. non-tested yet
+ungl3=: (((1 _ ,:~    -~&#) ,;.0 [) (((>:@] _1} *) +@-@{.)@[ , ~ larzrcfr) 0 ,.~ ])^:(#@[) (0 $~ 0 ,  -~/@$)
+ung3l=: (((_ 1 ,:~ <:@- &c) ,;.0 [) (((>:@]  0} *)   -@{:)@[ ,.  larzlnbc) 0 ,   ])^:(c@[) (0 $~ 0 ,~ - /@$)
+ung3r=: (((_ 1 ,:~    -~&c) ,;.0 [) (((>:@] _1} *)   -@{.)@[ ,.~ larzlnfc) 0 , ~ ])^:(c@[) (0 $~ 0 ,~ - /@$)
+
+NB. verified
+ungr3=: (((1 _ ,:~ 0 ,~ #@]) ,;.0 [) (((>:@]  (0 (=i.0:) ])} *) +@-@{:)@[ , ~ larzrcbr) ])^:(#@[) (0 (, $ [) c)
+
+NB. simpler way to extract i-th row
+ungr3_2=: (({~ #) (((>:@] (0 (=i.0:) ])} *) +@-@{:)@[ , ~ larzrcbr) ])^:(#@[) (0 (, $ [) c)
+
+NB. mimic to ungr2_2
+ungr3_3=: ([ larzrcbr ((, (1:`[`(0 $~ #@])}~ 1&(=i.1:)))~ _ _&{. :: (0 $~ 0 , #)))/@(0 , ~ |.)
+
+NB. mimic to ungr2_3
+ungr3_4=: ([ larzrcbr 1:`(_1 <@; 1 (=i.1:) [)`((, 0:)~  _ _&{. :: (0 $~ 0 , #))})/@(0 , ~ |.)
+
+NB. ungr3_2 with idea of ungr3_3 and ungr3_4 of unified vectors processing
+ungr3_5=: (({~ #) ([ larzrcbr (, (1:`[`(0 $~ #@])}~ 1&(=i.1:)))~) ])^:(#@[) (0 (, $ [) c)
+
+NB. ungr3_5 with shorter e(i) in form: (0 ... 0 1) , where 1's position match with the same in (0,...,0,1,v(i),tau(i))
+ungr3_6=: (({~ #) ([ larzrcbr (, 1 {.~ -@>:@(1&(=i.1:)))~) ])^:(#@[) (0 (, $ [) c)
+
+NB. ungr3_6 with fork instead hook in length calc
+ungr3_7=: (({~ #) ([ larzrcbr (, 1&([ {.~ _1 - =i.1:))~) ])^:(#@[) (0 (, $ [) c)
+
 NB. =========================================================
 NB. Interface
 
@@ -154,7 +248,7 @@ NB. - implements LAPACK's DORGLQ, ZUNGLQ for M=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
-unglq=: }:"1@((((((GQNB ,  _) ,:~              - &c) ];.0 [) (ungl2@[ ,   larfbrcfr) ]) ({."1~ (- GQNB) - c))^:(GQNB %~ -&#) ungl2@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
+unglq=: }:"1@((((((GQNB ,  _) ,:~               - &c) ];.0 [) (ungl2@[ ,   larfbrcfr) ]) ({."1~ (- GQNB) - c))^:(GQNB %~ -&#) ungl2@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -206,7 +300,7 @@ NB. - implements LAPACK's DORGQL, ZUNGQL for N=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-ungql=: }.  @((((((GQNB ,~ _) ,:~ (GQNB - 1) + -~&c) ];.0 [) (ung2l@[ ,.~ larfblnbc) ]) ({.  ~    GQNB  + #))^:(GQNB %~ -&c) ung2l@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
+ungql=: }.  @((((((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) (ung2l@[ ,.~ larfblnbc) ]) ({.  ~    GQNB  + #))^:(GQNB %~ -&c) ung2l@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -258,7 +352,7 @@ NB. - implements LAPACK's DORGQR, ZUNGQR for N=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
-ungqr=: }:  @((((((GQNB ,~ _) ,:~              - &#) ];.0 [) (ung2r@[ ,.  larfblnfc) ]) ({.  ~ (- GQNB) - #))^:(GQNB %~ -&c) ung2r@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
+ungqr=: }:  @((((((GQNB ,~ _) ,:~               - &#) ];.0 [) (ung2r@[ ,.  larfblnfc) ]) ({.  ~ (- GQNB) - #))^:(GQNB %~ -&c) ung2r@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -309,7 +403,56 @@ NB. - implements LAPACK's DORGRQ, ZUNGRQ for M=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
-ungrq=: }."1@((((((GQNB ,  _) ,:~ (GQNB - 1) + -~&#) ];.0 [) (ungr2@[ , ~ larfbrcbr) ]) ({."1~    GQNB  + c))^:(GQNB %~ -&#) ungr2@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
+ungrq=: }."1@((((((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) (ungr2@[ , ~ larfbrcbr) ]) ({."1~    GQNB  + c))^:(GQNB %~ -&#) ungr2@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
+
+NB. ---------------------------------------------------------
+NB. ungrz
+NB.
+NB. Description:
+NB.   Generate a matrix with orthonormal rows from output of
+NB.   tzrzf
+NB.
+NB. Syntax:
+NB.   Q=. ungrz RZf
+NB. where##########################
+NB.   RQf - m×(n+1)-matrix, the output of gerqf
+NB.   Q   - k×n-matrix with orthonormal rows, which is
+NB.         defined as the last k rows of a product of m
+NB.         elementary reflectors of order n:
+NB.           Q = Π{H(i)',i=0:m-1}
+NB.         where
+NB.           H(k:m-1)≡H(v(k:m-1),τ(k:m-1))=H(0,0)=I
+NB.   k   = min(m,n)
+NB.
+NB. Storage layout:
+NB.   example for m=4, n=5:       example for m=5, n=4:
+NB.   (  τ0 v0 u  u  u  u  )      (  *  u  u  u  u  )
+NB.   (  τ1 v1 v1 u  u  u  )      (  τ1 u  u  u  u  )
+NB.   (  τ2 v2 c2 v2 u  u  )      (  τ2 v2 u  u  u  )
+NB.   (  τ3 v3 v3 v3 v3 u  )      (  τ3 v3 v3 u  u  )
+NB.                               (  τ4 v4 v4 v4 u  )
+NB. where
+NB.   u         - elements of m×k-matrix R, upper triangular
+NB.   (1,vi,τi) - vector z(i) which defines an elementary
+NB.               reflector H(i) (unit is not stored, v(i)
+NB.               may be empty)
+NB.   *         - any value, is not used
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. R * (Q) = R * Q
+NB.   (((unmrqrn (trupick~ -~/@$)) -: ((mp  ungrq)~ (tru~ -~/@$))) }."1) RQf
+NB.   NB. I = Q * (Q^H)
+NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrqrc ungrq)) RQf
+NB.
+NB. Application:
+NB. - change eQ's size k:
+NB.     NB. eQf=. k ungrzk RZf
+NB.     ungrzk=: ungrq@{.
+
+unglz=: }."1@((((((GQNB ,  _) ,:~               -~&#) ];.0 [) (ungl3@[ , ~ larzbrcfr) ]) ({."1~    GQNB  + c))^:(GQNB %~ -&#) ungl3@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #)
+ungzl=: }:  @((((((GQNB ,~ _) ,:~  GQNB      -~ - &c) ];.0 [) (ung3l@[ ,.  larzblnbc) ]) ({.  ~ (- GQNB) - #))^:(GQNB %~ -&c) ung3l@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@[`(       dhs2lios@( 0 , [))`]}~ c)
+ungzr=: }.  @((((((GQNB ,~ _) ,:~               -~&c) ];.0 [) (ung3r@[ ,.~ larzblnfc) ]) ({.  ~    GQNB  + #))^:(GQNB %~ -&c) ung3r@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@[`(       dhs2lios@(_1 , [))`]}~ c)
+ungrz=: }:"1@((((((GQNB ,  _) ,:~               - &#) ];.0 [) (ungr3@[ ,   larzbrcbr) ]) ({."1~ (- GQNB) - c))^:(GQNB %~ -&#) ungr3@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@[`(a: <@; dhs2lios@( 0 , [))`]}~ #)
 
 NB. ---------------------------------------------------------
 NB. unghrl

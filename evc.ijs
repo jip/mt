@@ -287,9 +287,9 @@ NB. where
 NB.   'Y X'=. tgevclb SP
 NB.   'E1 E2'=. diagmat@diag"2 SP
 
-tgevcll=:  ($:~ i.@c) : (([;tgevci) tgevcs  @ tgevcly           ])
-tgevclr=:  ($:~ i.@c) : (([;tgevci) tgevcs  @          tgevclx  ])
-tgevclb=:  ($:~ i.@c) : (([;tgevci) tgevcs"2@(tgevcly,:tgevclx) ])
+tgevcll=:  ($:~ i.@c) : (([ ; tgevci) tgevcs  @ tgevcly             ])
+tgevclr=:  ($:~ i.@c) : (([ ; tgevci) tgevcs  @            tgevclx  ])
+tgevclb=:  ($:~ i.@c) : (([ ; tgevci) tgevcs"2@(tgevcly ,: tgevclx) ])
 
 NB. ---------------------------------------------------------
 NB. tgevcul
@@ -340,9 +340,9 @@ NB. - tgevcul models LAPACK's xTGEVC('L','S')
 NB. - tgevcur models LAPACK's xTGEVC('R','S')
 NB. - tgevcub models LAPACK's xTGEVC('B','S')
 
-tgevcul=: ($:~ i.@c) : ((([;tgevci) tgevcs  @ tgevclx           ])&.:(|:"2))
-tgevcur=: ($:~ i.@c) : ((([;tgevci) tgevcs  @          tgevcly  ])&.:(|:"2))
-tgevcub=: ($:~ i.@c) : ((([;tgevci) tgevcs"2@(tgevclx,:tgevcly) ])&.:(|:"2))
+tgevcul=: ($:~ i.@c) : ((([ ; tgevci) tgevcs  @ tgevclx             ])&.:(|:"2))
+tgevcur=: ($:~ i.@c) : ((([ ; tgevci) tgevcs  @            tgevcly  ])&.:(|:"2))
+tgevcub=: ($:~ i.@c) : ((([ ; tgevci) tgevcs"2@(tgevclx ,: tgevcly) ])&.:(|:"2))
 
 NB. ---------------------------------------------------------
 NB. tgevcllb
@@ -418,9 +418,9 @@ NB.   'YdQ1dQ0 XdZ1dZ0'=. tgevclbb S , P , dQ1dQ0 ,: dZ1dZ0
 NB.   'YQ2 XZ2'=. tgevclbb S , P , Q2 ,: Z2
 NB.   'E1 E2'=. diagmat@diag"2 S ,: P
 
-tgevcllb=:  (i.@c ([;tgevci) 2&{.) tgevcs  @( tgevcly mp 2{]                    ) ]
-tgevclrb=:  (i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevclx mp _1{] ) ]
-tgevclbb=:  (i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevcly mp 2{]),:(tgevclx mp _1{])) ]
+tgevcllb=:  (i.@c ([ ; tgevci) 2&{.) tgevcs  @( tgevcly mp 2 { ]                        ) ]
+tgevclrb=:  (i.@c ([ ; tgevci) 2&{.) tgevcs  @(                       tgevclx mp _1 { ] ) ]
+tgevclbb=:  (i.@c ([ ; tgevci) 2&{.) tgevcs"2@((tgevcly mp 2 { ]) ,: (tgevclx mp _1 { ])) ]
 
 NB. ---------------------------------------------------------
 NB. tgevculb
@@ -501,9 +501,9 @@ NB. - tgevculb models LAPACK's xTGEVC('L','B')
 NB. - tgevcurb models LAPACK's xTGEVC('R','B')
 NB. - tgevcubb models LAPACK's xTGEVC('B','B')
 
-tgevculb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @( tgevclx mp 2{]                    ) ])&.:(|:"2)
-tgevcurb=: ((i.@c ([;tgevci) 2&{.) tgevcs  @(                   tgevcly mp _1{] ) ])&.:(|:"2)
-tgevcubb=: ((i.@c ([;tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]),:(tgevcly mp _1{])) ])&.:(|:"2)
+tgevculb=: ((i.@c ([ ; tgevci) 2&{.) tgevcs  @( tgevclx mp 2{]                        ) ])&.:(|:"2)
+tgevcurb=: ((i.@c ([ ; tgevci) 2&{.) tgevcs  @(                     tgevcly mp _1 { ] ) ])&.:(|:"2)
+tgevcubb=: ((i.@c ([ ; tgevci) 2&{.) tgevcs"2@((tgevclx mp 2{]) ,: (tgevcly mp _1 { ])) ])&.:(|:"2)
 
 NB. =========================================================
 NB. Test suite
@@ -573,16 +573,16 @@ NB. Notes:
 NB. - berrxx are non-iterative and are require O(N^3) RAM
 
 testtgevc=: 3 : 0
-  vberrll=:  (     normir@:((((  norm1r@:((mp"1 2 (-/"3))~     )                                           )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:( norm1       "2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitr%FP_PREC*c)@]
-  vberrlr=:  (     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~+    )          )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:(       normi "2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitr%FP_PREC*c)@]
-  vberrlb=:  (>./@:normir@:((((((norm1r@:( mp"1 2        ~   {.),:norm1r@:((mp"2 1       ) + @{:))~(-/"3))~)(>./@:%)(FP_PREC*(FP_SFMIN>.|:@:(>./"2)@:((norm1,normi)"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitr%FP_PREC*c)@]
+  vberrll=:  (     normir@:((((  norm1r@:((mp"1 2 -/"3)~     )                                         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:( norm1       "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitr % FP_PREC * c)@]
+  vberrlr=:  (     normir@:((((                                 norm1r@:((mp"2 1~ -/"3)~+    )         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:(       normi "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitr % FP_PREC * c)@]
+  vberrlb=:  (>./@:normir@:((((((norm1r@:( mp"1 2      ~   {.),:norm1r@:((mp"2 1      ) + @{:))~ -/"3)~) (>./@:%) (FP_PREC * (FP_SFMIN >. |:@:(>./"2)@:((norm1,normi)"2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitr % FP_PREC * c)@]
 
-  vberrul=:  (     normir@:((((  norm1r@:((mp"1 2 (-/"3))~ct   )                                           )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:( normi       "2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitc%FP_PREC*c)@]
-  vberrur=:  (     normir@:((((                                   norm1r@:((mp"2 1~(-/"3))~|:   )          )      % (FP_PREC*(FP_SFMIN>.    (>./"1)@:(       norm1 "2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitc%FP_PREC*c)@]
-  vberrub=:  (>./@:normir@:((((((norm1r@:( mp"1 2        ~ct@{.),:norm1r@:((mp"2 1       ) |:@{:))~(-/"3))~)(>./@:%)(FP_PREC*(FP_SFMIN>.|:@:(>./"2)@:((normi,norm1)"2)@[)))~((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitc%FP_PREC*c)@]
+  vberrul=:  (     normir@:((((  norm1r@:((mp"1 2 -/"3)~ct   )                                         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:( normi       "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitc % FP_PREC * c)@]
+  vberrur=:  (     normir@:((((                                 norm1r@:((mp"2 1~ -/"3)~|:   )         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:(       norm1 "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitc % FP_PREC * c)@]
+  vberrub=:  (>./@:normir@:((((((norm1r@:( mp"1 2      ~ct@{.),:norm1r@:((mp"2 1      ) |:@{:))~ -/"3)~) (>./@:%) (FP_PREC * (FP_SFMIN >. |:@:(>./"2)@:((normi,norm1)"2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitc % FP_PREC * c)@]
 
-  rcondl=. <./ trlcon1"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
-  rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ 0&,)~((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
+  rcondl=. <./ trlcon1"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
+  rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ 0&,)~ ((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
 
   ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrll)) SPl
   ('tgevclr'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrlr)) SPl

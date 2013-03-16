@@ -469,17 +469,17 @@ testgeqf=: 3 : 0
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('128!:0'                tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (( mp~ ct                   )  0&{::)) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(mp~ ct       )@(0&{::))))) y
+  ('128!:0'                tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (( mp~ ct                   )  0&{::)) % (FP_EPS * norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct       )@(0&{::))))) y
 
-  ('2b1110&gelqf_jlapack_' tmonad (]`({. ,  ,. &.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((   <./ @$@]) {."1 unmlqrc)~ 1&{::)) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmlqrc unglq)@(1&{::))))) y
-  ('2b0111&geqlf_jlapack_' tmonad (]`({: ,~ , ~&.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((-@(<./)@$@]) {.   unmqllc)~ 0&{::)) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqllc ungql)@(0&{::))))) y
-  ('2b0111&geqrf_jlapack_' tmonad (]`({: ,~ ,  &.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((   <./ @$@]) {.   unmqrlc)~ 0&{::)) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqrlc ungqr)@(0&{::))))) y
-  ('2b1110&gerqf_jlapack_' tmonad (]`({. ,  ,.~&.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((-@(<./)@$@]) {."1 unmrqrc)~ 1&{::)) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmrqrc ungrq)@(1&{::))))) y
+  ('2b1110&gelqf_jlapack_' tmonad (]`({. ,  ,. &.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((   <./ @$@]) {."1 unmlqrc)~ 1&{::)) % (FP_EPS * norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmlqrc unglq)@(1&{::))))) y
+  ('2b0111&geqlf_jlapack_' tmonad (]`({: ,~ , ~&.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((-@(<./)@$@]) {.   unmqllc)~ 0&{::)) % (FP_EPS * norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqllc ungql)@(0&{::))))) y
+  ('2b0111&geqrf_jlapack_' tmonad (]`({: ,~ ,  &.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((   <./ @$@]) {.   unmqrlc)~ 0&{::)) % (FP_EPS * norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqrlc ungqr)@(0&{::))))) y
+  ('2b1110&gerqf_jlapack_' tmonad (]`({. ,  ,.~&.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((-@(<./)@$@]) {."1 unmrqrc)~ 1&{::)) % (FP_EPS * norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmrqrc ungrq)@(1&{::))))) y
 
-  ('gelqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( trl        @:(}:"1)@] -  ((   <./ @$@]) {."1 unmlqrc)~       ) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmlqrc unglq)        )))) y
-  ('geqlf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((trl~ -~/@$)@  }.   @] -  ((-@(<./)@$@]) {.   unmqllc)~       ) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqllc ungql)        )))) y
-  ('geqrf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( tru        @  }:   @] -  ((   <./ @$@]) {.   unmqrlc)~       ) % (FP_EPS*norm1*#)@[) >. ((% FP_EPS*#)~ norm1@(<: upddiag)@(unmqrlc ungqr)        )))) y
-  ('gerqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((tru~ -~/@$)@:(}."1)@] -  ((-@(<./)@$@]) {."1 unmrqrc)~       ) % (FP_EPS*norm1*c)@[) >. ((% FP_EPS*c)~ norm1@(<: upddiag)@(unmrqrc ungrq)        )))) y
+  ('gelqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( trl        @:(}:"1)@] -  ((   <./ @$@]) {."1 unmlqrc)~       ) % (FP_EPS * norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmlqrc unglq)        )))) y
+  ('geqlf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((trl~ -~/@$)@  }.   @] -  ((-@(<./)@$@]) {.   unmqllc)~       ) % (FP_EPS * norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqllc ungql)        )))) y
+  ('geqrf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( tru        @  }:   @] -  ((   <./ @$@]) {.   unmqrlc)~       ) % (FP_EPS * norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqrlc ungqr)        )))) y
+  ('gerqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((tru~ -~/@$)@:(}."1)@] -  ((-@(<./)@$@]) {."1 unmrqrc)~       ) % (FP_EPS * norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmrqrc ungrq)        )))) y
 
   EMPTY
 )

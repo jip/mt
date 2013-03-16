@@ -813,25 +813,25 @@ testlarfb=: 3 : 0
   Qffc=.  trl1         geqrf A
   Qffr=.  tru1         gelqf A
 
-  ('larfblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C , ~0))
-  ('larfblcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C), ~0))
-  ('larfblcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C ,  0))
-  ('larfblcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C),  0))
+  ('larfblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C , ~0))
+  ('larfblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C), ~0))
+  ('larfblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C ,  0))
+  ('larfblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C),  0))
 
-  ('larfblnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C , ~0))
-  ('larfblnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C), ~0))
-  ('larfblnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C ,  0))
-  ('larfblnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C),  0))
+  ('larfblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C , ~0))
+  ('larfblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C), ~0))
+  ('larfblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C ,  0))
+  ('larfblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C),  0))
 
-  ('larfbrcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),.~0))
-  ('larfbrcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,.~0))
-  ('larfbrcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),. 0))
-  ('larfbrcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,. 0))
+  ('larfbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),.~0))
+  ('larfbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,.~0))
+  ('larfbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),. 0))
+  ('larfbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,. 0))
 
-  ('larfbrnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),.~0))
-  ('larfbrnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,.~0))
-  ('larfbrnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),. 0))
-  ('larfbrnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,. 0))
+  ('larfbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),.~0))
+  ('larfbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,.~0))
+  ('larfbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),. 0))
+  ('larfbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,. 0))
 
   EMPTY
 )
@@ -858,25 +858,25 @@ testlarzb=: 3 : 0
   Qffc=. I (       (-~ i.) k)} tzzrf (tru~ -~/@$) A
   Qffr=. I (< a: ; (-~ i.) k)} tzlzf (trl~ -~/@$) A
 
-  ('larzblcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C ,  0))
-  ('larzblcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C),  0))
-  ('larzblcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C , ~0))
-  ('larzblcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C), ~0))
+  ('larzblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C ,  0))
+  ('larzblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C),  0))
+  ('larzblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C , ~0))
+  ('larzblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C), ~0))
 
-  ('larzblnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C ,  0))
-  ('larzblnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C),  0))
-  ('larzblnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C , ~0))
-  ('larzblnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C), ~0))
+  ('larzblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;(    C ,  0))
+  ('larzblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;((ct C),  0))
+  ('larzblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;(    C , ~0))
+  ('larzblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;((ct C), ~0))
 
-  ('larzbrcbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),. 0))
-  ('larzbrcbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,. 0))
-  ('larzbrcfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),.~0))
-  ('larzbrcfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,.~0))
+  ('larzbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),. 0))
+  ('larzbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,. 0))
+  ('larzbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),.~0))
+  ('larzbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,.~0))
 
-  ('larzbrnbc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),. 0))
-  ('larzbrnbr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,. 0))
-  ('larzbrnfc' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),.~0))
-  ('larzbrnfr' tdyad ((0&({::))`(1&({::))`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,.~0))
+  ('larzbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbc;((ct C),. 0))
+  ('larzbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qfbr;(    C ,. 0))
+  ('larzbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffc;((ct C),.~0))
+  ('larzbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) (Qffr;(    C ,.~0))
 
   EMPTY
 )

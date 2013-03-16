@@ -202,11 +202,11 @@ NB. Notes:
 NB. - ung{l2,2l,2r,r2} and corresp. ung{lq,ql,qr,rq} are
 NB.   topologic equivalents
 
-unglqstep=: ((((GQNB, _),:~(-&c))                       (] ;. 0)       [) (((ungl2~ #)@[) ,   larfbrcfr) ]) ({."1~ ((-GQNB)-c))
-ungqrstep=: ((((GQNB,~_),:~(-&#))                       (] ;. 0)       [) (((ung2r~ c)@[) ,.  larfblnfc) ]) ({.  ~ ((-GQNB)-#))
+unglqstep=: ((((GQNB ,  _) ,:~ -&c                           ) (] ;. 0)       [) (((ungl2~ #)@[) ,   larfbrcfr) ]) ({."1~ ((-GQNB)-c))
+ungqrstep=: ((((GQNB ,~ _) ,:~ -&#                           ) (] ;. 0)       [) (((ung2r~ c)@[) ,.  larfblnfc) ]) ({.  ~ ((-GQNB)-#))
 
-ungqlstep=: ((((GQNB,~_),:~(0 {:: [) ((GQNB-1)+-~) c@]) (] ;. 0) 1 {:: [) (((ung2l~ c)@[) ,.~ larfblnbc) ]) ({.  ~ (  GQNB +#))
-ungrqstep=: ((((GQNB, _),:~(0 {:: [) ((GQNB-1)+-~) #@]) (] ;. 0) 1 {:: [) (((ungr2~ #)@[) , ~ larfbrcbr) ]) ({."1~ (  GQNB +c))
+ungqlstep=: ((((GQNB ,~ _) ,:~ (0 {:: [) ((<: GQNB) + -~) c@]) (] ;. 0) 1 {:: [) (((ung2l~ c)@[) ,.~ larfblnbc) ]) ({.  ~ (  GQNB +#))
+ungrqstep=: ((((GQNB ,  _) ,:~ (0 {:: [) ((<: GQNB) + -~) #@]) (] ;. 0) 1 {:: [) (((ungr2~ #)@[) , ~ larfbrcbr) ]) ({."1~ (  GQNB +c))
 
 NB. =========================================================
 NB. Interface

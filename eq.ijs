@@ -736,9 +736,9 @@ hgezqevn=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotscll  1&{::  )) (hgezqe 2&{.)
 hgezqevv=: (2 }. ]) ((diag"2@(0 {:: ])) ; (rotscll"2&.:> }.)) (hgezqe 2&{.)
 
 hgezqsnn=:                    0 {::                            hgezqs
-hgezqsnv=: (2 {  ]) ((       (0 {:: ])) , (rotscll  2&{::  )) (hgezqs 2&{.)
-hgezqsvn=: (2 {  ]) ((       (0 {:: ])) , (rotscll  1&{::  )) (hgezqs 2&{.)
-hgezqsvv=: (2 }. ]) ((       (0 {:: ])) , (rotscll"2&: > }.)) (hgezqs 2&{.)
+hgezqsnv=: (2 {  ]) ((        0 {:: ] ) , (rotscll  2&{::  )) (hgezqs 2&{.)
+hgezqsvn=: (2 {  ]) ((        0 {:: ] ) , (rotscll  1&{::  )) (hgezqs 2&{.)
+hgezqsvv=: (2 }. ]) ((        0 {:: ] ) , (rotscll"2&: > }.)) (hgezqs 2&{.)
 
 NB. ---------------------------------------------------------
 NB. hgeqzenn
@@ -892,9 +892,9 @@ hgeqzevn=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotsclu  1&{::  )) (hgeqze 2&{.)
 hgeqzevv=: (2 }. ]) ((diag"2@(0 {:: ])) ; (rotsclu"2&.:> }.)) (hgeqze 2&{.)
 
 hgeqzsnn=:                    0 {::                            hgeqzs
-hgeqzsnv=: (2 {  ]) ((       (0 {:: ])) , (rotsclu  2&{::  )) (hgeqzs 2&{.)
-hgeqzsvn=: (2 {  ]) ((       (0 {:: ])) , (rotsclu  1&{::  )) (hgeqzs 2&{.)
-hgeqzsvv=: (2 }. ]) ((       (0 {:: ])) , (rotsclu"2&: > }.)) (hgeqzs 2&{.)
+hgeqzsnv=: (2 {  ]) ((        0 {:: ] ) , (rotsclu  2&{::  )) (hgeqzs 2&{.)
+hgeqzsvn=: (2 {  ]) ((        0 {:: ] ) , (rotsclu  1&{::  )) (hgeqzs 2&{.)
+hgeqzsvv=: (2 }. ]) ((        0 {:: ] ) , (rotsclu"2&: > }.)) (hgeqzs 2&{.)
 
 NB. =========================================================
 NB. Test suite
@@ -928,44 +928,44 @@ NB.       berr2 := ||I - dQ1 * dQ1^H|| / (FP_PREC * n)
 NB.       berr3 := ||I - dZ1 * dZ1^H|| / (FP_PREC * n)
 
 testhgeq=: 3 : 0
-  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'HT SP dQ1dZ1'=. (H,T,I,:I) prep (S,P,dQ1,:dZ1)
-  safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '(0&{::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                      NB. L: (ct cdiff1 ]) : ||H - dQ1^H * S * dZ1|| , ||T - dQ1^H * P * dZ1||
-                                                                                                  NB. R: (] cdiff1 ct) : ||H - dQ1 * S * dZ1^H|| , ||T - dQ1 * P * dZ1^H||
-  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                         NB. L: (mp~ adiff2) : ||I - dQ1^H * dQ1|| , ||I - dZ1^H * dZ1||
-                                                                                                  NB. R: (mp  adiff2) : ||I - dQ1 * dQ1^H|| , ||I - dZ1 * dZ1^H||
-  denom1=. safenorm@(0&{::)                                                                       NB. ||H|| , ||T||
-  getn=. c@(0&{::)                                                                                NB. n
-  safediv=. ((({:<.(%/@}:))`((<./@(}:*(1,{:)))%(1&{))@.(1>(1&{)))`(%/@}:)@.(</@}:))%(FP_PREC*{:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
-  cberr01=. 2 : 'safediv"1@:((u cdiff1 v) ,. denom1 ,. getn)'                                     NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
-                                                                                                  NB. R: (] cberr01 ct) : (berr0 , berr1) for R
-  aberr23=. 1 : '((<. (u adiff2))~ % (FP_PREC * ])) getn'                                         NB. L: (mp~ aberr23) : (berr2 , berr3) for L
-                                                                                                  NB. R: (mp  aberr23) : (berr2 , berr3) for R
+  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                         NB. L,R: 'HT SP dQ1dZ1'=. (H,T,I,:I) prep (S,P,dQ1,:dZ1)
+  safenorm=. FP_SFMIN >. norm1"2                                                                        NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
+  cdiff1=: 2 : '0&{:: safenorm@:- (u@{.@] mp"2 (mp"2 v@{:))&>/@}.'                                      NB. L: (ct cdiff1 ]) : ||H - dQ1^H * S * dZ1|| , ||T - dQ1^H * P * dZ1||
+                                                                                                        NB. R: (] cdiff1 ct) : ||H - dQ1 * S * dZ1^H|| , ||T - dQ1 * P * dZ1^H||
+  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                               NB. L: (mp~ adiff2) : ||I - dQ1^H * dQ1|| , ||I - dZ1^H * dZ1||
+                                                                                                        NB. R: (mp  adiff2) : ||I - dQ1 * dQ1^H|| , ||I - dZ1 * dZ1^H||
+  denom1=. safenorm@(0&{::)                                                                             NB. ||H|| , ||T||
+  getn=. c@(0&{::)                                                                                      NB. n
+  safediv=. ((({: <. %/@}:)`((<./@(}: * 1 , {:)) % 1&{)@.(1 > 1&{))`(%/@}:)@.(</@}:)) % (FP_PREC * {:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
+  cberr01=. 2 : 'safediv"1@:((u cdiff1 v) ,. denom1 ,. getn)'                                           NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
+                                                                                                        NB. R: (] cberr01 ct) : (berr0 , berr1) for R
+  aberr23=. 1 : '((<. (u adiff2))~ % FP_PREC * ]) getn'                                                 NB. L: (mp~ aberr23) : (berr2 , berr3) for L
+                                                                                                        NB. R: (mp  aberr23) : (berr2 , berr3) for R
   vberrl=: (>./@((ct cberr01 ]) , (mp~ aberr23))@prep) f.
   vberru=: (>./@((] cberr01 ct) , (mp  aberr23))@prep) f.
 
   I=. idmat c y
-  HTl=. (gghrdlnn~ (0,c))@((,: trl)/) y
-  HTu=. (gghrdunn~ (0,c))@((,: tru)/) y
+  HTl=. (gghrdlnn~ 0 , c)@((,: trl)/) y
+  HTu=. (gghrdunn~ 0 , c)@((,: tru)/) y
   rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag HTl
   rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag HTu
 
-  ('hgezqenn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqenv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqevn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqevv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , ,:~ I
-  ('hgezqsnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqsnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`vberrl)) HTl , ,:~ I
-  ('hgeqzenn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
-  ('hgeqzenv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzevn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzevv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , ,:~ I
-  ('hgeqzsnn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
-  ('hgeqzsnv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`vberru)) HTu , ,:~ I
+  ('hgezqenn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
+  ('hgezqenv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqevn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqevv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , ,:~ I
+  ('hgezqsnn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
+  ('hgezqsnv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqsvn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
+  ('hgezqsvv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`vberrl)) HTl , ,:~ I
+  ('hgeqzenn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
+  ('hgeqzenv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzevn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzevv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , ,:~ I
+  ('hgeqzsnn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
+  ('hgeqzsnv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzsvn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
+  ('hgeqzsvv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`vberru)) HTu , ,:~ I
 
   erase 'cdiff1 adiff2 vberrl vberru'
 

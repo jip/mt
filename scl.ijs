@@ -98,6 +98,6 @@ NB. - models LAPACK's xDRSCL, when A is a vector and t=1
 scl=: 4 : 0
   ioft=. ((FP_SFMIN |:@:(*^:2 1) |.) I."1 0 ]) | x
   io=. -/ ioft
-  (%~/ (ioft { (1 1,FP_SFMIN)) *^:(| io) x) * (FP_SFMIN&*^:io y)
+  (%~/ (ioft { (1 1 , FP_SFMIN)) *^:(| io) x) * (FP_SFMIN&*^:io y)
 )
-NB. scl=: ((],(0>:-),(0&>:))@(-&2)@((I.~(FP_SFMIN&*^:2 1 _1 _2))/)@:|@[) ((*&>)`(%&>)/@:((FP_SFMIN&*@[&0&.>)"0)) ((;(;~/))~)
+NB. scl=: ((],(0>:-),(0&>:))@(-&2)@((I.~ (FP_SFMIN&*^:2 1 _1 _2))/)@:|@[) ((*&>)`(%&>)/@:((FP_SFMIN&*@[&0&.>)"0)) ((;(;~/))~)

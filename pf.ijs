@@ -1359,7 +1359,7 @@ trlpc=: 3 : 0
       j=. >: j
     end.
     NB. Determine if matrix A is singular or nearly singular
-    if. smin > smax*FP_SFMIN*PFSF do.
+    if. smin > smax * FP_SFMIN * PFSF do.
       NB. Matrix is not singular or not nearly singular.
       NB. Follow usual method: Estimate the left singular
       NB. vector corresponding to the smallest singular value
@@ -1451,7 +1451,7 @@ trlpc=: 3 : 0
         itemp=. liofmax (>: rank) {. rnorms
         mxrp1=. (3 %: >: rank) * itemp { rnorms
         NB. Estimate the left singular vector
-        if. mnrp1 > mxrp1*PFSF*FP_SFMIN do.
+        if. mnrp1 > mxrp1 * PFSF * FP_SFMIN do.
           NB. Matrix is not singular or not nearly singular
           NB.
           NB. First, end the estimation of the right singular
@@ -1639,7 +1639,7 @@ trprc=: 3 : 0
       j=. >: j
     end.
     NB. Determine if matrix A is singular or nearly singular
-    if. smin > smax*FP_SFMIN*PFSF do.
+    if. smin > smax * FP_SFMIN * PFSF do.
       NB. Matrix is not singular or not nearly singular.
       NB. Follow usual method: Estimate the right singular
       NB. vector corresponding to the smallest singular value
@@ -1732,7 +1732,7 @@ trprc=: 3 : 0
         itemp=. liofmax (>: rank) {. cnorms
         mxrp1=. (3 %: >: rank) * itemp { cnorms
         NB. Estimate the right singular vector
-        if. mnrp1 > mxrp1*PFSF*FP_SFMIN do.
+        if. mnrp1 > mxrp1 * PFSF * FP_SFMIN do.
           NB. Matrix is not singular or not nearly singular
           NB.
           NB. First, end the estimation of the left singular
@@ -2093,10 +2093,10 @@ NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
 
-gelpf=: FP_EPS&$: :([ ]`trlpy@.(0<3{::]) gelpb)
+gelpf=: FP_EPS&$: :([ ]`trlpy@.(0 < 3 {:: ]) gelpb)
 
 NB.   'Q L p orcond rank svlues'=. [ircond] geplf A
-geplf=: FP_EPS&$: :([ ]`trply@.(0<3{::]) geplb)
+geplf=: FP_EPS&$: :([ ]`trply@.(0 < 3 {:: ]) geplb)
 
 NB. ---------------------------------------------------------
 NB. geprf
@@ -2175,10 +2175,10 @@ NB.   - matrix C is an identity matrix
 NB.   - if there was a problem to compute a rank, then rank
 NB.     gets value NaN
 
-geprf=: FP_EPS&$: :([ ]`trpry@.(0<3{::]) geprb)
+geprf=: FP_EPS&$: :([ ]`trpry@.(0 < 3 {:: ]) geprb)
 
 NB.   'p R Q orcond rank svlues'=. [ircond] gerpf A
-gerpf=: FP_EPS&$: :([ ]`trrpy@.(0<3{::]) gerpb)
+gerpf=: FP_EPS&$: :([ ]`trrpy@.(0 < 3 {:: ]) gerpb)
 
 NB. =========================================================
 NB. Test suite
@@ -2211,10 +2211,10 @@ NB. - RP: berr := max( ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I||
 testgepf=: 3 : 0
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- C.^:_1&:>`(mp       &>)/) % (FP_EPS*norm1*c)@[))) y
-  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- mp    &:>`(C.^:_1"1~&>)/) % (FP_EPS*norm1*#)@[))) y
-  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- mp    &:>`(C.^:_1"1~&>)/) % (FP_EPS*norm1*#)@[))) y
-  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- C.^:_1&:>`(mp       &>)/) % (FP_EPS*norm1*c)@[))) y
+  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- C.^:_1&:>`(mp       &>)/) % (FP_EPS * norm1 * c)@[))) y
+  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- mp    &:>`(C.^:_1"1~&>)/) % (FP_EPS * norm1 * #)@[))) y
+  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- mp    &:>`(C.^:_1"1~&>)/) % (FP_EPS * norm1 * #)@[))) y
+  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- C.^:_1&:>`(mp       &>)/) % (FP_EPS * norm1 * c)@[))) y
 
   EMPTY
 )

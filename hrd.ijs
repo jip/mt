@@ -761,10 +761,10 @@ testgehrd=: 3 : 0
 
   rcond=. gecon1 y
 
-  ('2b1100&gehrd_jlapack_' tmonad ((];1:;#)`(,&>/)`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS*norm1*#)@[))) y
+  ('2b1100&gehrd_jlapack_' tmonad ((] ; 1: ; #)`(,&>/)`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * norm1 * #)@[))) y
 
-  ('gehrdl'                tdyad ((0,#)`]       `]`(rcond"_)`(_."_)`(norm1@(- ( 1&trl@:(}:"1) (] mp~ (mp~ ct)) unghrl)) % (FP_EPS*norm1*#)@[))) y
-  ('gehrdu'                tdyad ((0,#)`]       `]`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS*norm1*#)@[))) y
+  ('gehrdl'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- ( 1&trl@:(}:"1) (] mp~ (mp~ ct)) unghrl)) % (FP_EPS * norm1 * #)@[))) y
+  ('gehrdu'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * norm1 * #)@[))) y
 
   EMPTY
 )
@@ -801,19 +801,19 @@ NB.       berr3 := ||I - dZ0 * dZ0^H|| / (FP_PREC * n)
 NB.       B - upper triangular
 
 testgghrd=: 3 : 0
-  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                   NB. L,R: 'AB HT dQ0dZ0'=. (A,B,I,:I) prep (H,T,dQ0,:dZ0)
-  safenorm=. FP_SFMIN >. norm1"2                                                                  NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '(0&{::) safenorm@:- ((((u@{.@]) mp"2 (mp"2 (v@{:)))&>/)@}.)'                      NB. L: (ct cdiff1 ]) : ||A - dQ0^H * H * dZ0|| , ||B - Q1^H * T * dZ0||
-                                                                                                  NB. R: (] cdiff1 ct) : ||A - dQ0 * H * dZ0^H|| , ||B - Q1 * T * dZ0^H||
-  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                         NB. L: (mp~ adiff2) : ||I - dQ0^H * dQ0|| , ||I - dZ0^H * dZ0||
-                                                                                                  NB. R: (mp  adiff2) : ||I - dQ0 * dQ0^H|| , ||I - dZ0 * dZ0^H||
-  denom1=. safenorm@(0&{::)                                                                       NB. ||A|| , ||B||
-  getn=. c@(0&{::)                                                                                NB. n
-  safediv=. ((({:<.(%/@}:))`((<./@(}:*(1,{:)))%(1&{))@.(1>(1&{)))`(%/@}:)@.(</@}:))%(FP_PREC*{:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
-  cberr01=. 2 : 'safediv"1@:((u cdiff1 v) ,. denom1 ,. getn)'                                     NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
-                                                                                                  NB. R: (] cberr01 ct) : (berr0 , berr1) for R
-  aberr23=. 1 : '((<. (u adiff2))~ % (FP_PREC * ])) getn'                                         NB. L: (mp~ aberr23) : (berr2 , berr3) for L
-                                                                                                  NB. R: (mp  aberr23) : (berr2 , berr3) for R
+  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                         NB. L,R: 'AB HT dQ0dZ0'=. (A,B,I,:I) prep (H,T,dQ0,:dZ0)
+  safenorm=. FP_SFMIN >. norm1"2                                                                        NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
+  cdiff1=: 2 : '0&{:: safenorm@:- (u@{.@] mp"2 (mp"2 v@{:))&>/@}.'                                      NB. L: (ct cdiff1 ]) : ||A - dQ0^H * H * dZ0|| , ||B - Q1^H * T * dZ0||
+                                                                                                        NB. R: (] cdiff1 ct) : ||A - dQ0 * H * dZ0^H|| , ||B - Q1 * T * dZ0^H||
+  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                               NB. L: (mp~ adiff2) : ||I - dQ0^H * dQ0|| , ||I - dZ0^H * dZ0||
+                                                                                                        NB. R: (mp  adiff2) : ||I - dQ0 * dQ0^H|| , ||I - dZ0 * dZ0^H||
+  denom1=. safenorm@(0&{::)                                                                             NB. ||A|| , ||B||
+  getn=. c@(0&{::)                                                                                      NB. n
+  safediv=. ((({: <. %/@}:)`((<./@(}: * 1 , {:)) % 1&{)@.(1 > 1&{))`(%/@}:)@.(</@}:)) % (FP_PREC * {:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
+  cberr01=. 2 : 'safediv"1@:((u cdiff1 v) ,. denom1 ,. getn)'                                           NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
+                                                                                                        NB. R: (] cberr01 ct) : (berr0 , berr1) for R
+  aberr23=. 1 : '((<. (u adiff2))~ % FP_PREC * ]) getn'                                                 NB. L: (mp~ aberr23) : (berr2 , berr3) for L
+                                                                                                        NB. R: (mp  aberr23) : (berr2 , berr3) for R
   vberrl=: (>./@((ct cberr01 ]) , (mp~ aberr23))@prep) f.
   vberru=: (>./@((] cberr01 ct) , (mp  aberr23))@prep) f.
 

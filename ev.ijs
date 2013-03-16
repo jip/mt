@@ -422,12 +422,12 @@ testgeev=: 3 : 0
 
   rcond=. gecon1 y
 
-  vberruL=: FP_PREC%~1<.norm1@[%~(((mp~ ct)~(1;0)&{::)normi@:-((0+@{::])*"1(1;0){::])) % FP_PREC>.norm1@((1;0){::])
-  vberruR=: FP_PREC%~1<.norm1@[%~(( mp      (1;1)&{::)norm1@:-((0  {::])*"1(1;1){::])) % FP_PREC>.norm1@((1;1){::])
-  vberrux=: 1(((%FP_PREC)>./"1@:<.FP_PREC%~|@:<:@:(normsc"2))([`((%FP_PREC)"_)@.])"0((1-+:FP_PREC)>(|@(9&o.))%&:(>./"1)|)@:(,"2))@{::]
-  vberruvv=: >./@(vberruL,vberruR,vberrux)  NB. STUDYME: verb is invisible from base locale when erase below is removed (???)
+  vberruL=: FP_PREC %~ 1 <. norm1@[ %~ (((mp~ ct)~ (1 ; 0)&{::) normi@:-((0 +@{::]) *"1 (1 ; 0) {:: ])) % FP_PREC >. norm1@((1 ; 0) {:: ])
+  vberruR=: FP_PREC %~ 1 <. norm1@[ %~ (( mp       (1 ; 1)&{::) norm1@:-((0   {::]) *"1 (1 ; 1) {:: ])) % FP_PREC >. norm1@((1 ; 1) {:: ])
+  vberrux=: 1 (((% FP_PREC)>./"1@:<. FP_PREC %~ |@:<:@:(normsc"2)) ([`((% FP_PREC)"_)@.])"0 ((1 - +: FP_PREC) > (|@(9&o.)) %&:(>./"1) |)@:(,"2))@{:: ]
+  vberruvv=: >./@(vberruL , vberruR , vberrux)  NB. STUDYME: verb is invisible from base locale when erase below is removed (???)
 
-  ('geev_jlapack_' tmonad (]`(1&({::) ; (0,:2)&({::))`(rcond"_)`(_."_)`vberruvv)) y
+  ('geev_jlapack_' tmonad (]`(1&{:: ; (0 ,: 2)&{::)`(rcond"_)`(_."_)`vberruvv)) y
 
   erase 'vberruL vberruR vberrux vberruvv'
 
@@ -469,8 +469,8 @@ testheev=: 3 : 0
 
   rcond=. hecon1 y
 
-  vberru0=: [((((%~{.)<.1{])`(((0{])<.(*{:))%[)@.(1>[)`(%~{.)@.(>{.)%FP_PREC*1{])~(FP_SFMIN>.{.))~&(norm1,#)(-(]mp(*ct))&>/)
-  vberru1=: 1((#<.norm1@(<:upddiag)@(mp ct))%(FP_PREC*#))@{::]
+  vberru0=: [ ((((%~ {.) <. 1 { ])`(((0 { ]) <. (* {:)) % [)@.(1 > [)`(%~ {.)@.(> {.) % FP_PREC * 1 { ])~ FP_SFMIN >. {.)~&(norm1 , #) (- (] mp (* ct))&>/)
+  vberru1=: 1 ((# <. norm1@(<: upddiag)@(mp ct)) % (FP_PREC * #))@{:: ]
   vberruv=: vberru0>.vberru1
 
   ('heev_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`vberruv)) y
@@ -527,13 +527,13 @@ NB. Notes:
 NB. - berrxxx are non-iterative and are require O(N^3) RAM
 
 testggev=: 3 : 0
-  vberrlvn=:  (     normir@:((*"_ 1|:@|.@(0&{::))((  norm1r@:((mp"1 2 (-/"3))~     )                                           )      % FP_PREC*(FP_SFMIN>.    (>./"1)@:( norm1       "2)@[))(1 {:: ])))>.(     normir@:<:@:normitr%FP_PREC*c)@(1 {:: ])
-  vberrlnv=:  (     normir@:((*"_ 1|:@|.@(0&{::))((                                   norm1r@:((mp"2 1~(-/"3))~+    )          )      % FP_PREC*(FP_SFMIN>.    (>./"1)@:(       normi "2)@[))(1 {:: ])))>.(     normir@:<:@:normitr%FP_PREC*c)@(1 {:: ])
-  vberrlvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::))((((norm1r@:( mp"1 2        ~   {.),:norm1r@:((mp"2 1       ) + @{:))~(-/"3))~)(>./@:%)FP_PREC*(FP_SFMIN>.|:@:(>./"1)@:((norm1,normi)"2)@[))(1 {:: ])))>.(>./@:normir@:<:@:normitr%FP_PREC*c)@(1 {:: ])
+  vberrlvn=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((  norm1r@:((mp"1 2 -/"3)~      )                                          )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:( norm1       "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
+  vberrlnv=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((                                  norm1r@:((mp"2 1~ -/"3)~ +    )         )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:(       normi "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
+  vberrlvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::)) ((((norm1r@:( mp"1 2      ~    {.),:norm1r@:((mp"2 1      )  + @{:))~ -/"3)~) (>./@:%) FP_PREC * (FP_SFMIN >. |:@:(>./"1)@:((norm1,normi)"2)@[)) (1 {:: ]))) >. (>./@:normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
 
-  vberruvn=:  (     normir@:((*"_ 1|:@|.@(0&{::))((  norm1r@:((mp"1 2 (-/"3))~ct   )                                           )      % FP_PREC*(FP_SFMIN>.    (>./"1)@:( normi       "2)@[))(1 {:: ])))>.(     normir@:<:@:normitc%FP_PREC*c)@(1 {:: ])
-  vberrunv=:  (     normir@:((*"_ 1|:@|.@(0&{::))((                                   norm1r@:((mp"2 1~(-/"3))~|:   )          )      % FP_PREC*(FP_SFMIN>.    (>./"1)@:(       norm1 "2)@[))(1 {:: ])))>.(     normir@:<:@:normitc%FP_PREC*c)@(1 {:: ])
-  vberruvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::))((((norm1r@:( mp"1 2        ~ct@{.),:norm1r@:((mp"2 1       ) |:@{:))~(-/"3))~)(>./@:%)FP_PREC*(FP_SFMIN>.|:@:(>./"1)@:((normi,norm1)"2)@[))(1 {:: ])))>.(>./@:normir@:<:@:normitc%FP_PREC*c)@(1 {:: ])
+  vberruvn=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((  norm1r@:((mp"1 2 -/"3)~ ct   )                                          )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:( normi       "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
+  vberrunv=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((                                  norm1r@:((mp"2 1~ -/"3)~ |:   )         )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:(       norm1 "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
+  vberruvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::)) ((((norm1r@:( mp"1 2      ~ ct@{.),:norm1r@:((mp"2 1      )  |:@{:))~ -/"3)~) (>./@:%) FP_PREC * (FP_SFMIN >. |:@:(>./"1)@:((normi,norm1)"2)@[)) (1 {:: ]))) >. (>./@:normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
 
   rcond=. <./ gecon1"2 y
 

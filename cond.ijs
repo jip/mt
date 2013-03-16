@@ -4,10 +4,12 @@ NB. con     Conj. to make verb estimating the reciprocal of
 NB.         the condition number of a matrix in a given norm
 NB. xxconx  Calculate reciprocal of the condition number of a
 NB.         matrix in a given norm
+NB. laic1x  Apply one step of incremental condition
+NB.         estimation
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -31,6 +33,12 @@ coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
+
+NB. ---------------------------------------------------------
+NB. stardot
+NB. Extend monad *. for quaternions
+
+stardot=: ;/@*.`((] ; %) qnmod)@.(2 = #)
 
 NB. =========================================================
 NB. Interface
@@ -86,29 +94,29 @@ NB.   Calculate reciprocal of the condition number of a
 NB.   matrix in a given norm
 NB.
 NB. Syntax:
-NB.   normG=. geconx G
-NB.   normH=. heconx H
-NB.   normP=. poconx P
-NB.   normT=. ptconx T
-NB.   normR=. trxxconx R
-NB.   normQ=. uncon1 Q
+NB.   rcondG=. geconx G
+NB.   rcondH=. heconx H
+NB.   rcondP=. poconx P
+NB.   rcondT=. ptconx T
+NB.   rcondR=. trxxconx R
+NB.   rcondQ=. uncon1 Q
 NB. where
-NB.   G     - n×n-matrix of type: general, band,
-NB.           tridiagonal, triangular or triangular band
-NB.   normG ≥ 0, reciprocal of the condition number of G
-NB.   H     - n×n-matrix of type: Hermitian (symmetric)
-NB.   normH ≥ 0, reciprocal of the condition number of H
-NB.   P     - n×n-matrix of type: Hermitian (symmetric)
-NB.           positive definite
-NB.   normP ≥ 0, reciprocal of the condition number of P
-NB.   T     - n×n-matrix of type: Hermitian (symmetric)
-NB.           positive definite tridiagonal
-NB.   normT ≥ 0, reciprocal of the condition number of T
-NB.   R     - n×n-matrix of type: triangular
-NB.   normR ≥ 0, reciprocal of the condition number of R
-NB.   Q     - n×n-matrix, unitary (orthogonal)
-NB.   normQ ≥ 0, reciprocal of the condition number of Q in
-NB.           1-norm
+NB.   G      - n×n-matrix of type: general, band,
+NB.            tridiagonal, triangular or triangular band
+NB.   rcondG ≥ 0, reciprocal of the condition number of G
+NB.   H      - n×n-matrix of type: Hermitian (symmetric)
+NB.   rcondH ≥ 0, reciprocal of the condition number of H
+NB.   P      - n×n-matrix of type: Hermitian (symmetric)
+NB.            positive definite
+NB.   rcondP ≥ 0, reciprocal of the condition number of P
+NB.   T      - n×n-matrix of type: Hermitian (symmetric)
+NB.            positive definite tridiagonal
+NB.   rcondT ≥ 0, reciprocal of the condition number of T
+NB.   R      - n×n-matrix of type: triangular
+NB.   rcondR ≥ 0, reciprocal of the condition number of R
+NB.   Q      - n×n-matrix, unitary (orthogonal)
+NB.   rcondQ ≥ 0, reciprocal of the condition number of Q in
+NB.            1-norm
 NB.
 NB. Notes:
 NB. - extraneous values in triangular, band matrices must be
@@ -154,3 +162,119 @@ trucon1=:  norm1 con trtriu
 truconi=:  normi con trtriu
 
 uncon1=: norm1 con ct
+
+NB. ---------------------------------------------------------
+NB. laic11
+NB. laic12
+NB.
+NB. Description:
+NB.   Apply one step of incremental condition estimation in
+NB.   its simplest version. Let ix, twonorm(ix) = 1, be an
+NB.   approximate singular vector of a lower triangular
+NB.   j×j-matrix iL, such that
+NB.     twonorm(iL*ix) = isest
+NB.   Then laic1x computes osest, s, c such that the vector
+NB.          [ s*ix ]
+NB.     ox = [  c   ]
+NB.   is an approximate singular vector of
+NB.          [ iL     0  ]
+NB.     oL = [ w'  gamma ]
+NB.   in the sense that
+NB.     twonorm(oL*ox) = osest.
+NB.   Note that [s c]' and osest^2 is an eigenpair of the
+NB.   system
+NB.     diag(isest^2, 0) + [alpha gamma] * [ conjg(alpha) ]
+NB.                                        [ conjg(gamma) ]
+NB.   where alpha = conjg(ix)'*w.
+NB.
+NB. Syntax:
+NB.   'osest cs'=. laic1x isest;ga
+NB. where
+NB.   isest -: norms iL mp ix
+NB.   ga    -: gamma , alpha
+NB.   osest -: norms oL mp ox
+NB.   cs    -: c , s
+NB.
+NB. Notes:
+NB. - laic11 models LAPACK's xLAIC1(1) and computes largest
+NB.   singular value
+NB. - laic12 models LAPACK's xLAIC1(2) and computes smallest
+NB.   singular value
+
+laic11=: 3 : 0
+  'absest absga'=. | L: 0 'sest ga'=. y
+  'absg absa'=. absga
+  NB. special cases
+  if. 0 = sest do.
+    if. >./ absga do.
+      stardot ga
+    else.
+      0 ; 1 0
+    end.
+  elseif. absg <: FP_EPS * absest do.
+    (| absest j. absa);0 1
+  elseif. absa <: FP_EPS * absest do.
+    if. absg <: absest do.
+      absest ; 0 1
+    else.
+      absg ; 1 0
+    end.
+  elseif. +./ absest <: FP_EPS * absga do.
+    stardot ga
+  elseif. do.
+    NB. normal case
+    b=. -: 1 - +/ 't c'=. *: absga % absest
+    if. 0 < b do.
+      t=. c % b + %: c + *: b
+    else.
+      t=. (%: c + *: b) - b
+    end.
+    (absest * %: >: t) ; qnsign (ga % absest) % (,~ <:) -t
+  end.
+)
+
+laic12=: 3 : 0
+  'sest ga'=. y
+  absest=. | sest
+  'absa absg'=. absag=. | ag=. |. ga
+  NB. special cases
+  if. 0 = sest do.
+    if. >./ absag do.
+      0 ; qnsign qnconij ag
+    else.
+      0 ; 0 1
+    end.
+  elseif. absg <: FP_EPS * absest do.
+    absg ; 1 0
+  elseif. absa <: FP_EPS * absest do.
+    if. absg <: absest do.
+      absg ; 1 0
+    else.
+      absest ; 0 1
+    end.
+  elseif. +./ absest <: FP_EPS * absag do.
+    scl=. >:&.*: tmp=. %/ 'm M'=. absa (<. , >.) absg
+    cs=. scl %~ M %~ qnconij ag
+    if. absg > absa do.
+      (absest % scl) ; cs
+    else.
+      (absest * tmp % scl) ; cs
+    end.
+  elseif. do.
+    NB. normal case
+    norma=. (>:@(+/)@(* {.) >. +/@(* {:)) zeta=. absag % absest
+    if. 0 <: >: +: (- * +)/ zeta do.
+      b=. -: >: +/ 't c'=. *: zeta
+      t=. c % b + %: | (*: b) - c
+      (absest * %: t + 4 * norma * *: FP_EPS) ; qnsign (ga % absest) % (, >:) -t
+    else.
+      b=. -: <: +/ 'c t'=. *: zeta
+      if. 0 <: b do.
+        t=. - c % b + %: c + *: b
+      else.
+        t=. b - %: c + *: b
+      end.
+      (absest * %: >: t + 4 * norma * *: FP_EPS) ; qnsign (ga % absest) % (,~ <:) -t
+    end.
+  end.
+)

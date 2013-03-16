@@ -150,7 +150,7 @@ geexp=: 3 : 0
 
   NB. find r_m(A) = [m/m] Padé approximant to A
   if. iom < # vm do.
-    y=. (iom { vm) geexpm2r y              NB. use max m such that ||A|| <= θ[m]
+    y=. (iom { vm) geexpm2r y              NB. use max m such that ||A|| ≤ θ[m]
   else.
     s=. >. 2 ^. normA % {: THETA           NB. find a minimal integer such that ||A/2^s||≤θ[13]
     y=. y % 2 ^ s                          NB. scaling

@@ -358,11 +358,11 @@ NB.                  largest element in row and column
 NB.           3.2.4) calculate
 NB.                    fup := GEBALSCLFAC^i
 NB.                  where i is mininal integer safisfying:
-NB.                    (c*fup) >= (r/(fup*GEBALSCLFAC))
+NB.                    (c*fup) ≥ (r/(fup*GEBALSCLFAC))
 NB.                  or
-NB.                    max(fup,c*fup,ca*fup) >= GEBALSFMAX2
+NB.                    max(fup,c*fup,ca*fup) ≥ GEBALSFMAX2
 NB.                  or
-NB.                    min(r/(fup*GEBALSCLFAC),ra/fup) <= GEBALSFMIN2
+NB.                    min(r/(fup*GEBALSCLFAC),ra/fup) ≤ GEBALSFMIN2
 NB.           3.2.5) scale up c and ca, scale down r and ra:
 NB.                    c  := c  * fup
 NB.                    ca := ca * fup
@@ -371,11 +371,11 @@ NB.                    ra := ra / fup
 NB.           3.2.6) calculate
 NB.                    fdn := GEBALSCLFAC^i
 NB.                  where i is mininal integer safisfying:
-NB.                    (r*fdn) >= (c/(fdn*GEBALSCLFAC))
+NB.                    (r*fdn) ≥ (c/(fdn*GEBALSCLFAC))
 NB.                  or
-NB.                    max(r*fdn,ra*fdn) >= GEBALSFMAX2
+NB.                    max(r*fdn,ra*fdn) ≥ GEBALSFMAX2
 NB.                  or
-NB.                    min(fdn,c/(fdn*GEBALSCLFAC),ca/fdn) <= GEBALSFMIN2
+NB.                    min(fdn,c/(fdn*GEBALSCLFAC),ca/fdn) ≤ GEBALSFMIN2
 NB.           3.2.7) scale down c and scale up r:
 NB.                    c := c / fdn
 NB.                    r := r * fdn
@@ -383,9 +383,9 @@ NB.           3.2.8) calculate scale factor:
 NB.                    f := fup / fdn
 NB.           3.2.9) if r and c are changed by f
 NB.                  considerably, and the following holds:
-NB.                    f >= 1 OR d[i] >= 1 OR f*d[i] > GEBALSFMIN1
+NB.                    f ≥ 1 OR d[i] ≥ 1 OR f*d[i] > GEBALSFMIN1
 NB.                  and
-NB.                    f <= 1 OR d[i] <= 1 OR d[i] < GEBALSFMAX1/GEBALSCLFAC
+NB.                    f ≤ 1 OR d[i] ≤ 1 OR d[i] < GEBALSFMAX1/GEBALSCLFAC
 NB.                  then:
 NB.                  3.2.9.1) scale d[i] by f up
 NB.                  3.2.9.2) scale B[i,:] by f down

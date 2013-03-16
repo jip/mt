@@ -2,7 +2,7 @@
 
 2. (lacn2,gesc2,latdf,getc2,tgsy2,tgsyl,tgex2,tgexc,tgsen) -> gges
 
-3. (gges,tgsyl) -> [2]
+3. (gges,tgsyl) -> [1]
 
 4. hrd.ijs: gghrdxxx: implement blocked generalized Hessenberg reduction [2]
 
@@ -14,7 +14,7 @@
 
 8. factorize gqvberr in eq,gq,hrd,pf,qf,tri
 
-9. qf.ijs: add test for Q unitarity/orthogonality
+9. qf.ijs: add test for Q orthogonality
 
 
 [1] Gerdin, Markus.

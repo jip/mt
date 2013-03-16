@@ -66,9 +66,28 @@ math/mt - change history
  * util: condneg renamed to negneg and variated in negpos, fmtlog is reworked
 
 == 0.8.0 ==
+ * eq: update rot evoking according to interface change
+ * ev: update rot evoking according to interface change
+ * evc: update rot evoking according to interface change
+ * hrd: update rot evoking according to interface change
  + pf: rank-revealing orthogonal factorization with pivoting, initial draft
  + quatern: quaternions support
  * rot: reworked to rely on quaternions
+
+== 0.8.1 ==
+ replace Unicode 'minus sign' by '-'
+
+== 0.8.2 ==
+ Code and comments clean-up
+ * cond: new verbs laic11 laic12
+ * ev: use normsc normsr
+ * gq: change unghrlx from monad to ambivalent
+ * hrd: change gghrdxxx from dyad to ambivalent
+ * norm: new verbs normsr normsc
+ + pf: orthogonal factorization with pivoting
+ * pow: use normsr
+ * sm: replace trsmxxxx by previous iterative version since it has lesser bw error
+ * test: fix J6/J7 console's [CR]LF problem
 
 == 0.8.3/4 ==
  * chg: update for j801

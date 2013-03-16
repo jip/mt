@@ -62,120 +62,6 @@ NB. Blocked code constants
 GQNB=: 32   NB. block size limit
 GQNX=: 128  NB. crossover point, GQNX ≥ GQNB
 
-NB. ---------------------------------------------------------
-NB. ungl2
-NB. ung2l
-NB. ung2r
-NB. ungr2
-NB.
-NB. Description:
-NB.   Reconstruct matrix Q, augmented by trash vector, from
-NB.   its elementary reflectors. Non-blocked version of
-NB.   algorithms
-NB.
-NB. Syntax:
-NB.   eQ=. ungxx Qf
-NB. where
-NB.   Qf - k×(n+1)-matrix for ungx2, or (m+1)×k-matrix for
-NB.        ung2x, unit triangular, the Q's factored form
-NB.   eQ - Q augmented by trash vector
-NB.   Q  - k×n-matrix for ungx2, or m×k-matrix for ung2x,
-NB.        with orthonormal rows/columns which is defined as
-NB.        the first/last rows/columns of a product of k
-NB.        elementary reflectors, see corresp.
-NB.        ung{lq,ql,qr,rq}
-NB.   k  ≤ n for ungx2, or ≤ m for ung2x
-NB.
-NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. by implicit matrix product unmxxxx
-NB.   (}:"1@ungl2 -: (unmlqrn  idmat      @(0 _1 + $))) Qf  NB. LQ: Q = I * (Q)
-NB.   (}.  @ung2l -: (unmqlln (idmat~ -~/)@(_1 0 + $))) Qf  NB. QL: Q = (Q) * I
-NB.   (}:  @ung2r -: (unmqrln  idmat      @(_1 0 + $))) Qf  NB. QR: Q = (Q) * I
-NB.   (}."1@ungr2 -: (unmrqrn (idmat~ -~/)@(0 _1 + $))) Qf  NB. RQ: Q = I * (Q)
-NB.   NB. orthonormality
-NB.   (idmat@# (-: clean) (mp  ct))@:(}:"1)@ungl2 Qf  NB. LQ: I = Q * Q^H
-NB.   (idmat@c (-: clean) (mp~ ct))@  }.   @ung2l Qf  NB. QL: I = Q^H * Q
-NB.   (idmat@c (-: clean) (mp~ ct))@  }:   @ung2r Qf  NB. QR: I = Q^H * Q
-NB.   (idmat@# (-: clean) (mp  ct))@:(}."1)@ungr2 Qf  NB. RQ: I = Q * Q^H
-NB.
-NB. Application:
-NB. - simulate LAPACK's xUNGL2(M,N,K) for M≠K:
-NB.     NB. eQ=. k ungl2k Qf
-NB.     ungl2k=: ungl2@((1 ; 0     ) setdiag  {.       )
-NB. - simulate LAPACK's xUNG2L(M,N,K) for M≠K:
-NB.     NB. eQ=. k ung2lk Qf
-NB.     ung2lk=: ung2l@((1 ; (-  #)) setdiag ({."1~ -)~)
-NB. - simulate LAPACK's xUNG2R(M,N,K) for M≠K:
-NB.     NB. eQ=. k ung2rk Qf
-NB.     ung2rk=: ung2r@((1 ; 0     ) setdiag  {."1     )
-NB. - simulate LAPACK's xUNGR2(M,N,K) for M≠K:
-NB.     NB. eQ=. k ungr2k Qf
-NB.     ungr2k=: ungr2@((1 ; (-~ c)) setdiag ({.  ~ -)~)
-NB.
-NB. Notes:
-NB. - ungl2 implements LAPACK's DORGL2, ZUNGL2 for M=K
-NB. - ung2l implements LAPACK's DORG2L, ZUNG2L for N=K
-NB. - ung2r implements LAPACK's DORG2R, ZUNG2R for N=K
-NB. - ungr2 implements LAPACK's DORGR2, ZUNGR2 for M=K
-
-ungl2=: (((1 _ ,:~ <:@- &#) ,;.0 [) ([ larfrcfr (, ~ 1 {.~   #)~) 0 ,.  ])^:(#@[) (0 $~ 0 ,  -~/@$)
-ung2l=: (((_ 1 ,:~    -~&c) ,;.0 [) ([ larflnbc (,.  1 {.~ -@#)~) 0 , ~ ])^:(c@[) (0 $~ 0 ,~ - /@$)
-ung2r=: (((_ 1 ,:~ <:@- &c) ,;.0 [) ([ larflnfc (,.~ 1 {.~   #)~) 0 ,   ])^:(c@[) (0 $~ 0 ,~ - /@$)
-ungr2=: (((1 _ ,:~    -~&#) ,;.0 [) ([ larfrcbr (,   1 {.~ -@#)~)       ])^:(#@[) (0 $~ 0 ,  -~/@$)
-
-NB. ---------------------------------------------------------
-NB. ungl3
-NB. ung3l
-NB. ung3r
-NB. ungr3
-NB.
-NB. Description:
-NB.   Reconstruct matrix Z, augmented by trash vector, from
-NB.   its elementary reflectors. Non-blocked version of
-NB.   algorithms
-NB.
-NB. Syntax:
-NB.   eZ=. ungxx Zf
-NB. where
-NB.   Zf - k×(n+1)-matrix for ungx3, or (m+1)×k-matrix for
-NB.        ung3x, the Z represented in factored form
-NB.   eZ - Z augmented by trash vector
-NB.   Z  - k×n-matrix for ungx3, or m×k-matrix for ung3x,
-NB.        with orthonormal rows/columns which is defined as
-NB.        the first/last rows/columns of a product of k
-NB.        elementary reflectors, see corresp.
-NB.        ung{lz,zl,zr,rz}
-NB.   k  ≤ n for ungx3, or ≤ m for ung3x
-NB.
-NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. by implicit matrix product unmxxxx
-NB.   (}."1@ungl3 -: (unmlzrn (idmat~ -~/)@(0 _1 + $))) Zf  NB. LZ: Q = I * (Q)
-NB.   (}:  @ung3l -: (unmzlln  idmat      @(_1 0 + $))) Zf  NB. ZL: Q = (q) * I
-NB.   (}.  @ung3r -: (unmzrln (idmat~ -~/)@(_1 0 + $))) Zf  NB. ZR: Q = (q) * I
-NB.   (}:"1@ungr3 -: (unmrzrn  idmat      @(0 _1 + $))) Zf  NB. RZ: Q = I * (Q)
-NB.   NB. orthonormality
-NB.   (idmat@# (-: clean) (mp  ct))@:(}."1)@ungl3 Zf  NB. RZ: I = Z * Z^H
-NB.   (idmat@c (-: clean) (mp~ ct))@  }:   @ung3l Zf  NB. ZL: I = Z^H * Z
-NB.   (idmat@c (-: clean) (mp~ ct))@  }.   @ung3r Zf  NB. ZR: I = Z^H * Z
-NB.   (idmat@# (-: clean) (mp  ct))@:(}:"1)@ungr3 Zf  NB. RZ: I = Z * Z^H
-NB.
-NB. Application:
-NB. - change eZ's size k:
-NB.     NB. eZ=. k ungl3k Zf
-NB.     ungl3k=: ungl3@((1 ; (-~ c)) setdiag ({.  ~ -)~)
-NB.     NB. eZ=. k ung3lk Zf
-NB.     ung3lk=: ung3l@((1 ; 0     ) setdiag  {."1     )
-NB.     NB. eZ=. k ung3rk Zf
-NB.     ung3rk=: ung3r@((1 ; (-  #)) setdiag ({."1~ -)~)
-NB.     NB. eZ=. k ungr2k Zf
-NB.     ungr2k=: ungr2@((1 ; 0     ) setdiag  {.       )
-
-ungl3=: (({  ~ _1 - #) ([ larzrcfr (, ~ 0&(1:`(=i:0:)`($~ #)}))~) ])^:(#@[) (0 (,  $ [) c)
-ung3l=: (({"1~      c) ([ larzlnbc (,.  0&(1:`(=i.0:)`($~ #)}))~) ])^:(c@[) (0 (,~ $ [) #)
-ung3r=: (({"1~ _1 - c) ([ larzlnfc (,.~ 0&(1:`(=i:0:)`($~ #)}))~) ])^:(c@[) (0 (,~ $ [) #)
-ungr3=: (({  ~      #) ([ larzrcbr (,   0&(1:`(=i.0:)`($~ #)}))~) ])^:(#@[) (0 (,  $ [) c)
-
-
 NB. =========================================================
 NB. Interface
 
@@ -200,12 +86,14 @@ NB.           H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
-NB.   LQf for m=4, n=5:           LQf for m=5, n=4:
-NB.     (  l  v0 v0 v0 v0 τ0  )     (  l  v0 v0 v0 τ0  )
-NB.     (  l  l  v1 v1 v1 τ1  )     (  l  l  v1 v1 τ1  )
-NB.     (  l  l  l  v2 v2 τ2  )     (  l  l  l  v2 τ2  )
-NB.     (  l  l  l  l  v3 τ3  )     (  l  l  l  l  τ3  )
-NB.                                 (  l  l  l  l  *   )
+NB.   LQf for m=3, n=7:                  LQf for m=7, n=3:
+NB.     (  l  v0 v0 v0 v0 v0 v0 τ0  )      (  l  v0 v0 τ0  )
+NB.     (  l  l  v1 v1 v1 v1 v1 τ1  )      (  l  l  v1 τ1  )
+NB.     (  l  l  l  v2 v2 v2 v2 τ2  )      (  l  l  l  τ2  )
+NB.                                        (  l  l  l  *   )
+NB.                                        (  l  l  l  *   )
+NB.                                        (  l  l  l  *   )
+NB.                                        (  l  l  l  *   )
 NB. where
 NB.   l              - elements of m×k-matrix L
 NB.   vi             - vector v(i)
@@ -229,8 +117,7 @@ NB. - implements LAPACK's DORGLQ, ZUNGLQ for M=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
-unglq=: }:"1@((((((GQNB ,  _) ,:~               - &c) ];.0 [) (ungl2@[ ,   larfbrcfr) ]) ({."1~ (- GQNB) - c))^:(GQNB %~ -&#) ungl2@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
-unglq_1=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [)              larfbrcfr        GQNB  ((1 ; 0 0 , [         ) setdiag e0) ])^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
+unglq=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [) larfbrcfr (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -253,13 +140,15 @@ NB.           H(n-k-1:0) ≡ H(u(n-k-1:0),τ(0:n-k-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
-NB.   QfL for m=4, n=5:           QfL for m=5, n=4:
-NB.     (  *  τ1 τ2 τ3 τ4  )        (  τ0 τ1 τ2 τ3  )
-NB.     (  l  l  v2 v3 v4  )        (  v0 v1 v2 v3  )
-NB.     (  l  l  l  v3 v4  )        (  l  v1 v2 v3  )
-NB.     (  l  l  l  l  v4  )        (  l  l  v2 v3  )
-NB.     (  l  l  l  l  l   )        (  l  l  l  v3  )
-NB.                                 (  l  l  l  l   )
+NB.   QfL for m=3, n=7:               QfL for m=7, n=3:
+NB.     (  *  *  *  *  τ0 τ1 τ2  )      (  τ0 τ1 τ2  )
+NB.     (  l  l  l  l  l  v1 v2  )      (  v0 v1 v2  )
+NB.     (  l  l  l  l  l  l  v2  )      (  v0 v1 v2  )
+NB.     (  l  l  l  l  l  l  l   )      (  v0 v1 v2  )
+NB.                                     (  v0 v1 v2  )
+NB.                                     (  l  v1 v2  )
+NB.                                     (  l  l  v2  )
+NB.                                     (  l  l  l   )
 NB. where
 NB.   l              - elements of k×n-matrix L
 NB.   vi             - vector v(i)
@@ -283,8 +172,7 @@ NB. - implements LAPACK's DORGQL, ZUNGQL for N=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-ungql=: }.  @((((((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) (ung2l@[ ,.~ larfblnbc) ]) ({.  ~    GQNB  + #))^:(GQNB %~ -&c) ung2l@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
-ungql_2=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [)              larfblnbc     (- GQNB) ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ])^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
+ungql=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) larfblnbc    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -307,13 +195,15 @@ NB.           H(k:n-1) ≡ H(u(k:n-1),τ(k:n-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
-NB.   QfR for m=4, n=5:           QfR for m=5, n=4:
-NB.     (  r  r  r  r  r  )         (  r  r  r  r   )
-NB.     (  v0 r  r  r  r  )         (  v0 r  r  r   )
-NB.     (  v0 v1 r  r  r  )         (  v0 v1 r  r   )
-NB.     (  v0 v1 v2 r  r  )         (  v0 v1 v2 r   )
-NB.     (  τ0 τ1 τ2 τ3 *  )         (  v0 v1 v2 v3  )
-NB.                                 (  τ0 τ1 τ2 τ3  )
+NB.   QfR for m=3, n=7:               QfR for m=7, n=3:
+NB.     (  r  r  r  r  r  r  r  )       (  r  r  r   )
+NB.     (  v0 r  r  r  r  r  r  )       (  v0 r  r   )
+NB.     (  v0 v1 r  r  r  r  r  )       (  v0 v1 r   )
+NB.     (  τ0 τ1 τ2 *  *  *  *  )       (  v0 v1 v2  )
+NB.                                     (  v0 v1 v2  )
+NB.                                     (  v0 v1 v2  )
+NB.                                     (  v0 v1 v2  )
+NB.                                     (  τ0 τ1 τ2  )
 NB. where
 NB.   r              - elements of k×n-matrix R
 NB.   vi             - vector v(i)
@@ -337,8 +227,7 @@ NB. - implements LAPACK's DORGQR, ZUNGQR for N=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
-ungqr=: }:  @((((((GQNB ,~ _) ,:~               - &#) ];.0 [) (ung2r@[ ,.  larfblnfc) ]) ({.  ~ (- GQNB) - #))^:(GQNB %~ -&c) ung2r@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
-ungqr_1=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [)              larfblnfc        GQNB  ((1 ; 0 0 , [         ) setdiag e0) ])^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
+ungqr=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [) larfblnfc (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -361,12 +250,14 @@ NB.           H(0:m-k-1) ≡ H(u(0:m-k-1),τ(0:m-k-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
-NB.   RQf for m=4, n=5:           RQf for m=5, n=4:
-NB.     (  τ0 v0 r  r  r  r  )      (  *  r  r  r  r  )
-NB.     (  τ1 v1 v1 r  r  r  )      (  τ1 r  r  r  r  )
-NB.     (  τ2 v2 c2 v2 r  r  )      (  τ2 v2 r  r  r  )
-NB.     (  τ3 v3 v3 v3 v3 r  )      (  τ3 v3 v3 r  r  )
-NB.                                 (  τ4 v4 v4 v4 r  )
+NB.   RQf for m=3, n=7:                 RQf for m=7, n=3:
+NB.     (  τ0 v0 v0 v0 v0 r  r  r  )      (  *  r  r  r  )
+NB.     (  τ1 v1 v1 v1 v1 v1 r  r  )      (  *  r  r  r  )
+NB.     (  τ2 v2 v2 v2 v2 v2 v2 r  )      (  *  r  r  r  )
+NB.                                       (  *  r  r  r  )
+NB.                                       (  τ0 r  r  r  )
+NB.                                       (  τ1 v1 r  r  )
+NB.                                       (  τ2 v2 v2 r  )
 NB. where
 NB.   r              - elements of m×k-matrix R
 NB.   vi             - vector v(i)
@@ -390,8 +281,7 @@ NB. - implements LAPACK's DORGRQ, ZUNGRQ for M=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
-ungrq=: }."1@((((((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) (ungr2@[ , ~ larfbrcbr) ]) ({."1~    GQNB  + c))^:(GQNB %~ -&#) ungr2@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
-ungrq_1=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [)              larfbrcbr     (- GQNB) ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ])^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
+ungrq=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) larfbrcbr    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
 
 NB. ---------------------------------------------------------
 NB. unglz
@@ -420,8 +310,8 @@ NB.     (  τ0 v0 v0 v0 v0 l  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 l  l  0   )
 NB.     (  τ2 v2 v2 v2 v2 l  l  l   )
 NB. where
-NB.   l                    - elements of L
-NB.   vi                   - l-vector v(i)
+NB.   l                    - elements of m×n-matrix L
+NB.   vi                   - (n-m)-vector v(i)
 NB.   τi                   - scalar value conj(τ(i))
 NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
 NB.
@@ -436,7 +326,7 @@ NB. - change Z's size k:
 NB.     NB. Z=. k unglzk LZf
 NB.     unglzk=: (unglz@  {.   ~ -)~
 
-unglz=: }."1@((((((GQNB ,  _) ,:~               -~&#) ];.0 [) (ungl3@[ , ~ larzbrcfr) ]) ({."1~    GQNB  + c))^:(GQNB %~ -&#) ungl3@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@]`(a: <@; dhs2lios@(_1 , ]))`[} #)
+unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@]`(a: <@; dhs2lios@(_1 , ]))`[} #)
 
 NB. ---------------------------------------------------------
 NB. ungzl
@@ -470,8 +360,8 @@ NB.   (  v0 v1 v2  )
 NB.   (  v0 v1 v2  )
 NB.   (  τ0 τ1 τ2  )
 NB. where
-NB.   l                    - elements of L
-NB.   vi                   - l-vector v(i)
+NB.   l                    - elements of m×n-matrix L
+NB.   vi                   - (n-m)-vector v(i)
 NB.   τi                   - scalar value τ(i)
 NB.   (0,..,0,1,0,...0,vi) - m-vector u(i)
 NB.
@@ -486,7 +376,7 @@ NB. - change Z's size k:
 NB.     NB. Z=. k ungzlk ZfL
 NB.     ungzlk=: ungzl@:({."1)
 
-ungzl=: }:  @((((((GQNB ,~ _) ,:~  GQNB      -~ - &c) ];.0 [) (ung3l@[ ,.  larzblnbc) ]) ({.  ~ (- GQNB) - #))^:(GQNB %~ -&c) ung3l@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@]`(       dhs2lios@( 0 , ]))`[} c)
+ungzl=: }:  @((( ((GQNB ,~ _) ,:~ 0 ,       c@]     ) ];.0 [) larzblnbc (1 ; 0 _1 , GQNB) setdiag          ({."1~    GQNB  + c)@])^:(GQNB %~ -&c) (larzblnbc  idmat      @$)@(}."1~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@]`(       dhs2lios@( 0 , ]))`[} c)
 
 NB. ---------------------------------------------------------
 NB. ungzr
@@ -520,8 +410,8 @@ NB.   (  r  r  r   )
 NB.   (  0  r  r   )
 NB.   (  0  0  r   )
 NB. where
-NB.   r                    - elements of R
-NB.   vi                   - l-vector v(i)
+NB.   r                    - elements of m×n-matrix R
+NB.   vi                   - (n-m)-vector v(i)
 NB.   τi                   - scalar value τ(i)
 NB.   (vi,0,..,0,1,0,...0) - m-vector u(i)
 NB.
@@ -536,7 +426,7 @@ NB. - change Z's size k:
 NB.     NB. Z=. k ungzrk ZfR
 NB.     ungzrk=: (ungzr@:({."1)~ -)~
 
-ungzr=: }.  @((((((GQNB ,~ _) ,:~               -~&c) ];.0 [) (ung3r@[ ,.~ larzblnfc) ]) ({.  ~    GQNB  + #))^:(GQNB %~ -&c) ung3r@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@]`(       dhs2lios@(_1 , ]))`[} c)
+ungzr=: }.  @((( ((GQNB ,~ _) ,:~ 0 ,  _1 - c@]     ) ];.0 [) larzblnfc (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({."1~ (- GQNB) - c)@])^:(GQNB %~ -&c) (larzblnfc (idmat~ -~/)@$)@(}."1~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@]`(       dhs2lios@(_1 , ]))`[} c)
 
 NB. ---------------------------------------------------------
 NB. ungrz
@@ -565,8 +455,8 @@ NB.     (  r  r  r  v0 v0 v0 v0 τ0  )
 NB.     (  0  r  r  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  r  v2 v2 v2 v2 τ2  )
 NB. where
-NB.   r                    - elements of R
-NB.   vi                   - l-vector v(i)
+NB.   r                    - elements of m×n-matrix R
+NB.   vi                   - (n-m)-vector v(i)
 NB.   τi                   - scalar value conj(τ(i))
 NB.   (0,..,0,1,0,...0,vi) - n-vector u(i)
 NB.
@@ -581,7 +471,7 @@ NB. - change Z's size k:
 NB.     NB. Z=. k ungrzk RZf
 NB.     ungrzk=: ungrz@  {.
 
-ungrz=: }:"1@((((((GQNB ,  _) ,:~               - &#) ];.0 [) (ungr3@[ ,   larzbrcbr) ]) ({."1~ (- GQNB) - c))^:(GQNB %~ -&#) ungr3@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@]`(a: <@; dhs2lios@( 0 , ]))`[} #)
+ungrz=: }:"1@((( ((GQNB ,  _) ,:~ 0 ,~      #@]     ) ];.0 [) larzbrcbr (1 ; 0 _1 , GQNB) setdiag          ({.  ~    GQNB  + #)@])^:(GQNB %~ -&#) (larzbrcbr  idmat      @$)@(}.  ~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@]`(a: <@; dhs2lios@( 0 , ]))`[} #)
 
 NB. ---------------------------------------------------------
 NB. unghrl
@@ -749,23 +639,3 @@ NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
 
 testgq=: 1 : 'EMPTY_mt_ [ (testunghr_mt_^:(=/@$) [ testungz_mt_ [ testungq_mt_)@u'
-
-NB. ungl2=: (((1 _ ,:~ <:@- &#) ,;.0 [) ([ larfrcfr (, ~ 1 {.~   #)~) 0 ,.  ])^:(#@[) (0 $~ 0 ,  -~/@$)
-NB. ung2l=: (((_ 1 ,:~    -~&c) ,;.0 [) ([ larflnbc (,.  1 {.~ -@#)~) 0 , ~ ])^:(c@[) (0 $~ 0 ,~ - /@$)
-NB. ung2r=: (((_ 1 ,:~ <:@- &c) ,;.0 [) ([ larflnfc (,.~ 1 {.~   #)~) 0 ,   ])^:(c@[) (0 $~ 0 ,~ - /@$)
-NB. ungr2=: (((1 _ ,:~    -~&#) ,;.0 [) ([ larfrcbr (,   1 {.~ -@#)~)       ])^:(#@[) (0 $~ 0 ,  -~/@$)
-NB. 
-NB. ungl3=: (({  ~ _1 - #) ([ larzrcfr (, ~ 0&(1:`(=i:0:)`($~ #)}))~) ])^:(#@[) (0 (,  $ [) c)
-NB. ung3l=: (({"1~      c) ([ larzlnbc (,.  0&(1:`(=i.0:)`($~ #)}))~) ])^:(c@[) (0 (,~ $ [) #)
-NB. ung3r=: (({"1~ _1 - c) ([ larzlnfc (,.~ 0&(1:`(=i:0:)`($~ #)}))~) ])^:(c@[) (0 (,~ $ [) #)
-NB. ungr3=: (({  ~      #) ([ larzrcbr (,   0&(1:`(=i.0:)`($~ #)}))~) ])^:(#@[) (0 (,  $ [) c)
-NB. 
-NB. unglq=: }:"1@((((((GQNB ,  _) ,:~               - &c) ];.0 [) (ungl2@[ ,   larfbrcfr) ]) ({."1~ (- GQNB) - c))^:(GQNB %~ -&#) ungl2@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
-NB. ungql=: }.  @((((((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) (ung2l@[ ,.~ larfblnbc) ]) ({.  ~    GQNB  + #))^:(GQNB %~ -&c) ung2l@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
-NB. ungqr=: }:  @((((((GQNB ,~ _) ,:~               - &#) ];.0 [) (ung2r@[ ,.  larfblnfc) ]) ({.  ~ (- GQNB) - #))^:(GQNB %~ -&c) ung2r@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
-NB. ungrq=: }."1@((((((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) (ungr2@[ , ~ larfbrcbr) ]) ({."1~    GQNB  + c))^:(GQNB %~ -&#) ungr2@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
-NB. 
-NB. unglz=: }."1@((((((GQNB ,  _) ,:~               -~&#) ];.0 [) (ungl3@[ , ~ larzbrcfr) ]) ({."1~    GQNB  + c))^:(GQNB %~ -&#) ungl3@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@]`(a: <@; dhs2lios@(_1 , ]))`[} #)
-NB. ungzl=: }:  @((((((GQNB ,~ _) ,:~  c@]              ) ];.0 [) (ung3l@[ ,.  larzblnbc) ]) ({.  ~ (- GQNB) - #))^:(GQNB %~ -&c) ung3l@(}."1~ (- GQNB)  * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@]`(       dhs2lios@( 0 , ]))`[} c)
-NB. ungzr=: }.  @((((((GQNB ,~ _) ,:~               -~&c) ];.0 [) (ung3r@[ ,.~ larzblnfc) ]) ({.  ~    GQNB  + #))^:(GQNB %~ -&c) ung3r@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@]`(       dhs2lios@(_1 , ]))`[} c)
-NB. ungrz=: }:"1@((((((GQNB ,  _) ,:~               - &#) ];.0 [) (ungr3@[ ,   larzbrcbr) ]) ({."1~ (- GQNB) - c))^:(GQNB %~ -&#) ungr3@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@]`(a: <@; dhs2lios@( 0 , ]))`[} #)

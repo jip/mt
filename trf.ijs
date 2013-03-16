@@ -65,7 +65,7 @@ NB.
 NB. Syntax:
 NB.   'ipo B lto t0o t1o'=. lahefpl ipi;subA;lti;t0i;t1i
 NB. where
-NB.   ipi       -: i. (n-i)
+NB.   ipi       -:i. (n-i)
 NB.   subA      - (n-i)×(n-i)-matrix to factorize, Hermitian
 NB.               (symmetric), the bottom right part of A
 NB.   lti       - (n-i)-vector, is defined as:
@@ -163,9 +163,9 @@ NB.   *    - marked elements to be permuted
 NB.
 NB. Algorithm (assume 0<i<n-TRFNB):
 NB.   In:
-NB.     ipi  -: i. (n-i)
+NB.     ipi  -:i. (n-i)
 NB.     subA - A[i:n-1,i:n-1]
-NB.     lti  -: ti 0 } li
+NB.     lti  -:ti 0 } li
 NB.     t0i  - (T[0,0],T[1,1],...,T[i-1,i-1])
 NB.     t1i  - (T[1,0],T[2,1],...,T[i,i-1])
 NB.     li   - vector to write into subL1[0:n-i-1,0] i.e.
@@ -174,14 +174,14 @@ NB.     ti   - any scalar
 NB.   Out:
 NB.     ipo  - ip[i:n-1]
 NB.     B    - see layout 1
-NB.     lto  -: to 0 } lo
+NB.     lto  -:to 0 } lo
 NB.     t0o  - (T[0,0],T[1,1],...,T[i+TRFNB-1,i+TRFNB-1]) =
 NB.            (t0i[0],t0i[1],...,t0i[i-1],subT[0,0],subT[1,1],...,subT[TRFNB-1,TRFNB-1])
 NB.     t1o  - (T[1,0],T[2,1],...,T[i+TRFNB,i+TRFNB-1]) =
 NB.            (t1i[0],t1i[1],...,t1i[i-1],subT[1,0],subT[2,1],...,subT[TRFNB,TRFNB-1])
 NB.     lo   - vector to write into subL1[TRFNB:n-i-1,TRFNB]
 NB.            i.e. L1[i+TRFNB:n-1,i+TRFNB]
-NB.     to   -: T[i+TRFNB+1,i+TRFNB]
+NB.     to   -:T[i+TRFNB+1,i+TRFNB]
 NB.   1) count amount of iterations to do:
 NB.        J := min(TRFNB,n-i)
 NB.   2) do iterations j=0:J-1 :
@@ -308,7 +308,7 @@ NB.
 NB. Syntax:
 NB.   'ipo B uto t0o t1o'=. lahefpu ipi;subA;uti;t0i;t1i
 NB. where
-NB.   ipi       -: i. (n+i+1)
+NB.   ipi       -:i. (n+i+1)
 NB.   subA      - (n+i+1)×(n+i+1)-matrix to factorize,
 NB.               Hermitian (symmetric), the top left part of
 NB.               A
@@ -409,9 +409,9 @@ NB.   *    - marked elements to be permuted
 NB.
 NB. Algorithm (assume TRFNB-n-1<i<-1):
 NB.   In:
-NB.     ipi  -: i. (n+i+1)
+NB.     ipi  -:i. (n+i+1)
 NB.     subA - A[0:n+i,0:n+i]
-NB.     uti  -: ti _1 } ui
+NB.     uti  -:ti _1 } ui
 NB.     t0i  - (T[n+i+1,n+i+1],T[n+i+2,n+i+2],...,T[n-1,n-1])
 NB.     t1i  - (T[n+i,n+i+1],T[n+i+1,n+i+2],...,T[n-2,n-1])
 NB.     ui   - vector to write into subU1[0:n+i,n+i] i.e.
@@ -420,14 +420,14 @@ NB.     ti   - any scalar
 NB.   Out:
 NB.     ipo  - ip[0:n+i]
 NB.     B    - see layout
-NB.     uto  -: to _1 } uo
+NB.     uto  -:to _1 } uo
 NB.     t0o  - (T[n+i-TRFNB+1,n+i-TRFNB+1],T[n+i-TRFNB+2,n+i-TRFNB+2],...,T[n-1,n-1]) =
 NB.            (subT[0,0],subT[1,1],...,subT[TRFNB-1,TRFNB-1],t0i[0],t0i[1],...,t0i[-i-2])
 NB.     t1o  - (T[n+i-TRFNB,n+i-TRFNB+1],T[n+i-TRFNB+1,n+i-TRFNB+2],...,T[n-2,n-1]) =
 NB.            (subT[0,1],subT[1,2],...,subT[TRFNB-1,TRFNB],t1i[0],t1i[1],...,t1i[-i-2])
 NB.     uo   - vector to write into subU1[0:n+i-TRFNB,n+i-TRFNB]
 NB.            i.e. U1[0:n+i-TRFNB,n+i-TRFNB]
-NB.     to   -: T[n+i-TRFNB-1,n+i-TRFNB]
+NB.     to   -:T[n+i-TRFNB-1,n+i-TRFNB]
 NB.   1) count amount of iterations to do:
 NB.        J := min(TRFNB,n+i+1)
 NB.   2) do iterations j={n+i,n+i-1,...,n+i-J+1}:

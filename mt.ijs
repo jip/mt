@@ -174,8 +174,8 @@ NB. where
 NB.   (m,n) - 2-vector of integers, shape of random matrices
 NB.           to test algorithms; only algorithms which
 NB.           accept m and n given will be tested
-NB.   mkge  - monadic verb to generate random non-singular
-NB.           general y-matrix (shape is taken from y)
+NB.   mkge  - monad to generate random non-singular general
+NB.           y-matrix (shape is taken from y)
 NB.   vtest - verb to test algorithms; is called as:
 NB.             vtest (m,n)
 NB.

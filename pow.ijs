@@ -97,10 +97,10 @@ NB.   Ru  - n×n-matrix, columns are right eigenvectors of A,
 NB.         output of geevuxv
 NB.   vl  - n-vector, eigenvalues of A, output of geevlxx
 NB.   vu  - n-vector, eigenvalues of A, output of geevuxx
-NB.   iLl -: Ll^_1
-NB.   iLu -: Lu^_1
-NB.   iRl -: Rl^_1
-NB.   iRu -: Ru^_1
+NB.   iLl -:%. Ll
+NB.   iLu -:%. Lu
+NB.   iRl -:%. Rl
+NB.   iRu -:%. Ru
 NB.   p   - sh-array of positive integers, power[s]
 NB.   P   - sh×n×n-array if r>0,
 NB.         n×n-array    if r=0, a matrix A in power[s] p
@@ -191,12 +191,12 @@ NB.   Ru  - n×n-matrix, columns are eigenvectors of A, output
 NB.         of heevuv
 NB.   vl  - n-vector, eigenvalues of A, output of heevlx
 NB.   vu  - n-vector, eigenvalues of A, output of heevux
-NB.   iRl -: Rl^_1
-NB.   p  - sh-array of positive integers, power[s]
-NB.   P  - sh×n×n-array if r>0,
-NB.        n×n-array    if r=0, a matrix A in power[s] p
-NB.   sh - r-vector of non-negative integers, the shape of p
-NB.   r  ≥ 0, the rank of p
+NB.   iRl -:%. Rl
+NB.   p   - sh-array of positive integers, power[s]
+NB.   P   - sh×n×n-array if r>0,
+NB.         n×n-array    if r=0, a matrix A in power[s] p
+NB.   sh  - r-vector of non-negative integers, the shape of p
+NB.   r   ≥ 0, the rank of p
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB. - lower case:

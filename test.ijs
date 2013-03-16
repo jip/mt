@@ -94,7 +94,7 @@ NB. - to test geqrf:
 NB.     NB. to estimate rcond in 1-norm
 NB.     vrcond=. (_."_)`gecon1@.(=/@$)@[
 NB.     NB. to calc. berr, assuming:
-NB.     NB.   berr := ||A - realA||_1 / (m * ε * ||A||_1)
+NB.     NB.   berr := ||A - realA||_1 / (FP_EPS * ||A||_1 * m)
 NB.     vberr=. ((- %&norm1 [) % FP_EPS * (norm1 * #)@[) unmqr
 NB.     NB. do the job
 NB.     ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A

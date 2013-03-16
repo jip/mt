@@ -52,7 +52,7 @@ NB. where
 NB.   A - n×n-matrix or m×n×n-report
 NB.   s - scalar or m-vector, shift of diagonal[s] in A
 NB.   B - array of the same shape as A, the shifted A:
-NB.          B -: A + s (*"0 2) idmat n
+NB.         B -: A + s (*"0 2) idmat n
 NB.
 NB. TODO:
 NB. - generalize A shape
@@ -182,10 +182,10 @@ NB.   Ru  - n×n-matrix, columns are right eigenvectors of A,
 NB.         output of geevuxv
 NB.   vl  - n-vector, eigenvalues of A, output of geevlxx
 NB.   vu  - n-vector, eigenvalues of A, output of geevuxx
-NB.   iLl -: Ll^_1
-NB.   iLu -: Lu^_1
-NB.   iRl -: Rl^_1
-NB.   iRu -: Ru^_1
+NB.   iLl -:%. Ll
+NB.   iLu -:%. Lu
+NB.   iRl -:%. Rl
+NB.   iRu -:%. Ru
 NB.   E   - n×n-matrix, matrix exponential e^A
 NB.
 NB. Assertions (with appropriate comparison tolerance):

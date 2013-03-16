@@ -523,13 +523,13 @@ NB.
 NB. Syntax:
 NB.   'CD plr hs'=. ggbalxp AB
 NB. where
-NB.   AB  -: A ,: B
-NB.   CD  -: C ,: D
+NB.   AB  -:A ,: B
+NB.   CD  -:C ,: D
 NB.   A,B - n×n-matrix
 NB.   C,D - n×n-matrix with isolated eigenvalues, being A and
 NB.          B with permuted rows and columns, for storage
 NB.          layout see gebalxp
-NB.   plr -: pl ,: pr
+NB.   plr -:pl ,: pr
 NB.   pl  - n-vector, rows permutation of A and B
 NB.   pr  - n-vector, columns permutation of A and B
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
@@ -652,18 +652,18 @@ NB.
 NB. Syntax:
 NB.   'EF plr hs dlr'=. ggbals CD ; plr ; hs
 NB. where
-NB.   CD  -: C ,: D
+NB.   CD  -:C ,: D
 NB.   C,D - n×n-matrix with isolated eigenvalues, the output
-NB.        of ggbalxp
+NB.         of ggbalxp
 NB.   plr - some not changing parameter, the output of
 NB.         ggbalxp
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrices E11 and F11 position in E and
 NB.         F, respectively, the output of ggbalxp
-NB.   EF  -: E ,: F
+NB.   EF  -:E ,: F
 NB.   E   - n×n-matrix, scaled version of C
 NB.   F   - n×n-matrix, scaled version of D
-NB.   dlr -: dl ,: dr
+NB.   dlr -:dl ,: dr
 NB.   dl  - n-vector, diagonal of scaling matrix Dl
 NB.   dr  - n-vector, diagonal of scaling matrix Dr
 NB.
@@ -748,13 +748,13 @@ NB.
 NB. Syntax:
 NB.   'EF plr hs dlr'=. ggbalx AB
 NB. where
-NB.   AB  -: A ,: B
-NB.   EF  -: E ,: F
-NB.   plr -: pl ,: pr
+NB.   AB  -:A ,: B
+NB.   EF  -:E ,: F
+NB.   plr -:pl ,: pr
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrices E11 and F11 position in E and
 NB.         F, respectively (see ggbalxp)
-NB.   dlr -: dl ,: dr
+NB.   dlr -:dl ,: dr
 NB.   A,B - n×n-matrix
 NB.   E   - n×n-matrix, balanced version of A
 NB.   F   - n×n-matrix, balanced version of B

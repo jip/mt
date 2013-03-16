@@ -53,13 +53,11 @@ NB.
 NB. Syntax:
 NB.   vapp=. norm con inv
 NB. where
-NB.   norm - monadic verb to calculate norm of matrix, is
-NB.          called as:
+NB.   norm - monad to calculate norm of matrix, is called as:
 NB.            normA=. norm A
-NB.   inv  - monadic verb to inverse square matrix, is called
-NB.          as:
+NB.   inv  - monad to inverse square matrix, is called as:
 NB.            invA=. inv A
-NB.   vapp - monadic verb to calculate the reciprocal of the
+NB.   vapp - monad to calculate the reciprocal of the
 NB.          condition number of a matrix in a given norm, is
 NB.          called as:
 NB.            rcondA=. vapp A

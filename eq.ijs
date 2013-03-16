@@ -57,17 +57,17 @@ NB.
 NB. Syntax:
 NB.   'HTupd signbc'=. hs hgexxeo H ,: T
 NB. where
-NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
-NB.           defines eigenvalues range
-NB.   H     - n×n-matrix, either lower or upper Hessenberg
-NB.           inside the submatrix H[h:h+s-1,h:h+s-1], and
-NB.           lower or upper triangular outside
-NB.   T     - n×n-matrix, either lower or upper triangular
-NB.   HTupd -: Hupd ,: Tupd
-NB.   Hupd  - n×n-matrix, being H with hs-segment of diagonal
-NB.           replaced by alpha (see hgexx)
-NB.   Tupd  - n×n-matrix, being T with hs-segment of diagonal
-NB.           replaced by beta (see hgexx)
+NB.   hs     - 2-vector of integers (h,s) 'head' and 'size',
+NB.            defines eigenvalues range
+NB.   H      - n×n-matrix, either lower or upper Hessenberg
+NB.            inside the submatrix H[h:h+s-1,h:h+s-1], and
+NB.            lower or upper triangular outside
+NB.   T      - n×n-matrix, either lower or upper triangular
+NB.   HTupd  -:Hupd ,: Tupd
+NB.   Hupd   - n×n-matrix, being H with hs-segment of
+NB.            diagonal replaced by alpha (see hgexx)
+NB.   Tupd   - n×n-matrix, being T with hs-segment of
+NB.            diagonal replaced by beta (see hgexx)
 NB.   signbc - s-vector, scaling factors to form Q,Z later
 
 hgexxeo=: 4 : 0
@@ -89,21 +89,21 @@ NB.
 NB. Syntax:
 NB.   'HTupd signbc'=. hs hgexxso H ,: T
 NB. where
-NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
-NB.           defines eigenvalues range
-NB.   H     - n×n-matrix, either lower (hgezqso) or upper
-NB.           (hgeqzso) Hessenberg inside the submatrix
-NB.           H[h:h+s-1,h:h+s-1], and lower (hgezqso) or
-NB.           upper (hgeqzso) triangular outside
-NB.   T     - n×n-matrix, either lower (hgezqso) or upper
-NB.           (hgeqzso) triangular
-NB.   HTupd -: Hupd ,: Tupd
-NB.   Hupd  - n×n-matrix, being H with rows (hgezqso) or
-NB.           columns (hgeqzso) from hs-segment transformed
-NB.           to Shur form
-NB.   Tupd  - n×n-matrix, being T with rows (hgezqso) or
-NB.           columns (hgeqzso) from hs-segment transformed
-NB.           to Shur form
+NB.   hs     - 2-vector of integers (h,s) 'head' and 'size',
+NB.            defines eigenvalues range
+NB.   H      - n×n-matrix, either lower (hgezqso) or upper
+NB.            (hgeqzso) Hessenberg inside the submatrix
+NB.            H[h:h+s-1,h:h+s-1], and lower (hgezqso) or
+NB.            upper (hgeqzso) triangular outside
+NB.   T      - n×n-matrix, either lower (hgezqso) or upper
+NB.            (hgeqzso) triangular
+NB.   HTupd  -:Hupd ,: Tupd
+NB.   Hupd   - n×n-matrix, being H with rows (hgezqso) or
+NB.            columns (hgeqzso) from hs-segment transformed
+NB.            to Shur form
+NB.   Tupd   - n×n-matrix, being T with rows (hgezqso) or
+NB.            columns (hgeqzso) from hs-segment transformed
+NB.            to Shur form
 NB.   signbc - s-vector, scaling factors to form Q,Z later
 
 hgezqso=: 4 : 0
@@ -697,7 +697,7 @@ NB.   Q1   - n×n-matrix, the unitary (orthogonal)
 NB.   Q2   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
 NB.   Z2   - n×n-matrix, the unitary (orthogonal)
-NB.   Q2Z2 -: Q2 ,: Z2
+NB.   Q2Z2 -:Q2 ,: Z2
 NB.   S    - n×n-matrix, lower triangular
 NB.   P    - n×n-matrix, lower triangular
 NB.
@@ -810,7 +810,7 @@ NB.   Q1   - n×n-matrix, the unitary (orthogonal)
 NB.   Q2   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
 NB.   Z2   - n×n-matrix, the unitary (orthogonal)
-NB.   Q2Z2 -: Q2 ,: Z2
+NB.   Q2Z2 -:Q2 ,: Z2
 NB.   S    - n×n-matrix, upper triangular
 NB.   P    - n×n-matrix, upper triangular
 NB.

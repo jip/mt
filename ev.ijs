@@ -56,15 +56,15 @@ NB.
 NB. Syntax:
 NB.   vapp=. ggbalp ggevi
 NB. where
-NB.   ggbalp  - monadic verb to permute matrix pair (A,B) to
-NB.             isolate eigenvalues, is either ggballp or
-NB.             ggbalup, is called as:
+NB.   ggbalp  - monad to permute matrix pair (A,B) to isolate
+NB.             eigenvalues, is either ggballp or ggbalup, is
+NB.             called as:
 NB.               'CD plr hs'=. ggbalp AB
-NB.   vapp    - monadic verb to calculate initial parameters
-NB.             for ggevxxx, is called as:
+NB.   vapp    - monad to calculate initial parameters for
+NB.             ggevxxx, is called as:
 NB.               'abnrmio ABupd plr hs'=. vapp AB
 NB.   AB      - 2×n×n-matrix, matrix pair (A,B)
-NB.   abnrmio -: abnrm ,. abio
+NB.   abnrmio -:abnrm ,. abio
 NB.   abnrm   - 2-vector, norms of A and B
 NB.   abio    - 2-vector of integers, defines both necessity
 NB.             and value of scaling for A and B

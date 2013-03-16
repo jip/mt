@@ -256,7 +256,7 @@ NB.             position in matrices A and B, respectively,
 NB.             see gehrdl
 NB.   A       - n×n-matrix
 NB.   B       - n×n-matrix, lower triangular
-NB.   HT      -: H ,: T
+NB.   HT      -:H ,: T
 NB.   H       - n×n-matrix, lower Hessenberg inside the
 NB.             submatrix H[h:h+s-1,h:h+s-1], and lower
 NB.             triangular outside
@@ -325,7 +325,7 @@ NB.             position in matrices A and B, respectively,
 NB.             see gehrdu
 NB.   A       - n×n-matrix
 NB.   B       - n×n-matrix, upper triangular
-NB.   HT      -: H ,: T
+NB.   HT      -:H ,: T
 NB.   H       - n×n-matrix, upper Hessenberg inside the
 NB.             submatrix H[h:h+s-1,h:h+s-1], and upper
 NB.             triangular outside

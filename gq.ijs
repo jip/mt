@@ -299,11 +299,11 @@ NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlzrc unglz)) LZf
 unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(#@] ((((0 >. - ) idmat <. ,  [) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]) ] : (({.  ~ -)~))
 
 
-write_I=:    ((((0 >. -~) idmat <. , ]) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ])                                                                                  NB. Zf=.   m   write_I    LZf
-mk_fret=:    (1:`(] (GQNB dhs2lios - , (0 >:@>. GQNB >.@%~ GQNX -~ ])) <.)`(0 $~ ])} #)                                                                          NB. fret=. m   mk_fret    LZf
-mk_I0=:      (idmat~ -~/)@(((0 >. (- {.)) , 1 { ]) $)                                                                                                            NB. I0=.   m   mk_I0      LZf
-step=:       ([ (larzbrcfr dbg 'larzbrcfr') (((- #)~ -~/@$) idmat $@[) , ])                                                                                      NB. eZi1=. bZf step       eZi
-unglz_dyad=: (}."1@((step dbg 'step')&:>/ dbg 'steps')@([ (((mk_fret dbg 'mk_fret') (<;.1 dbg 'split') ]) , <@(mk_I0 dbg 'mk_I0')) (write_I dbg 'write_I')))     NB. Z=.    m   unglz_dyad LZf
+write_I=:    ((((0 >. -~) idmat <. , ]) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ])          NB. Zf=.   m   write_I    LZf
+mk_fret=:    (1:`(] (GQNB dhs2lios - , (0 >:@>. GQNB >.@%~ GQNX -~ ])) <.)`(0 $~ ])} #)  NB. fret=. m   mk_fret    LZf
+mk_I0=:      (idmat~ -~/)@(((0 >. (- {.)) , 1 { ]) $)                                    NB. I0=.   m   mk_I0      LZf
+step=:       ([ larzbrcfr (((- #)~ -~/@$) idmat $@[) , ])                                NB. eZi1=. bZf step       eZi
+unglz_dyad=: (}."1@(step&:>/)@([ ((mk_fret <;.1 ]) , <@mk_I0) write_I))                  NB. Z=.    m   unglz_dyad LZf
 unglz_3=:    ($:~ #) : unglz_dyad                                                                                                                                NB. Z=.    [m] unglz      LZf
 
 NB. ---------------------------------------------------------

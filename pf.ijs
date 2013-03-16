@@ -9,7 +9,7 @@ NB.           general matrix
 NB. gerpf     RQ factorization with row pivoting of a general
 NB.           matrix
 NB.
-NB. testgepf  Test gexxf by general matrix given
+NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
@@ -47,6 +47,10 @@ NB. [2] C. H. Bischof, G. Quintana-Ortí. Algorithm 782: Codes
 NB.     for Rank-Revealing QR Factorizations of Dense
 NB.     Matrices. ACM Transactions on Mathematical Software,
 NB.     June 1998, Vol. 24, No. 2, pp. 254-257.
+NB.
+NB. TODO:
+NB. - geplf: Q * L * P = A
+NB. - gerpf: P * R * Q = A
 
 NB. =========================================================
 NB. Local definitions
@@ -2082,10 +2086,10 @@ NB.   _. ~: rank
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A -: clean p { L mp Q
-NB.   A -: clean p C. L mp Q
-NB.   A -: clean ip C.^:_1 L mp Q
-NB.   A -: clean P mp L mp Q
+NB.   A -: p { L mp Q
+NB.   A -: p C. L mp Q
+NB.   A -: ip C.^:_1 L mp Q
+NB.   A -: P mp L mp Q
 NB.   (idmat c L) -: clean (mp ct) Q
 NB. where
 NB.   'ip L Q rcond rank svlues'=. gelpf A
@@ -2095,8 +2099,8 @@ NB.   P=. p2P p
 
 gelpf=: FP_EPS&$: :([ ]`trlpy@.(0 < 3 {:: ]) gelpb)
 
-NB.   'Q L p orcond rank svlues'=. [ircond] geplf A
-geplf=: FP_EPS&$: :([ ]`trply@.(0 < 3 {:: ]) geplb)
+NB. NB. 'Q L p orcond rank svlues'=. [ircond] geplf A
+NB. geplf=: FP_EPS&$: :([ ]`trply@.(0 < 3 {:: ]) geplb)
 
 NB. ---------------------------------------------------------
 NB. geprf
@@ -2139,13 +2143,6 @@ NB.            that the rank is well defined with respect to
 NB.            the threshold chosen
 NB.   k      = min(m,n)
 NB.
-NB. Assertions (with appropriate comparison tolerance):
-NB.   I -: (mp~ ct) Q
-NB.   A -: Q mp R
-NB.   (] -: ((         tru   @  }:   ) mp~ ungqr)@geprf) A
-NB. where
-NB.   'Q R p orcond rank svlues'=. geprf A
-NB.
 NB. Storage layout:
 NB.   R  =  (  R00   R01  ) rank    =  (  R00p1   *  ) rank+1
 NB.         (  0     R11  ) m-rank     (  0       *  ) m-rank-1
@@ -2156,10 +2153,10 @@ NB.   _. ~: rank
 NB.   P -: %. iP
 NB.   P -: |: iP
 NB.   P -: ip2P ip
-NB.   A -: clean p {"1 Q mp R
-NB.   A -: clean p C."1 Q mp R
-NB.   A -: clean ip C.^:_1"1 Q mp R
-NB.   A -: clean Q mp R mp iP         NB. apply ip to columns
+NB.   A -: p {"1 Q mp R
+NB.   A -: p C."1 Q mp R
+NB.   A -: ip C.^:_1"1 Q mp R
+NB.   A -: Q mp R mp iP         NB. apply ip to columns
 NB.   (idmat # R) -: clean (mp~ ct) Q
 NB. where
 NB.   'Q R ip rcond rank svlues'=. geprf A
@@ -2177,8 +2174,8 @@ NB.     gets value NaN
 
 geprf=: FP_EPS&$: :([ ]`trpry@.(0 < 3 {:: ]) geprb)
 
-NB.   'p R Q orcond rank svlues'=. [ircond] gerpf A
-gerpf=: FP_EPS&$: :([ ]`trrpy@.(0 < 3 {:: ]) gerpb)
+NB. NB. 'p R Q orcond rank svlues'=. [ircond] gerpf A
+NB. gerpf=: FP_EPS&$: :([ ]`trrpy@.(0 < 3 {:: ]) gerpb)
 
 NB. =========================================================
 NB. Test suite
@@ -2189,7 +2186,7 @@ NB.
 NB. Description:
 NB.   Test orthogonal factorization with pivoting algorithms:
 NB.   - gelpf geplf geprf gerpf (math/mt addon)
-NB.   by general matrix given
+NB.   by general matrix
 NB.
 NB. Syntax:
 NB.   testgepf A
@@ -2197,24 +2194,24 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - LP: berr := ||A - P * L * Q|| / (FP_EPS * ||A|| * n)
-NB. - PL: berr := ||A - Q * L * P|| / (FP_EPS * ||A|| * m)
-NB. - PR: berr := ||A - Q * R * P|| / (FP_EPS * ||A|| * m)
-NB. - RP: berr := ||A - P * R * Q|| / (FP_EPS * ||A|| * n)
+NB. - for LP: berr := max( ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - for PL: berr := max( ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
+NB. - for PR: berr := max( ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
+NB. - for RP: berr := max( ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
 NB.
 NB. TODO:
-NB. - LP: berr := max( ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB. - PL: berr := max( ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - PR: berr := max( ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - RP: berr := max( ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - for LP: berr := max( ||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - for PL: berr := max( ||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
+NB. - for PR: berr := max( ||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
+NB. - for RP: berr := max( ||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
 
 testgepf=: 3 : 0
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- C.^:_1&:>`(mp       &>)/) % (FP_EPS * norm1 * c)@[))) y
-  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- mp    &:>`(C.^:_1"1~&>)/) % (FP_EPS * norm1 * #)@[))) y
-  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- mp    &:>`(C.^:_1"1~&>)/) % (FP_EPS * norm1 * #)@[))) y
-  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- C.^:_1&:>`(mp       &>)/) % (FP_EPS * norm1 * c)@[))) y
+  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) mp         2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
+  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: mp      1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
+  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: mp      1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
+  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) mp         2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
 
   EMPTY
 )

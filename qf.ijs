@@ -10,7 +10,7 @@ NB. tzzlf     ZL factorization of a trapezoidal matrix
 NB. tzzrf     ZR factorization of a trapezoidal matrix
 NB. tzrzf     RZ factorization of a trapezoidal matrix
 NB.
-NB. testgeqf  Test gexxf by general matrix given
+NB. testgeqf  Test gexxf by general matrix
 NB. testtzqf  Test tzxxf by trapezoidal matrix
 NB. testqf    Adv. to make verb to test gexxf and tzxxf by
 NB.           matrix of generator and shape given
@@ -70,11 +70,11 @@ NB.   Qf    - k×(n+1)-matrix, unit upper triangular, the Q
 NB.           represented in factored form
 NB.   Q     - k×n-matrix with orthonormal rows, which is
 NB.           defined as the first k rows of a product of m
-NB.           elementary reflectors of order n:
+NB.           elementary reflectors H(i) of order n:
 NB.             Q = Π{H(i)',i=m-1:0}
 NB.           where
-NB.             H(i) ≡ H(v(i),τ(i)) := I - (v(i))^H * τ(i) * v(i)
-NB.             H(m-1:k) ≡ H(v(m-1:k),τ(m-1:k)) = H(0,0) = I
+NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.             H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0) = I
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -91,11 +91,10 @@ NB.     (  1  v0 v0 v0 v0 v0 v0 τ0  )
 NB.     (  0  1  v1 v1 v1 v1 v1 τ1  )
 NB.     (  0  0  1  v2 v2 v2 v2 τ2  )
 NB. where
-NB.   l         - elements of L
-NB.   (1,vi,τi) - vector v(i) which defines an elementary
-NB.               reflector H(i) to form Qf
-NB.   τi        - scalar value conj(τ(i))
-NB.   vi        - m-vector v(i)
+NB.   l              - elements of L
+NB.   vi             - vector v(i)
+NB.   τi             - scalar value conj(τ(i))
+NB.   (0,...,0,1,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = L * (Q)
@@ -106,8 +105,8 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGELQ2
 NB. - gelq2 and gelqf are topologic equivalents
-NB. - if triangular matrix diagonal's non-negativity is
-NB.   required, then larfg* should be replaced by larfp*
+NB. - if L diagonal's non-negativity is required, then
+NB.   larfgfc should be replaced by larfpfc
 
 gelq2=: 3 : 0
   pfx=. 0 {."1 y
@@ -145,29 +144,28 @@ NB.           represented in factored form
 NB.   L     - k×n-matrix, lower triangular
 NB.   Q     - m×k-matrix with orthonormal columns, which is
 NB.           defined as the last k columns of a product of n
-NB.           elementary reflectors of order m:
+NB.           elementary reflectors H(i) of order m:
 NB.             Q = Π{H(i),i=n-1:0}
 NB.           where
-NB.             H(i) ≡ H(v(i),τ(i)) := I - v(i) * τ(i) * (v(i))^H
-NB.             H(n-1:k) ≡ H(v(n-1:k),τ(n-1:k)) = H(0,0) = I
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.             H(n-1:k) ≡ H(u(n-1:k),τ(n-1:k)) = H(0,0) = I
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
 NB.   QfL:                Qf:                 L:
-NB.     (  τ0 τ1 τ2  )      (  τ0 τ1 τ2  )      (  l  0  0   )
-NB.     (  v0 v1 v2  )      (  v0 v1 v2  )      (  l  l  0   )
-NB.     (  v0 v1 v2  )      (  v0 v1 v2  )      (  l  l  l   )
+NB.     (  τ0 τ1 τ2  )      (  τ0 τ1 τ2  )
 NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
 NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
-NB.     (  l  v1 v2  )      (  1  v1 v2  )
-NB.     (  l  l  v2  )      (  0  1  v2  )
-NB.     (  l  l  l   )      (  0  0  1   )
+NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
+NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
+NB.     (  l  v1 v2  )      (  1  v1 v2  )      (  l  0  0   )
+NB.     (  l  l  v2  )      (  0  1  v2  )      (  l  l  0   )
+NB.     (  l  l  l   )      (  0  0  1   )      (  l  l  l   )
 NB. where
-NB.   (τi,vi,1) - vector v(i) which defines an elementary
-NB.               reflector H(i) to form Qf
-NB.   l         - elements of L
-NB.   τi        - scalar value τ(i)
-NB.   vi        - m-vector v(i)
+NB.   l              - elements of L
+NB.   vi             - vector v(i)
+NB.   τi             - scalar value τ(i)
+NB.   (vi,1,0,...,0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = (Q) * L
@@ -178,8 +176,8 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGEQL2
 NB. - geql2 and geqlf are topologic equivalents
-NB. - if triangular matrix diagonal's non-negativity is
-NB.   required, then larfg* should be replaced by larfp*
+NB. - if L diagonal's non-negativity is required, then larfgb
+NB.   should be replaced by larfpb
 
 geql2=: 3 : 0
   pfxR=. 0 {."1 y
@@ -217,11 +215,11 @@ NB.           represented in factored form
 NB.   R     - k×n-matrix, upper triangular
 NB.   Q     - m×k-matrix with orthonormal columns, which is
 NB.           defined as the first k columns of a product of n
-NB.           elementary reflectors of order m:
+NB.           elementary reflectors H(i) of order m:
 NB.             Q = Π{H(i),i=0:n-1}
 NB.           where
-NB.             H(i) ≡ H(v(i),τ(i)) := I - v(i) * τ(i) * (v(i))^H
-NB.             H(k:n-1) ≡ H(v(k:n-1),τ(k:n-1)) = H(0,0) = I
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.             H(k:n-1) ≡ H(u(k:n-1),τ(k:n-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -235,11 +233,10 @@ NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
 NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
 NB.     (  τ0 τ1 τ2  )      (  τ0 τ1 τ2  )
 NB. where
-NB.   (1,vi,τi) - vector v(i) which defines an elementary
-NB.               reflector H(i) to form Qf
-NB.   r         - elements of R
-NB.   τi        - scalar value τ(i)
-NB.   vi        - m-vector v(i)
+NB.   r              - elements of R
+NB.   vi             - vector v(i)
+NB.   τi             - scalar value τ(i)
+NB.   (0,...,0,1,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = (Q) * R
@@ -250,8 +247,8 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGEQR2
 NB. - gerq2 and geqrf are topologic equivalents
-NB. - if triangular matrix diagonal's non-negativity is
-NB.   required, then larfg* should be replaced by larfp*
+NB. - if R diagonal's non-negativity is required, then larfgf
+NB.   should be replaced by larfpf
 
 geqr2=: 3 : 0
   pfx=. 0 {. y
@@ -289,11 +286,11 @@ NB.   Qf    - k×(n+1)-matrix, unit lower triangular, the Q
 NB.           represented in factored form
 NB.   Q     - k×n-matrix with orthonormal rows which is
 NB.           defined as the last k rows of a product of m
-NB.           elementary reflectors of order n:
+NB.           elementary reflectors H(i) of order n:
 NB.             Q = Π{H(i)',i=0:m-1}
 NB.           where
-NB.             H(i) ≡ H(v(i),τ(i)) := I - (v(i))^H * τ(i) * v(i)
-NB.             H(k:m-1) ≡ H(v(k:m-1),τ(k:m-1)) = H(0,0) = I
+NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.             H(k:m-1) ≡ H(u(k:m-1),τ(k:m-1)) = H(0,0) = I
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -310,11 +307,10 @@ NB.     (  τ0 v0 v0 v0 v0 1  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 v1 1  0   )
 NB.     (  τ2 v2 v2 v2 v2 v2 v2 1   )
 NB. where
-NB.   r         - elements of R
-NB.   (τi,vi,1) - vector v(i) which defines an elementary
-NB.               reflector H(i) to form Qf
-NB.   τi        - scalar value conj(τ(i))
-NB.   vi        - n-vector v(i)
+NB.   r              - elements of R
+NB.   vi             - vector v(i)
+NB.   τi             - scalar value conj(τ(i))
+NB.   (vi,1,0,...,0) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = R * (Q)
@@ -325,8 +321,8 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xGERQ2
 NB. - gerq2 and gerqf are topologic equivalents
-NB. - if triangular matrix diagonal's non-negativity is
-NB.   required, then larfg* should be replaced by larfp*
+NB. - if R diagonal's non-negativity is required, then
+NB.   larfgbc should be replaced by larfpbc
 
 gerq2=: 3 : 0
   pfxB=. 0 {. y
@@ -370,16 +366,20 @@ NB.   Zf    - m×(n+1)-matrix, the Z represented in factored
 NB.           form
 NB.   Z     - n×n-matrix with orthonormal rows which is
 NB.           defined as the product of m elementary
-NB.           reflectors of order n:
+NB.           reflectors H(i) of order n:
 NB.             Q = Π{H(i)',i=m-1:0}
 NB.           where
-NB.             H(i) ≡ H(v(i),τ(i)) := I - (v(i))^H * τ(i) * v(i)
+NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
 NB.
 NB. Storage layout for m=3, n=9, l=5:
 NB.   eA:
 NB.     (  *  a1 a1 a1 a1 a2 a2 il 0  0   )
 NB.     (  *  a1 a1 a1 a1 a2 a2 il li 0   )
 NB.     (  *  a1 a1 a1 a1 a2 a2 il il il  )
+NB.   LZf:
+NB.     (  τ0 v0 v0 v0 v0 a2 a2 ol 0  0   )
+NB.     (  τ1 v1 v1 v1 v1 a2 a2 ol ol 0   )
+NB.     (  τ2 v2 v2 v2 v2 a2 a2 ol ol ol  )
 NB.   L:
 NB.     (     0  0  0  0  a2 a2 ol 0  0   )
 NB.     (     0  0  0  0  a2 a2 ol ol 0   )
@@ -388,26 +388,20 @@ NB.   Zf:
 NB.     (  τ0 v0 v0 v0 v0 0  0  1  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 0  0  0  1  0   )
 NB.     (  τ2 v2 v2 v2 v2 0  0  0  0  1   )
-NB.   LZf:
-NB.     (  τ0 v0 v0 v0 v0 a2 a2 ol 0  0   )
-NB.     (  τ1 v1 v1 v1 v1 a2 a2 ol ol 0   )
-NB.     (  τ2 v2 v2 v2 v2 a2 a2 ol ol ol  )
 NB. where
-NB.   *                       - any scalar value, is not used
-NB.   a1                      - elements of iA1
-NB.   a2                      - elements of A2
-NB.   il                      - elements of iL
-NB.   (τi,vi,0,...0,1,0,..,0) - vector z(i) which defines an
-NB.                             elementary reflector H(i) to
-NB.                             form Zf
-NB.   ol                      - elements of oL
-NB.   τi                      - scalar value τ(i)
-NB.   vi                      - l-vector v(i)
+NB.   *                    - any scalar value, is not used
+NB.   a1                   - elements of iA1
+NB.   a2                   - elements of A2
+NB.   il                   - elements of iL
+NB.   ol                   - elements of oL
+NB.   vi                   - l-vector v(i)
+NB.   τi                   - scalar value conj(τ(i))
+NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - latlz and tzlzf are topologic equivalents
-NB. - in z(i) 0s and 1 are not stored, v(i) is empty for l=0,
-NB.   0s and 1 are absent and v(i) is empty when n=0
+NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
+NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latlz=: 4 : 0
   ios=. < < < (dhs2lios 0 , x) , _1
@@ -455,39 +449,38 @@ NB.   Zf    - (m+1)×n-matrix, the Z represented in factored
 NB.           form
 NB.   Z     - m×m-matrix with orthonormal columns which is
 NB.           defined as the product of n elementary
-NB.           reflectors of order m:
+NB.           reflectors H(i) of order m:
 NB.             Z = Π{H(i),i=n-1:0}
 NB.           where
-NB.             H(i) ≡ H(v(i),τ(i)) := I - v(i) * τ(i) * (v(i))^H
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
 NB.
 NB. Storage layout for m=9, n=3, l=5:
-NB.   eA:               Zf:               L:                ZfL:
-NB.   (  il 0  0   )    (  1  0  0   )    (  ol 0  0   )    (  ol 0  0   )
-NB.   (  il il 0   )    (  0  1  0   )    (  ol ol 0   )    (  ol ol 0   )
-NB.   (  il il il  )    (  0  0  1   )    (  ol ol ol  )    (  ol ol ol  )
-NB.   (  a1 a1 a1  )    (  0  0  0   )    (  a1 a1 a1  )    (  a1 a1 a1  )
-NB.   (  a1 a1 a1  )    (  0  0  0   )    (  a1 a1 a1  )    (  a1 a1 a1  )
-NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  *  *  *   )    (  τ0 τ1 τ2  )                      (  τ0 τ1 τ2  )
+NB.   eA:               ZfL:              Zf:               L:
+NB.   (  il 0  0   )    (  ol 0  0   )    (  1  0  0   )    (  ol 0  0   )
+NB.   (  il il 0   )    (  ol ol 0   )    (  0  1  0   )    (  ol ol 0   )
+NB.   (  il il il  )    (  ol ol ol  )    (  0  0  1   )    (  ol ol ol  )
+NB.   (  a1 a1 a1  )    (  a1 a1 a1  )    (  0  0  0   )    (  a1 a1 a1  )
+NB.   (  a1 a1 a1  )    (  a1 a1 a1  )    (  0  0  0   )    (  a1 a1 a1  )
+NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  *  *  *   )    (  τ0 τ1 τ2  )    (  τ0 τ1 τ2  )
 NB. where
-NB.   il                      - elements of iL
-NB.   a1                      - elements of A1
-NB.   a2                      - elements of iA2
-NB.   *                       - any scalar value, is not used
-NB.   ol                      - elements of oL
-NB.   (0,...0,1,0,..,0,vi,τi) - vector z(i) which defines an
-NB.                             elementary reflector H(i) to
-NB.                             form Zf
-NB.   vi                      - l-vector v(i)
-NB.   τi                      - scalar value τ(i)
+NB.   il                   - elements of iL
+NB.   a1                   - elements of A1
+NB.   a2                   - elements of iA2
+NB.   *                    - any scalar value, is not used
+NB.   ol                   - elements of oL
+NB.   vi                   - l-vector v(i)
+NB.   τi                   - scalar value τ(i)
+NB.   (0,...0,1,0,..,0,vi) - m-vector u(i)
+NB.                          elementary re
 NB.
 NB. Notes:
 NB. - latzl and tzzlf are topologic equivalents
-NB. - in z(i) 0s and 1 are not stored, v(i) is empty for l=0,
-NB.   0s and 1 are absent and v(i) is empty when n=0
+NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
+NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latzl=: 4 : 0
   ios=. < < < 0 , dhs2lios _1 , x
@@ -535,39 +528,37 @@ NB.   Zf    - (m+1)×n-matrix, the Z represented in factored
 NB.           form
 NB.   Z     - m×m-matrix with orthonormal columns which is
 NB.           defined as the product of n elementary
-NB.           reflectors of order m:
+NB.           reflectors H(i) of order m:
 NB.             Z = Π{H(i),i=0:n-1}
 NB.           where
-NB.             H(i) ≡ H(v(i),τ(i)) := I - v(i) * τ(i) * (v(i))^H
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
 NB.
 NB. Storage layout for m=9, n=3, l=5:
-NB.   eA:               Zf:               R:                ZfR:
-NB.   (  *  *  *   )    (  τ0 τ1 τ2  )                      (  τ0 τ1 τ2  )
-NB.   (  a1 a1 a1  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a1 a1 a1  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a1 a1 a1  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a1 a1 a1  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a2 a2 a2  )    (  0  0  0   )    (  a2 a2 a2  )    (  a2 a2 a2  )
-NB.   (  a2 a2 a2  )    (  0  0  0   )    (  a2 a2 a2  )    (  a2 a2 a2  )
-NB.   (  ir ir ir  )    (  1  0  0   )    (  or or or  )    (  or or or  )
-NB.   (  0  ir ir  )    (  0  1  0   )    (  0  or or  )    (  0  or or  )
-NB.   (  0  0  ir  )    (  0  0  1   )    (  0  0  or  )    (  0  0  or  )
+NB.   eA:               ZfR:              Zf:               R:
+NB.   (  *  *  *   )    (  τ0 τ1 τ2  )    (  τ0 τ1 τ2  )
+NB.   (  a1 a1 a1  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a1 a1 a1  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a1 a1 a1  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a1 a1 a1  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a2 a2 a2  )    (  a2 a2 a2  )    (  0  0  0   )    (  a2 a2 a2  )
+NB.   (  a2 a2 a2  )    (  a2 a2 a2  )    (  0  0  0   )    (  a2 a2 a2  )
+NB.   (  ir ir ir  )    (  or or or  )    (  1  0  0   )    (  or or or  )
+NB.   (  0  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
+NB.   (  0  0  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
 NB. where
-NB.   *                       - any scalar value, is not used
-NB.   a1                      - elements of iA1
-NB.   a2                      - elements of A2
-NB.   ir                      - elements of iR
-NB.   or                      - elements of oR
-NB.   (τi,vi,0,...0,1,0,..,0) - vector z(i) which defines an
-NB.                             elementary reflector H(i) to
-NB.                             form Zf
-NB.   τi                      - scalar value τ(i)
-NB.   vi                      - l-vector v(i)
+NB.   *                    - any scalar value, is not used
+NB.   a1                   - elements of iA1
+NB.   a2                   - elements of A2
+NB.   ir                   - elements of iR
+NB.   or                   - elements of oR
+NB.   vi                   - l-vector v(i)
+NB.   τi                   - scalar value τ(i)
+NB.   (vi,0,...0,1,0,..,0) - m-vector u(i)
 NB.
 NB. Notes:
 NB. - latzr and tzzrf are topologic equivalents
-NB. - in z(i) 0s and 1 are not stored, v(i) is empty for l=0,
-NB.   0s and 1 are absent and v(i) is empty when n=0
+NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
+NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latzr=: 4 : 0
   ios=. < < < (dhs2lios 0 , x) , _1
@@ -615,16 +606,20 @@ NB.   Zf    - m×(n+1)-matrix, the Z represented in factored
 NB.           form
 NB.   Z     - n×n-matrix with orthonormal rows which is
 NB.           defined as the product of m elementary
-NB.           reflectors of order n:
+NB.           reflectors H(i) of order n:
 NB.             Z = Π{H(i)',i=0:m-1}
 NB.           where
-NB.             H(i) ≡ H(v(i),τ(i)) := I - (v(i))^H * τ(i) * v(i)
+NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
 NB.
 NB. Storage layout for m=3, n=9, l=5:
 NB.   eA:
 NB.     (  ir ir ir a1 a1 a2 a2 a2 a2 *   )
 NB.     (  0  ir ir a1 a1 a2 a2 a2 a2 *   )
 NB.     (  0  0  ir a1 a1 a2 a2 a2 a2 *   )
+NB.   RZf:
+NB.     (  or or or a1 a1 v0 v0 v0 v0 τ0  )
+NB.     (  0  or or a1 a1 v1 v1 v1 v1 τ1  )
+NB.     (  0  0  or a1 a1 v2 v2 v2 v2 τ2  )
 NB.   R:
 NB.     (  or or or a1 a1 0  0  0  0      )
 NB.     (  0  or or a1 a1 0  0  0  0      )
@@ -633,21 +628,15 @@ NB.   Zf:
 NB.     (  1  0  0  0  0  v0 v0 v0 v0 τ0  )
 NB.     (  0  1  0  0  0  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  1  0  0  v2 v2 v2 v2 τ2  )
-NB.   RZf:
-NB.     (  or or or a1 a1 v0 v0 v0 v0 τ0  )
-NB.     (  0  or or a1 a1 v1 v1 v1 v1 τ1  )
-NB.     (  0  0  or a1 a1 v2 v2 v2 v2 τ2  )
 NB. where
-NB.   ir                      - elements of iR
-NB.   a1                      - elements of A1
-NB.   a2                      - elements of iA2
-NB.   *                       - any scalar value, is not used
-NB.   or                      - elements of oR
-NB.   (0,...0,1,0,..,0,vi,τi) - vector z(i) which defines an
-NB.                             elementary reflector H(i) to
-NB.                             form Zf
-NB.   vi                      - l-vector v(i)
-NB.   τi                      - scalar value τ(i)
+NB.   ir                   - elements of iR
+NB.   a1                   - elements of A1
+NB.   a2                   - elements of iA2
+NB.   *                    - any scalar value, is not used
+NB.   or                   - elements of oR
+NB.   vi                   - l-vector v(i)
+NB.   τi                   - scalar value conj(τ(i))
+NB.   (0,...0,1,0,..,0,vi) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - models LAPACK's xLATRZ with the following difference:
@@ -655,8 +644,8 @@ NB.   - v(i) is saved instead of conj(v(i))
 NB.   - conj(τ(i)) is saved instead of τ(i)
 NB.   to keep consistence with gexxf
 NB. - latrz and tzrzf are topologic equivalents
-NB. - in z(i) 0s and 1 are not stored, v(i) is empty for l=0,
-NB.   0s and 1 are absent and v(i) is empty when n=0
+NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
+NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latrz=: 4 : 0
   ios=. < < < 0 , dhs2lios _1 , x
@@ -696,10 +685,11 @@ NB.   Qf  - k×(n+1)-matrix, unit upper triangular, the Q
 NB.         represented in factored form
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the first k rows of a product of m
-NB.         elementary reflectors of order n:
+NB.         elementary reflectors H(i) of order n:
 NB.           Q = Π{H(i)',i=m-1:0}
 NB.         where
-NB.           H(m-1:k) ≡ H(v(m-1:k),τ(m-1:k)) = H(0,0)=I
+NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0)=I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -716,12 +706,10 @@ NB.     (  1  v0 v0 v0 v0 v0 v0 τ0  )
 NB.     (  0  1  v1 v1 v1 v1 v1 τ1  )
 NB.     (  0  0  1  v2 v2 v2 v2 τ2  )
 NB. where
-NB.   l         - elements of L
-NB.   (1,vi,τi) - vector v(i) which defines an elementary
-NB.               reflector H(i) to form Qf:
-NB.                 H(i) := I - (v(i))^H * τ(i) * v(i)
-NB.   τi        - scalar value conj(τ(i))
-NB.   vi        - m-vector v(i)
+NB.   l              - elements of L
+NB.   vi             - vector v(i)
+NB.   τi             - scalar value conj(τ(i))
+NB.   (0,...,0,1,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = L * (Q)
@@ -766,29 +754,28 @@ NB.         represented in factored form
 NB.   L   - k×n-matrix, lower triangular
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the last k columns of a product of n
-NB.         elementary reflectors of order m:
+NB.         elementary reflectors H(i) of order m:
 NB.           Q = Π{H(i),i=n-1:0}
 NB.         where
-NB.           H(i) ≡ H(v(i),τ(i)) := I - v(i) * τ(i) * (v(i))^H
-NB.           H(n-1:k) ≡ H(v(n-1:k),τ(n-1:k)) = H(0,0) = I
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(n-1:k) ≡ H(u(n-1:k),τ(n-1:k)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
 NB.   QfL:                Qf:                 L:
-NB.     (  τ0 τ1 τ2  )      (  τ0 τ1 τ2  )      (  l  0  0   )
-NB.     (  v0 v1 v2  )      (  v0 v1 v2  )      (  l  l  0   )
-NB.     (  v0 v1 v2  )      (  v0 v1 v2  )      (  l  l  l   )
+NB.     (  τ0 τ1 τ2  )      (  τ0 τ1 τ2  )
 NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
 NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
-NB.     (  l  v1 v2  )      (  1  v1 v2  )
-NB.     (  l  l  v2  )      (  0  1  v2  )
-NB.     (  l  l  l   )      (  0  0  1   )
+NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
+NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
+NB.     (  l  v1 v2  )      (  1  v1 v2  )      (  l  0  0   )
+NB.     (  l  l  v2  )      (  0  1  v2  )      (  l  l  0   )
+NB.     (  l  l  l   )      (  0  0  1   )      (  l  l  l   )
 NB. where
-NB.   (τi,vi,1) - vector v(i) which defines an elementary
-NB.               reflector H(i) to form Qf
-NB.   l         - elements of L
-NB.   τi        - scalar value τ(i)
-NB.   vi        - m-vector v(i)
+NB.   l              - elements of L
+NB.   vi             - vector v(i)
+NB.   τi             - scalar value τ(i)
+NB.   (vi,1,0,...,0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = (Q) * L
@@ -833,11 +820,11 @@ NB.         represented in factored form
 NB.   R   - k×n-matrix, upper triangular
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the first k columns of a product of n
-NB.         elementary reflectors of order m:
+NB.         elementary reflectors H(i) of order m:
 NB.           Q = Π{H(i),i=0:n-1}
 NB.         where
-NB.           H(i) ≡ H(v(i),τ(i)) := I - v(i) * τ(i) * (v(i))^H
-NB.           H(k:n-1) ≡ H(v(k:n-1),τ(k:n-1)) = H(0,0) = I
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(k:n-1) ≡ H(u(k:n-1),τ(k:n-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -851,11 +838,10 @@ NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
 NB.     (  v0 v1 v2  )      (  v0 v1 v2  )
 NB.     (  τ0 τ1 τ2  )      (  τ0 τ1 τ2  )
 NB. where
-NB.   (1,vi,τi) - vector v(i) which defines an elementary
-NB.               reflector H(i) to form Qf
-NB.   r         - elements of R
-NB.   τi        - scalar value τ(i)
-NB.   vi        - m-vector v(i)
+NB.   r              - elements of R
+NB.   vi             - vector v(i)
+NB.   τi             - scalar value τ(i)
+NB.   (0,...,0,1,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = (Q) * R
@@ -900,11 +886,11 @@ NB.   Qf  - k×(n+1)-matrix, unit lower triangular, the Q
 NB.         represented in factored form
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the last k rows of a product of m
-NB.         elementary reflectors of order n:
+NB.         elementary reflectors H(i) of order n:
 NB.           Q = Π{H(i)',i=0:m-1}
 NB.         where
-NB.           H(i) ≡ H(v(i),τ(i)) := I - (v(i))^H * τ(i) * v(i)
-NB.           H(k:m-1) ≡ H(v(k:m-1),τ(k:m-1)) = H(0,0) = I
+NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(k:m-1) ≡ H(u(k:m-1),τ(k:m-1)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -921,11 +907,10 @@ NB.     (  τ0 v0 v0 v0 v0 1  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 v1 1  0   )
 NB.     (  τ2 v2 v2 v2 v2 v2 v2 1   )
 NB. where
-NB.   r         - elements of R
-NB.   (τi,vi,1) - vector v(i) which defines an elementary
-NB.               reflector H(i) to form Qf
-NB.   τi        - scalar value conj(τ(i))
-NB.   vi        - n-vector v(i)
+NB.   r              - elements of R
+NB.   vi             - vector v(i)
+NB.   τi             - scalar value conj(τ(i))
+NB.   (vi,1,0,...,0) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = R * (Q)
@@ -975,17 +960,21 @@ NB.   oL  - m×m-matrix, lower triangular
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored
 NB.         form
 NB.   Z   - n×n-matrix with orthonormal rows which is defined
-NB.         as the product of m elementary reflectors of
+NB.         as the product of m elementary reflectors H(i) of
 NB.         order n:
 NB.           Z = Π{H(i)',i=m-1:0}
 NB.         where
-NB.           H(i) ≡ H(v(i),τ(i)) := I - (v(i))^H * τ(i) * v(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
 NB.
 NB. Storage layout for m=3, n=7:
 NB.   A:
 NB.     (     a0 a0 a0 a0 il 0  0   )
 NB.     (     a0 a0 a0 a0 il il 0   )
 NB.     (     a0 a0 a0 a0 il il il  )
+NB.   LZf:
+NB.     (  τ0 v0 v0 v0 v0 ol 0  0   )
+NB.     (  τ1 v1 v1 v1 v1 ol ol 0   )
+NB.     (  τ2 v2 v2 v2 v2 ol ol ol  )
 NB.   L:
 NB.     (     0  0  0  0  ol 0  0   )
 NB.     (     0  0  0  0  ol ol 0   )
@@ -994,24 +983,18 @@ NB.   Zf:
 NB.     (  τ0 v0 v0 v0 v0 1  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 0  1  0   )
 NB.     (  τ2 v2 v2 v2 v2 0  0  1   )
-NB.   LZf:
-NB.     (  τ0 v0 v0 v0 v0 ol 0  0   )
-NB.     (  τ1 v1 v1 v1 v1 ol ol 0   )
-NB.     (  τ2 v2 v2 v2 v2 ol ol ol  )
 NB. where
-NB.   a0                      - elements of iA0
-NB.   il                      - elements of iL
-NB.   (τi,vi,0,...0,1,0,..,0) - vector z(i) which defines an
-NB.                             elementary reflector H(i) to
-NB.                             form Zf
-NB.   ol                      - elements of oL
-NB.   τi                      - scalar value conj(τ(i))
-NB.   vi                      - l-vector v(i)
+NB.   a0                   - elements of iA0
+NB.   il                   - elements of iL
+NB.   ol                   - elements of oL
+NB.   vi                   - l-vector v(i)
+NB.   τi                   - scalar value conj(τ(i))
+NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - latlz and tzlzf are topologic equivalents
-NB. - in z(i) 0s and 1 are not stored, v(i) is empty for l=0,
-NB.   0s and 1 are absent and v(i) is empty when n=0
+NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
+NB.   0s and 1 are absent and u(i) is empty when n=0
 
 tzlzf=: 3 : 0
   y=. 0 ,. y
@@ -1060,32 +1043,30 @@ NB.         defined as the product of n elementary reflectors
 NB.         of order m:
 NB.           Z = Π{H(i),i=n-1:0}
 NB.         where
-NB.           H(i) ≡ H(v(i),τ(i)) := I - v(i) * τ(i) * (v(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
 NB.
 NB. Storage layout for m=7, n=3:
-NB.   A:                Zf:               L:                ZfR:
-NB.   (  il 0  0   )    (  1  0  0   )    (  ol 0  0   )    (  ol 0  0   )
-NB.   (  il il 0   )    (  0  1  0   )    (  ol ol 0   )    (  ol ol 0   )
-NB.   (  il il il  )    (  0  0  1   )    (  ol ol ol  )    (  ol ol ol  )
-NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.                     (  τ0 τ1 τ2  )                      (  τ0 τ1 τ2  )
+NB.   A:                ZfL:              Zf:               L:
+NB.   (  il 0  0   )    (  ol 0  0   )    (  1  0  0   )    (  ol 0  0   )
+NB.   (  il il 0   )    (  ol ol 0   )    (  0  1  0   )    (  ol ol 0   )
+NB.   (  il il il  )    (  ol ol ol  )    (  0  0  1   )    (  ol ol ol  )
+NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.                     (  τ0 τ1 τ2  )    (  τ0 τ1 τ2  )
 NB. where
-NB.   il                      - elements of iL
-NB.   a0                      - elements of iA0
-NB.   ol                      - elements of oL
-NB.   (0,...0,1,0,..,0,vi,τi) - vector z(i) which defines an
-NB.                             elementary reflector H(i) to
-NB.                             form Zf
-NB.   vi                      - l-vector v(i)
-NB.   τi                      - scalar value τ(i)
+NB.   il                   - elements of iL
+NB.   a0                   - elements of iA0
+NB.   ol                   - elements of oL
+NB.   vi                   - l-vector v(i)
+NB.   τi                   - scalar value τ(i)
+NB.   (0,...0,1,0,..,0,vi) - m-vector u(i)
 NB.
 NB. Notes:
 NB. - latzl and tzzlf are topologic equivalents
-NB. - in z(i) 0s and 1 are not stored, v(i) is empty for l=0,
-NB.   0s and 1 are absent and v(i) is empty when n=0
+NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
+NB.   0s and 1 are absent and u(i) is empty when n=0
 
 tzzlf=: 3 : 0
   y=. y , 0
@@ -1134,32 +1115,30 @@ NB.         defined as the product of n elementary reflectors
 NB.         of order m:
 NB.           Z = Π{H(i),i=0:n-1}
 NB.         where
-NB.           H(i) ≡ H(v(i),τ(i)) := I - v(i) * τ(i) * (v(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
 NB.
 NB. Storage layout for m=7, n=3:
-NB.   A:                Zf:               R:                ZfR:
-NB.                     (  τ0 τ1 τ2  )                      (  τ0 τ1 τ2  )
-NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  0  0  0   )    (  v0 v1 v2  )
-NB.   (  ir ir ir  )    (  1  0  0   )    (  or or or  )    (  or or or  )
-NB.   (  0  ir ir  )    (  0  1  0   )    (  0  or or  )    (  0  or or  )
-NB.   (  0  0  ir  )    (  0  0  1   )    (  0  0  or  )    (  0  0  or  )
+NB.   A:                ZfR:              Zf:               R:
+NB.                     (  τ0 τ1 τ2  )    (  τ0 τ1 τ2  )
+NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
+NB.   (  ir ir ir  )    (  or or or  )    (  1  0  0   )    (  or or or  )
+NB.   (  0  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
+NB.   (  0  0  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
 NB. where
-NB.   a0                      - elements of iA0
-NB.   ir                      - elements of iR
-NB.   (τi,vi,0,...0,1,0,..,0) - vector z(i) which defines an
-NB.                             elementary reflector H(i) to
-NB.                             form Zf
-NB.   or                      - elements of oR
-NB.   τi                      - scalar value τ(i)
-NB.   vi                      - l-vector v(i)
+NB.   a0                   - elements of iA0
+NB.   ir                   - elements of iR
+NB.   or                   - elements of oR
+NB.   vi                   - l-vector v(i)
+NB.   τi                   - scalar value τ(i)
+NB.   (vi,0,...0,1,0,..,0) - m-vector u(i)
 NB.
 NB. Notes:
 NB. - latzr and tzzrf are topologic equivalents
-NB. - in z(i) 0s and 1 are not stored, v(i) is empty for l=0,
-NB.   0s and 1 are absent and v(i) is empty when n=0
+NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
+NB.   0s and 1 are absent and u(i) is empty when n=0
 
 tzzrf=: 3 : 0
   y=. 0 , y
@@ -1203,17 +1182,21 @@ NB.   Tau - m-vector, scalars τ[0:m-1] for Zf
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored
 NB.         form
 NB.   Z   - n×n-matrix with orthonormal rows which is defined
-NB.         as the product of m elementary reflectors of
+NB.         as the product of m elementary reflectors H(i) of
 NB.         order n:
 NB.           Z = Π{H(i)',i=0:m-1}
 NB.         where
-NB.           H(i) ≡ H(v(i),τ(i)) := I - (v(i))^H * τ(i) * v(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
 NB.
 NB. Storage layout for m=3, n=7:
 NB.   A:
 NB.     (  ir ir ir a1 a1 a1 a1     )
 NB.     (  0  ir ir a1 a1 a1 a1     )
 NB.     (  0  0  ir a1 a1 a1 a1     )
+NB.   RZf:
+NB.     (  or or or v0 v0 v0 v0 τ0  )
+NB.     (  0  or or v1 v1 v1 v1 τ1  )
+NB.     (  0  0  or v2 v2 v2 v2 τ2  )
 NB.   R:
 NB.     (  or or or 0  0  0  0      )
 NB.     (  0  or or 0  0  0  0      )
@@ -1222,27 +1205,21 @@ NB.   Zf:
 NB.     (  1  0  0  v0 v0 v0 v0 τ0  )
 NB.     (  0  1  0  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  1  v2 v2 v2 v2 τ2  )
-NB.   RZf:
-NB.     (  or or or v0 v0 v0 v0 τ0  )
-NB.     (  0  or or v1 v1 v1 v1 τ1  )
-NB.     (  0  0  or v2 v2 v2 v2 τ2  )
 NB. where
-NB.   ir                      - elements of iR
-NB.   a1                      - elements of iA1
-NB.   or                      - elements of oR
-NB.   (0,...0,1,0,..,0,vi,τi) - vector z(i) which defines an
-NB.                             elementary reflector H(i) to
-NB.                             form Zf
-NB.   vi                      - l-vector v(i)
-NB.   τi                      - scalar value conj(τ(i))
+NB.   ir                   - elements of iR
+NB.   a1                   - elements of iA1
+NB.   or                   - elements of oR
+NB.   vi                   - l-vector v(i)
+NB.   τi                   - scalar value conj(τ(i))
+NB.   (0,...0,1,0,..,0,vi) - n-vector u(i)
 NB.
 NB. Notes:
-NB. - models LAPACK's xTZRZF with the following difference:
-NB.   v(i) and conj(τ(i)) are saved instead of conj(v(i)) and
-NB.   τ(i)
+NB. - models LAPACK's xTZRZF with the following differences:
+NB.   - v(i) is saved instead of conj(v(i))
+NB.   - conj(τ(i)) is saved instead of τ(i)
 NB. - latrz and tzrzf are topologic equivalents
-NB. - in z(i) 0s and 1 are not stored, v(i) is empty for l=0,
-NB.   0s and 1 are absent and v(i) is empty when n=0
+NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
+NB.   0s and 1 are absent and u(i) is empty when n=0
 
 tzrzf=: 3 : 0
 NB.QFNB=. QFNX=. 3
@@ -1276,7 +1253,7 @@ NB.   Test orthogonal factorization algorithms:
 NB.   - 128!:0 (built-in)
 NB.   - gelqf geqlf geqrf gerqf (math/lapack addon)
 NB.   - gelqf geqlf geqrf gerqf (math/mt addon)
-NB.   by general matrix given
+NB.   by general matrix
 NB.
 NB. Syntax:
 NB.   testgeqf A
@@ -1284,10 +1261,10 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - LQ berr := max( ||L - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB. - QL berr := max( ||L - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - QR berr := max( ||R - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - RQ berr := max( ||R - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - for LQ: berr := max( ||L - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - for QL: berr := max( ||L - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
+NB. - for QR: berr := max( ||R - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
+NB. - for RQ: berr := max( ||R - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
 
 testgeqf=: 3 : 0
   require :: ] '~addons/math/lapack/lapack.ijs'
@@ -1324,20 +1301,20 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - LZ berr := max( ||A - L * Z|| / (FP_EPS * ||A|| * n), ||Z * Z^H - I|| / (FP_EPS * n) )
-NB. - ZL berr := max( ||A - Z * L|| / (FP_EPS * ||A|| * m), ||Z^H * Z - I|| / (FP_EPS * m) )
-NB. - ZR berr := max( ||A - Z * R|| / (FP_EPS * ||A|| * m), ||Z^H * Z - I|| / (FP_EPS * m) )
-NB. - RZ berr := max( ||A - R * Z|| / (FP_EPS * ||A|| * n), ||Z * Z^H - I|| / (FP_EPS * n) )
+NB. - for LZ: berr := max( ||A - L * Z|| / (FP_EPS * ||A|| * m), ||Z * Z^H - I|| / (FP_EPS * n) )
+NB. - for ZL: berr := max( ||A - Z * L|| / (FP_EPS * ||A|| * n), ||Z^H * Z - I|| / (FP_EPS * m) )
+NB. - for ZR: berr := max( ||A - Z * R|| / (FP_EPS * ||A|| * n), ||Z^H * Z - I|| / (FP_EPS * m) )
+NB. - for RZ: berr := max( ||A - R * Z|| / (FP_EPS * ||A|| * m), ||Z * Z^H - I|| / (FP_EPS * n) )
 
 testtzqf=: 3 : 0
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
   Awide=. |:^:(>/@$) y
   Atall=. |:^:(</@$) y
 
-  ('tzlzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmlzrn (0:`((a: <@; 0 th2lios~ -~/)@[)`]}~ $)@:(}."1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmlzrc unglz))))) (trl~ -~/@$) Awide
-  ('tzzlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzlln (0:`(          th2lios~/    @[)`]}~ $)@  }:   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmzllc ungzl)))))  trl         Atall
-  ('tzzrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzrln (0:`((       0 th2lios~ -~/)@[)`]}~ $)@  }.   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmzrlc ungzr))))) (tru~ -~/@$) Atall
-  ('tzrzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmrzrn (0:`((a: <@;   th2lios~/   )@[)`]}~ $)@:(}:"1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmrzrc ungrz)))))  tru         Awide
+  ('tzlzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmlzrn (0:`((a: <@; 0 th2lios~ -~/)@[)`]}~ $)@:(}."1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@((<: upddiag)~ 0 >. -~/@$)@(unmlzrc unglz))))) (trl~ -~/@$) Awide
+  ('tzzlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzlln (0:`(          th2lios~/    @[)`]}~ $)@  }:   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@( <: upddiag             )@(unmzllc ungzl)))))  trl         Atall
+  ('tzzrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzrln (0:`((       0 th2lios~ -~/)@[)`]}~ $)@  }.   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@((<: upddiag)~ 0 <. -~/@$)@(unmzrlc ungzr))))) (tru~ -~/@$) Atall
+  ('tzrzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmrzrn (0:`((a: <@;   th2lios~/   )@[)`]}~ $)@:(}:"1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@( <: upddiag             )@(unmrzrc ungrz)))))  tru         Awide
 
   EMPTY
 )

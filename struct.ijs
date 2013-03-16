@@ -92,7 +92,7 @@ NB. ---------------------------------------------------------
 NB. Miscellaneous
 
 NB. convert table y to table of diagonals
-t2td=: 1 : '({. u/&i. {:)@$'
+t2td=: /(&i.)/(@$)
 
 NB. conj. to extract matrix circumscribing the triangular
 NB. (trapezoidal) matrix starting from diagonal number x in
@@ -125,7 +125,7 @@ NB.          as:
 NB.            mix=. lIOrow vmix lIOcolumn
 NB.   vapp - dyad to make multi-[anti-]band stencil, is
 NB.          called as:
-NB.            s=. bs vapp A
+NB.            S=. bs vapp A
 NB.   bs   - k×2-matrix of (b)s, or single b, or d, defines
 NB.          [anti-]bands to stencil
 NB.   b    - 2-vector (h,t), defines one [anti-]band to
@@ -137,7 +137,7 @@ NB.          [anti-]diagonal
 NB.   d    - integer in range [-∞,+∞], lIO single
 NB.          [anti-]diagonal to stencil
 NB.   A    - m×n-matrix
-NB.   s    - m×n-matrix, boolean, having 1s on [anti-]band[s]
+NB.   S    - m×n-matrix, boolean, having 1s on [anti-]band[s]
 NB.
 NB. Examples:
 NB. - see mbstencil, mabstencil
@@ -152,13 +152,13 @@ NB. Description:
 NB.   [Multi-]band and [multi-]anti-band stencils for matrix
 NB.
 NB. Syntax:
-NB.   s=. bs mbstencil  A
-NB.   s=. bs mabstencil A
+NB.   S=. bs mbstencil  A
+NB.   S=. bs mabstencil A
 NB. where
 NB.   bs - k×2-matrix of (b)s, or single b, or d, defines
 NB.        [anti-]bands to stencil
 NB.   A  - m×n-matrix
-NB.   s  - m×n-matrix, boolean, having 1s on [anti-]band[s]
+NB.   S  - m×n-matrix, boolean, having 1s on [anti-]band[s]
 NB.   b  - 2-vector (h,t), defines one [anti-]band to stencil
 NB.   h  - integer in range [-∞,t], defines lIO head of
 NB.        [anti-]diagonal
@@ -648,8 +648,8 @@ NB. Syntax:
 NB.   B=. [d] trlpick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   d - integer in range [-∞,+∞], lIO last non-zero
-NB.       diagonal
+NB.   d - integer in range [-∞,+∞], optional lIO last
+NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, lower triangular
 
 trlpick=: 0&$: :(((__ , [) mbstencil ]) * ])
@@ -682,8 +682,8 @@ NB. Syntax:
 NB.   B=. [d] trl1pick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   d - integer in range [-∞,+∞], lIO last non-zero
-NB.       diagonal
+NB.   d - integer in range [-∞,+∞], optional lIO last
+NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, lower triangular with unit on diagonal
 NB.       d
 
@@ -700,8 +700,8 @@ NB. Syntax:
 NB.   B=. [d] trupick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   d - integer in range [-∞,+∞], lIO first non-zero
-NB.       diagonal
+NB.   d - integer in range [-∞,+∞], optional lIO first
+NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, upper triangular with unit on diagonal
 NB.       d
 
@@ -756,11 +756,12 @@ NB. Syntax:
 NB.   D=. [(h,t)] diagmat e
 NB. where
 NB.   e - S-vector, new values for diagonal
-NB.   h - integer in range [1-m,n-1], lIO diagonal of v's
-NB.       head, relatively to top left corner, default is 0
-NB.   t - integer in range [1-m,n-1], lIO diagonal of v's
-NB.       tail, relatively to bottom right corner, default is
-NB.       0
+NB.   h - integer in range [1-m,n-1], optional lIO diagonal
+NB.       of v's head, relatively to top left corner, default
+NB.       is 0
+NB.   t - integer in range [1-m,n-1], optional lIO diagonal
+NB.       of v's tail, relatively to bottom right corner,
+NB.       default is 0
 NB.   D - m×n-matrix of zeros with vector e assigned to h-th
 NB.       diagonal
 NB.   S ≥ 0, the length of h-th diagonal

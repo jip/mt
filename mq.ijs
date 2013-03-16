@@ -70,7 +70,7 @@ mqvberr=: 2 : 'norm1_mt_@(- u&>/@}.)~ % (FP_EPS_mt_ * (1:`]@.*)@norm1_mt_ * v)@(
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-MQNB=: 3 NB. 32   NB. block size limit
+MQNB=: 32   NB. block size limit
 
 NB. ---------------------------------------------------------
 NB. Verb     Action   Side   Tran  Syntax
@@ -432,7 +432,7 @@ NB.   are topologic equivalents
 
 unmlzln=: }.  @(((unml3ln`((larzblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ , ~&0)
 unmlzlc=: }.  @(((unml3lc`((larzblnfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ , ~&0)
-unmlzrn=: }."1@(((unml3rn`(((larzbrcfr dbg 'larzbrcfr')&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ ,.~&0)
+unmlzrn=: }."1@(((unml3rn`((larzbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ ,.~&0)
 unmlzrc=: }."1@(((unml3rc`((larzbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ ,.~&0)
 
 NB. ---------------------------------------------------------
@@ -584,10 +584,10 @@ NB.         defines submatrix Qf position in matrix HQf, see
 NB.         see gehrdl
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (idmat@c (-: clean) (unmhrlln ct@unghrl)@gehrdl) A
-NB.   (idmat@c (-: clean) (unmhrllc ct@unghrl)@gehrdl) A
-NB.   (idmat@c (-: clean) (unmhrlrn ct@unghrl)@gehrdl) A
-NB.   (idmat@c (-: clean) (unmhrlrc ct@unghrl)@gehrdl) A
+NB.   (idmat@c (-: clean) (unmhrlln ct@unghrl)@(gehrdl~ 0 , c)) A
+NB.   (idmat@c (-: clean) (unmhrllc    unghrl)@(gehrdl~ 0 , c)) A
+NB.   (idmat@c (-: clean) (unmhrlrn ct@unghrl)@(gehrdl~ 0 , c)) A
+NB.   (idmat@c (-: clean) (unmhrlrc    unghrl)@(gehrdl~ 0 , c)) A
 NB.
 NB. Notes:
 NB. - instead of using f and s parameters, the following
@@ -631,10 +631,10 @@ NB.         defines submatrix Qf position in matrix HQf, see
 NB.         see gehrdu
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (idmat@# (-: clean) (unmhrlln ct@unghrl)@gehrdl) A
-NB.   (idmat@# (-: clean) (unmhrllc ct@unghrl)@gehrdl) A
-NB.   (idmat@# (-: clean) (unmhrlrn ct@unghrl)@gehrdl) A
-NB.   (idmat@# (-: clean) (unmhrlrc ct@unghrl)@gehrdl) A
+NB.   (idmat@# (-: clean) (unmhruln ct@unghru)@(gehrdu~ 0 , #)) A
+NB.   (idmat@# (-: clean) (unmhrulc    unghru)@(gehrdu~ 0 , #)) A
+NB.   (idmat@# (-: clean) (unmhrurn ct@unghru)@(gehrdu~ 0 , #)) A
+NB.   (idmat@# (-: clean) (unmhrurc    unghru)@(gehrdu~ 0 , #)) A
 NB.
 NB. Notes:
 NB. - models LAPACK's DORMHR, ZUNMHR
@@ -822,8 +822,8 @@ testunmhr=: 3 : 0
   'A C'=. y
   rcond=. gecon1 C
 
-  Qhrl=. unghrl HlQf=. (gehrdl~ 0 , #) A
-  Qhru=. unghru HuQf=. (gehrdu~ 0 , c) A
+  Qhrl=. unghrl HlQf=. (gehrdl~ 0 , c) A
+  Qhru=. unghru HuQf=. (gehrdu~ 0 , #) A
 
   ('unmhrlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(mp~ mqvberr c))) HlQf ; C ;    Qhrl
   ('unmhrllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(mp~ mqvberr c))) HlQf ; C ; ct Qhrl

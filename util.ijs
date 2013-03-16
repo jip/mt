@@ -1,6 +1,5 @@
 NB. Utilities
 NB.
-NB. sgn       Simplified signum
 NB. negneg    Conditional negate
 NB. negpos    Conditional negate
 NB. copysign  Copy sign
@@ -9,9 +8,8 @@ NB. soris     Sum of real and imaginary parts' squares
 NB. fmtlog    Format log string
 NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
-NB. ms        Minimum in sum of vectors
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2005-2012 Henry Rich, Igor Zhuravlov
 NB.
@@ -82,14 +80,3 @@ NB.     Sat Oct 22 06:37:12 HKT 2005.
 NB.     http://www.jsoftware.com/pipermail/general/2005-October/025450.html
 
 ag=: /. (,/@)
-
-NB. ---------------------------------------------------------
-NB. ms
-NB.
-NB. Description: Minimum in [sum of] vector[s]
-NB. Syntax:      k=. [(delta0,delta1,...)] ms (value0,value1,...)
-NB. where        default deltai is 0
-NB. Formula:     k = min(delta0+value0,delta1+value1,...)
-NB. Notes:       is memo, since repetitive calls are expected
-
-ms=: <./@:(] :+)M.

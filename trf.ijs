@@ -10,17 +10,16 @@ NB. pttrfx     Triangular factorization of a Hermitian
 NB.            (symmetric) positive definite tridiagonal
 NB.            matrix
 NB.
-NB. testgetrf  Test getrfxxxx by general matrix given
+NB. testgetrf  Test getrfxxxx by general matrix
 NB. testhetrf  Test hetrfpx by Hermitian (symmetric) matrix
-NB.            given
 NB. testpotrf  Test potrfx by Hermitian (symmetric) positive
-NB.            definite matrix given
+NB.            definite matrix
 NB. testpttrf  Test pttrfx by Hermitian (symmetric) positive
-NB.            definite tridiagonal matrix given
+NB.            definite tridiagonal matrix
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -50,7 +49,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-TRFNB=: 64  NB. block size limit, >0
+TRFNB=: 64  NB. block size limit
 
 NB. ---------------------------------------------------------
 NB. lahefpl
@@ -69,7 +68,7 @@ NB.   ipi       -:i. (n-i)
 NB.   subA      - (n-i)×(n-i)-matrix to factorize, Hermitian
 NB.               (symmetric), the bottom right part of A
 NB.   lti       - (n-i)-vector, is defined as:
-NB.                 lti=. ti 0 } li
+NB.                 lti=. ti 0} li
 NB.   t0i       - i-vector, float, leading elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i,n-1))-vector, leading elements
@@ -165,7 +164,7 @@ NB. Algorithm (assume 0<i<n-TRFNB):
 NB.   In:
 NB.     ipi  -:i. (n-i)
 NB.     subA - A[i:n-1,i:n-1]
-NB.     lti  -:ti 0 } li
+NB.     lti  -:ti 0} li
 NB.     t0i  - (T[0,0],T[1,1],...,T[i-1,i-1])
 NB.     t1i  - (T[1,0],T[2,1],...,T[i,i-1])
 NB.     li   - vector to write into subL1[0:n-i-1,0] i.e.
@@ -174,7 +173,7 @@ NB.     ti   - any scalar
 NB.   Out:
 NB.     ipo  - ip[i:n-1]
 NB.     B    - see layout 1
-NB.     lto  -:to 0 } lo
+NB.     lto  -:to 0} lo
 NB.     t0o  - (T[0,0],T[1,1],...,T[i+TRFNB-1,i+TRFNB-1]) =
 NB.            (t0i[0],t0i[1],...,t0i[i-1],subT[0,0],subT[1,1],...,subT[TRFNB-1,TRFNB-1])
 NB.     t1o  - (T[1,0],T[2,1],...,T[i+TRFNB,i+TRFNB-1]) =
@@ -282,7 +281,7 @@ NB.     http://www.cs.cas.cz/miro/rst08.pdf
 lahefpl=: (3 : 0)^:(TRFNB<.#@(0&{::))
   'ip A lt t0 t1'=. y
   w=. lt ((-~&# { ]) ((}.~ #) - ({.~ #) mp ]) ((-~,-@[)&# {. ])) A
-  A=. (w,:lt) ((0 liosE),:(0 liosS))&c } A
+  A=. (w,:lt) ((0 liosE),:(0 liosS))&c} A
   w=. 0 (9&o.) upd w - lt (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
   lt=. lt (+@}.@] - ((* }.)~ {.)) w
   dip=. (liofmax (-@] <@, -) #) lt
@@ -313,7 +312,7 @@ NB.   subA      - (n+i+1)×(n+i+1)-matrix to factorize,
 NB.               Hermitian (symmetric), the top left part of
 NB.               A
 NB.   uti       - (n+i+1)-vector, is defined as:
-NB.                 uti=. ti _1 } ui
+NB.                 uti=. ti _1} ui
 NB.   t0i       - (i+1)-vector, float, tail elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i+1,n-1))-vector, tail elements
@@ -411,7 +410,7 @@ NB. Algorithm (assume TRFNB-n-1<i<-1):
 NB.   In:
 NB.     ipi  -:i. (n+i+1)
 NB.     subA - A[0:n+i,0:n+i]
-NB.     uti  -:ti _1 } ui
+NB.     uti  -:ti _1} ui
 NB.     t0i  - (T[n+i+1,n+i+1],T[n+i+2,n+i+2],...,T[n-1,n-1])
 NB.     t1i  - (T[n+i,n+i+1],T[n+i+1,n+i+2],...,T[n-2,n-1])
 NB.     ui   - vector to write into subU1[0:n+i,n+i] i.e.
@@ -420,7 +419,7 @@ NB.     ti   - any scalar
 NB.   Out:
 NB.     ipo  - ip[0:n+i]
 NB.     B    - see layout
-NB.     uto  -:to _1 } uo
+NB.     uto  -:to _1} uo
 NB.     t0o  - (T[n+i-TRFNB+1,n+i-TRFNB+1],T[n+i-TRFNB+2,n+i-TRFNB+2],...,T[n-1,n-1]) =
 NB.            (subT[0,0],subT[1,1],...,subT[TRFNB-1,TRFNB-1],t0i[0],t0i[1],...,t0i[-i-2])
 NB.     t1o  - (T[n+i-TRFNB,n+i-TRFNB+1],T[n+i-TRFNB+1,n+i-TRFNB+2],...,T[n-2,n-1]) =
@@ -524,7 +523,7 @@ NB.     http://www.cs.cas.cz/miro/rst08.pdf
 lahefpu=: (3 : 0)^:(TRFNB<.#@(0&{::))
   'ip A ut t0 t1'=. y
   w=. ut ((<:@-&# { ]) (({.~ c) - (}.~ c) mp ]) ((-,[)&# {. ])) A
-  A=. (ut,:w) ((0 liosN),:(0 liosW))&c } A
+  A=. (ut,:w) ((0 liosN),:(0 liosW))&c} A
   w=. _1 (9&o.) upd w - ut (({:@[ * +@((1 liosN)&# ({,) ])) :: 0:) A
   ut=. ut (+@}:@] - ((* }:)~ {:)) w
   dip=. (<:@(1>.#) <@, liolmax) ut
@@ -982,8 +981,8 @@ NB.   'ip U1L'=. getrfpu1l A
 NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
-NB.   U1=. (tru1~ (-~/@$)) U1L
-NB.   L=. (trl~ (-~/@$)) U1L
+NB.   U1=. (tru1~ -~/@$) U1L
+NB.   L=. (trl~ -~/@$) U1L
 
 getrfpu1l=: 3 : 0
   'm n'=. sh=. $ y
@@ -1136,8 +1135,8 @@ NB.   'ip UL1'=. getrful1p A
 NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
-NB.   U=. (tru~ (-~/@$)) UL1
-NB.   L1=. (trl1~ (-~/@$)) UL1
+NB.   U=. (tru~ -~/@$) UL1
+NB.   L1=. (trl1~ -~/@$) UL1
 
 getrful1p=: 3 : 0
   'm n'=. sh=. $ y
@@ -1611,7 +1610,7 @@ NB.   Test:
 NB.   - lud (math/misc)
 NB.   - getrf (math/lapack)
 NB.   - getrfxxxx (math/mt)
-NB.   by general matrix given
+NB.   by general matrix
 NB.
 NB. Syntax:
 NB.   testgetrf A
@@ -1642,14 +1641,14 @@ testgetrf=: 3 : 0
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('lud_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: %.               2&{::)                        ) % (FP_EPS * norm1 * c)@[))) y
+  ('lud_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: %.               2&{::)                        ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
 
-  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: invperm_jlapack_ 2&{::)                        ) % (FP_EPS * norm1 * c)@[))) y
+  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: invperm_jlapack_ 2&{::)                        ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
 
-  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))) % (FP_EPS * norm1 * #)@[))) y
-  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))) % (FP_EPS * norm1 * c)@[))) y
-  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))) % (FP_EPS * norm1 * c)@[))) y
-  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))) % (FP_EPS * norm1 * #)@[))) y
+  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
 
   coerase <'mttmp'
 
@@ -1660,7 +1659,7 @@ NB. ---------------------------------------------------------
 NB. testhetrf
 NB.
 NB. Description:
-NB.   Test hetrfpx by Hermitian (symmetric) matrix given
+NB.   Test hetrfpx by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testhetrf A
@@ -1676,8 +1675,8 @@ NB.     berr := ||P * U1 * T * U1^H * P^H - A|| / (FP_EPS * ||A|| * n)
 testhetrf=: 3 : 0
   rcond=. hecon1 y
 
-  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&{::)) % (FP_EPS * norm1 * c)@[))) y
-  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&{::)) % (FP_EPS * norm1 * #)@[))) y
+  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
 
   EMPTY
 )
@@ -1690,7 +1689,7 @@ NB.   Test:
 NB.   - choleski (math/misc addon)
 NB.   - potrf (math/lapack addon)
 NB.   - potrfx (math/mt addon)
-NB.   by Hermitian (symmetric) positive definite matrix given
+NB.   by Hermitian (symmetric) positive definite matrix
 NB.
 NB. Syntax:
 NB.   testpotrf A
@@ -1715,12 +1714,12 @@ testpotrf=: 3 : 0
 
   rcond=. pocon1 y
 
-  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * norm1 * c)@[))) y
+  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
 
-  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * norm1 * c)@[))) y
+  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
 
-  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * norm1 * c)@[))) y
-  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * norm1 * #)@[))) y
+  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
 
   coerase <'mttmp'
 
@@ -1732,7 +1731,7 @@ NB. testpttrf
 NB.
 NB. Description:
 NB.   Test pttrfpx by Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix given
+NB.   tridiagonal matrix
 NB.
 NB. Syntax:
 NB.   testpttrf A
@@ -1752,8 +1751,8 @@ NB. - A should be sparse
 testpttrf=: 3 : 0
   rcond=. ptcon1 y
 
-  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * norm1 * c)@[))) y
-  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * norm1 * #)@[))) y
+  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
 
   EMPTY
 )

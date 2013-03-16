@@ -5,12 +5,12 @@ NB. gehrdx     Reduce a general matrix to Hessenberg form
 NB. gghrdx     Reduce a pair of general and triangular
 NB.            matrices to generalized Hessenberg form
 NB.
-NB. testgehrd  Test gehrdx by general matrix given
-NB. testgghrd  Test gghrdx by general matrices given
+NB. testgehrd  Test gehrdx by square matrix
+NB. testgghrd  Test gghrdx by pair of square matrices
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -84,14 +84,14 @@ lahr2l=: 3 : 0
   T=. H=. 0 0 $ 0
   j=. 0
   while. j < HRDNB do.
-    b=. (j { y) - (+ (<: j) {"1 V) mp (j {. y)
-    b=. b - (((0 (_1) } b) mp (ct V)) mp (ct T)) mp V  NB. matrix-by-vector ops only
-    z1=. 1 j } z=. _1 + upd (j , _1) larfg (0 (i. j) } b)
+    b=. (j { y) - (+ (<: j) {"1 V) mp j {. y
+    b=. b - ((((0) _1} b) mp ct V) mp ct T) mp V  NB. matrix-by-vector ops only
+    z1=. 1 j} z=. _1 + upd (j , _1) larfg (0 (i. j)} b)
     u=. (* +@{:) z1
-    w=. V +@mp (+ - 0 (_1) } u)
-    T=. T appendl ((w mp T) , (+ {: z1))
-    y=. ((w (i. j) } (0 , u)) mp y) j } y
-    H=. H appendl ((j {. b) , (j { z))
+    w=. V +@mp + - (0) _1} u
+    T=. T appendl (w mp T) , + {: z1
+    y=. ((w (i. j)} 0 , u) mp y) j} y
+    H=. H appendl (j {. b) , j { z
     V=. V appendr z1
     j=. >: j
   end.
@@ -142,13 +142,13 @@ lahr2u=: 3 : 0
   j=. 0
   while. j < HRDNB do.
     b=. (j {"1 y) - (j {."1 y) mp + (<: j) { V
-    b=. b - V mp (ct T) mp (ct V) mp 0 (_1) } b  NB. matrix-by-vector ops only
-    z1=. 1 j } z=. (j , _1) larfg (0 (i. j) } b)
+    b=. b - V mp (ct T) mp (ct V) mp (0) _1} b  NB. matrix-by-vector ops only
+    z1=. 1 j} z=. (j , _1) larfg 0 (i. j)} b
     u=. (* {:) z1
-    w=. (+ - 0 (_1) } u) +@mp V
-    T=. T stitcht ((T mp w) , ({: z1))
-    y=. (y mp (w (i. j) } (0 , u))) (< a: ; j) } y
-    H=. H stitcht ((j {. b) , (j { z))
+    w=. (+ - (0) _1} u) +@mp V
+    T=. T stitcht (T mp w) , {: z1
+    y=. (y mp w (i. j)} 0 , u) (< a: ; j)} y
+    H=. H stitcht (j {. b) , j { z
     V=. V stitchb z1
     j=. >: j
   end.
@@ -176,19 +176,19 @@ NB.         matrix A, see gehrdl
 NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdl
 
 gehd2l=: 4 : 0
-  A=. ({. x) {. y                             NB. skip ...
-  y=. ({. x) }. y                             NB. ...reduced rows
-  'j jlimit'=. 1 0 + (+/\) x                  NB. 'j jlimit'=. (h+1),(h+s)
-  while. j < jlimit do.                       NB. (s-1)-vector: h+1,h+2,...,h+s-1
+  A=. ({. x) {. y                              NB. skip ...
+  y=. ({. x) }. y                              NB. ...reduced rows
+  'j jlimit'=. 1 0 + +/\ x                     NB. 'j jlimit'=. (h+1),(h+s)
+  while. j < jlimit do.                        NB. (s-1)-vector: h+1,h+2,...,h+s-1
     r=. {. y
-    z1=. 1 (0) } z=. larfgfc j }. r
-    eL=. z1 larflcfr (}. y)                   NB. L := H' * L
-    eR=. z1 larfrnfr (j }."1 eL)              NB. R := R * H
-    A=. A , ((j {. r) , z)
+    z1=. (1) 0} z=. larfgfc j }. r
+    eL=. z1 larflcfr }. y                      NB. L := H' * L
+    eR=. z1 larfrnfr j }."1 eL                 NB. R := R * H
+    A=. A , (j {. r) , z
     y=. (j {."1 eL) ,. eR
     j=. >: j
   end.
-  0 (< ((c y) th2lios&<: jlimit);_1) } (A,y)  NB. clear τ[h+s-1:n-1]
+  0 (< ((c y) th2lios&<: jlimit) ; _1)} A , y  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -215,19 +215,19 @@ NB. Notes:
 NB. - implements LAPACK's xGEHD2 up to storage layout
 
 gehd2u=: 4 : 0
-  A=. ({. x) {."1 y                            NB. skip ...
-  y=. ({. x) }."1 y                            NB. ...reduced columns
-  'j jlimit'=. 1 0 + (+/\) x                   NB. 'j jlimit'=. (h+1),(h+s)
-  while. j < jlimit do.                        NB. (s-1)-vector: h+1,h+2,...,h+s-1
+  A=. ({. x) {."1 y                           NB. skip ...
+  y=. ({. x) }."1 y                           NB. ...reduced columns
+  'j jlimit'=. 1 0 + +/\ x                    NB. 'j jlimit'=. (h+1),(h+s)
+  while. j < jlimit do.                       NB. (s-1)-vector: h+1,h+2,...,h+s-1
     c=. {."1 y
-    z1=. 1 (0) } z=. larfgf j }. c
-    eR=. z1 larfrnfc (0 1 }. y)                NB. R := R * H
-    eL=. z1 larflcfc (j }. eR)                 NB. L := H' * L
-    A=. A ,. ((j {. c) , z)
+    z1=. (1) 0} z=. larfgf j }. c
+    eR=. z1 larfrnfc 0 1 }. y                 NB. R := R * H
+    eL=. z1 larflcfc j }. eR                  NB. L := H' * L
+    A=. A ,. (j {. c) , z
     y=. (j {. eR) , eL
     j=. >: j
   end.
-  0 (< _1;((# y) th2lios&<: jlimit)) } (A,.y)  NB. clear τ[h+s-1:n-1]
+  0 (< _1 ; (# y) th2lios&<: jlimit)} A ,. y  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -267,12 +267,12 @@ NB.             have the same shapes
 
 gghrdl=: 4 : 0
   'h s'=. x
-  t=. h+s-1
+  t=. h + s - 1
   n=. c y
   dQ0=. dZ0=. 0 4 $ 0
   i=. h
   liosr1a=. n th2lios i                        NB. (n-h)-vector h:n-1
-  liosc2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
+  liosc2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
   while. i < <: t do.                          NB. (s-2)-vector: h:h+s-3
     j=. t
     liosr1b=. n th2lios <: j                   NB. (n-h-s+2)-vector h+s-2:n-1
@@ -289,7 +289,7 @@ gghrdl=: 4 : 0
       y=. (< 0 ; lios ; liosc2a) cs&rot upd y
       dQ0=. dQ0 , cs , lios
       NB. step 3: update IOS
-      liosr1b=. (j-2) , liosr1b
+      liosr1b=. (j - 2) , liosr1b
       liosc2b=. }: liosc2b
       j=. <: j
     end.
@@ -341,12 +341,12 @@ NB.     3rd edition, 1996, p. 378.
 
 gghrdu=: 4 : 0
   'h s'=. x
-  t=. h+s-1
+  t=. h + s - 1
   n=. c y
   dQ0=. dZ0=. 0 4 $ 0
   j=. h
   liosc1a=. n th2lios j                        NB. (n-h)-vector h:n-1
-  liosr2a=. i. h+s                             NB. (h+s)-vector 0:h+s-1
+  liosr2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
   while. j < <: t do.                          NB. (s-2)-vector h:h+s-3
     i=. t
     liosc1b=. n th2lios <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
@@ -363,7 +363,7 @@ gghrdu=: 4 : 0
       y=. (< 0 ; liosr2a ; lios) cs&(rot&.|:) upd y
       dZ0=. dZ0 , cs , lios
       NB. step 3: update IOS
-      liosc1b=. (i-2) , liosc1b
+      liosc1b=. (i - 2) , liosc1b
       liosr2b=. }: liosr2b
       i=. <: i
     end.
@@ -391,9 +391,6 @@ NB.   A   - n×n-matrix to reduce
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see geballp and storage layout below
-NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
-NB.         defines submatrix A11 to be reduced position in
-NB.         matrix A, see gebalpl and storage layout below
 NB.   HQf - n×(n+1)-matrix, combined H and Qf
 NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
@@ -440,7 +437,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   ((idmat@#) -: po) Q
 NB.   H -: A (mp~ mp ct@]) Q
 NB. where
-NB.   HQf=. gehrdl A
+NB.   HQf=. (gehrdl~ 0 , #) A
 NB.   H=. 1 trl 0 _1 }. HQf
 NB.   Q=. unghrl HQf
 
@@ -451,21 +448,21 @@ gehrdl=: 4 : 0
   Atop=. (h , _) {. y
   Aleft=. (h - (n1 , _1)) {. y
   y=. (h + 0 1) }. y
-  I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB  NB. how many panels will be reduced
-  'i ilimit'=. h + (0,HRDNB) * I             NB. 'i ilimit'=. h,(h+HRDNB*I)
-  while. i < ilimit do.                      NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2lios (h,I))
-    'Y V H T'=. lahr2l y                     NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
-    eV0=. 0 ,. (0 (_1) }"1 V)                NB. prepend by zero column, replace τs by zeros
-    Aleft=. Aleft - (ct eV0) mp (T mp (eV0 mp Aleft))  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
-    y=. (HRDNB }. y) - (ct (HRDNB }."1 eV0)) mp Y      NB. apply reflector from the left
-    y=. y - (y mp (ct T mp (0 (_1) }"1 V))) mp V       NB. apply reflector from the right
-    V=. ((i. HRDNB) </ (i. (n-i))) } H ,: V  NB. write H into V's lower triangle in-place
+  I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB      NB. how many panels will be reduced
+  'i ilimit'=. h + (0 , HRDNB) * I                 NB. 'i ilimit'=. h,(h+HRDNB*I)
+  while. i < ilimit do.                            NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2lios (h,I))
+    'Y V H T'=. lahr2l y                           NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
+    eV0=. 0 ,. (0) _1}"1 V                         NB. prepend by zero column, replace τs by zeros
+    Aleft=. Aleft - (ct eV0) mp T mp eV0 mp Aleft  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
+    y=. (HRDNB }. y) - (ct HRDNB }."1 eV0) mp Y    NB. apply reflector from the left
+    y=. y - (y mp ct T mp (0) _1}"1 V) mp V        NB. apply reflector from the right
+    V=. ((i. HRDNB) </ i. n - i)} H ,: V           NB. write H into V's lower triangle in-place
     Atop=. Atop , (HRDNB {. Aleft) ,. V
-    Aleft=. (HRDNB }. Aleft) ,. (HRDNB {."1 y)
+    Aleft=. (HRDNB }. Aleft) ,. HRDNB {."1 y
     y=. HRDNB }."1 y
     i=. HRDNB + i
   end.
-  _1 0 }. (x + 1 _1 * HRDNB * I) gehd2l (Atop , Aleft ,. y)
+  _1 0 }. (x + 1 _1 * HRDNB * I) gehd2l Atop , Aleft ,. y
 )
 
 NB. ---------------------------------------------------------
@@ -530,7 +527,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   ((idmat@#) -: (mp~ ct)) Q
 NB.   H -: A (ct@] mp mp) Q
 NB. where
-NB.   HQf=. gehrdu A
+NB.   HQf=. (gehrdu~ 0, #) A
 NB.   H=. _1 tru _1 0 }. HQf
 NB.   Q=. unghru HQf
 NB.
@@ -542,23 +539,23 @@ gehrdu=: 4 : 0
   n1=. >: n=. # y
   y=. (2 $ n1) {. y
   Aleft=. h {."1 y
-  Atop=. (h - (_1 , n1)) {. y
+  Atop=. (h - _1 , n1) {. y
   y=. (h + 1 0) }. y
-  I=. 0 >. <. (s - (2+HRDNX-HRDNB)) % HRDNB  NB. how many panels will be reduced
-  'i ilimit'=. h + (0,HRDNB) * I             NB. 'i ilimit'=. h,(h+HRDNB*I)
-  while. i < ilimit do.                      NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2lios (h,I))
-    'Y V H T'=. lahr2u y                     NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
-    eV0=. 0 , (0 (_1) } V)                   NB. prepend by zero row, replace τs by zeros
-    Atop=. Atop - ((Atop mp eV0) mp T) mp (ct eV0)  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
-    y=. (HRDNB }."1 y) - Y mp (ct (HRDNB }. eV0))   NB. apply reflector from the right
-    y=. y - V mp (ct (0 (_1) } V) mp T) mp y        NB. apply reflector from the left
-    V=. ((i. (n-i)) >/ (i. HRDNB)) } H ,: V  NB. write H into V's upper triangle in-place
+  I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB     NB. how many panels will be reduced
+  'i ilimit'=. h + (0 , HRDNB) * I                NB. 'i ilimit'=. h,(h+HRDNB*I)
+  while. i < ilimit do.                           NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2lios (h,I))
+    'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
+    eV0=. 0 , (0) _1} V                           NB. prepend by zero row, replace τs by zeros
+    Atop=. Atop - ((Atop mp eV0) mp T) mp ct eV0  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
+    y=. (HRDNB }."1 y) - Y mp ct HRDNB }. eV0     NB. apply reflector from the right
+    y=. y - V mp (ct ((0) _1} V) mp T) mp y       NB. apply reflector from the left
+    V=. ((i. n - i) >/ i. HRDNB)} H ,: V          NB. write H into V's upper triangle in-place
     Aleft=. Aleft ,. (HRDNB {."1 Atop) , V
-    Atop=. (HRDNB }."1 Atop) , (HRDNB {. y)
+    Atop=. (HRDNB }."1 Atop) , HRDNB {. y
     y=. HRDNB }. y
     i=. HRDNB + i
   end.
-  0 _1 }. (x + 1 _1 * HRDNB * I) gehd2u (Aleft ,. Atop , y)
+  0 _1 }. (x + 1 _1 * HRDNB * I) gehd2u Aleft ,. Atop , y
 )
 
 NB. ---------------------------------------------------------
@@ -744,7 +741,7 @@ NB. Description:
 NB.   Test Hessenberg reduction algorithms:
 NB.   - gehrd (math/lapack addon)
 NB.   - gehrdx (math/mt addon)
-NB.   by general matrix given
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   testgehrd A
@@ -752,8 +749,8 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
-NB. - Q^H * H * Q = A : berr := ||A - Q^H * H * Q|| / (FP_EPS * ||A|| * n)
-NB. - Q * H * Q^H = A : berr := ||A - Q * H * Q^H|| / (FP_EPS * ||A|| * n)
+NB. - for gehrdl: berr := ||A - Q^H * H * Q|| / (FP_EPS * ||A|| * n)
+NB. - for gehrdu: berr := ||A - Q * H * Q^H|| / (FP_EPS * ||A|| * n)
 
 testgehrd=: 3 : 0
   require :: ] '~addons/math/lapack/lapack.ijs'
@@ -761,10 +758,10 @@ testgehrd=: 3 : 0
 
   rcond=. gecon1 y
 
-  ('2b1100&gehrd_jlapack_' tmonad ((] ; 1: ; #)`(,&>/)`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * norm1 * #)@[))) y
+  ('2b1100&gehrd_jlapack_' tmonad ((] ; 1: ; #)`(,&>/)`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
 
-  ('gehrdl'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- ( 1&trl@:(}:"1) (] mp~ (mp~ ct)) unghrl)) % (FP_EPS * norm1 * #)@[))) y
-  ('gehrdu'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * norm1 * #)@[))) y
+  ('gehrdl'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- ( 1&trl@:(}:"1) (] mp~ (mp~ ct)) unghrl)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('gehrdu'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
 
   EMPTY
 )
@@ -775,7 +772,7 @@ NB.
 NB. Description:
 NB.   Test Hessenberg reduction algorithms:
 NB.   - gghrdx (math/mt addon)
-NB.   by general matrices given
+NB.   by pair of square matrices
 NB.
 NB. Syntax:
 NB.   testgghrd AB
@@ -787,13 +784,13 @@ NB.   berr := max(berr0,berr1,berr2,berr3)
 NB. where
 NB.   ||M|| := max(||M||_1 , FP_SFMIN)
 NB.   'H T dQ0 dZ0'=. (0,n) gghrdxvv A , B , ,:~ I
-NB.   - gghrdl:
+NB.   - for gghrdl:
 NB.       berr0 := ||A - dQ0^H * H * dZ0|| / (FP_PREC * ||A|| * n)
 NB.       berr1 := ||B - dQ0^H * T * dZ0|| / (FP_PREC * ||B|| * n)
 NB.       berr2 := ||I - dQ0^H * dQ0|| / (FP_PREC * n)
 NB.       berr3 := ||I - dZ0^H * dZ0|| / (FP_PREC * n)
 NB.       B - lower triangular
-NB.   - gghrdu:
+NB.   - for gghrdu:
 NB.       berr0 := ||A - dQ0 * H * dZ0^H|| / (FP_PREC * ||A|| * n)
 NB.       berr1 := ||B - dQ0 * T * dZ0^H|| / (FP_PREC * ||B|| * n)
 NB.       berr2 := ||I - dQ0 * dQ0^H|| / (FP_PREC * n)
@@ -823,14 +820,14 @@ testgghrd=: 3 : 0
   rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag ABl
   rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag ABu
 
-  ('gghrdlnn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
-  ('gghrdlnv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvn' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvv' tdyad ((0,c)`]`]`(rcondl"_)`(_."_)`vberrl)) ABl , ,:~ I
-  ('gghrdunn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu
-  ('gghrdunv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvn' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvv' tdyad ((0,c)`]`]`(rcondu"_)`(_."_)`vberru)) ABu , ,:~ I
+  ('gghrdlnn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
+  ('gghrdlnv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
+  ('gghrdlvn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
+  ('gghrdlvv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`vberrl)) ABl , ,:~ I
+  ('gghrdunn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu
+  ('gghrdunv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
+  ('gghrduvn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
+  ('gghrduvv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`vberru)) ABu , ,:~ I
 
   erase 'cdiff1 adiff2 vberrl vberru'
 

@@ -59,8 +59,8 @@ gqvberr=: 2 : '(norm1_mt_@(<: upddiag_mt_)@(u ct_mt_) % FP_EPS_mt_ * v)@]'  NB. 
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-GQNB=: 3 NB. 32   NB. block size limit
-GQNX=: 4 NB. 128  NB. crossover point, GQNX ≥ GQNB
+GQNB=: 32   NB. block size limit
+GQNX=: 128  NB. crossover point, GQNX ≥ GQNB
 
 NB. =========================================================
 NB. Interface
@@ -82,7 +82,7 @@ NB.         elementary reflectors of order n:
 NB.           Q = Π{H(i)',i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   ≤ min(m,n), optional, default is min(m,n)
+NB.   k   ≤ n, optional, default is min(m,n)
 NB.
 NB. Storage layout:
 NB.   LQf for m=3, n=7:                  LQf for m=7, n=3:
@@ -111,9 +111,7 @@ NB. - implements LAPACK's DORGLQ, ZUNGLQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
-unglq=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [) larfbrcfr (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)@ (] :   {.        )
-
-unglq_3=: ($:~ 0 _1 <./@:+ $) :(}:"1@(([ (({."1~ -@c) larfbrcfr ]) idmat@(((] , +) #)~ c) appendr ])&:>/)@([ (   (<;.1~ (0 1:`(GQNB dhs2lios 0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@(idmat@((- {.) , -~/@]) $)) tru1pick@((<./@, 0 _1 + $) {. ])))
+unglq=: ($:~ 0 _1 <./@:+ $) :(}:"1@(([ (({."1~ -@c) larfbrcfr ])  idmat      @(((] ,  +) #)~ c) appendr  ])&:>/)@([ (   (<;.1~      (0 1:`(GQNB dhs2lios  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@( idmat      @((- {.) ,  -~/@]) $))  tru1pick        @((   <./ @, 0 _1 + $) {.   ])))
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -132,7 +130,7 @@ NB.         elementary reflectors of order m:
 NB.           Q = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   ≤ min(m,n), optional, default is min(m,n)
+NB.   k   ≤ m, optional, default is min(m,n)
 NB.
 NB. Storage layout:
 NB.   QfL for m=3, n=7:               QfL for m=7, n=3:
@@ -162,9 +160,7 @@ NB. - implements LAPACK's DORGQL, ZUNGQL
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-ungql=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) larfblnbc    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)@ (] : (({."1~ -)~))
-
-ungql_3=: ($:~ _1 0 <./@:+ $) :(}.  @(([ (({.  ~   #) larfblnbc ]) (idmat~ -~/)@(((] ,~ +) c)~ #) stitcht~ ])&:>/)@([ (|.@(<;.2~ '' ; (0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@((idmat~ -~/)@((- {:) ,~ - /@]) $)) (tru1pick~ -~/@$)@((-@(<./)@, _1 0 + $) {."1 ])))
+ungql=: ($:~ _1 0 <./@:+ $) :(}.  @(([ (({.  ~   #) larfblnbc ]) (idmat~ -~/)@(((] ,~ +) c)~ #) stitcht~ ])&:>/)@([ (|.@(<;.2~ '' ; (0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@((idmat~ -~/)@((- {:) ,~ - /@]) $)) (tru1pick~ -~/@$)@((-@(<./)@, _1 0 + $) {."1 ])))
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -183,7 +179,7 @@ NB.         elementary reflectors of order m:
 NB.           Q = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   ≤ min(m,n), optional, default is min(m,n)
+NB.   k   ≤ m, optional, default is min(m,n)
 NB.
 NB. Storage layout:
 NB.   QfR for m=3, n=7:               QfR for m=7, n=3:
@@ -213,9 +209,7 @@ NB. - implements LAPACK's DORGQR, ZUNGQR
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
-ungqr=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [) larfblnfc (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)@:(] : ( {."1     ))
-
-ungqr_3=: ($:~ _1 0 <./@:+ $) :(}:  @(([ (({.  ~ -@#) larfblnfc ]) idmat@(((] ,~ +) c)~ #) stitchb ])&:>/)@([ (   (<;.1~ '' ; (0 1:`(GQNB dhs2lios 0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@(idmat@((- {:) ,~ - /@]) $)) trl1pick@((<./@, _1 0 + $) {."1 ])))
+ungqr=: ($:~ _1 0 <./@:+ $) :(}:  @(([ (({.  ~ -@#) larfblnfc ])  idmat      @(((] ,~ +) c)~ #) stitchb  ])&:>/)@([ (   (<;.1~ '' ; (0 1:`(GQNB dhs2lios  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@( idmat      @((- {:) ,~ - /@]) $))  trl1pick        @((   <./ @, _1 0 + $) {."1 ])))
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -234,7 +228,7 @@ NB.         elementary reflectors of order n:
 NB.           Q = Π{H(i)',i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   ≤ min(m,n), optional, default is min(m,n)
+NB.   k   ≤ n, optional, default is min(m,n)
 NB.
 NB. Storage layout:
 NB.   RQf for m=3, n=7:                 RQf for m=7, n=3:
@@ -263,9 +257,7 @@ NB. - implements LAPACK's DORGRQ, ZUNGRQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
-ungrq=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) larfbrcbr    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)@ (] : (({.  ~ -)~))
-
-ungrq_3=: ($:~ 0 _1 <./@:+ $) :(}."1@(([ (({."1~   c) larfbrcbr ]) (idmat~ -~/)@(((] ,  +) #)~ c) appendl~ ])&:>/)@([ (|.@(<;.2~      (0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@((idmat~ -~/)@((- {.) ,  -~/@]) $)) (trl1pick~ -~/@$)@((-@(<./)@, 0 _1 + $) {.   ])))
+ungrq=: ($:~ 0 _1 <./@:+ $) :(}."1@(([ (({."1~   c) larfbrcbr ]) (idmat~ -~/)@(((] ,  +) #)~ c) appendl~ ])&:>/)@([ (|.@(<;.2~      (0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@((idmat~ -~/)@((- {.) ,  -~/@]) $)) (trl1pick~ -~/@$)@((-@(<./)@, 0 _1 + $) {.   ])))
 
 NB. ---------------------------------------------------------
 NB. unglz
@@ -284,11 +276,11 @@ NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   ≤ n, optional, default is m
+NB.   k   ≤ n, optional, default is min(m,n)
 NB.   m   ≤ n
 NB.
 NB. Storage layout:
-NB.   LZf for m=3, n=7, l=5:
+NB.   LZf for m=3, n=7:
 NB.     (  τ0 v0 v0 v0 v0 l  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 l  l  0   )
 NB.     (  τ2 v2 v2 v2 v2 l  l  l   )
@@ -323,11 +315,11 @@ NB.         elementary reflectors of order m:
 NB.           Z = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   ≤ m, optional, default is n
+NB.   k   ≤ m, optional, default is min(m,n)
 NB.   n   ≤ m
 NB.
 NB. Storage layout:
-NB.   ZfL for m=7, n=3, l=5:
+NB.   ZfL for m=7, n=3:
 NB.   (  l  0  0   )
 NB.   (  l  l  0   )
 NB.   (  l  l  l   )
@@ -367,11 +359,11 @@ NB.         elementary reflectors of order m:
 NB.           Z = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   ≤ m, optional, default is n
+NB.   k   ≤ m, optional, default is min(m,n)
 NB.   n   ≤ m
 NB.
 NB. Storage layout:
-NB.   ZfR for m=7, n=3, l=5:
+NB.   ZfR for m=7, n=3:
 NB.   (  τ0 τ1 τ2  )
 NB.   (  v0 v1 v2  )
 NB.   (  v0 v1 v2  )
@@ -411,11 +403,11 @@ NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   ≤ n, optional, default is m
+NB.   k   ≤ n, optional, default is min(m,n)
 NB.   m   ≤ n
 NB.
 NB. Storage layout:
-NB.   RZf for m=3, n=7, l=5:
+NB.   RZf for m=3, n=7:
 NB.     (  r  r  r  v0 v0 v0 v0 τ0  )
 NB.     (  0  r  r  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  r  v2 v2 v2 v2 τ2  )
@@ -501,10 +493,8 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - for unglq, ungrq:
-NB.     berr := ||Q * Q^H - I|| / (FP_EPS * n)
-NB. - for ungql, ungqr:
-NB.     berr := ||Q^H * Q - I|| / (FP_EPS * m)
+NB. - for unglq, ungrq: berr := ||Q * Q^H - I|| / (FP_EPS * n)
+NB. - for ungql, ungqr: berr := ||Q^H * Q - I|| / (FP_EPS * m)
 
 testungq=: 3 : 0
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
@@ -529,10 +519,8 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - for unglz, ungrz:
-NB.     berr := ||Z * (Z^H) - I|| / (FP_EPS * n)
-NB. - for ungql, ungqr:
-NB.     berr := ||(Z^H) * Z - I|| / (FP_EPS * m)
+NB. - for unglz, ungrz: berr := ||Z * Z^H - I|| / (FP_EPS * n)
+NB. - for ungzl, ungzr: berr := ||Z^H * Z - I|| / (FP_EPS * m)
 
 testungz=: 3 : 0
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
@@ -559,13 +547,11 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
-NB. - for unghrl:
-NB.     berr := ||Q * Q^H - I|| / (FP_EPS * n)
-NB. - for ungql, ungqr :
-NB.     berr := ||Q^H * Q - I|| / (FP_EPS * m)
+NB. - for unghrl: berr := ||Q * Q^H - I|| / (FP_EPS * n)
+NB. - for unghru: berr := ||Q^H * Q - I|| / (FP_EPS * n)
 
 testunghr=: 3 : 0
-  ('unghrl' tmonad ((gehrdl~ 0 , #)`]`(uncon1@])`(_."_)`(mp  gqvberr c))) y
+  ('unghrl' tmonad ((gehrdl~ 0 , #)`]`(uncon1@])`(_."_)`(mp  gqvberr #))) y
   ('unghru' tmonad ((gehrdu~ 0 , #)`]`(uncon1@])`(_."_)`(mp~ gqvberr #))) y
 
   EMPTY

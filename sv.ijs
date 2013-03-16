@@ -24,19 +24,18 @@ NB.           matrix; op(A) is either A itself, or A^T (the
 NB.           transposition of A); B is known right-hand side
 NB.           (RHS), X is unknown solution
 NB.
-NB. testgesv  Test gesvxxx by general matrix given
+NB. testgesv  Test gesvxxx by square matrix
 NB. testhesv  Test hesvxxx by Hermitian (symmetric) matrix
-NB.           given
 NB. testposv  Test posvxxx by Hermitian (symmetric) positive
-NB.           definite matrix given
+NB.           definite matrix
 NB. testptsv  Test ptsvxxx by Hermitian (symmetric) positive
-NB.           definite tridiagonal matrix given
+NB.           definite tridiagonal matrix
 NB. testsv    Adv. to make verb to test xxsvxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.9.0 2012-12-29
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -202,7 +201,7 @@ NB.   Test:
 NB.   - %. (built-in)
 NB.   - gesv (math/lapack addon)
 NB.   - gesvxxx (math/mt addon)
-NB.   by general matrix given
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   testgesv (A;X)
@@ -221,16 +220,16 @@ testgesv=: 3 : 0
   'A X'=. y
   'conA conAh conAt'=. gecon1"2 (] , ct ,: |:) A
 
-  ('%.'       tdyad ((mp&>/     )`(0&{:: )`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) y
+  ('%.'       tdyad ((mp&>/     )`(0&{:: )`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
 
-  ('gesv_jlapack_' tmonad ((0&{:: ; mp&>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) y
+  ('gesv_jlapack_' tmonad ((0&{:: ; mp&>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
 
-  ('gesvax'   tdyad ((    0&{:: )`(mp &>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) y
-  ('gesvahx'  tdyad ((ct@(0&{::))`(mp &>/)`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) ((ct A);X)
-  ('gesvatx'  tdyad ((|:@(0&{::))`(mp &>/)`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) ((|: A);X)
-  ('gesvxa'   tdyad ((    0&{:: )`(mp~&>/)`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) y
-  ('gesvxah'  tdyad ((ct@(0&{::))`(mp~&>/)`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) ((ct A);X)
-  ('gesvxat'  tdyad ((|:@(0&{::))`(mp~&>/)`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) ((|: A);X)
+  ('gesvax'  tdyad ((    0&{:: )`(mp &>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
+  ('gesvahx' tdyad ((ct@(0&{::))`(mp &>/)`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X
+  ('gesvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
+  ('gesvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) y
+  ('gesvxah' tdyad ((ct@(0&{::))`(mp~&>/)`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X
+  ('gesvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
 
   EMPTY
 )
@@ -239,7 +238,7 @@ NB. ---------------------------------------------------------
 NB. testhesv
 NB.
 NB. Description:
-NB.   Test hesvxxx by Hermitian (symmetric) matrix given
+NB.   Test hesvxxx by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testhesv (A;X)
@@ -248,17 +247,17 @@ NB.   A - n×n-matrix, Hermitian (symmetric)
 NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
-NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
+NB.   ferr := max(||X - exactX|| / ||X||)
+NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
 
 testhesv=: 3 : 0
   'A X'=. y
   'conA conAt'=. hecon1"2 (] ,: |:) A
 
-  ('hesvax'  tdyad ((    0&{:: )`(mp &>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) y
-  ('hesvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) ((|: A);X)
-  ('hesvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) y
-  ('hesvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) ((|: A);X)
+  ('hesvax'  tdyad ((    0&{:: )`(mp &>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
+  ('hesvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
+  ('hesvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) y
+  ('hesvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
 
   EMPTY
 )
@@ -268,7 +267,7 @@ NB. testposv
 NB.
 NB. Description:
 NB.   Test posvxxx by Hermitian (symmetric) positive definite
-NB.   matrix given
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   testposv (A;X)
@@ -277,17 +276,17 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
-NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
+NB.   ferr := max(||X - exactX|| / ||X||)
+NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
 
 testposv=: 3 : 0
   'A X'=. y
   'conA conAt'=. pocon1"2 (] ,: |:) A
 
-  ('posvax'  tdyad ((    0&{:: )`(mp &>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) y
-  ('posvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) ((|: A);X)
-  ('posvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) y
-  ('posvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) ((|: A);X)
+  ('posvax'  tdyad ((    0&{:: )`(mp &>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
+  ('posvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
+  ('posvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) y
+  ('posvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
 
   EMPTY
 )
@@ -297,7 +296,7 @@ NB. testptsv
 NB.
 NB. Description:
 NB.   Test ptsvxxx by Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix given
+NB.   tridiagonal matrix
 NB.
 NB. Syntax:
 NB.   testptsv (A;X)
@@ -307,17 +306,17 @@ NB.       tridiagonal
 NB.   X - n×n-matrix, exact solution
 NB.
 NB. Formula:
-NB. - ferr := max(||X - exactX|| / ||X||)
-NB. - berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
+NB.   ferr := max(||X - exactX|| / ||X||)
+NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
 
 testptsv=: 3 : 0
   'A X'=. y
   'conA conAt'=. ptcon1"2 (] ,: |:) A
 
-  ('ptsvax'  tdyad ((    0&{:: )`(mp &>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) y
-  ('ptsvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tc@])))) ((|: A);X)
-  ('ptsvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) y
-  ('ptsvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * norm1@(0 {:: [)) * norm1tr@])))) ((|: A);X)
+  ('ptsvax'  tdyad ((    0&{:: )`(mp &>/)`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
+  ('ptsvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
+  ('ptsvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) y
+  ('ptsvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
 
   EMPTY
 )

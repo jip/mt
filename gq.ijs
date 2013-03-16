@@ -12,7 +12,7 @@ NB. testunghr  Test unghrx by square matrix given
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
@@ -56,7 +56,7 @@ NB. where        k = min(rows,columns)
 NB. Formula:     iters = max(0,⌊(k+NB-NX-1)/NB⌋)
 NB. Notes:       is memo, since repetitive calls are expected
 
-gqi=: (0 >. <.@(GQNB %~ (_1+GQNB-GQNX)&+))M.
+gqi=: (0 >. <.@(GQNB %~ (_1 + GQNB - GQNX)&+))M.
 
 NB. ---------------------------------------------------------
 NB. gqb
@@ -140,10 +140,10 @@ NB.   1) form eQ(0) as unit matrix of proper size
 NB.   2) do iterations: eQ=. (s;Qf) (ungxxstep^:k) eQ0
 NB.
 NB. Assertions:
-NB.   (] -: clean@((         trl   @:(}:"1)) mp  ((}:"1)@(# ungl2 ])@         tru1   @(  k & {.   )))@gelqf) A
-NB.   (] -: clean@((((-~/@$) trl ])@: }.   ) mp~ ( }.   @(c ung2l ])@((-~/@$) tru1 ])@((-k)&({."1))))@geqlf) A
-NB.   (] -: clean@((         tru   @: }:   ) mp~ ( }:   @(c ung2r ])@         trl1   @(  k &({."1))))@geqrf) A
-NB.   (] -: clean@((((-~/@$) tru ])@:(}."1)) mp  ((}."1)@(# ungr2 ])@((-~/@$) trl1 ])@((-k)& {.   )))@gerqf) A
+NB.   (] -: clean@(( trl        @:(}:"1)) mp  (}:"1@(ungl2~ #)@ tru1        @(  k & {.   )))@gelqf) A
+NB.   (] -: clean@(((trl~ -~/@$)@: }.   ) mp~ (}.  @(ung2l~ c)@(tru1~ -~/@$)@((-k)&({."1))))@geqlf) A
+NB.   (] -: clean@(( tru        @: }:   ) mp~ (}:  @(ung2r~ c)@ trl1        @(  k &({."1))))@geqrf) A
+NB.   (] -: clean@(((tru~ -~/@$)@:(}."1)) mp  (}."1@(ungr2~ #)@(tru1~ -~/@$)@((-k)& {.   )))@gerqf) A
 NB. where
 NB.   k=. <./ $ A
 NB.
@@ -156,10 +156,10 @@ NB.
 NB. TODO:
 NB. - case s<k must be allowed, too
 
-ungl2=: ungl2step^:(;`(#@])`( idmat        @((,  c)-#@])))
-ung2l=: ung2lstep^:(;`(c@])`((idmat~ (-~/))@((,~ #)-c@])))
-ung2r=: ung2rstep^:(;`(c@])`( idmat        @((,~ #)-c@])))
-ungr2=: ungr2step^:(;`(#@])`((idmat~ (-~/))@((,  c)-#@])))
+ungl2=: ungl2step^:(;`(#@])`( idmat      @((,  c)- #@])))
+ung2l=: ung2lstep^:(;`(c@])`((idmat~ -~/)@((,~ #)- c@])))
+ung2r=: ung2rstep^:(;`(c@])`( idmat      @((,~ #)- c@])))
+ungr2=: ungr2step^:(;`(#@])`((idmat~ -~/)@((,  c)- #@])))
 
 NB. ---------------------------------------------------------
 NB. Description:
@@ -202,11 +202,11 @@ NB. Notes:
 NB. - ung{l2,2l,2r,r2} and corresp. ung{lq,ql,qr,rq} are
 NB.   topologic equivalents
 
-unglqstep=: ((((GQNB ,  _) ,:~ -&c                           ) (] ;. 0)       [) (((ungl2~ #)@[) ,   larfbrcfr) ]) ({."1~ ((-GQNB)-c))
-ungqrstep=: ((((GQNB ,~ _) ,:~ -&#                           ) (] ;. 0)       [) (((ung2r~ c)@[) ,.  larfblnfc) ]) ({.  ~ ((-GQNB)-#))
+unglqstep=: ((((GQNB ,  _) ,:~ -&c                           ) (] ;. 0)       [) (((ungl2~ #)@[) ,   larfbrcfr) ]) ({."1~ ((-GQNB) - c))
+ungqrstep=: ((((GQNB ,~ _) ,:~ -&#                           ) (] ;. 0)       [) (((ung2r~ c)@[) ,.  larfblnfc) ]) ({.  ~ ((-GQNB) - #))
 
-ungqlstep=: ((((GQNB ,~ _) ,:~ (0 {:: [) ((<: GQNB) + -~) c@]) (] ;. 0) 1 {:: [) (((ung2l~ c)@[) ,.~ larfblnbc) ]) ({.  ~ (  GQNB +#))
-ungrqstep=: ((((GQNB ,  _) ,:~ (0 {:: [) ((<: GQNB) + -~) #@]) (] ;. 0) 1 {:: [) (((ungr2~ #)@[) , ~ larfbrcbr) ]) ({."1~ (  GQNB +c))
+ungqlstep=: ((((GQNB ,~ _) ,:~ (0 {:: [) ((<: GQNB) + -~) c@]) (] ;. 0) 1 {:: [) (((ung2l~ c)@[) ,.~ larfblnbc) ]) ({.  ~ (  GQNB  + #))
+ungrqstep=: ((((GQNB ,  _) ,:~ (0 {:: [) ((<: GQNB) + -~) #@]) (] ;. 0) 1 {:: [) (((ungr2~ #)@[) , ~ larfbrcbr) ]) ({."1~ (  GQNB  + c))
 
 NB. =========================================================
 NB. Interface
@@ -259,7 +259,7 @@ NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
 NB. Assertions:
-NB.   (idmat@ms@$ -: clean@(mp  ct)) Q
+NB.   (idmat@(<./)@$ -: clean@(mp  ct)) Q
 NB. where
 NB.   Q=. unglq gelqf A
 NB.
@@ -268,7 +268,7 @@ NB. - implements LAPACK's DORGLQ, ZUNGLQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
-unglq=: ($:~ ( 0 _1&(ms $))) : ( 0 _1 }. ([ (unglqstep^:(]`(gqi@#@])`((-(gqb@#)) ungl2 ((}.~ (2 # (  gqb@#)))@])))) ( tru1            @((   <. ( 0 _1&(ms $)) ) {.   ]))))
+unglq=: ($:~  0 _1 <./@:+ $) : (}:"1@([ (unglqstep^:(]`(gqi@#@])`((- gqb@#) ungl2 (}.~ 2 #   gqb@#)@])))  tru1        @((<.  0 _1    <./ @:+ $) {.   ])))
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -319,7 +319,7 @@ NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
 NB. Assertions:
-NB.   (idmat@ms@$ -: clean@(mp~ ct)) Q
+NB.   (idmat@(<./)@$ -: clean@(mp~ ct)) Q
 NB. where
 NB.   Q=. ungql geqlf A
 NB.
@@ -328,7 +328,7 @@ NB. - implements LAPACK's DORGQL, ZUNGQL
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-ungql=: ($:~ (_1  0&(ms $))) : ( 1  0 }. ([ (ungqlstep^:(;`(gqi@c@])`((-(gqb@c)) ung2l ((}.~ (2 # (-@gqb@c)))@])))) ((tru1~ (-~/@$))@((-@(<. (_1  0&(ms $)))) {."1 ]))))
+ungql=: ($:~ _1  0 <./@:+ $) : (}.  @([ (ungqlstep^:(;`(gqi@c@])`((- gqb@c) ung2l (}.~ 2 # -@gqb@c)@]))) (tru1~ -~/@$)@((<. _1  0 -@(<./)@:+ $) {."1 ])))
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -379,7 +379,7 @@ NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
 NB. Assertions:
-NB.   (idmat@ms@$ -: clean@(mp~ ct)) Q
+NB.   (idmat@(<./)@$ -: clean@(mp~ ct)) Q
 NB. where
 NB.   Q=. ungqr geqrf A
 NB.
@@ -388,7 +388,7 @@ NB. - implements LAPACK's DORGQR, ZUNGQR
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
-ungqr=: ($:~ (_1  0&(ms $))) : (_1  0 }. ([ (ungqrstep^:(]`(gqi@c@])`((-(gqb@c)) ung2r ((}.~ (2 # (  gqb@c)))@])))) ( trl1            @((   <. (_1  0&(ms $)) ) {."1 ]))))
+ungqr=: ($:~ _1  0 <./@:+ $) : (}:  @([ (ungqrstep^:(]`(gqi@c@])`((- gqb@c) ung2r (}.~ 2 #   gqb@c)@])))  trl1        @((<. _1  0    <./ @:+ $) {."1 ])))
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -438,7 +438,7 @@ NB.               may be empty)
 NB.   *         - any value, is not used
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (idmat@ms@$ -: clean@po) Q
+NB.   (idmat@(<./)@$ -: clean@po) Q
 NB. where
 NB.   Q=. ungrq gerqf A
 NB.
@@ -447,7 +447,20 @@ NB. - implements LAPACK's DORGRQ, ZUNGRQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
-ungrq=: ($:~ ( 0 _1&(ms $))) : ( 0  1 }. ([ (ungrqstep^:(;`(gqi@#@])`((-(gqb@#)) ungr2 ((}.~ (2 # (-@gqb@#)))@])))) ((trl1~ (-~/@$))@((-@(<. ( 0 _1&(ms $)))) {.   ]))))
+ungrq=: ($:~  0 _1 <./@:+ $) : (}."1@([ (ungrqstep^:(;`(gqi@#@])`((- gqb@#) ungr2 (}.~ 2 # -@gqb@#)@]))) (trl1~ -~/@$)@((<.  0 _1 -@(<./)@:+ $) {.   ])))
+
+
+NB. eQi1=. Qf ungr2_step eQi
+ungr2_step_2=: ((1 _ ,:~ -~&#) ,;.0 [) (((>:@] _1} *) +@-@{.)@[ ,~ larfrcbr) 0 ,.~ ]
+
+NB. eQ=. ungr2 Qf
+ungr2_2=: ungr2_step_2^:(#@[) (0 $~ 0 , -~/@$)
+
+NB. eQi1=. Qf ungrq_step eQi
+ungrq_step_2=: (((GQNB , _) ,:~ (GQNB - 1) + -~&#) ];.0 [) ((ungr2_2@[ , ~ larfbrcbr) ]) ({."1~ GQNB + c)@]
+
+NB. Q=. ungrq RQf
+ungrq_2=: }."1@(ungrq_step_2^:(GQNB %~ -&#) ungr2_2@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.~  0 _1 -@(<./)@:+ $)
 
 NB. ---------------------------------------------------------
 NB. unghrl
@@ -551,8 +564,8 @@ NB. - for ungql, ungqr :
 NB.     berr := ||Q^H * Q - I|| / (FP_EPS * m)
 
 testunghr=: 3 : 0
-  ('unghrl' tmonad ((gehrdl~ (0,#))`]`(uncon1@])`(_."_)`(mp  gqvberr c))) y
-  ('unghru' tmonad ((gehrdu~ (0,#))`]`(uncon1@])`(_."_)`(mp~ gqvberr #))) y
+  ('unghrl' tmonad ((gehrdl~ 0 , #)`]`(uncon1@])`(_."_)`(mp  gqvberr c))) y
+  ('unghru' tmonad ((gehrdu~ 0 , #)`]`(uncon1@])`(_."_)`(mp~ gqvberr #))) y
 
   EMPTY
 )

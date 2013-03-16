@@ -276,7 +276,7 @@ NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   ≤ m, optional, default is m
+NB.   k   ≤ n, optional, default is m
 NB.   m   ≤ n
 NB.
 NB. Storage layout:
@@ -290,15 +290,15 @@ NB.   vi                   - (n-m)-vector v(i)
 NB.   τi                   - scalar value conj(τ(i))
 NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
 NB.
-NB. Assertions (with appropriate comparison tolerance):#######################
-NB.   NB. L * (Z) = L * Z
-NB.   (((unmlzrn (trupick~ -~/@$)) -: ((mp  unglz)~ (tru~ -~/@$))) }."1) LZf
-NB.   NB. I = Z * (Z^H)
-NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlzrc unglz)) LZf
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = L * Z
+NB.   (-: (trlpick@:({."1~ -@#) mp  unglz)@tzlzf) A
+NB.   NB. I = Z * Z^H
+NB.   (idmat@# -: (mp  ct))@unglz LZf
 
-unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(#@] ((((0 >. - ) idmat <. ,  [) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]) ] : (({.  ~ -)~))
+unglz  =: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (      (1:`(] (     GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} #)  <;.1 ]) , <@(idmat~    -~/)@(,  c)) (((0 >. -~) idmat <. ,  ]) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]))
 
-unglz_3=: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (      (1:`(] (     GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} #)  <;.1 ]) , <@(idmat~    -~/)@(,  c)) (((0 >. -~) idmat <. ,  ]) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]))
+unglz_5=: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (<;.1~      0 1:`(GQNB dhs2lios  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])@] , <@(idmat~ -~/)@(,  c)) ((-@(<. #) ,  -~/@$@]) {. ]) ,.  (((0 >. -~) idmat <. ,  ]) #)))
 
 NB. ---------------------------------------------------------
 NB. ungzl
@@ -317,7 +317,7 @@ NB.         elementary reflectors of order m:
 NB.           Z = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   ≤ n, optional, default is n
+NB.   k   ≤ m, optional, default is n
 NB.   n   ≤ m
 NB.
 NB. Storage layout:
@@ -337,14 +337,14 @@ NB.   τi                   - scalar value τ(i)
 NB.   (0,..,0,1,0,...0,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. (Z) * L = Z * L
-NB.   (((unmzlln  trupick        ) -: ((mp~ ungzl)~  tru        )) }:  ) ZfL
-NB.   NB. I = (Z^H) * Z
-NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmzllc ungzl)) ZfL
+NB.   NB. A = Z * L
+NB.   (-: (trlpick@:({.  ~   c) mp~ ungzl)@tzzlf) A
+NB.   NB. I = Z^H * Z
+NB.   (idmat@c -: (mp~ ct))@ungzl ZfL
 
-ungzl=: }:  @((( ((GQNB ,~ _) ,:~ 0 ,       c@]     ) ];.0 [) larzblnbc (1 ; 0 _1 , GQNB) setdiag          ({."1~    GQNB  + c)@])^:(GQNB %~ -&c) (larzblnbc  idmat      @$)@(}."1~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(c@] ((( 0        idmat <. ,~ [) c) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]) ] : ( {."1     ))
+ungzl  =: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(('' ; (1:`(] (_1 - GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} c)) <;.2 ]) , <@ idmat         @(,~ #)) (( 0        idmat <. ,~ ]) c) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]))
 
-ungzl_3=: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(('' ; (1:`(] (_1 - GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} c)) <;.2 ]) , <@ idmat         @(,~ #)) (( 0        idmat <. ,~ ]) c) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]))
+ungzl_5=: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(<;.2~ '' ; 0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@])@] , <@ idmat      @(,~ #)) ((  (<. c) ,~ -~/@$@]) {. ]) , ~ (( 0        idmat <. ,~ ]) c)))
 
 NB. ---------------------------------------------------------
 NB. ungzr
@@ -363,7 +363,7 @@ NB.         elementary reflectors of order m:
 NB.           Z = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   ≤ n, optional, default is n
+NB.   k   ≤ m, optional, default is n
 NB.   n   ≤ m
 NB.
 NB. Storage layout:
@@ -383,14 +383,14 @@ NB.   τi                   - scalar value τ(i)
 NB.   (vi,0,..,0,1,0,...0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. (Z) * R = Z * R
-NB.   (((unmzrln (trlpick~ -~/@$)) -: ((mp~ ungzr)~ (trl~ -~/@$))) }.  ) ZfR
-NB.   NB. I = (Z^H) * Z
-NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmzrlc ungzr)) ZfR
+NB.   NB. A = Z * R
+NB.   (-: (trupick@:({.  ~ -@c) mp~ ungzr)@tzzrf) A
+NB.   NB. I = Z^H * Z
+NB.   (idmat@c -: (mp~ ct))@ungzr ZfR
 
-ungzr=: }.  @((( ((GQNB ,~ _) ,:~ 0 ,  _1 - c@]     ) ];.0 [) larzblnfc (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({."1~ (- GQNB) - c)@])^:(GQNB %~ -&c) (larzblnfc (idmat~ -~/)@$)@(}."1~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(c@] ((((0 <. -~) idmat <. ,~ [) c) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]) ] : (({."1~ -)~))
+ungzr  =: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (('' ; (1:`(] (     GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} c)) <;.1 ]) , <@(idmat~    -~/)@(,~ #)) (((0 >. -~) idmat <. ,  ]) c) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]))
 
-ungzr_3=: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (('' ; (1:`(] (     GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} c)) <;.1 ]) , <@(idmat~    -~/)@(,~ #)) (((0 >. -~) idmat <. ,  ]) c) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]))
+ungzr_5=: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (<;.1~ '' ; 0 1:`(GQNB dhs2lios  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@])@] , <@(idmat~ -~/)@(,~ #)) ((-@(<. c) ,~ - /@$@]) {. ]) ,   (((0 <. - ) idmat <. ,~ ]) c)))
 
 NB. ---------------------------------------------------------
 NB. ungrz
@@ -409,7 +409,7 @@ NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   ≤ m, optional, default is m
+NB.   k   ≤ n, optional, default is m
 NB.   m   ≤ n
 NB.
 NB. Storage layout:
@@ -424,14 +424,14 @@ NB.   τi                   - scalar value conj(τ(i))
 NB.   (0,..,0,1,0,...0,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. R * (Z) = R * Z
-NB.   (((unmrzrn  trlpick        ) -: ((mp  ungrz)~  trl        )) }:"1) RZf
-NB.   NB. I = Z * (Z^H)
-NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrzrc ungrz)) RZf
+NB.   NB. A = R * Z
+NB.   (-: (trupick@:({."1~   #) mp  ungrz)@tzrzf) A
+NB.   NB. I = Z * Z^H
+NB.   (idmat@# -: (mp  ct))@ungrz RZf
 
-ungrz=: }:"1@((( ((GQNB ,  _) ,:~ 0 ,~      #@]     ) ];.0 [) larzbrcbr (1 ; 0 _1 , GQNB) setdiag          ({.  ~    GQNB  + #)@])^:(GQNB %~ -&#) (larzbrcbr  idmat      @$)@(}.  ~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(#@] ((( 0        idmat <. ,  [) #) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]) ] :   {.        )
+ungrz  =: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(      (1:`(] (_1 - GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} #)  <;.2 ]) , <@ idmat         @(,  c)) (( 0        idmat <. ,~ ]) #) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]))
 
-ungrz_3=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(      (1:`(] (_1 - GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} #)  <;.2 ]) , <@ idmat         @(,  c)) (( 0        idmat <. ,~ ]) #) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]))
+ungrz_5=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(<;.2~      0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])@] , <@ idmat      @(,  c)) ((  (<. #) ,  - /@$@]) {. ]) ,.~ (( 0        idmat <. ,  ]) #)))
 
 NB. ---------------------------------------------------------
 NB. unghrl

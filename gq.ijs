@@ -73,7 +73,7 @@ NB.   Generate a matrix with orthonormal rows from output of
 NB.   gelqf
 NB.
 NB. Syntax:
-NB.   Q=. unglq LQf
+NB.   Q=. [k] unglq LQf
 NB. where
 NB.   LQf - m×(n+1)-matrix, the output of gelqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
@@ -82,7 +82,7 @@ NB.         elementary reflectors of order n:
 NB.           Q = Π{H(i)',i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   = min(m,n)
+NB.   k   ≤ min(m,n), optional, default is min(m,n)
 NB.
 NB. Storage layout:
 NB.   LQf for m=3, n=7:                  LQf for m=7, n=3:
@@ -106,17 +106,12 @@ NB.   (((unmlqrn  trlpick        ) -: ((mp  unglq)~  trl        )) }:"1) LQf
 NB.   NB. I = Q * (Q^H)
 NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlqrc unglq)) LQf
 NB.
-NB. Application:
-NB. - simulate LAPACK's xUNGLQ(M,N,K) for M≠K:
-NB.     NB. Q=. k unglqk LQf
-NB.     unglqk=:  unglq@  {.
-NB.
 NB. Notes:
-NB. - implements LAPACK's DORGLQ, ZUNGLQ for M=K
+NB. - implements LAPACK's DORGLQ, ZUNGLQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
-unglq=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [) larfbrcfr (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
+unglq=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [) larfbrcfr (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)@(] :   {.        )
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -126,7 +121,7 @@ NB.   Generate a matrix with orthonormal columns from output
 NB.   of geqlf
 NB.
 NB. Syntax:
-NB.   Q=. ungql QfL
+NB.   Q=. [k] ungql QfL
 NB. where
 NB.   QfL - (m+1)×n-matrix, the output of geqlf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
@@ -135,7 +130,7 @@ NB.         elementary reflectors of order m:
 NB.           Q = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   = min(m,n)
+NB.   k   ≤ min(m,n), optional, default is min(m,n)
 NB.
 NB. Storage layout:
 NB.   QfL for m=3, n=7:               QfL for m=7, n=3:
@@ -160,17 +155,12 @@ NB.   (((unmqlln (trlpick~ -~/@$)) -: ((mp~ ungql)~ (trl~ -~/@$))) }.  ) QfL
 NB.   NB. I = (Q^H) * Q
 NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqllc ungql)) QfL
 NB.
-NB. Application:
-NB. - simulate LAPACK's xUNGQL(M,N,K) for M≠K:
-NB.     NB. Q=. k ungqlk QfL
-NB.     ungqlk=: (ungql@:({."1)~ -)~
-NB.
 NB. Notes:
-NB. - implements LAPACK's DORGQL, ZUNGQL for N=K
+NB. - implements LAPACK's DORGQL, ZUNGQL
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-ungql=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) larfblnbc    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
+ungql=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) larfblnbc    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)@(] : (({."1~ -)~))
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -180,7 +170,7 @@ NB.   Generate a matrix with orthonormal columns from output
 NB.   of geqrf
 NB.
 NB. Syntax:
-NB.   Q=. ungqr QfR
+NB.   Q=. [k] ungqr QfR
 NB. where
 NB.   QfR - (m+1)×n-matrix, the output of geqrf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
@@ -189,7 +179,7 @@ NB.         elementary reflectors of order m:
 NB.           Q = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   = min(m,n)
+NB.   k   ≤ min(m,n), optional, default is min(m,n)
 NB.
 NB. Storage layout:
 NB.   QfR for m=3, n=7:               QfR for m=7, n=3:
@@ -214,17 +204,12 @@ NB.   (((unmqrln  trupick        ) -: ((mp~ ungqr)~  tru        )) }:  ) QfR
 NB.   NB. I = (Q^H) * Q
 NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqrlc ungqr)) QfR
 NB.
-NB. Application:
-NB. - simulate LAPACK's xUNGQR(M,N,K) for M≠K:
-NB.     NB. Q=. k ungqrk QfR
-NB.     ungqrk=:  ungqr@:({."1)
-NB.
 NB. Notes:
-NB. - implements LAPACK's DORGQR, ZUNGQR for N=K
+NB. - implements LAPACK's DORGQR, ZUNGQR
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
-ungqr=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [) larfblnfc (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
+ungqr=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [) larfblnfc (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)@(] : ( {."1     ))
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -234,7 +219,7 @@ NB.   Generate a matrix with orthonormal rows from output of
 NB.   gerqf
 NB.
 NB. Syntax:
-NB.   Q=. ungrq RQf
+NB.   Q=. [k] ungrq RQf
 NB. where
 NB.   RQf - m×(n+1)-matrix, the output of gerqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
@@ -243,7 +228,7 @@ NB.         elementary reflectors of order n:
 NB.           Q = Π{H(i)',i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   = min(m,n)
+NB.   k   ≤ min(m,n), optional, default is min(m,n)
 NB.
 NB. Storage layout:
 NB.   RQf for m=3, n=7:                 RQf for m=7, n=3:
@@ -267,17 +252,12 @@ NB.   (((unmrqrn (trupick~ -~/@$)) -: ((mp  ungrq)~ (tru~ -~/@$))) }."1) RQf
 NB.   NB. I = Q * (Q^H)
 NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrqrc ungrq)) RQf
 NB.
-NB. Application:
-NB. - simulate LAPACK's xUNGRQ(M,N,K) for M≠K:
-NB.     NB. Q=. k ungrqk RQf
-NB.     ungrqk=: (ungrq@  {.   ~ -)~
-NB.
 NB. Notes:
-NB. - implements LAPACK's DORGRQ, ZUNGRQ for M=K
+NB. - implements LAPACK's DORGRQ, ZUNGRQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
-ungrq=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) larfbrcbr    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
+ungrq=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) larfbrcbr    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)@(] : (({.  ~ -)~))
 
 NB. ---------------------------------------------------------
 NB. unglz
@@ -290,7 +270,7 @@ NB. Syntax:
 NB.   Z=. [k] unglz LZf
 NB. where
 NB.   LZf - m×(n+1)-matrix, the output of tzlzf
-NB.   Z   - m×n-matrix with orthonormal rows, which is
+NB.   Z   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the last k rows of a product of k
 NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=k-1:0}
@@ -315,13 +295,8 @@ NB.   NB. L * (Z) = L * Z
 NB.   (((unmlzrn (trupick~ -~/@$)) -: ((mp  unglz)~ (tru~ -~/@$))) }."1) LZf
 NB.   NB. I = Z * (Z^H)
 NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlzrc unglz)) LZf
-NB.
-NB. Application:
-NB. - change Z's size m:
-NB.     NB. Z=. m unglzm LZf
-NB.     unglzm=: #@] unglz ({.~ -)~
 
-unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@# :(((0 >. - ) idmat <. ,  [) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ])
+unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(#@] ((((0 >. - ) idmat <. ,  [) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]) ] : (({.  ~ -)~))
 
 NB. ---------------------------------------------------------
 NB. ungzl
@@ -334,10 +309,10 @@ NB. Syntax:
 NB.   Z=. [k] ungzl ZfL
 NB. where
 NB.   ZfL - (m+1)×n-matrix, the output of tzzlf
-NB.   Z   - m×n-matrix with orthonormal columns, which is
+NB.   Z   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the first k columns of a product of k
 NB.         elementary reflectors of order m:
-NB.           Q = Π{H(i),i=k-1:0}
+NB.           Z = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
 NB.   k   ≤ n, optional, default is n
@@ -364,13 +339,8 @@ NB.   NB. (Z) * L = Z * L
 NB.   (((unmzlln  trupick        ) -: ((mp~ ungzl)~  tru        )) }:  ) ZfL
 NB.   NB. I = (Z^H) * Z
 NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmzllc ungzl)) ZfL
-NB.
-NB. Application:
-NB. - change Z's size n:
-NB.     NB. Z=. n ungzln ZfL
-NB.     ungzln=: c@] ungzl {."1
 
-ungzl=: }:  @((( ((GQNB ,~ _) ,:~ 0 ,       c@]     ) ];.0 [) larzblnbc (1 ; 0 _1 , GQNB) setdiag          ({."1~    GQNB  + c)@])^:(GQNB %~ -&c) (larzblnbc  idmat      @$)@(}."1~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@c :(( 0        idmat <. ,~ [) c) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ])
+ungzl=: }:  @((( ((GQNB ,~ _) ,:~ 0 ,       c@]     ) ];.0 [) larzblnbc (1 ; 0 _1 , GQNB) setdiag          ({."1~    GQNB  + c)@])^:(GQNB %~ -&c) (larzblnbc  idmat      @$)@(}."1~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(c@] ((( 0        idmat <. ,~ [) c) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]) ] : ( {."1     ))
 
 NB. ---------------------------------------------------------
 NB. ungzr
@@ -383,10 +353,10 @@ NB. Syntax:
 NB.   Z=. [k] ungzr ZfR
 NB. where
 NB.   ZfR - (m+1)×n-matrix, the output of tzzrf
-NB.   Z   - m×n-matrix with orthonormal columns, which is
+NB.   Z   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the last k columns of a product of k
 NB.         elementary reflectors of order m:
-NB.           Q = Π{H(i),i=0:k-1}
+NB.           Z = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
 NB.   k   ≤ n, optional, default is n
@@ -413,13 +383,8 @@ NB.   NB. (Z) * R = Z * R
 NB.   (((unmzrln (trlpick~ -~/@$)) -: ((mp~ ungzr)~ (trl~ -~/@$))) }.  ) ZfR
 NB.   NB. I = (Z^H) * Z
 NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmzrlc ungzr)) ZfR
-NB.
-NB. Application:
-NB. - change Z's size n:
-NB.     NB. Z=. n ungzrn ZfR
-NB.     ungzrn=: c@] ungzr ({."1~ -)~
 
-ungzr=: }.  @((( ((GQNB ,~ _) ,:~ 0 ,  _1 - c@]     ) ];.0 [) larzblnfc (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({."1~ (- GQNB) - c)@])^:(GQNB %~ -&c) (larzblnfc (idmat~ -~/)@$)@(}."1~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(idmat@c :(((0 <. -~) idmat <. ,~ [) c) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ])
+ungzr=: }.  @((( ((GQNB ,~ _) ,:~ 0 ,  _1 - c@]     ) ];.0 [) larzblnfc (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({."1~ (- GQNB) - c)@])^:(GQNB %~ -&c) (larzblnfc (idmat~ -~/)@$)@(}."1~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(c@] ((((0 <. -~) idmat <. ,~ [) c) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]) ] : (({."1~ -)~))
 
 NB. ---------------------------------------------------------
 NB. ungrz
@@ -432,10 +397,10 @@ NB. Syntax:
 NB.   Z=. [k] ungrz RZf
 NB. where
 NB.   RZf - m×(n+1)-matrix, the output of tzrzf
-NB.   Z   - m×n-matrix with orthonormal rows, which is
+NB.   Z   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the first k rows of a product of k
 NB.         elementary reflectors of order n:
-NB.           Q = Π{H(i)',i=0:k-1}
+NB.           Z = Π{H(i)',i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
 NB.   k   ≤ m, optional, default is m
@@ -457,13 +422,8 @@ NB.   NB. R * (Z) = R * Z
 NB.   (((unmrzrn  trlpick        ) -: ((mp  ungrz)~  trl        )) }:"1) RZf
 NB.   NB. I = Z * (Z^H)
 NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrzrc ungrz)) RZf
-NB.
-NB. Application:
-NB. - change Z's size m:
-NB.     NB. Z=. m ungrzm RZf
-NB.     ungrzm=: #@] ungrz {.
 
-ungrz=: }:"1@((( ((GQNB ,  _) ,:~ 0 ,~      #@]     ) ];.0 [) larzbrcbr (1 ; 0 _1 , GQNB) setdiag          ({.  ~    GQNB  + #)@])^:(GQNB %~ -&#) (larzbrcbr  idmat      @$)@(}.  ~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(idmat@# :(( 0        idmat <. ,  [) #) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ])
+ungrz=: }:"1@((( ((GQNB ,  _) ,:~ 0 ,~      #@]     ) ];.0 [) larzbrcbr (1 ; 0 _1 , GQNB) setdiag          ({.  ~    GQNB  + #)@])^:(GQNB %~ -&#) (larzbrcbr  idmat      @$)@(}.  ~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(#@] ((( 0        idmat <. ,  [) #) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]) ] :   {.        )
 
 NB. ---------------------------------------------------------
 NB. unghrl

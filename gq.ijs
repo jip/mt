@@ -59,8 +59,8 @@ gqvberr=: 2 : '(norm1_mt_@(<: upddiag_mt_)@(u ct_mt_) % FP_EPS_mt_ * v)@]'  NB. 
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-GQNB=: 32   NB. 3 NB. block size limit
-GQNX=: 128  NB. 4 NB. crossover point, GQNX ≥ GQNB
+GQNB=: 3 NB. 32   NB. block size limit
+GQNX=: 4 NB. 128  NB. crossover point, GQNX ≥ GQNB
 
 NB. =========================================================
 NB. Interface
@@ -113,21 +113,7 @@ NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
 unglq=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [) larfbrcfr (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)@ (] :   {.        )
 
-tru1pick=: 4 : '(x *@:+ - t2td)`(1 , 0&,:)} y'
-
-get_sQf=:      ((<./@, 0 _1 + $) 0&tru1pick@{. ])                                     NB. sQf=.  k   get_sQf  LQf
-mk_I0=:        ((idmat@((- {.) , -~/@])) $)                                           NB. I0=.   k   mk_I0    sQf
-mk_fret=:      (0 1:`(GQNB dhs2lios 0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])         NB. fret=.     mk_fret  sQf
-
-NB. variation #2: expand and setdiag eQi, shrink Qfi
-unglq_step_2=: ([ (({."1~ -@c) larfbrcfr ]) (((1 ; 0 0 , ]) setdiag (e0~ -)) #)~)     NB. eQi1=. Qfi step     eQi
-unglq_dyad_2=: (}:"1@(unglq_step_2&:>/)@([ (   (<;.1~ mk_fret)@] , <@mk_I0) get_sQf)) NB. Q=.    k   unglq_dy LQf
-unglq_2=:      ($:~ 0 _1 <./@:+ $) : unglq_dyad_2                                     NB. Q=.    [k] unglq    LQf
-
-NB. variation #3: prepend eQi by identity matrix
-unglq_step_3=: ([ (({."1~ -@c) larfbrcfr ]) (0 idmat (((] , +) #)~ c)) appendr ])     NB. eQi1=. Qfi step     eQi
-unglq_dyad_3=: (}:"1@(unglq_step_3&:>/)@([ (   (<;.1~ mk_fret)@] , <@mk_I0) get_sQf)) NB. Q=.    k   unglq_dy LQf
-unglq_3=:      ($:~ 0 _1 <./@:+ $) : unglq_dyad_3                                     NB. Q=.    [k] unglq    LQf
+unglq_3=: ($:~ 0 _1 <./@:+ $) :(}:"1@(([ (({."1~ -@c) larfbrcfr ]) idmat@(((] , +) #)~ c) appendr ])&:>/)@([ (   (<;.1~ (0 1:`(GQNB dhs2lios 0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@(idmat@((- {.) , -~/@]) $)) tru1pick@((<./@, 0 _1 + $) {. ])))
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -178,6 +164,8 @@ NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
 ungql=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) larfblnbc    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)@ (] : (({."1~ -)~))
 
+ungql_3=: ($:~ _1 0 <./@:+ $) :(}.  @(([ (({.  ~   #) larfblnbc ]) (idmat~ -~/)@(((] ,~ +) c)~ #) stitcht~ ])&:>/)@([ (|.@(<;.2~ '' ; (0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@((idmat~ -~/)@((- {:) ,~ - /@]) $)) (tru1pick~ -~/@$)@((-@(<./)@, _1 0 + $) {."1 ])))
+
 NB. ---------------------------------------------------------
 NB. ungqr
 NB.
@@ -227,6 +215,8 @@ NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
 ungqr=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [) larfblnfc (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)@:(] : ( {."1     ))
 
+ungqr_3=: ($:~ _1 0 <./@:+ $) :(}:  @(([ (({.  ~ -@#) larfblnfc ]) idmat@(((] ,~ +) c)~ #) stitchb ])&:>/)@([ (   (<;.1~ '' ; (0 1:`(GQNB dhs2lios 0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@(idmat@((- {:) ,~ - /@]) $)) trl1pick@((<./@, _1 0 + $) {."1 ])))
+
 NB. ---------------------------------------------------------
 NB. ungrq
 NB.
@@ -274,6 +264,8 @@ NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
 ungrq=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) larfbrcbr    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)@ (] : (({.  ~ -)~))
+
+ungrq_3=: ($:~ 0 _1 <./@:+ $) :(}."1@(([ (({."1~   c) larfbrcbr ]) (idmat~ -~/)@(((] ,  +) #)~ c) appendl~ ])&:>/)@([ (|.@(<;.2~      (0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@((idmat~ -~/)@((- {.) ,  -~/@]) $)) (trl1pick~ -~/@$)@((-@(<./)@, 0 _1 + $) {.   ])))
 
 NB. ---------------------------------------------------------
 NB. unglz

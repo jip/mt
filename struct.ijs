@@ -36,6 +36,10 @@ NB. trlpick   Zeroize elements outside lower triangular part
 NB.           of the matrix
 NB. trupick   Zeroize elements outside upper triangular part
 NB.           of the matrix
+NB. trl1pick  Zeroize elements outside lower triangular part
+NB.           of the matrix and set diagonal to 1
+NB. tru1pick  Zeroize elements outside upper triangular part
+NB.           of the matrix and set diagonal to 1
 NB.
 NB. idmat     Make identity matrix with units on solid part
 NB.           of diagonal
@@ -666,6 +670,42 @@ NB.       diagonal
 NB.   B - m×n-matrix, upper triangular
 
 trupick=: 0&$: :(((_ ,~ [) mbstencil ]) * ])
+
+NB. ---------------------------------------------------------
+NB. trl1pick
+NB.
+NB. Description:
+NB.   Zeroize elements outside lower triangular part of the
+NB.   matrix and set diagonal to 1
+NB.
+NB. Syntax:
+NB.   B=. [d] trl1pick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   d - integer in range [-∞,+∞], lIO last non-zero
+NB.       diagonal
+NB.   B - m×n-matrix, lower triangular with unit on diagonal
+NB.       d
+
+trl1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , ,:&0)} y')
+
+NB. ---------------------------------------------------------
+NB. tru1pick
+NB.
+NB. Description:
+NB.   Zeroize elements outside upper triangular part of the
+NB.   matrix and set diagonal to 1
+NB.
+NB. Syntax:
+NB.   B=. [d] trupick A
+NB. where
+NB.   A - m×n-matrix, contains B
+NB.   d - integer in range [-∞,+∞], lIO first non-zero
+NB.       diagonal
+NB.   B - m×n-matrix, upper triangular with unit on diagonal
+NB.       d
+
+tru1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , 0&,:)} y')
 
 NB. ---------------------------------------------------------
 NB. idmat

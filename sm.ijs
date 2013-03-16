@@ -44,30 +44,30 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:           Syntax:
-NB. trsmlx         L    * X = B      Xv=. A trsmlx   Bv
-NB. trsml1x        L1   * X = B      Xv=. A trsml1x  Bv
-NB. trsml1hx       L1^H * X = B      Xv=. A trsml1hx Bv
-NB. trsml1tx       L1^T * X = B      Xv=. A trsml1tx Bv
-NB. trsmlhx        L^H  * X = B      Xv=. A trsmlhx  Bv
-NB. trsmltx        L^T  * X = B      Xv=. A trsmltx  Bv
-NB. trsmux         U    * X = B      Xv=. A trsmux   Bv
-NB. trsmu1x        U1   * X = B      Xv=. A trsmu1x  Bv
-NB. trsmu1hx       U1^H * X = B      Xv=. A trsmu1hx Bv
-NB. trsmu1tx       U1^T * X = B      Xv=. A trsmu1tx Bv
-NB. trsmuhx        U^H  * X = B      Xv=. A trsmuhx  Bv
-NB. trsmutx        U^T  * X = B      Xv=. A trsmutx  Bv
-NB. trsmxl         X * L    = B      Xh=. A trsmxl   Bh
-NB. trsmxl1        X * L1   = B      Xh=. A trsmxl1  Bh
-NB. trsmxl1h       X * L1^H = B      Xh=. A trsmxl1h Bh
-NB. trsmxl1t       X * L1^T = B      Xh=. A trsmxl1t Bh
-NB. trsmxlh        X * L^H  = B      Xh=. A trsmxlh  Bh
-NB. trsmxlt        X * L^T  = B      Xh=. A trsmxlt  Bh
-NB. trsmxu         X * U    = B      Xh=. A trsmxu   Bh
-NB. trsmxu1        X * U1   = B      Xh=. A trsmxu1  Bh
-NB. trsmxu1h       X * U1^H = B      Xh=. A trsmxu1h Bh
-NB. trsmxu1t       X * U1^T = B      Xh=. A trsmxu1t Bh
-NB. trsmxuh        X * U^H  = B      Xh=. A trsmxuh  Bh
-NB. trsmxut        X * U^T  = B      Xh=. A trsmxut  Bh
+NB. trsmllcn       L^H  * X = B      Xv=. A trsmllcn Bv
+NB. trsmllcu       L1^H * X = B      Xv=. A trsmllcu Bv
+NB. trsmllnn       L    * X = B      Xv=. A trsmllnn Bv
+NB. trsmllnu       L1   * X = B      Xv=. A trsmllnu Bv
+NB. trsmlltn       L^T  * X = B      Xv=. A trsmlltn Bv
+NB. trsmlltu       L1^T * X = B      Xv=. A trsmlltu Bv
+NB. trsmlucn       U^H  * X = B      Xv=. A trsmlucn Bv
+NB. trsmlucu       U1^H * X = B      Xv=. A trsmlucu Bv
+NB. trsmlunn       U    * X = B      Xv=. A trsmlunn Bv
+NB. trsmlunu       U1   * X = B      Xv=. A trsmlunu Bv
+NB. trsmlutn       U^T  * X = B      Xv=. A trsmlutn Bv
+NB. trsmlutu       U1^T * X = B      Xv=. A trsmlutu Bv
+NB. trsmrlcn       X * L^H  = B      Xh=. A trsmrlcn Bh
+NB. trsmrlcu       X * L1^H = B      Xh=. A trsmrlcu Bh
+NB. trsmrlnn       X * L    = B      Xh=. A trsmrlnn Bh
+NB. trsmrlnu       X * L1   = B      Xh=. A trsmrlnu Bh
+NB. trsmrltn       X * L^T  = B      Xh=. A trsmrltn Bh
+NB. trsmrltu       X * L1^T = B      Xh=. A trsmrltu Bh
+NB. trsmrucn       X * U^H  = B      Xh=. A trsmrucn Bh
+NB. trsmrucu       X * U1^H = B      Xh=. A trsmrucu Bh
+NB. trsmrunn       X * U    = B      Xh=. A trsmrunn Bh
+NB. trsmrunu       X * U1   = B      Xh=. A trsmrunu Bh
+NB. trsmrutn       X * U^T  = B      Xh=. A trsmrutn Bh
+NB. trsmrutu       X * U1^T = B      Xh=. A trsmrutu Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with triangular matrix
@@ -98,30 +98,33 @@ NB.
 NB. TODO:
 NB. - replace column-wise algos by row-wise
 
-trsmlx=:   ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosW)&# 0&{::)~   ({,) 0 {:: [) % (    (*>:) &# 0&{::)~   ({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
-trsml1x=:  ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosW)&# 0&{::)~   ({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
-trsml1hx=: ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~ +@({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
-trsml1tx=: ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~   ({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
-trsmlhx=:  (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~ +@({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~ +@({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
-trsmltx=:  (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~   ({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
-trsmux=:   (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosE)&# 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~   ({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
-trsmu1x=:  ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosE)&# 0&{::)~   ({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(1 dhs2lios (-1-i*n,i))
-trsmu1hx=: ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~ +@({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i))
-trsmu1tx=: ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~   ({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i))
-trsmuhx=:  ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~ +@({,) 0 {:: [) % (    (*>:) &# 0&{::)~ +@({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
-trsmutx=:  ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~   ({,) 0 {:: [) % (    (*>:) &# 0&{::)~   ({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
-trsmxl=:   (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosS)&c 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~   ({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
-trsmxl1=:  ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosS)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
-trsmxl1h=: ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~ +@({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
-trsmxl1t=: ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
-trsmxlh=:  ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~ +@({,) 0 {:: [) % (    (*>:) &c 0&{::)~ +@({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
-trsmxlt=:  ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~   ({,) 0 {:: [) % (    (*>:) &c 0&{::)~   ({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
-trsmxu=:   ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosN)&c 0&{::)~   ({,) 0 {:: [) % (    (*>:) &c 0&{::)~   ({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
-trsmxu1=:  ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosN)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i))
-trsmxu1h=: ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~ +@({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i))
-trsmxu1t=: ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i))
-trsmxuh=:  (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~ +@({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~ +@({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
-trsmxut=:  (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~   ({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
+trsmllcn=: (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~ +@({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~ +@({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
+trsmllcu=: ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~ +@({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
+trsmllnn=: ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosW)&# 0&{::)~   ({,) 0 {:: [) % (    (*>:) &# 0&{::)~   ({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
+trsmllnu=: ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosW)&# 0&{::)~   ({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
+trsmlltn=: (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~   ({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
+trsmlltu=: ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~   ({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
+
+trsmlucn=: ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~ +@({,) 0 {:: [) % (    (*>:) &# 0&{::)~ +@({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
+trsmlucu=: ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~ +@({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i))
+trsmlunn=: (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosE)&# 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~   ({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
+trsmlunu=: ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosE)&# 0&{::)~   ({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(1 dhs2lios (-1-i*n,i))
+trsmlutn=: ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~   ({,) 0 {:: [) % (    (*>:) &# 0&{::)~   ({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
+trsmlutu=: ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~   ({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i))
+
+trsmrlcn=: ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~ +@({,) 0 {:: [) % (    (*>:) &c 0&{::)~ +@({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
+trsmrlcu=: ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~ +@({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
+trsmrlnn=: (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosS)&c 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~   ({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
+trsmrlnu=: ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosS)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
+trsmrltn=: ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~   ({,) 0 {:: [) % (    (*>:) &c 0&{::)~   ({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
+trsmrltu=: ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
+
+trsmrucn=: (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~ +@({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~ +@({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
+trsmrucu=: ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~ +@({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i))
+trsmrunn=: ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosN)&c 0&{::)~   ({,) 0 {:: [) % (    (*>:) &c 0&{::)~   ({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
+trsmrunu=: ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosN)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i))
+trsmrutn=: (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~   ({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
+trsmrutu=: ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i))
 
 NB. =========================================================
 NB. Test suite
@@ -155,30 +158,33 @@ testtrsm=: 3 : 0
 
   ('trtrs_jlapack_' tmonad (({.,(mp&.>/))`]`(conU "_)`(normi@(((- %&normic [) 1&{::)~))`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) U  ; X
 
-  ('trsmlx'   tdyad ((0&{::)`( mp      &>/)`]`(conL "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) L  ; X
-  ('trsml1x'  tdyad ((0&{::)`( mp      &>/)`]`(conL1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) L1 ; X
-  ('trsml1hx' tdyad ((0&{::)`((mp~ ct)~&>/)`]`(conL1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ ct)~&>/)@[ - ((mp~ ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) L1 ; X
-  ('trsml1tx' tdyad ((0&{::)`((mp~ |:)~&>/)`]`(conL1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ |:)~&>/)@[ - ((mp~ |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) L1 ; X
-  ('trsmlhx'  tdyad ((0&{::)`((mp~ ct)~&>/)`]`(conL "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ ct)~&>/)@[ - ((mp~ ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) L  ; X
-  ('trsmltx'  tdyad ((0&{::)`((mp~ |:)~&>/)`]`(conL "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ |:)~&>/)@[ - ((mp~ |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) L  ; X
-  ('trsmux'   tdyad ((0&{::)`( mp      &>/)`]`(conU "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) U  ; X
-  ('trsmu1x'  tdyad ((0&{::)`( mp      &>/)`]`(conU1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) U1 ; X
-  ('trsmu1hx' tdyad ((0&{::)`((mp~ ct)~&>/)`]`(conU1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ ct)~&>/)@[ - ((mp~ ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) U1 ; X
-  ('trsmu1tx' tdyad ((0&{::)`((mp~ |:)~&>/)`]`(conU1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ |:)~&>/)@[ - ((mp~ |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) U1 ; X
-  ('trsmuhx'  tdyad ((0&{::)`((mp~ ct)~&>/)`]`(conU "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ ct)~&>/)@[ - ((mp~ ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) U  ; X
-  ('trsmutx'  tdyad ((0&{::)`((mp~ |:)~&>/)`]`(conU "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ |:)~&>/)@[ - ((mp~ |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) U  ; X
-  ('trsmxl'   tdyad ((0&{::)`( mp~     &>/)`]`(conL "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(( mp     ~&>/)@[ - ( mp      0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) L  ; X
-  ('trsmxl1'  tdyad ((0&{::)`( mp~     &>/)`]`(conL1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(( mp     ~&>/)@[ - ( mp      0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) L1 ; X
-  ('trsmxl1h' tdyad ((0&{::)`((mp  ct)~&>/)`]`(conL1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  ct)~&>/)@[ - ((mp  ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) L1 ; X
-  ('trsmxl1t' tdyad ((0&{::)`((mp  |:)~&>/)`]`(conL1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  |:)~&>/)@[ - ((mp  |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) L1 ; X
-  ('trsmxlh'  tdyad ((0&{::)`((mp  ct)~&>/)`]`(conL "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  ct)~&>/)@[ - ((mp  ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) L  ; X
-  ('trsmxlt'  tdyad ((0&{::)`((mp  |:)~&>/)`]`(conL "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  |:)~&>/)@[ - ((mp  |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) L  ; X
-  ('trsmxu'   tdyad ((0&{::)`( mp~     &>/)`]`(conU "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(( mp     ~&>/)@[ - ( mp      0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) U  ; X
-  ('trsmxu1'  tdyad ((0&{::)`( mp~     &>/)`]`(conU1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(( mp     ~&>/)@[ - ( mp      0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) U1 ; X
-  ('trsmxu1h' tdyad ((0&{::)`((mp  ct)~&>/)`]`(conU1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  ct)~&>/)@[ - ((mp  ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) U1 ; X
-  ('trsmxu1t' tdyad ((0&{::)`((mp  |:)~&>/)`]`(conU1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  |:)~&>/)@[ - ((mp  |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) U1 ; X
-  ('trsmxuh'  tdyad ((0&{::)`((mp  ct)~&>/)`]`(conU "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  ct)~&>/)@[ - ((mp  ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) U  ; X
-  ('trsmxut'  tdyad ((0&{::)`((mp  |:)~&>/)`]`(conU "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  |:)~&>/)@[ - ((mp  |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) U  ; X
+  ('trsmllcn' tdyad ((0&{::)`((mp~ ct)~&>/)`]`(conL "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ ct)~&>/)@[ - ((mp~ ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) L  ; X
+  ('trsmllcu' tdyad ((0&{::)`((mp~ ct)~&>/)`]`(conL1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ ct)~&>/)@[ - ((mp~ ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) L1 ; X
+  ('trsmllnn' tdyad ((0&{::)`( mp      &>/)`]`(conL "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) L  ; X
+  ('trsmllnu' tdyad ((0&{::)`( mp      &>/)`]`(conL1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) L1 ; X
+  ('trsmlltn' tdyad ((0&{::)`((mp~ |:)~&>/)`]`(conL "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ |:)~&>/)@[ - ((mp~ |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) L  ; X
+  ('trsmlltu' tdyad ((0&{::)`((mp~ |:)~&>/)`]`(conL1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ |:)~&>/)@[ - ((mp~ |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) L1 ; X
+
+  ('trsmlucn' tdyad ((0&{::)`((mp~ ct)~&>/)`]`(conU "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ ct)~&>/)@[ - ((mp~ ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) U  ; X
+  ('trsmlucu' tdyad ((0&{::)`((mp~ ct)~&>/)`]`(conU1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ ct)~&>/)@[ - ((mp~ ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) U1 ; X
+  ('trsmlunn' tdyad ((0&{::)`( mp      &>/)`]`(conU "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) U  ; X
+  ('trsmlunu' tdyad ((0&{::)`( mp      &>/)`]`(conU1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(( mp      &>/)@[ - ( mp~     0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) U1 ; X
+  ('trsmlutn' tdyad ((0&{::)`((mp~ |:)~&>/)`]`(conU "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ |:)~&>/)@[ - ((mp~ |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) U  ; X
+  ('trsmlutu' tdyad ((0&{::)`((mp~ |:)~&>/)`]`(conU1"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(((mp~ |:)~&>/)@[ - ((mp~ |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tc@])))) U1 ; X
+
+  ('trsmrlcn' tdyad ((0&{::)`((mp  ct)~&>/)`]`(conL "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  ct)~&>/)@[ - ((mp  ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) L  ; X
+  ('trsmrlcu' tdyad ((0&{::)`((mp  ct)~&>/)`]`(conL1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  ct)~&>/)@[ - ((mp  ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) L1 ; X
+  ('trsmrlnn' tdyad ((0&{::)`( mp~     &>/)`]`(conL "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(( mp     ~&>/)@[ - ( mp      0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) L  ; X
+  ('trsmrlnu' tdyad ((0&{::)`( mp~     &>/)`]`(conL1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(( mp     ~&>/)@[ - ( mp      0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) L1 ; X
+  ('trsmrltn' tdyad ((0&{::)`((mp  |:)~&>/)`]`(conL "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  |:)~&>/)@[ - ((mp  |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) L  ; X
+  ('trsmrltu' tdyad ((0&{::)`((mp  |:)~&>/)`]`(conL1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  |:)~&>/)@[ - ((mp  |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) L1 ; X
+
+  ('trsmrucn' tdyad ((0&{::)`((mp  ct)~&>/)`]`(conU "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  ct)~&>/)@[ - ((mp  ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) U  ; X
+  ('trsmrucu' tdyad ((0&{::)`((mp  ct)~&>/)`]`(conU1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  ct)~&>/)@[ - ((mp  ct) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) U1 ; X
+  ('trsmrunn' tdyad ((0&{::)`( mp~     &>/)`]`(conU "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(( mp     ~&>/)@[ - ( mp      0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) U  ; X
+  ('trsmrunu' tdyad ((0&{::)`( mp~     &>/)`]`(conU1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(( mp     ~&>/)@[ - ( mp      0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) U1 ; X
+  ('trsmrutn' tdyad ((0&{::)`((mp  |:)~&>/)`]`(conU "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  |:)~&>/)@[ - ((mp  |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) U  ; X
+  ('trsmrutu' tdyad ((0&{::)`((mp  |:)~&>/)`]`(conU1"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(((mp  |:)~&>/)@[ - ((mp  |:) 0&{::)~) % (FP_EPS * (1:`]@.*)@normi@(0 {:: [)) * norm1tr@])))) U1 ; X
 
   EMPTY
 )

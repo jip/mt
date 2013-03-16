@@ -180,7 +180,7 @@ getripl1ustep=: 3 : 0
   Ci=. (-TRINB) {."1 pfx
   Ci=. (((i. n) - j) >/ i. TRINB)} Ci ,: 0  NB. spec code
   Ci=. Ci - sfx mp L1i
-  Ci=. L0i trsmxl1 Ci
+  Ci=. L0i trsmrlnu Ci
   ((-TRINB) }."1 pfx) ; Ci ,. sfx
 )
 
@@ -245,7 +245,7 @@ getripu1lstep=: 3 : 0
   Ci=. TRINB {."1 sfx
   Ci=. (((i. n) - j) </ i. TRINB)} Ci ,: 0  NB. spec code
   Ci=. Ci - pfx mp U1i
-  Ci=. U0i trsmxu1 Ci
+  Ci=. U0i trsmrunu Ci
   (pfx ,. Ci) ; TRINB }."1 sfx
 )
 
@@ -311,7 +311,7 @@ getriul1pstep=: 3 : 0
   Ri=. TRINB {. sfx
   Ri=. ((i. TRINB) >/ (i. n) - j)} Ri ,: 0  NB. spec code
   Ri=. Ri - L1i mp pfx
-  Ri=. L0i trsml1x Ri
+  Ri=. L0i trsmllnu Ri
   (pfx , Ri) ; TRINB }. sfx
 )
 
@@ -519,7 +519,7 @@ getripl1u=: 3 : 0
   y=. trtriu tru L1U
   y=. (>/~ i. n)} y ,: L1U  NB. spec code
   I=. <. n % TRINB
-  ip (C.^:_1"1) 1 {:: getripl1ustep^:I (TRINB * I) ({."1 ; (-@[ (trl1 trsmxl1 tru) }."1)) y
+  ip (C.^:_1"1) 1 {:: getripl1ustep^:I (TRINB * I) ({."1 ; (-@[ (trl1 trsmrlnu tru) }."1)) y
 )
 
 NB. ---------------------------------------------------------
@@ -584,7 +584,7 @@ getripu1l=: 3 : 0
   y=. trtril trl U1L
   y=. (</~ i. n)} y ,: U1L  NB. spec code
   I=. <. n % TRINB
-  ip (C.^:_1"1) 0 {:: getripu1lstep^:I (TRINB | n) ((((2 # [) {. ]) trsmxu1 trl@:({."1)) ; }."1) y
+  ip (C.^:_1"1) 0 {:: getripu1lstep^:I (TRINB | n) ((((2 # [) {. ]) trsmrunu trl@:({."1)) ; }."1) y
 )
 
 NB. ---------------------------------------------------------
@@ -649,7 +649,7 @@ getriul1p=: 3 : 0
   y=. trtriu tru UL1
   y=. (>/~ i. n)} y ,: UL1  NB. spec code
   I=. <. n % TRINB
-  ip (C.^:_1) 0 {:: getriul1pstep^:I (TRINB | n) ((((2 # [) {. ]) trsml1x tru@{.) ; }.) y
+  ip (C.^:_1) 0 {:: getriul1pstep^:I (TRINB | n) ((((2 # [) {. ]) trsmllnu tru@{.) ; }.) y
 )
 
 NB. ---------------------------------------------------------

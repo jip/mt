@@ -102,13 +102,13 @@ NB.   Xh -: clean LU1p getrsxlu1pt (|: A) mp~ Xh
 NB. where
 NB.   LU1p=. getrflu1p A
 
-getrslu1px=:  (0 {:: [) C.^:_1   ((] trsmu1x  trsmlx ~) 1&{::)~
-getrsxlu1ph=: (0 {:: [) C.^:_1"1 ((] trsmxu1h trsmxlh~) 1&{::)~
-getrsxlu1pt=: (0 {:: [) C.^:_1"1 ((] trsmxu1t trsmxlt~) 1&{::)~
+getrslu1px=:  (0 {:: [) C.^:_1   ((] trsmlunu trsmllnn~) 1&{::)~
+getrsxlu1ph=: (0 {:: [) C.^:_1"1 ((] trsmrucu trsmrlcn~) 1&{::)~
+getrsxlu1pt=: (0 {:: [) C.^:_1"1 ((] trsmrutu trsmrltn~) 1&{::)~
 
-getrslu1phx=: (1 {:: [) ([ trsmlhx trsmu1hx) ((0 {:: [) C.   ])
-getrslu1ptx=: (1 {:: [) ([ trsmltx trsmu1tx) ((0 {:: [) C.   ])
-getrsxlu1p=:  (1 {:: [) ([ trsmxl  trsmxu1 ) ((0 {:: [) C."1 ])
+getrslu1phx=: (1 {:: [) ([ trsmllcn trsmlucu) ((0 {:: [) C.   ])
+getrslu1ptx=: (1 {:: [) ([ trsmlltn trsmlutu) ((0 {:: [) C.   ])
+getrsxlu1p=:  (1 {:: [) ([ trsmrlnn trsmrunu) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
@@ -146,13 +146,13 @@ NB.
 NB. Notes:
 NB. - implements LAPACK's xGETRS
 
-getrspl1ux=:  (1 {:: [) ([ trsmux  trsml1x ) ((0 {:: [) C.   ])
-getrsxpl1uh=: (1 {:: [) ([ trsmxuh trsmxl1h) ((0 {:: [) C."1 ])
-getrsxpl1ut=: (1 {:: [) ([ trsmxut trsmxl1t) ((0 {:: [) C."1 ])
+getrspl1ux=:  (1 {:: [) ([ trsmlunn trsmllnu) ((0 {:: [) C.   ])
+getrsxpl1uh=: (1 {:: [) ([ trsmrucn trsmrlcu) ((0 {:: [) C."1 ])
+getrsxpl1ut=: (1 {:: [) ([ trsmrutn trsmrltu) ((0 {:: [) C."1 ])
 
-getrspl1uhx=: (0 {:: [) C.^:_1   ((] trsml1hx trsmuhx~) 1&{::)~
-getrspl1utx=: (0 {:: [) C.^:_1   ((] trsml1tx trsmutx~) 1&{::)~
-getrsxpl1u=:  (0 {:: [) C.^:_1"1 ((] trsmxl1  trsmxu ~) 1&{::)~
+getrspl1uhx=: (0 {:: [) C.^:_1   ((] trsmllcu trsmlucn~) 1&{::)~
+getrspl1utx=: (0 {:: [) C.^:_1   ((] trsmlltu trsmlutn~) 1&{::)~
+getrsxpl1u=:  (0 {:: [) C.^:_1"1 ((] trsmrlnu trsmrunn~) 1&{::)~
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
@@ -187,13 +187,13 @@ NB.   Xh -: clean pU1L getrsxpu1lt (|: A) mp~ Xh
 NB. where
 NB.   pU1L=. getrfpu1l A
 
-getrspu1lx=:  (1 {:: [) ([ trsmlx  trsmu1x ) ((0 {:: [) C.   ])
-getrsxpu1lh=: (1 {:: [) ([ trsmxlh trsmxu1h) ((0 {:: [) C."1 ])
-getrsxpu1lt=: (1 {:: [) ([ trsmxlt trsmxu1t) ((0 {:: [) C."1 ])
+getrspu1lx=:  (1 {:: [) ([ trsmllnn trsmlunu) ((0 {:: [) C.   ])
+getrsxpu1lh=: (1 {:: [) ([ trsmrlcn trsmrucu) ((0 {:: [) C."1 ])
+getrsxpu1lt=: (1 {:: [) ([ trsmrltn trsmrutu) ((0 {:: [) C."1 ])
 
-getrspu1lhx=: (0 {:: [) C.^:_1   ((] trsmu1hx trsmlhx~) 1&{::)~
-getrspu1ltx=: (0 {:: [) C.^:_1   ((] trsmu1tx trsmltx~) 1&{::)~
-getrsxpu1l=:  (0 {:: [) C.^:_1"1 ((] trsmxu1  trsmxl ~) 1&{::)~
+getrspu1lhx=: (0 {:: [) C.^:_1   ((] trsmlucu trsmllcn~) 1&{::)~
+getrspu1ltx=: (0 {:: [) C.^:_1   ((] trsmlutu trsmlltn~) 1&{::)~
+getrsxpu1l=:  (0 {:: [) C.^:_1"1 ((] trsmrunu trsmrlnn~) 1&{::)~
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
@@ -228,13 +228,13 @@ NB.   Xh -: clean UL1p getrsxul1pt (|: A) mp~ Xh
 NB. where
 NB.   UL1p=. getrful1p A
 
-getrsul1px=:  (0 {:: [) C.^:_1   ((] trsml1x  trsmux ~) 1&{::)~
-getrsxul1ph=: (0 {:: [) C.^:_1"1 ((] trsmxl1h trsmxuh~) 1&{::)~
-getrsxul1pt=: (0 {:: [) C.^:_1"1 ((] trsmxl1t trsmxut~) 1&{::)~
+getrsul1px=:  (0 {:: [) C.^:_1   ((] trsmllnu trsmlunn~) 1&{::)~
+getrsxul1ph=: (0 {:: [) C.^:_1"1 ((] trsmrlcu trsmrucn~) 1&{::)~
+getrsxul1pt=: (0 {:: [) C.^:_1"1 ((] trsmrltu trsmrutn~) 1&{::)~
 
-getrsul1phx=: (1 {:: [) ([ trsmuhx trsml1hx) ((0 {:: [) C.   ])
-getrsul1ptx=: (1 {:: [) ([ trsmutx trsml1tx) ((0 {:: [) C.   ])
-getrsxul1p=:  (1 {:: [) ([ trsmxu  trsmxl1 ) ((0 {:: [) C."1 ])
+getrsul1phx=: (1 {:: [) ([ trsmlucn trsmllcu) ((0 {:: [) C.   ])
+getrsul1ptx=: (1 {:: [) ([ trsmlutn trsmlltu) ((0 {:: [) C.   ])
+getrsxul1p=:  (1 {:: [) ([ trsmrunn trsmrlnu) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
@@ -269,10 +269,10 @@ NB. Notes:
 NB. - is similar to LAPACK's DSYTRS('L') and ZHETRS('L'), but
 NB.   uses another factorization, see hetrfx
 
-hetrsplx=:   (0 {:: [)    C.^:_1    (1 {:: [) trsml1hx pttrfl@(2 {:: [) pttrslx (1 {:: [) trsml1x  (0 {:: [) C.   ]
-hetrspltx=: ((0 {:: [) +@(C.^:_1  ) (1 {:: [) trsml1hx pttrfl@(2 {:: [) pttrslx (1 {:: [) trsml1x  (0 {:: [) C.   ]) +
-hetrsxpl=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmxl1  pttrfl@(2 {:: [) pttrsxl (1 {:: [) trsmxl1h (0 {:: [) C."1 ]
-hetrsxplt=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmxl1  pttrfl@(2 {:: [) pttrsxl (1 {:: [) trsmxl1h (0 {:: [) C."1 ]) +
+hetrsplx=:   (0 {:: [)    C.^:_1    (1 {:: [) trsmllcu pttrfl@(2 {:: [) pttrslx (1 {:: [) trsmllnu (0 {:: [) C.   ]
+hetrspltx=: ((0 {:: [) +@(C.^:_1  ) (1 {:: [) trsmllcu pttrfl@(2 {:: [) pttrslx (1 {:: [) trsmllnu (0 {:: [) C.   ]) +
+hetrsxpl=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmrlnu pttrfl@(2 {:: [) pttrsxl (1 {:: [) trsmrlcu (0 {:: [) C."1 ]
+hetrsxplt=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmrlnu pttrfl@(2 {:: [) pttrsxl (1 {:: [) trsmrlcu (0 {:: [) C."1 ]) +
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
@@ -303,10 +303,10 @@ NB.   Xh -: clean pU1T hetrsxput (|: A) mp~ Xh
 NB. where
 NB.   pU1T=. hetrfpu A
 
-hetrspux=:   (0 {:: [)    C.^:_1    (1 {:: [) trsmu1hx pttrfu@(2 {:: [) pttrsux (1 {:: [) trsmu1x  (0 {:: [) C.   ]
-hetrsputx=: ((0 {:: [) +@(C.^:_1  ) (1 {:: [) trsmu1hx pttrfu@(2 {:: [) pttrsux (1 {:: [) trsmu1x  (0 {:: [) C.   ]) +
-hetrsxpu=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmxu1  pttrfu@(2 {:: [) pttrsxu (1 {:: [) trsmxu1h (0 {:: [) C."1 ]
-hetrsxput=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmxu1  pttrfu@(2 {:: [) pttrsxu (1 {:: [) trsmxu1h (0 {:: [) C."1 ]) +
+hetrspux=:   (0 {:: [)    C.^:_1    (1 {:: [) trsmlucu pttrfu@(2 {:: [) pttrsux (1 {:: [) trsmlunu (0 {:: [) C.   ]
+hetrsputx=: ((0 {:: [) +@(C.^:_1  ) (1 {:: [) trsmlucu pttrfu@(2 {:: [) pttrsux (1 {:: [) trsmlunu (0 {:: [) C.   ]) +
+hetrsxpu=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmrunu pttrfu@(2 {:: [) pttrsxu (1 {:: [) trsmrucu (0 {:: [) C."1 ]
+hetrsxput=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmrunu pttrfu@(2 {:: [) pttrsxu (1 {:: [) trsmrucu (0 {:: [) C."1 ]) +
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
@@ -344,10 +344,10 @@ NB.
 NB. Notes:
 NB. - implements LAPACK's xPOTRS('L')
 
-potrslx=:   [   trsmlhx trsmlx
-potrsltx=: ([ +@trsmlhx trsmlx ) +
-potrsxl=:   [   trsmxl  trsmxlh
-potrsxlt=: ([ +@trsmxl  trsmxlh) +
+potrslx=:   [   trsmllcn trsmllnn
+potrsltx=: ([ +@trsmllcn trsmllnn) +
+potrsxl=:   [   trsmrlnn trsmrlcn
+potrsxlt=: ([ +@trsmrlnn trsmrlcn) +
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
@@ -382,10 +382,10 @@ NB.   Xh -: clean U potrsxut (|: A) mp~ Xh
 NB. where
 NB.   U=. potrfu A
 
-potrsux=:   [   trsmuhx trsmux
-potrsutx=: ([ +@trsmuhx trsmux ) +
-potrsxu=:   [   trsmxu  trsmxuh
-potrsxut=: ([ +@trsmxu  trsmxuh) +
+potrsux=:   [   trsmlucn trsmlunn
+potrsutx=: ([ +@trsmlucn trsmlunn) +
+potrsxu=:   [   trsmrunn trsmrucn
+potrsxut=: ([ +@trsmrunn trsmrucn) +
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:

@@ -686,7 +686,7 @@ getrflu1p=: 3 : 0
     k=. n (<. >.@-:) m
     'ip LaaU1a'=. getrflu1p k {. y
     y=. ip (C."1) k }. y
-    Lba=. LaaU1a trsmxu1&(k&({."1)) y
+    Lba=. LaaU1a trsmrunu&(k&({."1)) y
     'ipb LbbU1bb'=. getrflu1p y (- Lba&mp)&(k&(}."1)) LaaU1a
     dipb=. (i. k) , (k + ipb)
     (dipb C. ip) ; (dipb C."1 LaaU1a) , (Lba ,. LbbU1bb)
@@ -843,7 +843,7 @@ getrfpl1u=: 3 : 0
     k=. m (<. >.@-:) n
     'pi L1aUaa'=. getrfpl1u k {."1 y
     y=. pi C. k }."1 y
-    Uab=. L1aUaa trsml1x&(k&{.) y
+    Uab=. L1aUaa trsmllnu&(k&{.) y
     'ipb L1bbUbb'=. getrfpl1u y (- mp&Uab)&(k&}.) L1aUaa
     dipb=. (i. k) , (k + ipb)
     (dipb C. pi) ; (dipb C. L1aUaa) ,. (Uab , L1bbUbb)
@@ -997,7 +997,7 @@ getrfpu1l=: 3 : 0
     k=. m (<. >.@-:) n
     'ip U1bLbb'=. getrfpu1l (-k) {."1 y
     y=. ip C. (-k) }."1 y
-    Lab=. U1bLbb trsmu1x&((-k)&{.) y
+    Lab=. U1bLbb trsmlunu&((-k)&{.) y
     'ipa U1aaLaa'=. getrfpu1l y (- mp&Lab)&((-k)&}.) U1bLbb
     dipa=. ipa , ((m-k) + i. k)
     (dipa C. ip) ; (U1aaLaa , Lab) ,. (dipa C. U1bLbb)
@@ -1151,7 +1151,7 @@ getrful1p=: 3 : 0
     k=. n (<. >.@-:) m
     'ip UbbL1b'=. getrful1p (-k) {. y
     y=. ip (C."1) (-k) }. y
-    Uab=. UbbL1b trsmxl1&((-k)&({."1)) y
+    Uab=. UbbL1b trsmrlnu&((-k)&({."1)) y
     'ipa UaaL1aa'=. getrful1p y (- Uab&mp)&((-k)&(}."1)) UbbL1b
     dipa=. ipa , ((n-k) + i. k)
     (dipa C."1 ip) ; (UaaL1aa ,. Uab) , (dipa C."1 UbbL1b)
@@ -1404,7 +1404,7 @@ NB.                              ⌈n/2⌉ n-⌈n/2⌉
 NB.      2.2) recursively factorize A00:
 NB.             L00 := potrfl A00
 NB.      2.3) find L10^H:
-NB.             L10h := L00 trsmlx A01
+NB.             L10h := L00 trsmllnn A01
 NB.           via solving:
 NB.             L00 * (L10^H) = A01
 NB.      2.4) find L10:
@@ -1428,7 +1428,7 @@ NB. Notes:
 NB. - models LAPACK's xPOTRF('L'), but uses blocked, not
 NB.   partitioned algorithm
 
-potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0&{::))`,`(ct@])`trsmlx`(0 1&{::)`[`mp`[`]`(1 1&{::)`stitchb`(potrfl@:-~)`]`[`0:`0: fork6)@(<;.1~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
+potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0&{::))`,`(ct@])`trsmllnn`(0 1&{::)`[`mp`[`]`(1 1&{::)`stitchb`(potrfl@:-~)`]`[`0:`0: fork6)@(<;.1~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
 NB. ---------------------------------------------------------
 NB. potrfu
@@ -1460,7 +1460,7 @@ NB.                              ⌈n/2⌉ n-⌈n/2⌉
 NB.      2.2) recursively factorize A11:
 NB.             U11 := potrfu A11
 NB.      2.3) find U01^H:
-NB.             U01h := U11 trsmux A10
+NB.             U01h := U11 trsmlunn A10
 NB.           via solving:
 NB.             U11 * (U01^H) = A10
 NB.      2.4) find U01:
@@ -1480,7 +1480,7 @@ NB.   A -: clean po U
 NB. where
 NB.   U=. potrfu A
 
-potrfu=: %:`((0:`0:`0:`]`]`(potrfu@(1 1&{::))`(,~)`(ct@])`trsmux`(1 0&{::)`[`mp`[`]`(0 0&{::)`(stitcht~)`(potrfu@:-~)`]`[`0:`0: fork6)@(<;.1~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
+potrfu=: %:`((0:`0:`0:`]`]`(potrfu@(1 1&{::))`(,~)`(ct@])`trsmlunn`(1 0&{::)`[`mp`[`]`(0 0&{::)`(stitcht~)`(potrfu@:-~)`]`[`0:`0: fork6)@(<;.1~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
 NB. ---------------------------------------------------------
 NB. pttrfl

@@ -1368,7 +1368,7 @@ trlpc=: 3 : 0
       NB. Follow usual method: Estimate the left singular
       NB. vector corresponding to the smallest singular value
       NB. of lower triangular block A(0:rank-1,0:rank-1)
-      x2=. ((2 # rank) {. L) trsmxl x2
+      x2=. ((2 # rank) {. L) trsmrlnn x2
       NB. Find the index with largest absolute value in
       NB. vector x2
       io=. liofmax x2
@@ -1463,7 +1463,7 @@ trlpc=: 3 : 0
           x2=. x1 ((* {:) , 0 { ]) cs
           NB. Obtain the left singular vector from the right
           NB. one
-          x2=. ((2 # >: rank) {. L) trsmxl x2
+          x2=. ((2 # >: rank) {. L) trsmrlnn x2
           NB. Find the index with largest absolute value
           io=. liofmax x2
           NB. Permut row io to position rank
@@ -1648,7 +1648,7 @@ trprc=: 3 : 0
       NB. Follow usual method: Estimate the right singular
       NB. vector corresponding to the smallest singular value
       NB. of upper triangular block A(0:rank-1,0:rank-1)
-      x2=. ((2 # rank) {. R) trsmux x2
+      x2=. ((2 # rank) {. R) trsmlunn x2
       NB. Find the index with largest absolute value in
       NB. vector x2
       io=. liofmax x2
@@ -1744,7 +1744,7 @@ trprc=: 3 : 0
           x2=. x1 ((* {:) , 0 { ]) cs
           NB. Obtain the right singular vector from the left
           NB. one
-          x2=. ((2 # >: rank) {. R) trsmux x2
+          x2=. ((2 # >: rank) {. R) trsmlunn x2
           NB. Find the index with largest absolute value
           io=. liofmax x2
           NB. Permut column io to position rank

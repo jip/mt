@@ -298,13 +298,7 @@ NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlzrc unglz)) LZf
 
 unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(#@] ((((0 >. - ) idmat <. ,  [) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]) ] : (({.  ~ -)~))
 
-
-write_I=:    ((((0 >. -~) idmat <. , ]) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ])          NB. Zf=.   m   write_I    LZf
-mk_fret=:    (1:`(] (GQNB dhs2lios - , (0 >:@>. GQNB >.@%~ GQNX -~ ])) <.)`(0 $~ ])} #)  NB. fret=. m   mk_fret    LZf
-mk_I0=:      (idmat~ -~/)@(((0 >. (- {.)) , 1 { ]) $)                                    NB. I0=.   m   mk_I0      LZf
-step=:       ([ larzbrcfr (((- #)~ -~/@$) idmat $@[) , ])                                NB. eZi1=. bZf step       eZi
-unglz_dyad=: (}."1@(step&:>/)@([ ((mk_fret <;.1 ]) , <@mk_I0) write_I))                  NB. Z=.    m   unglz_dyad LZf
-unglz_3=:    ($:~ #) : unglz_dyad                                                                                                                                NB. Z=.    [m] unglz      LZf
+unglz_3=: ($:~ #) :(}."1@(([ (larzbrcfr dbg 'larzbrcfr') (((-  #)~ -~/@$) idmat $@[) , ])&:>/)@([ ((      (1:`(] (     GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} #)  <;. 1 ]) , <@(idmat~    -~/)@(((0 >. (- {.)) ,  1 { ]) $)) (((0 >. -~) idmat <. ,  ]) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]))
 
 NB. ---------------------------------------------------------
 NB. ungzl
@@ -350,6 +344,9 @@ NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmzllc ungzl)) ZfL
 
 ungzl=: }:  @((( ((GQNB ,~ _) ,:~ 0 ,       c@]     ) ];.0 [) larzblnbc (1 ; 0 _1 , GQNB) setdiag          ({."1~    GQNB  + c)@])^:(GQNB %~ -&c) (larzblnbc  idmat      @$)@(}."1~   (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(c@] ((( 0        idmat <. ,~ [) c) [`(<@;&(dhs2lios@( 0&,))/@$@[)`]} ]) ] : ( {."1     ))
 
+NB. mk_fret !!!
+ungzl_3=: ($:~ c) :(}:  @((([ larzblnbc (0               idmat $@[) (,.~ dbg 'eZi,eIi')~ ]) dbg 'step')&:>/ dbg 'steps')@([ ((((('' ; (1:`(] (GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} c)) dbg 'mk_fret') <;.1 ]) dbg 'cut') , <@((idmat~ >:@-~/) dbg 'mk_I0')@((((0 >. (- {:)) ,~ 0 { ]) $) dbg 'mk_I0_sh')) (( 0        idmat <. ,~ ]) c) (([`(<@;&(dhs2lios@( 0&,))/@$@[)`]}) dbg 'mk_Zf') ]))
+
 NB. ---------------------------------------------------------
 NB. ungzr
 NB.
@@ -393,6 +390,8 @@ NB.   NB. I = (Z^H) * Z
 NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmzrlc ungzr)) ZfR
 
 ungzr=: }.  @((( ((GQNB ,~ _) ,:~ 0 ,  _1 - c@]     ) ];.0 [) larzblnfc (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({."1~ (- GQNB) - c)@])^:(GQNB %~ -&c) (larzblnfc (idmat~ -~/)@$)@(}."1~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@(c@] ((((0 <. -~) idmat <. ,~ [) c) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]) ] : (({."1~ -)~))
+
+ungzr_3=: ($:~ c) :(}.  @((([ (larzblnfc dbg 'larzblnfc') (((+  c)~ -~/@$) (idmat dbg 'mk_Ii') $@[) (,.  dbg ',.') ])&:>/) dbg 'M')@([ ((('' ; (1:`(] (     GQNB dhs2lios - , 0 >:@>. GQNB >.@%~ GQNX -~ ]) <.)`(0 $~ ])} c)) <;. 1 ]) , <@(idmat~    -~/)@(((0 >. (- {:)) ,~ 0 { ]) $)) (((0 >. -~) idmat <. ,  ]) c) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]))
 
 NB. ---------------------------------------------------------
 NB. ungrz

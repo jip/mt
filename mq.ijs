@@ -848,6 +848,18 @@ unmrqln_5=: 4 : 0
   y=. }. y
 )
 
+NB. QbyC=. RQf unmrqln_6 C
+NB. monolithic RQf and eC, boxed lIOS scanning via xbtl
+NB. }. -: 0&, ^: _1
+unmrqln_6=: 4 : 0
+  x=. (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $) x
+  y=. (x&((larflcbr xbt 1)`(larfblcbr xbt MQNB)@.(MQNB < #@[)))&.(0&,) y
+)
+
+NB. QbyC=. RQf unmrqln_7 C
+NB. infixed & boxed RQf, linked monolithic eC, scan by insert
+unmrqln_7=: }.@(((unmr2ln`((larfblcbr&:>/@,~ (- MQNB)&(<\))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $))~ 0&,)
+
 NB. unmrqln_2=: (}.@((1 unmrxln_2_core)`(MQNB unmrxln_2_core)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.~ 0 _1 -@(<./)@:+ $))~ 0&,
 
 NB. =========================================================

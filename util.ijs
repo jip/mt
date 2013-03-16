@@ -9,9 +9,9 @@ NB. fmtlog    Format log string
 NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
 NB.
-NB. Version: 0.9.0 2012-12-29
+NB. Version: 0.9.0 2013-03-16
 NB.
-NB. Copyright 2005-2012 Henry Rich, Igor Zhuravlov
+NB. Copyright 2005-2013 Henry Rich, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

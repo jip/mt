@@ -1,4 +1,4 @@
-Copyright 2010-2012 Igor Zhuravlov
+Copyright 2010-2013 Igor Zhuravlov
 
 See the accompanying file COPYING.LESSER, version 2007-Jun-29
 or later for terms of use. If, for some reason it is missing,
@@ -10,8 +10,8 @@ the mt license also may be found at:
 mt is a set of routines for solving some problems in matrix
 algebra: transforming, decomposing, reducing to condensed
 form, factorization, equation solving, function applying,
-condition number estimating. It's based mostly on LAPACK
-algorithms, but doesn't require LAPACK.
+condition number estimating. Its algorithms are based on
+those from LAPACK [1] and RRQR [2, 3] libraries.
 
 Project homepage:
 http://www.jsoftware.com/jwiki/Addons/math/mt
@@ -21,3 +21,19 @@ see AUTHORS file
 
 TODO:
 see TODO file
+
+References:
+[1] Anderson, E. and Bai, Z. and Bischof, C. and Blackford,
+    S. and Demmel, J. and Dongarra, J. and Du Croz, J. and
+    Greenbaum, A. and Hammarling, S. and McKenney, A. and
+    Sorensen, D. (1999). LAPACK Users' Guide. (3rd).
+    Philadelphia, PA: Society for Industrial and Applied
+    Mathematics.
+[2] C. H. Bischof, G. Quintana-Ortí. Computing Rank-Revealing
+    QR Factorizations of Dense Matrices. ACM Transactions on
+    Mathematical Software, June 1998, Vol. 24, No. 2, pp.
+    226–253.
+[3] C. H. Bischof, G. Quintana-Ortí. Algorithm 782: Codes for
+    Rank-Revealing QR Factorizations of Dense Matrices. ACM
+    Transactions on Mathematical Software, June 1998, Vol.
+    24, No. 2, pp. 254-257.

@@ -16,9 +16,9 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.9.0 2012-12-29
+NB. Version: 0.9.0 2013-03-16
 NB.
-NB. Copyright 2010-2012 Igor Zhuravlov
+NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

@@ -1,31 +1,48 @@
-1. replace v&}. v&{. by s&}."1 s&{."1 and so on (qg)
+1. (lacn2,gesc2,latdf,getc2,tgsy2,tgsyl,tgex2,tgexc,tgsen) ->
+   gges
 
-2. (lacn2,gesc2,latdf,getc2,tgsy2,tgsyl,tgex2,tgexc,tgsen) -> gges
+2. (gges,tgsyl) -> [1]
 
-3. (gges,tgsyl) -> [1]
+3. hrd.ijs: gghrdxxx: implement blocked generalized
+   Hessenberg reduction [2]
 
-4. hrd.ijs: gghrdxxx: implement blocked generalized Hessenberg reduction [2]
+4. sm.ijs: trsmxxxx: replace column-wise algorithms by
+   row-wise
 
-5. sm.ijs: trsmxxxx: replace column-wise algorithms by row-wise
+5. ev.ijs: testggev: test ggev_jlapack_ to compare against
+   ggevxxx
 
-6. ev.ijs: testggev: test ggev_jlapack_ to compare against ggevxxx
+6. fix ggevxxx for AB=. 2 0 0 $ 0 abd for (A ,: 0)
 
-7. fix ggevxxx for AB=. 2 0 0 $ 0
+7. factorize gqvberr in eq,hrd,pf,qf,tri
 
-8. factorize gqvberr in eq,gq,hrd,pf,qf,tri
+8. improve *NB and *NX constants for optimal performance
 
-9. qf.ijs: add test for Q orthogonality
+9. exp.ijs: implement updated algo [3]
+
+10. Sylvester equation solvers:
+    [generalized] {continuous,discrete}-time
+
+11. Lyapunov equation solvers:
+    [generalized] {continuous,discrete}-time
+    for {solution X,Cholesky factor U}
+
+12. Algebraic Riccati equation solvers:
+    [generalized] {continuous,discrete}-time
 
 
-[1] Gerdin, Markus.
-    Computation of a canonical form for linear differential-algebraic equations.
-    Department of Electrical Engineering, Linköping University, 2004
+[1] Gerdin, Markus. Computation of a canonical form for
+    linear differential-algebraic equations. Department of
+    Electrical Engineering, Linköping University, 2004.
     LiTH-ISY-R-2602
 
-[2] Bo Kågström, Daniel Kressner, Enrique S.
-    Quintana-Ortí, and Gregorio Quintana-Ortí
-    Blocked Algorithms for the Reduction to
-    Hessenberg-Triangular Form Revisited.
-    February 2008.
-    LAPACK Working Note 198
+[2] Bo Kågström, Daniel Kressner, Enrique S. Quintana-Ortí,
+    and Gregorio Quintana-Ortí. Blocked Algorithms for the
+    Reduction to Hessenberg-Triangular Form Revisited.
+    February 2008. LAPACK Working Note 198
     http://www.netlib.org/lapack/lawns/downloads/
+
+[3] Awad H. Al-Mohy, Nicholas J. Higham. A New Scaling and
+    Squaring Algorithm for the Matrix Exponential. SIAM J.
+    Matrix Analysis Applications, Vol. 31, No. 3, pp.
+    970-989, 2009.

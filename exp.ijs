@@ -11,9 +11,9 @@ NB. testheexp  Test heexp by Hermitian (symmetric) matrix
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2013-03-16
 NB.
-NB. Copyright 2010-2012 Igor Zhuravlov
+NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

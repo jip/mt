@@ -9,9 +9,9 @@ NB.
 NB. testlartg  Test lartg by vectors
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.9.0 2012-12-29
+NB. Version: 0.9.0 2013-03-16
 NB.
-NB. Copyright 2010-2012 Igor Zhuravlov
+NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

@@ -31,9 +31,9 @@ NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.9.0 2013-03-16
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

@@ -2,9 +2,9 @@ NB. Debug
 NB.
 NB. dbg  Conj. to force verb to show debug info
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.9.0 2013-03-16
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

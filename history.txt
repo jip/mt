@@ -79,15 +79,30 @@ math/mt - change history
 
 == 0.8.2 ==
  Code and comments clean-up
- * cond: new verbs laic11 laic12
- * ev: use normsc normsr
- * gq: change unghrlx from monad to ambivalent
- * hrd: change gghrdxxx from dyad to ambivalent
- * norm: new verbs normsr normsc
- + pf: orthogonal factorization with pivoting
- * pow: use normsr
- * sm: replace trsmxxxx by previous iterative version since it has lesser bw error
+ + cond: new interfaces: laic11 laic12
+ * ev:   use normsc normsr
+ * gq:   change unghrlx from monad to ambivalent
+ * hrd:  change gghrdxxx from dyad to ambivalent
+ + norm: new interfaces: normsr normsc
+ + pf:   new interfaces: gelpf geprf
+ * pow:  use normsr
+ * sm:   replace trsmxxxx by previous iterative version since it has lesser bw error
  * test: fix J6/J7 console's [CR]LF problem
 
 == 0.8.3/4 ==
  * chg: update for j801
+
+== 0.9.0 ==
+ Code and comments clean-up
+ * ev:     use normsx
+ + gq:     unghrlx changed from monad to ambivalent, ung{lq,ql,qr,rq} improved,
+           new interfaces with test suite: ung{lz,zl,zr,rz}
+ * hrd:    change gghrdxxx from dyad to ambivalent
+ + mq:     new interfaces with test suite: unm{lz,zl,zr,rz}xx
+ + norm:   new interfaces: normsx
+ + pf:     test suite added
+ * pow:    use normsr
+ + qf:     gelqf fixed, ge{lq,ql,qr,rq}f reworked, new interfaces with test suite: tz{lz,zl,zr,rz}f
+ + ref:    better code factorization, new interfaces with test suite: larztxx larzxxxx larzbxxxx
+ * sm:     sync sm interface names with LAPACK (NAMES CHANGED!)
+ + struct: new interfaces: e0 trl1pick tru1pick

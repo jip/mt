@@ -71,70 +71,6 @@ NB. Blocked code constants
 MQNB=: 32   NB. block size limit
 
 NB. ---------------------------------------------------------
-NB. Description:
-NB.   Single step of non-blocked version of algorithms
-NB.
-NB. Syntax
-NB.   'pfxCi1 sfxCi1'=. Qf unmxxxx (pfxCi ; sfxCi)
-NB. where
-NB.   pfxCi   - pfxC(i), the prefix of eC(i), either already
-NB.             processed or not yet processed part
-NB.   sfxCi   - sfxC(i), the suffix of eC(i), either not yet
-NB.             processed or already processed part,
-NB.             inversely to pfxC(i)
-NB.   eC(i)   - matrix C augmented by trash vector, after
-NB.             i-th and before (i+1)-th step, it may be
-NB.             restored by merging pfxC(i) and sfxC(i)
-NB.   C       - m×n-matrix to multiply
-NB.   Qf      - unit triangular matrix, it represents Q in
-NB.             factored form, and contains vectors
-NB.             vtau[0:k-1]
-NB.   Q       - matrix with orthonormal rows or columns,
-NB.             which is defined as the product of
-NB.             elementary reflectors
-NB.   pfxCi1  - pfxC(i+1), the prefix of eC(i+1), either
-NB.             already processed or not yet processed part
-NB.   sfxCi1  - sfxC(i+1), the suffix of eC(i+1), either not
-NB.             yet processed or already processed part,
-NB.             inversely to pfxC(i)
-NB.   eC(i+1) - matrix C augmented by modified trash vector,
-NB.             after (i+1)-th step, it may be restored by
-NB.             merging pfxC(i+1) and sfxC(i+1)
-NB.
-NB. Algorithm:
-NB.   In:  Qf pfxC(i) sfxC(i)
-NB.   Out: pfxC(i+1) sfxC(i+1)
-NB.   1) form rios, rIOS of vtau[i] which defines an
-NB.      elementary reflector, depending on aC(i)'s size
-NB.   2) extract vtau[i] from Qf and ravel it:
-NB.        vtaui=. rios (, ;. 0) Qf
-NB.   3) apply an elementary reflector defined by vtau[i] to
-NB.      either pfxC(i) or sfxC(i) to produce tmp:
-NB.        tmp=. vtaui larfxxxx xfxCi
-NB.   4) combine tmp and either pfxC(i) or sfxC(i) to
-NB.      produce pfxC(i+1) and sfxC(i+1)
-
-unml2lnstep=: (0 {:: ]) ((,    1  _&rt)  ;   }.   @])  (,;.0~ (1 _ ,:~ 2 #      #@(0&{::))) larflcfr 1 {:: ]
-unml2lcstep=: (0 {:: ]) ((, ~ _1  _&rt)~ ;~  }:   @[)  (,;.0~ (1 _ ,:~ 2 #      #@(0&{::))) larflnfr 1 {:: ]
-unml2rnstep=: (0 {:: ]) ((,.~  _ _1&rt)~ ;~ (}:"1)@[)  (,;.0~ (1 _ ,:~ 2 #      c@(0&{::))) larfrcfr 1 {:: ]
-unml2rcstep=: (0 {:: ]) ((,.   _  1&rt)  ;  (}."1)@])  (,;.0~ (1 _ ,:~ 2 #      c@(0&{::))) larfrnfr 1 {:: ]
-
-unm2llnstep=: (1 {:: ]) ((,    1  _&rt)  ;   }.   @])~ (,;.0~ (_ 1 ,:~ 2 # _1 - #@(1&{::))) larflnbc 0 {:: ]
-unm2llcstep=: (1 {:: ]) ((, ~ _1  _&rt)~ ;~  }:   @[)~ (,;.0~ (_ 1 ,:~ 2 # _1 - #@(1&{::))) larflcbc 0 {:: ]
-unm2lrnstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~ (}:"1)@[)~ (,;.0~ (_ 1 ,:~ 2 # _1 - c@(1&{::))) larfrnbc 0 {:: ]
-unm2lrcstep=: (1 {:: ]) ((,.   _  1&rt)  ;  (}."1)@])~ (,;.0~ (_ 1 ,:~ 2 # _1 - c@(1&{::))) larfrcbc 0 {:: ]
-
-unm2rlnstep=: (0 {:: ]) ((, ~ _1  _&rt)~ ;~  }:   @[)  (,;.0~ (_ 1 ,:~ 2 #      #@(0&{::))) larflnfc 1 {:: ]
-unm2rlcstep=: (0 {:: ]) ((,    1  _&rt)  ;   }.   @])  (,;.0~ (_ 1 ,:~ 2 #      #@(0&{::))) larflcfc 1 {:: ]
-unm2rrnstep=: (0 {:: ]) ((,.   _  1&rt)  ;  (}."1)@])  (,;.0~ (_ 1 ,:~ 2 #      c@(0&{::))) larfrnfc 1 {:: ]
-unm2rrcstep=: (0 {:: ]) ((,.~  _ _1&rt)~ ;~ (}:"1)@[)  (,;.0~ (_ 1 ,:~ 2 #      c@(0&{::))) larfrcfc 1 {:: ]
-
-unmr2lnstep=: (1 {:: ]) ((, ~ _1  _&rt)~ ;~  }:   @[)~ (,;.0~ (1 _ ,:~ 2 # _1 - #@(1&{::))) larflcbr 0 {:: ]
-unmr2lcstep=: (1 {:: ]) ((,    1  _&rt)  ;   }.   @])~ (,;.0~ (1 _ ,:~ 2 # _1 - #@(1&{::))) larflnbr 0 {:: ]
-unmr2rnstep=: (1 {:: ]) ((,.   _  1&rt)  ;  (}."1)@])~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&{::))) larfrcbr 0 {:: ]
-unmr2rcstep=: (1 {:: ]) ((,.~  _ _1&rt)~ ;~ (}:"1)@[)~ (,;.0~ (1 _ ,:~ 2 # _1 - c@(1&{::))) larfrnbr 0 {:: ]
-
-NB. ---------------------------------------------------------
 NB. Verb     Action   Side   Tran  Syntax
 NB. unml2ln  Q * C    left   none  eCprod=. Qf unml2ln (C, 0)
 NB. unml2lc  Q^H * C  left   ct    eCprod=. Qf unml2lc (C, 0)
@@ -157,10 +93,10 @@ NB. Description:
 NB.   Multiply a general matrix C, augmented by trash vector,
 NB.   by matrix Q. This is non-blocked version of algorithm
 NB. where
-NB.   C      - m×n-matrix to multiply
+NB.   C      - m×(n+1)-matrix or (m+1)×n-matrix to multiply
 NB.   Qf     - unit triangular matrix, it represents Q in
 NB.            factored form as returned by ge{lq,ql,qr,rq}2,
-NB.            and contains vectors vtau[0:k-1]
+NB.            and contains vectors Vtau[0:k-1]
 NB.   Q      - matrix with orthonormal rows or columns, which
 NB.            is defined as the product of elementary
 NB.            reflectors
@@ -194,43 +130,89 @@ NB.
 NB. Notes:
 NB. - input's and output's shapes are the same
 NB. - implements LAPACK's {DOR,ZUN}M{L2,2L,2R,R2}
-NB. - unml2{ln,lc,rn,rc} and unmlq{ln,lc,rn,rc} respectively
-NB.   are topologic equivalents
+NB. - unm{l2,2l,2r,r2}{ln,lc,rn,rc} and
+NB.   unm{lq,ql,qr,rq}{ln,lc,rn,rc} respectively are
+NB.   topologic equivalents
 
-unml2ln_8=: (larflcfr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unml2lc_8=: (larflnfr&:>/@,~ (-@c <\ ,)      )~ <
-unml2rn_8=: (larfrcfr&:>/@,~ (-@c <\ ,)      )~ <
-unml2rc_8=: (larfrnfr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unml2ln=: (larflcfr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unml2lc=: (larflnfr&:>/@,~ (-@c <\ ,)      )~ <
+unml2rn=: (larfrcfr&:>/@,~ (-@c <\ ,)      )~ <
+unml2rc=: (larfrnfr&:>/@,~ (-@c <\ ,)@|.   )~ <
 
-unm2lln=: , &>/@([ unm2llnstep^:(c@[) (( {.       ;~  }.      )~ ( 1 - c))~)
-unm2llc=: , &>/@(  unm2llcstep^:(c@[) (;  0& {.                          ) )
-unm2lrn=: ,.&>/@(  unm2lrnstep^:(c@[) (;  0&({."1)                       ) )
-unm2lrc=: ,.&>/@([ unm2lrcstep^:(c@[) ((({.~ _&,) ;~ (}.~ 0&,))  ( 1 - c))~)
+unm2lln=: (larflnbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm2llc=: (larflcbc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm2lrn=: (larfrnbc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm2lrc=: (larfrcbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
 
-unm2lln_8=: (larflnbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm2llc_8=: (larflcbc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm2lrn_8=: (larfrnbc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm2lrc_8=: (larfrcbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm2rln=: (larflnfc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm2rlc=: (larflcfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm2rrn=: (larfrnfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm2rrc=: (larfrcfc&:>/@,~ (-@c <\ ,)   @|:)~ <
 
-unm2rln=: , &>/@([ unm2rlnstep^:(c@[) (( {.       ;   }.      )~ (_1 + c))~)
-unm2rlc=: , &>/@(  unm2rlcstep^:(c@[) (;~ 0& {.                          ) )
-unm2rrn=: ,.&>/@(  unm2rrnstep^:(c@[) (;~ 0&({."1)                       ) )
-unm2rrc=: ,.&>/@([ unm2rrcstep^:(c@[) ((({.~ _&,) ;  (}.~ 0&,))  (_1 + c))~)
+unmr2ln=: (larflcbr&:>/@,~ (-@c <\ ,)      )~ <
+unmr2lc=: (larflnbr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unmr2rn=: (larfrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unmr2rc=: (larfrnbr&:>/@,~ (-@c <\ ,)      )~ <
 
-unm2rln_8=: (larflnfc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm2rlc_8=: (larflcfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm2rrn_8=: (larfrnfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm2rrc_8=: (larfrcfc&:>/@,~ (-@c <\ ,)   @|:)~ <
+NB. ---------------------------------------------------------
+NB. Verb     Action   Side   Tran  Syntax
+NB. unml3ln  Z * C    left   none  eCprod=. Zf unml3ln (0, C)
+NB. unml3lc  Z^H * C  left   ct    eCprod=. Zf unml3lc (0, C)
+NB. unml3rn  C * Z    right  none  eCprod=. Zf unml3rn (0,.C)
+NB. unml3rc  C * Z^H  right  ct    eCprod=. Zf unml3rc (0,.C)
+NB. unm3lln  Z * C    left   none  eCprod=. Zf unm3lln (C, 0)
+NB. unm3llc  Z^H * C  left   ct    eCprod=. Zf unm3llc (C, 0)
+NB. unm3lrn  C * Z    right  none  eCprod=. Zf unm3lrn (C,.0)
+NB. unm3lrc  C * Z^H  right  ct    eCprod=. Zf unm3lrc (C,.0)
+NB. unm3rln  Z * C    left   none  eCprod=. Zf unm3rln (0, C)
+NB. unm3rlc  Z^H * C  left   ct    eCprod=. Zf unm3rlc (0, C)
+NB. unm3rrn  C * Z    right  none  eCprod=. Zf unm3rrn (0,.C)
+NB. unm3rrc  C * Z^H  right  ct    eCprod=. Zf unm3rrc (0,.C)
+NB. unmr3ln  Z * C    left   none  eCprod=. Zf unmr3ln (C, 0)
+NB. unmr3lc  Z^H * C  left   ct    eCprod=. Zf unmr3lc (C, 0)
+NB. unmr3rn  C * Z    right  none  eCprod=. Zf unmr3rn (C,.0)
+NB. unmr3rc  C * Z^H  right  ct    eCprod=. Zf unmr3rc (C,.0)
+NB.
+NB. Description:
+NB.   Multiply a general matrix C, augmented by trash vector,
+NB.   by matrix Z. This is non-blocked version of algorithm
+NB. where
+NB.   C      - m×(n+1)-matrix or (m+1)×n-matrix to multiply
+NB.   Zf     - unit triangular matrix, it represents Z in
+NB.            factored form as returned by tz{lz,zl,zr,rz}3,
+NB.            and contains vectors Vtau[0:k-1]
+NB.   Z      - matrix with orthonormal rows or columns, which
+NB.            is defined as the product of elementary
+NB.            reflectors
+NB.   eCprod - being product of matrix Z and augmented matrix
+NB.            C, trash vector is modified on exit
+NB.
+NB. Notes:
+NB. - input's and output's shapes are the same
+NB. - unmr3xx implement LAPACK's {DOR,ZUN}MR3
+NB. - unm{l3,3l,3r,r3}{ln,lc,rn,rc} and
+NB.   unm{lz,zl,zr,rz}{ln,lc,rn,rc} respectively are
+NB.   topologic equivalents
 
-unmr2ln=: , &>/@(  unmr2lnstep^:(#@[) (;  0& {.                          ) )
-unmr2lc=: , &>/@([ unmr2lcstep^:(#@[) (( {.       ;~  }.      )~ ( 1 - #))~)
-unmr2rn=: ,.&>/@([ unmr2rnstep^:(#@[) ((({.~ _&,) ;~ (}.~ 0&,))  ( 1 - #))~)
-unmr2rc=: ,.&>/@(  unmr2rcstep^:(#@[) (;  0&({."1)                       ) )
+unml3ln=: (larzlcfr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unml3lc=: (larzlnfr&:>/@,~ (-@c <\ ,)      )~ <
+unml3rn=: (larzrcfr&:>/@,~ (-@c <\ ,)      )~ <
+unml3rc=: (larzrnfr&:>/@,~ (-@c <\ ,)@|.   )~ <
 
-unmr2ln_8=: (larflcbr&:>/@,~ (-@c <\ ,)      )~ <
-unmr2lc_8=: (larflnbr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unmr2rn_8=: (larfrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unmr2rc_8=: (larfrnbr&:>/@,~ (-@c <\ ,)      )~ <
+unm3lln=: (larzlnbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm3llc=: (larzlcbc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm3lrn=: (larzrnbc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm3lrc=: (larzrcbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+
+unm3rln=: (larzlnfc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm3rlc=: (larzlcfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm3rrn=: (larzrnfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm3rrc=: (larzrcfc&:>/@,~ (-@c <\ ,)   @|:)~ <
+
+unmr3ln=: (larzlcbr&:>/@,~ (-@c <\ ,)      )~ <
+unmr3lc=: (larzlnbr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unmr3rn=: (larzrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unmr3rc=: (larzrnbr&:>/@,~ (-@c <\ ,)      )~ <
 
 NB. =========================================================
 NB. Interface
@@ -368,7 +350,7 @@ NB.   represented in factored form RQf as returned by gerqf
 NB.
 NB. where
 NB.   B,C - m×n-matrices
-NB.   LQf - n×(m+1)-matrix (ln,lc cases) or m×(n+1)-matrix
+NB.   LQf - l×(m+1)-matrix (ln,lc cases) or l×(n+1)-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gerqf
 NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
@@ -494,44 +476,141 @@ unmhrurc=: (unmqrrc~ 0 _1&(|.!.0))~
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
-NB. unmrzln   Q * C    left   none  B=. RQf unmrzln C
-NB. unmrzlc   Q^H * C  left   ct    B=. RQf unmrzlc C
-NB. unmrzrn   C * Q    right  none  B=. RQf unmrzrn C
-NB. unmrzrc   C * Q^H  right  ct    B=. RQf unmrzrc C
+NB. unmlzln   Z * C    left   none  B=. LZf unmlzln C
+NB. unmlzlc   Z^H * C  left   ct    B=. LZf unmlzlc C
+NB. unmlzrn   C * Z    right  none  B=. LZf unmlzrn C
+NB. unmlzrc   C * Z^H  right  ct    B=. LZf unmlzrc C
 NB.
 NB. Description:
-NB.   Multiply a general matrix C by matrix Q, which is
-NB.   represented in factored form RQf as returned by gerqf
+NB.   Multiply a general matrix C by matrix Z, which is
+NB.   represented in factored form LZf as returned by tzlzf
 NB.
 NB. where
 NB.   B,C - m×n-matrices
-NB.   LQf - n×(m+1)-matrix (ln,lc cases) or m×(n+1)-matrix
-NB.         (rn,rc), contains Qf (unit diagonal not stored),
-NB.         the output of gerqf
-NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
-NB.         unit lower triangular, the Q represented in
-NB.         factored form
-NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
+NB.   LZf - k×(m+1)-matrix (ln,lc cases) or k×(n+1)-matrix
+NB.         (rn,rc), contains Zf (identity submatrix not
+NB.         stored), the output of tzlzf
+NB.   Zf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
+NB.         trailing k×k-submatrix is identity, the Z
+NB.         represented in factored form
+NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as a product of k
 NB.         elementary reflectors:
-NB.           Q = Π{H(i)',i=0:k-1}
-NB.   k   = min(m,n)
+NB.           Z = Π{H(i)',i=k-1:0}
+NB.   k   ≤ min(m,n)
 NB.
-NB. Assertions (with appropriate comparison tolerance):
-NB.   (idmat@c (-: clean) (unmrzln ct@(<:@c ungrq ]))@gerqf) A
-NB.   (idmat@c (-: clean) (unmrzlc    (<:@c ungrq ]))@gerqf) A
-NB.   (idmat@c (-: clean) (unmrzrn ct@(<:@c ungrq ]))@gerqf) A
-NB.   (idmat@c (-: clean) (unmrzrc    (<:@c ungrq ]))@gerqf) A
+NB. Notes:
+NB. - unml3{lc,ln,rc,rn} and unmlz{lc,ln,rc,rn} respectively
+NB.   are topologic equivalents
+
+unmlzln=: }.  @(((unml3ln`((larzblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ , ~&0)
+unmlzlc=: }.  @(((unml3lc`((larzblnfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ , ~&0)
+unmlzrn=: }."1@(((unml3rn`((larzbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ ,.~&0)
+unmlzrc=: }."1@(((unml3rc`((larzbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@(_1 , [))`]}~ #))~ ,.~&0)
+
+NB. ---------------------------------------------------------
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmzlln   Z * C    left   none  B=. ZfL unmzlln C
+NB. unmzllc   Z^H * C  left   ct    B=. ZfL unmzllc C
+NB. unmzlrn   C * Z    right  none  B=. ZfL unmzlrn C
+NB. unmzlrc   C * Z^H  right  ct    B=. ZfL unmzlrc C
+NB.
+NB. Description:
+NB.   Multiply a general matrix C by matrix Z, which is
+NB.   represented in factored form ZfL as returned by tzzlf
+NB.
+NB. where
+NB.   B,C - m×n-matrices
+NB.   ZfL - (m+1)×k-matrix (ln,lc cases) or (n+1)×k-matrix
+NB.         (rn,rc), contains Zf (identity submatrix not
+NB.         stored), the output of tzzlf
+NB.   Zf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
+NB.         leading k×k-submatrix is identity, the Z
+NB.         represented in factored form
+NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
+NB.         (orthogonal), which is defined as a product of k
+NB.         elementary reflectors:
+NB.           Z = Π{H(i),i=k-1:0}
+NB.   k   ≤ min(m,n)
+NB.
+NB. Notes:
+NB. - unm3l{lc,ln,rc,rn} and unmzl{lc,ln,rc,rn} respectively
+NB.   are topologic equivalents
+
+unmzlln=: }:  @(((unm3lln`((larzblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2lios@( 0 , [))`]}~ c))~ ,  &0)
+unmzllc=: }:  @(((unm3llc`((larzblcbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2lios@( 0 , [))`]}~ c))~ ,  &0)
+unmzlrn=: }:"1@(((unm3lrn`((larzbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2lios@( 0 , [))`]}~ c))~ ,. &0)
+unmzlrc=: }:"1@(((unm3lrc`((larzbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2lios@( 0 , [))`]}~ c))~ ,. &0)
+
+NB. ---------------------------------------------------------
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmzrln   Z * C    left   none  B=. ZfR unmzrln C
+NB. unmzrlc   Z^H * C  left   ct    B=. ZfR unmzrlc C
+NB. unmzrrn   C * Z    right  none  B=. ZfR unmzrrn C
+NB. unmzrrc   C * Z^H  right  ct    B=. ZfR unmzrrc C
+NB.
+NB. Description:
+NB.   Multiply a general matrix C by matrix Z, which is
+NB.   represented in factored form ZfR as returned by tzzrf
+NB.
+NB. where
+NB.   B,C - m×n-matrices
+NB.   ZfR - (m+1)×k-matrix (ln,lc cases) or (n+1)×k-matrix
+NB.         (rn,rc), contains Zf (identity submatrix not
+NB.         stored), the output of tzzrf
+NB.   Zf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
+NB.         trailing k×k-submatrix is identity, the Z
+NB.         represented in factored form
+NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
+NB.         (orthogonal), which is defined as a product of k
+NB.         elementary reflectors:
+NB.           Z = Π{H(i),i=0:k-1}
+NB.   k   ≤ min(m,n)
+NB.
+NB. Notes:
+NB. - unm3r{lc,ln,rc,rn} and unmzr{lc,ln,rc,rn} respectively
+NB.   are topologic equivalents
+
+unmzrln=: }.  @(((unm3rln`((larzblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2lios@(_1 , [))`]}~ c))~ , ~&0)
+unmzrlc=: }.  @(((unm3rlc`((larzblcfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2lios@(_1 , [))`]}~ c))~ , ~&0)
+unmzrrn=: }."1@(((unm3rrn`((larzbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2lios@(_1 , [))`]}~ c))~ ,.~&0)
+unmzrrc=: }."1@(((unm3rrc`((larzbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2lios@(_1 , [))`]}~ c))~ ,.~&0)
+
+NB. ---------------------------------------------------------
+NB. Verb      Action   Side   Tran  Syntax
+NB. unmrzln   Z * C    left   none  B=. RZf unmrzln C
+NB. unmrzlc   Z^H * C  left   ct    B=. RZf unmrzlc C
+NB. unmrzrn   C * Z    right  none  B=. RZf unmrzrn C
+NB. unmrzrc   C * Z^H  right  ct    B=. RZf unmrzrc C
+NB.
+NB. Description:
+NB.   Multiply a general matrix C by matrix Z, which is
+NB.   represented in factored form RZf as returned by tzrzf
+NB.
+NB. where
+NB.   B,C - m×n-matrices
+NB.   RZf - k×(m+1)-matrix (ln,lc cases) or k×(n+1)-matrix
+NB.         (rn,rc), contains Zf (identity submatrix not
+NB.         stored), the output of tzrzf
+NB.   Zf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
+NB.         leading k×k-submatrix is identity, the Z
+NB.         represented in factored form
+NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
+NB.         (orthogonal), which is defined as a product of k
+NB.         elementary reflectors:
+NB.           Z = Π{H(i)',i=0:k-1}
+NB.   k   ≤ min(m,n)
 NB.
 NB. Notes:
 NB. - implements LAPACK's xORMRZ, xUNMRZ
-NB. - unmr2{lc,ln,rc,rn} and unmrz{lc,ln,rc,rn} respectively
+NB. - unmr3{lc,ln,rc,rn} and unmrz{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmrzln_7=: }:  @(((unmr3ln`((larzblcbr&:>/@,~     (- MQNB)&(<\) )~ <)@.(MQNB < #@[))~  tru1                                )~ ,  &0)
-unmrzlc_7=: }:  @(((unmr3lc`((larzblnbr&:>/@,~ |.@((- MQNB)&(<\)))~ <)@.(MQNB < #@[))~  tru1                                )~ ,  &0)
-unmrzrn_7=: }:"1@(((unmr3rn`((larzbrcbr&:>/@,~ |.@((- MQNB)&(<\)))~ <)@.(MQNB < #@[))~  tru1                                )~ ,. &0)
-unmrzrc_7=: }:"1@(((unmr3rc`((larzbrnbr&:>/@,~     (- MQNB)&(<\) )~ <)@.(MQNB < #@[))~  tru1                                )~ ,. &0)
+unmrzln=: }:  @(((unmr3ln`((larzblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@( 0 , [))`]}~ #))~ ,  &0)
+unmrzlc=: }:  @(((unmr3lc`((larzblnbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@( 0 , [))`]}~ #))~ ,  &0)
+unmrzrn=: }:"1@(((unmr3rn`((larzbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@( 0 , [))`]}~ #))~ ,. &0)
+unmrzrc=: }:"1@(((unmr3rc`((larzbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2lios@( 0 , [))`]}~ #))~ ,. &0)
+
 
 NB. =========================================================
 NB. Test suite
@@ -577,25 +656,25 @@ testunmq=: 3 : 0
   'LQf QfL QfR RQf'=. xQf=. (gelqf ; geqlf ; geqrf ; gerqf) A
   'Qlq Qql Qqr Qrq'=. (((unglq~ <:@c)&.>)`((ungql~ <:@#)&.>)`((ungqr~ <:@#)&.>)`((ungrq~ <:@c)&.>)) ag xQf
 
-  ('unmlqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) (LQf;(ct C);    Qlq )
-  ('unmlqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) (LQf;(ct C);(ct Qlq))
-  ('unmlqrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) (LQf;    C ;    Qlq )
-  ('unmlqrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) (LQf;    C ;(ct Qlq))
+  ('unmlqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) LQf ; (ct C) ;    Qlq
+  ('unmlqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) LQf ; (ct C) ; ct Qlq
+  ('unmlqrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) LQf ;     C  ;    Qlq
+  ('unmlqrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) LQf ;     C  ; ct Qlq
 
-  ('unmqlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) (QfL;    C ;    Qql )
-  ('unmqllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) (QfL;    C ;(ct Qql))
-  ('unmqlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) (QfL;(ct C);    Qql )
-  ('unmqlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) (QfL;(ct C);(ct Qql))
+  ('unmqlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) QfL ;     C  ;    Qql
+  ('unmqllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) QfL ;     C  ; ct Qql
+  ('unmqlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) QfL ; (ct C) ;    Qql
+  ('unmqlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) QfL ; (ct C) ; ct Qql
 
-  ('unmqrln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) (QfR;    C ;    Qqr )
-  ('unmqrlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) (QfR;    C ;(ct Qqr))
-  ('unmqrrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) (QfR;(ct C);    Qqr )
-  ('unmqrrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) (QfR;(ct C);(ct Qqr))
+  ('unmqrln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) QfR ;     C  ;    Qqr
+  ('unmqrlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) QfR ;     C  ; ct Qqr
+  ('unmqrrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) QfR ; (ct C) ;    Qqr
+  ('unmqrrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [)))) QfR ; (ct C) ; ct Qqr
 
-  ('unmrqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) (RQf;(ct C);    Qrq )
-  ('unmrqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) (RQf;(ct C);(ct Qrq))
-  ('unmrqrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) (RQf;    C ;    Qrq )
-  ('unmrqrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) (RQf;    C ;(ct Qrq))
+  ('unmrqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) RQf ; (ct C) ;    Qrq
+  ('unmrqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) RQf ; (ct C) ; ct Qrq
+  ('unmrqrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) RQf ;     C  ;    Qrq
+  ('unmrqrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [)))) RQf ;     C  ; ct Qrq
 
   EMPTY
 )
@@ -631,15 +710,56 @@ testunmhr=: 3 : 0
   'HlQf HuQf'=. xQf=. ((gehrdl~ 0 , #) ; (gehrdu~ 0 , c)) A
   'Qhrl Qhru'=. ((unghrl&.>)`(unghru&.>)) ag xQf
 
-  ('unmhrlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [))))) (HlQf;(ct C);    Qhrl )
-  ('unmhrllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [))))) (HlQf;(ct C);(ct Qhrl))
-  ('unmhrlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [))))) (HlQf;    C ;    Qhrl )
-  ('unmhrlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [))))) (HlQf;    C ;(ct Qhrl))
+  ('unmhrlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [))))) HlQf ; (ct C) ;    Qhrl
+  ('unmhrllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [))))) HlQf ; (ct C) ; ct Qhrl
+  ('unmhrlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [))))) HlQf ;     C  ;    Qhrl
+  ('unmhrlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * c)@(1 {:: [))))) HlQf ;     C  ; ct Qhrl
 
-  ('unmhruln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [))))) (HuQf;(ct C);    Qhru )
-  ('unmhrulc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [))))) (HuQf;(ct C);(ct Qhru))
-  ('unmhrurn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [))))) (HuQf;    C ;    Qhru )
-  ('unmhrurc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [))))) (HuQf;    C ;(ct Qhru))
+  ('unmhruln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [))))) HuQf ; (ct C) ;    Qhru
+  ('unmhrulc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [))))) HuQf ; (ct C) ; ct Qhru
+  ('unmhrurn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [))))) HuQf ;     C  ;    Qhru
+  ('unmhrurc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS * norm1 * #)@(1 {:: [))))) HuQf ;     C  ; ct Qhru
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testunmz
+NB.
+NB. Description:
+NB.   Test Z multiplication zf-algorithms by general matrix
+NB.   given
+NB.
+NB. Syntax:
+NB.   testunmz (A;C)
+NB. where
+NB.   A - m×n-matrix, is used to get Zf
+NB.   C - m×n-matrix, is used as multiplier
+
+testunmz=: 3 : 0
+  'A C'=. y
+  rcond=. (_."_)`gecon1@.(=/@$) C  NB. meaninigful for square matrices only
+  'LZf ZfL ZfR RZf'=. (tzlzf ; tzzlf ; tzzrf ; tzrzf) A
+
+  ('unmlzln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) LZf ; ct C
+  ('unmlzlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) LZf ; ct C
+  ('unmlzrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) LZf ;    C
+  ('unmlzrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) LZf ;    C
+
+  ('unmzlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) ZfL ;    C
+  ('unmzllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) ZfL ;    C
+  ('unmzlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) ZfL ; ct C
+  ('unmzlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) ZfL ; ct C
+
+  ('unmzrln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) ZfR ;    C
+  ('unmzrlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) ZfR ;    C
+  ('unmzrrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) ZfR ; ct C
+  ('unmzrrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) ZfR ; ct C
+
+  ('unmrzln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) RZf ; ct C
+  ('unmrzlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) RZf ; ct C
+  ('unmrzrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) RZf ;    C
+  ('unmrzrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) RZf ;    C
 
   EMPTY
 )
@@ -671,4 +791,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testmq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testmq_mt_ 150 200
 
-testmq=: 1 : 'EMPTY_mt_ [ (testunmhr_mt_^:(=/@$@(0&{::)) [ testunmq_mt_)@(u ; u)'
+testmq=: 1 : 'EMPTY_mt_ [ (testunmz_mt_ [ testunmhr_mt_^:(=/@$@(0&{::)) [ testunmq_mt_)@(u ; u)'

@@ -10,9 +10,9 @@ NB. testgghrd  Test gghrdx by general matrices given
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -334,10 +334,10 @@ NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
 NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
 NB.             have the same shapes
 NB.
-NB. References:
-NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB.  rences:
+NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
-NB.     3rd edition, 1996, p. 378
+NB.     3rd edition, 1996, p. 378.
 
 gghrdu=: 4 : 0
   'h s'=. x
@@ -626,10 +626,10 @@ NB.
 NB. TODO:
 NB. - implement blocked version
 
-gghrdlnn=: [: : (0 {:: gghrdl)
-gghrdlnv=: [: : (   {:@]  ((0 {:: ]) , (rotscll 2 {:: ]  )) (gghrdl   }:))
-gghrdlvn=: [: : (   {:@]  ((0 {:: ]) , (rotscll 1 {:: ]  )) (gghrdl   }:))
-gghrdlvv=: [: : ((2 }. ]) ((0 {:: ]) , (rotscll&:>"2 0 }.)) (gghrdl 2&{.))
+gghrdlnn=: 0 {:: gghrdl
+gghrdlnv=:    {:@]  ((0 {:: ]) , (rotscll 2 {:: ]  )) (gghrdl   }:)
+gghrdlvn=:    {:@]  ((0 {:: ]) , (rotscll 1 {:: ]  )) (gghrdl   }:)
+gghrdlvv=: (2 }. ]) ((0 {:: ]) , (rotscll&:>"2 0 }.)) (gghrdl 2&{.)
 
 NB. ---------------------------------------------------------
 NB. Verb:           Syntax:
@@ -668,7 +668,7 @@ NB.          defines submatrices A11 and B11 to be reduced
 NB.          position in matrices A and B, respectively, see
 NB.          gebalup and gehrdu
 NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, upper triangular
+NB.   B p   - n×n-matrix, upper triangular
 NB.   H    - n×n-matrix, upper Hessenberg inside the submatrix
 NB.          H[h:h+s-1,h:h+s-1], and upper triangular outside
 NB.   T    - n×n-matrix, upper triangular
@@ -717,24 +717,22 @@ NB.     NB. 'H T Q1 dZ0'=. hs gghrduvi A , B ,: Q0
 NB.     gghrduvi=: gghrduvv (, idmat@c)
 NB.
 NB. References:
-NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
-NB.     3rd edition, 1996, p. 378
-NB. [2] Bo Kågström, Daniel Kressner, Enrique S.
-NB.     Quintana-Ortí, and Gregorio Quintana-Ortí
-NB.     Blocked Algorithms for the Reduction to
-NB.     Hessenberg-Triangular Form Revisited.
-NB.     February 2008.
-NB.     LAPACK Working Note 198
+NB.     3rd edition, 1996, p. 378.
+NB. [2] Bo Kågström, Daniel Kressner, Enrique S. Quintana-
+NB.     Ortí, Gregorio Quintana-Ortí. Blocked Algorithms for
+NB.     the Reduction to Hessenberg-Triangular Form
+NB.     Revisited. February 2008. LAPACK Working Note 198.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
 NB. TODO:
 NB. - implement blocked version [2]
 
-gghrdunn=: [: : (0 {:: gghrdu)
-gghrdunv=: [: : (   {:@]  ((0 {:: ]) , (rotsclu 2 {:: ]  )) (gghrdu }:  ))
-gghrduvn=: [: : (   {:@]  ((0 {:: ]) , (rotsclu 1 {:: ]  )) (gghrdu }:  ))
-gghrduvv=: [: : ((2 }. ]) ((0 {:: ]) , (rotsclu&:>"2 0 }.)) (gghrdu 2&{.))
+gghrdunn=: 0 {:: gghrdu
+gghrdunv=:    {:@]  ((0 {:: ]) , (rotsclu 2 {:: ]  )) (gghrdu }:  )
+gghrduvn=:    {:@]  ((0 {:: ]) , (rotsclu 1 {:: ]  )) (gghrdu }:  )
+gghrduvv=: (2 }. ]) ((0 {:: ]) , (rotsclu&:>"2 0 }.)) (gghrdu 2&{.)
 
 NB. =========================================================
 NB. Test suite
@@ -763,10 +761,10 @@ testgehrd=: 3 : 0
 
   rcond=. gecon1 y
 
-  ('2b1100&gehrd_jlapack_' tmonad ((];1:;#)`(,&>/)`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS*#*norm1)@[))) y
+  ('2b1100&gehrd_jlapack_' tmonad ((];1:;#)`(,&>/)`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS*norm1*#)@[))) y
 
-  ('gehrdl'                tdyad ((0,#)`]       `]`(rcond"_)`(_."_)`(norm1@(- ( 1&trl@:(}:"1) (] mp~ (mp~ ct)) unghrl)) % (FP_EPS*#*norm1)@[))) y
-  ('gehrdu'                tdyad ((0,#)`]       `]`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS*#*norm1)@[))) y
+  ('gehrdl'                tdyad ((0,#)`]       `]`(rcond"_)`(_."_)`(norm1@(- ( 1&trl@:(}:"1) (] mp~ (mp~ ct)) unghrl)) % (FP_EPS*norm1*#)@[))) y
+  ('gehrdu'                tdyad ((0,#)`]       `]`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS*norm1*#)@[))) y
 
   EMPTY
 )

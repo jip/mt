@@ -11,9 +11,9 @@ NB. qnmod      Magnitude
 NB. qnsign     Signum
 NB. qnf        Adv. to make quaternion verb
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2011 Igor Zhuravlov
+NB. Copyright 2011-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -135,9 +135,9 @@ NB. qnconik       a - b*i + c*j - d*k     qc=. qnconik q
 NB. qnconv        a - b*i - c*j - d*k     qc=. qnconv  q
 NB.
 NB. References:
-NB. [1] Karataev E.A. Inner conjugation of quaternions.
-NB.     Volzhskiy, 2002 (Каратаев Е.А. Внутреннее сопряжение
-NB.     кватернионов. Волжский, 2002)
+NB. [1] E. A. Karataev. Inner conjugation of quaternions.
+NB.     Volzhskiy, 2002 (Е. А. Каратаев. Внутреннее
+NB.     сопряжение кватернионов. Волжский, 2002).
 NB.     http://karataev.nm.ru/
 
 NB. inner single conjugation
@@ -200,16 +200,16 @@ NB.
 NB. Examples:
 NB.    ^ 1
 NB. 2.71828
-NB.    NB. quaternificated exp(x) of real x has b=c=d=0
-NB.    ^ qnf_mt_ 1 0
+NB.    NB. quaternificated e^y of real y has b=c=d=0
+NB.    ^ qnf 1 0
 NB. 2.71828 0
 NB.    ^ 1j2
 NB. _1.1312j2.47173
-NB.    NB. quaternificated exp(x) of complex x has c=d=0
-NB.    ^ qnf_mt_ 1j2 0
+NB.    NB. quaternificated e^y of complex y has c=d=0
+NB.    ^ qnf 1j2 0
 NB. _1.1312j2.47173 0
-NB.    NB. quaternificated exp(x) of quaternion x
-NB.    ^ qnf_mt_ 1j2 3j4
+NB.    NB. quaternificated e^y of quaternion y
+NB.    ^ qnf 1j2 3j4
 NB. 1.69392j_0.78956 _1.18434j_1.57912
 NB.
 NB. Notes:
@@ -219,9 +219,9 @@ NB.     |q-a| + b*i + c*j + d*k
 NB.   to aviod |q-a| value computing twice
 NB.
 NB. References:
-NB. [1] Bairak L.G. Integral Formula of Cauchy for
-NB.     Quaternions. 2010. (Байрак Л.Г. Интегральная формула
-NB.     Коши для кватернионов. 2010.)
+NB. [1] L. G. Bairak. Integral Formula of Cauchy for
+NB.     Quaternions. 2010 (Л. Г. Байрак. Интегральная формула
+NB.     Коши для кватернионов. 2010).
 NB.     http://scholium.narod.ru
 
 qnf=: 1 : 'qn1_mt_ (u@(j. qn1_mt_) ((9 o. [) qn1_mt_ (* 11&o.)~) (% qn1_mt_)@]) qnmod_mt_@qnmarkijk_mt_ qn1_mt_ ]'

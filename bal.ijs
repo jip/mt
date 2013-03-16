@@ -17,9 +17,9 @@ NB.            given
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -309,10 +309,10 @@ NB. Notes:
 NB. - gebalup models LAPACK's xGEBAL('P')
 NB.
 NB. References:
-NB. [1] Kressner, D. 2004. Numerical methods and software for
+NB. [1] Daniel Kressner. Numerical methods and software for
 NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
-NB.     Germany.
+NB.     Germany, 2004.
 
 geballp=: [ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/,:(+/"1)) -"1 diag)@:(0&~:)))
 gebalup=: [ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1,:(+/)) -"1 diag)@:(0&~:)))
@@ -414,10 +414,10 @@ NB. - models LAPACK's xGEBAL('S'), with following difference:
 NB.   ra and ca never get value from diagonal element
 NB.
 NB. References:
-NB. [1] Kressner, D. 2004. Numerical methods and software for
+NB. [1] Daniel Kressner. Numerical methods and software for
 NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
-NB.     Germany.
+NB.     Germany, 2004.
 
 gebals=: 3 : 0
   'B p hs'=. y
@@ -809,7 +809,7 @@ NB.
 NB. References:
 NB. [1] Michael H. Schneider, Stavros A. Zenios. A
 NB.     Comparative Study of Algorithms for Matrix Balancing.
-NB.     Operations Research. Vol. 38. No. 3. May-June 1990
+NB.     Operations Research. Vol. 38, No. 3, May-June 1990.
 
 testgebal=: 3 : 0
   require :: ] '~addons/math/lapack/lapack.ijs'

@@ -17,9 +17,9 @@ NB. testlarfb  Test larfbxxxx by general matrix given
 NB. testref    Adv. to make verb to test larfxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -107,10 +107,10 @@ NB.   I=. idmat n
 NB.   H=. I - tau (] */ (* +)) (1,v)
 NB.
 NB. References:
-NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, and E.
-NB.     Jason Riedy. (2008) Non-Negative Diagonals and High
-NB.     Performance on Low-Profile Matrices from Householder
-NB.     QR. UCB/EECS-2008-76, May 30, 2008
+NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, E. Jason
+NB.     Riedy. Non-Negative Diagonals and High Performance on
+NB.     Low-Profile Matrices from Householder QR.
+NB.     UCB/EECS-2008-76, May 30, 2008.
 NB.     LAPACK Working Note 203
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 NB.
@@ -290,8 +290,8 @@ NB.
 NB. References:
 NB. [1] E. Elmroth, F. Gustavson. Applying Recursion to
 NB.     Serial and Parallel QR Factorization Leads to Better
-NB.     Performance. IBM J. Research & Development, Vol. 44,
-NB.     No. 4, 2000, pp 605-624.
+NB.     Performance. IBM J. Research & Development, 2000,
+NB.     Vol. 44, No. 4, pp. 605-624.
 NB.     http://www.research.ibm.com/journal/rd/444/elmroth.pdf
 
 larftfc=: (_1 _1&{.)`(({."1 (0:`0:`(larftfc@[)`]`[`((mp~ ct@(0&(_1})))~)`[`(-@mp )` mp  `(larftfc@])`(({.~   #),.])`, `]`[`0: fork5) }."1)~ (<.@-:@c))`(EMPTY"_)@.(*@<:@c)

@@ -19,9 +19,9 @@ NB.            definite tridiagonal matrix given
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.8.1 2011-10-29
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -167,9 +167,9 @@ NB.      5.2) stitch sfx(i) to Ciupd to produce sfx(i+1)
 NB.      5.3) link sfx(i+1) to pfx(i+1)
 NB.
 NB. References:
-NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
-NB.     Inversion, UT-CS-90-119, October, 1990.
-NB.     LAPACK Working Note 27
+NB. [1] J. DuCroz, Nicholas J. Higham. Stability of Methods
+NB.     for Matrix Inversion. UT-CS-90-119, October, 1990.
+NB.     LAPACK Working Note 27.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 getripl1ustep=: 3 : 0
@@ -509,9 +509,9 @@ NB. Notes:
 NB. - implements LAPACK's xGETRI
 NB.
 NB. References:
-NB. [1] J. DuCroz, N. Higham. Stability of Methods for Matrix
-NB.     Inversion, UT-CS-90-119, October, 1990.
-NB.     LAPACK Working Note 27
+NB. [1] J. DuCroz, Nicholas J. Higham. Stability of Methods
+NB.     for Matrix Inversion. UT-CS-90-119, October, 1990.
+NB.     LAPACK Working Note 27.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 getripl1u=: 3 : 0
@@ -788,11 +788,12 @@ NB.
 NB. References:
 NB. [1] Moawwad El-Mikkawy, El-Desouky Rahmo. A new recursive
 NB.     algorithm for inverting general tridiagonal and
-NB.     anti-tridiagonal matrices.
-NB.     Applied Mathematics and Computation 204 (2008) 368-372
+NB.     anti-tridiagonal matrices. Applied Mathematics and
+NB.     Computation, 2008, Vol. 204, pp. 368-372.
 NB.     http://dx.doi.org/10.1016/j.amc.2008.06.053
-NB. [2] [Jprogramming] ravel items (,.) of empty list (i.0)
-NB.     Igor Zhuravlov, 2010-06-05 10:08:56
+NB. [2] Igor Zhuravlov. [Jprogramming] ravel items (,.) of
+NB.     empty list (i.0)
+NB.     2010-06-05 10:08:56.
 NB.     http://jsoftware.com/pipermail/programming/2010-June/019617.html
 NB.
 NB. TODO:

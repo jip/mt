@@ -741,25 +741,25 @@ testunmq=: 3 : 0
   'LQf QfL QfR RQf'=. xQf=. (gelqf ; geqlf ; geqrf ; gerqf) A
   'Qlq Qql Qqr Qrq'=. (((unglq~ (<:@c))&.>)`((ungql~ (<:@#))&.>)`((ungqr~ (<:@#))&.>)`((ungrq~ (<:@c))&.>)) ag xQf
 
-  ('unmlqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % FP_EPS*(norm1*c)@(1 {:: [)))) (LQf;(ct C);    Qlq )
-  ('unmlqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % FP_EPS*(norm1*c)@(1 {:: [)))) (LQf;(ct C);(ct Qlq))
-  ('unmlqrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % FP_EPS*(norm1*c)@(1 {:: [)))) (LQf;    C ;    Qlq )
-  ('unmlqrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % FP_EPS*(norm1*c)@(1 {:: [)))) (LQf;    C ;(ct Qlq))
+  ('unmlqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % (FP_EPS*norm1*c)@(1 {:: [)))) (LQf;(ct C);    Qlq )
+  ('unmlqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % (FP_EPS*norm1*c)@(1 {:: [)))) (LQf;(ct C);(ct Qlq))
+  ('unmlqrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % (FP_EPS*norm1*c)@(1 {:: [)))) (LQf;    C ;    Qlq )
+  ('unmlqrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % (FP_EPS*norm1*c)@(1 {:: [)))) (LQf;    C ;(ct Qlq))
 
-  ('unmqlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % FP_EPS*(norm1*#)@(1 {:: [)))) (QfL;    C ;    Qql )
-  ('unmqllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % FP_EPS*(norm1*#)@(1 {:: [)))) (QfL;    C ;(ct Qql))
-  ('unmqlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % FP_EPS*(norm1*#)@(1 {:: [)))) (QfL;(ct C);    Qql )
-  ('unmqlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % FP_EPS*(norm1*#)@(1 {:: [)))) (QfL;(ct C);(ct Qql))
+  ('unmqlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % (FP_EPS*norm1*#)@(1 {:: [)))) (QfL;    C ;    Qql )
+  ('unmqllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % (FP_EPS*norm1*#)@(1 {:: [)))) (QfL;    C ;(ct Qql))
+  ('unmqlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % (FP_EPS*norm1*#)@(1 {:: [)))) (QfL;(ct C);    Qql )
+  ('unmqlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % (FP_EPS*norm1*#)@(1 {:: [)))) (QfL;(ct C);(ct Qql))
 
-  ('unmqrln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % FP_EPS*(norm1*#)@(1 {:: [)))) (QfR;    C ;    Qqr )
-  ('unmqrlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % FP_EPS*(norm1*#)@(1 {:: [)))) (QfR;    C ;(ct Qqr))
-  ('unmqrrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % FP_EPS*(norm1*#)@(1 {:: [)))) (QfR;(ct C);    Qqr )
-  ('unmqrrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % FP_EPS*(norm1*#)@(1 {:: [)))) (QfR;(ct C);(ct Qqr))
+  ('unmqrln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % (FP_EPS*norm1*#)@(1 {:: [)))) (QfR;    C ;    Qqr )
+  ('unmqrlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % (FP_EPS*norm1*#)@(1 {:: [)))) (QfR;    C ;(ct Qqr))
+  ('unmqrrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % (FP_EPS*norm1*#)@(1 {:: [)))) (QfR;(ct C);    Qqr )
+  ('unmqrrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % (FP_EPS*norm1*#)@(1 {:: [)))) (QfR;(ct C);(ct Qqr))
 
-  ('unmrqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % FP_EPS*(norm1*c)@(1 {:: [)))) (RQf;(ct C);    Qrq )
-  ('unmrqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % FP_EPS*(norm1*c)@(1 {:: [)))) (RQf;(ct C);(ct Qrq))
-  ('unmrqrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % FP_EPS*(norm1*c)@(1 {:: [)))) (RQf;    C ;    Qrq )
-  ('unmrqrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % FP_EPS*(norm1*c)@(1 {:: [)))) (RQf;    C ;(ct Qrq))
+  ('unmrqln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % (FP_EPS*norm1*c)@(1 {:: [)))) (RQf;(ct C);    Qrq )
+  ('unmrqlc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp~&>/@}.))~ % (FP_EPS*norm1*c)@(1 {:: [)))) (RQf;(ct C);(ct Qrq))
+  ('unmrqrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % (FP_EPS*norm1*c)@(1 {:: [)))) (RQf;    C ;    Qrq )
+  ('unmrqrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(norm1@(- (mp &>/@}.))~ % (FP_EPS*norm1*c)@(1 {:: [)))) (RQf;    C ;(ct Qrq))
 
   EMPTY
 )
@@ -795,15 +795,15 @@ testunmhr=: 3 : 0
   'HlQf HuQf'=. xQf=. ((gehrdl~ (0,#)) ; (gehrdu~ (0,c))) A
   'Qhrl Qhru'=. ((unghrl&.>)`(unghru&.>)) ag xQf
 
-  ('unmhrlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % FP_EPS*(norm1*c)@(1 {:: [))))) (HlQf;(ct C);    Qhrl )
-  ('unmhrllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % FP_EPS*(norm1*c)@(1 {:: [))))) (HlQf;(ct C);(ct Qhrl))
-  ('unmhrlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % FP_EPS*(norm1*c)@(1 {:: [))))) (HlQf;    C ;    Qhrl )
-  ('unmhrlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % FP_EPS*(norm1*c)@(1 {:: [))))) (HlQf;    C ;(ct Qhrl))
+  ('unmhrlln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS*norm1*c)@(1 {:: [))))) (HlQf;(ct C);    Qhrl )
+  ('unmhrllc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS*norm1*c)@(1 {:: [))))) (HlQf;(ct C);(ct Qhrl))
+  ('unmhrlrn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS*norm1*c)@(1 {:: [))))) (HlQf;    C ;    Qhrl )
+  ('unmhrlrc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS*norm1*c)@(1 {:: [))))) (HlQf;    C ;(ct Qhrl))
 
-  ('unmhruln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % FP_EPS*(norm1*#)@(1 {:: [))))) (HuQf;(ct C);    Qhru )
-  ('unmhrulc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % FP_EPS*(norm1*#)@(1 {:: [))))) (HuQf;(ct C);(ct Qhru))
-  ('unmhrurn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % FP_EPS*(norm1*#)@(1 {:: [))))) (HuQf;    C ;    Qhru )
-  ('unmhrurc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % FP_EPS*(norm1*#)@(1 {:: [))))) (HuQf;    C ;(ct Qhru))
+  ('unmhruln' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS*norm1*#)@(1 {:: [))))) (HuQf;(ct C);    Qhru )
+  ('unmhrulc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp~&>/@}.)~ % (FP_EPS*norm1*#)@(1 {:: [))))) (HuQf;(ct C);(ct Qhru))
+  ('unmhrurn' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS*norm1*#)@(1 {:: [))))) (HuQf;    C ;    Qhru )
+  ('unmhrurc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`((norm1@(- mp &>/@}.)~ % (FP_EPS*norm1*#)@(1 {:: [))))) (HuQf;    C ;(ct Qhru))
 
   EMPTY
 )

@@ -5,9 +5,9 @@ NB.           computational monad
 NB. tdyad     Template conj. to make verbs to test
 NB.           computational dyad
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -123,9 +123,10 @@ tmonad=: 2 : 0
     rcond=. FP_OVFL
   end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
-  (logline , LF) ((1!:3)^:(0 < (#@]))) TESTLOGFILE
-  TESTLOG=: TESTLOG , logline
   logline (1!:2) 2
+  logline=. logline , LF
+  logline ((1!:3)^:(0 < (#@]))) TESTLOGFILE
+  TESTLOG=: TESTLOG , logline
   EMPTY
 )
 
@@ -143,8 +144,9 @@ tdyad=: 2 : 0
     rcond=. FP_OVFL
   end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
-  (logline , LF) ((1!:3)^:(0 < (#@]))) TESTLOGFILE
-  TESTLOG=: TESTLOG , logline
   logline (1!:2) 2
+  logline=. logline , LF
+  logline ((1!:3)^:(0 < (#@]))) TESTLOGFILE
+  TESTLOG=: TESTLOG , logline
   EMPTY
 )

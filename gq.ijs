@@ -12,9 +12,9 @@ NB. testunghr  Test unghrx by square matrix given
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -473,7 +473,7 @@ NB.     H(0:f-1) = H(f+s-1:n-1) = I .
 NB.   This approach delivers excessive calculations in rare
 NB.   case ((f>0) OR (f+s<n)).
 
-unghrl=: unglq@(|.!.0) : [:
+unghrl=: unglq@(|.!.0)
 
 NB. ---------------------------------------------------------
 NB. unghru
@@ -500,7 +500,7 @@ NB.     H(0:f-1) = H(f+s-1:n-1) = I .
 NB.   This approach delivers excessive calculations in rare
 NB.   case ((f>0) OR (f+s<n)).
 
-unghru=: ungqr@(0 _1&(|.!.0)) : [:
+unghru=: ungqr@(0 _1&(|.!.0))
 
 NB. =========================================================
 NB. Test suite

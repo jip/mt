@@ -13,9 +13,9 @@ NB.            given
 NB. testpow    Adv. to make verb to test xxpow by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-05-01
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -60,8 +60,8 @@ NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
 NB.
 NB. References:
-NB. [1] Linear Recurrences and Matrix Powers
-NB.     Roger Hui, 2006-08-09 09:20:34
+NB. [1] Roger Hui. Linear Recurrences and Matrix Powers.
+NB.     2006-08-09 09:20:34
 NB.     http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
 
 gepow=: 4 : 0
@@ -168,9 +168,9 @@ NB.   f=. v ^1 0 p
 NB.   F=. p gepow V
 NB.
 NB. References:
-NB. [1] http://icl.cs.utk.edu/lapack-forum/viewtopic.php?p=985#p985
-NB.     LAPACK/ScaLAPACK Development ‹ DGEEVX and left eigenvectors
-NB.     Julien Langou, Fri Dec 22, 2006 5:15 pm
+NB. [1] Julien Langou. LAPACK/ScaLAPACK Development - DGEEVX
+NB.     and left eigenvectors. Dec 22, 2006 5:15 pm.
+NB.     http://icl.cs.utk.edu/lapack-forum/viewtopic.php?p=985#p985
 
 dipow=: (0 {:: ]) mp"2 ([ ^"1 0~ 1 {:: ]) (*"1 2) 2 {:: ]
 
@@ -277,7 +277,7 @@ NB. - fixed powers vector (p -: 5 7) is used
 
 testdipow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  geevlvv=. 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)"2&.>)ag ggevlvv@(,:(idmat@c))
+  geevlvv=. 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)"2&.>)ag ggevlvv@(,:(idmat@c))
 
   rcond=. gecon1 y
   try.

@@ -16,9 +16,9 @@ NB. unmat    Adv. to make verb to make random unitary
 NB.          (orthogonal) matrix
 NB. spmat    Conj. to make verb to make random sparse array
 NB.
-NB. Version: 0.8.1 2011-10-29
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -173,14 +173,14 @@ NB. Notes:
 NB. - randnf requests only ⌈Π{sh[:]}/2⌉ numbers from RNG
 NB.
 NB. References:
-NB. [1] G. E. P. Box and Mervin E. Muller, A Note on the
-NB.     Generation of Random Normal Deviates, The Annals of
-NB.     Mathematical Statistics (1958), Vol. 29, No. 2 pp.
-NB.     610-611
-NB. [2] D.R.Brillinger "Time series. Data analysis and
-NB.     theory", The University of California, Berkeley, 1975
-NB.     (Д. Бриллинджер "Временные ряды. Обработка данных и
-NB.     теория". Изд-во "Мир". М. 1980, стр. 98)
+NB. [1] G. E. P. Box, Mervin E. Muller. A Note on the
+NB.     Generation of Random Normal Deviates. The Annals of
+NB.     Mathematical Statistics, 1958, Vol. 29, No. 2, pp.
+NB.     610-611.
+NB. [2] D. R. Brillinger. Time series. Data analysis and
+NB.     theory. The University of California, Berkeley, 1975
+NB.     (Д. Бриллинджер. Временные ряды. Обработка данных и
+NB.     теория. Изд-во "Мир". М. 1980, стр. 98).
 
 randnf=: (($,) +.@:(%:@(2&rande) r. 0 2p1&randu)@>.@-:@(*/)) : (p. $:)
 randnc=:           (%:@   rande  r. 0 2p1&randu)             : (p. $:)
@@ -592,9 +592,9 @@ NB.   via QR-factorization from complex matrix B:
 NB.     U=. randnc unmat 4
 NB.
 NB. References:
-NB. [1] Francesco Mezzadri (2007). How to generate random
-NB.     matrices from the classical compact groups.
-NB.     Notices of the AMS, Vol. 54 (2007), 592-604
+NB. [1] Francesco Mezzadri. How to generate random matrices
+NB.     from the classical compact groups. Notices of the
+NB.     AMS, 2007, Vol. 54, pp. 592-604.
 NB.     http://arxiv.org/abs/math-ph/0609050v2
 
 unmat=: 1 : '(ungqr_mt_*"1*@diag_mt_)@geqrf_mt_@:u@(2&$)'

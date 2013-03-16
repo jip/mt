@@ -9,9 +9,9 @@ NB. testgeqf  Test gexxx by general matrix given
 NB. testqf    Adv. to make verb to test gexxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -240,7 +240,6 @@ NB.           H(m-1:k)≡H(v(m-1:k),τ(m-1:k))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   Q -: unglq LQf
 NB.   I -: po Q
 NB.   A -: L mp Q
 NB.   (] -: ((         trl   @:(}:"1)) mp  unglq)@gelqf) A
@@ -254,7 +253,7 @@ NB. - models LAPACK's xGELQF
 
 gelqf=: (0&{:: ,. 1&{:: , gelq2@(2&{::))@((3 : 0)^:((qfi@(0 _1&(ms $)))`((0&({."1));(0&{.);])))@(,.&0)
   'pfx sfxT sfxB'=. y
-  nb=. QFNB <. k=. <./ 0 _1 ms $ sfxB
+  nb=. QFNB <. k=. 0 _1 ms $ sfxB
   Z=. gelq2 nb {. sfxB
   sfxT=. sfxT , Z
   sfxB=. (tru1 Z) larfbrnfr nb }. sfxB
@@ -285,7 +284,6 @@ NB.           H(n-1:k)≡H(v(n-1:k),τ(n-1:k))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   Q -: ungql QfL
 NB.   I -: (mp~ ct) Q
 NB.   A -: Q mp L
 NB.   (] -: ((((-~/@$) trl ])@  }.   ) mp~ ungql)@geqlf) A
@@ -299,7 +297,7 @@ NB. - models LAPACK's xGEQLF
 
 geqlf=: ((geql2@(0&{::) ,. 1&{::) , 2&{::)@((3 : 0)^:((qfi@(_1 0&(ms $)))`(] ; 0&({."1) ; 0&{.)))@(0&,)
   'pfxL pfxR sfx'=. y
-  nnb=. - QFNB <. k=. <./ _1 0 ms $ pfxL
+  nnb=. - QFNB <. k=. _1 0 ms $ pfxL
   Z=. geql2 nnb {."1 pfxL
   pfxR=. Z ,. pfxR
   pfxL=. ((tru1~ -~/@$) Z) larfblcbc nnb }."1 pfxL
@@ -330,7 +328,6 @@ NB.           H(k:n-1)≡H(v(k:n-1),τ(k:n-1))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   Q -: ungql QfR
 NB.   I -: (mp~ ct) Q
 NB.   A -: Q mp R
 NB.   (] -: ((         tru   @  }:   ) mp~ ungqr)@geqrf) A
@@ -344,7 +341,7 @@ NB. - models LAPACK's xGEQRF
 
 geqrf=: (0&{:: , 1&{:: ,. geqr2@(2&{::))@((3 : 0)^:((qfi@(_1 0&(ms $)))`(0&{. ; 0&({."1) ; ])))@(,&0)
   'pfx sfxL sfxR'=. y
-  nb=. QFNB <. k=. <./ _1 0 ms $ sfxR
+  nb=. QFNB <. k=. _1 0 ms $ sfxR
   Z=. geqr2 nb {."1 sfxR
   sfxL=. sfxL ,. Z
   sfxR=. (trl1 Z) larfblcfc nb }."1 sfxR
@@ -375,7 +372,6 @@ NB.           H(k:m-1)≡H(v(k:m-1),τ(k:m-1))=H(0,0)=I
 NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   Q -: ungrq RQf
 NB.   I -: po Q
 NB.   A -: R mp Q
 NB.   (] -: ((((-~/@$) tru ])@:(}."1)) mp  ungrq)@gerqf) A
@@ -389,7 +385,7 @@ NB. - models LAPACK's xGERQF
 
 gerqf=: ((gerq2@(0&{::) , 1&{::) ,. 2&{::)@((3 : 0)^:((qfi@(0 _1&(ms $)))`(] ; 0&{. ; 0&({."1))))@(0&,.)
   'pfxT pfxB sfx'=. y
-  nnb=. - QFNB <. k=. <./ 0 _1 ms $ pfxT
+  nnb=. - QFNB <. k=. 0 _1 ms $ pfxT
   Z=. gerq2 nnb {. pfxT
   pfxB=. Z , pfxB
   pfxT=. ((trl1~ -~/@$) Z) larfbrnbr nnb }. pfxT
@@ -415,12 +411,18 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - LQ: berr := ||L - A * Q^H|| / (FP_EPS * n * ||A||)
-NB. - QL: berr := ||L - Q^H * A|| / (FP_EPS * m * ||A||)
-NB. - QR: berr := ||R - Q^H * A|| / (FP_EPS * m * ||A||)
-NB. - RQ: berr := ||R - A * Q^H|| / (FP_EPS * n * ||A||)
+NB. - LQ: berr := ||L - A * Q^H|| / (FP_EPS * ||A|| * n)
+NB. - QL: berr := ||L - Q^H * A|| / (FP_EPS * ||A|| * m)
+NB. - QR: berr := ||R - Q^H * A|| / (FP_EPS * ||A|| * m)
+NB. - RQ: berr := ||R - A * Q^H|| / (FP_EPS * ||A|| * n)
 NB. where
 NB.   matrix product is done indirectly via unmxxxx
+NB.
+NB. TODO:
+NB. - LQ: berr := max( ||L - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - QL: berr := max( ||L - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
+NB. - QR: berr := max( ||R - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
+NB. - RQ: berr := max( ||R - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
 
 testgeqf=: 3 : 0
   require :: ] '~addons/math/lapack/lapack.ijs'
@@ -428,17 +430,17 @@ testgeqf=: 3 : 0
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('128!:0' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (mp&>/)))%(FP_EPS*(#*norm1)@[)))) y
+  ('128!:0' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (mp&>/))) % (FP_EPS*norm1*#)@[))) y
 
-  ('2b1110&gelqf_jlapack_' tmonad (]`({. , ,. &.>/@}.)`(rcond"_)`(_."_)`(norm1@(- ((mp  unglq)&>/)) % (FP_EPS*c*norm1)@[))) y
-  ('2b0111&geqlf_jlapack_' tmonad (]`({: , ,~ &.>/@}:)`(rcond"_)`(_."_)`(norm1@(- ((mp~ ungql)&>/)) % (FP_EPS*#*norm1)@[))) y
-  ('2b0111&geqrf_jlapack_' tmonad (]`({: , ,  &.>/@}:)`(rcond"_)`(_."_)`(norm1@(- ((mp~ ungqr)&>/)) % (FP_EPS*#*norm1)@[))) y
-  ('2b1110&gerqf_jlapack_' tmonad (]`({. , ,.~&.>/@}.)`(rcond"_)`(_."_)`(norm1@(- ((mp  ungrq)&>/)) % (FP_EPS*c*norm1)@[))) y
+  ('2b1110&gelqf_jlapack_' tmonad (]`({. , ,. &.>/@}.)`(rcond"_)`(_."_)`(norm1@(- ((mp  unglq)&>/)) % (FP_EPS*norm1*c)@[))) y
+  ('2b0111&geqlf_jlapack_' tmonad (]`({: , ,~ &.>/@}:)`(rcond"_)`(_."_)`(norm1@(- ((mp~ ungql)&>/)) % (FP_EPS*norm1*#)@[))) y
+  ('2b0111&geqrf_jlapack_' tmonad (]`({: , ,  &.>/@}:)`(rcond"_)`(_."_)`(norm1@(- ((mp~ ungqr)&>/)) % (FP_EPS*norm1*#)@[))) y
+  ('2b1110&gerqf_jlapack_' tmonad (]`({. , ,.~&.>/@}.)`(rcond"_)`(_."_)`(norm1@(- ((mp  ungrq)&>/)) % (FP_EPS*norm1*c)@[))) y
 
-  ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@( trl        @:(}:"1)@] - ((   <./ @$@]) {."1 unmlqrc)~) % (FP_EPS*c*norm1)@[))) y
-  ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@((trl~ -~/@$)@  }.   @] - ((-@(<./)@$@]) {.   unmqllc)~) % (FP_EPS*#*norm1)@[))) y
-  ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@( tru        @  }:   @] - ((   <./ @$@]) {.   unmqrlc)~) % (FP_EPS*#*norm1)@[))) y
-  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@((tru~ -~/@$)@:(}."1)@] - ((-@(<./)@$@]) {."1 unmrqrc)~) % (FP_EPS*c*norm1)@[))) y
+  ('gelqf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@( trl        @:(}:"1)@] - ((   <./ @$@]) {."1 unmlqrc)~) % (FP_EPS*norm1*c)@[))) y
+  ('geqlf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@((trl~ -~/@$)@  }.   @] - ((-@(<./)@$@]) {.   unmqllc)~) % (FP_EPS*norm1*#)@[))) y
+  ('geqrf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@( tru        @  }:   @] - ((   <./ @$@]) {.   unmqrlc)~) % (FP_EPS*norm1*#)@[))) y
+  ('gerqf' tmonad (]`]`(rcond"_)`(_."_)`(norm1@((tru~ -~/@$)@:(}."1)@] - ((-@(<./)@$@]) {."1 unmrqrc)~) % (FP_EPS*norm1*c)@[))) y
 
   EMPTY
 )

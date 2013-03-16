@@ -12,9 +12,9 @@ NB.            given
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -115,7 +115,7 @@ NB. ---------------------------------------------------------
 NB. geexp
 NB.
 NB. Description:
-NB.   Matrix exponential of a general matrix
+NB.   Matrix exponential of a general matrix [1]
 NB.
 NB. Syntax:
 NB.   E=. geexp A
@@ -124,9 +124,17 @@ NB.   A - n×n-matrix
 NB.   E - n×n-matrix, matrix exponential e^A
 NB.
 NB. References:
-NB. [1] N. J. Higham, The scaling and squaring method for the
-NB.     matrix exponential revisited, SIAM J. Matrix Anal.
-NB.     Appl. Vol. 26, No. 4, pp. 1179–1193
+NB. [1] Nicholas J. Higham. The scaling and squaring method
+NB.     for the matrix exponential revisited. SIAM J. Matrix
+NB.     Analysis Applications, Vol. 26, No. 4, pp. 1179–1193,
+NB.     2005.
+NB. [2] Awad H. Al-Mohy, Nicholas J. Higham. A New Scaling
+NB.     and Squaring Algorithm for the Matrix Exponential.
+NB.     SIAM J. Matrix Analysis Applications, Vol. 31, No. 3,
+NB.     pp. 970-989, 2009.
+NB.
+NB. TODO:
+NB. - implement [2]
 
 geexp=: 3 : 0
   vm=. 3 5 7 9 13                          NB. Padé approximant degrees m
@@ -241,9 +249,9 @@ NB.   f=. ^ v
 NB.   F=. geexp V
 NB.
 NB. References:
-NB. [1] http://icl.cs.utk.edu/lapack-forum/viewtopic.php?p=985#p985
-NB.     LAPACK/ScaLAPACK Development ‹ DGEEVX and left eigenvectors
-NB.     Julien Langou, Fri Dec 22, 2006 5:15 pm
+NB. [1] Julien Langou. LAPACK/ScaLAPACK Development - DGEEVX
+NB.     and left eigenvectors. Dec 22, 2006 5:15 pm.
+NB.     http://icl.cs.utk.edu/lapack-forum/viewtopic.php?p=985#p985
 
 diexp=: 0&{:: mp ^@:(1&{::) * 2&{::
 

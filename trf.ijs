@@ -20,9 +20,9 @@ NB.            definite tridiagonal matrix given
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -1533,9 +1533,9 @@ NB. - if A is indefinite then factors may have unacceptably
 NB.   large elements
 NB.
 NB. References:
-NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
-NB.     3rd edition, 1996, p. 157
+NB.     3rd edition, 1996, p. 157.
 NB.
 NB. TODO:
 NB. - L1 and D would be sparse
@@ -1591,9 +1591,9 @@ NB. - if A is indefinite then factors may have unacceptably
 NB.   large elements
 NB.
 NB. References:
-NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
-NB.     3rd edition, 1996, p. 157
+NB.     3rd edition, 1996, p. 157.
 NB.
 NB. TODO:
 NB. - U1 and D would be sparse
@@ -1642,14 +1642,14 @@ testgetrf=: 3 : 0
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('lud_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: %. 2&{::)) % FP_EPS*(norm1*c)@[))) y
+  ('lud_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: %. 2&{::)) % (FP_EPS*norm1*c)@[))) y
 
-  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: invperm_jlapack_ 2&{::)) % FP_EPS*(norm1*c)@[))) y
+  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: invperm_jlapack_ 2&{::)) % (FP_EPS*norm1*c)@[))) y
 
-  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))) % FP_EPS*(norm1*#)@[))) y
-  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))) % FP_EPS*(norm1*c)@[))) y
-  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))) % FP_EPS*(norm1*c)@[))) y
-  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))) % FP_EPS*(norm1*#)@[))) y
+  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))) % (FP_EPS*norm1*#)@[))) y
+  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))) % (FP_EPS*norm1*c)@[))) y
+  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))) % (FP_EPS*norm1*c)@[))) y
+  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))) % (FP_EPS*norm1*#)@[))) y
 
   coerase <'mttmp'
 
@@ -1676,8 +1676,8 @@ NB.     berr := ||P * U1 * T * U1^H * P^H - A|| / (FP_EPS * ||A|| * n)
 testhetrf=: 3 : 0
   rcond=. hecon1 y
 
-  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&({::))) % FP_EPS*(norm1*c)@[))) y
-  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&({::))) % FP_EPS*(norm1*#)@[))) y
+  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&({::))) % (FP_EPS*norm1*c)@[))) y
+  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&({::))) % (FP_EPS*norm1*#)@[))) y
 
   EMPTY
 )
@@ -1715,12 +1715,12 @@ testpotrf=: 3 : 0
 
   rcond=. pocon1 y
 
-  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % FP_EPS*(norm1*c)@[))) y
+  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS*norm1*c)@[))) y
 
-  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % FP_EPS*(norm1*c)@[))) y
+  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS*norm1*c)@[))) y
 
-  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % FP_EPS*(norm1*c)@[))) y
-  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % FP_EPS*(norm1*#)@[))) y
+  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS*norm1*c)@[))) y
+  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS*norm1*#)@[))) y
 
   coerase <'mttmp'
 
@@ -1752,8 +1752,8 @@ NB. - A should be sparse
 testpttrf=: 3 : 0
   rcond=. ptcon1 y
 
-  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % FP_EPS*(norm1*c)@[))) y
-  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % FP_EPS*(norm1*#)@[))) y
+  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS*norm1*c)@[))) y
+  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS*norm1*#)@[))) y
 
   EMPTY
 )

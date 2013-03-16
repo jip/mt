@@ -39,9 +39,9 @@ NB.              positive definite tridiagonal matrix given
 NB. testtrs      Adv. to make verb to test xxtrsxxx by matrix
 NB.              of generator and shape given
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -446,9 +446,9 @@ NB. - if A is singular then solution Xx will be wrong
 NB. - if A is indefinite then solution Xx may be wrong
 NB.
 NB. References:
-NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
-NB.     3rd edition, 1996, p. 157
+NB.     3rd edition, 1996, p. 157.
 NB.
 NB. TODO:
 NB. - L1 and D would be sparse
@@ -516,9 +516,9 @@ NB. - if A is singular then solution Xx will be wrong
 NB. - if A is indefinite then solution Xx may be wrong
 NB.
 NB. References:
-NB. [1] G. H. Golub and C. F. Van Loan, Matrix Computations,
+NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
-NB.     3rd edition, 1996, p. 157
+NB.     3rd edition, 1996, p. 157.
 NB.
 NB. TODO:
 NB. - U1 and D would be sparse

@@ -8,9 +8,9 @@ NB. testhgeq  Test hgexxxxx by general matrices given
 NB. testeq    Adv. to make verb to test hgexxxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2011 Igor Zhuravlov
+NB. Copyright 2011-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -656,9 +656,9 @@ NB.     (dQ1*Q1)^H * S * (dZ1*Z1) = Q1^H * H * Z1
 NB.     (dQ1*Q1)^H * P * (dZ1*Z1) = Q1^H * T * Z1
 NB.   To avoid overflow, eigenvalues of the matrix pair (H,T)
 NB.   (equivalently, of (A,B)) are computed as a pair of
-NB.   values. Each i-th eigenvector (row) from L and
-NB.   R has a corresponding eigenvalue represented as a pair
-NB.   of i-th elements from vectors e1 and e2:
+NB.   values. Each i-th eigenvector (row) from L and R has a
+NB.   corresponding eigenvalue represented as a pair of i-th
+NB.   elements from vectors e1 and e2:
 NB.     E1=. diagmat e1=. diag S
 NB.     E2=. diagmat e2=. diag P
 NB.   If E2 is nonsingular then:
@@ -769,9 +769,9 @@ NB.     (Q1*dQ1) * S * (Z1*dZ1)^H = Q1 * H * Z1^H
 NB.     (Q1*dQ1) * P * (Z1*dZ1)^H = Q1 * T * Z1^H
 NB.   To avoid overflow, eigenvalues of the matrix pair (H,T)
 NB.   (equivalently, of (A,B)) are computed as a pair of
-NB.   values. Each i-th eigenvector (column) from L and
-NB.   R has a corresponding eigenvalue represented as a pair
-NB.   of i-th elements from vectors e1 and e2:
+NB.   values. Each i-th eigenvector (column) from L and R has
+NB.   a corresponding eigenvalue represented as a pair of
+NB.   i-th elements from vectors e1 and e2:
 NB.     E1=. diagmat e1=. diag S
 NB.     E2=. diagmat e2=. diag P
 NB.   If E2 is nonsingular then:
@@ -882,9 +882,9 @@ NB.     128!:5 < S,:P         NB. too expensive, use the next
 NB.     128!:5 < diag"2 S,:P
 NB.
 NB. References:
-NB. [1] C.B. Moler & G.W. Stewart, "An Algorithm for
-NB.     Generalized Matrix Eigenvalue Problems",
-NB.     SIAM J. Numer. Anal., 10(1973), pp. 241-256.
+NB. [1] C. B. Moler, G. W. Stewart. An Algorithm for
+NB.     Generalized Matrix Eigenvalue Problems. SIAM J.
+NB.     Numer. Anal., 10(1973), pp. 241-256.
 
 hgeqzenn=:            diag"2@(0 {::                            hgeqze     )
 hgeqzenv=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotsclu  2&{::  )) (hgeqze 2&{.)

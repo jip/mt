@@ -12,9 +12,9 @@ NB. testtrsm  Test trsmxxxx by triangular matrix given
 NB. testsm    Adv. to make verb to test trsmxxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010-2012 Igor Zhuravlov
+NB. Copyright 2010-2011 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -94,31 +94,34 @@ NB.   difference: alpha parameter is assumed to be always
 NB.   equal to 1; to workaround this limitation use the
 NB.   following pattern:
 NB.     X=. A trsmxxxx alpha*B
+NB.
+NB. TODO:
+NB. - replace column-wise algos by row-wise
 
-trsmlx=:   ( |:@mp     128!:1@tru @|:)~
-trsml1x=:  ( |:@mp     128!:1@tru1@|:)~
-trsml1hx=: (    mp~    128!:1@tru1@|:)~+
-trsml1tx=: (    mp~    128!:1@tru1@|:)~
-trsmlhx=:  (    mp~    128!:1@tru @|:)~+
-trsmltx=:  (    mp~    128!:1@tru @|:)~
-trsmux=:   (    mp~    128!:1@tru    )~
-trsmu1x=:  (    mp~    128!:1@tru1   )~
-trsmu1hx=: ((ct@mp~ct)~128!:1@tru1   )~
-trsmu1tx=: ((|:@mp~|:)~128!:1@tru1   )~
-trsmuhx=:  ((ct@mp~ct)~128!:1@tru    )~
-trsmutx=:  ((|:@mp~|:)~128!:1@tru    )~
-trsmxl=:   ( |:@mp~    128!:1@tru    )~&:|:
-trsmxl1=:  ( |:@mp~    128!:1@tru1   )~&:|:
-trsmxl1h=: ( + @mp~+ )~128!:1@tru1@|:
-trsmxl1t=:      mp     128!:1@tru1@|:
-trsmxlh=:  ( + @mp~+ )~128!:1@tru @|:
-trsmxlt=:        mp    128!:1@tru @|:
-trsmxu=:         mp    128!:1@tru
-trsmxu1=:        mp    128!:1@tru1
-trsmxu1h=: ( ct@mp~    128!:1@tru1   )~ct
-trsmxu1t=: ( |:@mp~    128!:1@tru1   )~|:
-trsmxuh=:  ( ct@mp~    128!:1@tru    )~ct
-trsmxut=:  ( |:@mp~    128!:1@tru    )~|:
+trsmlx=:   ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosW)&# 0&{::)~   ({,) 0 {:: [) % (    (*>:) &# 0&{::)~   ({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
+trsml1x=:  ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosW)&# 0&{::)~   ({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
+trsml1hx=: ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~ +@({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
+trsml1tx=: ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~   ({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
+trsmlhx=:  (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~ +@({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~ +@({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
+trsmltx=:  (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosS)&# 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~   ({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
+trsmux=:   (((((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosE)&# 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&# 0&{::)~   ({,) 0 {:: [) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
+trsmu1x=:  ( (((_1-#@]) {   (1 {:: [)) - ] mp~ ((_1 liosE)&# 0&{::)~   ({,) 0 {:: [                                        ) ,      ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(1 dhs2lios (-1-i*n,i))
+trsmu1hx=: ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~ +@({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i))
+trsmu1tx=: ( ((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~   ({,) 0 {:: [                                        ) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i))
+trsmuhx=:  ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~ +@({,) 0 {:: [) % (    (*>:) &# 0&{::)~ +@({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
+trsmutx=:  ((((    #@]  {   (1 {:: [)) - ] mp~ (( 1 liosN)&# 0&{::)~   ({,) 0 {:: [) % (    (*>:) &# 0&{::)~   ({,) 0 {:: [) ,    ~ ])^:(;`(#@])`(0 {.   ]))  NB. lios(ui)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
+trsmxl=:   (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosS)&c 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~   ({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i)), lio(lii)=-1-i*(n+1)
+trsmxl1=:  ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosS)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (-1-i  ,i))
+trsmxl1h=: ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~ +@({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
+trsmxl1t=: ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i))
+trsmxlh=:  ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~ +@({,) 0 {:: [) % (    (*>:) &c 0&{::)~ +@({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
+trsmxlt=:  ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~   ({,) 0 {:: [) % (    (*>:) &c 0&{::)~   ({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (   i*n,i)), lio(lii)=   i*(n+1)
+trsmxu=:   ((((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosN)&c 0&{::)~   ({,) 0 {:: [) % (    (*>:) &c 0&{::)~   ({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
+trsmxu1=:  ( ((    c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosN)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i))
+trsmxu1h=: ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~ +@({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i))
+trsmxu1t=: ( (((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~   ({,) 0 {:: [                                        ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i))
+trsmxuh=:  (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~ +@({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~ +@({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
+trsmxut=:  (((((_1-c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~   ({,) 0 {:: [) % ((_1-(*>:))&c 0&{::)~   ({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
 
 NB. =========================================================
 NB. Test suite

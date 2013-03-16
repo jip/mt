@@ -9,9 +9,9 @@ NB.
 NB. testlartg  Test lartg by vectors given
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.8.1 2011-10-29
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -90,10 +90,10 @@ NB.   To achieve this, use modified definition:
 NB.     lartg=: {. (sgn@(9 o. [) * *&sgn) +
 NB.
 NB. References:
-NB. [1] Anderson, Edward. (2000) Discontinuous Plane
-NB.     Rotations and the Symmetric Eigenvalue Problem.
-NB.     LAPACK Working Note 150, University of Tennessee,
-NB.     UT-CS-00-454, December 4, 2000
+NB. [1] Edward Anderson. Discontinuous Plane Rotations and
+NB.     the Symmetric Eigenvalue Problem. University of
+NB.     Tennessee, UT-CS-00-454, December 4, 2000.
+NB.     LAPACK Working Note 150
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 lartg=: {. *&sgn +
@@ -307,18 +307,18 @@ NB.        Rexact[i] - exact value computed by Algorithm 1
 NB.                    [1],
 NB.                      |Rexact[i]| ≤ FP_OVFL
 NB.   8) exclude +∞ from vector BErr:
-NB.        BErr=. xrInf BErr
+NB.        BErr=. xeInf BErr
 NB.   9) find backward error:
 NB.        maxberr = max(BErr[:])
 NB.
 NB. References:
-NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. (2001) On
+NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. On
 NB.     Computing Givens rotations reliably and efficiently.
-NB.     LAPACK Working Note 148, University of Tennessee,
-NB.     UT-CS-00-449, January 31, 2001.
+NB.     University of Tennessee, UT-CS-00-449, January 31,
+NB.     2001. LAPACK Working Note 148
 NB.     http://www.netlib.org/lapack/lawns/downloads/
-NB. [2] [Jprogramming] 128!:5] 0j_.
-NB.     Dan Bron, 2009-12-02 02:22:37
+NB. [2] Dan Bron. [Jprogramming] 128!:5] 0j_.
+NB.     2009-12-02 02:22:37.
 NB.     http://www.jsoftware.com/pipermail/programming/2009-December/017071.html
 
 testlartg=: 3 : 0

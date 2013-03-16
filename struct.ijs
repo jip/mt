@@ -56,9 +56,9 @@ NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2007-2011 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
+NB. Copyright 2007-2012 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -265,8 +265,8 @@ NB.   A    - some array
 NB.   fret - some fret
 NB.
 NB. References:
-NB. [1] JWiki/Essays/ Block Matrix Inverse
-NB.     Roger Hui, 2005-11-24 03:53:19
+NB. [1] Roger Hui. JWiki/Essays/Block Matrix Inverse.
+NB.     2005-11-24 03:53:19.
 NB.     http://www.jsoftware.com/jwiki/Essays/Block%20Matrix%20Inverse
 NB.
 NB. TODO:
@@ -342,8 +342,8 @@ NB. -----                             ---*-
 NB. -----                             -----
 NB.
 NB. References:
-NB. [1] [Jprogramming] Transform to Amend
-NB.     Oleg Kobchenko, 2007-03-02 22:15:54
+NB. [1] Oleg Kobchenko. [Jprogramming] Transform to Amend.
+NB.     2007-03-02 22:15:54.
 NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005415.html
 
 upd=: (@:{) (`[) (`]) }

@@ -11,9 +11,9 @@ NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
 NB. ms        Minimum in sum of vectors
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2012-02-23
 NB.
-NB. Copyright 2005-2011 Henry Rich, Igor Zhuravlov
+NB. Copyright 2005-2012 Henry Rich, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -77,8 +77,8 @@ NB. - process each table in the report individually:
 NB.     0 1 2 (+:&.+:)`(-:&.-:)`(*:&.+:) ag i. 3 4 4
 NB.
 NB. References:
-NB. [1] [Jforum] gerund apply
-NB.     Henry Rich, Sat Oct 22 06:37:12 HKT 2005
+NB. [1] Henry Rich. [Jforum] gerund apply
+NB.     Sat Oct 22 06:37:12 HKT 2005.
 NB.     http://www.jsoftware.com/pipermail/general/2005-October/025450.html
 
 ag=: /. (,/@)

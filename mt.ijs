@@ -160,13 +160,16 @@ NB. Test suite
 
 NB. ---------------------------------------------------------
 NB. testlow
+NB. testmid
+NB. testhigh
+NB. test
 NB.
 NB. Description:
-NB.   Adv. to make verb to test low-level algorithms by
-NB.   matrix of generator and shape given
+NB.   Adv. to make verb to test algorithms either all or not,
+NB.   by matrix of generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkge testlow
+NB.   vtest=. mkge testxxxx
 NB. where
 NB.   (m,n) - 2-vector of integers, shape of random matrices
 NB.           to test algorithms; only algorithms which
@@ -177,17 +180,20 @@ NB.   vtest - verb to test algorithms; is called as:
 NB.             vtest (m,n)
 NB.
 NB. Application:
-NB. - test by random square integer matrix with elements
-NB.   distributed uniformly with support [0,100):
+NB. - test low-level algorithms by random square integer
+NB.   matrix with elements distributed uniformly with support
+NB.   [0,100):
 NB.    ?@$&100 testlow_mt_ 10 10
-NB. - test by random rectangular real matrix with elements
-NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testlow_mt_ 200 150
-NB. - test by random square real matrix with elements with
-NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testlow_mt_ 200 200
-NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testlow_mt_ 150 200
+NB. - test mid-level algorithms by random rectangular real
+NB.   matrix with elements distributed uniformly with support
+NB.   (0,1):
+NB.     ?@$&0 testmid_mt_ 200 150
+NB. - test high-level algorithms by random square real matrix
+NB.   with elements with limited value's amplitude:
+NB.     _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
+NB. - test all algorithms by random rectangular complex
+NB.   matrix:
+NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
 testlow=: 1 : 0
   (u testbak_mt_) y  NB. square matrices only
@@ -200,37 +206,6 @@ testlow=: 1 : 0
 
   EMPTY_mt_
 )
-
-NB. ---------------------------------------------------------
-NB. testmid
-NB.
-NB. Description:
-NB.   Adv. to make verb to test mid-level algorithms by
-NB.   matrix of generator and shape given
-NB.
-NB. Syntax:
-NB.   vtest=. mkge testmid
-NB. where
-NB.   (m,n) - 2-vector of integers, shape of random matrices
-NB.           to test algorithms; only algorithms which
-NB.           accept m and n given will be tested
-NB.   mkge  - monadic verb to generate random non-singular
-NB.           general y-matrix (shape is taken from y)
-NB.   vtest - verb to test algorithms; is called as:
-NB.             vtest (m,n)
-NB.
-NB. Application:
-NB. - test by random square integer matrix with elements
-NB.   distributed uniformly with support [0,100):
-NB.    ?@$&100 testmid_mt_ 10 10
-NB. - test by random rectangular real matrix with elements
-NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testmid_mt_ 200 150
-NB. - test by random square real matrix with elements with
-NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testmid_mt_ 200 200
-NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testmid_mt_ 150 200
 
 testmid=: 1 : 0
   (u testeq_mt_ ) y   NB. square matrices only
@@ -245,37 +220,6 @@ testmid=: 1 : 0
   EMPTY_mt_
 )
 
-NB. ---------------------------------------------------------
-NB. testhigh
-NB.
-NB. Description:
-NB.   Adv. to make verb to test high-level algorithms by
-NB.   matrix of generator and shape given
-NB.
-NB. Syntax:
-NB.   vtest=. mkge testhigh
-NB. where
-NB.   (m,n) - 2-vector of integers, shape of random matrices
-NB.           to test algorithms; only algorithms which
-NB.           accept m and n given will be tested
-NB.   mkge  - monadic verb to generate random non-singular
-NB.           general y-matrix (shape is taken from y)
-NB.   vtest - verb to test algorithms; is called as:
-NB.             vtest (m,n)
-NB.
-NB. Application:
-NB. - test by random square integer matrix with elements
-NB.   distributed uniformly with support [0,100):
-NB.    ?@$&100 testhigh_mt_ 10 10
-NB. - test by random rectangular real matrix with elements
-NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testhigh_mt_ 200 150
-NB. - test by random square real matrix with elements with
-NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
-NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testhigh_mt_ 150 200
-
 testhigh=: 1 : 0
   (u testev_mt_ ) y   NB. square matrices only
   (u testexp_mt_) y   NB. square matrices only
@@ -284,37 +228,6 @@ testhigh=: 1 : 0
 
   EMPTY_mt_
 )
-
-NB. ---------------------------------------------------------
-NB. test
-NB.
-NB. Description:
-NB.   Adv. to make verb to test algorithms by matrix of
-NB.   generator and shape given
-NB.
-NB. Syntax:
-NB.   vtest=. mkge test
-NB. where
-NB.   (m,n) - 2-vector of integers, shape of random matrices
-NB.           to test algorithms; only algorithms which
-NB.           accept m and n given will be tested
-NB.   mkge  - monadic verb to generate random non-singular
-NB.           general y-matrix (shape is taken from y)
-NB.   vtest - verb to test algorithms; is called as:
-NB.             vtest (m,n)
-NB.
-NB. Application:
-NB. - test by random square integer matrix with elements
-NB.   distributed uniformly with support [0,100):
-NB.    ?@$&100 test_mt_ 10 10
-NB. - test by random rectangular real matrix with elements
-NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 test_mt_ 200 150
-NB. - test by random square real matrix with elements with
-NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ test_mt_ 200 200
-NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
 test=: 1 : 0
   fmtlog_mt_ 'algorithm';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'

@@ -10,9 +10,9 @@ NB. testggev  Test ggevxxx by general matrices given
 NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.8.0 2011-10-29
+NB. Version: 0.8.2 2012-05-01
 NB.
-NB. Copyright 2011 Igor Zhuravlov
+NB. Copyright 2011-2012 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -150,13 +150,13 @@ NB.     NB. e=. geevlnn A
 NB.     geevlnn=: {.@ggevlnn@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('N','V') (see notes):
 NB.     NB. 'e R'=. geevlnv A
-NB.     geevlnv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)      &.>)ag ggevlnv@(,:(idmat@c))
+NB.     geevlnv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)      &.>)ag ggevlnv@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('V','N') (see notes):
 NB.     NB. 'e L'=. geevlvn A
-NB.     geevlvn=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)      &.>)ag ggevlvn@(,:(idmat@c))
+NB.     geevlvn=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)      &.>)ag ggevlvn@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('V','V') (see notes):
 NB.     NB. 'e LR'=. geevlvv A
-NB.     geevlvv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)    "2&.>)ag ggevlvv@(,:(idmat@c))
+NB.     geevlvv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)    "2&.>)ag ggevlvv@(,:(idmat@c))
 NB. - simulate LAPACK's xHEEV('N'):
 NB.     NB. e=. heevln A
 NB.     heevln=: 9 o.{.@ggevlnn@(,:(idmat@c))
@@ -301,13 +301,13 @@ NB.     NB. e=. geevunn A
 NB.     geevunn=: {.@ggevunn@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('N','V') (see notes):
 NB.     NB. 'e R'=. geevunv A
-NB.     geevunv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)&.|:  &.>)ag ggevunv@(,:(idmat@c))
+NB.     geevunv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)&.|:  &.>)ag ggevunv@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('V','N') (see notes):
 NB.     NB. 'e L'=. geevuvn A
-NB.     geevuvn=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)&.|:  &.>)ag ggevuvn@(,:(idmat@c))
+NB.     geevuvn=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)&.|:  &.>)ag ggevuvn@(,:(idmat@c))
 NB. - simulate LAPACK's xGEEV('V','V') (see notes):
 NB.     NB. 'e LR'=. geevuvv A
-NB.     geevuvv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%norms"1)&.|:"2&.>)ag ggevuvv@(,:(idmat@c))
+NB.     geevuvv=: 0 1 ({.&.>)`(((**@+@((i.>./)"1@sorim{"0 1]))%normsr)&.|:"2&.>)ag ggevuvv@(,:(idmat@c))
 NB. - simulate LAPACK's xHEEV('N'):
 NB.     NB. e=. heevun A
 NB.     heevun=: 9 o.{.@ggevunn@(,:(idmat@c))
@@ -424,7 +424,7 @@ testgeev=: 3 : 0
 
   vberruL=: FP_PREC%~1<.norm1@[%~(((mp~ ct)~(1;0)&{::)normi@:-((0+@{::])*"1(1;0){::])) % FP_PREC>.norm1@((1;0){::])
   vberruR=: FP_PREC%~1<.norm1@[%~(( mp      (1;1)&{::)norm1@:-((0  {::])*"1(1;1){::])) % FP_PREC>.norm1@((1;1){::])
-  vberrux=: 1(((%FP_PREC)>./"1@:<.FP_PREC%~|@:<:@:(norms"1@|:"2))([`((%FP_PREC)"_)@.])"0((1-+:FP_PREC)>(|@(9&o.))%&:(>./"1)|)@:(,"2))@{::]
+  vberrux=: 1(((%FP_PREC)>./"1@:<.FP_PREC%~|@:<:@:(normsc"2))([`((%FP_PREC)"_)@.])"0((1-+:FP_PREC)>(|@(9&o.))%&:(>./"1)|)@:(,"2))@{::]
   vberruvv=: >./@(vberruL,vberruR,vberrux)  NB. STUDYME: verb is invisible from base locale when erase below is removed (???)
 
   ('geev_jlapack_' tmonad (]`(1&({::) ; (0,:2)&({::))`(rcond"_)`(_."_)`vberruvv)) y

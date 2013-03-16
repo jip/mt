@@ -13,13 +13,14 @@ NB. rt        Restrained Take
 NB. icut      Inversed cut
 NB.
 NB. upd       Adv. to update subarray by a monad
+NB. e0        Extend matrix by zeros
 NB. appendx   Enhance built-in Append verb (,)
 NB. stitchx   Enhance built-in Stitch verb (,.)
 NB.
 NB. diag      Return a solid part of diagonal
 NB. setdiag   Assign value[s] to a solid part of diagonal
-NB. upddiag   Template adv. to make verbs to update a solid
-NB.           part of diagonal
+NB. upddiag   Adv. to make verbs to update a solid part of
+NB.           diagonal
 NB.
 NB. bdlpick   Zeroize elements outside lower bidiagonal part
 NB.           of the matrix
@@ -56,7 +57,7 @@ NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.0 2012-12-29
 NB.
 NB. Copyright 2007-2012 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
@@ -89,9 +90,9 @@ NB. Miscellaneous
 NB. convert table y to table of diagonals
 t2td=: 1 : '({. u/&i. {:)@$'
 
-NB. template conj. to extract matrix circumscribing the
-NB. triangular (trapezoidal) matrix
-NB. starting from diagonal number x in the matrix y
+NB. conj. to extract matrix circumscribing the triangular
+NB. (trapezoidal) matrix starting from diagonal number x in
+NB. the matrix y
 trcut=: 2 : '((m&*)@:(<./"1)@v $) {. ]'
 
 NB. extract upper triangular (trapezoidal) matrix
@@ -100,17 +101,16 @@ trucut=: 1 _1 trcut (] ,. (-~ {:))
 NB. extract lower triangular (trapezoidal) matrix
 trlcut=: _1 1 trcut ((+ {.) ,. ])
 
-NB. template conj. to extract triangular (trapezoidal)
-NB. matrix starting from diagonal number x in the
-NB. circumscribing matrix y
+NB. conj. to extract triangular (trapezoidal) matrix starting
+NB. from diagonal number x in the circumscribing matrix y
 tr=: 2 : '0&$: :([ (] * (u~ (-~ t2td))) v)'
 
 NB. ---------------------------------------------------------
 NB. mxbstencil
 NB.
 NB. Description:
-NB.   Template adv. to make verbs returning
-NB.   [multi-][anti-]band stencil for matrix
+NB.   Adv. to make verbs returning [multi-][anti-]band
+NB.   stencil for matrix
 NB.
 NB. Syntax:
 NB.   vapp=. vmix mxbstencil
@@ -215,7 +215,7 @@ NB. - (h,s) pair defines raveled rIOS of solid part of
 NB.   diagonal
 
 diaglios=: 0 0 _&$: :(4 : 0)
-  'd h s'=. x=. ((i. 3) < (# x)) } 0 0 _ ,: x  NB. in-place op
+  'd h s'=. x=. ((i. 3) < (# x))} 0 0 _ ,: x  NB. in-place op
   'm n'=. y=. 2 $ y
   H=. n (-@*^:(0 > ])) d
   S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
@@ -327,7 +327,7 @@ NB. where
 NB.   vapp=. u upd
 NB.   subA=. ios { A
 NB.   subAupd=. u subA
-NB.   Aupd=. subAupd ios } A
+NB.   Aupd=. subAupd ios} A
 NB.
 NB. Examples:
 NB.    1 ('*'"_ upd) 4 5$'-'             1 2 ('*'"_ upd) 4 5$'-'
@@ -346,7 +346,36 @@ NB. [1] Oleg Kobchenko. [Jprogramming] Transform to Amend.
 NB.     2007-03-02 22:15:54.
 NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005415.html
 
-upd=: (@:{) (`[) (`]) }
+upd=: (@:{) (`[) (`])}
+
+NB. ---------------------------------------------------------
+NB. e0
+NB.
+NB. Description:
+NB.   Extend matrix by zeros
+NB.
+NB. Syntax:
+NB.   eA=. sh e0 A
+NB. where
+NB.   A  - matrix to extend
+NB.   sh - scalar or 2-vector, integer, extended size
+NB.   eA - extend A
+NB.
+NB. Examples:
+NB.    2 e0 3 4 $ 1        2 3 e0 3 4 $ 1        2 _3 e0 3 4 $ 1
+NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
+NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
+NB. 0 0 1 1 1 1         0 0 0 1 1 1 1         1 1 1 1 0 0 0
+NB. 0 0 1 1 1 1         0 0 0 1 1 1 1         1 1 1 1 0 0 0
+NB. 0 0 1 1 1 1         0 0 0 1 1 1 1         1 1 1 1 0 0 0
+NB.    _2 e0 3 4 $ 1       _2 3 e0 3 4 $ 1       _2 _3 e0 3 4 $ 1
+NB. 1 1 1 1 0 0         0 0 0 1 1 1 1         1 1 1 1 0 0 0
+NB. 1 1 1 1 0 0         0 0 0 1 1 1 1         1 1 1 1 0 0 0
+NB. 1 1 1 1 0 0         0 0 0 1 1 1 1         1 1 1 1 0 0 0
+NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
+NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
+
+e0=: ([ -~ (negpos"0 $)) {. ]
 
 NB. ---------------------------------------------------------
 NB. appendl
@@ -473,17 +502,16 @@ NB. 0 0 2 0                         0 0 1 0
 
 setdiag=: 4 : 0
   'e dhs'=. x
-  dhs=. ((i. 3) < (# dhs)) } 0 0 _ ,: dhs  NB. assign defaults, in-place op
+  dhs=. ((i. 3) < (# dhs))} 0 0 _ ,: dhs  NB. assign defaults, in-place op
   lios=. dhs diaglios $ y
-  e (lios"_) } y
+  e (lios"_)} y
 )
 
 NB. ---------------------------------------------------------
 NB. upddiag
 NB.
 NB. Description:
-NB.   Template adv. to make verbs to update a solid part of
-NB.   diagonal
+NB.   Adv. to make verbs to update a solid part of diagonal
 NB.
 NB. Syntax:
 NB.   vapp=. u upddiag
@@ -515,11 +543,11 @@ NB.   http://www.jsoftware.com/pipermail/general/2007-November/031233.html
 upddiag=: 1 : 0
   lios=. diaglios_mt_ $ y
   e=. lios ({,) y
-  (u e) (lios"_) } y
+  (u e) (lios"_)} y
 :
   lios=. x diaglios_mt_ $ y
   e=. lios ({,) y
-  (u e) (lios"_) } y
+  (u e) (lios"_)} y
 )
 
 NB. ---------------------------------------------------------

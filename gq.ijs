@@ -230,6 +230,7 @@ NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
 unglq=: }:"1@((((((GQNB ,  _) ,:~               - &c) ];.0 [) (ungl2@[ ,   larfbrcfr) ]) ({."1~ (- GQNB) - c))^:(GQNB %~ -&#) ungl2@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
+unglq_1=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [)              larfbrcfr        GQNB  ((1 ; 0 0 , [         ) setdiag e0) ])^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -282,12 +283,8 @@ NB. - implements LAPACK's DORGQL, ZUNGQL for N=K
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-e0=: ([ -~ (negpos"0 $)) {. ]
-
-ungql  =: }.  @((((((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) (ung2l@[ ,.~ larfblnbc) ]) ({.  ~    GQNB  + #)                          )^:(GQNB %~ -&c) ung2l                     @(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
-ungql_1=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [)              larfblnbc     (- GQNB) ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ])^:(GQNB %~ -&c) ung2l                     @(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
+ungql=: }.  @((((((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) (ung2l@[ ,.~ larfblnbc) ]) ({.  ~    GQNB  + #))^:(GQNB %~ -&c) ung2l@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
 ungql_2=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [)              larfblnbc     (- GQNB) ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ])^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
-ungql_3=: }.  @(                                                                                                                                           larfblnbc (idmat~ -~/)@$                                                )@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -341,6 +338,7 @@ NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
 ungqr=: }:  @((((((GQNB ,~ _) ,:~               - &#) ];.0 [) (ung2r@[ ,.  larfblnfc) ]) ({.  ~ (- GQNB) - #))^:(GQNB %~ -&c) ung2r@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
+ungqr_1=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [)              larfblnfc        GQNB  ((1 ; 0 0 , [         ) setdiag e0) ])^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -393,6 +391,7 @@ NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
 ungrq=: }."1@((((((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) (ungr2@[ , ~ larfbrcbr) ]) ({."1~    GQNB  + c))^:(GQNB %~ -&#) ungr2@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
+ungrq_1=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [)              larfbrcbr     (- GQNB) ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ])^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)
 
 NB. ---------------------------------------------------------
 NB. unglz

@@ -60,7 +60,7 @@ PFSF=: 100  NB. Safe Factor, a security factor to avoid
             NB. arithmetic exceptions
 
 NB. ---------------------------------------------------------
-NB. lauc1fc
+NB. lauc1f
 NB.
 NB. Description:
 NB.   Apply incremental condition estimation to determine
@@ -69,7 +69,7 @@ NB.   be acceptable as a pivot column with respect to the
 NB.   threshold thresh
 NB.
 NB. Syntax:
-NB.   out=. lauc1fc ismin;iv;w;gamma;thresh
+NB.   out=. lauc1f ismin;iv;w;gamma;thresh
 NB. where
 NB.   ismin  - an estimate for the smallest singular value of
 NB.            R(0:k-1,0:k-1)
@@ -92,51 +92,7 @@ NB.
 NB. Notes:
 NB. - models RRQR's xLAUC1 [1, 2]
 
-lauc1fc=: 3 : 0
-  'smin v w gamma thresh'=. y
-  if. thresh > | gamma do.
-    0
-  else.
-    'smin cs'=. laic12 smin ; gamma , w mp + v
-    if. thresh > smin do.
-      0
-    else.
-      smin ; v ((* {:) , 0 { ]) cs
-    end.
-  end.
-)
-
-NB. ---------------------------------------------------------
-NB. lauc1fr
-NB.
-NB. Description:
-NB.   Apply incremental condition estimation to determine
-NB.   whether the k-th row of A, stored in vector w, would be
-NB.   acceptable as a pivot row with respect to the threshold
-NB.   thresh
-NB.
-NB. Syntax:
-NB.   out=. lauc1fr ismin;iv;w;gamma;thresh
-NB. where
-NB.   ismin  - an estimate for the smallest singular value of
-NB.            L(0:k-1,0:k-1)
-NB.   iv     - k-vector, an approximate smallest right
-NB.            singular vector of L(0:k-1,0:k-1)
-NB.   w      - k-vector of elements L(k,0:k-1)
-NB.   gamma  - k-th diagonal element L(k,k)
-NB.   thresh - if osmin is smaller than thresh, the k-th row
-NB.            is rejected
-NB.   out    - is either 0 if k-th row of L is rejected, or
-NB.              out -: osmin;ov
-NB.            if the k-th row of L is found acceptable
-NB.   osmin  - an estimate for the smallest singular value of
-NB.            L(0:k,0:k)
-NB.   ov     - (k+1)-vector, an approximate smallest right
-NB.            singular vector of L(0:k,0:k)
-NB.   L      - m×n-matrix, lower triangular (trapezoidal)
-
-NB. identical to lauc1fc
-lauc1fr=: 3 : 0
+lauc1f=: 3 : 0
   'smin v w gamma thresh'=. y
   if. thresh > | gamma do.
     0
@@ -244,7 +200,7 @@ gelpc=: 3 : 0
   end.
   NB. Initialize partial row norms. The first item of
   NB. rnorms store the exact row norms
-  rnorms=. ,:~ normsr A11
+  rnorms=. ,:~ normsr }:"1 A11
   NB. Compute factorization
   i=. >: offset
   lasti=. k <. offset + dsrd
@@ -261,16 +217,16 @@ gelpc=: 3 : 0
     rnorms=. }."1 rnorms
     w=. {. A10
     NB. Generate elementary reflector H(i)
-    gamma=. {. z=. larfgf {. A11
+    gamma=. {. z=. larfgfc {. A11
     NB. Apply elementary reflector H(I) to the corresponding
     NB. block of matrix A
-    y=. (< (<0) ; 0) { A11=. (1 (0)} z) larfrcfr A11
+    y=. (< (<0) ; 0) { A11=. (1 (0)} z) larfrnfr A11
     NB. Update partial row norms
     if. i < lasti do.
       'temp temp2'=. 2 %/\ (| y) , rnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
-      rnorms2=. }. normsr A11
+      rnorms2=. }. normsr }:"1 A11
       rnorms3=. temp (((* %:)~ {.) 0} ]) rnorms
       rnorms2=. (,:~ 1 = temp2)} rnorms3 ,: rnorms2
       rnorms=. (,:~ 0 = {. rnorms)} rnorms2 ,: rnorms
@@ -286,7 +242,7 @@ gelpc=: 3 : 0
       end.
     else.
       smaxpr=. mxnm * 3 %: i
-      out=. lauc1fr smin ; v ; w ; gamma ; smaxpr * rcond
+      out=. lauc1f smin ; v ; w ; gamma ; smaxpr * rcond
       if. 0 = L. out do.
         NB. Row rejected
         A11=. z 0} A11
@@ -309,7 +265,7 @@ gelpc=: 3 : 0
     NB. All remaining rows rejected
     if. <./ $ A11 do.
       NB. Factor remaining columns
-      A11=. gelqf }:"1 A11   NB. FIXME excessive re-shaping
+      A11=. gelqf }:"1 A11   NB. FIXME TWICE excessive re-shaping
     end.
     eAsfx=. A10 ,. A11
     NB. Use incremental condition estimation to get an
@@ -318,7 +274,7 @@ gelpc=: 3 : 0
     jsupr=. k - c A10
     while. j < jsupr do.
       'w gamma'=. (}: ; {:) (< j ; (i. >: # v)) { eAsfx
-      'smin cs'=. laic12 smin ; gamma , v mp + w
+      'smin cs'=. laic12 smin ; gamma , w mp + v
       v=. v ((* {:) , 0 { ]) cs
       if. 0 = j do.
         svlues=. smin 2} svlues
@@ -426,7 +382,7 @@ geprc=: 3 : 0
   end.
   NB. Initialize partial column norms. The first item of
   NB. cnorms store the exact column norms
-  cnorms=. ,:~ normsc A11
+  cnorms=. ,:~ normsc }: A11
   NB. Compute factorization
   i=. >: offset
   lasti=. k <. offset + dsrd
@@ -452,7 +408,7 @@ geprc=: 3 : 0
       'temp temp2'=. 2 %/\ (| y) , cnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
-      cnorms2=. }. normsc A11
+      cnorms2=. }. normsc }: A11
       cnorms3=. temp (((* %:)~ {.) 0} ]) cnorms
       cnorms2=. (,:~ 1 = temp2)} cnorms3 ,: cnorms2
       cnorms=. (,:~ 0 = {. cnorms)} cnorms2 ,: cnorms
@@ -468,7 +424,7 @@ geprc=: 3 : 0
       end.
     else.
       smaxpr=. mxnm * 3 %: i
-      out=. lauc1fc smin ; v ; w ; gamma ; smaxpr * rcond
+      out=. lauc1f smin ; v ; w ; gamma ; smaxpr * rcond
       if. 0 = L. out do.
         NB. Column rejected
         A11=. z (< a: ; 0)} A11
@@ -491,7 +447,7 @@ geprc=: 3 : 0
     NB. All remaining columns rejected
     if. <./ $ A11 do.
       NB. Factor remaining columns
-      A11=. geqrf }: A11   NB. FIXME excessive re-shaping
+      A11=. geqrf }: A11   NB. FIXME TWICE excessive re-shaping
     end.
     eAsfx=. A01 , A11
     NB. Use incremental condition estimation to get an
@@ -616,7 +572,7 @@ gelpw=: 3 : 0
   NB. Initialize partial row norms (stored in the first item
   NB. of rnorms) and exact row norms (stored in the second
   NB. item of rnorms) for the first batch of rows
-  rnorms=. ,:~ normsr A11
+  rnorms=. ,:~ normsr }:"1 A11
   NB. Main loop
   lastk=. <: (n - offset) <. # p
   while. nb > # dLQf do.
@@ -637,15 +593,15 @@ gelpw=: 3 : 0
     u=. {."1 A11
     w=. {. A10
     NB. Is candidate pivot row acceptable ?
-    out=. lauc1fr smin ; v ; w ; gamma ; smax * rcond
+    out=. lauc1f smin ; v ; w ; gamma ; smax * rcond
     if. 0 = L. out do. break. end.
     NB. Pivot candidate was accepted
     'smin v'=. out
     NB. Generate Householder vector
-    z=. larfgf {. A11
+    z=. larfgfc {. A11
     dLQf=. dLQf , w , z
     NB. Apply Householder reflection to A11
-    y=. (< (<0) ; 0) { A11=. (1 (0)} z) larfrcfr A11
+    y=. (< (<0) ; 0) { A11=. (1 (0)} z) larfrnfr A11
     A10=. (}. A10) ,. y
     A11=. 1 1 }. A11
     rnorms=. }."1 rnorms
@@ -654,7 +610,7 @@ gelpw=: 3 : 0
       'temp temp2'=. 2 %/\ (| y) , rnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
-      rnorms2=. }. normsr A11
+      rnorms2=. }. normsr }:"1 A11
       rnorms3=. temp (((* %:)~ {.) 0} ]) rnorms
       rnorms2=. (,:~ 1 = temp2)} rnorms3 ,: rnorms2
       rnorms=. (,:~ 0 = {. rnorms)} rnorms2 ,: rnorms
@@ -771,7 +727,7 @@ geprw=: 3 : 0
   NB. Initialize partial column norms (stored in the first
   NB. item of cnorms) and exact column norms (stored in the
   NB. second item of cnorms) for the first batch of columns
-  cnorms=. ,:~ normsc A11
+  cnorms=. ,:~ normsc }: A11
   NB. Main loop
   lastk=. <: (m - offset) <. # p
   while. nb > c dQfR do.
@@ -792,7 +748,7 @@ geprw=: 3 : 0
     u=. {. A11
     w=. {."1 A01
     NB. Is candidate pivot column acceptable ?
-    out=. lauc1fc smin ; v ; w ; gamma ; smax * rcond
+    out=. lauc1f smin ; v ; w ; gamma ; smax * rcond
     if. 0 = L. out do. break. end.
     NB. Pivot candidate was accepted
     'smin v'=. out
@@ -809,7 +765,7 @@ geprw=: 3 : 0
       'temp temp2'=. 2 %/\ (| y) , cnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
-      cnorms2=. }. normsc A11
+      cnorms2=. }. normsc }: A11
       cnorms3=. temp (((* %:)~ {.) 0} ]) cnorms
       cnorms2=. (,:~ 1 = temp2)} cnorms3 ,: cnorms2
       cnorms=. (,:~ 0 = {. cnorms)} cnorms2 ,: cnorms
@@ -882,7 +838,7 @@ gelpb=: 4 : 0
   end.
   NB. Factor remaining rows using blocked code with
   NB. restricted pivoting strategy
-  nb=. 3 <. k NB. FIXME!!! QFNB <. k
+  nb=. QFNB <. k
   NB. The size of the pivot window is chosen to be nb+nllity
   nllity=. k <. 10 >. <. 0.5 0.05 mp nb , m
   norej=. m
@@ -896,13 +852,13 @@ gelpb=: 4 : 0
     'A00 A10'=. lwsize ({. ; }.) A10
     'A01 A11'=. lwsize ({. ; }.) A11
     pwi=. (i. lwsize) + # y
-    'dLQf A00 A01 pw smin v'=. (gelpw dbg 'gelpw') A00;A01;kb;x;(pwi{p);mxnm;smin;v
+    'dLQf A00 A01 pw smin v'=. gelpw A00;A01;kb;x;(pwi{p);mxnm;smin;v
     p=. pw pwi} p
     if. # dLQf do.
       NB. Accumulate Householder vectors in a block reflector
       if. # A11 do.
         NB. Apply block reflector to A11
-        A11=. ((# y) tru1 dLQf) larfbrcfr A11
+        A11=. ((# y) tru1 dLQf) larfbrnfr A11
       end.
       y=. y , dLQf
     end.
@@ -1013,7 +969,7 @@ geprb=: 4 : 0
   end.
   NB. Factor remaining columns using blocked code with
   NB. restricted pivoting strategy
-  nb=. 3 <. k NB. FIXME!!! QFNB <. k
+  nb=. QFNB <. k
   NB. The size of the pivot window is chosen to be nb+nllity
   nllity=. k <. 10 >. <. 0.5 0.05 mp nb , n
   norej=. n
@@ -1027,7 +983,7 @@ geprb=: 4 : 0
     'A00 A01'=. lwsize ({."1 ; }."1) A01
     'A10 A11'=. lwsize ({."1 ; }."1) A11
     pwi=. (i. lwsize) + c y
-    'dQfR A00 A10 pw smin v'=. (geprw dbg 'geprw') A00;A10;kb;x;(pwi{p);mxnm;smin;v
+    'dQfR A00 A10 pw smin v'=. geprw A00;A10;kb;x;(pwi{p);mxnm;smin;v
     p=. pw pwi} p
     if. c dQfR do.
       NB. Accumulate Householder vectors in a block reflector
@@ -1072,6 +1028,40 @@ geprb=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
+NB. trlpr
+NB.
+NB. Description:
+NB.   Compute an estimate for the numerical rank of an
+NB.   lower triangular (trapezoidal) matrix
+NB.
+NB. Syntax:
+NB.   rank=. rcond trlpr L
+NB. where
+NB.   L     - m×k-matrix, lower triangular (trapezoidal), k≤m
+NB.   rcond > 0, 1/rcond specifies an upper bound on the
+NB.           condition number of L
+NB.   rank  ≥ 0, an estimate for the numerical rank of L
+
+trlpr=: 4 : 0
+  smin=. smax=. | 0 ({,) y
+  rank=. 0 < smin
+  if. rank do.
+    k=. c y
+    x1=. x2=. 1
+    while. rank < k do.
+      'w gamma'=. (}: ; {:) (< rank ; i. >: rank) { y
+      'smin cs1'=. laic12 smin ; gamma , x1 mp + w
+      'smax cs2'=. laic11 smax ; gamma , x2 mp + w
+      if. smin < smax*x do. break. end.
+      x1=. x1 ((* {:) , 0 { ]) cs1
+      x2=. x2 ((* {:) , 0 { ]) cs2
+      rank=. >: rank
+    end.
+  end.
+  rank
+)
+
+NB. ---------------------------------------------------------
 NB. trprr
 NB.
 NB. Description:
@@ -1110,6 +1100,50 @@ trprr=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
+NB. gelpg3
+NB.
+NB. Description:
+NB.   Retriangularize a special matrix, and accumulate
+NB.   rotations applied
+NB.
+NB. Syntax:
+NB.   'dQ L'=. gelpg3 A
+NB. where
+NB.   A  - m×k-matrix, has zeros above 1st subdiagonal,
+NB.        excepting the first row
+NB.   L  - m×k-matrix, lower triangular (trapezoidal)
+NB.   dQ - r×4-matrix, rotations accumulated, where each row
+NB.        defines one rotation and is 4-vector of values:
+NB.          c , s , iof , iog
+NB.
+NB. Storage layout:
+NB. - example for input 6×4-matrix A:
+NB.     x x x x
+NB.     x 0 0 0
+NB.     x x 0 0
+NB.     x x x 0
+NB.     x x x x
+NB.     x x x x
+
+gelpg3=: 3 : 0
+  'm k'=. $ y
+  dQ=. 0 4$0
+  if. (1 < k) *. 0 < m do.
+    NB. Compute Givens rotations needed to nullify the first
+    NB. row of matrix A, apply to A, accumulate rotations
+    NB. applied
+    i=. <: k
+    lios=. i. m
+    while. i do.
+      'y cs'=. rot&.|: rotga y ; (< lios ; i - 1 0) ; 0
+      dQ=. dQ , (+ cs) , i - 1 0
+      i=. <: i
+    end.
+  end.
+  dQ ; y
+)
+
+NB. ---------------------------------------------------------
 NB. geprg3
 NB.
 NB. Description:
@@ -1127,11 +1161,11 @@ NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
 NB.
 NB. Storage layout:
-NB. - example for input 4×8-matrix A:
-NB.     x x x x x x x x
-NB.     x 0 x x x x x x
-NB.     x 0 0 x x x x x
-NB.     x 0 0 0 x x x x
+NB. - example for input 4×6-matrix A:
+NB.     x x x x x x
+NB.     x 0 x x x x
+NB.     x 0 0 x x x
+NB.     x 0 0 0 x x
 NB.
 NB. Note:
 NB. - models RRQR's xGRET(3) [1, 2] with following
@@ -1142,7 +1176,6 @@ NB.     - are applied to A in rows-oriented manner
 NB.     - are accumulated in dQ instead of applying to Q
 NB.       immediately
 NB.   - block algorithm only
-
 
 geprg3=: 3 : 0
   'k n'=. $ y
@@ -1157,6 +1190,41 @@ geprg3=: 3 : 0
       'y cs'=. rot rotga y ; (< (i - 1 0) ; lios) ; < < a: ; 0
       dQ=. dQ , (+ cs) , i - 1 0
       i=. <: i
+    end.
+  end.
+  dQ ; y
+)
+
+NB. ---------------------------------------------------------
+NB. hslph3
+NB.
+NB. Description:
+NB.   Reduce the lower Hessenberg matrix A to lower
+NB.   triangular form, and accumulate rotations applied
+NB.
+NB. Syntax:
+NB.   'dQ L'=. hslph3 H
+NB. where
+NB.   H  - m×k-matrix, lower Hessenberg, k≤m
+NB.   L  - m×k-matrix, lower triangular (trapezoidal)
+NB.   dQ - r×4-matrix, rotations accumulated, where each row
+NB.        defines one rotation and is 4-vector of values:
+NB.          c , s , iof , iog
+
+hslph3=: 3 : 0
+  'm k'=. $ y
+  dQ=. 0 4$0
+  if. (1 < k) *. 0 < m do.
+    NB. Compute Givens rotations needed to reduce lower
+    NB. Hessenberg matrix H to lower triangular form L,
+    NB. apply to H, accumulate rotations applied
+    i=. 1
+    lios=. i. m
+    while. i < k do.
+      'y cs'=. rot&.|: rotga y ; (< lios ; i - 1 0) ; 0
+      lios=. }. lios
+      dQ=. dQ , (+ cs) , i - 1 0
+      i=. >: i
     end.
   end.
   dQ ; y
@@ -1277,13 +1345,13 @@ trlpc=: 3 : 0
       L=. dip C. L
       p=. dip C. p
     end.
-    NB. ################## STOPPED HERE
     NB. Estimate the largest singular value, the smallest
-    NB. singular value, and its corresponding left singular vector
-    smin=. smax=. | 0 ({,) R
+    NB. singular value, and its corresponding right singular
+    NB. vector
+    smin=. smax=. | 0 ({,) L
     x1=. x2=. j=. 1
     while. j < rank do.
-      'w gamma'=. (}: ; {:) (< (i. >: j) ; j) { R
+      'w gamma'=. (}: ; {:) (< j ; i. >: j) { L
       'smax cs'=. laic11 smax ; gamma , w mp + x1
       x1=. x1 ((* {:) , 0 { ]) cs
       'smin cs'=. laic12 smin ; gamma , w mp + x2
@@ -1293,24 +1361,24 @@ trlpc=: 3 : 0
     NB. Determine if matrix A is singular or nearly singular
     if. smin > smax*FP_SFMIN*PFSF do.
       NB. Matrix is not singular or not nearly singular.
-      NB. Follow usual method: Estimate the right singular
+      NB. Follow usual method: Estimate the left singular
       NB. vector corresponding to the smallest singular value
-      NB. of upper triangular block A(0:rank-1,0:rank-1)
-      x2=. ((2 # rank) {. R) trsmux x2
+      NB. of lower triangular block A(0:rank-1,0:rank-1)
+      x2=. ((2 # rank) {. L) trsmxl x2
       NB. Find the index with largest absolute value in
       NB. vector x2
       io=. liofmax x2
       NB. Permut if necessary
       if. ((f * | io { x2) > | {: x2) *. (io < <: rank) do.
         NB. Exchange cyclically to the left the
-        NB. columns/elements between io and rank-1, that is:
+        NB. rows/elements between io and rank-1, that is:
         NB. io->rank-1, io+1->io, io+2->io+1,...,
         NB. rank-1->rank-2
         dip=. < 1 |. rank th2lios io
-        R=. dip C."1 R
+        L=. dip C. L
         p=. dip C. p
         NB. Retriangularize matrix A after the permutation
-        'dQi R'=. hsprh3 R
+        'dQi L'=. hslph3 L
         dQ=. dQ , dQi
       end.
     end.
@@ -1320,105 +1388,104 @@ trlpc=: 3 : 0
   elseif. do.
     NB. Apply modified Pan&Tang algorithm 3
     ns=. 0
-    mxstps=. 25 + n
+    mxstps=. 25 + m
     f=. PFFP % %: >: rank
-    NB. Compute the norms of columns of matrix A
-    cnorms=. normsc R
+    NB. Compute the norms of rows of matrix A
+    rnorms=. normsr L
     NB. Estimate the smallest singular value of
-    NB. A(0:rank-1,0:rank-1) and its corresponding left
+    NB. A(0:rank-1,0:rank-1) and its corresponding right
     NB. singular vector. smin will contain the smallest
-    NB. singular value and x1 will contain the left singular
+    NB. singular value and x1 will contain the right singular
     NB. vector
-    smin=. | 0 ({,) R
+    smin=. | 0 ({,) L
     x1=. j=. 1
     while. j < rank do.
-      'w gamma'=. (}: ; {:) (< (i. >: j) ; j) { R
+      'w gamma'=. (}: ; {:) (< j ; i. >: j) { L
       'smin cs'=. laic12 smin ; gamma , w mp + x1
       x1=. x1 ((* {:) , 0 { ]) cs
       j=. >: j
     end.
     NB. Initialize loop variables
     nca=. 0
-    nctba=. n-rank
+    nctba=. m-rank
     ii=. rank
     while. (ns < mxstps) *. (nca < nctba) do.
       NB. Estimate the smallest singular value of
-      NB. A(0:rank,0:rank) and its corresponding left
-      NB. singular vector as if column ii of matrix A were on
-      NB. column of number rank
+      NB. A(0:rank,0:rank) and its corresponding right
+      NB. singular vector as if row ii of matrix A were on
+      NB. row of number rank
       ij=. ii <. <: k
-      diag=. (< ij , ii) { R
+      diag=. (< ii , ij) { L
       i=. <: ij
       while. i >: rank do.
-        diag=. (mp~ lartg) ((< i , ii ) { R) , diag
+        diag=. (mp~ lartg) ((< ii , i ) { L) , diag
         i=. <: i
       end.
-      'mnrp1 cs'=. laic12 smin ; diag , ((< (i. rank) ; ii) { R) mp + x1
+      'mnrp1 cs'=. laic12 smin ; diag , ((< ii ; i. rank) { L) mp + x1
       if. mnrp1 >: f * | diag do.
-        NB. Column ii accepted on the right part of matrix A
+        NB. Row ii accepted on the bottom part of matrix A
         nca=. >: nca
-        if. ii = <: n do.
+        if. ii = <: m do.
           ii=. >: rank
         else.
           ii=. >: ii
         end.
       else.
-        NB. Column ii not accepted on the right part of
-        NB. matrix A
+        NB. Row ii not accepted on the left part of matrix A
         NB.
-        NB. Permut column ii to position number rank
+        NB. Permut row ii to position number rank
         NB.
-        NB. Exchange cyclically to the right the
-        NB. columns/elements between rank and ii, that is,
+        NB. Exchange cyclically to the bottom the
+        NB. rows/elements between rank and ii, that is,
         NB. rank->rank+1, rank+1->rank+2,...,ii-1->ii,
         NB. ii->rank
         dip=. < |. (>: ii) th2lios rank
-        R=. dip C."1 R
+        L=. dip C. L
         p=. dip C. p
-        cnorms=. dip C. cnorms
+        rnorms=. dip C. rnorms
         NB. Retriangularize matrix A after the permutation,
         NB. adjust Q accordingly
-        'dQi R'=. geprg3 R
+        'dQi L'=. gelpg3 L
         dQ=. dQ , dQi
         NB. Estimate the largest singular value
-        itemp=. liofmax (>: rank) {. cnorms
-        mxrp1=. (3 %: >: rank) * itemp { cnorms
-        NB. Estimate the right singular vector
+        itemp=. liofmax (>: rank) {. rnorms
+        mxrp1=. (3 %: >: rank) * itemp { rnorms
+        NB. Estimate the left singular vector
         if. mnrp1 > mxrp1*PFSF*FP_SFMIN do.
           NB. Matrix is not singular or not nearly singular
           NB.
-          NB. First, end the estimation of the left singular
+          NB. First, end the estimation of the right singular
           NB. vector
           x2=. x1 ((* {:) , 0 { ]) cs
-          NB. Obtain the right singular vector from the left
+          NB. Obtain the left singular vector from the right
           NB. one
-          x2=. ((2 # >: rank) {. R) trsmux x2
+          x2=. ((2 # >: rank) {. L) trsmxl x2
           NB. Find the index with largest absolute value
           io=. liofmax x2
-          NB. Permut column io to position rank
+          NB. Permut row io to position rank
           if. io < rank do.
-            NB. Exchange cyclically to the left the
-            NB. columns/elements between io and rank, that
+            NB. Exchange cyclically to the top the
+            NB. rows/elements between io and rank, that
             NB. is, io->rank,io+1->io,io+2->io+1,...,
             NB. rank->rank-1
             dip=. < 1 |. (>: rank) th2lios io
-            R=. dip C."1 R
+            L=. dip C. L
             p=. dip C. p
-            cnorms=. dip C. cnorms
+            rnorms=. dip C. rnorms
             NB. Retriangularize matrix A after the
             NB. permutation
-            'dQi R'=. hsprh3 R
+            'dQi L'=. hslph3 L
             dQ=. dQ , dQi
             NB. Estimate the smallest singular value of
             NB. A(0:rank-1,0:rank-1) and its corresponding
-            NB. left singular vector. smin will contain the
+            NB. right singular vector. smin will contain the
             NB. smallest singular value and x1 will contain
-            NB. the left singular vector
-            smin=. | 0 ({,) R
+            NB. the right singular vector
+            smin=. | 0 ({,) L
             x1=. j=. 1
             while. j < rank do.
-              'w gamma'=. (}: ; {:) (< (i. >: j) ; j) { R
-              'smin cs'=. laic12 smin ; gamma , w mp + x1
+              'w gamma'=. (}: ; {:) (< j ; i. >: j) { L
+              'smin cs'=. laic12 smin ; gamma , x1 mp + w
               x1=. x1 ((* {:) , 0 { ]) cs
               j=. >: j
             end.
@@ -1427,7 +1494,7 @@ trlpc=: 3 : 0
         NB. Update loop variables
         nca=. 0
         ns=. >: ns
-        if. ii = <: n do.
+        if. ii = <: m do.
           ii=. >: rank
         else.
           ii=. >: ii
@@ -1435,45 +1502,45 @@ trlpc=: 3 : 0
       end.
     end.
     NB. Final pivoting
-    io=. rank + liofmax rank }. cnorms
-    if. ((f * | io { cnorms) > | rank { cnorms) *. (io > rank) do.
-      NB. Exchange cyclically to the right the
-      NB. columns/elements between rank and ii, that is,
+    io=. rank + liofmax rank }. rnorms
+    if. ((f * | io { rnorms) > | rank { rnorms) *. (io > rank) do.
+      NB. Exchange cyclically to the bottom the
+      NB. rows/elements between rank and ii, that is,
       NB. rank->rank+1, rank+1->rank+2,...,io-1->io,
       NB. io->rank
       dip=. < |. (>: io) th2lios rank
-      R=. dip C."1 R
+      L=. dip C. L
       p=. dip C. p
       NB. Retriangularize matrix A after permutation
-      'dQi R'=. geprg3 R
+      'dQi L'=. gelpg3 L
       dQ=. dQ , dQi
     end.
     NB. Compute vector svlues and variables rcnr and rcnrp1
     NB.
     NB. Compute the largest singular value of
     NB. A(0:rank-1,0:rank-1)
-    smax=. | 0 ({,) R
+    smax=. | 0 ({,) L
     x2=. j=. 1
     while. j < rank do.
-      'w gamma'=. (}: ; {:) (< (i. >: j) ; j) { R
-      'smax cs'=. laic11 smax ; gamma , w mp + x2
+      'w gamma'=. (}: ; {:) (< j ; i. >: j) { L
+      'smax cs'=. laic11 smax ; gamma , x2 mp + w
       x2=. x2 ((* {:) , 0 { ]) cs
       j=. >: j
     end.
     svlues=. smax , smin
     NB. Compute the largest singular value and the smallest
     NB. singular value of A(0:rank,0:rank)
-    'w gamma'=. (}: ; {:) (< (i. >: rank) ; rank) { R
-    'mxrp1 cs'=. laic11 smax ; gamma , w mp + x2
-    'smin cs'=. laic12 smin ; gamma , w mp + x1
+    'w gamma'=. (}: ; {:) (< rank ; i. >: rank) { L
+    'mxrp1 cs'=. laic11 smax ; gamma , x2 mp + w
+    'smin cs'=. laic12 smin ; gamma , x1 mp + w
     x1=. x1 ((* {:) , 0 { ]) cs
     svlues=. svlues , smin
     NB. Compute the smallest singular value of
-    NB. A(0:mn-1,0:mn-1)
+    NB. A(0:k-1,0:k-1)
     j=. >: rank
     while. j < k do.
-      'w gamma'=. (}: ; {:) (< (i. >: j) ; j) { R
-      'smin cs'=. laic12 smin ; gamma , w mp + x1
+      'w gamma'=. (}: ; {:) (< j ; i. >: j) { L
+      'smin cs'=. laic12 smin ; gamma , x1 mp + w
       x1=. x1 ((* {:) , 0 { ]) cs
       j=. >: j
     end.
@@ -1483,7 +1550,7 @@ trlpc=: 3 : 0
     rcnr=. %/ 1 0 { svlues
     rcnrp1=. (2 { svlues) % mxrp1
   end.
-  dQ ; R ; p ; isovrn ; rcnr ; rcnrp1 ; svlues
+  p ; L ; dQ ; isovrn ; rcnr ; rcnrp1 ; svlues
 )
 
 NB. ---------------------------------------------------------
@@ -1559,7 +1626,8 @@ trprc=: 3 : 0
       p=. dip C. p
     end.
     NB. Estimate the largest singular value, the smallest
-    NB. singular value, and its corresponding left singular vector
+    NB. singular value, and its corresponding left singular
+    NB. vector
     smin=. smax=. | 0 ({,) R
     x1=. x2=. j=. 1
     while. j < rank do.
@@ -1749,7 +1817,7 @@ trprc=: 3 : 0
     x1=. x1 ((* {:) , 0 { ]) cs
     svlues=. svlues , smin
     NB. Compute the smallest singular value of
-    NB. A(0:mn-1,0:mn-1)
+    NB. A(0:k-1,0:k-1)
     j=. >: rank
     while. j < k do.
       'w gamma'=. (}: ; {:) (< (i. >: j) ; j) { R
@@ -2025,10 +2093,10 @@ NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
 
-gelpf=: (FP_EPS $: ]) : ([ ]`trlpy@.(0<3{::]) gelpb)
+gelpf=: FP_EPS&$: :([ ]`trlpy@.(0<3{::]) gelpb)
 
 NB.   'Q L p orcond rank svlues'=. [ircond] geplf A
-geplf=: (FP_EPS $: ]) : ([ ]`trply@.(0<3{::]) geplb)
+geplf=: FP_EPS&$: :([ ]`trply@.(0<3{::]) geplb)
 
 NB. ---------------------------------------------------------
 NB. geprf
@@ -2107,10 +2175,10 @@ NB.   - matrix C is an identity matrix
 NB.   - if there was a problem to compute a rank, then rank
 NB.     gets value NaN
 
-geprf=: (FP_EPS $: ]) : ([ ]`trpry@.(0<3{::]) geprb)
+geprf=: FP_EPS&$: :([ ]`trpry@.(0<3{::]) geprb)
 
 NB.   'p R Q orcond rank svlues'=. [ircond] gerpf A
-gerpf=: (FP_EPS $: ]) : ([ ]`trrpy@.(0<3{::]) gerpb)
+gerpf=: FP_EPS&$: :([ ]`trrpy@.(0<3{::]) gerpb)
 
 NB. =========================================================
 NB. Test suite

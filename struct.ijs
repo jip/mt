@@ -103,7 +103,7 @@ trlcut=: _1 1 trcut ((+ {.) ,. ])
 NB. template conj. to extract triangular (trapezoidal)
 NB. matrix starting from diagonal number x in the
 NB. circumscribing matrix y
-tr=: 2 : '0&$: : ([ (] * (u~ (-~ t2td))) v)'
+tr=: 2 : '0&$: :([ (] * (u~ (-~ t2td))) v)'
 
 NB. ---------------------------------------------------------
 NB. mxbstencil
@@ -214,7 +214,7 @@ NB. Notes:
 NB. - (h,s) pair defines raveled rIOS of solid part of
 NB.   diagonal
 
-diaglios=: (0 0 _&$:) :(4 : 0)
+diaglios=: 0 0 _&$: :(4 : 0)
   'd h s'=. x=. ((i. 3) < (# x)) } 0 0 _ ,: x  NB. in-place op
   'm n'=. y=. 2 $ y
   H=. n (-@*^:(0 > ])) d
@@ -620,7 +620,7 @@ NB.   d - integer in range [-∞,+∞], lIO last non-zero
 NB.       diagonal
 NB.   B - m×n-matrix, lower triangular
 
-trlpick=: (0&$:) : (((__ , [) mbstencil ]) * ])
+trlpick=: 0&$: :(((__ , [) mbstencil ]) * ])
 
 NB. ---------------------------------------------------------
 NB. trupick
@@ -637,7 +637,7 @@ NB.   d - integer in range [-∞,+∞], lIO first non-zero
 NB.       diagonal
 NB.   B - m×n-matrix, upper triangular
 
-trupick=: (0&$:) : (((_ ,~ [) mbstencil ]) * ])
+trupick=: 0&$: :(((_ ,~ [) mbstencil ]) * ])
 
 NB. ---------------------------------------------------------
 NB. idmat
@@ -676,7 +676,7 @@ NB.
 NB. TODO:
 NB. - I would be sparse
 
-idmat=: (a:&$:) :((1;[) setdiag (0 $~ 2 $ ]))
+idmat=: a:&$: :((1;[) setdiag (0 $~ 2 $ ]))
 
 NB. ---------------------------------------------------------
 NB. diagmat
@@ -721,7 +721,7 @@ NB.
 NB. TODO:
 NB. - D would be sparse
 
-diagmat=: (0 0&$:) :((; {.)~ setdiag ((0 $~ (+ (2&(|.@}. - {.)@(0&(<. , >.)))))~ #))
+diagmat=: 0 0&$: :((; {.)~ setdiag ((0 $~ (+ (2&(|.@}. - {.)@(0&(<. , >.)))))~ #))
 
 NB. ---------------------------------------------------------
 NB. trl
@@ -843,7 +843,7 @@ NB. 1  1  0 0                    1 0
 NB. 5  6  1 0                    9 1
 NB. 9 10 11 1
 
-trl1=: (0&$:) :([ trl (1;[) setdiag ])
+trl1=: 0&$: :([ trl (1;[) setdiag ])
 
 NB. ---------------------------------------------------------
 NB. tru1
@@ -867,7 +867,7 @@ NB. 0 1                          1 5 6
 NB.                              0 1 9
 NB.                              0 0 1
 
-tru1=: (0&$:) :([ tru (1;[) setdiag ])
+tru1=: 0&$: :([ tru (1;[) setdiag ])
 
 NB. ---------------------------------------------------------
 NB. tr2he

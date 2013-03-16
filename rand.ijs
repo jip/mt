@@ -209,7 +209,7 @@ NB.     s ~ TN(1,3^2,4,+∞)
 NB.   :
 NB.     tnormrand=: 1 3 4 _&randtnf
 
-randtnf=: (0 1 __ _&$:) :(4 : 0)
+randtnf=: 0 1 __ _&$: :(4 : 0)
   'mu sigma a b'=. x
   mrandnf=. (mu,sigma)&randnf
   NB. replace out-bounded elements recursively

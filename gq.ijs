@@ -59,8 +59,8 @@ gqvberr=: 2 : '(norm1_mt_@(<: upddiag_mt_)@(u ct_mt_) % FP_EPS_mt_ * v)@]'  NB. 
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-GQNB=: 32   NB. block size limit
-GQNX=: 128  NB. crossover point, GQNX ≥ GQNB
+GQNB=: 3 NB. 32   NB. block size limit
+GQNX=: 4 NB. 128  NB. crossover point, GQNX ≥ GQNB
 
 NB. =========================================================
 NB. Interface
@@ -111,7 +111,7 @@ NB. - implements LAPACK's DORGLQ, ZUNGLQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
-unglq=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [) larfbrcfr (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)@(] :   {.        )
+unglq=: }:"1@((( ((GQNB ,  _) ,:~  GQNB      -~ - &c) ];.0 [) larfbrcfr (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcfr  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@ tru1        @({.  ~  0 _1    <./ @:+ $)@ (] :   {.        )
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -160,7 +160,7 @@ NB. - implements LAPACK's DORGQL, ZUNGQL
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-ungql=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) larfblnbc    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)@(] : (({."1~ -)~))
+ungql=: }.  @((( ((GQNB ,~ _) ,:~ (GQNB - 1) +  -~&c) ];.0 [) larfblnbc    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnbc (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ c))@(tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $)@ (] : (({."1~ -)~))
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -209,7 +209,7 @@ NB. - implements LAPACK's DORGQR, ZUNGQR
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
-ungqr=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [) larfblnfc (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)@(] : ( {."1     ))
+ungqr=: }:  @((( ((GQNB ,~ _) ,:~  GQNB      -~ - &#) ];.0 [) larfblnfc (- GQNB) ((1 ; 0 0 , -@[       ) setdiag e0) ]           )^:(GQNB %~ -&c) (larfblnfc  idmat      @$)@(}.~ 2 #    GQNB  * 0 >. GQNB >.@%~ GQNX -~ c))@ trl1        @({."1~ _1  0    <./ @:+ $)@:(] : ( {."1     ))
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -257,7 +257,7 @@ NB. - implements LAPACK's DORGRQ, ZUNGRQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
-ungrq=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) larfbrcbr    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)@(] : (({.  ~ -)~))
+ungrq=: }."1@((( ((GQNB ,  _) ,:~ (GQNB - 1) +  -~&#) ];.0 [) larfbrcbr    GQNB  ((1 ; (,~ _1 ,~ -~/@$)) setdiag e0) ]           )^:(GQNB %~ -&#) (larfbrcbr (idmat~ -~/)@$)@(}.~ 2 # (- GQNB) * 0 >. GQNB >.@%~ GQNX -~ #))@(trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $)@ (] : (({.  ~ -)~))
 
 NB. ---------------------------------------------------------
 NB. unglz
@@ -290,13 +290,21 @@ NB.   vi                   - (n-m)-vector v(i)
 NB.   τi                   - scalar value conj(τ(i))
 NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
 NB.
-NB. Assertions (with appropriate comparison tolerance):
+NB. Assertions (with appropriate comparison tolerance):#######################
 NB.   NB. L * (Z) = L * Z
 NB.   (((unmlzrn (trupick~ -~/@$)) -: ((mp  unglz)~ (tru~ -~/@$))) }."1) LZf
 NB.   NB. I = Z * (Z^H)
 NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlzrc unglz)) LZf
 
 unglz=: }."1@((( ((GQNB ,  _) ,:~ 0 ,~ _1 - #@]     ) ];.0 [) larzbrcfr (setdiag~ 1 ; (0 , GQNB) ,~ -~/@$)@({.  ~ (- GQNB) - #)@])^:(GQNB %~ -&#) (larzbrcfr (idmat~ -~/)@$)@(}.  ~      GQNB  * 0 >. GQNB >.@%~ GQNX -~ #))@(#@] ((((0 >. - ) idmat <. ,  [) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ]) ] : (({.  ~ -)~))
+
+
+write_I=:    ((((0 >. -~) idmat <. , ]) #) [`(<@;&(dhs2lios@(_1&,))/@$@[)`]} ])                                                                                  NB. Zf=.   m   write_I    LZf
+mk_fret=:    (1:`(] (GQNB dhs2lios - , (0 >:@>. GQNB >.@%~ GQNX -~ ])) <.)`(0 $~ ])} #)                                                                          NB. fret=. m   mk_fret    LZf
+mk_I0=:      (idmat~ -~/)@(((0 >. (- {.)) , 1 { ]) $)                                                                                                            NB. I0=.   m   mk_I0      LZf
+step=:       ([ (larzbrcfr dbg 'larzbrcfr') (((- #)~ -~/@$) idmat $@[) , ])                                                                                      NB. eZi1=. bZf step       eZi
+unglz_dyad=: (}."1@((step dbg 'step')&:>/ dbg 'steps')@([ (((mk_fret dbg 'mk_fret') (<;.1 dbg 'split') ]) , <@(mk_I0 dbg 'mk_I0')) (write_I dbg 'write_I')))     NB. Z=.    m   unglz_dyad LZf
+unglz_3=:    ($:~ #) : unglz_dyad                                                                                                                                NB. Z=.    [m] unglz      LZf
 
 NB. ---------------------------------------------------------
 NB. ungzl

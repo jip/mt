@@ -118,10 +118,6 @@ tmonad=: 2 : 0
   try. rcond=. y vrcond out                           catch. rcond=. _        end.
   try. ferr=. y vferr out                             catch. ferr=. _.        end.
   try. berr=. y vberr out                             catch. berr=. _.        end.
-  NB. fix J6 prinf bug
-  if. rcond = _ do.
-    rcond=. FP_OVFL
-  end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
   logline=. logline , LF
@@ -139,10 +135,6 @@ tdyad=: 2 : 0
   try. rcond=. y vrcond out                           catch. rcond=. _        end.
   try. ferr=. y vferr out                             catch. ferr=. _.        end.
   try. berr=. y vberr out                             catch. berr=. _.        end.
-  NB. fix J6 prinf bug
-  if. rcond = _ do.
-    rcond=. FP_OVFL
-  end.
   logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
   logline=. logline , LF

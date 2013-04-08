@@ -16,6 +16,7 @@ NB. upd       Adv. to update subarray by a monad
 NB. e0        Extend matrix by zeros
 NB. appendx   Enhance built-in Append verb (,)
 NB. stitchx   Enhance built-in Stitch verb (,.)
+NB. ds        Direct sum of matrices A⊕B
 NB.
 NB. diag      Return a solid part of diagonal
 NB. setdiag   Assign value[s] to a solid part of diagonal
@@ -436,6 +437,23 @@ NB. - 1-rank arrays (i.e. vectors) are also acceptable
 
 stitcht=: ,.`([,.({.  ~   #)~)`(({.  ~   #),.])@.(*@-&#)
 stitchb=: ,.`([,.({.  ~ -@#)~)`(({.  ~ -@#),.])@.(*@-&#)
+
+NB. ---------------------------------------------------------
+NB. ds
+NB.
+NB. Description:
+NB.   Direct sum of matrices A⊕B
+NB.
+NB. Syntax:
+NB.   C=. A ds B
+NB. where
+NB.   A - ma×na-matrix
+NB.   B - mb×nb-matrix
+NB.   C - (ma+mb)×(na+nb)-matrix:
+NB.         C = (  A 0  )
+NB.             (  0 B  )
+
+ds=: (+&c {."1 [) appendr ]
 
 NB. ---------------------------------------------------------
 NB. diag

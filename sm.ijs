@@ -121,30 +121,7 @@ trsmrltu=: ( ((      c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosW)&c 0&{::)~   ({,) 0 
 
 trsmrucn=: (((((_1 - c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~ +@({,) 0 {:: [) % ((_1 - (*>:))&c 0&{::)~ +@({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
 trsmrucu=: ( (((_1 - c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~ +@({,) 0 {:: [                                          ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i))
-
-NB. original column-wise tacit version
 trsmrunn=: ((((      c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosN)&c 0&{::)~   ({,) 0 {:: [) % (      (*>:) &c 0&{::)~   ({,) 0 {:: [) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
-
-NB. column-wise tacit version with grouped U[0:i,i] reading
-trsmrunn_1=: (((((dhs2lios 0 1&+)&c~ ({,) ]) 0&{::)~ (((_1 {"1 ]) - mp&:(}:"1)~) % _1 { [) (] ,. ((({"1) 1&{::)~ c))) ,.~ ])^:(;`(#@[)`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
-
-NB. trsmrunn_1 with ungreedy mp
-trsmrunn_2=: (((((dhs2lios 0 1&+)&c~ ({,) ]) 0&{::)~ (((_1 {"1 ]) - (mp 0&(_1}))~) % _1 { [) (] ,. ((({"1) 1&{::)~ c))) ,.~ ])^:(;`(#@[)`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i)), lio(lii)=   i*(n+1)
-
-NB. row-wise explicit box-free version
-trsmrunn_3=: 4 : 0
-  xx=. 0 {."1 y
-  while. c y do.
-    xi=. ({."1 y) % (< 2 # c xx) { x
-    y=. }."1 y
-    y=. y - xi *"0 1 ((<@; <@<@i.@>:) c xx) { x
-    xx=. xx ,. xi
-  end.
-)
-
-NB. row-wise tacit version with grouped U[i,i:n-1] reading
-trsmrunn_4=: 0 {:: (((0 {:: ]) ((,. {."1) ; }."1@]) ((((0 liosE)&c~ ({,) [) ((((0) 0}"1 ]) - ((_1) 0} [) *"1 0 %"1 0~&:({."1))) ]) 1&{::))^:(c@[) (;~ 0&({."1)))
-
 trsmrunu=: ( ((      c@]  {"1 (1 {:: [)) - ] mp  (( 1 liosN)&c 0&{::)~   ({,) 0 {:: [                                          ) ,"1 0~ ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(n dhs2lios (   i  ,i))
 trsmrutn=: (((((_1 - c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~   ({,) 0 {:: [) % ((_1 - (*>:))&c 0&{::)~   ({,) 0 {:: [) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i)), lio(lii)=-1-i*(n+1)
 trsmrutu=: ( (((_1 - c@]) {"1 (1 {:: [)) - ] mp  ((_1 liosE)&c 0&{::)~   ({,) 0 {:: [                                          ) ,"0 1  ])^:(;`(c@])`(0 {."1 ]))  NB. lios(li)=(1 dhs2lios (-1-i*n,i))

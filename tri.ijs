@@ -110,7 +110,7 @@ getrilu1pstep=: 3 : 0
   Ri=. (-TRINB) {. pfx
   Ri=. ((i. TRINB) </ (i. n) - j)} Ri ,: 0  NB. spec code
   Ri=. Ri - U1i mp sfx
-  Ri=. U0i trsmu1x Ri
+  Ri=. U0i trsmlunu Ri
   ((-TRINB) }. pfx) ; Ri , sfx
 )
 
@@ -445,7 +445,7 @@ getrilu1p=: 3 : 0
   y=. trtril trl LU1
   y=. (</~ i. n)} y ,: LU1  NB. spec code
   I=. <. n % TRINB
-  ip (C.^:_1) 1 {:: getrilu1pstep^:I (TRINB * I) ({. ; ([ (tru1 trsmu1x trl) }.)) y
+  ip (C.^:_1) 1 {:: getrilu1pstep^:I (TRINB * I) ({. ; ([ (tru1 trsmlunu trl) }.)) y
 )
 
 NB. ---------------------------------------------------------

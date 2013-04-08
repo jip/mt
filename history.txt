@@ -83,7 +83,7 @@ math/mt - change history
  * ev:   use normsc normsr
  * gq:   change unghrlx from monad to ambivalent
  * hrd:  change gghrdxxx from dyad to ambivalent
- + norm: new interfaces: normsr normsc
+ + norm: new interfaces: normsc normsr
  + pf:   new interfaces: gelpf geprf
  * pow:  use normsr
  * sm:   replace trsmxxxx by previous iterative version since it has lesser bw error
@@ -94,15 +94,21 @@ math/mt - change history
 
 == 0.9.0 ==
  Code and comments clean-up
- * ev:     use normsx
- + gq:     unghrlx changed from monad to ambivalent, ung{lq,ql,qr,rq} improved,
+ * ev:     use normsc normsr
+ + gq:     unghr{l,u} are changed from monad to ambivalent, ung{lq,ql,qr,rq} are improved,
            new interfaces with test suite: ung{lz,zl,zr,rz}
  * hrd:    change gghrdxxx from dyad to ambivalent
  + mq:     new interfaces with test suite: unm{lz,zl,zr,rz}xx
- + norm:   new interfaces: normsx
  + pf:     test suite added
  * pow:    use normsr
  + qf:     gelqf fixed, ge{lq,ql,qr,rq}f reworked, new interfaces with test suite: tz{lz,zl,zr,rz}f
  + ref:    better code factorization, new interfaces with test suite: larztxx larzxxxx larzbxxxx
  * sm:     sync sm interface names with LAPACK (NAMES CHANGED!)
  + struct: new interfaces: e0 trl1pick tru1pick
+
+== 0.9.1 ==
+ Drop J6 support
+ * rot:    drop J6 support in xrNaN
+ * sm:     complete sync sm interface names with LAPACK (s/trsmu1x/trsmlunu/)
+ + struct: new interface: ds
+ * test:   drop J6 support in tmonad tdyad

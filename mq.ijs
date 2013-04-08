@@ -13,12 +13,6 @@ NB.            factored form, as returned by geqrf
 NB. unmrqxx    Multiply a general matrix by a matrix with
 NB.            orthonormal rows, which is represented in
 NB.            factored form, as returned by gerqf
-NB. unmhrxxx   Multiply a general matrix by an unitary
-NB.            (orthogonal) matrix, which is represented in
-NB.            factored form, as returned by gehrdx
-NB. unmbrxx    Multiply a general matrix by an unitary
-NB.            (orthogonal) matrix, which is represented in
-NB.            factored form, as returned by gebrdx
 NB. unmlzxx    Multiply a general matrix by a matrix with
 NB.            orthonormal rows, which is represented in
 NB.            factored form, as returned by tzlzf
@@ -31,6 +25,12 @@ NB.            factored form, as returned by tzzrf
 NB. unmrzxx    Multiply a general matrix by a matrix with
 NB.            orthonormal rows, which is represented in
 NB.            factored form, as returned by tzrzf
+NB. unmhrxxx   Multiply a general matrix by an unitary
+NB.            (orthogonal) matrix, which is represented in
+NB.            factored form, as returned by gehrdx
+NB. unmbrxx    Multiply a general matrix by an unitary
+NB.            (orthogonal) matrix, which is represented in
+NB.            factored form, as returned by gebrdx
 NB.
 NB. testunmq   Test unmxxxx by general matrix
 NB. testunmhr  Test unmhrxxx by square matrix

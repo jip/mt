@@ -290,11 +290,6 @@ NB.   4) combine R and Rexact:
 NB.        Rboth=. R ,. Rexact
 NB.   5) exclude rows containing NaNs:
 NB.        Rboth=. xrNaN Rboth
-NB.      note: J602 has a bug in (128!:5) [2], so the
-NB.            following workaround:
-NB.              j./"1@(128!:5)@:+.
-NB.            must be used instead of:
-NB.              128!:5
 NB.   6) exclude rows containing ±∞:
 NB.        Rboth=. xrInf Rboth
 NB.   7) calculate backward error for each pair
@@ -317,16 +312,13 @@ NB.     Computing Givens rotations reliably and efficiently.
 NB.     University of Tennessee, UT-CS-00-449, January 31,
 NB.     2001. LAPACK Working Note 148
 NB.     http://www.netlib.org/lapack/lawns/downloads/
-NB. [2] Dan Bron. [Jprogramming] 128!:5] 0j_.
-NB.     2009-12-02 02:22:37.
-NB.     http://www.jsoftware.com/pipermail/programming/2009-December/017071.html
 
 testlartg=: 3 : 0
   NB. implement Algorithm 1 [1]
   algo1=: 3 : 'if. 0 = {: y do. (sgn , 0:) {. y elseif. 0 = {. y do. (0 , sgn@+) {: y elseif. do. try. ((| f),((sgn f) * (+ g))) % %: +/ soris ''f g''=. y catch. 2 # _. end. end.'
 
   NB. exclude rows containing NaN from the table y
-  xrNaN=: #~ -.@(+./^:2)@|:@(128!:5)@:+.
+  xrNaN=: #~ +:/"1@(128!:5)
 
   NB. exclude rows containing ±∞ from the table y
   xrInf=: #~ -.@(+./)@|:@:(_ = |)

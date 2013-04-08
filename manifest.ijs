@@ -10,9 +10,9 @@ number estimating. Is based mostly on LAPACK algorithms, but
 doesn't require LAPACK.
 )
 
-VERSION=: '0.9.0'
+VERSION=: '0.9.1'
 
-RELEASE=: 'j602 j701 j801'
+RELEASE=: 'j701 j801'
 
 LABCATEGORY=: 'Math'
 

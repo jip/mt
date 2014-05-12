@@ -62,3 +62,4 @@ general/misc
 math/lapack
 math/misc
 )
+PLATFORMS=: 'linux win darwin android'

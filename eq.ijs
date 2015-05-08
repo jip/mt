@@ -211,7 +211,7 @@ hgezq=: 1 : 0
             if. btol > | (< 1 , ,~ j) { y do.
               y=. 0 (< 1 , ,~ j)} y
               NB. test 2a: check for 2 consecutive small
-              NB, superdiagonals in H
+              NB. superdiagonals in H
               ilazr2=. 0
               if. -. ilazro do.
                 'Hj1j Hjj1 Hjj'=. sorim ((<"1) 0 ,. (_1 0,0 1,:0 0) + j) { y

@@ -61,7 +61,7 @@ NB.
 NB. References:
 NB. [1] Roger Hui. Linear Recurrences and Matrix Powers.
 NB.     2006-08-09 09:20:34
-NB.     http://www.jsoftware.com/jwiki/Essays/Linear_Recurrences
+NB.     http://code.jsoftware.com/wiki/Essays/Linear_Recurrences
 
 gepow=: 4 : 0
 

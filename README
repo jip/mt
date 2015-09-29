@@ -14,7 +14,7 @@ condition number estimating. Its algorithms are based on
 those from LAPACK [1] and RRQR [2, 3] libraries.
 
 Project homepage:
-http://www.jsoftware.com/jwiki/Addons/math/mt
+http://code.jsoftware.com/wiki/Addons/math/mt
 
 Authors:
 see AUTHORS file

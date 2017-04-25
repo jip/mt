@@ -12,7 +12,7 @@ NB. testtrsm  Test trsmxxxx by triangular matrix
 NB. testsm    Adv. to make verb to test trsmxxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.9.9 2017-03-20
+NB. Version: 0.9.9 2017-04-23
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -221,4 +221,4 @@ NB.
 NB. Notes:
 NB. - trsmxxxx are impractical for large matrices
 
-testsm=: 1 : 'EMPTY_mt_ [ testtrsm_mt_@(u ; u)^:(=/ *. 500 >: {.)'
+testsm=: 1 : 'EMPTY [ testtrsm_mt_@(u ; u)^:(=/ *. 500 >: {.)'

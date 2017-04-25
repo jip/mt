@@ -718,4 +718,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testtrs_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrs_mt_ 150 150
 
-testtrs=: 1 : 'EMPTY_mt_ [ (testpttrs_mt_@((u ptmat2_mt_) ; u) [ testpotrs_mt_@((u pomat_mt_) ; u) [ (testhetrs_mt_@((u hemat_mt_) ; u)) [ testgetrs_mt_@(u ; u))^:(=/)'
+testtrs=: 1 : 'EMPTY [ (testpttrs_mt_@((u ptmat2_mt_) ; u) [ testpotrs_mt_@((u pomat_mt_) ; u) [ (testhetrs_mt_@((u hemat_mt_) ; u)) [ testgetrs_mt_@(u ; u))^:(=/)'

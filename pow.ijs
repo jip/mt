@@ -12,7 +12,7 @@ NB. testhepow  Test hepow by Hermitian (symmetric) matrix
 NB. testpow    Adv. to make verb to test xxpow by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.9 2017-04-17
+NB. Version: 0.9.9 2017-04-23
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -347,4 +347,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testpow_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testpow_mt_ 150 150
 
-testpow=: 1 : 'EMPTY_mt_ [ (testhepow_mt_@(u hemat_mt_) [ testdipow_mt_@(u dimat_mt_ u) [ testgepow_mt_@u)^:(=/)'
+testpow=: 1 : 'EMPTY [ (testhepow_mt_@(u hemat_mt_) [ testdipow_mt_@(u dimat_mt_ u) [ testgepow_mt_@u)^:(=/)'

@@ -27,7 +27,7 @@ NB. testunghr  Test unghrx by square matrix
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.9 2017-04-07
+NB. Version: 0.9.9 2017-04-23
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -586,4 +586,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testgq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
 
-testgq=: 1 : 'EMPTY_mt_ [ (testunghr_mt_^:(=/@$) [ testungz_mt_ [ testungq_mt_)@u'
+testgq=: 1 : 'EMPTY [ (testunghr_mt_^:(=/@$) [ testungz_mt_ [ testungq_mt_)@u'

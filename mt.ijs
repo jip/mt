@@ -99,11 +99,6 @@ FP_EMAX=: ((FP_BASE ^ FP_ELEN) - FP_BASE) - FP_EBIAS  NB. max exponent for norma
 FP_OVFL=: (FP_BASE - FP_PREC) * (FP_BASE ^ FP_EMAX)   NB. max normalized positive number = (1-ε)*2^1024
 FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/FP_SFMIN does not overflow
 
-NB. ---------------------------------------------------------
-NB. Constants
-
-EMPTY=: i. 0 0
-
 NB. =========================================================
 NB. Includes
 
@@ -205,7 +200,7 @@ testlow=: 1 : 0
   (u testmq_mt_  ) y
   (u testsm_mt_  ) y  NB. square matrices with size ≤ 500 only
 
-  EMPTY_mt_
+  EMPTY
 )
 
 testmid=: 1 : 0
@@ -218,7 +213,7 @@ testmid=: 1 : 0
   (u testtri_mt_ ) y  NB. square matrices only
   (u testtrs_mt_ ) y  NB. square matrices only
 
-  EMPTY_mt_
+  EMPTY
 )
 
 testhigh=: 1 : 0
@@ -227,7 +222,7 @@ testhigh=: 1 : 0
   (u testpow_mt_ ) y  NB. square matrices only
   (u testsv_mt_  ) y  NB. square matrices only
 
-  EMPTY_mt_
+  EMPTY
 )
 
 test=: 1 : 0
@@ -237,5 +232,5 @@ test=: 1 : 0
   (u testmid_mt_ ) y  NB. mid-level algorithms
   (u testhigh_mt_) y  NB. high-level algorithms
 
-  EMPTY_mt_
+  EMPTY
 )

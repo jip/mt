@@ -9,7 +9,7 @@ NB.
 NB. testlartg  Test lartg by vectors
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.9.9 2017-04-17
+NB. Version: 0.9.9 2017-04-23
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -375,4 +375,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testrot_mt_ 200 200
 NB. - test by 150 random complex 2-vectors:
 NB.     (gemat_mt_ j. gemat_mt_) testrot_mt_ 150 200
 
-testrot=: 1 : 'EMPTY_mt_ [ testlartg_mt_@u@({. , 2:)'
+testrot=: 1 : 'EMPTY [ testlartg_mt_@u@({. , 2:)'

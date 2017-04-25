@@ -754,4 +754,4 @@ NB. - <text>
 NB. ...
 NB. - <text>
 
-<testname>=: 1 : 'EMPTY_mt_ [ <definition>'
+<testname>=: 1 : 'EMPTY [ <definition>'

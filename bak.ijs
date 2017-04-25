@@ -9,9 +9,9 @@ NB. testgebak  Test gebakxx by square matrix
 NB. testbak    Adv. to make verb to test gebakxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -185,4 +185,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testbak_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testbak_mt_ 150 150
 
-testbak=: 1 : 'EMPTY_mt_ [ testgebak_mt_@u^:(=/)'
+testbak=: 1 : 'EMPTY [ testgebak_mt_@u^:(=/)'

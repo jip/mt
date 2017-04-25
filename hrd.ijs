@@ -10,9 +10,9 @@ NB. testgghrd  Test gghrdx by pair of square matrices
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -861,4 +861,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testhrd_mt_ 150 150
 NB. - test by random square complex matrices:
 NB.     (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
 
-testhrd=: 1 : 'EMPTY_mt_ [ (testgghrd_mt_@u@(2&,) [ testgehrd_mt_@u)^:(=/)'
+testhrd=: 1 : 'EMPTY [ (testgghrd_mt_@u@(2&,) [ testgehrd_mt_@u)^:(=/)'

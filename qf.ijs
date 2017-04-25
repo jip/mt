@@ -15,9 +15,9 @@ NB. testtzqf  Test tzxxf by trapezoidal matrix
 NB. testqf    Adv. to make verb to test gexxf and tzxxf by
 NB.           matrix of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -1346,4 +1346,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testqf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testqf_mt_ 150 200
 
-testqf=: 1 : 'EMPTY_mt_ [ (testtzqf_mt_ [ testgeqf_mt_)@u'
+testqf=: 1 : 'EMPTY [ (testtzqf_mt_ [ testgeqf_mt_)@u'

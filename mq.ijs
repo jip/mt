@@ -38,9 +38,9 @@ NB. testunmz   Test unmxxxx by trapezoidal matrix
 NB. testmq     Adv. to make verb to test unmxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.9.1 2013-04-09
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -864,4 +864,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testmq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testmq_mt_ 150 200
 
-testmq=: 1 : 'EMPTY_mt_ [ (testunmhr_mt_^:(=/@$@(0&{::)) [ testunmz_mt_ [ testunmq_mt_)@(u ; u)'
+testmq=: 1 : 'EMPTY [ (testunmhr_mt_^:(=/@$@(0&{::)) [ testunmz_mt_ [ testunmq_mt_)@(u ; u)'

@@ -9,9 +9,9 @@ NB. testtgevc   Test tgevcxxx by square matrices
 NB. testevc     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -629,4 +629,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testevc_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testevc_mt_ 150 150
 
-testevc=: 1 : 'EMPTY_mt_ [ testtgevc_mt_@u@(2&,)^:(=/)'
+testevc=: 1 : 'EMPTY [ testtgevc_mt_@u@(2&,)^:(=/)'

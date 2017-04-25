@@ -8,9 +8,9 @@ NB. testhgeq  Test hgexxxxx by square matrices
 NB. testeq    Adv. to make verb to test hgexxxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.9.6 2015-08-09
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2015 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -999,4 +999,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testeq_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testeq_mt_ 150 150
 
-testeq=: 1 : 'EMPTY_mt_ [ testhgeq_mt_@u@(2&,)^:(=/)'
+testeq=: 1 : 'EMPTY [ testhgeq_mt_@u@(2&,)^:(=/)'

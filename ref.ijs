@@ -22,9 +22,9 @@ NB. testlarzb  Test larzbxxxx by general matrix
 NB. testref    Adv. to make verb to test larxxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.9.9 2015-06-04
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2015 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -955,4 +955,4 @@ NB.   testgq, testmq, testqf
 NB. - larxtxx and larxbxxxx are impractical for large
 NB.   matrices
 
-testref=: 1 : 'EMPTY_mt_ [ (testlarzb_mt_ [ testlarfb_mt_ [ testlarzt_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'
+testref=: 1 : 'EMPTY [ (testlarzb_mt_ [ testlarfb_mt_ [ testlarzt_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'

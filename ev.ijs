@@ -9,7 +9,7 @@ NB. testggev  Test ggevxxx by pair of square matrices
 NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.9.9 2017-03-20
+NB. Version: 0.9.9 2017-04-23
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -584,4 +584,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testev_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testev_mt_ 150 150
 
-testev=: 1 : 'EMPTY_mt_ [ (testggev_mt_@u@(2&,) [ testheev_mt_@(u hemat_mt_) [ testgeev_mt_@u)^:(=/)'
+testev=: 1 : 'EMPTY [ (testggev_mt_@u@(2&,) [ testheev_mt_@(u hemat_mt_) [ testgeev_mt_@u)^:(=/)'

@@ -11,7 +11,7 @@ NB. testheexp  Test heexp by Hermitian (symmetric) matrix
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.9 2017-04-18
+NB. Version: 0.9.9 2017-04-23
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -421,4 +421,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testexp_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testexp_mt_ 150 150
 
-testexp=: 1 : 'EMPTY_mt_ [ (testheexp_mt_@(u hemat_mt_) [ testdiexp_mt_@(u dimat_mt_ u) [ testgeexp_mt_@u)^:(=/)'
+testexp=: 1 : 'EMPTY [ (testheexp_mt_@(u hemat_mt_) [ testdiexp_mt_@(u dimat_mt_ u) [ testgeexp_mt_@u)^:(=/)'

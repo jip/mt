@@ -13,7 +13,7 @@ NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.9.9 2017-04-18
+NB. Version: 0.9.9 2017-04-23
 NB.
 NB. Copyright 2012-2017 Igor Zhuravlov
 NB.
@@ -2273,4 +2273,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testpf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testpf_mt_ 150 200
 
-testpf=: 1 : 'EMPTY_mt_ [ testgepf_mt_@u'
+testpf=: 1 : 'EMPTY [ testgepf_mt_@u'

@@ -18,9 +18,9 @@ NB.            definite tridiagonal matrix
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.1 2013-04-09
+NB. Version: 0.9.9 2017-04-18
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -782,7 +782,9 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   iA -: %. A
 NB. where
-NB.   iA=. pttril pttrfl A
+NB.   iA=. pttril A
+NB.   or
+NB.   iA=. pttriu A
 NB.
 NB. References:
 NB. [1] Moawwad El-Mikkawy, El-Desouky Rahmo. A new recursive
@@ -791,8 +793,8 @@ NB.     anti-tridiagonal matrices. Applied Mathematics and
 NB.     Computation, 2008, Vol. 204, pp. 368-372.
 NB.     http://dx.doi.org/10.1016/j.amc.2008.06.053
 NB. [2] Igor Zhuravlov. [Jprogramming] ravel items (,.) of
-NB.     empty list (i.0)
-NB.     2010-06-05 10:08:56.
+NB.     empty list (i.0) .
+NB.     2010-06-05 10:08:56 HKT.
 NB.     http://jsoftware.com/pipermail/programming/2010-June/019617.html
 NB.
 NB. TODO:

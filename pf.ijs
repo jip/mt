@@ -13,9 +13,9 @@ NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.9.9 2014-06-01
+NB. Version: 0.9.9 2017-04-18
 NB.
-NB. Copyright 2012-2014 Igor Zhuravlov
+NB. Copyright 2012-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -42,7 +42,7 @@ NB. References:
 NB. [1] C. H. Bischof, G. Quintana-Ortí. Computing Rank-
 NB.     Revealing QR Factorizations of Dense Matrices. ACM
 NB.     Transactions on Mathematical Software, June 1998,
-NB.     Vol. 24, No. 2, pp. 226–253.
+NB.     Vol. 24, No. 2, pp. 226-253.
 NB. [2] C. H. Bischof, G. Quintana-Ortí. Algorithm 782: Codes
 NB.     for Rank-Revealing QR Factorizations of Dense
 NB.     Matrices. ACM Transactions on Mathematical Software,

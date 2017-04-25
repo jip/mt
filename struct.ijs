@@ -62,9 +62,9 @@ NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.9.7 2015-09-29
+NB. Version: 0.9.9 2017-04-18
 NB.
-NB. Copyright 2007-2015 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
+NB. Copyright 2007-2017 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -348,7 +348,7 @@ NB. -----                             -----
 NB.
 NB. References:
 NB. [1] Oleg Kobchenko. [Jprogramming] Transform to Amend.
-NB.     2007-03-02 22:15:54.
+NB.     2007-03-02 22:15:54 HKT.
 NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005415.html
 
 upd=: (@:{) (`[) (`])}
@@ -563,8 +563,9 @@ NB.          being updated by monad u
 NB.   S    ≥ 0, the length of d-th diagonal
 NB.
 NB. TODO:
-NB. - [Jgeneral] duce/fold in J as an adverb or conjuction
-NB.   Henry Rich, Sun Nov 25 14:07:46 HKT 2007
+NB. - Henry Rich. [Jgeneral] duce/fold in J as an adverb or
+NB.   conjuction.
+NB.   2007-11-25 14:07:46 HKT.
 NB.   http://www.jsoftware.com/pipermail/general/2007-November/031233.html
 
 upddiag=: 1 : 0

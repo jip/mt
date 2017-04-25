@@ -29,14 +29,17 @@ References:
     Sorensen, D. (1999). LAPACK Users' Guide. (3rd).
     Philadelphia, PA: Society for Industrial and Applied
     Mathematics.
+    http://www.netlib.org/lapack
 [2] C. H. Bischof, G. Quintana-Ortí. Computing Rank-Revealing
     QR Factorizations of Dense Matrices. ACM Transactions on
     Mathematical Software, June 1998, Vol. 24, No. 2, pp.
-    226–253.
+    226-253.
+    https://doi.org/10.1145/290200.287637
 [3] C. H. Bischof, G. Quintana-Ortí. Algorithm 782: Codes for
     Rank-Revealing QR Factorizations of Dense Matrices. ACM
     Transactions on Mathematical Software, June 1998, Vol.
     24, No. 2, pp. 254-257.
+    http://www.netlib.org/toms/782
 [4] Benner, P., Mehrmann, V., Sima, V., Van Huffel, S., and
     A. Varga: "SLICOT - A Subroutine Library in Systems and
     Control Theory", June 1997, NICONET Report 97-3; also

@@ -756,7 +756,6 @@ NB.   - for C * Z  : berr := ||C * (Z  ) - C * Z  || / (FP_EPS * ||C|| * n)
 NB.   - for C * Z^H: berr := ||C * (Z^H) - C * Z^H|| / (FP_EPS * ||C|| * n)
 
 testunmz=: 3 : 0
-AC=: y
   'A C'=. y
   rcond=. (_."_)`gecon1@.(=/@$) C  NB. meaninigful for square matrices only
 

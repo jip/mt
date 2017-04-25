@@ -9,9 +9,9 @@ NB. fmtlog    Format log string
 NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2017-04-18
 NB.
-NB. Copyright 2005-2013 Henry Rich, Igor Zhuravlov
+NB. Copyright 2005-2017 Henry Rich, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -75,8 +75,8 @@ NB. - process each table in the report individually:
 NB.     0 1 2 (+:&.+:)`(-:&.-:)`(*:&.+:) ag i. 3 4 4
 NB.
 NB. References:
-NB. [1] Henry Rich. [Jforum] gerund apply
-NB.     Sat Oct 22 06:37:12 HKT 2005.
+NB. [1] Henry Rich. [Jforum] gerund apply.
+NB.     2005-10-22 06:37:12 HKT.
 NB.     http://www.jsoftware.com/pipermail/general/2005-October/025450.html
 
 ag=: /. (,/@)

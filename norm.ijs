@@ -19,9 +19,9 @@ NB.          vector (matrix)
 NB. normsc   Square-based Euclidean norm of matrix columns
 NB. normsr   Square-based Euclidean norm of matrix rows
 NB.
-NB. Version: 0.9.2 2013-06-01
+NB. Version: 0.9.9 2017-04-07
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -104,7 +104,7 @@ NB.
 NB. Notes:
 NB. - norm1t implements BLAS's DASUM, DZASUM
 
-norm1t=:  sorim csum (max@)       NB. 1-norm of vector (matrix)
+norm1t=:  sorim csum      (max@)  NB. 1-norm of vector (matrix)
 norm1tc=: sorim csum              NB. 1-norm of vector (matrix columns)
 norm1tr=: sorim rsum              NB. 1-norm of vector (matrix rows)
 

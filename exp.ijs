@@ -11,9 +11,9 @@ NB. testheexp  Test heexp by Hermitian (symmetric) matrix
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.2 2013-06-01
+NB. Version: 0.9.9 2017-04-18
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -125,7 +125,7 @@ NB.
 NB. References:
 NB. [1] Nicholas J. Higham. The scaling and squaring method
 NB.     for the matrix exponential revisited. SIAM J. Matrix
-NB.     Analysis Applications, Vol. 26, No. 4, pp. 1179–1193,
+NB.     Analysis Applications, Vol. 26, No. 4, pp. 1179-1193,
 NB.     2005.
 NB. [2] Awad H. Al-Mohy, Nicholas J. Higham. A New Scaling
 NB.     and Squaring Algorithm for the Matrix Exponential.

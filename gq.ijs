@@ -27,9 +27,9 @@ NB. testunghr  Test unghrx by square matrix
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.3 2014-05-18
+NB. Version: 0.9.9 2017-04-07
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -551,8 +551,10 @@ NB. - for unghrl: berr := ||Q * Q^H - I|| / (FP_EPS * n)
 NB. - for unghru: berr := ||Q^H * Q - I|| / (FP_EPS * n)
 
 testunghr=: 3 : 0
-  ('unghrl' tmonad ((gehrdl~ 0 , #)`]`(uncon1@])`(_."_)`(mp  gqvberr #))) y
-  ('unghru' tmonad ((gehrdu~ 0 , #)`]`(uncon1@])`(_."_)`(mp~ gqvberr #))) y
+  rcond=. uncon1 y
+
+  ('unghrl' tmonad ((gehrdl~ 0 , #)`]`(rcond"_)`(_."_)`(mp  gqvberr #))) y
+  ('unghru' tmonad ((gehrdu~ 0 , #)`]`(rcond"_)`(_."_)`(mp~ gqvberr #))) y
 
   EMPTY
 )

@@ -1,10 +1,10 @@
-NB. Scaling
+NB. Scale
 NB.
 NB. scl  Try to scale without overflow or underflow
 NB.
-NB. Version: 0.8.2 2013-06-01
+NB. Version: 0.9.9 2017-03-20
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

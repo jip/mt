@@ -24,6 +24,7 @@ README
 TODO
 bak.ijs
 bal.ijs
+benchmark.ijs
 cond.ijs
 dbg.ijs
 eq.ijs

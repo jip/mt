@@ -28,7 +28,7 @@ math/mt - change history
  * fix manifest.ijs
 
 == 0.6.3 ==
- * fix for Windows: s/con.ijs/cond.ijs/
+ * cond: renamed from con for Windows environment
 
 == 0.6.4 ==
  * made tolerant to math/lapack and math/misc addons absence case
@@ -37,10 +37,14 @@ math/mt - change history
  * minor fixes in comments
 
 == 0.6.6 ==
- * bal.ijs: minor fixes in comments, eqr.ijs: fix comment, template.ijs: added
+ * bal:      minor fixes in comments
+ * eqr:      fix comment
+ + template: skeleton for developers
 
 == 0.6.7 ==
- * bal: minor fix in code; exp: error fixed; template,trf,tri: minor fixes in comments
+ Minor fixes in comments
+ * bal: minor fix in code
+ * exp: error fixed
 
 == 0.7.0 ==
  J7-compatible, GNEP solver added
@@ -66,13 +70,13 @@ math/mt - change history
  * util: condneg renamed to negneg and variated in negpos, fmtlog is reworked
 
 == 0.8.0 ==
- * eq: update rot evoking according to interface change
- * ev: update rot evoking according to interface change
- * evc: update rot evoking according to interface change
- * hrd: update rot evoking according to interface change
- + pf: rank-revealing orthogonal factorization with pivoting, initial draft
+ * eq:      update rot evoking according to interface change
+ * ev:      update rot evoking according to interface change
+ * evc:     update rot evoking according to interface change
+ * hrd:     update rot evoking according to interface change
+ + pf:      rank-revealing orthogonal factorization with pivoting, initial draft
  + quatern: quaternions support
- * rot: reworked to rely on quaternions
+ * rot:     reworked to rely on quaternions
 
 == 0.8.1 ==
  replace Unicode 'minus sign' by '-'
@@ -130,8 +134,26 @@ math/mt - change history
  * eq: fix typo
 
 == 0.9.7 ==
- * point to new j wiki
+ Point to new j wiki
  * manifest: touch release to j802 j803 j804 j805
 
 == 0.9.8 ==
  * manifest: touch release to j802 j803 j804 j805 j806
+
+== 0.10.0 ==
+ * bal:       fix gebals, improve comments
+ + benchmark: new interface
+ * cond:      is protected against singular input matrices (SEMANTICS CHANGED!)
+ * dbg:       show current locale, too
+ * exp:       minor error fixed
+ * gq:        minor refactoring
+ - mq:        garbage code removed
+ * mt:        drop J6 specifics, add some includes, minor changes
+ * pf:        avoid data loss in Q returned (INTERFACE CHANGED!)
+ * pow:       fine-tune a test suite
+ * rand:      new interfaces: kmsmat, ptmat2; test suite added
+ + ref:       new interface: refga
+ * rot:       refine lartg (SEMANTICS CHANGED!), fix locale error in rotga, enhance comments
+ - sm:        garbage code removed
+ * test:      error fixed
+ * util:      fmtlog: verb name's column extended

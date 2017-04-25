@@ -114,9 +114,24 @@ math/mt - change history
  * test:   drop J6 support in tmonad tdyad
 
 == 0.9.2 ==
- * bal:    extend gebals by dyadic case which models SLICOT's TB01ID
+ * bal:      extend gebals by dyadic case which models SLICOT's TB01ID
+ * manifest: touch release to j802
 
- == 0.9.3 ==
- * bal:    fix gebals, improve comments
- * pf:     avoid data loss in Q returned (INTERFACE CHANGED!)
- 
+== 0.9.3 ==
+ * manifest: touch platform
+
+== 0.9.4 ==
+ * manifest: touch release to j802 j803
+
+== 0.9.5 ==
+ * manifest: touch release to j802 j803 j804
+
+== 0.9.6 ==
+ * eq: fix typo
+
+== 0.9.7 ==
+ * point to new j wiki
+ * manifest: touch release to j802 j803 j804 j805
+
+== 0.9.8 ==
+ * manifest: touch release to j802 j803 j804 j805 j806

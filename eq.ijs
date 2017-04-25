@@ -8,9 +8,9 @@ NB. testhgeq  Test hgexxxxx by square matrices
 NB. testeq    Adv. to make verb to test hgexxxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.6 2015-08-09
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2015 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

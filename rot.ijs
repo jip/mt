@@ -9,9 +9,9 @@ NB.
 NB. testlartg  Test lartg by vectors
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.9.9 2015-05-27
+NB. Version: 0.9.9 2017-04-17
 NB.
-NB. Copyright 2010-2015 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -86,7 +86,7 @@ NB. Notes:
 NB. - simulates LAPACK's xLARTG with the following difference:
 NB.   for f=0, g≠0:
 NB.   - mt's lartg and LAPACK's ZLARTG follows [1]:
-NB.       (c,s)=(0,sign(conj(g)), r=abs(g)
+NB.       (c,s)=(0,sign(conj(g))), r=abs(g)
 NB.     to keep c, s and r continuous
 NB.   - LAPACK's DLARTG for g∊ℝ works differently:
 NB.       (c,s)=(0,1), r=g
@@ -108,7 +108,7 @@ NB.     Tennessee, UT-CS-00-454, December 4, 2000.
 NB.     LAPACK Working Note 150
 NB.     http://www.netlib.org/lapack/lawns/downloads/
 
-lartg=: {. *&sgn +
+lartg=: ({. *&sgn +)"1
 
 NB. ---------------------------------------------------------
 NB. rot
@@ -287,7 +287,7 @@ NB.
 NB. Algorithm for calculating backward error:
 NB.   In:  FG, CS
 NB.   where
-NB.        CS=. lartg"1 FG
+NB.        CS=. lartg FG
 NB.        CS -: C ,. S
 NB.   Out: maxberr
 NB.   1) find R:
@@ -341,7 +341,7 @@ testlartg=: 3 : 0
   NB. backward error calculator:
   vberrlartg=: (mp algo1)"1@[ (|@:- >./@:xeInf@:% (FP_SFMIN * FP_PREC) >. FP_EPS * |@[)/@|:@xrInf@xrNaN@,. mp"1
 
-  ('lartg"1' tmonad (]`]`(_."_)`(_."_)`vberrlartg)) y
+  ('lartg' tmonad (]`]`(_."_)`(_."_)`vberrlartg)) y
 
   erase 'algo1 xrNaN xrInf xeInf vberrlartg'
 

@@ -7,9 +7,9 @@ NB.         matrix in a given norm
 NB. laic1x  Apply one step of incremental condition
 NB.         estimation
 NB.
-NB. Version: 0.8.2 2012-02-23
+NB. Version: 0.9.9 2017-04-07
 NB.
-NB. Copyright 2010-2012 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -138,28 +138,28 @@ NB. - tru1coni simulates LAPACK's xTRCON('i','U','U')
 NB. - trucon1 simulates LAPACK's xTRCON('1','U','N')
 NB. - truconi simulates LAPACK's xTRCON('i','U','N')
 
-gecon1=: norm1 con (getrilu1p@getrflu1p)
-geconi=: normI con (getrilu1p@getrflu1p)
+gecon1=: 1:`(norm1 con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
+geconi=: 1:`(normI con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
 
-hecon1=: norm1 con (hetripl@hetrfpl)
-heconi=: normi con (hetripl@hetrfpl)
+hecon1=: 1:`(norm1 con (hetripl@hetrfpl) :: 0:)@.(*@#)
+heconi=: 1:`(normi con (hetripl@hetrfpl) :: 0:)@.(*@#)
 
-pocon1=: norm1 con (potril@potrfl)
-poconi=: normi con (potril@potrfl)
+pocon1=: 1:`(norm1 con (potril@potrfl) :: 0:)@.(*@#)
+poconi=: 1:`(normi con (potril@potrfl) :: 0:)@.(*@#)
 
-ptcon1=: norm1 con pttril
-ptconi=: normi con pttril
+ptcon1=: 1:`(norm1 con pttril :: 0:)@.(*@#)
+ptconi=: 1:`(normi con pttril :: 0:)@.(*@#)
 
-trl1con1=: norm1 con trtril1
-trl1coni=: normi con trtril1
-trlcon1=:  norm1 con trtril
-trlconi=:  normi con trtril
-tru1con1=: norm1 con trtriu1
-tru1coni=: normi con trtriu1
-trucon1=:  norm1 con trtriu
-truconi=:  normi con trtriu
+trl1con1=: 1:`(norm1 con trtril1 :: 0:)@.(*@#)
+trl1coni=: 1:`(normi con trtril1 :: 0:)@.(*@#)
+trlcon1=:  1:`(norm1 con trtril  :: 0:)@.(*@#)
+trlconi=:  1:`(normi con trtril  :: 0:)@.(*@#)
+tru1con1=: 1:`(norm1 con trtriu1 :: 0:)@.(*@#)
+tru1coni=: 1:`(normi con trtriu1 :: 0:)@.(*@#)
+trucon1=:  1:`(norm1 con trtriu  :: 0:)@.(*@#)
+truconi=:  1:`(normi con trtriu  :: 0:)@.(*@#)
 
-uncon1=: norm1 con ct
+uncon1=: 1:`(norm1 con ct :: 0:)@.(*@#)
 
 NB. ---------------------------------------------------------
 NB. laic11

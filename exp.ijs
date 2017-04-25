@@ -136,27 +136,27 @@ NB. TODO:
 NB. - implement [2]
 
 geexp=: 3 : 0
-  vm=. 3 5 7 9 13                          NB. Padé approximant degrees m
+  vm=. 3 5 7 9 13                            NB. Padé approximant degrees m
   THETA=. 24774315513739r1656496414665010 2287286674603605r9007199254740992 1070075424639547r1125899906842624  1180983412074661r562949953421312 1512061155730925r281474976710656
-                                           NB. θ[m] coeffcients
+                                             NB. θ[m] coeffcients
 
   NB. preprocess A
-  mu=. (trace % #) y                       NB. calc shift value
-  y=. (- mu) sdiag y                       NB. shift diagonal
-  'y d'=. 0 3 { gebals (];(a:"_);(0,#)) y  NB. balance A to reduce 1-norm
+  mu=. (trace % #) y                         NB. calc shift value
+  y=. (- mu) sdiag y                         NB. shift diagonal
+  'y d'=. 0 3 { gebals (] ; i.@# ; 0 , #) y  NB. balance A to reduce 1-norm
 
   iom=. THETA I. normA=. norm1 y
 
   NB. find r_m(A) = [m/m] Padé approximant to A
   if. iom < # vm do.
-    y=. (iom { vm) geexpm2r y              NB. use max m such that ||A|| ≤ θ[m]
+    y=. (iom { vm) geexpm2r y                NB. use max m such that ||A|| ≤ θ[m]
   else.
-    s=. >. 2 ^. normA % {: THETA           NB. find a minimal integer such that ||A/2^s||≤θ[13]
-    y=. y % 2 ^ s                          NB. scaling
-    y=. 13 geexpm2r y                      NB. use m=13
-    y=. mp~^:s y                           NB. undo scaling
+    s=. >. 2 ^. normA % {: THETA             NB. find a minimal integer such that ||A/2^s||≤θ[13]
+    y=. y % 2 ^ s                            NB. scaling
+    y=. 13 geexpm2r y                        NB. use m=13
+    y=. mp~^:s y                             NB. undo scaling
   end.
-  (^ mu) *  y (] * %"1) d                  NB. undo preprocessing
+  (^ mu) *  y (] * %"1) d                    NB. undo preprocessing
 )
 
 NB. ---------------------------------------------------------

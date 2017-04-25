@@ -3,9 +3,9 @@ NB.
 NB. tmonad  Conj. to make verbs to test computational monad
 NB. tdyad   Conj. to make verbs to test computational dyad
 NB.
-NB. Version: 0.9.1 2013-04-09
+NB. Version: 0.9.9 2017-04-19
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -118,11 +118,11 @@ tmonad=: 2 : 0
   try. rcond=. y vrcond out                           catch. rcond=. _        end.
   try. ferr=. y vferr out                             catch. ferr=. _.        end.
   try. berr=. y vberr out                             catch. berr=. _.        end.
-  logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
+  logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
   logline=. logline , LF
-  logline ((1!:3)^:(0 < (#@]))) TESTLOGFILE
-  TESTLOG=: TESTLOG , logline
+  logline 1!:3^:(0 < #@]) TESTLOGFILE_mt_
+  TESTLOG_mt_=: TESTLOG_mt_ , logline
   EMPTY
 )
 
@@ -135,10 +135,10 @@ tdyad=: 2 : 0
   try. rcond=. y vrcond out                           catch. rcond=. _        end.
   try. ferr=. y vferr out                             catch. ferr=. _.        end.
   try. berr=. y vberr out                             catch. berr=. _.        end.
-  logline=. fmtlog m ; rcond ; ferr ; berr ; t ; s
+  logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
   logline=. logline , LF
-  logline ((1!:3)^:(0 < (#@]))) TESTLOGFILE
-  TESTLOG=: TESTLOG , logline
+  logline 1!:3^:(0 < #@]) TESTLOGFILE_mt_
+  TESTLOG_mt_=: TESTLOG_mt_ , logline
   EMPTY
 )

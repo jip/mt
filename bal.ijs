@@ -16,9 +16,9 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.9.3 2014-05-18
+NB. Version: 0.9.9 2017-04-17
 NB.
-NB. Copyright 2010-2014 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -360,6 +360,9 @@ NB.   D=. diagmat d
 NB.   Dinv=. %. D
 NB.
 NB. Application:
+NB. - model LAPACK's xGEBAL('N') to do nothing:
+NB.     'p hs d'=. gebaln A
+NB.     gebaln=: (i. ; 0&, ; 1&($~))@#
 NB. - model LAPACK's xGEBAL('S') to balance without
 NB.   eigenvalues isolating step, i.e. scale non-permuted
 NB.   matrix A (default p and hs):
@@ -470,11 +473,8 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
   if. x do.
     NB. act as TB01ID
     x=. snorm % (norm1t >. normit) S
-    S ; p ; hs ; d ; x
-  else.
-    NB. act as xGEBAL
-    S ; p ; hs ; d
   end.
+  S ; p ; hs ; d ; x
 )
 
 NB. ---------------------------------------------------------

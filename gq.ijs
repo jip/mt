@@ -27,7 +27,7 @@ NB. testunghr  Test unghrx by square matrix
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.3 2014-05-18
 NB.
 NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
@@ -438,7 +438,7 @@ NB. Syntax:
 NB.   Q=. unghrl HQf
 NB. where
 NB.   HQf - n×(n+1)-matrix with packed H and Qf (see gehrdl)
-NB.   Q   - n×n-matrix, an unitary (orthogonal)
+NB.   Q   - n×n-matrix, the unitary (orthogonal)
 NB.
 NB. Notes:
 NB. - instead of using f and s parameters, the following
@@ -464,7 +464,7 @@ NB. Syntax:
 NB.   Q=. unghru HQf
 NB. where
 NB.   HQf - (n+1)×n-matrix with packed H and Qf (see gehrdu)
-NB.   Q   - n×n-matrix, an unitary (orthogonal)
+NB.   Q   - n×n-matrix, the unitary (orthogonal)
 NB.
 NB. Notes:
 NB. - models LAPACK's DORGHR, ZUNGHR

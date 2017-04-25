@@ -791,7 +791,7 @@ NB.   to reveal the rank of A by a suitably dimensioned
 NB.   trailing submatrix L11 with norm(L11) being small.
 NB.
 NB. Syntax:
-NB.   'p L Q orcond rank svlues'=. ircond gelpb A
+NB.   'p L Qn orcond rank svlues'=. ircond gelpb A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, 1/ircond specifies an upper bound on the
@@ -799,9 +799,9 @@ NB.            condition number of L00
 NB.   p      - m-vector, rows inversed permutation of A,
 NB.            represents permutation m×m-matrix P
 NB.   L      - m×k-matrix, lower triangular (trapezoidal)
-NB.   Q      - k×n-matrix with orthonormal rows which is
-NB.            defined as the product of k elementary
-NB.            reflectors
+NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
+NB.            Q:
+NB.              Q -: k {. Qn
 NB.   orcond > 0, 1/orcond is an estimate for the condition
 NB.            number of L00
 NB.   rank   ≥ 0, an estimate for the numerical rank of A
@@ -812,6 +812,9 @@ NB.            This may be an underestimate of the rank if
 NB.            the leading rows were not well-conditioned
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see gelpf
+NB.   Q      - k×n-matrix with orthonormal rows, which is
+NB.            defined as the first k rows of a product of k
+NB.            elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -823,7 +826,7 @@ gelpb=: 4 : 0
   k=. <./ 'm n'=. $ y
   p=. i. m
   if. 0 = k do.
-    p ; ((m,0)$0) ; ((0,n)$0) ; 0 ; 0 ; 4$0
+    p ; ((m,0)$0) ; ((2#n)$0) ; 0 ; 0 ; 4$0
     return.
   end.
   y=. y ,. 0
@@ -831,13 +834,13 @@ gelpb=: 4 : 0
   'y A10 A11 p v svlues mxnm'=. gelpc ((m,0)$0);y;1;x;p;(i.0);(4$_.);_.
   if. # y do.
     if. 1 = k do.
-      p ; (trl }:"1 y) ; (unglq y) ; (%/ 1 0 { svlues) ; 1 ; svlues
+      p ; (trl }:"1 y) ; (n unglq y) ; (%/ 1 0 { svlues) ; 1 ; svlues
       return.
     else.
       smin=. 1 { svlues
     end.
   else.
-    p ; (trl }:"1 A11) ; (unglq A11) ; 0 ; 0 ; 4$0
+    p ; (trl }:"1 A11) ; (n unglq A11) ; 0 ; 0 ; 4$0
     return.
   end.
   NB. Factor remaining rows using blocked code with
@@ -897,7 +900,7 @@ gelpb=: 4 : 0
   end.
   rank=. # y
   y=. y , A10 ,. A11
-  p ; (trl }:"1 y) ; (unglq y) ; (%/ 1 0 { svlues) ; rank ; svlues
+  p ; (trl }:"1 y) ; (n unglq y) ; (%/ 1 0 { svlues) ; rank ; svlues
 )
 
 NB. ---------------------------------------------------------
@@ -912,14 +915,14 @@ NB.   to reveal the rank of A by a suitably dimensioned
 NB.   trailing submatrix R11 with norm(R11) being small.
 NB.
 NB. Syntax:
-NB.   'Q R p orcond rank svlues'=. ircond geprb A
+NB.   'Qm R p orcond rank svlues'=. ircond geprb A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, 1/ircond specifies an upper bound on the
 NB.            condition number of R00
-NB.   Q      - m×k-matrix with orthonormal columns which is
-NB.            defined as the product of k elementary
-NB.            reflectors
+NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
+NB.            Q:
+NB.              Q -: k {."1 Qm
 NB.   R      - k×n-matrix, upper triangular (trapezoidal)
 NB.   p      - n-vector, columns inversed permutation of A,
 NB.            represents permutation n×n-matrix P
@@ -933,6 +936,9 @@ NB.            This may be an underestimate of the rank if
 NB.            the leading columns were not well-conditioned
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see geprf
+NB.   Q      - m×k-matrix with orthonormal columns, which is
+NB.            defined as the first k columns of a product of
+NB.            k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -954,7 +960,7 @@ geprb=: 4 : 0
   k=. <./ 'm n'=. $ y
   p=. i. n
   if. 0 = k do.
-    ((m,0)$0) ; ((0,n)$0) ; p ; 0 ; 0 ; 4$0
+    ((2#m)$0) ; ((0,n)$0) ; p ; 0 ; 0 ; 4$0
     return.
   end.
   y=. y , 0
@@ -962,13 +968,13 @@ geprb=: 4 : 0
   'y A01 A11 p v svlues mxnm'=. geprc ((0,n)$0);y;1;x;p;(i.0);(4$_.);_.
   if. c y do.
     if. 1 = k do.
-      (ungqr y) ; (tru }: y) ; p ; (%/ 1 0 { svlues) ; 1 ; svlues
+      (m ungqr y) ; (tru }: y) ; p ; (%/ 1 0 { svlues) ; 1 ; svlues
       return.
     else.
       smin=. 1 { svlues
     end.
   else.
-    (ungqr A11) ; (tru }: A11) ; p ; 0 ; 0 ; 4$0
+    (m ungqr A11) ; (tru }: A11) ; p ; 0 ; 0 ; 4$0
     return.
   end.
   NB. Factor remaining columns using blocked code with
@@ -1028,7 +1034,7 @@ geprb=: 4 : 0
   end.
   rank=. c y
   y=. y ,. A01 , A11
-  (ungqr y) ; (tru }: y) ; p ; (%/ 1 0 { svlues) ; rank ; svlues
+  (m ungqr y) ; (tru }: y) ; p ; (%/ 1 0 { svlues) ; rank ; svlues
 )
 
 NB. ---------------------------------------------------------
@@ -1851,7 +1857,7 @@ NB.   accepted, the matrix will be permuted and
 NB.   retriangularized until the rank is revealed.
 NB.
 NB. Syntax:
-NB.   'op oL oQ orcond rank svlues'=. ircond trlpy ip;iL;iQ;trash;trash;trash
+NB.   'op oL oQn orcond rank svlues'=. ircond trlpy ip;iL;iQn;trash;trash;trash
 NB. where
 NB.   ircond > 0, 1/ircond is an upper bound on the condition
 NB.            number of iL00
@@ -1859,22 +1865,28 @@ NB.   ip     - m-vector, rows inversed permutation of iL,
 NB.            represents permutation m×m-matrix
 NB.   iL     - m×k-matrix, lower triangular (trapezoidal)
 NB.            before rank detecting
-NB.   iQ     - k×n-matrix with orthonormal rows which is
-NB.            defined as the product of k elementary
-NB.            reflectors
+NB.   iQn    - n×n-matrix, the unitary (orthogonal), embeds
+NB.            iQ:
+NB.              iQ -: k {. iQn
 NB.   op     - m-vector, rows inversed permutation of oL,
 NB.            represents permutation m×m-matrix
 NB.   oL     - m×k-matrix, lower triangular (trapezoidal)
 NB.            after rank detecting
-NB.   oQ     - k×n-matrix with orthonormal rows which is
-NB.            defined as the product of k elementary
-NB.            reflectors
+NB.   oQn    - n×n-matrix, the unitary (orthogonal), embeds
+NB.            oQ:
+NB.              oQ -: k {. oQn
 NB.   orcond > 0, 1/orcond is an estimate for the condition
 NB.            number of oL00
 NB.   rank   - integer in range [0,k], an estimate of the
 NB.            rank offered by this algorithm
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see gelpf
+NB.   iQ     - k×n-matrix with orthonormal rows, which is
+NB.            defined as the first k rows of a product of k
+NB.            elementary reflectors, before rank detecting
+NB.   oQ     - k×n-matrix with orthonormal rows, which is
+NB.            defined as the first k rows of a product of k
+NB.            elementary reflectors, after rank detecting
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -1945,20 +1957,20 @@ NB.   accepted, the matrix will be permuted and
 NB.   retriangularized until the rank is revealed.
 NB.
 NB. Syntax:
-NB.   'oQ oR op orcond rank svlues'=. ircond trpry iQ;iR;ip;trash;trash;trash
+NB.   'oQm oR op orcond rank svlues'=. ircond trpry iQm;iR;ip;trash;trash;trash
 NB. where
 NB.   ircond > 0, 1/ircond is an upper bound on the condition
 NB.            number of iR00
-NB.   iQ     - m×k-matrix with orthonormal columns which is
-NB.            defined as the product of k elementary
-NB.            reflectors
+NB.   iQm    - m×m-matrix, the unitary (orthogonal), embeds
+NB.            iQ:
+NB.              iQ -: k {."1 iQm
 NB.   iR     - k×n-matrix, upper triangular (trapezoidal)
 NB.            before rank detecting
 NB.   ip     - n-vector, columns inversed permutation of iR,
 NB.            represents permutation n×n-matrix
-NB.   oQ     - m×k-matrix with orthonormal columns which is
-NB.            defined as the product of k elementary
-NB.            reflectors
+NB.   oQm    - m×m-matrix, the unitary (orthogonal), embeds
+NB.            oQ:
+NB.              oQ -: k {."1 oQm
 NB.   oR     - k×n-matrix, upper triangular (trapezoidal)
 NB.            after rank detecting
 NB.   op     - n-vector, columns inversed permutation of oR,
@@ -1969,6 +1981,12 @@ NB.   rank   - integer in range [0,k], an estimate of the
 NB.            rank offered by this algorithm
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see geprf
+NB.   iQ     - m×k-matrix with orthonormal columns, which is
+NB.            defined as the first k columns of a product of
+NB.            k elementary reflectors, before rank detecting
+NB.   oQ     - m×k-matrix with orthonormal columns, which is
+NB.            defined as the first k columns of a product of
+NB.            k elementary reflectors, after rank detecting
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -2048,7 +2066,7 @@ NB.   rank of A by a suitably dimensioned trailing submatrix
 NB.   L11 with norm(L11) being small.
 NB.
 NB. Syntax:
-NB.   'p L Q orcond rank svlues'=. [ircond] gelpf A
+NB.   'p L Qn orcond rank svlues'=. [ircond] gelpf A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, optional, default is FP_EPS. 1/ircond
@@ -2057,7 +2075,9 @@ NB.            number of L00
 NB.   p      - m-vector, rows inversed permutation of L,
 NB.            represents permutation m×m-matrix
 NB.   L      - m×k-matrix, lower triangular (trapezoidal)
-NB.   Q      - k×n-matrix with orthonormal rows
+NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
+NB.            Q:
+NB.              Q -: k {. Qn
 NB.   orcond > 0, 1/orcond is an estimate for the condition
 NB.            number of L00
 NB.   rank   - integer in range [0,k], an estimate of the
@@ -2074,6 +2094,9 @@ NB.              sigma_max(A) , sigma_r(A) , sigma_(r+1)(A) , sigma_min(A)
 NB.            By examining these values, one can confirm
 NB.            that the rank is well defined with respect to
 NB.            the threshold chosen
+NB.   Q      - k×n-matrix with orthonormal rows, which is
+NB.            defined as the first k rows of a product of k
+NB.            elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -2092,10 +2115,11 @@ NB.   A -: ip C.^:_1 L mp Q
 NB.   A -: P mp L mp Q
 NB.   (idmat c L) -: clean (mp ct) Q
 NB. where
-NB.   'ip L Q rcond rank svlues'=. gelpf A
+NB.   'ip L Qn rcond rank svlues'=. gelpf A
 NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
+NB.   Q=. (c L) {. Qn
 
 gelpf=: FP_EPS&$: :([ ]`trlpy@.(0 < 3 {:: ]) gelpb)
 
@@ -2115,13 +2139,15 @@ NB.   rank of A by a suitably dimensioned trailing submatrix
 NB.   R11 with norm(R11) being small.
 NB.
 NB. Syntax:
-NB.   'Q R p orcond rank svlues'=. [ircond] geprf A
+NB.   'Qm R p orcond rank svlues'=. [ircond] geprf A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, optional, default is FP_EPS. 1/ircond
 NB.            specifies an upper bound on the condition
 NB.            number of R00
-NB.   Q      - m×k-matrix with orthonormal columns
+NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
+NB.            Q:
+NB.              Q -: k {."1 Qm
 NB.   R      - k×n-matrix, upper triangular (trapezoidal)
 NB.   p      - n-vector, columns inversed permutation of R,
 NB.            represents permutation n×n-matrix
@@ -2141,6 +2167,9 @@ NB.              sigma_max(A) , sigma_r(A) , sigma_(r+1)(A) , sigma_min(A)
 NB.            By examining these values, one can confirm
 NB.            that the rank is well defined with respect to
 NB.            the threshold chosen
+NB.   Q      - m×k-matrix with orthonormal columns, which is
+NB.            defined as the first k columns of a product
+NB.           of k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -2159,10 +2188,11 @@ NB.   A -: ip C.^:_1"1 Q mp R
 NB.   A -: Q mp R mp iP         NB. apply ip to columns
 NB.   (idmat # R) -: clean (mp~ ct) Q
 NB. where
-NB.   'Q R ip rcond rank svlues'=. geprf A
+NB.   'Qm R ip rcond rank svlues'=. geprf A
 NB.   p=. /: ip
 NB.   iP=. p2P ip
 NB.   P=. p2P p
+NB.   Q=. (# R) {."1 Qm
 NB.
 NB. Notes:
 NB. - simulates LAPACK's xGEQPx
@@ -2208,10 +2238,10 @@ NB. - for RP: berr := max( ||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)
 testgepf=: 3 : 0
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) mp         2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
-  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: mp      1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
-  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: mp      1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
-  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) mp         2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
+  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~   c)~)     2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
+  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~ -@#) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
+  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~   #) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
+  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~ -@c)~)     2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
 
   EMPTY
 )

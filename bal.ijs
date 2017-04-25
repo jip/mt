@@ -1,7 +1,7 @@
 NB. Balance a matrix or pair of matrices
 NB.
 NB. gebalxp    Isolate eigenvalues of a general square matrix
-NB. gebalxs    Make the rows and columns of a general square
+NB. gebals     Make the rows and columns of a general square
 NB.            matrix as close in 1-norm as possible
 NB. gebalx     Balance a general square matrix
 NB.
@@ -16,9 +16,9 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.9.2 2013-06-01
+NB. Version: 0.9.3 2014-05-18
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2014 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -360,24 +360,31 @@ NB.   D=. diagmat d
 NB.   Dinv=. %. D
 NB.
 NB. Application:
-NB. - scale non-permuted matrix A (default p and hs),
-NB.   i.e. balance without eigenvalues isolating step:
+NB. - model LAPACK's xGEBAL('S') to balance without
+NB.   eigenvalues isolating step, i.e. scale non-permuted
+NB.   matrix A (default p and hs):
 NB.     'Ascl d'=. (0 3 { gebals@((; i. ; 0&,) #)) A
-NB. - model TB01ID('N'):
+NB. - model SLICOT's TB01ID('N'):
 NB.     NB. 'Ascl d'=. maxred tb01idn  A
 NB.     tb01idn=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
-NB. - model TB01ID('B'):
-NB.     NB. 'Sscl d'=. maxred tb01idb  A ,. B
+NB. - model SLICOT's TB01ID('B'):
+NB.     NB. 'ABscl d'=. maxred tb01idb  A ,. B
+NB.     NB. 'Ascl Bscl'=. n ({."1 ; }."1) ABscl
 NB.     tb01idb=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
-NB. - model TB01ID('C'):
-NB.     NB. 'Sscl d'=. maxred tb01idc  A      , C
+NB. - model SLICOT's TB01ID('C'):
+NB.     NB. 'ACscl d'=. maxred tb01idc  A , C
+NB.     NB. 'Ascl Cscl'=. n ({. ; }.) ACscl
 NB.     tb01idc=: 0 3 { (gebals ] ; i.@c_mt_ ; 0 , _:)
-NB. - model TB01ID('A'):
-NB.     NB. 'Sscl d'=. maxred tb01ida (A ,. B) , C
-NB.     tb01ida=: 0 3 { (gebals ] ; i.@n"_   ; 0 , _:)
+NB. - model SLICOT's TB01ID('A'):
+NB.     NB. 'ABC0scl d'=. maxred tb01ida (A ,. B) , C
+NB.     NB. 'ABscl C0scl'=. n ({. ; }.) ABC0scl
+NB.     NB. 'Ascl Bscl'=. n ({."1 ; }."1) ABscl
+NB.     NB. Cscl=. n {."1 C0scl
+NB.     tb01ida=: 0 3 { (gebals ] ; (i. n)   ; 0 , _:)
 NB.
 NB. Notes:
-NB. - monadic case models LAPACK's xGEBAL('S')
+NB. - monadic case models scaling step of LAPACK's
+NB.   xGEBAL('A')
 NB. - dyadic case models SLICOT's TB01ID with
 NB.   following differences:
 NB.   - (SCLFAC = 2) instead of (SCLFAC = 10)
@@ -429,7 +436,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
           r=. x
         end.
       else.
-        NB. act as xGEBAL('S')
+        NB. act as xGEBAL
         if. r +.&(0&=) c do.
           continue.
         end.
@@ -459,12 +466,15 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
         noconv=. 1
       end.
     end.
-    end.
+  end.
   if. x do.
     NB. act as TB01ID
     x=. snorm % (norm1t >. normit) S
+    S ; p ; hs ; d ; x
+  else.
+    NB. act as xGEBAL
+    S ; p ; hs ; d
   end.
-  S ; p ; hs ; d ; x
 )
 
 NB. ---------------------------------------------------------
@@ -530,10 +540,10 @@ NB.   'CD plr hs'=. ggbalxp AB
 NB. where
 NB.   AB  -:A ,: B
 NB.   CD  -:C ,: D
-NB.   A,B - n×n-matrix
-NB.   C,D - n×n-matrix with isolated eigenvalues, being A and
-NB.          B with permuted rows and columns, for storage
-NB.          layout see gebalxp
+NB.   A,B - n×n-matrices
+NB.   C,D - n×n-matrices with isolated eigenvalues, being A
+NB.         and B with permuted rows and columns, for storage
+NB.         layout see gebalxp
 NB.   plr -:pl ,: pr
 NB.   pl  - n-vector, rows permutation of A and B
 NB.   pr  - n-vector, columns permutation of A and B
@@ -658,8 +668,8 @@ NB. Syntax:
 NB.   'EF plr hs dlr'=. ggbals CD ; plr ; hs
 NB. where
 NB.   CD  -:C ,: D
-NB.   C,D - n×n-matrix with isolated eigenvalues, the output
-NB.         of ggbalxp
+NB.   C,D - n×n-matrices with isolated eigenvalues, the
+NB.         output of ggbalxp
 NB.   plr - some not changing parameter, the output of
 NB.         ggbalxp
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
@@ -687,6 +697,10 @@ NB.     'EF plr hs dlr'=. ggbals (] ; a:"_ ; 0 , c) AB
 NB.
 NB. Notes:
 NB. - ggbals implements LAPACK's xGGBAL('S')
+NB.
+NB. TODO:
+NB. - embed SLICOT's TG01AD, like SLICOT's TB01ID embedded in
+NB.   gebals
 
 ggbals=: 3 : 0
   m3x=. - 3&*
@@ -760,7 +774,7 @@ NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrices E11 and F11 position in E and
 NB.         F, respectively (see ggbalxp)
 NB.   dlr -:dl ,: dr
-NB.   A,B - n×n-matrix
+NB.   A,B - n×n-matrices
 NB.   E   - n×n-matrix, balanced version of A
 NB.   F   - n×n-matrix, balanced version of B
 NB.   pl  - n-vector, rows permutation of A and B

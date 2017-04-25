@@ -11,7 +11,7 @@ mt is a set of routines for solving some problems in matrix
 algebra: transforming, decomposing, reducing to condensed
 form, factorization, equation solving, function applying,
 condition number estimating. Its algorithms are based on
-those from LAPACK [1] and RRQR [2, 3] libraries.
+those from LAPACK [1], RRQR [2, 3] and SLICOT [4] libraries.
 
 Project homepage:
 http://code.jsoftware.com/wiki/Addons/math/mt
@@ -37,3 +37,11 @@ References:
     Rank-Revealing QR Factorizations of Dense Matrices. ACM
     Transactions on Mathematical Software, June 1998, Vol.
     24, No. 2, pp. 254-257.
+[4] Benner, P., Mehrmann, V., Sima, V., Van Huffel, S., and
+    A. Varga: "SLICOT - A Subroutine Library in Systems and
+    Control Theory", June 1997, NICONET Report 97-3; also
+    in "Applied and Computational Control, Signal and
+    Circuits" (Biswa N. Datta, Ed.), Birkauser, vol. 1, ch.
+    10, pp. 499-539, 1999, ISBN 0-8176-3954-2,
+    3-7643-3954-3, ISSN 1522-8363.
+    http://www.slicot.org/

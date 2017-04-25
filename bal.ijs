@@ -16,7 +16,7 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.2 2013-06-01
 NB.
 NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
@@ -231,7 +231,7 @@ NB.   k = ⌈log_{GEBALSCLFAC}(e/GEBALSFMIN2)⌉, i.e. maximal
 NB.       integer safisfying:
 NB.         e/f > GEBALSFMIN2
 NB.
-NB. Note:
+NB. Notes:
 NB. - conventional (closed) insertion point is calculated by:
 NB.     c=. x I. y
 NB.   and provides:
@@ -321,96 +321,67 @@ NB. gebals
 NB.
 NB. Description:
 NB.   Apply a diagonal similarity transformation:
-NB.     C = D^_1 * B * D
-NB.   to make the 1-norms of each row of B11 and its
+NB.     Sscl = D^_1 * S * D
+NB.   to make the 1-norms of each row of S11 and its
 NB.   corresponding column as close as possible
 NB.
 NB. Syntax:
-NB.   'C p hs d'=. gebals B ; p ; hs
+NB.   'Ascl p     hs     d        '=.         gebals A ; p      ; hs
+NB.   'Sscl trash trash1 d omaxred'=. imaxred gebals S ; (i. n) ; 0 _
 NB. where
-NB.   B  - n×n-matrix with isolated eigenvalues, the output
-NB.        of gebalxp
-NB.   p  - some not changing parameter, the output of gebalxp
-NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
-NB.        defines submatrix B11 position in B, the output of
-NB.        gebalxp
-NB.   C  - n×n-matrix, scaled version of B
-NB.   d  - n-vector, diagonal of scaling matrix D
-NB.
-NB. Algorithm:
-NB.   In: B, p, hs
-NB.   Out: C, d
-NB.   1) extract B, p, h and s from y
-NB.   2) initialize d (D's diagonal), bt (1st lIO behind
-NB.      tail), rios (rIOS of B11 row/column within B
-NB.      row/column)
-NB.   3) do...:
-NB.      3.1) mark scaling process as converged
-NB.      3.2) traverse B11, for each i-th pair of row and
-NB.           corresp. column:
-NB.           3.2.1) extract them and laminate into rc, then
-NB.                  replace diagonal elements by zeros
-NB.           3.2.2) calculate r and c, the norm1t of row and
-NB.                  column
-NB.           3.2.3) calculate ra and ca, the magnitudes of
-NB.                  largest element in row and column
-NB.           3.2.4) calculate
-NB.                    fup := GEBALSCLFAC^i
-NB.                  where i is mininal integer safisfying:
-NB.                    (c*fup) ≥ (r/(fup*GEBALSCLFAC))
-NB.                  or
-NB.                    max(fup,c*fup,ca*fup) ≥ GEBALSFMAX2
-NB.                  or
-NB.                    min(r/(fup*GEBALSCLFAC),ra/fup) ≤ GEBALSFMIN2
-NB.           3.2.5) scale up c and ca, scale down r and ra:
-NB.                    c  := c  * fup
-NB.                    ca := ca * fup
-NB.                    r  := r  / fup
-NB.                    ra := ra / fup
-NB.           3.2.6) calculate
-NB.                    fdn := GEBALSCLFAC^i
-NB.                  where i is mininal integer safisfying:
-NB.                    (r*fdn) ≥ (c/(fdn*GEBALSCLFAC))
-NB.                  or
-NB.                    max(r*fdn,ra*fdn) ≥ GEBALSFMAX2
-NB.                  or
-NB.                    min(fdn,c/(fdn*GEBALSCLFAC),ca/fdn) ≤ GEBALSFMIN2
-NB.           3.2.7) scale down c and scale up r:
-NB.                    c := c / fdn
-NB.                    r := r * fdn
-NB.           3.2.8) calculate scale factor:
-NB.                    f := fup / fdn
-NB.           3.2.9) if r and c are changed by f
-NB.                  considerably, and the following holds:
-NB.                    f ≥ 1 OR d[i] ≥ 1 OR f*d[i] > GEBALSFMIN1
-NB.                  and
-NB.                    f ≤ 1 OR d[i] ≤ 1 OR d[i] < GEBALSFMAX1/GEBALSCLFAC
-NB.                  then:
-NB.                  3.2.9.1) scale d[i] by f up
-NB.                  3.2.9.2) scale B[i,:] by f down
-NB.                  3.2.9.3) scale B[:,i] by f up
-NB.                  3.2.9.4) mark scaling process as not
-NB.                           yet converged
-NB.      ...while not converged
-NB.   4) link B, p, hs and d to produce output
+NB.   A       - n×n-matrix with isolated eigenvalues, the
+NB.             output of gebalxp
+NB.   p       - n-vector, some not changing parameter, the
+NB.             output of gebalxp
+NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
+NB.             defines submatrix A11 position in A, the
+NB.             output of gebalxp
+NB.   S       - the input for TB01ID, any of:
+NB.               n×n-matrix:          A
+NB.               n×(n+m)-matrix:      A ,. B
+NB.               (n+p)×n-matrix:      A       , C
+NB.               (n+p)×(n+m)-matrix: (A ,. B) , C
+NB.   imaxred > 1, the maximum allowed reduction in the
+NB.             1-norm of S (in an iteration) if zero rows or
+NB.             columns are encountered
+NB.   omaxred - if the 1-norm of S is non-zero, the ratio
+NB.             between the 1-norm of S and the 1-norm of C
+NB.   Ascl    - n×n-matrix, scaled version of A
+NB.   Sscl    - ($ S)-matrix, scaled version of S
+NB.   d       - n-vector, diagonal of scaling matrix D
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   Dinv -: diagmat % d
-NB.   C -: Dinv mp B mp D
-NB.   C -: B (*"1 % ]) d
+NB.   Ascl -: Dinv mp A mp D
+NB.   Ascl -: A (*"1 % ]) d
 NB. where
-NB.   'C p hs d'=. gebals B ; p ; hs
+NB.   'Ascl p hs d'=. gebals A ; p ; hs
 NB.   D=. diagmat d
 NB.   Dinv=. %. D
 NB.
 NB. Application:
 NB. - scale non-permuted matrix A (default p and hs),
 NB.   i.e. balance without eigenvalues isolating step:
-NB.   'C p hs d'=. gebals (];(a:"_);(0,#)) A
+NB.     'Ascl d'=. (0 3 { gebals@((; i. ; 0&,) #)) A
+NB. - model TB01ID('N'):
+NB.     NB. 'Ascl d'=. maxred tb01idn  A
+NB.     tb01idn=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
+NB. - model TB01ID('B'):
+NB.     NB. 'Sscl d'=. maxred tb01idb  A ,. B
+NB.     tb01idb=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
+NB. - model TB01ID('C'):
+NB.     NB. 'Sscl d'=. maxred tb01idc  A      , C
+NB.     tb01idc=: 0 3 { (gebals ] ; i.@c_mt_ ; 0 , _:)
+NB. - model TB01ID('A'):
+NB.     NB. 'Sscl d'=. maxred tb01ida (A ,. B) , C
+NB.     tb01ida=: 0 3 { (gebals ] ; i.@n"_   ; 0 , _:)
 NB.
 NB. Notes:
-NB. - models LAPACK's xGEBAL('S'), with following difference:
-NB.   ra and ca never get value from diagonal element
+NB. - monadic case models LAPACK's xGEBAL('S')
+NB. - dyadic case models SLICOT's TB01ID with
+NB.   following differences:
+NB.   - (SCLFAC = 2) instead of (SCLFAC = 10)
+NB.   - no default maxred, 10 should be supplied instead
 NB.
 NB. References:
 NB. [1] Daniel Kressner. Numerical methods and software for
@@ -418,47 +389,82 @@ NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany, 2004.
 
-gebals=: 3 : 0
-  'B p hs'=. y
+gebals=: (}:@($:~ 0:)) : (4 : 0)
+  'S p hs'=. y
   'h s'=. hs
-  d=. (# B) $ 1
-  bt=. h + s
+  n=. # p
+  d=. n $ 1
+  if. x do.
+    NB. act as TB01ID
+    snorm=. (norm1t >. normit) S
+    if. snorm do.
+      x=. GEBALSFMIN1 >. snorm % x
+    else.
+      S ; p ; hs ; d ; x return.
+    end.
+  end.
+  bt=. n <. h + s
   rios=. ,. hs
   whilst. noconv do.
     noconv=. 0
     i=. <: h
     while. bt > i=. >: i do.
-      rc=. rios (];.0)"2 1 i ([ 0:`[`]}"1 { ,: {"1) B
-      'r c'=. norm1tr rc
-      if. r *.&(0&~:) c do.
-        'ra ca'=. |@(liofmax { ])"1 rc
-        sum=. r + c
-        g=. r % GEBALSCLFAC
-        fup=. gebalsf c , 1 , g , (1 >. c >. ca) , ra <. g
-        c=. c * fup
-        g=. c % GEBALSCLFAC
-        r=. r % fup
-        fdn=. gebalsf r , 1 , g , (r >. ra % fup) , fup <. g <. ca * fup
-        f=. fup % fdn
-        c=. c % fdn
-        r=. r * fdn
-        if. (r + c) < GEBALFACTOR * sum do.
-          di=. i { d
-          if. f *.&(<&1) di do.
-            if. GEBALSFMIN1 >: f * di do. continue. end.
+      rc=. i ({ ; {"1) S
+      'r c'=. 0&(rios norm1t;.0 i}) L: 0 rc
+      if. x do.
+        NB. act as TB01ID
+        if. r *.&(0&=) c do.
+          continue.
+        end.
+        if. 0 = c do.
+          if. r <: x do.
+            continue.
           end.
-          if. f *.&(>&1) di do.
-            if. di >: GEBALSFMAX1 % f do. continue. end.
+          c=. x
+        end.
+        if. 0 = r do.
+          if. c <: x do.
+            continue.
           end.
-          d=. (di * f) i} d
-          B=. i  %&f upd    B
-          B=. i (*&f upd)"1 B
-          noconv=. 1
+          r=. x
+        end.
+      else.
+        NB. act as xGEBAL('S')
+        if. r +.&(0&=) c do.
+          continue.
         end.
       end.
+      'ra ca'=. >./ L: 0 rc
+      sum=. r + c
+      g=. r % GEBALSCLFAC
+      fup=. gebalsf c , 1 , g , (1 >. c >. ca) , ra <. g
+      c=. c * fup
+      g=. c % GEBALSCLFAC
+      r=. r % fup
+      fdn=. gebalsf r , 1 , g , (r >. ra % fup) , fup <. g <. ca * fup
+      f=. fup % fdn
+      c=. c % fdn
+      r=. r * fdn
+      if. (r + c) < GEBALFACTOR * sum do.
+        di=. i { d
+        if. f *.&(<&1) di do.
+          if. GEBALSFMIN1 >: f * di do. continue. end.
+        end.
+        if. f *.&(>&1) di do.
+          if. di >: GEBALSFMAX1 % f do. continue. end.
+        end.
+        d=. (di * f) i} d
+        S=.         i  %&f upd S
+        S=. (< a: ; i) *&f upd S
+        noconv=. 1
+      end.
     end.
+    end.
+  if. x do.
+    NB. act as TB01ID
+    x=. snorm % (norm1t >. normit) S
   end.
-  B ; p ; hs ; d
+  S ; p ; hs ; d ; x
 )
 
 NB. ---------------------------------------------------------

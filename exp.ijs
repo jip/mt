@@ -11,7 +11,7 @@ NB. testheexp  Test heexp by Hermitian (symmetric) matrix
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.2 2013-06-01
 NB.
 NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
@@ -346,7 +346,7 @@ NB.   A - n×n-matrix, diagonalizable
 
 testdiexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  geevlvv=. 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1])) % norms"1)"2&.>)ag ggevlvv@(,: idmat@c)
+  geevlvv=. 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1])) % normsr)"2&.>)ag ggevlvv@(,: idmat@c)
 
   rcond=. gecon1 y
   try.

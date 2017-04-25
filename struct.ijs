@@ -62,7 +62,7 @@ NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.2 2013-06-01
 NB.
 NB. Copyright 2007-2013 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
@@ -357,7 +357,7 @@ NB. ---------------------------------------------------------
 NB. e0
 NB.
 NB. Description:
-NB.   Extend matrix by zeros
+NB.   Extend matrix by blanks
 NB.
 NB. Syntax:
 NB.   eA=. sh e0 A
@@ -379,6 +379,11 @@ NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
 NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
+NB.       _1 _2 e0 3 4 $ 'abcdefghijkl'
+NB.       
+NB.   abcd
+NB.   efgh
+NB.   ijkl
 
 e0=: ([ + (negneg"0 $)) {. ]
 

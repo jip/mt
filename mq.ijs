@@ -38,7 +38,7 @@ NB. testunmz   Test unmxxxx by trapezoidal matrix
 NB. testmq     Adv. to make verb to test unmxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.1 2013-04-09
 NB.
 NB. Copyright 2010-2013 Igor Zhuravlov
 NB.

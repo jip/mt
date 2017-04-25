@@ -19,7 +19,7 @@ NB.          vector (matrix)
 NB. normsc   Square-based Euclidean norm of matrix columns
 NB. normsr   Square-based Euclidean norm of matrix rows
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.2 2013-06-01
 NB.
 NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
@@ -91,12 +91,12 @@ normic=: | cmax              NB. ∞-norm of vector (matrix columns)
 normir=: | rmax              NB. ∞-norm of vector (matrix rows)
 
 NB. ---------------------------------------------------------
-NB. norm1
-NB. norm1c
-NB. norm1r
-NB. normi
-NB. normic
-NB. normir
+NB. norm1t
+NB. norm1tc
+NB. norm1tr
+NB. normit
+NB. normitc
+NB. normitr
 NB.
 NB. Description:
 NB.   Taxicab-based norms |Re(y)| + |Im(y)|

@@ -18,7 +18,7 @@ NB.            definite tridiagonal matrix
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.1 2013-04-09
 NB.
 NB. Copyright 2010-2013 Igor Zhuravlov
 NB.

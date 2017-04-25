@@ -2,9 +2,9 @@ NB. Scaling
 NB.
 NB. scl  Try to scale without overflow or underflow
 NB.
-NB. Version: 0.7.0 2011-08-06
+NB. Version: 0.8.2 2013-06-01
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2013 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -94,6 +94,7 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xLASCL('G'), when A is a matrix
 NB. - models LAPACK's xDRSCL, when A is a vector and t=1
+NB. - reverse x to get obverse (scl^:_1)
 
 scl=: 4 : 0
   ioft=. ((FP_SFMIN |:@:(*^:2 1) |.) I."1 0 ]) | x

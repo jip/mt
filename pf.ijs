@@ -13,7 +13,7 @@ NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.2 2013-06-01
 NB.
 NB. Copyright 2012-2013 Igor Zhuravlov
 NB.
@@ -1080,7 +1080,7 @@ NB.   rcond > 0, 1/rcond specifies an upper bound on the
 NB.           condition number of R
 NB.   rank  ≥ 0, an estimate for the numerical rank of R
 NB.
-NB. Note:
+NB. Notes:
 NB. - models RRQR's xTRRNK [1, 2] with following
 NB.   difference: rectangular R is allowed
 
@@ -1171,7 +1171,7 @@ NB.     x 0 x x x x
 NB.     x 0 0 x x x
 NB.     x 0 0 0 x x
 NB.
-NB. Note:
+NB. Notes:
 NB. - models RRQR's xGRET(3) [1, 2] with following
 NB.   differences:
 NB.   - matrix C is an identity matrix
@@ -1250,7 +1250,7 @@ NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
 NB.
-NB. Note:
+NB. Notes:
 NB. - models RRQR's xHESS(3) [1, 2] with following
 NB.   differences:
 NB.   - matrix C is an identity matrix

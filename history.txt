@@ -112,3 +112,6 @@ math/mt - change history
  * sm:     complete sync sm interface names with LAPACK (s/trsmu1x/trsmlunu/)
  + struct: new interface: ds
  * test:   drop J6 support in tmonad tdyad
+
+== 0.9.2 ==
+ * bal:    extend gebals by dyadic case which models SLICOT's TB01ID

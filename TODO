@@ -6,28 +6,25 @@
 3. hrd.ijs: gghrdxxx: implement blocked generalized
    Hessenberg reduction [2]
 
-4. sm.ijs: trsmxxxx: replace column-wise algorithms by
-   row-wise
-
-5. ev.ijs: testggev: test ggev_jlapack_ to compare against
+4. ev.ijs: testggev: test ggev_jlapack_ to compare against
    ggevxxx
 
-6. fix ggevxxx for AB=. 2 0 0 $ 0 abd for (A ,: 0)
+5. fix ggevxxx for AB=. 2 0 0 $ 0 abd for (A ,: 0)
 
-7. factorize gqvberr in eq,hrd,pf,qf,tri
+6. factorize gqvberr in eq,hrd,pf,qf,tri
 
-8. improve *NB and *NX constants for optimal performance
+7. improve *NB and *NX constants for optimal performance
 
-9. exp.ijs: implement updated algo [3]
+8. exp.ijs: implement updated algo [3]
 
-10. Sylvester equation solvers:
-    [generalized] {continuous,discrete}-time
+9. Sylvester equation solvers:
+   [generalized] {continuous,discrete}-time
 
-11. Lyapunov equation solvers:
+10. Lyapunov equation solvers:
     [generalized] {continuous,discrete}-time
     for {solution X,Cholesky factor U}
 
-12. Algebraic Riccati equation solvers:
+11. Algebraic Riccati equation solvers:
     [generalized] {continuous,discrete}-time
 
 

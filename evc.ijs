@@ -9,7 +9,7 @@ NB. testtgevc   Test tgevcxxx by square matrices
 NB. testevc     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
-NB. Version: 0.9.9 2017-04-23
+NB. Version: 0.10.0 2017-04-23
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.

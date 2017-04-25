@@ -7,7 +7,7 @@ NB.         matrix in a given norm
 NB. laic1x  Apply one step of incremental condition
 NB.         estimation
 NB.
-NB. Version: 0.9.9 2017-04-07
+NB. Version: 0.10.0 2017-04-23
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.

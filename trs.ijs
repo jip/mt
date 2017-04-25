@@ -39,9 +39,9 @@ NB.              positive definite tridiagonal matrix
 NB. testtrs      Adv. to make verb to test xxtrsxxx by matrix
 NB.              of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -718,4 +718,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testtrs_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrs_mt_ 150 150
 
-testtrs=: 1 : 'EMPTY_mt_ [ (testpttrs_mt_@((u ptmat_mt_) ; u) [ testpotrs_mt_@((u pomat_mt_) ; u) [ (testhetrs_mt_@((u hemat_mt_) ; u)) [ testgetrs_mt_@(u ; u))^:(=/)'
+testtrs=: 1 : 'EMPTY_mt_ [ (testpttrs_mt_@((u ptmat2_mt_) ; u) [ testpotrs_mt_@((u pomat_mt_) ; u) [ (testhetrs_mt_@((u hemat_mt_) ; u)) [ testgetrs_mt_@(u ; u))^:(=/)'

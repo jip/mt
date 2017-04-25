@@ -33,9 +33,9 @@ NB.           definite tridiagonal matrix
 NB. testsv    Adv. to make verb to test xxsvxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2014-04-23
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2014 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -348,4 +348,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testsv_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testsv_mt_ 150 150
 
-testsv=: 1 : 'EMPTY_mt_ [ (testptsv_mt_@((u ptmat_mt_) ; u) [ testposv_mt_@((u pomat_mt_) ; u) [ testhesv_mt_@((u hemat_mt_) ; u) [ testgesv_mt_@(u ; u))^:(=/)'
+testsv=: 1 : 'EMPTY_mt_ [ (testptsv_mt_@((u ptmat2_mt_) ; u) [ testposv_mt_@((u pomat_mt_) ; u) [ testhesv_mt_@((u hemat_mt_) ; u) [ testgesv_mt_@(u ; u))^:(=/)'

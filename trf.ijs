@@ -19,9 +19,9 @@ NB.            definite tridiagonal matrix
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.9.9 2015-06-01
+NB. Version: 0.9.9 2017-04-23
 NB.
-NB. Copyright 2010-2015 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -1784,4 +1784,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testtrf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 
-testtrf=: 1 : 'EMPTY_mt_ [ (testpttrf_mt_@(u ptmat_mt_) [ testpotrf_mt_@(u pomat_mt_) [ testhetrf_mt_@(u hemat_mt_))^:(=/) [ testgetrf_mt_@u'
+testtrf=: 1 : 'EMPTY_mt_ [ (testpttrf_mt_@(u ptmat2_mt_) [ testpotrf_mt_@(u pomat_mt_) [ testhetrf_mt_@(u hemat_mt_))^:(=/) [ testgetrf_mt_@u'

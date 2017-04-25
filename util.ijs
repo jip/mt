@@ -9,7 +9,7 @@ NB. fmtlog    Format log string
 NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
 NB.
-NB. Version: 0.9.9 2017-04-18
+NB. Version: 0.9.9 2017-04-23
 NB.
 NB. Copyright 2005-2017 Henry Rich, Igor Zhuravlov
 NB.
@@ -50,7 +50,7 @@ copysign=: -@]^:((=-)&*)                                        NB. if x<0 then 
 sorim=: +/"1@:| @:+.                                            NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
 soris=: +/"1@:*:@:+.                                            NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
 
-fmtlog=: ;@:(26 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))  NB. log string format
+fmtlog=: ;@:(40 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))  NB. log string format
 
 NB. ---------------------------------------------------------
 NB. ag

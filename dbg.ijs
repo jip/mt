@@ -2,9 +2,9 @@ NB. Debug
 NB.
 NB. dbg  Conj. to force verb to show debug info
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.3 2015-08-09
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2015 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -50,26 +50,26 @@ NB.   vdbg2 - the same output as by vdbg1 plus input's and
 NB.           output's values
 
 dbg1=: 2 : 0
-  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y)
+  smoutput 'dbg' ; (coname '') ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y)
   o=. u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes_mt_ o)
+  smoutput 'dbg' ; (coname '') ; (n , ' SUCCESS') ; (gshapes_mt_ o)
   o
 :
-  smoutput 'dbg' ; 'x' ; (gshapes_mt_ x) ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y)
+  smoutput 'dbg' ; (coname '') ; 'x' ; (gshapes_mt_ x) ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y)
   o=. x u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes_mt_ o)
+  smoutput 'dbg' ; (coname '') ; (n , ' SUCCESS') ; (gshapes_mt_ o)
   o
 )
 
 dbg2=: 2 : 0
-  smoutput 'dbg' ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y) ; < y
+  smoutput 'dbg' ; (coname '') ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y) ; < y
   o=. u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes_mt_ o) ; < o
+  smoutput 'dbg' ; (coname '') ; (n , ' SUCCESS') ; (gshapes_mt_ o) ; < o
   o
 :
-  smoutput 'dbg' ; 'x' ; (gshapes_mt_ x) ; x ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y) ; < y
+  smoutput 'dbg' ; (coname '') ; 'x' ; (gshapes_mt_ x) ; x ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y) ; < y
   o=. x u y
-  smoutput 'dbg' ; (n , ' SUCCESS') ; (gshapes_mt_ o) ; < o
+  smoutput 'dbg' ; (coname '') ; (n , ' SUCCESS') ; (gshapes_mt_ o) ; < o
   o
 )
 

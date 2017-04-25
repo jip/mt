@@ -19,9 +19,9 @@ NB.            definite tridiagonal matrix
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2015-06-01
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2015 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -685,7 +685,7 @@ getrflu1p=: 3 : 0
   elseif. do.
     k=. n (<. >.@-:) m
     'ip LaaU1a'=. getrflu1p k {. y
-    y=. ip (C."1) k }. y
+    y=. ip C."1 k }. y
     Lba=. LaaU1a trsmrunu&(k&({."1)) y
     'ipb LbbU1bb'=. getrflu1p y (- Lba&mp)&(k&(}."1)) LaaU1a
     dipb=. (i. k) , (k + ipb)
@@ -836,8 +836,8 @@ getrfpl1u=: 3 : 0
     (i. m) ; y
   elseif. 1 = n do.
     dip=. < 0 , liofmax y
-    ip=. dip (C. :: ]) i. m
-    y=. ((] 0:} %) 0&({,)) dip (C. :: ]) y
+    ip=. dip C. :: ] i. m
+    y=. ((] 0:} %) 0&({,)) dip C. :: ] y
     ip ; y
   elseif. do.
     k=. m (<. >.@-:) n
@@ -990,8 +990,8 @@ getrfpu1l=: 3 : 0
     (i. m) ; y
   elseif. 1 = n do.
     dip=. < _1 , liolmax y
-    ip=. dip (C. :: ]) i. m
-    y=. ((] _1:} %) _1&({,)) dip (C. :: ]) y
+    ip=. dip C. :: ] i. m
+    y=. ((] _1:} %) _1&({,)) dip C. :: ] y
     ip ; y
   elseif. do.
     k=. m (<. >.@-:) n
@@ -1144,13 +1144,13 @@ getrful1p=: 3 : 0
     (i. n) ; y
   elseif. 1 = m do.
     dip=. < _1 , liolmax {. y
-    ip=. dip (C. :: ]) i. n
-    y=. ((] _1:} %) _1&({,)) dip (C."1 :: ]) y
+    ip=. dip C. :: ] i. n
+    y=. ((] _1:} %) _1&({,)) dip C."1 :: ] y
     ip ; y
   elseif. do.
     k=. n (<. >.@-:) m
     'ip UbbL1b'=. getrful1p (-k) {. y
-    y=. ip (C."1) (-k) }. y
+    y=. ip C."1 (-k) }. y
     Uab=. UbbL1b trsmrlnu&((-k)&({."1)) y
     'ipa UaaL1aa'=. getrful1p y (- Uab&mp)&((-k)&(}."1)) UbbL1b
     dipa=. ipa , ((n-k) + i. k)

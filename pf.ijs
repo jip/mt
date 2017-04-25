@@ -13,9 +13,9 @@ NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.9.2 2013-06-01
+NB. Version: 0.9.9 2014-06-01
 NB.
-NB. Copyright 2012-2013 Igor Zhuravlov
+NB. Copyright 2012-2014 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

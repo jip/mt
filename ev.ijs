@@ -9,9 +9,9 @@ NB. testggev  Test ggevxxx by pair of square matrices
 NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.9.2 2013-06-01
+NB. Version: 0.9.9 2017-03-20
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -32,6 +32,13 @@ NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
+
+NB. =========================================================
+NB. Concepts
+NB.
+NB. I have a dream (2010-11-02):
+NB.   ggev=: gizmo @ tgevc @ hgeqz @ gghrd @ qr &. bal &. scl
+NB. Is it possible?
 
 NB. =========================================================
 NB. Local definitions
@@ -123,9 +130,9 @@ NB.   AB   - 2×n×n-matrix, matrix pair (A,B):
 NB.            AB -: A ,: B
 NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
 NB.            e1e2 -: e1 ,: e2
-NB.   L    - n×n-matrix. left eigenvectors (rows)
-NB.   R    - n×n-matrix. right eigenvectors (rows)
-NB.   LR   - 2×n×n-matrix. left and right eigenvectors:
+NB.   L    - n×n-matrix, left eigenvectors (rows)
+NB.   R    - n×n-matrix, right eigenvectors (rows)
+NB.   LR   - 2×n×n-matrix, left and right eigenvectors:
 NB.            LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -274,9 +281,9 @@ NB.   AB   - 2×n×n-matrix, matrix pair (A,B):
 NB.            AB -: A ,: B
 NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
 NB.            e1e2 -: e1 ,: e2
-NB.   L    - n×n-matrix. left eigenvectors (columns)
-NB.   R    - n×n-matrix. right eigenvectors (columns)
-NB.   LR   - 2×n×n-matrix. left and right eigenvectors:
+NB.   L    - n×n-matrix, left eigenvectors (columns)
+NB.   R    - n×n-matrix, right eigenvectors (columns)
+NB.   LR   - 2×n×n-matrix, left and right eigenvectors:
 NB.            LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):

@@ -10,6 +10,7 @@ NB.            the right
 NB. larxbxxxx  Dyads to build and apply a block reflector or
 NB.            its transpose to a matrix from either the left
 NB.            or the right
+NB. refga      Conj. to make verb to get and apply reflection
 NB.
 NB. testlarfg  Test larfx by general vector
 NB. testlarf   Test larfxxxx by general matrix
@@ -21,9 +22,9 @@ NB. testlarzb  Test larzbxxxx by general matrix
 NB. testref    Adv. to make verb to test larxxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.9.9 2015-06-04
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2015 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -646,6 +647,44 @@ larzbrnbc=:         _1  larxbrnxc larztbc
 larzbrnbr=: (< a: ; _1) larxbrnxr larztbr
 larzbrnfc=:          0  larxbrnxc larztfc
 larzbrnfr=: (< a: ;  0) larxbrnxr larztfr
+
+NB. ---------------------------------------------------------
+NB. refga
+NB.
+NB. Description:
+NB.   Conj. to make verb to get and apply reflection
+NB.
+NB. Syntax:
+NB.   vapp=. larfxxx refga larfxxxx
+NB. where
+NB.   larfxxx  - monad to generate a reflector; is called as:
+NB.                z=. ios larfxxx y
+NB.   larfxxxx - dyad to apply a reflector; is called as:
+NB.                subAupd=. vtau larfxxxx subA
+NB.   vapp     - monad to generate and apply a reflector; is
+NB.              called as:
+NB.                'Aupd vtau'=. vapp A ; iossubA ; iosy ; iosa
+NB.   z        - vector, source to produce vector vtau
+NB.   A        - m×n-matrix to update, is augmented by trash
+NB.              vector according to larfxxxx
+NB.   Aupd     - m×n-matrix, updated A, being A with subA
+NB.              replaced by subAupd
+NB.   subA     - submatrix of A to apply reflection
+NB.   subAupd  - submatrix of the same shape as subA, the
+NB.              reflected subA
+NB.   iossubA  - IOS of subA (subAupd) within A (Aupd)
+NB.   iosy     - IOS within subA of vector y which  defines
+NB.              reflector
+NB.   ioa      - IO within z of scalar α, usually 0 or _1
+NB.   vtau     - vector, produced from z, defines
+NB.              reflection matrix
+
+refga=: 2 : 0
+  'A iossubA iosy ioa'=. y
+  subA=. iossubA { A
+  vtau=. 1 ioa} u iosy { subA
+  ((vtau v subA) iossubA} A) ; vtau
+)
 
 NB. =========================================================
 NB. Test suite

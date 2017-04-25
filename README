@@ -5,7 +5,7 @@ or later for terms of use. If, for some reason it is missing,
 the mt license also may be found at:
 <http://www.gnu.org/licenses/>
 
-'Matrix toolbox' addon for J programming language
+'Matrix toolbox' addon for J language
 
 mt is a set of routines for solving some problems in matrix
 algebra: transforming, decomposing, reducing to condensed

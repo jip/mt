@@ -9,9 +9,9 @@ NB.
 NB. testlartg  Test lartg by vectors
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.9.1 2013-04-09
+NB. Version: 0.9.9 2015-05-27
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2015 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -83,14 +83,26 @@ NB.   'c s'=. lartg (f,g)
 NB.   r=. (c,s) mp (f,g)
 NB.
 NB. Notes:
-NB. - models LAPACK's xLARTG
-NB. - [G]SEP requires plane rotation to be continuous [1]:
+NB. - simulates LAPACK's xLARTG with the following difference:
+NB.   for f=0, g≠0:
+NB.   - mt's lartg and LAPACK's ZLARTG follows [1]:
+NB.       (c,s)=(0,sign(conj(g)), r=abs(g)
+NB.     to keep c, s and r continuous
+NB.   - LAPACK's DLARTG for g∊ℝ works differently:
+NB.       (c,s)=(0,1), r=g
+NB.     to eliminate FLOPS
+NB. - [G]SEP requires plane rotation to be continuous [2]:
 NB.     cs := sgn(cd1st(cd1st(fg))) * sgn(cd1st(fg)) * sgn(qnconik(fg))
 NB.   To achieve this, use modified definition:
 NB.     lartg=: {. (sgn@(9 o. [) * *&sgn) +
 NB.
 NB. References:
-NB. [1] Edward Anderson. Discontinuous Plane Rotations and
+NB. [1] David S. Bindel and James W. Demmel and W. Kahan and
+NB.     Osni A. Marques. On Computing Givens rotations
+NB.     reliably and efficiently. UT-CS-00-449, October 2000.
+NB.     LAPACK Working Note 148
+NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB. [2] Edward Anderson. Discontinuous Plane Rotations and
 NB.     the Symmetric Eigenvalue Problem. University of
 NB.     Tennessee, UT-CS-00-454, December 4, 2000.
 NB.     LAPACK Working Note 150
@@ -171,21 +183,21 @@ NB.             called as:
 NB.               'Aupd cs'=. vapp A ; iossubA ; iosfg
 NB.   cs      - 2-vector (c,s), output of lartg, defines
 NB.             rotation matrix
-NB.   A       - n×n-matrix to update
-NB.   Aupd    - n×n-matrix, updated A, being A with subA
+NB.   A       - m×n-matrix to update
+NB.   Aupd    - m×n-matrix, updated A, being A with subA
 NB.             replaced by subAupd
 NB.   subA    - 2×any-matrix or any×2-matrix, array of
 NB.             2-vectors to apply rotation
 NB.   subAupd - matrix of the same shape as subA, the rotated
 NB.             subA
-NB.   iossubA - ios of subA (subAupd) within A (Aupd)
-NB.   iosfg   - ios within subA of 2-vector (f,g) which
+NB.   iossubA - IOS of subA (subAupd) within A (Aupd)
+NB.   iosfg   - IOS within subA of 2-vector (f,g) which
 NB.             defines rotation
 
 rotga=: 1 : 0
   'A iossubA iosfg'=. y
   subA=. iossubA { A
-  cs=. lartg iosfg { subA
+  cs=. lartg_mt_ iosfg { subA
   ((cs u subA) iossubA} A) ; cs
 )
 

@@ -62,9 +62,9 @@ NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.9.2 2013-06-01
+NB. Version: 0.9.7 2015-09-29
 NB.
-NB. Copyright 2007-2013 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
+NB. Copyright 2007-2015 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -689,7 +689,7 @@ NB.   B=. [d] trupick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], lIO first non-zero
-NB.       diagonal
+NB.       diagonal, default is 0
 NB.   B - m×n-matrix, upper triangular
 
 trupick=: 0&$: :(((_ ,~ [) mbstencil ]) * ])

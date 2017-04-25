@@ -115,7 +115,6 @@ timespacex_z_=: 6!:2 , 7!:2@]                   NB. timespacex_z_ (J7: already i
 
 NB. ---------------------------------------------------------
 NB. Addon definitions
-NB.
 
 NB. utilities
 require '~addons/math/mt/dbg.ijs'     NB. Debug

@@ -380,7 +380,7 @@ NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB.       _1 _2 e0 3 4 $ 'abcdefghijkl'
-NB.       
+NB.
 NB.   abcd
 NB.   efgh
 NB.   ijkl
@@ -475,7 +475,7 @@ NB.       default is 0 (main diagonal)
 NB.   h - integer in range [-S,S-1], optional lIO extreme
 NB.       element of solid part of diagonal, default is 0
 NB.       (take from head)
-NB.   s - integer in range [-S,S] or ±∞, optional size of 
+NB.   s - integer in range [-S,S] or ±∞, optional size of
 NB.       solid part of diagonal, default is +∞ (all elements
 NB.       in forward direction)
 NB.   e - min(S,|s|)-vector, elements from the solid part of
@@ -510,7 +510,7 @@ NB.   S    ≥ 0, the length of d-th diagonal
 NB.   k    ≤ S, the length of vector e
 NB.
 NB. Examples:
-NB. 
+NB.
 NB.    (2;a:) setdiag 4 4 $ 0          (2;_1 1 1) setdiag 4 4 $ 0
 NB. 2 0 0 0                         0 0 0 0
 NB. 0 2 0 0                         0 0 0 0

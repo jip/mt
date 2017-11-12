@@ -10,7 +10,7 @@ NB. FP_FLEN      Fraction field length (bits)
 NB. FP_IGUNFL    Is gradual underflow? (boolean)
 NB. FP_EBIAS     Exponent bias for normalized numbers
 NB. FP_EPS       Machine epsilon
-NB. FP_PREC      Machine precision 
+NB. FP_PREC      Machine precision
 NB. FP_EMIN      Min exponent for normalized numbers
 NB. FP_UNFL      Min normalized positive number
 NB. FP_EMAX      Max exponent for normalized numbers

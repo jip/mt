@@ -12,7 +12,9 @@ doesn't require LAPACK.
 
 VERSION=: '0.10.1'
 
-RELEASE=: 'j802 j803 j804 j805 j806 j807'
+RELEASE=: ''
+
+FOLDER=: 'math/mt'
 
 LABCATEGORY=: 'Math'
 

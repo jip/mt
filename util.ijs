@@ -9,7 +9,7 @@ NB. fmtlog    Format log string
 NB. ag        Adv. to apply successive verbs from gerund to
 NB.           successive elements of list
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-10-19
 NB.
 NB. Copyright 2005-2017 Henry Rich, Igor Zhuravlov
 NB.
@@ -71,7 +71,7 @@ NB.   E    = rank-1 array (e0,e1,...)
 NB.   Eupd = rank-1 array (e0upd,e1upd,...)
 NB.
 NB. Application:
-NB. - process each table in the report individually:
+NB. - process each table in the brick individually:
 NB.     0 1 2 (+:&.+:)`(-:&.-:)`(*:&.+:) ag i. 3 4 4
 NB.
 NB. References:

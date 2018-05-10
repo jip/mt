@@ -10,7 +10,7 @@ NB. testgghrd  Test gghrdx by pair of square matrices
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-10-19
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -334,7 +334,7 @@ NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
 NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
 NB.             have the same shapes
 NB.
-NB.  rences:
+NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 378.
@@ -777,7 +777,7 @@ NB.
 NB. Syntax:
 NB.   testgghrd AB
 NB. where
-NB.   AB - 2×n×n-report
+NB.   AB - 2×n×n-brick
 NB.
 NB. Formula:
 NB.   berr := max(berr0,berr1,berr2,berr3)

@@ -9,7 +9,7 @@ NB. testggev  Test ggevxxx by pair of square matrices
 NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-10-19
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -495,7 +495,7 @@ NB.
 NB. Syntax:
 NB.   testggev AB
 NB. where
-NB.   AB - 2×n×n-report
+NB.   AB - 2×n×n-brick
 NB.
 NB. Formula:
 NB.   berr := max(berr0,berr1)

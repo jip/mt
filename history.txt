@@ -157,3 +157,9 @@ math/mt - change history
  - sm:        garbage code removed
  * test:      error fixed
  * util:      fmtlog: verb name's column extended
+
+== 0.10.1 ==
+ * minor fixes in comments
+
+== 0.10.2 ==
+ * replace "report" term by "brick" in comments

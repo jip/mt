@@ -11,7 +11,7 @@ NB. testheexp  Test heexp by Hermitian (symmetric) matrix
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-10-19
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -42,13 +42,13 @@ NB. ---------------------------------------------------------
 NB. sdiag
 NB.
 NB. Description:
-NB.   Shift diagonal in each table of report y by corresp.
+NB.   Shift diagonal in each table of brick y by corresp.
 NB.   atom from x
 NB.
 NB. Syntax:
 NB.   B=. s sdiag A
 NB. where
-NB.   A - n×n-matrix or m×n×n-report
+NB.   A - n×n-matrix or m×n×n-brick
 NB.   s - scalar or m-vector, shift of diagonal[s] in A
 NB.   B - array of the same shape as A, the shifted A:
 NB.         B -: A + s (*"0 2) idmat n
@@ -72,7 +72,7 @@ NB.   m ≥ 0, integer, approximant's degree
 NB.   r - n×n-matrix, r_m(A)
 
 geexpm2r=: 4 : 0
-  rbyvs=. +/@:*"3 1       NB. multiply report x by each row of x, then sum reports
+  rbyvs=. +/@:*"3 1       NB. multiply brick x by each row of x, then sum bricks
   b0b1=. (0 0 ; 1 0)&{@]  NB. extract (b[0] , b[1]) from y
 
   NB. b[i] coeffcients of degree 13 Padé approximant for V (1st row) and U (2nd row)
@@ -84,12 +84,12 @@ geexpm2r=: 4 : 0
     NB. A powers (2 [4 [6 [8]]]), shape: p×n×n
     pA=. (+: }. i. >. -: x) gepow y
 
-    NB. - multiply each table in pA by corresp. atom b[i], output: report 2×p×n×n
-    NB. - sum multiplied tables, output: report 2×n×n
+    NB. - multiply each table in pA by corresp. atom b[i], output shape: 2×p×n×n
+    NB. - sum multiplied tables, output: 2×n×n-brick
     NB. - shift 1st table's diagonal by b[0], 2nd table's diagonal by b[1]
     'V U'=. pA (b0b1 sdiag (rbyvs 0 1&}.)) bc
   else.
-    NB. report of A powers (2 4 6)
+    NB. brick of A powers (2 4 6)
     pA=. 2 4 6 gepow y
 
     NB. V=. (b[8]*(A^2)+b[10]*(A^4)+b[12]*(A^6)) * (A^6)

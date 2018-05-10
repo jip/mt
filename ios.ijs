@@ -12,9 +12,9 @@ NB. rios2lios  Convert rIOS to lIOS
 NB. liosX      lIOS of vector laying between diagonal and
 NB.            matrix edge
 NB.
-NB. Version: 0.9.0 2013-03-16
+NB. Version: 0.10.2 2017-10-19
 NB.
-NB. Copyright 2010-2013 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -47,10 +47,10 @@ NB. rIOS - rectangular IOS, for r-rank array is a 2×r-array
 NB.        of integers ((head0,head1,...),:(size0,size1,...))
 NB.
 NB. Following are equivalents:
-NB.   (3 5 _7,:2 _3 4) (] ;. 0) report
-NB.   (< 3 4;7 6 5;_10 _9 _8 _7) { report
-NB.   (rios2ios (3 5 _7,:2 _3 4)) { report
-NB.   (ios2rios (< 3 4;7 6 5;_10 _9 _8 _7)) (] ;. 0) report
+NB.   (3 5 _7,:2 _3 4) (] ;. 0) brick
+NB.   (< 3 4;7 6 5;_10 _9 _8 _7) { brick
+NB.   (rios2ios (3 5 _7,:2 _3 4)) { brick
+NB.   (ios2rios (< 3 4;7 6 5;_10 _9 _8 _7)) (] ;. 0) brick
 NB.
 NB. Following are equivalents:
 NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4

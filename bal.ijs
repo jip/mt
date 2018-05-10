@@ -16,7 +16,7 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-10-19
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -853,7 +853,7 @@ NB.
 NB. Syntax:
 NB.   testggbal AB
 NB. where
-NB.   AB - 2×n×n-report
+NB.   AB - 2×n×n-brick
 
 testggbal=: 3 : 0
   rcond=. <./ gecon1"2 y

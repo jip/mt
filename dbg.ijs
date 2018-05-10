@@ -2,9 +2,9 @@ NB. Debug
 NB.
 NB. dbg  Conj. to force verb to show debug info
 NB.
-NB. Version: 0.9.3 2015-08-09
+NB. Version: 0.10.2 2017-10-19
 NB.
-NB. Copyright 2010-2015 Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -29,7 +29,19 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-gshapes=: $`($ (; <) $ L: 0)@.(0 < L.)  NB. get shapes
+NB. get shape
+dbgshape=: $`($ (; <) $ L: 0)@.(0 < L.)
+
+NB. failure handler
+dbgfailed=: 1 : '(dbsig@dberr [ smoutput@(m ; ''FAILED'' ; coname))@'''''
+
+NB. success handlers
+dbgsucceed1=: 1 : '[ smoutput@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_    )'
+dbgsucceed2=: 1 : '[ smoutput@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_ ; <)'
+
+NB. argument[s] handlers
+dbgarg1=: 2 : '] [ smoutput@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_     ) : ((''x'' ; ''y'') ,@,. ,:& dbgshape_mt_     ))'
+dbgarg2=: 2 : '] [ smoutput@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_ ; < ) : ((''x'' ; ''y'') ,@,. ,:&(dbgshape_mt_ ; <)))'
 
 NB. ---------------------------------------------------------
 NB. dbg1
@@ -49,29 +61,9 @@ NB.           and valency, input's and output's shapes
 NB.   vdbg2 - the same output as by vdbg1 plus input's and
 NB.           output's values
 
-dbg1=: 2 : 0
-  smoutput 'dbg' ; (coname '') ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y)
-  o=. u y
-  smoutput 'dbg' ; (coname '') ; (n , ' SUCCESS') ; (gshapes_mt_ o)
-  o
-:
-  smoutput 'dbg' ; (coname '') ; 'x' ; (gshapes_mt_ x) ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y)
-  o=. x u y
-  smoutput 'dbg' ; (coname '') ; (n , ' SUCCESS') ; (gshapes_mt_ o)
-  o
-)
+dbg1=: 2 : '(n dbgsucceed1_mt_)@u^:(1:`((u b. 0) dbgarg1_mt_ n)) :: (n dbgfailed_mt_)'
 
-dbg2=: 2 : 0
-  smoutput 'dbg' ; (coname '') ; (n , ' [MONAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y) ; < y
-  o=. u y
-  smoutput 'dbg' ; (coname '') ; (n , ' SUCCESS') ; (gshapes_mt_ o) ; < o
-  o
-:
-  smoutput 'dbg' ; (coname '') ; 'x' ; (gshapes_mt_ x) ; x ; (n , ' [DYAD] ' , (": u b. 0)) ; 'y' ; (gshapes_mt_ y) ; < y
-  o=. x u y
-  smoutput 'dbg' ; (coname '') ; (n , ' SUCCESS') ; (gshapes_mt_ o) ; < o
-  o
-)
+dbg2=: 2 : '(n dbgsucceed2_mt_)@u^:(1:`((u b. 0) dbgarg2_mt_ n)) :: (n dbgfailed_mt_)'
 
 NB. =========================================================
 NB. Interface

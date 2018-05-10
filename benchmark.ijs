@@ -2,7 +2,7 @@ NB. Benchmark
 NB.
 NB. benchmark  Adv. to make dyad to benchmark mt addon
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-10-19
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -174,7 +174,7 @@ benchmark=: 1 : 0
   timespacex_z_=: timex , (_."_)
   TESTLOGFILE_mt_=: < jpath '~temp/mt.benchmark.' , x , '.log'
 
-  measurements=. i. 0 0 0  NB. (# y)×(# verbs)×BMKRUNS-report of boxed strings 'n/a' or with formatted float
+  measurements=. i. 0 0 0  NB. (# y)×(# verbs)×BMKRUNS-brick of boxed strings 'n/a' or with formatted float
   titles=. ''  NB. (# y)-vector of boxed titles
   iosize=. 0
   while. iosize < # y do.
@@ -214,7 +214,7 @@ benchmark=: 1 : 0
 
   NB. replace 'n/a' by _. , convert to float, unbox
   measurements=. (measurements = < 'n/a')} measurements ,: < '_.'
-  measurements=. > ". L: 0 measurements  NB. (# y)×(# verbs)×BMKRUNS-report of floats and possibly NaNs
+  measurements=. > ". L: 0 measurements  NB. (# y)×(# verbs)×BMKRUNS-brick of floats and possibly NaNs
 
   NB. for each verb: exclude NaNs, take minimum execution time [1]
   rounds=. <./@(#~ -.@(128!:5))"1 measurements  NB. (# y)×(# verbs)-matrix of floats
@@ -222,7 +222,7 @@ benchmark=: 1 : 0
   NB. for each size: estimate benchmark value
   out=. +/"1 rounds  NB. (# y)-vector of floats
 
-  NB. prepare report and save
+  NB. prepare brick and save
   (clipfmt y ,. out) fwrite '~temp/mt.benchmark.' , x , '.result'
 
   timespacex_z_=: timespacex_bak f.

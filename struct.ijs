@@ -62,9 +62,9 @@ NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2018-05-04
 NB.
-NB. Copyright 2007-2017 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
+NB. Copyright 2007-2018 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -510,7 +510,6 @@ NB.   S    ≥ 0, the length of d-th diagonal
 NB.   k    ≤ S, the length of vector e
 NB.
 NB. Examples:
-NB.
 NB.    (2;a:) setdiag 4 4 $ 0          (2;_1 1 1) setdiag 4 4 $ 0
 NB. 2 0 0 0                         0 0 0 0
 NB. 0 2 0 0                         0 0 0 0

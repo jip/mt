@@ -2,6 +2,8 @@ NB. Random arrays
 NB.
 NB. trxxmat    Adv. to make verb to make random square
 NB.            triangular matrix
+NB. kmsmat     Adv. to make monad to make random
+NB.            Kac-Murdock-Szego (KMS) matrix
 NB. gemat      Make random real array
 NB. dimat      Conj. to make verb to make random
 NB.            diagonalizable matrix
@@ -25,7 +27,7 @@ NB. testptmat  Test ptmatx by matrix size given
 NB. testspmat  Test spmat by matrix shape given
 NB. testrand   Test xxxxmatx by matrix shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-10-10
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.

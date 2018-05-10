@@ -19,7 +19,7 @@ NB.            definite tridiagonal matrix
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-04-25
 NB.
 NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
@@ -1430,6 +1430,45 @@ NB.   partitioned algorithm
 
 potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0&{::))`,`(ct@])`trsmllnn`(0 1&{::)`[`mp`[`]`(1 1&{::)`stitchb`(potrfl@:-~)`]`[`0:`0: fork6)@(<;.1~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
+NB. potrfl=: 3 : 0
+NB.   n=. # y
+NB.   if. n > 1 do.
+NB.     p=. >. -: n
+NB.     Ta=. potrfl (2 # p) {. y     NB. recursively factorize square matrix from top left or bottom right corner
+NB.     Ac=. (p ([ , -) n) {. y      NB. off-diagonal part of input matrix
+NB.     Tb=. ct Tbh=. Ta trtrslx Ac  NB. off-diagonal part of output matrix
+NB.     Aa=. (2 # p) }. y            NB. square matrix from opposite corner on diagonal of input matrix
+NB.     Tc=. potrfl Aa - Tb mp Tbh   NB. recursively factorize square matrix from opposite corner on diagonal
+NB.     Ta 0 append (Tb ,. Tc)       NB. assemble output as triangular matrix
+NB.   else.
+NB.     %: y
+NB.   end.
+NB. )
+
+potrfl2=: 3 : 0
+  n=. # y
+  ATL=. EMPTY
+  ATR=. i. 0 , n
+  ABL=. i. n , 0
+  ABR=. y
+  while.
+    n > # ATL
+  do.
+    b=. TRFNB <. # ABR
+    A10=. b {. ABL
+    NB. ( A11 ) = ( A11 ) - ( A10 ) * A10'
+    NB. ( A21 )   ( A21 )   ( A20 )
+    'A11 A21'=. b ({. ; }.) (b {."1 ABR) - ABL mp ct A10
+    A11=. potrfl2 A11  NB. may fail
+    A21=. A21 mp 128!:1 ct A11  NB. A21=. A21 mp ct trtril A11
+    ATL=. ATL , A10 ,. A11
+    ATR=. (b }."1 ATR) , b ((([ , -) c) {. ]) ABR
+    ABL=. (b }. ABL) ,. A21
+    ABR=. (2 # b) }. ABR
+  end.
+  (ATL ,. ABR) , ABL ,. ABR
+)
+
 NB. ---------------------------------------------------------
 NB. potrfu
 NB.
@@ -1632,10 +1671,7 @@ NB. - use temporary locale mttmp to avoid mt's names
 NB.   redefinition
 
 testgetrf=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/misc/makemat.ijs'   NB. FIXME: ...
-  load_mttmp_ :: ] '~addons/math/misc/matutil.ijs'   NB.   ... J doesn't ...
-  load_mttmp_ :: ] '~addons/math/misc/linear.ijs'    NB.   ... execute 'require' ...
-  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'  NB.   ... recursively
+  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'
   require :: ] '~addons/math/lapack/lapack.ijs'
   need_jlapack_ :: ] 'getrf'
 

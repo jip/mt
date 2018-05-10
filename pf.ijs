@@ -13,7 +13,7 @@ NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2017-11-02
 NB.
 NB. Copyright 2012-2017 Igor Zhuravlov
 NB.
@@ -2169,7 +2169,7 @@ NB.            that the rank is well defined with respect to
 NB.            the threshold chosen
 NB.   Q      - m×k-matrix with orthonormal columns, which is
 NB.            defined as the first k columns of a product
-NB.           of k elementary reflectors
+NB.            of k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:

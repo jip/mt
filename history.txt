@@ -162,4 +162,9 @@ math/mt - change history
  * minor fixes in comments
 
 == 0.10.2 ==
- * replace "report" term by "brick" in comments
+ replace "report" term by "brick" in comments
+ fix minor typos in comments
+ * dbg:  tacitized
+ * mt:   shorter refs to addon's stuff
+ * rand: kmsmat descr. in comment added
+ * trf:  minor refactoring

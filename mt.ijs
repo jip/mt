@@ -17,7 +17,6 @@ NB. FP_EMAX      Max exponent for normalized numbers
 NB. FP_OVFL      Max normalized positive number
 NB. FP_SFMIN     Safe min, such that 1/FP_SFMIN does not
 NB.              overflow
-NB. EMPTY        i. 0 0
 NB.
 NB. testlow      Adv. to make verb to test low-level
 NB.              algorithms by matrix of generator and shape
@@ -31,9 +30,9 @@ NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.2 2018-05-03
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2018 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -105,50 +104,50 @@ NB. Includes
 NB. ---------------------------------------------------------
 NB. System definitions
 
-require '~addons/math/misc/mathutil.ijs'  NB. mp_mt_
-require 'general/misc/format'             NB. clipfmt clipunfmt
+require 'math/misc/mathutil'   NB. mp_mt_
+require 'general/misc/format'  NB. clipfmt clipunfmt
 
 NB. ---------------------------------------------------------
 NB. Addon definitions
 
 NB. utilities
-require '~addons/math/mt/dbg.ijs'         NB. Debug
-require '~addons/math/mt/fork.ijs'        NB. Extended forks
-require '~addons/math/mt/util.ijs'        NB. Utilities
-require '~addons/math/mt/ios.ijs'         NB. IOS
-require '~addons/math/mt/norm.ijs'        NB. Norms
-require '~addons/math/mt/quatern.ijs'     NB. Quaternions
-require '~addons/math/mt/struct.ijs'      NB. Structure handlers
-require '~addons/math/mt/rand.ijs'        NB. Random arrays
-require '~addons/math/mt/test.ijs'        NB. Test
-require '~addons/math/mt/benchmark.ijs'   NB. Benchmark
+require 'math/mt/dbg'          NB. Debug
+require 'math/mt/fork'         NB. Extended forks
+require 'math/mt/util'         NB. Utilities
+require 'math/mt/ios'          NB. IOS
+require 'math/mt/norm'         NB. Norms
+require 'math/mt/quatern'      NB. Quaternions
+require 'math/mt/struct'       NB. Structure handlers
+require 'math/mt/rand'         NB. Random arrays
+require 'math/mt/test'         NB. Test
+require 'math/mt/benchmark'    NB. Benchmark
 
 NB. low-level
-require '~addons/math/mt/bak.ijs'         NB. Restore original eigenvectors
-require '~addons/math/mt/bal.ijs'         NB. Balance
-require '~addons/math/mt/cond.ijs'        NB. Condition number
-require '~addons/math/mt/ref.ijs'         NB. Reflection
-require '~addons/math/mt/rot.ijs'         NB. Rotation
-require '~addons/math/mt/gq.ijs'          NB. Generate Q from its factored form
-require '~addons/math/mt/mq.ijs'          NB. Multiply by Q represented in factored form
-require '~addons/math/mt/scl.ijs'         NB. Scale
-require '~addons/math/mt/sm.ijs'          NB. Solve linear monomial equation with triangular matrix
+require 'math/mt/bak'          NB. Restore original eigenvectors
+require 'math/mt/bal'          NB. Balance
+require 'math/mt/cond'         NB. Condition number
+require 'math/mt/ref'          NB. Reflection
+require 'math/mt/rot'          NB. Rotation
+require 'math/mt/gq'           NB. Generate Q from its factored form
+require 'math/mt/mq'           NB. Multiply by Q represented in factored form
+require 'math/mt/scl'          NB. Scale
+require 'math/mt/sm'           NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
-require '~addons/math/mt/eq.ijs'          NB. Eigenvalues and Schur form
-require '~addons/math/mt/evc.ijs'         NB. Eigenvectors
-require '~addons/math/mt/hrd.ijs'         NB. Hessenberg reduction
-require '~addons/math/mt/pf.ijs'          NB. Orthogonal factorization with pivoting
-require '~addons/math/mt/qf.ijs'          NB. Orthogonal factorization
-require '~addons/math/mt/trf.ijs'         NB. Triangular factorization
-require '~addons/math/mt/tri.ijs'         NB. Inverse by trf
-require '~addons/math/mt/trs.ijs'         NB. Solve linear monomial equation by trf
+require 'math/mt/eq'           NB. Eigenvalues and Schur form
+require 'math/mt/evc'          NB. Eigenvectors
+require 'math/mt/hrd'          NB. Hessenberg reduction
+require 'math/mt/pf'           NB. Orthogonal factorization with pivoting
+require 'math/mt/qf'           NB. Orthogonal factorization
+require 'math/mt/trf'          NB. Triangular factorization
+require 'math/mt/tri'          NB. Inverse by trf
+require 'math/mt/trs'          NB. Solve linear monomial equation by trf
 
 NB. high-level
-require '~addons/math/mt/ev.ijs'          NB. Eigenvalues and eigenvectors
-require '~addons/math/mt/exp.ijs'         NB. Matrix exponential
-require '~addons/math/mt/pow.ijs'         NB. Raise matrix to integer power[s]
-require '~addons/math/mt/sv.ijs'          NB. Solve linear monomial equation
+require 'math/mt/ev'           NB. Eigenvalues and eigenvectors
+require 'math/mt/exp'          NB. Matrix exponential
+require 'math/mt/pow'          NB. Raise matrix to integer power[s]
+require 'math/mt/sv'           NB. Solve linear monomial equation
 
 NB. =========================================================
 NB. Test suite

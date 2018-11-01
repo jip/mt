@@ -168,3 +168,6 @@ math/mt - change history
  * mt:   shorter refs to addon's stuff
  * rand: kmsmat descr. in comment added
  * trf:  minor refactoring
+
+== 0.10.3 ==
+ * quatern: qnk error fixed

@@ -11,7 +11,7 @@ NB. qnmod      Magnitude
 NB. qnsign     Signum
 NB. qnf        Adv. to quaternificate verb
 NB.
-NB. Version: 0.10.3 2018-11-01
+NB. Version: 0.10.4 2018-11-02
 NB.
 NB. Copyright 2010-2018 Igor Zhuravlov
 NB.
@@ -138,7 +138,6 @@ NB. References:
 NB. [1] E. A. Karataev. Inner conjugation of quaternions.
 NB.     Volzhskiy, 2002 (Е. А. Каратаев. Внутреннее
 NB.     сопряжение кватернионов. Волжский, 2002).
-NB.     http://karataev.nm.ru/
 
 NB. inner single conjugation
 qncon1=: -@+@{. ,     {:  NB. by 1
@@ -222,6 +221,5 @@ NB. References:
 NB. [1] L. G. Bairak. Integral Formula of Cauchy for
 NB.     Quaternions. 2010 (Л. Г. Байрак. Интегральная формула
 NB.     Коши для кватернионов. 2010).
-NB.     http://scholium.narod.ru
 
 qnf=: 1 : 'qn1_mt_ (u@(j. qn1_mt_) ((9 o. [) qn1_mt_ (* 11&o.)~) (% qn1_mt_)@]) qnmod_mt_@qnmarkijk_mt_ qn1_mt_ ]'

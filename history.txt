@@ -171,3 +171,6 @@ math/mt - change history
 
 == 0.10.3 ==
  * quatern: qnk error fixed
+
+== 0.10.4 ==
+ * quatern: bad links removed

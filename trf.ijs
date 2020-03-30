@@ -19,9 +19,9 @@ NB.            definite tridiagonal matrix
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.10.2 2017-04-25
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -144,7 +144,7 @@ NB.   h10h      - elements of subH10^H
 NB.   a11u      - elements of subA11upd
 NB.
 NB. Storage layout 2 (assume TRFNB<n):
-NB.   IOS from head:                 IOS from tail:
+NB.   ISO from head:                 ISO from tail:
 NB.     ipi      subA     lti          ipi          subA         lti
 NB.     0        0                     -(n-i)       -(n-i)
 NB.     ...      ...                   ...          ...
@@ -218,7 +218,7 @@ NB.                    p := liofmax lti
 NB.                  note: to force L1 to be truly diagonally
 NB.                        dominant replace sorim by soris in
 NB.                        liofmax definition
-NB.           2.5.2) remap lIOS to measure from tail, making
+NB.           2.5.2) remap lISO to measure from tail, making
 NB.                  possible to apply the same dip to arrays
 NB.                  of different lengths (see layout 2):
 NB.                    dip := (-(n-i-j),p-(n-i-j))
@@ -281,8 +281,8 @@ NB.     http://www.cs.cas.cz/miro/rst08.pdf
 lahefpl=: (3 : 0)^:(TRFNB<.#@(0&{::))
   'ip A lt t0 t1'=. y
   w=. lt ((-~&# { ]) ((}.~ #) - ({.~ #) mp ]) ((-~,-@[)&# {. ])) A
-  A=. (w,:lt) ((0 liosE),:(0 liosS))&c} A
-  w=. 0 (9&o.) upd w - lt (({.@[ * +@((_1 liosS)&# ({,) ])) :: 0:) A
+  A=. (w,:lt) ((0 lisoE),:(0 lisoS))&c} A
+  w=. 0 (9&o.) upd w - lt (({.@[ * +@((_1 lisoS)&# ({,) ])) :: 0:) A
   lt=. lt (+@}.@] - ((* }.)~ {.)) w
   dip=. (liofmax (-@] <@, -) #) lt
   ip=. dip C. :: ] ip
@@ -390,7 +390,7 @@ NB.   h11h      - elements of subH11^H
 NB.   a00u      - elements of subA00upd
 NB.
 NB. Storage layout 2 (assume TRFNB<n):
-NB.   IOS from head:
+NB.   ISO from head:
 NB.     ipi      subA     uti
 NB.     0        0        0
 NB.     ...      ...      ...
@@ -464,7 +464,7 @@ NB.                    p := liolmax uti
 NB.                  note: to force U1 to be truly diagonally
 NB.                        dominant replace sorim by soris in
 NB.                        liolmax definition
-NB.           2.5.2) form lIOS to measure from head, making
+NB.           2.5.2) form lISO to measure from head, making
 NB.                  possible to apply the same dip to arrays
 NB.                  of different lengths (see layout 2):
 NB.                    dip := (n-i-j-1,p)
@@ -523,8 +523,8 @@ NB.     http://www.cs.cas.cz/miro/rst08.pdf
 lahefpu=: (3 : 0)^:(TRFNB<.#@(0&{::))
   'ip A ut t0 t1'=. y
   w=. ut ((<:@-&# { ]) (({.~ c) - (}.~ c) mp ]) ((-,[)&# {. ])) A
-  A=. (ut,:w) ((0 liosN),:(0 liosW))&c} A
-  w=. _1 (9&o.) upd w - ut (({:@[ * +@((1 liosN)&# ({,) ])) :: 0:) A
+  A=. (ut,:w) ((0 lisoN),:(0 lisoW))&c} A
+  w=. _1 (9&o.) upd w - ut (({:@[ * +@((1 lisoN)&# ({,) ])) :: 0:) A
   ut=. ut (+@}:@] - ((* }:)~ {:)) w
   dip=. (<:@(1>.#) <@, liolmax) ut
   ip=. dip C. :: ] ip
@@ -1261,7 +1261,7 @@ hetrfpl=: 3 : 0
     ip=. dip C. ip
     subL1=. trl1 (_,TRFNB) rt y
     L1=. (dip C. L1) stitchb subL1
-    y=. ((2 # TRFNB) }. y) - (((TRFNB }. subL1) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 { :: ] lt) * (1 (0}) :: ] lt)) */ + (lt ((_1 liosS)&# ({,) ]) y))
+    y=. ((2 # TRFNB) }. y) - (((TRFNB }. subL1) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 { :: ] lt) * (1 (0}) :: ] lt)) */ + (lt ((_1 lisoS)&# ({,) ]) y))
     i=. TRFNB + i
   end.
   T=. t1 (((setdiag~ ;&_1) (setdiag~ + ; 1:) ])~ diagmat) t0
@@ -1367,7 +1367,7 @@ hetrfpu=: 3 : 0
     ip=. dip C. ip
     subU1=. (tru1~ -~/@$) (_,-TRFNB) rt y
     U1=. subU1 stitcht (dip C. U1)
-    y=. ((2 # -TRFNB) }. y) - ((((-TRFNB) }. subU1) mp ((-TRFNB) ((((0>.+)#),[) }. ]) y)) + ((_1 { :: ] ut) * (1 (_1}) :: ] ut)) */ + (ut ((1 liosN)&# ({,) ]) y))
+    y=. ((2 # -TRFNB) }. y) - ((((-TRFNB) }. subU1) mp ((-TRFNB) ((((0>.+)#),[) }. ]) y)) + ((_1 { :: ] ut) * (1 (_1}) :: ] ut)) */ + (ut ((1 lisoN)&# ({,) ]) y))
     i=. i - TRFNB
   end.
   T=. t1 (((setdiag~ ;&1) (setdiag~ + ; _1:) ])~ diagmat) t0

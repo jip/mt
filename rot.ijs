@@ -9,9 +9,9 @@ NB.
 NB. testlartg  Test lartg by vectors
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -180,7 +180,7 @@ NB.               rot&.|:  NB. apply rotation to rows
 NB.               rot      NB. apply rotation to columns
 NB.   vapp    - monad to generate and apply rotation; is
 NB.             called as:
-NB.               'Aupd cs'=. vapp A ; iossubA ; iosfg
+NB.               'Aupd cs'=. vapp A ; isosubA ; isofg
 NB.   cs      - 2-vector (c,s), output of lartg, defines
 NB.             rotation matrix
 NB.   A       - m×n-matrix to update
@@ -190,15 +190,15 @@ NB.   subA    - 2×any-matrix or any×2-matrix, array of
 NB.             2-vectors to apply rotation
 NB.   subAupd - matrix of the same shape as subA, the rotated
 NB.             subA
-NB.   iossubA - IOS of subA (subAupd) within A (Aupd)
-NB.   iosfg   - IOS within subA of 2-vector (f,g) which
+NB.   isosubA - ISO of subA (subAupd) within A (Aupd)
+NB.   isofg   - ISO within subA of 2-vector (f,g) which
 NB.             defines rotation
 
 rotga=: 1 : 0
-  'A iossubA iosfg'=. y
-  subA=. iossubA { A
-  cs=. lartg_mt_ iosfg { subA
-  ((cs u subA) iossubA} A) ; cs
+  'A isosubA isofg'=. y
+  subA=. isosubA { A
+  cs=. lartg_mt_ isofg { subA
+  ((cs u subA) isosubA} A) ; cs
 )
 
 NB. ---------------------------------------------------------
@@ -228,7 +228,7 @@ NB.   io      - IO either row (rotscll) or column (rotsclu)
 NB.             to scale
 NB.   cs      - 2-vector (c,s), output of lartg, defines
 NB.             rotation matrix
-NB.   iof,iog - IOS either rows (rotscll) or columns
+NB.   iof,iog - ISO either rows (rotscll) or columns
 NB.             (rotsclu) which contain 2-vectors (f,g) to
 NB.             rotate, iof≠iog
 NB.

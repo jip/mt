@@ -27,9 +27,9 @@ NB. testptmat  Test ptmatx by matrix size given
 NB. testspmat  Test spmat by matrix shape given
 NB. testrand   Test xxxxmatx by matrix shape given
 NB.
-NB. Version: 0.10.2 2017-10-10
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -286,10 +286,10 @@ NB.        ve=. randx ne
 NB.   2) prepare fret:
 NB.      2.0) make zero ne-vector:
 NB.             f=. ne $ 0
-NB.      2.1) make lIOS for start of an interval marks:
-NB.             lios=. +/\ i. ne
+NB.      2.1) make lISO for start of an interval marks:
+NB.             liso=. +/\ i. ne
 NB.      2.2) write in marks:
-NB.             f=. 1 lios} f
+NB.             f=. 1 liso} f
 NB.   3) cut ve on pieces of length (1 2 3 ... n) and stack
 NB.      them into lower triangular matrix:
 NB.        L=. f ];.1 ve

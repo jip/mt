@@ -16,9 +16,9 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.10.2 2017-10-19
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -113,7 +113,7 @@ NB.   Out: p, hs
 NB.   1) extract verbs ioz, getv, mkt, dhs from u
 NB.   2) extract p, hs, nz from y
 NB.   3) extract h, s from hs
-NB.   4) while there are zeros in nz fragment with rIOS
+NB.   4) while there are zeros in nz fragment with rISO
 NB.      (,.hs), traverse direction:
 NB.      4.1) find nz amendment (nza) after vectors swapping
 NB.           (indirect zi because vector zi may be swapped
@@ -414,13 +414,13 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
     end.
   end.
   bt=. n <. h + s
-  rios=. ,. hs
+  riso=. ,. hs
   whilst. noconv do.
     noconv=. 0
     i=. <: h
     while. bt > i=. >: i do.
       rc=. i ({ ; {"1) S
-      'r c'=. 0&(rios norm1t;.0 i}) L: 0 rc
+      'r c'=. 0&(riso norm1t;.0 i}) L: 0 rc
       if. x do.
         NB. act as TB01ID
         if. r *.&(0&=) c do.
@@ -571,14 +571,14 @@ ggballp=: 3 : 0
   j=. h + s - 1
   while. j >: h do.
     v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
-    lios=. I. 0 ~: v
-    select. # lios
+    liso=. I. 0 ~: v
+    select. # liso
       fcase. 1 do.
         nst=. < j , h + s - 1
         pr=. nst C. :: ] pr
         y=. nst C."1 :: ] y
       case. 0 do.
-        nst=. < (h + {. lios) , h + s - 1
+        nst=. < (h + {. liso) , h + s - 1
         pl=. nst C. :: ] pl
         y=. nst C."2 :: ] y
         s=. <: s
@@ -590,14 +590,14 @@ ggballp=: 3 : 0
   i=. h
   while. i < h + s do.
     v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
-    lios=. I. 0 ~: v
-    select. # lios
+    liso=. I. 0 ~: v
+    select. # liso
       fcase. 1 do.
         nst=. < i , h
         pl=. nst C. :: ] pl
         y=. nst C."2 :: ] y
       case. 0 do.
-        nst=. < (h + {. lios) , h
+        nst=. < (h + {. liso) , h
         pr=. nst C. :: ] pr
         y=. nst C."1 :: ] y
         i=. h=. >: h
@@ -616,14 +616,14 @@ ggbalup=: 3 : 0
   i=. h + s - 1
   while. i >: h do.
     v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
-    lios=. I. 0 ~: v
-    select. # lios
+    liso=. I. 0 ~: v
+    select. # liso
       fcase. 1 do.
         nst=. < i , h + s - 1
         pl=. nst C. :: ] pl
         y=. nst C."2 :: ] y
       case. 0 do.
-        nst=. < (h + {. lios) , h + s - 1
+        nst=. < (h + {. liso) , h + s - 1
         pr=. nst C. :: ] pr
         y=. nst C."1 :: ] y
         s=. <: s
@@ -635,14 +635,14 @@ ggbalup=: 3 : 0
   j=. h
   while. j < h + s do.
     v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
-    lios=. I. 0 ~: v
-    select. # lios
+    liso=. I. 0 ~: v
+    select. # liso
       fcase. 1 do.
         nst=. < j , h
         pr=. nst C. :: ] pr
         y=. nst C."1 :: ] y
       case. 0 do.
-        nst=. < (h + {. lios) , h
+        nst=. < (h + {. liso) , h
         pl=. nst C. :: ] pl
         y=. nst C."2 :: ] y
         j=. h=. >: h
@@ -740,8 +740,8 @@ ggbals=: 3 : 0
   lsfmax=. <.    GGBALSCLFAC ^. % FP_SFMIN
   irab=. h + (0 2 ,. hs ,. h , _) liofmax"1;.0 CD
   icab=. (0 2 ,. (0 , h + s) ,. hs) liofmax"1@:(|:"2);.0 CD
-  rab=. >./ | (<"1 irab ,.~"1 dhs2lios hs) {"1 2 CD
-  cab=. >./ | (<"1 icab ,. "1 dhs2lios hs) {"1 2 CD
+  rab=. >./ | (<"1 irab ,.~"1 dhs2liso hs) {"1 2 CD
+  cab=. >./ | (<"1 icab ,. "1 dhs2liso hs) {"1 2 CD
   lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab ,: cab
   dlr=. GGBALSCLFAC ^ lsfmax <. (lsfmax - lxab) <. lsfmin >. <. 0.5 + dlr
   dlr=. (-h) |."1 (c CD) {.!.1"1 dlr  NB. adjust dlr's shape

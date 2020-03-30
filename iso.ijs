@@ -1,20 +1,20 @@
-NB. IOS
+NB. ISO
 NB.
 NB. liofmax    lIO 1st element with maximum sum of real and
 NB.            imagine parts' modules
 NB. liolmax    lIO last element with maximum sum of real and
 NB.            imagine parts' modules
-NB. th2lios    Generate lIOS from tail and head
-NB. dhs2lios   Generate lIOS from head, size and optional
+NB. th2liso    Generate lISO from tail and head
+NB. dhs2liso   Generate lISO from head, size and optional
 NB.            delta
-NB. rios2ios   Convert rIOS to IOS
-NB. rios2lios  Convert rIOS to lIOS
-NB. liosX      lIOS of vector laying between diagonal and
+NB. riso2iso   Convert rISO to ISO
+NB. riso2liso  Convert rISO to lISO
+NB. lisoX      lISO of vector laying between diagonal and
 NB.            matrix edge
 NB.
-NB. Version: 0.10.2 2017-10-19
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -41,28 +41,28 @@ NB. Concepts
 NB.
 NB. IO   - index of
 NB. lIO  - linear IO, is an integer
-NB. IOS  - indices of
-NB. lIOS - linear IOS, is a vector of integers
-NB. rIOS - rectangular IOS, for r-rank array is a 2×r-array
+NB. ISO  - indices of
+NB. lISO - linear ISO, is a vector of integers
+NB. rISO - rectangular ISO, for r-rank array is a 2×r-array
 NB.        of integers ((head0,head1,...),:(size0,size1,...))
 NB.
 NB. Following are equivalents:
 NB.   (3 5 _7,:2 _3 4) (] ;. 0) brick
 NB.   (< 3 4;7 6 5;_10 _9 _8 _7) { brick
-NB.   (rios2ios (3 5 _7,:2 _3 4)) { brick
-NB.   (ios2rios (< 3 4;7 6 5;_10 _9 _8 _7)) (] ;. 0) brick
+NB.   (riso2iso (3 5 _7,:2 _3 4)) { brick
+NB.   (iso2riso (< 3 4;7 6 5;_10 _9 _8 _7)) (] ;. 0) brick
 NB.
 NB. Following are equivalents:
 NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4
-NB.   (4 lios2ios 1 6 11) { i. 3 4
-NB.   (4 ios2lios (0 1 ; 1 2 ; 2 3)) ({,) i. 3 4
+NB.   (4 liso2iso 1 6 11) { i. 3 4
+NB.   (4 iso2liso (0 1 ; 1 2 ; 2 3)) ({,) i. 3 4
 NB.   1 6 11 ({,) i. 3 4
 
 NB. =========================================================
 NB. Local definitions
 
-NB. convert rIOS to opened (non-boxed) IOS
-rios2oios=: <@dhs2lios/"1@:|:
+NB. convert rISO to opened (non-boxed) ISO
+riso2oiso=: <@dhs2liso/"1@:|:
 
 NB. =========================================================
 NB. Interface
@@ -78,156 +78,156 @@ NB. lIO last element e with max(|Re(e)|+|Im(e)|) from list y
 liolmax=: (i:>./)@sorim
 
 NB. ---------------------------------------------------------
-NB. th2lios
+NB. th2liso
 NB.
 NB. Description:
-NB.   Generate lIOS from tail and head
+NB.   Generate lISO from tail and head
 NB.
 NB. Syntax:
-NB.   lios=. t th2lios h
+NB.   liso=. t th2liso h
 NB. where
-NB.   h    - integer, head of lios
-NB.   t    - integer, tail of lios
-NB.   lios - (x-y)-vector of integers, lIOS from head h to
+NB.   h    - integer, head of liso
+NB.   t    - integer, tail of liso
+NB.   liso - (x-y)-vector of integers, lISO from head h to
 NB.          tail (t-1) with delta=1:
 NB.            h (h+1) ... (t-1)
 NB.
 NB. Notes:
 NB. - monadic case is possible, though awkward:
-NB.     _3 _2 _1 -: th2lios _3
-NB.     5 4 3    -: th2lios  3
+NB.     _3 _2 _1 -: th2liso _3
+NB.     5 4 3    -: th2liso  3
 
-th2lios=: ] + i.@-
+th2liso=: ] + i.@-
 
 NB. ---------------------------------------------------------
-NB. dhs2lios
+NB. dhs2liso
 NB.
 NB. Description:
-NB.   Generate lIOS from head, size and delta
+NB.   Generate lISO from head, size and delta
 NB.
 NB. Syntax:
-NB.   lios=. [d] dhs2lios (h,s)
+NB.   liso=. [d] dhs2liso (h,s)
 NB. where
-NB.   h    - integer, head of lios, if h<0 then lios is
+NB.   h    - integer, head of liso, if h<0 then liso is
 NB.          pointed to h, otherwise away from h
-NB.   s    - integer, size of lios, if s<0 then lios's order
+NB.   s    - integer, size of liso, if s<0 then liso's order
 NB.          is reversed
-NB.   d    ≥ 0 integer, optional delta of lios, default is 1
-NB.   lios - |s|-vector of integers
+NB.   d    ≥ 0 integer, optional delta of liso, default is 1
+NB.   liso - |s|-vector of integers
 NB.
 NB. Examples:
-NB.    2 dhs2lios 4 3                 2 dhs2lios _4 3
+NB.    2 dhs2liso 4 3                 2 dhs2liso _4 3
 NB. 4 6 8                          _8 _6 _4
-NB.    2 dhs2lios 4 _3                2 dhs2lios _4 _3
+NB.    2 dhs2liso 4 _3                2 dhs2liso _4 _3
 NB. 8 6 4                          _4 _6 _8
 NB.
 NB. Notes:
-NB. - monadic case models rIOS in (u;.0) with following
+NB. - monadic case models rISO in (u;.0) with following
 NB.   difference: s cannot be ±∞
 
-dhs2lios=: 1&$: :({.@] + (negneg~ {.) * i.@(negneg/)@])
+dhs2liso=: 1&$: :({.@] + (negneg~ {.) * i.@(negneg/)@])
 
 NB. ---------------------------------------------------------
-NB. rios2ios
+NB. riso2iso
 NB.
 NB. Description:
-NB.   Convert rIOS to IOS
+NB.   Convert rISO to ISO
 NB.
 NB. Syntax:
-NB.   ios=. rios2ios rios
+NB.   iso=. riso2iso riso
 NB.
 NB. Notes:
-NB. - rios with columns count less than array's rank is
+NB. - riso with columns count less than array's rank is
 NB.   indexing the slice
 
-rios2ios=: <"1@rios2oios
+riso2iso=: <"1@riso2oiso
 
 NB. ---------------------------------------------------------
-NB. rios2lios
+NB. riso2liso
 NB.
 NB. Description:
-NB.   Convert rIOS to lIOS
+NB.   Convert rISO to lISO
 NB.
 NB. Syntax:
-NB.   lios=. sh rios2lios rios
+NB.   liso=. sh riso2liso riso
 NB. where
-NB.   rios  - 2×r-array of integers, rIOS of subarray:
+NB.   riso  - 2×r-array of integers, rISO of subarray:
 NB.             (2,r) $ from[0:r-1],size[0:r-1]
 NB.   sh    - r-array of integers, shape of array to explore:
 NB.             Size[0:r-1]
-NB.   lios  - |Π{size[i],i=0:r-1}|-array of integers, rowwise
-NB.           lIOS of subarray elements
+NB.   liso  - |Π{size[i],i=0:r-1}|-array of integers, rowwise
+NB.           lISO of subarray elements
 NB.   r     ≥ 0, integer, rank of array to explore
 NB.
 NB. Formula:
-NB.   lios[k] := Σ{Π{Size[j],j=i+1:r-1}*(n[k][i]-(n[k][i+1]<0 ? 1 : 0)),i=0:r-2} + n[k][r-1]
+NB.   liso[k] := Σ{Π{Size[j],j=i+1:r-1}*(n[k][i]-(n[k][i+1]<0 ? 1 : 0)),i=0:r-2} + n[k][r-1]
 NB. where
-NB.   k       = 0:|Π{size[i],i=0:r-1}|-1, IO lios' item
-NB.   n[k][i] - i-th axis' IO for k-th lios' item
+NB.   k       = 0:|Π{size[i],i=0:r-1}|-1, IO liso' item
+NB.   n[k][i] - i-th axis' IO for k-th liso' item
 NB.
 NB. Assertions:
-NB.   (lios ({,) array) -: (rios (, ;. 0) array)
+NB.   (liso ({,) array) -: (riso (, ;. 0) array)
 NB. where
-NB.   rios=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
+NB.   riso=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
 NB.   sh=. 10 11 12 13
 NB.   array=. i. sh
-NB.   lios=. sh rios2lios rios
+NB.   liso=. sh riso2liso riso
 
-rios2lios=: */\.@(1&(|.!.1))@[ +/@:* (+ 1&(|.!.0)@(0&>))@|:@:>@,@{@rios2oios@]
+riso2liso=: */\.@(1&(|.!.1))@[ +/@:* (+ 1&(|.!.0)@(0&>))@|:@:>@,@{@riso2oiso@]
 
 NB. ---------------------------------------------------------
-NB. liosE
-NB. liosN
-NB. liosS
-NB. liosW
+NB. lisoE
+NB. lisoN
+NB. lisoS
+NB. lisoW
 NB.
 NB. Description:
-NB.   lIOS of vector laying between diagonal and matrix edge
+NB.   lISO of vector laying between diagonal and matrix edge
 NB.   in any of one cardinal direction: east, north, south or
 NB.   west; and having optional gap between diagonal, at head
 NB.   or tail
 NB.
 NB. Syntax:
-NB.   vapp=. gap liosX
+NB.   vapp=. gap lisoX
 NB. where
-NB.   liosX - adv., any of: liosE liosN liosS liosW
+NB.   lisoX - adv., any of: lisoE lisoN lisoS lisoW
 NB.   gap   - integer, negative value means "from
 NB.           head", otherwise "from tail"
-NB.   vapp  - dyad to return lios; is called as:
-NB.             lios=. l vapp n
-NB.   lios  - l-vector of integers, lIOS of v in ravelled A
+NB.   vapp  - dyad to return liso; is called as:
+NB.             liso=. l vapp n
+NB.   liso  - l-vector of integers, lISO of v in ravelled A
 NB.   v     - l-vector from A:
-NB.             v -: lios ({,) A
+NB.             v -: liso ({,) A
 NB.   A     - m×n-matrix
 NB.
 NB. Examples:
-NB.    '***' ((((0 liosE)&c)}),.' ',.(((1 liosE)&c)}),.' ',.(((_1 liosE)&c)})) 5 6$'-'
+NB.    '***' ((((0 lisoE)&c)}),.' ',.(((1 lisoE)&c)}),.' ',.(((_1 lisoE)&c)})) 5 6$'-'
 NB. ------ ------ ------
 NB. ------ --***- ---***
 NB. ---*** ------ ------
 NB. ------ ------ ------
 NB. ------ ------ ------
-NB.    '***' ((((0 liosN)&c)}),.' ',.(((1 liosN)&c)}),.' ',.(((_1 liosN)&c)})) 5 6$'-'
+NB.    '***' ((((0 lisoN)&c)}),.' ',.(((1 lisoN)&c)}),.' ',.(((_1 lisoN)&c)})) 5 6$'-'
 NB. --*--- ---*-- ------
 NB. --*--- ---*-- ---*--
 NB. --*--- ---*-- ---*--
 NB. ------ ------ ---*--
 NB. ------ ------ ------
-NB.    '***' ((((0 liosS)&c)}),.' ',.(((1 liosS)&c)}),.' ',.(((_1 liosS)&c)})) 5 6$'-'
+NB.    '***' ((((0 lisoS)&c)}),.' ',.(((1 lisoS)&c)}),.' ',.(((_1 lisoS)&c)})) 5 6$'-'
 NB. ------ ------ ------
 NB. ------ --*--- ------
 NB. ---*-- --*--- --*---
 NB. ---*-- --*--- --*---
 NB. ---*-- ------ --*---
-NB.    '***' ((((0 liosW)&c)}),.' ',.(((1 liosW)&c)}),.' ',.(((_1 liosW)&c)})) 5 6$'-'
+NB.    '***' ((((0 lisoW)&c)}),.' ',.(((1 lisoW)&c)}),.' ',.(((_1 lisoW)&c)})) 5 6$'-'
 NB. ------ ------ ------
 NB. ------ ------ ------
 NB. ***--- ------ ------
 NB. ------ ***--- -***--
 NB. ------ ------ ------
 
-liosE=: 1 : 'dhs2lios_mt_@(((_1 - 0 >. m) -  (* ((<: | m)&+))~) , [)'
-liosW=: 1 : 'dhs2lios_mt_@(((     0 <. m) -~ (* ((<: | m)&+))~) , [)'
+lisoE=: 1 : 'dhs2liso_mt_@(((_1 - 0 >. m) -  (* ((<: | m)&+))~) , [)'
+lisoW=: 1 : 'dhs2liso_mt_@(((     0 <. m) -~ (* ((<: | m)&+))~) , [)'
 
-liosN=: 1 : '] dhs2lios_mt_ (((-~ ((<: | m)&+))~ (*&(0 <. m))) , [)'
-liosS=: 1 : '] dhs2lios_mt_ (((-~ ((-  | m)&-))~ (*&(0 >. m))) , [)'
+lisoN=: 1 : '] dhs2liso_mt_ (((-~ ((<: | m)&+))~ (*&(0 <. m))) , [)'
+lisoS=: 1 : '] dhs2liso_mt_ (((-~ ((-  | m)&-))~ (*&(0 >. m))) , [)'

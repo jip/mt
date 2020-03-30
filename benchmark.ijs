@@ -2,9 +2,9 @@ NB. Benchmark
 NB.
 NB. benchmark  Adv. to make dyad to benchmark mt addon
 NB.
-NB. Version: 0.10.2 2017-10-19
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -193,16 +193,8 @@ benchmark=: 1 : 0
     iosize=. >: iosize
   end.
 
-  NB. extract verb names from last run. this:
-  NB.   '(?m)^.{40}' rxall TESTLOG_mt_
-  NB. and this:
-  NB.   '(?m)(^|\n)\K.{40}' rxall TESTLOG_mt_
-  NB. works incorrectly: instead of extracting verb names
-  NB. they return entire input chopped by 40 chars. to
-  NB. workaround it we apply two regexes separarely:
-  NB.   ^.{40}                 to extract 1st verb's name
-  NB.   (?m)(?<=\n)^.{40}      to extract all but the first names
-  measuredverbs=. rtb_mt_ L: 0 ('^.{40}'&rxall , '(?m)(?<=\n)^.{40}'&rxall) TESTLOG_mt_
+  NB. extract verb names from last run
+  measuredverbs=. rtb_mt_ L: 0 '^.{40}'&rxall TESTLOG_mt_
 
   NB. not all measured verbs belongs to mt addon, so filter aliens out
   iofellows=. measuredverbs e. namelist_mt_ 3

@@ -120,8 +120,8 @@ tmonad=: 2 : 0
   try. berr=. y vberr out                             catch. berr=. _.        end.
   logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
-  logline=. logline , LF
-  logline 1!:3^:(0 < #@]) TESTLOGFILE_mt_
+  wd^:IFQT 'msgs'
+  logline (1!:3~ ,&LF)~^:(0 < #@]) TESTLOGFILE_mt_
   TESTLOG_mt_=: TESTLOG_mt_ , logline
   EMPTY
 )
@@ -137,8 +137,8 @@ tdyad=: 2 : 0
   try. berr=. y vberr out                             catch. berr=. _.        end.
   logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
-  logline=. logline , LF
-  logline 1!:3^:(0 < #@]) TESTLOGFILE_mt_
+  wd^:IFQT 'msgs'
+  logline (1!:3~ ,&LF)~^:(0 < #@]) TESTLOGFILE_mt_
   TESTLOG_mt_=: TESTLOG_mt_ , logline
   EMPTY
 )

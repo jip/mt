@@ -174,3 +174,7 @@ math/mt - change history
 
 == 0.10.4 ==
  * quatern: bad links removed
+
+== 0.10.5 ==
+ * benchmark: drop a workaround outdated
+ * test: minor optimizations

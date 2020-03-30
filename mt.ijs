@@ -30,9 +30,9 @@ NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.10.2 2018-05-03
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2018 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -114,7 +114,7 @@ NB. utilities
 require 'math/mt/dbg'          NB. Debug
 require 'math/mt/fork'         NB. Extended forks
 require 'math/mt/util'         NB. Utilities
-require 'math/mt/ios'          NB. IOS
+require 'math/mt/iso'          NB. ISO
 require 'math/mt/norm'         NB. Norms
 require 'math/mt/quatern'      NB. Quaternions
 require 'math/mt/struct'       NB. Structure handlers

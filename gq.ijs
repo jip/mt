@@ -27,9 +27,9 @@ NB. testunghr  Test unghrx by square matrix
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -111,7 +111,7 @@ NB. - implements LAPACK's DORGLQ, ZUNGLQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
 
-unglq=: ($:~ 0 _1 <./@:+ $) :(}:"1@(([ (({."1~ -@c) larfbrcfr ])  idmat      @(((] ,  +) #)~ c) appendr  ])&:>/)@([ (   (<;.1~      (0 1:`(GQNB dhs2lios  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@( idmat      @((- {.) ,  -~/@]) $))  tru1pick        @((   <./ @, 0 _1 + $) {.   ])))
+unglq=: ($:~ 0 _1 <./@:+ $) :(}:"1@(([ (({."1~ -@c) larfbrcfr ])  idmat      @(((] ,  +) #)~ c) appendr  ])&:>/)@([ (   (<;.1~      (0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@( idmat      @((- {.) ,  -~/@]) $))  tru1pick        @((   <./ @, 0 _1 + $) {.   ])))
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -160,7 +160,7 @@ NB. - implements LAPACK's DORGQL, ZUNGQL
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
 
-ungql=: ($:~ _1 0 <./@:+ $) :(}.  @(([ (({.  ~   #) larfblnbc ]) (idmat~ -~/)@(((] ,~ +) c)~ #) stitcht~ ])&:>/)@([ (|.@(<;.2~ '' ; (0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@((idmat~ -~/)@((- {:) ,~ - /@]) $)) (tru1pick~ -~/@$)@((-@(<./)@, _1 0 + $) {."1 ])))
+ungql=: ($:~ _1 0 <./@:+ $) :(}.  @(([ (({.  ~   #) larfblnbc ]) (idmat~ -~/)@(((] ,~ +) c)~ #) stitcht~ ])&:>/)@([ (|.@(<;.2~ '' ; (0 1:`(GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@((idmat~ -~/)@((- {:) ,~ - /@]) $)) (tru1pick~ -~/@$)@((-@(<./)@, _1 0 + $) {."1 ])))
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -209,7 +209,7 @@ NB. - implements LAPACK's DORGQR, ZUNGQR
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
 
-ungqr=: ($:~ _1 0 <./@:+ $) :(}:  @(([ (({.  ~ -@#) larfblnfc ])  idmat      @(((] ,~ +) c)~ #) stitchb  ])&:>/)@([ (   (<;.1~ '' ; (0 1:`(GQNB dhs2lios  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@( idmat      @((- {:) ,~ - /@]) $))  trl1pick        @((   <./ @, _1 0 + $) {."1 ])))
+ungqr=: ($:~ _1 0 <./@:+ $) :(}:  @(([ (({.  ~ -@#) larfblnfc ])  idmat      @(((] ,~ +) c)~ #) stitchb  ])&:>/)@([ (   (<;.1~ '' ; (0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@( idmat      @((- {:) ,~ - /@]) $))  trl1pick        @((   <./ @, _1 0 + $) {."1 ])))
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -257,7 +257,7 @@ NB. - implements LAPACK's DORGRQ, ZUNGRQ
 NB. - straightforward O(k*m^3) code:
 NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
 
-ungrq=: ($:~ 0 _1 <./@:+ $) :(}."1@(([ (({."1~   c) larfbrcbr ]) (idmat~ -~/)@(((] ,  +) #)~ c) appendl~ ])&:>/)@([ (|.@(<;.2~      (0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@((idmat~ -~/)@((- {.) ,  -~/@]) $)) (trl1pick~ -~/@$)@((-@(<./)@, 0 _1 + $) {.   ])))
+ungrq=: ($:~ 0 _1 <./@:+ $) :(}."1@(([ (({."1~   c) larfbrcbr ]) (idmat~ -~/)@(((] ,  +) #)~ c) appendl~ ])&:>/)@([ (|.@(<;.2~      (0 1:`(GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@((idmat~ -~/)@((- {.) ,  -~/@]) $)) (trl1pick~ -~/@$)@((-@(<./)@, 0 _1 + $) {.   ])))
 
 NB. ---------------------------------------------------------
 NB. unglz
@@ -296,7 +296,7 @@ NB.   (-: (trlpick@:({."1~ -@#) mp  unglz)@tzlzf) A
 NB.   NB. I = Z * Z^H
 NB.   (idmat@# -: (mp  ct))@unglz LZf
 
-unglz=: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (<;.1~      0 1:`(GQNB dhs2lios  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])@] , <@(idmat~ -~/)@(,  c)) ((-@(<. #) ,  -~/@$@]) {. ]) ,.  (((0 >. -~) idmat <. ,  ]) #)))
+unglz=: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (<;.1~      0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])@] , <@(idmat~ -~/)@(,  c)) ((-@(<. #) ,  -~/@$@]) {. ]) ,.  (((0 >. -~) idmat <. ,  ]) #)))
 
 NB. ---------------------------------------------------------
 NB. ungzl
@@ -340,7 +340,7 @@ NB.   (-: (trlpick@:({.  ~   c) mp~ ungzl)@tzzlf) A
 NB.   NB. I = Z^H * Z
 NB.   (idmat@c -: (mp~ ct))@ungzl ZfL
 
-ungzl=: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(<;.2~ '' ; 0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@])@] , <@ idmat      @(,~ #)) ((  (<. c) ,~ -~/@$@]) {. ]) , ~ (( 0        idmat <. ,~ ]) c)))
+ungzl=: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(<;.2~ '' ; 0 1:`(GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@])@] , <@ idmat      @(,~ #)) ((  (<. c) ,~ -~/@$@]) {. ]) , ~ (( 0        idmat <. ,~ ]) c)))
 
 NB. ---------------------------------------------------------
 NB. ungzr
@@ -384,7 +384,7 @@ NB.   (-: (trupick@:({.  ~ -@c) mp~ ungzr)@tzzrf) A
 NB.   NB. I = Z^H * Z
 NB.   (idmat@c -: (mp~ ct))@ungzr ZfR
 
-ungzr=: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (<;.1~ '' ; 0 1:`(GQNB dhs2lios  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@])@] , <@(idmat~ -~/)@(,~ #)) ((-@(<. c) ,~ - /@$@]) {. ]) ,   (((0 <. - ) idmat <. ,~ ]) c)))
+ungzr=: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (<;.1~ '' ; 0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@])@] , <@(idmat~ -~/)@(,~ #)) ((-@(<. c) ,~ - /@$@]) {. ]) ,   (((0 <. - ) idmat <. ,~ ]) c)))
 
 NB. ---------------------------------------------------------
 NB. ungrz
@@ -423,7 +423,7 @@ NB.   (-: (trupick@:({."1~   #) mp  ungrz)@tzrzf) A
 NB.   NB. I = Z * Z^H
 NB.   (idmat@# -: (mp  ct))@ungrz RZf
 
-ungrz=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(<;.2~      0 1:`(GQNB dhs2lios _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])@] , <@ idmat      @(,  c)) ((  (<. #) ,  - /@$@]) {. ]) ,.~ (( 0        idmat <. ,  ]) #)))
+ungrz=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(<;.2~      0 1:`(GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])@] , <@ idmat      @(,  c)) ((  (<. #) ,  - /@$@]) {. ]) ,.~ (( 0        idmat <. ,  ]) #)))
 
 NB. ---------------------------------------------------------
 NB. unghrl

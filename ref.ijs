@@ -22,9 +22,9 @@ NB. testlarzb  Test larzbxxxx by general matrix
 NB. testref    Adv. to make verb to test larxxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -164,10 +164,10 @@ NB.   H is represented in factored form by n-vector (1,v) and
 NB.   scalar τ.
 NB.
 NB. Syntax:
-NB.   z=. ios larfg y
-NB.   z=. ios larfp y
+NB.   z=. iso larfg y
+NB.   z=. iso larfp y
 NB. where
-NB.   ios - 2-vector of integers (ioa,iot)
+NB.   iso - 2-vector of integers (ioa,iot)
 NB.   ioa - lIO α in y
 NB.   iot - lIO pre-allocated scalar in y
 NB.   y   - (n+1)-vector having scalar α ∊ ℂ at index ioa,
@@ -658,12 +658,12 @@ NB. Syntax:
 NB.   vapp=. larfxxx refga larfxxxx
 NB. where
 NB.   larfxxx  - monad to generate a reflector; is called as:
-NB.                z=. ios larfxxx y
+NB.                z=. iso larfxxx y
 NB.   larfxxxx - dyad to apply a reflector; is called as:
 NB.                subAupd=. vtau larfxxxx subA
 NB.   vapp     - monad to generate and apply a reflector; is
 NB.              called as:
-NB.                'Aupd vtau'=. vapp A ; iossubA ; iosy ; iosa
+NB.                'Aupd vtau'=. vapp A ; isosubA ; isoy ; isoa
 NB.   z        - vector, source to produce vector vtau
 NB.   A        - m×n-matrix to update, is augmented by trash
 NB.              vector according to larfxxxx
@@ -672,18 +672,18 @@ NB.              replaced by subAupd
 NB.   subA     - submatrix of A to apply reflection
 NB.   subAupd  - submatrix of the same shape as subA, the
 NB.              reflected subA
-NB.   iossubA  - IOS of subA (subAupd) within A (Aupd)
-NB.   iosy     - IOS within subA of vector y which  defines
+NB.   isosubA  - ISO of subA (subAupd) within A (Aupd)
+NB.   isoy     - ISO within subA of vector y which  defines
 NB.              reflector
 NB.   ioa      - IO within z of scalar α, usually 0 or _1
 NB.   vtau     - vector, produced from z, defines
 NB.              reflection matrix
 
 refga=: 2 : 0
-  'A iossubA iosy ioa'=. y
-  subA=. iossubA { A
-  vtau=. 1 ioa} u iosy { subA
-  ((vtau v subA) iossubA} A) ; vtau
+  'A isosubA isoy ioa'=. y
+  subA=. isosubA { A
+  vtau=. 1 ioa} u isoy { subA
+  ((vtau v subA) isosubA} A) ; vtau
 )
 
 NB. =========================================================
@@ -701,10 +701,10 @@ NB. where
 NB.   ey - (n+1)-vector
 
 testlarfg=: 3 : 0
-  ios=. (2 ?@$ <:@#) y
+  iso=. (2 ?@$ <:@#) y
 
-  ('larfg' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) ios ; y
-  ('larfp' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) ios ; y
+  ('larfg' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) iso ; y
+  ('larfp' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) iso ; y
 
   EMPTY
 )

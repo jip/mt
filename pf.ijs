@@ -13,9 +13,9 @@ NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.10.2 2017-11-02
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2012-2017 Igor Zhuravlov
+NB. Copyright 2012-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -1143,9 +1143,9 @@ gelpg3=: 3 : 0
     NB. row of matrix A, apply to A, accumulate rotations
     NB. applied
     i=. <: k
-    lios=. i. m
+    liso=. i. m
     while. i do.
-      'y cs'=. rot&.|: rotga y ; (< lios ; i - 1 0) ; 0
+      'y cs'=. rot&.|: rotga y ; (< liso ; i - 1 0) ; 0
       dQ=. dQ , (+ cs) , i - 1 0
       i=. <: i
     end.
@@ -1195,9 +1195,9 @@ geprg3=: 3 : 0
     NB. column of matrix A, apply to A, accumulate rotations
     NB. applied
     i=. <: k
-    lios=. i. n
+    liso=. i. n
     while. i do.
-      'y cs'=. rot rotga y ; (< (i - 1 0) ; lios) ; < < a: ; 0
+      'y cs'=. rot rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
       dQ=. dQ , (+ cs) , i - 1 0
       i=. <: i
     end.
@@ -1229,10 +1229,10 @@ hslph3=: 3 : 0
     NB. Hessenberg matrix H to lower triangular form L,
     NB. apply to H, accumulate rotations applied
     i=. 1
-    lios=. i. m
+    liso=. i. m
     while. i < k do.
-      'y cs'=. rot&.|: rotga y ; (< lios ; i - 1 0) ; 0
-      lios=. }. lios
+      'y cs'=. rot&.|: rotga y ; (< liso ; i - 1 0) ; 0
+      liso=. }. liso
       dQ=. dQ , (+ cs) , i - 1 0
       i=. >: i
     end.
@@ -1274,10 +1274,10 @@ hsprh3=: 3 : 0
     NB. Hessenberg matrix H to upper triangular form R,
     NB. apply to H, accumulate rotations applied
     i=. 1
-    lios=. i. n
+    liso=. i. n
     while. i < k do.
-      'y cs'=. rot rotga y ; (< (i - 1 0) ; lios) ; < < a: ; 0
-      lios=. }. lios
+      'y cs'=. rot rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
+      liso=. }. liso
       dQ=. dQ , (+ cs) , i - 1 0
       i=. >: i
     end.
@@ -1349,7 +1349,7 @@ trlpc=: 3 : 0
     f=. PFFP
     NB. Move the best row of A(k1:m-1,0:n-1) to (k-1)-th
     NB. position
-    io=. liofmax (< m (th2lios ; ]) k1) { L
+    io=. liofmax (< m (th2liso ; ]) k1) { L
     if. io do.
       dip=. < k1 ([ , +) io
       L=. dip C. L
@@ -1384,7 +1384,7 @@ trlpc=: 3 : 0
         NB. rows/elements between io and rank-1, that is:
         NB. io->rank-1, io+1->io, io+2->io+1,...,
         NB. rank-1->rank-2
-        dip=. < 1 |. rank th2lios io
+        dip=. < 1 |. rank th2liso io
         L=. dip C. L
         p=. dip C. p
         NB. Retriangularize matrix A after the permutation
@@ -1449,7 +1449,7 @@ trlpc=: 3 : 0
         NB. rows/elements between rank and ii, that is,
         NB. rank->rank+1, rank+1->rank+2,...,ii-1->ii,
         NB. ii->rank
-        dip=. < |. (>: ii) th2lios rank
+        dip=. < |. (>: ii) th2liso rank
         L=. dip C. L
         p=. dip C. p
         rnorms=. dip C. rnorms
@@ -1478,7 +1478,7 @@ trlpc=: 3 : 0
             NB. rows/elements between io and rank, that
             NB. is, io->rank,io+1->io,io+2->io+1,...,
             NB. rank->rank-1
-            dip=. < 1 |. (>: rank) th2lios io
+            dip=. < 1 |. (>: rank) th2liso io
             L=. dip C. L
             p=. dip C. p
             rnorms=. dip C. rnorms
@@ -1518,7 +1518,7 @@ trlpc=: 3 : 0
       NB. rows/elements between rank and ii, that is,
       NB. rank->rank+1, rank+1->rank+2,...,io-1->io,
       NB. io->rank
-      dip=. < |. (>: io) th2lios rank
+      dip=. < |. (>: io) th2liso rank
       L=. dip C. L
       p=. dip C. p
       NB. Retriangularize matrix A after permutation
@@ -1629,7 +1629,7 @@ trprc=: 3 : 0
     f=. PFFP
     NB. Move the best column of A(0:m-1,k1:n-1) to (k-1)-th
     NB. position
-    io=. liofmax (< n (] ; th2lios) k1) { R
+    io=. liofmax (< n (] ; th2liso) k1) { R
     if. io do.
       dip=. < k1 ([ , +) io
       R=. dip C."1 R
@@ -1664,7 +1664,7 @@ trprc=: 3 : 0
         NB. columns/elements between io and rank-1, that is:
         NB. io->rank-1, io+1->io, io+2->io+1,...,
         NB. rank-1->rank-2
-        dip=. < 1 |. rank th2lios io
+        dip=. < 1 |. rank th2liso io
         R=. dip C."1 R
         p=. dip C. p
         NB. Retriangularize matrix A after the permutation
@@ -1730,7 +1730,7 @@ trprc=: 3 : 0
         NB. columns/elements between rank and ii, that is,
         NB. rank->rank+1, rank+1->rank+2,...,ii-1->ii,
         NB. ii->rank
-        dip=. < |. (>: ii) th2lios rank
+        dip=. < |. (>: ii) th2liso rank
         R=. dip C."1 R
         p=. dip C. p
         cnorms=. dip C. cnorms
@@ -1759,7 +1759,7 @@ trprc=: 3 : 0
             NB. columns/elements between io and rank, that
             NB. is, io->rank,io+1->io,io+2->io+1,...,
             NB. rank->rank-1
-            dip=. < 1 |. (>: rank) th2lios io
+            dip=. < 1 |. (>: rank) th2liso io
             R=. dip C."1 R
             p=. dip C. p
             cnorms=. dip C. cnorms
@@ -1799,7 +1799,7 @@ trprc=: 3 : 0
       NB. columns/elements between rank and ii, that is,
       NB. rank->rank+1, rank+1->rank+2,...,io-1->io,
       NB. io->rank
-      dip=. < |. (>: io) th2lios rank
+      dip=. < |. (>: io) th2liso rank
       R=. dip C."1 R
       p=. dip C. p
       NB. Retriangularize matrix A after permutation

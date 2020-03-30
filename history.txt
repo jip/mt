@@ -176,5 +176,7 @@ math/mt - change history
  * quatern: bad links removed
 
 == 0.10.5 ==
+ IOS abbreviation is replaced by ISO to sync with J glossary, the same for ios to iso
  * benchmark: drop a workaround outdated
+ * iso:       renamed from ios.ijs
  * test: minor optimizations

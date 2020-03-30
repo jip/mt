@@ -9,9 +9,9 @@ NB. testggev  Test ggevxxx by pair of square matrices
 NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.10.2 2017-10-19
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -177,14 +177,14 @@ NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevlnn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (<0 1;;~dhs2lios hs) ([ ((gghrdlnn~0,c) upd) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`]}) y
+  y=. (<0 1;;~dhs2liso hs) ([ ((gghrdlnn~0,c) upd) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`]}) y
   e1e2=. hs hgezqenn y
   e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
 
 ggevlnv=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
+  y=. (0 1;(<i.{.hs);dhs2liso hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
   y=. (gghrdlnv~0,c) y
   y=. hs hgezqsnv y
   e1e2=. 2 {. diag"2 y
@@ -202,7 +202,7 @@ ggevlnv=: 3 : 0
 
 ggevlvn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (<0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`]} y
+  y=. (<0 1;(<i.{.hs);dhs2liso hs) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`]} y
   y=. (((0,]) gghrdlvn (,idmat)) c) y
   y=. hs hgezqsvn y
   e1e2=. 2 {. diag"2 y
@@ -220,7 +220,7 @@ ggevlvn=: 3 : 0
 
 ggevlvv=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (0 1;(<i.{.hs);dhs2lios hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 3)<@(0})[)`((, ,:~@idmat@c)@])} y
+  y=. (0 1;(<i.{.hs);dhs2liso hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 3)<@(0})[)`((, ,:~@idmat@c)@])} y
   y=. (gghrdlvv~0,c) y
   y=. hs hgezqsvv y
   e1e2=. 2 {. diag"2 y
@@ -332,14 +332,14 @@ NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevunn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (<0 1;;~dhs2lios hs) ([ ((gghrdunn~0,c) upd) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`]}) y
+  y=. (<0 1;;~dhs2liso hs) ([ ((gghrdunn~0,c) upd) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`]}) y
   e1e2=. hs hgeqzenn y
   e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
 
 ggevuvn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
+  y=. (0 1;(dhs2liso hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
   y=. (gghrduvn~0,c) y
   y=. hs hgeqzsvn y
   e1e2=. 2 {. diag"2 y
@@ -357,7 +357,7 @@ ggevuvn=: 3 : 0
 
 ggevunv=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (<0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`]} y
+  y=. (<0 1;(dhs2liso hs);<<i.{.hs) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`]} y
   y=. (((0,]) gghrdunv (,idmat)) c) y
   y=. hs hgeqzsnv y
   e1e2=. 2 {. diag"2 y
@@ -375,7 +375,7 @@ ggevunv=: 3 : 0
 
 ggevuvv=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (0 1;(dhs2lios hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, ,:~@idmat@c)@])} y
+  y=. (0 1;(dhs2liso hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, ,:~@idmat@c)@])} y
   y=. (gghrduvv~0,c) y
   y=. hs hgeqzsvv y
   e1e2=. 2 {. diag"2 y

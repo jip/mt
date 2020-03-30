@@ -2,9 +2,9 @@ NB. Scale
 NB.
 NB. scl  Try to scale without overflow or underflow
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -66,7 +66,7 @@ NB.
 NB. Algorithm:
 NB.   In: A f t
 NB.   Out: B
-NB.   1) find lIOS |f| and |t| in scale vector (1,1,FP_SFMIN)
+NB.   1) find lISO |f| and |t| in scale vector (1,1,FP_SFMIN)
 NB.      1.1) form vector (|f|,|t|)
 NB.      1.2) form matrix:
 NB.             ( |t|*FP_SFMIN*FP_SFMIN  |t|*FP_SFMIN )

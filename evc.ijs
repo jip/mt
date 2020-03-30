@@ -9,9 +9,9 @@ NB. testtgevc   Test tgevcxxx by square matrices
 NB. testevc     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
-NB. Version: 0.10.2 2017-10-19
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -43,11 +43,11 @@ NB. Description:
 NB.   Calculate initial parameters for tgevcly and tgevclx
 NB.
 NB. Syntax:
-NB.   'bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. ios tgevci SP
+NB.   'bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. iso tgevci SP
 NB. where
 NB.   SP       - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.              produced by hgezqsxx
-NB.   ios      - k-vector, lIOS eigenvectors to compute
+NB.   iso      - k-vector, lISO eigenvectors to compute
 NB.   bignum   > 0
 NB.   d2       - n×2-matrix
 NB.   abrwork  - n×2-matrix, stitched norm1t of rows of
@@ -95,9 +95,9 @@ NB. Description:
 NB.   Compute some or all of non-scaled left eigenvectors
 NB.
 NB. Syntax:
-NB.   W=. (ios ; init) tgevcly SP
+NB.   W=. (iso ; init) tgevcly SP
 NB. where
-NB.   ios   - k-vector, lIOS eigenvectors to compute
+NB.   iso   - k-vector, lISO eigenvectors to compute
 NB.   init  - boxed 8-vector, the output of tgevci
 NB.   SP    - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.           produced by hgezqsxx
@@ -106,13 +106,13 @@ NB.           non-scaled
 NB.   k     - integer in range [0,n]
 
 tgevcly=: 4 : 0
-  'ios bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. x
+  'iso bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. x
   n=. c y
-  k=. # ios
+  k=. # iso
   W=. (0,n) $ 0
   je=. <: k
   while. je >: 0 do.
-    if. *./ FP_SFMIN >: (je { ios) { d2 do.
+    if. *./ FP_SFMIN >: (je { iso) { d2 do.
       NB. singular matrix pencil - return unit eigenvector
       work=. 1 je} n $ 0
     else.
@@ -120,9 +120,9 @@ tgevcly=: 4 : 0
       NB.   y * (a*A - b*B) = 0  (rowwise)
       NB. work[0:j-1] contains sums w
       NB. work[j+1:je] contains y
-      work=. 1 ,~ (-/) ((je { ios) { abcoeff) * (((0,],0:),:(2 1,])) je { ios) ({.@(1 0 2&|:)) ;. 0 y
+      work=. 1 ,~ (-/) ((je { iso) { abcoeff) * (((0,],0:),:(2 1,])) je { iso) ({.@(1 0 2&|:)) ;. 0 y
       di=. je { d
-      j=. <: je { ios
+      j=. <: je { iso
       while. j >: 0 do.
         NB. form:
         NB.   y[j] = - w[j] / di
@@ -138,7 +138,7 @@ tgevcly=: 4 : 0
           if. ((abcoeffa mp&(j&{) abrwork) >: (bignum % abs1wj)) *. (1 < abs1wj) do.
             work=. work % abs1wj
           end.
-          workadd=. (((je { ios) { abcoeff) * j { work) * (((0,],0:),:(2 1,])) j) ({.@(1 0 2&|:)) ;. 0 y
+          workadd=. (((je { iso) { abcoeff) * j { work) * (((0,],0:),:(2 1,])) j) ({.@(1 0 2&|:)) ;. 0 y
           work=. (i. j) +`-/@(,&workadd) upd work
         end.
         j=. <: j
@@ -157,9 +157,9 @@ NB. Description:
 NB.   Compute some or all of non-scaled right eigenvectors
 NB.
 NB. Syntax:
-NB.   W=. (ios ; init) tgevclx SP
+NB.   W=. (iso ; init) tgevclx SP
 NB. where
-NB.   ios   - k-vector, lIOS eigenvectors to compute
+NB.   iso   - k-vector, lISO eigenvectors to compute
 NB.   init  - boxed 8-vector, the output of tgevci
 NB.   SP    - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.           produced by hgezqsxx
@@ -168,14 +168,14 @@ NB.           non-scaled
 NB.   k     - integer in range [0,n]
 
 tgevclx=: 4 : 0
-  'ios bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. x
+  'iso bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. x
   d=. + d
   n=. c y
-  k=. # ios
+  k=. # iso
   W=. (0,n) $ 0
   je=. 0
   while. je < k do.
-    if. *./ FP_SFMIN >: (je { ios) { d2 do.
+    if. *./ FP_SFMIN >: (je { iso) { d2 do.
       NB. singular matrix pencil - return unit eigenvector
       work=. 1 je} n $ 0
     else.
@@ -186,7 +186,7 @@ tgevclx=: 4 : 0
       work=. 1
       xmax=. 1
       di=. je { d
-      j=. >: je { ios
+      j=. >: je { iso
       while. j < n do.
         NB. compute:
         NB.         j-1
@@ -197,7 +197,7 @@ tgevclx=: 4 : 0
           work=. work % xmax
           xmax=. 1
         end.
-        sum=. -/ (0 1 ]`+ ag (je { ios) { abcoeff) * work mp (j ((0,, ),:(2 1,- )) je { ios) (+@{.@(0&|:)) ;. 0 y
+        sum=. -/ (0 1 ]`+ ag (je { iso) { abcoeff) * work mp (j ((0,, ),:(2 1,- )) je { iso) (+@{.@(0&|:)) ;. 0 y
         NB. form:
         NB.   x[j] = - sum / conjg(a*S[j,j] - b*P[j,j])
         NB. with scaling and perturbation of the denominator
@@ -235,9 +235,9 @@ NB.   V - k×n-matrix, scaled W
 
 tgevcs=: 3 : 0
   norm=. normitr y
-  ios=. (#y) #"0 FP_SFMIN < norm
+  iso=. (#y) #"0 FP_SFMIN < norm
   y=. y % norm
-  y=. ios} 0 ,: y
+  y=. iso} 0 ,: y
 )
 
 NB. =========================================================
@@ -265,11 +265,11 @@ NB.     E1=. diagmat(diag(S))
 NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
-NB.   Y=.     [ios] tgevcll SP
-NB.   X=.     [ios] tgevclr SP
-NB.   'Y X'=. [ios] tgevclb SP
+NB.   Y=.     [iso] tgevcll SP
+NB.   X=.     [iso] tgevclr SP
+NB.   'Y X'=. [iso] tgevclb SP
 NB. where
-NB.   ios - k-vector, optional lIOS eigenvectors to compute,
+NB.   iso - k-vector, optional lISO eigenvectors to compute,
 NB.         default is "all eigenvectors"
 NB.   SP  - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.         produced by hgezqsxx
@@ -313,11 +313,11 @@ NB.     E1=. diagmat(diag(S))
 NB.     E2=. diagmat(diag(P))
 NB.
 NB. Syntax:
-NB.   Y=.     [ios] tgevcul SP
-NB.   X=.     [ios] tgevcur SP
-NB.   'Y X'=. [ios] tgevcub SP
+NB.   Y=.     [iso] tgevcul SP
+NB.   X=.     [iso] tgevcur SP
+NB.   'Y X'=. [iso] tgevcub SP
 NB. where
-NB.   ios - k-vector, optional lIOS eigenvectors to compute,
+NB.   iso - k-vector, optional lISO eigenvectors to compute,
 NB.         default is "all eigenvectors"
 NB.   SP  - 2×n×n-matrix (S,:P), generalized Schur form,
 NB.         produced by hgeqzsxx

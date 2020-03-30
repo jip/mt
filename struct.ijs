@@ -62,9 +62,9 @@ NB.           triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.10.2 2018-05-04
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2007-2018 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
+NB. Copyright 2007-2020 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -120,7 +120,7 @@ NB.
 NB. Syntax:
 NB.   vapp=. vmix mxbstencil
 NB. where
-NB.   vmix - dyad to mix lIOS x and y, is either (-~) for
+NB.   vmix - dyad to mix lISO x and y, is either (-~) for
 NB.          band, or (+) for anti-band stencils, is called
 NB.          as:
 NB.            mix=. lIOrow vmix lIOcolumn
@@ -186,13 +186,13 @@ mbstencil=:                   -~ mxbstencil
 mabstencil=: (|."1@:-~ <:@c) (+  mxbstencil) ]
 
 NB. ---------------------------------------------------------
-NB. diaglios
+NB. diagliso
 NB.
 NB. Description:
-NB.   Return lIOS of solid part of diagonal of matrix
+NB.   Return lISO of solid part of diagonal of matrix
 NB.
 NB. Syntax:
-NB.   lios=. [(d[,h[,s]])] diaglios [m,]n
+NB.   liso=. [(d[,h[,s]])] diagliso [m,]n
 NB. where
 NB.   m    ≥ 0, integer, optional rows in matrix, default is
 NB.          n
@@ -205,7 +205,7 @@ NB.          (take from head)
 NB.   s    - integer in range [-S,S] or ±∞, optional size of
 NB.          solid part of diagonal, default is +∞ (all
 NB.          elements in forward direction)
-NB.   lios - min(S,|s|)-vector of integers, lIOS solid
+NB.   liso - min(S,|s|)-vector of integers, lISO solid
 NB.          part of diagonal
 NB.   S    ≥ 0, the length of diagonal
 NB.
@@ -216,15 +216,15 @@ NB. - the whole diagonal's size:
 NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
 NB.
 NB. Notes:
-NB. - (h,s) pair defines raveled rIOS of solid part of
+NB. - (h,s) pair defines raveled rISO of solid part of
 NB.   diagonal
 
-diaglios=: 0 0 _&$: :(4 : 0)
+diagliso=: 0 0 _&$: :(4 : 0)
   'd h s'=. x=. ((i. 3) < (# x))} 0 0 _ ,: x  NB. in-place op
   'm n'=. y=. 2 $ y
   H=. n (-@*^:(0 > ])) d
   S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
-  (h ,: (s <. S)) (] ;. 0) (>: n) dhs2lios H , S
+  (h ,: (s <. S)) (] ;. 0) (>: n) dhs2liso H , S
 )
 
 NB. =========================================================
@@ -320,19 +320,19 @@ NB. where
 NB.   u    - monad to update subA; is called as:
 NB.            subAupd=. u subA
 NB.   vapp - verb to update A; is called as:
-NB.            Aupd=. ios vapp A
-NB.   ios  - IOS of subA in the A
+NB.            Aupd=. iso vapp A
+NB.   iso  - ISO of subA in the A
 NB.   subA - subarray in the A
 NB.   A    - array
 NB.   Aupd - A with subA being replaced by subAupd
 NB.
 NB. Assertions:
-NB.   Aupd -: ios vapp A
+NB.   Aupd -: iso vapp A
 NB. where
 NB.   vapp=. u upd
-NB.   subA=. ios { A
+NB.   subA=. iso { A
 NB.   subAupd=. u subA
-NB.   Aupd=. subAupd ios} A
+NB.   Aupd=. subAupd iso} A
 NB.
 NB. Examples:
 NB.    1 ('*'"_ upd) 4 5$'-'             1 2 ('*'"_ upd) 4 5$'-'
@@ -482,7 +482,7 @@ NB.   e - min(S,|s|)-vector, elements from the solid part of
 NB.       diagonal
 NB.   S ≥ 0, the length of diagonal
 
-diag=: ((<0 1)&|:) :((diaglios $) ({,) ])
+diag=: ((<0 1)&|:) :((diagliso $) ({,) ])
 
 NB. ---------------------------------------------------------
 NB. setdiag
@@ -529,8 +529,8 @@ NB. 0 0 2 0                         0 0 1 0
 setdiag=: 4 : 0
   'e dhs'=. x
   dhs=. ((i. 3) < (# dhs))} 0 0 _ ,: dhs  NB. assign defaults, in-place op
-  lios=. dhs diaglios $ y
-  e (lios"_)} y
+  liso=. dhs diagliso $ y
+  e (liso"_)} y
 )
 
 NB. ---------------------------------------------------------
@@ -568,13 +568,13 @@ NB.   2007-11-25 14:07:46 HKT.
 NB.   http://www.jsoftware.com/pipermail/general/2007-November/031233.html
 
 upddiag=: 1 : 0
-  lios=. diaglios_mt_ $ y
-  e=. lios ({,) y
-  (u e) (lios"_)} y
+  liso=. diagliso_mt_ $ y
+  e=. liso ({,) y
+  (u e) (liso"_)} y
 :
-  lios=. x diaglios_mt_ $ y
-  e=. lios ({,) y
-  (u e) (lios"_)} y
+  liso=. x diagliso_mt_ $ y
+  e=. liso ({,) y
+  (u e) (liso"_)} y
 )
 
 NB. ---------------------------------------------------------

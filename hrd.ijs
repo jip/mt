@@ -10,9 +10,9 @@ NB. testgghrd  Test gghrdx by pair of square matrices
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.10.2 2017-10-19
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -188,7 +188,7 @@ gehd2l=: 4 : 0
     y=. (j {."1 eL) ,. eR
     j=. >: j
   end.
-  0 (< ((c y) th2lios&<: jlimit) ; _1)} A , y  NB. clear τ[h+s-1:n-1]
+  0 (< ((c y) th2liso&<: jlimit) ; _1)} A , y  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -227,7 +227,7 @@ gehd2u=: 4 : 0
     y=. (j {. eR) , eL
     j=. >: j
   end.
-  0 (< _1 ; (# y) th2lios&<: jlimit)} A ,. y  NB. clear τ[h+s-1:n-1]
+  0 (< _1 ; (# y) th2liso&<: jlimit)} A ,. y  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -271,29 +271,29 @@ gghrdl=: 4 : 0
   n=. c y
   dQ0=. dZ0=. 0 4 $ 0
   i=. h
-  liosr1a=. n th2lios i                        NB. (n-h)-vector h:n-1
-  liosc2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
+  lisor1a=. n th2liso i                        NB. (n-h)-vector h:n-1
+  lisoc2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
   while. i < <: t do.                          NB. (s-2)-vector: h:h+s-3
     j=. t
-    liosr1b=. n th2lios <: j                   NB. (n-h-s+2)-vector h+s-2:n-1
-    liosc2b=. i. >: j                          NB. (j+1)-vector 0:h+s-1
+    lisor1b=. n th2liso <: j                   NB. (n-h-s+2)-vector h+s-2:n-1
+    lisoc2b=. i. >: j                          NB. (j+1)-vector 0:h+s-1
     while. j > >: i do.                        NB. (h+s-i-2)-vector (desc) h+s-1:i+2
-      lios=. j - 1 0
-      NB. step 1: rotate columns lios to kill A[i,j]
-      'y cs'=. rot&.|: rotga y ; (< 0 ; liosr1a ; lios) ; 0
-      y=. (< 1 ; liosr1b ; lios) cs&(rot&.|:) upd y
-      dZ0=. dZ0 , cs , lios
-      lios=. j - 0 1
-      NB. step 2: rotate rows lios to kill B[j-1,j]
-      'y cs'=. rot rotga y ; (< 1 ; lios ; liosc2b) ; < < a: ; _1
-      y=. (< 0 ; lios ; liosc2a) cs&rot upd y
-      dQ0=. dQ0 , cs , lios
-      NB. step 3: update IOS
-      liosr1b=. (j - 2) , liosr1b
-      liosc2b=. }: liosc2b
+      liso=. j - 1 0
+      NB. step 1: rotate columns liso to kill A[i,j]
+      'y cs'=. rot&.|: rotga y ; (< 0 ; lisor1a ; liso) ; 0
+      y=. (< 1 ; lisor1b ; liso) cs&(rot&.|:) upd y
+      dZ0=. dZ0 , cs , liso
+      liso=. j - 0 1
+      NB. step 2: rotate rows liso to kill B[j-1,j]
+      'y cs'=. rot rotga y ; (< 1 ; liso ; lisoc2b) ; < < a: ; _1
+      y=. (< 0 ; liso ; lisoc2a) cs&rot upd y
+      dQ0=. dQ0 , cs , liso
+      NB. step 3: update ISO
+      lisor1b=. (j - 2) , lisor1b
+      lisoc2b=. }: lisoc2b
       j=. <: j
     end.
-    liosr1a=. }. liosr1a
+    lisor1a=. }. lisor1a
     i=. >: i
   end.
   y ; dQ0 ; + dZ0
@@ -345,29 +345,29 @@ gghrdu=: 4 : 0
   n=. c y
   dQ0=. dZ0=. 0 4 $ 0
   j=. h
-  liosc1a=. n th2lios j                        NB. (n-h)-vector h:n-1
-  liosr2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
+  lisoc1a=. n th2liso j                        NB. (n-h)-vector h:n-1
+  lisor2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
   while. j < <: t do.                          NB. (s-2)-vector h:h+s-3
     i=. t
-    liosc1b=. n th2lios <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
-    liosr2b=. i. >: i                          NB. (i+1)-vector 0:h+s-1
+    lisoc1b=. n th2liso <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
+    lisor2b=. i. >: i                          NB. (i+1)-vector 0:h+s-1
     while. i > >: j do.                        NB. (h+s-j-2)-vector (desc) h+s-1:j+2
-      lios=. i - 1 0
-      NB. step 1: rotate rows lios to kill A[i,j]
-      'y cs'=. rot rotga y ; (< 0 ; lios ; liosc1a) ; < < a: ; 0
-      y=. (< 1 ; lios ; liosc1b) cs&rot upd y
-      dQ0=. dQ0 , cs , lios
-      lios=. i - 0 1
-      NB. step 2: rotate columns lios to kill B[i,i-1]
-      'y cs'=. rot&.|: rotga y ; (< 1 ; liosr2b ; lios) ; _1
-      y=. (< 0 ; liosr2a ; lios) cs&(rot&.|:) upd y
-      dZ0=. dZ0 , cs , lios
-      NB. step 3: update IOS
-      liosc1b=. (i - 2) , liosc1b
-      liosr2b=. }: liosr2b
+      liso=. i - 1 0
+      NB. step 1: rotate rows liso to kill A[i,j]
+      'y cs'=. rot rotga y ; (< 0 ; liso ; lisoc1a) ; < < a: ; 0
+      y=. (< 1 ; liso ; lisoc1b) cs&rot upd y
+      dQ0=. dQ0 , cs , liso
+      liso=. i - 0 1
+      NB. step 2: rotate columns liso to kill B[i,i-1]
+      'y cs'=. rot&.|: rotga y ; (< 1 ; lisor2b ; liso) ; _1
+      y=. (< 0 ; lisor2a ; liso) cs&(rot&.|:) upd y
+      dZ0=. dZ0 , cs , liso
+      NB. step 3: update ISO
+      lisoc1b=. (i - 2) , lisoc1b
+      lisor2b=. }: lisor2b
       i=. <: i
     end.
-    liosc1a=. }. liosc1a
+    lisoc1a=. }. lisoc1a
     j=. >: j
   end.
   y ; (+ dQ0) ; dZ0
@@ -450,7 +450,7 @@ gehrdl=: 4 : 0
   y=. (h + 0 1) }. y
   I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB      NB. how many panels will be reduced
   'i ilimit'=. h + (0 , HRDNB) * I                 NB. 'i ilimit'=. h,(h+HRDNB*I)
-  while. i < ilimit do.                            NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2lios (h,I))
+  while. i < ilimit do.                            NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2liso (h,I))
     'Y V H T'=. lahr2l y                           NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
     eV0=. 0 ,. (0) _1}"1 V                         NB. prepend by zero column, replace τs by zeros
     Aleft=. Aleft - (ct eV0) mp T mp eV0 mp Aleft  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
@@ -543,7 +543,7 @@ gehrdu=: 4 : 0
   y=. (h + 1 0) }. y
   I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB     NB. how many panels will be reduced
   'i ilimit'=. h + (0 , HRDNB) * I                NB. 'i ilimit'=. h,(h+HRDNB*I)
-  while. i < ilimit do.                           NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2lios (h,I))
+  while. i < ilimit do.                           NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2liso (h,I))
     'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
     eV0=. 0 , (0) _1} V                           NB. prepend by zero row, replace τs by zeros
     Atop=. Atop - ((Atop mp eV0) mp T) mp ct eV0  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]

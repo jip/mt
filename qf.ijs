@@ -15,9 +15,9 @@ NB. testtzqf  Test tzxxf by trapezoidal matrix
 NB. testqf    Adv. to make verb to test gexxf and tzxxf by
 NB.           matrix of generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.10.5 2020-03-30
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2020 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -404,7 +404,7 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latlz=: 4 : 0
-  ios=. < < < (dhs2lios 0 , x) , _1
+  iso=. < < < (dhs2liso 0 , x) , _1
   m=. # y
   sfxR=. (- m) {."1 y
   y=. (- m) }."1 y
@@ -413,10 +413,10 @@ latlz=: 4 : 0
     y=. y ,. {."1 sfxR
     sfxR=. 1 1 }. sfxR
     z=. {. y
-    bak=. ios { z
-    z=. larfgbc 0 ios} z
+    bak=. iso { z
+    z=. larfgbc 0 iso} z
     y=. ((1) _1} z) larzrnfr }. y
-    pfx=. (pfx ,. 0) , bak ios} z
+    pfx=. (pfx ,. 0) , bak iso} z
   end.
   pfx
 )
@@ -483,7 +483,7 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latzl=: 4 : 0
-  ios=. < < < 0 , dhs2lios _1 , x
+  iso=. < < < 0 , dhs2liso _1 , x
   n=. c y
   pfxT=. n {. y
   y=. n }. y
@@ -492,10 +492,10 @@ latzl=: 4 : 0
     y=. ({: pfxT) , y
     pfxT=. _1 _1 }. pfxT
     z=. {:"1 y
-    bak=. ios { z
-    z=. larfgf 0 ios} z
+    bak=. iso { z
+    z=. larfgf 0 iso} z
     y=. ((1) 0} z) larzlcbc }:"1 y
-    sfx=. (bak ios} z) ,. 0 , sfx
+    sfx=. (bak iso} z) ,. 0 , sfx
   end.
   sfx
 )
@@ -561,7 +561,7 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latzr=: 4 : 0
-  ios=. < < < (dhs2lios 0 , x) , _1
+  iso=. < < < (dhs2liso 0 , x) , _1
   n=. c y
   sfxB=. (- n) {. y
   y=. (- n) }. y
@@ -570,10 +570,10 @@ latzr=: 4 : 0
     y=. y , {. sfxB
     sfxB=. 1 1 }. sfxB
     z=. {."1 y
-    bak=. ios { z
-    z=. larfgb 0 ios} z
+    bak=. iso { z
+    z=. larfgb 0 iso} z
     y=. ((1) _1} z) larzlcfc }."1 y
-    pfx=. (pfx , 0) ,. bak ios} z
+    pfx=. (pfx , 0) ,. bak iso} z
   end.
   pfx
 )
@@ -648,7 +648,7 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latrz=: 4 : 0
-  ios=. < < < 0 , dhs2lios _1 , x
+  iso=. < < < 0 , dhs2liso _1 , x
   m=. # y
   pfxL=. m {."1 y
   y=. m }."1 y
@@ -657,10 +657,10 @@ latrz=: 4 : 0
     y=. ({:"1 pfxL) ,. y
     pfxL=. _1 _1 }. pfxL
     z=. {: y
-    bak=. ios { z
-    z=. larfgfc 0 ios} z
+    bak=. iso { z
+    z=. larfgfc 0 iso} z
     y=. ((1) 0} z) larzrnbr }: y
-    sfx=. (bak ios} z) , 0 ,. sfx
+    sfx=. (bak iso} z) , 0 ,. sfx
   end.
   sfx
 )
@@ -1311,10 +1311,10 @@ testtzqf=: 3 : 0
   Awide=. |:^:(>/@$) y
   Atall=. |:^:(</@$) y
 
-  ('tzlzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmlzrn (0:`((a: <@; 0 th2lios~ -~/)@[)`]}~ $)@:(}."1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@((<: upddiag)~ 0 >. -~/@$)@(unmlzrc unglz))))) (trl~ -~/@$) Awide
-  ('tzzlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzlln (0:`(          th2lios~/    @[)`]}~ $)@  }:   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@( <: upddiag             )@(unmzllc ungzl)))))  trl         Atall
-  ('tzzrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzrln (0:`((       0 th2lios~ -~/)@[)`]}~ $)@  }.   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@((<: upddiag)~ 0 <. -~/@$)@(unmzrlc ungzr))))) (tru~ -~/@$) Atall
-  ('tzrzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmrzrn (0:`((a: <@;   th2lios~/   )@[)`]}~ $)@:(}:"1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@( <: upddiag             )@(unmrzrc ungrz)))))  tru         Awide
+  ('tzlzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmlzrn (0:`((a: <@; 0 th2liso~ -~/)@[)`]}~ $)@:(}."1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@((<: upddiag)~ 0 >. -~/@$)@(unmlzrc unglz))))) (trl~ -~/@$) Awide
+  ('tzzlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzlln (0:`(          th2liso~/    @[)`]}~ $)@  }:   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@( <: upddiag             )@(unmzllc ungzl)))))  trl         Atall
+  ('tzzrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzrln (0:`((       0 th2liso~ -~/)@[)`]}~ $)@  }.   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@((<: upddiag)~ 0 <. -~/@$)@(unmzrlc ungzr))))) (tru~ -~/@$) Atall
+  ('tzrzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmrzrn (0:`((a: <@;   th2liso~/   )@[)`]}~ $)@:(}:"1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@( <: upddiag             )@(unmrzrc ungrz)))))  tru         Awide
 
   EMPTY
 )

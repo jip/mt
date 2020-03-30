@@ -136,11 +136,11 @@ NB.   LR   - 2×n×n-matrix, left and right eigenvectors:
 NB.            LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (ggevlnn -:                           +@:ggevunn@:(ct"2) ) A ,: B
-NB.   (ggevlnn -:&(/:~@(%/))                   ggevunn         ) A ,: B
-NB.   (ggevlnv -: (0 1 (+&.>)`(ct&.>)       ag ggevuvn@:(ct"2))) A ,: B
-NB.   (ggevlvn -: (0 1 (+&.>)`(ct&.>)       ag ggevunv@:(ct"2))) A ,: B
-NB.   (ggevlvv -: (0 1 (+&.>)`(ct"2@:|.&.>) ag ggevuvv@:(ct"2))) A ,: B
+NB.   (ggevlnn -:                    +@ggevunn@:(ct"2)) A ,: B
+NB.   (ggevlnn -:&(/:~@(%/))           ggevunn        ) A ,: B
+NB.   (ggevlnv -: +&.>`(ct      &.>)"0@ggevuvn@:(ct"2)) A ,: B
+NB.   (ggevlvn -: +&.>`(ct      &.>)"0@ggevunv@:(ct"2)) A ,: B
+NB.   (ggevlvv -: +&.>`(ct"2@:|.&.>)"0@ggevuvv@:(ct"2)) A ,: B
 NB.   (E2 mp L mp A) -: (E1 mp L mp B)
 NB.   (A mp (ct R) mp E2) -: (B mp (ct R) mp E1)
 NB. where
@@ -156,19 +156,19 @@ NB.     NB. e=. geevlnn A
 NB.     geevlnn=: {.@ggevlnn@(,: idmat@c)
 NB. - simulate LAPACK's xGEEV('N','V') (see notes):
 NB.     NB. 'e R'=. geevlnv A
-NB.     geevlnv=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)      &.>)ag ggevlnv@(,: idmat@c)
+NB.     geevlnv=: {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)      &.>)"0@ggevlnv@(,: idmat@c)
 NB. - simulate LAPACK's xGEEV('V','N') (see notes):
 NB.     NB. 'e L'=. geevlvn A
-NB.     geevlvn=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)      &.>)ag ggevlvn@(,: idmat@c)
+NB.     geevlvn=: {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)      &.>)"0@ggevlvn@(,: idmat@c)
 NB. - simulate LAPACK's xGEEV('V','V') (see notes):
 NB.     NB. 'e LR'=. geevlvv A
-NB.     geevlvv=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)    "2&.>)ag ggevlvv@(,: idmat@c)
+NB.     geevlvv=: {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)    "2&.>)"0@ggevlvv@(,: idmat@c)
 NB. - simulate LAPACK's xHEEV('N'):
 NB.     NB. e=. heevln A
-NB.     heevln=: 9 o.{.@ggevlnn@(,: idmat@c)
+NB.     heevln=: 9 o. {.@ggevlnn@(,: idmat@c)
 NB. - simulate LAPACK's xHEEV('V') (see notes):
 NB.     NB. 'e V'=. heevlv A
-NB.     heevlv=: 0 1 ((9 o.{.)&.>)`((%  %:@diag@(mp ct))&.>)ag ggevlvn@(,: idmat@c)
+NB.     heevlv=: (9 o. {.)&.>`((%  %:@diag@(mp ct))&.>)"0@ggevlvn@(,: idmat@c)
 NB.
 NB. Notes:
 NB. - eigenvectors from LAPACK's xGEEV are normalized to have
@@ -287,11 +287,11 @@ NB.   LR   - 2×n×n-matrix, left and right eigenvectors:
 NB.            LR -: L ,: R
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (ggevunn -:                           +@:ggevlnn@:(ct"2) ) A ,: B
-NB.   (ggevunn -:&(/:~@(%/))                   ggevlnn         ) A ,: B
-NB.   (ggevunv -: (0 1 (+&.>)`(ct&.>)       ag ggevlvn@:(ct"2))) A ,: B
-NB.   (ggevuvn -: (0 1 (+&.>)`(ct&.>)       ag ggevlnv@:(ct"2))) A ,: B
-NB.   (ggevuvv -: (0 1 (+&.>)`(ct"2@:|.&.>) ag ggevlvv@:(ct"2))) A ,: B
+NB.   (ggevunn -:                    +@ggevlnn@:(ct"2)) A ,: B
+NB.   (ggevunn -:&(/:~@(%/))           ggevlnn        ) A ,: B
+NB.   (ggevunv -: +&.>`(ct      &.>)"0@ggevlvn@:(ct"2)) A ,: B
+NB.   (ggevuvn -: +&.>`(ct      &.>)"0@ggevlnv@:(ct"2)) A ,: B
+NB.   (ggevuvv -: +&.>`(ct"2@:|.&.>)"0@ggevlvv@:(ct"2)) A ,: B
 NB.   (E2 mp (ct L) mp A) -: (E1 mp (ct L) mp B)
 NB.   (A mp R mp E2) -: (B mp R mp E1)
 NB. where
@@ -307,19 +307,19 @@ NB.     NB. e=. geevunn A
 NB.     geevunn=: {.@ggevunn@(,: idmat@c)
 NB. - simulate LAPACK's xGEEV('N','V') (see notes):
 NB.     NB. 'e R'=. geevunv A
-NB.     geevunv=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:  &.>)ag ggevunv@(,: idmat@c)
+NB.     geevunv=: {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:  &.>)"0@ggevunv@(,: idmat@c)
 NB. - simulate LAPACK's xGEEV('V','N') (see notes):
 NB.     NB. 'e L'=. geevuvn A
-NB.     geevuvn=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:  &.>)ag ggevuvn@(,: idmat@c)
+NB.     geevuvn=: {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:  &.>)"0@ggevuvn@(,: idmat@c)
 NB. - simulate LAPACK's xGEEV('V','V') (see notes):
 NB.     NB. 'e LR'=. geevuvv A
-NB.     geevuvv=: 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:"2&.>)ag ggevuvv@(,: idmat@c)
+NB.     geevuvv=: {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1]))%normsr)&.|:"2&.>)"0@ggevuvv@(,: idmat@c)
 NB. - simulate LAPACK's xHEEV('N'):
 NB.     NB. e=. heevun A
-NB.     heevun=: 9 o.{.@ggevunn@(,: idmat@c)
+NB.     heevun=: 9 o. {.@ggevunn@(,: idmat@c)
 NB. - simulate LAPACK's xHEEV('V') (see notes):
 NB.     NB. 'e V'=. heevuv A
-NB.     heevuv=: 0 1 ((9 o.{.)&.>)`((%"1%:@diag@(mp~ct))&.>)ag ggevunv@(,: idmat@c)
+NB.     heevuv=: (9 o. {.)&.>`((%"1%:@diag@(mp~ct))&.>)"0@ggevunv@(,: idmat@c)
 NB.
 NB. Notes:
 NB. - ggevunn models LAPACK's xGGEV('N','N')

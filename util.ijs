@@ -6,12 +6,10 @@ NB. copysign  Copy sign
 NB. sorim     Sum of real and imaginary parts' modules
 NB. soris     Sum of real and imaginary parts' squares
 NB. fmtlog    Format log string
-NB. ag        Adv. to apply successive verbs from gerund to
-NB.           successive elements of list
 NB.
 NB. Version: 0.10.2 2017-10-19
 NB.
-NB. Copyright 2005-2017 Henry Rich, Igor Zhuravlov
+NB. Copyright 2010-2017 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -51,32 +49,3 @@ sorim=: +/"1@:| @:+.                                            NB. sum of real 
 soris=: +/"1@:*:@:+.                                            NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
 
 fmtlog=: ;@:(40 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))  NB. log string format
-
-NB. ---------------------------------------------------------
-NB. ag
-NB.
-NB. Description
-NB.   Adv. to apply successive verbs from gerund to
-NB.   successive elements of list
-NB.
-NB. Syntax:
-NB.   vapp=: g ag
-NB. where
-NB.   g    - gerund u0`u1`... ; each monad ui is called as:
-NB.            eiupd=. ui ei
-NB.   vapp - monad to apply successive ui to successive ei;
-NB.          is called as:
-NB.             Eupd=. vapp E
-NB.   E    = rank-1 array (e0,e1,...)
-NB.   Eupd = rank-1 array (e0upd,e1upd,...)
-NB.
-NB. Application:
-NB. - process each table in the brick individually:
-NB.     0 1 2 (+:&.+:)`(-:&.-:)`(*:&.+:) ag i. 3 4 4
-NB.
-NB. References:
-NB. [1] Henry Rich. [Jforum] gerund apply.
-NB.     2005-10-22 06:37:12 HKT.
-NB.     http://www.jsoftware.com/pipermail/general/2005-October/025450.html
-
-ag=: /. (,/@)

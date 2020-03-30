@@ -276,7 +276,7 @@ NB. - fixed powers vector (p -: 5 7) is used
 
 testdipow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  geevlvv=. 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1 ])) % normsr)"2&.>)ag ggevlvv@(,: idmat@c)
+  geevlvv=. {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1 ])) % normsr)"2&.>)"0@ggevlvv@(,: idmat@c)
 
   rcond=. gecon1 y
   try.
@@ -306,7 +306,7 @@ NB.   A - n×n-matrix, Hermitian (symmetric)
 
 testhepow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  heevlv=. 0 1 ((9 o.{.)&.>)`((%%:@diag@(mp ct))&.>)ag ggevlvn@(,: idmat@c)
+  heevlv=. (9 o. {.)&.>`((%%:@diag@(mp ct))&.>)"0@ggevlvn@(,: idmat@c)
 
   rcond=. hecon1 y
   try.

@@ -947,8 +947,8 @@ testhgeq=: 3 : 0
   I=. idmat c y
   HTl=. (gghrdlnn~ 0 , c)@((,: trl)/) y
   HTu=. (gghrdunn~ 0 , c)@((,: tru)/) y
-  rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag HTl
-  rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag HTu
+  rcondl=. <./ gecon1&.{.`(trlcon1&.{.)"2 HTl
+  rcondu=. <./ gecon1&.{.`(trucon1&.{.)"2 HTu
 
   ('hgezqenn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
   ('hgezqenv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I

@@ -817,8 +817,8 @@ testgghrd=: 3 : 0
   I=. idmat c y
   ABl=. (,: trl)/ y
   ABu=. (,: tru)/ y
-  rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag ABl
-  rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag ABu
+  rcondl=. <./ gecon1&.{.`(trlcon1&.{.)"2 ABl
+  rcondu=. <./ gecon1&.{.`(trucon1&.{.)"2 ABu
 
   ('gghrdlnn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
   ('gghrdlnv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I

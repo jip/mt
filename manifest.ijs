@@ -12,7 +12,7 @@ doesn't require LAPACK.
 
 VERSION=: '0.10.5'
 
-RELEASE=: ''
+RELEASE=: 'j901'
 
 FOLDER=: 'math/mt'
 

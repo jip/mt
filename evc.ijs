@@ -63,29 +63,29 @@ NB.   d        - k×n-matrix
 tgevci=: 4 : 0
   bignum=. % FP_SFMIN * c y
   small=. % FP_PREC * bignum
-  d0=. diag"2 y                                                                NB. 2×n-matrix
-  d1=. 0 1 ]`(9&o.) ag d0                                                      NB. 2×n-matrix
-  d2=. 0 1 sorim`| ag d1
-  temp=. norm1tr"2 y                                                           NB. 2×n-matrix
-  abnorm=. >./"1 temp                                                          NB. 2-vector
+  d0=. diag"2 y                                                         NB. 2×n-matrix
+  d1=. ]`(9&o.)"1 d0                                                    NB. 2×n-matrix
+  d2=. sorim`|"1 d1
+  temp=. norm1tr"2 y                                                    NB. 2×n-matrix
+  abnorm=. >./"1 temp                                                   NB. 2-vector
   abrwork=. temp - sorim d0
-  abscale=. % FP_SFMIN >. abnorm                                               NB. 2-vector
-  temp=. % (>./) FP_SFMIN , abscale * d2                                       NB. n-vector
-  sba=. |. abscale * temp *"1 d1                                               NB. 2×n-matrix
-  abcoeff=. abscale * sba
+  abscale=. % FP_SFMIN >. abnorm                                        NB. 2-vector
+  temp=. % (>./) FP_SFMIN , abscale * d2                                NB. n-vector
+  sba=. |. abscale * temp *"1 d1                                        NB. 2×n-matrix
+  abcoeff=. abscale * sba                                               NB. 2×n-matrix
   NB. scale to avoid underflow
-  lsab=. *./ 0 1 (>:&FP_SFMIN)`(<&small) ag 0 1 (|`sorim ag)"2 sba ,: abcoeff  NB. 2×n-matrix
-  scale=. >./ lsab} 1 ,: ((% small) <. abnorm) * small % 0 1 |`sorim ag sba    NB. n-vector
-  scale=. (+./ lsab)} scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
+  lsab=. *./ >:&FP_SFMIN`(<&small)"2 |`sorim"1"2 sba ,: abcoeff         NB. 2×n-matrix
+  scale=. >./ lsab} 1 ,: ((% small) <. abnorm) * small % |`sorim"1 sba  NB. n-vector
+  scale=. (+./ lsab)} scale ,: scale <. % FP_SFMIN * >./ 1 , |`sorim"1 abcoeff
   abcoeff=. lsab} (abcoeff *"1 scale) ,: (abscale * scale *"1 sba)
-  abcoeffa=. 0 1 |`sorim ag abcoeff
+  abcoeffa=. |`sorim"1 abcoeff
   cond1=. +/ abcoeffa * abrwork
-  dmin=. (# x) # ,: >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa                 NB. k×n-matrix
-  d=. (x { |: abcoeff) mp 0 1 ]`- ag d0
+  dmin=. (# x) # ,: >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa          NB. k×n-matrix
+  d=. (x { |: abcoeff) mp ]`-"1 d0
   d=. (dmin < sorim d)} dmin ,: d
-  cond2=. bignum (((1>]),.*) sorim) d
+  cond2=. bignum (((1 > ]) ,. *) sorim) d
 
-  bignum ; (|:d2) ; (|:abrwork) ; cond1 ; cond2 ; (|:abcoeff) ; (|:abcoeffa) ; d
+  bignum ; (|: d2) ; (|: abrwork) ; cond1 ; cond2 ; (|: abcoeff) ; (|: abcoeffa) ; d
 )
 
 NB. ---------------------------------------------------------
@@ -197,7 +197,7 @@ tgevclx=: 4 : 0
           work=. work % xmax
           xmax=. 1
         end.
-        sum=. -/ (0 1 ]`+ ag (je { iso) { abcoeff) * work mp (j ((0,, ),:(2 1,- )) je { iso) (+@{.@(0&|:)) ;. 0 y
+        sum=. -/ (]`+"0 (je { iso) { abcoeff) * work mp (j ((0 , ,) ,: (2 1 , -)) je { iso) +@{.@(0&|:);.0 y
         NB. form:
         NB.   x[j] = - sum / conjg(a*S[j,j] - b*P[j,j])
         NB. with scaling and perturbation of the denominator

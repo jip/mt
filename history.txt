@@ -180,3 +180,7 @@ math/mt - change history
  * benchmark: drop a workaround outdated
  * iso:       renamed from ios.ijs
  * test: minor optimizations
+
+== 0.11.0 ==
+ Drop J8 support
+ - util:      ag: removed

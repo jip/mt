@@ -190,7 +190,7 @@ NB.   subA    - 2×any-matrix or any×2-matrix, array of
 NB.             2-vectors to apply rotation
 NB.   subAupd - matrix of the same shape as subA, the rotated
 NB.             subA
-NB.   isosubA - ISO of subA (subAupd) within A (Aupd)
+NB.   isosubA - ISO subA (subAupd) within A (Aupd)
 NB.   isofg   - ISO within subA of 2-vector (f,g) which
 NB.             defines rotation
 

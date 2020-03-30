@@ -189,7 +189,7 @@ NB. ---------------------------------------------------------
 NB. diagliso
 NB.
 NB. Description:
-NB.   Return lISO of solid part of diagonal of matrix
+NB.   Return lISO solid part of diagonal of matrix
 NB.
 NB. Syntax:
 NB.   liso=. [(d[,h[,s]])] diagliso [m,]n
@@ -216,7 +216,7 @@ NB. - the whole diagonal's size:
 NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
 NB.
 NB. Notes:
-NB. - (h,s) pair defines raveled rISO of solid part of
+NB. - (h,s) pair defines raveled rISO solid part of
 NB.   diagonal
 
 diagliso=: 0 0 _&$: :(4 : 0)
@@ -321,7 +321,7 @@ NB.   u    - monad to update subA; is called as:
 NB.            subAupd=. u subA
 NB.   vapp - verb to update A; is called as:
 NB.            Aupd=. iso vapp A
-NB.   iso  - ISO of subA in the A
+NB.   iso  - ISO subA in the A
 NB.   subA - subarray in the A
 NB.   A    - array
 NB.   Aupd - A with subA being replaced by subAupd

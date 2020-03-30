@@ -672,7 +672,7 @@ NB.              replaced by subAupd
 NB.   subA     - submatrix of A to apply reflection
 NB.   subAupd  - submatrix of the same shape as subA, the
 NB.              reflected subA
-NB.   isosubA  - ISO of subA (subAupd) within A (Aupd)
+NB.   isosubA  - ISO subA (subAupd) within A (Aupd)
 NB.   isoy     - ISO within subA of vector y which  defines
 NB.              reflector
 NB.   ioa      - IO within z of scalar α, usually 0 or _1

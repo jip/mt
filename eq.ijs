@@ -204,7 +204,7 @@ hgezq=: 1 : 0
             elseif. atol >: sorim (< 0 , j - 1 0) { y do.
               y=. 0 (< 0 , j - 1 0)} y
               ilazro=. 1
-            elseif. do.
+            else.
               ilazro=. 0
             end.
             NB. test 2: T[j,j]=0
@@ -428,7 +428,7 @@ hgeqz=: 1 : 0
             elseif. atol >: sorim (< 0 , j - 0 1) { y do.
               y=. 0 (< 0 , j - 0 1)} y
               ilazro=. 1
-            elseif. do.
+            else.
               ilazro=. 0
             end.
             NB. test 2: T[j,j]=0

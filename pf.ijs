@@ -1395,7 +1395,7 @@ trlpc=: 3 : 0
     isovrn=. 0
     svlues=. 1 3#smax,smin
     rcnr=. rcnrp1=. smin%smax
-  elseif. do.
+  else.
     NB. Apply modified Pan&Tang algorithm 3
     ns=. 0
     mxstps=. 25 + m
@@ -1675,7 +1675,7 @@ trprc=: 3 : 0
     isovrn=. 0
     svlues=. 1 3#smax,smin
     rcnr=. rcnrp1=. smin%smax
-  elseif. do.
+  else.
     NB. Apply modified Pan&Tang algorithm 3
     ns=. 0
     mxstps=. 25 + n
@@ -1917,7 +1917,7 @@ trlpy=: 4 : 0
       elseif. x <: rcnr <. rcnrp1 do.
         if. is1st +. godown do.
           rank=. >: rank
-        elseif. do.
+        else.
           nornkdtd=. 0
           rank=. _.
         end.
@@ -1931,7 +1931,7 @@ trlpy=: 4 : 0
           godown=. 0
           rank=. <: rank
         end.
-      elseif. do.
+      else.
         nornkdtd=. 0
         rank=. _.
       end.
@@ -2023,7 +2023,7 @@ trpry=: 4 : 0
       elseif. x <: rcnr <. rcnrp1 do.
         if. is1st +. goright do.
           rank=. >: rank
-        elseif. do.
+        else.
           nornkdtd=. 0
           rank=. _.
         end.
@@ -2037,7 +2037,7 @@ trpry=: 4 : 0
           goright=. 0
           rank=. <: rank
         end.
-      elseif. do.
+      else.
         nornkdtd=. 0
         rank=. _.
       end.

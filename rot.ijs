@@ -327,7 +327,7 @@ NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 testlartg=: 3 : 0
   NB. implement Algorithm 1 [1]
-  algo1=: 3 : 'if. 0 = {: y do. (sgn , 0:) {. y elseif. 0 = {. y do. (0 , sgn@+) {: y elseif. do. try. ((| f),((sgn f) * (+ g))) % %: +/ soris ''f g''=. y catch. 2 # _. end. end.'
+  algo1=: 3 : 'if. 0 = {: y do. (sgn , 0:) {. y elseif. 0 = {. y do. (0 , sgn@+) {: y else. try. ((| f),((sgn f) * (+ g))) % %: +/ soris ''f g''=. y catch. 2 # _. end. end.'
 
   NB. exclude rows containing NaN from the table y
   xrNaN=: #~ +:/"1@(128!:5)

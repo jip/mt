@@ -677,12 +677,12 @@ getrflu1p=: 3 : 0
   'm n'=. sh=. $ y
   if. 0 e. sh do.
     (i. n) ; y
-  elseif. 1=m do.
+  elseif. 1 = m do.
     dip=. < 0 , liofmax {. y
     ip=. dip C. :: ] i. n
     y=. ((] 0:} %) 0&({,)) dip C."1 :: ] y
     ip ; y
-  elseif. do.
+  else.
     k=. n (<. >.@-:) m
     'ip LaaU1a'=. getrflu1p k {. y
     y=. ip C."1 k }. y
@@ -839,7 +839,7 @@ getrfpl1u=: 3 : 0
     ip=. dip C. :: ] i. m
     y=. ((] 0:} %) 0&({,)) dip C. :: ] y
     ip ; y
-  elseif. do.
+  else.
     k=. m (<. >.@-:) n
     'pi L1aUaa'=. getrfpl1u k {."1 y
     y=. pi C. k }."1 y
@@ -993,7 +993,7 @@ getrfpu1l=: 3 : 0
     ip=. dip C. :: ] i. m
     y=. ((] _1:} %) _1&({,)) dip C. :: ] y
     ip ; y
-  elseif. do.
+  else.
     k=. m (<. >.@-:) n
     'ip U1bLbb'=. getrfpu1l (-k) {."1 y
     y=. ip C. (-k) }."1 y
@@ -1147,7 +1147,7 @@ getrful1p=: 3 : 0
     ip=. dip C. :: ] i. n
     y=. ((] _1:} %) _1&({,)) dip C."1 :: ] y
     ip ; y
-  elseif. do.
+  else.
     k=. n (<. >.@-:) m
     'ip UbbL1b'=. getrful1p (-k) {. y
     y=. ip C."1 (-k) }. y

@@ -219,7 +219,7 @@ laic11=: 3 : 0
     end.
   elseif. +./ absest <: FP_EPS * absga do.
     stardot ga
-  elseif. do.
+  else.
     NB. normal case
     b=. -: 1 - +/ 't c'=. *: absga % absest
     if. 0 < b do.
@@ -258,7 +258,7 @@ laic12=: 3 : 0
     else.
       (absest * tmp % scl) ; cs
     end.
-  elseif. do.
+  else.
     NB. normal case
     norma=. (>:@(+/)@(* {.) >. +/@(* {:)) zeta=. absag % absest
     if. 0 <: >: +: (- * +)/ zeta do.

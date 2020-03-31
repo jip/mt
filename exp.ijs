@@ -99,7 +99,7 @@ geexpm2r=: 4 : 0
 
     NB. V=.      V + b[6]*A6+b[4]*A4+b[2]*A2+b[0]*I
     NB. U=. A * (U + b[7]*A6+b[5]*A4+b[3]*A2+b[1]*I)
-    'V U'=. VU + pA (b0b1 sdiag (rbyvs (0 1 ,: 2 3)&(] ;. 0))) bc
+    'V U'=. VU + pA (b0b1 sdiag (rbyvs (0 1 ,: 2 3)&(];.0))) bc
   end.
   U=. y mp U
 

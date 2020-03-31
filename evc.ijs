@@ -120,7 +120,7 @@ tgevcly=: 4 : 0
       NB.   y * (a*A - b*B) = 0  (rowwise)
       NB. work[0:j-1] contains sums w
       NB. work[j+1:je] contains y
-      work=. 1 ,~ (-/) ((je { iso) { abcoeff) * (((0,],0:),:(2 1,])) je { iso) ({.@(1 0 2&|:)) ;. 0 y
+      work=. 1 ,~ -/ ((je { iso) { abcoeff) * (((0 , ] , 0:) ,: 2 1 , ]) je { iso) {.@(1 0 2&|:);.0 y
       di=. je { d
       j=. <: je { iso
       while. j >: 0 do.
@@ -138,7 +138,7 @@ tgevcly=: 4 : 0
           if. ((abcoeffa mp&(j&{) abrwork) >: (bignum % abs1wj)) *. (1 < abs1wj) do.
             work=. work % abs1wj
           end.
-          workadd=. (((je { iso) { abcoeff) * j { work) * (((0,],0:),:(2 1,])) j) ({.@(1 0 2&|:)) ;. 0 y
+          workadd=. (((je { iso) { abcoeff) * j { work) * (((0 , ] , 0:) ,: 2 1 , ]) j) {.@(1 0 2&|:);.0 y
           work=. (i. j) +`-/@(,&workadd) upd work
         end.
         j=. <: j
@@ -212,7 +212,7 @@ tgevclx=: 4 : 0
         xmax=. xmax >. sorim workj
         j=. >: j
       end.
-      work=. (-n) {. work
+      work=. (- n) {. work
     end.
     je=. >: je
     W=. W , work

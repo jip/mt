@@ -162,7 +162,7 @@ hgezq=: 1 : 0
   '`hgezqxo init reset step'=. m
   e=. +/ 'h s'=. x
   dQ1=. dZ1=. 0 4 $ 0
-  abnorm=. (0 2 ,. ,.~ x) norms"2 ;. 0 y
+  abnorm=. (0 2 ,. ,.~ x) norms"2;.0 y
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgezqxo y  NB. process eigenvalues (columns) h+s:n-1
@@ -387,7 +387,7 @@ hgeqz=: 1 : 0
   '`hgeqzxo init reset step'=. m
   e=. +/ 'h s'=. x
   dQ1=. dZ1=. 0 4 $ 0
-  abnorm=. (0 2 ,. ,.~ x) norms"2 ;. 0 y
+  abnorm=. (0 2 ,. ,.~ x) norms"2;.0 y
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgeqzxo y  NB. process eigenvalues (columns) h+s:n-1

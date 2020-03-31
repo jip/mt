@@ -47,15 +47,15 @@ NB. rISO - rectangular ISO, for r-rank array is a 2×r-array
 NB.        of integers ((head0,head1,...),:(size0,size1,...))
 NB.
 NB. Following are equivalents:
-NB.   (3 5 _7,:2 _3 4) (] ;. 0) brick
-NB.   (< 3 4;7 6 5;_10 _9 _8 _7) { brick
-NB.   (riso2iso (3 5 _7,:2 _3 4)) { brick
-NB.   (iso2riso (< 3 4;7 6 5;_10 _9 _8 _7)) (] ;. 0) brick
+NB.   (3 5 _7 ,: 2 _3 4) ];.0 brick
+NB.   (< 3 4 ; 7 6 5 ; _10 _9 _8 _7) { brick
+NB.   (riso2iso 3 5 _7 ,: 2 _3 4) { brick
+NB.   (iso2riso < 3 4 ; 7 6 5 ; _10 _9 _8 _7) ];.0 brick
 NB.
 NB. Following are equivalents:
 NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4
 NB.   (4 liso2iso 1 6 11) { i. 3 4
-NB.   (4 iso2liso (0 1 ; 1 2 ; 2 3)) ({,) i. 3 4
+NB.   (4 iso2liso 0 1 ; 1 2 ; 2 3) ({,) i. 3 4
 NB.   1 6 11 ({,) i. 3 4
 
 NB. =========================================================
@@ -166,7 +166,7 @@ NB.   k       = 0:|Π{size[i],i=0:r-1}|-1, IO liso' item
 NB.   n[k][i] - i-th axis' IO for k-th liso' item
 NB.
 NB. Assertions:
-NB.   (liso ({,) array) -: (riso (, ;. 0) array)
+NB.   (liso ({,) array) -: (riso ,;.0 array)
 NB. where
 NB.   riso=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
 NB.   sh=. 10 11 12 13

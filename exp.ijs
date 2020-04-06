@@ -78,8 +78,8 @@ geexpm2r=: 4 : 0
   NB. b[i] coeffcients of degree 13 Padé approximant for V (1st row) and U (2nd row)
   bc=. _2 (|:@(]\)) (>: x) {. 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
 
-  NB. U=. A*Σ(b[i+1]*(A^i),i=0,2,..,m-1)
-  NB. V=.   Σ(b[i  ]*(A^i),i=0,2,..,m-1)
+  NB. U=. A*Σ(b[i+1]*(A^i),i=0,2,...,m-1)
+  NB. V=.   Σ(b[i  ]*(A^i),i=0,2,...,m-1)
   if. x < 13 do.
     NB. A powers (2 [4 [6 [8]]]), shape: p×n×n
     pA=. (+: }. i. >. -: x) gepow y

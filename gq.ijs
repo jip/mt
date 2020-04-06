@@ -285,10 +285,10 @@ NB.     (  τ0 v0 v0 v0 v0 l  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 l  l  0   )
 NB.     (  τ2 v2 v2 v2 v2 l  l  l   )
 NB. where
-NB.   l                    - elements of m×n-matrix L
-NB.   vi                   - (n-m)-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
+NB.   l                      - elements of m×n-matrix L
+NB.   vi                     - (n-m)-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (vi,0,...,0,1,0,...,0) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = L * Z
@@ -329,10 +329,10 @@ NB.   (  v0 v1 v2  )
 NB.   (  v0 v1 v2  )
 NB.   (  τ0 τ1 τ2  )
 NB. where
-NB.   l                    - elements of m×n-matrix L
-NB.   vi                   - (n-m)-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (0,..,0,1,0,...0,vi) - m-vector u(i)
+NB.   l                      - elements of m×n-matrix L
+NB.   vi                     - (n-m)-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (0,...,0,1,0,...,0,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = Z * L
@@ -373,10 +373,10 @@ NB.   (  r  r  r   )
 NB.   (  0  r  r   )
 NB.   (  0  0  r   )
 NB. where
-NB.   r                    - elements of m×n-matrix R
-NB.   vi                   - (n-m)-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (vi,0,..,0,1,0,...0) - m-vector u(i)
+NB.   r                      - elements of m×n-matrix R
+NB.   vi                     - (n-m)-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (vi,0,...,0,1,0,...,0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = Z * R
@@ -412,10 +412,10 @@ NB.     (  r  r  r  v0 v0 v0 v0 τ0  )
 NB.     (  0  r  r  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  r  v2 v2 v2 v2 τ2  )
 NB. where
-NB.   r                    - elements of m×n-matrix R
-NB.   vi                   - (n-m)-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (0,..,0,1,0,...0,vi) - n-vector u(i)
+NB.   r                      - elements of m×n-matrix R
+NB.   vi                     - (n-m)-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (0,...,0,1,0,...,0,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. A = R * Z

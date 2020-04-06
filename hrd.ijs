@@ -404,7 +404,7 @@ NB.         represented as:
 NB.           Q(i) = I - v[i]' * τ[i] * v[i] ,
 NB.         and values v[i][i-h+1:s-2] and τ[i] are
 NB.         stored in (i-h)-th row of Qf:
-NB.           Qf[i-h,0:s-1] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...0,τ[i])
+NB.           Qf[i-h,0:s-1] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...,0,τ[i])
 NB.         assuming
 NB.           v[i][0:i-h-1] = v[i][s-1:n-h-2] = 0 ,
 NB.           v[i][i-h] = 1 ,
@@ -493,7 +493,7 @@ NB.         represented as:
 NB.           Q(i) = I - v[i] * τ[i] * v[i]' ,
 NB.         and values v[i][i-h+1:s-2] and τ[i] are
 NB.         stored in (i-h)-th column of Qf:
-NB.           Qf[0:s-1,i-h] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...0,τ[i])
+NB.           Qf[0:s-1,i-h] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...,0,τ[i])
 NB.         assuming
 NB.           v[i][0:i-h-1] = v[i][s-1:n-h-2] = 0 ,
 NB.           v[i][i-h] = 1 ,

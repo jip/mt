@@ -1334,7 +1334,7 @@ NB. Notes:
 NB. - if the leading block of L is singular or near singular,
 NB.   there will be no permutation because in that case the
 NB.   right (and left) singular vectors are the canonical
-NB.   ones ((0,0,...0,1)^T). That is, there will not be
+NB.   ones ((0,0,...,0,1)^T). That is, there will not be
 NB.   permutation if rcond <: PFSF * FP_SFMIN
 
 trlpc=: 3 : 0
@@ -1614,7 +1614,7 @@ NB.   difference: matrix C is an identity matrix
 NB. - if the leading block of R is singular or near singular,
 NB.   there will be no permutation because in that case the
 NB.   right (and left) singular vectors are the canonical
-NB.   ones ((0,0,...0,1)^T). That is, there will not be
+NB.   ones ((0,0,...,0,1)^T). That is, there will not be
 NB.   permutation if rcond <: PFSF * FP_SFMIN
 
 trprc=: 3 : 0

@@ -389,14 +389,14 @@ NB.     (  τ0 v0 v0 v0 v0 0  0  1  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 0  0  0  1  0   )
 NB.     (  τ2 v2 v2 v2 v2 0  0  0  0  1   )
 NB. where
-NB.   *                    - any scalar value, is not used
-NB.   a1                   - elements of iA1
-NB.   a2                   - elements of A2
-NB.   il                   - elements of iL
-NB.   ol                   - elements of oL
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
+NB.   *                      - any scalar value, is not used
+NB.   a1                     - elements of iA1
+NB.   a2                     - elements of A2
+NB.   il                     - elements of iL
+NB.   ol                     - elements of oL
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (vi,0,...,0,1,0,...,0) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - latlz and tzlzf are topologic equivalents
@@ -467,15 +467,15 @@ NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  *  *  *   )    (  τ0 τ1 τ2  )    (  τ0 τ1 τ2  )
 NB. where
-NB.   il                   - elements of iL
-NB.   a1                   - elements of A1
-NB.   a2                   - elements of iA2
-NB.   *                    - any scalar value, is not used
-NB.   ol                   - elements of oL
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (0,...0,1,0,..,0,vi) - m-vector u(i)
-NB.                          elementary re
+NB.   il                     - elements of iL
+NB.   a1                     - elements of A1
+NB.   a2                     - elements of iA2
+NB.   *                      - any scalar value, is not used
+NB.   ol                     - elements of oL
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (0,...,0,1,0,...,0,vi) - m-vector u(i)
+NB.                            elementary re
 NB.
 NB. Notes:
 NB. - latzl and tzzlf are topologic equivalents
@@ -546,14 +546,14 @@ NB.   (  ir ir ir  )    (  or or or  )    (  1  0  0   )    (  or or or  )
 NB.   (  0  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
 NB.   (  0  0  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
 NB. where
-NB.   *                    - any scalar value, is not used
-NB.   a1                   - elements of iA1
-NB.   a2                   - elements of A2
-NB.   ir                   - elements of iR
-NB.   or                   - elements of oR
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (vi,0,...0,1,0,..,0) - m-vector u(i)
+NB.   *                      - any scalar value, is not used
+NB.   a1                     - elements of iA1
+NB.   a2                     - elements of A2
+NB.   ir                     - elements of iR
+NB.   or                     - elements of oR
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (vi,0,...,0,1,0,...,0) - m-vector u(i)
 NB.
 NB. Notes:
 NB. - latzr and tzzrf are topologic equivalents
@@ -629,14 +629,14 @@ NB.     (  1  0  0  0  0  v0 v0 v0 v0 τ0  )
 NB.     (  0  1  0  0  0  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  1  0  0  v2 v2 v2 v2 τ2  )
 NB. where
-NB.   ir                   - elements of iR
-NB.   a1                   - elements of A1
-NB.   a2                   - elements of iA2
-NB.   *                    - any scalar value, is not used
-NB.   or                   - elements of oR
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (0,...0,1,0,..,0,vi) - n-vector u(i)
+NB.   ir                     - elements of iR
+NB.   a1                     - elements of A1
+NB.   a2                     - elements of iA2
+NB.   *                      - any scalar value, is not used
+NB.   or                     - elements of oR
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (0,...,0,1,0,...,0,vi) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - models LAPACK's xLATRZ with the following difference:
@@ -984,12 +984,12 @@ NB.     (  τ0 v0 v0 v0 v0 1  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 0  1  0   )
 NB.     (  τ2 v2 v2 v2 v2 0  0  1   )
 NB. where
-NB.   a0                   - elements of iA0
-NB.   il                   - elements of iL
-NB.   ol                   - elements of oL
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
+NB.   a0                     - elements of iA0
+NB.   il                     - elements of iL
+NB.   ol                     - elements of oL
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (vi,0,...,0,1,0,...,0) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - latlz and tzlzf are topologic equivalents
@@ -1056,12 +1056,12 @@ NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.                     (  τ0 τ1 τ2  )    (  τ0 τ1 τ2  )
 NB. where
-NB.   il                   - elements of iL
-NB.   a0                   - elements of iA0
-NB.   ol                   - elements of oL
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (0,...0,1,0,..,0,vi) - m-vector u(i)
+NB.   il                     - elements of iL
+NB.   a0                     - elements of iA0
+NB.   ol                     - elements of oL
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (0,...,0,1,0,...,0,vi) - m-vector u(i)
 NB.
 NB. Notes:
 NB. - latzl and tzzlf are topologic equivalents
@@ -1128,12 +1128,12 @@ NB.   (  ir ir ir  )    (  or or or  )    (  1  0  0   )    (  or or or  )
 NB.   (  0  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
 NB.   (  0  0  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
 NB. where
-NB.   a0                   - elements of iA0
-NB.   ir                   - elements of iR
-NB.   or                   - elements of oR
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (vi,0,...0,1,0,..,0) - m-vector u(i)
+NB.   a0                     - elements of iA0
+NB.   ir                     - elements of iR
+NB.   or                     - elements of oR
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (vi,0,...,0,1,0,...,0) - m-vector u(i)
 NB.
 NB. Notes:
 NB. - latzr and tzzrf are topologic equivalents
@@ -1206,12 +1206,12 @@ NB.     (  1  0  0  v0 v0 v0 v0 τ0  )
 NB.     (  0  1  0  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  1  v2 v2 v2 v2 τ2  )
 NB. where
-NB.   ir                   - elements of iR
-NB.   a1                   - elements of iA1
-NB.   or                   - elements of oR
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (0,...0,1,0,..,0,vi) - n-vector u(i)
+NB.   ir                     - elements of iR
+NB.   a1                     - elements of iA1
+NB.   or                     - elements of oR
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (0,...,0,1,0,...,0,vi) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - models LAPACK's xTZRZF with the following differences:

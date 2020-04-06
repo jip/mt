@@ -1228,7 +1228,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   A -: clean (/: ip) fp L1 (mp mp ct@[) T
+NB.   A -: clean ip fp^:_1 L1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) L1 (mp mp ct@[) T
 NB. where
 NB.   'ip L1 T'=. hetrfpl A
@@ -1338,7 +1338,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   A -: clean (/: ip) fp U1 (mp mp ct@[) T
+NB.   A -: clean ip fp^:_1 U1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) U1 (mp mp ct@[) T
 NB. where
 NB.   'ip U1 T'=. hetrfpu A
@@ -1711,8 +1711,8 @@ NB.     berr := ||P * U1 * T * U1^H * P^H - A|| / (FP_EPS * ||A|| * n)
 testhetrf=: 3 : 0
   rcond=. hecon1 y
 
-  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. fp^:_1~ 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. fp^:_1~ 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
 
   EMPTY
 )

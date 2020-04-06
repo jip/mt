@@ -240,7 +240,11 @@ trace=: +/@diag  NB. Matrix trace
 ct=: +@:|:       NB. Conjugate transpose
 cp=: ct&.|.      NB. Conjugate pertranspose
 
-fp=: [ C."1 C.   NB. Full (symmetric) permutation
+NB. Do/undo full (symmetric) permutation
+NB. Syntax:
+NB.   Aperm=. p fp     A
+NB.   A=.     p fp^:_1 Aperm
+fp=: ([ C."1 C.) :. ([ C.^:_1"1 C.^:_1)
 
 NB. Transform permutation vector to permutation matrix, to
 NB. permute rows by y or columns by (/:y)

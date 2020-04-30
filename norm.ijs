@@ -46,13 +46,11 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-max=: >./`0:@.(0 = #)  NB. max of, 0 for empty list
+csum=: +/"2@:    NB. vector: sum of, matrix: column sums
+rsum=: +/"1@:    NB. vector: sum of, matrix: row sums
 
-csum=: +/"2@:          NB. vector: sum of, matrix: column sums
-rsum=: +/"1@:          NB. vector: sum of, matrix: row sums
-
-cmax=: max"2@:         NB. vector: max of, matrix: column maximums
-rmax=: max"1@:         NB. vector: max of, matrix: row maximums
+cmax=: maxc"2@:  NB. vector: max of, matrix: column maximums
+rmax=: max "1@:  NB. vector: max of, matrix: row maximums
 
 NB. =========================================================
 NB. Interface

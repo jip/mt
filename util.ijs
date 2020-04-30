@@ -1,5 +1,7 @@
 NB. Utilities
 NB.
+NB. max       Max-of, 0 for empty list
+NB. maxc      Max-of, '' for empty list
 NB. negneg    Conditional negate
 NB. negpos    Conditional negate
 NB. copysign  Copy sign
@@ -39,6 +41,9 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Miscellaneous
+
+max=:  >./`      0: @.(0 = #)                                   NB. max-of, 0 for empty list
+maxc=: >./`(c {. 0:)@.(0 = #)                                   NB. max-of, '' for empty list
 
 negneg=: -@]^:(0>[)                                             NB. if x<0 then -y else y endif
 negpos=: -@]^:(0<:[)                                            NB. if x≥0 then -y else y endif

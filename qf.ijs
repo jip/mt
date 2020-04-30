@@ -1251,7 +1251,8 @@ NB.
 NB. Description:
 NB.   Test orthogonal factorization algorithms:
 NB.   - 128!:0 (built-in)
-NB.   - gelqf geqlf geqrf gerqf (math/lapack addon)
+NB.   - qrd (math/misc)
+NB.   - xGELQF xGEQLF xGEQRF xGERQF (math/lapack2 addon)
 NB.   - gelqf geqlf geqrf gerqf (math/mt addon)
 NB.   by general matrix
 NB.
@@ -1261,28 +1262,50 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - for LQ: berr := max( ||L - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB. - for QL: berr := max( ||L - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for QR: berr := max( ||R - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for RQ: berr := max( ||R - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB.   berr := max(berr0,berr1)
+NB.   if ||A||_1 > 0 then
+NB.     berr0 := ((||W1|| / size) / ||A||_1) / FP_EPS
+NB.   else
+NB.     berr0 := 0
+NB.   endif
+NB.   berr1 := (||W2|| / size) / FP_EPS
+NB. where
+NB.   - for LQ: ||W1|| := ||L - A * Q^H||_1, ||W2|| := ||Q * Q^H - I||_1, size := max(1, n)
+NB.   - for QL: ||W1|| := ||L - Q^H * A||_1, ||W2|| := ||Q^H * Q - I||_1, size := max(1, m)
+NB.   - for QR: ||W1|| := ||R - Q^H * A||_1, ||W2|| := ||Q^H * Q - I||_1, size := max(1, m)
+NB.   - for RQ: ||W1|| := ||R - A * Q^H||_1, ||W2|| := ||Q * Q^H - I||_1, size := max(1, n)
+NB.
+NB. Notes:
+NB. - models LAPACK's xLQT01, xQLT01, xQRT01 and xRQT01
 
 testgeqf=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'gelqf geqlf geqrf gerqf'
+  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gelqf.ijs'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/geqlf.ijs'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/geqrf.ijs'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gerqf.ijs'
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('128!:0'                tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (( mp~ ct                   )  0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct       )@(0&{::))))) y
+  ('128!:0'        tmonad (]`]                                                     `(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
+  ('qrd_mttmp_'    tmonad (]`]                                                     `(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
 
-  ('2b1110&gelqf_jlapack_' tmonad (]`({. ,  ,. &.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((   <./ @$@]) {."1 unmlqrc)~ 1&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmlqrc unglq)@(1&{::))))) y
-  ('2b0111&geqlf_jlapack_' tmonad (]`({: ,~ , ~&.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((-@(<./)@$@]) {.   unmqllc)~ 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqllc ungql)@(0&{::))))) y
-  ('2b0111&geqrf_jlapack_' tmonad (]`({: ,~ ,  &.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((   <./ @$@]) {.   unmqrlc)~ 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqrlc ungqr)@(0&{::))))) y
-  ('2b1110&gerqf_jlapack_' tmonad (]`({. ,  ,.~&.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((-@(<./)@$@]) {."1 unmrqrc)~ 1&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmrqrc ungrq)@(1&{::))))) y
+  ('dgelqf_mttmp_' tmonad (]`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  |:@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  |:))@(1 {:: ])))) y
+  ('dgeqlf_mttmp_' tmonad (]`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ |:@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ |:))@(0 {:: ])))) y
+  ('dgeqrf_mttmp_' tmonad (]`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ |:@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ |:))@(0 {:: ])))) y
+  ('dgerqf_mttmp_' tmonad (]`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  |:@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  |:))@(1 {:: ])))) y
 
-  ('gelqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( trl        @:(}:"1)@] -  ((   <./ @$@]) {."1 unmlqrc)~       ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmlqrc unglq)        )))) y
-  ('geqlf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((trl~ -~/@$)@  }.   @] -  ((-@(<./)@$@]) {.   unmqllc)~       ) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqllc ungql)        )))) y
-  ('geqrf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( tru        @  }:   @] -  ((   <./ @$@]) {.   unmqrlc)~       ) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqrlc ungqr)        )))) y
-  ('gerqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((tru~ -~/@$)@:(}."1)@] -  ((-@(<./)@$@]) {."1 unmrqrc)~       ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmrqrc ungrq)        )))) y
+  ('zgelqf_mttmp_' tmonad (]`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  ct@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  ct))@(1 {:: ])))) y
+  ('zgeqlf_mttmp_' tmonad (]`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
+  ('zgeqrf_mttmp_' tmonad (]`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
+  ('zgerqf_mttmp_' tmonad (]`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  ct@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  ct))@(1 {:: ])))) y
+
+  ('gelqf'         tmonad (]`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  ct@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  ct))@(1 {:: ])))) y
+  ('geqlf'         tmonad (]`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
+  ('geqrf'         tmonad (]`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
+  ('gerqf'         tmonad (]`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  ct@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  ct))@(1 {:: ])))) y
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -1292,6 +1315,7 @@ NB. testtzqf
 NB.
 NB. Description:
 NB.   Test orthogonal factorization algorithms:
+NB.   - xTZRZF (math/lapack2 addon)
 NB.   - tzlzf tzzlf tzzrf tzrzf (math/mt addon)
 NB.   by trapezoidal matrix
 NB.
@@ -1301,20 +1325,42 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - for LZ: berr := max( ||A - L * Z|| / (FP_EPS * ||A|| * m), ||Z * Z^H - I|| / (FP_EPS * n) )
-NB. - for ZL: berr := max( ||A - Z * L|| / (FP_EPS * ||A|| * n), ||Z^H * Z - I|| / (FP_EPS * m) )
-NB. - for ZR: berr := max( ||A - Z * R|| / (FP_EPS * ||A|| * n), ||Z^H * Z - I|| / (FP_EPS * m) )
-NB. - for RZ: berr := max( ||A - R * Z|| / (FP_EPS * ||A|| * m), ||Z * Z^H - I|| / (FP_EPS * n) )
+NB.   berr := max(berr0,berr1)
+NB.   nom  := ||W1|| / (FP_EPS * max(m,n))
+NB.   if ||A||_1 > 0 then
+NB.     berr0 := nom / ||A||_1
+NB.   else
+NB.     berr0 := nom
+NB.   endif
+NB.   berr1 := ||W2|| / (FP_EPS * max(m,n))
+NB. where
+NB.   - for LZ: ||W1|| := ||A - L * Z||_1, ||W2|| := ||Z * Z^H - I||_1
+NB.   - for ZL: ||W1|| := ||A - Z * L||_1, ||W2|| := ||Z^H * Z - I||_1
+NB.   - for ZR: ||W1|| := ||A - Z * R||_1, ||W2|| := ||Z^H * Z - I||_1
+NB.   - for RZ: ||W1|| := ||A - R * Z||_1, ||W2|| := ||Z * Z^H - I||_1
+NB.
+NB. Notes:
+NB. - models LAPACK's xRZT01 and xRZT02 (xTZRZF test only)
+NB. - shortened geometry is used:
+NB.   - L (R) is square triangular min(m,n)×min(m,n)-matrix
+NB.   - Z is m×n-matrix
 
 testtzqf=: 3 : 0
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/tzrzf.ijs'
+
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
   Awide=. |:^:(>/@$) y
   Atall=. |:^:(</@$) y
 
-  ('tzlzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmlzrn (0:`((a: <@; 0 th2liso~ -~/)@[)`]}~ $)@:(}."1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@((<: upddiag)~ 0 >. -~/@$)@(unmlzrc unglz))))) (trl~ -~/@$) Awide
-  ('tzzlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzlln (0:`(          th2liso~/    @[)`]}~ $)@  }:   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@( <: upddiag             )@(unmzllc ungzl)))))  trl         Atall
-  ('tzzrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzrln (0:`((       0 th2liso~ -~/)@[)`]}~ $)@  }.   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@((<: upddiag)~ 0 <. -~/@$)@(unmzrlc ungzr))))) (tru~ -~/@$) Atall
-  ('tzrzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmrzrn (0:`((a: <@;   th2liso~/   )@[)`]}~ $)@:(}:"1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@( <: upddiag             )@(unmrzrc ungrz)))))  tru         Awide
+  ('dtzrzf_mttmp_' tmonad (]`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`((((- (unmrzrn ((1 -~ c) {."1 trupick@({."1~   #)))) ((FP_EPS * 1 >. c@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~  trupick        )~ >. ((% FP_EPS * 1 >. c)~ norm1@( <: upddiag             )@(unmrzrc ungrz))))) Awide
+  ('ztzrzf_mttmp_' tmonad (]`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`((((- (unmrzrn ((1 -~ c) {."1 trupick@({."1~   #)))) ((FP_EPS * 1 >. c@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~  trupick        )~ >. ((% FP_EPS * 1 >. c)~ norm1@( <: upddiag             )@(unmrzrc ungrz))))) Awide
+
+  ('tzlzf'         tmonad (]`]                `(rcond"_)`(_."_)`((((- (unmlzrn ((1 -  c) {."1         ({."1~ -@#)))) ((FP_EPS * 1 >. c@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~ (trlpick~ -~/@$))~ >. ((% FP_EPS * 1 >. c)~ norm1@((<: upddiag)~ 0 >. -~/@$)@(unmlzrc unglz))))) Awide
+  ('tzzlf'         tmonad (]`]                `(rcond"_)`(_."_)`((((- (unmzlln ((1 -~ #) {.           ({.  ~   c)))) ((FP_EPS * 1 >. #@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~  trlpick        )~ >. ((% FP_EPS * 1 >. #)~ norm1@( <: upddiag             )@(unmzllc ungzl))))) Atall
+  ('tzzrf'         tmonad (]`]                `(rcond"_)`(_."_)`((((- (unmzrln ((1 -  #) {.           ({.  ~ -@c)))) ((FP_EPS * 1 >. #@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~ (trupick~ -~/@$))~ >. ((% FP_EPS * 1 >. #)~ norm1@((<: upddiag)~ 0 <. -~/@$)@(unmzrlc ungzr))))) Atall
+  ('tzrzf'         tmonad (]`]                `(rcond"_)`(_."_)`((((- (unmrzrn ((1 -~ c) {."1         ({."1~   #)))) ((FP_EPS * 1 >. c@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~  trupick        )~ >. ((% FP_EPS * 1 >. c)~ norm1@( <: upddiag             )@(unmrzrc ungrz))))) Awide
+
+  coerase < 'mttmp'
 
   EMPTY
 )

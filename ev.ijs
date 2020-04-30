@@ -82,6 +82,118 @@ NB.             position, produced by ggbalp
 
 ggevi=: 1 : '(,.(0,(EVSMLNUM_mt_*1-FP_EPS_mt_),EVBIGNUM_mt_)&I.)@:(>./@,"2)@:| ([ ; u@:(scl_mt_^:((,{&EVSCL_mt_)/@[`({&0 1 0 1@{:@[)`])"1 2)) ]'
 
+NB. ---------------------------------------------------------
+NB. drgev
+NB.
+NB. Description:
+NB.   Adv. to make verb to compute backward error of
+NB.   eigenvectors produced by generalized eigenvalue problem
+NB.   solvers
+NB.
+NB. Syntax:
+NB.   vberr=. mmul`vmul`norma`normb drgev
+NB. where
+NB.   mmul     - dyad to multiply matrices; is called as:
+NB.                M3=. M1 mmul M2
+NB.   vmul     - dyad to multiply matrix by diagonal matrix
+NB.              represented as vector; is called as:
+NB.                M2=. v1 vmul M1
+NB.   norma    - monad to compute norm of matrix; is called
+NB.              as:
+NB.                normM=. norma M1
+NB.   normb    - monad to compute norms of matrix rows
+NB.              (columns); is called as:
+NB.                v2=. normb M1
+NB.   vberr    - dyad to compute berr; is called as:
+NB.                berr=. AB vberr (e1e2 ; V)
+NB.   AB       - 2×n×n-brick, matrix pair (A,B) to
+NB.              eigen-decompose
+NB.   e1e2     - 2×n-matrix, laminated vectors of
+NB.              generalized eigenvalues α and β
+NB.   V        - either L or R
+NB.   M1,M2,M3 - n×n-matrix
+NB.   v1,v2    - n-vector
+NB.   L        - n×n-matrix, columns with left eigenvectors
+NB.   R        - n×n-matrix, columns with right eigenvectors
+NB.   berr     ≥ 0, float, scalar, backward error
+NB.   normM    ≥ 0, float, scalar, norm of matrix
+NB.
+NB. Application:
+NB. - to compute berr for L from ggevlvx:
+NB.     NB. berr=. AB vberrlL (e1e2 ; L)
+NB.     vberrlL=:  mp_mt_         "2` *   `normi_mt_`normitr_mt_ drgev
+NB. - to compute berr for R from ggevlxv:
+NB.     NB. berr=. AB vberrlR (e1e2 ; R)
+NB.     vberrlR=: (mp_mt_  ct_mt_)"2`(*"1)`normi_mt_`normitr_mt_ drgev
+NB. - to compute berr for L from ggevuvx:
+NB.     NB. berr=. AB vberruL (e1e2 ; L)
+NB.     vberruL=: (mp_mt_~ ct_mt_)"2` *   `norm1_mt_`normitc_mt_ drgev
+NB. - to compute berr for R from ggevuxv:
+NB.     NB. berr=. AB vberruR (e1e2 ; R)
+NB.     vberruR=: mp_mt_          "2`(*"1)`norm1_mt_`normitc_mt_ drgev
+NB.
+NB. Formula:
+NB.   berr := max(berr0,berr1)
+NB.   - for ggevlxx:
+NB.     ||L|| := max(||L||_inf , FP_PREC)
+NB.     ||R|| := max(||R||_inf , FP_PREC)
+NB.     - for L:
+NB.         berr0 := (||(C2 * (C1 * E2)) * L   * A - (C2 * (C1 * E2)) * L   * B||_1 / ||R||) / FP_PREC
+NB.         berr1 := normit(normitc(L) - 1) / (FP_PREC * n)
+NB.     - for R:
+NB.         berr0 := (||A * R^H * ((E2 * С1) * С2) - B * R^H * ((E1 * С1) * С2)||_1 / ||R||) / FP_PREC
+NB.         berr1 := normit(normitc(R) - 1) / (FP_PREC * n)
+NB.     - for L and R:
+NB.         berr0 := max(berr0(ggevlvx),berr0(ggevlxv))
+NB.         berr1 := max(berr1(ggevlvx),berr1(ggevlxv))
+NB.   - for ggevuxx:
+NB.     ||L|| := max(||L||_1 , FP_PREC)
+NB.     ||R|| := max(||R||_1 , FP_PREC)
+NB.     - for L:
+NB.         berr0 := (||(C2 * (C1 * E2)) * L^H * A - (C2 * (C1 * E2)) * L^H * B||_1 / ||R||) / FP_PREC
+NB.         berr1 := normit(normitc(L) - 1) / (FP_PREC * n)
+NB.     - for R:
+NB.         berr0 := (||A * R   * ((E2 * С1) * С2) - B * R   * ((E1 * С1) * С2)||_1 / ||R||) / FP_PREC
+NB.         berr1 := normit(normitc(R) - 1) / (FP_PREC * n)
+NB.     - for L and R:
+NB.         berr0 := max(berr0(ggevuvx),berr0(ggevuxv))
+NB.         berr1 := max(berr1(ggevuvx),berr1(ggevuxv))
+NB.   C1 := (diag(coeff1))^_1
+NB.   C2 := (diag(coeff2))^_1
+NB.   coeff1(i) := if(sorim(α(i)) > (1/FP_SFMIN) / ||B||
+NB.                or sorim(β(i)) > (1/FP_SFMIN) / ||A||
+NB.                or max(sorim(α(i)),sorim(β(i))) < 1)
+NB.                then max(max(sorim(α(i)),sorim(β(i))),FP_SFMIN)
+NB.                else 1
+NB.   coeff2(i) := max(sorim(α(i))*||B||,sorim(β(i))*||A||, FP_SFMIN)
+NB.   ||A|| := max(||A||_1 , FP_SFMIN)
+NB.   ||B|| := max(||B||_1 , FP_SFMIN)
+NB. where
+NB.   v(i) - i-th element of vector v
+NB.
+NB. Notes:
+NB. - models LAPACK's xDRGEV and xGET52
+
+drgev=: 1 : 0
+  '`mmul vmul norma normb'=. m
+  'e1e2 V'=. y
+  n=. # V
+  if. 0 = n do. 0 return. end.
+  banorm=. |. FP_SFMIN_mt_ >. norma"2 x                       NB. 2-vector, float
+  alfbetmax=. (% FP_SFMIN_mt_) % 1 >. banorm                  NB. 2-vector, float
+  abs1ab=. sorim_mt_"1 e1e2                                   NB. 2×n-matrix, float
+  abmax=. >./ abs1ab                                          NB. n-vector, float
+  cond=. +./ (abs1ab > alfbetmax) , 1 > abmax                 NB. n-vector, boolean
+  e1e2=. e1e2 %"1 cond} 1 ,: FP_SFMIN_mt_ >. abmax            NB. 2×n-matrix
+  abcoeff=. (|. e1e2) %"1 >./ FP_SFMIN_mt_ , abs1ab * banorm  NB. 2×n-matrix
+  Err=. -/ abcoeff vmul x mmul V                              NB. n×n-matrix
+  errnrm=. (norma Err) % FP_PREC_mt_ >. norma V               NB. scalar, float
+  result1=. errnrm % FP_PREC_mt_                              NB. scalar, float
+  enrmer=. normir_mt_ <: normb V                              NB. scalar, float
+  result2=. enrmer % FP_PREC_mt_ * n                          NB. scalar, float
+  result1 >. result2                                          NB. scalar, float
+)
+
 NB. =========================================================
 NB. Interface
 
@@ -398,7 +510,7 @@ NB. ---------------------------------------------------------
 NB. testgeev
 NB.
 NB. Description:
-NB.   Test geev (math/lapack) by square matrix
+NB.   Test xGEEV (math/lapack2) by square matrix
 NB.
 NB. Syntax:
 NB.   testgeev A
@@ -406,36 +518,57 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
-NB.   berr := max(berrL,berrR,berrl,berrr)
+NB.   berru    := max(berruL,berruR,berrul,berrur)
+NB.   berruL   := min((||L^H * A - W * L^H||_1 / max(||L||_1 , FP_PREC)) / ||A|| , 1) / FP_PREC
+NB.   berruR   := min((||A   * R - R * W  ||_1 / max(||R||_1 , FP_PREC)) / ||A|| , 1) / FP_PREC
+NB.   ||A||    := max(||A||_1 , FP_SFMIN)
+NB.
+NB.   vrmax[j] := max(|Re(X[i,j])|)
+NB.                i | Im(X[i,j]) == 0
+NB.
+NB.   vmax[j]  := max(|X[:,j]|)
+NB.                i
+NB.
+NB.   if ∃ j | vrmax[j] / vmax[j] < 1 - 2 * FP_PREC then
+NB.     berrux := 1 / FP_PREC
+NB.   else
+NB.     berrux := max(min(| ||X[:,j]||_E - 1 | , 1) / FP_PREC)
+NB.               j
+NB.   endif
 NB. where
-NB.   ||A|| := max(||A||_1 , FP_SFMIN)
-NB.   L - matrix of left eigenvectors
-NB.   R - matrix of right eigenvectors
-NB.   E - diagonal matrix of eigenvalues
-NB.   - geev_jlapack_:
-NB.       berrL := min((||L^H * A - E * L^H||_1 / max(||L||_1 , FP_PREC)) / ||A|| , 1) / FP_PREC
-NB.       berrR := min((||A   * R - R * E  ||_1 / max(||R||_1 , FP_PREC)) / ||A|| , 1) / FP_PREC
-NB.       if max(|Re(X[i,j])|) / max(|X[i,j]|) < 1 - 2*FP_PREC then
-NB.         berrx := 1/FP_PREC
-NB.       else
-NB.         berrx := max(min(1/FP_PREC , | ||X[:,j]||_E - 1 |) / FP_PREC
-NB.       endif
-NB.       where berrx is either berrl or berrr, and corresponding X is either L or R
+NB.   A      - matrix to eigen-decompose
+NB.   W      - diagonal matrix of eigenvalues
+NB.   L      - matrix of left eigenvectors
+NB.   R      - matrix of right eigenvectors
+NB.   berrux - either berrul or berrur
+NB.   X      - either L or R
+NB.
+NB. Notes:
+NB. - vberrux models LAPACK's xDRVEV and xGET22
 
 testgeev=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'geev'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/geev.ijs'
 
   rcond=. gecon1 y
 
-  vberruL=: FP_PREC %~ 1 <. norm1@[ %~ (((mp~ ct)~ (1 ; 0)&{::) normi@:-((0 +@{::]) *"1 (1 ; 0) {:: ])) % FP_PREC >. norm1@((1 ; 0) {:: ])
-  vberruR=: FP_PREC %~ 1 <. norm1@[ %~ (( mp       (1 ; 1)&{::) norm1@:-((0   {::]) *"1 (1 ; 1) {:: ])) % FP_PREC >. norm1@((1 ; 1) {:: ])
-  vberrux=: 1 (((% FP_PREC)>./"1@:<. FP_PREC %~ |@:<:@:(normsc"2)) ([`((% FP_PREC)"_)@.])"0 ((1 - +: FP_PREC) > (|@(9&o.)) %&:(>./"1) |)@:(,"2))@{:: ]
-  vberruvv=: >./@(vberruL , vberruR , vberrux)  NB. STUDYME: verb is invisible from base locale when erase below is removed (???)
+  vberruX_mttmp_=. 2 : 'FP_PREC_mt_ %~ 1 <. (u % FP_PREC_mt_ >. norm1_mt_@v) % FP_SFMIN_mt_ >. norm1_mt_@['
+  vberruL_mttmp_=. normi_mt_@(((mp_mt_~ ct_mt_)~ 1&{::) - (1 {:: ]) *"1 +@(0 {:: ])) vberruX_mttmp_ (1 {:: ])
+  vberruR_mttmp_=. norm1_mt_@(( mp_mt_           2&{::) - (2 {:: ]) *"1   (0 {:: ])) vberruX_mttmp_ (2 {:: ])
+  vberrux_mttmp_=. (% FP_PREC)"_`(>./@(FP_PREC %~ 1 ([ <. |@:-) normsc_mt_))@.((1 _2 p. FP_PREC) *./@:<: (%~&(>./@:|) ({."1 (* 0 = *) {:"1)@:+.))
+  vberrul_mttmp_=. vberrux_mttmp_@(1 {:: ])
+  vberrur_mttmp_=. vberrux_mttmp_@(2 {:: ])
 
-  ('geev_jlapack_' tmonad (]`(1&{:: ; (0 ,: 2)&{::)`(rcond"_)`(_."_)`vberruvv)) y
+  ('''nn''&dgeev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(_."_)                                                                )) y
+  ('''nv''&dgeev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(                                    vberruR_mttmp_ >. vberrur_mttmp_))) y
+  ('''vn''&dgeev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(vberruL_mttmp_ >. vberrul_mttmp_                                    ))) y
+  ('''vv''&dgeev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(vberruL_mttmp_ >. vberrul_mttmp_ >. vberruR_mttmp_ >. vberrur_mttmp_))) y
 
-  erase 'vberruL vberruR vberrux vberruvv'
+  ('''nn''&zgeev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(_."_)                                                                )) y
+  ('''nv''&zgeev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(                                    vberruR_mttmp_ >. vberrur_mttmp_))) y
+  ('''vn''&zgeev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(vberruL_mttmp_ >. vberrul_mttmp_                                    ))) y
+  ('''vv''&zgeev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(vberruL_mttmp_ >. vberrul_mttmp_ >. vberruR_mttmp_ >. vberrur_mttmp_))) y
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -444,8 +577,8 @@ NB. ---------------------------------------------------------
 NB. testheev
 NB.
 NB. Description:
-NB.   Test heev (math/lapack) by Hermitian (symmetric) matrix
-NB.   given
+NB.   Test DSYEV and ZHEEV (math/lapack2) by Hermitian
+NB.   (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testheev A
@@ -453,35 +586,47 @@ NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric)
 NB.
 NB. Formula:
-NB.   berr := max(berr0,berr1)
-NB. where
+NB.   berru := max(berru0,berru1)
 NB.   ||A|| := max(||A||_1 , FP_SFMIN)
+NB.   ||W|| := ||A - V * E * V^H||_1
+NB.   if ||A|| > ||W|| then
+NB.     berru0 := (||W|| / ||A||) / (FP_PREC * n)
+NB.   elseif ||A|| < 1 then
+NB.     berru0 := (min(||W|| , n * ||A||) / ||A||) / (FP_PREC * n)
+NB.   else
+NB.     berru0 := min(||W|| / ||A|| , n) / (FP_PREC * n)
+NB.   endif
+NB.   berru1 := min(||V * V^H - I||_1 , n) / (FP_PREC * n)
+NB. where
+NB.   A - matrix to eigen-decompose
+NB.   W - diagonal matrix of eigenvalues
 NB.   V - matrix of eigenvectors
-NB.   E - diagonal matrix of eigenvalues
-NB.   - heev_jlapack_:
-NB.       wnorm := ||A - V * E * V^H||_1
-NB.       if ||A|| > wnorm then
-NB.         berr0 := (wnorm / ||A||) / (FP_PREC * n)
-NB.       elseif ||A|| < 1 then
-NB.         berr0 := (min(wnorm , n * ||A||) / ||A||) / (FP_PREC * n)
-NB.       else
-NB.         berr0 := min(wnorm / ||A|| , n) / (FP_PREC * n)
-NB.       endif
-NB.       berr1 := min(||V * V^H - I||_1 , n) / (FP_PREC * n)
+NB.
+NB. Notes:
+NB. - models LAPACK's DSYT21 and ZHET21
 
 testheev=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'heev'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/dsyev.ijs'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/zheev.ijs'
 
   rcond=. hecon1 y
+  n=. # y
+  nulp=. FP_PREC * n
 
-  vberru0=: [ ((((%~ {.) <. 1 { ])`(((0 { ]) <. (* {:)) % [)@.(1 > [)`(%~ {.)@.(> {.) % FP_PREC * 1 { ])~ FP_SFMIN >. {.)~&(norm1 , #) (- (] mp (* ct))&>/)
-  vberru1=: 1 ((# <. norm1@(<: upddiag)@(mp ct)) % (FP_PREC * #))@{:: ]
-  vberruv=: vberru0>.vberru1
+  vberru0_mttmp_=. (- (0&{:: (] mp_mt_ (* ct_mt_)) 1&{::)) ((nulp %~ n <. %)`(nulp %~ (<. n&*) % ])@.(1 > ])`(nulp %~ %)@.< FP_SFMIN&>.)&norm1_mt_ [
+  vberru1_mttmp_=. nulp %~ n <. norm1_mt_@(<: upddiag_mt_)@(mp_mt_ ct_mt_)@(1 {:: ])
 
-  ('heev_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`vberruv)) y
+  ('''nl''&dsyev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(_."_                            ))) y
+  ('''nu''&dsyev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(_."_                            ))) y
+  ('''vl''&dsyev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
+  ('''vu''&dsyev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
 
-  erase 'vberru0 vberru1 vberruv'
+  ('''nl''&zheev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(_."_                            ))) y
+  ('''nu''&zheev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(_."_                            ))) y
+  ('''vl''&zheev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
+  ('''vu''&zheev_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -490,69 +635,48 @@ NB. ---------------------------------------------------------
 NB. testggev
 NB.
 NB. Description:
-NB.   Test ggevxxx by pair of square matrices
+NB.   Test
+NB.   - xGGEV (math/lapack2)
+NB.   - ggevxxx (math/mt)
+NB.   by pair of square matrices
 NB.
 NB. Syntax:
 NB.   testggev AB
 NB. where
 NB.   AB - 2×n×n-brick
-NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1)
-NB. where
-NB.   ||M|| := max(||M||_1 , FP_SFMIN)
-NB.   ||v|| := max(|Re(v(i))|+|Im(v(i))|)
-NB.   α(i)  - i-th eigenvalue, also i-th element on S
-NB.           diagonal
-NB.   β(i)  - i-th eigenvalue, also i-th element on P
-NB.           diagonal
-NB.   l(i)  - i-th left eigenvector
-NB.   lb(i) - i-th back transformed left eigenvector
-NB.   r(i)  - i-th right eigenvector
-NB.   rb(i) - i-th back transformed right eigenvector
-NB.   - ggevlvn:
-NB.       berr0 := max(||l(i) * (β(i)*A - α(i)*B)  || / (FP_PREC * max(|| β(i)*A   ||,|| α(i)*B   ||)))
-NB.       berr1 := max(| ||l(i)|| - 1 |) / (FP_PREC * n)
-NB.   - ggevlnv:
-NB.       berr0 := max(||r(i) * (β(i)*A - α(i)*B)^H|| / (FP_PREC * max(||(β(i)*A)^H||,||(α(i)*B)^H||)))
-NB.       berr1 := max(| ||r(i)|| - 1 |) / (FP_PREC * n)
-NB.   - ggevlvv:
-NB.       berr0 := berr(ggevlvn)
-NB.       berr1 := berr(ggevlnv)
-NB.   - ggevuvn:
-NB.       berr0 := max(||(β(i)*A - α(i)*B)^H * l(i)|| / (FP_PREC * max(||(β(i)*A)^H||,||(α(i)*B)^H||)))
-NB.       berr1 := max(| ||l(i)|| - 1 |) / (FP_PREC * n)
-NB.   - ggevunv:
-NB.       berr0 := max(||(β(i)*A - α(i)*B)   * r(i)|| / (FP_PREC * max(|| β(i)*A   ||,|| α(i)*B   ||)))
-NB.       berr1 := max(| ||r(i)|| - 1 |) / (FP_PREC * n)
-NB.   - ggevuvv:
-NB.       berr0 := berr(ggevuvn)
-NB.       berr1 := berr(ggevunv)
-NB.
-NB. Notes:
-NB. - berrxxx are non-iterative and are require O(N^3) RAM
 
 testggev=: 3 : 0
-  vberrlvn=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((  norm1r@:((mp"1 2 -/"3)~      )                                          )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:( norm1         "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
-  vberrlnv=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((                                  norm1r@:((mp"2 1~ -/"3)~ +    )         )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:(         normi "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
-  vberrlvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::)) ((((norm1r@:( mp"1 2      ~    {.),:norm1r@:((mp"2 1      )  + @{:))~ -/"3)~) (>./@:%) FP_PREC * (FP_SFMIN >. |:@:(>./"1)@:((norm1 , normi)"2)@[)) (1 {:: ]))) >. (>./@:normir@:<:@:normitr % FP_PREC * c)@(1 {:: ])
-
-  vberruvn=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((  norm1r@:((mp"1 2 -/"3)~ ct   )                                          )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:( normi         "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
-  vberrunv=:  (     normir@:((*"_ 1|:@|.@(0&{::)) ((                                  norm1r@:((mp"2 1~ -/"3)~ |:   )         )       %  FP_PREC * (FP_SFMIN >.     (>./"1)@:(         norm1 "2)@[)) (1 {:: ]))) >. (     normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
-  vberruvv=:  (>./@:normir@:((*"_ 1|:@|.@(0&{::)) ((((norm1r@:( mp"1 2      ~ ct@{.),:norm1r@:((mp"2 1      )  |:@{:))~ -/"3)~) (>./@:%) FP_PREC * (FP_SFMIN >. |:@:(>./"1)@:((normi , norm1)"2)@[)) (1 {:: ]))) >. (>./@:normir@:<:@:normitc % FP_PREC * c)@(1 {:: ])
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/ggev.ijs'
 
   rcond=. <./ gecon1"2 y
+  n=. c y
 
-  ('ggevlnn' tmonad (]`]`(rcond"_)`(_."_)`(_."_)  )) y
-  ('ggevlnv' tmonad (]`]`(rcond"_)`(_."_)`vberrlnv)) y
-  ('ggevlvn' tmonad (]`]`(rcond"_)`(_."_)`vberrlvn)) y
-  ('ggevlvv' tmonad (]`]`(rcond"_)`(_."_)`vberrlvv)) y
-  ('ggevunn' tmonad (]`]`(rcond"_)`(_."_)`(_."_)  )) y
-  ('ggevunv' tmonad (]`]`(rcond"_)`(_."_)`vberrunv)) y
-  ('ggevuvn' tmonad (]`]`(rcond"_)`(_."_)`vberruvn)) y
-  ('ggevuvv' tmonad (]`]`(rcond"_)`(_."_)`vberruvv)) y
+  vberrlL_mttmp_=.  mp_mt_~        "2` *   `normi_mt_`normitr_mt_ drgev_mt_
+  vberrlR_mttmp_=. (mp_mt_  ct_mt_)"2`(*"1)`normi_mt_`normitr_mt_ drgev_mt_
+  vberruL_mttmp_=. (mp_mt_~ ct_mt_)"2` *   `norm1_mt_`normitc_mt_ drgev_mt_
+  vberruR_mttmp_=.  mp_mt_         "2`(*"1)`norm1_mt_`normitc_mt_ drgev_mt_
 
-  erase 'vberrlnv vberrlvn vberrlvv vberrunv vberruvn vberruvv'
+  ('''nn''&dggev_mttmp_' tmonad (]`]                                  `(rcond"_)`(_."_)`(_."_                                         ))) y
+  ('''nv''&dggev_mttmp_' tmonad (]`((0&{:: ,: 1&{::) ;         3&{:: )`(rcond"_)`(_."_)`                         vberruR_mttmp_        )) y
+  ('''vn''&dggev_mttmp_' tmonad (]`((0&{:: ,: 1&{::) ; 2&{::         )`(rcond"_)`(_."_)`  vberruL_mttmp_                               )) y
+  ('''vv''&dggev_mttmp_' tmonad (]`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcond"_)`(_."_)`((vberruL_mttmp_ }:) >. (vberruR_mttmp_ 0 2&{)))) y
+
+  ('''nn''&zggev_mttmp_' tmonad (]`]                                  `(rcond"_)`(_."_)`(_."_                                         ))) y
+  ('''nv''&zggev_mttmp_' tmonad (]`((0&{:: ,: 1&{::) ;         3&{:: )`(rcond"_)`(_."_)`                         vberruR_mttmp_        )) y
+  ('''vn''&zggev_mttmp_' tmonad (]`((0&{:: ,: 1&{::) ; 2&{::         )`(rcond"_)`(_."_)`  vberruL_mttmp_                               )) y
+  ('''vv''&zggev_mttmp_' tmonad (]`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcond"_)`(_."_)`((vberruL_mttmp_ }:) >. (vberruR_mttmp_ 0 2&{)))) y
+
+  ('ggevlnn'             tmonad (]`]                                  `(rcond"_)`(_."_)`(_."_                                         ))) y
+  ('ggevlnv'             tmonad (]`]                                  `(rcond"_)`(_."_)`                         vberrlR_mttmp_        )) y
+  ('ggevlvn'             tmonad (]`]                                  `(rcond"_)`(_."_)`  vberrlL_mttmp_                               )) y
+  ('ggevlvv'             tmonad (]`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcond"_)`(_."_)`((vberrlL_mttmp_ }:) >. (vberrlR_mttmp_ 0 2&{)))) y
+
+  ('ggevunn'             tmonad (]`]                                  `(rcond"_)`(_."_)`(_."_                                         ))) y
+  ('ggevunv'             tmonad (]`]                                  `(rcond"_)`(_."_)`                         vberruR_mttmp_        )) y
+  ('ggevuvn'             tmonad (]`]                                  `(rcond"_)`(_."_)`  vberruL_mttmp_                               )) y
+  ('ggevuvv'             tmonad (]`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcond"_)`(_."_)`((vberruL_mttmp_ }:) >. (vberruR_mttmp_ 0 2&{)))) y
+
+  coerase < 'mttmp'
 
   EMPTY
 )

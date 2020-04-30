@@ -58,10 +58,27 @@ trf.ijs
 tri.ijs
 trs.ijs
 util.ijs
+test/lapack2/dsyev.ijs
+test/lapack2/gebal.ijs
+test/lapack2/geev.ijs
+test/lapack2/gehrd.ijs
+test/lapack2/gelqf.ijs
+test/lapack2/geqlf.ijs
+test/lapack2/geqrf.ijs
+test/lapack2/gerqf.ijs
+test/lapack2/gesv.ijs
+test/lapack2/getrf.ijs
+test/lapack2/ggbal.ijs
+test/lapack2/ggev.ijs
+test/lapack2/gghrd.ijs
+test/lapack2/potrf.ijs
+test/lapack2/trtrs.ijs
+test/lapack2/tzrzf.ijs
+test/lapack2/zheev.ijs
 )
 
 DEPENDS=: 0 : 0
 general/misc
-math/lapack
+math/lapack2
 math/misc
 )

@@ -1657,34 +1657,47 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - for L * U1 * P = A :
-NB.     berr := ||L * U1 * P - A|| / (FP_EPS * ||A|| * m)
-NB. - for P * L1 * U = A :
-NB.     berr := ||P * L1 * U - A|| / (FP_EPS * ||A|| * n)
-NB. - for P * U1 * L = A :
-NB.     berr := ||P * U1 * L - A|| / (FP_EPS * ||A|| * n)
-NB. - for U * L1 * P = A :
-NB.     berr := ||U * L1 * P - A|| / (FP_EPS * ||A|| * m)
+NB.   if 0=m or 0=n then
+NB.     berr := 0
+NB.   elseif 0=||A|| and ||A - Aapprox|| > 0
+NB.     berr := 1 / FP_EPS
+NB.   else
+NB.     berr := ((||A - Aapprox|| / size) / ||A||) / FP_EPS
+NB.   endif
+NB. where
+NB.   for getrflu1p: Aapprox := L * U1 * P, ||matrix|| := ||matrix||_inf, size = m
+NB.   for getrfpl1u: Aapprox := P * L1 * U, ||matrix|| := ||matrix||_1  , size = n
+NB.   for getrfpu1l: Aapprox := P * U1 * L, ||matrix|| := ||matrix||_1  , size = n
+NB.   for getrful1p: Aapprox := U * L1 * P, ||matrix|| := ||matrix||_inf, size = m
 NB.
 NB. Notes:
-NB. - use temporary locale mttmp to avoid mt's names
-NB.   redefinition
+NB. - models LAPACK's xGET01
 
 testgetrf=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'getrf'
+  load        :: ] 'numeric'
+  load_mttmp_ :: ] 'math/misc/mathutil'
+  load_mttmp_ :: ] 'math/misc/makemat'
+  load_mttmp_ :: ] 'math/misc/matutil'
+  load_mttmp_ :: ] 'math/misc/linear'
+  load_mttmp_ :: ] 'math/misc/matfacto'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/getrf.ijs'
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('lud_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: %.               2&{::)                        ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  NB. berr=. A (calcNorm aberr) Aapprox
+  aberr=. 1 : '((FP_EPS , c_mt_@]) %~/@,@,.`(%@FP_EPS)@.(</@:*@]) [ ,&u -)`0:@.(0 e. $@])'
+  vberr1_mttmp_=. norm1_mt_ aberr
+  vberri_mttmp_=. normi_mt_ aberr
 
-  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: invperm_jlapack_ 2&{::)                        ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('lud_mttmp_'    tmonad (]`(ip2P^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcond"_)`(_."_)`vberr1_mttmp_)) y
 
-  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
-  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('dgetrf_mttmp_' tmonad (]`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcond"_)`(_."_)`vberr1_mttmp_)) y
+  ('zgetrf_mttmp_' tmonad (]`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcond"_)`(_."_)`vberr1_mttmp_)) y
+
+  ('getrflu1p'     tmonad (]`(0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))`(rcond"_)`(_."_)`vberri_mttmp_)) y
+  ('getrfpl1u'     tmonad (]`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcond"_)`(_."_)`vberr1_mttmp_)) y
+  ('getrfpu1l'     tmonad (]`(0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))`(rcond"_)`(_."_)`vberr1_mttmp_)) y
+  ('getrful1p'     tmonad (]`(0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))`(rcond"_)`(_."_)`vberri_mttmp_)) y
 
   coerase <'mttmp'
 
@@ -1723,7 +1736,7 @@ NB.
 NB. Description:
 NB.   Test:
 NB.   - choleski (math/misc addon)
-NB.   - potrf (math/lapack addon)
+NB.   - xPOTRF (math/lapack addon)
 NB.   - potrfx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix
 NB.
@@ -1734,28 +1747,43 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite
 NB.
 NB. Formula:
-NB. - for L * L^H = A :
-NB.     berr := ||L * L^H - A|| / (FP_EPS * ||A|| * n)
-NB. - for U * U^H = A :
-NB.     berr := ||U * U^H - A|| / (FP_EPS * ||A|| * n)
+NB.   if 0=n then
+NB.     berr := 0
+NB.   elseif 0=||A||_1 or ∃ i | Im(A(i,i)) ≠ 0
+NB.     berr := 1 / FP_EPS
+NB.   else
+NB.     berr := ((||A - Aapprox||_1 / n) / ||A||_1) / FP_EPS
+NB.   endif
+NB. where
+NB.   for potrfl: Aapprox := L * L^H
+NB.   for potrfu: Aapprox := U * U^H
 NB.
 NB. Notes:
-NB. - use temporary locale mttmp to avoid mt's names
-NB.   redefinition
+NB. - models LAPACK's xPOT01
 
 testpotrf=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'potrf'
+  load        :: ] 'numeric'
+  load_mttmp_ :: ] 'math/misc/mathutil'
+  load_mttmp_ :: ] 'math/misc/makemat'
+  load_mttmp_ :: ] 'math/misc/matutil'
+  load_mttmp_ :: ] 'math/misc/linear'
+  load_mttmp_ :: ] 'math/misc/matfacto'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/potrf.ijs'
 
   rcond=. pocon1 y
 
-  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  NB. berr=. A (makeAapprox aberr) T  NB. T is either L or U
+  aberr=. 1 : '(((FP_EPS , #@]) %~/@,@,.`(%@FP_EPS)@.(0 ([ = {) ]) [ ,&norm1_mt_ -) u)`(%@FP_EPS)@.(0 +./@:~: 11 o. diag_mt_@])`0:@.(0 = #@])'
 
-  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('choleski_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`((mp  ct)     aberr))) y
 
-  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('''l''&dpotrf_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`((mp  |:)@trl aberr))) y
+  ('''u''&dpotrf_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`((mp~ |:)@tru aberr))) y
+  ('''l''&zpotrf_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`((mp  ct)@trl aberr))) y
+  ('''u''&zpotrf_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`((mp~ ct)@tru aberr))) y
+
+  ('potrfl'              tmonad (]`]`(rcond"_)`(_."_)`((mp  ct)     aberr))) y
+  ('potrfu'              tmonad (]`]`(rcond"_)`(_."_)`((mp  ct)     aberr))) y
 
   coerase <'mttmp'
 

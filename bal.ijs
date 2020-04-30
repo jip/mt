@@ -813,7 +813,7 @@ NB. testgebal
 NB.
 NB. Description:
 NB.   Test:
-NB.   - gebal (math/lapack)
+NB.   - xGEBAL (math/lapack2)
 NB.   - gebalx (math/mt)
 NB.   by square matrix
 NB.
@@ -822,24 +822,48 @@ NB.   testgebal A
 NB. where
 NB.   A - n×n-matrix
 NB.
-NB. TODO:
-NB. - consider [1]
+NB. Formula:
+NB.   err0 := ||Abal||_1 / ||A||_1                                           if not a permute only
+NB.   err1 := ||A - P^_1 *     Abal *        P||_1 / (FP_EPS * ||A||_1 * n)  if a permute only
+NB.   err1 := ||A -        D * Abal * D^_1    ||_1 / (FP_EPS * ||A||_1 * n)  if a scale only
+NB.   err1 := ||A - P^_1 * D * Abal * D^_1 * P||_1 / (FP_EPS * ||A||_1 * n)  if a permute and a scale
+NB. where
+NB.   err0 - how 1-norm is changed: <1=reduced, 1=no effect, >1=increased
+NB.   err1 - how consistent output data is
 NB.
-NB. References:
-NB. [1] Michael H. Schneider, Stavros A. Zenios. A
-NB.     Comparative Study of Algorithms for Matrix Balancing.
-NB.     Operations Research. Vol. 38, No. 3, May-June 1990.
+NB. Notes:
+NB. - err0 is outputted in ferr column
+NB. - err1 is outputted in berr column
 
 testgebal=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'gebal'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gebal.ijs'
 
   rcond=. gecon1 y
 
-  ('gebal_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  vferr_mttmp_=.  %~&norm1_mt_ 0&{::
+  vp_mttmp_=.     (1&{:: , 2&{::) makeper_jlapack2_ 3&{::
+  vd_mttmp_=.     (#\@i.@#@(3&{::) ((>: {.) *. (<: {:)) 1&{:: , 2&{::)`(1 ,: 3&{::)}
+  vscale_mttmp_=. 0&{:: (%"1 * ]) 3&{::
+  vdenom_mttmp_=. (FP_EPS * (1:`]@.*)@norm1_mt_ * #)@[
 
-  ('geball' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebalu' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- vp_mttmp_ (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
+  ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(-                    0&{:: (%"1 * ])     3&{::) % vdenom_mttmp_))) y
+  ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(- vp_mttmp_ (fp^:_1) 0&{:: (%"1 * ]) vd_mttmp_) % vdenom_mttmp_))) y
+
+  ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- vp_mttmp_ (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
+  ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(-                    0&{:: (%"1 * ])     3&{::) % vdenom_mttmp_))) y
+  ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(- vp_mttmp_ (fp^:_1) 0&{:: (%"1 * ]) vd_mttmp_) % vdenom_mttmp_))) y
+
+  ('geballp'             tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- 1&{::     (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
+  ('gebalup'             tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- 1&{::     (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
+
+  ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcond"_)`vferr_mttmp_`(norm1@(-                          vscale_mttmp_      ) % vdenom_mttmp_))) y
+  ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcond"_)`(4&{::)     `(norm1@(-                          vscale_mttmp_      ) % vdenom_mttmp_))) y
+
+  ('geball'              tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(- 1&{::     (fp^:_1)       vscale_mttmp_      ) % vdenom_mttmp_))) y
+  ('gebalu'              tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(- 1&{::     (fp^:_1)       vscale_mttmp_      ) % vdenom_mttmp_))) y
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -848,18 +872,64 @@ NB. ---------------------------------------------------------
 NB. testggbal
 NB.
 NB. Description:
-NB.   Test ggbalx by pair of square matrices
+NB.   Test:
+NB.   - xGGBAL (math/lapack2)
+NB.   - ggbalx (math/mt)
+NB.   by pair of square matrices
 NB.
 NB. Syntax:
 NB.   testggbal AB
 NB. where
 NB.   AB - 2×n×n-brick
+NB.
+NB. Formula:
+NB.   err0X := ||Xbal||_1 / ||X||_1                                           if not a permute only
+NB.   err1X := ||X - P^_1 *     Xbal *        P||_1 / (FP_EPS * ||X||_1 * n)  if a permute only
+NB.   err1X := ||X -        D * Xbal * D^_1    ||_1 / (FP_EPS * ||X||_1 * n)  if a scale only
+NB.   err1X := ||X - P^_1 * D * Xbal * D^_1 * P||_1 / (FP_EPS * ||X||_1 * n)  if a permute and a scale
+NB.   err0  := max(err0A , err0B)
+NB.   err1  := max(err1A , err1B)
+NB. where
+NB.   X    - A or B
+NB.   err0 - how 1-norm is changed: <1=reduced, 1=no effect, >1=increased
+NB.   err1 - how consistent output data is
+NB.
+NB. Notes:
+NB. - err0 is outputted in ferr column
+NB. - err1 is outputted in berr column
 
 testggbal=: 3 : 0
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/ggbal.ijs'
+
   rcond=. <./ gecon1"2 y
 
-  ('ggball' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
-  ('ggbalu' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  vgeto_mttmp_=.    0 0 1 1 2 2&(]&.:>/.)
+  vferr_mttmp_=.    >./@:(%~&norm1_mt_"2) 0&{::
+  vp_mttmp_=.       1&{:: makeper_jlapack2_"1 (2&{::)
+  vd_mttmp_=.       (#\@i.@{:@$@(2&{::) ((>: {.) ,:~@:*. (<: {:)) 1&{::)`(1 ,: 2&{::)}
+  vperm_mttmp_=.    (C.^:_1"2~ {.) (C.^:_1"1~ {:) ]
+  vscale_mttmp_=.   (%"2 {.) (%"1 {:) ]
+  vscale03_mttmp_=. 0&{:: vscale_mttmp_ 3&{::
+  vdenom_mttmp_=.   (FP_EPS * (1:`]@.*)@norm1_mt_"2 * c_mt_)@[
+
+  ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
+  ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{:: vscale_mttmp_ 2&{::                            ) >./@:% vdenom_mttmp_))) y
+  ('''b''&dggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(- (0&{:: vscale_mttmp_ vd_mttmp_) vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
+
+  ('''p''&zggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
+  ('''s''&zggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{:: vscale_mttmp_ 2&{::                            ) >./@:% vdenom_mttmp_))) y
+  ('''b''&zggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(- (0&{:: vscale_mttmp_ vd_mttmp_) vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
+
+  ('ggballp'             tmonad (]                     `]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ 1&{::    ) >./@:% vdenom_mttmp_))) y
+  ('ggbalup'             tmonad (]                     `]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ 1&{::    ) >./@:% vdenom_mttmp_))) y
+
+  ('ggbals'              tmonad (((; ,:~@i.   ; 0&,) c)`]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-        vscale03_mttmp_                                ) >./@:% vdenom_mttmp_))) y
+  ('(2^_44)&ggbals'      tmonad (((; ,:~@i.   ; 0&,) c)`]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-        vscale03_mttmp_                                ) >./@:% vdenom_mttmp_))) y
+
+  ('ggball'              tmonad (]                     `]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-        vscale03_mttmp_          vperm_mttmp_ 1&{::    ) >./@:% vdenom_mttmp_))) y
+  ('ggbalu'              tmonad (]                     `]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-        vscale03_mttmp_          vperm_mttmp_ 1&{::    ) >./@:% vdenom_mttmp_))) y
+
+  coerase < 'mttmp'
 
   EMPTY
 )

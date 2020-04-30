@@ -739,7 +739,7 @@ NB. testgehrd
 NB.
 NB. Description:
 NB.   Test Hessenberg reduction algorithms:
-NB.   - gehrd (math/lapack addon)
+NB.   - xGEHRD (math/lapack2 addon)
 NB.   - gehrdx (math/mt addon)
 NB.   by square matrix
 NB.
@@ -749,19 +749,38 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
-NB. - for gehrdl: berr := ||A - Q^H * H * Q|| / (FP_EPS * ||A|| * n)
-NB. - for gehrdu: berr := ||A - Q * H * Q^H|| / (FP_EPS * ||A|| * n)
+NB.   berr := max(berr0,berr1)
+NB.   berr0 := (min(||W|| , ||A||) / max((FP_SFMIN * n) / FP_PREC , ||A|| * FP_PREC)) / n
+NB.   - for gehrdl:
+NB.       ||A|| := max(||A||_inf , FP_SFMIN)
+NB.       ||W|| := ||A - Q^H * H * Q||_inf
+NB.       berr1 := (||Q * Q^H - I||_inf / n) / FP_PREC
+NB.   - for gehrdu:
+NB.       ||A|| := max(||A||_1 , FP_SFMIN)
+NB.       ||W|| := ||A - Q * H * Q^H||_1
+NB.       berr1 := (||Q^H * Q - I||_1 / n) / FP_PREC
+NB.
+NB. Notes:
+NB. - models LAPACK's xHST01, DORT01 and ZUNT01
 
 testgehrd=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'gehrd'
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gehrd.ijs'
 
   rcond=. gecon1 y
 
-  ('2b1100&gehrd_jlapack_' tmonad ((] ; 1: ; #)`(,&>/)`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  cberr0=.  2 : '%~/@({. , ((FP_SFMIN (FP_PREC %~ *) {.) >. (FP_PREC * {:)) , <./@}.)@(#@[ , (- u&>/) (, FP_SFMIN&>.)&v [)'
+  vberrl0_mttmp_=. (] mp_mt_~ (mp_mt_~ ct_mt_)) cberr0 normi_mt_
+  vberru0_mttmp_=. (] mp_mt_  (mp_mt_  ct_mt_)) cberr0 norm1_mt_
+  vberrl1_mttmp_=. FP_PREC %~ (normi_mt_@(<: upddiag_mt_)@(mp_mt_  ct_mt_) % #)@(1 {:: ])
+  vberru1_mttmp_=. FP_PREC %~ (norm1_mt_@(<: upddiag_mt_)@(mp_mt_~ ct_mt_) % #)@(1 {:: ])
 
-  ('gehrdl'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- ( 1&trl@:(}:"1) (] mp~ (mp~ ct)) unghrl)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
-  ('gehrdu'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('dgehrd_mttmp_' tmonad ((1 ; # ; ])`(_1&trupick@(0&{::) ; unghru@;)`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
+  ('zgehrd_mttmp_' tmonad ((1 ; # ; ])`(_1&trupick@(0&{::) ; unghru@;)`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
+
+  ('gehrdl'        tdyad  ((0 , #)  `]`(( 1 trlpick }:"1)  ; unghrl  )`(rcond"_)`(_."_)`(vberrl0_mttmp_ >. vberrl1_mttmp_))) y
+  ('gehrdu'        tdyad  ((0 , #)  `]`((_1 trupick }:  )  ; unghru  )`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -771,6 +790,7 @@ NB. testgghrd
 NB.
 NB. Description:
 NB.   Test Hessenberg reduction algorithms:
+NB.   - xGGHRD (math/lapack2 addon)
 NB.   - gghrdx (math/mt addon)
 NB.   by pair of square matrices
 NB.
@@ -782,54 +802,74 @@ NB.
 NB. Formula:
 NB.   berr := max(berr0,berr1,berr2,berr3)
 NB. where
-NB.   ||M|| := max(||M||_1 , FP_SFMIN)
 NB.   'H T dQ0 dZ0'=. (0,n) gghrdxvv A , B , ,:~ I
+NB.   - for berri in {berr0,berr1}
+NB.       if ||A|| > ||W|| then
+NB.         berri := (||W|| / ||A||) / (FP_PREC * n)
+NB.       elseif ||A|| < 1 then
+NB.         berri := (min(||W|| , n * ||A||) / ||A||) / (FP_PREC * n)
+NB.       else
+NB.         berri := min(||W|| / ||A|| , n) / (FP_PREC * n)
+NB.       endif
+NB.   - for berrj in {berr2,berr3}
+NB.       berrj := min(||E|| , n) / (FP_PREC * n)
 NB.   - for gghrdl:
-NB.       berr0 := ||A - dQ0^H * H * dZ0|| / (FP_PREC * ||A|| * n)
-NB.       berr1 := ||B - dQ0^H * T * dZ0|| / (FP_PREC * ||B|| * n)
-NB.       berr2 := ||I - dQ0^H * dQ0|| / (FP_PREC * n)
-NB.       berr3 := ||I - dZ0^H * dZ0|| / (FP_PREC * n)
+NB.       ||A|| := max(||A||_inf , FP_SFMIN)
+NB.       ||W|| := ||A - dQ0^H * H * dZ0||_inf  for berru0
+NB.       ||W|| := ||B - dQ0^H * T * dZ0||_inf  for berru1
+NB.       ||E|| := ||dQ0^H * dQ0 - I||_inf      for berru2
+NB.       ||E|| := ||dZ0^H * dZ0 - I||_inf      for berru3
 NB.       B - lower triangular
 NB.   - for gghrdu:
-NB.       berr0 := ||A - dQ0 * H * dZ0^H|| / (FP_PREC * ||A|| * n)
-NB.       berr1 := ||B - dQ0 * T * dZ0^H|| / (FP_PREC * ||B|| * n)
-NB.       berr2 := ||I - dQ0 * dQ0^H|| / (FP_PREC * n)
-NB.       berr3 := ||I - dZ0 * dZ0^H|| / (FP_PREC * n)
+NB.       ||A|| := max(||A||_1 , FP_SFMIN)
+NB.       ||W|| := ||A - dQ0 * H * dZ0^H||_1  for berru0
+NB.       ||W|| := ||B - dQ0 * T * dZ0^H||_1  for berru1
+NB.       ||E|| := ||dQ0 * dQ0^H - I||_1      for berru2
+NB.       ||E|| := ||dZ0 * dZ0^H - I||_1      for berru3
 NB.       B - upper triangular
+NB.
+NB. Notes:
+NB. - models LAPACK's xGET51
 
 testgghrd=: 3 : 0
-  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                         NB. L,R: 'AB HT dQ0dZ0'=. (A,B,I,:I) prep (H,T,dQ0,:dZ0)
-  safenorm=. FP_SFMIN >. norm1"2                                                                        NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '0&{:: safenorm@:- (u@{.@] mp"2 (mp"2 v@{:))&>/@}.'                                      NB. L: (ct cdiff1 ]) : ||A - dQ0^H * H * dZ0|| , ||B - Q1^H * T * dZ0||
-                                                                                                        NB. R: (] cdiff1 ct) : ||A - dQ0 * H * dZ0^H|| , ||B - Q1 * T * dZ0^H||
-  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                               NB. L: (mp~ adiff2) : ||I - dQ0^H * dQ0|| , ||I - dZ0^H * dZ0||
-                                                                                                        NB. R: (mp  adiff2) : ||I - dQ0 * dQ0^H|| , ||I - dZ0 * dZ0^H||
-  denom1=. safenorm@(0&{::)                                                                             NB. ||A|| , ||B||
-  getn=. c@(0&{::)                                                                                      NB. n
-  safediv=. ((({: <. %/@}:)`((<./@(}: * 1 , {:)) % 1&{)@.(1 > 1&{))`(%/@}:)@.(</@}:)) % (FP_PREC * {:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
-  cberr01=. 2 : 'safediv"1@:((u cdiff1 v) ,. denom1 ,. getn)'                                           NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
-                                                                                                        NB. R: (] cberr01 ct) : (berr0 , berr1) for R
-  aberr23=. 1 : '((<. (u adiff2))~ % FP_PREC * ]) getn'                                                 NB. L: (mp~ aberr23) : (berr2 , berr3) for L
-                                                                                                        NB. R: (mp  aberr23) : (berr2 , berr3) for R
-  vberrl=: (>./@((ct cberr01 ]) , (mp~ aberr23))@prep) f.
-  vberru=: (>./@((] cberr01 ct) , (mp  aberr23))@prep) f.
+  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gghrd.ijs'
 
-  I=. idmat c y
-  ABl=. (,: trl)/ y
-  ABu=. (,: tru)/ y
+  n=. c y
+  nulp=. FP_PREC * n
+  I=. idmat n
+  ABl=. (,: trlpick)/ y
+  ABu=. (,: trupick)/ y
   rcondl=. <./ gecon1&.{.`(trlcon1&.{.)"2 ABl
   rcondu=. <./ gecon1&.{.`(trucon1&.{.)"2 ABu
 
-  ('gghrdlnn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
-  ('gghrdlnv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`vberrl)) ABl , ,:~ I
-  ('gghrdunn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu
-  ('gghrdunv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`vberru)) ABu , ,:~ I
+  vberrli_mttmp_=. (- 2&{ ((mp_mt_~ ct_mt_)~"2) 2&{.  mp_mt_        "2 {:) ((nulp %~ n <. %)`(nulp %~ (<. n&*) % ])@.(1 > ])`(nulp %~ %)@.< FP_SFMIN&>.)&(normi_mt_"2) [
+  vberrui_mttmp_=. (- 2&{ ( mp_mt_          "2) 2&{. (mp_mt_ ct_mt_)"2 {:) ((nulp %~ n <. %)`(nulp %~ (<. n&*) % ])@.(1 > ])`(nulp %~ %)@.< FP_SFMIN&>.)&(norm1_mt_"2) [
+  vberrlj_mttmp_=. nulp %~ n <. normi_mt_@(<: upddiag_mt_)@(mp_mt_~ ct_mt_)"2
+  vberruj_mttmp_=. nulp %~ n <. norm1_mt_@(<: upddiag_mt_)@(mp_mt_  ct_mt_)"2
 
-  erase 'cdiff1 adiff2 vberrl vberru'
+  ('''nn''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; EMPTY"_)`]`(rcondu"_)`(_."_)`(_."_                                                  ))) ABu
+  ('''ni''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; EMPTY"_)`]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(3 {:: ])))) ABu
+  ('''nv''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; idmat@n)`]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(3 {:: ])))) ABu
+
+  ('''in''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; EMPTY"_)`]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(2 {:: ])))) ABu
+  ('''ii''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; EMPTY"_)`>`(rcondu"_)`(_."_)`( vberrui_mttmp_         >./@, vberruj_mttmp_@(2 }.  ])))) ABu
+  ('''iv''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; idmat@n)`>`(rcondu"_)`(_."_)`( vberrui_mttmp_         >./@, vberruj_mttmp_@(2 }.  ])))) ABu
+
+  ('''vn''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; idmat@n ; EMPTY"_)`>`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(2 {:: ])))) ABu
+  ('''vi''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; idmat@n ; EMPTY"_)`>`(rcondu"_)`(_."_)`( vberrui_mttmp_         >./@, vberruj_mttmp_@(2 }.  ])))) ABu
+  ('''vv''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; idmat@n ; idmat@n)`>`(rcondu"_)`(_."_)`( vberrui_mttmp_         >./@, vberruj_mttmp_@(2 }.  ])))) ABu
+
+  ('gghrdlnn'             tdyad  ((0 , n)"_`]                          `]`(rcondl"_)`(_."_)`(_."_                                        ))) ABl
+  ('gghrdlnv'             tdyad  ((0 , n)"_`]                          `]`(rcondl"_)`(_."_)`(                              vberrlj_mttmp_@(2 {  ])))) ABl , I
+  ('gghrdlvn'             tdyad  ((0 , n)"_`]                          `]`(rcondl"_)`(_."_)`(                              vberrlj_mttmp_@(2 {  ])))) ABl , I
+  ('gghrdlvv'             tdyad  ((0 , n)"_`]                          `]`(rcondl"_)`(_."_)`((vberrli_mttmp_~ 2&{.)~ >./@, vberrlj_mttmp_@(2 }. ])))) ABl , ,:~ I
+
+  ('gghrdunn'             tdyad  ((0 , n)"_`]                          `]`(rcondu"_)`(_."_)`(_."_                                        ))) ABu
+  ('gghrdunv'             tdyad  ((0 , n)"_`]                          `]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(2 {  ])))) ABu , I
+  ('gghrduvn'             tdyad  ((0 , n)"_`]                          `]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(2 {  ])))) ABu , I
+  ('gghrduvv'             tdyad  ((0 , n)"_`]                          `]`(rcondu"_)`(_."_)`((vberrui_mttmp_~ 2&{.)~ >./@, vberruj_mttmp_@(2 }. ])))) ABu , ,:~ I
+
+  coerase < 'mttmp'
 
   EMPTY
 )

@@ -183,5 +183,5 @@ math/mt - change history
 
 == 0.11.0 ==
  Drop J8 support
- * struct: fp obverse added
+ * struct: obverse added for interfaces: fp p2P ip2P
  - util:   ag removed

@@ -5,9 +5,9 @@ NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. cp        Conjugate pertranspose
 NB. fp        Full (symmetric) permutation
-NB. p2P       Transform permutation vector to permutation
-NB.           matrix
-NB. ip2P      Transform inversed permutation vector to
+NB. p2P       Transform permutation vector to/from
+NB.           permutation matrix
+NB. ip2P      Transform inversed permutation vector to/from
 NB.           permutation matrix
 NB. rt        Restrained Take
 NB. icut      Inversed cut
@@ -246,14 +246,15 @@ NB.   Aperm=. p fp     A
 NB.   A=.     p fp^:_1 Aperm
 fp=: ([ C."1 C.) :. ([ C.^:_1"1 C.^:_1)
 
-NB. Transform permutation vector to permutation matrix, to
-NB. permute rows by y or columns by (/:y)
-p2P=:  {    =
+NB. Transform permutation vector to/from permutation matrix,
+NB. to permute rows by y or columns by (/: y)
+p2P=:  ({    =) :. (     i.&1"1 )
 
-NB. Transform inversed permutation vector to permutation
-NB. matrix, or permutation vector to inversed permutation
-NB. matrix, to permute rows by (/:y) or columns by y
-ip2P=: {^:_1=
+NB. Transform inversed permutation vector to/from permutation
+NB. matrix, or permutation vector to/from inversed
+NB. permutation matrix, to permute rows by (/: y) or columns
+NB. by y
+ip2P=: ({^:_1=) :. (/:@:(i.&1"1))
 
 NB. ---------------------------------------------------------
 NB. icut

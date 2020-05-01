@@ -8,6 +8,7 @@ NB. normi    Magnitude-based ∞-norm of vector (matrix)
 NB. normic   Magnitude-based ∞-norm of vector (matrix
 NB.          columns)
 NB. normir   Magnitude-based ∞-norm of vector (matrix rows)
+NB. normm    Magnitude-based max of modules of elements
 NB. norm1t   Taxicab-based 1-norm of vector (matrix)
 NB. norm1tc  Taxicab-based 1-norm of vector (matrix columns)
 NB. norm1tr  Taxicab-based 1-norm of vector (matrix rows)
@@ -62,6 +63,7 @@ NB. norm1r
 NB. normi
 NB. normic
 NB. normir
+NB. normm
 NB.
 NB. Description:
 NB.   Magnitude-based norms |y|
@@ -79,6 +81,12 @@ NB. - to force normi act like any of: DLANSB('i'),
 NB.   DLANST('i'), xLANGB('i'), xLANGT('i'), xLANHS('i'),
 NB.   xLANTB('i'), xLANTR('i'), ZLANHB('i'), ZLANHT('i'),-
 NB.   extraneous values in matrix must be zeroed
+NB. - normm implements LAPACK's DLANSY('m'), xLANGE('m'),
+NB.   ZLANHE('m')
+NB. - to force normm act like any of: DLANSB('m'),
+NB.   DLANST('m'), xLANGB('m'), xLANGT('m'), xLANHS('m'),
+NB.   xLANTB('m'), xLANTR('m'), ZLANHB('m'), ZLANHT('m'),-
+NB.   extraneous values in matrix must be zeroed
 
 norm1=:  | csum      (max@)  NB. 1-norm of vector (matrix)
 norm1c=: | csum              NB. 1-norm of vector (matrix columns)
@@ -87,6 +95,7 @@ norm1r=: | rsum              NB. 1-norm of vector (matrix rows)
 normi=:  | (+/"_1@:) (max@)  NB. ∞-norm of vector (matrix)
 normic=: | cmax              NB. ∞-norm of vector (matrix columns)
 normir=: | rmax              NB. ∞-norm of vector (matrix rows)
+normm=:  >./@,@:|`0:@.(0 = #)  NB. max of modules of elements of vector (matrix)
 
 NB. ---------------------------------------------------------
 NB. norm1t

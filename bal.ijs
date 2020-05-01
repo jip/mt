@@ -305,7 +305,11 @@ NB.   P=. p2P p
 NB.   Pinv=. %. P
 NB.
 NB. Notes:
-NB. - gebalup models LAPACK's xGEBAL('P')
+NB. - gebalup models LAPACK's xGEBAL('P') with the following
+NB.   difference: if A is {upper,lower} triangular n×n-matrix
+NB.   of size n>2 then
+NB.   - in LAPACK: B11 is a 1×1-matrix, ILO=1, IHI=1
+NB.   - in mt: B11 is the 0×0-matrix, hs=(0 0) i.e. IHI=0
 NB.
 NB. References:
 NB. [1] Daniel Kressner. Numerical methods and software for
@@ -313,8 +317,8 @@ NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany, 2004.
 
-geballp=: [ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/ ,: +/"1) -"1 diag)@:(0&~:)))
-gebalup=: [ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1 ,: +/) -"1 diag)@:(0&~:)))
+geballp=: (; (i. ; 0&,)@#)`([ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/ ,: +/"1) -"1 diag)@:(0&~:))))@.(1 < #)
+gebalup=: (; (i. ; 0&,)@#)`([ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1 ,: +/) -"1 diag)@:(0&~:))))@.(1 < #)
 
 NB. ---------------------------------------------------------
 NB. gebals
@@ -520,7 +524,11 @@ NB.   D=. diagmat d
 NB.   Dinv=. %. D
 NB.
 NB. Notes:
-NB. - gebalu models LAPACK's xGEBAL('B')
+NB. - gebalu models LAPACK's xGEBAL('B') with the following
+NB.   difference: if A is {upper,lower} triangular n×n-matrix
+NB.   of size n>2 then
+NB.   - in LAPACK: B11 is a 1×1-matrix, ILO=1, IHI=1
+NB.   - in mt: B11 is the 0×0-matrix, hs=(0 0) i.e. IHI=0
 
 geball=: gebals@geballp
 gebalu=: gebals@gebalup
@@ -562,48 +570,55 @@ NB.   'Pl Pr'=. p2P"1 plr
 NB.   Prinv=. %. Pr
 NB.
 NB. Notes:
-NB. - ggbalup implements LAPACK's xGGBAL('P')
+NB. - ggbalup implements LAPACK's xGGBAL('P') with the
+NB.   following difference: if both A and B are {upper,lower}
+NB.   triangular n×n-matrices of size n>2 then
+NB.   - in LAPACK: C11 and D11 are a 1×1-matrix, ILO=1, IHI=1
+NB.   - in mt: C11 and D11 are the 0×0-matrix, hs=(0 0) i.e.
+NB.     IHI=0
 
 ggballp=: 3 : 0
   s=. n=. c y
   h=. 0
   pl=. pr=. i. n
-  j=. h + s - 1
-  while. j >: h do.
-    v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
-    liso=. I. 0 ~: v
-    select. # liso
-      fcase. 1 do.
-        nst=. < j , h + s - 1
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-      case. 0 do.
-        nst=. < (h + {. liso) , h + s - 1
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-        s=. <: s
-        j=. h + s - 1
-      case. do.
-        j=. <: j
+  if. 1 < n do.
+    j=. h + s - 1
+    while. j >: h do.
+      v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
+      liso=. I. 0 ~: v
+      select. # liso
+        fcase. 1 do.
+          nst=. < j , h + s - 1
+          pr=. nst C. :: ] pr
+          y=. nst C."1 :: ] y
+        case. 0 do.
+          nst=. < (h + {. liso) , h + s - 1
+          pl=. nst C. :: ] pl
+          y=. nst C."2 :: ] y
+          s=. <: s
+          j=. h + s - 1
+        case. do.
+          j=. <: j
+      end.
     end.
-  end.
-  i=. h
-  while. i < h + s do.
-    v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
-    liso=. I. 0 ~: v
-    select. # liso
-      fcase. 1 do.
-        nst=. < i , h
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-      case. 0 do.
-        nst=. < (h + {. liso) , h
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-        i=. h=. >: h
-        s=. <: s
-      case. do.
-        i=. >: i
+    i=. h
+    while. i < h + s do.
+      v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
+      liso=. I. 0 ~: v
+      select. # liso
+        fcase. 1 do.
+          nst=. < i , h
+          pl=. nst C. :: ] pl
+          y=. nst C."2 :: ] y
+        case. 0 do.
+          nst=. < (h + {. liso) , h
+          pr=. nst C. :: ] pr
+          y=. nst C."1 :: ] y
+          i=. h=. >: h
+          s=. <: s
+        case. do.
+          i=. >: i
+      end.
     end.
   end.
   y ; (pl ,: pr) ; h , s
@@ -613,42 +628,44 @@ ggbalup=: 3 : 0
   s=. n=. c y
   h=. 0
   pl=. pr=. i. n
-  i=. h + s - 1
-  while. i >: h do.
-    v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
-    liso=. I. 0 ~: v
-    select. # liso
-      fcase. 1 do.
-        nst=. < i , h + s - 1
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-      case. 0 do.
-        nst=. < (h + {. liso) , h + s - 1
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-        s=. <: s
-        i=. h + s - 1
-      case. do.
-        i=. <: i
+  if. 1 < n do.
+    i=. h + s - 1
+    while. i >: h do.
+      v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
+      liso=. I. 0 ~: v
+      select. # liso
+        fcase. 1 do.
+          nst=. < i , h + s - 1
+          pl=. nst C. :: ] pl
+          y=. nst C."2 :: ] y
+        case. 0 do.
+          nst=. < (h + {. liso) , h + s - 1
+          pr=. nst C. :: ] pr
+          y=. nst C."1 :: ] y
+          s=. <: s
+          i=. h + s - 1
+        case. do.
+          i=. <: i
+      end.
     end.
-  end.
-  j=. h
-  while. j < h + s do.
-    v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
-    liso=. I. 0 ~: v
-    select. # liso
-      fcase. 1 do.
-        nst=. < j , h
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-      case. 0 do.
-        nst=. < (h + {. liso) , h
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-        j=. h=. >: h
-        s=. <: s
-      case. do.
-        j=. >: j
+    j=. h
+    while. j < h + s do.
+      v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
+      liso=. I. 0 ~: v
+      select. # liso
+        fcase. 1 do.
+          nst=. < j , h
+          pr=. nst C. :: ] pr
+          y=. nst C."1 :: ] y
+        case. 0 do.
+          nst=. < (h + {. liso) , h
+          pl=. nst C. :: ] pl
+          y=. nst C."2 :: ] y
+          j=. h=. >: h
+          s=. <: s
+        case. do.
+          j=. >: j
+      end.
     end.
   end.
   y ; (pl ,: pr) ; h , s
@@ -800,7 +817,12 @@ NB.   Prinv=. %. Pr
 NB.   'Dl Dr'=. diagmat"1 dlr
 NB.
 NB. Notes:
-NB. - ggbalu implements LAPACK's xGGBAL('B')
+NB. - ggbalu implements LAPACK's xGGBAL('B') with the
+NB.   following difference: if both A and B are {upper,lower}
+NB.   triangular n×n-matrices of size n>2 then
+NB.   - in LAPACK: C11 and D11 are a 1×1-matrix, ILO=1, IHI=1
+NB.   - in mt: C11 and D11 are the 0×0-matrix, hs=(0 0) i.e.
+NB.     IHI=0
 
 ggball=: ggbals@ggballp
 ggbalu=: ggbals@ggbalup

@@ -6,23 +6,21 @@
 3. hrd.ijs: gghrdxxx: implement blocked generalized
    Hessenberg reduction [2]
 
-4. fix ggevxxx for AB=. 2 0 0 $ 0 and for (A ,: 0)
+4. factorize gqvberr in eq,hrd,pf,qf,tri
 
-5. factorize gqvberr in eq,hrd,pf,qf,tri
+5. improve *NB and *NX constants for optimal performance
 
-6. improve *NB and *NX constants for optimal performance
+6. exp.ijs: implement updated algo [3]
 
-7. exp.ijs: implement updated algo [3]
-
-8. Sylvester equation solvers:
+7. Sylvester equation solvers:
    [generalized] {continuous,discrete}-time
 
-9. Lyapunov equation solvers:
+8. Lyapunov equation solvers:
    [generalized] {continuous,discrete}-time
    for {solution X,Cholesky factor U}
 
-10. Algebraic Riccati equation solvers:
-    [generalized] {continuous,discrete}-time
+9. Algebraic Riccati equation solvers:
+   [generalized] {continuous,discrete}-time
 
 
 [1] Gerdin, Markus. Computation of a canonical form for

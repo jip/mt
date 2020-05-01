@@ -80,7 +80,7 @@ NB.             B, produced by ggbalp
 NB.   hs      - 2-vector of integers, defines submatrices
 NB.             position, produced by ggbalp
 
-ggevi=: 1 : '(,.(0,(EVSMLNUM_mt_*1-FP_EPS_mt_),EVBIGNUM_mt_)&I.)@:(>./@,"2)@:| ([ ; u@:(scl_mt_^:((,{&EVSCL_mt_)/@[`({&0 1 0 1@{:@[)`])"1 2)) ]'
+ggevi=: 1 : '(,.(0,(EVSMLNUM_mt_*1-FP_EPS_mt_),EVBIGNUM_mt_)&I.)@:(normm_mt_"2) ([ ; u@:(scl_mt_^:((,{&EVSCL_mt_)/@[`({&0 1 0 1@{:@[)`])"1 2)) ]'
 
 NB. ---------------------------------------------------------
 NB. drgev

@@ -184,5 +184,11 @@ math/mt - change history
 == 0.11.0 ==
  Drop J8 support
  Replace lapack by lapack2 in addon tests
+ * bal:    gxbalxp fixed for case n=0
+ * ev:     ggevxxx fixed for case n=0
+ * gq:     ungxx fixed for case n=0
+ * mq:     unmxxxx fixed for case n=0
+ * norm:   - normic and normitc are fixed for case #(columns)=0
+           - normm - new interface added
  * struct: obverse added for interfaces: fp p2P ip2P
  - util:   ag removed

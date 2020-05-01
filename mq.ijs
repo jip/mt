@@ -133,25 +133,25 @@ NB. - unm{l2,2l,2r,r2}{ln,lc,rn,rc} and
 NB.   unm{lq,ql,qr,rq}{ln,lc,rn,rc} respectively are
 NB.   topologic equivalents
 
-unml2ln=: (larflcfr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unml2lc=: (larflnfr&:>/@,~ (-@c <\ ,)      )~ <
-unml2rn=: (larfrcfr&:>/@,~ (-@c <\ ,)      )~ <
-unml2rc=: (larfrnfr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unml2ln=: ((larflcfr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
+unml2lc=: ((larflnfr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
+unml2rn=: ((larfrcfr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
+unml2rc=: ((larfrnfr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
 
-unm2lln=: (larflnbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm2llc=: (larflcbc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm2lrn=: (larfrnbc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm2lrc=: (larfrcbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm2lln=: ((larflnbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <)^:(0 < c@[)
+unm2llc=: ((larflcbc&:>/@,~ (-@c <\ ,)   @|:)~ <)^:(0 < c@[)
+unm2lrn=: ((larfrnbc&:>/@,~ (-@c <\ ,)   @|:)~ <)^:(0 < c@[)
+unm2lrc=: ((larfrcbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <)^:(0 < c@[)
 
-unm2rln=: (larflnfc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm2rlc=: (larflcfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm2rrn=: (larfrnfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm2rrc=: (larfrcfc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm2rln=: ((larflnfc&:>/@,~ (-@c <\ ,)   @|:)~ <)^:(0 < c@[)
+unm2rlc=: ((larflcfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <)^:(0 < c@[)
+unm2rrn=: ((larfrnfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <)^:(0 < c@[)
+unm2rrc=: ((larfrcfc&:>/@,~ (-@c <\ ,)   @|:)~ <)^:(0 < c@[)
 
-unmr2ln=: (larflcbr&:>/@,~ (-@c <\ ,)      )~ <
-unmr2lc=: (larflnbr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unmr2rn=: (larfrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unmr2rc=: (larfrnbr&:>/@,~ (-@c <\ ,)      )~ <
+unmr2ln=: ((larflcbr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
+unmr2lc=: ((larflnbr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
+unmr2rn=: ((larfrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
+unmr2rc=: ((larfrnbr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
 
 NB. ---------------------------------------------------------
 NB. Verb     Action   Side   Tran  Syntax
@@ -211,25 +211,25 @@ NB. - unm{l3,3l,3r,r3}{ln,lc,rn,rc} and
 NB.   unm{lz,zl,zr,rz}{ln,lc,rn,rc} respectively are
 NB.   topologic equivalents
 
-unml3ln=: (larzlcfr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unml3lc=: (larzlnfr&:>/@,~ (-@c <\ ,)      )~ <
-unml3rn=: (larzrcfr&:>/@,~ (-@c <\ ,)      )~ <
-unml3rc=: (larzrnfr&:>/@,~ (-@c <\ ,)@|.   )~ <
+unml3ln=: ((larzlcfr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
+unml3lc=: ((larzlnfr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
+unml3rn=: ((larzrcfr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
+unml3rc=: ((larzrnfr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
 
-unm3lln=: (larzlnbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm3llc=: (larzlcbc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm3lrn=: (larzrnbc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm3lrc=: (larzrcbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
+unm3lln=: ((larzlnbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <)^:(0 < c@[)
+unm3llc=: ((larzlcbc&:>/@,~ (-@c <\ ,)   @|:)~ <)^:(0 < c@[)
+unm3lrn=: ((larzrnbc&:>/@,~ (-@c <\ ,)   @|:)~ <)^:(0 < c@[)
+unm3lrc=: ((larzrcbc&:>/@,~ (-@c <\ ,)@|.@|:)~ <)^:(0 < c@[)
 
-unm3rln=: (larzlnfc&:>/@,~ (-@c <\ ,)   @|:)~ <
-unm3rlc=: (larzlcfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm3rrn=: (larzrnfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <
-unm3rrc=: (larzrcfc&:>/@,~ (-@c <\ ,)   @|:)~ <
+unm3rln=: ((larzlnfc&:>/@,~ (-@c <\ ,)   @|:)~ <)^:(0 < c@[)
+unm3rlc=: ((larzlcfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <)^:(0 < c@[)
+unm3rrn=: ((larzrnfc&:>/@,~ (-@c <\ ,)@|.@|:)~ <)^:(0 < c@[)
+unm3rrc=: ((larzrcfc&:>/@,~ (-@c <\ ,)   @|:)~ <)^:(0 < c@[)
 
-unmr3ln=: (larzlcbr&:>/@,~ (-@c <\ ,)      )~ <
-unmr3lc=: (larzlnbr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unmr3rn=: (larzrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <
-unmr3rc=: (larzrnbr&:>/@,~ (-@c <\ ,)      )~ <
+unmr3ln=: ((larzlcbr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
+unmr3lc=: ((larzlnbr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
+unmr3rn=: ((larzrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
+unmr3rc=: ((larzrnbr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
 
 NB. =========================================================
 NB. Interface
@@ -269,10 +269,10 @@ NB. - implement LAPACK's DORMLQ, ZUNMLQ
 NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmlqln=: }:  @(((unml2ln`((larfblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,  &0)
-unmlqlc=: }:  @(((unml2lc`((larfblnfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,  &0)
-unmlqrn=: }:"1@(((unml2rn`((larfbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,. &0)
-unmlqrc=: }:"1@(((unml2rc`((larfbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,. &0)
+unmlqln=: }:  @(((unml2ln`((larfblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,  &0)`(i.@$@])@.(0 e. $@])
+unmlqlc=: }:  @(((unml2lc`((larfblnfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,  &0)`(i.@$@])@.(0 e. $@])
+unmlqrn=: }:"1@(((unml2rn`((larfbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,. &0)`(i.@$@])@.(0 e. $@])
+unmlqrc=: }:"1@(((unml2rc`((larfbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -309,10 +309,10 @@ NB. - implement LAPACK's DORMQL, ZUNMQL
 NB. - unm2l{lc,ln,rc,rn} and unmql{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmqlln=: }.  @(((unm2lln`((larfblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)
-unmqllc=: }.  @(((unm2llc`((larfblcbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)
-unmqlrn=: }."1@(((unm2lrn`((larfbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)
-unmqlrc=: }."1@(((unm2lrc`((larfbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)
+unmqlln=: }.  @(((unm2lln`((larfblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)`(i.@$@])@.(0 e. $@])
+unmqllc=: }.  @(((unm2llc`((larfblcbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)`(i.@$@])@.(0 e. $@])
+unmqlrn=: }."1@(((unm2lrn`((larfbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)`(i.@$@])@.(0 e. $@])
+unmqlrc=: }."1@(((unm2lrc`((larfbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -349,10 +349,10 @@ NB. - implement LAPACK's DORMQR, ZUNMQR
 NB. - unm2r{lc,ln,rc,rn} and unmqr{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmqrln=: }:  @(((unm2rln`((larfblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,  &0)
-unmqrlc=: }:  @(((unm2rlc`((larfblcfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,  &0)
-unmqrrn=: }:"1@(((unm2rrn`((larfbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,. &0)
-unmqrrc=: }:"1@(((unm2rrc`((larfbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,. &0)
+unmqrln=: }:  @(((unm2rln`((larfblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,  &0)`(i.@$@])@.(0 e. $@])
+unmqrlc=: }:  @(((unm2rlc`((larfblcfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,  &0)`(i.@$@])@.(0 e. $@])
+unmqrrn=: }:"1@(((unm2rrn`((larfbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,. &0)`(i.@$@])@.(0 e. $@])
+unmqrrc=: }:"1@(((unm2rrc`((larfbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -390,10 +390,10 @@ NB. - implement LAPACK's DORMRQ, ZUNMRQ
 NB. - unmr2{lc,ln,rc,rn} and unmrq{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmrqln=: }.  @(((unmr2ln`((larfblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ , ~&0)
-unmrqlc=: }.  @(((unmr2lc`((larfblnbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ , ~&0)
-unmrqrn=: }."1@(((unmr2rn`((larfbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~&0)
-unmrqrc=: }."1@(((unmr2rc`((larfbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~&0)
+unmrqln=: }.  @(((unmr2ln`((larfblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ , ~&0)`(i.@$@])@.(0 e. $@])
+unmrqlc=: }.  @(((unmr2lc`((larfblnbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ , ~&0)`(i.@$@])@.(0 e. $@])
+unmrqrn=: }."1@(((unmr2rn`((larfbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~&0)`(i.@$@])@.(0 e. $@])
+unmrqrc=: }."1@(((unmr2rc`((larfbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -430,10 +430,10 @@ NB. Notes:
 NB. - unml3{lc,ln,rc,rn} and unmlz{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmlzln=: }.  @(((unml3ln`((larzblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ , ~&0)
-unmlzlc=: }.  @(((unml3lc`((larzblnfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ , ~&0)
-unmlzrn=: }."1@(((unml3rn`((larzbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ ,.~&0)
-unmlzrc=: }."1@(((unml3rc`((larzbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ ,.~&0)
+unmlzln=: }.  @(((unml3ln`((larzblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ , ~&0)`(i.@$@])@.(0 e. $@])
+unmlzlc=: }.  @(((unml3lc`((larzblnfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ , ~&0)`(i.@$@])@.(0 e. $@])
+unmlzrn=: }."1@(((unml3rn`((larzbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ ,.~&0)`(i.@$@])@.(0 e. $@])
+unmlzrc=: }."1@(((unml3rc`((larzbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -470,10 +470,10 @@ NB. Notes:
 NB. - unm3l{lc,ln,rc,rn} and unmzl{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmzlln=: }:  @(((unm3lln`((larzblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,  &0)
-unmzllc=: }:  @(((unm3llc`((larzblcbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,  &0)
-unmzlrn=: }:"1@(((unm3lrn`((larzbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,. &0)
-unmzlrc=: }:"1@(((unm3lrc`((larzbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,. &0)
+unmzlln=: }:  @(((unm3lln`((larzblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,  &0)`(i.@$@])@.(0 e. $@])
+unmzllc=: }:  @(((unm3llc`((larzblcbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,  &0)`(i.@$@])@.(0 e. $@])
+unmzlrn=: }:"1@(((unm3lrn`((larzbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,. &0)`(i.@$@])@.(0 e. $@])
+unmzlrc=: }:"1@(((unm3lrc`((larzbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -510,10 +510,10 @@ NB. Notes:
 NB. - unm3r{lc,ln,rc,rn} and unmzr{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmzrln=: }.  @(((unm3rln`((larzblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ , ~&0)
-unmzrlc=: }.  @(((unm3rlc`((larzblcfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ , ~&0)
-unmzrrn=: }."1@(((unm3rrn`((larzbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ ,.~&0)
-unmzrrc=: }."1@(((unm3rrc`((larzbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ ,.~&0)
+unmzrln=: }.  @(((unm3rln`((larzblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ , ~&0)`(i.@$@])@.(0 e. $@])
+unmzrlc=: }.  @(((unm3rlc`((larzblcfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ , ~&0)`(i.@$@])@.(0 e. $@])
+unmzrrn=: }."1@(((unm3rrn`((larzbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ ,.~&0)`(i.@$@])@.(0 e. $@])
+unmzrrc=: }."1@(((unm3rrc`((larzbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax
@@ -551,10 +551,10 @@ NB. - implement LAPACK's xORMRZ, xUNMRZ
 NB. - unmr3{lc,ln,rc,rn} and unmrz{lc,ln,rc,rn} respectively
 NB.   are topologic equivalents
 
-unmrzln=: }:  @(((unmr3ln`((larzblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,  &0)
-unmrzlc=: }:  @(((unmr3lc`((larzblnbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,  &0)
-unmrzrn=: }:"1@(((unmr3rn`((larzbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,. &0)
-unmrzrc=: }:"1@(((unmr3rc`((larzbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,. &0)
+unmrzln=: }:  @(((unmr3ln`((larzblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,  &0)`(i.@$@])@.(0 e. $@])
+unmrzlc=: }:  @(((unmr3lc`((larzblnbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,  &0)`(i.@$@])@.(0 e. $@])
+unmrzrn=: }:"1@(((unmr3rn`((larzbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,. &0)`(i.@$@])@.(0 e. $@])
+unmrzrc=: }:"1@(((unmr3rc`((larzbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
 NB. Verb      Action   Side   Tran  Syntax

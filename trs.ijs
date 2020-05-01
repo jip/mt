@@ -72,10 +72,10 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
 NB. getrslu1px      A   * X = B     Xv=. LU1p getrslu1px  Bv
-NB. getrslu1phx     A^H * X = B     Xv=. LU1p getrslu1phx Bv
+NB. getrslu1pcx     A^H * X = B     Xv=. LU1p getrslu1pcx Bv
 NB. getrslu1ptx     A^T * X = B     Xv=. LU1p getrslu1ptx Bv
 NB. getrsxlu1p      X * A   = B     Xh=. LU1p getrsxlu1p  Bh
-NB. getrsxlu1ph     X * A^H = B     Xh=. LU1p getrsxlu1ph Bh
+NB. getrsxlu1pc     X * A^H = B     Xh=. LU1p getrsxlu1pc Bh
 NB. getrsxlu1pt     X * A^T = B     Xh=. LU1p getrsxlu1pt Bh
 NB.
 NB. Description:
@@ -94,29 +94,29 @@ NB.   nrhs ≥ 0, number of RHSs
 NB.
 NB. Assertions:
 NB.   Xv -: clean LU1p getrslu1px      A  mp  Xv
-NB.   Xv -: clean LU1p getrslu1phx (ct A) mp  Xv
+NB.   Xv -: clean LU1p getrslu1pcx (ct A) mp  Xv
 NB.   Xv -: clean LU1p getrslu1ptx (|: A) mp  Xv
 NB.   Xh -: clean LU1p getrsxlu1p      A  mp~ Xh
-NB.   Xh -: clean LU1p getrsxlu1ph (ct A) mp~ Xh
+NB.   Xh -: clean LU1p getrsxlu1pc (ct A) mp~ Xh
 NB.   Xh -: clean LU1p getrsxlu1pt (|: A) mp~ Xh
 NB. where
 NB.   LU1p=. getrflu1p A
 
 getrslu1px=:  (0 {:: [) C.^:_1   ((] trsmlunu trsmllnn~) 1&{::)~
-getrsxlu1ph=: (0 {:: [) C.^:_1"1 ((] trsmrucu trsmrlcn~) 1&{::)~
+getrsxlu1pc=: (0 {:: [) C.^:_1"1 ((] trsmrucu trsmrlcn~) 1&{::)~
 getrsxlu1pt=: (0 {:: [) C.^:_1"1 ((] trsmrutu trsmrltn~) 1&{::)~
 
-getrslu1phx=: (1 {:: [) ([ trsmllcn trsmlucu) ((0 {:: [) C.   ])
+getrslu1pcx=: (1 {:: [) ([ trsmllcn trsmlucu) ((0 {:: [) C.   ])
 getrslu1ptx=: (1 {:: [) ([ trsmlltn trsmlutu) ((0 {:: [) C.   ])
 getrsxlu1p=:  (1 {:: [) ([ trsmrlnn trsmrunu) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
 NB. getrspl1ux      A   * X = B     Xv=. pL1U getrspl1ux  Bv
-NB. getrspl1uhx     A^H * X = B     Xv=. pL1U getrspl1uhx Bv
+NB. getrspl1ucx     A^H * X = B     Xv=. pL1U getrspl1ucx Bv
 NB. getrspl1utx     A^T * X = B     Xv=. pL1U getrspl1utx Bv
 NB. getrsxpl1u      X * A   = B     Xh=. pL1U getrsxpl1u  Bh
-NB. getrsxpl1uh     X * A^H = B     Xh=. pL1U getrsxpl1uh Bh
+NB. getrsxpl1uc     X * A^H = B     Xh=. pL1U getrsxpl1uc Bh
 NB. getrsxpl1ut     X * A^T = B     Xh=. pL1U getrsxpl1ut Bh
 NB.
 NB. Description:
@@ -135,10 +135,10 @@ NB.   nrhs ≥ 0, number of RHSs
 NB.
 NB. Assertions:
 NB.   Xv -: clean pL1U getrspl1ux      A  mp  Xv
-NB.   Xv -: clean pL1U getrspl1uhx (ct A) mp  Xv
+NB.   Xv -: clean pL1U getrspl1ucx (ct A) mp  Xv
 NB.   Xv -: clean pL1U getrspl1utx (|: A) mp  Xv
 NB.   Xh -: clean pL1U getrsxpl1u      A  mp~ Xh
-NB.   Xh -: clean pL1U getrsxpl1uh (ct A) mp~ Xh
+NB.   Xh -: clean pL1U getrsxpl1uc (ct A) mp~ Xh
 NB.   Xh -: clean pL1U getrsxpl1ut (|: A) mp~ Xh
 NB. where
 NB.   pL1U=. getrfpl1u A
@@ -147,20 +147,20 @@ NB. Notes:
 NB. - implements LAPACK's xGETRS
 
 getrspl1ux=:  (1 {:: [) ([ trsmlunn trsmllnu) ((0 {:: [) C.   ])
-getrsxpl1uh=: (1 {:: [) ([ trsmrucn trsmrlcu) ((0 {:: [) C."1 ])
+getrsxpl1uc=: (1 {:: [) ([ trsmrucn trsmrlcu) ((0 {:: [) C."1 ])
 getrsxpl1ut=: (1 {:: [) ([ trsmrutn trsmrltu) ((0 {:: [) C."1 ])
 
-getrspl1uhx=: (0 {:: [) C.^:_1   ((] trsmllcu trsmlucn~) 1&{::)~
+getrspl1ucx=: (0 {:: [) C.^:_1   ((] trsmllcu trsmlucn~) 1&{::)~
 getrspl1utx=: (0 {:: [) C.^:_1   ((] trsmlltu trsmlutn~) 1&{::)~
 getrsxpl1u=:  (0 {:: [) C.^:_1"1 ((] trsmrlnu trsmrunn~) 1&{::)~
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
 NB. getrspu1lx      A   * X = B     Xv=. pU1L getrspu1lx  Bv
-NB. getrspu1lhx     A^H * X = B     Xv=. pU1L getrspu1lhx Bv
+NB. getrspu1lcx     A^H * X = B     Xv=. pU1L getrspu1lcx Bv
 NB. getrspu1ltx     A^T * X = B     Xv=. pU1L getrspu1ltx Bv
 NB. getrsxpu1l      X * A   = B     Xh=. pU1L getrsxpu1l  Bh
-NB. getrsxpu1lh     X * A^H = B     Xh=. pU1L getrsxpu1lh Bh
+NB. getrsxpu1lc     X * A^H = B     Xh=. pU1L getrsxpu1lc Bh
 NB. getrsxpu1lt     X * A^T = B     Xh=. pU1L getrsxpu1lt Bh
 NB.
 NB. Description:
@@ -179,29 +179,29 @@ NB.   nrhs ≥ 0, number of RHSs
 NB.
 NB. Assertions:
 NB.   Xv -: clean pU1L getrspu1lx      A  mp  Xv
-NB.   Xv -: clean pU1L getrspu1lhx (ct A) mp  Xv
+NB.   Xv -: clean pU1L getrspu1lcx (ct A) mp  Xv
 NB.   Xv -: clean pU1L getrspu1ltx (|: A) mp  Xv
 NB.   Xh -: clean pU1L getrsxpu1l      A  mp~ Xh
-NB.   Xh -: clean pU1L getrsxpu1lh (ct A) mp~ Xh
+NB.   Xh -: clean pU1L getrsxpu1lc (ct A) mp~ Xh
 NB.   Xh -: clean pU1L getrsxpu1lt (|: A) mp~ Xh
 NB. where
 NB.   pU1L=. getrfpu1l A
 
 getrspu1lx=:  (1 {:: [) ([ trsmllnn trsmlunu) ((0 {:: [) C.   ])
-getrsxpu1lh=: (1 {:: [) ([ trsmrlcn trsmrucu) ((0 {:: [) C."1 ])
+getrsxpu1lc=: (1 {:: [) ([ trsmrlcn trsmrucu) ((0 {:: [) C."1 ])
 getrsxpu1lt=: (1 {:: [) ([ trsmrltn trsmrutu) ((0 {:: [) C."1 ])
 
-getrspu1lhx=: (0 {:: [) C.^:_1   ((] trsmlucu trsmllcn~) 1&{::)~
+getrspu1lcx=: (0 {:: [) C.^:_1   ((] trsmlucu trsmllcn~) 1&{::)~
 getrspu1ltx=: (0 {:: [) C.^:_1   ((] trsmlutu trsmlltn~) 1&{::)~
 getrsxpu1l=:  (0 {:: [) C.^:_1"1 ((] trsmrunu trsmrlnn~) 1&{::)~
 
 NB. ---------------------------------------------------------
 NB. Verb:           Solves:         Syntax:
 NB. getrsul1px      A   * X = B     Xv=. UL1p getrsul1px  Bv
-NB. getrsul1phx     A^H * X = B     Xv=. UL1p getrsul1phx Bv
+NB. getrsul1pcx     A^H * X = B     Xv=. UL1p getrsul1pcx Bv
 NB. getrsul1ptx     A^T * X = B     Xv=. UL1p getrsul1ptx Bv
 NB. getrsxul1p      X * A   = B     Xh=. UL1p getrsxul1p  Bh
-NB. getrsxul1ph     X * A^H = B     Xh=. UL1p getrsxul1ph Bh
+NB. getrsxul1pc     X * A^H = B     Xh=. UL1p getrsxul1pc Bh
 NB. getrsxul1pt     X * A^T = B     Xh=. UL1p getrsxul1pt Bh
 NB.
 NB. Description:
@@ -220,19 +220,19 @@ NB.   nrhs ≥ 0, number of RHSs
 NB.
 NB. Assertions:
 NB.   Xv -: clean UL1p getrsul1px      A  mp  Xv
-NB.   Xv -: clean UL1p getrsul1phx (ct A) mp  Xv
+NB.   Xv -: clean UL1p getrsul1pcx (ct A) mp  Xv
 NB.   Xv -: clean UL1p getrsul1ptx (|: A) mp  Xv
 NB.   Xh -: clean UL1p getrsxul1p      A  mp~ Xh
-NB.   Xh -: clean UL1p getrsxul1ph (ct A) mp~ Xh
+NB.   Xh -: clean UL1p getrsxul1pc (ct A) mp~ Xh
 NB.   Xh -: clean UL1p getrsxul1pt (|: A) mp~ Xh
 NB. where
 NB.   UL1p=. getrful1p A
 
 getrsul1px=:  (0 {:: [) C.^:_1   ((] trsmllnu trsmlunn~) 1&{::)~
-getrsxul1ph=: (0 {:: [) C.^:_1"1 ((] trsmrlcu trsmrucn~) 1&{::)~
+getrsxul1pc=: (0 {:: [) C.^:_1"1 ((] trsmrlcu trsmrucn~) 1&{::)~
 getrsxul1pt=: (0 {:: [) C.^:_1"1 ((] trsmrltu trsmrutn~) 1&{::)~
 
-getrsul1phx=: (1 {:: [) ([ trsmlucn trsmllcu) ((0 {:: [) C.   ])
+getrsul1pcx=: (1 {:: [) ([ trsmlucn trsmllcu) ((0 {:: [) C.   ])
 getrsul1ptx=: (1 {:: [) ([ trsmlutn trsmlltu) ((0 {:: [) C.   ])
 getrsxul1p=:  (1 {:: [) ([ trsmrunn trsmrlnu) ((0 {:: [) C."1 ])
 
@@ -541,7 +541,7 @@ NB. Syntax:
 NB.   testgetrs (A;X)
 NB. where
 NB.   A - n×n-matrix
-NB.   X - n×n-matrix, exact solution
+NB.   X - n×n-matrix, exact solutions
 NB.
 NB. Formula:
 NB.   ferr := max(||X - exactX|| / ||X||)
@@ -553,31 +553,31 @@ testgetrs=: 3 : 0
   'LU1ip ipL1U ipU1L UL1ip'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
 
   ('getrslu1px'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; LU1ip
-  ('getrslu1phx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; LU1ip
+  ('getrslu1pcx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; LU1ip
   ('getrslu1ptx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; LU1ip
   ('getrsxlu1p'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; LU1ip
-  ('getrsxlu1ph' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; LU1ip
+  ('getrsxlu1pc' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; LU1ip
   ('getrsxlu1pt' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; LU1ip
 
   ('getrspl1ux'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; ipL1U
-  ('getrspl1uhx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; ipL1U
+  ('getrspl1ucx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; ipL1U
   ('getrspl1utx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; ipL1U
   ('getrsxpl1u'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; ipL1U
-  ('getrsxpl1uh' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; ipL1U
+  ('getrsxpl1uc' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; ipL1U
   ('getrsxpl1ut' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; ipL1U
 
   ('getrspu1lx'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; ipU1L
-  ('getrspu1lhx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; ipU1L
+  ('getrspu1lcx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; ipU1L
   ('getrspu1ltx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; ipU1L
   ('getrsxpu1l'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; ipU1L
-  ('getrsxpu1lh' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; ipU1L
+  ('getrsxpu1lc' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; ipU1L
   ('getrsxpu1lt' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; ipU1L
 
   ('getrsul1px'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; UL1ip
-  ('getrsul1phx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; UL1ip
+  ('getrsul1pcx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; UL1ip
   ('getrsul1ptx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; UL1ip
   ('getrsxul1p'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; UL1ip
-  ('getrsxul1ph' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; UL1ip
+  ('getrsxul1pc' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; UL1ip
   ('getrsxul1pt' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; UL1ip
 
   EMPTY

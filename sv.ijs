@@ -67,10 +67,10 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Verb:          Solves:         Syntax:
 NB. gesvax         A   * X = B     Xv=. A gesvax  Bv
-NB. gesvahx        A^H * X = B     Xv=. A gesvahx Bv
+NB. gesvacx        A^H * X = B     Xv=. A gesvacx Bv
 NB. gesvatx        A^T * X = B     Xv=. A gesvatx Bv
 NB. gesvxa         X * A   = B     Xh=. A gesvxa  Bh
-NB. gesvxah        X * A^H = B     Xh=. A gesvxah Bh
+NB. gesvxac        X * A^H = B     Xh=. A gesvxac Bh
 NB. gesvxat        X * A^T = B     Xh=. A gesvxat Bh
 NB.
 NB. Description:
@@ -92,10 +92,10 @@ NB. Notes:
 NB. - gesvax implements LAPACK's xGESV
 
 gesvax=:  (getrspl1ux ~ getrfpl1u)~
-gesvahx=: (getrspl1uhx~ getrfpl1u)~
+gesvacx=: (getrspl1ucx~ getrfpl1u)~
 gesvatx=: (getrspl1utx~ getrfpl1u)~
 gesvxa=:  (getrsxpl1u ~ getrfpl1u)~
-gesvxah=: (getrsxpl1uh~ getrfpl1u)~
+gesvxac=: (getrsxpl1uc~ getrfpl1u)~
 gesvxat=: (getrsxpl1ut~ getrfpl1u)~
 
 NB. ---------------------------------------------------------

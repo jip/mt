@@ -191,4 +191,11 @@ math/mt - change history
  * norm:   - normic and normitc are fixed for case #(columns)=0
            - normm - new interface added
  * struct: obverse added for interfaces: fp p2P ip2P
+ * sv:     interfaces renamed to unify with LAPACK:
+             gesvahx to gesvacx, gesvxah to gesvxac
+ * trs:    interfaces renamed to unify with LAPACK:
+             getrslu1phx to getrslu1pcx, getrsxlu1ph to getrsxlu1pc,
+             getrspl1uhx to getrspl1ucx, getrsxpl1uh to getrsxpl1uc,
+             getrspu1lhx to getrspu1lcx, getrsxpu1lh to getrsxpu1lc,
+             getrsul1phx to getrsul1pcx, getrsxul1ph to getrsxul1pc
  - util:   ag removed

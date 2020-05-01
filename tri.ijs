@@ -825,7 +825,7 @@ NB. where
 NB.   A - n×n-matrix, lower triangular
 NB.
 NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
+NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
 
 testtrtri=: 3 : 0
   L1=. |: U1=. tru1 U=. |: y
@@ -856,7 +856,7 @@ NB. where
 NB.   A - n×n-matrix
 NB.
 NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
+NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
 
 testgetri=: 3 : 0
   rcond=. gecon1 y
@@ -883,7 +883,7 @@ NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric)
 NB.
 NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
+NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
 
 testhetri=: 3 : 0
   rcond=. hecon1 y
@@ -907,7 +907,7 @@ NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.
 NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
+NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
 
 testpotri=: 3 : 0
   rcond=. pocon1 y
@@ -932,7 +932,7 @@ NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite tridiagonal
 NB.
 NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
+NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
 
 testpttri=: 3 : 0
   rcond=. ptcon1 y

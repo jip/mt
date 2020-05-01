@@ -919,21 +919,21 @@ NB.   'S P dQ1 dZ1'=. (0,n) hgexxsvv H , T , ,:~ I
 NB.   - hgezqxxx:
 NB.       berr0 := ||H - dQ1^H * S * dZ1|| / (FP_PREC * ||H|| * n)
 NB.       berr1 := ||T - dQ1^H * P * dZ1|| / (FP_PREC * ||T|| * n)
-NB.       berr2 := ||I - dQ1^H * dQ1|| / (FP_PREC * n)
-NB.       berr3 := ||I - dZ1^H * dZ1|| / (FP_PREC * n)
+NB.       berr2 := ||dQ1^H * dQ1 - I|| / (FP_PREC * n)
+NB.       berr3 := ||dZ1^H * dZ1 - I|| / (FP_PREC * n)
 NB.   - hgeqzxxx:
 NB.       berr0 := ||H - dQ1 * S * dZ1^H|| / (FP_PREC * ||H|| * n)
 NB.       berr1 := ||T - dQ1 * P * dZ1^H|| / (FP_PREC * ||T|| * n)
-NB.       berr2 := ||I - dQ1 * dQ1^H|| / (FP_PREC * n)
-NB.       berr3 := ||I - dZ1 * dZ1^H|| / (FP_PREC * n)
+NB.       berr2 := ||dQ1 * dQ1^H - I|| / (FP_PREC * n)
+NB.       berr3 := ||dZ1 * dZ1^H - I|| / (FP_PREC * n)
 
 testhgeq=: 3 : 0
   prep=. (,~ <@(2&{.))~ _2&(<\)                                                                         NB. L,R: 'HT SP dQ1dZ1'=. (H,T,I,:I) prep (S,P,dQ1,:dZ1)
   safenorm=. FP_SFMIN >. norm1"2                                                                        NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
   cdiff1=: 2 : '0&{:: safenorm@:- (u@{.@] mp"2 (mp"2 v@{:))&>/@}.'                                      NB. L: (ct cdiff1 ]) : ||H - dQ1^H * S * dZ1|| , ||T - dQ1^H * P * dZ1||
                                                                                                         NB. R: (] cdiff1 ct) : ||H - dQ1 * S * dZ1^H|| , ||T - dQ1 * P * dZ1^H||
-  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                               NB. L: (mp~ adiff2) : ||I - dQ1^H * dQ1|| , ||I - dZ1^H * dZ1||
-                                                                                                        NB. R: (mp  adiff2) : ||I - dQ1 * dQ1^H|| , ||I - dZ1 * dZ1^H||
+  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                               NB. L: (mp~ adiff2) : ||dQ1^H * dQ1 - I|| , ||dZ1^H * dZ1 - I||
+                                                                                                        NB. R: (mp  adiff2) : ||dQ1 * dQ1^H - I|| , ||dZ1 * dZ1^H - I||
   denom1=. safenorm@(0&{::)                                                                             NB. ||H|| , ||T||
   getn=. c@(0&{::)                                                                                      NB. n
   safediv=. ((({: <. %/@}:)`((<./@(}: * 1 , {:)) % 1&{)@.(1 > 1&{))`(%/@}:)@.(</@}:)) % (FP_PREC * {:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)

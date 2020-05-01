@@ -549,7 +549,7 @@ NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
 
 testgetrs=: 3 : 0
   'A X'=. y
-  'conA conAh conAt'=. gecon1"2 (] , ct ,: |:) A
+  'conA conAh conAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
   'LU1ip ipL1U ipU1L UL1ip'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
 
   ('getrslu1px'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; LU1ip
@@ -601,7 +601,7 @@ NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
 
 testhetrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. hecon1"2 (] ,: |:) A
+  'conA conAt'=. (hecon1 , hecon1@|:) A
   'ipL1D ipU1D'=. (hetrfpl ; <@hetrfpu) A
 
   ('hetrsplx'  tdyad ((_3&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; ipL1D
@@ -636,7 +636,7 @@ NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
 
 testpotrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. pocon1"2 (] ,: |:) A
+  'conA conAt'=. (pocon1 , pocon1@|:) A
   'L U'=. (potrfl ,: potrfu) A
 
   ('potrslx'  tdyad ((2&{::)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; L
@@ -675,7 +675,7 @@ NB. - A should be sparse
 
 testpttrs=: 3 : 0
   'A X'=. y
-  'conA conAt'=. ptcon1"2 (,: |:) A
+  'conA conAt'=. (ptcon1 , ptcon1@|:) A
   'L1D U1D'=. (pttrfl ; <@pttrfu) A
 
   ('pttrslx'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; L1D

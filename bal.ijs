@@ -418,7 +418,6 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
     end.
   end.
   bt=. n <. h + s
-  riso=. ,. hs
   whilst. noconv do.
     noconv=. 0
     i=. <: h
@@ -746,8 +745,7 @@ ggbals=: 3 : 0
     NB. determine correction to current iteration
     aw10=. alpha * w10
     dlr=. dlr + aw10
-    cmax=. normi , aw10
-    if. cmax < 0.5 do. break. end.
+    if. 0.5 > normi , aw10 do. break. end.
     w45=. w45 - alpha * w23
     pgamma=. gamma
     k=. >: k
@@ -757,9 +755,9 @@ ggbals=: 3 : 0
   lsfmax=. <.    GGBALSCLFAC ^. % FP_SFMIN
   irab=. h + (0 2 ,. hs ,. h , _) liofmax"1;.0 CD
   icab=. (0 2 ,. (0 , h + s) ,. hs) liofmax"1@:(|:"2);.0 CD
-  rab=. >./ | (<"1 irab ,.~"1 dhs2liso hs) {"1 2 CD
-  cab=. >./ | (<"1 icab ,. "1 dhs2liso hs) {"1 2 CD
-  lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab ,: cab
+  rab=. normi (<"1 irab ,.~"1 dhs2liso hs) {"1 2 CD
+  cab=. normi (<"1 icab ,. "1 dhs2liso hs) {"1 2 CD
+  lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab , cab
   dlr=. GGBALSCLFAC ^ lsfmax <. (lsfmax - lxab) <. lsfmin >. <. 0.5 + dlr
   dlr=. (-h) |."1 (c CD) {.!.1"1 dlr  NB. adjust dlr's shape
   CD=. ({. dlr) *"1 2 CD              NB. row scaling of matrices C and D

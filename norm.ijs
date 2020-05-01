@@ -88,7 +88,7 @@ NB.   DLANST('m'), xLANGB('m'), xLANGT('m'), xLANHS('m'),
 NB.   xLANTB('m'), xLANTR('m'), ZLANHB('m'), ZLANHT('m'),-
 NB.   extraneous values in matrix must be zeroed
 
-norm1=:  | csum      (max@)  NB. 1-norm of vector (matrix)
+norm1=:  norm1c      (max@)    NB. 1-norm of vector (matrix)
 norm1c=: | csum              NB. 1-norm of vector (matrix columns)
 norm1r=: | rsum              NB. 1-norm of vector (matrix rows)
 
@@ -111,7 +111,7 @@ NB.
 NB. Notes:
 NB. - norm1t implements BLAS's DASUM, DZASUM
 
-norm1t=:  sorim csum      (max@)  NB. 1-norm of vector (matrix)
+norm1t=:  norm1tc         (max@)  NB. 1-norm of vector (matrix)
 norm1tc=: sorim csum              NB. 1-norm of vector (matrix columns)
 norm1tr=: sorim rsum              NB. 1-norm of vector (matrix rows)
 

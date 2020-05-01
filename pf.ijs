@@ -1458,8 +1458,7 @@ trlpc=: 3 : 0
         'dQi L'=. gelpg3 L
         dQ=. dQ , dQi
         NB. Estimate the largest singular value
-        itemp=. liofmax (>: rank) {. rnorms
-        mxrp1=. (3 %: >: rank) * itemp { rnorms
+        mxrp1=. (3 %: >: rank) * normitr (>: rank) {. rnorms
         NB. Estimate the left singular vector
         if. mnrp1 > mxrp1 * PFSF * FP_SFMIN do.
           NB. Matrix is not singular or not nearly singular
@@ -1739,8 +1738,7 @@ trprc=: 3 : 0
         'dQi R'=. geprg3 R
         dQ=. dQ , dQi
         NB. Estimate the largest singular value
-        itemp=. liofmax (>: rank) {. cnorms
-        mxrp1=. (3 %: >: rank) * itemp { cnorms
+        mxrp1=. (3 %: >: rank) * normitr (>: rank) {. cnorms
         NB. Estimate the right singular vector
         if. mnrp1 > mxrp1 * PFSF * FP_SFMIN do.
           NB. Matrix is not singular or not nearly singular

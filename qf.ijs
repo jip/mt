@@ -1222,7 +1222,6 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 tzrzf=: 3 : 0
-NB.QFNB=. QFNX=. 3
   y=. y ,. 0
   l=. -/ 'm n1'=. $ y
   pfxL=. m {."1 y

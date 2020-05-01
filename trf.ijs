@@ -122,10 +122,10 @@ NB.     ( subA00 subA10^H ) TRFNB        ( subL100H00h subH10^H  ) TRFNB
 NB.     ( subA10 subA11   ) n-i-TRFNB    ( subL110     subA11upd ) n-i-TRFNB
 NB.       TRFNB  n-i-TRFNB                 TRFNB       n-i-TRFNB
 NB. where
-NB.   subL100H00h - TRFNB×TRFNB-matrix, combined strict lower
-NB.                 triangle of L100, and strict upper
-NB.                 triangle of subH00^H, diagonal is
-NB.                 undefined
+NB.   subL100H00h - TRFNB×TRFNB-matrix, a strict lower
+NB.                 triangle of L100 combined with a strict
+NB.                 upper triangle of subH00^H, the diagonal
+NB.                 is undefined
 NB.
 NB. Example for output B when TRFNB=2, n=5:
 NB.   ( *    h00h h10h h10h h10h )
@@ -368,10 +368,10 @@ NB.     ( subA00    subA10^H ) n+i-TRFNB    ( subA00upd subU101     ) n+i-TRFNB
 NB.     ( subA10    subA11   ) TRFNB        ( subH01^H  subU111H11h ) TRFNB
 NB.       n+i-TRFNB TRFNB                     n+i-TRFNB TRFNB
 NB. where
-NB.   subU111H11h - TRFNB×TRFNB-matrix, combined strict upper
-NB.                 triangle of U111, and strict lower
-NB.                 triangle of subH11^H, diagonal is
-NB.                 undefined
+NB.   subU111H11h - TRFNB×TRFNB-matrix, a strict upper
+NB.                 triangle of U111 combined with a strict
+NB.                 lower triangle of subH11^H, the diagonal
+NB.                 is undefined
 NB.
 NB. Example for output B when TRFNB=2, n=5:
 NB.   ( a00u a00u a00u u101 u101 )
@@ -568,9 +568,9 @@ NB.     k   ( U1aa U1ab ) := ( U1a ) := U1      k   ( LaaU1aa U1ab    ) := LU1
 NB.     m-k (      U1bb )    ( U1b )            m-k ( Lba     LbbU1bb )
 NB.           k    n-k         n                      k       n-k
 NB. where
-NB.   LaaU1aa - combined Laa and U1aa, U1aa's unit diagonal
+NB.   LaaU1aa - Laa and U1aa combined, U1aa's unit diagonal
 NB.             isn't stored
-NB.   LbbU1bb - combined Lbb and U1bb, U1bb's unit diagonal
+NB.   LbbU1bb - Lbb and U1bb combined, U1bb's unit diagonal
 NB.             isn't stored
 NB.
 NB. Algorithm:
@@ -722,9 +722,9 @@ NB.     k   ( L1aa      ) := ( L1a L1b ) := L1      k   ( L1aaUaa Uba     ) := L
 NB.     m-k ( L1ab L1bb )                           m-k ( L1ab    L1bbUbb )
 NB.           k    n-k         k   n-k                    k       n-k
 NB. where
-NB.   L1aaUaa - combined L1aa and Uaa, L1aa's unit diagonal
+NB.   L1aaUaa - L1aa and Uaa combined, L1aa's unit diagonal
 NB.             isn't stored
-NB.   L1bbUbb - combined L1bb and Ubb, L1bb's unit diagonal
+NB.   L1bbUbb - L1bb and Ubb combined, L1bb's unit diagonal
 NB.             isn't stored
 NB.
 NB. Algorithm:
@@ -879,9 +879,9 @@ NB.     m-k ( U1aa U1ba ) := ( U1a U1b ) := U1      m-k ( U1aaLaa U1ba    ) := U
 NB.     k   (      U1bb )                           k   ( Lab     U1bbLbb )
 NB.           n-k  k           n-k k                      n-k       k
 NB. where
-NB.   U1aaLaa - combined U1aa and Laa, U1aa's unit diagonal
+NB.   U1aaLaa - U1aa and Laa combined, U1aa's unit diagonal
 NB.             isn't stored
-NB.   U1bbLbb - combined U1bb and Lbb, U1bb's unit diagonal
+NB.   U1bbLbb - U1bb and Lbb combined, U1bb's unit diagonal
 NB.             isn't stored
 NB.
 NB. Algorithm:
@@ -1033,9 +1033,9 @@ NB.     m-k ( L1aa      ) := ( L1a ) := L1      m-k ( UaaL1aa Uab     ) := UL1
 NB.     k   ( L1ba L1bb )    ( L1b )            k   ( L1ba    UbbL1bb )
 NB.           n-k  k           n                      n-k     k
 NB. where
-NB.   UaaL1aa - combined Uaa and L1aa, L1aa's unit diagonal
+NB.   UaaL1aa - Uaa and L1aa combined, L1aa's unit diagonal
 NB.             isn't stored
-NB.   UbbL1bb - combined Ubb and L1bb, L1bb's unit diagonal
+NB.   UbbL1bb - Ubb and L1bb combined, L1bb's unit diagonal
 NB.             isn't stored
 NB.
 NB. Algorithm:

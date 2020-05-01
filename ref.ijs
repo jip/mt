@@ -71,7 +71,7 @@ NB.   mprod - dyad to multiply matrices, is called as:
 NB.             M3=. M1 mprod M2
 NB.   vapp  - monad to calculate Τ, is called as:
 NB.             T=. vapp VTau
-NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, combined V and Tau
+NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, V and Tau combined
 NB.   T     - k×k-matrix, triangular
 NB.   V     - m×k- or k×n-matrix, unit trapezoidal
 NB.   Tau   - k-vector, τ[0:k-1] corresp. to V

@@ -173,7 +173,7 @@ NB.         rows 0:h-1
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdl
-NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdl
+NB.   HQf - (n+1)×(n+1)-matrix, H and Qf combined, see gehrdl
 
 gehd2l=: 4 : 0
   A=. ({. x) {. y                              NB. skip ...
@@ -209,7 +209,7 @@ NB.         columns 0:h-1
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdu
-NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdu
+NB.   HQf - (n+1)×(n+1)-matrix, H and Qf combined, see gehrdu
 NB.
 NB. Notes:
 NB. - implements LAPACK's xGEHD2 up to storage layout
@@ -391,7 +391,7 @@ NB.   A   - n×n-matrix to reduce
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see geballp and storage layout below
-NB.   HQf - n×(n+1)-matrix, combined H and Qf
+NB.   HQf - n×(n+1)-matrix, H and Qf combined
 NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
 NB.         1st supdiagonal
@@ -480,7 +480,7 @@ NB.   A   - n×n-matrix to reduce
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gebalup and storage layout below
-NB.   HQf - (n+1)×n-matrix, combined H and Qf
+NB.   HQf - (n+1)×n-matrix, H and Qf combined
 NB.   H   - n×n-matrix, it has zeros under 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros below
 NB.         1st subdiagonal

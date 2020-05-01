@@ -63,8 +63,7 @@ NB.           vector:
 NB.             eA -: A ,. Trash
 NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - m-vector, will be replaced by Tau
-NB.   LQf   - m×(n+1)-matrix, combined L and Qf (unit
-NB.           diagonal not stored)
+NB.   LQf   - m×(n+1)-matrix, L and Qf combined
 NB.   L     - m×k-matrix, lower trapezoidal
 NB.   Qf    - k×(n+1)-matrix, unit upper trapezoidal (unit
 NB.           diagonal not stored), the Q represented in
@@ -138,8 +137,7 @@ NB.           vector:
 NB.             eA -: Trash , A
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
-NB.   QfL   - (m+1)×n-matrix, combined Qf (unit diagonal not
-NB.           stored) and L
+NB.   QfL   - (m+1)×n-matrix, Qf and L combined
 NB.   Qf    - (m+1)×k-matrix, unit upper trapezoidal (unit
 NB.           diagonal not stored), the Q represented in
 NB.           factored form
@@ -210,8 +208,7 @@ NB.           vector:
 NB.             eA -: A , Trash
 NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - n-vector, will be replaced by Tau
-NB.   QfR   - (m+1)×n-matrix, combined Qf (unit diagonal not
-NB.           stored) and R
+NB.   QfR   - (m+1)×n-matrix, Qf and R combined
 NB.   Qf    - (m+1)×k-matrix, unit lower trapezoidal (unit
 NB.           diagonal not stored), the Q represented in
 NB.           factored form
@@ -282,8 +279,7 @@ NB.           vector:
 NB.             eA -: Trash ,. A
 NB.   Trash - m-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
-NB.   RQf   - m×(n+1)-matrix, combined R and  Qf (unit
-NB.           diagonal not stored)
+NB.   RQf   - m×(n+1)-matrix, R and Qf combined
 NB.   R     - m×k-matrix, upper trapezoidal
 NB.   Qf    - k×(n+1)-matrix, unit lower trapezoidal (unit
 NB.           diagonal not stored), the Q represented in
@@ -359,8 +355,8 @@ NB.   Trash - m-vector, will be replaced by Tau
 NB.   iA1   - m×(l-1)-matrix, part to be replaced by Zf
 NB.   A2    - m×(n-m-l+1)-matrix, is not changed
 NB.   iL    - m×m-matrix, lower triangular
-NB.   LZf   - m×(n+1)-matrix, combined unit lower trapezoidal
-NB.           Zf and lower trapezoidal L:
+NB.   LZf   - m×(n+1)-matrix, unit lower trapezoidal Zf and
+NB.           lower trapezoidal L combined:
 NB.             LZf -: Tau ,. oA1 ,. A2 ,. oL
 NB.   Tau   - m-vector, scalars τ[0:m-1] for Zf
 NB.   oA1   - m×(l-1)-matrix, rows are vectors v[0:m-1] for
@@ -442,8 +438,8 @@ NB.   iL    - n×n-matrix, lower triangular
 NB.   A1    - (m-n-l+1)×n-matrix, is not changed
 NB.   iA2   - (l-1)×n-matrix, part to be replaced by Zf
 NB.   Trash - n-vector, will be replaced by Tau
-NB.   ZfL   - (m+1)×n-matrix, combined lower trapezoidal L
-NB.           and unit lower trapezoidal Zf:
+NB.   ZfL   - (m+1)×n-matrix, lower trapezoidal L and unit
+NB.           lower trapezoidal Zf combined:
 NB.             ZfL -: oL , A1 , oA2 , Tau
 NB.   oL    - n×n-matrix, lower triangular
 NB.   oA2   - (l-1)×n-matrix, columns are vectors v[0:n-1]
@@ -521,8 +517,8 @@ NB.   Trash - n-vector, will be replaced by Tau
 NB.   iA1   - (l-1)×n-matrix, part to be replaced by Zf
 NB.   A2    - (m-n-l+1)×n-matrix, is not changed
 NB.   iR    - n×n-matrix, upper triangular
-NB.   ZfR   - (m+1)×n-matrix, combined upper trapezoidal R
-NB.           and unit upper trapezoidal Zf:
+NB.   ZfR   - (m+1)×n-matrix, upper trapezoidal R and unit
+NB.           upper trapezoidal Zf combined:
 NB.             ZfR -: Tau , oA1 , A2 , oR
 NB.   Tau   - n-vector, scalars τ[0:n-1] for Zf
 NB.   oA1   - (l-1)×n-matrix, columns are vectors v[0:n-1]
@@ -599,8 +595,8 @@ NB.   iR    - m×m-matrix, upper triangular
 NB.   A1    - m×(n-m-l+1)-matrix, is not changed
 NB.   iA2   - m×(l-1)-matrix, part to be replaced by Zf
 NB.   Trash - m-vector, will be replaced by Tau
-NB.   RZf   - m×(n+1)-matrix, combined upper trapezoidal R
-NB.           and unit upper trapezoidal Zf:
+NB.   RZf   - m×(n+1)-matrix, upper trapezoidal R and unit
+NB.           upper trapezoidal Zf combined:
 NB.             RZf -: oR ,. A1 ,. oA2 ,. Tau
 NB.   oR    - m×m-matrix, upper triangular
 NB.   oA2   - m×(l-1)-matrix, rows are vectors v[0:m-1] for
@@ -682,8 +678,7 @@ NB. Syntax:
 NB.   LQf=. gelqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   LQf - m×(n+1)-matrix, combined L and Qf (unit
-NB.         diagonal not stored)
+NB.   LQf - m×(n+1)-matrix, L and Qf combined
 NB.   L   - m×k-matrix, lower trapezoidal
 NB.   Qf  - k×(n+1)-matrix, unit upper trapezoidal (unit
 NB.         diagonal not stored), the Q represented in
@@ -752,8 +747,7 @@ NB. Syntax:
 NB.   QfL=. geqlf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   QfL - (m+1)×n-matrix, combined Qf (unit diagonal not
-NB.         stored) and L
+NB.   QfL - (m+1)×n-matrix, Qf and L combined
 NB.   Qf  - (m+1)×k-matrix, unit upper trapezoidal (unit
 NB.         diagonal not stored), the Q represented in
 NB.         factored form
@@ -819,8 +813,7 @@ NB. Syntax:
 NB.   QfR=. geqrf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   QfR - (m+1)×n-matrix, combined Qf (unit diagonal not
-NB.         stored) and R
+NB.   QfR - (m+1)×n-matrix, Qf and R combined
 NB.   Qf  - (m+1)×k-matrix, unit lower trapezoidal (unit
 NB.         diagonal not stored), the Q represented in
 NB.         factored form
@@ -886,8 +879,7 @@ NB. Syntax:
 NB.   RQf=. gerqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   RQf - m×(n+1)-matrix, combined R and Qf (unit diagonal
-NB.         not stored)
+NB.   RQf - m×(n+1)-matrix, R and Qf combined
 NB.   R   - m×k-matrix, upper trapezoidal
 NB.   Qf  - k×(n+1)-matrix, unit lower trapezoidal (unit
 NB.         diagonal not stored), the Q represented in
@@ -959,8 +951,8 @@ NB.   A   - m×n-matrix:
 NB.           A -: iA0 ,. iL
 NB.   iA0 - m×(n-m)-matrix, part to be replaced by Zf
 NB.   iL  - m×m-matrix, lower triangular
-NB.   LZf - m×(n+1)-matrix, combined lower trapezoidal L and
-NB.         unit lower trapezoidal Zf:
+NB.   LZf - m×(n+1)-matrix, lower trapezoidal L and unit
+NB.         lower trapezoidal Zf combined:
 NB.           LZf -: Tau ,. oA0 ,. oL
 NB.   Tau - m-vector, scalars τ[0:m-1] for Zf
 NB.   oA0 - m×(n-m)-matrix, rows are vectors v[0:m-1] for Zf
@@ -1037,8 +1029,8 @@ NB.   A   - m×n-matrix:
 NB.           A -: iL , iA0
 NB.   iL  - n×n-matrix, lower triangular
 NB.   iA0 - (m-n)×n-matrix, part to be replaced by Zf
-NB.   ZfL - (m+1)×n-matrix, combined unit upper trapezoidal
-NB.         Zf and lower trapezoidal L:
+NB.   ZfL - (m+1)×n-matrix, unit upper trapezoidal Zf and
+NB.         lower trapezoidal L combined:
 NB.           ZfL -: oL , oA0 , Tau
 NB.   oL  - n×n-matrix, lower triangular
 NB.   oA0 - (m-n)×n-matrix, columns are vectors v[0:m-1] for
@@ -1109,8 +1101,8 @@ NB.   A   - m×n-matrix:
 NB.           A -: iA0 , iR
 NB.   iA0 - (m-n)×n-matrix, part to be replaced by Zf
 NB.   iR  - n×n-matrix, upper triangular
-NB.   ZfR - (m+1)×n-matrix, combined unit upper trapezoidal
-NB.         Zf and upper trapezoidal R:
+NB.   ZfR - (m+1)×n-matrix, unit upper trapezoidal Zf and
+NB.         upper trapezoidal R combined:
 NB.           ZfR -: Tau , oA0 , oR
 NB.   Tau - n-vector, scalars τ[0:n-1] for Zf
 NB.   oA0 - (m-n)×n-matrix, columns are vectors v[0:m-1] for
@@ -1181,8 +1173,8 @@ NB.   A   - m×n-matrix:
 NB.           A -: iR ,. iA1
 NB.   iR  - m×m-matrix, upper triangular
 NB.   iA1 - m×(n-m)-matrix, part to be replaced by Zf
-NB.   RZf - m×(n+1)-matrix, combined upper trapezoidal R and
-NB.         unit upper trapezoidal Zf:
+NB.   RZf - m×(n+1)-matrix, upper trapezoidal R and unit
+NB.         upper trapezoidal Zf combined:
 NB.           RZf -: oR ,. oA1 ,. Tau
 NB.   oR  - m×m-matrix, upper triangular
 NB.   oA1 - m×(-m)-matrix, rows are vectors v[0:m-1] for Zf

@@ -791,7 +791,7 @@ NB. [1] Moawwad El-Mikkawy, El-Desouky Rahmo. A new recursive
 NB.     algorithm for inverting general tridiagonal and
 NB.     anti-tridiagonal matrices. Applied Mathematics and
 NB.     Computation, 2008, Vol. 204, pp. 368-372.
-NB.     http://dx.doi.org/10.1016/j.amc.2008.06.053
+NB.     https://doi.org/10.1016/j.amc.2008.06.053
 NB. [2] Igor Zhuravlov. [Jprogramming] ravel items (,.) of
 NB.     empty list (i.0) .
 NB.     2010-06-05 10:08:56 HKT.

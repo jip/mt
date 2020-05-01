@@ -727,7 +727,7 @@ NB.
 NB. Application:
 NB. - scale non-permuted matrices A and B (default plr and
 NB.   hs), i.e. balance without eigenvalues isolating step:
-NB.     'EF plr hs dlr'=. ggbals (] ; a:"_ ; 0 , c) AB
+NB.     'EF plr hs dlr'=. ggbals (] ; '' ; 0 , c) AB
 NB.
 NB. Notes:
 NB. - ggbals implements LAPACK's xGGBAL('S')

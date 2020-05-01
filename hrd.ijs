@@ -665,7 +665,7 @@ NB.          defines submatrices A11 and B11 to be reduced
 NB.          position in matrices A and B, respectively, see
 NB.          gebalup and gehrdu
 NB.   A    - n×n-matrix, general
-NB.   B p   - n×n-matrix, upper triangular
+NB.   B    - n×n-matrix, upper triangular
 NB.   H    - n×n-matrix, upper Hessenberg inside the submatrix
 NB.          H[h:h+s-1,h:h+s-1], and upper triangular outside
 NB.   T    - n×n-matrix, upper triangular

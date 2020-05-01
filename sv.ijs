@@ -76,14 +76,14 @@ NB.
 NB. Description:
 NB.   Solve linear monomial equation with general matrix A
 NB.   via triangular factorization:
-NB.     L * U1 * P = A
+NB.     P * L1 * U = A
 NB. where:
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, the solution
 NB.   Xh   - same shape as Bh, the solution
-NB.   P    - n×n-matrix, columns permutation of A
+NB.   P    - n×n-matrix, rows permutation of A
 NB.   L1   - n×n-matrix, unit lower triangular
 NB.   U    - n×n-matrix, upper triangular
 NB.   nrhs ≥ 0

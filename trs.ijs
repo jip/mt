@@ -593,7 +593,7 @@ NB. Syntax:
 NB.   testhetrs (A;X)
 NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric)
-NB.   X - n×n-matrix, exact solution
+NB.   X - n×n-matrix, exact solutions
 NB.
 NB. Formula:
 NB.   ferr := max(||X - exactX|| / ||X||)
@@ -628,7 +628,7 @@ NB. Syntax:
 NB.   testpotrs (A;X)
 NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.   X - n×n-matrix, exact solution
+NB.   X - n×n-matrix, exact solutions
 NB.
 NB. Formula:
 NB.   ferr := max(||X - exactX|| / ||X||)
@@ -664,7 +664,7 @@ NB.   testpttrs (A;X)
 NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
 NB.       tridiagonal
-NB.   X - n×n-matrix, exact solution
+NB.   X - n×n-matrix, exact solutions
 NB.
 NB. Formula:
 NB.   ferr := max(||X - exactX|| / ||X||)

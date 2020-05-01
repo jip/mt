@@ -246,7 +246,7 @@ NB.   (}:   -: (unmqrln  trupick        @  }:   )@geqr2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQR2
-NB. - gerq2 and geqrf are topologic equivalents
+NB. - geqr2 and geqrf are topologic equivalents
 NB. - if R diagonal's non-negativity is required, then larfgf
 NB.   should be replaced by larfpf
 
@@ -851,7 +851,7 @@ NB.   (     -: (unmqrln  trupick        @  }:   )@geqrf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQRF
-NB. - gerq2 and geqrf are topologic equivalents
+NB. - geqr2 and geqrf are topologic equivalents
 
 geqrf=: 3 : 0
   y=. y , 0
@@ -1198,7 +1198,7 @@ NB.   RZf - m×(n+1)-matrix, upper trapezoidal R and unit
 NB.         upper trapezoidal Zf combined:
 NB.           RZf -: oR ,. oA1 ,. Tau
 NB.   oR  - m×m-matrix, upper triangular
-NB.   oA1 - m×(-m)-matrix, rows are vectors v[0:m-1] for Zf
+NB.   oA1 - m×(n-m)-matrix, rows are vectors v[0:m-1] for Zf
 NB.   Tau - m-vector, scalars τ[0:m-1] for Zf
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored
 NB.         form

@@ -183,7 +183,7 @@ NB. normsr
 NB.
 NB. Description:
 NB.   Square-based Euclidean (Frobenius) norm of vector
-NB.   (matrix) |y|^2
+NB.   (matrix) sqrt(|y|^2)
 NB.
 NB. Assertions:
 NB.   0     -: norms_mt_  0 0 $ 0
@@ -201,8 +201,8 @@ NB.   (norms_mt_"1    -: normsr_mt_)       10 10 ?@$ 0
 NB.   (norms_mt_"1    -: normsr_mt_) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
-NB. - norms implements BLAS's DZNRM2 and partially xLASSQ,
-NB.   LAPACK's DLANSY('f'), xLANGE('f'), ZLANHE('f')
+NB. - norms implements BLAS's DNRM2, DZNRM2 and models
+NB.   xLASSQ, LAPACK's DLANSY('f'), xLANGE('f'), ZLANHE('f')
 NB. - to force norms act like any of: DLANSB('f'),
 NB.   DLANST('f'), xLANGB('f'), xLANGT('f'), xLANHS('f'),
 NB.   xLANTB('f'), xLANTR('f'), ZLANHB('f'), ZLANHT('f'),-

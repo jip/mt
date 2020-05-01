@@ -544,7 +544,7 @@ NB.
 NB. Description:
 NB.   Dyads to build and apply a block reflector H or its
 NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (V,Τ) , where Τ is the
+NB.   right. H is defined by pair (V,Τ), where Τ is the
 NB.   triangular factor produced from pair (V,Τ) by larftxx.
 NB.
 NB. Syntax:
@@ -606,7 +606,7 @@ NB.
 NB. Description:
 NB.   Dyads to build and apply a block reflector H or its
 NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (V,Τ) , where Τ is the
+NB.   right. H is defined by pair (V,Τ), where Τ is the
 NB.   triangular factor produced from pair (V,Τ) by larztxx.
 NB.
 NB. Syntax:

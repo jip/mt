@@ -96,7 +96,7 @@ NB.   Multiply a general matrix C, augmented by trash vector,
 NB.   by matrix Q. This is non-blocked version of algorithm
 NB. where
 NB.   C      - m×(n+1)-matrix or (m+1)×n-matrix to multiply
-NB.   Qf     - unit triangular matrix, it represents Q in
+NB.   Qf     - unit trapezoidal matrix, it represents Q in
 NB.            factored form as returned by ge{lq,ql,qr,rq}2,
 NB.            and contains vectors Vtau[0:k-1]
 NB.   Q      - matrix with orthonormal rows or columns, which
@@ -177,7 +177,7 @@ NB.   Multiply a general matrix C, augmented by trash vector,
 NB.   by matrix Z. This is non-blocked version of algorithm
 NB. where
 NB.   C      - m×(n+1)-matrix or (m+1)×n-matrix to multiply
-NB.   Zf     - unit triangular matrix, it represents Z in
+NB.   Zf     - unit trapezoidal matrix, it represents Z in
 NB.            factored form as returned by tz{lz,zl,zr,rz}3,
 NB.            and contains vectors Vtau[0:k-1]
 NB.   Z      - matrix with orthonormal rows or columns, which
@@ -250,7 +250,7 @@ NB.   LQf - n×(m+1)-matrix (ln,lc cases) or m×(n+1)-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gelqf
 NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
-NB.         unit upper triangular, the Q represented in
+NB.         unit upper trapezoidal, the Q represented in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as a product of k
@@ -290,7 +290,7 @@ NB.   QfL - (m+1)×n-matrix (ln,lc cases), (n+1)×m-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of geqlf
 NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
-NB.         unit upper triangular, the Q represented in
+NB.         unit upper trapezoidal, the Q represented in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as a product of k
@@ -330,7 +330,7 @@ NB.   QfR - (m+1)×n-matrix (ln,lc cases), (n+1)×m-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of geqrf
 NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
-NB.         unit lower triangular, the Q represented in
+NB.         unit lower trapezoidal, the Q represented in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as a product of k
@@ -371,7 +371,7 @@ NB.   RQf - l×(m+1)-matrix (ln,lc cases) or l×(n+1)-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gerqf
 NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
-NB.         unit lower triangular, the Q represented in
+NB.         unit lower trapezoidal, the Q represented in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as a product of k
@@ -573,8 +573,9 @@ NB.   HQf - m×(m+1)-matrix (ln,lc cases) or n×(n+1)-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gehrdl
 NB.   Qf  - (s-1)×(m-h)-matrix (ln,lc) or (s-1)×(n-h)-matrix
-NB.         (rn,rc), unit upper triangular, the Q represented
-NB.         in factored form, located in HQf[h:h+s-2,h+1:end]
+NB.         (rn,rc), unit upper trapezoidal, the Q
+NB.         represented in factored form, located in
+NB.         HQf[h:h+s-2,h+1:end]
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), being
 NB.         unit matrix with unitary (orthogonal) matrix
 NB.         inserted into elements Q[h:h+s-1,h:h+s-1] :
@@ -620,8 +621,9 @@ NB.   HQf - (m+1)×m-matrix (ln,lc cases) or (n+1)×n-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gehrdu
 NB.   Qf  - (m-h)×(s-1)-matrix (ln,lc) or (n-h)×(s-1)-matrix
-NB.         (rn,rc), unit lower triangular, the Q represented
-NB.         in factored form, located in HQf[h+1:end,h:h+s-2]
+NB.         (rn,rc), unit lower trapezoidal, the Q
+NB.         represented in factored form, located in
+NB.         HQf[h+1:end,h:h+s-2]
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), being
 NB.         unit matrix with unitary (orthogonal) matrix
 NB.         inserted into elements Q[h:h+s-1,h:h+s-1] :

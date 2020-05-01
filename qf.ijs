@@ -65,9 +65,10 @@ NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - m-vector, will be replaced by Tau
 NB.   LQf   - m×(n+1)-matrix, combined L and Qf (unit
 NB.           diagonal not stored)
-NB.   L     - m×k-matrix, lower triangular
-NB.   Qf    - k×(n+1)-matrix, unit upper triangular, the Q
-NB.           represented in factored form
+NB.   L     - m×k-matrix, lower trapezoidal
+NB.   Qf    - k×(n+1)-matrix, unit upper trapezoidal (unit
+NB.           diagonal not stored), the Q represented in
+NB.           factored form
 NB.   Q     - k×n-matrix with orthonormal rows, which is
 NB.           defined as the first k rows of a product of m
 NB.           elementary reflectors H(i) of order n:
@@ -139,9 +140,10 @@ NB.   Trash - n-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
 NB.   QfL   - (m+1)×n-matrix, combined Qf (unit diagonal not
 NB.           stored) and L
-NB.   Qf    - (m+1)×k-matrix, unit upper triangular, the Q
-NB.           represented in factored form
-NB.   L     - k×n-matrix, lower triangular
+NB.   Qf    - (m+1)×k-matrix, unit upper trapezoidal (unit
+NB.           diagonal not stored), the Q represented in
+NB.           factored form
+NB.   L     - k×n-matrix, lower trapezoidal
 NB.   Q     - m×k-matrix with orthonormal columns, which is
 NB.           defined as the last k columns of a product of n
 NB.           elementary reflectors H(i) of order m:
@@ -210,9 +212,10 @@ NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   QfR   - (m+1)×n-matrix, combined Qf (unit diagonal not
 NB.           stored) and R
-NB.   Qf    - (m+1)×k-matrix, unit lower triangular, the Q
-NB.           represented in factored form
-NB.   R     - k×n-matrix, upper triangular
+NB.   Qf    - (m+1)×k-matrix, unit lower trapezoidal (unit
+NB.           diagonal not stored), the Q represented in
+NB.           factored form
+NB.   R     - k×n-matrix, upper trapezoidal
 NB.   Q     - m×k-matrix with orthonormal columns, which is
 NB.           defined as the first k columns of a product of n
 NB.           elementary reflectors H(i) of order m:
@@ -281,9 +284,10 @@ NB.   Trash - m-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
 NB.   RQf   - m×(n+1)-matrix, combined R and  Qf (unit
 NB.           diagonal not stored)
-NB.   R     - m×k-matrix, upper triangular
-NB.   Qf    - k×(n+1)-matrix, unit lower triangular, the Q
-NB.           represented in factored form
+NB.   R     - m×k-matrix, upper trapezoidal
+NB.   Qf    - k×(n+1)-matrix, unit lower trapezoidal (unit
+NB.           diagonal not stored), the Q represented in
+NB.           factored form
 NB.   Q     - k×n-matrix with orthonormal rows which is
 NB.           defined as the last k rows of a product of m
 NB.           elementary reflectors H(i) of order n:
@@ -680,9 +684,10 @@ NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   LQf - m×(n+1)-matrix, combined L and Qf (unit
 NB.         diagonal not stored)
-NB.   L   - m×k-matrix, lower triangular
-NB.   Qf  - k×(n+1)-matrix, unit upper triangular, the Q
-NB.         represented in factored form
+NB.   L   - m×k-matrix, lower trapezoidal
+NB.   Qf  - k×(n+1)-matrix, unit upper trapezoidal (unit
+NB.         diagonal not stored), the Q represented in
+NB.         factored form
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the first k rows of a product of m
 NB.         elementary reflectors H(i) of order n:
@@ -749,9 +754,10 @@ NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   QfL - (m+1)×n-matrix, combined Qf (unit diagonal not
 NB.         stored) and L
-NB.   Qf  - (m+1)×k-matrix, unit upper triangular, the Q
-NB.         represented in factored form
-NB.   L   - k×n-matrix, lower triangular
+NB.   Qf  - (m+1)×k-matrix, unit upper trapezoidal (unit
+NB.         diagonal not stored), the Q represented in
+NB.         factored form
+NB.   L   - k×n-matrix, lower trapezoidal
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the last k columns of a product of n
 NB.         elementary reflectors H(i) of order m:
@@ -815,9 +821,10 @@ NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   QfR - (m+1)×n-matrix, combined Qf (unit diagonal not
 NB.         stored) and R
-NB.   Qf  - (m+1)×k-matrix, unit lower triangular, the Q
-NB.         represented in factored form
-NB.   R   - k×n-matrix, upper triangular
+NB.   Qf  - (m+1)×k-matrix, unit lower trapezoidal (unit
+NB.         diagonal not stored), the Q represented in
+NB.         factored form
+NB.   R   - k×n-matrix, upper trapezoidal
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the first k columns of a product of n
 NB.         elementary reflectors H(i) of order m:
@@ -881,9 +888,10 @@ NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   RQf - m×(n+1)-matrix, combined R and Qf (unit diagonal
 NB.         not stored)
-NB.   R   - m×k-matrix, upper triangular
-NB.   Qf  - k×(n+1)-matrix, unit lower triangular, the Q
-NB.         represented in factored form
+NB.   R   - m×k-matrix, upper trapezoidal
+NB.   Qf  - k×(n+1)-matrix, unit lower trapezoidal (unit
+NB.         diagonal not stored), the Q represented in
+NB.         factored form
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the last k rows of a product of m
 NB.         elementary reflectors H(i) of order n:

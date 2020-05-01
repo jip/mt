@@ -58,7 +58,7 @@ NB. where
 NB.   subeA - (n-i)×(n-i)-matrix eA[i:n-1,i+1:n]
 NB.   Y     - HRDNB×(n-i)-matrix, Y = T * V * subeA, the
 NB.           last column contains trash
-NB.   V     - HRDNB×(n-i)-matrix, unit upper triangular,
+NB.   V     - HRDNB×(n-i)-matrix, unit upper trapezoidal,
 NB.           the last column contains τ[i:i+HRDNB-1]
 NB.   T     - HRDNB×HRDNB-matrix, lower triangular
 NB.   H     - HRDNB×HRDNB-matrix, lower triangular
@@ -113,7 +113,7 @@ NB. where
 NB.   subeA - (n-i)×(n-i)-matrix eA[i+1:n,i:n-1]
 NB.   Y     - (n-i)×HRDNB-matrix, Y = subeA * V * T, the
 NB.           last row contains trash
-NB.   V     - (n-i)×HRDNB-matrix, unit lower triangular,
+NB.   V     - (n-i)×HRDNB-matrix, unit lower trapezoidal,
 NB.           the last row contains τ[i:i+HRDNB-1]
 NB.   T     - HRDNB×HRDNB-matrix, upper triangular
 NB.   H     - HRDNB×HRDNB-matrix, upper triangular
@@ -395,7 +395,7 @@ NB.   HQf - n×(n+1)-matrix, combined H and Qf
 NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
 NB.         1st supdiagonal
-NB.   Qf  - (s-1)×(n-h)-matrix, unit upper triangular (unit
+NB.   Qf  - (s-1)×(n-h)-matrix, unit upper trapezoidal (unit
 NB.         diagonal not stored), represents Q in factored
 NB.         form:
 NB.           Q = Π{H(i)',i=h+s-2:h} ,
@@ -484,7 +484,7 @@ NB.   HQf - (n+1)×n-matrix, combined H and Qf
 NB.   H   - n×n-matrix, it has zeros under 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros below
 NB.         1st subdiagonal
-NB.   Qf  - (n-h)×(s-1)-matrix, unit lower triangular (unit
+NB.   Qf  - (n-h)×(s-1)-matrix, unit lower trapezoidal (unit
 NB.         diagonal not stored), represents Q in factored
 NB.         form:
 NB.           Q = Π{H(i),i=h:h+s-2} ,

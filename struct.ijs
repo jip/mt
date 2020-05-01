@@ -33,28 +33,24 @@ NB. hsupick   Zeroize elements outside upper Hessenberg part
 NB.           of the matrix
 NB. gtpick    Zeroize elements outside tridiagonal part of
 NB.           the matrix
-NB. trlpick   Zeroize elements outside lower triangular part
+NB. trlpick   Zeroize elements outside lower trapezoidal part
 NB.           of the matrix
-NB. trupick   Zeroize elements outside upper triangular part
+NB. trupick   Zeroize elements outside upper trapezoidal part
 NB.           of the matrix
-NB. trl1pick  Zeroize elements outside lower triangular part
+NB. trl1pick  Zeroize elements outside lower trapezoidal part
 NB.           of the matrix and set diagonal to 1
-NB. tru1pick  Zeroize elements outside upper triangular part
+NB. tru1pick  Zeroize elements outside upper trapezoidal part
 NB.           of the matrix and set diagonal to 1
 NB.
 NB. idmat     Make identity matrix with units on solid part
 NB.           of diagonal
 NB. diagmat   Make diagonal matrix
-NB. trl       Extract lower triangular (trapezoidal) matrix
-NB. tru       Extract upper triangular (trapezoidal) matrix
-NB. trl0      Extract strictly lower triangular (trapezoidal)
-NB.           matrix
-NB. tru0      Extract strictly upper triangular (trapezoidal)
-NB.           matrix
-NB. trl1      Extract unit lower triangular (trapezoidal)
-NB.           matrix
-NB. tru1      Extract unit upper triangular (trapezoidal)
-NB.           matrix
+NB. trl       Extract lower trapezoidal matrix
+NB. tru       Extract upper trapezoidal matrix
+NB. trl0      Extract strictly lower trapezoidal matrix
+NB. tru0      Extract strictly upper trapezoidal matrix
+NB. trl1      Extract unit lower trapezoidal matrix
+NB. tru1      Extract unit upper trapezoidal matrix
 NB. tr2he     Make Hermitian (symmetric) matrix from
 NB.           triangular one
 NB. he        Make Hermitian (symmetric) matrix from lower
@@ -95,19 +91,18 @@ NB. Miscellaneous
 NB. convert table y to table of diagonals
 t2td=: /(&i.)/(@$)
 
-NB. conj. to extract matrix circumscribing the triangular
-NB. (trapezoidal) matrix starting from diagonal number x in
-NB. the matrix y
+NB. conj. to extract matrix circumscribing the trapezoidal
+NB. matrix starting from diagonal number x in the matrix y
 trcut=: 2 : '((m&*)@:(<./"1)@v $) {. ]'
 
-NB. extract upper triangular (trapezoidal) matrix
+NB. extract upper trapezoidal matrix
 trucut=: 1 _1 trcut (] ,. (-~ {:))
 
-NB. extract lower triangular (trapezoidal) matrix
+NB. extract lower trapezoidal matrix
 trlcut=: _1 1 trcut ((+ {.) ,. ])
 
-NB. conj. to extract triangular (trapezoidal) matrix starting
-NB. from diagonal number x in the circumscribing matrix y
+NB. conj. to extract trapezoidal matrix starting from
+NB. diagonal number x in the circumscribing matrix y
 tr=: 2 : '0&$: :([ (] * (u~ (-~ t2td))) v)'
 
 NB. ---------------------------------------------------------
@@ -669,7 +664,7 @@ NB. ---------------------------------------------------------
 NB. trlpick
 NB.
 NB. Description:
-NB.   Zeroize elements outside lower triangular part of the
+NB.   Zeroize elements outside lower trapezoidal part of the
 NB.   matrix
 NB.
 NB. Syntax:
@@ -678,7 +673,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, lower triangular
+NB.   B - m×n-matrix, lower trapezoidal
 
 trlpick=: 0&$: :(((__ , [) mbstencil ]) * ])
 
@@ -686,7 +681,7 @@ NB. ---------------------------------------------------------
 NB. trupick
 NB.
 NB. Description:
-NB.   Zeroize elements outside upper triangular part of the
+NB.   Zeroize elements outside upper trapezoidal part of the
 NB.   matrix
 NB.
 NB. Syntax:
@@ -695,7 +690,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], lIO first non-zero
 NB.       diagonal, default is 0
-NB.   B - m×n-matrix, upper triangular
+NB.   B - m×n-matrix, upper trapezoidal
 
 trupick=: 0&$: :(((_ ,~ [) mbstencil ]) * ])
 
@@ -703,7 +698,7 @@ NB. ---------------------------------------------------------
 NB. trl1pick
 NB.
 NB. Description:
-NB.   Zeroize elements outside lower triangular part of the
+NB.   Zeroize elements outside lower trapezoidal part of the
 NB.   matrix and set diagonal to 1
 NB.
 NB. Syntax:
@@ -712,7 +707,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, lower triangular with unit on diagonal
+NB.   B - m×n-matrix, lower trapezoidal with unit on diagonal
 NB.       d
 
 trl1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , ,:&0)} y')
@@ -721,7 +716,7 @@ NB. ---------------------------------------------------------
 NB. tru1pick
 NB.
 NB. Description:
-NB.   Zeroize elements outside upper triangular part of the
+NB.   Zeroize elements outside upper trapezoidal part of the
 NB.   matrix and set diagonal to 1
 NB.
 NB. Syntax:
@@ -730,7 +725,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO first
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, upper triangular with unit on diagonal
+NB.   B - m×n-matrix, upper trapezoidal with unit on diagonal
 NB.       d
 
 tru1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , 0&,:)} y')
@@ -824,8 +819,8 @@ NB. ---------------------------------------------------------
 NB. trl
 NB.
 NB. Description:
-NB.   Extract lower triangular (trapezoidal) matrix with
-NB.   optional shrinking
+NB.   Extract lower trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    trl >: i. 3 4                0 trl >: i. 3 4
@@ -848,8 +843,8 @@ NB. ---------------------------------------------------------
 NB. tru
 NB.
 NB. Description:
-NB.   Extract upper triangular (trapezoidal) matrix with
-NB.   optional shrinking
+NB.   Extract upper trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    tru >: i. 3 4                0 tru >: i. 3 4
@@ -872,8 +867,8 @@ NB. ---------------------------------------------------------
 NB. trl0
 NB.
 NB. Description:
-NB.   Extract strictly lower triangular (trapezoidal) matrix
-NB.   with optional shrinking
+NB.   Extract strictly lower trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    trl0 >: i. 4 3               0 trl0 >: i. 4 3
@@ -897,8 +892,8 @@ NB. ---------------------------------------------------------
 NB. tru0
 NB.
 NB. Description:
-NB.   Extract strictly upper triangular (trapezoidal) matrix
-NB.   with optional shrinking
+NB.   Extract strictly upper trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    tru0 >: i. 3 4               0 tru0 >: i. 3 4
@@ -921,8 +916,8 @@ NB. ---------------------------------------------------------
 NB. trl1
 NB.
 NB. Description:
-NB.   Extract unit lower triangular (trapezoidal) matrix with
-NB.   optional shrinking
+NB.   Extract unit lower trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    trl1 >: i. 4 3               0 trl1 >: i. 4 3
@@ -946,8 +941,8 @@ NB. ---------------------------------------------------------
 NB. tru1
 NB.
 NB. Description:
-NB.   Extract unit upper triangular (trapezoidal) matrix with
-NB.   optional shrinking
+NB.   Extract unit upper trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    tru1 >: i. 3 4               0 tru1 >: i. 3 4

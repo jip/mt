@@ -555,8 +555,8 @@ NB.   ip  - n-vector, columns inversed permutation of A
 NB.   LU1 - m×n-matrix, lower triangle contains L, and strict
 NB.         upper triangle contains U1 without unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
-NB.   L   - m×min(m,n)-matrix, lower triangular
-NB.   U1  - min(m,n)×n-matrix, unit upper triangular
+NB.   L   - m×min(m,n)-matrix, lower trapezoidal
+NB.   U1  - min(m,n)×n-matrix, unit upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       L's partitioning:
@@ -655,7 +655,7 @@ NB.                    ip[k:n-1] := Pb^H * ip[k:n-1]
 NB.           4.7.2) permute columns of U1ab according to
 NB.                  Pb^H :
 NB.                    U1ab := U1ab * Pb^H
-NB.           4.7.3) assemble triangular matrices L and U1
+NB.           4.7.3) assemble trapezoidal matrices L and U1
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -709,8 +709,8 @@ NB.   ip  - m-vector, rows inversed permutation of A
 NB.   L1U - m×n-matrix, upper triangle contains U, and strict
 NB.         lower triangle contains L1 without unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
-NB.   L1  - m×min(m,n)-matrix, unit lower triangular
-NB.   U   - min(m,n)×n-matrix, upper triangular
+NB.   L1  - m×min(m,n)-matrix, unit lower trapezoidal
+NB.   U   - min(m,n)×n-matrix, upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           U's partitioning:
@@ -809,7 +809,7 @@ NB.                    ip[k:m-1] := Pb^H * ip[k:m-1]
 NB.           4.7.2) permute rows of L1ab according to
 NB.                  Pb^H :
 NB.                    L1ab := Pb^H * L1ab
-NB.           4.7.3) assemble triangular matrices L1 and U
+NB.           4.7.3) assemble trapezoidal matrices L1 and U
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -866,8 +866,8 @@ NB.   A   - m×n-matrix to factorize
 NB.   U1L - m×n-matrix, lower triangle contains L, and strict
 NB.         upper triangle contains U1 without unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
-NB.   L   - m×min(m,n)-matrix, lower triangular
-NB.   U1  - min(m,n)×n-matrix, unit upper triangular
+NB.   L   - m×min(m,n)-matrix, lower trapezoidal
+NB.   U1  - min(m,n)×n-matrix, unit upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           L's partitioning:
@@ -966,7 +966,7 @@ NB.                    ip[0:m-k-1] := Pa^H * ip[0:m-k-1]
 NB.           4.7.2) permute rows of U1ba according to
 NB.                  Pa^H :
 NB.                    U1ba := Pa^H * U1ba
-NB.           4.7.3) assemble triangular matrices U1 and L
+NB.           4.7.3) assemble trapezoidal matrices U1 and L
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -1020,8 +1020,8 @@ NB.   ip  - n-vector, columns inversed permutation of A
 NB.   UL1 - m×n-matrix, upper triangle contains U, and strict
 NB.         lower triangle contains L1 without unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
-NB.   L1  - m×min(m,n)-matrix, unit lower triangular
-NB.   U   - min(m,n)×n-matrix, upper triangular
+NB.   L1  - m×min(m,n)-matrix, unit lower trapezoidal
+NB.   U   - min(m,n)×n-matrix, upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       U's partitioning:
@@ -1120,7 +1120,7 @@ NB.                    ip[0:k-1] := Pa^H * ip[0:k-1]
 NB.           4.7.2) permute columns of L1ba according to
 NB.                  Pa^H :
 NB.                    L1ba := L1ba * Pa^H
-NB.           4.7.3) assemble triangular matrices L1 and U
+NB.           4.7.3) assemble trapezoidal matrices L1 and U
 NB.
 NB. Assertions:
 NB.   P -: %. iP

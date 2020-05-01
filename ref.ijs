@@ -73,8 +73,7 @@ NB.   vapp  - monad to calculate Τ, is called as:
 NB.             T=. vapp VTau
 NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, combined V and Tau
 NB.   T     - k×k-matrix, triangular
-NB.   V     - m×k- or k×n-matrix, unit triangular
-NB.           (trapezoidal)
+NB.   V     - m×k- or k×n-matrix, unit trapezoidal
 NB.   Tau   - k-vector, τ[0:k-1] corresp. to V
 
 larxtf=: 2 : '(] (] ((0 ,~ [) ,.  (mp }:) , _1 { ]) ({~ (<@;~ i.@>:)@#       ))^:(-&#)  1  1&rt)@(-@(m&{) *"1 (_1;a:) tru@setdiag (v ct)@(0&(m})))'
@@ -312,8 +311,8 @@ NB. Syntax:
 NB.   T=. larxtbc VTau
 NB. where
 NB.   VTau - (m+1)×k-matrix (tau,V)
-NB.   V    - m×k-matrix, unit upper triangular (trapezoidal)
-NB.          with 1s on (k-m)-th diagonal and 0s below
+NB.   V    - m×k-matrix, unit upper trapezoidal with 1s on
+NB.          (k-m)-th diagonal and 0s below
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
 NB.   T    - k×k-matrix, lower triangular
 NB.
@@ -338,8 +337,8 @@ NB. Syntax:
 NB.   T=. larxtbr VTau
 NB. where
 NB.   VTau - k×(n+1)-matrix (tau,.V)
-NB.   V    - k×n-matrix, unit lower triangular (trapezoidal)
-NB.          with 1s on (n-k)-th diagonal and 0s above
+NB.   V    - k×n-matrix, unit lower trapezoidal with 1s on
+NB.          (n-k)-th diagonal and 0s above
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
 NB.   T    - k×k-matrix, lower triangular
 NB.
@@ -364,8 +363,8 @@ NB. Syntax:
 NB.   T=. larxtfc VTau
 NB. where
 NB.   VTau - (m+1)×n-matrix (V,tau)
-NB.   V    - m×n-matrix, unit lower triangular (trapezoidal)
-NB.          with 1s on 0-th diagonal and 0s above
+NB.   V    - m×n-matrix, unit lower trapezoidal with 1s on
+NB.          0-th diagonal and 0s above
 NB.   tau  - n-vector τ[0:n-1] corresp. to V
 NB.   T    - n×n-matrix, upper triangular
 NB.
@@ -390,8 +389,8 @@ NB. Syntax:
 NB.   T=. larxtfr VTau
 NB. where
 NB.   VTau - k×(n+1)-matrix (V,.tau)
-NB.   V    - k×n-matrix, unit upper triangular (trapezoidal)
-NB.          with 1s on 0-th diagonal and 0s below
+NB.   V    - k×n-matrix, unit upper trapezoidal with 1s on
+NB.          0-th diagonal and 0s below
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
 NB.   T    - k×k-matrix, upper triangular
 NB.
@@ -555,7 +554,7 @@ NB.   eC    - matrix C to update, augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
 NB.   eCupd - being updated matrix C, augmented by modified
 NB.           trash vector
-NB.   V     - unit triangular (trapezoidal) matrix
+NB.   V     - unit trapezoidal matrix
 NB.   Tau   - k-vector τ[0:k-1] corresp. to V
 NB.
 NB. Notes:
@@ -617,8 +616,8 @@ NB.   eC    - matrix C to update, augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
 NB.   eCupd - being updated matrix C, augmented by modified
 NB.           trash vector
-NB.   V     - unit triangular (trapezoidal) matrix, with 0s
-NB.           in atoms to be ignored
+NB.   V     - unit trapezoidal matrix, with 0s in atoms to be
+NB.           ignored
 NB.   Tau   - k-vector τ[0:k-1] corresp. to V
 NB.
 NB. Notes:

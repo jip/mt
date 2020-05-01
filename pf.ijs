@@ -91,7 +91,7 @@ NB.   osmin  - an estimate for the smallest singular value of
 NB.            R(0:k,0:k)
 NB.   ov     - (k+1)-vector, an approximate smallest left
 NB.            singular vector of R(0:k,0:k)
-NB.   R      - m×n-matrix, upper triangular (trapezoidal)
+NB.   R      - m×n-matrix, upper trapezoidal
 NB.
 NB. Notes:
 NB. - models RRQR's xLAUC1 [1, 2]
@@ -116,11 +116,11 @@ NB.
 NB. Description:
 NB.   Continue a partial LQ factorization on
 NB.   A(offset:offset+dsrd-1,:). If A(0:offset-1,:) has been
-NB.   reduced to lower triangular (trapezoidal) form, then
-NB.   gelpc applies the traditional row pivoting strategy
-NB.   to identify dsrd more independent rows of A with the
-NB.   restriction that the condition number of the leading
-NB.   lower triangle of A should not be larger than 1/rcond.
+NB.   reduced to lower trapezoidal form, then gelpc applies
+NB.   the traditional row pivoting strategy to identify dsrd
+NB.   more independent rows of A with the restriction that
+NB.   the condition number of the leading lower triangle of A
+NB.   should not be larger than 1/rcond.
 NB.   If lacptd (≤ dsrd) such rows are found, then the
 NB.   condition number of lower triangle in
 NB.   A(0:offset+lacptd-1,0:offset+lacptd-1) is less than
@@ -179,7 +179,7 @@ NB.             elementary reflectors
 NB.   oQ      - (offset+lacptd)×(n+1)-matrix with orthonormal
 NB.             rows, which is defined as the product of
 NB.             (offset+lacptd) elementary reflectors
-NB.   L       - m×k-matrix, lower triangular (trapezoidal)
+NB.   L       - m×k-matrix, lower trapezoidal
 NB.   A       - m×n-matrix to factorize
 NB.   k       = min(m,n)
 NB.
@@ -296,11 +296,11 @@ NB.
 NB. Description:
 NB.   Continue a partial QR factorization on
 NB.   A(:,offset:offset+dsrd-1). If A(:,0:offset-1) has been
-NB.   reduced to upper triangular (trapezoidal) form, then
-NB.   geprc applies the traditional column pivoting strategy
-NB.   to identify dsrd more independent columns of A with the
-NB.   restriction that the condition number of the leading
-NB.   upper triangle of A should not be larger than 1/rcond.
+NB.   reduced to upper trapezoidal form, then geprc applies
+NB.   the traditional column pivoting strategy to identify
+NB.   dsrd more independent columns of A with the restriction
+NB.   that the condition number of the leading upper triangle
+NB.   of A should not be larger than 1/rcond.
 NB.   If lacptd (≤ dsrd) such columns are found, then the
 NB.   condition number of upper triangle in
 NB.   A(0:offset+lacptd-1,0:offset+lacptd-1) is less than
@@ -359,7 +359,7 @@ NB.             columns, which is defined as the product of
 NB.             (offset+lacptd) elementary reflectors
 NB.   iR      -:tru (2 # offset) {. QfR
 NB.   oR      -:tru (2 # offset+lacptd) {. QfR ,. dQfR
-NB.   R       - k×n-matrix, upper triangular (trapezoidal)
+NB.   R       - k×n-matrix, upper trapezoidal
 NB.   A       - m×n-matrix to factorize
 NB.   k       = min(m,n)
 NB.
@@ -798,7 +798,7 @@ NB.   ircond > 0, 1/ircond specifies an upper bound on the
 NB.            condition number of L00
 NB.   p      - m-vector, rows inversed permutation of A,
 NB.            represents permutation m×m-matrix P
-NB.   L      - m×k-matrix, lower triangular (trapezoidal)
+NB.   L      - m×k-matrix, lower trapezoidal
 NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {. Qn
@@ -923,7 +923,7 @@ NB.            condition number of R00
 NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {."1 Qm
-NB.   R      - k×n-matrix, upper triangular (trapezoidal)
+NB.   R      - k×n-matrix, upper trapezoidal
 NB.   p      - n-vector, columns inversed permutation of A,
 NB.            represents permutation n×n-matrix P
 NB.   orcond > 0, 1/orcond is an estimate for the condition
@@ -1042,12 +1042,12 @@ NB. trlpr
 NB.
 NB. Description:
 NB.   Compute an estimate for the numerical rank of an
-NB.   lower triangular (trapezoidal) matrix
+NB.   lower trapezoidal matrix
 NB.
 NB. Syntax:
 NB.   rank=. rcond trlpr L
 NB. where
-NB.   L     - m×k-matrix, lower triangular (trapezoidal), k≤m
+NB.   L     - m×k-matrix, lower trapezoidal, k≤m
 NB.   rcond > 0, 1/rcond specifies an upper bound on the
 NB.           condition number of L
 NB.   rank  ≥ 0, an estimate for the numerical rank of L
@@ -1076,12 +1076,12 @@ NB. trprr
 NB.
 NB. Description:
 NB.   Compute an estimate for the numerical rank of an
-NB.   upper triangular (trapezoidal) matrix
+NB.   upper trapezoidal matrix
 NB.
 NB. Syntax:
 NB.   rank=. rcond trprr R
 NB. where
-NB.   R     - k×n-matrix, upper triangular (trapezoidal), k≤n
+NB.   R     - k×n-matrix, upper trapezoidal, k≤n
 NB.   rcond > 0, 1/rcond specifies an upper bound on the
 NB.           condition number of R
 NB.   rank  ≥ 0, an estimate for the numerical rank of R
@@ -1121,7 +1121,7 @@ NB.   'dQ L'=. gelpg3 A
 NB. where
 NB.   A  - m×k-matrix, has zeros above 1st subdiagonal,
 NB.        excepting the first row
-NB.   L  - m×k-matrix, lower triangular (trapezoidal)
+NB.   L  - m×k-matrix, lower trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1165,7 +1165,7 @@ NB.   'dQ R'=. geprg3 A
 NB. where
 NB.   A  - k×n-matrix, has zeros below 1st superdiagonal,
 NB.        excepting the first column
-NB.   R  - k×n-matrix, upper triangular (trapezoidal)
+NB.   R  - k×n-matrix, upper trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1216,7 +1216,7 @@ NB. Syntax:
 NB.   'dQ L'=. hslph3 H
 NB. where
 NB.   H  - m×k-matrix, lower Hessenberg, k≤m
-NB.   L  - m×k-matrix, lower triangular (trapezoidal)
+NB.   L  - m×k-matrix, lower trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1251,7 +1251,7 @@ NB. Syntax:
 NB.   'dQ R'=. hsprh3 H
 NB. where
 NB.   H  - k×n-matrix, upper Hessenberg, k≤n
-NB.   R  - k×n-matrix, upper triangular (trapezoidal)
+NB.   R  - k×n-matrix, upper trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1301,14 +1301,12 @@ NB.   'op oL dQ isovrn rcnr rcnrp1 svlues'=. trprc ip;iL;rank
 NB. where
 NB.   ip     - m-vector, rows inversed permutation of iL,
 NB.            represents permutation m×m-matrix
-NB.   iL     - m×k-matrix, input lower triangular
-NB.            (trapezoidal)
+NB.   iL     - m×k-matrix, input lower trapezoidal
 NB.   rank   - integer in range [0,k], the estimate for the
 NB.            rank of iL
 NB.   op     - m-vector, rows inversed permutation of oL,
 NB.            represents permutation m×m-matrix
-NB.   oL     - m×k-matrix, output lower triangular
-NB.            (trapezoidal)
+NB.   oL     - m×k-matrix, output lower trapezoidal
 NB.   dQ     - r×4-matrix, rotations accumulated, where each
 NB.            row defines one rotation and is 4-vector of
 NB.            values:
@@ -1576,8 +1574,7 @@ NB.
 NB. Syntax:
 NB.   'dQ oR op isovrn rcnr rcnrp1 svlues'=. trprc iR;ip;rank
 NB. where
-NB.   iR     - k×n-matrix, input upper triangular
-NB.            (trapezoidal)
+NB.   iR     - k×n-matrix, input upper trapezoidal
 NB.   ip     - n-vector, columns inversed permutation of iR,
 NB.            represents permutation n×n-matrix
 NB.   rank   - integer in range [0,k], the estimate for the
@@ -1586,8 +1583,7 @@ NB.   dQ     - r×4-matrix, rotations accumulated, where each
 NB.            row defines one rotation and is 4-vector of
 NB.            values:
 NB.              c , s , iof , iog
-NB.   oR     - k×n-matrix, output upper triangular
-NB.            (trapezoidal)
+NB.   oR     - k×n-matrix, output upper trapezoidal
 NB.   op     - n-vector, columns inversed permutation of oR,
 NB.            represents permutation n×n-matrix
 NB.   isovrn - boolean, signals about allowed maximum number
@@ -1846,13 +1842,13 @@ NB. ---------------------------------------------------------
 NB. trlpy
 NB.
 NB. Description:
-NB.   Detect the right rank for lower triangular
-NB.   (trapezoidal) matrix L. The algorithm used here is an
-NB.   version of Pan and Tang's RRQR algorithm number 3. This
-NB.   algorithm is applied to matrix L until the right rank
-NB.   is obtained. If the input ordering of matrix L is not
-NB.   accepted, the matrix will be permuted and
-NB.   retriangularized until the rank is revealed.
+NB.   Detect the right rank for lower trapezoidal matrix L.
+NB.   The algorithm used here is an version of Pan and Tang's
+NB.   RRQR algorithm number 3. This algorithm is applied to
+NB.   matrix L until the right rank is obtained. If the input
+NB.   ordering of matrix L is not accepted, the matrix will
+NB.   be permuted and retriangularized until the rank is
+NB.   revealed.
 NB.
 NB. Syntax:
 NB.   'op oL oQn orcond rank svlues'=. ircond trlpy ip;iL;iQn;trash;trash;trash
@@ -1861,14 +1857,14 @@ NB.   ircond > 0, 1/ircond is an upper bound on the condition
 NB.            number of iL00
 NB.   ip     - m-vector, rows inversed permutation of iL,
 NB.            represents permutation m×m-matrix
-NB.   iL     - m×k-matrix, lower triangular (trapezoidal)
+NB.   iL     - m×k-matrix, lower trapezoidal
 NB.            before rank detecting
 NB.   iQn    - n×n-matrix, the unitary (orthogonal), embeds
 NB.            iQ:
 NB.              iQ -: k {. iQn
 NB.   op     - m-vector, rows inversed permutation of oL,
 NB.            represents permutation m×m-matrix
-NB.   oL     - m×k-matrix, lower triangular (trapezoidal)
+NB.   oL     - m×k-matrix, lower trapezoidal
 NB.            after rank detecting
 NB.   oQn    - n×n-matrix, the unitary (orthogonal), embeds
 NB.            oQ:
@@ -1946,13 +1942,13 @@ NB. ---------------------------------------------------------
 NB. trpry
 NB.
 NB. Description:
-NB.   Detect the right rank for upper triangular
-NB.   (trapezoidal) matrix R. The algorithm used here is an
-NB.   version of Pan and Tang's RRQR algorithm number 3. This
-NB.   algorithm is applied to matrix R until the right rank
-NB.   is obtained. If the input ordering of matrix R is not
-NB.   accepted, the matrix will be permuted and
-NB.   retriangularized until the rank is revealed.
+NB.   Detect the right rank for upper trapezoidal matrix R.
+NB.   The algorithm used here is an version of Pan and Tang's
+NB.   RRQR algorithm number 3. This algorithm is applied to
+NB.   matrix R until the right rank is obtained. If the input
+NB.   ordering of matrix R is not accepted, the matrix will
+NB.   be permuted and retriangularized until the rank is
+NB.   revealed.
 NB.
 NB. Syntax:
 NB.   'oQm oR op orcond rank svlues'=. ircond trpry iQm;iR;ip;trash;trash;trash
@@ -1962,14 +1958,14 @@ NB.            number of iR00
 NB.   iQm    - m×m-matrix, the unitary (orthogonal), embeds
 NB.            iQ:
 NB.              iQ -: k {."1 iQm
-NB.   iR     - k×n-matrix, upper triangular (trapezoidal)
+NB.   iR     - k×n-matrix, upper trapezoidal
 NB.            before rank detecting
 NB.   ip     - n-vector, columns inversed permutation of iR,
 NB.            represents permutation n×n-matrix
 NB.   oQm    - m×m-matrix, the unitary (orthogonal), embeds
 NB.            oQ:
 NB.              oQ -: k {."1 oQm
-NB.   oR     - k×n-matrix, upper triangular (trapezoidal)
+NB.   oR     - k×n-matrix, upper trapezoidal
 NB.            after rank detecting
 NB.   op     - n-vector, columns inversed permutation of oR,
 NB.            represents permutation n×n-matrix
@@ -2072,7 +2068,7 @@ NB.            specifies an upper bound on the condition
 NB.            number of L00
 NB.   p      - m-vector, rows inversed permutation of L,
 NB.            represents permutation m×m-matrix
-NB.   L      - m×k-matrix, lower triangular (trapezoidal)
+NB.   L      - m×k-matrix, lower trapezoidal
 NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {. Qn
@@ -2146,7 +2142,7 @@ NB.            number of R00
 NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {."1 Qm
-NB.   R      - k×n-matrix, upper triangular (trapezoidal)
+NB.   R      - k×n-matrix, upper trapezoidal
 NB.   p      - n-vector, columns inversed permutation of R,
 NB.            represents permutation n×n-matrix
 NB.   orcond > 0, 1/orcond is an estimate for the condition

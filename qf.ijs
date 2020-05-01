@@ -97,10 +97,10 @@ NB.   τi             - scalar value conj(τ(i))
 NB.   (0,...,0,1,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = L * Q
+NB.   (}:"1 -: ( trl        @:(}:"1) mp unglq)@gelq2) eA
 NB.   NB. A = L * (Q)
 NB.   (}:"1 -: (unmlqrn  trlpick        @:(}:"1))@gelq2) eA
-NB.   NB. I = Q * (Q^H)
-NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlqrc unglq)@gelq2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGELQ2
@@ -168,10 +168,10 @@ NB.   τi             - scalar value τ(i)
 NB.   (vi,1,0,...,0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Q * L
+NB.   (}.   -: (ungql mp (trl~ -~/@$)@: }.   )@geql2) eA
 NB.   NB. A = (Q) * L
 NB.   (}.   -: (unmqlln (trlpick~ -~/@$)@  }.   )@geql2) eA
-NB.   NB. I = (Q^H) * Q
-NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqllc ungql)@geql2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQL2
@@ -239,10 +239,10 @@ NB.   τi             - scalar value τ(i)
 NB.   (0,...,0,1,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Q * R
+NB.   (}:   -: (ungqr mp  tru        @: }:   )@geqr2) eA
 NB.   NB. A = (Q) * R
 NB.   (}:   -: (unmqrln  trupick        @  }:   )@geqr2) eA
-NB.   NB. I = (Q^H) * Q
-NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqrlc ungqr)@geqr2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQR2
@@ -313,10 +313,10 @@ NB.   τi             - scalar value conj(τ(i))
 NB.   (vi,1,0,...,0) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = R * Q
+NB.   (}."1 -: ((tru~ -~/@$)@:(}."1) mp ungrq)@gerq2) eA
 NB.   NB. A = R * (Q)
 NB.   (}."1 -: (unmrqrn (trupick~ -~/@$)@:(}."1))@gerq2) eA
-NB.   NB. I = Q * (Q^H)
-NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrqrc ungrq)@gerq2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGERQ2
@@ -712,10 +712,10 @@ NB.   τi             - scalar value conj(τ(i))
 NB.   (0,...,0,1,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = L * Q
+NB.   (     -: ( trl        @:(}:"1) mp unglq)@gelqf) A
 NB.   NB. A = L * (Q)
 NB.   (     -: (unmlqrn  trlpick        @:(}:"1))@gelqf) A
-NB.   NB. I = Q * (Q^H)
-NB.   (( 0         idmat (<. , ])/)@        $  (-: clean) (unmlqrc unglq)@gelqf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGELQF
@@ -778,10 +778,10 @@ NB.   τi             - scalar value τ(i)
 NB.   (vi,1,0,...,0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Q * L
+NB.   (     -: (ungql mp (trl~ -~/@$)@: }.   )@geqlf) A
 NB.   NB. A = (Q) * L
 NB.   (     -: (unmqlln (trlpick~ -~/@$)@  }.   )@geqlf) A
-NB.   NB. I = (Q^H) * Q
-NB.   (((0 <. -~/) idmat ([ , <.)/)@        $  (-: clean) (unmqllc ungql)@geqlf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQLF
@@ -844,10 +844,10 @@ NB.   τi             - scalar value τ(i)
 NB.   (0,...,0,1,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Q * R
+NB.   (     -: (ungqr mp  tru        @: }:   )@geqrf) A
 NB.   NB. A = (Q) * R
 NB.   (     -: (unmqrln  trupick        @  }:   )@geqrf) A
-NB.   NB. I = (Q^H) * Q
-NB.   (( 0         idmat ([ , <.)/)@        $  (-: clean) (unmqrlc ungqr)@geqrf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQRF
@@ -913,10 +913,10 @@ NB.   τi             - scalar value conj(τ(i))
 NB.   (vi,1,0,...,0) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = R * Q
+NB.   (     -: ((tru~ -~/@$)@:(}."1) mp ungrq)@gerqf) A
 NB.   NB. A = R * (Q)
 NB.   (     -: (unmrqrn (trupick~ -~/@$)@:(}."1))@gerqf) A
-NB.   NB. I = Q * (Q^H)
-NB.   (((0 >. -~/) idmat (<. , ])/)@        $  (-: clean) (unmrqrc ungrq)@gerqf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGERQF
@@ -991,6 +991,12 @@ NB.   vi                     - l-vector v(i)
 NB.   τi                     - scalar value conj(τ(i))
 NB.   (vi,0,...,0,1,0,...,0) - n-vector u(i)
 NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = L * Z
+NB.   (-: (({."1~ -@#) mp unglz)@tzlzf) A
+NB.   NB. A = L * (Z)
+NB.   (-: (unmlzrn ((1 -  c) {."1 ({."1~ -@#)))@tzlzf) A
+NB.
 NB. Notes:
 NB. - latlz and tzlzf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
@@ -1063,6 +1069,12 @@ NB.   vi                     - l-vector v(i)
 NB.   τi                     - scalar value τ(i)
 NB.   (0,...,0,1,0,...,0,vi) - m-vector u(i)
 NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Z * L
+NB.   (-: (ungzl mp ({.  ~   c))@tzzlf) A
+NB.   NB. A = (Z) * L
+NB.   (-: (unmzlln ((1 -~ #) {.   ({.  ~   c)))@tzzlf) A
+NB.
 NB. Notes:
 NB. - latzl and tzzlf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
@@ -1134,6 +1146,12 @@ NB.   or                     - elements of oR
 NB.   vi                     - l-vector v(i)
 NB.   τi                     - scalar value τ(i)
 NB.   (vi,0,...,0,1,0,...,0) - m-vector u(i)
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Z * R
+NB.   (-: (ungzr mp ({.  ~ -@c))@tzzrf) A
+NB.   NB. A = (Z) * R
+NB.   (-: (unmzrln ((1 -  #) {.   ({.  ~ -@c)))@tzzrf) A
 NB.
 NB. Notes:
 NB. - latzr and tzzrf are topologic equivalents
@@ -1212,6 +1230,12 @@ NB.   or                     - elements of oR
 NB.   vi                     - l-vector v(i)
 NB.   τi                     - scalar value conj(τ(i))
 NB.   (0,...,0,1,0,...,0,vi) - n-vector u(i)
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = R * Z
+NB.   (-: (({."1~   #) mp ungrz)@tzrzf) A
+NB.   NB. A = R * (Z)
+NB.   (-: (unmrzrn ((1 -~ c) {."1 ({."1~   #)))@tzrzf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xTZRZF with the following differences:

@@ -438,7 +438,7 @@ NB.   ((idmat@#) -: po) Q
 NB.   H -: A (mp~ mp ct@]) Q
 NB. where
 NB.   HQf=. (gehrdl~ 0 , #) A
-NB.   H=. 1 trl 0 _1 }. HQf
+NB.   H=. 1 trlpick }:"1 HQf
 NB.   Q=. unghrl HQf
 
 gehrdl=: 4 : 0
@@ -528,7 +528,7 @@ NB.   ((idmat@#) -: (mp~ ct)) Q
 NB.   H -: A (ct@] mp mp) Q
 NB. where
 NB.   HQf=. (gehrdu~ 0, #) A
-NB.   H=. _1 tru _1 0 }. HQf
+NB.   H=. _1 trupick }: HQf
 NB.   Q=. unghru HQf
 NB.
 NB. Notes:

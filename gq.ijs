@@ -101,8 +101,8 @@ NB.   (0,...,0,1,vi) - n-vector u(i)
 NB.   *              - any value, is not used
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. L * (Q) = L * Q
-NB.   (((unmlqrn  trlpick        ) -: ((mp  unglq)~  trl        )) }:"1) LQf
+NB.   NB. L * Q = L * (Q)
+NB.   ((((mp  unglq)~  trl        ) -: (unmlqrn  trlpick        )) }:"1) LQf
 NB.   NB. I = Q * (Q^H)
 NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlqrc unglq)) LQf
 NB.
@@ -150,8 +150,8 @@ NB.   (vi,1,0,...,0) - m-vector u(i)
 NB.   *              - any value, is not used
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. (Q) * L = Q * L
-NB.   (((unmqlln (trlpick~ -~/@$)) -: ((mp~ ungql)~ (trl~ -~/@$))) }.  ) QfL
+NB.   NB. Q * L = (Q) * L
+NB.   ((((mp~ ungql)~ (trl~ -~/@$)) -: (unmqlln (trlpick~ -~/@$))) }.  ) QfL
 NB.   NB. I = (Q^H) * Q
 NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqllc ungql)) QfL
 NB.
@@ -199,8 +199,8 @@ NB.   (0,...,0,1,vi) - m-vector u(i)
 NB.   *              - any value, is not used
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. (Q) * R = Q * R
-NB.   (((unmqrln  trupick        ) -: ((mp~ ungqr)~  tru        )) }:  ) QfR
+NB.   NB. Q * R = (Q) * R
+NB.   ((((mp~ ungqr)~  tru        ) -: (unmqrln  trupick        )) }:  ) QfR
 NB.   NB. I = (Q^H) * Q
 NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqrlc ungqr)) QfR
 NB.
@@ -247,8 +247,8 @@ NB.   (vi,1,0,...,0) - n-vector u(i)
 NB.   *              - any value, is not used
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. R * (Q) = R * Q
-NB.   (((unmrqrn (trupick~ -~/@$)) -: ((mp  ungrq)~ (tru~ -~/@$))) }."1) RQf
+NB.   NB. R * Q = R * (Q)
+NB.   ((((mp  ungrq)~ (tru~ -~/@$)) -: (unmrqrn (trupick~ -~/@$))) }."1) RQf
 NB.   NB. I = Q * (Q^H)
 NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrqrc ungrq)) RQf
 NB.
@@ -291,8 +291,8 @@ NB.   τi                     - scalar value conj(τ(i))
 NB.   (vi,0,...,0,1,0,...,0) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. A = L * Z
-NB.   (-: (trlpick@:({."1~ -@#) mp  unglz)@tzlzf) A
+NB.   NB. L * Z = L * (Z)
+NB.   (((mp  unglz)~ -: [ unmlzrn ({."1~ (1 -  c))~) ({."1~ -@#)) LZf
 NB.   NB. I = Z * Z^H
 NB.   (idmat@# -: (mp  ct))@unglz LZf
 
@@ -335,8 +335,8 @@ NB.   τi                     - scalar value τ(i)
 NB.   (0,...,0,1,0,...,0,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. A = Z * L
-NB.   (-: (trlpick@:({.  ~   c) mp~ ungzl)@tzzlf) A
+NB.   NB. Z * L = (Z) * L
+NB.   (((mp~ ungzl)~ -: [ unmzlln ({.  ~ (1 -~ #))~) ({.  ~   c)) ZfL
 NB.   NB. I = Z^H * Z
 NB.   (idmat@c -: (mp~ ct))@ungzl ZfL
 
@@ -379,8 +379,8 @@ NB.   τi                     - scalar value τ(i)
 NB.   (vi,0,...,0,1,0,...,0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. A = Z * R
-NB.   (-: (trupick@:({.  ~ -@c) mp~ ungzr)@tzzrf) A
+NB.   NB. Z * R = (Z) * R
+NB.   (((mp~ ungzr)~ -: [ unmzrln ({.  ~ (1 -  #))~) ({.  ~ -@c)) ZfR
 NB.   NB. I = Z^H * Z
 NB.   (idmat@c -: (mp~ ct))@ungzr ZfR
 
@@ -418,8 +418,8 @@ NB.   τi                     - scalar value conj(τ(i))
 NB.   (0,...,0,1,0,...,0,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   NB. A = R * Z
-NB.   (-: (trupick@:({."1~   #) mp  ungrz)@tzrzf) A
+NB.   NB. R * Z = R * (Z)
+NB.   (((mp  ungrz)~ -: [ unmrzrn ({."1~ (1 -~ c))~) ({."1~   #)) RZf
 NB.   NB. I = Z * Z^H
 NB.   (idmat@# -: (mp  ct))@ungrz RZf
 
@@ -439,6 +439,10 @@ NB.   Q=. unghrl HQf
 NB. where
 NB.   HQf - n×(n+1)-matrix with packed H and Qf (see gehrdl)
 NB.   Q   - n×n-matrix, the unitary (orthogonal)
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. I = Q * Q^H
+NB.   (idmat@# -: clean@(mp  ct))@unghrl HQf
 NB.
 NB. Notes:
 NB. - instead of using f and s parameters, the following
@@ -465,6 +469,10 @@ NB.   Q=. unghru HQf
 NB. where
 NB.   HQf - (n+1)×n-matrix with packed H and Qf (see gehrdu)
 NB.   Q   - n×n-matrix, the unitary (orthogonal)
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. I = Q^H * Q
+NB.   (idmat@# -: clean@(mp~ ct))@unghru HQf
 NB.
 NB. Notes:
 NB. - models LAPACK's DORGHR, ZUNGHR

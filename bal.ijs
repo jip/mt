@@ -295,14 +295,16 @@ NB.   Bu00 Bu22 - square upper triangular matrices with
 NB.               isolated eigenvalues in diagonal
 NB.
 NB. Assertions:
-NB.   Pinv -: |: P
-NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
-NB.   B -: p fp A
+NB.   iP -: |: P
+NB.   B -:  P mp A mp iP          NB. permute rows and columns by p of A
+NB.   A -: iP mp B mp  P          NB. undo permuting rows and columns by p of B
+NB.   B -: p fp     A
+NB.   A -: p fp^:_1 B
 NB.   B11 -: (,.~ hs) ];.0 B
 NB. where
 NB.   'B p hs'=. gebalxp A
 NB.   P=. p2P p
-NB.   Pinv=. %. P
+NB.   iP=. %. P
 NB.
 NB. Notes:
 NB. - gebalup models LAPACK's xGEBAL('P') with the following
@@ -355,13 +357,15 @@ NB.   Sscl    - ($ S)-matrix, scaled version of S
 NB.   d       - n-vector, diagonal of scaling matrix D
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   Dinv -: diagmat % d
-NB.   Ascl -: Dinv mp A mp D
-NB.   Ascl -: A (*"1 % ]) d
+NB.   iD   -: diagmat % d
+NB.   Ascl -: iD mp A    mp  D    NB. unscale rows by d and scale columns by d of A
+NB.   A    -:  D mp Ascl mp iD    NB. scale rows by d and unscale columns by d of Ascl
+NB.   Ascl -: A    (*"1 % ]) d
+NB.   A    -: Ascl (%"1 * ]) d
 NB. where
 NB.   'Ascl p hs d'=. gebals A ; p ; hs
 NB.   D=. diagmat d
-NB.   Dinv=. %. D
+NB.   iD=. %. D
 NB.
 NB. Application:
 NB. - model LAPACK's xGEBAL('N') to do nothing:
@@ -506,21 +510,25 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   p -: pp
 NB.   hs -: hsp
-NB.   Pinv -: |: P
-NB.   Dinv -: diagmat % d
-NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
-NB.   B -: p fp A
-NB.   C -: Dinv mp B mp D
+NB.   iP -: |: P
+NB.   iD -: diagmat % d
+NB.   B -:  P mp A mp iP          NB. permute rows and columns by p of A
+NB.   A -: iP mp B mp  P          NB. undo permuting rows and columns by p of B
+NB.   B -: p fp     A
+NB.   A -: p fp^:_1 B
+NB.   C -: iD mp B mp  D          NB. unscale rows by d and scale columns by d of B
+NB.   B -:  D mp C mp iD          NB. scale rows by d and unscale columns by d of C
 NB.   C -: B (*"1 % ]) d
+NB.   B -: C (%"1 * ]) d
 NB.   B11 -: (,.~ hs) ];.0 B
 NB.   C11 -: (,.~ hs) ];.0 C
 NB. where
 NB.   'B pp hsp'=. gebalxp A
 NB.   'C p hs d'=. gebalx A
 NB.   P=. p2P p
-NB.   Pinv=. %. P
+NB.   iP=. %. P
 NB.   D=. diagmat d
-NB.   Dinv=. %. D
+NB.   iD=. %. D
 NB.
 NB. Notes:
 NB. - gebalu models LAPACK's xGEBAL('B') with the following
@@ -559,14 +567,18 @@ NB.         defines submatrices C11 and D11 position in C and
 NB.         D, respectively
 NB.
 NB. Assertions:
-NB.   Prinv -: |: Pr
-NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
-NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr
+NB.   iPl -: |: Pl
+NB.   iPr -: |: Pr
+NB.   CD -:  Pl mp"2 AB mp"2 iPr  NB. permute rows by pl and columns by pr of both A and B
+NB.   AB -: iPl mp"2 CD mp"2  Pr  NB. undo permuting rows by pl and columns by pr of both C and D
+NB.   CD -: AB ((C.    "2~ {.) (C.    "1~ {:) ]) plr
+NB.   AB -: CD ((C.^:_1"2~ {.) (C.^:_1"1~ {:) ]) plr
 NB.   CD11 -: (0 2 ,. ,.~ hs) ];.0 CD
 NB. where
 NB.   'CD plr hs'=. ggbalxp AB
 NB.   'Pl Pr'=. p2P"1 plr
-NB.   Prinv=. %. Pr
+NB.   iPl=. %. Pl
+NB.   iPr=. %. Pr
 NB.
 NB. Notes:
 NB. - ggbalup implements LAPACK's xGGBAL('P') with the
@@ -699,12 +711,17 @@ NB.   dl  - n-vector, diagonal of scaling matrix Dl
 NB.   dr  - n-vector, diagonal of scaling matrix Dr
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   EF -: Dl mp"2 CD mp"2 Dr
+NB.   iDl -: %. Dl
+NB.   iDr -: %. Dr
+NB.   EF -:  Dl mp"2 CD mp"2  Dr  NB. scale rows by dl and columns by dr of both C and D
+NB.   CD -: iDl mp"2 EF mp"2 iDr  NB. unscale rows by dl and columns by dr of both E and F
 NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
+NB.   CD -: EF ((%"2  {.) (%"1 {:) ]) dlr
 NB.   EF11 -: (0 2 ,. ,.~ hs) ];.0 EF
 NB. where
 NB.   'EF plr hs dlr'=. ggbals CD ; plr ; hs
 NB.   'Dl Dr'=. diagmat"1 dlr
+NB.   'iDl iDr'=. diagmat"1 % dlr
 NB.
 NB. Application:
 NB. - scale non-permuted matrices A and B (default plr and
@@ -800,19 +817,28 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   plr -: plrp
 NB.   hs -: hsp
-NB.   Prinv -: |: Pr
-NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
-NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr
-NB.   EF -: Dl mp"2 CD mp"2 Dr
+NB.   iPl -: |: Pl
+NB.   iPr -: |: Pr
+NB.   iDl -: %. Dl
+NB.   iDr -: %. Dr
+NB.   CD -:  Pl mp"2 AB mp"2 iPr  NB. permute rows by pl and columns by pr of both A and B
+NB.   AB -: iPl mp"2 CD mp"2  Pr  NB. undo permuting rows by pl and columns by pr of both C and D
+NB.   CD -: AB ((C.    "2~ {.) (C.    "1~ {:) ]) plr
+NB.   AB -: CD ((C.^:_1"2~ {.) (C.^:_1"1~ {:) ]) plr
+NB.   EF -:  Dl mp"2 CD mp"2  Dr  NB. scale rows by dl and columns by dr of both C and D
+NB.   CD -: iDl mp"2 EF mp"2 iDr  NB. unscale rows by dl and columns by dr of both E and F
 NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
+NB.   CD -: EF ((%"2  {.) (%"1 {:) ]) dlr
 NB.   CD11 -: (0 2 ,. ,.~ hs) ];.0 CD
 NB.   EF11 -: (0 2 ,. ,.~ hs) ];.0 EF
 NB. where
 NB.   'CD plrp hsp'=. ggbalxp AB
 NB.   'EF plr hs dlr'=. ggbalx AB
 NB.   'Pl Pr'=. p2P"1 plr
-NB.   Prinv=. %. Pr
+NB.   iPl=. %. Pl
+NB.   iPr=. %. Pr
 NB.   'Dl Dr'=. diagmat"1 dlr
+NB.   'iDl iDr'=. diagmat"1 % dlr
 NB.
 NB. Notes:
 NB. - ggbalu implements LAPACK's xGGBAL('B') with the

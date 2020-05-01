@@ -585,10 +585,10 @@ NB.         defines submatrix Qf position in matrix HQf, see
 NB.         see gehrdl
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (idmat@c (-: clean) (unmhrlln ct@unghrl)@(gehrdl~ 0 , c)) A
-NB.   (idmat@c (-: clean) (unmhrllc    unghrl)@(gehrdl~ 0 , c)) A
-NB.   (idmat@c (-: clean) (unmhrlrn ct@unghrl)@(gehrdl~ 0 , c)) A
-NB.   (idmat@c (-: clean) (unmhrlrc    unghrl)@(gehrdl~ 0 , c)) A
+NB.   (idmat@c -: clean@(unmhrlln ct@unghrl)@(gehrdl~ 0 , c)) A
+NB.   (idmat@c -: clean@(unmhrllc    unghrl)@(gehrdl~ 0 , c)) A
+NB.   (idmat@c -: clean@(unmhrlrn ct@unghrl)@(gehrdl~ 0 , c)) A
+NB.   (idmat@c -: clean@(unmhrlrc    unghrl)@(gehrdl~ 0 , c)) A
 NB.
 NB. Notes:
 NB. - instead of using f and s parameters, the following
@@ -633,10 +633,10 @@ NB.         defines submatrix Qf position in matrix HQf, see
 NB.         see gehrdu
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   (idmat@# (-: clean) (unmhruln ct@unghru)@(gehrdu~ 0 , #)) A
-NB.   (idmat@# (-: clean) (unmhrulc    unghru)@(gehrdu~ 0 , #)) A
-NB.   (idmat@# (-: clean) (unmhrurn ct@unghru)@(gehrdu~ 0 , #)) A
-NB.   (idmat@# (-: clean) (unmhrurc    unghru)@(gehrdu~ 0 , #)) A
+NB.   (idmat@# -: clean@(unmhruln ct@unghru)@(gehrdu~ 0 , #)) A
+NB.   (idmat@# -: clean@(unmhrulc    unghru)@(gehrdu~ 0 , #)) A
+NB.   (idmat@# -: clean@(unmhrurn ct@unghru)@(gehrdu~ 0 , #)) A
+NB.   (idmat@# -: clean@(unmhrurc    unghru)@(gehrdu~ 0 , #)) A
 NB.
 NB. Notes:
 NB. - models LAPACK's DORMHR, ZUNMHR

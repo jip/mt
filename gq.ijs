@@ -104,7 +104,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. L * Q = L * (Q)
 NB.   ((((mp  unglq)~  trl        ) -: (unmlqrn  trlpick        )) }:"1) LQf
 NB.   NB. I = Q * (Q^H)
-NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlqrc unglq)) LQf
+NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) -: clean@(unmlqrc unglq)) LQf
 NB.
 NB. Notes:
 NB. - implements LAPACK's DORGLQ, ZUNGLQ
@@ -153,7 +153,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. Q * L = (Q) * L
 NB.   ((((mp~ ungql)~ (trl~ -~/@$)) -: (unmqlln (trlpick~ -~/@$))) }.  ) QfL
 NB.   NB. I = (Q^H) * Q
-NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqllc ungql)) QfL
+NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) -: clean@(unmqllc ungql)) QfL
 NB.
 NB. Notes:
 NB. - implements LAPACK's DORGQL, ZUNGQL
@@ -202,7 +202,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. Q * R = (Q) * R
 NB.   ((((mp~ ungqr)~  tru        ) -: (unmqrln  trupick        )) }:  ) QfR
 NB.   NB. I = (Q^H) * Q
-NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqrlc ungqr)) QfR
+NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) -: clean@(unmqrlc ungqr)) QfR
 NB.
 NB. Notes:
 NB. - implements LAPACK's DORGQR, ZUNGQR
@@ -250,7 +250,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. R * Q = R * (Q)
 NB.   ((((mp  ungrq)~ (tru~ -~/@$)) -: (unmrqrn (trupick~ -~/@$))) }."1) RQf
 NB.   NB. I = Q * (Q^H)
-NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrqrc ungrq)) RQf
+NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) -: clean@(unmrqrc ungrq)) RQf
 NB.
 NB. Notes:
 NB. - implements LAPACK's DORGRQ, ZUNGRQ
@@ -294,7 +294,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. L * Z = L * (Z)
 NB.   (((mp  unglz)~ -: [ unmlzrn ({."1~ (1 -  c))~) ({."1~ -@#)) LZf
 NB.   NB. I = Z * Z^H
-NB.   (idmat@# -: (mp  ct))@unglz LZf
+NB.   (idmat@# -: clean@(mp  ct))@unglz LZf
 
 unglz=: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (<;.1~      0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])@] , <@(idmat~ -~/)@(,  c)) ((-@(<. #) ,  -~/@$@]) {. ]) ,.  (((0 >. -~) idmat <. ,  ]) #))`((-~ idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
@@ -338,7 +338,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. Z * L = (Z) * L
 NB.   (((mp~ ungzl)~ -: [ unmzlln ({.  ~ (1 -~ #))~) ({.  ~   c)) ZfL
 NB.   NB. I = Z^H * Z
-NB.   (idmat@c -: (mp~ ct))@ungzl ZfL
+NB.   (idmat@c -: clean@(mp~ ct))@ungzl ZfL
 
 ungzl=: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(<;.2~ '' ; 0 1:`((GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`((1 0 $ 0)"_)@.(0 = ]))`($~)} c@])@] , <@ idmat      @(,~ #)) ((  (<. c) ,~ -~/@$@]) {. ]) , ~ (( 0        idmat <. ,~ ]) c))`((0  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
@@ -382,7 +382,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. Z * R = (Z) * R
 NB.   (((mp~ ungzr)~ -: [ unmzrln ({.  ~ (1 -  #))~) ({.  ~ -@c)) ZfR
 NB.   NB. I = Z^H * Z
-NB.   (idmat@c -: (mp~ ct))@ungzr ZfR
+NB.   (idmat@c -: clean@(mp~ ct))@ungzr ZfR
 
 ungzr=: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (<;.1~ '' ; 0 1:`((GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`((1 0 $ 0)"_)@.(0 = ]))`($~)} c@])@] , <@(idmat~ -~/)@(,~ #)) ((-@(<. c) ,~ - /@$@]) {. ]) ,   (((0 <. - ) idmat <. ,~ ]) c))`((-  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
@@ -421,7 +421,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. R * Z = R * (Z)
 NB.   (((mp  ungrz)~ -: [ unmrzrn ({."1~ (1 -~ c))~) ({."1~   #)) RZf
 NB.   NB. I = Z * Z^H
-NB.   (idmat@# -: (mp  ct))@ungrz RZf
+NB.   (idmat@# -: clean@(mp  ct))@ungrz RZf
 
 ungrz=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(<;.2~      0 1:`((GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`((0 1 $ 0)"_)@.(0 = ]))`($~)} #@])@] , <@ idmat      @(,  c)) ((  (<. #) ,  - /@$@]) {. ]) ,.~ (( 0        idmat <. ,  ]) #))`((0  idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 

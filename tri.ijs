@@ -817,7 +817,7 @@ NB. Description:
 NB.   Test:
 NB.   - 128!:1 (built-in)
 NB.   - trtrixx (math/mt addon)
-NB.   by triangular matrix given
+NB.   by triangular matrix
 NB.
 NB. Syntax:
 NB.   testtrtri A

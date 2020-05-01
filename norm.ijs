@@ -117,12 +117,13 @@ NB.   xLANTB('m'), xLANTR('m'), ZLANHB('m'), ZLANHT('m'),-
 NB.   extraneous values in matrix must be zeroed
 
 norm1=:  norm1c      (max@)    NB. 1-norm of vector (matrix)
-norm1c=: | csum              NB. 1-norm of vector (matrix columns)
-norm1r=: | rsum              NB. 1-norm of vector (matrix rows)
+norm1c=: | csum                NB. 1-norm of vector (matrix columns)
+norm1r=: | rsum                NB. 1-norm of vector (matrix rows)
 
-normi=:  | (+/"_1@:) (max@)  NB. ∞-norm of vector (matrix)
-normic=: | cmax              NB. ∞-norm of vector (matrix columns)
-normir=: | rmax              NB. ∞-norm of vector (matrix rows)
+normi=:  | (+/"_1@:) (max@)    NB. ∞-norm of vector (matrix)
+normic=: | cmax                NB. ∞-norm of vector (matrix columns)
+normir=: | rmax                NB. ∞-norm of vector (matrix rows)
+
 normm=:  >./@,@:|`0:@.(0 = #)  NB. max of modules of elements of vector (matrix)
 
 NB. ---------------------------------------------------------

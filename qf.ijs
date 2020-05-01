@@ -689,7 +689,7 @@ NB.         elementary reflectors H(i) of order n:
 NB.           Q = Π{H(i)',i=m-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0)=I
+NB.           H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0) = I
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -1001,6 +1001,7 @@ NB. Notes:
 NB. - latlz and tzlzf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
+NB. - strict upper triangle of iL is ignored
 
 tzlzf=: 3 : 0
   y=. 0 ,. y
@@ -1079,6 +1080,7 @@ NB. Notes:
 NB. - latzl and tzzlf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
+NB. - strict upper triangle of iL is ignored
 
 tzzlf=: 3 : 0
   y=. y , 0
@@ -1157,6 +1159,7 @@ NB. Notes:
 NB. - latzr and tzzrf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
+NB. - strict lower triangle of iR is ignored
 
 tzzrf=: 3 : 0
   y=. 0 , y
@@ -1244,6 +1247,7 @@ NB.   - conj(τ(i)) is saved instead of τ(i)
 NB. - latrz and tzrzf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
+NB. - strict lower triangle of iR is ignored
 
 tzrzf=: 3 : 0
   y=. y ,. 0

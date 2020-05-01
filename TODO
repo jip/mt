@@ -24,6 +24,9 @@
 
 10. replace pf (RRQR) by qp (xGEQP3) [4]
 
+11. implement a matrix canonization algorithm [5,6]
+
+References:
 [1] Gerdin, Markus. Computation of a canonical form for
     linear differential-algebraic equations. Department of
     Electrical Engineering, Linköping University, 2004.
@@ -43,3 +46,13 @@
 [4] Rank Revealing QR factorization (RRQR)
     LAPACK/ScaLAPACK Development forum. 2012-02-06.
     http://icl.cs.utk.edu/lapack-forum/viewtopic.php?f=5&t=2469#p8162
+
+[5] Volkov, V.G., Dem’yanov, D.N. Application of Matrix
+    Decompositions for Matrix Canonization. Comput. Math. and
+    Math. Phys. 59, 1759–1770 (2019).
+    https://doi.org/10.1134/S0965542519110149
+
+[6] Valentin N. Bykov, Vladimir N. Ryabchenko and Nikolay I.
+    Sel'vesyuk. Solving of the special matrix equations with
+    canonization method. Bulletein of the University of Kiev,
+    Vol. 2004, No. 3.

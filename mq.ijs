@@ -266,7 +266,7 @@ NB.   ((unmlqrc -: (mp  ct@(unglq~ <:@c))~) 0 ?@$~ 0 _1     + $) LQf
 NB.
 NB. Notes:
 NB. - implement LAPACK's DORMLQ, ZUNMLQ
-NB. - unml2{lc,ln,rc,rn} and unmlq{lc,ln,rc,rn} respectively
+NB. - unml2{ln,lc,rn,rc} and unmlq{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
 unmlqln=: }:  @(((unml2ln`((larfblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,  &0)`(i.@$@])@.(0 e. $@])
@@ -306,7 +306,7 @@ NB.   ((unmqlrc -: (mp  ct@(ungql~ <:@#))~) 0 ?@$~ _1 0 |.@:+ $) QfL
 NB.
 NB. Notes:
 NB. - implement LAPACK's DORMQL, ZUNMQL
-NB. - unm2l{lc,ln,rc,rn} and unmql{lc,ln,rc,rn} respectively
+NB. - unm2l{ln,lc,rn,rc} and unmql{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
 unmqlln=: }.  @(((unm2lln`((larfblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ , ~&0)`(i.@$@])@.(0 e. $@])
@@ -346,7 +346,7 @@ NB.   ((unmqrrc -: (mp  ct@(ungqr~ <:@#))~) 0 ?@$~ _1 0 |.@:+ $) QfR
 NB.
 NB. Notes:
 NB. - implement LAPACK's DORMQR, ZUNMQR
-NB. - unm2r{lc,ln,rc,rn} and unmqr{lc,ln,rc,rn} respectively
+NB. - unm2r{ln,lc,rn,rc} and unmqr{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
 unmqrln=: }:  @(((unm2rln`((larfblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,  &0)`(i.@$@])@.(0 e. $@])
@@ -387,7 +387,7 @@ NB.   ((unmrqrc -: (mp  ct@(ungrq~ <:@c))~) 0 ?@$~ 0 _1     + $) RQf
 NB.
 NB. Notes:
 NB. - implement LAPACK's DORMRQ, ZUNMRQ
-NB. - unmr2{lc,ln,rc,rn} and unmrq{lc,ln,rc,rn} respectively
+NB. - unmr2{ln,lc,rn,rc} and unmrq{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
 unmrqln=: }.  @(((unmr2ln`((larfblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ , ~&0)`(i.@$@])@.(0 e. $@])
@@ -427,7 +427,7 @@ NB.   ((unmlzrn -: (mp     (unglz~ <:@c))~) 0 ?@$~ 0 _1     + $) LZf
 NB.   ((unmlzrc -: (mp  ct@(unglz~ <:@c))~) 0 ?@$~ 0 _1     + $) LZf
 NB.
 NB. Notes:
-NB. - unml3{lc,ln,rc,rn} and unmlz{lc,ln,rc,rn} respectively
+NB. - unml3{ln,lc,rn,rc} and unmlz{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
 unmlzln=: }.  @(((unml3ln`((larzblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ , ~&0)`(i.@$@])@.(0 e. $@])
@@ -467,7 +467,7 @@ NB.   ((unmzlrn -: (mp     (ungzl~ <:@#))~) 0 ?@$~ _1 0 |.@:+ $) ZfL
 NB.   ((unmzlrc -: (mp  ct@(ungzl~ <:@#))~) 0 ?@$~ _1 0 |.@:+ $) ZfL
 NB.
 NB. Notes:
-NB. - unm3l{lc,ln,rc,rn} and unmzl{lc,ln,rc,rn} respectively
+NB. - unm3l{ln,lc,rn,rc} and unmzl{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
 unmzlln=: }:  @(((unm3lln`((larzblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,  &0)`(i.@$@])@.(0 e. $@])
@@ -507,7 +507,7 @@ NB.   ((unmzrrn -: (mp     (ungzr~ <:@#))~) 0 ?@$~ _1 0 |.@:+ $) ZfR
 NB.   ((unmzrrc -: (mp  ct@(ungzr~ <:@#))~) 0 ?@$~ _1 0 |.@:+ $) ZfR
 NB.
 NB. Notes:
-NB. - unm3r{lc,ln,rc,rn} and unmzr{lc,ln,rc,rn} respectively
+NB. - unm3r{ln,lc,rn,rc} and unmzr{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
 unmzrln=: }.  @(((unm3rln`((larzblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ , ~&0)`(i.@$@])@.(0 e. $@])
@@ -548,7 +548,7 @@ NB.   ((unmrzrc -: (mp  ct@(ungrz~ <:@c))~) 0 ?@$~ 0 _1     + $) RZf
 NB.
 NB. Notes:
 NB. - implement LAPACK's xORMRZ, xUNMRZ
-NB. - unmr3{lc,ln,rc,rn} and unmrz{lc,ln,rc,rn} respectively
+NB. - unmr3{ln,lc,rn,rc} and unmrz{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 
 unmrzln=: }:  @(((unmr3ln`((larzblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,  &0)`(i.@$@])@.(0 e. $@])

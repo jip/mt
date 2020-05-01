@@ -167,7 +167,7 @@ NB.           as:
 NB.             vector=. iovector getv matrix
 NB.   getv1 - dyad to extract vector (either column or row)
 NB.           from matrix, of direction opposite to getv0, is
-NB.           either ({) or ({"1), is called as:
+NB.           either ({"1) or ({), is called as:
 NB.             vector=. iovector getv matrix
 NB.   vapp  - dyad to traverse both directions, is called as:
 NB.             'p hs'=. A vapp (nz0 ,: nz1)
@@ -341,7 +341,8 @@ NB.   p       - n-vector, some not changing parameter, the
 NB.             output of gebalxp
 NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
 NB.             defines submatrix A11 position in A, the
-NB.             output of gebalxp
+NB.             output of gebalxp, s=∞ is allowed and means
+NB.             'all elements from h-th to the last one'
 NB.   S       - the input for TB01ID, any of:
 NB.               n×n-matrix:          A
 NB.               n×(n+m)-matrix:      A ,. B

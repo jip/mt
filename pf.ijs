@@ -2218,16 +2218,16 @@ NB. where
 NB.   A - m×n-matrix
 NB.
 NB. Formula:
-NB. - for LP: berr := max( ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB. - for PL: berr := max( ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for PR: berr := max( ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for RP: berr := max( ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - for LP: berr := max(||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n))
+NB. - for PL: berr := max(||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m))
+NB. - for PR: berr := max(||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m))
+NB. - for RP: berr := max(||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n))
 NB.
 NB. TODO:
-NB. - for LP: berr := max( ||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB. - for PL: berr := max( ||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for PR: berr := max( ||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for RP: berr := max( ||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - for LP: berr := max(||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n))
+NB. - for PL: berr := max(||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m))
+NB. - for PR: berr := max(||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m))
+NB. - for RP: berr := max(||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n))
 
 testgepf=: 3 : 0
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only

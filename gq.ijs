@@ -276,7 +276,7 @@ NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   ≤ n, optional, default is min(m,n)
+NB.   k   ≤ n, optional, default is m
 NB.   m   ≤ n
 NB.
 NB. Storage layout:
@@ -315,7 +315,7 @@ NB.         elementary reflectors of order m:
 NB.           Z = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   ≤ m, optional, default is min(m,n)
+NB.   k   ≤ m, optional, default is n
 NB.   n   ≤ m
 NB.
 NB. Storage layout:
@@ -359,7 +359,7 @@ NB.         elementary reflectors of order m:
 NB.           Z = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   k   ≤ m, optional, default is min(m,n)
+NB.   k   ≤ m, optional, default is n
 NB.   n   ≤ m
 NB.
 NB. Storage layout:
@@ -403,7 +403,7 @@ NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.   k   ≤ n, optional, default is min(m,n)
+NB.   k   ≤ n, optional, default is m
 NB.   m   ≤ n
 NB.
 NB. Storage layout:
@@ -422,6 +422,11 @@ NB.   NB. R * Z = R * (Z)
 NB.   (((mp  ungrz)~ -: [ unmrzrn ({."1~ (1 -~ c))~) ({."1~   #)) RZf
 NB.   NB. I = Z * Z^H
 NB.   (idmat@# -: clean@(mp  ct))@ungrz RZf
+NB.
+NB. TODO:
+NB. - find a way to express ungrz via unglq since:
+NB.     Z -: |: (unglq~ <:@c) Zf
+NB.   identity holds for non-complex input
 
 ungrz=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(<;.2~      0 1:`((GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`((0 1 $ 0)"_)@.(0 = ]))`($~)} #@])@] , <@ idmat      @(,  c)) ((  (<. #) ,  - /@$@]) {. ]) ,.~ (( 0        idmat <. ,  ]) #))`((0  idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 

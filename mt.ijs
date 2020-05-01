@@ -105,7 +105,7 @@ NB. ---------------------------------------------------------
 NB. System definitions
 
 require 'math/misc/mathutil'   NB. mp_mt_
-require 'general/misc/format'  NB. clipfmt clipunfmt
+require 'general/misc/format'  NB. clipfmt_z_
 
 NB. ---------------------------------------------------------
 NB. Addon definitions

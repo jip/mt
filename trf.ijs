@@ -1724,8 +1724,8 @@ NB.     berr := ||P * U1 * T * U1^H * P^H - A|| / (FP_EPS * ||A|| * n)
 testhetrf=: 3 : 0
   rcond=. hecon1 y
 
-  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. fp^:_1~ 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. fp^:_1~ 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. fp^:_1~ 0&{::)) % (FP_EPS * 1:^:(0&=)@norm1 * c)@[))) y
+  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. fp^:_1~ 0&{::)) % (FP_EPS * 1:^:(0&=)@norm1 * #)@[))) y
 
   EMPTY
 )
@@ -1815,8 +1815,8 @@ NB. - A should be sparse
 testpttrf=: 3 : 0
   rcond=. ptcon1 y
 
-  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * 1:^:(0&=)@norm1 * c)@[))) y
+  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * 1:^:(0&=)@norm1 * #)@[))) y
 
   EMPTY
 )

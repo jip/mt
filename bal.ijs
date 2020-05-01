@@ -891,7 +891,7 @@ testgebal=: 3 : 0
   vp_mttmp_=.     (1&{:: , 2&{::) makeper_jlapack2_ 3&{::
   vd_mttmp_=.     (#\@i.@#@(3&{::) ((>: {.) *. (<: {:)) 1&{:: , 2&{::)`(1 ,: 3&{::)}
   vscale_mttmp_=. 0&{:: (%"1 * ]) 3&{::
-  vdenom_mttmp_=. (FP_EPS * (1:`]@.*)@norm1_mt_ * #)@[
+  vdenom_mttmp_=. (FP_EPS * 1:^:(0&=)@norm1_mt_ * #)@[
 
   ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- vp_mttmp_ (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
   ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(-                    0&{:: (%"1 * ])     3&{::) % vdenom_mttmp_))) y
@@ -957,7 +957,7 @@ testggbal=: 3 : 0
   vperm_mttmp_=.    (C.^:_1"2~ {.) (C.^:_1"1~ {:) ]
   vscale_mttmp_=.   (%"2 {.) (%"1 {:) ]
   vscale03_mttmp_=. 0&{:: vscale_mttmp_ 3&{::
-  vdenom_mttmp_=.   (FP_EPS * (1:`]@.*)@norm1_mt_"2 * c_mt_)@[
+  vdenom_mttmp_=.   (FP_EPS * 1:^:(0&=)@norm1_mt_"2 * c_mt_)@[
 
   ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
   ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{:: vscale_mttmp_ 2&{::                            ) >./@:% vdenom_mttmp_))) y

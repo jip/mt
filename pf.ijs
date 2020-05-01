@@ -2232,10 +2232,10 @@ NB. - for RP: berr := max(||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n))
 testgepf=: 3 : 0
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~   c)~)     2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
-  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~ -@#) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
-  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~   #) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
-  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~ -@c)~)     2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
+  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~   c)~)     2&{:: ) % (FP_EPS * 1:^:(0&=)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
+  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~ -@#) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * 1:^:(0&=)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
+  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~   #) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * 1:^:(0&=)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
+  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~ -@c)~)     2&{:: ) % (FP_EPS * 1:^:(0&=)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
 
   EMPTY
 )

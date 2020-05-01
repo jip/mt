@@ -65,7 +65,7 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-mqvberr=: 2 : 'norm1_mt_@(- u&>/@}.)~ % (FP_EPS_mt_ * (1:`]@.*)@norm1_mt_ * v)@(1 {:: [)'  NB. conj. to form verb to calc. berr
+mqvberr=: 2 : 'norm1_mt_@(- u&>/@}.)~ % (FP_EPS_mt_ * 1:^:(0&=)@norm1_mt_ * v)@(1 {:: [)'  NB. conj. to form verb to calc. berr
 
 NB. ---------------------------------------------------------
 NB. Blocked code constants

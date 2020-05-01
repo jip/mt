@@ -364,10 +364,10 @@ testhesv=: 3 : 0
   'A X'=. y
   'rcondA rcondAt'=. (hecon1 , hecon1@|:) A
 
-  ('hesvax'  tdyad ((    0&{:: )`(mp &>/)`]`(rcondA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
-  ('hesvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(rcondAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
-  ('hesvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(rcondA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) y
-  ('hesvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(rcondAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
+  ('hesvax'  tdyad ((    0&{:: )`(mp &>/)`]`(rcondA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) y
+  ('hesvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(rcondAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
+  ('hesvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(rcondA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) y
+  ('hesvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(rcondAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
 
   EMPTY
 )
@@ -393,10 +393,10 @@ testposv=: 3 : 0
   'A X'=. y
   'rcondA rcondAt'=. (pocon1 , pocon1@|:) A
 
-  ('posvax'  tdyad ((    0&{:: )`(mp &>/)`]`(rcondA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
-  ('posvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(rcondAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
-  ('posvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(rcondA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) y
-  ('posvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(rcondAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
+  ('posvax'  tdyad ((    0&{:: )`(mp &>/)`]`(rcondA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) y
+  ('posvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(rcondAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
+  ('posvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(rcondA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) y
+  ('posvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(rcondAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
 
   EMPTY
 )
@@ -423,10 +423,10 @@ testptsv=: 3 : 0
   'A X'=. y
   'rcondA rcondAt'=. (ptcon1 , ptcon1@|:) A
 
-  ('ptsvax'  tdyad ((    0&{:: )`(mp &>/)`]`(rcondA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) y
-  ('ptsvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(rcondAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
-  ('ptsvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(rcondA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) y
-  ('ptsvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(rcondAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * (1:`]@.*)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
+  ('ptsvax'  tdyad ((    0&{:: )`(mp &>/)`]`(rcondA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) y
+  ('ptsvatx' tdyad ((|:@(0&{::))`(mp &>/)`]`(rcondAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@[ - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X
+  ('ptsvxa'  tdyad ((    0&{:: )`(mp~&>/)`]`(rcondA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) y
+  ('ptsvxat' tdyad ((|:@(0&{::))`(mp~&>/)`]`(rcondAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@[ - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X
 
   EMPTY
 )

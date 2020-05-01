@@ -424,7 +424,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
     i=. <: h
     while. bt > i=. >: i do.
       rc=. i ({ ; {"1) S
-      'r c'=. 0&(riso norm1t;.0 i}) L: 0 rc
+      'r c'=. norms L: 0 rc
       if. x do.
         NB. act as TB01ID
         if. r *.&(0&=) c do.
@@ -448,7 +448,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
           continue.
         end.
       end.
-      'ra ca'=. >./ L: 0 rc
+      'ra ca'=. (|@{~ liofmax) L: 0 rc
       sum=. r + c
       g=. r % GEBALSCLFAC
       fup=. gebalsf c , 1 , g , (1 >. c >. ca) , ra <. g

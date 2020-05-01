@@ -184,6 +184,7 @@ math/mt - change history
 == 0.11.0 ==
  Drop J8 support
  Replace lapack by lapack2 in addon tests
+ Algorithms implemented synced with LAPACK 3.9.0
  * bal:    gxbalxp fixed for case n=0
  * ev:     ggevxxx fixed for case n=0
  * gq:     ungxx fixed for case n=0

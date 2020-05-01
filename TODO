@@ -4,7 +4,7 @@
 2. (gges,tgsyl) -> [1]
 
 3. hrd.ijs: gghrdxxx: implement blocked generalized
-   Hessenberg reduction [2]
+   Hessenberg reduction xGGHD3 [2]
 
 4. factorize gqvberr in eq,hrd,pf,qf,tri
 
@@ -22,6 +22,7 @@
 9. Algebraic Riccati equation solvers:
    [generalized] {continuous,discrete}-time
 
+10. replace pf (RRQR) by qp (xGEQP3) [4]
 
 [1] Gerdin, Markus. Computation of a canonical form for
     linear differential-algebraic equations. Department of
@@ -38,3 +39,7 @@
     Squaring Algorithm for the Matrix Exponential. SIAM J.
     Matrix Analysis Applications, Vol. 31, No. 3, pp.
     970-989, 2009.
+
+[4] Rank Revealing QR factorization (RRQR)
+    LAPACK/ScaLAPACK Development forum. 2012-02-06.
+    http://icl.cs.utk.edu/lapack-forum/viewtopic.php?f=5&t=2469#p8162

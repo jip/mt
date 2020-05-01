@@ -46,31 +46,31 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:           Syntax:
-NB. trsmllcn       L^H  * X = B      Xv=. A trsmllcn Bv
-NB. trsmllcu       L1^H * X = B      Xv=. A trsmllcu Bv
-NB. trsmllnn       L    * X = B      Xv=. A trsmllnn Bv
-NB. trsmllnu       L1   * X = B      Xv=. A trsmllnu Bv
-NB. trsmlltn       L^T  * X = B      Xv=. A trsmlltn Bv
-NB. trsmlltu       L1^T * X = B      Xv=. A trsmlltu Bv
-NB. trsmlucn       U^H  * X = B      Xv=. A trsmlucn Bv
-NB. trsmlucu       U1^H * X = B      Xv=. A trsmlucu Bv
-NB. trsmlunn       U    * X = B      Xv=. A trsmlunn Bv
-NB. trsmlunu       U1   * X = B      Xv=. A trsmlunu Bv
-NB. trsmlutn       U^T  * X = B      Xv=. A trsmlutn Bv
-NB. trsmlutu       U1^T * X = B      Xv=. A trsmlutu Bv
-NB. trsmrlcn       X * L^H  = B      Xh=. A trsmrlcn Bh
-NB. trsmrlcu       X * L1^H = B      Xh=. A trsmrlcu Bh
-NB. trsmrlnn       X * L    = B      Xh=. A trsmrlnn Bh
-NB. trsmrlnu       X * L1   = B      Xh=. A trsmrlnu Bh
-NB. trsmrltn       X * L^T  = B      Xh=. A trsmrltn Bh
-NB. trsmrltu       X * L1^T = B      Xh=. A trsmrltu Bh
-NB. trsmrucn       X * U^H  = B      Xh=. A trsmrucn Bh
-NB. trsmrucu       X * U1^H = B      Xh=. A trsmrucu Bh
-NB. trsmrunn       X * U    = B      Xh=. A trsmrunn Bh
-NB. trsmrunu       X * U1   = B      Xh=. A trsmrunu Bh
-NB. trsmrutn       X * U^T  = B      Xh=. A trsmrutn Bh
-NB. trsmrutu       X * U1^T = B      Xh=. A trsmrutu Bh
+NB. Verb:       Solves:         Syntax:
+NB. trsmllcn    L^H  * X = B    Xv=. A trsmllcn Bv
+NB. trsmllcu    L1^H * X = B    Xv=. A trsmllcu Bv
+NB. trsmllnn    L    * X = B    Xv=. A trsmllnn Bv
+NB. trsmllnu    L1   * X = B    Xv=. A trsmllnu Bv
+NB. trsmlltn    L^T  * X = B    Xv=. A trsmlltn Bv
+NB. trsmlltu    L1^T * X = B    Xv=. A trsmlltu Bv
+NB. trsmlucn    U^H  * X = B    Xv=. A trsmlucn Bv
+NB. trsmlucu    U1^H * X = B    Xv=. A trsmlucu Bv
+NB. trsmlunn    U    * X = B    Xv=. A trsmlunn Bv
+NB. trsmlunu    U1   * X = B    Xv=. A trsmlunu Bv
+NB. trsmlutn    U^T  * X = B    Xv=. A trsmlutn Bv
+NB. trsmlutu    U1^T * X = B    Xv=. A trsmlutu Bv
+NB. trsmrlcn    X * L^H  = B    Xh=. A trsmrlcn Bh
+NB. trsmrlcu    X * L1^H = B    Xh=. A trsmrlcu Bh
+NB. trsmrlnn    X * L    = B    Xh=. A trsmrlnn Bh
+NB. trsmrlnu    X * L1   = B    Xh=. A trsmrlnu Bh
+NB. trsmrltn    X * L^T  = B    Xh=. A trsmrltn Bh
+NB. trsmrltu    X * L1^T = B    Xh=. A trsmrltu Bh
+NB. trsmrucn    X * U^H  = B    Xh=. A trsmrucn Bh
+NB. trsmrucu    X * U1^H = B    Xh=. A trsmrucu Bh
+NB. trsmrunn    X * U    = B    Xh=. A trsmrunn Bh
+NB. trsmrunu    X * U1   = B    Xh=. A trsmrunu Bh
+NB. trsmrutn    X * U^T  = B    Xh=. A trsmrutn Bh
+NB. trsmrutu    X * U1^T = B    Xh=. A trsmrutu Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with triangular matrix

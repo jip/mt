@@ -73,23 +73,23 @@ NB. Blocked code constants
 MQNB=: 32   NB. block size limit
 
 NB. ---------------------------------------------------------
-NB. Verb     Action   Side   Tran  Syntax
-NB. unml2ln  Q   * C  left   none  eCprod=. Qf unml2ln (C, 0)
-NB. unml2lc  Q^H * C  left   ct    eCprod=. Qf unml2lc (C, 0)
-NB. unml2rn  C * Q    right  none  eCprod=. Qf unml2rn (C,.0)
-NB. unml2rc  C * Q^H  right  ct    eCprod=. Qf unml2rc (C,.0)
-NB. unm2lln  Q   * C  left   none  eCprod=. Qf unm2lln (0, C)
-NB. unm2llc  Q^H * C  left   ct    eCprod=. Qf unm2llc (0, C)
-NB. unm2lrn  C * Q    right  none  eCprod=. Qf unm2lrn (0,.C)
-NB. unm2lrc  C * Q^H  right  ct    eCprod=. Qf unm2lrc (0,.C)
-NB. unm2rln  Q   * C  left   none  eCprod=. Qf unm2rln (C, 0)
-NB. unm2rlc  Q^H * C  left   ct    eCprod=. Qf unm2rlc (C, 0)
-NB. unm2rrn  C * Q    right  none  eCprod=. Qf unm2rrn (C,.0)
-NB. unm2rrc  C * Q^H  right  ct    eCprod=. Qf unm2rrc (C,.0)
-NB. unmr2ln  Q   * C  left   none  eCprod=. Qf unmr2ln (0, C)
-NB. unmr2lc  Q^H * C  left   ct    eCprod=. Qf unmr2lc (0, C)
-NB. unmr2rn  C * Q    right  none  eCprod=. Qf unmr2rn (0,.C)
-NB. unmr2rc  C * Q^H  right  ct    eCprod=. Qf unmr2rc (0,.C)
+NB. Verb       Action     Side     Tran    Syntax
+NB. unml2ln    Q   * C    left     none    eCprod=. Qf unml2ln (C, 0)
+NB. unml2lc    Q^H * C    left     ct      eCprod=. Qf unml2lc (C, 0)
+NB. unml2rn    C * Q      right    none    eCprod=. Qf unml2rn (C,.0)
+NB. unml2rc    C * Q^H    right    ct      eCprod=. Qf unml2rc (C,.0)
+NB. unm2lln    Q   * C    left     none    eCprod=. Qf unm2lln (0, C)
+NB. unm2llc    Q^H * C    left     ct      eCprod=. Qf unm2llc (0, C)
+NB. unm2lrn    C * Q      right    none    eCprod=. Qf unm2lrn (0,.C)
+NB. unm2lrc    C * Q^H    right    ct      eCprod=. Qf unm2lrc (0,.C)
+NB. unm2rln    Q   * C    left     none    eCprod=. Qf unm2rln (C, 0)
+NB. unm2rlc    Q^H * C    left     ct      eCprod=. Qf unm2rlc (C, 0)
+NB. unm2rrn    C * Q      right    none    eCprod=. Qf unm2rrn (C,.0)
+NB. unm2rrc    C * Q^H    right    ct      eCprod=. Qf unm2rrc (C,.0)
+NB. unmr2ln    Q   * C    left     none    eCprod=. Qf unmr2ln (0, C)
+NB. unmr2lc    Q^H * C    left     ct      eCprod=. Qf unmr2lc (0, C)
+NB. unmr2rn    C * Q      right    none    eCprod=. Qf unmr2rn (0,.C)
+NB. unmr2rc    C * Q^H    right    ct      eCprod=. Qf unmr2rc (0,.C)
 NB.
 NB. Description:
 NB.   Multiply a general matrix C, augmented by trash vector,
@@ -154,23 +154,23 @@ unmr2rn=: ((larfrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
 unmr2rc=: ((larfrnbr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
 
 NB. ---------------------------------------------------------
-NB. Verb     Action   Side   Tran  Syntax
-NB. unml3ln  Z   * C  left   none  eCprod=. Zf unml3ln (0, C)
-NB. unml3lc  Z^H * C  left   ct    eCprod=. Zf unml3lc (0, C)
-NB. unml3rn  C * Z    right  none  eCprod=. Zf unml3rn (0,.C)
-NB. unml3rc  C * Z^H  right  ct    eCprod=. Zf unml3rc (0,.C)
-NB. unm3lln  Z   * C  left   none  eCprod=. Zf unm3lln (C, 0)
-NB. unm3llc  Z^H * C  left   ct    eCprod=. Zf unm3llc (C, 0)
-NB. unm3lrn  C * Z    right  none  eCprod=. Zf unm3lrn (C,.0)
-NB. unm3lrc  C * Z^H  right  ct    eCprod=. Zf unm3lrc (C,.0)
-NB. unm3rln  Z   * C  left   none  eCprod=. Zf unm3rln (0, C)
-NB. unm3rlc  Z^H * C  left   ct    eCprod=. Zf unm3rlc (0, C)
-NB. unm3rrn  C * Z    right  none  eCprod=. Zf unm3rrn (0,.C)
-NB. unm3rrc  C * Z^H  right  ct    eCprod=. Zf unm3rrc (0,.C)
-NB. unmr3ln  Z   * C  left   none  eCprod=. Zf unmr3ln (C, 0)
-NB. unmr3lc  Z^H * C  left   ct    eCprod=. Zf unmr3lc (C, 0)
-NB. unmr3rn  C * Z    right  none  eCprod=. Zf unmr3rn (C,.0)
-NB. unmr3rc  C * Z^H  right  ct    eCprod=. Zf unmr3rc (C,.0)
+NB. Verb       Action     Side     Tran    Syntax
+NB. unml3ln    Z   * C    left     none    eCprod=. Zf unml3ln (0, C)
+NB. unml3lc    Z^H * C    left     ct      eCprod=. Zf unml3lc (0, C)
+NB. unml3rn    C * Z      right    none    eCprod=. Zf unml3rn (0,.C)
+NB. unml3rc    C * Z^H    right    ct      eCprod=. Zf unml3rc (0,.C)
+NB. unm3lln    Z   * C    left     none    eCprod=. Zf unm3lln (C, 0)
+NB. unm3llc    Z^H * C    left     ct      eCprod=. Zf unm3llc (C, 0)
+NB. unm3lrn    C * Z      right    none    eCprod=. Zf unm3lrn (C,.0)
+NB. unm3lrc    C * Z^H    right    ct      eCprod=. Zf unm3lrc (C,.0)
+NB. unm3rln    Z   * C    left     none    eCprod=. Zf unm3rln (0, C)
+NB. unm3rlc    Z^H * C    left     ct      eCprod=. Zf unm3rlc (0, C)
+NB. unm3rrn    C * Z      right    none    eCprod=. Zf unm3rrn (0,.C)
+NB. unm3rrc    C * Z^H    right    ct      eCprod=. Zf unm3rrc (0,.C)
+NB. unmr3ln    Z   * C    left     none    eCprod=. Zf unmr3ln (C, 0)
+NB. unmr3lc    Z^H * C    left     ct      eCprod=. Zf unmr3lc (C, 0)
+NB. unmr3rn    C * Z      right    none    eCprod=. Zf unmr3rn (C,.0)
+NB. unmr3rc    C * Z^H    right    ct      eCprod=. Zf unmr3rc (C,.0)
 NB.
 NB. Description:
 NB.   Multiply a general matrix C, augmented by trash vector,
@@ -235,11 +235,11 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmlqln   Q   * C  left   none  B=. LQf unmlqln C
-NB. unmlqlc   Q^H * C  left   ct    B=. LQf unmlqlc C
-NB. unmlqrn   C * Q    right  none  B=. LQf unmlqrn C
-NB. unmlqrc   C * Q^H  right  ct    B=. LQf unmlqrc C
+NB. Verb       Action     Side     Tran    Syntax
+NB. unmlqln    Q   * C    left     none    B=. LQf unmlqln C
+NB. unmlqlc    Q^H * C    left     ct      B=. LQf unmlqlc C
+NB. unmlqrn    C * Q      right    none    B=. LQf unmlqrn C
+NB. unmlqrc    C * Q^H    right    ct      B=. LQf unmlqrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -275,11 +275,11 @@ unmlqrn=: }:"1@(((unml2rn`((larfbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))
 unmlqrc=: }:"1@(((unml2rc`((larfbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmqlln   Q   * C  left   none  B=. QfL unmqlln C
-NB. unmqllc   Q^H * C  left   ct    B=. QfL unmqllc C
-NB. unmqlrn   C * Q    right  none  B=. QfL unmqlrn C
-NB. unmqlrc   C * Q^H  right  ct    B=. QfL unmqlrc C
+NB. Verb       Action     Side     Tran    Syntax
+NB. unmqlln    Q   * C    left     none    B=. QfL unmqlln C
+NB. unmqllc    Q^H * C    left     ct      B=. QfL unmqllc C
+NB. unmqlrn    C * Q      right    none    B=. QfL unmqlrn C
+NB. unmqlrc    C * Q^H    right    ct      B=. QfL unmqlrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -315,11 +315,11 @@ unmqlrn=: }."1@(((unm2lrn`((larfbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))
 unmqlrc=: }."1@(((unm2lrc`((larfbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmqrln   Q   * C  left   none  B=. QfR unmqrln C
-NB. unmqrlc   Q^H * C  left   ct    B=. QfR unmqrlc C
-NB. unmqrrn   C * Q    right  none  B=. QfR unmqrrn C
-NB. unmqrrc   C * Q^H  right  ct    B=. QfR unmqrrc C
+NB. Verb       Action     Side     Tran    Syntax
+NB. unmqrln    Q   * C    left     none    B=. QfR unmqrln C
+NB. unmqrlc    Q^H * C    left     ct      B=. QfR unmqrlc C
+NB. unmqrrn    C * Q      right    none    B=. QfR unmqrrn C
+NB. unmqrrc    C * Q^H    right    ct      B=. QfR unmqrrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -355,11 +355,11 @@ unmqrrn=: }:"1@(((unm2rrn`((larfbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))
 unmqrrc=: }:"1@(((unm2rrc`((larfbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmrqln   Q   * C  left   none  B=. RQf unmrqln C
-NB. unmrqlc   Q^H * C  left   ct    B=. RQf unmrqlc C
-NB. unmrqrn   C * Q    right  none  B=. RQf unmrqrn C
-NB. unmrqrc   C * Q^H  right  ct    B=. RQf unmrqrc C
+NB. Verb       Action     Side     Tran    Syntax
+NB. unmrqln    Q   * C    left     none    B=. RQf unmrqln C
+NB. unmrqlc    Q^H * C    left     ct      B=. RQf unmrqlc C
+NB. unmrqrn    C * Q      right    none    B=. RQf unmrqrn C
+NB. unmrqrc    C * Q^H    right    ct      B=. RQf unmrqrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
@@ -396,11 +396,11 @@ unmrqrn=: }."1@(((unmr2rn`((larfbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))
 unmrqrc=: }."1@(((unmr2rc`((larfbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmlzln   Z   * C  left   none  B=. LZf unmlzln C
-NB. unmlzlc   Z^H * C  left   ct    B=. LZf unmlzlc C
-NB. unmlzrn   C * Z    right  none  B=. LZf unmlzrn C
-NB. unmlzrc   C * Z^H  right  ct    B=. LZf unmlzrc C
+NB. Verb       Action     Side     Tran    Syntax
+NB. unmlzln    Z   * C    left     none    B=. LZf unmlzln C
+NB. unmlzlc    Z^H * C    left     ct      B=. LZf unmlzlc C
+NB. unmlzrn    C * Z      right    none    B=. LZf unmlzrn C
+NB. unmlzrc    C * Z^H    right    ct      B=. LZf unmlzrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Z, which is
@@ -436,11 +436,11 @@ unmlzrn=: }."1@(((unml3rn`((larzbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))
 unmlzrc=: }."1@(((unml3rc`((larzbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmzlln   Z   * C  left   none  B=. ZfL unmzlln C
-NB. unmzllc   Z^H * C  left   ct    B=. ZfL unmzllc C
-NB. unmzlrn   C * Z    right  none  B=. ZfL unmzlrn C
-NB. unmzlrc   C * Z^H  right  ct    B=. ZfL unmzlrc C
+NB. Verb       Action     Side     Tran    Syntax
+NB. unmzlln    Z   * C    left     none    B=. ZfL unmzlln C
+NB. unmzllc    Z^H * C    left     ct      B=. ZfL unmzllc C
+NB. unmzlrn    C * Z      right    none    B=. ZfL unmzlrn C
+NB. unmzlrc    C * Z^H    right    ct      B=. ZfL unmzlrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Z, which is
@@ -476,11 +476,11 @@ unmzlrn=: }:"1@(((unm3lrn`((larzbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))
 unmzlrc=: }:"1@(((unm3lrc`((larzbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmzrln   Z   * C  left   none  B=. ZfR unmzrln C
-NB. unmzrlc   Z^H * C  left   ct    B=. ZfR unmzrlc C
-NB. unmzrrn   C * Z    right  none  B=. ZfR unmzrrn C
-NB. unmzrrc   C * Z^H  right  ct    B=. ZfR unmzrrc C
+NB. Verb       Action     Side     Tran    Syntax
+NB. unmzrln    Z   * C    left     none    B=. ZfR unmzrln C
+NB. unmzrlc    Z^H * C    left     ct      B=. ZfR unmzrlc C
+NB. unmzrrn    C * Z      right    none    B=. ZfR unmzrrn C
+NB. unmzrrc    C * Z^H    right    ct      B=. ZfR unmzrrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Z, which is
@@ -516,11 +516,11 @@ unmzrrn=: }."1@(((unm3rrn`((larzbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))
 unmzrrc=: }."1@(((unm3rrc`((larzbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmrzln   Z   * C  left   none  B=. RZf unmrzln C
-NB. unmrzlc   Z^H * C  left   ct    B=. RZf unmrzlc C
-NB. unmrzrn   C * Z    right  none  B=. RZf unmrzrn C
-NB. unmrzrc   C * Z^H  right  ct    B=. RZf unmrzrc C
+NB. Verb       Action     Side     Tran    Syntax
+NB. unmrzln    Z   * C    left     none    B=. RZf unmrzln C
+NB. unmrzlc    Z^H * C    left     ct      B=. RZf unmrzlc C
+NB. unmrzrn    C * Z      right    none    B=. RZf unmrzrn C
+NB. unmrzrc    C * Z^H    right    ct      B=. RZf unmrzrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Z, which is
@@ -557,11 +557,11 @@ unmrzrn=: }:"1@(((unmr3rn`((larzbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))
 unmrzrc=: }:"1@(((unmr3rc`((larzbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmhrlln  Q   * C  left   none  B=. HQf unmhrlln C
-NB. unmhrllc  Q^H * C  left   ct    B=. HQf unmhrllc C
-NB. unmhrlrn  C * Q    right  none  B=. HQf unmhrlrn C
-NB. unmhrlrc  C * Q^H  right  ct    B=. HQf unmhrlrc C
+NB. Verb        Action     Side     Tran    Syntax
+NB. unmhrlln    Q   * C    left     none    B=. HQf unmhrlln C
+NB. unmhrllc    Q^H * C    left     ct      B=. HQf unmhrllc C
+NB. unmhrlrn    C * Q      right    none    B=. HQf unmhrlrn C
+NB. unmhrlrc    C * Q^H    right    ct      B=. HQf unmhrlrc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by unitary (orthogonal)
@@ -605,11 +605,11 @@ unmhrlrn=: (unmlqrn~ |.!.0)~
 unmhrlrc=: (unmlqrc~ |.!.0)~
 
 NB. ---------------------------------------------------------
-NB. Verb      Action   Side   Tran  Syntax
-NB. unmhruln  Q   * C  left   none  B=. HQf unmhruln C
-NB. unmhrulc  Q^H * C  left   ct    B=. HQf unmhrulc C
-NB. unmhrurn  C * Q    right  none  B=. HQf unmhrurn C
-NB. unmhrurc  C * Q^H  right  ct    B=. HQf unmhrurc C
+NB. Verb        Action     Side     Tran    Syntax
+NB. unmhruln    Q   * C    left     none    B=. HQf unmhruln C
+NB. unmhrulc    Q^H * C    left     ct      B=. HQf unmhrulc C
+NB. unmhrurn    C * Q      right    none    B=. HQf unmhrurn C
+NB. unmhrurc    C * Q^H    right    ct      B=. HQf unmhrurc C
 NB.
 NB. Description:
 NB.   Multiply a general matrix C by unitary (orthogonal)

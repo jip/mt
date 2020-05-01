@@ -65,13 +65,13 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:         Syntax:
-NB. gesvax         A   * X = B     Xv=. A gesvax  Bv
-NB. gesvacx        A^H * X = B     Xv=. A gesvacx Bv
-NB. gesvatx        A^T * X = B     Xv=. A gesvatx Bv
-NB. gesvxa         X * A   = B     Xh=. A gesvxa  Bh
-NB. gesvxac        X * A^H = B     Xh=. A gesvxac Bh
-NB. gesvxat        X * A^T = B     Xh=. A gesvxat Bh
+NB. Verb:      Solves:        Syntax:
+NB. gesvax     A   * X = B    Xv=. A gesvax  Bv
+NB. gesvacx    A^H * X = B    Xv=. A gesvacx Bv
+NB. gesvatx    A^T * X = B    Xv=. A gesvatx Bv
+NB. gesvxa     X * A   = B    Xh=. A gesvxa  Bh
+NB. gesvxac    X * A^H = B    Xh=. A gesvxac Bh
+NB. gesvxat    X * A^T = B    Xh=. A gesvxat Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with general matrix A
@@ -99,11 +99,11 @@ gesvxac=: (getrsxpl1uc~ getrfpl1u)~
 gesvxat=: (getrsxpl1ut~ getrfpl1u)~
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:         Syntax:
-NB. hesvax         A   * X = B     Xv=. A hesvax  Bv
-NB. hesvatx        A^T * X = B     Xv=. A hesvatx Bv
-NB. hesvxa         X * A   = B     Xh=. A hesvxa  Bh
-NB. hesvxat        X * A^T = B     Xh=. A hesvxat Bh
+NB. Verb:      Solves:        Syntax:
+NB. hesvax     A   * X = B    Xv=. A hesvax  Bv
+NB. hesvatx    A^T * X = B    Xv=. A hesvatx Bv
+NB. hesvxa     X * A   = B    Xh=. A hesvxa  Bh
+NB. hesvxat    X * A^T = B    Xh=. A hesvxat Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
@@ -129,11 +129,11 @@ hesvxa=:  (hetrsxpl ~ hetrfpl)~
 hesvxat=: (hetrsxplt~ hetrfpl)~
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:         Syntax:
-NB. posvax         A   * X = B     Xv=. A posvax  Bv
-NB. posvatx        A^T * X = B     Xv=. A posvatx Bv
-NB. posvxa         X * A   = B     Xh=. A posvxa  Bh
-NB. posvxat        X * A^T = B     Xh=. A posvxat Bh
+NB. Verb:      Solves:        Syntax:
+NB. posvax     A   * X = B    Xv=. A posvax  Bv
+NB. posvatx    A^T * X = B    Xv=. A posvatx Bv
+NB. posvxa     X * A   = B    Xh=. A posvxa  Bh
+NB. posvxat    X * A^T = B    Xh=. A posvxat Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian
@@ -160,11 +160,11 @@ posvxa=:  (potrsxl ~ potrfl)~
 posvxat=: (potrsxlt~ potrfl)~
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:         Syntax:
-NB. ptsvax         A   * X = B     Xv=. A ptsvax  Bv
-NB. ptsvatx        A^T * X = B     Xv=. A ptsvatx Bv
-NB. ptsvxa         X * A   = B     Xh=. A ptsvxa  Bh
-NB. ptsvxat        X * A^T = B     Xh=. A ptsvxat Bh
+NB. Verb:      Solves:        Syntax:
+NB. ptsvax     A   * X = B    Xv=. A ptsvax  Bv
+NB. ptsvatx    A^T * X = B    Xv=. A ptsvatx Bv
+NB. ptsvxa     X * A   = B    Xh=. A ptsvxa  Bh
+NB. ptsvxat    X * A^T = B    Xh=. A ptsvxat Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with Hermitian

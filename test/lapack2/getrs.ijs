@@ -17,7 +17,7 @@ NB.   L1U   - n×n-matrix, L1 and U combined
 NB.   ipiv  - n-vector, integer, the pivot indices that
 NB.           define P
 NB.   B     - n×nrhs-matrix, RHS
-NB.   X     - n×nrhs-matrix, the solutions of equation:
+NB.   X     - n×nrhs-matrix, solutions of equation:
 NB.             op(A) * X = B
 NB.   A     - n×n-matrix, represented in the factored form by
 NB.           L1U and ipiv

@@ -178,11 +178,11 @@ NB. where:
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, solutions
+NB.   Xh   - same shape as Bh, solutions
 NB.   P    - n×n-matrix, rows permutation of A
-NB.   L1   - n×n-matrix, unit lower triangular
-NB.   U    - n×n-matrix, upper triangular
+NB.   L1   - n×n-matrix, the unit lower triangular
+NB.   U    - n×n-matrix, the upper triangular
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
@@ -251,14 +251,15 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) matrix A via triangular factorization:
 NB.     P * L1 * T * L1^H * P^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric)
+NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
-NB.   P    - n×n-matrix, full permutation of A
-NB.   L1   - n×n-matrix, unit lower triangular
-NB.   T    - n×n-matrix, Hermitian (symmetric) tridiagonal
+NB.   Xv   - same shape as Bv, solutions
+NB.   Xh   - same shape as Bh, solutions
+NB.   P    - n×n-matrix, the full permutation of A
+NB.   L1   - n×n-matrix, the unit lower triangular
+NB.   T    - n×n-matrix, the Hermitian (symmetric)
+NB.          tridiagonal
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
@@ -282,14 +283,14 @@ NB.   (symmetric) positive definite matrix A via Cholesky
 NB.   factorization:
 NB.     L * L^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
-NB.   L    - n×n-matrix, lower triangular with positive
-NB.          diagonal entries, Cholesky triangle
+NB.   Xv   - same shape as Bv, solutions
+NB.   Xh   - same shape as Bh, solutions
+NB.   L    - n×n-matrix, the lower triangular with positive
+NB.          diagonal entries, the Cholesky triangle
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
@@ -313,13 +314,13 @@ NB.   (symmetric) positive definite tridiagonal matrix A via
 NB.   factorization:
 NB.     L1 * D * L1^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
-NB.   L1   - n×n-matrix, unit lower bidiangonal
+NB.   Xv   - same shape as Bv, solutions
+NB.   Xh   - same shape as Bh, solutions
+NB.   L1   - n×n-matrix, the unit lower bidiangonal
 NB.   D    - n×n-matrix, diagonal with positive diagonal
 NB.          entries
 NB.   nrhs ≥ 0
@@ -383,7 +384,7 @@ NB. Syntax:
 NB.   testgesv3 (A ; X)
 NB. where
 NB.   A - n×n-matrix
-NB.   X - n×3-matrix, the exact solutions
+NB.   X - n×3-matrix, exact solutions
 
 testgesv3=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/gesv'
@@ -524,8 +525,8 @@ NB.
 NB. Syntax:
 NB.   testhesv1 (A ; x)
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric)
-NB.   x - n-vector, exact solution
+NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   x - n-vector, the exact solution
 
 testhesv1=: 3 : 0
   'A x'=. y
@@ -556,7 +557,6 @@ NB.   testhesv3 (A ; X)
 NB. where
 NB.   A - n×n-matrix, the Hermitian (symmetric)
 NB.   X - n×3-matrix, exact solutions
->>>>>>> 758964c... test suites improved and extended
 NB.
 NB. Notes:
 NB. - no berrA calc for LAPACK's DSYSV and ZHESV yet since
@@ -624,8 +624,9 @@ NB.
 NB. Syntax:
 NB.   testposv1 (A ; x)
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.   x - n-vector, exact solution
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
+NB.   x - n-vector, the exact solution
 
 testposv1=: 3 : 0
   'A x'=. y
@@ -644,7 +645,6 @@ testposv1=: 3 : 0
 
 NB. ---------------------------------------------------------
 NB. testposv3
->>>>>>> 758964c... test suites improved and extended
 NB.
 NB. Description:
 NB.   Test:
@@ -714,9 +714,9 @@ NB.
 NB. Syntax:
 NB.   testptsv1 (A ; x)
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.       tridiagonal
-NB.   x - n-vector, exact solution
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite tridiagonal
+NB.   x - n-vector, the exact solution
 
 testptsv1=: 3 : 0
   'A x'=. y
@@ -742,7 +742,6 @@ NB.   - xPTSV (math/lapack2 addon)
 NB.   - ptsvxxx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite tridiagonal
 NB.   matrix and multiple RHS
->>>>>>> 758964c... test suites improved and extended
 NB.
 NB. Syntax:
 NB.   testptsv3 (A ; X)

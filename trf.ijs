@@ -65,15 +65,16 @@ NB. Syntax:
 NB.   'ipo B lto t0o t1o'=. lahefpl ipi;subA;lti;t0i;t1i
 NB. where
 NB.   ipi       -:i. (n-i)
-NB.   subA      - (n-i)×(n-i)-matrix to factorize, Hermitian
-NB.               (symmetric), the bottom right part of A
+NB.   subA      - (n-i)×(n-i)-matrix to factorize, the
+NB.               Hermitian (symmetric), the bottom right
+NB.               part of A
 NB.   lti       - (n-i)-vector, is defined as:
 NB.                 lti=. ti 0} li
 NB.   t0i       - i-vector, float, leading elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i,n-1))-vector, leading elements
 NB.               of subdiagonal of T
-NB.   ipo       - (n-i)-vector of integers, inversed full
+NB.   ipo       - (n-i)-vector of integers, the inversed full
 NB.               permutation, corresponding to subP
 NB.   B         - (n-i)×(n-i)-matrix, contains subL110,
 NB.               subH10^H, strict lower triangle of subL100,
@@ -89,31 +90,34 @@ NB.   li        - (n-i)-vector, the 1st scaled column of
 NB.               subL1, having 1 in the 1st element
 NB.   ti        - scalar, the max from li before it was
 NB.               scaled, can be any value when i=0
-NB.   subL100   - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, unit
-NB.               lower triangular, top left part of subL1
+NB.   subL100   - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, the
+NB.               unit lower triangular, top left part of
+NB.               subL1
 NB.   subL110   - max(0,n-i-TRFNB)×min(TRFNB,n-i)-matrix,
-NB.               bottom left part of subL1
-NB.   subH00    - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, lower
-NB.               Hessenberg, top left part of subH
+NB.               the bottom left part of subL1
+NB.   subH00    - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, the
+NB.               lower Hessenberg, top left part of subH
 NB.   subH10    - max(0,n-i-TRFNB)×min(TRFNB,n-i)-matrix,
-NB.               bottom left part of subH
+NB.               the bottom left part of subH
 NB.   subA11upd - max(0,n-i-TRFNB)×max(0,n-i-TRFNB), not yet
 NB.               factored bottom right part of subA
-NB.   subP      - (n-i)×(n-i)-matrix, boolean, full
+NB.   subP      - (n-i)×(n-i)-matrix, boolean, the full
 NB.               permutation of subA
-NB.   subL1     - (n-i)×(n-i)-matrix, unit lower triangular,
-NB.               being columns i:min(i+TRFNB,n) of L1
-NB.   subH      - (n-i)×(n-i)-matrix, lower Hessenberg, is
-NB.               defined as:
+NB.   subL1     - (n-i)×(n-i)-matrix, the unit lower
+NB.               triangular, being columns i:min(i+TRFNB,n)
+NB.               of L1
+NB.   subH      - (n-i)×(n-i)-matrix, the lower Hessenberg,
+NB.               which is defined as:
 NB.                 subH=. subL1 mp subT
-NB.   subT      - (n-i)×(n-i)-matrix, Hermitian (symmetric)
-NB.               tridiagonal, being bottom right part of T
+NB.   subT      - (n-i)×(n-i)-matrix, the Hermitian
+NB.               (symmetric) tridiagonal, being bottom right
+NB.               part of T
 NB.   i         - integer from set:
 NB.                 {(0:⌈n/TRFNB⌉)*TRFNB} ,
 NB.               lIO subA's 1st row and column within A
-NB.   A         - n×n-matrix, Hermitian (symmetric)
-NB.   L1        - n×n-matrix, unit lower triangular
-NB.   T         - n×n-matrix, Hermitian (symmetric)
+NB.   A         - n×n-matrix, the Hermitian (symmetric)
+NB.   L1        - n×n-matrix, the unit lower triangular
+NB.   T         - n×n-matrix, the Hermitian (symmetric)
 NB.               tridiagonal
 NB.
 NB. Storage layout 1 (assume TRFNB<n):
@@ -317,8 +321,8 @@ NB.   t0i       - (i+1)-vector, float, tail elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i+1,n-1))-vector, tail elements
 NB.               of superdiagonal of T
-NB.   ipo       - (n+i+1)-vector of integers, inversed full
-NB.               permutation, corresponding to subP
+NB.   ipo       - (n+i+1)-vector of integers, the inversed
+NB.               full permutation, corresponding to subP
 NB.   B         - (n+i+1)×(n+i+1)-matrix, contains subU101,
 NB.               subH01^H, strict upper triangle of subU111,
 NB.               strict lower triangle of subH11^H, and
@@ -334,32 +338,33 @@ NB.               subU1, having 1 in the last element
 NB.   ti        - scalar, the max from ui before it was
 NB.               scaled, can be any value when i=_1
 NB.   subU111   - min(TRFNB,n+i+1)×min(TRFNB,n+i+1)-matrix,
-NB.               unit upper triangular, bottom right part of
-NB.               subU1
+NB.               the unit upper triangular, bottom right
+NB.               part of subU1
 NB.   subU101   - max(0,n+i+1-TRFNB)×min(TRFNB,n+i+1)-matrix,
-NB.               top right part of subU1
+NB.               the top right part of subU1
 NB.   subH11    - min(TRFNB,n+i+1)×min(TRFNB,n+i+1)-matrix,
-NB.               upper Hessenberg, bottom right part of subH
+NB.               the upper Hessenberg, bottom right part of
+NB.               subH
 NB.   subH01    - max(0,n+i+1-TRFNB)×min(TRFNB,n+i+1)-matrix,
-NB.               top right part of subH
+NB.               the top right part of subH
 NB.   subA00upd - max(0,n+i+1-TRFNB)×max(0,n+i+1-TRFNB), not
 NB.               yet factored top left part of subA
-NB.   subP      - (n+i+1)×(n+i+1)-matrix, boolean, full
+NB.   subP      - (n+i+1)×(n+i+1)-matrix, boolean, the full
 NB.               permutation of subA
-NB.   subU1     - (n+i+1)×(n+i+1)-matrix, unit upper
+NB.   subU1     - (n+i+1)×(n+i+1)-matrix, the unit upper
 NB.               triangular, being columns 0:n+i of U1
-NB.   subH      - (n+i+1)×(n+i+1)-matrix, upper Hessenberg,
-NB.               is defined as:
+NB.   subH      - (n+i+1)×(n+i+1)-matrix, the upper
+NB.               Hessenberg, is defined as:
 NB.                 subH=. subU1 mp subT
-NB.   subT      - (n+i+1)×(n+i+1)-matrix, Hermitian
+NB.   subT      - (n+i+1)×(n+i+1)-matrix, the Hermitian
 NB.               (symmetric) tridiagonal, being top left
 NB.               part of T
 NB.   i         - integer from set:
 NB.                 {_1-(0:⌈n/TRFNB⌉)*TRFNB},
 NB.               lIO subA's last row and column within A
-NB.   A         - n×n-matrix, Hermitian (symmetric)
-NB.   U1        - n×n-matrix, unit upper triangular
-NB.   T         - n×n-matrix, Hermitian (symmetric)
+NB.   A         - n×n-matrix, the Hermitian (symmetric)
+NB.   U1        - n×n-matrix, the unit upper triangular
+NB.   T         - n×n-matrix, the Hermitian (symmetric)
 NB.               tridiagonal
 NB.
 NB. Storage layout 1 (assume TRFNB<n):
@@ -552,11 +557,12 @@ NB.     'ip LU1'=. getrflu1p A
 NB. where
 NB.   A   - m×n-matrix to factorize
 NB.   ip  - n-vector, columns inversed permutation of A
-NB.   LU1 - m×n-matrix, lower triangle contains L, and strict
-NB.         upper triangle contains U1 without unit diagonal
+NB.   LU1 - m×n-matrix, the lower triangle contains L, and
+NB.         the strict upper triangle contains U1 without
+NB.         unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
-NB.   L   - m×min(m,n)-matrix, lower trapezoidal
-NB.   U1  - min(m,n)×n-matrix, unit upper trapezoidal
+NB.   L   - m×min(m,n)-matrix, the lower trapezoidal
+NB.   U1  - min(m,n)×n-matrix, the unit upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       L's partitioning:
@@ -706,11 +712,12 @@ NB.     'ip L1U'=. getrfpl1u A
 NB. where
 NB.   A   - m×n-matrix to factorize
 NB.   ip  - m-vector, rows inversed permutation of A
-NB.   L1U - m×n-matrix, upper triangle contains U, and strict
-NB.         lower triangle contains L1 without unit diagonal
+NB.   L1U - m×n-matrix, the upper triangle contains U, and
+NB.         the strict lower triangle contains L1 without
+NB.         unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
-NB.   L1  - m×min(m,n)-matrix, unit lower trapezoidal
-NB.   U   - min(m,n)×n-matrix, upper trapezoidal
+NB.   L1  - m×min(m,n)-matrix, the unit lower trapezoidal
+NB.   U   - min(m,n)×n-matrix, the upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           U's partitioning:
@@ -863,11 +870,12 @@ NB.     'ip U1L'=. getrfpu1l A
 NB. where
 NB.   ip  - m-vector, rows inversed permutation of A
 NB.   A   - m×n-matrix to factorize
-NB.   U1L - m×n-matrix, lower triangle contains L, and strict
-NB.         upper triangle contains U1 without unit diagonal
+NB.   U1L - m×n-matrix, the lower triangle contains L, and
+NB.         the strict upper triangle contains U1 without
+NB.         unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
-NB.   L   - m×min(m,n)-matrix, lower trapezoidal
-NB.   U1  - min(m,n)×n-matrix, unit upper trapezoidal
+NB.   L   - m×min(m,n)-matrix, the lower trapezoidal
+NB.   U1  - min(m,n)×n-matrix, the unit upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           L's partitioning:
@@ -1017,11 +1025,12 @@ NB.     'ip UL1'=. getrful1p A
 NB. where
 NB.   A   - m×n-matrix to factorize
 NB.   ip  - n-vector, columns inversed permutation of A
-NB.   UL1 - m×n-matrix, upper triangle contains U, and strict
-NB.         lower triangle contains L1 without unit diagonal
+NB.   UL1 - m×n-matrix, the upper triangle contains U, and
+NB.         the strict lower triangle contains L1 without
+NB.         unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
-NB.   L1  - m×min(m,n)-matrix, unit lower trapezoidal
-NB.   U   - min(m,n)×n-matrix, upper trapezoidal
+NB.   L1  - m×min(m,n)-matrix, the unit lower trapezoidal
+NB.   U   - min(m,n)×n-matrix, the upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       U's partitioning:
@@ -1171,12 +1180,12 @@ NB.
 NB. Syntax:
 NB.     'ip L1 T'=. hetrfpl A
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric)
-NB.   ip - n-vector of integers, full inversed permutation of
-NB.        A
-NB.   L1 - n×n-matrix, unit lower triangular
-NB.   T  - n×n-matrix, Hermitian (symmetric) tridiagonal
-NB.   P  - n×n-matrix, full permutation of A
+NB.   A  - n×n-matrix, the Hermitian (symmetric)
+NB.   ip - n-vector of integers, the full inversed
+NB.        permutation of A
+NB.   L1 - n×n-matrix, the unit lower triangular
+NB.   T  - n×n-matrix, the Hermitian (symmetric) tridiagonal
+NB.   P  - n×n-matrix, the full permutation of A
 NB.
 NB. Algorithm (assume TRFNB<n-i):
 NB.   In: A
@@ -1281,12 +1290,12 @@ NB.
 NB. Syntax:
 NB.     'ip U1 T'=. hetrfpu A
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric)
-NB.   ip - n-vector of integers, full inversed permutation of
-NB.        A
-NB.   U1 - n×n-matrix, unit upper triangular
-NB.   T  - n×n-matrix, Hermitian (symmetric) tridiagonal
-NB.   P  - n×n-matrix, full permutation of A
+NB.   A  - n×n-matrix, the Hermitian (symmetric)
+NB.   ip - n-vector of integers, the full inversed
+NB.        permutation of A
+NB.   U1 - n×n-matrix, the unit upper triangular
+NB.   T  - n×n-matrix, the Hermitian (symmetric) tridiagonal
+NB.   P  - n×n-matrix, the full permutation of A
 NB.
 NB. Algorithm (assume TRFNB<n+i+1):
 NB.   In: A
@@ -1385,9 +1394,10 @@ NB.
 NB. Syntax:
 NB.   L=. potrfl A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.   L - n×n-matrix, lower triangular with positive diagonal
-NB.       entries, Cholesky triangle
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
+NB.   L - n×n-matrix, the lower triangular with positive
+NB.       diagonal entries, the Cholesky triangle
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1480,9 +1490,10 @@ NB.
 NB. Syntax:
 NB.   U=. potrfu A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.   U - n×n-matrix, upper triangular with positive diagonal
-NB.       entries, Cholesky triangle
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
+NB.   U - n×n-matrix, the upper triangular with positive
+NB.       diagonal entries, the Cholesky triangle
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1532,9 +1543,9 @@ NB.
 NB. Syntax:
 NB.   'L1 D'=. pttrfl A
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric) positive
+NB.   A  - n×n-matrix, the Hermitian (symmetric) positive
 NB.        definite tridiagonal
-NB.   L1 - n×n-matrix, unit lower bidiangonal
+NB.   L1 - n×n-matrix, the unit lower bidiangonal
 NB.   D  - n×n-matrix, diagonal with positive diagonal
 NB.        entries
 NB.
@@ -1591,9 +1602,9 @@ NB.
 NB. Syntax:
 NB.   'U1 D'=. pttrfu A
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric) positive
+NB.   A  - n×n-matrix, the Hermitian (symmetric) positive
 NB.        definite tridiagonal
-NB.   U1 - n×n-matrix, unit upper bidiangonal
+NB.   U1 - n×n-matrix, the unit upper bidiangonal
 NB.   D  - n×n-matrix, diagonal with positive diagonal
 NB.        entries
 NB.
@@ -1697,7 +1708,7 @@ NB.
 NB. Syntax:
 NB.   testhetrf A
 NB. where
-NB.   A - n×n-matrix, Hermitian
+NB.   A - n×n-matrix, the Hermitian
 NB.
 NB. Notes:
 NB. - no berrA calc for LAPACK's DSYTRF and ZHETRF yet since
@@ -1754,7 +1765,7 @@ NB.
 NB. Syntax:
 NB.   testpotrf A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite
 
 testpotrf=: 3 : 0
@@ -1798,7 +1809,7 @@ NB.
 NB. Syntax:
 NB.   testpttrf A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite tridiagonal
 NB.
 NB. TODO:

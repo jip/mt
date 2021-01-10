@@ -16,7 +16,7 @@ NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, the pivot indices that define
 NB.          P
 NB.   B    - n×nrhs-matrix, RHS
-NB.   X    - n×nrhs-matrix, the solutions of equation:
+NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
 NB.   A    - n×n-matrix, the Hermitian represented in
 NB.          factored form by DT1 and ipiv

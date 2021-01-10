@@ -91,7 +91,7 @@ NB.   osmin  - an estimate for the smallest singular value of
 NB.            R(0:k,0:k)
 NB.   ov     - (k+1)-vector, an approximate smallest left
 NB.            singular vector of R(0:k,0:k)
-NB.   R      - m×n-matrix, upper trapezoidal
+NB.   R      - m×n-matrix, the upper trapezoidal
 NB.
 NB. Notes:
 NB. - models RRQR's xLAUC1 [1, 2]
@@ -179,7 +179,7 @@ NB.             elementary reflectors
 NB.   oQ      - (offset+lacptd)×(n+1)-matrix with orthonormal
 NB.             rows, which is defined as the product of
 NB.             (offset+lacptd) elementary reflectors
-NB.   L       - m×k-matrix, lower trapezoidal
+NB.   L       - m×k-matrix, the lower trapezoidal
 NB.   A       - m×n-matrix to factorize
 NB.   k       = min(m,n)
 NB.
@@ -359,7 +359,7 @@ NB.             columns, which is defined as the product of
 NB.             (offset+lacptd) elementary reflectors
 NB.   iR      -:tru (2 # offset) {. QfR
 NB.   oR      -:tru (2 # offset+lacptd) {. QfR ,. dQfR
-NB.   R       - k×n-matrix, upper trapezoidal
+NB.   R       - k×n-matrix, the upper trapezoidal
 NB.   A       - m×n-matrix to factorize
 NB.   k       = min(m,n)
 NB.
@@ -371,8 +371,8 @@ NB.      offset  n-offset                 offset  lacptd  n-offset-lacptd
 NB.
 NB. Notes:
 NB. - models RRQR's xGEQPC [1, 2] with following differences:
-NB.   - returned Q is represented as a product of elementary
-NB.     reflectors, and is merged with R
+NB.   - Q returned is represented as the product of
+NB.     elementary reflectors, and is merged with R
 NB. - mxnm is updated only when offset = 0
 
 geprc=: 3 : 0
@@ -798,7 +798,7 @@ NB.   ircond > 0, 1/ircond specifies an upper bound on the
 NB.            condition number of L00
 NB.   p      - m-vector, rows inversed permutation of A,
 NB.            represents permutation m×m-matrix P
-NB.   L      - m×k-matrix, lower trapezoidal
+NB.   L      - m×k-matrix, the lower trapezoidal
 NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {. Qn
@@ -813,8 +813,8 @@ NB.            the leading rows were not well-conditioned
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see gelpf
 NB.   Q      - k×n-matrix with orthonormal rows, which is
-NB.            defined as the first k rows of a product of k
-NB.            elementary reflectors
+NB.            defined as the first k rows of the product of
+NB.            k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -923,7 +923,7 @@ NB.            condition number of R00
 NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {."1 Qm
-NB.   R      - k×n-matrix, upper trapezoidal
+NB.   R      - k×n-matrix, the upper trapezoidal
 NB.   p      - n-vector, columns inversed permutation of A,
 NB.            represents permutation n×n-matrix P
 NB.   orcond > 0, 1/orcond is an estimate for the condition
@@ -937,8 +937,8 @@ NB.            the leading columns were not well-conditioned
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see geprf
 NB.   Q      - m×k-matrix with orthonormal columns, which is
-NB.            defined as the first k columns of a product of
-NB.            k elementary reflectors
+NB.            defined as the first k columns of the product
+NB.            of k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -1047,7 +1047,7 @@ NB.
 NB. Syntax:
 NB.   rank=. rcond trlpr L
 NB. where
-NB.   L     - m×k-matrix, lower trapezoidal, k≤m
+NB.   L     - m×k-matrix, the lower trapezoidal, k≤m
 NB.   rcond > 0, 1/rcond specifies an upper bound on the
 NB.           condition number of L
 NB.   rank  ≥ 0, an estimate for the numerical rank of L
@@ -1081,7 +1081,7 @@ NB.
 NB. Syntax:
 NB.   rank=. rcond trprr R
 NB. where
-NB.   R     - k×n-matrix, upper trapezoidal, k≤n
+NB.   R     - k×n-matrix, the upper trapezoidal, k≤n
 NB.   rcond > 0, 1/rcond specifies an upper bound on the
 NB.           condition number of R
 NB.   rank  ≥ 0, an estimate for the numerical rank of R
@@ -1121,7 +1121,7 @@ NB.   'dQ L'=. gelpg3 A
 NB. where
 NB.   A  - m×k-matrix, has zeros above 1st subdiagonal,
 NB.        excepting the first row
-NB.   L  - m×k-matrix, lower trapezoidal
+NB.   L  - m×k-matrix, the lower trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1165,7 +1165,7 @@ NB.   'dQ R'=. geprg3 A
 NB. where
 NB.   A  - k×n-matrix, has zeros below 1st superdiagonal,
 NB.        excepting the first column
-NB.   R  - k×n-matrix, upper trapezoidal
+NB.   R  - k×n-matrix, the upper trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1215,8 +1215,8 @@ NB.
 NB. Syntax:
 NB.   'dQ L'=. hslph3 H
 NB. where
-NB.   H  - m×k-matrix, lower Hessenberg, k≤m
-NB.   L  - m×k-matrix, lower trapezoidal
+NB.   H  - m×k-matrix, the lower Hessenberg, k≤m
+NB.   L  - m×k-matrix, the lower trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1250,8 +1250,8 @@ NB.
 NB. Syntax:
 NB.   'dQ R'=. hsprh3 H
 NB. where
-NB.   H  - k×n-matrix, upper Hessenberg, k≤n
-NB.   R  - k×n-matrix, upper trapezoidal
+NB.   H  - k×n-matrix, the upper Hessenberg, k≤n
+NB.   R  - k×n-matrix, the upper trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1857,14 +1857,14 @@ NB.   ircond > 0, 1/ircond is an upper bound on the condition
 NB.            number of iL00
 NB.   ip     - m-vector, rows inversed permutation of iL,
 NB.            represents permutation m×m-matrix
-NB.   iL     - m×k-matrix, lower trapezoidal
+NB.   iL     - m×k-matrix, the lower trapezoidal
 NB.            before rank detecting
 NB.   iQn    - n×n-matrix, the unitary (orthogonal), embeds
 NB.            iQ:
 NB.              iQ -: k {. iQn
 NB.   op     - m-vector, rows inversed permutation of oL,
 NB.            represents permutation m×m-matrix
-NB.   oL     - m×k-matrix, lower trapezoidal
+NB.   oL     - m×k-matrix, the lower trapezoidal
 NB.            after rank detecting
 NB.   oQn    - n×n-matrix, the unitary (orthogonal), embeds
 NB.            oQ:
@@ -1876,11 +1876,11 @@ NB.            rank offered by this algorithm
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see gelpf
 NB.   iQ     - k×n-matrix with orthonormal rows, which is
-NB.            defined as the first k rows of a product of k
-NB.            elementary reflectors, before rank detecting
+NB.            defined as the first k rows of the product of
+NB.            k elementary reflectors, before rank detecting
 NB.   oQ     - k×n-matrix with orthonormal rows, which is
-NB.            defined as the first k rows of a product of k
-NB.            elementary reflectors, after rank detecting
+NB.            defined as the first k rows of the product of
+NB.            k elementary reflectors, after rank detecting
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -1958,14 +1958,14 @@ NB.            number of iR00
 NB.   iQm    - m×m-matrix, the unitary (orthogonal), embeds
 NB.            iQ:
 NB.              iQ -: k {."1 iQm
-NB.   iR     - k×n-matrix, upper trapezoidal
+NB.   iR     - k×n-matrix, the upper trapezoidal
 NB.            before rank detecting
 NB.   ip     - n-vector, columns inversed permutation of iR,
 NB.            represents permutation n×n-matrix
 NB.   oQm    - m×m-matrix, the unitary (orthogonal), embeds
 NB.            oQ:
 NB.              oQ -: k {."1 oQm
-NB.   oR     - k×n-matrix, upper trapezoidal
+NB.   oR     - k×n-matrix, the upper trapezoidal
 NB.            after rank detecting
 NB.   op     - n-vector, columns inversed permutation of oR,
 NB.            represents permutation n×n-matrix
@@ -1976,11 +1976,13 @@ NB.            rank offered by this algorithm
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see geprf
 NB.   iQ     - m×k-matrix with orthonormal columns, which is
-NB.            defined as the first k columns of a product of
-NB.            k elementary reflectors, before rank detecting
+NB.            defined as the first k columns of the product
+NB.            of k elementary reflectors, before rank
+NB.            detecting
 NB.   oQ     - m×k-matrix with orthonormal columns, which is
-NB.            defined as the first k columns of a product of
-NB.            k elementary reflectors, after rank detecting
+NB.            defined as the first k columns of the product
+NB.            of k elementary reflectors, after rank
+NB.            detecting
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -2068,7 +2070,7 @@ NB.            specifies an upper bound on the condition
 NB.            number of L00
 NB.   p      - m-vector, rows inversed permutation of L,
 NB.            represents permutation m×m-matrix
-NB.   L      - m×k-matrix, lower trapezoidal
+NB.   L      - m×k-matrix, the lower trapezoidal
 NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {. Qn
@@ -2089,8 +2091,8 @@ NB.            By examining these values, one can confirm
 NB.            that the rank is well defined with respect to
 NB.            the threshold chosen
 NB.   Q      - k×n-matrix with orthonormal rows, which is
-NB.            defined as the first k rows of a product of k
-NB.            elementary reflectors
+NB.            defined as the first k rows of the product of
+NB.            k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -2142,7 +2144,7 @@ NB.            number of R00
 NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {."1 Qm
-NB.   R      - k×n-matrix, upper trapezoidal
+NB.   R      - k×n-matrix, the upper trapezoidal
 NB.   p      - n-vector, columns inversed permutation of R,
 NB.            represents permutation n×n-matrix
 NB.   orcond > 0, 1/orcond is an estimate for the condition
@@ -2162,7 +2164,7 @@ NB.            By examining these values, one can confirm
 NB.            that the rank is well defined with respect to
 NB.            the threshold chosen
 NB.   Q      - m×k-matrix with orthonormal columns, which is
-NB.            defined as the first k columns of a product
+NB.            defined as the first k columns of the product
 NB.            of k elementary reflectors
 NB.   k      = min(m,n)
 NB.

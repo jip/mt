@@ -73,7 +73,7 @@ NB.   vapp  - monad to calculate Τ, is called as:
 NB.             T=. vapp VTau
 NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, V and Tau combined
 NB.   T     - k×k-matrix, triangular
-NB.   V     - m×k- or k×n-matrix, unit trapezoidal
+NB.   V     - m×k- or k×n-matrix, the unit trapezoidal
 NB.   Tau   - k-vector, τ[0:k-1] corresp. to V
 
 larxtf=: 2 : '(] (] ((0 ,~ [) ,.  (mp }:) , _1 { ]) ({~ (<@;~ i.@>:)@#       ))^:(-&#)  1  1&rt)@(-@(m&{) *"1 (_1;a:) tru@setdiag (v ct)@(0&(m})))'
@@ -311,10 +311,10 @@ NB. Syntax:
 NB.   T=. larxtbc VTau
 NB. where
 NB.   VTau - (m+1)×k-matrix (tau,V)
-NB.   V    - m×k-matrix, unit upper trapezoidal with 1s on
-NB.          (k-m)-th diagonal and 0s below
+NB.   V    - m×k-matrix, the unit upper trapezoidal with 1s
+NB.          on (k-m)-th diagonal and 0s below
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
-NB.   T    - k×k-matrix, lower triangular
+NB.   T    - k×k-matrix, the lower triangular
 NB.
 NB. Notes:
 NB. - larftbc models LAPACK's xLARFT('B','C')
@@ -337,10 +337,10 @@ NB. Syntax:
 NB.   T=. larxtbr VTau
 NB. where
 NB.   VTau - k×(n+1)-matrix (tau,.V)
-NB.   V    - k×n-matrix, unit lower trapezoidal with 1s on
-NB.          (n-k)-th diagonal and 0s above
+NB.   V    - k×n-matrix, the unit lower trapezoidal with 1s
+NB.          on (n-k)-th diagonal and 0s above
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
-NB.   T    - k×k-matrix, lower triangular
+NB.   T    - k×k-matrix, the lower triangular
 NB.
 NB. Notes:
 NB. - larftbr models LAPACK's xLARFT('B','R')
@@ -363,10 +363,10 @@ NB. Syntax:
 NB.   T=. larxtfc VTau
 NB. where
 NB.   VTau - (m+1)×n-matrix (V,tau)
-NB.   V    - m×n-matrix, unit lower trapezoidal with 1s on
-NB.          0-th diagonal and 0s above
+NB.   V    - m×n-matrix, the unit lower trapezoidal with 1s
+NB.          on 0-th diagonal and 0s above
 NB.   tau  - n-vector τ[0:n-1] corresp. to V
-NB.   T    - n×n-matrix, upper triangular
+NB.   T    - n×n-matrix, the upper triangular
 NB.
 NB. Notes:
 NB. - larftfc models LAPACK's xLARFT('F','C')
@@ -389,10 +389,10 @@ NB. Syntax:
 NB.   T=. larxtfr VTau
 NB. where
 NB.   VTau - k×(n+1)-matrix (V,.tau)
-NB.   V    - k×n-matrix, unit upper trapezoidal with 1s on
-NB.          0-th diagonal and 0s below
+NB.   V    - k×n-matrix, the unit upper trapezoidal with 1s
+NB.          on 0-th diagonal and 0s below
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
-NB.   T    - k×k-matrix, upper triangular
+NB.   T    - k×k-matrix, the upper triangular
 NB.
 NB. Notes:
 NB. - larftfr models LAPACK's xLARFT('F','R')

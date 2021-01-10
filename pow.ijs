@@ -53,8 +53,8 @@ NB.   P=. p gepow A
 NB. where
 NB.   A  - n×n-matrix, a general matrix
 NB.   p  - sh-array of non-negative integers, power[s]
-NB.   P  - sh×n×n-array if r>0, a matrix A in power[s] p
-NB.        n×n-array    if r=0, a matrix A in power p
+NB.   P  - sh×n×n-array if r>0, the matrix A in power[s] p
+NB.        n×n-array    if r=0, the matrix A in power p
 NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
 NB.
@@ -269,7 +269,7 @@ NB.
 NB. Syntax:
 NB.   testdipow A
 NB. where
-NB.   A - n×n-matrix, diagonalizable
+NB.   A - n×n-matrix, the diagonalizable
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
@@ -302,7 +302,7 @@ NB.
 NB. Syntax:
 NB.   testhepow A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric)
+NB.   A - n×n-matrix, the Hermitian (symmetric)
 
 testhepow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes

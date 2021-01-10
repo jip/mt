@@ -328,18 +328,20 @@ NB.
 NB. Description:
 NB.   Inverse triangular matrix
 NB. where:
-NB.   L   - n×n-matrix, lower triangular
-NB.   iL  - n×n-matrix, lower triangular, an inversion of L
-NB.   L1  - n×n-matrix, unit lower triangular (diagonal is
-NB.         not saved)
-NB.   iL1 - n×n-matrix, unit lower triangular (diagonal is
-NB.         not saved), an inversion of L1
-NB.   U   - n×n-matrix, upper triangular
-NB.   iU  - n×n-matrix, upper triangular, an inversion of U
-NB.   U1  - n×n-matrix, unit upper triangular (diagonal is
-NB.         not saved)
-NB.   iU1 - n×n-matrix, unit upper triangular (diagonal is
-NB.         not saved), an inversion of U1
+NB.   L   - n×n-matrix, the lower triangular
+NB.   iL  - n×n-matrix, the lower triangular, an inversion of
+NB.         L
+NB.   L1  - n×n-matrix, the unit lower triangular (diagonal
+NB.         is not stored)
+NB.   iL1 - n×n-matrix, the unit lower triangular (diagonal
+NB.         is not stored), the inversion of L1
+NB.   U   - n×n-matrix, the upper triangular
+NB.   iU  - n×n-matrix, the upper triangular, the inversion
+NB.         of U
+NB.   U1  - n×n-matrix, the unit upper triangular (diagonal
+NB.         is not stored)
+NB.   iU1 - n×n-matrix, the unit upper triangular (diagonal
+NB.         is not stored), the inversion of U1
 NB.
 NB. Algorithm for trtriu:
 NB.   In: U
@@ -432,9 +434,9 @@ NB.             pfx := A[0:I*TRINB-1,0:n-1]
 NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getrilu1pstep^:I (pfx ; sfx)
 NB.      6.4) extract sfx produced by the last iteration
-NB.      6.5) apply permutation P to the rows of sfx by
-NB.           obversed applying of inversed permutation P^H,
-NB.           to produce final A^_1
+NB.      6.5) apply permutation P to rows of sfx by obversed
+NB.           applying of inversed permutation P^H, to
+NB.           produce final A^_1
 NB.
 NB. Assertions:
 NB.   (%. -: (getrilu1p@getrflu1p)) A
@@ -497,7 +499,7 @@ NB.             pfx := A[0:n-1,0:I*TRINB-1]
 NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getripl1ustep^:I (pfx ; sfx)
 NB.      6.4) extract sfx produced by the last iteration
-NB.      6.5) apply permutation P to the columns of sfx by
+NB.      6.5) apply permutation P to columns of sfx by
 NB.           obversed applying of inversed permutation P^H,
 NB.           to produce final A^_1
 NB.
@@ -571,7 +573,7 @@ NB.             sfx := A[0:n-1,n%TRINB:n-1]
 NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getripu1lstep^:I (pfx ; sfx)
 NB.      6.4) extract pfx produced by the last iteration
-NB.      6.5) apply permutation P to the columns of pfx by
+NB.      6.5) apply permutation P to columns of pfx by
 NB.           obversed applying of inversed permutation P^H,
 NB.           to produce final A^_1
 NB.
@@ -636,9 +638,9 @@ NB.             sfx := A[n%TRINB:n-1,0:n-1]
 NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getriul1pstep^:I (pfx ; sfx)
 NB.      6.4) extract pfx produced by the last iteration
-NB.      6.5) apply permutation P to the rows of pfx by
-NB.           obversed applying of inversed permutation P^H,
-NB.           to produce final A^_1
+NB.      6.5) apply permutation P to rows of pfx by obversed
+NB.           applying of inversed permutation P^H, to
+NB.           produce final A^_1
 NB.
 NB. Assertions:
 NB.   (%. -: (getriul1p@getrful1p)) A
@@ -661,7 +663,7 @@ NB. Description:
 NB.   Inverse Hermitian (symmetric) matrix A, represented in
 NB.   factored form
 NB. where
-NB.   A    - n×n-matrix, Hermitian (symmetric)
+NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   pL1T - 3-vector of boxes, the output of hetrfpl, the
 NB.          matrix A represented in factored form
 NB.   pU1T - 3-vector of boxes, the output of hetrfpu, the
@@ -722,13 +724,13 @@ NB. Description:
 NB.   Inverse Hermitian (symmetric) positive definite
 NB.   tridiagonal matrix A, represented in factored form
 NB. where
-NB.   A   - n×n-matrix, Hermitian (symmetric) positive definite
-NB.         tridiagonal
 NB.   L1D - 2-vector of boxes, the output of pttrfl, the
 NB.         matrix A represented in factored form, optional
 NB.   U1D - 2-vector of boxes, the output of pttrfu, the
 NB.         matrix A represented in factored form, optional
-NB.   iA  - n×n-matrix, inversion of A
+NB.   iA  - n×n-matrix, the inversion of A
+NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
+NB.         definite tridiagonal
 NB.
 NB. Algorithm for pttril [1]:
 NB.   In:  A and, optionally, L1D

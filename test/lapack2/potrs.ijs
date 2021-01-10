@@ -15,7 +15,7 @@ NB.            'U' - use upper triangle of A only, form is:
 NB.                    U^H * U = A
 NB.   T    - n×n-matrix, L or U factor
 NB.   B    - n×nrhs-matrix, RHS
-NB.   X    - n×nrhs-matrix, the solutions of equation:
+NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite represented in the factored form by T

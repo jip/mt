@@ -97,8 +97,8 @@ NB. where:
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
 NB.   LU1p - 2-vector of boxes, the output of getrflu1p, the
 NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
@@ -138,8 +138,8 @@ NB. where:
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
 NB.   pL1U - 2-vector of boxes, the output of getrfpl1u, the
 NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
@@ -182,8 +182,8 @@ NB. where:
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
 NB.   pU1L - 2-vector of boxes, the output of getrfpu1l, the
 NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
@@ -223,8 +223,8 @@ NB. where:
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
 NB.   UL1p - 2-vector of boxes, the output of getrful1p, the
 NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
@@ -259,11 +259,11 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) matrix A, represented in factored form:
 NB.     P * L1 * T * L1^H * P^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric)
+NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
 NB.   pL1T - 3-vector of boxes, the output of hetrfpl, the
 NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0, number of RHSs
@@ -296,11 +296,11 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) matrix A, represented in factored form:
 NB.     P * U1 * T * U1^H * P^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric)
+NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
 NB.   pU1T - 3-vector of boxes, the output of hetrfpu, the
 NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0
@@ -331,16 +331,16 @@ NB.   (symmetric) positive definite matrix A, represented in
 NB.   factored form:
 NB.     L * L^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
-NB.   L    - n×n-matrix, lower triangular with positive
-NB.          diagonal entries, Cholesky triangle, the output
-NB.          of potrfl, the matrix A represented in factored
-NB.          form
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
+NB.   L    - n×n-matrix, the lower triangular with positive
+NB.          diagonal entries, the Cholesky triangle, the
+NB.          output of potrfl, the matrix A represented in
+NB.          factored form
 NB.   nrhs ≥ 0, number of RHSs
 NB.
 NB. Assertions:
@@ -372,16 +372,16 @@ NB.   (symmetric) positive definite matrix A, represented in
 NB.   factored form:
 NB.     U * U^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
-NB.   U    - n×n-matrix, upper triangular with positive
-NB.          diagonal entries, Cholesky triangle, the output
-NB.          of potrfu, the matrix A represented in factored
-NB.          form
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
+NB.   U    - n×n-matrix, the upper triangular with positive
+NB.          diagonal entries, the Cholesky triangle, the
+NB.          output of potrfu, the matrix A represented in
+NB.          factored form
 NB.   nrhs ≥ 0, number of RHSs
 NB.
 NB. Assertions:
@@ -410,12 +410,12 @@ NB.   (symmetric) positive definite tridiagonal matrix A,
 NB.   represented in factored form [1]:
 NB.     L1 * D * L1^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
 NB.   L1D  - 2-vector of boxes, the output of pttrfl, the
 NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0
@@ -481,12 +481,12 @@ NB.   (symmetric) positive definite tridiagonal matrix A,
 NB.   represented in factored form, based on [1]:
 NB.     U1 * D * U1^H = A
 NB. where:
-NB.   A    - n×n-matrix, Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, the solution[s]
+NB.   Xh   - same shape as Bh, the solution[s]
 NB.   U1D  - 2-vector of boxes, the output of pttrfu, the
 NB.          matrix A represented in factored form
 NB.   nrhs ≥ 0

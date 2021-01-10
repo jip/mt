@@ -19,30 +19,25 @@ NB.             'I' - to compute Z
 NB.             'V' - to compute Z1*Z
 NB.   ilo   ∈ [1,n], IO starting column, 1-based
 NB.   ihi   ∈ [1,n], IO ending column, 1-based
-NB.   A     - n×n-matrix, numeric, upper triangular in
+NB.   A     - n×n-matrix, numeric, the upper triangular in
 NB.           columns outside ilo:ihi
-NB.   B     - n×n-matrix, numeric, upper triangular
-NB.   Q1    - matrix, numeric:
-NB.             n×n-matrix, orthogonal (unitary) if compQ='V'
-NB.             0×0-matrix otherwise
-NB.   Z1    - matrix, numeric:
-NB.             n×n-matrix, orthogonal (unitary) if compZ='V'
-NB.             0×0-matrix otherwise
-NB.   H     - n×n-matrix, the upper Hessenberg in the upper
-NB.           triangle and the first subdiagonal, and zeros
-NB.           outside
+NB.   B     - n×n-matrix, numeric, the upper triangular
+NB.   Q1    - n×n-matrix, the unitary (orthogonal) if
+NB.           compQ='V' or any noun otherwise
+NB.   Z1    - n×n-matrix, the unitary (orthogonal) if
+NB.           compZ='V' or any noun otherwise
+NB.   H     - n×n-matrix, the upper Hessenberg in rows and
+NB.           columns ilo:ihi and upper triangular outside
 NB.   T     - n×n-matrix, the upper triangular:
 NB.             T = Q^H B Z
-NB.   Q     - matrix:
-NB.             0×0-matrix if compQ='N'
-NB.             n×n-matrix, orthogonal (unitary):
-NB.               Q    if compQ='I'
-NB.               Q1*Q if compQ='V'
-NB.   Z     - matrix:
-NB.             0×0-matrix if compZ='N'
-NB.             n×n-matrix, orthogonal (unitary):
-NB.               Z    if compZ='I'
-NB.               Z1*Z if compZ='V'
+NB.   Q     - 0×0-matrix if compQ='N', or n×n-matrix, the
+NB.           unitary (orthogonal):
+NB.             Q    if compQ='I'
+NB.             Q1*Q if compQ='V'
+NB.   Z     - 0×0-matrix if compZ='N', or n×n-matrix, the
+NB.           unitary (orthogonal):
+NB.             Z    if compZ='I'
+NB.             Z1*Z if compZ='V'
 NB.   n     ≥ 0
 NB.
 NB. Notes:

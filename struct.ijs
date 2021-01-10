@@ -588,7 +588,7 @@ NB. Syntax:
 NB.   B=. bdlpick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   B - m×n-matrix, lower bidiagonal
+NB.   B - m×n-matrix, the lower bidiagonal
 NB.
 NB. TODO:
 NB. - B would be sparse
@@ -606,7 +606,7 @@ NB. Syntax:
 NB.   B=. bdupick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   B - m×n-matrix, upper bidiagonal
+NB.   B - m×n-matrix, the upper bidiagonal
 NB.
 NB. TODO:
 NB. - B would be sparse
@@ -624,7 +624,7 @@ NB. Syntax:
 NB.   B=. hslpick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   B - m×n-matrix, lower Hessenberg
+NB.   B - m×n-matrix, the lower Hessenberg
 
 hslpick=: * __ 1&mbstencil
 
@@ -639,7 +639,7 @@ NB. Syntax:
 NB.   B=. hsupick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   B - m×n-matrix, upper Hessenberg
+NB.   B - m×n-matrix, the upper Hessenberg
 
 hsupick=: * _1 _&mbstencil
 
@@ -673,7 +673,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, lower trapezoidal
+NB.   B - m×n-matrix, the lower trapezoidal
 
 trlpick=: 0&$: :(((__ , [) mbstencil ]) * ])
 
@@ -690,7 +690,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], lIO first non-zero
 NB.       diagonal, default is 0
-NB.   B - m×n-matrix, upper trapezoidal
+NB.   B - m×n-matrix, the upper trapezoidal
 
 trupick=: 0&$: :(((_ ,~ [) mbstencil ]) * ])
 
@@ -707,8 +707,8 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, lower trapezoidal with unit on diagonal
-NB.       d
+NB.   B - m×n-matrix, the lower trapezoidal with unit on
+NB.       diagonal d
 
 trl1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , ,:&0)} y')
 
@@ -725,8 +725,8 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO first
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, upper trapezoidal with unit on diagonal
-NB.       d
+NB.   B - m×n-matrix, the upper trapezoidal with unit on
+NB.       diagonal d
 
 tru1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , 0&,:)} y')
 
@@ -971,8 +971,8 @@ NB.
 NB. Syntax:
 NB.   H=. tr2he T
 NB. where
-NB.   T - n×n-matrix, lower or upper triangular
-NB.   H - n×n-matrix, Hermitian (symmetric)
+NB.   T - n×n-matrix, the lower or upper triangular
+NB.   H - n×n-matrix, the Hermitian (symmetric)
 
 tr2he=: (-: upddiag)@(+ ct)
 
@@ -988,7 +988,7 @@ NB. Syntax:
 NB.   H=. hex G
 NB. where
 NB.   G - n×n-matrix
-NB.   H - n×n-matrix, Hermitian (symmetric)
+NB.   H - n×n-matrix, the Hermitian (symmetric)
 
 hel=: (</~@i.@#)`(,: ct)}
 heu=: (>/~@i.@#)`(,: ct)}
@@ -1004,6 +1004,6 @@ NB. Syntax:
 NB.   P=. po G
 NB. where
 NB.   G - n×n-matrix, invertible
-NB.   H - n×n-matrix, Hermitian (symmetric)
+NB.   H - n×n-matrix, the Hermitian (symmetric)
 
 po=: mp ct

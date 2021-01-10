@@ -11,18 +11,18 @@ NB.            'L' - use lower triangle of A only
 NB.            'U' - use upper triangle of A only
 NB.   trans - scalar, character, case-insensitive, specifies
 NB.           the form of the system of equations:
-NB.            'N' - A   * X = B   (no transpose)
-NB.            'T' - A^T * X = B   (transpose)
-NB.            'C' - A^H * X = B   (conjugate transpose)
-NB.   diag - scalar, character, case-insensitive:
-NB.            'N' - A is non-unit triangular
-NB.            'U' - A is unit triangular, the diagonal
-NB.                  elements of A are not
-NB.   A    - n×n-matrix, [unit] {lower,upper}-triangular
-NB.   B    - n×nrhs-matrix, RHS
-NB.   X    - n×nrhs-matrix, the solution
-NB.   n    ≥ 0
-NB.   nrhs ≥ 0
+NB.             'N' - A   * X = B  (no transpose)
+NB.             'T' - A^T * X = B  (transpose)
+NB.             'C' - A^H * X = B  (conjugate transpose)
+NB.   diag  - scalar, character, case-insensitive:
+NB.             'N' - A is non-unit triangular
+NB.             'U' - A is unit triangular, the diagonal
+NB.                   elements of A are not
+NB.   A     - n×n-matrix, [unit] {lower,upper}-triangular
+NB.   B     - n×nrhs-matrix, RHS
+NB.   X     - n×nrhs-matrix, solutions
+NB.   n     ≥ 0, the order of system
+NB.   nrhs  ≥ 0, the number of RHS
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

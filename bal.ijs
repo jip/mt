@@ -103,7 +103,7 @@ NB.            'p hs'=. A vapp (p ; hs ; nz)
 NB.   nz   - n-vector of non-negative integers, count of
 NB.          non-zero elements in rows (columns) of A
 NB.   A    - n×n-matrix
-NB.   p    - n-vector, full permutation of A
+NB.   p    - n-vector, the full permutation of A
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrix B11 position in B
 NB.
@@ -178,7 +178,7 @@ NB.   nz1   - n-vector of non-negative integers, count of
 NB.           non-zero elements in either columns or rows
 NB.           excluding diagonal, opposite to nz0
 NB.   A     - n×n-matrix
-NB.   p     - n-vector, full permutation of A
+NB.   p     - n-vector, the full permutation of A
 NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
 NB.           defines submatrix B11 position in B
 NB.
@@ -264,7 +264,7 @@ NB.   A  - n×n-matrix
 NB.   B  - n×n-matrix with isolated eigenvalues, being A
 NB.        with permuted rows and columns, see storage
 NB.        layout
-NB.   p  - n-vector, full permutation of A
+NB.   p  - n-vector, the full permutation of A
 NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
 NB.        defines submatrix B11 position in B
 NB.
@@ -502,7 +502,7 @@ NB.   'C p hs d'=. gebalx A
 NB. where
 NB.   A  - n×n-matrix
 NB.   C  - n×n-matrix, balanced version of A
-NB.   p  - n-vector, full permutation of A
+NB.   p  - n-vector, the full permutation of A
 NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
 NB.        defines submatrix B11 position in B (see gebalxp)
 NB.   d  - n-vector, diagonal of scaling matrix D (see

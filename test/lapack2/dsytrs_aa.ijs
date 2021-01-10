@@ -17,7 +17,7 @@ NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, the pivot indices that define
 NB.          P
 NB.   B    - n×nrhs-matrix, real, RHS
-NB.   X    - n×nrhs-matrix, real, the solutions of equation:
+NB.   X    - n×nrhs-matrix, real, solutions of equation:
 NB.            A * X = B
 NB.   A    - n×n-matrix, real, the symmetric, represented in
 NB.          the factored form by DT1 and ipiv

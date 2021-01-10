@@ -13,8 +13,8 @@ NB.            'V' - to compute V
 NB.   uplo - scalar, character, case-insensitive:
 NB.            'L' - use lower triangle of A only
 NB.            'U' - use upper triangle of A only
-NB.   A    - n×n-matrix, numeric, Hermitian or
-NB.          {lower,upper}-triangular
+NB.   A    - n×n-matrix, numeric, the Hermitian or lower or
+NB.          upper triangular
 NB.   w    - n-vector, eigenvalues of A
 NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
 NB.   n    ≥ 0

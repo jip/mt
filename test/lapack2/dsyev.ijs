@@ -13,7 +13,7 @@ NB.            'V' - to compute V
 NB.   uplo - scalar, character, case-insensitive:
 NB.            'L' - use lower triangle of A only
 NB.            'U' - use upper triangle of A only
-NB.   A    - n×n-matrix, real, symmetric or
+NB.   A    - n×n-matrix, real, the symmetric or
 NB.          {lower,upper}-triangular
 NB.   w    - n-vector, real, eigenvalues of A
 NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix

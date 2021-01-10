@@ -687,10 +687,10 @@ NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices H11 and T11 position in H
 NB.          and T, respectively, see ggballp and gehrdl
-NB.   H    - n×n-matrix, lower Hessenberg inside the
+NB.   H    - n×n-matrix, the lower Hessenberg inside the
 NB.          submatrix H[h:h+s-1,h:h+s-1], and lower
 NB.          triangular outside
-NB.   T    - n×n-matrix, lower triangular
+NB.   T    - n×n-matrix, the lower triangular
 NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
 NB.            e1e2 -: e1 ,: e2
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
@@ -698,8 +698,8 @@ NB.   Q2   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
 NB.   Z2   - n×n-matrix, the unitary (orthogonal)
 NB.   Q2Z2 -:Q2 ,: Z2
-NB.   S    - n×n-matrix, lower triangular
-NB.   P    - n×n-matrix, lower triangular
+NB.   S    - n×n-matrix, the lower triangular
+NB.   P    - n×n-matrix, the lower triangular
 NB.
 NB. Notes:
 NB. - non-converged eigenvalues are set to NaN
@@ -800,10 +800,10 @@ NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices H11 and T11 position in H
 NB.          and T, respectively, see ggbalup and gehrdu
-NB.   H    - n×n-matrix, upper Hessenberg inside the
+NB.   H    - n×n-matrix, the upper Hessenberg inside the
 NB.          submatrix H[h:h+s-1,h:h+s-1], and upper
 NB.          triangular outside
-NB.   T    - n×n-matrix, upper triangular
+NB.   T    - n×n-matrix, the upper triangular
 NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
 NB.            e1e2 -: e1 ,: e2
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
@@ -811,8 +811,8 @@ NB.   Q2   - n×n-matrix, the unitary (orthogonal)
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
 NB.   Z2   - n×n-matrix, the unitary (orthogonal)
 NB.   Q2Z2 -:Q2 ,: Z2
-NB.   S    - n×n-matrix, upper triangular
-NB.   P    - n×n-matrix, upper triangular
+NB.   S    - n×n-matrix, the upper triangular
+NB.   P    - n×n-matrix, the upper triangular
 NB.
 NB. Notes:
 NB. - non-converged eigenvalues are set to NaN

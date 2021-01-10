@@ -11,7 +11,7 @@ NB.   dlA  - (n-1)-vector, subdiagonal of A
 NB.   dA   - n-vector, diagonal of A
 NB.   duA  - (n-1)-vector, superdiagonal of A
 NB.   B    - n×nrhs-matrix, RHS
-NB.   X    - n×nrhs-matrix, the solutions of equation:
+NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
 NB.   A    - n×n-matrix, will be factored as:
 NB.            P * L1 * U = A

@@ -76,16 +76,16 @@ NB. Description:
 NB.   Solve linear monomial equation with triangular matrix
 NB. where:
 NB.   A    - n×n-matrix, containing either U, U1, L or L1
-NB.   U    - n×n-matrix, upper triangular
-NB.   U1   - n×n-matrix, unit upper triangular (diagonal is
-NB.          not saved)
-NB.   L    - n×n-matrix, lower triangular
-NB.   L1   - n×n-matrix, unit lower triangular (diagonal is
-NB.          not saved)
+NB.   U    - n×n-matrix, the upper triangular
+NB.   U1   - n×n-matrix, the unit upper triangular (diagonal
+NB.          is not stored)
+NB.   L    - n×n-matrix, the lower triangular
+NB.   L1   - n×n-matrix, the unit lower triangular (diagonal
+NB.          is not stored)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, the solution
-NB.   Xh   - same shape as Bh, the solution
+NB.   Xv   - same shape as Bv, solutions
+NB.   Xh   - same shape as Bh, solutions
 NB.   nrhs ≥ 0
 NB.
 NB. Notes:
@@ -142,7 +142,7 @@ NB. Syntax:
 NB.   testtrsm1 (A ; x)
 NB. where
 NB.   A - n×n-matrix, triangular
-NB.   x - n-vector, exact solution
+NB.   x - n-vector, the exact solution
 
 testtrsm1=: 3 : 0
   'A x'=. y

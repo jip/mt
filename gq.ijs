@@ -75,7 +75,7 @@ NB.   Q=. [k] unglq LQf
 NB. where
 NB.   LQf - m×(n+1)-matrix, the output of gelqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the first k rows of a product of k
+NB.         defined as the first k rows of the product of k
 NB.         elementary reflectors of order n:
 NB.           Q = Π{H(i)',i=k-1:0}
 NB.         where
@@ -123,7 +123,7 @@ NB.   Q=. [k] ungql QfL
 NB. where
 NB.   QfL - (m+1)×n-matrix, the output of geqlf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the last k columns of a product of k
+NB.         defined as the last k columns of the product of k
 NB.         elementary reflectors of order m:
 NB.           Q = Π{H(i),i=k-1:0}
 NB.         where
@@ -172,8 +172,8 @@ NB.   Q=. [k] ungqr QfR
 NB. where
 NB.   QfR - (m+1)×n-matrix, the output of geqrf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the first k columns of a product of k
-NB.         elementary reflectors of order m:
+NB.         defined as the first k columns of the product of
+NB.         k elementary reflectors of order m:
 NB.           Q = Π{H(i),i=0:k-1}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
@@ -221,7 +221,7 @@ NB.   Q=. [k] ungrq RQf
 NB. where
 NB.   RQf - m×(n+1)-matrix, the output of gerqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the last k rows of a product of k
+NB.         defined as the last k rows of the product of k
 NB.         elementary reflectors of order n:
 NB.           Q = Π{H(i)',i=0:k-1}
 NB.         where
@@ -269,7 +269,7 @@ NB.   Z=. [k] unglz LZf
 NB. where
 NB.   LZf - m×(n+1)-matrix, the output of tzlzf
 NB.   Z   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the last k rows of a product of k
+NB.         defined as the last k rows of the product of k
 NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=k-1:0}
 NB.         where
@@ -308,8 +308,8 @@ NB.   Z=. [k] ungzl ZfL
 NB. where
 NB.   ZfL - (m+1)×n-matrix, the output of tzzlf
 NB.   Z   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the first k columns of a product of k
-NB.         elementary reflectors of order m:
+NB.         defined as the first k columns of the product of
+NB.         k elementary reflectors of order m:
 NB.           Z = Π{H(i),i=k-1:0}
 NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
@@ -352,7 +352,7 @@ NB.   Z=. [k] ungzr ZfR
 NB. where
 NB.   ZfR - (m+1)×n-matrix, the output of tzzrf
 NB.   Z   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the last k columns of a product of k
+NB.         defined as the last k columns of the product of k
 NB.         elementary reflectors of order m:
 NB.           Z = Π{H(i),i=0:k-1}
 NB.         where
@@ -396,7 +396,7 @@ NB.   Z=. [k] ungrz RZf
 NB. where
 NB.   RZf - m×(n+1)-matrix, the output of tzrzf
 NB.   Z   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the first k rows of a product of k
+NB.         defined as the first k rows of the product of k
 NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=0:k-1}
 NB.         where

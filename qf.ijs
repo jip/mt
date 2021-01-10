@@ -64,9 +64,9 @@ NB.             eA -: A ,. Trash
 NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - m-vector, will be replaced by Tau
 NB.   LQf   - m×(n+1)-matrix, L and Qf combined
-NB.   L     - m×k-matrix, lower trapezoidal
-NB.   Qf    - k×(n+1)-matrix, unit upper trapezoidal (unit
-NB.           diagonal not stored), the Q represented in
+NB.   L     - m×k-matrix, the lower trapezoidal
+NB.   Qf    - k×(n+1)-matrix, the unit upper trapezoidal
+NB.           (unit diagonal not stored), represents the Q in
 NB.           factored form
 NB.   Q     - k×n-matrix with orthonormal rows, which is
 NB.           defined as the first k rows of a product of m
@@ -138,10 +138,10 @@ NB.             eA -: Trash , A
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
 NB.   QfL   - (m+1)×n-matrix, Qf and L combined
-NB.   Qf    - (m+1)×k-matrix, unit upper trapezoidal (unit
-NB.           diagonal not stored), the Q represented in
+NB.   Qf    - (m+1)×k-matrix, the unit upper trapezoidal
+NB.           (unit diagonal not stored), represents the Q in
 NB.           factored form
-NB.   L     - k×n-matrix, lower trapezoidal
+NB.   L     - k×n-matrix, the lower trapezoidal
 NB.   Q     - m×k-matrix with orthonormal columns, which is
 NB.           defined as the last k columns of a product of n
 NB.           elementary reflectors H(i) of order m:
@@ -209,10 +209,10 @@ NB.             eA -: A , Trash
 NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   QfR   - (m+1)×n-matrix, Qf and R combined
-NB.   Qf    - (m+1)×k-matrix, unit lower trapezoidal (unit
-NB.           diagonal not stored), the Q represented in
+NB.   Qf    - (m+1)×k-matrix, the unit lower trapezoidal
+NB.           (unit diagonal not stored), represents the Q in
 NB.           factored form
-NB.   R     - k×n-matrix, upper trapezoidal
+NB.   R     - k×n-matrix, the upper trapezoidal
 NB.   Q     - m×k-matrix with orthonormal columns, which is
 NB.           defined as the first k columns of a product of n
 NB.           elementary reflectors H(i) of order m:
@@ -280,9 +280,9 @@ NB.             eA -: Trash ,. A
 NB.   Trash - m-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
 NB.   RQf   - m×(n+1)-matrix, R and Qf combined
-NB.   R     - m×k-matrix, upper trapezoidal
-NB.   Qf    - k×(n+1)-matrix, unit lower trapezoidal (unit
-NB.           diagonal not stored), the Q represented in
+NB.   R     - m×k-matrix, the upper trapezoidal
+NB.   Qf    - k×(n+1)-matrix, the unit lower trapezoidal
+NB.           (unit diagonal not stored), represents the Q in
 NB.           factored form
 NB.   Q     - k×n-matrix with orthonormal rows which is
 NB.           defined as the last k rows of a product of m
@@ -354,14 +354,14 @@ NB.             eA -: Trash ,. iA1 ,. A2 ,. iL
 NB.   Trash - m-vector, will be replaced by Tau
 NB.   iA1   - m×(l-1)-matrix, part to be replaced by Zf
 NB.   A2    - m×(n-m-l+1)-matrix, is not changed
-NB.   iL    - m×m-matrix, lower triangular
-NB.   LZf   - m×(n+1)-matrix, unit lower trapezoidal Zf and
-NB.           lower trapezoidal L combined:
+NB.   iL    - m×m-matrix, the lower triangular
+NB.   LZf   - m×(n+1)-matrix, the unit lower trapezoidal Zf
+NB.           and the lower trapezoidal L combined:
 NB.             LZf -: Tau ,. oA1 ,. A2 ,. oL
 NB.   Tau   - m-vector, scalars τ[0:m-1] for Zf
 NB.   oA1   - m×(l-1)-matrix, rows are vectors v[0:m-1] for
 NB.           Zf
-NB.   oL    - m×m-matrix, lower triangular
+NB.   oL    - m×m-matrix, the lower triangular
 NB.   Zf    - m×(n+1)-matrix, the Z represented in factored
 NB.           form
 NB.   Z     - n×n-matrix with orthonormal rows which is
@@ -434,14 +434,14 @@ NB. where
 NB.   eA    - (m+1)×n-matrix, being A augmented by trash
 NB.           vector:
 NB.             eA -: iL , A1 , iA2 , Trash
-NB.   iL    - n×n-matrix, lower triangular
+NB.   iL    - n×n-matrix, the lower triangular
 NB.   A1    - (m-n-l+1)×n-matrix, is not changed
 NB.   iA2   - (l-1)×n-matrix, part to be replaced by Zf
 NB.   Trash - n-vector, will be replaced by Tau
-NB.   ZfL   - (m+1)×n-matrix, lower trapezoidal L and unit
-NB.           lower trapezoidal Zf combined:
+NB.   ZfL   - (m+1)×n-matrix, the lower trapezoidal L and the
+NB.           unit lower trapezoidal Zf combined:
 NB.             ZfL -: oL , A1 , oA2 , Tau
-NB.   oL    - n×n-matrix, lower triangular
+NB.   oL    - n×n-matrix, the lower triangular
 NB.   oA2   - (l-1)×n-matrix, columns are vectors v[0:n-1]
 NB.           for Zf
 NB.   Tau   - n-vector, scalars τ[0:n-1] for Zf
@@ -516,14 +516,14 @@ NB.             eA -: Trash , iA1 , A2 , iR
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   iA1   - (l-1)×n-matrix, part to be replaced by Zf
 NB.   A2    - (m-n-l+1)×n-matrix, is not changed
-NB.   iR    - n×n-matrix, upper triangular
-NB.   ZfR   - (m+1)×n-matrix, upper trapezoidal R and unit
-NB.           upper trapezoidal Zf combined:
+NB.   iR    - n×n-matrix, the upper triangular
+NB.   ZfR   - (m+1)×n-matrix, the upper trapezoidal R and the
+NB.           unit upper trapezoidal Zf combined:
 NB.             ZfR -: Tau , oA1 , A2 , oR
 NB.   Tau   - n-vector, scalars τ[0:n-1] for Zf
 NB.   oA1   - (l-1)×n-matrix, columns are vectors v[0:n-1]
 NB.           for Zf
-NB.   oR    - n×n-matrix, upper triangular
+NB.   oR    - n×n-matrix, the upper triangular
 NB.   Zf    - (m+1)×n-matrix, the Z represented in factored
 NB.           form
 NB.   Z     - m×m-matrix with orthonormal columns which is
@@ -591,14 +591,14 @@ NB. where
 NB.   eA    - m×(n+1)-matrix, being A augmented by trash
 NB.           vector:
 NB.             eA -: iR ,. A1 ,. iA2 ,. Trash
-NB.   iR    - m×m-matrix, upper triangular
+NB.   iR    - m×m-matrix, the upper triangular
 NB.   A1    - m×(n-m-l+1)-matrix, is not changed
 NB.   iA2   - m×(l-1)-matrix, part to be replaced by Zf
 NB.   Trash - m-vector, will be replaced by Tau
-NB.   RZf   - m×(n+1)-matrix, upper trapezoidal R and unit
-NB.           upper trapezoidal Zf combined:
+NB.   RZf   - m×(n+1)-matrix, the upper trapezoidal R and the
+NB.           unit upper trapezoidal Zf combined:
 NB.             RZf -: oR ,. A1 ,. oA2 ,. Tau
-NB.   oR    - m×m-matrix, upper triangular
+NB.   oR    - m×m-matrix, the upper triangular
 NB.   oA2   - m×(l-1)-matrix, rows are vectors v[0:m-1] for
 NB.           Zf
 NB.   Tau   - m-vector, scalars τ[0:m-1] for Zf
@@ -679,9 +679,9 @@ NB.   LQf=. gelqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   LQf - m×(n+1)-matrix, L and Qf combined
-NB.   L   - m×k-matrix, lower trapezoidal
-NB.   Qf  - k×(n+1)-matrix, unit upper trapezoidal (unit
-NB.         diagonal not stored), the Q represented in
+NB.   L   - m×k-matrix, the lower trapezoidal
+NB.   Qf  - k×(n+1)-matrix, the unit upper trapezoidal (unit
+NB.         diagonal not stored), represents the Q in
 NB.         factored form
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the first k rows of a product of m
@@ -748,10 +748,10 @@ NB.   QfL=. geqlf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   QfL - (m+1)×n-matrix, Qf and L combined
-NB.   Qf  - (m+1)×k-matrix, unit upper trapezoidal (unit
-NB.         diagonal not stored), the Q represented in
+NB.   Qf  - (m+1)×k-matrix, the unit upper trapezoidal (unit
+NB.         diagonal not stored), represents the Q in
 NB.         factored form
-NB.   L   - k×n-matrix, lower trapezoidal
+NB.   L   - k×n-matrix, the lower trapezoidal
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the last k columns of a product of n
 NB.         elementary reflectors H(i) of order m:
@@ -814,10 +814,10 @@ NB.   QfR=. geqrf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   QfR - (m+1)×n-matrix, Qf and R combined
-NB.   Qf  - (m+1)×k-matrix, unit lower trapezoidal (unit
-NB.         diagonal not stored), the Q represented in
+NB.   Qf  - (m+1)×k-matrix, the unit lower trapezoidal (unit
+NB.         diagonal not stored), represents the Q in
 NB.         factored form
-NB.   R   - k×n-matrix, upper trapezoidal
+NB.   R   - k×n-matrix, the upper trapezoidal
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the first k columns of a product of n
 NB.         elementary reflectors H(i) of order m:
@@ -880,9 +880,9 @@ NB.   RQf=. gerqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   RQf - m×(n+1)-matrix, R and Qf combined
-NB.   R   - m×k-matrix, upper trapezoidal
-NB.   Qf  - k×(n+1)-matrix, unit lower trapezoidal (unit
-NB.         diagonal not stored), the Q represented in
+NB.   R   - m×k-matrix, the upper trapezoidal
+NB.   Qf  - k×(n+1)-matrix, the unit lower trapezoidal (unit
+NB.         diagonal not stored), represents the Q in
 NB.         factored form
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the last k rows of a product of m
@@ -950,13 +950,13 @@ NB. where
 NB.   A   - m×n-matrix:
 NB.           A -: iA0 ,. iL
 NB.   iA0 - m×(n-m)-matrix, part to be replaced by Zf
-NB.   iL  - m×m-matrix, lower triangular
-NB.   LZf - m×(n+1)-matrix, lower trapezoidal L and unit
+NB.   iL  - m×m-matrix
+NB.   LZf - m×(n+1)-matrix, the lower trapezoidal L and unit
 NB.         lower trapezoidal Zf combined:
 NB.           LZf -: Tau ,. oA0 ,. oL
 NB.   Tau - m-vector, scalars τ[0:m-1] for Zf
 NB.   oA0 - m×(n-m)-matrix, rows are vectors v[0:m-1] for Zf
-NB.   oL  - m×m-matrix, lower triangular
+NB.   oL  - m×m-matrix, the lower triangular
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored
 NB.         form
 NB.   Z   - n×n-matrix with orthonormal rows which is defined
@@ -1034,12 +1034,12 @@ NB.   ZfL=. tzzlf A
 NB. where
 NB.   A   - m×n-matrix:
 NB.           A -: iL , iA0
-NB.   iL  - n×n-matrix, lower triangular
+NB.   iL  - n×n-matrix
 NB.   iA0 - (m-n)×n-matrix, part to be replaced by Zf
-NB.   ZfL - (m+1)×n-matrix, unit upper trapezoidal Zf and
+NB.   ZfL - (m+1)×n-matrix, the unit upper trapezoidal Zf and
 NB.         lower trapezoidal L combined:
 NB.           ZfL -: oL , oA0 , Tau
-NB.   oL  - n×n-matrix, lower triangular
+NB.   oL  - n×n-matrix, the lower triangular
 NB.   oA0 - (m-n)×n-matrix, columns are vectors v[0:m-1] for
 NB.         Zf
 NB.   Tau - n-vector, scalars τ[0:n-1] for Zf
@@ -1114,14 +1114,14 @@ NB. where
 NB.   A   - m×n-matrix:
 NB.           A -: iA0 , iR
 NB.   iA0 - (m-n)×n-matrix, part to be replaced by Zf
-NB.   iR  - n×n-matrix, upper triangular
-NB.   ZfR - (m+1)×n-matrix, unit upper trapezoidal Zf and
+NB.   iR  - n×n-matrix
+NB.   ZfR - (m+1)×n-matrix, the unit upper trapezoidal Zf and
 NB.         upper trapezoidal R combined:
 NB.           ZfR -: Tau , oA0 , oR
 NB.   Tau - n-vector, scalars τ[0:n-1] for Zf
 NB.   oA0 - (m-n)×n-matrix, columns are vectors v[0:m-1] for
 NB.         Zf
-NB.   oR  - n×n-matrix, upper triangular
+NB.   oR  - n×n-matrix, the upper triangular
 NB.   Zf  - (m+1)×n-matrix, the Z represented in factored
 NB.         form
 NB.   Z   - m×m-matrix with orthonormal columns which is
@@ -1192,12 +1192,12 @@ NB.   RZf=. tzrzf A
 NB. where
 NB.   A   - m×n-matrix:
 NB.           A -: iR ,. iA1
-NB.   iR  - m×m-matrix, upper triangular
+NB.   iR  - m×m-matrix
 NB.   iA1 - m×(n-m)-matrix, part to be replaced by Zf
-NB.   RZf - m×(n+1)-matrix, upper trapezoidal R and unit
+NB.   RZf - m×(n+1)-matrix, the upper trapezoidal R and unit
 NB.         upper trapezoidal Zf combined:
 NB.           RZf -: oR ,. oA1 ,. Tau
-NB.   oR  - m×m-matrix, upper triangular
+NB.   oR  - m×m-matrix, the upper triangular
 NB.   oA1 - m×(n-m)-matrix, rows are vectors v[0:m-1] for Zf
 NB.   Tau - m-vector, scalars τ[0:m-1] for Zf
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored

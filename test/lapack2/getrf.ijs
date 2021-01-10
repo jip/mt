@@ -10,12 +10,11 @@ NB. where
 NB.   A    - m×n-matrix, which is factorized as:
 NB.            P * L1 * U = A
 NB.   L1U  - m×n-matrix, L1 and U combined
-NB.   ipiv - k-vector, the pivot indices that define the
-NB.          permutation matrix P; row i of the matrix was
-NB.          interchanged with row (i { ipiv)
-NB.   L1   - m×k-matrix, unit lower trapezoidal (unit
+NB.   ipiv - k-vector, pivot indices that define P
+NB.   L1   - m×k-matrix, the unit lower trapezoidal (unit
 NB.          diagonal not stored)
-NB.   U    - k×n-matrix, upper trapezoidal
+NB.   U    - k×n-matrix, the upper trapezoidal
+NB.   P    - n×n-matrix, boolean, the permutation matrix
 NB.   m    ≥ 0, rows in A and L1
 NB.   n    ≥ 0, columns in A and U
 NB.   k    = min(m,n)

@@ -131,7 +131,7 @@ NB. Syntax:
 NB.   S=. [par] randnf sh
 NB.   S=. [par] randnc sh
 NB. where
-NB.   sh  - r-vector of non-negative integers, shape of S
+NB.   sh  - r-vector of non-negative integers, the shape of S
 NB.   par - optional 2-vector (μ,σ), σ>0, parameters of
 NB.         distribution, default is (0 1)
 NB.   S   - sh-array of values s ~ N(μ,σ^2)

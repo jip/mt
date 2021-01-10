@@ -58,14 +58,14 @@ NB. where
 NB.   subeA - (n-i)×(n-i)-matrix eA[i:n-1,i+1:n]
 NB.   Y     - HRDNB×(n-i)-matrix, Y = T * V * subeA, the
 NB.           last column contains trash
-NB.   V     - HRDNB×(n-i)-matrix, unit upper trapezoidal,
+NB.   V     - HRDNB×(n-i)-matrix, the unit upper trapezoidal,
 NB.           the last column contains τ[i:i+HRDNB-1]
-NB.   T     - HRDNB×HRDNB-matrix, lower triangular
-NB.   H     - HRDNB×HRDNB-matrix, lower triangular
+NB.   T     - HRDNB×HRDNB-matrix, the lower triangular
+NB.   H     - HRDNB×HRDNB-matrix, the lower triangular
 NB.   eA    - n×(n+1)-matrix, being A with stitched trash
 NB.           column
 NB.   A     - n×n-matrix to reduce
-NB.   Q     - (n-i)×(n-i)-matrix, block reflector,
+NB.   Q     - (n-i)×(n-i)-matrix, the block reflector,
 NB.             Q = I - V'*T*V
 NB.   VH    - HRDNB×(n-i)-matrix, represents reduced rows
 NB.           of subeA, lower triangles of VH and H are
@@ -113,13 +113,13 @@ NB. where
 NB.   subeA - (n-i)×(n-i)-matrix eA[i+1:n,i:n-1]
 NB.   Y     - (n-i)×HRDNB-matrix, Y = subeA * V * T, the
 NB.           last row contains trash
-NB.   V     - (n-i)×HRDNB-matrix, unit lower trapezoidal,
+NB.   V     - (n-i)×HRDNB-matrix, the unit lower trapezoidal,
 NB.           the last row contains τ[i:i+HRDNB-1]
-NB.   T     - HRDNB×HRDNB-matrix, upper triangular
-NB.   H     - HRDNB×HRDNB-matrix, upper triangular
+NB.   T     - HRDNB×HRDNB-matrix, the upper triangular
+NB.   H     - HRDNB×HRDNB-matrix, the upper triangular
 NB.   eA    - (n+1)×n-matrix, being A with appended trash row
 NB.   A     - n×n-matrix to reduce
-NB.   Q     - (n-i)×(n-i)-matrix, block reflector,
+NB.   Q     - (n-i)×(n-i)-matrix, the block reflector,
 NB.             Q = I - V*T*V'
 NB.   VH    - (n-i)×HRDNB-matrix, represents reduced columns
 NB.           of subeA, upper triangles of VH and H are
@@ -255,12 +255,12 @@ NB.             defines submatrices A11 and B11 to be reduced
 NB.             position in matrices A and B, respectively,
 NB.             see gehrdl
 NB.   A       - n×n-matrix
-NB.   B       - n×n-matrix, lower triangular
+NB.   B       - n×n-matrix, the lower triangular
 NB.   HT      -:H ,: T
-NB.   H       - n×n-matrix, lower Hessenberg inside the
-NB.             submatrix H[h:h+s-1,h:h+s-1], and lower
+NB.   H       - n×n-matrix, the lower Hessenberg inside the
+NB.             submatrix H[h:h+s-1,h:h+s-1], and the lower
 NB.             triangular outside
-NB.   T       - n×n-matrix, lower triangular
+NB.   T       - n×n-matrix, the lower triangular
 NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
 NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
 NB.             have the same shapes
@@ -324,12 +324,12 @@ NB.             defines submatrices A11 and B11 to be reduced
 NB.             position in matrices A and B, respectively,
 NB.             see gehrdu
 NB.   A       - n×n-matrix
-NB.   B       - n×n-matrix, upper triangular
+NB.   B       - n×n-matrix, the upper triangular
 NB.   HT      -:H ,: T
-NB.   H       - n×n-matrix, upper Hessenberg inside the
-NB.             submatrix H[h:h+s-1,h:h+s-1], and upper
+NB.   H       - n×n-matrix, the upper Hessenberg inside the
+NB.             submatrix H[h:h+s-1,h:h+s-1], and the upper
 NB.             triangular outside
-NB.   T       - n×n-matrix, upper triangular
+NB.   T       - n×n-matrix, the upper triangular
 NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
 NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
 NB.             have the same shapes
@@ -395,9 +395,9 @@ NB.   HQf - n×(n+1)-matrix, H and Qf combined
 NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
 NB.         1st supdiagonal
-NB.   Qf  - (s-1)×(n-h)-matrix, unit upper trapezoidal (unit
-NB.         diagonal not stored), represents Q in factored
-NB.         form:
+NB.   Qf  - (s-1)×(n-h)-matrix, the unit upper trapezoidal
+NB.         (unit diagonal not stored), represents Q in
+NB.         factored form:
 NB.           Q = Π{H(i)',i=h+s-2:h} ,
 NB.         where each elementary reflector Q(i) is
 NB.         represented as:
@@ -410,7 +410,7 @@ NB.           v[i][0:i-h-1] = v[i][s-1:n-h-2] = 0 ,
 NB.           v[i][i-h] = 1 ,
 NB.         v[i][i-h+1:s-2] is stored in A[i,i+2:h+s-1], τ[i]
 NB.         is stored in A[i,n]
-NB.   Q   - n×n-matrix, being unit matrix with unitary
+NB.   Q   - n×n-matrix, the unit matrix with unitary
 NB.         (orthogonal) matrix inserted into elements
 NB.         Q[h:h+s-1,h:h+s-1]
 NB.
@@ -419,9 +419,9 @@ NB.       (  A00          )
 NB.   A = (  A10 A11      )
 NB.       (  A20 A21 A22  )
 NB. where
-NB.   A00     - h×h-matrix, lower triangular
+NB.   A00     - h×h-matrix, the lower triangular
 NB.   A11     - s×s-matrix to be reduced
-NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, lower triangular
+NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, the lower triangular
 NB.   A10,A21 - matrices to be updated
 NB. Example for h=1, s=5, n=7:
 NB.   input  A                     output HQf
@@ -484,9 +484,9 @@ NB.   HQf - (n+1)×n-matrix, H and Qf combined
 NB.   H   - n×n-matrix, it has zeros under 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros below
 NB.         1st subdiagonal
-NB.   Qf  - (n-h)×(s-1)-matrix, unit lower trapezoidal (unit
-NB.         diagonal not stored), represents Q in factored
-NB.         form:
+NB.   Qf  - (n-h)×(s-1)-matrix, the unit lower trapezoidal
+NB.         (unit diagonal not stored), represents Q in
+NB.         factored form:
 NB.           Q = Π{H(i),i=h:h+s-2} ,
 NB.         where each elementary reflector Q(i) is
 NB.         represented as:
@@ -499,7 +499,7 @@ NB.           v[i][0:i-h-1] = v[i][s-1:n-h-2] = 0 ,
 NB.           v[i][i-h] = 1 ,
 NB.         v[i][i-h+1:s-2] is stored in A[i+2:h+s-1,i], τ[i]
 NB.         is stored in A[n,i]
-NB.   Q   - n×n-matrix, being unit matrix with unitary
+NB.   Q   - n×n-matrix, the unit matrix with unitary
 NB.         (orthogonal) matrix inserted into elements
 NB.         Q[h:h+s-1,h:h+s-1]
 NB.
@@ -508,9 +508,9 @@ NB.       (  A00 A01 A02  )
 NB.   A = (      A11 A12  )
 NB.       (          A22  )
 NB. where
-NB.   A00     - h×h-matrix, upper triangular
+NB.   A00     - h×h-matrix, the upper triangular
 NB.   A11     - s×s-matrix to be reduced
-NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, upper triangular
+NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, the upper triangular
 NB.   A01,A12 - matrices to be updated
 NB. Example for h=1, s=5, n=7:
 NB.   input  A                     output HQf
@@ -595,10 +595,11 @@ NB.          defines submatrices A11 and B11 to be reduced
 NB.          position in matrices A and B, respectively, see
 NB.          geballp and gehrdl
 NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, lower triangular
-NB.   H    - n×n-matrix, lower Hessenberg inside the submatrix
-NB.          H[h:h+s-1,h:h+s-1], and lower triangular outside
-NB.   T    - n×n-matrix, lower triangular
+NB.   B    - n×n-matrix, the lower triangular
+NB.   H    - n×n-matrix, the lower Hessenberg inside the
+NB.          submatrix H[h:h+s-1,h:h+s-1], and lower
+NB.          triangular outside
+NB.   T    - n×n-matrix, the lower triangular
 NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
 NB.          from the LQ factorization of B
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
@@ -665,10 +666,11 @@ NB.          defines submatrices A11 and B11 to be reduced
 NB.          position in matrices A and B, respectively, see
 NB.          gebalup and gehrdu
 NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, upper triangular
-NB.   H    - n×n-matrix, upper Hessenberg inside the submatrix
-NB.          H[h:h+s-1,h:h+s-1], and upper triangular outside
-NB.   T    - n×n-matrix, upper triangular
+NB.   B    - n×n-matrix, the upper triangular
+NB.   H    - n×n-matrix, the upper Hessenberg inside the
+NB.          submatrix H[h:h+s-1,h:h+s-1], and upper
+NB.          triangular outside
+NB.   T    - n×n-matrix, the upper triangular
 NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
 NB.          from the QR factorization of B
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)

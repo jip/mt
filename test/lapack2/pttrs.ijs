@@ -18,7 +18,7 @@ NB.   dD   - n-vector, real, diagonal of D
 NB.   eT1  - (n-1)-vector, subdiagonal of L1, or the
 NB.          superdiagonal of U1
 NB.   B    - n×nrhs-matrix, RHS
-NB.   X    - n×nrhs-matrix, the solutions of equation:
+NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal represented in factored

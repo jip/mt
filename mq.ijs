@@ -94,11 +94,10 @@ NB.   C      - m×(n+1)-matrix or (m+1)×n-matrix to multiply
 NB.   Qf     - unit trapezoidal matrix, it represents Q in
 NB.            factored form as returned by ge{lq,ql,qr,rq}2,
 NB.            and contains vectors Vtau[0:k-1]
-NB.   Q      - matrix with orthonormal rows or columns, which
-NB.            is defined as the product of elementary
-NB.            reflectors
-NB.   eCprod - being product of matrix Q and augmented matrix
-NB.            C, trash vector is modified on exit
+NB.   Q      - unitary (orthogonal) matrix, which is defined
+NB.            as the product of elementary reflectors
+NB.   eCprod - the product of matrix Q and the augmented
+NB.            matrix C, trash vector is modified on exit
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   ((((}:  @unml2ln ,  &0)~  tru1        @({.  ~  0 _1    <./ @:+ $)) -: (mp~    (unglq~ <:@c)))~ 0 ?@$~ 0 _1 |.@:+ $) LQf
@@ -175,11 +174,10 @@ NB.   C      - m×(n+1)-matrix or (m+1)×n-matrix to multiply
 NB.   Zf     - unit trapezoidal matrix, it represents Z in
 NB.            factored form as returned by tz{lz,zl,zr,rz}3,
 NB.            and contains vectors Vtau[0:k-1]
-NB.   Z      - matrix with orthonormal rows or columns, which
-NB.            is defined as the product of elementary
-NB.            reflectors
-NB.   eCprod - being product of matrix Z and augmented matrix
-NB.            C, trash vector is modified on exit
+NB.   Z      - unitary (orthonormal) matrix which is defined
+NB.            as the product of elementary reflectors
+NB.   eCprod - the product of matrix Z and the augmented
+NB.            matrix C, trash vector is modified on exit
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   ((((}.  @unml3ln , ~&0)~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #)) -: (mp~    (unglz~ <:@c)))~ 0 ?@$~ 0 _1 |.@:+ $) LZf
@@ -248,8 +246,8 @@ NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
 NB.         unit upper trapezoidal, the Q represented in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
-NB.         (orthogonal), which is defined as a product of k
-NB.         elementary reflectors:
+NB.         (orthogonal), which is defined as the product of
+NB.         k elementary reflectors H(i):
 NB.           Q = Π{H(i)',i=k-1:0}
 NB.   k   = min(m,n)
 NB.
@@ -288,8 +286,8 @@ NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
 NB.         unit upper trapezoidal, the Q represented in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
-NB.         (orthogonal), which is defined as a product of k
-NB.         elementary reflectors:
+NB.         (orthogonal), which is defined as the product of
+NB.         k elementary reflectors H(i):
 NB.           Q = Π{H(i),i=k-1:0}
 NB.   k   = min(m,n)
 NB.
@@ -328,8 +326,8 @@ NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
 NB.         unit lower trapezoidal, the Q represented in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
-NB.         (orthogonal), which is defined as a product of k
-NB.         elementary reflectors:
+NB.         (orthogonal), which is defined as the product of
+NB.         k elementary reflectors H(i):
 NB.           Q = Π{H(i),i=0:k-1}
 NB.   k   = min(m,n)
 NB.
@@ -369,8 +367,8 @@ NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
 NB.         unit lower trapezoidal, the Q represented in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
-NB.         (orthogonal), which is defined as a product of k
-NB.         elementary reflectors:
+NB.         (orthogonal), which is defined as the product of
+NB.         k elementary reflectors H(i):
 NB.           Q = Π{H(i)',i=0:k-1}
 NB.   k   = min(m,n)
 NB.
@@ -410,8 +408,8 @@ NB.   Zf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
 NB.         trailing k×k-submatrix is identity, the Z
 NB.         represented in factored form
 NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
-NB.         (orthogonal), which is defined as a product of k
-NB.         elementary reflectors:
+NB.         (orthogonal), which is defined as the product of
+NB.         k elementary reflectors H(i):
 NB.           Z = Π{H(i)',i=k-1:0}
 NB.   k   ≤ min(m,n)
 NB.
@@ -450,8 +448,8 @@ NB.   Zf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
 NB.         leading k×k-submatrix is identity, the Z
 NB.         represented in factored form
 NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
-NB.         (orthogonal), which is defined as a product of k
-NB.         elementary reflectors:
+NB.         (orthogonal), which is defined as the product of
+NB.         k elementary reflectors H(i):
 NB.           Z = Π{H(i),i=k-1:0}
 NB.   k   ≤ min(m,n)
 NB.
@@ -490,8 +488,8 @@ NB.   Zf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
 NB.         trailing k×k-submatrix is identity, the Z
 NB.         represented in factored form
 NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
-NB.         (orthogonal), which is defined as a product of k
-NB.         elementary reflectors:
+NB.         (orthogonal), which is defined as the product of
+NB.         k elementary reflectors H(i):
 NB.           Z = Π{H(i),i=0:k-1}
 NB.   k   ≤ min(m,n)
 NB.
@@ -530,8 +528,8 @@ NB.   Zf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
 NB.         leading k×k-submatrix is identity, the Z
 NB.         represented in factored form
 NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
-NB.         (orthogonal), which is defined as a product of k
-NB.         elementary reflectors:
+NB.         (orthogonal), which is defined as the product of
+NB.         k elementary reflectors H(i):
 NB.           Z = Π{H(i)',i=0:k-1}
 NB.   k   ≤ min(m,n)
 NB.
@@ -568,8 +566,8 @@ NB.   HQf - m×(m+1)-matrix (ln,lc cases) or n×(n+1)-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gehrdl
 NB.   Qf  - (s-1)×(m-h)-matrix (ln,lc) or (s-1)×(n-h)-matrix
-NB.         (rn,rc), unit upper trapezoidal, the Q
-NB.         represented in factored form, located in
+NB.         (rn,rc), the unit upper trapezoidal, represents
+NB.         the Q in factored form, located in
 NB.         HQf[h:h+s-2,h+1:end]
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), being
 NB.         unit matrix with unitary (orthogonal) matrix
@@ -616,8 +614,8 @@ NB.   HQf - (m+1)×m-matrix (ln,lc cases) or (n+1)×n-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gehrdu
 NB.   Qf  - (m-h)×(s-1)-matrix (ln,lc) or (n-h)×(s-1)-matrix
-NB.         (rn,rc), unit lower trapezoidal, the Q
-NB.         represented in factored form, located in
+NB.         (rn,rc), the unit lower trapezoidal, represents
+NB.         the Q in factored form, located in
 NB.         HQf[h+1:end,h:h+s-2]
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), being
 NB.         unit matrix with unitary (orthogonal) matrix

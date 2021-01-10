@@ -11,13 +11,13 @@ NB.   A    - n×n-matrix, which is factorized as:
 NB.            P * L1 * U = A
 NB.   B    - n×nrhs-matrix, RHS
 NB.   L1U  - n×n-matrix, L1 and U combined
-NB.   ipiv - n-vector, the pivot indices that define the
-NB.          permutation matrix P; row i of the matrix was
-NB.          interchanged with row (i { ipiv)
-NB.   X    - n×nrhs-matrix, the solution
-NB.   L1   - n×n-matrix, unit lower triangular (unit diagonal
-NB.          not stored)
-NB.   U    - n×n-matrix, upper triangular
+NB.   ipiv - n-vector, pivot indices that define P
+NB.   X    - n×nrhs-matrix, solutions of equation:
+NB.            A * X = B
+NB.   L1   - n×n-matrix, the unit lower triangular (unit
+NB.          diagonal not stored)
+NB.   U    - n×n-matrix, the upper triangular
+NB.   P    - n×n-matrix, boolean, the permutation matrix
 NB.   n    ≥ 0, the size of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.

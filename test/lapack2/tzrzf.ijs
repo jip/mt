@@ -10,16 +10,16 @@ NB. where
 NB.   A   - m×n-matrix, the leading upper trapezoidal part of
 NB.         it must contain the matrix to be factored
 NB.   RZf - m×n-matrix, R and Zf combined
-NB.   tau - m-vector, the scalar factors of the elementary
+NB.   tau - m-vector, the scalar factors of elementary
 NB.         reflectors applied to A
 NB.   R   - m×m-matrix, the upper triangular part contains
 NB.         the part factored, the strict lower triangular
 NB.         part contains corresp. elements from A unchanged
-NB.   Zf  - m×n-matrix, unit upper trapezoidal (unit diagonal
-NB.         not stored), with the tau it represents the Z in
-NB.         factored form
-NB.   Z   - n×n-matrix, orthogonal (unitary), which is
-NB.         defined as a product of m elementary reflectors
+NB.   Zf  - m×n-matrix, the unit upper trapezoidal (unit
+NB.         diagonal not stored), with the tau it represents
+NB.         the Z in the factored form
+NB.   Z   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of m elementary reflectors
 NB.         H(i) of order n:
 NB.           Z = Π{H(i)',i=0:m-1}
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)

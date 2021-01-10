@@ -113,7 +113,7 @@ NB.            positive definite tridiagonal
 NB.   rcondT ≥ 0, reciprocal of the condition number of T
 NB.   R      - n×n-matrix of type: triangular
 NB.   rcondR ≥ 0, reciprocal of the condition number of R
-NB.   Q      - n×n-matrix, unitary (orthogonal)
+NB.   Q      - n×n-matrix, the unitary (orthogonal)
 NB.   rcondQ ≥ 0, reciprocal of the condition number of Q in
 NB.            1-norm
 NB.

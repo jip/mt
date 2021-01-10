@@ -49,7 +49,7 @@ NB. Syntax:
 NB.   B=. s sdiag A
 NB. where
 NB.   A - n×n-matrix or m×n×n-brick
-NB.   s - scalar or m-vector, shift of diagonal[s] in A
+NB.   s - scalar or m-vector, the shift of diagonal[s] in A
 NB.   B - array of the same shape as A, the shifted A:
 NB.         B -: A + s (*"0 2) idmat n
 NB.
@@ -342,7 +342,7 @@ NB.
 NB. Syntax:
 NB.   testdiexp A
 NB. where
-NB.   A - n×n-matrix, diagonalizable
+NB.   A - n×n-matrix, the diagonalizable
 
 testdiexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -374,7 +374,7 @@ NB.
 NB. Syntax:
 NB.   testheexp A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric)
+NB.   A - n×n-matrix, the Hermitian (symmetric)
 
 testheexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes

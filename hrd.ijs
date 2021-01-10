@@ -697,19 +697,19 @@ NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: I
 NB.   'H T dQ0 dZ0'=. hs gghrduvv A , B , ,:~ I
 NB.
 NB. Application:
-NB. - model LAPACK's xGGHRD('N','I'):
+NB. - models LAPACK's xGGHRD('N','I'):
 NB.     NB. 'H T dZ0'=. hs gghrduni A ,: B
 NB.     gghrduni=: gghrdunv (, idmat@c)
-NB. - model LAPACK's xGGHRD('I','N'):
+NB. - models LAPACK's xGGHRD('I','N'):
 NB.     NB. 'H T dQ0'=. hs gghrduin A ,: B
 NB.     gghrduin=: gghrduvn (, idmat@c)
-NB. - model LAPACK's xGGHRD('I','I'):
+NB. - models LAPACK's xGGHRD('I','I'):
 NB.     NB. 'H T dQ0 dZ0'=. hs gghrduii A ,: B
 NB.     gghrduii=: gghrduvv (,~^:2~ idmat@c)
-NB. - model LAPACK's xGGHRD('I','V'):
+NB. - models LAPACK's xGGHRD('I','V'):
 NB.     NB. 'H T dQ0 Z1'=. hs gghrduiv A , B ,: Z0
 NB.     gghrduiv=: gghrduvv (1&A.@, idmat@c)
-NB. - model LAPACK's xGGHRD('V','I'):
+NB. - models LAPACK's xGGHRD('V','I'):
 NB.     NB. 'H T Q1 dZ0'=. hs gghrduvi A , B ,: Q0
 NB.     gghrduvi=: gghrduvv (, idmat@c)
 NB.

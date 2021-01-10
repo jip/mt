@@ -91,8 +91,8 @@ NB.
 NB. Notes:
 NB. - opposite triangle is not referenced
 NB. - unit diagonal is not referenced
-NB. - model BLAS's xTRSV for vector RHS
-NB. - model BLAS's xTRSM for matrix RHS with following
+NB. - models BLAS's xTRSV for vector RHS
+NB. - models BLAS's xTRSM for matrix RHS with the following
 NB.   difference: alpha parameter is assumed to be always
 NB.   equal to 1; to workaround this limitation use the
 NB.   following pattern:

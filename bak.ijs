@@ -57,9 +57,9 @@ NB.   d    - n-vector, diagonal of scaling matrix D
 NB.   B    - n×n-matrix, transformed eigenvectors
 NB.
 NB. Application:
-NB. - model xGGBAK('S','L')
+NB. - models xGGBAK('S','L')
 NB.     'CD pl'=. gebakxsx EF ; ({. plr) ; ({. dlr)
-NB. - model xGGBAK('S','R')
+NB. - models xGGBAK('S','R')
 NB.     'CD pr'=. gebakxsx EF ; ({: plr) ; ({: dlr)
 NB.
 NB. Notes:
@@ -86,9 +86,9 @@ NB.   p  - n-vector, permutation of B
 NB.   C  - n×n-matrix, transformed eigenvectors
 NB.
 NB. Application:
-NB. - model xGGBAK('P','L')
+NB. - models xGGBAK('P','L')
 NB.     AB=. gebakup CD ; ({. plr)
-NB. - model xGGBAK('P','R')
+NB. - models xGGBAK('P','R')
 NB.     AB=. gebakup CD ; ({: plr)
 NB.
 NB. Notes:
@@ -119,9 +119,9 @@ NB.   d - n-vector, diagonal of scaling matrix D
 NB.   C - n×n-matrix, transformed eigenvectors
 NB.
 NB. Application:
-NB. - model xGGBAK('B','L')
+NB. - models xGGBAK('B','L')
 NB.     AB=. gebakul EF ; ({. plr) ; ({. dlr)
-NB. - model xGGBAK('B','R')
+NB. - models xGGBAK('B','R')
 NB.     AB=. gebakur EF ; ({: plr) ; ({: dlr)
 NB.
 NB. Notes:

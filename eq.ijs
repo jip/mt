@@ -845,34 +845,34 @@ NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
 NB.   'S P dQ1 dZ1'=. hs hgeqzsvv H , T , ,:~ I
 NB.
 NB. Application:
-NB. - model LAPACK's xHGEQZ('E','N','I'):
+NB. - models LAPACK's xHGEQZ('E','N','I'):
 NB.     NB. 'e1e2 dZ1'=. hs hgeqzeni H ,: T
 NB.     hgeqzeni=: hgeqzenv (, idmat@c)
-NB. - model LAPACK's xHGEQZ('E','I','N'):
+NB. - models LAPACK's xHGEQZ('E','I','N'):
 NB.     NB. 'e1e2 dQ1'=. hs hgeqzein H ,: T
 NB.     hgeqzein=: hgeqzevn (, idmat@c)
-NB. - model LAPACK's xHGEQZ('E','I','I'):
+NB. - models LAPACK's xHGEQZ('E','I','I'):
 NB.     NB. 'e1e2 dQ1dZ1'=. hs hgeqzeii H ,: T
 NB.     hgeqzeii=: hgeqzevv (,~^:2~ idmat@c)
-NB. - model LAPACK's xHGEQZ('E','I','V'):
+NB. - models LAPACK's xHGEQZ('E','I','V'):
 NB.     NB. 'e1e2 dQ1Z2'=. hs hgeqzeiv H , T ,: Z1
 NB.     hgeqzeiv=: hgeqzevv (1&A.@, idmat@c)
-NB. - model LAPACK's xHGEQZ('E','V','I'):
+NB. - models LAPACK's xHGEQZ('E','V','I'):
 NB.     NB. 'e1e2 Q2dZ1'=. hs hgeqzevi H , T ,: Q1
 NB.     hgeqzevi=: hgeqzevv (, idmat@c)
-NB. - model LAPACK's xHGEQZ('S','N','I'):
+NB. - models LAPACK's xHGEQZ('S','N','I'):
 NB.     NB. 'S P dZ1'=. hs hgeqzsni H ,: T
 NB.     hgeqzsni=: hgeqzsnv (, idmat@c)
-NB. - model LAPACK's xHGEQZ('S','I','N'):
+NB. - models LAPACK's xHGEQZ('S','I','N'):
 NB.     NB. 'S P dQ1'=. hs hgeqzsin H ,: T
 NB.     hgeqzsin=: hgeqzsvn (, idmat@c)
-NB. - model LAPACK's xHGEQZ('S','I','I'):
+NB. - models LAPACK's xHGEQZ('S','I','I'):
 NB.     NB. 'S P dQ1 dZ1'=. hs hgeqzsii H ,: T
 NB.     hgeqzsii=: hgeqzsvv (,~^:2~ idmat@c)
-NB. - model LAPACK's xHGEQZ('S','I','V'):
+NB. - models LAPACK's xHGEQZ('S','I','V'):
 NB.     NB. 'S P dQ1 Z2'=. hs hgeqzsiv H , T ,: Z1
 NB.     hgeqzsiv=: hgeqzsvv (1&A.@, idmat@c)
-NB. - model LAPACK's xHGEQZ('S','V','I'):
+NB. - models LAPACK's xHGEQZ('S','V','I'):
 NB.     NB. 'S P Q2 dZ1'=. hs hgeqzsvi H , T ,: Q1
 NB.     hgeqzsvi=: hgeqzsvv (, idmat@c)
 NB. - detect case of non-convergence (0=converged,

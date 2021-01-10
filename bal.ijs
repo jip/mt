@@ -369,25 +369,25 @@ NB.   D=. diagmat d
 NB.   iD=. %. D
 NB.
 NB. Application:
-NB. - model LAPACK's xGEBAL('N') to do nothing:
+NB. - models LAPACK's xGEBAL('N') to do nothing:
 NB.     'p hs d'=. gebaln A
 NB.     gebaln=: (i. ; 0&, ; 1&($~))@#
-NB. - model LAPACK's xGEBAL('S') to balance without
+NB. - models LAPACK's xGEBAL('S') to balance without
 NB.   eigenvalues isolating step, i.e. scale non-permuted
 NB.   matrix A (default p and hs):
 NB.     'Ascl d'=. (0 3 { gebals@((; i. ; 0&,) #)) A
-NB. - model SLICOT's TB01ID('N'):
+NB. - models SLICOT's TB01ID('N'):
 NB.     NB. 'Ascl d'=. maxred tb01idn  A
 NB.     tb01idn=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
-NB. - model SLICOT's TB01ID('B'):
+NB. - models SLICOT's TB01ID('B'):
 NB.     NB. 'ABscl d'=. maxred tb01idb  A ,. B
 NB.     NB. 'Ascl Bscl'=. n ({."1 ; }."1) ABscl
 NB.     tb01idb=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
-NB. - model SLICOT's TB01ID('C'):
+NB. - models SLICOT's TB01ID('C'):
 NB.     NB. 'ACscl d'=. maxred tb01idc  A , C
 NB.     NB. 'Ascl Cscl'=. n ({. ; }.) ACscl
 NB.     tb01idc=: 0 3 { (gebals ] ; i.@c_mt_ ; 0 , _:)
-NB. - model SLICOT's TB01ID('A'):
+NB. - models SLICOT's TB01ID('A'):
 NB.     NB. 'ABC0scl d'=. maxred tb01ida (A ,. B) , C
 NB.     NB. 'ABscl C0scl'=. n ({. ; }.) ABC0scl
 NB.     NB. 'Ascl Bscl'=. n ({."1 ; }."1) ABscl

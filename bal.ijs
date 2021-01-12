@@ -885,32 +885,33 @@ NB. - err1 is outputted in berr column
 testgebal=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/gebal'
 
-  rcond=. gecon1 y
+  'rcondl rcondu'=. (geconi , gecon1) y
 
-  vferr_mttmp_=.  %~&norm1_mt_ 0&{::
-  vp_mttmp_=.     (1&{:: , 2&{::) makeper_jlapack2_ 3&{::
-  vd_mttmp_=.     (#\@i.@#@(3&{::) ((>: {.) *. (<: {:)) 1&{:: , 2&{::)`(1 ,: 3&{::)}
-  vscale_mttmp_=. 0&{:: (%"1 * ]) 3&{::
-  vdenom_mttmp_=. (FP_EPS * 1:^:(0&=)@norm1_mt_ * #)@[
+  vferr2=:  %~&norm1 0&{::
+  vp2=:     (1&{:: , 2&{::) makeper_jlapack2_ 3&{::
+  vd2=:     (#\@i.@#@(3&{::) ((>: {.) *. (<: {:)) 1&{:: , 2&{::)`(1 ,: 3&{::)}
+  vscale2=: 0&{:: (%"1 * ]) 3&{::
+  vdenom2=: (FP_EPS * 1:^:(0&=)@norm1 * #)@[
 
-  ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- vp_mttmp_ (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
-  ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(-                    0&{:: (%"1 * ])     3&{::) % vdenom_mttmp_))) y
-  ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(- vp_mttmp_ (fp^:_1) 0&{:: (%"1 * ]) vd_mttmp_) % vdenom_mttmp_))) y
+  ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
+  ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
 
-  ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- vp_mttmp_ (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
-  ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(-                    0&{:: (%"1 * ])     3&{::) % vdenom_mttmp_))) y
-  ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(- vp_mttmp_ (fp^:_1) 0&{:: (%"1 * ]) vd_mttmp_) % vdenom_mttmp_))) y
+  ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
+  ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
 
-  ('geballp'             tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- 1&{::     (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
-  ('gebalup'             tmonad (]                 `]`(rcond"_)`(_."_)      `(norm1@(- 1&{::     (fp^:_1) 0&{::                    ) % vdenom_mttmp_))) y
+  ('geballp'             tmonad (]                 `]`(rcondl"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+  ('gebalup'             tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
 
-  ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcond"_)`vferr_mttmp_`(norm1@(-                          vscale_mttmp_      ) % vdenom_mttmp_))) y
-  ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcond"_)`(4&{::)     `(norm1@(-                          vscale_mttmp_      ) % vdenom_mttmp_))) y
+  ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcondl"_)`vferr2   `(norm1@(-                      vscale2        ) % vdenom2))) y
+  ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcondl"_)`(4 {:: ])`(norm1@(-                      vscale2        ) % vdenom2))) y
 
-  ('geball'              tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(- 1&{::     (fp^:_1)       vscale_mttmp_      ) % vdenom_mttmp_))) y
-  ('gebalu'              tmonad (]                 `]`(rcond"_)`vferr_mttmp_`(norm1@(- 1&{::     (fp^:_1)       vscale_mttmp_      ) % vdenom_mttmp_))) y
+  ('geball'              tmonad (]                 `]`(rcondl"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
+  ('gebalu'              tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
 
   coerase < 'mttmp'
+  erase 'vferr2 vp2 vd2 vscale2 vdenom2'
 
   EMPTY
 )
@@ -948,35 +949,36 @@ NB. - err1 is outputted in berr column
 testggbal=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/ggbal'
 
-  rcond=. <./ gecon1"2 y
+  'rcondl rcondu'=. <./ (geconi , gecon1)"2 y
 
-  vgeto_mttmp_=.    0 0 1 1 2 2&(]&.:>/.)
-  vferr_mttmp_=.    >./@:(%~&norm1_mt_"2) 0&{::
-  vp_mttmp_=.       1&{:: makeper_jlapack2_"1 (2&{::)
-  vd_mttmp_=.       (#\@i.@{:@$@(2&{::) ((>: {.) ,:~@:*. (<: {:)) 1&{::)`(1 ,: 2&{::)}
-  vperm_mttmp_=.    (C.^:_1"2~ {.) (C.^:_1"1~ {:) ]
-  vscale_mttmp_=.   (%"2 {.) (%"1 {:) ]
-  vscale03_mttmp_=. 0&{:: vscale_mttmp_ 3&{::
-  vdenom_mttmp_=.   (FP_EPS * 1:^:(0&=)@norm1_mt_"2 * c_mt_)@[
+  vgeto2=:   0 0 1 1 2 2&(]&.:>/.)
+  vferr2=:   >./@:(%~&norm1"2) 0&{::
+  vp2=:      1&{:: makeper_jlapack2_"1 (2&{::)
+  vd2=:      (#\@i.@{:@$@(2&{::) ((>: {.) ,:~@:*. (<: {:)) 1&{::)`(1 ,: 2&{::)}
+  vperm2=:   (C.^:_1"2~ {.) (C.^:_1"1~ {:) ]
+  vscale2=:  (%"2 {.) (%"1 {:) ]
+  vscale03=: 0&{:: vscale2 3&{::
+  vdenom2=:  (FP_EPS * 1:^:(0&=)@norm1"2 * c)@[
 
-  ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
-  ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{:: vscale_mttmp_ 2&{::                            ) >./@:% vdenom_mttmp_))) y
-  ('''b''&dggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(- (0&{:: vscale_mttmp_ vd_mttmp_) vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
+  ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
+  ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
+  ('''b''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
 
-  ('''p''&zggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
-  ('''s''&zggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{:: vscale_mttmp_ 2&{::                            ) >./@:% vdenom_mttmp_))) y
-  ('''b''&zggbal_mttmp_' tmonad (]                     `vgeto_mttmp_`(rcond"_)`vferr_mttmp_`(norm1"2@(- (0&{:: vscale_mttmp_ vd_mttmp_) vperm_mttmp_ vp_mttmp_) >./@:% vdenom_mttmp_))) y
+  ('''p''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
+  ('''s''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
+  ('''b''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
 
-  ('ggballp'             tmonad (]                     `]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ 1&{::    ) >./@:% vdenom_mttmp_))) y
-  ('ggbalup'             tmonad (]                     `]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-  0&{::                          vperm_mttmp_ 1&{::    ) >./@:% vdenom_mttmp_))) y
+  ('ggballp'             tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
+  ('ggbalup'             tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
 
-  ('ggbals'              tmonad (((; ,:~@i.   ; 0&,) c)`]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-        vscale03_mttmp_                                ) >./@:% vdenom_mttmp_))) y
-  ('(2^_44)&ggbals'      tmonad (((; ,:~@i.   ; 0&,) c)`]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-        vscale03_mttmp_                                ) >./@:% vdenom_mttmp_))) y
+  ('ggbals'              tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
+  ('(2^_44)&ggbals'      tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
 
-  ('ggball'              tmonad (]                     `]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-        vscale03_mttmp_          vperm_mttmp_ 1&{::    ) >./@:% vdenom_mttmp_))) y
-  ('ggbalu'              tmonad (]                     `]           `(rcond"_)`vferr_mttmp_`(norm1"2@(-        vscale03_mttmp_          vperm_mttmp_ 1&{::    ) >./@:% vdenom_mttmp_))) y
+  ('ggball'              tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
+  ('ggbalu'              tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
 
   coerase < 'mttmp'
+  erase 'vgeto2 vferr2 vp2 vd2 vperm2 vscale2 vscale03 vdenom2'
 
   EMPTY
 )

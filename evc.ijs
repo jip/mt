@@ -581,7 +581,7 @@ testtgevc=: 3 : 0
   vberrur=:  (     normir@:((((                                 norm1r@:((mp"2 1~ -/"3)~|:   )         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:(       norm1 "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitc % FP_PREC * c)@]
   vberrub=:  (>./@:normir@:((((((norm1r@:( mp"1 2      ~ct@{.),:norm1r@:((mp"2 1      ) |:@{:))~ -/"3)~) (>./@:%) (FP_PREC * (FP_SFMIN >. |:@:(>./"2)@:((normi,norm1)"2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitc % FP_PREC * c)@]
 
-  rcondl=. <./ trlcon1"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
+  rcondl=. <./ trlconi"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
   rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ 0&,)~ ((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
 
   ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrll)) SPl

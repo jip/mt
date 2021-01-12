@@ -148,12 +148,12 @@ NB. where
 NB.   A - n×n-matrix
 
 testgebak=: 3 : 0
-  rcond=. gecon1 y
+  'rcondl rcondu'=. (geconi , gecon1) y
 
-  ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
+  ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
+  ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
+  ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
 
   EMPTY
 )

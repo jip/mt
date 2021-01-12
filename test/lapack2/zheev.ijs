@@ -16,7 +16,7 @@ NB.            'U' - use upper triangle of A only
 NB.   A    - n×n-matrix, numeric, Hermitian or
 NB.          {lower,upper}-triangular
 NB.   w    - n-vector, eigenvalues of A
-NB.   V    - n×n-matrix, eigenvectors of A
+NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
 NB.   n    ≥ 0
 NB.
 NB. Notes:
@@ -26,7 +26,7 @@ zheev=: 4 : 0
   'jobV uplo'=. x
   assert. *./ (1 = # jobV) , jobV e. 'nNvV'
   assert. *./ (1 = # uplo) , uplo e. 'lLuU'
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. ishermitian_jlapack2_ *. isreal_jlapack2_@((<0 1)&|:)) y
+  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_@((<0 1)&|:)) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   NB. lwork=. , 1 >. _1 2 p. n  NB. minimal

@@ -15,8 +15,8 @@ NB.            'L' - use lower triangle of A only
 NB.            'U' - use upper triangle of A only
 NB.   A    - n×n-matrix, real, symmetric or
 NB.          {lower,upper}-triangular
-NB.   w    - n-vector, eigenvalues of A
-NB.   V    - n×n-matrix, eigenvectors of A
+NB.   w    - n-vector, real, eigenvalues of A
+NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
 NB.   n    ≥ 0
 NB.
 NB. Notes:
@@ -26,7 +26,7 @@ dsyev=: 4 : 0
   'jobV uplo'=. x
   assert. *./ (1 = # jobV) , jobV e. 'nNvV'
   assert. *./ (1 = # uplo) , uplo e. 'lLuU'
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. issymmetric_jlapack2_ *. isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
     case. JFL   do.

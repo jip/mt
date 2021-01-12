@@ -2,13 +2,13 @@ require 'math/lapack2'
 
 NB. Description:
 NB.   Reduce an upper trapezoidal matrix to upper triangular
-NB.   form by means of orthogonal (unitary) transformations
+NB.   form by an unitary (orthogonal) transformations
 NB.
 NB. Syntax:
 NB.   'RZf tau'=. xtzrzf A
 NB. where
 NB.   A   - m×n-matrix, the leading upper trapezoidal part of
-NB.         it must contain the matrix to be factorized
+NB.         it must contain the matrix to be factored
 NB.   RZf - m×n-matrix, R and Zf combined
 NB.   tau - m-vector, the scalar factors of the elementary
 NB.         reflectors applied to A
@@ -21,11 +21,12 @@ NB.         factored form
 NB.   Z   - n×n-matrix, orthogonal (unitary), which is
 NB.         defined as a product of m elementary reflectors
 NB.         H(i) of order n:
-NB.           Z = Π{H(i),i=0:m-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.   m   ≥ 0
-NB.   n   ≥ m
+NB.           Z = Π{H(i)',i=0:m-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≥ 0, the number of rows in A, RZf and Zf, and the
+NB.         size of R
+NB.   n   ≥ m, the number of columns in A, RZf and Zf, and
+NB.         the size of Z
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

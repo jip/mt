@@ -722,7 +722,7 @@ NB.       column is used to form reflector
 
 testlarf=: 3 : 0
   y=. 1 {:: y
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
   ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
@@ -761,7 +761,7 @@ NB.       column is used to form reflector
 
 testlarz=: 3 : 0
   y=. 1 {:: y
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
   ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
@@ -799,7 +799,7 @@ NB.   A - m×n-matrix, is used to form Qf
 
 testlarft=: 3 : 0
   y=. 0 {:: y
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ('larftbc' tmonad (((tru1~ -~/@$)@geqlf)`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftbr' tmonad (((trl1~ -~/@$)@gerqf)`]`(rcond"_)`(_."_)`(_."_))) y
@@ -822,7 +822,7 @@ NB.   A - m×n-matrix, is used to form Qf
 
 testlarzt=: 3 : 0
   y=. 0 {:: y
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ('larztbc' tmonad ((((idmat@]`(           i. @])`[)} c)@tzzlf@ trl        )`]`(rcond"_)`(_."_)`(_."_))) y
   ('larztbr' tmonad ((((idmat@]`(a: <@;     i. @])`[)} #)@tzrzf@ tru        )`]`(rcond"_)`(_."_)`(_."_))) y
@@ -846,7 +846,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testlarfb=: 3 : 0
   'A C'=. y
-  rcond=. (_."_)`gecon1@.(=/@$) C  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) C  NB. meaninigful for square matrices only
 
   Qfbc=. (tru1~ -~/@$) geqlf A
   Qfbr=. (trl1~ -~/@$) gerqf A
@@ -890,7 +890,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testlarzb=: 3 : 0
   'A C'=. y
-  rcond=. (_."_)`gecon1@.(=/@$) C  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) C  NB. meaninigful for square matrices only
 
   I=. idmat k=. <./ $ A
   Qfbc=. I (           i.  k)} tzzlf  trl         A

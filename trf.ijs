@@ -1680,7 +1680,7 @@ testgetrf=: 3 : 0
   load_mttmp_ :: ] 'math/misc/matutil'
   load_mttmp_ :: ] 'math/misc/linear'
   load_mttmp_ :: ] 'math/misc/matfacto'
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/getrf.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
@@ -1768,7 +1768,7 @@ testpotrf=: 3 : 0
   load_mttmp_ :: ] 'math/misc/matutil'
   load_mttmp_ :: ] 'math/misc/linear'
   load_mttmp_ :: ] 'math/misc/matfacto'
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/potrf.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
 
   rcond=. pocon1 y
 

@@ -214,6 +214,7 @@ NB. - see testgesv3
 
 testgesv1=: 3 : 0
   'A x'=. y
+
   'rcondA rcondAc rcondAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
   'norm1A normiA'=. (norm1 , normi) A
 
@@ -296,7 +297,7 @@ NB. Notes:
 NB. - models LAPACK's xGET01, xGET02 and xGET04
 
 testgesv3=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gesv.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gesv'
 
   'A Xv'=. y
   Xh=. |: Xv

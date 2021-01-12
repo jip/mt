@@ -256,7 +256,7 @@ NB. Notes:
 NB. - models LAPACK's xTRT02 and xGET04
 
 testtrsm3=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/trtrs.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/trtrs'
 
   'A Xv'=. y
   Xh=. |: Xv

@@ -182,10 +182,12 @@ math/mt - change history
  * test:      minor optimizations
 
 == 0.11.0 ==
- Drop J8 support
- Replace lapack by lapack2 in addon tests
- Algorithms implemented synced with LAPACK 3.9.0
+ J9+ compatible
+ lapack replaced by lapack2 in addon tests
+ Most algorithms implemented are synced with LAPACK 3.9.0
+ Refs shortened to addon's stuff and external addons
  * bal:    gxbalxp fixed for case n=0
+ + cond:   new interface: unconi
  * ev:     ggevxxx fixed for case n=0
  * gq:     ungxx fixed for case n=0
  * mq:     unmxxxx fixed for case n=0

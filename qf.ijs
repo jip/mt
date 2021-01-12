@@ -1306,11 +1306,16 @@ NB. Notes:
 NB. - models LAPACK's xLQT01, xQLT01, xQRT01 and xRQT01
 
 testgeqf=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gelqf.ijs'
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/geqlf.ijs'
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/geqrf.ijs'
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gerqf.ijs'
+  load        :: ] 'numeric'
+  load_mttmp_ :: ] 'math/misc/mathutil'
+  load_mttmp_ :: ] 'math/misc/makemat'
+  load_mttmp_ :: ] 'math/misc/matutil'
+  load_mttmp_ :: ] 'math/misc/linear'
+  load_mttmp_ :: ] 'math/misc/matfacto'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gelqf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/geqlf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/geqrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gerqf'
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
 
@@ -1373,7 +1378,7 @@ NB.   - L (R) is square triangular min(m,n)×min(m,n)-matrix
 NB.   - Z is m×n-matrix
 
 testtzqf=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/tzrzf.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/tzrzf'
 
   rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
   Awide=. |:^:(>/@$) y

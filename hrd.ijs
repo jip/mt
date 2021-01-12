@@ -764,7 +764,7 @@ NB. Notes:
 NB. - models LAPACK's xHST01, DORT01 and ZUNT01
 
 testgehrd=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gehrd.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gehrd'
 
   rcond=. gecon1 y
 
@@ -832,7 +832,7 @@ NB. Notes:
 NB. - models LAPACK's xGET51
 
 testgghrd=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gghrd.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gghrd'
 
   n=. c y
   nulp=. FP_PREC * n

@@ -883,7 +883,7 @@ NB. - err0 is outputted in ferr column
 NB. - err1 is outputted in berr column
 
 testgebal=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/gebal.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gebal'
 
   rcond=. gecon1 y
 
@@ -946,7 +946,7 @@ NB. - err0 is outputted in ferr column
 NB. - err1 is outputted in berr column
 
 testggbal=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/ggbal.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/ggbal'
 
   rcond=. <./ gecon1"2 y
 

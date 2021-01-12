@@ -86,6 +86,7 @@ NB. tru1coni
 NB. trucon1
 NB. truconi
 NB. uncon1
+NB. unconi
 NB.
 NB. Description:
 NB.   Calculate reciprocal of the condition number of a
@@ -97,7 +98,7 @@ NB.   rcondH=. heconx H
 NB.   rcondP=. poconx P
 NB.   rcondT=. ptconx T
 NB.   rcondR=. trxxconx R
-NB.   rcondQ=. uncon1 Q
+NB.   rcondQ=. unconx Q
 NB. where
 NB.   G      - n×n-matrix of type: general, band,
 NB.            tridiagonal, triangular or triangular band
@@ -160,6 +161,7 @@ trucon1=:  1:`(norm1 con trtriu  :: 0:)@.(*@#)
 truconi=:  1:`(normi con trtriu  :: 0:)@.(*@#)
 
 uncon1=: 1:`(norm1 con ct :: 0:)@.(*@#)
+unconi=: 1:`(normi con ct :: 0:)@.(*@#)
 
 NB. ---------------------------------------------------------
 NB. laic11

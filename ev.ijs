@@ -547,7 +547,7 @@ NB. Notes:
 NB. - vberrux models LAPACK's xDRVEV and xGET22
 
 testgeev=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/mt/test/lapack2/geev.ijs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/geev'
 
   rcond=. gecon1 y
 

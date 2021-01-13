@@ -45,10 +45,8 @@ dgeev=: 4 : 0
   lwork=. , 1 >. n * 130 [^:(x +./@e. 'vV') 34  NB. optimal
   cdrc=. dgeev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0.0) ; (n $ 0.0) ; Vl ; ldVl ; Vr ; ldVr ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
-  'wr wi Vl Vr'=. 6 7 8 10 { cdrc
+  'wr wi Vl Vr'=. (|: L: 0) 6 7 8 10 { cdrc  NB. (|:) doesn't affect to wr and wi
   w=. wr j. wi
-  if. jobVl e. 'vV' do. Vl=. |: Vl end.
-  if. jobVr e. 'vV' do. Vr=. |: Vr end.
   if. # cx=. I. wi ~: 0 do.
     if. jobVl e. 'vV' do. Vl=. cx cxpair_jlapack2_ Vl end.
     if. jobVr e. 'vV' do. Vr=. cx cxpair_jlapack2_ Vr end.
@@ -70,8 +68,5 @@ zgeev=: 4 : 0
   lwork=. , 1 >. n * 130 [^:(x +./@e. 'vV') 33  NB. optimal
   cdrc=. zgeev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0j0) ; Vl ; ldVl ; Vr ; ldVr ; (lwork $ 0j0) ; lwork ; ((+: n) $ 0.0) ; , _1
   assert. 0 = _1 {:: cdrc
-  'w Vl Vr'=. 6 7 9 { cdrc
-  if. jobVl e. 'vV' do. Vl=. |: Vl end.
-  if. jobVr e. 'vV' do. Vr=. |: Vr end.
-  w ; Vl ; Vr
+  (|: L: 0) 6 7 9 { cdrc  NB. (|:) doesn't affect to w
 )

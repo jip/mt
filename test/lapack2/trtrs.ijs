@@ -61,7 +61,7 @@ ztrtrs=: 4 : 0
   assert. *./ (1 = # trans) , trans e. 'nNtTcC'
   assert. *./ (1 = # diag ) , diag  e. 'nNuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) A
-  assert. (ismatrix_jlapack2_                               ) B
+  assert.  ismatrix_jlapack2_                                 B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
   if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   ld=. , 1 >. n

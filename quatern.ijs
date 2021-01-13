@@ -75,10 +75,10 @@ NB. qnjk     y=. qnjk q         qy=. y qnjk q
 NB. qn1j     z=. qn1j q         qz=. z qn1j q
 NB. qn1k     w=. qn1k q         qw=. w qn1k q
 
-qn1=:  9&o.@{. : ((j. qni) 0} ])
-qni=: 11&o.@{. : ((j.~qn1) 0} ])
-qnj=:  9&o.@{: : ((j. qnk) 1} ])
-qnk=: 11&o.@{: : ((j.~qnj) 1} ])
+qn1=: ( 9 o. {.) : ((j.  qni) 0} ])
+qni=: (11 o. {.) : ((j.~ qn1) 0} ])
+qnj=: ( 9 o. {:) : ((j.  qnk) 1} ])
+qnk=: (11 o. {:) : ((j.~ qnj) 1} ])
 
 qn1i=: {.            : (0})
 qnjk=: {:            : (1})
@@ -104,22 +104,22 @@ NB. qnmark1ik    a + b*i + 0*j + d*k    q1ik=. qnmark1ik q
 NB. qnmark1jk    a + 0*i + c*j + d*k    q1jk=. qnmark1jk q
 NB. qnmarkijk    0 + b*i + c*j + d*k    qijk=. qnmarkijk q
 
-qnmark1=: ( 9    o. {.),0:
-qnmarki=: (11 j.@o. {.),0:
-qnmarkj=: 0, 9    o. {:
-qnmarkk=: 0,11 j.@o. {:
+qnmark1=: (0 ,~    qn1) : [:
+qnmarki=: (0 ,~ j.@qni) : [:
+qnmarkj=: (0 ,     qnj) : [:
+qnmarkk=: (0 ,  j.@qnk) : [:
 
-qnmark1i=: 0&(1})
-qnmarkjk=: 0&(0})
-qnmark1j=:       9&o.
-qnmarkik=: j.@:(11&o.)
-qnmark1k=: ( 9    o. {.) , 11 j.@o. {:
-qnmarkij=: (11 j.@o. {.) ,  9    o. {:
+qnmark1i=: 0&(1})          : [:
+qnmarkjk=: 0&(0})          : [:
+qnmark1j=:      9&o.       : [:
+qnmarkik=: j.@(11&o.)      : [:
+qnmark1k=: (qn1 ,  j.@qnk) : [:
+qnmarkij=: (qnj ,~ j.@qni) : [:
 
-qnmark1ij=: 1}~ ( 9    o. {:)
-qnmark1ik=: 1}~ (11 j.@o. {:)
-qnmark1jk=: 0}~ ( 9    o. {.)
-qnmarkijk=: 0}~ (11 j.@o. {.)
+qnmark1ij=: (1}~    qnj) : [:
+qnmark1ik=: (1}~ j.@qnk) : [:
+qnmark1jk=: (0}~    qn1) : [:
+qnmarkijk=: (0}~ j.@qni) : [:
 
 NB. ---------------------------------------------------------
 NB. Conjugators
@@ -163,8 +163,8 @@ NB. Reciprocal
 qnrec=: qnconv % +/@:*:@,@:+.
 
 NB. Divide
-qndivl=: qnmul qnrec  NB. via left quotient
-qndivr=: qnmul~qnrec  NB. via right quotient
+qndivl=: qnmul  qnrec  NB. via left quotient
+qndivr=: qnmul~ qnrec  NB. via right quotient
 
 NB. Magnitude
 qnmod=: norms

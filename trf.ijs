@@ -1451,30 +1451,6 @@ NB.     %: y
 NB.   end.
 NB. )
 
-potrfl2=: 3 : 0
-  n=. # y
-  ATL=. EMPTY
-  ATR=. i. 0 , n
-  ABL=. i. n , 0
-  ABR=. y
-  while.
-    n > # ATL
-  do.
-    b=. TRFNB <. # ABR
-    A10=. b {. ABL
-    NB. ( A11 ) = ( A11 ) - ( A10 ) * A10'
-    NB. ( A21 )   ( A21 )   ( A20 )
-    'A11 A21'=. b ({. ; }.) (b {."1 ABR) - ABL mp ct A10
-    A11=. potrfl2 A11  NB. may fail
-    A21=. A21 mp 128!:1 ct A11  NB. A21=. A21 mp ct trtril A11
-    ATL=. ATL , A10 ,. A11
-    ATR=. (b }."1 ATR) , b ((([ , -) c) {. ]) ABR
-    ABL=. (b }. ABL) ,. A21
-    ABR=. (2 # b) }. ABR
-  end.
-  (ATL ,. ABR) , ABL ,. ABR
-)
-
 NB. ---------------------------------------------------------
 NB. potrfu
 NB.

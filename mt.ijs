@@ -225,7 +225,7 @@ testhigh=: 1 : 0
 )
 
 test=: 1 : 0
-  fmtlog_mt_ 'algorithm';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'
+  smoutput fmtlog_mt_ 'sentence';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'
 
   (u testlow_mt_ ) y  NB. low-level algorithms
   (u testmid_mt_ ) y  NB. mid-level algorithms

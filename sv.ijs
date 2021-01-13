@@ -563,14 +563,14 @@ NB.   x - n-vector, the exact solution
 testhesv1=: 3 : 0
   'A x'=. y
 
-  'rcondA rcondAt'=. (hecon1 , hecon1@|:) A
+  rcondA=. hecon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
-  ('hesvax'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA  ; norm1A
-  ('hesvatx' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondAt ; norm1At
-  ('hesvxa'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA  ; normiA
-  ('hesvxat' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondAt ; normiAt
+  ('hesvax'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA ; norm1A
+  ('hesvatx' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondA ; norm1At
+  ('hesvxa'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA ; normiA
+  ('hesvxat' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondA ; normiAt
 
   EMPTY
 )
@@ -603,7 +603,7 @@ testhesv3=: 3 : 0
   'A Xv'=. y
   Xh=. |: Xv
 
-  'rcondA rcondAt'=. (hecon1 , hecon1@|:) A
+  rcondA=. hecon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -625,20 +625,20 @@ testhesv3=: 3 : 0
   calcAzl=: makeper_jlapack2_@(1&{::) fp ((setdiag~  1 ;~ +@(_1&diag))@bdlpick (mp~ mp  ct@]) trl1pick@:(|.!.0"1))@(0&{::)
   calcAzu=: makeper_jlapack2_@(1&{::) fp ((setdiag~ _1 ;~ +@( 1&diag))@bdupick (mp  mp~ ct@]) tru1pick@:(|.!.0  ))@(0&{::)
 
-  ('''l''&dsysv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''u''&dsysv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''l''&zhesv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''u''&zhesv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA  ; norm1A
+  ('''l''&dsysv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''u''&dsysv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''l''&zhesv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''u''&zhesv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
 
-  ('''l''&dsysv_aa_mttmp_' tmonad ((2&{. )        `]      `(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''u''&dsysv_aa_mttmp_' tmonad ((2&{. )        `]      `(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdu)))) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''l''&zhesv_aa_mttmp_' tmonad ((2&{. )        `]      `(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''u''&zhesv_aa_mttmp_' tmonad ((2&{. )        `]      `(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzu)))) A ; Bax            ; Xv ; rcondA  ; norm1A
+  ('''l''&dsysv_aa_mttmp_' tmonad ((2&{. )        `]      `(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''u''&dsysv_aa_mttmp_' tmonad ((2&{. )        `]      `(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdu)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''l''&zhesv_aa_mttmp_' tmonad ((2&{. )        `]      `(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''u''&zhesv_aa_mttmp_' tmonad ((2&{. )        `]      `(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzu)))) A ; Bax            ; Xv ; rcondA ; norm1A
 
-  ('hesvax'                tdyad  ((0&{::)`(1&{::)`]      `(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('hesvatx'               tdyad  ((0&{::)`(1&{::)`]      `(3 {:: [)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondAt ; norm1At
-  ('hesvxa'                tdyad  ((0&{::)`(1&{::)`]      `(3 {:: [)` vferrh       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA  ; normiA
-  ('hesvxat'               tdyad  ((0&{::)`(1&{::)`]      `(3 {:: [)` vferrh       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondAt ; normiAt
+  ('hesvax'                tdyad  ((0&{::)`(1&{::)`]      `(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('hesvatx'               tdyad  ((0&{::)`(1&{::)`]      `(3 {:: [)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondA ; norm1At
+  ('hesvxa'                tdyad  ((0&{::)`(1&{::)`]      `(3 {:: [)` vferrh       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA ; normiA
+  ('hesvxat'               tdyad  ((0&{::)`(1&{::)`]      `(3 {:: [)` vferrh       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondA ; normiAt
 
   coerase < 'mttmp'
   erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat'
@@ -663,14 +663,14 @@ NB.   x - n-vector, the exact solution
 testposv1=: 3 : 0
   'A x'=. y
 
-  'rcondA rcondAt'=. (pocon1 , pocon1@|:) A
+  rcondA=. pocon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
-  ('posvax'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA  ; norm1A
-  ('posvatx' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondAt ; norm1At
-  ('posvxa'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA  ; normiA
-  ('posvxat' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondAt ; normiAt
+  ('posvax'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA ; norm1A
+  ('posvatx' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondA ; norm1At
+  ('posvxa'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA ; normiA
+  ('posvxat' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondA ; normiAt
 
   EMPTY
 )
@@ -698,7 +698,7 @@ testposv3=: 3 : 0
   'A Xv'=. y
   Xh=. |: Xv
 
-  'rcondA rcondAt'=. (pocon1 , pocon1@|:) A
+  rcondA=. pocon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -720,15 +720,15 @@ testposv3=: 3 : 0
   calcAzl=: (mp  ct)@trlpick@(0&{::)
   calcAzu=: (mp~ ct)@trupick@(0&{::)
 
-  ('''l''&dposv_mttmp_' tmonad ((2&{. )       `]`(3 {:: [)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''u''&dposv_mttmp_' tmonad ((2&{. )       `]`(3 {:: [)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAdu)))) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''l''&zposv_mttmp_' tmonad ((2&{. )       `]`(3 {:: [)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('''u''&zposv_mttmp_' tmonad ((2&{. )       `]`(3 {:: [)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAzu)))) A ; Bax            ; Xv ; rcondA  ; norm1A
+  ('''l''&dposv_mttmp_' tmonad ((2&{. )       `]`(3 {:: [)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''u''&dposv_mttmp_' tmonad ((2&{. )       `]`(3 {:: [)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAdu)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''l''&zposv_mttmp_' tmonad ((2&{. )       `]`(3 {:: [)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''u''&zposv_mttmp_' tmonad ((2&{. )       `]`(3 {:: [)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAzu)))) A ; Bax            ; Xv ; rcondA ; norm1A
 
-  ('posvax'             tdyad ((0&{::)`(1&{::)`]`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('posvatx'            tdyad ((0&{::)`(1&{::)`]`(3 {:: [)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondAt ; norm1At
-  ('posvxa'             tdyad ((0&{::)`(1&{::)`]`(3 {:: [)` vferrh       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA  ; normiA
-  ('posvxat'            tdyad ((0&{::)`(1&{::)`]`(3 {:: [)` vferrh       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondAt ; normiAt
+  ('posvax'             tdyad ((0&{::)`(1&{::)`]`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('posvatx'            tdyad ((0&{::)`(1&{::)`]`(3 {:: [)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondA ; norm1At
+  ('posvxa'             tdyad ((0&{::)`(1&{::)`]`(3 {:: [)` vferrh       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA ; normiA
+  ('posvxat'            tdyad ((0&{::)`(1&{::)`]`(3 {:: [)` vferrh       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondA ; normiAt
 
   coerase < 'mttmp'
   erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat calcAdl calcAdu calcAzl calcAzu'
@@ -753,14 +753,14 @@ NB.   x - n-vector, the exact solution
 testptsv1=: 3 : 0
   'A x'=. y
 
-  'rcondA rcondAt'=. (ptcon1 , ptcon1@|:) A
+  rcondA=. ptcon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
-  ('ptsvax'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA  ; norm1A
-  ('ptsvatx' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondAt ; norm1At
-  ('ptsvxa'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA  ; normiA
-  ('ptsvxat' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondAt ; normiAt
+  ('ptsvax'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA ; norm1A
+  ('ptsvatx' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondA ; norm1At
+  ('ptsvxa'  tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA ; normiA
+  ('ptsvxat' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondA ; normiAt
 
   EMPTY
 )
@@ -788,7 +788,7 @@ testptsv3=: 3 : 0
   'A Xv'=. y
   Xh=. |: Xv
 
-  'rcondA rcondAt'=. (ptcon1 , ptcon1@|:) A
+  rcondA=. ptcon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -808,13 +808,13 @@ testptsv3=: 3 : 0
   calcAdl=: (((setdiag~ ;&_1)~ idmat@#)~ (mp mp |:@[) diagmat@[)&>/@}:
   calcAzl=: (((setdiag~ ;&_1)~ idmat@#)~ (mp mp ct@[) diagmat@[)&>/@}:
 
-  ('dptsv_mttmp_' tmonad (((diag ; _1&diag)@(0&{::) , 1&{)`]`(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('zptsv_mttmp_' tmonad (((diag ; _1&diag)@(0&{::) , 1&{)`]`(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA  ; norm1A
+  ('dptsv_mttmp_' tmonad (((diag ; _1&diag)@(0&{::) , 1&{)`]`(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('zptsv_mttmp_' tmonad (((diag ; _1&diag)@(0&{::) , 1&{)`]`(3 {:: [)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA ; norm1A
 
-  ('ptsvax'       tdyad  ((0&{::)`(1&{::)                 `]`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('ptsvatx'      tdyad  ((0&{::)`(1&{::)                 `]`(3 {:: [)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondAt ; norm1At
-  ('ptsvxa'       tdyad  ((0&{::)`(1&{::)                 `]`(3 {:: [)` vferrv       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA  ; normiA
-  ('ptsvxat'      tdyad  ((0&{::)`(1&{::)                 `]`(3 {:: [)` vferrv       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondAt ; normiAt
+  ('ptsvax'       tdyad  ((0&{::)`(1&{::)                 `]`(3 {:: [)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('ptsvatx'      tdyad  ((0&{::)`(1&{::)                 `]`(3 {:: [)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondA ; norm1At
+  ('ptsvxa'       tdyad  ((0&{::)`(1&{::)                 `]`(3 {:: [)` vferrv       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA ; normiA
+  ('ptsvxat'      tdyad  ((0&{::)`(1&{::)                 `]`(3 {:: [)` vferrv       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondA ; normiAt
 
   coerase < 'mttmp'
   erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat calcAdl calcAzl'

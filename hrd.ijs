@@ -294,7 +294,7 @@ gghrdl=: 4 : 0
     lisor1a=. }. lisor1a
     i=. >: i
   end.
-  y ; dQ0 ; + dZ0
+  (hslpick`trlpick"2 y) ; dQ0 ; + dZ0
 )
 
 NB. ---------------------------------------------------------
@@ -368,7 +368,7 @@ gghrdu=: 4 : 0
     lisoc1a=. }. lisoc1a
     j=. >: j
   end.
-  y ; (+ dQ0) ; dZ0
+  (hsupick`trupick"2 y) ; (+ dQ0) ; dZ0
 )
 
 NB. =========================================================

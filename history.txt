@@ -190,6 +190,7 @@ math/mt - change history
              - lapack addon replaced by lapack2
  * bal:      gxbalxp fixed for case n=0
  + cond:     new interface: unconi
+ * dbg:      fixed to obey DEBUG noun value dynamic changes
  * ev:       ggevxxx fixed for case n=0
  * gq:       ungxx fixed for case n=0
  * manifest: release upgraded to j902, 'files' and 'depends' sections extended

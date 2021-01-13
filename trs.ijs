@@ -734,7 +734,7 @@ NB.   - ferr is computed, too by call to t04v
 testhetrs1=: 3 : 0
   'A x'=. y
 
-  'rcondA rcondAt'=. (hecon1 , hecon1@|:) A
+  rcondA=. hecon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -752,15 +752,15 @@ testhetrs1=: 3 : 0
   vberrxa=:   mp      t02v
   vberrxat=: (mp  |:) t02v
 
-  ('hetrsplx'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; pL1T
-  ('hetrspltx' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; pL1T
-  ('hetrsxpl'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; pL1T
-  ('hetrsxplt' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; pL1T
+  ('hetrsplx'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA ; norm1A  ; pL1T
+  ('hetrspltx' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondA ; norm1At ; pL1T
+  ('hetrsxpl'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA ; normiA  ; pL1T
+  ('hetrsxplt' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondA ; normiAt ; pL1T
 
-  ('hetrspux'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; pU1T
-  ('hetrsputx' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; pU1T
-  ('hetrsxpu'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; pU1T
-  ('hetrsxput' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; pU1T
+  ('hetrspux'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA ; norm1A  ; pU1T
+  ('hetrsputx' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondA ; norm1At ; pU1T
+  ('hetrsxpu'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA ; normiA  ; pU1T
+  ('hetrsxput' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondA ; normiAt ; pU1T
 
   coerase < 'mttmp'
   erase 'vberrax vberratx vberrxa vberrxat'
@@ -802,7 +802,7 @@ testhetrs3=: 3 : 0
   'A Xv'=. y
   Xh=. |: Xv
 
-  'rcondA rcondAt'=. (hecon1 , hecon1@|:) A
+  rcondA=. hecon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -833,15 +833,15 @@ testhetrs3=: 3 : 0
   ('''l''&zhetrs_aa_mttmp_' tmonad ((1&{ ,~ 'l' zhetrf_aa_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
   ('''u''&zhetrs_aa_mttmp_' tmonad ((1&{ ,~ 'u' zhetrf_aa_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
 
-  ('hetrsplx'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; pL1T
-  ('hetrspltx'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; pL1T
-  ('hetrsxpl'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; pL1T
-  ('hetrsxplt'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; pL1T
+  ('hetrsplx'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A  ; pL1T
+  ('hetrspltx'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondA ; norm1At ; pL1T
+  ('hetrsxpl'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA ; normiA  ; pL1T
+  ('hetrsxplt'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondA ; normiAt ; pL1T
 
-  ('hetrspux'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; pU1T
-  ('hetrsputx'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; pU1T
-  ('hetrsxpu'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; pU1T
-  ('hetrsxput'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; pU1T
+  ('hetrspux'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A  ; pU1T
+  ('hetrsputx'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondA ; norm1At ; pU1T
+  ('hetrsxpu'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA ; normiA  ; pU1T
+  ('hetrsxput'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondA ; normiAt ; pU1T
 
   coerase < 'mttmp'
   erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat'
@@ -866,7 +866,7 @@ NB.   x - n-vector, the exact solution
 testpotrs1=: 3 : 0
   'A x'=. y
 
-  'rcondA rcondAt'=. (pocon1 , pocon1@|:) A
+  rcondA=. pocon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -884,15 +884,15 @@ testpotrs1=: 3 : 0
   vberrxa=:   mp      t02v
   vberrxat=: (mp  |:) t02v
 
-  ('potrslx'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; L
-  ('potrsltx' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; L
-  ('potrsxl'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; L
-  ('potrsxlt' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; L
+  ('potrslx'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA ; norm1A  ; L
+  ('potrsltx' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondA ; norm1At ; L
+  ('potrsxl'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA ; normiA  ; L
+  ('potrsxlt' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondA ; normiAt ; L
 
-  ('potrsux'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; U
-  ('potrsutx' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; U
-  ('potrsxu'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; U
-  ('potrsxut' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; U
+  ('potrsux'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA ; norm1A  ; U
+  ('potrsutx' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondA ; norm1At ; U
+  ('potrsxu'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA ; normiA  ; U
+  ('potrsxut' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondA ; normiAt ; U
 
   coerase < 'mttmp'
   erase 'vberrax vberratx vberrxa vberrxat'
@@ -924,7 +924,7 @@ testpotrs3=: 3 : 0
   'A Xv'=. y
   Xh=. |: Xv
 
-  'rcondA rcondAt'=. (pocon1 , pocon1@|:) A
+  rcondA=. pocon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -945,20 +945,20 @@ testpotrs3=: 3 : 0
   vberrxa=:   mp      t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
-  ('''l''&dpotrs_mttmp_' tmonad ((1&{ ;~ 'l' dpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
-  ('''u''&dpotrs_mttmp_' tmonad ((1&{ ;~ 'u' dpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
-  ('''l''&zpotrs_mttmp_' tmonad ((1&{ ;~ 'l' zpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
-  ('''u''&zpotrs_mttmp_' tmonad ((1&{ ;~ 'u' zpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+  ('''l''&dpotrs_mttmp_' tmonad ((1&{ ;~ 'l' dpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''u''&dpotrs_mttmp_' tmonad ((1&{ ;~ 'u' dpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''l''&zpotrs_mttmp_' tmonad ((1&{ ;~ 'l' zpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''u''&zpotrs_mttmp_' tmonad ((1&{ ;~ 'u' zpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
 
-  ('potrslx'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; L
-  ('potrsltx'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; L
-  ('potrsxl'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; L
-  ('potrsxlt'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; L
+  ('potrslx'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A  ; L
+  ('potrsltx'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondA ; norm1At ; L
+  ('potrsxl'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA ; normiA  ; L
+  ('potrsxlt'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondA ; normiAt ; L
 
-  ('potrsux'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; U
-  ('potrsutx'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; U
-  ('potrsxu'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; U
-  ('potrsxut'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; U
+  ('potrsux'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A  ; U
+  ('potrsutx'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondA ; norm1At ; U
+  ('potrsxu'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA ; normiA  ; U
+  ('potrsxut'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondA ; normiAt ; U
 
   coerase < 'mttmp'
   erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat'
@@ -986,7 +986,7 @@ NB. - A should be sparse
 testpttrs1=: 3 : 0
   'A x'=. y
 
-  'rcondA rcondAt'=. (ptcon1 , ptcon1@|:) A
+  rcondA=. ptcon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -1004,15 +1004,15 @@ testpttrs1=: 3 : 0
   vberrxa=:   mp      t02v
   vberrxat=: (mp  |:) t02v
 
-  ('pttrslx'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; L1D
-  ('pttrsltx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; L1D
-  ('pttrsxl'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; L1D
-  ('pttrsxlt' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; L1D
+  ('pttrslx'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA ; norm1A  ; L1D
+  ('pttrsltx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondA ; norm1At ; L1D
+  ('pttrsxl'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA ; normiA  ; L1D
+  ('pttrsxlt' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondA ; normiAt ; L1D
 
-  ('pttrsux'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; U1D
-  ('pttrsutx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; U1D
-  ('pttrsxu'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; U1D
-  ('pttrsxut' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; U1D
+  ('pttrsux'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA ; norm1A  ; U1D
+  ('pttrsutx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondA ; norm1At ; U1D
+  ('pttrsxu'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA ; normiA  ; U1D
+  ('pttrsxut' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondA ; normiAt ; U1D
 
   coerase < 'mttmp'
   erase 'vberrax vberratx vberrxa vberrxat'
@@ -1047,7 +1047,7 @@ testpttrs3=: 3 : 0
   'A Xv'=. y
   Xh=. |: Xv
 
-  'rcondA rcondAt'=. (ptcon1 , ptcon1@|:) A
+  rcondA=. ptcon1 A
 
   'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
 
@@ -1068,18 +1068,18 @@ testpttrs3=: 3 : 0
   vberrxa=:   mp      t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
-  ('dpttrs_mttmp_'       tmonad ((1&{ ,~ dpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
-  ('''l''&zpttrs_mttmp_' tmonad ((1&{ ,~ zpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+  ('dpttrs_mttmp_'       tmonad ((1&{ ,~ dpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''l''&zpttrs_mttmp_' tmonad ((1&{ ,~ zpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
 
-  ('pttrslx'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; L1D
-  ('pttrsltx'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; L1D
-  ('pttrsxl'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; L1D
-  ('pttrsxlt'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; L1D
+  ('pttrslx'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A  ; L1D
+  ('pttrsltx'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondA ; norm1At ; L1D
+  ('pttrsxl'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA ; normiA  ; L1D
+  ('pttrsxlt'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondA ; normiAt ; L1D
 
-  ('pttrsux'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; U1D
-  ('pttrsutx'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; U1D
-  ('pttrsxu'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; U1D
-  ('pttrsxut'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; U1D
+  ('pttrsux'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A  ; U1D
+  ('pttrsutx'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondA ; norm1At ; U1D
+  ('pttrsxu'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA ; normiA  ; U1D
+  ('pttrsxut'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondA ; normiAt ; U1D
 
   coerase < 'mttmp'
   erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat'

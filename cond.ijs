@@ -140,7 +140,7 @@ NB. - trucon1 simulates LAPACK's xTRCON('1','U','N')
 NB. - truconi simulates LAPACK's xTRCON('i','U','N')
 
 gecon1=: 1:`(norm1 con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
-geconi=: 1:`(normI con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
+geconi=: 1:`(normi con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
 
 hecon1=: 1:`(norm1 con (hetripl@hetrfpl) :: 0:)@.(*@#)
 heconi=: 1:`(normi con (hetripl@hetrfpl) :: 0:)@.(*@#)

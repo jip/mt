@@ -120,68 +120,80 @@ NB.   - randu's values aren't used outside elsewhere
 rande=: -@^.@randu : (* $:)
 
 NB. ---------------------------------------------------------
-NB. randnf
+NB. randnr
 NB. randnc
+NB. randnq
 NB.
 NB. Description:
 NB.   Normal distribution N(μ,σ^2) with mean μ and variance
 NB.   σ^2
 NB.
 NB. Syntax:
-NB.   S=. [par] randnf sh
-NB.   S=. [par] randnc sh
+NB.   R=. [par] randnr sh
+NB.   C=. [par] randnc sh
+NB.   Q=. [par] randnq sh
 NB. where
-NB.   sh  - r-vector of non-negative integers, the shape of S
+NB.   sh  - r-vector of non-negative integers, the shape of
+NB.         R, C and Q
 NB.   par - optional 2-vector (μ,σ), σ>0, parameters of
 NB.         distribution, default is (0 1)
-NB.   S   - sh-array of values s ~ N(μ,σ^2)
-NB.   r   ≥ 0, the rank of S
+NB.   R   - sh-array of real values r ~ N(μ,σ^2)
+NB.   C   - sh-array of complex values c ~ N(μ,σ^2)
+NB.   Q   - sh-array of quaternion values q ~ N(μ,σ^2)
+NB.         represented as (sh,2)-array of complex numbers
+NB.   r   ≥ 0, the rank of R, C and Q
 NB.
 NB. Formula:
-NB.   nf1 ← sqrt(e)*cos(u)         NB. see...
-NB.   nf2 ← sqrt(e)*sin(u)         NB. ...[1]
-NB.   nc  ← (nf1 + i*nf2)/sqrt(2)  NB. see [2]
-NB.   n3  ← σ*nxx + μ
+NB.   nr1r ← sqrt(e1)*cos(u1)        NB. see...
+NB.   nr1i ← sqrt(e1)*sin(u1)        NB. ...[1]
+NB.   nr2r ← sqrt(e2)*cos(u2)
+NB.   nr2i ← sqrt(e2)*sin(u2)
+NB.   nc1 ← (nr1r + i*nr1i)/sqrt(2)  NB. see [2]
+NB.   nc2 ← (nr2r + i*nr2i)/sqrt(2)
+NB.   nq  ← (nc1  + j*nc2 )/sqrt(2)  NB. see [3]
+NB.   n3  ← σ*nxxx + μ
 NB. where
-NB.   u            ~ U(0,2*π)
-NB.   e            ~ E(2)
-NB.   nf1,nf2,nc,n ~ N(0,1)
-NB.   n3           ~ N(μ,σ^2)
+NB.   u1,u2                          ~ U(0,2*π)
+NB.   e1,e2                          ~ E(2)
+NB.   nr1r,nr1i,nr2r,nr2i,nc1,nc2,nq ~ N(0,1)
+NB.   n3                             ~ N(μ,σ^2)
 NB.
-NB. Algorithm for monadic randnf:
+NB. Algorithm for monadic randnr:
 NB.   In: sh
-NB.   Out: S
-NB.   0) calc ceiled half of elements quantity in S:
+NB.   Out: R
+NB.   0) calc ceiled half of elements quantity in R:
 NB.        n := ⌈Π{sh[i],i=0:r-1}/2⌉
 NB.   1) make random complex n-vector with elements
 NB.      having real and imagine parts both independently
 NB.      distributed normally:
-NB.        Re(v[i]) := nf1[i], i=0:n-1
-NB.        Im(v[i]) := nf2[i], i=0:n-1
+NB.        Re(v[i]) := nr1r[i], i=0:n-1
+NB.        Im(v[i]) := nr1i[i], i=0:n-1
 NB.   2) form n×2-array with separated real and imagine
 NB.      parts:
-NB.        S[i,0] := Re(v[i])
-NB.        S[i,1] := Im(v[i])
-NB.   3) re-shape S to shape sh (special code is involved):
-NB.        S=. sh ($,) S
+NB.        R[i,0] := Re(v[i])
+NB.        R[i,1] := Im(v[i])
+NB.   3) re-shape R to shape sh (special code is involved):
+NB.        R=. sh ($,) R
 NB.
 NB. Application:
-NB. - verb to make real matrix S with elements s having:
-NB.     s ~ N(1,3^2)
+NB. - verb to make real matrix R with elements r having:
+NB.     r ~ N(1,3^2)
 NB.   :
-NB.     normrand=: 1 3&randnf
-NB. - verb to make complex matrix S with elements s having:
-NB.     s ~ N(1,3^2)
+NB.     normrand=: 1 3&randnr
+NB. - verb to make complex matrix C with elements c having:
+NB.     c ~ N(4+i*5,3^2)
 NB.   :
-NB.     normrand=: 1 3&randnc
-NB. - verb to make complex matrix S with elements s having:
-NB.     Re(s) ~ N(0,1)
-NB.     Im(s) ~ N(1,3^2)
+NB.     normrand=: 4j5 3&randnc
+NB. - verb to make quaternion matrix Q with elements q
+NB.   having:
+NB.     q ~ N(4+i*5+j*6+k*7,3^2)
 NB.   :
-NB.     normrand=: randnf j. 1 3&randnf
+NB.     normrand=: (4j5 6j7 3)&randnq
 NB.
 NB. Notes:
-NB. - randnf requests only ⌈Π{sh[:]}/2⌉ numbers from RNG
+NB. - randnr requests only ⌈Π{sh[:]}/2⌉ numbers from RNG
+NB. - randnc generates C-gaussian complex numbers [3]
+NB. - randnq generates Q-gaussian quaternion numbers [3]
 NB.
 NB. References:
 NB. [1] G. E. P. Box, Mervin E. Muller. A Note on the
@@ -192,40 +204,49 @@ NB. [2] D. R. Brillinger. Time series. Data analysis and
 NB.     theory. The University of California, Berkeley, 1975
 NB.     (Д. Бриллинджер. Временные ряды. Обработка данных и
 NB.     теория. Изд-во "Мир". М. 1980, стр. 98).
+NB. [3] N. N. Vakhania, "Random vectors with values in
+NB.     quaternion Hilbert spaces", Theory of Probability &
+NB.     Its Applications, 1999, Vol. 43, No. 1 : pp. 99-115
+NB.     https://doi.org/10.1137/S0040585X97976696
+NB.     (Н. Н. Вахания, "Случайные векторы со значениями в
+NB.     кватернионных гильбертовых пространствах", Теория
+NB.     вероятн. и ее примен., 43:1 (1998), 18-40
+NB.     https://doi.org/10.4213/tvp821 )
 
-randnf=: (($,) +.@:(%:@(2&rande) r. 0 2p1&randu)@>.@-:@(*/)) : (p. $:)
-randnc=:           (%:@   rande  r. 0 2p1&randu)             : (p. $:)
+randnr=: (($,) +.@:(%:@(2  &rande) r. 0 2p1&randu)@>.@-:@(*/)) : (p.                   $:)
+randnc=:           (%:@     rande  r. 0 2p1&randu)             : (p.                   $:)
+randnq=:           (%:@(0.5&rande) r. 0 2p1&randu)@(,&2)       : (((* {:)~ (+"1 }:) [) $:)
 
 NB. ---------------------------------------------------------
-NB. randtnf
+NB. randtnr
 NB.
 NB. Description:
 NB.   Truncated normal distribution TN(μ,σ^2,a,b) of real
 NB.   numbers in range [a,b] with mean μ and variance σ^2
 NB.
 NB. Syntax:
-NB.   S=. [par] randtnf sh
+NB.   R=. [par] randtnr sh
 NB. where
-NB.   sh   - r-vector of non-negative integers, shape of S
+NB.   sh   - r-vector of non-negative integers, shape of R
 NB.   par - optional 4-vector (μ,σ,a,b), σ>0, a≤b, (μ,σ) are
-NB.         normal distribution parameters, [a,b] is s range,
+NB.         normal distribution parameters, [a,b] is range,
 NB.         default is (0 1 -∞ +∞)
-NB.   S   - sh-array of values s ~ N(μ,σ^2), a ≤ s ≤ b
-NB.   r   ≥ 0, the rank of S
+NB.   R   - sh-array of values r ~ N(μ,σ^2), a ≤ r ≤ b
+NB.   r   ≥ 0, the rank of R
 NB.
 NB. Application:
-NB. - verb to make complex matrix S with elements s having
+NB. - verb to make complex matrix R with elements r having
 NB.   left-side truncated normal distribution:
-NB.     s ~ TN(1,3^2,4,+∞)
+NB.     r ~ TN(1,3^2,4,+∞)
 NB.   :
-NB.     tnormrand=: 1 3 4 _&randtnf
+NB.     tnormrand=: 1 3 4 _&randtnr
 
-randtnf=: 0 1 __ _&$: :(4 : 0)
+randtnr=: 0 1 __ _&$: :(4 : 0)
   'mu sigma a b'=. x
-  mrandnf=. (mu,sigma)&randnf
+  mrandnr=. (mu,sigma)&randnr
   NB. replace out-bounded elements recursively
-  rober=. I.@(a&> +. b&<) $:@mrandnf@#@[`[`]}^:(0 < #@[) ]
-  ($ rober@mrandnf@(*/)) y
+  rober=. I.@(a&> +. b&<) $:@mrandnr@#@[`[`]}^:(0 < #@[) ]
+  ($ rober@mrandnr@(*/)) y
 )
 
 NB. ---------------------------------------------------------
@@ -440,7 +461,7 @@ NB. - default par provides about 95% of g numbers falls into
 NB.   the range [-1/FP_EPS,-FP_EPS]U[FP_EPS,1/FP_EPS]
 NB.   ("68-95-99.7 rule")
 
-gemat=: (_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX)&$: :(((randu~ 2&{.) (* 2&^) (randtnf~ 2&}.))~)
+gemat=: (_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX)&$: :(((randu~ 2&{.) (* 2&^) (randtnr~ 2&}.))~)
 
 NB. ---------------------------------------------------------
 NB. dimat
@@ -476,7 +497,7 @@ NB.     mantissa(d) ~ U(1,3)
 NB.     exponent(d) ~ TN(0,4^2,_5,6)
 NB.   and eigenvectors Q derived via QR-factorization from
 NB.   real matrix B:
-NB.     A=. 1 3 0 4 _5 6&gemat dimat (randnf unmat) 4 4
+NB.     A=. 1 3 0 4 _5 6&gemat dimat (randnr unmat) 4 4
 NB. - make complex diagonalizable Hermitian 4×4-matrix A with
 NB.   eigenvalues d having:
 NB.     mantissa(d) ~ U(1,3)
@@ -675,7 +696,7 @@ NB.
 NB. Syntax:
 NB.   vapp=. randnx unmat
 NB. where
-NB.   randnx - monad to make A, it is either randnf or
+NB.   randnx - monad to make A, it is either randnr or
 NB.            randnc; is called as:
 NB.              A=. randnx y
 NB.   vapp   - monad to make Q; is called as:
@@ -699,12 +720,12 @@ NB.   I -: clean (mp ct) Q
 NB.   I -: clean (mp~ct) Q
 NB. where
 NB.   I=. idmat n
-NB.   Q=. randnf unmat n
+NB.   Q=. randnr unmat n
 NB.
 NB. Application:
 NB. - make real orthogonal 4×4-matrix Q, where Q is derived
 NB.   via QR-factorization from real matrix B:
-NB.     Q=. randnf unmat 4 4
+NB.     Q=. randnr unmat 4 4
 NB. - make complex unitary 4×4-matrix U, where U is derived
 NB.   via QR-factorization from complex matrix B:
 NB.     U=. randnc unmat 4
@@ -739,7 +760,7 @@ NB.   r     ≥ 0, the rank of S
 NB.
 NB. Application:
 NB. - make random real sparse 3×4-matrix S:
-NB.     S=. (randnf spmat 0.25) 3 4
+NB.     S=. (randnr spmat 0.25) 3 4
 NB.
 NB. TODO:
 NB. - S should be sparse
@@ -812,7 +833,7 @@ NB. Notes:
 NB. - result is not taken into account by benchmark
 
 testdimat=: 3 : 0
-  (' gemat           dimat (randnf unmat)' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
+  (' gemat           dimat (randnr unmat)' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
   (' gemat           dimat (randnc unmat)' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
 
   ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y

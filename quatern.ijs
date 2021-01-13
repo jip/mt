@@ -39,18 +39,18 @@ NB. =========================================================
 NB. Concepts
 NB.
 NB. Let:
-NB.   a,b,c,d ∊ ℝ        Basis elements multiplication table:
+NB.   a,b,c,d ∊ ℝ       Basis elements multiplication table:
 NB.   ℂi ≡ ℝ  + ℝ *i          i   j   k
 NB.   ℂj ≡ ℝ  + ℝ *j      i  _1   k  -j
 NB.   ℂk ≡ ℝ  + ℝ *k      j  -k  _1   i
 NB.   ℍ  ≡ ℂi + ℂi*j      k   j  -i  _1
 NB.
-NB. J:                    Math:
-NB.  x -: a j. b            x = a + b*i ∊ ℂi
-NB.  y -: c j. d            y = c + d*i ∊ ℂi
-NB.  z -: a j. c            z = a + c*j ∊ ℂj
-NB.  w -: a j. d            w = a + d*k ∊ ℂk
-NB.  q -: x , y             q = x + y*j = a + b*i + c*j + d*k ∊ ℍ
+NB. J:                  Math:
+NB.  x -: a j. b          x = a + b*i ∊ ℂi
+NB.  y -: c j. d          y = c + d*i ∊ ℂi
+NB.  z -: a j. c          z = a + c*j ∊ ℂj
+NB.  w -: a j. d          w = a + d*k ∊ ℂk
+NB.  q -: x , y           q = x + y*j = a + b*i + c*j + d*k ∊ ℍ
 NB.
 NB. Notes:
 NB. - elements from ℂi, ℂj, ℂk must not be mixed with each

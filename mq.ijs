@@ -65,7 +65,7 @@ NB. Local definitions
 NB. ---------------------------------------------------------
 NB. Blocked code constants
 
-MQNB=: 32   NB. block size limit
+MQNB=: 32  NB. block size limit
 
 NB. ---------------------------------------------------------
 NB. Verb       Action     Side     Tran    Syntax

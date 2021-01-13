@@ -676,13 +676,13 @@ NB.     A * R^H * E = B * R^H * E
 NB.
 NB. Syntax:
 NB.   e1e2=.        hs hgezqenn H ,: T
-NB.   'e1e2 Z2'=.   hs hgezqenv H , T ,: Z1
-NB.   'e1e2 Q2'=.   hs hgezqevn H , T ,: Q1
-NB.   'e1e2 Q2Z2'=. hs hgezqevv H , T , Q1 ,: Z1
+NB.   'e1e2 Z2'=.   hs hgezqenv H ,  T ,: Z1
+NB.   'e1e2 Q2'=.   hs hgezqevn H ,  T ,: Q1
+NB.   'e1e2 Q2Z2'=. hs hgezqevv H ,  T ,  Q1 ,: Z1
 NB.   'S P'=.       hs hgezqsnn H ,: T
-NB.   'S P Z2'=.    hs hgezqsnv H , T ,: Z1
-NB.   'S P Q2'=.    hs hgezqsvn H , T ,: Q1
-NB.   'S P Q2 Z2'=. hs hgezqsvv H , T , Q1 ,: Z1
+NB.   'S P Z2'=.    hs hgezqsnv H ,  T ,: Z1
+NB.   'S P Q2'=.    hs hgezqsvn H ,  T ,: Q1
+NB.   'S P Q2 Z2'=. hs hgezqsvv H ,  T ,  Q1 ,: Z1
 NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices H11 and T11 position in H
@@ -789,13 +789,13 @@ NB.     A * R * E = B * R * E
 NB.
 NB. Syntax:
 NB.   e1e2=.        hs hgeqzenn H ,: T
-NB.   'e1e2 Z2'=.   hs hgeqzenv H , T ,: Z1
-NB.   'e1e2 Q2'=.   hs hgeqzevn H , T ,: Q1
-NB.   'e1e2 Q2Z2'=. hs hgeqzevv H , T , Q1 ,: Z1
+NB.   'e1e2 Z2'=.   hs hgeqzenv H ,  T ,: Z1
+NB.   'e1e2 Q2'=.   hs hgeqzevn H ,  T ,: Q1
+NB.   'e1e2 Q2Z2'=. hs hgeqzevv H ,  T ,  Q1 ,: Z1
 NB.   'S P'=.       hs hgeqzsnn H ,: T
-NB.   'S P Z2'=.    hs hgeqzsnv H , T ,: Z1
-NB.   'S P Q2'=.    hs hgeqzsvn H , T ,: Q1
-NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
+NB.   'S P Z2'=.    hs hgeqzsnv H ,  T ,: Z1
+NB.   'S P Q2'=.    hs hgeqzsvn H ,  T ,: Q1
+NB.   'S P Q2 Z2'=. hs hgeqzsvv H ,  T ,  Q1 ,: Z1
 NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices H11 and T11 position in H

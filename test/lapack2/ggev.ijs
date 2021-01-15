@@ -57,10 +57,8 @@ dggev=: 4 : 0
   lwork=. , 1 >. n * 39  NB. optimal
   cdrc=. dggev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: A) ; ldAB ; (|: B) ; ldAB ; (n $ 0.0) ; (n $ 0.0) ; (n $ 0.0) ; Vl ; ldVl ; Vr ; ldVr ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
-  'alphar alphai beta Vl Vr'=. 8 9 10 11 13 { cdrc
+  'alphar alphai beta Vl Vr'=. (|: L: 0) 8 9 10 11 13 { cdrc  NB. (|:) doesn't affect to alphar, alphai and beta
   alpha=. alphar j. alphai
-  if. jobVl e. 'vV' do. Vl=. |: Vl end.
-  if. jobVr e. 'vV' do. Vr=. |: Vr end.
   if. # cx=. I. alphai ~: 0 do.
     if. jobVl e. 'vV' do. Vl=. cx cxpair_jlapack2_ Vl end.
     if. jobVr e. 'vV' do. Vr=. cx cxpair_jlapack2_ Vr end.
@@ -86,8 +84,5 @@ zggev=: 4 : 0
   lwork=. , 1 >. n * 33  NB. optimal
   cdrc=. zggev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: A) ; ldAB ; (|: B) ; ldAB ; (n $ 0j0) ; (n $ 0j0) ; Vl ; ldVl ; Vr ; ldVr ; (lwork $ 0j0) ; lwork ; ((8 * n) $ 0.0) ; , _1
   assert. 0 = _1 {:: cdrc
-  'alpha beta Vl Vr'=. 8 9 10 12 { cdrc
-  if. jobVl e. 'vV' do. Vl=. |: Vl end.
-  if. jobVr e. 'vV' do. Vr=. |: Vr end.
-  alpha ; beta ; Vl ; Vr
+  (|: L: 0) 8 9 10 12 { cdrc  NB. (|:) doesn't affect to alpha and beta
 )

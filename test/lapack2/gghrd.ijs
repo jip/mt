@@ -47,7 +47,8 @@ dgghrd=: 4 : 0
   assert. *./ (2 = # x) , x e. 'nNiIvV'
   'compQ compZ'=. x
   'ilo ihi A B Q1 Z1'=. y
-  n=. {. sh=. $ A
+  n=. # A
+  assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   assert.                      (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_                                   ) A
   assert.                      (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. (-: utri_jlapack2_)    *. n = #) B
@@ -77,8 +78,8 @@ dgghrd=: 4 : 0
       case.       do. Z1=. Z1 + 0.0
     end.
   end.
-  Q1=. sh (0 0 $ 0.0)"_`(0.0 $~ [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compQ) Q1
-  Z1=. sh (0 0 $ 0.0)"_`(0.0 $~ [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compZ) Z1
+  Q1=. n (0 0 $ 0.0)"_`(0.0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compQ) Q1
+  Z1=. n (0 0 $ 0.0)"_`(0.0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compZ) Z1
   ldAB=. , 1 >. n
   ldQ=.  , 1 >. 0:^:(compQ e. 'nN') n
   ldZ=.  , 1 >. 0:^:(compZ e. 'nN') n
@@ -91,7 +92,8 @@ zgghrd=: 4 : 0
   assert. *./ (2 = # x) , x e. 'nNiIvV'
   'compQ compZ'=. x
   'ilo ihi A B Q1 Z1'=. y
-  n=. {. sh=. $ A
+  n=. # A
+  assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   assert.                      (ismatrix_jlapack2_ *. issquare_jlapack2_                                  ) A
   assert.                      (ismatrix_jlapack2_ *. issquare_jlapack2_ *. (-: utri_jlapack2_) *. (n = #)) B
@@ -101,8 +103,8 @@ zgghrd=: 4 : 0
   if.                    JCMPX ~: 3!:0 B  do. B=.  B  + 0j0 end.
   if. (compQ e. 'vV') *. JCMPX ~: 3!:0 Q1 do. Q1=. Q1 + 0j0 end.
   if. (compZ e. 'vV') *. JCMPX ~: 3!:0 Z1 do. Z1=. Z1 + 0j0 end.
-  Q1=. sh (0 0 $ 0j0)"_`(0j0 $~ [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compQ) Q1
-  Z1=. sh (0 0 $ 0j0)"_`(0j0 $~ [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compZ) Z1
+  Q1=. n (0 0 $ 0j0)"_`(0j0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compQ) Q1
+  Z1=. n (0 0 $ 0j0)"_`(0j0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compZ) Z1
   ldAB=. , 1 >. n
   ldQ=.  , 1 >. 0:^:(compQ e. 'nN') n
   ldZ=.  , 1 >. 0:^:(compZ e. 'nN') n

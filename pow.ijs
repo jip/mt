@@ -253,9 +253,7 @@ NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
 
 testgepow=: 3 : 0
-  rcond=. gecon1 y
-
-  ('gepow' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) 5 7 ; y
+  ('gepow' tdyad ((5 7"_)`]`]`(geconi@[)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -278,7 +276,6 @@ testdipow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
   geevlvv=. {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1 ])) % normsr)"2&.>)"0@ggevlvv@(,: idmat@c)
 
-  rcond=. gecon1 y
   try.
     'v LR'=. geevlvv y               NB. eigendecomposition
     'L R'=. LR
@@ -288,7 +285,7 @@ testdipow=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  ('dipow' tdyad ((0&{::)`}.`]`(rcond"_)`(_."_)`(_."_))) 5 7 ; (ct R) ; v ; iRh
+  ('dipow' tdyad ((5 7"_)`]`]`(geconi@[)`(_."_)`(_."_))) (ct R) ; v ; iRh
 
   EMPTY
 )
@@ -308,14 +305,13 @@ testhepow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
   heevlv=. (9 o. {.)&.>`((%%:@diag@(mp ct))&.>)"0@ggevlvn@(,: idmat@c)
 
-  rcond=. hecon1 y
   try.
     'v R'=. heevlv y  NB. eigendecomposition
   catch.
     v=. R=. _.
   end.
 
-  ('hepow' tdyad ((0&{::)`}.`]`(rcond"_)`(_."_)`(_."_))) 5 7 ; v ; ct R
+  ('hepow' tdyad ((5 7"_)`]`]`(heconi@[)`(_."_)`(_."_))) v ; ct R
 
   EMPTY
 )

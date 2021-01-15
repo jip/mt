@@ -326,9 +326,7 @@ NB. where
 NB.   A - n×n-matrix
 
 testgeexp=: 3 : 0
-  rcond=. gecon1 y
-
-  ('geexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('geexp' tmonad (]`]`(geconi@[)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -348,7 +346,6 @@ testdiexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
   geevlvv=. {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1])) % normsr)"2&.>)"0@ggevlvv@(,: idmat@c)
 
-  rcond=. gecon1 y
   try.
     'v LR'=. geevlvv y                 NB. eigendecomposition
     'L R'=. LR
@@ -360,7 +357,7 @@ testdiexp=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  ('diexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (ct R) ; v ; iRh
+  ('diexp' tmonad (]`]`(geconi@[)`(_."_)`(_."_))) (ct R) ; v ; iRh
 
   EMPTY
 )
@@ -380,7 +377,6 @@ testheexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
   heevlv=. (9 o. {.)&.>`((%%:@diag@(mp ct))&.>)"0@ggevlvn@(,:(idmat@c))
 
-  rcond=. hecon1 y
   try.
     'v R'=. heevlv y                NB. eigendecomposition
     v=. j./ (*"1 (-@*@{.)) |: +. v  NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
@@ -389,7 +385,7 @@ testheexp=: 3 : 0
     v=. R=. _.
   end.
 
-  ('heexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) v ; ct R
+  ('heexp' tmonad (]`]`(heconi@[)`(_."_)`(_."_))) v ; ct R
 
   EMPTY
 )

@@ -39,7 +39,7 @@ dgelqf=: 3 : 0
   lwork=. , 1 >. 32&*^:(k>128) m  NB. optimal
   cdrc=. dgelqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't effect tau
+  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to tau
 )
 
 zgelqf=: 3 : 0
@@ -50,5 +50,5 @@ zgelqf=: 3 : 0
   lwork=. , 1 >. 32&*^:(k>128) m  NB. optimal
   cdrc=. zgelqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't effect tau
+  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to tau
 )

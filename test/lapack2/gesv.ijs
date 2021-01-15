@@ -43,7 +43,7 @@ dgesv=: 3 : 0
   ld=. , 1 >. n
   cdrc=. dgesv_jlapack2_ (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 6 { cdrc  NB. (|:) doesn't effect ipiv
+  (|: L: 0) 3 5 6 { cdrc  NB. (|:) doesn't affect to ipiv
 )
 
 zgesv=: 3 : 0
@@ -56,5 +56,5 @@ zgesv=: 3 : 0
   ld=. , 1 >. n
   cdrc=. zgesv_jlapack2_ (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 6 { cdrc  NB. (|:) doesn't effect ipiv
+  (|: L: 0) 3 5 6 { cdrc  NB. (|:) doesn't affect to ipiv
 )

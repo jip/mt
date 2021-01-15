@@ -44,7 +44,7 @@ dtzrzf=: 3 : 0
   lwork=. , 1 >. 32&*`1:@.(m=n) m  NB. optimal
   cdrc=. dtzrzf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (m $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't effect tau
+  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to tau
 )
 
 ztzrzf=: 3 : 0
@@ -56,5 +56,5 @@ ztzrzf=: 3 : 0
   lwork=. , 1 >. 32&*`1:@.(m=n) m  NB. optimal
   cdrc=. ztzrzf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (m $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't effect tau
+  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to tau
 )

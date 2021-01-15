@@ -33,7 +33,7 @@ dgetrf=: 3 : 0
   end.
   cdrc=. dgetrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 00) ; , _1
   assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't effect ipiv
+  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to ipiv
 )
 
 zgetrf=: 3 : 0
@@ -42,5 +42,5 @@ zgetrf=: 3 : 0
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   cdrc=. zgetrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 00) ; , _1
   assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't effect ipiv
+  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to ipiv
 )

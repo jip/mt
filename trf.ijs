@@ -267,8 +267,8 @@ NB.   3) use output from the last iteration as algorithm's
 NB.      output
 NB.
 NB. Notes:
-NB. - for n>TRFNB is similar to LAPACK's DLASYF('L') and
-NB.   ZLAHEF('L'), but uses another factorization
+NB. - for n>TRFNB models LAPACK's DLASYF_AA('L') and
+NB.   ZLAHEF_AA('L')
 NB. - for n<:TRFNB is similar to LAPACK's DSYTF2('L') and
 NB.   ZHETF2('L'), but uses another factorization
 NB. - diagonals 0 and 1 of subH (main diagonal and
@@ -833,7 +833,7 @@ NB.   L1=. trl1 L1U
 NB.   U=. tru L1U
 NB.
 NB. Notes:
-NB. - models LAPACK's xGETRF
+NB. - implements LAPACK's xGETRF
 
 getrfpl1u=: 3 : 0
   'm n'=. sh=. $ y
@@ -1243,8 +1243,7 @@ NB.   iP=. p2P ip
 NB.   P=. ip2P ip
 NB.
 NB. Notes:
-NB. - is similar to LAPACK's DSYTRF and ZHETRF, but uses
-NB.   another factorization
+NB. - models LAPACK's DSYTRF_AA('L') and ZHETRF_AA('L')
 NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
@@ -1433,8 +1432,7 @@ NB. where
 NB.   L=. potrfl A
 NB.
 NB. Notes:
-NB. - models LAPACK's xPOTRF('L'), but uses blocked, not
-NB.   partitioned algorithm
+NB. - implements LAPACK's xPOTRF('L')
 
 potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0&{::))`,`(ct@])`trsmllnn`(0 1&{::)`[`mp`[`]`(1 1&{::)`stitchb`(potrfl@:-~)`]`[`0:`0: fork6)@(<;.1~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
@@ -1575,7 +1573,7 @@ NB. where
 NB.   'L1 D'=. pttrfl A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xPTTRF
+NB. - models LAPACK's xPTTRF
 NB.
 NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.

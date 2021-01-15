@@ -17,9 +17,11 @@ NB.   compZ - scalar, character, case-insensitive:
 NB.             'N' - do not compute Z
 NB.             'I' - to compute Z
 NB.             'V' - to compute Z1*Z
-NB.   ilo   ∈ [1,n], IO starting column, 1-based
-NB.   ihi   ∈ [1,n], IO ending column, 1-based
-NB.   A     - n×n-matrix, numeric, the upper triangular in
+NB.   ilo   ∈ [1,max(1,ihi)], IO starting row and column,
+NB.           1-based
+NB.   ihi   ∈ [min(ilo,n),n], IO ending row and column,
+NB.           1-based
+NB.   A     - n×n-matrix, the upper triangular in rows and
 NB.           columns outside ilo:ihi
 NB.   B     - n×n-matrix, the upper triangular
 NB.   Q1    - n×n-matrix, the unitary (orthogonal) if

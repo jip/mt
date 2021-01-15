@@ -7,27 +7,27 @@ NB.              matrix, represented in factored form; op(A)
 NB.              is either A itself, or A^T (the
 NB.              transposition of A), or A^H (the conjugate
 NB.              transposition of A); B is known right-hand
-NB.              side (RHS), X is unknown solution
+NB.              sides (RHS), X is unknown solutions
 NB. hetrsxxxx    Solve equation (op(A) * X = B) or
 NB.              (X * op(A) = B), where A is a Hermitian
 NB.              (symmetric) matrix, represented in factored
 NB.              form; op(A) is either A itself, or A^T (the
 NB.              transposition of A); B is known right-hand
-NB.              side (RHS), X is unknown solution
+NB.              sides (RHS), X is unknown solutions
 NB. potrsxxx     Solve equation (op(A) * X = B) or
 NB.              (X * op(A) = B), where A is a Hermitian
 NB.              (symmetric) positive definite matrix,
 NB.              represented in factored form; op(A) is
 NB.              either A itself, or A^T (the transposition
-NB.              of A); B is known right-hand side (RHS), X
-NB.              is unknown solution
+NB.              of A); B is known right-hand sides (RHS), X
+NB.              is unknown solutions
 NB. pttrsxxx     Solve equation (op(A) * X = B) or
 NB.              (X * op(A) = B), where A is a Hermitian
 NB.              (symmetric) positive definite tridiagonal
 NB.              matrix, represented in factored form; op(A)
 NB.              is either A itself, or A^T (the
 NB.              transposition of A); B is known right-hand
-NB.              side (RHS), X is unknown solution
+NB.              sides (RHS), X is unknown solutions
 NB.
 NB. testgetrs1   Test getrsxxxxxx by general square matrix
 NB.              and single RHS

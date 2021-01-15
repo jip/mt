@@ -104,9 +104,9 @@ NB.   NB. I = Q * (Q^H)
 NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) -: clean@(unmlqrc unglq)) LQf
 NB.
 NB. Notes:
-NB. - implements LAPACK's DORGLQ, ZUNGLQ
-NB. - straightforward O(k*m^3) code:
-NB.   Q=. k {. mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)"0/~"1 + }:"1 Qf
+NB. - monadic case implements LAPACK's DORGLQ, ZUNGLQ
+NB. - straightforward O(k*n^3) code:
+NB.     Q=.   k  {.   mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)~"0/~"1    }:"1   k  {.   Qf
 
 unglq=: ($:~ 0 _1 <./@:+ $) :(}:"1@(([ (({."1~ -@c) larfbrcfr ])  idmat      @(((] ,  +) #)~ c) appendr  ])&:>/)@([ (   (<;.1~      (0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@( idmat      @((- {.) ,  -~/@]) $))  tru1pick        @((   <./ @, 0 _1 + $) {.   ]))`((0  idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
@@ -152,9 +152,9 @@ NB.   NB. I = (Q^H) * Q
 NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) -: clean@(unmqllc ungql)) QfL
 NB.
 NB. Notes:
-NB. - implements LAPACK's DORGQL, ZUNGQL
+NB. - monadic case implements LAPACK's DORGQL, ZUNGQL
 NB. - straightforward O(k*m^3) code:
-NB.   Q=. (-k) {."1 mp/ (idmat m) -"2 |. ({. Qf) * (* +)"0/~"1 |: }. Qf
+NB.     Q=. (-k) {."1 mp/ (idmat m) -"2 |. (  {.   Qf) * (* +) "0/~"1 |: }.   (-k) {."1 Qf
 
 ungql=: ($:~ _1 0 <./@:+ $) :(}.  @(([ (({.  ~   #) larfblnbc ]) (idmat~ -~/)@(((] ,~ +) c)~ #) stitcht~ ])&:>/)@([ (|.@(<;.2~ '' ; (0 1:`(GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@((idmat~ -~/)@((- {:) ,~ - /@]) $)) (tru1pick~ -~/@$)@((-@(<./)@, _1 0 + $) {."1 ]))`((-  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
@@ -200,9 +200,9 @@ NB.   NB. I = (Q^H) * Q
 NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) -: clean@(unmqrlc ungqr)) QfR
 NB.
 NB. Notes:
-NB. - implements LAPACK's DORGQR, ZUNGQR
+NB. - monadic case implements LAPACK's DORGQR, ZUNGQR
 NB. - straightforward O(k*m^3) code:
-NB.   Q=. k {."1 mp/ (idmat m) -"2 ({: Qf) * (* +)"0/~"1 |: }: Qf
+NB.     Q=.   k  {."1 mp/ (idmat m) -"2    (  {:   Qf) * (* +) "0/~"1 |: }:     k  {."1 Qf
 
 ungqr=: ($:~ _1 0 <./@:+ $) :(}:  @(([ (({.  ~ -@#) larfblnfc ])  idmat      @(((] ,~ +) c)~ #) stitchb  ])&:>/)@([ (   (<;.1~ '' ; (0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@( idmat      @((- {:) ,~ - /@]) $))  trl1pick        @((   <./ @, _1 0 + $) {."1 ]))`((0  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
@@ -247,9 +247,9 @@ NB.   NB. I = Q * (Q^H)
 NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) -: clean@(unmrqrc ungrq)) RQf
 NB.
 NB. Notes:
-NB. - implements LAPACK's DORGRQ, ZUNGRQ
-NB. - straightforward O(k*m^3) code:
-NB.   Q=. (-k) {. mp/ (idmat n) -"2 (+ {."1 Qf) * (* +)"0/~"1 + }."1 Qf
+NB. - monadic case implements LAPACK's DORGRQ, ZUNGRQ
+NB. - straightforward O(k*n^3) code:
+NB.     Q=. (-k) {.   mp/ (idmat n) -"2    (+ {."1 Qf) * (* +)~"0/~"1    }."1 (-k) {.   Qf
 
 ungrq=: ($:~ 0 _1 <./@:+ $) :(}."1@(([ (({."1~   c) larfbrcbr ]) (idmat~ -~/)@(((] ,  +) #)~ c) appendl~ ])&:>/)@([ (|.@(<;.2~      (0 1:`(GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@((idmat~ -~/)@((- {.) ,  -~/@]) $)) (trl1pick~ -~/@$)@((-@(<./)@, 0 _1 + $) {.   ]))`((-~ idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
@@ -453,13 +453,13 @@ NB.   NB. I = Q * Q^H
 NB.   (idmat@# -: clean@(mp  ct))@unghrl HQf
 NB.
 NB. Notes:
-NB. - instead of using f and s parameters, the following
+NB. - instead of using h and s parameters, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i)',i=n-1:0} ,
 NB.   where
-NB.     H(0:f-1) = H(f+s-1:n-1) = I .
+NB.     H(0:h-1) = H(h+s-1:n-1) = I .
 NB.   This approach delivers excessive calculations in rare
-NB.   case ((f>0) OR (f+s<n)).
+NB.   case ((h>0) OR (h+s<n)).
 
 unghrl=: unglq@(|.!.0)
 
@@ -486,13 +486,13 @@ NB.   (idmat@# -: clean@(mp~ ct))@unghru HQf
 NB.
 NB. Notes:
 NB. - models LAPACK's DORGHR, ZUNGHR
-NB. - instead of using f and s parameters, the following
+NB. - instead of using h and s parameters, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i),i=0:n-1} ,
 NB.   where
-NB.     H(0:f-1) = H(f+s-1:n-1) = I .
+NB.     H(0:h-1) = H(h+s-1:n-1) = I .
 NB.   This approach delivers excessive calculations in rare
-NB.   case ((f>0) OR (f+s<n)).
+NB.   case ((h>0) OR (h+s<n)).
 
 unghru=: ungqr@(0 _1&(|.!.0))
 

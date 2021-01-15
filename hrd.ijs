@@ -48,7 +48,7 @@ NB. lahr2l
 NB.
 NB. Description:
 NB.   Reduce the first HRDNB rows (panel) of a general matrix
-NB.   subeA so that elements behind the 1st supdiagonal are
+NB.   subeA so that elements behind the 1st superdiagonal are
 NB.   zero. The reduction is performed by an unitary
 NB.   (orthogonal) similarity transformation: Q * subeA * Q^H
 NB.
@@ -392,7 +392,7 @@ NB.         matrix A, see geballp and storage layout below
 NB.   HQf - n×(n+1)-matrix, H and Qf combined
 NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
-NB.         1st supdiagonal
+NB.         1st superdiagonal
 NB.   Qf  - (s-1)×(n-h)-matrix, the unit upper trapezoidal
 NB.         (unit diagonal not stored), represents Q in
 NB.         factored form:

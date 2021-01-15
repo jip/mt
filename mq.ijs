@@ -588,9 +588,21 @@ NB.   ((unmrzrn -: (mp     (ungrz~ <:@c))~) 0 ?@$~ 0 _1     + $) RZf
 NB.   ((unmrzrc -: (mp  ct@(ungrz~ <:@c))~) 0 ?@$~ 0 _1     + $) RZf
 NB.
 NB. Notes:
-NB. - implement LAPACK's xORMRZ, xUNMRZ
 NB. - unmr3{ln,lc,rn,rc} and unmrz{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
+NB. - implement LAPACK's DORMRZ, ZUNMRZ with the following
+NB.   difference: if not all reflectors are needed then
+NB.   part of RZf should be zeroed, e.g.:
+NB.     original RZf with m=5, n=9:
+NB.       (  r  r  r  r  r v0 v0 v0 v0 τ0  )
+NB.       (  0  r  r  r  r v1 v1 v1 v1 τ1  )
+NB.       (  0  0  r  r  r v2 v2 v2 v2 τ2  )
+NB.       (  0  0  0  r  r v3 v3 v3 v3 τ3  )
+NB.       (  0  0  0  0  r v4 v4 v4 v4 τ4  )
+NB.     RZf used as x argument when k=2:
+NB.       (  r  r  0  0  0 v0 v0 v0 v0 τ0  )
+NB.       (  0  r  0  0  0 v1 v1 v1 v1 τ1  )
+NB.     note zeroed elements in columns 2,3,4
 
 unmrzln=: }:  @(((unmr3ln`((larzblcbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,  &0)`(i.@$@])@.(0 e. $@])
 unmrzlc=: }:  @(((unmr3lc`((larzblnbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@( 0 , [))`]}~ #))~ ,  &0)`(i.@$@])@.(0 e. $@])

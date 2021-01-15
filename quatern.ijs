@@ -53,7 +53,7 @@ NB.  w -: a j. d          w = a + d*k ∊ ℂk
 NB.  q -: x , y           q = x + y*j = a + b*i + c*j + d*k ∊ ℍ
 NB.
 NB. Notes:
-NB. - elements from ℂi, ℂj, ℂk must not be mixed with each
+NB. - elements from ℝ, ℂi, ℂj, ℂk must not be mixed with each
 NB.   other by math operators in J
 
 NB. =========================================================

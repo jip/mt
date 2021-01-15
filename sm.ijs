@@ -5,8 +5,8 @@ NB.            (X * op(A) = B), where A is either unit or
 NB.            non-unit, either lower or upper, triangular
 NB.            matrix; op(A) is either A itself, or A^T, the
 NB.            transposition of A, or A^H, the conjugate
-NB.            transposition of A; B is known right-hand side
-NB.            (RHS), X is unknown solution
+NB.            transposition of A; B is known right-hand
+NB.            sides (RHS), X is unknown solutions
 NB.
 NB. testtrsm1  Test trsmxxxx by triangular matrix and single
 NB.            RHS

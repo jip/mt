@@ -14,9 +14,9 @@ NB.   R   - m×k-matrix, the upper trapezoidal
 NB.   Qf  - k×n-matrix, the unit lower trapezoidal (unit
 NB.         diagonal not stored), with the tau it represents
 NB.         the Q in the factored form
-NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the last k rows of a product of m
-NB.         elementary reflectors H(i) of order n:
+NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of m elementary reflectors
+NB.         H(i) of order n:
 NB.           Q = Π{H(i)',i=0:m-1}
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   = min(m,n)

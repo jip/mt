@@ -2191,7 +2191,7 @@ NB.   P=. p2P p
 NB.   Q=. (# R) {."1 Qm
 NB.
 NB. Notes:
-NB. - simulates LAPACK's xGEQPx
+NB. - simulates LAPACK's xGEQP3
 NB. - implements RRQR's xGEQPY(3) [1, 2] with following
 NB.   differences:
 NB.   - matrix C is an identity matrix

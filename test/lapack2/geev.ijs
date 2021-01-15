@@ -16,9 +16,11 @@ NB.             'N' - do not compute Vr
 NB.             'V' - to compute Vr
 NB.   A     - n×n-matrix
 NB.   w     - n-vector, eigenvalues of A
-NB.   Vl    - n×n-matrix, left eigenvectors of A
-NB.   Vr    - n×n-matrix, right eigenvectors of A
-NB.   n     ≥ 0
+NB.   Vl    - n×n-matrix, left eigenvectors of A or
+NB.           0×0-matrix
+NB.   Vr    - n×n-matrix, right eigenvectors of A or
+NB.           0×0-matrix
+NB.   n     ≥ 0, the size of A, Vl, Vr and w
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

@@ -5,7 +5,7 @@ NB.            (X * op(A) = B), where A is a general square
 NB.            matrix; op(A) is either A itself, or A^T (the
 NB.            transposition of A), or A^H (the conjugate
 NB.            transposition of A); B is known right-hand
-NB.            side (RHS), X is unknown solution
+NB.            sides (RHS), X is unknown solutions
 NB. gtsvxxx    Solve equation (op(A) * X = B) or
 NB.            (X * op(A) = B), where A is a tridiagonal
 NB.            matrix; op(A) is either A itself, or A^T (the
@@ -16,19 +16,19 @@ NB. hesvxxx    Solve equation (op(A) * X = B) or
 NB.            (X * op(A) = B), where A is a Hermitian
 NB.            (symmetric) matrix; op(A) is either A itself,
 NB.            or A^T (the transposition of A); B is known
-NB.            right-hand side (RHS), X is unknown solution
+NB.            right-hand sides (RHS), X is unknown solutions
 NB. posvxxx    Solve equation (op(A) * X = B) or
 NB.            (X * op(A) = B), where A is a Hermitian
 NB.            (symmetric) positive definite matrix; op(A) is
 NB.            either A itself, or A^T (the transposition of
-NB.            A); B is known right-hand side (RHS), X is
-NB.            unknown solution
+NB.            A); B is known right-hand sides (RHS), X is
+NB.            unknown solutions
 NB. ptsvxxx    Solve equation (op(A) * X = B) or
 NB.            (X * op(A) = B), where A is a Hermitian
 NB.            (symmetric) positive definite tridiagonal
 NB.            matrix; op(A) is either A itself, or A^T (the
 NB.            transposition of A); B is known right-hand
-NB.            side (RHS), X is unknown solution
+NB.            sides (RHS), X is unknown solutions
 NB.
 NB. testgesv1  Test gesvxxx by general square matrix and
 NB.            single RHS

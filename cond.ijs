@@ -118,8 +118,8 @@ NB.   rcondQ ≥ 0, reciprocal of the condition number of Q in
 NB.            1-norm
 NB.
 NB. Notes:
-NB. - extraneous values in triangular, band matrices must be
-NB.   zeroed
+NB. - extraneous values in band, tridiagonal, triangular and
+NB.   triangular band matrices must be zeroed
 NB. - gecon1 simulates LAPACK's xGECON('1'), xGBCON('1'),
 NB.   xGTCON('1'), xTBCON('1')
 NB. - geconi simulates LAPACK's xGECON('i'), xGBCON('i'),

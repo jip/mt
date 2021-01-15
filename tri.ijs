@@ -396,7 +396,7 @@ NB.
 NB. Syntax:
 NB.   iA=. getrilu1p LU1p
 NB. where
-NB.   LU1p - 3-vector of boxes, the output of getrflu1p, the
+NB.   LU1p - 2-vector of boxes, the output of getrflu1p, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.   A    - n×n-matrix
@@ -461,7 +461,7 @@ NB.
 NB. Syntax:
 NB.   iA=. getripl1u pL1U
 NB. where
-NB.   pL1U - 3-vector of boxes, the output of getrfpl1u, the
+NB.   pL1U - 2-vector of boxes, the output of getrfpl1u, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.   A    - n×n-matrix
@@ -535,7 +535,7 @@ NB.
 NB. Syntax:
 NB.   iA=. getripu1l pU1L
 NB. where
-NB.   pU1L - 3-vector of boxes, the output of getrfpu1l, the
+NB.   pU1L - 2-vector of boxes, the output of getrfpu1l, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.   A    - n×n-matrix
@@ -600,7 +600,7 @@ NB.
 NB. Syntax:
 NB.   iA=. getriul1p UL1p
 NB. where
-NB.   UL1p - 3-vector of boxes, the output of getrful1p, the
+NB.   UL1p - 2-vector of boxes, the output of getrful1p, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.   A    - n×n-matrix
@@ -693,13 +693,13 @@ NB. Description:
 NB.   Inverse Hermitian (symmetric) positive definite matrix
 NB.    A, represented in factored form
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric) positive
-NB.        definite
 NB.   L  - n×n-matrix, the output of potrfl, lower
 NB.        triangular Cholesky factor
 NB.   U  - n×n-matrix, the output of potrfu, upper
 NB.        triangular Cholesky factor
 NB.   iA - n×n-matrix, an inversion of A
+NB.   A  - n×n-matrix, the Hermitian (symmetric) positive
+NB.        definite
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   iA -: %. A

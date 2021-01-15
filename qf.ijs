@@ -68,13 +68,11 @@ NB.   L     - m×k-matrix, the lower trapezoidal
 NB.   Qf    - k×(n+1)-matrix, the unit upper trapezoidal
 NB.           (unit diagonal not stored), represents the Q in
 NB.           factored form
-NB.   Q     - k×n-matrix with orthonormal rows, which is
-NB.           defined as the first k rows of a product of m
-NB.           elementary reflectors H(i) of order n:
-NB.             Q = Π{H(i)',i=m-1:0}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.             H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0) = I
+NB.   Q     - n×n-matrix, the unitary (orthogonal), which is
+NB.           defined as the product of k elementary
+NB.           reflectors H(i) of order n:
+NB.             Q = Π{H(i)',i=k-1:0}
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -142,13 +140,11 @@ NB.   Qf    - (m+1)×k-matrix, the unit upper trapezoidal
 NB.           (unit diagonal not stored), represents the Q in
 NB.           factored form
 NB.   L     - k×n-matrix, the lower trapezoidal
-NB.   Q     - m×k-matrix with orthonormal columns, which is
-NB.           defined as the last k columns of a product of n
-NB.           elementary reflectors H(i) of order m:
-NB.             Q = Π{H(i),i=n-1:0}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.             H(n-1:k) ≡ H(u(n-1:k),τ(n-1:k)) = H(0,0) = I
+NB.   Q     - m×m-matrix, the unitary (orthogonal), which is
+NB.           defined as the product of k elementary
+NB.           reflectors H(i) of order m:
+NB.             Q = Π{H(i),i=k-1:0}
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -213,13 +209,11 @@ NB.   Qf    - (m+1)×k-matrix, the unit lower trapezoidal
 NB.           (unit diagonal not stored), represents the Q in
 NB.           factored form
 NB.   R     - k×n-matrix, the upper trapezoidal
-NB.   Q     - m×k-matrix with orthonormal columns, which is
-NB.           defined as the first k columns of a product of n
-NB.           elementary reflectors H(i) of order m:
-NB.             Q = Π{H(i),i=0:n-1}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.             H(k:n-1) ≡ H(u(k:n-1),τ(k:n-1)) = H(0,0) = I
+NB.   Q     - m×m-matrix, the unitary (orthogonal), which is
+NB.           defined as the product of k elementary
+NB.           reflectors H(i) of order m:
+NB.             Q = Π{H(i),i=0:k-1}
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -284,13 +278,11 @@ NB.   R     - m×k-matrix, the upper trapezoidal
 NB.   Qf    - k×(n+1)-matrix, the unit lower trapezoidal
 NB.           (unit diagonal not stored), represents the Q in
 NB.           factored form
-NB.   Q     - k×n-matrix with orthonormal rows which is
-NB.           defined as the last k rows of a product of m
-NB.           elementary reflectors H(i) of order n:
-NB.             Q = Π{H(i)',i=0:m-1}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.             H(k:m-1) ≡ H(u(k:m-1),τ(k:m-1)) = H(0,0) = I
+NB.   Q     - n×n-matrix, the unitary (orthogonal), which is
+NB.           defined as the product of k elementary
+NB.           reflectors H(i) of order n:
+NB.             Q = Π{H(i)',i=0:k-1}
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -364,7 +356,7 @@ NB.           Zf
 NB.   oL    - m×m-matrix, the lower triangular
 NB.   Zf    - m×(n+1)-matrix, the Z represented in factored
 NB.           form
-NB.   Z     - n×n-matrix with orthonormal rows which is
+NB.   Z     - n×n-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of m elementary
 NB.           reflectors H(i) of order n:
 NB.             Q = Π{H(i)',i=m-1:0}
@@ -447,7 +439,7 @@ NB.           for Zf
 NB.   Tau   - n-vector, scalars τ[0:n-1] for Zf
 NB.   Zf    - (m+1)×n-matrix, the Z represented in factored
 NB.           form
-NB.   Z     - m×m-matrix with orthonormal columns which is
+NB.   Z     - m×m-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of n elementary
 NB.           reflectors H(i) of order m:
 NB.             Z = Π{H(i),i=n-1:0}
@@ -526,7 +518,7 @@ NB.           for Zf
 NB.   oR    - n×n-matrix, the upper triangular
 NB.   Zf    - (m+1)×n-matrix, the Z represented in factored
 NB.           form
-NB.   Z     - m×m-matrix with orthonormal columns which is
+NB.   Z     - m×m-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of n elementary
 NB.           reflectors H(i) of order m:
 NB.             Z = Π{H(i),i=0:n-1}
@@ -604,7 +596,7 @@ NB.           Zf
 NB.   Tau   - m-vector, scalars τ[0:m-1] for Zf
 NB.   Zf    - m×(n+1)-matrix, the Z represented in factored
 NB.           form
-NB.   Z     - n×n-matrix with orthonormal rows which is
+NB.   Z     - n×n-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of m elementary
 NB.           reflectors H(i) of order n:
 NB.             Z = Π{H(i)',i=0:m-1}
@@ -683,13 +675,11 @@ NB.   L   - m×k-matrix, the lower trapezoidal
 NB.   Qf  - k×(n+1)-matrix, the unit upper trapezoidal (unit
 NB.         diagonal not stored), represents the Q in
 NB.         factored form
-NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the first k rows of a product of m
-NB.         elementary reflectors H(i) of order n:
-NB.           Q = Π{H(i)',i=m-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0) = I
+NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of k elementary
+NB.         reflectors H(i) of order n:
+NB.           Q = Π{H(i)',i=k-1:0}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -752,13 +742,11 @@ NB.   Qf  - (m+1)×k-matrix, the unit upper trapezoidal (unit
 NB.         diagonal not stored), represents the Q in
 NB.         factored form
 NB.   L   - k×n-matrix, the lower trapezoidal
-NB.   Q   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the last k columns of a product of n
-NB.         elementary reflectors H(i) of order m:
-NB.           Q = Π{H(i),i=n-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.           H(n-1:k) ≡ H(u(n-1:k),τ(n-1:k)) = H(0,0) = I
+NB.   Q   - m×m-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of k elementary
+NB.         reflectors H(i) of order m:
+NB.           Q = Π{H(i),i=k-1:0}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -818,13 +806,11 @@ NB.   Qf  - (m+1)×k-matrix, the unit lower trapezoidal (unit
 NB.         diagonal not stored), represents the Q in
 NB.         factored form
 NB.   R   - k×n-matrix, the upper trapezoidal
-NB.   Q   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the first k columns of a product of n
-NB.         elementary reflectors H(i) of order m:
-NB.           Q = Π{H(i),i=0:n-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.           H(k:n-1) ≡ H(u(k:n-1),τ(k:n-1)) = H(0,0) = I
+NB.   Q   - m×m-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of k elementary reflectors
+NB.         H(i) of order m:
+NB.           Q = Π{H(i),i=0:k-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -884,13 +870,11 @@ NB.   R   - m×k-matrix, the upper trapezoidal
 NB.   Qf  - k×(n+1)-matrix, the unit lower trapezoidal (unit
 NB.         diagonal not stored), represents the Q in
 NB.         factored form
-NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the last k rows of a product of m
-NB.         elementary reflectors H(i) of order n:
-NB.           Q = Π{H(i)',i=0:m-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(k:m-1) ≡ H(u(k:m-1),τ(k:m-1)) = H(0,0) = I
+NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of k elementary reflectors
+NB.         H(i) of order n:
+NB.           Q = Π{H(i)',i=0:k-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -959,17 +943,17 @@ NB.   oA0 - m×(n-m)-matrix, rows are vectors v[0:m-1] for Zf
 NB.   oL  - m×m-matrix, the lower triangular
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored
 NB.         form
-NB.   Z   - n×n-matrix with orthonormal rows which is defined
-NB.         as the product of m elementary reflectors H(i) of
-NB.         order n:
+NB.   Z   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of m elementary reflectors
+NB.         H(i) of order n:
 NB.           Z = Π{H(i)',i=m-1:0}
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=7:
 NB.   A:
-NB.     (     a0 a0 a0 a0 il 0  0   )
-NB.     (     a0 a0 a0 a0 il il 0   )
+NB.     (     a0 a0 a0 a0 il *  *   )
+NB.     (     a0 a0 a0 a0 il il *   )
 NB.     (     a0 a0 a0 a0 il il il  )
 NB.   LZf:
 NB.     (  τ0 v0 v0 v0 v0 ol 0  0   )
@@ -1045,7 +1029,7 @@ NB.         Zf
 NB.   Tau - n-vector, scalars τ[0:n-1] for Zf
 NB.   Zf  - (m+1)×n-matrix, the Z represented in factored
 NB.         form
-NB.   Z   - m×m-matrix with orthonormal columns which is
+NB.   Z   - m×m-matrix, the unitary (orthogonal), which is
 NB.         defined as the product of n elementary reflectors
 NB.         H(i) of order m:
 NB.           Z = Π{H(i),i=n-1:0}
@@ -1054,8 +1038,8 @@ NB.   m   ≥ n
 NB.
 NB. Storage layout for m=7, n=3:
 NB.   A:                ZfL:              Zf:               L:
-NB.   (  il 0  0   )    (  ol 0  0   )    (  1  0  0   )    (  ol 0  0   )
-NB.   (  il il 0   )    (  ol ol 0   )    (  0  1  0   )    (  ol ol 0   )
+NB.   (  il *  *   )    (  ol 0  0   )    (  1  0  0   )    (  ol 0  0   )
+NB.   (  il il *   )    (  ol ol 0   )    (  0  1  0   )    (  ol ol 0   )
 NB.   (  il il il  )    (  ol ol ol  )    (  0  0  1   )    (  ol ol ol  )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
@@ -1124,7 +1108,7 @@ NB.         Zf
 NB.   oR  - n×n-matrix, the upper triangular
 NB.   Zf  - (m+1)×n-matrix, the Z represented in factored
 NB.         form
-NB.   Z   - m×m-matrix with orthonormal columns which is
+NB.   Z   - m×m-matrix, the unitary (orthogonal), which is
 NB.         defined as the product of n elementary reflectors
 NB.         H(i) of order m:
 NB.           Z = Π{H(i),i=0:n-1}
@@ -1139,8 +1123,8 @@ NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  ir ir ir  )    (  or or or  )    (  1  0  0   )    (  or or or  )
-NB.   (  0  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
-NB.   (  0  0  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
+NB.   (  *  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
+NB.   (  *  *  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
 NB. where
 NB.   a0                     - elements of iA0
 NB.   ir                     - elements of iR
@@ -1202,9 +1186,9 @@ NB.   oA1 - m×(n-m)-matrix, rows are vectors v[0:m-1] for Zf
 NB.   Tau - m-vector, scalars τ[0:m-1] for Zf
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored
 NB.         form
-NB.   Z   - n×n-matrix with orthonormal rows which is defined
-NB.         as the product of m elementary reflectors H(i) of
-NB.         order n:
+NB.   Z   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of m elementary reflectors
+NB.         H(i) of order n:
 NB.           Z = Π{H(i)',i=0:m-1}
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   m   ≤ n
@@ -1212,8 +1196,8 @@ NB.
 NB. Storage layout for m=3, n=7:
 NB.   A:
 NB.     (  ir ir ir a1 a1 a1 a1     )
-NB.     (  0  ir ir a1 a1 a1 a1     )
-NB.     (  0  0  ir a1 a1 a1 a1     )
+NB.     (  *  ir ir a1 a1 a1 a1     )
+NB.     (  *  *  ir a1 a1 a1 a1     )
 NB.   RZf:
 NB.     (  or or or v0 v0 v0 v0 τ0  )
 NB.     (  0  or or v1 v1 v1 v1 τ1  )

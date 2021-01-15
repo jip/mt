@@ -53,8 +53,8 @@ NB. trl1      Extract unit lower trapezoidal matrix
 NB. tru1      Extract unit upper trapezoidal matrix
 NB. tr2he     Make Hermitian (symmetric) matrix from
 NB.           triangular one
-NB. he        Make Hermitian (symmetric) matrix from lower
-NB.           triangle of general square one
+NB. hex       Make Hermitian (symmetric) matrix from lower
+NB.           (upper) triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
@@ -977,19 +977,21 @@ NB.   H - n×n-matrix, Hermitian (symmetric)
 tr2he=: (-: upddiag)@(+ ct)
 
 NB. ---------------------------------------------------------
-NB. he
+NB. hel
+NB. heu
 NB.
 NB. Description:
-NB.   Make Hermitian (symmetric) matrix from lower triangle
-NB.   of general square one
+NB.   Make Hermitian (symmetric) matrix from lower (upper)
+NB.   triangle of general square one
 NB.
 NB. Syntax:
-NB.   H=. he G
+NB.   H=. hex G
 NB. where
 NB.   G - n×n-matrix
 NB.   H - n×n-matrix, Hermitian (symmetric)
 
-he=: tr2he@trl
+hel=: (</~@i.@#)`(,: ct)}
+heu=: (>/~@i.@#)`(,: ct)}
 
 NB. ---------------------------------------------------------
 NB. po

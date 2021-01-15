@@ -1646,32 +1646,15 @@ NB. testgetrf
 NB.
 NB. Description:
 NB.   Test:
-NB.   - lud (math/misc)
-NB.   - getrf (math/lapack)
-NB.   - getrfxxxx (math/mt)
+NB.   - lud (math/misc addon)
+NB.   - xGETRF (math/lapack2 addon)
+NB.   - getrfxxxx (math/mt addon)
 NB.   by general matrix
 NB.
 NB. Syntax:
 NB.   testgetrf A
 NB. where
 NB.   A - m×n-matrix
-NB.
-NB. Formula:
-NB.   if 0=m or 0=n then
-NB.     berr := 0
-NB.   elseif 0=||A|| and ||A - Aapprox|| > 0
-NB.     berr := 1 / FP_EPS
-NB.   else
-NB.     berr := ((||A - Aapprox|| / size) / ||A||) / FP_EPS
-NB.   endif
-NB. where
-NB.   for getrflu1p: Aapprox := L * U1 * P, ||matrix|| := ||matrix||_inf, size = m
-NB.   for getrfpl1u: Aapprox := P * L1 * U, ||matrix|| := ||matrix||_1  , size = n
-NB.   for getrfpu1l: Aapprox := P * U1 * L, ||matrix|| := ||matrix||_1  , size = n
-NB.   for getrful1p: Aapprox := U * L1 * P, ||matrix|| := ||matrix||_inf, size = m
-NB.
-NB. Notes:
-NB. - models LAPACK's xGET01
 
 testgetrf=: 3 : 0
   load        :: ] 'numeric'
@@ -1682,24 +1665,21 @@ testgetrf=: 3 : 0
   load_mttmp_ :: ] 'math/misc/matfacto'
   load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
 
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  'rcondl rcondu'=. (_. _."_)`(geconi , gecon1)@.(=/@$) y  NB. meaninigful for square matrices only
 
-  NB. berr=. A (calcNorm aberr) Aapprox
-  aberr=. 1 : '((FP_EPS , c_mt_@]) %~/@,@,.`(%@FP_EPS)@.(</@:*@]) [ ,&u -)`0:@.(0 e. $@])'
-  vberr1_mttmp_=. norm1_mt_ aberr
-  vberri_mttmp_=. normi_mt_ aberr
+  'norml normu'=. (normi , norm1) y
 
-  ('lud_mttmp_'    tmonad (]`(ip2P^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcond"_)`(_."_)`vberr1_mttmp_)) y
+  ('lud_mttmp_'    tmonad ((0&{::)`(ip2P^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
 
-  ('dgetrf_mttmp_' tmonad (]`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcond"_)`(_."_)`vberr1_mttmp_)) y
-  ('zgetrf_mttmp_' tmonad (]`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcond"_)`(_."_)`vberr1_mttmp_)) y
+  ('dgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  ('zgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
 
-  ('getrflu1p'     tmonad (]`(0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))`(rcond"_)`(_."_)`vberri_mttmp_)) y
-  ('getrfpl1u'     tmonad (]`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcond"_)`(_."_)`vberr1_mttmp_)) y
-  ('getrfpu1l'     tmonad (]`(0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))`(rcond"_)`(_."_)`vberr1_mttmp_)) y
-  ('getrful1p'     tmonad (]`(0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))`(rcond"_)`(_."_)`vberri_mttmp_)) y
+  ('getrflu1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))`(rcondl"_)`(_."_)`(normi get01 #))) y ; norml
+  ('getrfpl1u'     tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  ('getrfpu1l'     tmonad ((0&{::)`(0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  ('getrful1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))`(rcondl"_)`(_."_)`(normi get01 #))) y ; norml
 
-  coerase <'mttmp'
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -1708,24 +1688,55 @@ NB. ---------------------------------------------------------
 NB. testhetrf
 NB.
 NB. Description:
-NB.   Test hetrfpx by Hermitian (symmetric) matrix
+NB.   Test:
+NB.   - DSYTRF DSYTRF_AA ZHETRF ZHETRF_AA (math/lapack2
+NB.     addon)
+NB.   - hetrfpx (math/mt addon)
+NB.   by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testhetrf A
 NB. where
 NB.   A - n×n-matrix, Hermitian
 NB.
-NB. Formula:
-NB. - for P * L1 * T * L1^H * P^H = A :
-NB.     berr := ||P * L1 * T * L1^H * P^H - A|| / (FP_EPS * ||A|| * n)
-NB. - for P * U1 * T * U1^H * P^H = A :
-NB.     berr := ||P * U1 * T * U1^H * P^H - A|| / (FP_EPS * ||A|| * n)
+NB. Notes:
+NB. - no berrA calc for LAPACK's DSYTRF and ZHETRF yet since
+NB.   its output is intricate
 
 testhetrf=: 3 : 0
-  rcond=. hecon1 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf_aa'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf_aa'
 
-  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. fp^:_1~ 0&{::)) % (FP_EPS * 1:^:(0&=)@norm1 * c)@[))) y
-  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. fp^:_1~ 0&{::)) % (FP_EPS * 1:^:(0&=)@norm1 * #)@[))) y
+  rcond=. heconi y
+
+  norm=. normi y
+
+  NB. Aapprox=. calcAxx (DT1 ; ipiv)
+  calcAdl=: makeper_jlapack2_@(1&{::) fp ((setdiag~  1 ;~    _1&diag )@bdlpick (mp~ mp  |:@]) trl1pick@:(|.!.0"1))@(0&{::)
+  calcAdu=: makeper_jlapack2_@(1&{::) fp ((setdiag~ _1 ;~     1&diag )@bdupick (mp  mp~ |:@]) tru1pick@:(|.!.0  ))@(0&{::)
+  calcAzl=: makeper_jlapack2_@(1&{::) fp ((setdiag~  1 ;~ +@(_1&diag))@bdlpick (mp~ mp  ct@]) trl1pick@:(|.!.0"1))@(0&{::)
+  calcAzu=: makeper_jlapack2_@(1&{::) fp ((setdiag~ _1 ;~ +@( 1&diag))@bdupick (mp  mp~ ct@]) tru1pick@:(|.!.0  ))@(0&{::)
+
+  NB. Aapprox=. calcA (ip ; T1 ; T)  NB. where T1 is L1 or U1
+  calcA=: 0&{:: fp^:_1 (mp mp ct@[)&>/@}.
+
+  ('''l''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+  ('''u''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+  ('''l''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+  ('''u''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+
+  ('''l''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdl`(rcond"_)`(_."_)`het01 )) y ; norm
+  ('''u''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdu`(rcond"_)`(_."_)`het01 )) y ; norm
+  ('''l''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzl`(rcond"_)`(_."_)`het01 )) y ; norm
+  ('''u''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzu`(rcond"_)`(_."_)`het01 )) y ; norm
+
+  ('hetrfpl'                tmonad ((0&{::)`calcA  `(rcond"_)`(_."_)`het01 )) y ; norm
+  ('hetrfpu'                tmonad ((0&{::)`calcA  `(rcond"_)`(_."_)`het01 )) y ; norm
+
+  coerase < 'mttmp'
+  erase 'calcAdl calcAdu calcAzl calcAzu calcA calcA'
 
   EMPTY
 )
@@ -1736,7 +1747,7 @@ NB.
 NB. Description:
 NB.   Test:
 NB.   - choleski (math/misc addon)
-NB.   - xPOTRF (math/lapack addon)
+NB.   - xPOTRF (math/lapack2 addon)
 NB.   - potrfx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix
 NB.
@@ -1745,21 +1756,6 @@ NB.   testpotrf A
 NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite
-NB.
-NB. Formula:
-NB.   if 0=n then
-NB.     berr := 0
-NB.   elseif 0=||A||_1 or ∃ i | Im(A(i,i)) ≠ 0
-NB.     berr := 1 / FP_EPS
-NB.   else
-NB.     berr := ((||A - Aapprox||_1 / n) / ||A||_1) / FP_EPS
-NB.   endif
-NB. where
-NB.   for potrfl: Aapprox := L * L^H
-NB.   for potrfu: Aapprox := U * U^H
-NB.
-NB. Notes:
-NB. - models LAPACK's xPOT01
 
 testpotrf=: 3 : 0
   load        :: ] 'numeric'
@@ -1770,22 +1766,21 @@ testpotrf=: 3 : 0
   load_mttmp_ :: ] 'math/misc/matfacto'
   load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
 
-  rcond=. pocon1 y
+  rcond=. poconi y
 
-  NB. berr=. A (makeAapprox aberr) T  NB. T is either L or U
-  aberr=. 1 : '(((FP_EPS , #@]) %~/@,@,.`(%@FP_EPS)@.(0 ([ = {) ]) [ ,&norm1_mt_ -) u)`(%@FP_EPS)@.(0 +./@:~: 11 o. diag_mt_@])`0:@.(0 = #@])'
+  norm=. normi y
 
-  ('choleski_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`((mp  ct)     aberr))) y
+  ('choleski_mttmp_'     tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
 
-  ('''l''&dpotrf_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`((mp  |:)@trl aberr))) y
-  ('''u''&dpotrf_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`((mp~ |:)@tru aberr))) y
-  ('''l''&zpotrf_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`((mp  ct)@trl aberr))) y
-  ('''u''&zpotrf_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`((mp~ ct)@tru aberr))) y
+  ('''l''&dpotrf_mttmp_' tmonad ((0&{::)`((mp  |:)@trl)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('''u''&dpotrf_mttmp_' tmonad ((0&{::)`((mp~ |:)@tru)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('''l''&zpotrf_mttmp_' tmonad ((0&{::)`((mp  ct)@trl)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('''u''&zpotrf_mttmp_' tmonad ((0&{::)`((mp~ ct)@tru)`(rcond"_)`(_."_)`het01)) y ; norm
 
-  ('potrfl'              tmonad (]`]`(rcond"_)`(_."_)`((mp  ct)     aberr))) y
-  ('potrfu'              tmonad (]`]`(rcond"_)`(_."_)`((mp  ct)     aberr))) y
+  ('potrfl'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
+  ('potrfu'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
 
-  coerase <'mttmp'
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -1794,8 +1789,11 @@ NB. ---------------------------------------------------------
 NB. testpttrf
 NB.
 NB. Description:
-NB.   Test pttrfpx by Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix
+NB.   Test:
+NB.   - xPTTRF (math/lapack2 addon)
+NB.   - pttrfx (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite tridiagonal
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   testpttrf A
@@ -1803,20 +1801,30 @@ NB. where
 NB.   A - n×n-matrix, Hermitian (symmetric) positive
 NB.       definite tridiagonal
 NB.
-NB. Formula:
-NB. - for L1 * D * L1^H = A :
-NB.     berr := ||L1 * D * L1^H - A|| / (FP_EPS * ||A|| * n)
-NB. - for U1 * D * U1^H = A :
-NB.     berr := ||U1 * D * U1^H - A|| / (FP_EPS * ||A|| * n)
-NB.
 NB. TODO:
 NB. - A should be sparse
 
 testpttrf=: 3 : 0
-  rcond=. ptcon1 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/pttrf'
 
-  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * 1:^:(0&=)@norm1 * c)@[))) y
-  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * 1:^:(0&=)@norm1 * #)@[))) y
+  rcond=. ptconi y
+
+  norm=. normi y
+
+  NB. Aapprox=. L1 calcAm D
+  calcAm=: mp mp ct@[
+  NB. Aapprox=. dD calcAxl eT1
+  calcAdl=: ((setdiag~ ;&_1)~ idmat@#)~ (mp mp |:@[) diagmat@[
+  calcAzl=: ((setdiag~ ;&_1)~ idmat@#)~ calcAm       diagmat@[
+
+  ('dpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAdl&>/)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('zpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAzl&>/)`(rcond"_)`(_."_)`het01)) y ; norm
+
+  ('pttrfl'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('pttrfu'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`(_."_)`het01)) y ; norm
+
+  coerase < 'mttmp'
+  erase 'calcAdl calcAzl calcAm'
 
   EMPTY
 )

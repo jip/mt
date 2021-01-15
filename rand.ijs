@@ -388,7 +388,7 @@ NB. [1] W.F. Trench, "Numerical solution of the eigenvalue
 NB.     problem for Hermitian Toeplitz matrices", SIAM J.
 NB.     Matrix Analysis and Appl., 10 (1989), pp. 135-146.
 
-kmsmat=: 1 : 'he_mt_@(+@u ^ -/~@i.@{.)'
+kmsmat=: 1 : 'hel_mt_@(+@u ^ -/~@i.@{.)'
 
 NB. ---------------------------------------------------------
 NB. gemat

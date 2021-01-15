@@ -183,22 +183,27 @@ math/mt - change history
 
 == 0.11.0 ==
  J9+ compatible
- lapack replaced by lapack2 in addon tests
  Most algorithms implemented are synced with LAPACK 3.9.0
  Refs shortened to addon's stuff and external addons
- * bal:    gxbalxp fixed for case n=0
- + cond:   new interface: unconi
- * ev:     ggevxxx fixed for case n=0
- * gq:     ungxx fixed for case n=0
- * mq:     unmxxxx fixed for case n=0
- * norm:   - normic and normitc are fixed for case #(columns)=0
-           - normm - new interface added
- * struct: obverse added for interfaces: fp p2P ip2P
- * sv:     interfaces renamed to unify with LAPACK:
-             gesvahx to gesvacx, gesvxah to gesvxac
- * trs:    interfaces renamed to unify with LAPACK:
-             getrslu1phx to getrslu1pcx, getrsxlu1ph to getrsxlu1pc,
-             getrspl1uhx to getrspl1ucx, getrsxpl1uh to getrsxpl1uc,
-             getrspu1lhx to getrspu1lcx, getrsxpu1lh to getrsxpu1lc,
-             getrsul1phx to getrsul1pcx, getrsxul1ph to getrsxul1pc
- - util:   ag removed
+ Test suites - improved and extended
+             - lapack addon replaced by lapack2
+ * bal:      gxbalxp fixed for case n=0
+ + cond:     new interface: unconi
+ * ev:       ggevxxx fixed for case n=0
+ * gq:       ungxx fixed for case n=0
+ * manifest: release upgraded to j902, 'files' and 'depends' sections extended
+ * mq:       unmxxxx fixed for case n=0
+ * norm:     - normic and normitc fixed for case #(columns)=0
+             - normsx get particular code branch for non-complex data types
+             - new interface: normm
+ * struct:   - obverse added for interfaces: fp p2P ip2P
+             - interface he splitted on hel and heu (NAMES CHANGED!)
+ * sv:       - gesvxxx names synced with LAPACK (INTERFACE RENAMED!)
+             - new interfaces for tridiagonal system solvers: gtsvax gtsvacx gtsvatx gtsvxa gtsvxac gtsvxat
+ * test:     - verb calls in tmonad and tdyad are wrapped by try/catch to avoid unintended termination
+             - new interfaces: drvevx drgev xxt01 t02x xxt02 t03 xxt03 t04x xxt11 t211 t22x t511x t513x t52xx
+ * trs:      - getrsxxxxxx names synced with LAPACK (INTERFACE RENAMED!)
+             - hetrsxxxx rebased from pttrsxx to gtsvxx
+             - pttrsuxx and pttrsxux fixed
+ * util:     - ag removed
+             - sorix get particular code branch for non-complex data types

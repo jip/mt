@@ -1276,9 +1276,9 @@ NB. ---------------------------------------------------------
 NB. testgeqf
 NB.
 NB. Description:
-NB.   Test orthogonal factorization algorithms:
+NB.   Test:
 NB.   - 128!:0 (built-in)
-NB.   - qrd (math/misc)
+NB.   - qrd (math/misc addon)
 NB.   - xGELQF xGEQLF xGEQRF xGERQF (math/lapack2 addon)
 NB.   - gelqf geqlf geqrf gerqf (math/mt addon)
 NB.   by general matrix
@@ -1287,23 +1287,6 @@ NB. Syntax:
 NB.   testgeqf A
 NB. where
 NB.   A - m×n-matrix
-NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1)
-NB.   if ||A||_1 > 0 then
-NB.     berr0 := ((||W1|| / size) / ||A||_1) / FP_EPS
-NB.   else
-NB.     berr0 := 0
-NB.   endif
-NB.   berr1 := (||W2|| / size) / FP_EPS
-NB. where
-NB.   - for LQ: ||W1|| := ||L - A * Q^H||_1, ||W2|| := ||Q * Q^H - I||_1, size := max(1, n)
-NB.   - for QL: ||W1|| := ||L - Q^H * A||_1, ||W2|| := ||Q^H * Q - I||_1, size := max(1, m)
-NB.   - for QR: ||W1|| := ||R - Q^H * A||_1, ||W2|| := ||Q^H * Q - I||_1, size := max(1, m)
-NB.   - for RQ: ||W1|| := ||R - A * Q^H||_1, ||W2|| := ||Q * Q^H - I||_1, size := max(1, n)
-NB.
-NB. Notes:
-NB. - models LAPACK's xLQT01, xQLT01, xQRT01 and xRQT01
 
 testgeqf=: 3 : 0
   load        :: ] 'numeric'
@@ -1317,25 +1300,29 @@ testgeqf=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/geqrf'
   load_mttmp_ :: ] 'math/mt/test/lapack2/gerqf'
 
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('128!:0'        tmonad (]`]                                                     `(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
-  ('qrd_mttmp_'    tmonad (]`]                                                     `(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
+  norm=. norm1 y
 
-  ('dgelqf_mttmp_' tmonad (]`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  |:@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  |:))@(1 {:: ])))) y
-  ('dgeqlf_mttmp_' tmonad (]`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ |:@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ |:))@(0 {:: ])))) y
-  ('dgeqrf_mttmp_' tmonad (]`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ |:@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ |:))@(0 {:: ])))) y
-  ('dgerqf_mttmp_' tmonad (]`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  |:@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  |:))@(1 {:: ])))) y
+  args=. y ; norm
 
-  ('zgelqf_mttmp_' tmonad (]`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  ct@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  ct))@(1 {:: ])))) y
-  ('zgeqlf_mttmp_' tmonad (]`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
-  ('zgeqrf_mttmp_' tmonad (]`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
-  ('zgerqf_mttmp_' tmonad (]`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  ct@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  ct))@(1 {:: ])))) y
+  ('128!:0'        tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
+  ('qrd_mttmp_'    tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
 
-  ('gelqf'         tmonad (]`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  ct@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  ct))@(1 {:: ])))) y
-  ('geqlf'         tmonad (]`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
-  ('geqrf'         tmonad (]`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. #)) ((mp~ ct@(0&{::)) - 1 {:: ])) >. (FP_EPS %~ (1 >. #) %~ norm1@(<: upddiag)@(mp~ ct))@(0 {:: ])))) y
-  ('gerqf'         tmonad (]`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`(_."_)`(([ %~/@(|.!.FP_EPS)`0:@.(0 = 0&{)@(,&(norm1 , 1 >. c)) ((mp  ct@(1&{::)) - 0 {:: ])) >. (FP_EPS %~ (1 >. c) %~ norm1@(<: upddiag)@(mp  ct))@(1 {:: ])))) y
+  ('dgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
+  ('dgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
+  ('dgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
+  ('dgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+
+  ('zgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
+  ('zgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
+  ('zgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
+  ('zgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+
+  ('gelqf'         tmonad ((0&{::)`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`(_."_)`lqt01)) args
+  ('geqlf'         tmonad ((0&{::)`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`(_."_)`qlt01)) args
+  ('geqrf'         tmonad ((0&{::)`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`(_."_)`qrt01)) args
+  ('gerqf'         tmonad ((0&{::)`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`(_."_)`rqt01)) args
 
   coerase < 'mttmp'
 
@@ -1346,7 +1333,7 @@ NB. ---------------------------------------------------------
 NB. testtzqf
 NB.
 NB. Description:
-NB.   Test orthogonal factorization algorithms:
+NB.   Test:
 NB.   - xTZRZF (math/lapack2 addon)
 NB.   - tzlzf tzzlf tzzrf tzrzf (math/mt addon)
 NB.   by trapezoidal matrix
@@ -1356,43 +1343,30 @@ NB.   testtzqf A
 NB. where
 NB.   A - m×n-matrix
 NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1)
-NB.   nom  := ||W1|| / (FP_EPS * max(m,n))
-NB.   if ||A||_1 > 0 then
-NB.     berr0 := nom / ||A||_1
-NB.   else
-NB.     berr0 := nom
-NB.   endif
-NB.   berr1 := ||W2|| / (FP_EPS * max(m,n))
-NB. where
-NB.   - for LZ: ||W1|| := ||A - L * Z||_1, ||W2|| := ||Z * Z^H - I||_1
-NB.   - for ZL: ||W1|| := ||A - Z * L||_1, ||W2|| := ||Z^H * Z - I||_1
-NB.   - for ZR: ||W1|| := ||A - Z * R||_1, ||W2|| := ||Z^H * Z - I||_1
-NB.   - for RZ: ||W1|| := ||A - R * Z||_1, ||W2|| := ||Z * Z^H - I||_1
-NB.
-NB. Notes:
-NB. - models LAPACK's xRZT01 and xRZT02 (xTZRZF test only)
-NB. - shortened geometry is used:
-NB.   - L (R) is square triangular min(m,n)×min(m,n)-matrix
-NB.   - Z is m×n-matrix
+NB. TODO:
+NB. - add xQRT12 test
 
 testtzqf=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/tzrzf'
 
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
-  Awide=. |:^:(>/@$) y
-  Atall=. |:^:(</@$) y
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('dtzrzf_mttmp_' tmonad (]`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`((((- (unmrzrn ((1 -~ c) {."1 trupick@({."1~   #)))) ((FP_EPS * 1 >. c@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~  trupick        )~ >. ((% FP_EPS * 1 >. c)~ norm1@( <: upddiag             )@(unmrzrc ungrz))))) Awide
-  ('ztzrzf_mttmp_' tmonad (]`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`((((- (unmrzrn ((1 -~ c) {."1 trupick@({."1~   #)))) ((FP_EPS * 1 >. c@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~  trupick        )~ >. ((% FP_EPS * 1 >. c)~ norm1@( <: upddiag             )@(unmrzrc ungrz))))) Awide
+  normw=. norm1 Awide=. |:^:(>/@$) y
+  normt=. normi Atall=. |:^:(</@$) y
 
-  ('tzlzf'         tmonad (]`]                `(rcond"_)`(_."_)`((((- (unmlzrn ((1 -  c) {."1         ({."1~ -@#)))) ((FP_EPS * 1 >. c@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~ (trlpick~ -~/@$))~ >. ((% FP_EPS * 1 >. c)~ norm1@((<: upddiag)~ 0 >. -~/@$)@(unmlzrc unglz))))) Awide
-  ('tzzlf'         tmonad (]`]                `(rcond"_)`(_."_)`((((- (unmzlln ((1 -~ #) {.           ({.  ~   c)))) ((FP_EPS * 1 >. #@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~  trlpick        )~ >. ((% FP_EPS * 1 >. #)~ norm1@( <: upddiag             )@(unmzllc ungzl))))) Atall
-  ('tzzrf'         tmonad (]`]                `(rcond"_)`(_."_)`((((- (unmzrln ((1 -  #) {.           ({.  ~ -@c)))) ((FP_EPS * 1 >. #@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~ (trupick~ -~/@$))~ >. ((% FP_EPS * 1 >. #)~ norm1@((<: upddiag)~ 0 <. -~/@$)@(unmzrlc ungzr))))) Atall
-  ('tzrzf'         tmonad (]`]                `(rcond"_)`(_."_)`((((- (unmrzrn ((1 -~ c) {."1         ({."1~   #)))) ((FP_EPS * 1 >. c@]) ((1 { ]) %~^:(0 < [) (%~ {.)) ,&norm1) [)~  trupick        )~ >. ((% FP_EPS * 1 >. c)~ norm1@( <: upddiag             )@(unmrzrc ungrz))))) Awide
+  NB. LAPACK doesn't clean strict lower triangle in R, so we need a rzt01 variant
+  rzt01a=: ((1 {:: [) %~^:(0 < [) (norm1 % FP_EPS * 1 >. c)@((- trupick@(0&{::))~ (unmrzrn ((1 -~ c) {."1 trupick@({."1~ #)))))`0:@.(0 e. $@]) >. (norm1 % FP_EPS * 1 >. c)@(<: upddiag)@(unmrzrc ungrz)`0:@.(0 e. $)@]
+
+  ('dtzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
+  ('ztzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
+
+  ('tzlzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`lzt01  )) Awide ; normw
+  ('tzzlf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zlt01  )) Atall ; normt
+  ('tzzrf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zrt01  )) Atall ; normt
+  ('tzrzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`rzt01  )) Awide ; normw
 
   coerase < 'mttmp'
+  erase 'rzt01a'
 
   EMPTY
 )
@@ -1401,8 +1375,8 @@ NB. ---------------------------------------------------------
 NB. testqf
 NB.
 NB. Description:
-NB.   Adv. to make verb to test gexxx by matrix of generator
-NB.   and shape given
+NB.   Adv. to make verb to test gexxf and tzxxf by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testqf

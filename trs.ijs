@@ -29,13 +29,24 @@ NB.              is either A itself, or A^T (the
 NB.              transposition of A); B is known right-hand
 NB.              side (RHS), X is unknown solution
 NB.
-NB. testgetrs    Test getrsxxxxxx by square matrix
-NB. testhetrs    Test hetrsxxxx by Hermitian (symmetric)
-NB.              matrix
-NB. testpotrs    Test potrsxxx by Hermitian (symmetric)
-NB.              positive definite matrix
-NB. testpttrs    Test pttrsxxx by Hermitian (symmetric)
-NB.              positive definite tridiagonal matrix
+NB. testgetrs1   Test getrsxxxxxx by general square matrix
+NB.              and single RHS
+NB. testgetrs3   Test getrsxxxxxx by general square matrix
+NB.              and multiple RHS
+NB. testhetrs1   Test hetrsxxxx by Hermitian (symmetric)
+NB.              matrix and single RHS
+NB. testhetrs3   Test hetrsxxxx by Hermitian (symmetric)
+NB.              matrix and multiple RHS
+NB. testpotrs1   Test potrsxxx by Hermitian (symmetric)
+NB.              positive definite matrix and single RHS
+NB. testpotrs3   Test potrsxxx by Hermitian (symmetric)
+NB.              positive definite matrix and multiple RHS
+NB. testpttrs1   Test pttrsxxx by Hermitian (symmetric)
+NB.              positive definite tridiagonal matrix and
+NB.              single RHS
+NB. testpttrs3   Test pttrsxxx by Hermitian (symmetric)
+NB.              positive definite tridiagonal matrix and
+NB.              multiple RHS
 NB. testtrs      Adv. to make verb to test xxtrsxxx by matrix
 NB.              of generator and shape given
 NB.
@@ -266,13 +277,12 @@ NB. where
 NB.   pL1T=. hetrfpl A
 NB.
 NB. Notes:
-NB. - is similar to LAPACK's DSYTRS('L') and ZHETRS('L'), but
-NB.   uses another factorization, see hetrfx
+NB. - models LAPACK's DSYTRS_AA('L') and ZHETRS_AA('L')
 
-hetrsplx=:   (0 {:: [)    C.^:_1    (1 {:: [) trsmllcu pttrfl@(2 {:: [) pttrslx (1 {:: [) trsmllnu (0 {:: [) C.   ]
-hetrspltx=: ((0 {:: [) +@(C.^:_1  ) (1 {:: [) trsmllcu pttrfl@(2 {:: [) pttrslx (1 {:: [) trsmllnu (0 {:: [) C.   ]) +
-hetrsxpl=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmrlnu pttrfl@(2 {:: [) pttrsxl (1 {:: [) trsmrlcu (0 {:: [) C."1 ]
-hetrsxplt=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmrlnu pttrfl@(2 {:: [) pttrsxl (1 {:: [) trsmrlcu (0 {:: [) C."1 ]) +
+hetrsplx=:   (0 {:: [)    C.^:_1    (1 {:: [) trsmllcu (2 {:: [) gtsvax (1 {:: [) trsmllnu (0 {:: [) C.   ]
+hetrspltx=: ((0 {:: [) +@(C.^:_1  ) (1 {:: [) trsmllcu (2 {:: [) gtsvax (1 {:: [) trsmllnu (0 {:: [) C.   ]) +
+hetrsxpl=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmrlnu (2 {:: [) gtsvxa (1 {:: [) trsmrlcu (0 {:: [) C."1 ]
+hetrsxplt=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmrlnu (2 {:: [) gtsvxa (1 {:: [) trsmrlcu (0 {:: [) C."1 ]) +
 
 NB. ---------------------------------------------------------
 NB. Verb:        Solves:        Syntax:
@@ -303,10 +313,10 @@ NB.   Xh -: clean pU1T hetrsxput (|: A) mp~ Xh
 NB. where
 NB.   pU1T=. hetrfpu A
 
-hetrspux=:   (0 {:: [)    C.^:_1    (1 {:: [) trsmlucu pttrfu@(2 {:: [) pttrsux (1 {:: [) trsmlunu (0 {:: [) C.   ]
-hetrsputx=: ((0 {:: [) +@(C.^:_1  ) (1 {:: [) trsmlucu pttrfu@(2 {:: [) pttrsux (1 {:: [) trsmlunu (0 {:: [) C.   ]) +
-hetrsxpu=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmrunu pttrfu@(2 {:: [) pttrsxu (1 {:: [) trsmrucu (0 {:: [) C."1 ]
-hetrsxput=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmrunu pttrfu@(2 {:: [) pttrsxu (1 {:: [) trsmrucu (0 {:: [) C."1 ]) +
+hetrspux=:   (0 {:: [)    C.^:_1    (1 {:: [) trsmlucu (2 {:: [) gtsvax (1 {:: [) trsmlunu (0 {:: [) C.   ]
+hetrsputx=: ((0 {:: [) +@(C.^:_1  ) (1 {:: [) trsmlucu (2 {:: [) gtsvax (1 {:: [) trsmlunu (0 {:: [) C.   ]) +
+hetrsxpu=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmrunu (2 {:: [) gtsvxa (1 {:: [) trsmrucu (0 {:: [) C."1 ]
+hetrsxput=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmrunu (2 {:: [) gtsvxa (1 {:: [) trsmrucu (0 {:: [) C."1 ]) +
 
 NB. ---------------------------------------------------------
 NB. Verb:       Solves:        Syntax:
@@ -532,161 +542,537 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. testgetrs
+NB. testgetrs1
 NB.
 NB. Description:
-NB.   Test getrsxxx by square matrix
+NB.   Test getrsxxx by general square matrix and single RHS
 NB.
 NB. Syntax:
-NB.   testgetrs (A;X)
+NB.   testgetrs1 (A ; x)
 NB. where
 NB.   A - n×n-matrix
-NB.   X - n×n-matrix, exact solutions
-NB.
-NB. Formula:
-NB.   ferr := max(||X - exactX|| / ||X||)
-NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
+NB.   x - n-vector, the exact solution
 
-testgetrs=: 3 : 0
-  'A X'=. y
-  'conA conAh conAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
-  'LU1ip ipL1U ipU1L UL1ip'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
+testgetrs1=: 3 : 0
+  'A x'=. y
 
-  ('getrslu1px'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; LU1ip
-  ('getrslu1pcx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; LU1ip
-  ('getrslu1ptx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; LU1ip
-  ('getrsxlu1p'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; LU1ip
-  ('getrsxlu1pc' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; LU1ip
-  ('getrsxlu1pt' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; LU1ip
+  'rcondA rcondAc rcondAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
 
-  ('getrspl1ux'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; ipL1U
-  ('getrspl1ucx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; ipL1U
-  ('getrspl1utx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; ipL1U
-  ('getrsxpl1u'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; ipL1U
-  ('getrsxpl1uc' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; ipL1U
-  ('getrsxpl1ut' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; ipL1U
+  'normiAt norm1At'=. 'normiAc norm1Ac'=. 'norm1A normiA'=. (norm1 , normi) A
 
-  ('getrspu1lx'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; ipU1L
-  ('getrspu1lcx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; ipU1L
-  ('getrspu1ltx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; ipU1L
-  ('getrsxpu1l'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; ipU1L
-  ('getrsxpu1lc' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; ipU1L
-  ('getrsxpu1lt' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; ipU1L
+  'LU1p pL1U pU1L UL1p'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
 
-  ('getrsul1px'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; UL1ip
-  ('getrsul1pcx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAh"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (ct A) ; X ; UL1ip
-  ('getrsul1ptx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; UL1ip
-  ('getrsxul1p'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; UL1ip
-  ('getrsxul1pc' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAh"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (ct A) ; X ; UL1ip
-  ('getrsxul1pt' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; UL1ip
+  Bax=.      A  mp x
+  Bacx=. (ct A) mp x
+  Batx=. (|: A) mp x
+
+  Bxa=.  x mp    A
+  Bxac=. x mp ct A
+  Bxat=. x mp |: A
+
+  NB. vberrX for x at right side
+  vberrax=:   mp~     t02v
+  vberracx=: (mp~ ct) t02v
+  vberratx=: (mp~ |:) t02v
+  NB. vberrX for x at left side
+  vberrxa=:   mp      t02v
+  vberrxac=: (mp  ct) t02v
+  vberrxat=: (mp  |:) t02v
+
+  ('getrslu1px'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; LU1p
+  ('getrslu1pcx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberracx)) A ; Bacx ; x ; rcondAc ; norm1Ac ; LU1p
+  ('getrslu1ptx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; LU1p
+  ('getrsxlu1p'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; LU1p
+  ('getrsxlu1pc' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxac)) A ; Bxac ; x ; rcondAc ; normiAc ; LU1p
+  ('getrsxlu1pt' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; LU1p
+
+  ('getrspl1ux'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; pL1U
+  ('getrspl1ucx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberracx)) A ; Bacx ; x ; rcondAc ; norm1Ac ; pL1U
+  ('getrspl1utx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; pL1U
+  ('getrsxpl1u'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; pL1U
+  ('getrsxpl1uc' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxac)) A ; Bxac ; x ; rcondAc ; normiAc ; pL1U
+  ('getrsxpl1ut' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; pL1U
+
+  ('getrspu1lx'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; pU1L
+  ('getrspu1lcx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberracx)) A ; Bacx ; x ; rcondAc ; norm1Ac ; pU1L
+  ('getrspu1ltx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; pU1L
+  ('getrsxpu1l'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; pU1L
+  ('getrsxpu1lc' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxac)) A ; Bxac ; x ; rcondAc ; normiAc ; pU1L
+  ('getrsxpu1lt' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; pU1L
+
+  ('getrsul1px'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; UL1p
+  ('getrsul1pcx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberracx)) A ; Bacx ; x ; rcondAc ; norm1Ac ; UL1p
+  ('getrsul1ptx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; UL1p
+  ('getrsxul1p'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; UL1p
+  ('getrsxul1pc' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxac)) A ; Bxac ; x ; rcondAc ; normiAc ; UL1p
+  ('getrsxul1pt' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; UL1p
+
+  coerase < 'mttmp'
+  erase 'vberrax vberracx vberratx vberrxa vberrxac vberrxat'
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. testhetrs
+NB. testgetrs3
 NB.
 NB. Description:
-NB.   Test hetrsxxx by Hermitian (symmetric) matrix
+NB.   Test:
+NB.   - xGETRS (math/lapack2 addon)
+NB.   - getrsxxx (math/mt addon)
+NB.   by general square matrix and multiple RHS
 NB.
 NB. Syntax:
-NB.   testhetrs (A;X)
+NB.   testgetrs3 (A ; X)
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric)
-NB.   X - n×n-matrix, exact solutions
-NB.
-NB. Formula:
-NB.   ferr := max(||X - exactX|| / ||X||)
-NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
+NB.   A - n×n-matrix
+NB.   X - n×3-matrix, exact solutions
 
-testhetrs=: 3 : 0
-  'A X'=. y
-  'conA conAt'=. (hecon1 , hecon1@|:) A
-  'ipL1D ipU1D'=. (hetrfpl ; <@hetrfpu) A
+testgetrs3=: 3 : 0
+  load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/getrs'
 
-  ('hetrsplx'  tdyad ((_3&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; ipL1D
-  ('hetrspltx' tdyad ((_3&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; ipL1D
-  ('hetrsxpl'  tdyad ((_3&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; ipL1D
-  ('hetrsxplt' tdyad ((_3&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; ipL1D
+  'A Xv'=. y
+  Xh=. |: Xv
 
-  ('hetrspux'  tdyad ((_3&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; ipU1D
-  ('hetrsputx' tdyad ((_3&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; ipU1D
-  ('hetrsxpu'  tdyad ((_3&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; ipU1D
-  ('hetrsxput' tdyad ((_3&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; ipU1D
+  'rcondA rcondAc rcondAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
+
+  'normiAt norm1At'=. 'normiAc norm1Ac'=. 'norm1A normiA'=. (norm1 , normi) A
+
+  'LU1p pL1U pU1L UL1p'=. (getrflu1p ; getrfpl1u ; getrfpu1l ; <@getrful1p) A
+
+  Bax=.      A  mp Xv
+  Bacx=. (ct A) mp Xv
+  Batx=. (|: A) mp Xv
+
+  Bxa=.  Xh mp    A
+  Bxac=. Xh mp ct A
+  Bxat=. Xh mp |: A
+
+  vferrv=: normitc t04m  NB. for Xv
+  vferrh=: normitr t04m  NB. for Xh
+
+  NB. vberrX for Xv at right side
+  vberrax=:   mp~     t02m norm1tc
+  vberracx=: (mp~ ct) t02m norm1tc
+  vberratx=: (mp~ |:) t02m norm1tc
+  NB. vberrX for Xh at left side
+  vberrxa=:   mp      t02m norm1tr
+  vberrxac=: (mp  ct) t02m norm1tr
+  vberrxat=: (mp  |:) t02m norm1tr
+
+  ('''n''&dgetrs_mttmp_' tmonad ((1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+  ('''c''&dgetrs_mttmp_' tmonad ((1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3 {:: [)`vferrv`vberracx)) A ; Bacx ; Xv ; rcondAc ; norm1Ac
+  ('''t''&dgetrs_mttmp_' tmonad ((1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At
+
+  ('''n''&zgetrs_mttmp_' tmonad ((1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+  ('''c''&zgetrs_mttmp_' tmonad ((1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3 {:: [)`vferrv`vberracx)) A ; Bacx ; Xv ; rcondAc ; norm1Ac
+  ('''t''&zgetrs_mttmp_' tmonad ((1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At
+
+  ('getrslu1px'          tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; LU1p
+  ('getrslu1pcx'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberracx)) A ; Bacx ; Xv ; rcondAc ; norm1Ac ; LU1p
+  ('getrslu1ptx'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; LU1p
+  ('getrsxlu1p'          tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; LU1p
+  ('getrsxlu1pc'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxac)) A ; Bxac ; Xh ; rcondAc ; normiAc ; LU1p
+  ('getrsxlu1pt'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; LU1p
+
+  ('getrspl1ux'          tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; pL1U
+  ('getrspl1ucx'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberracx)) A ; Bacx ; Xv ; rcondAc ; norm1Ac ; pL1U
+  ('getrspl1utx'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; pL1U
+  ('getrsxpl1u'          tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; pL1U
+  ('getrsxpl1uc'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxac)) A ; Bxac ; Xh ; rcondAc ; normiAc ; pL1U
+  ('getrsxpl1ut'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; pL1U
+
+  ('getrspu1lx'          tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; pU1L
+  ('getrspu1lcx'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberracx)) A ; Bacx ; Xv ; rcondAc ; norm1Ac ; pU1L
+  ('getrspu1ltx'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; pU1L
+  ('getrsxpu1l'          tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; pU1L
+  ('getrsxpu1lc'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxac)) A ; Bxac ; Xh ; rcondAc ; normiAc ; pU1L
+  ('getrsxpu1lt'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; pU1L
+
+  ('getrsul1px'          tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; UL1p
+  ('getrsul1pcx'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberracx)) A ; Bacx ; Xv ; rcondAc ; norm1Ac ; UL1p
+  ('getrsul1ptx'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; UL1p
+  ('getrsxul1p'          tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; UL1p
+  ('getrsxul1pc'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxac)) A ; Bxac ; Xh ; rcondAc ; normiAc ; UL1p
+  ('getrsxul1pt'         tdyad  ((_2&{.)`(1&{::)               `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; UL1p
+
+  coerase < 'mttmp'
+  erase 'vferrv vferrh vberrax vberracx vberratx vberrxa vberrxac vberrxat'
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. testpotrs
+NB. testhetrs1
+NB.
+NB. Description:
+NB.   Test hetrsxxxx by Hermitian (symmetric) matrix and
+NB.   single RHS
+NB.
+NB. Syntax:
+NB.   testhetrs1 (A ; x)
+NB. where
+NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   x - n-vector, the exact solution
+NB.
+NB. Notes:
+NB. - models LAPACK's DCHKSY_AA, ZCHKHE_AA with the following
+NB.   difference:
+NB.   - ferr is computed, too by call to t04v
+
+testhetrs1=: 3 : 0
+  'A x'=. y
+
+  'rcondA rcondAt'=. (hecon1 , hecon1@|:) A
+
+  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+
+  'pL1T pU1T'=. (hetrfpl ; <@hetrfpu) A
+
+  Bax=.      A  mp x
+  Batx=. (|: A) mp x
+  Bxa=.  x mp    A
+  Bxat=. x mp |: A
+
+  NB. vberrX for x at right side
+  vberrax=:   mp~     t02v
+  vberratx=: (mp~ |:) t02v
+  NB. vberrX for x at left side
+  vberrxa=:   mp      t02v
+  vberrxat=: (mp  |:) t02v
+
+  ('hetrsplx'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; pL1T
+  ('hetrspltx' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; pL1T
+  ('hetrsxpl'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; pL1T
+  ('hetrsxplt' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; pL1T
+
+  ('hetrspux'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; pU1T
+  ('hetrsputx' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; pU1T
+  ('hetrsxpu'  tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; pU1T
+  ('hetrsxput' tdyad ((_3&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; pU1T
+
+  coerase < 'mttmp'
+  erase 'vberrax vberratx vberrxa vberrxat'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testhetrs3
+NB.
+NB. Description:
+NB.   Test:
+NB.   - DSYTRS DSYTRS_AA ZHETRS ZHETRS_AA (math/lapack2
+NB.     addon)
+NB.   - hetrsxxxx (math/mt addon)
+NB.   by Hermitian (symmetric) matrix and multiple RHS
+NB.
+NB. Syntax:
+NB.   testhetrs3 (A ; X)
+NB. where
+NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   X - n×3-matrix, exact solutions
+NB.
+NB. Notes:
+NB. - models LAPACK's DCHKSY_AA, ZCHKHE_AA with the following
+NB.   difference:
+NB.   - ferr is computed, too by call to t04m
+
+testhetrs3=: 3 : 0
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf_aa'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf_aa'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrs_aa'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrs'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrs_aa'
+
+  'A Xv'=. y
+  Xh=. |: Xv
+
+  'rcondA rcondAt'=. (hecon1 , hecon1@|:) A
+
+  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+
+  'pL1T pU1T'=. (hetrfpl ; <@hetrfpu) A
+
+  Bax=.      A  mp Xv
+  Batx=. (|: A) mp Xv
+  Bxa=.  Xh mp    A
+  Bxat=. Xh mp |: A
+
+  vferrv=: normitc t04m  NB. for Xv
+  vferrh=: normitr t04m  NB. for Xh
+
+  NB. vberrX for Xv at right side
+  vberrax=:   mp~     t02m norm1tc
+  vberratx=: (mp~ |:) t02m norm1tc
+  NB. vberrX for Xh at left side
+  vberrxa=:   mp      t02m norm1tr
+  vberrxat=: (mp  |:) t02m norm1tr
+
+  ('''l''&dsytrs_mttmp_'    tmonad ((1&{ ,~ 'l' dsytrf_mttmp_    0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''u''&dsytrs_mttmp_'    tmonad ((1&{ ,~ 'u' dsytrf_mttmp_    0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''l''&zhetrs_mttmp_'    tmonad ((1&{ ,~ 'l' zhetrf_mttmp_    0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''u''&zhetrs_mttmp_'    tmonad ((1&{ ,~ 'u' zhetrf_mttmp_    0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+
+  ('''l''&dsytrs_aa_mttmp_' tmonad ((1&{ ,~ 'l' dsytrf_aa_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''u''&dsytrs_aa_mttmp_' tmonad ((1&{ ,~ 'u' dsytrf_aa_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''l''&zhetrs_aa_mttmp_' tmonad ((1&{ ,~ 'l' zhetrf_aa_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+  ('''u''&zhetrs_aa_mttmp_' tmonad ((1&{ ,~ 'u' zhetrf_aa_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA ; norm1A
+
+  ('hetrsplx'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; pL1T
+  ('hetrspltx'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; pL1T
+  ('hetrsxpl'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; pL1T
+  ('hetrsxplt'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; pL1T
+
+  ('hetrspux'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; pU1T
+  ('hetrsputx'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; pU1T
+  ('hetrsxpu'               tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; pU1T
+  ('hetrsxput'              tdyad  ((_3&{.)`(1&{::)                    `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; pU1T
+
+  coerase < 'mttmp'
+  erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testpotrs1
 NB.
 NB. Description:
 NB.   Test potrsxxx by Hermitian (symmetric) positive
-NB.   definite matrix
+NB.   definite matrix and single RHS
 NB.
 NB. Syntax:
-NB.   testpotrs (A;X)
+NB.   testpotrs1 (A ; x)
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.   X - n×n-matrix, exact solutions
-NB.
-NB. Formula:
-NB.   ferr := max(||X - exactX|| / ||X||)
-NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
+NB.   x - n-vector, the exact solution
 
-testpotrs=: 3 : 0
-  'A X'=. y
-  'conA conAt'=. (pocon1 , pocon1@|:) A
+testpotrs1=: 3 : 0
+  'A x'=. y
+
+  'rcondA rcondAt'=. (pocon1 , pocon1@|:) A
+
+  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+
   'L U'=. (potrfl ,: potrfu) A
 
-  ('potrslx'  tdyad ((2&{::)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; L
-  ('potrsltx' tdyad ((2&{::)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; L
-  ('potrsxl'  tdyad ((2&{::)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; L
-  ('potrsxlt' tdyad ((2&{::)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; L
+  Bax=.      A  mp x
+  Batx=. (|: A) mp x
+  Bxa=.  x mp    A
+  Bxat=. x mp |: A
 
-  ('potrsux'  tdyad ((2&{::)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; U
-  ('potrsutx' tdyad ((2&{::)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; U
-  ('potrsxu'  tdyad ((2&{::)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; U
-  ('potrsxut' tdyad ((2&{::)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; U
+  NB. vberrX for x at right side
+  vberrax=:   mp~     t02v
+  vberratx=: (mp~ |:) t02v
+  NB. vberrX for x at left side
+  vberrxa=:   mp      t02v
+  vberrxat=: (mp  |:) t02v
+
+  ('potrslx'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; L
+  ('potrsltx' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; L
+  ('potrsxl'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; L
+  ('potrsxlt' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; L
+
+  ('potrsux'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; U
+  ('potrsutx' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; U
+  ('potrsxu'  tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; U
+  ('potrsxut' tdyad ((5&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; U
+
+  coerase < 'mttmp'
+  erase 'vberrax vberratx vberrxa vberrxat'
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. testpttrs
+NB. testpotrs3
+NB.
+NB. Description:
+NB.   Test:
+NB.   - xPOTRS (math/lapack2 addon)
+NB.   - potrsxxx (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite matrix and
+NB.   multiple RHS
+NB.
+NB. Syntax:
+NB.   testpotrs3 (A ; X)
+NB. where
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
+NB.   X - n×3-matrix, exact solutions
+
+testpotrs3=: 3 : 0
+  load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/potrs'
+
+  'A Xv'=. y
+  Xh=. |: Xv
+
+  'rcondA rcondAt'=. (pocon1 , pocon1@|:) A
+
+  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+
+  'L U'=. (potrfl ,: potrfu) A
+
+  Bax=.      A  mp Xv
+  Batx=. (|: A) mp Xv
+  Bxa=.  Xh mp    A
+  Bxat=. Xh mp |: A
+
+  vferrv=: normitc t04m  NB. for Xv
+  vferrh=: normitr t04m  NB. for Xh
+
+  NB. vberrX for Xv at right side
+  vberrax=:   mp~     t02m norm1tc
+  vberratx=: (mp~ |:) t02m norm1tc
+  NB. vberrX for Xh at left side
+  vberrxa=:   mp      t02m norm1tr
+  vberrxat=: (mp  |:) t02m norm1tr
+
+  ('''l''&dpotrs_mttmp_' tmonad ((1&{ ;~ 'l' dpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+  ('''u''&dpotrs_mttmp_' tmonad ((1&{ ;~ 'u' dpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+  ('''l''&zpotrs_mttmp_' tmonad ((1&{ ;~ 'l' zpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+  ('''u''&zpotrs_mttmp_' tmonad ((1&{ ;~ 'u' zpotrf_mttmp_ 0&{::)`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+
+  ('potrslx'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; L
+  ('potrsltx'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; L
+  ('potrsxl'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; L
+  ('potrsxlt'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; L
+
+  ('potrsux'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; U
+  ('potrsutx'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; U
+  ('potrsxu'             tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; U
+  ('potrsxut'            tdyad  ((5&{::)`(1&{::)                 `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; U
+
+  coerase < 'mttmp'
+  erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testpttrs1
 NB.
 NB. Description:
 NB.   Test pttrsxxx by Hermitian (symmetric) positive
-NB.   definite tridiagonal matrix
+NB.   definite tridiagonal matrix and single RHS
 NB.
 NB. Syntax:
-NB.   testpttrs (A;X)
+NB.   testpttrs1 (A ; x)
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.       tridiagonal
-NB.   X - n×n-matrix, exact solutions
-NB.
-NB. Formula:
-NB.   ferr := max(||X - exactX|| / ||X||)
-NB.   berr := max(||B - op(A) * X|| / (FP_EPS * ||op(A)|| * ||X||))
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite tridiagonal
+NB.   x - n-vector, the exact solution
 NB.
 NB. TODO:
 NB. - A should be sparse
 
-testpttrs=: 3 : 0
-  'A X'=. y
-  'conA conAt'=. (ptcon1 , ptcon1@|:) A
+testpttrs1=: 3 : 0
+  'A x'=. y
+
+  'rcondA rcondAt'=. (ptcon1 , ptcon1@|:) A
+
+  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+
   'L1D U1D'=. (pttrfl ; <@pttrfu) A
 
-  ('pttrslx'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; L1D
-  ('pttrsltx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; L1D
-  ('pttrsxl'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; L1D
-  ('pttrsxlt' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; L1D
+  Bax=.      A  mp x
+  Batx=. (|: A) mp x
+  Bxa=.  x mp    A
+  Bxat=. x mp |: A
 
-  ('pttrsux'  tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conA "_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@]))))     A  ; X ; U1D
-  ('pttrsutx' tdyad ((_2&{.)`(mp &>/@(2&{.))`]`(conAt"_)`(normi@((- %&normic [) 1&{::)~)`(normi@(norm1tc@(mp &>/@(2 {. [) - (mp~ 0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tc@])))) (|: A) ; X ; U1D
-  ('pttrsxu'  tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conA "_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@]))))     A  ; X ; U1D
-  ('pttrsxut' tdyad ((_2&{.)`(mp~&>/@(2&{.))`]`(conAt"_)`(normi@((- %&normir [) 1&{::)~)`(normi@(norm1tr@(mp~&>/@(2 {. [) - (mp  0&{::)~) % (FP_EPS * 1:^:(0&=)@norm1@(0 {:: [)) * norm1tr@])))) (|: A) ; X ; U1D
+  NB. vberrX for x at right side
+  vberrax=:   mp~     t02v
+  vberratx=: (mp~ |:) t02v
+  NB. vberrX for x at left side
+  vberrxa=:   mp      t02v
+  vberrxat=: (mp  |:) t02v
+
+  ('pttrslx'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; L1D
+  ('pttrsltx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; L1D
+  ('pttrsxl'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; L1D
+  ('pttrsxlt' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; L1D
+
+  ('pttrsux'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrax )) A ; Bax  ; x ; rcondA  ; norm1A  ; U1D
+  ('pttrsutx' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberratx)) A ; Batx ; x ; rcondAt ; norm1At ; U1D
+  ('pttrsxu'  tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxa )) A ; Bxa  ; x ; rcondA  ; normiA  ; U1D
+  ('pttrsxut' tdyad ((_2&{.)`(1&{::)`]`(3 {:: [)`t04v`vberrxat)) A ; Bxat ; x ; rcondAt ; normiAt ; U1D
+
+  coerase < 'mttmp'
+  erase 'vberrax vberratx vberrxa vberrxat'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testpttrs3
+NB.
+NB. Description:
+NB.   Test:
+NB.   - xPTTRS (math/lapack2 addon)
+NB.   - pttrsxxx (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite tridiagonal
+NB.   matrix and multiple RHS
+NB.
+NB. Syntax:
+NB.   testpttrs3 (A ; X)
+NB. where
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite tridiagonal
+NB.   X - n×3-matrix, the exact solutions
+NB.
+NB. TODO:
+NB. - A should be sparse
+
+testpttrs3=: 3 : 0
+  load_mttmp_ :: ] 'math/mt/test/lapack2/pttrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/pttrs'
+
+  'A Xv'=. y
+  Xh=. |: Xv
+
+  'rcondA rcondAt'=. (ptcon1 , ptcon1@|:) A
+
+  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+
+  'L1D U1D'=. (pttrfl ; <@pttrfu) A
+
+  Bax=.      A  mp Xv
+  Batx=. (|: A) mp Xv
+  Bxa=.  Xh mp    A
+  Bxat=. Xh mp |: A
+
+  vferrv=: normitc t04m  NB. for Xv
+  vferrh=: normitr t04m  NB. for Xh
+
+  NB. vberrX for Xv at right side
+  vberrax=:   mp~     t02m norm1tc
+  vberratx=: (mp~ |:) t02m norm1tc
+  NB. vberrX for Xh at left side
+  vberrxa=:   mp      t02m norm1tr
+  vberrxat=: (mp  |:) t02m norm1tr
+
+  ('dpttrs_mttmp_'       tmonad ((1&{ ,~ dpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+  ('''l''&zpttrs_mttmp_' tmonad ((1&{ ,~ zpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A
+
+  ('pttrslx'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; L1D
+  ('pttrsltx'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; L1D
+  ('pttrsxl'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; L1D
+  ('pttrsxlt'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; L1D
+
+  ('pttrsux'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberrax )) A ; Bax  ; Xv ; rcondA  ; norm1A  ; U1D
+  ('pttrsutx'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrv`vberratx)) A ; Batx ; Xv ; rcondAt ; norm1At ; U1D
+  ('pttrsxu'             tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxa )) A ; Bxa  ; Xh ; rcondA  ; normiA  ; U1D
+  ('pttrsxut'            tdyad  ((_2&{.)`(1&{::)                                `]`(3 {:: [)`vferrh`vberrxat)) A ; Bxat ; Xh ; rcondAt ; normiAt ; U1D
+
+  coerase < 'mttmp'
+  erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat'
 
   EMPTY
 )
@@ -718,4 +1104,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testtrs_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrs_mt_ 150 150
 
-testtrs=: 1 : 'EMPTY [ (testpttrs_mt_@((u ptmat2_mt_) ; u) [ testpotrs_mt_@((u pomat_mt_) ; u) [ (testhetrs_mt_@((u hemat_mt_) ; u)) [ testgetrs_mt_@(u ; u))^:(=/)'
+testtrs=: 1 : 'EMPTY [ ((((u ptmat2_mt_)@# (testpttrs3_mt_@; [ testpttrs1_mt_@(; {:"1)) ]) [ ((u pomat_mt_)@# (testpotrs3_mt_@; [ testpotrs1_mt_@(; {:"1)) ]) [ ((u hemat_mt_)@# (testhetrs3_mt_@; [ testhetrs1_mt_@(; {:"1)) ]))@u@({. , 3:) [ ((}."1 (testgetrs3_mt_@; [ testgetrs1_mt_@(; {:"1)) {."1)~ _3:)@u@(+&0 3))^:(=/)'

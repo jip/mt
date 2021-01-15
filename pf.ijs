@@ -2208,34 +2208,53 @@ NB. ---------------------------------------------------------
 NB. testgepf
 NB.
 NB. Description:
-NB.   Test orthogonal factorization with pivoting algorithms:
-NB.   - gelpf geplf geprf gerpf (math/mt addon)
-NB.   by general matrix
+NB.   Test gexxf by general matrix
 NB.
 NB. Syntax:
 NB.   testgepf A
 NB. where
 NB.   A - m×n-matrix
 NB.
-NB. Formula:
-NB. - for LP: berr := max(||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n))
-NB. - for PL: berr := max(||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m))
-NB. - for PR: berr := max(||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m))
-NB. - for RP: berr := max(||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n))
-NB.
 NB. TODO:
-NB. - for LP: berr := max(||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n))
-NB. - for PL: berr := max(||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m))
-NB. - for PR: berr := max(||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m))
-NB. - for RP: berr := max(||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n))
+NB. - add xQRT12 test
 
 testgepf=: 3 : 0
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  load_mttmp_ :: ] 'math/mt/test/lapack2/geqp3'
 
-  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~   c)~)     2&{:: ) % (FP_EPS * 1:^:(0&=)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
-  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~ -@#) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * 1:^:(0&=)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
-  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~   #) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * 1:^:(0&=)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
-  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~ -@c)~)     2&{:: ) % (FP_EPS * 1:^:(0&=)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+
+  norm=. norm1 y
+
+  args=. y ; norm
+
+  NB. current pf verbs return Q in non-factorized form,
+  NB. this differs from xGEQP3 so specialized adapters
+  NB. are needed
+  NB. berrA=. (A ; normA) xpt01a (ip ; x ; Qn ; trash)
+  NB. berrA=. (A ; normA) pxt01a (Qm ; x ; ip ; trash)
+  lpt01a=: ((1 {:: [) %~^:(0 < [)   C.  ~&(0&{::)          (normi % FP_EPS * >./@$)@:- (1 {:: ]) ([ mp ({.~   c)~ ) 2 {:: ])`0:@.(0 e. $@(0 {:: [))
+  plt01a=: ((1 {:: [) %~^:(0 < [) ((C."1  (0&{::))~ 2&{::) (norm1 % FP_EPS * >./@$)@:- (0 {:: ]) (({."1~ -@#) mp ]) 1 {:: ])`0:@.(0 e. $@(0 {:: [))
+  prt01a=: ((1 {:: [) %~^:(0 < [) ((C."1  (0&{::))~ 2&{::) (norm1 % FP_EPS * >./@$)@:- (0 {:: ]) (({."1~   #) mp ]) 1 {:: ])`0:@.(0 e. $@(0 {:: [))
+  rpt01a=: ((1 {:: [) %~^:(0 < [)   C.  ~&(0&{::)          (normi % FP_EPS * >./@$)@:- (1 {:: ]) ([ mp ({.~ -@c)~ ) 2 {:: ])`0:@.(0 e. $@(0 {:: [))
+  NB. berrQn=. trash0 xqt11a (trash1 ; trash2 ; Qn ; trash3)
+  NB. berrQm=. trash0 qxt11a (Qm ; trash1 ; trash2 ; trash3)
+  lqt11a=: (normi@(<: upddiag)@(mp  ct) % FP_EPS * #)@(2 {:: ])
+  qlt11a=: (norm1@(<: upddiag)@(mp~ ct) % FP_EPS * #)@(0 {:: ])
+  qrt11a=: (norm1@(<: upddiag)@(mp~ ct) % FP_EPS * #)@(0 {:: ])
+  rqt11a=: (normi@(<: upddiag)@(mp  ct) % FP_EPS * #)@(2 {:: ])
+
+  ('dgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  ('dgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+
+  ('gelpf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(lpt01a >. lqt11a))) args
+  ('geplf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(plt01a >. qlt11a))) args
+  ('geprf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(prt01a >. qrt11a))) args
+  ('gerpf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(rpt01a >. rqt11a))) args
+
+  coerase < 'mttmp'
+  erase 'lpt01a plt01a prt01a rpt01a lqt11a qlt11a qrt11a'
 
   EMPTY
 )

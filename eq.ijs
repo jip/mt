@@ -903,71 +903,117 @@ NB. ---------------------------------------------------------
 NB. testhgeq
 NB.
 NB. Description:
-NB.   Test ZQ and QZ algorithms hgexxxxx by pair of square
-NB.   matrices
+NB.   Test:
+NB.   - xHGEQZ (math/lapack2 addon)
+NB.   - hgexxxxx (math/mt addon)
+NB.   by pair of square matrices
 NB.
 NB. Syntax:
 NB.   testhgeq AB
 NB. where
 NB.   AB - 2×n×n-brick
-NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1,berr2,berr3)
-NB. where
-NB.   ||M|| := max(||M||_1 , FP_SFMIN)
-NB.   'S P dQ1 dZ1'=. (0,n) hgexxsvv H , T , ,:~ I
-NB.   - hgezqxxx:
-NB.       berr0 := ||H - dQ1^H * S * dZ1|| / (FP_PREC * ||H|| * n)
-NB.       berr1 := ||T - dQ1^H * P * dZ1|| / (FP_PREC * ||T|| * n)
-NB.       berr2 := ||dQ1^H * dQ1 - I|| / (FP_PREC * n)
-NB.       berr3 := ||dZ1^H * dZ1 - I|| / (FP_PREC * n)
-NB.   - hgeqzxxx:
-NB.       berr0 := ||H - dQ1 * S * dZ1^H|| / (FP_PREC * ||H|| * n)
-NB.       berr1 := ||T - dQ1 * P * dZ1^H|| / (FP_PREC * ||T|| * n)
-NB.       berr2 := ||dQ1 * dQ1^H - I|| / (FP_PREC * n)
-NB.       berr3 := ||dZ1 * dZ1^H - I|| / (FP_PREC * n)
 
 testhgeq=: 3 : 0
-  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                         NB. L,R: 'HT SP dQ1dZ1'=. (H,T,I,:I) prep (S,P,dQ1,:dZ1)
-  safenorm=. FP_SFMIN >. norm1"2                                                                        NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '0&{:: safenorm@:- (u@{.@] mp"2 (mp"2 v@{:))&>/@}.'                                      NB. L: (ct cdiff1 ]) : ||H - dQ1^H * S * dZ1|| , ||T - dQ1^H * P * dZ1||
-                                                                                                        NB. R: (] cdiff1 ct) : ||H - dQ1 * S * dZ1^H|| , ||T - dQ1 * P * dZ1^H||
-  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                               NB. L: (mp~ adiff2) : ||dQ1^H * dQ1 - I|| , ||dZ1^H * dZ1 - I||
-                                                                                                        NB. R: (mp  adiff2) : ||dQ1 * dQ1^H - I|| , ||dZ1 * dZ1^H - I||
-  denom1=. safenorm@(0&{::)                                                                             NB. ||H|| , ||T||
-  getn=. c@(0&{::)                                                                                      NB. n
-  safediv=. ((({: <. %/@}:)`((<./@(}: * 1 , {:)) % 1&{)@.(1 > 1&{))`(%/@}:)@.(</@}:)) % (FP_PREC * {:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
-  cberr01=. 2 : 'safediv"1@:((u cdiff1 v) ,. denom1 ,. getn)'                                           NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
-                                                                                                        NB. R: (] cberr01 ct) : (berr0 , berr1) for R
-  aberr23=. 1 : '((<. (u adiff2))~ % FP_PREC * ]) getn'                                                 NB. L: (mp~ aberr23) : (berr2 , berr3) for L
-                                                                                                        NB. R: (mp  aberr23) : (berr2 , berr3) for R
-  vberrl=: (>./@((ct cberr01 ]) , (mp~ aberr23))@prep) f.
-  vberru=: (>./@((] cberr01 ct) , (mp  aberr23))@prep) f.
+  load_mttmp_ :: ] 'math/mt/test/lapack2/hgeqz'
 
-  I=. idmat c y
-  HTl=. (gghrdlnn~ 0 , c)@((,: trl)/) y
-  HTu=. (gghrdunn~ 0 , c)@((,: tru)/) y
-  rcondl=. <./ gecon1&.{.`(trlcon1&.{.)"2 HTl
-  rcondu=. <./ gecon1&.{.`(trucon1&.{.)"2 HTu
+  n=. c y
+  hs=. 0 , n
+  I=. idmat n
 
-  ('hgezqenn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqenv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqevn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqevv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , ,:~ I
-  ('hgezqsnn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqsnv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`vberrl)) HTl , ,:~ I
-  ('hgeqzenn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
-  ('hgeqzenv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzevn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzevv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , ,:~ I
-  ('hgeqzsnn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
-  ('hgeqzsnv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`vberru)) HTu , ,:~ I
+  'Hl Tl'=. HTl=. hs gghrdlnn (((mp  ct@unglq) ,: trlpick@(_1 }."1 ])) gelqf)/ y
+  'Hu Tu'=. HTu=. hs gghrdunn (((mp~ ct@ungqr) ,: trupick@(_1 }.   ])) geqrf)/ y
 
-  erase 'cdiff1 adiff2 vberrl vberru'
+  rcondl=. (geconi Hl) <. trlconi Tl
+  rcondu=. (gecon1 Hu) <. trucon1 Tu
+
+  normsl=. ;/ normi"2 HTl
+  normsu=. ;/ norm1"2 HTu
+
+  argslapack=. normsu , ;/ HTu , ,:~ I  NB. arguments for xHGEQZ            t511u t513u
+  argsmtl=.    normsl ,  < HTl          NB. arguments for hgezqxnn          t511l t513l
+  argsmtvl=.   normsl ,  < HTl ,     I  NB. arguments for hgezqxnv hgezqxvn t511l t513l
+  argsmtvvl=.  normsl ,  < HTl , ,:~ I  NB. arguments for hgezqxvv          t511l t513l
+  argsmtu=.    normsu ,  < HTu          NB. arguments for hgeqzxnn          t511u t513u
+  argsmtvu=.   normsu ,  < HTu ,     I  NB. arguments for hgeqzxnv hgeqzxvn t511u t513u
+  argsmtvvu=.  normsu ,  < HTu , ,:~ I  NB. arguments for hgeqzxvv          t511u t513u
+
+  t511u1=: (t511u"1~ (  2             0      ,:  3            1)&{  )~      (0 4 5 ,: 1 4 5)&{
+  t511l2=: (t511l"1~ (((2 ; 0)&{::) ; 0&{::) ,: (2 ; 1)&{:: ; 1 &{::)~ <"2@((0 2 3 ,: 1 2 3)&{)
+  t511u2=: (t511u"1~ (((2 ; 0)&{::) ; 0&{::) ,: (2 ; 1)&{:: ; 1 &{::)~ <"2@((0 2 3 ,: 1 2 3)&{)
+
+  t513u4=:               t513u@(4 {:: ])
+  t513u5=:               t513u@(5 {:: ])
+  t513u45=: (4 {:: ]) >.&t513u  5 {:: ]
+
+  t513l1=:                   t513l@(1     {:: ])
+  t513u1=:                   t513u@(1     {:: ])
+  t513l2=:                   t513l@(2     {   ])
+  t513u2=:                   t513u@(2     {   ])
+  t513l01=: ((1;0) {:: ]) >.&t513l  (1;1) {:: ]
+  t513u01=: ((1;0) {:: ]) >.&t513u  (1;1) {:: ]
+  t513l23=: (2     {   ]) >.&t513l  3     {   ]
+  t513u23=: (2     {   ]) >.&t513u  3     {   ]
+
+  ('''enn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  ('''eni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''env''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''ein''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''eii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''eiv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''evn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''evi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''evv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+
+  ('''snn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  ('''sni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''snv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''sin''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''sii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''siv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''svn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''svi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''svv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+
+  ('''enn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  ('''eni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''env''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''ein''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''eii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''eiv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''evn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''evi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''evv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+
+  ('''snn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  ('''sni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''snv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''sin''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''sii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''siv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''svn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''svi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''svv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+
+  ('hgezqenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
+  ('hgezqenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
+  ('hgezqevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
+  ('hgezqevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l01))) argsmtvvl
+  ('hgezqsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
+  ('hgezqsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
+  ('hgezqsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
+  ('hgezqsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23))) argsmtvvl
+
+  ('hgeqzenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
+  ('hgeqzenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
+  ('hgeqzevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
+  ('hgeqzevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u01))) argsmtvvu
+  ('hgeqzsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
+  ('hgeqzsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
+  ('hgeqzsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
+  ('hgeqzsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23))) argsmtvvu
+
+  coerase < 'mttmp'
+  erase 't511u1 t511l2 t511u2 t513u4 t513u5 t513u45 t513l1 t513u1 t513l2 t513u2 t513l01 t513u01 t513l23 t513u23'
 
   EMPTY
 )

@@ -136,74 +136,66 @@ NB. ---------------------------------------------------------
 NB. testtrsm1
 NB.
 NB. Description:
-NB.   Test trsmxxxx (math/mt addon) by triangular matrix and
-NB.   single RHS
+NB.   Test trsmxxxx by triangular matrix and single RHS
 NB.
 NB. Syntax:
 NB.   testtrsm1 (A ; x)
 NB. where
 NB.   A - n×n-matrix, triangular
 NB.   x - n-vector, exact solution
-NB.
-NB. Formula:
-NB. - see testtrsm3
 
 testtrsm1=: 3 : 0
   'A x'=. y
 
-  rcondL=.  trlcon1  L=.  trlpick  A
-  rcondU=.  trucon1  U=.  trupick  A
+  rcondL=.  trlcon1  L=.  trlpick A
+  rcondU=.  trucon1  U=.  trupick A
   rcondL1=. trl1con1 L1=. (1 ; '') setdiag L
   rcondU1=. tru1con1 U1=. (1 ; '') setdiag U
 
-  'normAxlnn normAxlxn'=. (norm1 , normi) L
-  'normAxlnu normAxlxu'=. (norm1 , normi) L1
-  'normAxunn normAxuxn'=. (norm1 , normi) U
-  'normAxunu normAxuxu'=. (norm1 , normi) U1
+  'norm1L  normiL '=. (norm1 , normi) L
+  'norm1L1 normiL1'=. (norm1 , normi) L1
+  'norm1U  normiU '=. (norm1 , normi) U
+  'norm1U1 normiU1'=. (norm1 , normi) U1
 
-  NB. ferr=. (A ; B ; X ; rcondA ; normA) vferr Xapprox
-  vferr_mttmp_=. %&FP_EPS^:(1 > FP_EPS&*)@((3 {:: [) *`%/@,`(%@FP_EPS)@.(>/@:*@]) ] (- ,&normitr_mt_ ]) 2 {:: [)`(%@FP_EPS)@.(0 = 3 {:: [)`0:@.(0 = #@])
+  NB. vberrX for x at right side
+  vberrlxnx=:  mp~     t02v
+  vberrlxcx=: (mp~ ct) t02v
+  vberrlxtx=: (mp~ |:) t02v
+  NB. vberrX for x at left side
+  vberrrxnx=:  mp      t02v
+  vberrrxcx=: (mp  ct) t02v
+  vberrrxtx=: (mp  |:) t02v
 
-  NB. berr=. (A ; B ; X ; rcondA ; normA) (calcB aberr) Xapprox
-  aberr=. 1 : '((FP_EPS , 4 {:: [) %~/@,@,.`(%@FP_EPS)@.(0 ([ = {) ]) ] ,&norm1tc_mt_ (u 0&{::)~ - 1 {:: [)`(%@FP_EPS)@.(0 = 4 {:: [)`0:@.(0 = #@])'
-  NB. vberr for x at right side
-  vberrlxcx_mttmp_=. (mp_mt_~ ct_mt_) aberr
-  vberrlxnx_mttmp_=.  mp_mt_~         aberr
-  vberrlxtx_mttmp_=. (mp_mt_~ |:    ) aberr
-  NB. vberr for x at left side
-  vberrrxcx_mttmp_=. (mp_mt_  ct_mt_) aberr
-  vberrrxnx_mttmp_=.  mp_mt_          aberr
-  vberrrxtx_mttmp_=. (mp_mt_  |:    ) aberr
+  ('trsmllnn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxnx)) L  ; (L   mp       x ) ; x  ; rcondL  ; norm1L
+  ('trsmllnu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxnx)) L1 ; (L1  mp       x ) ; x  ; rcondL1 ; norm1L1
+  ('trsmllcn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxcx)) L  ; (L  (mp~ ct)~ x ) ; x  ; rcondL  ; normiL
+  ('trsmllcu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxcx)) L1 ; (L1 (mp~ ct)~ x ) ; x  ; rcondL1 ; normiL1
+  ('trsmlltn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxtx)) L  ; (L  (mp~ |:)~ x ) ; x  ; rcondL  ; normiL
+  ('trsmlltu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxtx)) L1 ; (L1 (mp~ |:)~ x ) ; x  ; rcondL1 ; normiL1
 
-  ('trsmllcn' tdyad (0&{::`(1&{::)`]`(rcondL "_)`vferr_mttmp_`vberrlxcx_mttmp_)) L  ; (L  (mp~ ct)~ x ) ; x  ; rcondL  ; normAxlxn
-  ('trsmllcu' tdyad (0&{::`(1&{::)`]`(rcondL1"_)`vferr_mttmp_`vberrlxcx_mttmp_)) L1 ; (L1 (mp~ ct)~ x ) ; x  ; rcondL1 ; normAxlxu
-  ('trsmllnn' tdyad (0&{::`(1&{::)`]`(rcondL "_)`vferr_mttmp_`vberrlxnx_mttmp_)) L  ; (L   mp       x ) ; x  ; rcondL  ; normAxlnn
-  ('trsmllnu' tdyad (0&{::`(1&{::)`]`(rcondL1"_)`vferr_mttmp_`vberrlxnx_mttmp_)) L1 ; (L1  mp       x ) ; x  ; rcondL1 ; normAxlnu
-  ('trsmlltn' tdyad (0&{::`(1&{::)`]`(rcondL "_)`vferr_mttmp_`vberrlxtx_mttmp_)) L  ; (L  (mp~ |:)~ x ) ; x  ; rcondL  ; normAxlxn
-  ('trsmlltu' tdyad (0&{::`(1&{::)`]`(rcondL1"_)`vferr_mttmp_`vberrlxtx_mttmp_)) L1 ; (L1 (mp~ |:)~ x ) ; x  ; rcondL1 ; normAxlxu
+  ('trsmlunn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxnx)) U  ; (U   mp       x ) ; x  ; rcondU  ; norm1U
+  ('trsmlunu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxnx)) U1 ; (U1  mp       x ) ; x  ; rcondU1 ; norm1U1
+  ('trsmlucn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxcx)) U  ; (U  (mp~ ct)~ x ) ; x  ; rcondU  ; normiU
+  ('trsmlucu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxcx)) U1 ; (U1 (mp~ ct)~ x ) ; x  ; rcondU1 ; normiU1
+  ('trsmlutn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxtx)) U  ; (U  (mp~ |:)~ x ) ; x  ; rcondU  ; normiU
+  ('trsmlutu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrlxtx)) U1 ; (U1 (mp~ |:)~ x ) ; x  ; rcondU1 ; normiU1
 
-  ('trsmlucn' tdyad (0&{::`(1&{::)`]`(rcondU "_)`vferr_mttmp_`vberrlxcx_mttmp_)) U  ; (U  (mp~ ct)~ x ) ; x  ; rcondU  ; normAxuxn
-  ('trsmlucu' tdyad (0&{::`(1&{::)`]`(rcondU1"_)`vferr_mttmp_`vberrlxcx_mttmp_)) U1 ; (U1 (mp~ ct)~ x ) ; x  ; rcondU1 ; normAxuxu
-  ('trsmlunn' tdyad (0&{::`(1&{::)`]`(rcondU "_)`vferr_mttmp_`vberrlxnx_mttmp_)) U  ; (U   mp       x ) ; x  ; rcondU  ; normAxunn
-  ('trsmlunu' tdyad (0&{::`(1&{::)`]`(rcondU1"_)`vferr_mttmp_`vberrlxnx_mttmp_)) U1 ; (U1  mp       x ) ; x  ; rcondU1 ; normAxunu
-  ('trsmlutn' tdyad (0&{::`(1&{::)`]`(rcondU "_)`vferr_mttmp_`vberrlxtx_mttmp_)) U  ; (U  (mp~ |:)~ x ) ; x  ; rcondU  ; normAxuxn
-  ('trsmlutu' tdyad (0&{::`(1&{::)`]`(rcondU1"_)`vferr_mttmp_`vberrlxtx_mttmp_)) U1 ; (U1 (mp~ |:)~ x ) ; x  ; rcondU1 ; normAxuxu
+  ('trsmrlnn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxnx)) L  ; (x   mp       L ) ; x  ; rcondL  ; normiL
+  ('trsmrlnu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxnx)) L1 ; (x   mp       L1) ; x  ; rcondL1 ; normiL1
+  ('trsmrlcn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxcx)) L  ; (x  (mp  ct)  L ) ; x  ; rcondL  ; norm1L
+  ('trsmrlcu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxcx)) L1 ; (x  (mp  ct)  L1) ; x  ; rcondL1 ; norm1L1
+  ('trsmrltn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxtx)) L  ; (x  (mp  |:)  L ) ; x  ; rcondL  ; norm1L
+  ('trsmrltu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxtx)) L1 ; (x  (mp  |:)  L1) ; x  ; rcondL1 ; norm1L1
 
-  ('trsmrlcn' tdyad (0&{::`(1&{::)`]`(rcondL "_)`vferr_mttmp_`vberrrxcx_mttmp_)) L  ; (x  (mp  ct)  L ) ; x  ; rcondL  ; normAxlxn
-  ('trsmrlcu' tdyad (0&{::`(1&{::)`]`(rcondL1"_)`vferr_mttmp_`vberrrxcx_mttmp_)) L1 ; (x  (mp  ct)  L1) ; x  ; rcondL1 ; normAxlxu
-  ('trsmrlnn' tdyad (0&{::`(1&{::)`]`(rcondL "_)`vferr_mttmp_`vberrrxnx_mttmp_)) L  ; (x   mp       L ) ; x  ; rcondL  ; normAxlnn
-  ('trsmrlnu' tdyad (0&{::`(1&{::)`]`(rcondL1"_)`vferr_mttmp_`vberrrxnx_mttmp_)) L1 ; (x   mp       L1) ; x  ; rcondL1 ; normAxlnu
-  ('trsmrltn' tdyad (0&{::`(1&{::)`]`(rcondL "_)`vferr_mttmp_`vberrrxtx_mttmp_)) L  ; (x  (mp  |:)  L ) ; x  ; rcondL  ; normAxlxn
-  ('trsmrltu' tdyad (0&{::`(1&{::)`]`(rcondL1"_)`vferr_mttmp_`vberrrxtx_mttmp_)) L1 ; (x  (mp  |:)  L1) ; x  ; rcondL1 ; normAxlxu
-
-  ('trsmrucn' tdyad (0&{::`(1&{::)`]`(rcondU "_)`vferr_mttmp_`vberrrxcx_mttmp_)) U  ; (x  (mp  ct)  U ) ; x  ; rcondU  ; normAxuxn
-  ('trsmrucu' tdyad (0&{::`(1&{::)`]`(rcondU1"_)`vferr_mttmp_`vberrrxcx_mttmp_)) U1 ; (x  (mp  ct)  U1) ; x  ; rcondU1 ; normAxuxu
-  ('trsmrunn' tdyad (0&{::`(1&{::)`]`(rcondU "_)`vferr_mttmp_`vberrrxnx_mttmp_)) U  ; (x   mp       U ) ; x  ; rcondU  ; normAxunn
-  ('trsmrunu' tdyad (0&{::`(1&{::)`]`(rcondU1"_)`vferr_mttmp_`vberrrxnx_mttmp_)) U1 ; (x   mp       U1) ; x  ; rcondU1 ; normAxunu
-  ('trsmrutn' tdyad (0&{::`(1&{::)`]`(rcondU "_)`vferr_mttmp_`vberrrxtx_mttmp_)) U  ; (x  (mp  |:)  U ) ; x  ; rcondU  ; normAxuxn
-  ('trsmrutu' tdyad (0&{::`(1&{::)`]`(rcondU1"_)`vferr_mttmp_`vberrrxtx_mttmp_)) U1 ; (x  (mp  |:)  U1) ; x  ; rcondU1 ; normAxuxu
+  ('trsmrunn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxnx)) U  ; (x   mp       U ) ; x  ; rcondU  ; normiU
+  ('trsmrunu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxnx)) U1 ; (x   mp       U1) ; x  ; rcondU1 ; normiU1
+  ('trsmrucn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxcx)) U  ; (x  (mp  ct)  U ) ; x  ; rcondU  ; norm1U
+  ('trsmrucu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxcx)) U1 ; (x  (mp  ct)  U1) ; x  ; rcondU1 ; norm1U1
+  ('trsmrutn' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxtx)) U  ; (x  (mp  |:)  U ) ; x  ; rcondU  ; norm1U
+  ('trsmrutu' tdyad ((0&{::)`(1&{::)`]`(3 {:: [)`t04v`vberrrxtx)) U1 ; (x  (mp  |:)  U1) ; x  ; rcondU1 ; norm1U1
 
   coerase < 'mttmp'
+  erase 'vberrlxnx vberrlxcx vberrlxtx vberrrxnx vberrrxcx vberrrxtx'
 
   EMPTY
 )
@@ -222,38 +214,6 @@ NB.   testtrsm3 (A ; X)
 NB. where
 NB.   A - n×n-matrix, triangular
 NB.   X - n×3-matrix, exact solutions
-NB.
-NB. Formula:
-NB. - ferr for lnn case:
-NB.   foreach i-th pair (X,Xapprox) from nrhs solutions do
-NB.     if 0=n or 0=nrhs then
-NB.       ferr[i] := 0
-NB.     elseif 0=rcond(op(A)) or 0=||X|| and 0<||X-Xapprox|| then
-NB.       ferr[i] := 1 / FP_EPS
-NB.     else
-NB.       ferr[i] := (||X - Xapprox|| / ||X||) * rcond(op(A))
-NB.     endif
-NB.   endfor
-NB.   ferr := max(ferr[i])
-NB.   if ferr * FP_EPS < 1 then
-NB.     ferr := ferr / FP_EPS
-NB.   endif
-NB.   ||vector|| := normit(vector)
-NB. - berr for lnn case:
-NB.   foreach i-th computed solution X from nrhs solutions do
-NB.     if 0=n or 0=nrhs then
-NB.       berr[i] := 0
-NB.     elseif 0=||op(A)||_1 or 0=||X|| then
-NB.       berr[i] := 1 / FP_EPS
-NB.     else
-NB.       berr[i] := ((||B - op(A) * X|| / ||op(A)||_1) / ||X||) / FP_EPS
-NB.     endif
-NB.   endfor
-NB.   berr := max(berr[i])
-NB.   ||vector|| := norm1t(vector)
-NB.
-NB. Notes:
-NB. - models LAPACK's xTRT02 and xGET04
 
 testtrsm3=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/trtrs'
@@ -266,125 +226,122 @@ testtrsm3=: 3 : 0
   rcondL1=. trl1con1 L1=. (1 ; '') setdiag L
   rcondU1=. tru1con1 U1=. (1 ; '') setdiag U
 
-  'normAxlnn normAxlxn'=. (norm1 , normi) L
-  'normAxlnu normAxlxu'=. (norm1 , normi) L1
-  'normAxunn normAxuxn'=. (norm1 , normi) U
-  'normAxunu normAxuxu'=. (norm1 , normi) U1
+  'norm1L  normiL '=. (norm1 , normi) L
+  'norm1L1 normiL1'=. (norm1 , normi) L1
+  'norm1U  normiU '=. (norm1 , normi) U
+  'norm1U1 normiU1'=. (norm1 , normi) U1
 
-  Bllcn=. (ct L ) mp Xv
-  Bllcu=. (ct L1) mp Xv
   Bllnn=.     L   mp Xv
   Bllnu=.     L1  mp Xv
+  Bllcn=. (ct L ) mp Xv
+  Bllcu=. (ct L1) mp Xv
   Blltn=. (|: L ) mp Xv
   Blltu=. (|: L1) mp Xv
 
-  Blucn=. (ct U ) mp Xv
-  Blucu=. (ct U1) mp Xv
   Blunn=.     U   mp Xv
   Blunu=.     U1  mp Xv
+  Blucn=. (ct U ) mp Xv
+  Blucu=. (ct U1) mp Xv
   Blutn=. (|: U ) mp Xv
   Blutu=. (|: U1) mp Xv
 
-  Brlcn=. Xh mp ct L
-  Brlcu=. Xh mp ct L1
   Brlnn=. Xh mp    L
   Brlnu=. Xh mp    L1
+  Brlcn=. Xh mp ct L
+  Brlcu=. Xh mp ct L1
   Brltn=. Xh mp |: L
   Brltu=. Xh mp |: L1
 
-  Brucn=. Xh mp ct U
-  Brucu=. Xh mp ct U1
   Brunn=. Xh mp    U
   Brunu=. Xh mp    U1
+  Brucn=. Xh mp ct U
+  Brucu=. Xh mp ct U1
   Brutn=. Xh mp |: U
   Brutu=. Xh mp |: U1
 
-  NB. ferr=. (A ; B ; X ; rcondA ; normA) (normitx aferr) Xapprox
-  aferr=. 1 : '%&FP_EPS^:(1 > FP_EPS&*)@max_mt_@((3 {:: [) >/@:*@}.`(*`%/ ,: %@FP_EPS)}@, ] (- ,:&u ]) 2 {:: [)`(%@FP_EPS)@.(0 = 3 {:: [)`0:@.(0 e. $@])'
-  vferrv_mttmp_=. normitc_mt_ aferr  NB. for Xv
-  vferrh_mttmp_=. normitr_mt_ aferr  NB. for Xh
+  vferrv=: normitc t04m  NB. for Xv
+  vferrh=: normitr t04m  NB. for Xh
 
-  NB. berr=. (A ; B ; X ; rcondA ; normA) (calcB cberr norm1tx) Xapprox
-  cberr=. 2 : 'max_mt_@((FP_EPS , 4 {:: [) %~/@,@,.`(%@FP_EPS)@.(0 ([ = {) ])"1 ] ,.&v (u 0&{::)~ - 1 {:: [)`(%@FP_EPS)@.(0 = 4 {:: [)`0:@.(0 e. $@])'
-  NB. vberr for Xv at right side and a triangular matrix embedded in A
-  vberrlcn_mttmp_=.  (mp_mt_~ ct_mt_@trlpick_mt_ ) cberr norm1tc_mt_
-  vberrlcu_mttmp_=.  (mp_mt_~ ct_mt_@trl1pick_mt_) cberr norm1tc_mt_
-  vberrlnn_mttmp_=.  (mp_mt_~        trlpick_mt_ ) cberr norm1tc_mt_
-  vberrlnu_mttmp_=.  (mp_mt_~        trl1pick_mt_) cberr norm1tc_mt_
-  vberrltn_mttmp_=.  (mp_mt_~ |:    @trlpick_mt_ ) cberr norm1tc_mt_
-  vberrltu_mttmp_=.  (mp_mt_~ |:    @trl1pick_mt_) cberr norm1tc_mt_
-  vberrucn_mttmp_=.  (mp_mt_~ ct_mt_@trupick_mt_ ) cberr norm1tc_mt_
-  vberrucu_mttmp_=.  (mp_mt_~ ct_mt_@tru1pick_mt_) cberr norm1tc_mt_
-  vberrunn_mttmp_=.  (mp_mt_~        trupick_mt_ ) cberr norm1tc_mt_
-  vberrunu_mttmp_=.  (mp_mt_~        tru1pick_mt_) cberr norm1tc_mt_
-  vberrutn_mttmp_=.  (mp_mt_~ |:    @trupick_mt_ ) cberr norm1tc_mt_
-  vberrutu_mttmp_=.  (mp_mt_~ |:    @tru1pick_mt_) cberr norm1tc_mt_
-  NB. vberr for Xv at right side and a triangular matrix A
-  vberrlxcx_mttmp_=. (mp_mt_~ ct_mt_             ) cberr norm1tc_mt_
-  vberrlxnx_mttmp_=. (mp_mt_~                    ) cberr norm1tc_mt_
-  vberrlxtx_mttmp_=. (mp_mt_~ |:                 ) cberr norm1tc_mt_
-  NB. vberr for Xh at left side and a triangular matrix A
-  vberrrxcx_mttmp_=. (mp_mt_  ct_mt_             ) cberr norm1tr_mt_
-  vberrrxnx_mttmp_=. (mp_mt_                     ) cberr norm1tr_mt_
-  vberrrxtx_mttmp_=. (mp_mt_  |:                 ) cberr norm1tr_mt_
+  NB. vberrX for Xv at right side and a triangular matrix embedded in A
+  vberrlnn=:  (mp~    trlpick ) t02m norm1tc
+  vberrlnu=:  (mp~    trl1pick) t02m norm1tc
+  vberrlcn=:  (mp~ ct@trlpick ) t02m norm1tc
+  vberrlcu=:  (mp~ ct@trl1pick) t02m norm1tc
+  vberrltn=:  (mp~ |:@trlpick ) t02m norm1tc
+  vberrltu=:  (mp~ |:@trl1pick) t02m norm1tc
+  vberrunn=:  (mp~    trupick ) t02m norm1tc
+  vberrunu=:  (mp~    tru1pick) t02m norm1tc
+  vberrucn=:  (mp~ ct@trupick ) t02m norm1tc
+  vberrucu=:  (mp~ ct@tru1pick) t02m norm1tc
+  vberrutn=:  (mp~ |:@trupick ) t02m norm1tc
+  vberrutu=:  (mp~ |:@tru1pick) t02m norm1tc
+  NB. vberrX for Xv at right side and a triangular matrix A
+  vberrlxnx=:  mp~              t02m norm1tc
+  vberrlxcx=: (mp~ ct         ) t02m norm1tc
+  vberrlxtx=: (mp~ |:         ) t02m norm1tc
+  NB. vberrX for Xh at left side and a triangular matrix A
+  vberrrxnx=:  mp               t02m norm1tr
+  vberrrxcx=: (mp  ct         ) t02m norm1tr
+  vberrrxtx=: (mp  |:         ) t02m norm1tr
 
-  ('''lcn''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrlcn_mttmp_ )) A  ; Bllcn ; Xv ; rcondL  ; normAxlxn
-  ('''lcu''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrlcu_mttmp_ )) A  ; Bllcu ; Xv ; rcondL1 ; normAxlxu
-  ('''lnn''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrlnn_mttmp_ )) A  ; Bllnn ; Xv ; rcondL  ; normAxlnn
-  ('''lnu''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrlnu_mttmp_ )) A  ; Bllnu ; Xv ; rcondL1 ; normAxlnu
-  ('''ltn''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrltn_mttmp_ )) A  ; Blltn ; Xv ; rcondL  ; normAxlxn
-  ('''ltu''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrltu_mttmp_ )) A  ; Blltu ; Xv ; rcondL1 ; normAxlxu
+  ('''lnn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrlnn )) A  ; Bllnn ; Xv ; rcondL  ; norm1L
+  ('''lnu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrlnu )) A  ; Bllnu ; Xv ; rcondL1 ; norm1L1
+  ('''lcn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrlcn )) A  ; Bllcn ; Xv ; rcondL  ; normiL
+  ('''lcu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrlcu )) A  ; Bllcu ; Xv ; rcondL1 ; normiL1
+  ('''ltn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrltn )) A  ; Blltn ; Xv ; rcondL  ; normiL
+  ('''ltu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrltu )) A  ; Blltu ; Xv ; rcondL1 ; normiL1
 
-  ('''ucn''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrucn_mttmp_ )) A  ; Blucn ; Xv ; rcondL  ; normAxuxn
-  ('''ucu''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrucu_mttmp_ )) A  ; Blucu ; Xv ; rcondL1 ; normAxuxu
-  ('''unn''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrunn_mttmp_ )) A  ; Blunn ; Xv ; rcondL  ; normAxunn
-  ('''unu''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrunu_mttmp_ )) A  ; Blunu ; Xv ; rcondL1 ; normAxunu
-  ('''utn''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrutn_mttmp_ )) A  ; Blutn ; Xv ; rcondL  ; normAxuxn
-  ('''utu''&dtrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrutu_mttmp_ )) A  ; Blutu ; Xv ; rcondL1 ; normAxuxu
+  ('''unn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrunn )) A  ; Blunn ; Xv ; rcondL  ; norm1U
+  ('''unu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrunu )) A  ; Blunu ; Xv ; rcondL1 ; norm1U1
+  ('''ucn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrucn )) A  ; Blucn ; Xv ; rcondL  ; normiU
+  ('''ucu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrucu )) A  ; Blucu ; Xv ; rcondL1 ; normiU1
+  ('''utn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrutn )) A  ; Blutn ; Xv ; rcondL  ; normiU
+  ('''utu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrutu )) A  ; Blutu ; Xv ; rcondL1 ; normiU1
 
-  ('''lcn''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrlcn_mttmp_ )) A  ; Bllcn ; Xv ; rcondL  ; normAxlxn
-  ('''lcu''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrlcu_mttmp_ )) A  ; Bllcu ; Xv ; rcondL1 ; normAxlxu
-  ('''lnn''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrlnn_mttmp_ )) A  ; Bllnn ; Xv ; rcondL  ; normAxlnn
-  ('''lnu''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrlnu_mttmp_ )) A  ; Bllnu ; Xv ; rcondL1 ; normAxlnu
-  ('''ltn''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrltn_mttmp_ )) A  ; Blltn ; Xv ; rcondL  ; normAxlxn
-  ('''ltu''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrltu_mttmp_ )) A  ; Blltu ; Xv ; rcondL1 ; normAxlxu
+  ('''lnn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrlnn )) A  ; Bllnn ; Xv ; rcondL  ; norm1L
+  ('''lnu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrlnu )) A  ; Bllnu ; Xv ; rcondL1 ; norm1L1
+  ('''lcn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrlcn )) A  ; Bllcn ; Xv ; rcondL  ; normiL
+  ('''lcu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrlcu )) A  ; Bllcu ; Xv ; rcondL1 ; normiL1
+  ('''ltn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrltn )) A  ; Blltn ; Xv ; rcondL  ; normiL
+  ('''ltu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrltu )) A  ; Blltu ; Xv ; rcondL1 ; normiL1
 
-  ('''ucn''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrucn_mttmp_ )) A  ; Blucn ; Xv ; rcondL  ; normAxuxn
-  ('''ucu''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrucu_mttmp_ )) A  ; Blucu ; Xv ; rcondL1 ; normAxuxu
-  ('''unn''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrunn_mttmp_ )) A  ; Blunn ; Xv ; rcondL  ; normAxunn
-  ('''unu''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrunu_mttmp_ )) A  ; Blunu ; Xv ; rcondL1 ; normAxunu
-  ('''utn''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrutn_mttmp_ )) A  ; Blutn ; Xv ; rcondL  ; normAxuxn
-  ('''utu''&ztrtrs_mttmp_' tmonad (2&{. `        ]`(rcondL "_)`vferrv_mttmp_`vberrutu_mttmp_ )) A  ; Blutu ; Xv ; rcondL1 ; normAxuxu
+  ('''unn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrunn )) A  ; Blunn ; Xv ; rcondL  ; norm1U
+  ('''unu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrunu )) A  ; Blunu ; Xv ; rcondL1 ; norm1U1
+  ('''ucn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrucn )) A  ; Blucn ; Xv ; rcondL  ; normiU
+  ('''ucu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrucu )) A  ; Blucu ; Xv ; rcondL1 ; normiU1
+  ('''utn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrutn )) A  ; Blutn ; Xv ; rcondL  ; normiU
+  ('''utu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3 {:: [)`vferrv`vberrutu )) A  ; Blutu ; Xv ; rcondL1 ; normiU1
 
-  ('trsmllcn'              tdyad  (0&{::`(1&{::)`]`(rcondL "_)`vferrv_mttmp_`vberrlxcx_mttmp_)) L  ; Bllcn ; Xv ; rcondL  ; normAxlxn
-  ('trsmllcu'              tdyad  (0&{::`(1&{::)`]`(rcondL1"_)`vferrv_mttmp_`vberrlxcx_mttmp_)) L1 ; Bllcu ; Xv ; rcondL1 ; normAxlxu
-  ('trsmllnn'              tdyad  (0&{::`(1&{::)`]`(rcondL "_)`vferrv_mttmp_`vberrlxnx_mttmp_)) L  ; Bllnn ; Xv ; rcondL  ; normAxlnn
-  ('trsmllnu'              tdyad  (0&{::`(1&{::)`]`(rcondL1"_)`vferrv_mttmp_`vberrlxnx_mttmp_)) L1 ; Bllnu ; Xv ; rcondL1 ; normAxlnu
-  ('trsmlltn'              tdyad  (0&{::`(1&{::)`]`(rcondL "_)`vferrv_mttmp_`vberrlxtx_mttmp_)) L  ; Blltn ; Xv ; rcondL  ; normAxlxn
-  ('trsmlltu'              tdyad  (0&{::`(1&{::)`]`(rcondL1"_)`vferrv_mttmp_`vberrlxtx_mttmp_)) L1 ; Blltu ; Xv ; rcondL1 ; normAxlxu
+  ('trsmllnn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxnx)) L  ; Bllnn ; Xv ; rcondL  ; norm1L
+  ('trsmllnu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxnx)) L1 ; Bllnu ; Xv ; rcondL1 ; norm1L1
+  ('trsmllcn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxcx)) L  ; Bllcn ; Xv ; rcondL  ; normiL
+  ('trsmllcu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxcx)) L1 ; Bllcu ; Xv ; rcondL1 ; normiL1
+  ('trsmlltn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxtx)) L  ; Blltn ; Xv ; rcondL  ; normiL
+  ('trsmlltu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxtx)) L1 ; Blltu ; Xv ; rcondL1 ; normiL1
 
-  ('trsmlucn'              tdyad  (0&{::`(1&{::)`]`(rcondU "_)`vferrv_mttmp_`vberrlxcx_mttmp_)) U  ; Blucn ; Xv ; rcondU  ; normAxuxn
-  ('trsmlucu'              tdyad  (0&{::`(1&{::)`]`(rcondU1"_)`vferrv_mttmp_`vberrlxcx_mttmp_)) U1 ; Blucu ; Xv ; rcondU1 ; normAxuxu
-  ('trsmlunn'              tdyad  (0&{::`(1&{::)`]`(rcondU "_)`vferrv_mttmp_`vberrlxnx_mttmp_)) U  ; Blunn ; Xv ; rcondU  ; normAxunn
-  ('trsmlunu'              tdyad  (0&{::`(1&{::)`]`(rcondU1"_)`vferrv_mttmp_`vberrlxnx_mttmp_)) U1 ; Blunu ; Xv ; rcondU1 ; normAxunu
-  ('trsmlutn'              tdyad  (0&{::`(1&{::)`]`(rcondU "_)`vferrv_mttmp_`vberrlxtx_mttmp_)) U  ; Blutn ; Xv ; rcondU  ; normAxuxn
-  ('trsmlutu'              tdyad  (0&{::`(1&{::)`]`(rcondU1"_)`vferrv_mttmp_`vberrlxtx_mttmp_)) U1 ; Blutu ; Xv ; rcondU1 ; normAxuxu
+  ('trsmlunn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxnx)) U  ; Blunn ; Xv ; rcondU  ; norm1U
+  ('trsmlunu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxnx)) U1 ; Blunu ; Xv ; rcondU1 ; norm1U1
+  ('trsmlucn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxcx)) U  ; Blucn ; Xv ; rcondU  ; normiU
+  ('trsmlucu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxcx)) U1 ; Blucu ; Xv ; rcondU1 ; normiU1
+  ('trsmlutn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxtx)) U  ; Blutn ; Xv ; rcondU  ; normiU
+  ('trsmlutu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrv`vberrlxtx)) U1 ; Blutu ; Xv ; rcondU1 ; normiU1
 
-  ('trsmrlcn'              tdyad  (0&{::`(1&{::)`]`(rcondL "_)`vferrh_mttmp_`vberrrxcx_mttmp_)) L  ; Brlcn ; Xh ; rcondL  ; normAxlxn
-  ('trsmrlcu'              tdyad  (0&{::`(1&{::)`]`(rcondL1"_)`vferrh_mttmp_`vberrrxcx_mttmp_)) L1 ; Brlcu ; Xh ; rcondL1 ; normAxlxu
-  ('trsmrlnn'              tdyad  (0&{::`(1&{::)`]`(rcondL "_)`vferrh_mttmp_`vberrrxnx_mttmp_)) L  ; Brlnn ; Xh ; rcondL  ; normAxlnn
-  ('trsmrlnu'              tdyad  (0&{::`(1&{::)`]`(rcondL1"_)`vferrh_mttmp_`vberrrxnx_mttmp_)) L1 ; Brlnu ; Xh ; rcondL1 ; normAxlnu
-  ('trsmrltn'              tdyad  (0&{::`(1&{::)`]`(rcondL "_)`vferrh_mttmp_`vberrrxtx_mttmp_)) L  ; Brltn ; Xh ; rcondL  ; normAxlxn
-  ('trsmrltu'              tdyad  (0&{::`(1&{::)`]`(rcondL1"_)`vferrh_mttmp_`vberrrxtx_mttmp_)) L1 ; Brltu ; Xh ; rcondL1 ; normAxlxu
+  ('trsmrlnn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxnx)) L  ; Brlnn ; Xh ; rcondL  ; normiL
+  ('trsmrlnu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxnx)) L1 ; Brlnu ; Xh ; rcondL1 ; normiL1
+  ('trsmrlcn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxcx)) L  ; Brlcn ; Xh ; rcondL  ; norm1L
+  ('trsmrlcu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxcx)) L1 ; Brlcu ; Xh ; rcondL1 ; norm1L1
+  ('trsmrltn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxtx)) L  ; Brltn ; Xh ; rcondL  ; norm1L
+  ('trsmrltu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxtx)) L1 ; Brltu ; Xh ; rcondL1 ; norm1L1
 
-  ('trsmrucn'              tdyad  (0&{::`(1&{::)`]`(rcondU "_)`vferrh_mttmp_`vberrrxcx_mttmp_)) U  ; Brucn ; Xh ; rcondU  ; normAxuxn
-  ('trsmrucu'              tdyad  (0&{::`(1&{::)`]`(rcondU1"_)`vferrh_mttmp_`vberrrxcx_mttmp_)) U1 ; Brucu ; Xh ; rcondU1 ; normAxuxu
-  ('trsmrunn'              tdyad  (0&{::`(1&{::)`]`(rcondU "_)`vferrh_mttmp_`vberrrxnx_mttmp_)) U  ; Brunn ; Xh ; rcondU  ; normAxunn
-  ('trsmrunu'              tdyad  (0&{::`(1&{::)`]`(rcondU1"_)`vferrh_mttmp_`vberrrxnx_mttmp_)) U1 ; Brunu ; Xh ; rcondU1 ; normAxunu
-  ('trsmrutn'              tdyad  (0&{::`(1&{::)`]`(rcondU "_)`vferrh_mttmp_`vberrrxtx_mttmp_)) U  ; Brutn ; Xh ; rcondU  ; normAxuxn
-  ('trsmrutu'              tdyad  (0&{::`(1&{::)`]`(rcondU1"_)`vferrh_mttmp_`vberrrxtx_mttmp_)) U1 ; Brutu ; Xh ; rcondU1 ; normAxuxu
+  ('trsmrunn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxnx)) U  ; Brunn ; Xh ; rcondU  ; normiU
+  ('trsmrunu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxnx)) U1 ; Brunu ; Xh ; rcondU1 ; normiU1
+  ('trsmrucn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxcx)) U  ; Brucn ; Xh ; rcondU  ; norm1U
+  ('trsmrucu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxcx)) U1 ; Brucu ; Xh ; rcondU1 ; norm1U1
+  ('trsmrutn'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxtx)) U  ; Brutn ; Xh ; rcondU  ; norm1U
+  ('trsmrutu'              tdyad  ((0&{::)`(1&{::)`]`(3 {:: [)`vferrh`vberrrxtx)) U1 ; Brutu ; Xh ; rcondU1 ; norm1U1
 
   coerase < 'mttmp'
+  erase 'vferrv vferrh vberrlnn vberrlnu vberrlcn vberrlcu vberrltn vberrltu vberrunn vberrunu vberrucn vberrucu vberrutn vberrutu vberrlxnx vberrlxcx vberrlxtx vberrrxnx vberrrxcx vberrrxtx'
 
   EMPTY
 )
@@ -416,4 +373,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testsm_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testsm_mt_ 150 150
 
-testsm=: 1 : 'EMPTY [ (testtrsm3_mt_@((}."1 ; {."1)~ _3:) [ testtrsm1_mt_@(_3&(}."1) ; {:"1))@u@(+&0 3)^:(=/)'
+testsm=: 1 : 'EMPTY [ ((}."1 (testtrsm3_mt_@; [ testtrsm1_mt_@(; {:"1)) {."1)~ _3:)@u@(+&0 3)^:(=/)'

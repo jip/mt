@@ -738,7 +738,7 @@ NB. ---------------------------------------------------------
 NB. testgehrd
 NB.
 NB. Description:
-NB.   Test Hessenberg reduction algorithms:
+NB.   Test:
 NB.   - xGEHRD (math/lapack2 addon)
 NB.   - gehrdx (math/mt addon)
 NB.   by square matrix
@@ -747,40 +747,28 @@ NB. Syntax:
 NB.   testgehrd A
 NB. where
 NB.   A - n×n-matrix
-NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1)
-NB.   berr0 := (min(||W|| , ||A||) / max((FP_SFMIN * n) / FP_PREC , ||A|| * FP_PREC)) / n
-NB.   - for gehrdl:
-NB.       ||A|| := max(||A||_inf , FP_SFMIN)
-NB.       ||W|| := ||A - Q^H * H * Q||_inf
-NB.       berr1 := (||Q * Q^H - I||_inf / n) / FP_PREC
-NB.   - for gehrdu:
-NB.       ||A|| := max(||A||_1 , FP_SFMIN)
-NB.       ||W|| := ||A - Q * H * Q^H||_1
-NB.       berr1 := (||Q^H * Q - I||_1 / n) / FP_PREC
-NB.
-NB. Notes:
-NB. - models LAPACK's xHST01, DORT01 and ZUNT01
 
 testgehrd=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/gehrd'
 
-  rcond=. gecon1 y
+  'rcondl rcondu'=. (geconi , gecon1) y
 
-  cberr0=.  2 : '%~/@({. , ((FP_SFMIN (FP_PREC %~ *) {.) >. (FP_PREC * {:)) , <./@}.)@(#@[ , (- u&>/) (, FP_SFMIN&>.)&v [)'
-  vberrl0_mttmp_=. (] mp_mt_~ (mp_mt_~ ct_mt_)) cberr0 normi_mt_
-  vberru0_mttmp_=. (] mp_mt_  (mp_mt_  ct_mt_)) cberr0 norm1_mt_
-  vberrl1_mttmp_=. FP_PREC %~ (normi_mt_@(<: upddiag_mt_)@(mp_mt_  ct_mt_) % #)@(1 {:: ])
-  vberru1_mttmp_=. FP_PREC %~ (norm1_mt_@(<: upddiag_mt_)@(mp_mt_~ ct_mt_) % #)@(1 {:: ])
+  'norml normu'=. (normi , norm1) y
 
-  ('dgehrd_mttmp_' tmonad ((1 ; # ; ])`(_1&trupick@(0&{::) ; unghru@;)`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
-  ('zgehrd_mttmp_' tmonad ((1 ; # ; ])`(_1&trupick@(0&{::) ; unghru@;)`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
+  hst01l=: ((normi hst01) (] mp~ (mp~ ct))&>/)
+  hst01u=: ((norm1 hst01) (] mp  (mp  ct))&>/)
 
-  ('gehrdl'        tdyad  ((0 , #)  `]`(( 1 trlpick }:"1)  ; unghrl  )`(rcond"_)`(_."_)`(vberrl0_mttmp_ >. vberrl1_mttmp_))) y
-  ('gehrdu'        tdyad  ((0 , #)  `]`((_1 trupick }:  )  ; unghru  )`(rcond"_)`(_."_)`(vberru0_mttmp_ >. vberru1_mttmp_))) y
+  unt01l=: (normi unt01 (mp  ct))@(1 {:: ])
+  unt01u=: (norm1 unt01 (mp~ ct))@(1 {:: ])
+
+  ('dgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  ('zgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+
+  ('gehrdl'        tdyad  ((0 , #@(0&{::))`(0&{::)`(( 1 trlpick }:"1)  ; unghrl  )`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml
+  ('gehrdu'        tdyad  ((0 , #@(0&{::))`(0&{::)`((_1 trupick }:  )  ; unghru  )`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
 
   coerase < 'mttmp'
+  erase 'hst01l hst01u unt01l unt01u'
 
   EMPTY
 )
@@ -789,7 +777,7 @@ NB. ---------------------------------------------------------
 NB. testgghrd
 NB.
 NB. Description:
-NB.   Test Hessenberg reduction algorithms:
+NB.   Test:
 NB.   - xGGHRD (math/lapack2 addon)
 NB.   - gghrdx (math/mt addon)
 NB.   by pair of square matrices
@@ -798,78 +786,66 @@ NB. Syntax:
 NB.   testgghrd AB
 NB. where
 NB.   AB - 2×n×n-brick
-NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1,berr2,berr3)
-NB. where
-NB.   'H T dQ0 dZ0'=. (0,n) gghrdxvv A , B , ,:~ I
-NB.   - for berri in {berr0,berr1}
-NB.       if ||A|| > ||W|| then
-NB.         berri := (||W|| / ||A||) / (FP_PREC * n)
-NB.       elseif ||A|| < 1 then
-NB.         berri := (min(||W|| , n * ||A||) / ||A||) / (FP_PREC * n)
-NB.       else
-NB.         berri := min(||W|| / ||A|| , n) / (FP_PREC * n)
-NB.       endif
-NB.   - for berrj in {berr2,berr3}
-NB.       berrj := min(||E|| , n) / (FP_PREC * n)
-NB.   - for gghrdl:
-NB.       ||A|| := max(||A||_inf , FP_SFMIN)
-NB.       ||W|| := ||A - dQ0^H * H * dZ0||_inf  for berru0
-NB.       ||W|| := ||B - dQ0^H * T * dZ0||_inf  for berru1
-NB.       ||E|| := ||dQ0^H * dQ0 - I||_inf      for berru2
-NB.       ||E|| := ||dZ0^H * dZ0 - I||_inf      for berru3
-NB.       B - lower triangular
-NB.   - for gghrdu:
-NB.       ||A|| := max(||A||_1 , FP_SFMIN)
-NB.       ||W|| := ||A - dQ0 * H * dZ0^H||_1  for berru0
-NB.       ||W|| := ||B - dQ0 * T * dZ0^H||_1  for berru1
-NB.       ||E|| := ||dQ0 * dQ0^H - I||_1      for berru2
-NB.       ||E|| := ||dZ0 * dZ0^H - I||_1      for berru3
-NB.       B - upper triangular
-NB.
-NB. Notes:
-NB. - models LAPACK's xGET51
 
 testgghrd=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/gghrd'
 
-  n=. c y
-  nulp=. FP_PREC * n
-  I=. idmat n
-  ABl=. (,: trlpick)/ y
-  ABu=. (,: trupick)/ y
-  rcondl=. <./ gecon1&.{.`(trlcon1&.{.)"2 ABl
-  rcondu=. <./ gecon1&.{.`(trucon1&.{.)"2 ABu
+  I=. idmat c y
 
-  vberrli_mttmp_=. (- 2&{ ((mp_mt_~ ct_mt_)~"2) 2&{.  mp_mt_        "2 {:) ((nulp %~ n <. %)`(nulp %~ (<. n&*) % ])@.(1 > ])`(nulp %~ %)@.< FP_SFMIN&>.)&(normi_mt_"2) [
-  vberrui_mttmp_=. (- 2&{ ( mp_mt_          "2) 2&{. (mp_mt_ ct_mt_)"2 {:) ((nulp %~ n <. %)`(nulp %~ (<. n&*) % ])@.(1 > ])`(nulp %~ %)@.< FP_SFMIN&>.)&(norm1_mt_"2) [
-  vberrlj_mttmp_=. nulp %~ n <. normi_mt_@(<: upddiag_mt_)@(mp_mt_~ ct_mt_)"2
-  vberruj_mttmp_=. nulp %~ n <. norm1_mt_@(<: upddiag_mt_)@(mp_mt_  ct_mt_)"2
+  'Al Bl'=. ABl=. (((mp  ct@unglq) ,: trlpick@(_1 }."1 ])) gelqf)/ y
+  'Au Bu'=. ABu=. (((mp~ ct@ungqr) ,: trupick@(_1 }.   ])) geqrf)/ y
 
-  ('''nn''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; EMPTY"_)`]`(rcondu"_)`(_."_)`(_."_                                                  ))) ABu
-  ('''ni''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; EMPTY"_)`]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(3 {:: ])))) ABu
-  ('''nv''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; idmat@n)`]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(3 {:: ])))) ABu
+  rcondl=. (geconi Al) <. trlconi Bl
+  rcondu=. (gecon1 Au) <. trucon1 Bu
 
-  ('''in''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; EMPTY"_)`]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(2 {:: ])))) ABu
-  ('''ii''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; EMPTY"_)`>`(rcondu"_)`(_."_)`( vberrui_mttmp_         >./@, vberruj_mttmp_@(2 }.  ])))) ABu
-  ('''iv''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; EMPTY   ; idmat@n)`>`(rcondu"_)`(_."_)`( vberrui_mttmp_         >./@, vberruj_mttmp_@(2 }.  ])))) ABu
+  normsl=. ;/ normi"2 ABl
+  normsu=. ;/ norm1"2 ABu
 
-  ('''vn''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; idmat@n ; EMPTY"_)`>`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(2 {:: ])))) ABu
-  ('''vi''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; idmat@n ; EMPTY"_)`>`(rcondu"_)`(_."_)`( vberrui_mttmp_         >./@, vberruj_mttmp_@(2 }.  ])))) ABu
-  ('''vv''&dgghrd_mttmp_' tmonad ((1 ; n ; {. ; {: ; idmat@n ; idmat@n)`>`(rcondu"_)`(_."_)`( vberrui_mttmp_         >./@, vberruj_mttmp_@(2 }.  ])))) ABu
+  argslapack=. normsu , ;/ ABu , ,:~ I  NB. arguments for xGGHRD            t511u t513u
+  argsmtl=.    normsl ,  < ABl          NB. arguments for gghrdlnn          t511l t513l
+  argsmtvl=.   normsl ,  < ABl ,     I  NB. arguments for gghrdlnv gghrdlvn t511l t513l
+  argsmtvvl=.  normsl ,  < ABl , ,:~ I  NB. arguments for gghrdlvv          t511l t513l
+  argsmtu=.    normsu ,  < ABu          NB. arguments for gghrdunn          t511u t513u
+  argsmtvu=.   normsu ,  < ABu ,     I  NB. arguments for gghrdunv gghrduvn t511u t513u
+  argsmtvvu=.  normsu ,  < ABu , ,:~ I  NB. arguments for gghrduvv          t511u t513u
 
-  ('gghrdlnn'             tdyad  ((0 , n)"_`]                          `]`(rcondl"_)`(_."_)`(_."_                                        ))) ABl
-  ('gghrdlnv'             tdyad  ((0 , n)"_`]                          `]`(rcondl"_)`(_."_)`(                              vberrlj_mttmp_@(2 {  ])))) ABl , I
-  ('gghrdlvn'             tdyad  ((0 , n)"_`]                          `]`(rcondl"_)`(_."_)`(                              vberrlj_mttmp_@(2 {  ])))) ABl , I
-  ('gghrdlvv'             tdyad  ((0 , n)"_`]                          `]`(rcondl"_)`(_."_)`((vberrli_mttmp_~ 2&{.)~ >./@, vberrlj_mttmp_@(2 }. ])))) ABl , ,:~ I
+  t511u1=: (t511u"1~ (  2             0      ,:  3            1)&{  )~      (0 2 3 ,: 1 2 3)&{
+  t511l2=: (t511l"1~ (((2 ; 0)&{::) ; 0&{::) ,: (2 ; 1)&{:: ; 1 &{::)~ <"2@((0 2 3 ,: 1 2 3)&{)
+  t511u2=: (t511u"1~ (((2 ; 0)&{::) ; 0&{::) ,: (2 ; 1)&{:: ; 1 &{::)~ <"2@((0 2 3 ,: 1 2 3)&{)
 
-  ('gghrdunn'             tdyad  ((0 , n)"_`]                          `]`(rcondu"_)`(_."_)`(_."_                                        ))) ABu
-  ('gghrdunv'             tdyad  ((0 , n)"_`]                          `]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(2 {  ])))) ABu , I
-  ('gghrduvn'             tdyad  ((0 , n)"_`]                          `]`(rcondu"_)`(_."_)`(                              vberruj_mttmp_@(2 {  ])))) ABu , I
-  ('gghrduvv'             tdyad  ((0 , n)"_`]                          `]`(rcondu"_)`(_."_)`((vberrui_mttmp_~ 2&{.)~ >./@, vberruj_mttmp_@(2 }. ])))) ABu , ,:~ I
+  t513u2b=:               t513u@(2 {:: ])
+  t513u3b=:               t513u@(3 {:: ])
+  t513u23b=: (2 {:: ]) >.&t513u  3 {:: ]
+
+  t513l2=:                t513l@(2 {   ])
+  t513u2=:                t513u@(2 {   ])
+  t513l23=:  (2 {   ]) >.&t513l  3 {   ]
+  t513u23=:  (2 {   ]) >.&t513u  3 {   ]
+
+  ('''nn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
+  ('''ni''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  ('''nv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+
+  ('''in''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  ('''ii''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  ('''iv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+
+  ('''vn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+
+  ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                 ))) argsmtl
+  ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
+  ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
+  ('gghrdlvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23 ))) argsmtvvl
+
+  ('gghrdunn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                 ))) argsmtu
+  ('gghrdunv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
+  ('gghrduvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
+  ('gghrduvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23 ))) argsmtvvu
 
   coerase < 'mttmp'
+  erase 't511u1 t511l2 t511u2 t513u2b t513u3b t513u23b t513l2 t513u2 t513l23 t513u23'
 
   EMPTY
 )

@@ -678,10 +678,9 @@ NB.
 NB. Notes:
 NB. - is similar to LAPACK's DSYTRI and ZHETRI, but uses
 NB.   another factorization, see hetrfx
-NB. - calls to pttril and pttriu are interchangeable here
 
-hetripl=: 0&{:: fp^:_1 pttril@(2&{::) (ct@] mp mp) trtril1@(1&{::)
-hetripu=: 0&{:: fp^:_1 pttril@(2&{::) (ct@] mp mp) trtriu1@(1&{::)
+hetripl=: 0&{:: fp^:_1 (gtsvax idmat@#)@(2&{::) (ct@] mp mp) trtril1@(1&{::)
+hetripu=: 0&{:: fp^:_1 (gtsvax idmat@#)@(2&{::) (ct@] mp mp) trtriu1@(1&{::)
 
 NB. ---------------------------------------------------------
 NB. Verb:     Factorization used:    Syntax:
@@ -816,30 +815,45 @@ NB.
 NB. Description:
 NB.   Test:
 NB.   - 128!:1 (built-in)
+NB.   - xTRTRI (math/lapack2)
 NB.   - trtrixx (math/mt addon)
 NB.   by triangular matrix
 NB.
 NB. Syntax:
 NB.   testtrtri A
 NB. where
-NB.   A - n×n-matrix, lower triangular
-NB.
-NB. Formula:
-NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
+NB.   A - n×n-matrix
 
 testtrtri=: 3 : 0
-  L1=. |: U1=. tru1 U=. |: y
-  rcondL=.  trlcon1  y
-  rcondL1=. trl1con1 L1
-  rcondU=.  trucon1  U
-  rcondU1=. tru1con1 U1
+  load_mttmp_ :: ] 'math/mt/test/lapack2/trtri'
 
-  ('128!:1'  tmonad (]`]`(rcondU "_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) U
+  rcondL=.  trlcon1  L=.  trlpick y
+  rcondU=.  trucon1  U=.  trupick y
+  rcondL1=. trl1con1 L1=. (1 ; '') setdiag L
+  rcondU1=. tru1con1 U1=. (1 ; '') setdiag U
 
-  ('trtril'  tmonad (]`]`(rcondL "_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) y
-  ('trtril1' tmonad (]`]`(rcondL1"_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) L1
-  ('trtriu'  tmonad (]`]`(rcondU "_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) U
-  ('trtriu1' tmonad (]`]`(rcondU1"_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) U1
+  norm1L=.  norm1 L
+  norm1L1=. norm1 L1
+  norm1U=.  norm1 U
+  norm1U1=. norm1 U1
+
+  ('128!:1'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U
+
+  ('''ln''&dtrtri_mttmp_' tmonad ((3&{::)`trlpick `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
+  ('''lu''&dtrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
+  ('''un''&dtrtri_mttmp_' tmonad ((3&{::)`trupick `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
+  ('''uu''&dtrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
+  ('''ln''&ztrtri_mttmp_' tmonad ((3&{::)`trlpick `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
+  ('''lu''&ztrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
+  ('''un''&ztrtri_mttmp_' tmonad ((3&{::)`trupick `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
+  ('''uu''&ztrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
+
+  ('trtril'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L
+  ('trtril1'              tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1
+  ('trtriu'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U
+  ('trtriu1'              tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -848,25 +862,36 @@ NB. ---------------------------------------------------------
 NB. testgetri
 NB.
 NB. Description:
-NB.   Test getrixxxx by square matrix
+NB.   Test:
+NB.   - %. (built-in)
+NB.   - xGETRI (math/lapack2 addon)
+NB.   - getrixxxx (math/mt addon)
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   testgetri A
 NB. where
 NB.   A - n×n-matrix
-NB.
-NB. Formula:
-NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
 
 testgetri=: 3 : 0
-  rcond=. gecon1 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/getri'
 
-  ('%.'        tmonad (] `]`(rcond"_)`(_."_)`(           norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]   )))               y
+  'rcondl rcondu'=. (geconi , gecon1) y
 
-  ('getrilu1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; getrflu1p) y
-  ('getripl1u' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; getrfpl1u) y
-  ('getripu1l' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; getrfpu1l) y
-  ('getriul1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; getrful1p) y
+  'norml normu'=. (normi , norm1) y
+
+  ('%.'            tmonad ((               0&{:: )`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
+
+  ('dgetri_mttmp_' tmonad ((dgetrf_mttmp_@(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+  ('zgetri_mttmp_' tmonad ((zgetrf_mttmp_@(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+
+  ('getrilu1p'     tmonad ((getrflu1p    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
+  ('getripl1u'     tmonad ((getrfpl1u    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+  ('getripu1l'     tmonad ((getrfpu1l    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+  ('getriul1p'     tmonad ((getrful1p    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -875,21 +900,35 @@ NB. ---------------------------------------------------------
 NB. testhetri
 NB.
 NB. Description:
-NB.   Test hetripx by Hermitian (symmetric) matrix
+NB.   Test:
+NB.   - DSYTRI2 ZHETRI2 (math/lapack2 addon)
+NB.   - hetripx (math/mt addon)
+NB.   by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testhetri A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric)
-NB.
-NB. Formula:
-NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
+NB.   A - n×n-matrix, the Hermitian (symmetric)
 
 testhetri=: 3 : 0
-  rcond=. hecon1 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytri2'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetri2'
 
-  ('hetripl' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; hetrfpl) y
-  ('hetripu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; hetrfpu) y
+  rcond=. heconi y
+
+  norm=. normi y
+
+  ('''l''&dsytri2_mttmp_' tmonad (('l' dsytrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''u''&dsytri2_mttmp_' tmonad (('u' dsytrf_mttmp_  0&{:: )`heu`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&zhetri2_mttmp_' tmonad (('l' zhetrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''u''&zhetri2_mttmp_' tmonad (('u' zhetrf_mttmp_  0&{:: )`heu`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  ('hetripl'              tmonad ((    hetrfpl      @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('hetripu'              tmonad ((    hetrfpu      @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -898,22 +937,32 @@ NB. ---------------------------------------------------------
 NB. testpotri
 NB.
 NB. Description:
-NB.   Test hetripx by Hermitian (symmetric) positive definite
-NB.   matrix
+NB.   Test:
+NB.   - xPOTRI (math/lapack2 addon)
+NB.   - potrix (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite matrix
 NB.
 NB. Syntax:
 NB.   testpotri A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.
-NB. Formula:
-NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
 
 testpotri=: 3 : 0
+  load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/potri'
+
   rcond=. pocon1 y
 
-  ('potril' tmonad ((1&{::)`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; potrfl) y
-  ('potriu' tmonad ((1&{::)`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; potrfu) y
+  norm=. norm1 y
+
+  ('''l''&dpotri_mttmp_' tmonad (('l' dpotrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&zpotri_mttmp_' tmonad (('l' zpotrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  ('potril'              tmonad ((    potrfl       @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('potriu'              tmonad ((    potrfu       @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -922,22 +971,27 @@ NB. ---------------------------------------------------------
 NB. testpttri
 NB.
 NB. Description:
-NB.   Test pttri by Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix
+NB.   Test:
+NB.   - xPTTRI (math/lapack2 addon)
+NB.   - pttrix (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite tridiagonal
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   testpttri A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite tridiagonal
-NB.
-NB. Formula:
-NB.   berr := ||A * A^_1 - I||_1 / (FP_EPS * ||A||_1 * ||A^_1||_1 * n)
 
 testpttri=: 3 : 0
   rcond=. ptcon1 y
 
-  ('pttril' tdyad ((pttrfl@])`]`]`(rcond"_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) y
+  norm=. norm1 y
+
+  ('pttril' tmonad ((        0&{:: )        `]`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('pttril' tdyad  ((pttrfl@(0&{::))`(0&{::)`]`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -969,4 +1023,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testtri_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtri_mt_ 150 150
 
-testtri=: 1 : 'EMPTY [ (testpttri_mt_@(u ptmat2_mt_) [ testpotri_mt_@(u pomat_mt_) [ testhetri_mt_@(u hemat_mt_) [ testgetri_mt_@u [ testtrtri_mt_@(u trlmat_mt_))^:(=/)'
+testtri=: 1 : 'EMPTY [ (testpttri_mt_@(u ptmat2_mt_) [ testpotri_mt_@(u pomat_mt_) [ testhetri_mt_@(u hemat_mt_) [ (testgetri_mt_ [ testtrtri_mt_)@u)^:(=/)'

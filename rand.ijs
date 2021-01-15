@@ -248,7 +248,7 @@ NB. Notes:
 NB. - randx is used to acquire datatype only
 NB. - datatypes supported: floating, complex
 
-kmsmat121=: 1 : '{.@u@1:'
+kmsmat121=: 1 : '{.@u@1'
 kmsmatrho=: 1 : '((0.5 1&randu_mt_ r. 0 2p1&randu_mt_) kmsmat121_mt_)`(0.5 1&randu_mt_ kmsmat121_mt_)@.(0 -: 11&o.)@(u kmsmat121_mt_)'
 
 NB. =========================================================
@@ -379,9 +379,9 @@ NB.   iK=. %. K
 NB.
 NB. Application:
 NB. - make random real positive definite KMS 4×4-matrix:
-NB.     K=. {.@randu@1: kmsmat 4 4
+NB.     K=. {.@randu@1 kmsmat 4 4
 NB. - make random complex positive definite KMS 4×4-matrix:
-NB.     K=. {.@(randu r. 0 2p1&randu)@1: kmsmat 4
+NB.     K=. {.@(randu r. 0 2p1&randu)@1 kmsmat 4
 NB.
 NB. References:
 NB. [1] W.F. Trench, "Numerical solution of the eigenvalue

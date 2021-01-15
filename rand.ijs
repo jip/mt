@@ -27,9 +27,9 @@ NB. testptmat  Test ptmatx by matrix size given
 NB. testspmat  Test spmat by matrix shape given
 NB. testrand   Test xxxxmatx by matrix shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

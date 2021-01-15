@@ -9,9 +9,9 @@ NB. testgebak  Test gebakxx by square matrix
 NB. testbak    Adv. to make verb to test gebakxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

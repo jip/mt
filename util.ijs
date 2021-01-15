@@ -9,9 +9,9 @@ NB. sorim     Sum of real and imaginary parts' modules
 NB. soris     Sum of real and imaginary parts' squares
 NB. fmtlog    Format log string
 NB.
-NB. Version: 0.10.2 2017-10-19
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

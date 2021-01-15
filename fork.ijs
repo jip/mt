@@ -7,7 +7,7 @@ NB. fork6  Generalized fork with 6-depth execution graph
 NB.
 NB. Version: 0.7.0 2011-08-06
 NB.
-NB. Copyright 2010-2011 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

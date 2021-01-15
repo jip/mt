@@ -11,9 +11,9 @@ NB. qnmod      Magnitude
 NB. qnsign     Signum
 NB. qnf        Adv. to quaternificate verb
 NB.
-NB. Version: 0.10.4 2018-11-02
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2018 Igor Zhuravlov
+NB. Copyright 2011-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

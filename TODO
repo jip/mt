@@ -1,42 +1,42 @@
-1. (lacn2,gesc2,latdf,getc2,tgsy2,tgsyl,tgex2,tgexc,tgsen) ->
-   gges
+1. hrd.ijs: gghrdxxx: implement blocked generalized
+   Hessenberg reduction xGGHD3 [1]
 
-2. (gges,tgsyl) -> [1]
+2. (lacn2,gesc2,latdf,getc2,tgsy2,tgsyl,tgex2,tgexc,tgsen) ->
+   gges3
 
-3. hrd.ijs: gghrdxxx: implement blocked generalized
-   Hessenberg reduction xGGHD3 [2]
+3. (gges3,tgsyl) -> [2]
 
-4. factorize gqvberr in eq,hrd,pf,qf,tri
+4. improve *NB and *NX constants for optimal performance
 
-5. improve *NB and *NX constants for optimal performance
+5. exp.ijs: implement updated algo [3]
 
-6. exp.ijs: implement updated algo [3]
-
-7. Sylvester equation solvers:
+6. Sylvester equation solvers:
    [generalized] {continuous,discrete}-time
 
-8. Lyapunov equation solvers:
+7. Lyapunov equation solvers:
    [generalized] {continuous,discrete}-time
    for {solution X,Cholesky factor U}
 
-9. Algebraic Riccati equation solvers:
+8. Algebraic Riccati equation solvers:
    [generalized] {continuous,discrete}-time
 
-10. replace pf (RRQR) by qp (xGEQP3) [4]
+9. replace pf (RRQR) by qp (xGEQP3) [4]
 
-11. implement a matrix canonization algorithm [5,6]
+10. (getc2,geqp3) -> a matrix canonization algorithm [5]
+
+11. rewrite loops via Fold (F.. F.: F. F:. F:: F:)
 
 References:
-[1] Gerdin, Markus. Computation of a canonical form for
-    linear differential-algebraic equations. Department of
-    Electrical Engineering, Linköping University, 2004.
-    LiTH-ISY-R-2602
-
-[2] Bo Kågström, Daniel Kressner, Enrique S. Quintana-Ortí,
+[1] Bo Kågström, Daniel Kressner, Enrique S. Quintana-Ortí,
     and Gregorio Quintana-Ortí. Blocked Algorithms for the
     Reduction to Hessenberg-Triangular Form Revisited.
     February 2008. LAPACK Working Note 198
     http://www.netlib.org/lapack/lawns/downloads/
+
+[2] Gerdin, Markus. Computation of a canonical form for
+    linear differential-algebraic equations. Department of
+    Electrical Engineering, Linköping University, 2004.
+    LiTH-ISY-R-2602
 
 [3] Awad H. Al-Mohy, Nicholas J. Higham. A New Scaling and
     Squaring Algorithm for the Matrix Exponential. SIAM J.
@@ -51,8 +51,3 @@ References:
     Decompositions for Matrix Canonization. Comput. Math. and
     Math. Phys. 59, 1759–1770 (2019).
     https://doi.org/10.1134/S0965542519110149
-
-[6] Valentin N. Bykov, Vladimir N. Ryabchenko and Nikolay I.
-    Sel'vesyuk. Solving of the special matrix equations with
-    canonization method. Bulletein of the University of Kiev,
-    Vol. 2004, No. 3.

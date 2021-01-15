@@ -1,8 +1,8 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Compute the Cholesky factorization of a symmetric
-NB.   (Hermitian) positive definite matrix
+NB.   Compute the Cholesky factorization of a Hermitian
+NB.   (symmetric) positive definite matrix
 NB.
 NB. Syntax:
 NB.   T=. uplo xpotrf A
@@ -18,7 +18,7 @@ NB.   T    - n×n-matrix, L or U factor combined with
 NB.          untouched elements from A in opposite triangle
 NB.   L    - n×n-matrix, the lower triangular
 NB.   U    - n×n-matrix, the upper triangular
-NB.   n    ≥ 0, size of A, L and U
+NB.   n    ≥ 0, the size of A, L and U
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

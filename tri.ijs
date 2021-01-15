@@ -327,7 +327,7 @@ NB. trtriu1    iU1=. trtriu1 U1
 NB.
 NB. Description:
 NB.   Inverse triangular matrix
-NB. where:
+NB. where
 NB.   L   - n×n-matrix, the lower triangular
 NB.   iL  - n×n-matrix, the lower triangular, an inversion of
 NB.         L

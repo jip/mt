@@ -386,7 +386,7 @@ NB.     tb01idb=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
 NB. - models SLICOT's TB01ID('C'):
 NB.     NB. 'ACscl d'=. maxred tb01idc  A , C
 NB.     NB. 'Ascl Cscl'=. n ({. ; }.) ACscl
-NB.     tb01idc=: 0 3 { (gebals ] ; i.@c_mt_ ; 0 , _:)
+NB.     tb01idc=: 0 3 { (gebals ] ; i.@c ; 0 , _:)
 NB. - models SLICOT's TB01ID('A'):
 NB.     NB. 'ABC0scl d'=. maxred tb01ida (A ,. B) , C
 NB.     NB. 'ABscl C0scl'=. n ({. ; }.) ABC0scl
@@ -860,8 +860,8 @@ NB. testgebal
 NB.
 NB. Description:
 NB.   Test:
-NB.   - xGEBAL (math/lapack2)
-NB.   - gebalx (math/mt)
+NB.   - xGEBAL (math/lapack2 addon)
+NB.   - gebalx (math/mt addon)
 NB.   by square matrix
 NB.
 NB. Syntax:
@@ -921,8 +921,8 @@ NB. testggbal
 NB.
 NB. Description:
 NB.   Test:
-NB.   - xGGBAL (math/lapack2)
-NB.   - ggbalx (math/mt)
+NB.   - xGGBAL (math/lapack2 addon)
+NB.   - ggbalx (math/mt addon)
 NB.   by pair of square matrices
 NB.
 NB. Syntax:

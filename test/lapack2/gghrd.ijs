@@ -2,7 +2,7 @@ require 'math/lapack2'
 
 NB. Description:
 NB.   Reduce a pair of square matrices (A,B) to generalized
-NB.   upper Hessenberg form using orthogonal (unitary)
+NB.   upper Hessenberg form by an unitary (orthogonal)
 NB.   transformations, where A is a general matrix and B is
 NB.   upper triangular
 NB.
@@ -21,7 +21,7 @@ NB.   ilo   ∈ [1,n], IO starting column, 1-based
 NB.   ihi   ∈ [1,n], IO ending column, 1-based
 NB.   A     - n×n-matrix, numeric, the upper triangular in
 NB.           columns outside ilo:ihi
-NB.   B     - n×n-matrix, numeric, the upper triangular
+NB.   B     - n×n-matrix, the upper triangular
 NB.   Q1    - n×n-matrix, the unitary (orthogonal) if
 NB.           compQ='V' or any noun otherwise
 NB.   Z1    - n×n-matrix, the unitary (orthogonal) if
@@ -38,7 +38,7 @@ NB.   Z     - 0×0-matrix if compZ='N', or n×n-matrix, the
 NB.           unitary (orthogonal):
 NB.             Z    if compZ='I'
 NB.             Z1*Z if compZ='V'
-NB.   n     ≥ 0
+NB.   n     ≥ 0, the size of A, B, H and T
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

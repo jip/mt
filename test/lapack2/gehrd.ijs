@@ -2,7 +2,7 @@ require 'math/lapack2'
 
 NB. Description:
 NB.   Reduce a general square matrix to upper Hessenberg form
-NB.   by an orthogonal (unitary) similarity transformation
+NB.   by an unitary (orthogonal) similarity transformation
 NB.
 NB. Syntax:
 NB.   'HQf tau'=. xgehrd ilo ; ihi ; A
@@ -18,10 +18,12 @@ NB.         reflectors applied to A, in elements ilo:ihi
 NB.   H   - n×n-matrix, the upper Hessenberg in rows and
 NB.         columns ilo:ihi and upper triangular outside
 NB.   Qf  - n×n-matrix, columns below the first subdiagonal
-NB.         with the tau, represent the Q as a product of
-NB.         elementary reflectors
-NB.   Q   - n×n-matrix, orthogonal (unitary)
-NB.   n   ≥ 0
+NB.         with the tau represent the Q in the factored
+NB.         form
+NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of (ihi-ilo) elementary
+NB.         reflectors
+NB.   n   ≥ 0, the size of A, HQf, H, Qf, Q and tau
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

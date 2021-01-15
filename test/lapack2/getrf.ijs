@@ -7,16 +7,17 @@ NB.
 NB. Syntax:
 NB.   'L1U ipiv'=. xgetrf A
 NB. where
-NB.   A    - m×n-matrix, which is factorized as:
+NB.   A    - m×n-matrix to be factored as:
 NB.            P * L1 * U = A
 NB.   L1U  - m×n-matrix, L1 and U combined
-NB.   ipiv - k-vector, pivot indices that define P
+NB.   ipiv - k-vector, integer, the pivot indices that define
+NB.          P
 NB.   L1   - m×k-matrix, the unit lower trapezoidal (unit
 NB.          diagonal not stored)
 NB.   U    - k×n-matrix, the upper trapezoidal
 NB.   P    - n×n-matrix, boolean, the permutation matrix
-NB.   m    ≥ 0, rows in A and L1
-NB.   n    ≥ 0, columns in A and U
+NB.   m    ≥ 0, the number of rows in A and L1
+NB.   n    ≥ 0, the number of columns in A and U
 NB.   k    = min(m,n)
 NB.
 NB. Notes:

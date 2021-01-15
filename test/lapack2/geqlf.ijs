@@ -22,8 +22,9 @@ NB.         where
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
 NB.           H(n-1:k) ≡ H(u(n-1:k),τ(n-1:k)) = H(0,0) = I
 NB.   k   = min(m,n)
-NB.   m   ≥ 0
-NB.   n   ≥ 0
+NB.   m   ≥ 0, the number of rows in A, QfL and Qf
+NB.   n   ≥ 0, the number of columns in A, QfL and L, and the
+NB.         size of Q
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

@@ -68,7 +68,7 @@ NB.   ipi       -:i. (n-i)
 NB.   subA      - (n-i)×(n-i)-matrix to factorize, the
 NB.               Hermitian (symmetric), the bottom right
 NB.               part of A
-NB.   lti       - (n-i)-vector, is defined as:
+NB.   lti       - (n-i)-vector, which is defined as:
 NB.                 lti=. ti 0} li
 NB.   t0i       - i-vector, float, leading elements of main
 NB.               diagonal of T
@@ -112,9 +112,8 @@ NB.                 subH=. subL1 mp subT
 NB.   subT      - (n-i)×(n-i)-matrix, the Hermitian
 NB.               (symmetric) tridiagonal, being bottom right
 NB.               part of T
-NB.   i         - integer from set:
-NB.                 {(0:⌈n/TRFNB⌉)*TRFNB} ,
-NB.               lIO subA's 1st row and column within A
+NB.   i         ∊ {(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's 1st row
+NB.               and column within A
 NB.   A         - n×n-matrix, the Hermitian (symmetric)
 NB.   L1        - n×n-matrix, the unit lower triangular
 NB.   T         - n×n-matrix, the Hermitian (symmetric)
@@ -315,7 +314,7 @@ NB.   ipi       -:i. (n+i+1)
 NB.   subA      - (n+i+1)×(n+i+1)-matrix to factorize,
 NB.               Hermitian (symmetric), the top left part of
 NB.               A
-NB.   uti       - (n+i+1)-vector, is defined as:
+NB.   uti       - (n+i+1)-vector, which is defined as:
 NB.                 uti=. ti _1} ui
 NB.   t0i       - (i+1)-vector, float, tail elements of main
 NB.               diagonal of T
@@ -359,9 +358,8 @@ NB.                 subH=. subU1 mp subT
 NB.   subT      - (n+i+1)×(n+i+1)-matrix, the Hermitian
 NB.               (symmetric) tridiagonal, being top left
 NB.               part of T
-NB.   i         - integer from set:
-NB.                 {_1-(0:⌈n/TRFNB⌉)*TRFNB},
-NB.               lIO subA's last row and column within A
+NB.   i         ∊ {_1-(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's last
+NB.               row and column within A
 NB.   A         - n×n-matrix, the Hermitian (symmetric)
 NB.   U1        - n×n-matrix, the unit upper triangular
 NB.   T         - n×n-matrix, the Hermitian (symmetric)
@@ -575,9 +573,9 @@ NB.     m-k (      U1bb )    ( U1b )            m-k ( Lba     LbbU1bb )
 NB.           k    n-k         n                      k       n-k
 NB. where
 NB.   LaaU1aa - Laa and U1aa combined, U1aa's unit diagonal
-NB.             isn't stored
+NB.             not stored
 NB.   LbbU1bb - Lbb and U1bb combined, U1bb's unit diagonal
-NB.             isn't stored
+NB.             not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -730,9 +728,9 @@ NB.     m-k ( L1ab L1bb )                           m-k ( L1ab    L1bbUbb )
 NB.           k    n-k         k   n-k                    k       n-k
 NB. where
 NB.   L1aaUaa - L1aa and Uaa combined, L1aa's unit diagonal
-NB.             isn't stored
+NB.             not stored
 NB.   L1bbUbb - L1bb and Ubb combined, L1bb's unit diagonal
-NB.             isn't stored
+NB.             not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -888,9 +886,9 @@ NB.     k   (      U1bb )                           k   ( Lab     U1bbLbb )
 NB.           n-k  k           n-k k                      n-k       k
 NB. where
 NB.   U1aaLaa - U1aa and Laa combined, U1aa's unit diagonal
-NB.             isn't stored
+NB.             not stored
 NB.   U1bbLbb - U1bb and Lbb combined, U1bb's unit diagonal
-NB.             isn't stored
+NB.             not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1043,9 +1041,9 @@ NB.     k   ( L1ba L1bb )    ( L1b )            k   ( L1ba    UbbL1bb )
 NB.           n-k  k           n                      n-k     k
 NB. where
 NB.   UaaL1aa - Uaa and L1aa combined, L1aa's unit diagonal
-NB.             isn't stored
+NB.             not stored
 NB.   UbbL1bb - Ubb and L1bb combined, L1bb's unit diagonal
-NB.             isn't stored
+NB.             not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1578,8 +1576,6 @@ NB.   'L1 D'=. pttrfl A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xPTTRF
-NB. - if A is indefinite then factors may have unacceptably
-NB.   large elements
 NB.
 NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.

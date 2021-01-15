@@ -74,7 +74,7 @@ NB. trsmrutu    X * U1^T = B    Xh=. A trsmrutu Bh
 NB.
 NB. Description:
 NB.   Solve linear monomial equation with triangular matrix
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, containing either U, U1, L or L1
 NB.   U    - n×n-matrix, the upper triangular
 NB.   U1   - n×n-matrix, the unit upper triangular (diagonal
@@ -86,7 +86,8 @@ NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - same shape as Bv, solutions
 NB.   Xh   - same shape as Bh, solutions
-NB.   nrhs ≥ 0
+NB.   n    ≥ 0, the order of system
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
 NB. - opposite triangle is not referenced
@@ -97,6 +98,8 @@ NB.   difference: alpha parameter is assumed to be always
 NB.   equal to 1; to workaround this limitation use the
 NB.   following pattern:
 NB.     X=. A trsmxxxx alpha*B
+NB. - models LAPACK's xTRTRS for matrix RHS with the
+NB.   following difference: no check for A singularity
 NB.
 NB. TODO:
 NB. - replace column-wise algos by row-wise

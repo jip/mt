@@ -2,7 +2,7 @@ NB. Solve linear monomial equation by triangular
 NB. factorization
 NB.
 NB. getrsxxxxxx  Solve equation (op(A) * X = B) or
-NB.              (X * op(A) = B), where A is a general
+NB.              (X * op(A) = B), where A is a general square
 NB.              matrix, represented in factored form; op(A)
 NB.              is either A itself, or A^T (the
 NB.              transposition of A), or A^H (the conjugate
@@ -93,7 +93,7 @@ NB. Description:
 NB.   Solve linear monomial equation with general square
 NB.   matrix A, represented in factored form:
 NB.     L * U1 * P = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
@@ -101,7 +101,8 @@ NB.   Xv   - same shape as Bv, the solution[s]
 NB.   Xh   - same shape as Bh, the solution[s]
 NB.   LU1p - 2-vector of boxes, the output of getrflu1p, the
 NB.          matrix A represented in factored form
-NB.   nrhs ≥ 0, number of RHSs
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Assertions:
 NB.   Xv -: clean LU1p getrslu1px      A  mp  Xv
@@ -134,7 +135,7 @@ NB. Description:
 NB.   Solve linear monomial equation with general square
 NB.   matrix A, represented in factored form:
 NB.     P * L1 * U = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
@@ -142,7 +143,8 @@ NB.   Xv   - same shape as Bv, the solution[s]
 NB.   Xh   - same shape as Bh, the solution[s]
 NB.   pL1U - 2-vector of boxes, the output of getrfpl1u, the
 NB.          matrix A represented in factored form
-NB.   nrhs ≥ 0, number of RHSs
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Assertions:
 NB.   Xv -: clean pL1U getrspl1ux      A  mp  Xv
@@ -178,7 +180,7 @@ NB. Description:
 NB.   Solve linear monomial equation with general square
 NB.   matrix A, represented in factored form:
 NB.     P * U1 * L = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
@@ -186,7 +188,8 @@ NB.   Xv   - same shape as Bv, the solution[s]
 NB.   Xh   - same shape as Bh, the solution[s]
 NB.   pU1L - 2-vector of boxes, the output of getrfpu1l, the
 NB.          matrix A represented in factored form
-NB.   nrhs ≥ 0, number of RHSs
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Assertions:
 NB.   Xv -: clean pU1L getrspu1lx      A  mp  Xv
@@ -219,7 +222,7 @@ NB. Description:
 NB.   Solve linear monomial equation with general square
 NB.   matrix A, represented in factored form:
 NB.     U * L1 * P = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
@@ -227,7 +230,8 @@ NB.   Xv   - same shape as Bv, the solution[s]
 NB.   Xh   - same shape as Bh, the solution[s]
 NB.   UL1p - 2-vector of boxes, the output of getrful1p, the
 NB.          matrix A represented in factored form
-NB.   nrhs ≥ 0, number of RHSs
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Assertions:
 NB.   Xv -: clean UL1p getrsul1px      A  mp  Xv
@@ -258,7 +262,7 @@ NB. Description:
 NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) matrix A, represented in factored form:
 NB.     P * L1 * T * L1^H * P^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
@@ -266,7 +270,8 @@ NB.   Xv   - same shape as Bv, the solution[s]
 NB.   Xh   - same shape as Bh, the solution[s]
 NB.   pL1T - 3-vector of boxes, the output of hetrfpl, the
 NB.          matrix A represented in factored form
-NB.   nrhs ≥ 0, number of RHSs
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Assertions:
 NB.   Xv -: clean pL1T hetrsplx      A  mp  Xv
@@ -295,7 +300,7 @@ NB. Description:
 NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) matrix A, represented in factored form:
 NB.     P * U1 * T * U1^H * P^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
@@ -303,7 +308,8 @@ NB.   Xv   - same shape as Bv, the solution[s]
 NB.   Xh   - same shape as Bh, the solution[s]
 NB.   pU1T - 3-vector of boxes, the output of hetrfpu, the
 NB.          matrix A represented in factored form
-NB.   nrhs ≥ 0
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Assertions:
 NB.   Xv -: clean pU1T hetrspux      A  mp  Xv
@@ -330,7 +336,7 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) positive definite matrix A, represented in
 NB.   factored form:
 NB.     L * L^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
@@ -341,7 +347,8 @@ NB.   L    - n×n-matrix, the lower triangular with positive
 NB.          diagonal entries, the Cholesky triangle, the
 NB.          output of potrfl, the matrix A represented in
 NB.          factored form
-NB.   nrhs ≥ 0, number of RHSs
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Assertions:
 NB.   Xv -: clean L potrslx      A  mp  Xv
@@ -371,7 +378,7 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) positive definite matrix A, represented in
 NB.   factored form:
 NB.     U * U^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
@@ -382,7 +389,8 @@ NB.   U    - n×n-matrix, the upper triangular with positive
 NB.          diagonal entries, the Cholesky triangle, the
 NB.          output of potrfu, the matrix A represented in
 NB.          factored form
-NB.   nrhs ≥ 0, number of RHSs
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Assertions:
 NB.   Xv -: clean U potrsux      A  mp  Xv
@@ -409,7 +417,7 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) positive definite tridiagonal matrix A,
 NB.   represented in factored form [1]:
 NB.     L1 * D * L1^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
@@ -418,7 +426,8 @@ NB.   Xv   - same shape as Bv, the solution[s]
 NB.   Xh   - same shape as Bh, the solution[s]
 NB.   L1D  - 2-vector of boxes, the output of pttrfl, the
 NB.          matrix A represented in factored form
-NB.   nrhs ≥ 0
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Algorithm for pttrslx:
 NB.   In:  L1 D Bv
@@ -435,7 +444,7 @@ NB.      for non-empty be only
 NB.   4) cut off trash column to extract updated Bv:
 NB.        b=. (}:"1) btrash
 NB.   5) prepare intermediate input:
-NB.        bde=. ((}: b) , (({: b) % ({: d))) ,. d ,. ((conj(e),0)
+NB.        bde=. ((}: b) , (({: b) % ({: d))) ,. d ,. (conj(e),0)
 NB.   6) do iterations k=n-2:0 by suffix scan:
 NB.        btrash=. u/\. bde
 NB.      to find :
@@ -480,7 +489,7 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) positive definite tridiagonal matrix A,
 NB.   represented in factored form, based on [1]:
 NB.     U1 * D * U1^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
@@ -489,7 +498,8 @@ NB.   Xv   - same shape as Bv, the solution[s]
 NB.   Xh   - same shape as Bh, the solution[s]
 NB.   U1D  - 2-vector of boxes, the output of pttrfu, the
 NB.          matrix A represented in factored form
-NB.   nrhs ≥ 0
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Algorithm for pttrsux:
 NB.   In:  U1 D Bv
@@ -506,7 +516,7 @@ NB.      for non-empty be only
 NB.   4) cut off trash column to extract updated Bv:
 NB.        b=. (}:"1) btrash
 NB.   5) prepare intermediate input:
-NB.        bde=. ((({. b) % ({. d)) , (}. b)) ,. d ,. ((0,conj(e))
+NB.        bde=. ((({. b) % ({. d)) , (}. b)) ,. d ,. (0,conj(e))
 NB.   6) do iterations k=1:n-1 by reversed suffix scan:
 NB.        btrash=. u/\.&.|. bde
 NB.      to find :

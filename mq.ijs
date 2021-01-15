@@ -243,12 +243,13 @@ NB.   LQf - n×(m+1)-matrix (ln,lc cases) or m×(n+1)-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gelqf
 NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
-NB.         unit upper trapezoidal, the Q represented in
+NB.         unit upper trapezoidal, represents the Q in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as the product of
 NB.         k elementary reflectors H(i):
 NB.           Q = Π{H(i)',i=k-1:0}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -283,12 +284,13 @@ NB.   QfL - (m+1)×n-matrix (ln,lc cases), (n+1)×m-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of geqlf
 NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
-NB.         unit upper trapezoidal, the Q represented in
+NB.         unit upper trapezoidal, represents the Q in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as the product of
 NB.         k elementary reflectors H(i):
 NB.           Q = Π{H(i),i=k-1:0}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -323,12 +325,13 @@ NB.   QfR - (m+1)×n-matrix (ln,lc cases), (n+1)×m-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of geqrf
 NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
-NB.         unit lower trapezoidal, the Q represented in
+NB.         unit lower trapezoidal, represents the Q in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as the product of
 NB.         k elementary reflectors H(i):
 NB.           Q = Π{H(i),i=0:k-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -364,12 +367,13 @@ NB.   RQf - l×(m+1)-matrix (ln,lc cases) or l×(n+1)-matrix
 NB.         (rn,rc), contains Qf (unit diagonal not stored),
 NB.         the output of gerqf
 NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
-NB.         unit lower trapezoidal, the Q represented in
+NB.         unit lower trapezoidal, represents the Q in
 NB.         factored form
 NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as the product of
 NB.         k elementary reflectors H(i):
 NB.           Q = Π{H(i)',i=0:k-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   = min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -411,6 +415,7 @@ NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as the product of
 NB.         k elementary reflectors H(i):
 NB.           Z = Π{H(i)',i=k-1:0}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   ≤ min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -422,6 +427,18 @@ NB.
 NB. Notes:
 NB. - unml3{ln,lc,rn,rc} and unmlz{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
+NB. - if not all reflectors are needed then part of LZf
+NB.   should be zeroed, e.g.:
+NB.     original LZf with m=5, n=9:
+NB.       (  τ0 v0 v0 v0 v0 l  0  0  0  0  )
+NB.       (  τ1 v1 v1 v1 v1 l  l  0  0  0  )
+NB.       (  τ2 v2 v2 v2 v2 l  l  l  0  0  )
+NB.       (  τ3 v3 v3 v3 v3 l  l  l  l  0  )
+NB.       (  τ4 v4 v4 v4 v4 l  l  l  l  l  )
+NB.     LZf used as x argument when k=2:
+NB.       (  τ3 v3 v3 v3 v3 0  0  0  l  0  )
+NB.       (  τ4 v4 v4 v4 v4 0  0  0  l  l  )
+NB.     note zeroed elements in columns 5,6,7
 
 unmlzln=: }.  @(((unml3ln`((larzblcfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ , ~&0)`(i.@$@])@.(0 e. $@])
 unmlzlc=: }.  @(((unml3lc`((larzblnfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; dhs2liso@(_1 , [))`]}~ #))~ , ~&0)`(i.@$@])@.(0 e. $@])
@@ -451,6 +468,7 @@ NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as the product of
 NB.         k elementary reflectors H(i):
 NB.           Z = Π{H(i),i=k-1:0}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   ≤ min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -462,6 +480,20 @@ NB.
 NB. Notes:
 NB. - unm3l{ln,lc,rn,rc} and unmzl{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
+NB. - if not all reflectors are needed then part of ZfL
+NB.   should be zeroed, e.g.:
+NB.     original ZfL with m=9, n=5:    ZfL used as x argument when k=2:
+NB.       (  l  0  0  0  0   )           (  l  0   )
+NB.       (  l  l  0  0  0   )           (  l  l   )
+NB.       (  l  l  l  0  0   )           (  0  0   )
+NB.       (  l  l  l  l  0   )           (  0  0   )
+NB.       (  l  l  l  l  l   )           (  0  0   )
+NB.       (  v0 v1 v2 v3 v4  )           (  v0 v1  )
+NB.       (  v0 v1 v2 v3 v4  )           (  v0 v1  )
+NB.       (  v0 v1 v2 v3 v4  )           (  v0 v1  )
+NB.       (  v0 v1 v2 v3 v4  )           (  v0 v1  )
+NB.       (  τ0 τ1 τ2 τ3 τ4  )           (  τ0 τ1  )
+NB.                                    note zeroed elements in rows 2,3,4
 
 unmzlln=: }:  @(((unm3lln`((larzblnbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,  &0)`(i.@$@])@.(0 e. $@])
 unmzllc=: }:  @(((unm3llc`((larzblcbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@( 0 , [))`]}~ c))~ ,  &0)`(i.@$@])@.(0 e. $@])
@@ -491,6 +523,7 @@ NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as the product of
 NB.         k elementary reflectors H(i):
 NB.           Z = Π{H(i),i=0:k-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   ≤ min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -502,6 +535,20 @@ NB.
 NB. Notes:
 NB. - unm3r{ln,lc,rn,rc} and unmzr{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
+NB. - if not all reflectors are needed then part of ZfR
+NB.   should be zeroed, e.g.:
+NB.     original ZfR with m=9, n=5:    ZfR used as x argument when k=2:
+NB.       (  τ0 τ1 τ2 τ3 τ4  )           (  τ3 τ4  )
+NB.       (  v0 v1 v2 v3 v4  )           (  v3 v4  )
+NB.       (  v0 v1 v2 v3 v4  )           (  v3 v4  )
+NB.       (  v0 v1 v2 v3 v4  )           (  v3 v4  )
+NB.       (  v0 v1 v2 v3 v4  )           (  v3 v4  )
+NB.       (  r  r  r  r  r   )           (  0  0   )
+NB.       (  0  r  r  r  r   )           (  0  0   )
+NB.       (  0  0  r  r  r   )           (  0  0   )
+NB.       (  0  0  0  r  r   )           (  r  r   )
+NB.       (  0  0  0  0  r   )           (  0  r   )
+NB.                                    note zeroed elements in rows 5,6,7
 
 unmzrln=: }.  @(((unm3rln`((larzblnfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ , ~&0)`(i.@$@])@.(0 e. $@])
 unmzrlc=: }.  @(((unm3rlc`((larzblcfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       dhs2liso@(_1 , [))`]}~ c))~ , ~&0)`(i.@$@])@.(0 e. $@])
@@ -531,6 +578,7 @@ NB.   Z   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), unitary
 NB.         (orthogonal), which is defined as the product of
 NB.         k elementary reflectors H(i):
 NB.           Z = Π{H(i)',i=0:k-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   ≤ min(m,n)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
@@ -569,10 +617,11 @@ NB.   Qf  - (s-1)×(m-h)-matrix (ln,lc) or (s-1)×(n-h)-matrix
 NB.         (rn,rc), the unit upper trapezoidal, represents
 NB.         the Q in factored form, located in
 NB.         HQf[h:h+s-2,h+1:end]
-NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), being
+NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), is the
 NB.         unit matrix with unitary (orthogonal) matrix
 NB.         inserted into elements Q[h:h+s-1,h:h+s-1] :
 NB.           Q = Π{H(i)',i=h+s-2:h}
+NB.           H(i) = I - v[i]' * τ[i] * v[i]
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix Qf position in matrix HQf, see
 NB.         see gehrdl
@@ -617,10 +666,11 @@ NB.   Qf  - (m-h)×(s-1)-matrix (ln,lc) or (n-h)×(s-1)-matrix
 NB.         (rn,rc), the unit lower trapezoidal, represents
 NB.         the Q in factored form, located in
 NB.         HQf[h+1:end,h:h+s-2]
-NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), being
+NB.   Q   - m×m-matrix (ln,lc) or n×n-matrix (rn,rc), is the
 NB.         unit matrix with unitary (orthogonal) matrix
 NB.         inserted into elements Q[h:h+s-1,h:h+s-1] :
 NB.           Q = Π{H(i),i=h:h+s-2}
+NB.           H(i) = I - v[i] * τ[i] * v[i]'
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix Qf position in matrix HQf, see
 NB.         see gehrdu

@@ -694,9 +694,13 @@ NB.   T    - n×n-matrix, the lower triangular
 NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
 NB.            e1e2 -: e1 ,: e2
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
-NB.   Q2   - n×n-matrix, the unitary (orthogonal)
+NB.   Q2   - n×n-matrix, the unitary (orthogonal), the left
+NB.          Schur vectors of (H,T) pair if Q1=I, and of
+NB.          (A,B) pair otherwise
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z2   - n×n-matrix, the unitary (orthogonal)
+NB.   Z2   - n×n-matrix, the unitary (orthogonal), the right
+NB.          Schur vectors of (H,T) pair if Z1=I, and of
+NB.          (A,B) pair otherwise
 NB.   Q2Z2 -:Q2 ,: Z2
 NB.   S    - n×n-matrix, the lower triangular
 NB.   P    - n×n-matrix, the lower triangular
@@ -710,6 +714,8 @@ NB.   Q2       -: dQ1 mp Q1
 NB.   Z2       -: dZ1 mp Z1
 NB.   (H ,: T) -: dQ1 (mp~ ct)~"2 (S ,: P) mp"2 dZ1
 NB.   (C ,: D) -: Q2 (mp~ ct)~"2 (S ,: P) mp"2 Z2
+NB.   I        -: Q2^H * Q2
+NB.   I        -: Z2^H * Z2
 NB. where
 NB.   C - n×n-matrix, general
 NB.   D - n×n-matrix, general
@@ -807,9 +813,13 @@ NB.   T    - n×n-matrix, the upper triangular
 NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
 NB.            e1e2 -: e1 ,: e2
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
-NB.   Q2   - n×n-matrix, the unitary (orthogonal)
+NB.   Q2   - n×n-matrix, the unitary (orthogonal), the left
+NB.          Schur vectors of (H,T) pair if Q1=I, and of
+NB.          (A,B) pair otherwise
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z2   - n×n-matrix, the unitary (orthogonal)
+NB.   Z2   - n×n-matrix, the unitary (orthogonal), the right
+NB.          Schur vectors of (H,T) pair if Z1=I, and of
+NB.          (A,B) pair otherwise
 NB.   Q2Z2 -:Q2 ,: Z2
 NB.   S    - n×n-matrix, the upper triangular
 NB.   P    - n×n-matrix, the upper triangular
@@ -831,6 +841,8 @@ NB.   Q2       -: Q1 mp dQ1
 NB.   Z2       -: Z1 mp dZ1
 NB.   (H ,: T) -: dQ1 mp"2 (S ,: P) (mp ct)"2 dZ1
 NB.   (C ,: D) -: Q2 mp"2 (S ,: P) (mp ct)"2 Z2
+NB.   I        -: Q2 * Q2^H
+NB.   I        -: Z2 * Z2^H
 NB. where
 NB.   C - n×n-matrix, general
 NB.   D - n×n-matrix, general

@@ -15,14 +15,16 @@ NB.             'V' - to compute Vl
 NB.   jobVr - scalar, character, case-insensitive:
 NB.             'N' - do not compute Vr
 NB.             'V' - to computed Vr
-NB.   A,B   - n×n-matrix, numeric, a matrix pair
+NB.   A,B   - n×n-matrix, a matrix pair
 NB.   alpha - n-vector, generalized eigenvalues nominator of
 NB.           matrix pair (A,B)
 NB.   beta  - n-vector, generalized eigenvalues denominator
 NB.           of matrix pair (A,B)
-NB.   Vl    - n×n-matrix, left eigenvectors of A
-NB.   Vr    - n×n-matrix, right eigenvectors of A
-NB.   n     ≥ 0
+NB.   Vl    - n×n-matrix, left eigenvectors of A if jobVl='V'
+NB.           or 0×0-matrix otherwise
+NB.   Vr    - n×n-matrix, right eigenvectors of A if
+NB.           jobVr='V' or 0×0-matrix otherwise
+NB.   n     ≥ 0, the size of A, B, Vl, Vr, alpha and beta
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

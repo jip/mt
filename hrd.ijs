@@ -71,8 +71,7 @@ NB.   VH    - HRDNB×(n-i)-matrix, represents reduced rows
 NB.           of subeA, lower triangles of VH and H are
 NB.           match, strict upper triangles of VH and V are
 NB.           match
-NB.   i     - integer from set:
-NB.             {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
@@ -125,8 +124,7 @@ NB.   VH    - (n-i)×HRDNB-matrix, represents reduced columns
 NB.           of subeA, upper triangles of VH and H are
 NB.           match, strict lower triangles of VH and V are
 NB.           match
-NB.   i     - integer from set:
-NB.             {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
@@ -398,10 +396,8 @@ NB.         1st supdiagonal
 NB.   Qf  - (s-1)×(n-h)-matrix, the unit upper trapezoidal
 NB.         (unit diagonal not stored), represents Q in
 NB.         factored form:
-NB.           Q = Π{H(i)',i=h+s-2:h} ,
-NB.         where each elementary reflector Q(i) is
-NB.         represented as:
-NB.           Q(i) = I - v[i]' * τ[i] * v[i] ,
+NB.           Q = Π{H(i)',i=h+s-2:h}
+NB.           H(i) = I - v[i]' * τ[i] * v[i]
 NB.         and values v[i][i-h+1:s-2] and τ[i] are
 NB.         stored in (i-h)-th row of Qf:
 NB.           Qf[i-h,0:s-1] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...,0,τ[i])
@@ -487,10 +483,8 @@ NB.         1st subdiagonal
 NB.   Qf  - (n-h)×(s-1)-matrix, the unit lower trapezoidal
 NB.         (unit diagonal not stored), represents Q in
 NB.         factored form:
-NB.           Q = Π{H(i),i=h:h+s-2} ,
-NB.         where each elementary reflector Q(i) is
-NB.         represented as:
-NB.           Q(i) = I - v[i] * τ[i] * v[i]' ,
+NB.           Q = Π{H(i),i=h:h+s-2}
+NB.           H(i) = I - v[i] * τ[i] * v[i]'
 NB.         and values v[i][i-h+1:s-2] and τ[i] are
 NB.         stored in (i-h)-th column of Qf:
 NB.           Qf[0:s-1,i-h] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...,0,τ[i])

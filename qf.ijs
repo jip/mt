@@ -368,8 +368,8 @@ NB.   Z     - n×n-matrix with orthonormal rows which is
 NB.           defined as the product of m elementary
 NB.           reflectors H(i) of order n:
 NB.             Q = Π{H(i)',i=m-1:0}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=9, l=5:
 NB.   eA:
@@ -451,8 +451,8 @@ NB.   Z     - m×m-matrix with orthonormal columns which is
 NB.           defined as the product of n elementary
 NB.           reflectors H(i) of order m:
 NB.             Z = Π{H(i),i=n-1:0}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
+NB.   m   ≥ n
 NB.
 NB. Storage layout for m=9, n=3, l=5:
 NB.   eA:               ZfL:              Zf:               L:
@@ -530,8 +530,8 @@ NB.   Z     - m×m-matrix with orthonormal columns which is
 NB.           defined as the product of n elementary
 NB.           reflectors H(i) of order m:
 NB.             Z = Π{H(i),i=0:n-1}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
+NB.   m   ≥ n
 NB.
 NB. Storage layout for m=9, n=3, l=5:
 NB.   eA:               ZfR:              Zf:               R:
@@ -608,8 +608,8 @@ NB.   Z     - n×n-matrix with orthonormal rows which is
 NB.           defined as the product of m elementary
 NB.           reflectors H(i) of order n:
 NB.             Z = Π{H(i)',i=0:m-1}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=9, l=5:
 NB.   eA:
@@ -640,9 +640,9 @@ NB.   (0,...,0,1,0,...,0,vi) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - models LAPACK's xLATRZ with the following difference:
-NB.   - v(i) is saved instead of conj(v(i))
-NB.   - conj(τ(i)) is saved instead of τ(i)
-NB.   to keep consistence with gexxf
+NB.   - v(i) is stored instead of conj(v(i))
+NB.   - conj(τ(i)) is stored instead of τ(i)
+NB.   to keep consistency with gexxf
 NB. - latrz and tzrzf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
@@ -963,8 +963,8 @@ NB.   Z   - n×n-matrix with orthonormal rows which is defined
 NB.         as the product of m elementary reflectors H(i) of
 NB.         order n:
 NB.           Z = Π{H(i)',i=m-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=7:
 NB.   A:
@@ -1047,10 +1047,10 @@ NB.   Zf  - (m+1)×n-matrix, the Z represented in factored
 NB.         form
 NB.   Z   - m×m-matrix with orthonormal columns which is
 NB.         defined as the product of n elementary reflectors
-NB.         of order m:
+NB.         H(i) of order m:
 NB.           Z = Π{H(i),i=n-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
+NB.   m   ≥ n
 NB.
 NB. Storage layout for m=7, n=3:
 NB.   A:                ZfL:              Zf:               L:
@@ -1126,10 +1126,10 @@ NB.   Zf  - (m+1)×n-matrix, the Z represented in factored
 NB.         form
 NB.   Z   - m×m-matrix with orthonormal columns which is
 NB.         defined as the product of n elementary reflectors
-NB.         of order m:
+NB.         H(i) of order m:
 NB.           Z = Π{H(i),i=0:n-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
+NB.   m   ≥ n
 NB.
 NB. Storage layout for m=7, n=3:
 NB.   A:                ZfR:              Zf:               R:
@@ -1206,8 +1206,8 @@ NB.   Z   - n×n-matrix with orthonormal rows which is defined
 NB.         as the product of m elementary reflectors H(i) of
 NB.         order n:
 NB.           Z = Π{H(i)',i=0:m-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=7:
 NB.   A:
@@ -1242,8 +1242,8 @@ NB.   (-: (unmrzrn ((1 -~ c) {."1 ({."1~   #)))@tzrzf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xTZRZF with the following differences:
-NB.   - v(i) is saved instead of conj(v(i))
-NB.   - conj(τ(i)) is saved instead of τ(i)
+NB.   - v(i) is stored instead of conj(v(i))
+NB.   - conj(τ(i)) is stored instead of τ(i)
 NB. - latrz and tzrzf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
@@ -1375,8 +1375,8 @@ NB. ---------------------------------------------------------
 NB. testqf
 NB.
 NB. Description:
-NB.   Adv. to make verb to test gexxf and tzxxf by matrix of
-NB.   generator and shape given
+NB.   Adv. to make verb to test gexxf by matrix of generator
+NB.   and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testqf

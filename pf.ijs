@@ -174,7 +174,7 @@ NB.               iQ -: unglq LQf
 NB.   iL      -:trl (2 # offset) {. LQf
 NB.   oL      -:trl (2 # offset+lacptd) {. LQf , dLQf
 NB.   iQ      - offset×(n+1)-matrix with orthonormal rows,
-NB.             which is defined as the product of offset
+NB.             which is defined as the product of (offset)
 NB.             elementary reflectors
 NB.   oQ      - (offset+lacptd)×(n+1)-matrix with orthonormal
 NB.             rows, which is defined as the product of
@@ -352,7 +352,7 @@ NB.             and iR:
 NB.               iR -: tru }: QfR
 NB.               iQ -: ungqr QfR
 NB.   iQ      - (m+1)×offset-matrix with orthonormal columns,
-NB.             which is defined as the product of offset
+NB.             which is defined as the product of (offset)
 NB.             elementary reflectors
 NB.   oQ      - (m+1)×(offset+lacptd)-matrix with orthonormal
 NB.             columns, which is defined as the product of
@@ -550,7 +550,7 @@ NB.              iQ -: unglq LQf
 NB.   iL     -:trl (2 # offset) {. LQf
 NB.   oL     -:trl (2 # offset+lacptd) {. LQf , dLQf
 NB.   iQ     - offset×(n+1)-matrix with orthonormal rows,
-NB.            which is defined as the product of offset
+NB.            which is defined as the product of (offset)
 NB.            elementary reflectors
 NB.   oQ     - (offset+lacptd)×(n+1)-matrix with orthonormal
 NB.            rows, which is defined as the product of
@@ -701,7 +701,7 @@ NB.            and iR:
 NB.              iR -: tru }: QfR
 NB.              iQ -: ungqr QfR
 NB.   iQ     - (m+1)×offset-matrix with orthonormal columns,
-NB.            which is defined as the product of offset
+NB.            which is defined as the product of (offset)
 NB.            elementary reflectors
 NB.   oQ     - (m+1)×(offset+lacptd)-matrix with orthonormal
 NB.            columns, which is defined as the product of
@@ -791,12 +791,12 @@ NB.   to reveal the rank of A by a suitably dimensioned
 NB.   trailing submatrix L11 with norm(L11) being small.
 NB.
 NB. Syntax:
-NB.   'p L Qn orcond rank svlues'=. ircond gelpb A
+NB.   'ip L Qn orcond rank svlues'=. ircond gelpb A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, 1/ircond specifies an upper bound on the
 NB.            condition number of L00
-NB.   p      - m-vector, rows inversed permutation of A,
+NB.   ip     - m-vector, rows inversed permutation of A,
 NB.            represents permutation m×m-matrix P
 NB.   L      - m×k-matrix, the lower trapezoidal
 NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
@@ -915,7 +915,7 @@ NB.   to reveal the rank of A by a suitably dimensioned
 NB.   trailing submatrix R11 with norm(R11) being small.
 NB.
 NB. Syntax:
-NB.   'Qm R p orcond rank svlues'=. ircond geprb A
+NB.   'Qm R ip orcond rank svlues'=. ircond geprb A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, 1/ircond specifies an upper bound on the
@@ -924,7 +924,7 @@ NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {."1 Qm
 NB.   R      - k×n-matrix, the upper trapezoidal
-NB.   p      - n-vector, columns inversed permutation of A,
+NB.   ip     - n-vector, columns inversed permutation of A,
 NB.            represents permutation n×n-matrix P
 NB.   orcond > 0, 1/orcond is an estimate for the condition
 NB.            number of R00
@@ -2062,13 +2062,13 @@ NB.   rank of A by a suitably dimensioned trailing submatrix
 NB.   L11 with norm(L11) being small.
 NB.
 NB. Syntax:
-NB.   'p L Qn orcond rank svlues'=. [ircond] gelpf A
+NB.   'ip L Qn orcond rank svlues'=. [ircond] gelpf A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, optional, default is FP_EPS. 1/ircond
 NB.            specifies an upper bound on the condition
 NB.            number of L00
-NB.   p      - m-vector, rows inversed permutation of L,
+NB.   ip     - m-vector, rows inversed permutation of L,
 NB.            represents permutation m×m-matrix
 NB.   L      - m×k-matrix, the lower trapezoidal
 NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
@@ -2119,7 +2119,7 @@ NB.   Q=. (c L) {. Qn
 
 gelpf=: FP_EPS&$: :([ ]`trlpy@.(0 < 3 {:: ]) gelpb)
 
-NB. NB. 'Q L p orcond rank svlues'=. [ircond] geplf A
+NB. NB. 'Qm L ip orcond rank svlues'=. [ircond] geplf A
 NB. geplf=: FP_EPS&$: :([ ]`trply@.(0 < 3 {:: ]) geplb)
 
 NB. ---------------------------------------------------------
@@ -2135,7 +2135,7 @@ NB.   rank of A by a suitably dimensioned trailing submatrix
 NB.   R11 with norm(R11) being small.
 NB.
 NB. Syntax:
-NB.   'Qm R p orcond rank svlues'=. [ircond] geprf A
+NB.   'Qm R ip orcond rank svlues'=. [ircond] geprf A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, optional, default is FP_EPS. 1/ircond
@@ -2145,7 +2145,7 @@ NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {."1 Qm
 NB.   R      - k×n-matrix, the upper trapezoidal
-NB.   p      - n-vector, columns inversed permutation of R,
+NB.   ip     - n-vector, columns inversed permutation of R,
 NB.            represents permutation n×n-matrix
 NB.   orcond > 0, 1/orcond is an estimate for the condition
 NB.            number of R00
@@ -2200,7 +2200,7 @@ NB.     gets value NaN
 
 geprf=: FP_EPS&$: :([ ]`trpry@.(0 < 3 {:: ]) geprb)
 
-NB. NB. 'p R Q orcond rank svlues'=. [ircond] gerpf A
+NB. NB. 'ip R Qn orcond rank svlues'=. [ircond] gerpf A
 NB. gerpf=: FP_EPS&$: :([ ]`trrpy@.(0 < 3 {:: ]) gerpb)
 
 NB. =========================================================

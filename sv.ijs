@@ -1,8 +1,8 @@
 NB. Solve linear monomial equation
 NB.
 NB. gesvxxx    Solve equation (op(A) * X = B) or
-NB.            (X * op(A) = B), where A is a general matrix;
-NB.            op(A) is either A itself, or A^T (the
+NB.            (X * op(A) = B), where A is a general square
+NB.            matrix; op(A) is either A itself, or A^T (the
 NB.            transposition of A), or A^H (the conjugate
 NB.            transposition of A); B is known right-hand
 NB.            side (RHS), X is unknown solution
@@ -171,10 +171,10 @@ NB. gesvxac    X * A^H = B    Xh=. A gesvxac Bh
 NB. gesvxat    X * A^T = B    Xh=. A gesvxat Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with general matrix A
-NB.   via triangular factorization:
+NB.   Solve linear monomial equation with general square
+NB.   matrix A via triangular factorization:
 NB.     P * L1 * U = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
@@ -183,7 +183,16 @@ NB.   Xh   - same shape as Bh, solutions
 NB.   P    - n×n-matrix, rows permutation of A
 NB.   L1   - n×n-matrix, the unit lower triangular
 NB.   U    - n×n-matrix, the upper triangular
-NB.   nrhs ≥ 0
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
+NB.
+NB. Assertions:
+NB.   A (] -: clean@([ gesvax   mp      )) Xv
+NB.   A (] -: clean@([ gesvacx (mp~ ct)~)) Xv
+NB.   A (] -: clean@([ gesvatx (mp~ |:)~)) Xv
+NB.   A (] -: clean@([ gesvxa   mp~     )) Xh
+NB.   A (] -: clean@([ gesvxac (mp  ct)~)) Xh
+NB.   A (] -: clean@([ gesvxat (mp  |:)~)) Xh
 NB.
 NB. Notes:
 NB. - gesvax implements LAPACK's xGESV
@@ -250,7 +259,7 @@ NB. Description:
 NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) matrix A via triangular factorization:
 NB.     P * L1 * T * L1^H * P^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
@@ -260,10 +269,17 @@ NB.   P    - n×n-matrix, the full permutation of A
 NB.   L1   - n×n-matrix, the unit lower triangular
 NB.   T    - n×n-matrix, the Hermitian (symmetric)
 NB.          tridiagonal
-NB.   nrhs ≥ 0
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
+NB.
+NB. Assertions:
+NB.   A (] -: clean@([ hesvax   mp      )) Xv
+NB.   A (] -: clean@([ hesvatx (mp~ |:)~)) Xv
+NB.   A (] -: clean@([ hesvxa   mp~     )) Xh
+NB.   A (] -: clean@([ hesvxat (mp  |:)~)) Xh
 NB.
 NB. Notes:
-NB. - implements LAPACK's DSYSV('L'), ZHESV('L')
+NB. - implements LAPACK's DSYSV_AA('L'), ZHESV_AA('L')
 
 hesvax=:  (hetrsplx ~ hetrfpl)~
 hesvatx=: (hetrspltx~ hetrfpl)~
@@ -282,7 +298,7 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) positive definite matrix A via Cholesky
 NB.   factorization:
 NB.     L * L^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
@@ -291,7 +307,14 @@ NB.   Xv   - same shape as Bv, solutions
 NB.   Xh   - same shape as Bh, solutions
 NB.   L    - n×n-matrix, the lower triangular with positive
 NB.          diagonal entries, the Cholesky triangle
-NB.   nrhs ≥ 0
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
+NB.
+NB. Assertions:
+NB.   A (] -: clean@([ posvax   mp      )) Xv
+NB.   A (] -: clean@([ posvatx (mp~ |:)~)) Xv
+NB.   A (] -: clean@([ posvxa   mp~     )) Xh
+NB.   A (] -: clean@([ posvxat (mp  |:)~)) Xh
 NB.
 NB. Notes:
 NB. - implements LAPACK's xPOSV('L')
@@ -313,7 +336,7 @@ NB.   Solve linear monomial equation with Hermitian
 NB.   (symmetric) positive definite tridiagonal matrix A via
 NB.   factorization:
 NB.     L1 * D * L1^H = A
-NB. where:
+NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
@@ -323,10 +346,19 @@ NB.   Xh   - same shape as Bh, solutions
 NB.   L1   - n×n-matrix, the unit lower bidiangonal
 NB.   D    - n×n-matrix, diagonal with positive diagonal
 NB.          entries
-NB.   nrhs ≥ 0
+NB.   n    ≥ 0, the size of A
+NB.   nrhs ≥ 0, the number of RHS
+NB.
+NB. Assertions:
+NB.   A (] -: clean@([ ptsvax   mp      )) Xv
+NB.   A (] -: clean@([ ptsvatx (mp~ |:)~)) Xv
+NB.   A (] -: clean@([ ptsvxa   mp~     )) Xh
+NB.   A (] -: clean@([ ptsvxat (mp  |:)~)) Xh
 NB.
 NB. Notes:
 NB. - implements LAPACK's xPTSV
+NB. - if A is singular then solution Xx will be wrong
+NB. - if A is indefinite then solution Xx may be wrong
 
 ptsvax=:  (pttrslx ~ pttrfl)~
 ptsvatx=: (pttrsltx~ pttrfl)~

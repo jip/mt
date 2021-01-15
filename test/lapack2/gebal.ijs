@@ -13,11 +13,13 @@ NB.             'S' - to scale only
 NB.             'B' - to do both permute and scale
 NB.   A     - n×n-matrix to balance
 NB.   Abal  - n×n-matrix, a balanced matrix A
-NB.   ilo   ∈ [1,n], IO starting column, 1-based
-NB.   ihi   ∈ [1,n], IO ending column, 1-based
+NB.   ilo   ∈ [1,max(1,ihi)], IO starting row and column,
+NB.           1-based
+NB.   ihi   ∈ [min(ilo,n),n], IO ending row and column,
+NB.           1-based
 NB.   scale - n-vector, float, details of the permutations
 NB.           and scaling factors applied to A
-NB.   n     ≥ 0
+NB.   n     ≥ 0, the size of A, Abal and scale
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

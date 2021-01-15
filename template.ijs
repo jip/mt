@@ -37,7 +37,26 @@ coclass 'mt'
 NB. =========================================================
 NB. Concepts <optional section>
 NB.
-NB. <Any text>
+NB. Terms: <optional section>
+NB.   <Any text>
+NB.
+NB. Notation: <optional section>
+NB.   <Any text>
+NB.
+NB. Conventions: <optional section>
+NB.   <Any text>
+NB.
+NB. Examples: <optional section>
+NB.   <Any text>
+NB.
+NB. Notes: <optional section>
+NB.   <Any text>
+NB.
+NB. TODO: <optional section>
+NB.   <Any text>
+NB.
+NB. References: <optional section>
+NB.   <Any text>
 
 NB. =========================================================
 NB. Local definitions <optional section>

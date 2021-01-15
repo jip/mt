@@ -18,12 +18,10 @@ NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the last k rows of a product of m
 NB.         elementary reflectors H(i) of order n:
 NB.           Q = Π{H(i)',i=0:m-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(k:m-1) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0) = I
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   = min(m,n)
-NB.   m   ≥ 0
-NB.   n   ≥ 0
+NB.   m   ≥ 0, the number of rows in A, RQf and R
+NB.   n   ≥ 0, the number of columns in A, RQf and Qf and Q
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale

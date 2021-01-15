@@ -76,10 +76,9 @@ NB. where
 NB.   LQf - m×(n+1)-matrix, the output of gelqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the first k rows of the product of k
-NB.         elementary reflectors of order n:
+NB.         elementary reflectors H(i) of order n:
 NB.           Q = Π{H(i)',i=k-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   ≤ n, optional, default is min(m,n)
 NB.
 NB. Storage layout:
@@ -124,10 +123,9 @@ NB. where
 NB.   QfL - (m+1)×n-matrix, the output of geqlf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the last k columns of the product of k
-NB.         elementary reflectors of order m:
+NB.         elementary reflectors H(i) of order m:
 NB.           Q = Π{H(i),i=k-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   ≤ m, optional, default is min(m,n)
 NB.
 NB. Storage layout:
@@ -173,10 +171,9 @@ NB. where
 NB.   QfR - (m+1)×n-matrix, the output of geqrf
 NB.   Q   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the first k columns of the product of
-NB.         k elementary reflectors of order m:
+NB.         k elementary reflectors H(i) of order m:
 NB.           Q = Π{H(i),i=0:k-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   ≤ m, optional, default is min(m,n)
 NB.
 NB. Storage layout:
@@ -222,10 +219,9 @@ NB. where
 NB.   RQf - m×(n+1)-matrix, the output of gerqf
 NB.   Q   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the last k rows of the product of k
-NB.         elementary reflectors of order n:
+NB.         elementary reflectors H(i) of order n:
 NB.           Q = Π{H(i)',i=0:k-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   ≤ n, optional, default is min(m,n)
 NB.
 NB. Storage layout:
@@ -270,10 +266,9 @@ NB. where
 NB.   LZf - m×(n+1)-matrix, the output of tzlzf
 NB.   Z   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the last k rows of the product of k
-NB.         elementary reflectors of order n:
+NB.         elementary reflectors H(i) of order n:
 NB.           Z = Π{H(i)',i=k-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   ≤ n, optional, default is m
 NB.   m   ≤ n
 NB.
@@ -293,6 +288,10 @@ NB.   NB. L * Z = L * (Z)
 NB.   (((mp  unglz)~ -: [ unmlzrn ({."1~ (1 -  c))~) ({."1~ -@#)) LZf
 NB.   NB. I = Z * Z^H
 NB.   (idmat@# -: clean@(mp  ct))@unglz LZf
+NB.
+NB. Notes:
+NB. - straightforward O(k*n^3) code:
+NB.     Z=. (-k) {.   mp/ (idmat n) -"2 |. (+ {."1 Zf) * (* +)~"0/~"1    }."1 (-k) {.   Zf
 
 unglz=: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (<;.1~      0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@])@] , <@(idmat~ -~/)@(,  c)) ((-@(<. #) ,  -~/@$@]) {. ]) ,.  (((0 >. -~) idmat <. ,  ]) #))`((-~ idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
@@ -309,10 +308,9 @@ NB. where
 NB.   ZfL - (m+1)×n-matrix, the output of tzzlf
 NB.   Z   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the first k columns of the product of
-NB.         k elementary reflectors of order m:
+NB.         k elementary reflectors H(i) of order m:
 NB.           Z = Π{H(i),i=k-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   ≤ m, optional, default is n
 NB.   n   ≤ m
 NB.
@@ -337,6 +335,10 @@ NB.   NB. Z * L = (Z) * L
 NB.   (((mp~ ungzl)~ -: [ unmzlln ({.  ~ (1 -~ #))~) ({.  ~   c)) ZfL
 NB.   NB. I = Z^H * Z
 NB.   (idmat@c -: clean@(mp~ ct))@ungzl ZfL
+NB.
+NB. Notes:
+NB. - straightforward O(k*m^3) code:
+NB.     Z=.   k  {."1 mp/ (idmat m) -"2 |. (  {:   Zf) * (* +) "0/~"1 |: }:     k  {."1 Zf
 
 ungzl=: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(<;.2~ '' ; 0 1:`((GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`((1 0 $ 0)"_)@.(0 = ]))`($~)} c@])@] , <@ idmat      @(,~ #)) ((  (<. c) ,~ -~/@$@]) {. ]) , ~ (( 0        idmat <. ,~ ]) c))`((0  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
@@ -353,10 +355,9 @@ NB. where
 NB.   ZfR - (m+1)×n-matrix, the output of tzzrf
 NB.   Z   - m×k-matrix with orthonormal columns, which is
 NB.         defined as the last k columns of the product of k
-NB.         elementary reflectors of order m:
+NB.         elementary reflectors H(i) of order m:
 NB.           Z = Π{H(i),i=0:k-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   ≤ m, optional, default is n
 NB.   n   ≤ m
 NB.
@@ -381,6 +382,10 @@ NB.   NB. Z * R = (Z) * R
 NB.   (((mp~ ungzr)~ -: [ unmzrln ({.  ~ (1 -  #))~) ({.  ~ -@c)) ZfR
 NB.   NB. I = Z^H * Z
 NB.   (idmat@c -: clean@(mp~ ct))@ungzr ZfR
+NB.
+NB. Notes:
+NB. - straightforward O(k*m^3) code:
+NB.     Z=. (-k) {."1 mp/ (idmat m) -"2    (  {.   Zf) * (* +) "0/~"1 |: }.   (-k) {."1 Zf
 
 ungzr=: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (<;.1~ '' ; 0 1:`((GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`((1 0 $ 0)"_)@.(0 = ]))`($~)} c@])@] , <@(idmat~ -~/)@(,~ #)) ((-@(<. c) ,~ - /@$@]) {. ]) ,   (((0 <. - ) idmat <. ,~ ]) c))`((-  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
@@ -399,8 +404,7 @@ NB.   Z   - k×n-matrix with orthonormal rows, which is
 NB.         defined as the first k rows of the product of k
 NB.         elementary reflectors of order n:
 NB.           Z = Π{H(i)',i=0:k-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   ≤ n, optional, default is m
 NB.   m   ≤ n
 NB.
@@ -421,10 +425,9 @@ NB.   (((mp  ungrz)~ -: [ unmrzrn ({."1~ (1 -~ c))~) ({."1~   #)) RZf
 NB.   NB. I = Z * Z^H
 NB.   (idmat@# -: clean@(mp  ct))@ungrz RZf
 NB.
-NB. TODO:
-NB. - find a way to express ungrz via unglq since:
-NB.     Z -: |: (unglq~ <:@c) Zf
-NB.   identity holds for non-complex input
+NB. Notes:
+NB. - straightforward O(k*n^3) code:
+NB.     Z=.   k  {.   mp/ (idmat n) -"2    (+ {:"1 Zf) * (* +)~"0/~"1    }:"1   k  {.   Zf
 
 ungrz=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(<;.2~      0 1:`((GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`((0 1 $ 0)"_)@.(0 = ]))`($~)} #@])@] , <@ idmat      @(,  c)) ((  (<. #) ,  - /@$@]) {. ]) ,.~ (( 0        idmat <. ,  ]) #))`((0  idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
@@ -432,16 +435,18 @@ NB. ---------------------------------------------------------
 NB. unghrl
 NB.
 NB. Description:
-NB.   Generate an unitary (orthogonal) matrix Q which is
-NB.   defined as the product of elementary reflectors of
-NB.   order n, as returned by gehrdl:
-NB.     Q = Π{H(i)',i=f+s-2:f} .
+NB.   Generate an unitary (orthogonal) matrix from output of
+NB.   gehrdl
 NB.
 NB. Syntax:
 NB.   Q=. unghrl HQf
 NB. where
 NB.   HQf - n×(n+1)-matrix with packed H and Qf (see gehrdl)
-NB.   Q   - n×n-matrix, the unitary (orthogonal)
+NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of (s-1) elementary
+NB.         reflectors H(i) of order n:
+NB.           Q = Π{H(i)',i=h+s-2:h}
+NB.           H(i) = I - v[i]' * τ[i] * v[i]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. I = Q * Q^H
@@ -462,16 +467,18 @@ NB. ---------------------------------------------------------
 NB. unghru
 NB.
 NB. Description:
-NB.   Generate an unitary (orthogonal) matrix Q which is
-NB.   defined as the product of elementary reflectors of
-NB.   order n, as returned by gehrdu:
-NB.     Q = Π{H(i),i=f:f+s-2} .
+NB.   Generate an unitary (orthogonal) matrix from output of
+NB.   gehrdu
 NB.
 NB. Syntax:
 NB.   Q=. unghru HQf
 NB. where
 NB.   HQf - (n+1)×n-matrix with packed H and Qf (see gehrdu)
-NB.   Q   - n×n-matrix, the unitary (orthogonal)
+NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of (s-1) elementary
+NB.         reflectors H(i) of order n:
+NB.           Q = Π{H(i),i=h:h+s-2}
+NB.           H(i) = I - v[i] * τ[i] * v[i]'
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   NB. I = Q^H * Q

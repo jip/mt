@@ -809,6 +809,17 @@ NB. 3 0 0                        3 0 0 0
 NB. 0 5 0                        0 5 0 0
 NB. 0 0 7                        0 0 7 0
 NB. 0 0 0
+NB.    1 1 diagmat 3 5 7            _1 _1 diagmat 3 5 7
+NB. 0 3 0 0                      0 0 0 0
+NB. 0 0 5 0                      3 0 0 0
+NB. 0 0 0 7                      0 5 0 0
+NB. 0 0 0 0                      0 0 7 0
+NB.    1 _1 diagmat 3 5 7           _1 1 diagmat 3 5 7
+NB. 0 3 0 0 0                    0 0 0
+NB. 0 0 5 0 0                    3 0 0
+NB. 0 0 0 7 0                    0 5 0
+NB.                              0 0 7
+NB.                              0 0 0
 NB.
 NB. TODO:
 NB. - D would be sparse

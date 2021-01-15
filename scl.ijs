@@ -49,13 +49,13 @@ NB.       under- or overflow, if possible
 NB.   r ≥ 0, integer
 NB.
 NB. Formula:
-NB.   if |(f*FP_SFMIN)*FP_SFMIN| > |t|
+NB.   if |(f*FP_SFMIN)*FP_SFMIN| > |t| then
 NB.     B := (t/((f*FP_SFMIN)*FP_SFMIN))*((A*FP_SFMIN)*FP_SFMIN)
-NB.   elseif |f*FP_SFMIN| > |t|
+NB.   elseif |f*FP_SFMIN| > |t| then
 NB.     B := (t/(f*FP_SFMIN))*(A*FP_SFMIN)
-NB.   elseif |(t/FP_SFMAX)/FP_SFMAX| > |f|
+NB.   elseif |(t/FP_SFMAX)/FP_SFMAX| > |f| then
 NB.     B := (((t/FP_SFMAX)/FP_SFMAX)/f)*((A*FP_SFMAX)*FP_SFMAX)
-NB.   elseif |t/FP_SFMAX| > |f|
+NB.   elseif |t/FP_SFMAX| > |f| then
 NB.     B := ((t/FP_SFMAX)/f)*(A*FP_SFMAX)
 NB.   else
 NB.     B := (t/f)*A

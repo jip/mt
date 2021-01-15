@@ -6,9 +6,9 @@ NB.
 NB. Syntax:
 NB.   X=. (uplo , trans , diag) xtrtrs A ; B
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of A only
-NB.            'U' - use upper triangle of A only
+NB.   uplo  - scalar, character, case-insensitive:
+NB.             'L' - use lower triangle of A only
+NB.             'U' - use upper triangle of A only
 NB.   trans - scalar, character, case-insensitive, specifies
 NB.           the form of the system of equations:
 NB.             'N' - A   * X = B  (no transpose)

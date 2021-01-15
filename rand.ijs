@@ -124,8 +124,8 @@ NB. randnf
 NB. randnc
 NB.
 NB. Description:
-NB.   Normal distribution N(μ,σ^2) of real (complex) numbers
-NB.   with mean μ and variance σ^2
+NB.   Normal distribution N(μ,σ^2) with mean μ and variance
+NB.   σ^2
 NB.
 NB. Syntax:
 NB.   S=. [par] randnf sh
@@ -270,7 +270,8 @@ NB.             A=. randx y
 NB.   vapp  - monad to make triangular n×n-matrix T; is
 NB.           called as:
 NB.             T=. vapp sh
-NB.   sh    - size or shape, is either n or (n,any_number)
+NB.   sh    - size or shape, which is either n or
+NB.           (n,any_number)
 NB.   L1    - n×n-matrix, random unit lower triangular
 NB.   L     - n×n-matrix, random lower triangular
 NB.   U1    - n×n-matrix, random unit upper triangular
@@ -341,7 +342,8 @@ NB.   randx - nilad to make rho; is called as:
 NB.             rho=. randx any_noun
 NB.   vapp  - monad to make KMS; is called as:
 NB.             K=. vapp sh
-NB.   sh    - size or shape, is either n or (n,any_number)
+NB.   sh    - size or shape, which is either n or
+NB.           (n,any_number)
 NB.   rho   - scalar number, the KMS matrix parameter
 NB.   K     - n×n-matrix, random KMS matrix
 NB.
@@ -456,15 +458,15 @@ NB.   randx - monad to make d; is called as:
 NB.             d=. randx n
 NB.   vapp  - monad to make A; is called as:
 NB.             A=. vapp sh
-NB.   sh    - size or shape, is either n or (n,n)
+NB.   sh    - size or shape, which is either n or (n,n)
 NB.   Q     - n×n-matrix, random unitary (orthogonal):
 NB.             I = Q^H * Q
 NB.   d     - n-vector of distinct or real (non-complex)
 NB.           numbers
-NB.   A     - n×n-matrix, random diagonalizable square, is
-NB.           defined as:
+NB.   A     - n×n-matrix, random diagonalizable square, which
+NB.           is defined as:
 NB.             A := Q * D * Q^H
-NB.   D     - n×n-matrix, diagonal, is defined as:
+NB.   D     - n×n-matrix, diagonal, which is defined as:
 NB.             D := diagmat d
 NB.
 NB. Application:
@@ -511,7 +513,8 @@ NB.   randx - monad to make random y-array; is called as:
 NB.             A=. randx y
 NB.   vapp  - monad to make H; is called as:
 NB.             H=. vapp sh
-NB.   sh    - size or shape, is either n or (n,any_number)
+NB.   sh    - size or shape, which is either n or
+NB.           (n,any_number)
 NB.   H     - n×n-matrix, random Hermitian (symmetric)
 NB.
 NB. Assertions:
@@ -560,7 +563,8 @@ NB.   randx - monad to make A; is called as:
 NB.             A=. randx y
 NB.   vapp  - monad to make P; is called as:
 NB.             P=. vapp sh
-NB.   sh    - size or shape, is either n or (n,any_number)
+NB.   sh    - size or shape, which is either n or
+NB.           (n,any_number)
 NB.   A     - n×n-matrix, random general square invertible
 NB.   P     - n×n-matrix, random Hermitian (symmetric)
 NB.           positive definite; is defined as:
@@ -615,12 +619,14 @@ NB.             T=. vapp sh
 NB.   vapp2 - monad to make T2; is called as:
 NB.             T2=. vapp2 sh
 NB.   T     - n×n-matrix, random Hermitian (symmetric)
-NB.           positive definite tridiagonal, is defined as:
+NB.           positive definite tridiagonal, which is defined
+NB.           as:
 NB.             T := L * L^H
 NB.   T2    - n×n-matrix, random Hermitian (symmetric)
-NB.           positive definite tridiagonal, is defined as:
+NB.           positive definite tridiagonal, which is defined
+NB.           as:
 NB.             T := K^_1
-NB.   sh    - size or shape, is either n or (n,n)
+NB.   sh    - size or shape, which is either n or (n,n)
 NB.   L     - n×n-matrix, random lower bidiagonal with
 NB.           positive diagonal entries
 NB.   K     - n×n-matrix, random K(rho) generated from rho
@@ -752,7 +758,7 @@ NB.
 NB. Syntax:
 NB.   testtrmat sz
 NB. where
-NB.   sz - size or shape, is either n or (n,any_number)
+NB.   sz - size or shape, which is either n or (n,any_number)
 NB.
 NB. Notes:
 NB. - result is not taken into account by benchmark
@@ -800,7 +806,7 @@ NB.
 NB. Syntax:
 NB.   testdimat sz
 NB. where
-NB.   sz - size or shape, is either n or (n,n)
+NB.   sz - size or shape, which is either n or (n,n)
 NB.
 NB. Notes:
 NB. - result is not taken into account by benchmark
@@ -824,7 +830,7 @@ NB.
 NB. Syntax:
 NB.   testhemat sz
 NB. where
-NB.   sz - size or shape, is either n or (n,any_number)
+NB.   sz - size or shape, which is either n or (n,any_number)
 NB.
 NB. Notes:
 NB. - result is not taken into account by benchmark
@@ -844,7 +850,7 @@ NB.
 NB. Syntax:
 NB.   testpomat sz
 NB. where
-NB.   sz - size or shape, is either n or (n,any_number)
+NB.   sz - size or shape, which is either n or (n,any_number)
 NB.
 NB. Notes:
 NB. - result is not taken into account by benchmark
@@ -864,7 +870,7 @@ NB.
 NB. Syntax:
 NB.   testptmat sz
 NB. where
-NB.   sz - size or shape, is either n or (n,any_number)
+NB.   sz - size or shape, which is either n or (n,any_number)
 NB.
 NB. Notes:
 NB. - result is not taken into account by benchmark

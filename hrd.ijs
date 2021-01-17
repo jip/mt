@@ -10,9 +10,9 @@ NB. testgghrd  Test gghrdx by pair of square matrices
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -48,7 +48,7 @@ NB. lahr2l
 NB.
 NB. Description:
 NB.   Reduce the first HRDNB rows (panel) of a general matrix
-NB.   subeA so that elements behind the 1st supdiagonal are
+NB.   subeA so that elements behind the 1st superdiagonal are
 NB.   zero. The reduction is performed by an unitary
 NB.   (orthogonal) similarity transformation: Q * subeA * Q^H
 NB.
@@ -58,21 +58,20 @@ NB. where
 NB.   subeA - (n-i)×(n-i)-matrix eA[i:n-1,i+1:n]
 NB.   Y     - HRDNB×(n-i)-matrix, Y = T * V * subeA, the
 NB.           last column contains trash
-NB.   V     - HRDNB×(n-i)-matrix, unit upper triangular,
+NB.   V     - HRDNB×(n-i)-matrix, the unit upper trapezoidal,
 NB.           the last column contains τ[i:i+HRDNB-1]
-NB.   T     - HRDNB×HRDNB-matrix, lower triangular
-NB.   H     - HRDNB×HRDNB-matrix, lower triangular
+NB.   T     - HRDNB×HRDNB-matrix, the lower triangular
+NB.   H     - HRDNB×HRDNB-matrix, the lower triangular
 NB.   eA    - n×(n+1)-matrix, being A with stitched trash
 NB.           column
 NB.   A     - n×n-matrix to reduce
-NB.   Q     - (n-i)×(n-i)-matrix, block reflector,
+NB.   Q     - (n-i)×(n-i)-matrix, the block reflector,
 NB.             Q = I - V'*T*V
 NB.   VH    - HRDNB×(n-i)-matrix, represents reduced rows
 NB.           of subeA, lower triangles of VH and H are
 NB.           match, strict upper triangles of VH and V are
 NB.           match
-NB.   i     - integer from set:
-NB.             {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
@@ -113,20 +112,19 @@ NB. where
 NB.   subeA - (n-i)×(n-i)-matrix eA[i+1:n,i:n-1]
 NB.   Y     - (n-i)×HRDNB-matrix, Y = subeA * V * T, the
 NB.           last row contains trash
-NB.   V     - (n-i)×HRDNB-matrix, unit lower triangular,
+NB.   V     - (n-i)×HRDNB-matrix, the unit lower trapezoidal,
 NB.           the last row contains τ[i:i+HRDNB-1]
-NB.   T     - HRDNB×HRDNB-matrix, upper triangular
-NB.   H     - HRDNB×HRDNB-matrix, upper triangular
+NB.   T     - HRDNB×HRDNB-matrix, the upper triangular
+NB.   H     - HRDNB×HRDNB-matrix, the upper triangular
 NB.   eA    - (n+1)×n-matrix, being A with appended trash row
 NB.   A     - n×n-matrix to reduce
-NB.   Q     - (n-i)×(n-i)-matrix, block reflector,
+NB.   Q     - (n-i)×(n-i)-matrix, the block reflector,
 NB.             Q = I - V*T*V'
 NB.   VH    - (n-i)×HRDNB-matrix, represents reduced columns
 NB.           of subeA, upper triangles of VH and H are
 NB.           match, strict lower triangles of VH and V are
 NB.           match
-NB.   i     - integer from set:
-NB.             {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
 NB.   n     ≥ 0, integer, size of matrix A
 NB.
@@ -173,7 +171,7 @@ NB.         rows 0:h-1
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdl
-NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdl
+NB.   HQf - (n+1)×(n+1)-matrix, H and Qf combined, see gehrdl
 
 gehd2l=: 4 : 0
   A=. ({. x) {. y                              NB. skip ...
@@ -209,7 +207,7 @@ NB.         columns 0:h-1
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gehrdu
-NB.   HQf - (n+1)×(n+1)-matrix, combined H and Qf, see gehrdu
+NB.   HQf - (n+1)×(n+1)-matrix, H and Qf combined, see gehrdu
 NB.
 NB. Notes:
 NB. - implements LAPACK's xGEHD2 up to storage layout
@@ -255,12 +253,12 @@ NB.             defines submatrices A11 and B11 to be reduced
 NB.             position in matrices A and B, respectively,
 NB.             see gehrdl
 NB.   A       - n×n-matrix
-NB.   B       - n×n-matrix, lower triangular
+NB.   B       - n×n-matrix, the lower triangular
 NB.   HT      -:H ,: T
-NB.   H       - n×n-matrix, lower Hessenberg inside the
-NB.             submatrix H[h:h+s-1,h:h+s-1], and lower
+NB.   H       - n×n-matrix, the lower Hessenberg inside the
+NB.             submatrix H[h:h+s-1,h:h+s-1], and the lower
 NB.             triangular outside
-NB.   T       - n×n-matrix, lower triangular
+NB.   T       - n×n-matrix, the lower triangular
 NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
 NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
 NB.             have the same shapes
@@ -296,7 +294,7 @@ gghrdl=: 4 : 0
     lisor1a=. }. lisor1a
     i=. >: i
   end.
-  y ; dQ0 ; + dZ0
+  (hslpick`trlpick"2 y) ; dQ0 ; + dZ0
 )
 
 NB. ---------------------------------------------------------
@@ -324,12 +322,12 @@ NB.             defines submatrices A11 and B11 to be reduced
 NB.             position in matrices A and B, respectively,
 NB.             see gehrdu
 NB.   A       - n×n-matrix
-NB.   B       - n×n-matrix, upper triangular
+NB.   B       - n×n-matrix, the upper triangular
 NB.   HT      -:H ,: T
-NB.   H       - n×n-matrix, upper Hessenberg inside the
-NB.             submatrix H[h:h+s-1,h:h+s-1], and upper
+NB.   H       - n×n-matrix, the upper Hessenberg inside the
+NB.             submatrix H[h:h+s-1,h:h+s-1], and the upper
 NB.             triangular outside
-NB.   T       - n×n-matrix, upper triangular
+NB.   T       - n×n-matrix, the upper triangular
 NB.   dQ0,dZ0 - any×4-matrix, accumulates rotations to form
 NB.             Q1 and Z1 later, see rotsclx; dQ0 and dZ0 may
 NB.             have the same shapes
@@ -370,7 +368,7 @@ gghrdu=: 4 : 0
     lisoc1a=. }. lisoc1a
     j=. >: j
   end.
-  y ; (+ dQ0) ; dZ0
+  (hsupick`trupick"2 y) ; (+ dQ0) ; dZ0
 )
 
 NB. =========================================================
@@ -391,26 +389,24 @@ NB.   A   - n×n-matrix to reduce
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see geballp and storage layout below
-NB.   HQf - n×(n+1)-matrix, combined H and Qf
+NB.   HQf - n×(n+1)-matrix, H and Qf combined
 NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
-NB.         1st supdiagonal
-NB.   Qf  - (s-1)×(n-h)-matrix, unit upper triangular (unit
-NB.         diagonal not stored), represents Q in factored
-NB.         form:
-NB.           Q = Π{H(i)',i=h+s-2:h} ,
-NB.         where each elementary reflector Q(i) is
-NB.         represented as:
-NB.           Q(i) = I - v[i]' * τ[i] * v[i] ,
+NB.         1st superdiagonal
+NB.   Qf  - (s-1)×(n-h)-matrix, the unit upper trapezoidal
+NB.         (unit diagonal not stored), represents Q in
+NB.         factored form:
+NB.           Q = Π{H(i)',i=h+s-2:h}
+NB.           H(i) = I - v[i]' * τ[i] * v[i]
 NB.         and values v[i][i-h+1:s-2] and τ[i] are
 NB.         stored in (i-h)-th row of Qf:
-NB.           Qf[i-h,0:s-1] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...0,τ[i])
+NB.           Qf[i-h,0:s-1] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...,0,τ[i])
 NB.         assuming
 NB.           v[i][0:i-h-1] = v[i][s-1:n-h-2] = 0 ,
 NB.           v[i][i-h] = 1 ,
 NB.         v[i][i-h+1:s-2] is stored in A[i,i+2:h+s-1], τ[i]
 NB.         is stored in A[i,n]
-NB.   Q   - n×n-matrix, being unit matrix with unitary
+NB.   Q   - n×n-matrix, the unit matrix with unitary
 NB.         (orthogonal) matrix inserted into elements
 NB.         Q[h:h+s-1,h:h+s-1]
 NB.
@@ -419,9 +415,9 @@ NB.       (  A00          )
 NB.   A = (  A10 A11      )
 NB.       (  A20 A21 A22  )
 NB. where
-NB.   A00     - h×h-matrix, lower triangular
+NB.   A00     - h×h-matrix, the lower triangular
 NB.   A11     - s×s-matrix to be reduced
-NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, lower triangular
+NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, the lower triangular
 NB.   A10,A21 - matrices to be updated
 NB. Example for h=1, s=5, n=7:
 NB.   input  A                     output HQf
@@ -438,7 +434,7 @@ NB.   ((idmat@#) -: po) Q
 NB.   H -: A (mp~ mp ct@]) Q
 NB. where
 NB.   HQf=. (gehrdl~ 0 , #) A
-NB.   H=. 1 trl 0 _1 }. HQf
+NB.   H=. 1 trlpick }:"1 HQf
 NB.   Q=. unghrl HQf
 
 gehrdl=: 4 : 0
@@ -480,26 +476,24 @@ NB.   A   - n×n-matrix to reduce
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrix A11 to be reduced position in
 NB.         matrix A, see gebalup and storage layout below
-NB.   HQf - (n+1)×n-matrix, combined H and Qf
+NB.   HQf - (n+1)×n-matrix, H and Qf combined
 NB.   H   - n×n-matrix, it has zeros under 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros below
 NB.         1st subdiagonal
-NB.   Qf  - (n-h)×(s-1)-matrix, unit lower triangular (unit
-NB.         diagonal not stored), represents Q in factored
-NB.         form:
-NB.           Q = Π{H(i),i=h:h+s-2} ,
-NB.         where each elementary reflector Q(i) is
-NB.         represented as:
-NB.           Q(i) = I - v[i] * τ[i] * v[i]' ,
+NB.   Qf  - (n-h)×(s-1)-matrix, the unit lower trapezoidal
+NB.         (unit diagonal not stored), represents Q in
+NB.         factored form:
+NB.           Q = Π{H(i),i=h:h+s-2}
+NB.           H(i) = I - v[i] * τ[i] * v[i]'
 NB.         and values v[i][i-h+1:s-2] and τ[i] are
 NB.         stored in (i-h)-th column of Qf:
-NB.           Qf[0:s-1,i-h] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...0,τ[i])
+NB.           Qf[0:s-1,i-h] = (0,...,0,1,v[i][i-h+1],...,v[i][s-2],0,...,0,τ[i])
 NB.         assuming
 NB.           v[i][0:i-h-1] = v[i][s-1:n-h-2] = 0 ,
 NB.           v[i][i-h] = 1 ,
 NB.         v[i][i-h+1:s-2] is stored in A[i+2:h+s-1,i], τ[i]
 NB.         is stored in A[n,i]
-NB.   Q   - n×n-matrix, being unit matrix with unitary
+NB.   Q   - n×n-matrix, the unit matrix with unitary
 NB.         (orthogonal) matrix inserted into elements
 NB.         Q[h:h+s-1,h:h+s-1]
 NB.
@@ -508,9 +502,9 @@ NB.       (  A00 A01 A02  )
 NB.   A = (      A11 A12  )
 NB.       (          A22  )
 NB. where
-NB.   A00     - h×h-matrix, upper triangular
+NB.   A00     - h×h-matrix, the upper triangular
 NB.   A11     - s×s-matrix to be reduced
-NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, upper triangular
+NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, the upper triangular
 NB.   A01,A12 - matrices to be updated
 NB. Example for h=1, s=5, n=7:
 NB.   input  A                     output HQf
@@ -528,7 +522,7 @@ NB.   ((idmat@#) -: (mp~ ct)) Q
 NB.   H -: A (ct@] mp mp) Q
 NB. where
 NB.   HQf=. (gehrdu~ 0, #) A
-NB.   H=. _1 tru _1 0 }. HQf
+NB.   H=. _1 trupick }: HQf
 NB.   Q=. unghru HQf
 NB.
 NB. Notes:
@@ -559,11 +553,11 @@ gehrdu=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Verb:           Syntax:
-NB. gghrdlnn        'H T'=.       hs gghrdlnn A ,: B
-NB. gghrdlnv        'H T Z1'=.    hs gghrdlnv A , B ,: Z0
-NB. gghrdlvn        'H T Q1'=.    hs gghrdlvn A , B ,: Q0
-NB. gghrdlvv        'H T Q1 Z1'=. hs gghrdlvv A , B , Q0 ,: Z0
+NB. Verb:       Syntax:
+NB. gghrdlnn    'H T'=.       hs gghrdlnn A ,: B
+NB. gghrdlnv    'H T Z1'=.    hs gghrdlnv A ,  B ,: Z0
+NB. gghrdlvn    'H T Q1'=.    hs gghrdlvn A ,  B ,: Q0
+NB. gghrdlvv    'H T Q1 Z1'=. hs gghrdlvv A ,  B ,  Q0 ,: Z0
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized lower
@@ -595,10 +589,11 @@ NB.          defines submatrices A11 and B11 to be reduced
 NB.          position in matrices A and B, respectively, see
 NB.          geballp and gehrdl
 NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, lower triangular
-NB.   H    - n×n-matrix, lower Hessenberg inside the submatrix
-NB.          H[h:h+s-1,h:h+s-1], and lower triangular outside
-NB.   T    - n×n-matrix, lower triangular
+NB.   B    - n×n-matrix, the lower triangular
+NB.   H    - n×n-matrix, the lower Hessenberg inside the
+NB.          submatrix H[h:h+s-1,h:h+s-1], and lower
+NB.          triangular outside
+NB.   T    - n×n-matrix, the lower triangular
 NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
 NB.          from the LQ factorization of B
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
@@ -629,11 +624,11 @@ gghrdlvn=:    {:@]  ((0 {:: ]) , (rotscll 1 {:: ]  )) (gghrdl   }:)
 gghrdlvv=: (2 }. ]) ((0 {:: ]) , (rotscll&:>"2 0 }.)) (gghrdl 2&{.)
 
 NB. ---------------------------------------------------------
-NB. Verb:           Syntax:
-NB. gghrdunn        'H T'=.       hs gghrdunn A ,: B
-NB. gghrdunv        'H T Z1'=.    hs gghrdunv A , B ,: Z0
-NB. gghrduvn        'H T Q1'=.    hs gghrduvn A , B ,: Q0
-NB. gghrduvv        'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: Z0
+NB. Verb:       Syntax:
+NB. gghrdunn    'H T'=.       hs gghrdunn A ,: B
+NB. gghrdunv    'H T Z1'=.    hs gghrdunv A ,  B ,: Z0
+NB. gghrduvn    'H T Q1'=.    hs gghrduvn A ,  B ,: Q0
+NB. gghrduvv    'H T Q1 Z1'=. hs gghrduvv A ,  B ,  Q0 ,: Z0
 NB.
 NB. Description:
 NB.   Reduce a pair of matrices (A,B) to generalized upper
@@ -665,10 +660,11 @@ NB.          defines submatrices A11 and B11 to be reduced
 NB.          position in matrices A and B, respectively, see
 NB.          gebalup and gehrdu
 NB.   A    - n×n-matrix, general
-NB.   B p   - n×n-matrix, upper triangular
-NB.   H    - n×n-matrix, upper Hessenberg inside the submatrix
-NB.          H[h:h+s-1,h:h+s-1], and upper triangular outside
-NB.   T    - n×n-matrix, upper triangular
+NB.   B    - n×n-matrix, the upper triangular
+NB.   H    - n×n-matrix, the upper Hessenberg inside the
+NB.          submatrix H[h:h+s-1,h:h+s-1], and upper
+NB.          triangular outside
+NB.   T    - n×n-matrix, the upper triangular
 NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
 NB.          from the QR factorization of B
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
@@ -697,19 +693,19 @@ NB.   'H T Q1 Z1'=. hs gghrduvv A , B , Q0 ,: I
 NB.   'H T dQ0 dZ0'=. hs gghrduvv A , B , ,:~ I
 NB.
 NB. Application:
-NB. - model LAPACK's xGGHRD('N','I'):
+NB. - models LAPACK's xGGHRD('N','I'):
 NB.     NB. 'H T dZ0'=. hs gghrduni A ,: B
 NB.     gghrduni=: gghrdunv (, idmat@c)
-NB. - model LAPACK's xGGHRD('I','N'):
+NB. - models LAPACK's xGGHRD('I','N'):
 NB.     NB. 'H T dQ0'=. hs gghrduin A ,: B
 NB.     gghrduin=: gghrduvn (, idmat@c)
-NB. - model LAPACK's xGGHRD('I','I'):
+NB. - models LAPACK's xGGHRD('I','I'):
 NB.     NB. 'H T dQ0 dZ0'=. hs gghrduii A ,: B
 NB.     gghrduii=: gghrduvv (,~^:2~ idmat@c)
-NB. - model LAPACK's xGGHRD('I','V'):
+NB. - models LAPACK's xGGHRD('I','V'):
 NB.     NB. 'H T dQ0 Z1'=. hs gghrduiv A , B ,: Z0
 NB.     gghrduiv=: gghrduvv (1&A.@, idmat@c)
-NB. - model LAPACK's xGGHRD('V','I'):
+NB. - models LAPACK's xGGHRD('V','I'):
 NB.     NB. 'H T Q1 dZ0'=. hs gghrduvi A , B ,: Q0
 NB.     gghrduvi=: gghrduvv (, idmat@c)
 NB.
@@ -738,8 +734,8 @@ NB. ---------------------------------------------------------
 NB. testgehrd
 NB.
 NB. Description:
-NB.   Test Hessenberg reduction algorithms:
-NB.   - gehrd (math/lapack addon)
+NB.   Test:
+NB.   - xGEHRD (math/lapack2 addon)
 NB.   - gehrdx (math/mt addon)
 NB.   by square matrix
 NB.
@@ -747,21 +743,28 @@ NB. Syntax:
 NB.   testgehrd A
 NB. where
 NB.   A - n×n-matrix
-NB.
-NB. Formula:
-NB. - for gehrdl: berr := ||A - Q^H * H * Q|| / (FP_EPS * ||A|| * n)
-NB. - for gehrdu: berr := ||A - Q * H * Q^H|| / (FP_EPS * ||A|| * n)
 
 testgehrd=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'gehrd'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gehrd'
 
-  rcond=. gecon1 y
+  'rcondl rcondu'=. (geconi , gecon1) y
 
-  ('2b1100&gehrd_jlapack_' tmonad ((] ; 1: ; #)`(,&>/)`(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  'norml normu'=. (normi , norm1) y
 
-  ('gehrdl'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- ( 1&trl@:(}:"1) (] mp~ (mp~ ct)) unghrl)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
-  ('gehrdu'                tdyad  ((0 , #)`]   `]     `(rcond"_)`(_."_)`(norm1@(- (_1&tru@:(}:  ) (] mp  (mp  ct)) unghru)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  hst01l=: ((normi hst01) (] mp~ (mp~ ct))&>/)
+  hst01u=: ((norm1 hst01) (] mp  (mp  ct))&>/)
+
+  unt01l=: (normi unt01 (mp  ct))@(1 {:: ])
+  unt01u=: (norm1 unt01 (mp~ ct))@(1 {:: ])
+
+  ('dgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  ('zgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+
+  ('gehrdl'        tdyad  ((0 , #@(0&{::))`(0&{::)`(( 1 trlpick }:"1)  ; unghrl  )`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml
+  ('gehrdu'        tdyad  ((0 , #@(0&{::))`(0&{::)`((_1 trupick }:  )  ; unghru  )`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+
+  coerase < 'mttmp'
+  erase 'hst01l hst01u unt01l unt01u'
 
   EMPTY
 )
@@ -770,7 +773,8 @@ NB. ---------------------------------------------------------
 NB. testgghrd
 NB.
 NB. Description:
-NB.   Test Hessenberg reduction algorithms:
+NB.   Test:
+NB.   - xGGHRD (math/lapack2 addon)
 NB.   - gghrdx (math/mt addon)
 NB.   by pair of square matrices
 NB.
@@ -778,58 +782,66 @@ NB. Syntax:
 NB.   testgghrd AB
 NB. where
 NB.   AB - 2×n×n-brick
-NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1,berr2,berr3)
-NB. where
-NB.   ||M|| := max(||M||_1 , FP_SFMIN)
-NB.   'H T dQ0 dZ0'=. (0,n) gghrdxvv A , B , ,:~ I
-NB.   - for gghrdl:
-NB.       berr0 := ||A - dQ0^H * H * dZ0|| / (FP_PREC * ||A|| * n)
-NB.       berr1 := ||B - dQ0^H * T * dZ0|| / (FP_PREC * ||B|| * n)
-NB.       berr2 := ||I - dQ0^H * dQ0|| / (FP_PREC * n)
-NB.       berr3 := ||I - dZ0^H * dZ0|| / (FP_PREC * n)
-NB.       B - lower triangular
-NB.   - for gghrdu:
-NB.       berr0 := ||A - dQ0 * H * dZ0^H|| / (FP_PREC * ||A|| * n)
-NB.       berr1 := ||B - dQ0 * T * dZ0^H|| / (FP_PREC * ||B|| * n)
-NB.       berr2 := ||I - dQ0 * dQ0^H|| / (FP_PREC * n)
-NB.       berr3 := ||I - dZ0 * dZ0^H|| / (FP_PREC * n)
-NB.       B - upper triangular
 
 testgghrd=: 3 : 0
-  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                         NB. L,R: 'AB HT dQ0dZ0'=. (A,B,I,:I) prep (H,T,dQ0,:dZ0)
-  safenorm=. FP_SFMIN >. norm1"2                                                                        NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '0&{:: safenorm@:- (u@{.@] mp"2 (mp"2 v@{:))&>/@}.'                                      NB. L: (ct cdiff1 ]) : ||A - dQ0^H * H * dZ0|| , ||B - Q1^H * T * dZ0||
-                                                                                                        NB. R: (] cdiff1 ct) : ||A - dQ0 * H * dZ0^H|| , ||B - Q1 * T * dZ0^H||
-  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                               NB. L: (mp~ adiff2) : ||I - dQ0^H * dQ0|| , ||I - dZ0^H * dZ0||
-                                                                                                        NB. R: (mp  adiff2) : ||I - dQ0 * dQ0^H|| , ||I - dZ0 * dZ0^H||
-  denom1=. safenorm@(0&{::)                                                                             NB. ||A|| , ||B||
-  getn=. c@(0&{::)                                                                                      NB. n
-  safediv=. ((({: <. %/@}:)`((<./@(}: * 1 , {:)) % 1&{)@.(1 > 1&{))`(%/@}:)@.(</@}:)) % (FP_PREC * {:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
-  cberr01=. 2 : 'safediv"1@:((u cdiff1 v) ,. denom1 ,. getn)'                                           NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
-                                                                                                        NB. R: (] cberr01 ct) : (berr0 , berr1) for R
-  aberr23=. 1 : '((<. (u adiff2))~ % FP_PREC * ]) getn'                                                 NB. L: (mp~ aberr23) : (berr2 , berr3) for L
-                                                                                                        NB. R: (mp  aberr23) : (berr2 , berr3) for R
-  vberrl=: (>./@((ct cberr01 ]) , (mp~ aberr23))@prep) f.
-  vberru=: (>./@((] cberr01 ct) , (mp  aberr23))@prep) f.
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gghrd'
 
   I=. idmat c y
-  ABl=. (,: trl)/ y
-  ABu=. (,: tru)/ y
-  rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag ABl
-  rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag ABu
 
-  ('gghrdlnn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl
-  ('gghrdlnv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) ABl , I
-  ('gghrdlvv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`vberrl)) ABl , ,:~ I
-  ('gghrdunn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu
-  ('gghrdunv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) ABu , I
-  ('gghrduvv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`vberru)) ABu , ,:~ I
+  'Al Bl'=. ABl=. (((mp  ct@unglq) ,: trlpick@(_1 }."1 ])) gelqf)/ y
+  'Au Bu'=. ABu=. (((mp~ ct@ungqr) ,: trupick@(_1 }.   ])) geqrf)/ y
 
-  erase 'cdiff1 adiff2 vberrl vberru'
+  rcondl=. (geconi Al) <. trlconi Bl
+  rcondu=. (gecon1 Au) <. trucon1 Bu
+
+  normsl=. ;/ normi"2 ABl
+  normsu=. ;/ norm1"2 ABu
+
+  argslapack=. normsu , ;/ ABu , ,:~ I  NB. arguments for xGGHRD            t511u t513u
+  argsmtl=.    normsl ,  < ABl          NB. arguments for gghrdlnn          t511l t513l
+  argsmtvl=.   normsl ,  < ABl ,     I  NB. arguments for gghrdlnv gghrdlvn t511l t513l
+  argsmtvvl=.  normsl ,  < ABl , ,:~ I  NB. arguments for gghrdlvv          t511l t513l
+  argsmtu=.    normsu ,  < ABu          NB. arguments for gghrdunn          t511u t513u
+  argsmtvu=.   normsu ,  < ABu ,     I  NB. arguments for gghrdunv gghrduvn t511u t513u
+  argsmtvvu=.  normsu ,  < ABu , ,:~ I  NB. arguments for gghrduvv          t511u t513u
+
+  t511u1=: (t511u"1~ (  2             0      ,:  3            1)&{  )~      (0 2 3 ,: 1 2 3)&{
+  t511l2=: (t511l"1~ (((2 ; 0)&{::) ; 0&{::) ,: (2 ; 1)&{:: ; 1 &{::)~ <"2@((0 2 3 ,: 1 2 3)&{)
+  t511u2=: (t511u"1~ (((2 ; 0)&{::) ; 0&{::) ,: (2 ; 1)&{:: ; 1 &{::)~ <"2@((0 2 3 ,: 1 2 3)&{)
+
+  t513u2b=:               t513u@(2 {:: ])
+  t513u3b=:               t513u@(3 {:: ])
+  t513u23b=: (2 {:: ]) >.&t513u  3 {:: ]
+
+  t513l2=:                t513l@(2 {   ])
+  t513u2=:                t513u@(2 {   ])
+  t513l23=:  (2 {   ]) >.&t513l  3 {   ]
+  t513u23=:  (2 {   ]) >.&t513u  3 {   ]
+
+  ('''nn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
+  ('''ni''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  ('''nv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+
+  ('''in''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  ('''ii''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  ('''iv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+
+  ('''vn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+
+  ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                 ))) argsmtl
+  ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
+  ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
+  ('gghrdlvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23 ))) argsmtvvl
+
+  ('gghrdunn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                 ))) argsmtu
+  ('gghrdunv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
+  ('gghrduvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
+  ('gghrduvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23 ))) argsmtvvu
+
+  coerase < 'mttmp'
+  erase 't511u1 t511l2 t511u2 t513u2b t513u3b t513u23b t513l2 t513u2 t513l23 t513u23'
 
   EMPTY
 )

@@ -18,9 +18,9 @@ NB.            definite tridiagonal matrix
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -319,27 +319,29 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:        Syntax:
-NB. trtril       iL=.  trtril  L
-NB. trtril1      iL1=. trtril1 L1
-NB. trtriu       iU=.  trtriu  U
-NB. trtriu1      iU1=. trtriu1 U1
+NB. Verb:      Syntax:
+NB. trtril     iL=.  trtril  L
+NB. trtril1    iL1=. trtril1 L1
+NB. trtriu     iU=.  trtriu  U
+NB. trtriu1    iU1=. trtriu1 U1
 NB.
 NB. Description:
 NB.   Inverse triangular matrix
-NB. where:
-NB.   L   - n×n-matrix, lower triangular
-NB.   iL  - n×n-matrix, lower triangular, an inversion of L
-NB.   L1  - n×n-matrix, unit lower triangular (diagonal is
-NB.         not saved)
-NB.   iL1 - n×n-matrix, unit lower triangular (diagonal is
-NB.         not saved), an inversion of L1
-NB.   U   - n×n-matrix, upper triangular
-NB.   iU  - n×n-matrix, upper triangular, an inversion of U
-NB.   U1  - n×n-matrix, unit upper triangular (diagonal is
-NB.         not saved)
-NB.   iU1 - n×n-matrix, unit upper triangular (diagonal is
-NB.         not saved), an inversion of U1
+NB. where
+NB.   L   - n×n-matrix, the lower triangular
+NB.   iL  - n×n-matrix, the lower triangular, an inversion of
+NB.         L
+NB.   L1  - n×n-matrix, the unit lower triangular (diagonal
+NB.         is not stored)
+NB.   iL1 - n×n-matrix, the unit lower triangular (diagonal
+NB.         is not stored), the inversion of L1
+NB.   U   - n×n-matrix, the upper triangular
+NB.   iU  - n×n-matrix, the upper triangular, the inversion
+NB.         of U
+NB.   U1  - n×n-matrix, the unit upper triangular (diagonal
+NB.         is not stored)
+NB.   iU1 - n×n-matrix, the unit upper triangular (diagonal
+NB.         is not stored), the inversion of U1
 NB.
 NB. Algorithm for trtriu:
 NB.   In: U
@@ -394,7 +396,7 @@ NB.
 NB. Syntax:
 NB.   iA=. getrilu1p LU1p
 NB. where
-NB.   LU1p - 3-vector of boxes, the output of getrflu1p, the
+NB.   LU1p - 2-vector of boxes, the output of getrflu1p, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.   A    - n×n-matrix
@@ -432,9 +434,9 @@ NB.             pfx := A[0:I*TRINB-1,0:n-1]
 NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getrilu1pstep^:I (pfx ; sfx)
 NB.      6.4) extract sfx produced by the last iteration
-NB.      6.5) apply permutation P to the rows of sfx by
-NB.           obversed applying of inversed permutation P^H,
-NB.           to produce final A^_1
+NB.      6.5) apply permutation P to rows of sfx by obversed
+NB.           applying of inversed permutation P^H, to
+NB.           produce final A^_1
 NB.
 NB. Assertions:
 NB.   (%. -: (getrilu1p@getrflu1p)) A
@@ -459,7 +461,7 @@ NB.
 NB. Syntax:
 NB.   iA=. getripl1u pL1U
 NB. where
-NB.   pL1U - 3-vector of boxes, the output of getrfpl1u, the
+NB.   pL1U - 2-vector of boxes, the output of getrfpl1u, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.   A    - n×n-matrix
@@ -497,7 +499,7 @@ NB.             pfx := A[0:n-1,0:I*TRINB-1]
 NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getripl1ustep^:I (pfx ; sfx)
 NB.      6.4) extract sfx produced by the last iteration
-NB.      6.5) apply permutation P to the columns of sfx by
+NB.      6.5) apply permutation P to columns of sfx by
 NB.           obversed applying of inversed permutation P^H,
 NB.           to produce final A^_1
 NB.
@@ -533,7 +535,7 @@ NB.
 NB. Syntax:
 NB.   iA=. getripu1l pU1L
 NB. where
-NB.   pU1L - 3-vector of boxes, the output of getrfpu1l, the
+NB.   pU1L - 2-vector of boxes, the output of getrfpu1l, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.   A    - n×n-matrix
@@ -571,7 +573,7 @@ NB.             sfx := A[0:n-1,n%TRINB:n-1]
 NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getripu1lstep^:I (pfx ; sfx)
 NB.      6.4) extract pfx produced by the last iteration
-NB.      6.5) apply permutation P to the columns of pfx by
+NB.      6.5) apply permutation P to columns of pfx by
 NB.           obversed applying of inversed permutation P^H,
 NB.           to produce final A^_1
 NB.
@@ -598,7 +600,7 @@ NB.
 NB. Syntax:
 NB.   iA=. getriul1p UL1p
 NB. where
-NB.   UL1p - 3-vector of boxes, the output of getrful1p, the
+NB.   UL1p - 2-vector of boxes, the output of getrful1p, the
 NB.          matrix A represented in factored form
 NB.   iA   - n×n-matrix, an inversion of A
 NB.   A    - n×n-matrix
@@ -636,9 +638,9 @@ NB.             sfx := A[n%TRINB:n-1,0:n-1]
 NB.      6.3) do iterations i=0:I-1 :
 NB.             'pfx sfx'=. getriul1pstep^:I (pfx ; sfx)
 NB.      6.4) extract pfx produced by the last iteration
-NB.      6.5) apply permutation P to the rows of pfx by
-NB.           obversed applying of inversed permutation P^H,
-NB.           to produce final A^_1
+NB.      6.5) apply permutation P to rows of pfx by obversed
+NB.           applying of inversed permutation P^H, to
+NB.           produce final A^_1
 NB.
 NB. Assertions:
 NB.   (%. -: (getriul1p@getrful1p)) A
@@ -653,15 +655,15 @@ getriul1p=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Verb:    Factorization used:            Syntax:
-NB. hetripl  P * L1 * T * L1^H * P^H = A    iA=. hetripl pL1T
-NB. hetripu  P * U1 * T * U1^H * P^H = A    iA=. hetripu pU1T
+NB. Verb:      Factorization used:            Syntax:
+NB. hetripl    P * L1 * T * L1^H * P^H = A    iA=. hetripl pL1T
+NB. hetripu    P * U1 * T * U1^H * P^H = A    iA=. hetripu pU1T
 NB.
 NB. Description:
 NB.   Inverse Hermitian (symmetric) matrix A, represented in
 NB.   factored form
 NB. where
-NB.   A    - n×n-matrix, Hermitian (symmetric)
+NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   pL1T - 3-vector of boxes, the output of hetrfpl, the
 NB.          matrix A represented in factored form
 NB.   pU1T - 3-vector of boxes, the output of hetrfpu, the
@@ -678,27 +680,26 @@ NB.
 NB. Notes:
 NB. - is similar to LAPACK's DSYTRI and ZHETRI, but uses
 NB.   another factorization, see hetrfx
-NB. - calls to pttril and pttriu are interchangeable here
 
-hetripl=: (/:@(0&{::)) fp pttril@(2&{::) (ct@] mp mp) trtril1@(1&{::)
-hetripu=: (/:@(0&{::)) fp pttril@(2&{::) (ct@] mp mp) trtriu1@(1&{::)
+hetripl=: 0&{:: fp^:_1 (gtsvax idmat@#)@(2&{::) (ct@] mp mp) trtril1@(1&{::)
+hetripu=: 0&{:: fp^:_1 (gtsvax idmat@#)@(2&{::) (ct@] mp mp) trtriu1@(1&{::)
 
 NB. ---------------------------------------------------------
-NB. Verb:     Factorization used:          Syntax:
-NB. potril    L * L^H = A                  iA=. potril L
-NB. potriu    U * U^H = A                  iA=. potriu U
+NB. Verb:     Factorization used:    Syntax:
+NB. potril    L * L^H = A            iA=. potril L
+NB. potriu    U * U^H = A            iA=. potriu U
 NB.
 NB. Description:
 NB.   Inverse Hermitian (symmetric) positive definite matrix
 NB.    A, represented in factored form
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric) positive
-NB.        definite
 NB.   L  - n×n-matrix, the output of potrfl, lower
 NB.        triangular Cholesky factor
 NB.   U  - n×n-matrix, the output of potrfu, upper
 NB.        triangular Cholesky factor
 NB.   iA - n×n-matrix, an inversion of A
+NB.   A  - n×n-matrix, the Hermitian (symmetric) positive
+NB.        definite
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   iA -: %. A
@@ -715,21 +716,21 @@ potril=: (mp~ ct)@trtril
 potriu=: (mp~ ct)@trtriu
 
 NB. ---------------------------------------------------------
-NB. Verb:     Factorization used:         Syntax:
-NB. pttril    L1 * D * L1^H = A           iA=. [L1D] pttril A
-NB. pttriu    U1 * D * U1^H = A           iA=. [U1D] pttriu A
+NB. Verb:     Factorization used:    Syntax:
+NB. pttril    L1 * D * L1^H = A      iA=. [L1D] pttril A
+NB. pttriu    U1 * D * U1^H = A      iA=. [U1D] pttriu A
 NB.
 NB. Description:
 NB.   Inverse Hermitian (symmetric) positive definite
 NB.   tridiagonal matrix A, represented in factored form
 NB. where
-NB.   A   - n×n-matrix, Hermitian (symmetric) positive definite
-NB.         tridiagonal
 NB.   L1D - 2-vector of boxes, the output of pttrfl, the
 NB.         matrix A represented in factored form, optional
 NB.   U1D - 2-vector of boxes, the output of pttrfu, the
 NB.         matrix A represented in factored form, optional
-NB.   iA  - n×n-matrix, inversion of A
+NB.   iA  - n×n-matrix, the inversion of A
+NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
+NB.         definite tridiagonal
 NB.
 NB. Algorithm for pttril [1]:
 NB.   In:  A and, optionally, L1D
@@ -791,7 +792,7 @@ NB. [1] Moawwad El-Mikkawy, El-Desouky Rahmo. A new recursive
 NB.     algorithm for inverting general tridiagonal and
 NB.     anti-tridiagonal matrices. Applied Mathematics and
 NB.     Computation, 2008, Vol. 204, pp. 368-372.
-NB.     http://dx.doi.org/10.1016/j.amc.2008.06.053
+NB.     https://doi.org/10.1016/j.amc.2008.06.053
 NB. [2] Igor Zhuravlov. [Jprogramming] ravel items (,.) of
 NB.     empty list (i.0) .
 NB.     2010-06-05 10:08:56 HKT.
@@ -801,7 +802,7 @@ NB. TODO:
 NB. - pttriu
 NB. - A should be sparse
 
-pttril=: ($:~ pttrfl) : ((4 : 0)^:(((0:`(+@])`(_1&diag)`,.`((-@,. 1&(|.!.0))~ }.)`diag fork3)@])`(0>.<:@#@])`(EMPTY"_`,.@.(0<#)@((]`- ag)@(*/\)&.|.)@(((, %@(_1&{ :: ]))~ +)~&>/)@((_1&diag&.>)`(diag&.>) ag)@[)))
+pttril=: ($:~ pttrfl) : ((4 : 0)^:(((0:`(+@])`(_1&diag)`,.`((-@,. 1&(|.!.0))~ }.)`diag fork3)@])`(0>.<:@#@])`(EMPTY"_`,.@.(0<#)@(]`-"0@(*/\)&.|.)@(((, %@(_1&{ :: ]))~ +)~&>/)@:(_1&diag&.>`(diag&.>)"0)@[)))
   io=. -c y
   pi=. io { x
   ((io (>: upd) +/"1 (}. pi) *"1 (2 {."1 y)) % {. pi) ,. y
@@ -816,30 +817,45 @@ NB.
 NB. Description:
 NB.   Test:
 NB.   - 128!:1 (built-in)
+NB.   - xTRTRI (math/lapack2)
 NB.   - trtrixx (math/mt addon)
-NB.   by triangular matrix given
+NB.   by triangular matrix
 NB.
 NB. Syntax:
 NB.   testtrtri A
 NB. where
-NB.   A - n×n-matrix, lower triangular
-NB.
-NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
+NB.   A - n×n-matrix
 
 testtrtri=: 3 : 0
-  L1=. |: U1=. tru1 U=. |: y
-  rcondL=.  trlcon1  y
-  rcondL1=. trl1con1 L1
-  rcondU=.  trucon1  U
-  rcondU1=. tru1con1 U1
+  load_mttmp_ :: ] 'math/mt/test/lapack2/trtri'
 
-  ('128!:1'  tmonad (]`]`(rcondU "_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) U
+  rcondL=.  trlcon1  L=.  trlpick y
+  rcondU=.  trucon1  U=.  trupick y
+  rcondL1=. trl1con1 L1=. (1 ; '') setdiag L
+  rcondU1=. tru1con1 U1=. (1 ; '') setdiag U
 
-  ('trtril'  tmonad (]`]`(rcondL "_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) y
-  ('trtril1' tmonad (]`]`(rcondL1"_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) L1
-  ('trtriu'  tmonad (]`]`(rcondU "_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) U
-  ('trtriu1' tmonad (]`]`(rcondU1"_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) U1
+  norm1L=.  norm1 L
+  norm1L1=. norm1 L1
+  norm1U=.  norm1 U
+  norm1U1=. norm1 U1
+
+  ('128!:1'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U
+
+  ('''ln''&dtrtri_mttmp_' tmonad ((3&{::)`trlpick `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
+  ('''lu''&dtrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
+  ('''un''&dtrtri_mttmp_' tmonad ((3&{::)`trupick `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
+  ('''uu''&dtrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
+  ('''ln''&ztrtri_mttmp_' tmonad ((3&{::)`trlpick `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
+  ('''lu''&ztrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
+  ('''un''&ztrtri_mttmp_' tmonad ((3&{::)`trupick `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
+  ('''uu''&ztrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
+
+  ('trtril'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L
+  ('trtril1'              tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1
+  ('trtriu'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U
+  ('trtriu1'              tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -848,25 +864,36 @@ NB. ---------------------------------------------------------
 NB. testgetri
 NB.
 NB. Description:
-NB.   Test getrixxxx by square matrix
+NB.   Test:
+NB.   - %. (built-in)
+NB.   - xGETRI (math/lapack2 addon)
+NB.   - getrixxxx (math/mt addon)
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   testgetri A
 NB. where
 NB.   A - n×n-matrix
-NB.
-NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
 
 testgetri=: 3 : 0
-  rcond=. gecon1 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/getri'
 
-  ('%.'        tmonad (] `]`(rcond"_)`(_."_)`(           norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]   )))               y
+  'rcondl rcondu'=. (geconi , gecon1) y
 
-  ('getrilu1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; getrflu1p) y
-  ('getripl1u' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; getrfpl1u) y
-  ('getripu1l' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; getrfpu1l) y
-  ('getriul1p' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; getrful1p) y
+  'norml normu'=. (normi , norm1) y
+
+  ('%.'            tmonad ((               0&{:: )`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
+
+  ('dgetri_mttmp_' tmonad ((dgetrf_mttmp_@(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+  ('zgetri_mttmp_' tmonad ((zgetrf_mttmp_@(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+
+  ('getrilu1p'     tmonad ((getrflu1p    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
+  ('getripl1u'     tmonad ((getrfpl1u    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+  ('getripu1l'     tmonad ((getrfpu1l    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+  ('getriul1p'     tmonad ((getrful1p    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -875,21 +902,35 @@ NB. ---------------------------------------------------------
 NB. testhetri
 NB.
 NB. Description:
-NB.   Test hetripx by Hermitian (symmetric) matrix
+NB.   Test:
+NB.   - DSYTRI2 ZHETRI2 (math/lapack2 addon)
+NB.   - hetripx (math/mt addon)
+NB.   by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testhetri A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric)
-NB.
-NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
+NB.   A - n×n-matrix, the Hermitian (symmetric)
 
 testhetri=: 3 : 0
-  rcond=. hecon1 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytri2'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetri2'
 
-  ('hetripl' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; hetrfpl) y
-  ('hetripu' tmonad (}.`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; hetrfpu) y
+  rcond=. heconi y
+
+  norm=. normi y
+
+  ('''l''&dsytri2_mttmp_' tmonad (('l' dsytrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''u''&dsytri2_mttmp_' tmonad (('u' dsytrf_mttmp_  0&{:: )`heu`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&zhetri2_mttmp_' tmonad (('l' zhetrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''u''&zhetri2_mttmp_' tmonad (('u' zhetrf_mttmp_  0&{:: )`heu`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  ('hetripl'              tmonad ((    hetrfpl      @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('hetripu'              tmonad ((    hetrfpu      @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -898,22 +939,32 @@ NB. ---------------------------------------------------------
 NB. testpotri
 NB.
 NB. Description:
-NB.   Test hetripx by Hermitian (symmetric) positive definite
-NB.   matrix
+NB.   Test:
+NB.   - xPOTRI (math/lapack2 addon)
+NB.   - potrix (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite matrix
 NB.
 NB. Syntax:
 NB.   testpotri A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.
-NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
 
 testpotri=: 3 : 0
+  load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/potri'
+
   rcond=. pocon1 y
 
-  ('potril' tmonad ((1&{::)`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; potrfl) y
-  ('potriu' tmonad ((1&{::)`]`(rcond"_)`(_."_)`((0 {:: [) (norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]) ]))) (; potrfu) y
+  norm=. norm1 y
+
+  ('''l''&dpotri_mttmp_' tmonad (('l' dpotrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&zpotri_mttmp_' tmonad (('l' zpotrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  ('potril'              tmonad ((    potrfl       @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('potriu'              tmonad ((    potrfu       @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -922,22 +973,27 @@ NB. ---------------------------------------------------------
 NB. testpttri
 NB.
 NB. Description:
-NB.   Test pttri by Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix
+NB.   Test:
+NB.   - xPTTRI (math/lapack2 addon)
+NB.   - pttrix (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite tridiagonal
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   testpttri A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite tridiagonal
-NB.
-NB. Formula:
-NB.   berr := ||I - A * A^_1|| / (FP_EPS * ||A|| * ||A^_1|| * n)
 
 testpttri=: 3 : 0
   rcond=. ptcon1 y
 
-  ('pttril' tdyad ((pttrfl@])`]`]`(rcond"_)`(_."_)`(norm1@(<: upddiag)@mp % FP_EPS * *&norm1 * #@]))) y
+  norm=. norm1 y
+
+  ('pttril' tmonad ((        0&{:: )        `]`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('pttril' tdyad  ((pttrfl@(0&{::))`(0&{::)`]`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -969,4 +1025,4 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testtri_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtri_mt_ 150 150
 
-testtri=: 1 : 'EMPTY [ (testpttri_mt_@(u ptmat2_mt_) [ testpotri_mt_@(u pomat_mt_) [ testhetri_mt_@(u hemat_mt_) [ testgetri_mt_@u [ testtrtri_mt_@(u trlmat_mt_))^:(=/)'
+testtri=: 1 : 'EMPTY [ (testpttri_mt_@(u ptmat2_mt_) [ testpotri_mt_@(u pomat_mt_) [ testhetri_mt_@(u hemat_mt_) [ (testgetri_mt_ [ testtrtri_mt_)@u)^:(=/)'

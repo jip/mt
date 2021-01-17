@@ -22,9 +22,9 @@ NB. testlarzb  Test larzbxxxx by general matrix
 NB. testref    Adv. to make verb to test larxxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -71,10 +71,9 @@ NB.   mprod - dyad to multiply matrices, is called as:
 NB.             M3=. M1 mprod M2
 NB.   vapp  - monad to calculate Τ, is called as:
 NB.             T=. vapp VTau
-NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, combined V and Tau
+NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, V and Tau combined
 NB.   T     - k×k-matrix, triangular
-NB.   V     - m×k- or k×n-matrix, unit triangular
-NB.           (trapezoidal)
+NB.   V     - m×k- or k×n-matrix, the unit trapezoidal
 NB.   Tau   - k-vector, τ[0:k-1] corresp. to V
 
 larxtf=: 2 : '(] (] ((0 ,~ [) ,.  (mp }:) , _1 { ]) ({~ (<@;~ i.@>:)@#       ))^:(-&#)  1  1&rt)@(-@(m&{) *"1 (_1;a:) tru@setdiag (v ct)@(0&(m})))'
@@ -274,7 +273,7 @@ larfp=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Verb:      Input:            Output:                  β:
+NB. Verb:      Input:            Output:                 β:
 NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∊ℝ
 NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∊ℝ
 NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∊ℝ
@@ -312,10 +311,10 @@ NB. Syntax:
 NB.   T=. larxtbc VTau
 NB. where
 NB.   VTau - (m+1)×k-matrix (tau,V)
-NB.   V    - m×k-matrix, unit upper triangular (trapezoidal)
-NB.          with 1s on (k-m)-th diagonal and 0s below
+NB.   V    - m×k-matrix, the unit upper trapezoidal with 1s
+NB.          on (k-m)-th diagonal and 0s below
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
-NB.   T    - k×k-matrix, lower triangular
+NB.   T    - k×k-matrix, the lower triangular
 NB.
 NB. Notes:
 NB. - larftbc models LAPACK's xLARFT('B','C')
@@ -338,10 +337,10 @@ NB. Syntax:
 NB.   T=. larxtbr VTau
 NB. where
 NB.   VTau - k×(n+1)-matrix (tau,.V)
-NB.   V    - k×n-matrix, unit lower triangular (trapezoidal)
-NB.          with 1s on (n-k)-th diagonal and 0s above
+NB.   V    - k×n-matrix, the unit lower trapezoidal with 1s
+NB.          on (n-k)-th diagonal and 0s above
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
-NB.   T    - k×k-matrix, lower triangular
+NB.   T    - k×k-matrix, the lower triangular
 NB.
 NB. Notes:
 NB. - larftbr models LAPACK's xLARFT('B','R')
@@ -364,10 +363,10 @@ NB. Syntax:
 NB.   T=. larxtfc VTau
 NB. where
 NB.   VTau - (m+1)×n-matrix (V,tau)
-NB.   V    - m×n-matrix, unit lower triangular (trapezoidal)
-NB.          with 1s on 0-th diagonal and 0s above
+NB.   V    - m×n-matrix, the unit lower trapezoidal with 1s
+NB.          on 0-th diagonal and 0s above
 NB.   tau  - n-vector τ[0:n-1] corresp. to V
-NB.   T    - n×n-matrix, upper triangular
+NB.   T    - n×n-matrix, the upper triangular
 NB.
 NB. Notes:
 NB. - larftfc models LAPACK's xLARFT('F','C')
@@ -390,10 +389,10 @@ NB. Syntax:
 NB.   T=. larxtfr VTau
 NB. where
 NB.   VTau - k×(n+1)-matrix (V,.tau)
-NB.   V    - k×n-matrix, unit upper triangular (trapezoidal)
-NB.          with 1s on 0-th diagonal and 0s below
+NB.   V    - k×n-matrix, the unit upper trapezoidal with 1s
+NB.          on 0-th diagonal and 0s below
 NB.   tau  - k-vector τ[0:k-1] corresp. to V
-NB.   T    - k×k-matrix, upper triangular
+NB.   T    - k×k-matrix, the upper triangular
 NB.
 NB. Notes:
 NB. - larftfr models LAPACK's xLARFT('F','R')
@@ -403,23 +402,23 @@ larftfr=: (< a: ; _1) larxtf mp
 larztfr=: (< a: ;  0) larxtf mp
 
 NB. ---------------------------------------------------------
-NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
-NB. larflcbc   H' * C   left    ct     bwd   columnwise  0, C
-NB. larflcbr   H' * C   left    ct     bwd   rowwise     0, C
-NB. larflcfc   H' * C   left    ct     fwd   columnwise  C, 0
-NB. larflcfr   H' * C   left    ct     fwd   rowwise     C, 0
-NB. larflnbc   H  * C   left    none   bwd   columnwise  0, C
-NB. larflnbr   H  * C   left    none   bwd   rowwise     0, C
-NB. larflnfc   H  * C   left    none   fwd   columnwise  C, 0
-NB. larflnfr   H  * C   left    none   fwd   rowwise     C, 0
-NB. larfrcbc   C  * H'  right   ct     bwd   columnwise  0,.C
-NB. larfrcbr   C  * H'  right   ct     bwd   rowwise     0,.C
-NB. larfrcfc   C  * H'  right   ct     fwd   columnwise  C,.0
-NB. larfrcfr   C  * H'  right   ct     fwd   rowwise     C,.0
-NB. larfrnbc   C  * H   right   none   bwd   columnwise  0,.C
-NB. larfrnbr   C  * H   right   none   bwd   rowwise     0,.C
-NB. larfrnfc   C  * H   right   none   fwd   columnwise  C,.0
-NB. larfrnfr   C  * H   right   none   fwd   rowwise     C,.0
+NB. Verb:       Action:    Side:    Tran:    Dir:    Layout:       eC:
+NB. larflcbc    H' * C     left     ct       bwd     columnwise    0, C
+NB. larflcbr    H' * C     left     ct       bwd     rowwise       0, C
+NB. larflcfc    H' * C     left     ct       fwd     columnwise    C, 0
+NB. larflcfr    H' * C     left     ct       fwd     rowwise       C, 0
+NB. larflnbc    H  * C     left     none     bwd     columnwise    0, C
+NB. larflnbr    H  * C     left     none     bwd     rowwise       0, C
+NB. larflnfc    H  * C     left     none     fwd     columnwise    C, 0
+NB. larflnfr    H  * C     left     none     fwd     rowwise       C, 0
+NB. larfrcbc    C  * H'    right    ct       bwd     columnwise    0,.C
+NB. larfrcbr    C  * H'    right    ct       bwd     rowwise       0,.C
+NB. larfrcfc    C  * H'    right    ct       fwd     columnwise    C,.0
+NB. larfrcfr    C  * H'    right    ct       fwd     rowwise       C,.0
+NB. larfrnbc    C  * H     right    none     bwd     columnwise    0,.C
+NB. larfrnbr    C  * H     right    none     bwd     rowwise       0,.C
+NB. larfrnfc    C  * H     right    none     fwd     columnwise    C,.0
+NB. larfrnfr    C  * H     right    none     fwd     rowwise       C,.0
 NB.
 NB. Description:
 NB.   Dyads to apply an elementary reflector H or its
@@ -463,23 +462,23 @@ larfrnfc=: _1 larxrnxc
 larfrnfr=: _1 larxrnxr
 
 NB. ---------------------------------------------------------
-NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
-NB. larzlcbc   H' * C   left    ct     bwd   columnwise  C, 0
-NB. larzlcbr   H' * C   left    ct     bwd   rowwise     C, 0
-NB. larzlcfc   H' * C   left    ct     fwd   columnwise  0, C
-NB. larzlcfr   H' * C   left    ct     fwd   rowwise     0, C
-NB. larzlnbc   H  * C   left    none   bwd   columnwise  C, 0
-NB. larzlnbr   H  * C   left    none   bwd   rowwise     C, 0
-NB. larzlnfc   H  * C   left    none   fwd   columnwise  0, C
-NB. larzlnfr   H  * C   left    none   fwd   rowwise     0, C
-NB. larzrcbc   C  * H'  right   ct     bwd   columnwise  C,.0
-NB. larzrcbr   C  * H'  right   ct     bwd   rowwise     C,.0
-NB. larzrcfc   C  * H'  right   ct     fwd   columnwise  0,.C
-NB. larzrcfr   C  * H'  right   ct     fwd   rowwise     0,.C
-NB. larzrnbc   C  * H   right   none   bwd   columnwise  C,.0
-NB. larzrnbr   C  * H   right   none   bwd   rowwise     C,.0
-NB. larzrnfc   C  * H   right   none   fwd   columnwise  0,.C
-NB. larzrnfr   C  * H   right   none   fwd   rowwise     0,.C
+NB. Verb:       Action:    Side:    Tran:    Dir:    Layout:       eC:
+NB. larzlcbc    H' * C     left     ct       bwd     columnwise    C, 0
+NB. larzlcbr    H' * C     left     ct       bwd     rowwise       C, 0
+NB. larzlcfc    H' * C     left     ct       fwd     columnwise    0, C
+NB. larzlcfr    H' * C     left     ct       fwd     rowwise       0, C
+NB. larzlnbc    H  * C     left     none     bwd     columnwise    C, 0
+NB. larzlnbr    H  * C     left     none     bwd     rowwise       C, 0
+NB. larzlnfc    H  * C     left     none     fwd     columnwise    0, C
+NB. larzlnfr    H  * C     left     none     fwd     rowwise       0, C
+NB. larzrcbc    C  * H'    right    ct       bwd     columnwise    C,.0
+NB. larzrcbr    C  * H'    right    ct       bwd     rowwise       C,.0
+NB. larzrcfc    C  * H'    right    ct       fwd     columnwise    0,.C
+NB. larzrcfr    C  * H'    right    ct       fwd     rowwise       0,.C
+NB. larzrnbc    C  * H     right    none     bwd     columnwise    C,.0
+NB. larzrnbr    C  * H     right    none     bwd     rowwise       C,.0
+NB. larzrnfc    C  * H     right    none     fwd     columnwise    0,.C
+NB. larzrnfr    C  * H     right    none     fwd     rowwise       0,.C
 NB.
 NB. Description:
 NB.   Dyads to apply an elementary reflector H or its
@@ -524,28 +523,28 @@ larzrnfc=:  0 larxrnxc
 larzrnfr=:  0 larxrnxr
 
 NB. ---------------------------------------------------------
-NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
-NB. larfblcbc  H' * C   left    ct     bwd   columnwise  0, C
-NB. larfblcbr  H' * C   left    ct     bwd   rowwise     0, C
-NB. larfblcfc  H' * C   left    ct     fwd   columnwise  C, 0
-NB. larfblcfr  H' * C   left    ct     fwd   rowwise     C, 0
-NB. larfblnbc  H  * C   left    none   bwd   columnwise  0, C
-NB. larfblnbr  H  * C   left    none   bwd   rowwise     0, C
-NB. larfblnfc  H  * C   left    none   fwd   columnwise  C, 0
-NB. larfblnfr  H  * C   left    none   fwd   rowwise     C, 0
-NB. larfbrcbc  C  * H'  right   ct     bwd   columnwise  0,.C
-NB. larfbrcbr  C  * H'  right   ct     bwd   rowwise     0,.C
-NB. larfbrcfc  C  * H'  right   ct     fwd   columnwise  C,.0
-NB. larfbrcfr  C  * H'  right   ct     fwd   rowwise     C,.0
-NB. larfbrnbc  C  * H   right   none   bwd   columnwise  0,.C
-NB. larfbrnbr  C  * H   right   none   bwd   rowwise     0,.C
-NB. larfbrnfc  C  * H   right   none   fwd   columnwise  C,.0
-NB. larfbrnfr  C  * H   right   none   fwd   rowwise     C,.0
+NB. Verb:        Action:    Side:    Tran:    Dir:    Layout:       eC:
+NB. larfblcbc    H' * C     left     ct       bwd     columnwise    0, C
+NB. larfblcbr    H' * C     left     ct       bwd     rowwise       0, C
+NB. larfblcfc    H' * C     left     ct       fwd     columnwise    C, 0
+NB. larfblcfr    H' * C     left     ct       fwd     rowwise       C, 0
+NB. larfblnbc    H  * C     left     none     bwd     columnwise    0, C
+NB. larfblnbr    H  * C     left     none     bwd     rowwise       0, C
+NB. larfblnfc    H  * C     left     none     fwd     columnwise    C, 0
+NB. larfblnfr    H  * C     left     none     fwd     rowwise       C, 0
+NB. larfbrcbc    C  * H'    right    ct       bwd     columnwise    0,.C
+NB. larfbrcbr    C  * H'    right    ct       bwd     rowwise       0,.C
+NB. larfbrcfc    C  * H'    right    ct       fwd     columnwise    C,.0
+NB. larfbrcfr    C  * H'    right    ct       fwd     rowwise       C,.0
+NB. larfbrnbc    C  * H     right    none     bwd     columnwise    0,.C
+NB. larfbrnbr    C  * H     right    none     bwd     rowwise       0,.C
+NB. larfbrnfc    C  * H     right    none     fwd     columnwise    C,.0
+NB. larfbrnfr    C  * H     right    none     fwd     rowwise       C,.0
 NB.
 NB. Description:
 NB.   Dyads to build and apply a block reflector H or its
 NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (V,Τ) , where Τ is the
+NB.   right. H is defined by pair (V,Τ), where Τ is the
 NB.   triangular factor produced from pair (V,Τ) by larftxx.
 NB.
 NB. Syntax:
@@ -555,7 +554,7 @@ NB.   eC    - matrix C to update, augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
 NB.   eCupd - being updated matrix C, augmented by modified
 NB.           trash vector
-NB.   V     - unit triangular (trapezoidal) matrix
+NB.   V     - unit trapezoidal matrix
 NB.   Tau   - k-vector τ[0:k-1] corresp. to V
 NB.
 NB. Notes:
@@ -586,28 +585,28 @@ larfbrnfc=:         _1  larxbrnxc larftfc
 larfbrnfr=: (< a: ; _1) larxbrnxr larftfr
 
 NB. ---------------------------------------------------------
-NB. Verb:      Action:  Side:   Tran:  Dir:  Layout:     eC:
-NB. larzblcbc  H' * C   left    ct     bwd   columnwise  C, 0
-NB. larzblcbr  H' * C   left    ct     bwd   rowwise     C, 0
-NB. larzblcfc  H' * C   left    ct     fwd   columnwise  0, C
-NB. larzblcfr  H' * C   left    ct     fwd   rowwise     0, C
-NB. larzblnbc  H  * C   left    none   bwd   columnwise  C, 0
-NB. larzblnbr  H  * C   left    none   bwd   rowwise     C, 0
-NB. larzblnfc  H  * C   left    none   fwd   columnwise  0, C
-NB. larzblnfr  H  * C   left    none   fwd   rowwise     0, C
-NB. larzbrcbc  C  * H'  right   ct     bwd   columnwise  C,.0
-NB. larzbrcbr  C  * H'  right   ct     bwd   rowwise     C,.0
-NB. larzbrcfc  C  * H'  right   ct     fwd   columnwise  0,.C
-NB. larzbrcfr  C  * H'  right   ct     fwd   rowwise     0,.C
-NB. larzbrnbc  C  * H   right   none   bwd   columnwise  C,.0
-NB. larzbrnbr  C  * H   right   none   bwd   rowwise     C,.0
-NB. larzbrnfc  C  * H   right   none   fwd   columnwise  0,.C
-NB. larzbrnfr  C  * H   right   none   fwd   rowwise     0,.C
+NB. Verb:        Action:    Side:    Tran:    Dir:    Layout:       eC:
+NB. larzblcbc    H' * C     left     ct       bwd     columnwise    C, 0
+NB. larzblcbr    H' * C     left     ct       bwd     rowwise       C, 0
+NB. larzblcfc    H' * C     left     ct       fwd     columnwise    0, C
+NB. larzblcfr    H' * C     left     ct       fwd     rowwise       0, C
+NB. larzblnbc    H  * C     left     none     bwd     columnwise    C, 0
+NB. larzblnbr    H  * C     left     none     bwd     rowwise       C, 0
+NB. larzblnfc    H  * C     left     none     fwd     columnwise    0, C
+NB. larzblnfr    H  * C     left     none     fwd     rowwise       0, C
+NB. larzbrcbc    C  * H'    right    ct       bwd     columnwise    C,.0
+NB. larzbrcbr    C  * H'    right    ct       bwd     rowwise       C,.0
+NB. larzbrcfc    C  * H'    right    ct       fwd     columnwise    0,.C
+NB. larzbrcfr    C  * H'    right    ct       fwd     rowwise       0,.C
+NB. larzbrnbc    C  * H     right    none     bwd     columnwise    C,.0
+NB. larzbrnbr    C  * H     right    none     bwd     rowwise       C,.0
+NB. larzbrnfc    C  * H     right    none     fwd     columnwise    0,.C
+NB. larzbrnfr    C  * H     right    none     fwd     rowwise       0,.C
 NB.
 NB. Description:
 NB.   Dyads to build and apply a block reflector H or its
 NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (V,Τ) , where Τ is the
+NB.   right. H is defined by pair (V,Τ), where Τ is the
 NB.   triangular factor produced from pair (V,Τ) by larztxx.
 NB.
 NB. Syntax:
@@ -617,8 +616,8 @@ NB.   eC    - matrix C to update, augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
 NB.   eCupd - being updated matrix C, augmented by modified
 NB.           trash vector
-NB.   V     - unit triangular (trapezoidal) matrix, with 0s
-NB.           in atoms to be ignored
+NB.   V     - unit trapezoidal matrix, with 0s in atoms to be
+NB.           ignored
 NB.   Tau   - k-vector τ[0:k-1] corresp. to V
 NB.
 NB. Notes:
@@ -672,7 +671,7 @@ NB.              replaced by subAupd
 NB.   subA     - submatrix of A to apply reflection
 NB.   subAupd  - submatrix of the same shape as subA, the
 NB.              reflected subA
-NB.   isosubA  - ISO of subA (subAupd) within A (Aupd)
+NB.   isosubA  - ISO subA (subAupd) within A (Aupd)
 NB.   isoy     - ISO within subA of vector y which  defines
 NB.              reflector
 NB.   ioa      - IO within z of scalar α, usually 0 or _1
@@ -723,7 +722,7 @@ NB.       column is used to form reflector
 
 testlarf=: 3 : 0
   y=. 1 {:: y
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
   ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
@@ -762,7 +761,7 @@ NB.       column is used to form reflector
 
 testlarz=: 3 : 0
   y=. 1 {:: y
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
   ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
@@ -800,7 +799,7 @@ NB.   A - m×n-matrix, is used to form Qf
 
 testlarft=: 3 : 0
   y=. 0 {:: y
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ('larftbc' tmonad (((tru1~ -~/@$)@geqlf)`]`(rcond"_)`(_."_)`(_."_))) y
   ('larftbr' tmonad (((trl1~ -~/@$)@gerqf)`]`(rcond"_)`(_."_)`(_."_))) y
@@ -823,7 +822,7 @@ NB.   A - m×n-matrix, is used to form Qf
 
 testlarzt=: 3 : 0
   y=. 0 {:: y
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ('larztbc' tmonad ((((idmat@]`(           i. @])`[)} c)@tzzlf@ trl        )`]`(rcond"_)`(_."_)`(_."_))) y
   ('larztbr' tmonad ((((idmat@]`(a: <@;     i. @])`[)} #)@tzrzf@ tru        )`]`(rcond"_)`(_."_)`(_."_))) y
@@ -847,7 +846,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testlarfb=: 3 : 0
   'A C'=. y
-  rcond=. (_."_)`gecon1@.(=/@$) C  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) C  NB. meaninigful for square matrices only
 
   Qfbc=. (tru1~ -~/@$) geqlf A
   Qfbr=. (trl1~ -~/@$) gerqf A
@@ -891,7 +890,7 @@ NB.   C - m×n-matrix, is used as multiplier
 
 testlarzb=: 3 : 0
   'A C'=. y
-  rcond=. (_."_)`gecon1@.(=/@$) C  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) C  NB. meaninigful for square matrices only
 
   I=. idmat k=. <./ $ A
   Qfbc=. I (           i.  k)} tzzlf  trl         A

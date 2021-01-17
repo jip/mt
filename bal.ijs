@@ -16,9 +16,9 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -50,12 +50,12 @@ GEBALSCLFAC=:  2
 GEBALFACTOR=:  0.95
 GEBALESFMIN1=: FP_EMIN + FP_FLEN - 1  NB. _1022 + 53 - 1 = _970 , CHECKME: for no gradual underflow case only
 GEBALESFMAX1=: - GEBALESFMIN1
-GEBALSFMIN1=: GEBALSCLFAC ^ GEBALESFMIN1
-GEBALSFMAX1=: GEBALSCLFAC ^ GEBALESFMAX1
-GEBALSFMIN2=: GEBALSFMIN1 * GEBALSCLFAC
-GEBALSFMAX2=: GEBALSFMAX1 % GEBALSCLFAC
+GEBALSFMIN1=:  GEBALSCLFAC ^ GEBALESFMIN1
+GEBALSFMAX1=:  GEBALSCLFAC ^ GEBALESFMAX1
+GEBALSFMIN2=:  GEBALSFMIN1 * GEBALSCLFAC
+GEBALSFMAX2=:  GEBALSFMAX1 % GEBALSCLFAC
 
-GGBALSCLFAC=: 10
+GGBALSCLFAC=:  10
 
 NB. Vector of values:
 NB.   GEBALSFMIN2 * GEBALSCLFAC^i
@@ -103,7 +103,7 @@ NB.            'p hs'=. A vapp (p ; hs ; nz)
 NB.   nz   - n-vector of non-negative integers, count of
 NB.          non-zero elements in rows (columns) of A
 NB.   A    - n×n-matrix
-NB.   p    - n-vector, full permutation of A
+NB.   p    - n-vector, the full permutation of A
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrix B11 position in B
 NB.
@@ -167,7 +167,7 @@ NB.           as:
 NB.             vector=. iovector getv matrix
 NB.   getv1 - dyad to extract vector (either column or row)
 NB.           from matrix, of direction opposite to getv0, is
-NB.           either ({) or ({"1), is called as:
+NB.           either ({"1) or ({), is called as:
 NB.             vector=. iovector getv matrix
 NB.   vapp  - dyad to traverse both directions, is called as:
 NB.             'p hs'=. A vapp (nz0 ,: nz1)
@@ -178,7 +178,7 @@ NB.   nz1   - n-vector of non-negative integers, count of
 NB.           non-zero elements in either columns or rows
 NB.           excluding diagonal, opposite to nz0
 NB.   A     - n×n-matrix
-NB.   p     - n-vector, full permutation of A
+NB.   p     - n-vector, the full permutation of A
 NB.   hs    - 2-vector of integers (h,s) 'head' and 'size',
 NB.           defines submatrix B11 position in B
 NB.
@@ -264,7 +264,7 @@ NB.   A  - n×n-matrix
 NB.   B  - n×n-matrix with isolated eigenvalues, being A
 NB.        with permuted rows and columns, see storage
 NB.        layout
-NB.   p  - n-vector, full permutation of A
+NB.   p  - n-vector, the full permutation of A
 NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
 NB.        defines submatrix B11 position in B
 NB.
@@ -295,17 +295,23 @@ NB.   Bu00 Bu22 - square upper triangular matrices with
 NB.               isolated eigenvalues in diagonal
 NB.
 NB. Assertions:
-NB.   Pinv -: |: P
-NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
-NB.   B -: p fp A
+NB.   iP -: |: P
+NB.   B -:  P mp A mp iP          NB. permute rows and columns by p of A
+NB.   A -: iP mp B mp  P          NB. undo permuting rows and columns by p of B
+NB.   B -: p fp     A
+NB.   A -: p fp^:_1 B
 NB.   B11 -: (,.~ hs) ];.0 B
 NB. where
 NB.   'B p hs'=. gebalxp A
 NB.   P=. p2P p
-NB.   Pinv=. %. P
+NB.   iP=. %. P
 NB.
 NB. Notes:
-NB. - gebalup models LAPACK's xGEBAL('P')
+NB. - gebalup models LAPACK's xGEBAL('P') with the following
+NB.   difference: if A is {upper,lower} triangular n×n-matrix
+NB.   of size n>2 then
+NB.   - in LAPACK: B11 is a 1×1-matrix, ILO=1, IHI=1
+NB.   - in mt: B11 is the 0×0-matrix, hs=(0 0) i.e. IHI=0
 NB.
 NB. References:
 NB. [1] Daniel Kressner. Numerical methods and software for
@@ -313,8 +319,8 @@ NB.     general and structured eigenvalue problems. Ph.D.
 NB.     thesis, TU Berlin, Institut für Mathematik, Berlin,
 NB.     Germany, 2004.
 
-geballp=: [ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/ ,: +/"1) -"1 diag)@:(0&~:)))
-gebalup=: [ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1 ,: +/) -"1 diag)@:(0&~:)))
+geballp=: (; (i. ; 0&,)@#)`([ ((fp~ (0&{::)) ; ]) (({`({"1) gebalxp2d) (((+/ ,: +/"1) -"1 diag)@:(0&~:))))@.(1 < #)
+gebalup=: (; (i. ; 0&,)@#)`([ ((fp~ (0&{::)) ; ]) ((({"1)`{ gebalxp2d) (((+/"1 ,: +/) -"1 diag)@:(0&~:))))@.(1 < #)
 
 NB. ---------------------------------------------------------
 NB. gebals
@@ -335,7 +341,8 @@ NB.   p       - n-vector, some not changing parameter, the
 NB.             output of gebalxp
 NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
 NB.             defines submatrix A11 position in A, the
-NB.             output of gebalxp
+NB.             output of gebalxp, s=∞ is allowed and means
+NB.             'all elements from h-th to the last one'
 NB.   S       - the input for TB01ID, any of:
 NB.               n×n-matrix:          A
 NB.               n×(n+m)-matrix:      A ,. B
@@ -351,34 +358,36 @@ NB.   Sscl    - ($ S)-matrix, scaled version of S
 NB.   d       - n-vector, diagonal of scaling matrix D
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   Dinv -: diagmat % d
-NB.   Ascl -: Dinv mp A mp D
-NB.   Ascl -: A (*"1 % ]) d
+NB.   iD   -: diagmat % d
+NB.   Ascl -: iD mp A    mp  D    NB. unscale rows by d and scale columns by d of A
+NB.   A    -:  D mp Ascl mp iD    NB. scale rows by d and unscale columns by d of Ascl
+NB.   Ascl -: A    (*"1 % ]) d
+NB.   A    -: Ascl (%"1 * ]) d
 NB. where
 NB.   'Ascl p hs d'=. gebals A ; p ; hs
 NB.   D=. diagmat d
-NB.   Dinv=. %. D
+NB.   iD=. %. D
 NB.
 NB. Application:
-NB. - model LAPACK's xGEBAL('N') to do nothing:
+NB. - models LAPACK's xGEBAL('N') to do nothing:
 NB.     'p hs d'=. gebaln A
 NB.     gebaln=: (i. ; 0&, ; 1&($~))@#
-NB. - model LAPACK's xGEBAL('S') to balance without
+NB. - models LAPACK's xGEBAL('S') to balance without
 NB.   eigenvalues isolating step, i.e. scale non-permuted
 NB.   matrix A (default p and hs):
 NB.     'Ascl d'=. (0 3 { gebals@((; i. ; 0&,) #)) A
-NB. - model SLICOT's TB01ID('N'):
+NB. - models SLICOT's TB01ID('N'):
 NB.     NB. 'Ascl d'=. maxred tb01idn  A
 NB.     tb01idn=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
-NB. - model SLICOT's TB01ID('B'):
+NB. - models SLICOT's TB01ID('B'):
 NB.     NB. 'ABscl d'=. maxred tb01idb  A ,. B
 NB.     NB. 'Ascl Bscl'=. n ({."1 ; }."1) ABscl
 NB.     tb01idb=: 0 3 { (gebals ] ; i.@#     ; 0 , _:)
-NB. - model SLICOT's TB01ID('C'):
+NB. - models SLICOT's TB01ID('C'):
 NB.     NB. 'ACscl d'=. maxred tb01idc  A , C
 NB.     NB. 'Ascl Cscl'=. n ({. ; }.) ACscl
-NB.     tb01idc=: 0 3 { (gebals ] ; i.@c_mt_ ; 0 , _:)
-NB. - model SLICOT's TB01ID('A'):
+NB.     tb01idc=: 0 3 { (gebals ] ; i.@c ; 0 , _:)
+NB. - models SLICOT's TB01ID('A'):
 NB.     NB. 'ABC0scl d'=. maxred tb01ida (A ,. B) , C
 NB.     NB. 'ABscl C0scl'=. n ({. ; }.) ABC0scl
 NB.     NB. 'Ascl Bscl'=. n ({."1 ; }."1) ABscl
@@ -414,13 +423,12 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
     end.
   end.
   bt=. n <. h + s
-  riso=. ,. hs
   whilst. noconv do.
     noconv=. 0
     i=. <: h
     while. bt > i=. >: i do.
       rc=. i ({ ; {"1) S
-      'r c'=. 0&(riso norm1t;.0 i}) L: 0 rc
+      'r c'=. norms L: 0 rc
       if. x do.
         NB. act as TB01ID
         if. r *.&(0&=) c do.
@@ -444,7 +452,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
           continue.
         end.
       end.
-      'ra ca'=. >./ L: 0 rc
+      'ra ca'=. (|@{~ liofmax) L: 0 rc
       sum=. r + c
       g=. r % GEBALSCLFAC
       fup=. gebalsf c , 1 , g , (1 >. c >. ca) , ra <. g
@@ -494,7 +502,7 @@ NB.   'C p hs d'=. gebalx A
 NB. where
 NB.   A  - n×n-matrix
 NB.   C  - n×n-matrix, balanced version of A
-NB.   p  - n-vector, full permutation of A
+NB.   p  - n-vector, the full permutation of A
 NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
 NB.        defines submatrix B11 position in B (see gebalxp)
 NB.   d  - n-vector, diagonal of scaling matrix D (see
@@ -503,24 +511,32 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   p -: pp
 NB.   hs -: hsp
-NB.   Pinv -: |: P
-NB.   Dinv -: diagmat % d
-NB.   B -: P mp A mp Pinv          NB. apply p to rows and columns of A
-NB.   B -: p fp A
-NB.   C -: Dinv mp B mp D
+NB.   iP -: |: P
+NB.   iD -: diagmat % d
+NB.   B -:  P mp A mp iP          NB. permute rows and columns by p of A
+NB.   A -: iP mp B mp  P          NB. undo permuting rows and columns by p of B
+NB.   B -: p fp     A
+NB.   A -: p fp^:_1 B
+NB.   C -: iD mp B mp  D          NB. unscale rows by d and scale columns by d of B
+NB.   B -:  D mp C mp iD          NB. scale rows by d and unscale columns by d of C
 NB.   C -: B (*"1 % ]) d
+NB.   B -: C (%"1 * ]) d
 NB.   B11 -: (,.~ hs) ];.0 B
 NB.   C11 -: (,.~ hs) ];.0 C
 NB. where
 NB.   'B pp hsp'=. gebalxp A
 NB.   'C p hs d'=. gebalx A
 NB.   P=. p2P p
-NB.   Pinv=. %. P
+NB.   iP=. %. P
 NB.   D=. diagmat d
-NB.   Dinv=. %. D
+NB.   iD=. %. D
 NB.
 NB. Notes:
-NB. - gebalu models LAPACK's xGEBAL('B')
+NB. - gebalu models LAPACK's xGEBAL('B') with the following
+NB.   difference: if A is {upper,lower} triangular n×n-matrix
+NB.   of size n>2 then
+NB.   - in LAPACK: B11 is a 1×1-matrix, ILO=1, IHI=1
+NB.   - in mt: B11 is the 0×0-matrix, hs=(0 0) i.e. IHI=0
 
 geball=: gebals@geballp
 gebalu=: gebals@gebalup
@@ -552,58 +568,69 @@ NB.         defines submatrices C11 and D11 position in C and
 NB.         D, respectively
 NB.
 NB. Assertions:
-NB.   Prinv -: |: Pr
-NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
-NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr
+NB.   iPl -: |: Pl
+NB.   iPr -: |: Pr
+NB.   CD -:  Pl mp"2 AB mp"2 iPr  NB. permute rows by pl and columns by pr of both A and B
+NB.   AB -: iPl mp"2 CD mp"2  Pr  NB. undo permuting rows by pl and columns by pr of both C and D
+NB.   CD -: AB ((C.    "2~ {.) (C.    "1~ {:) ]) plr
+NB.   AB -: CD ((C.^:_1"2~ {.) (C.^:_1"1~ {:) ]) plr
 NB.   CD11 -: (0 2 ,. ,.~ hs) ];.0 CD
 NB. where
 NB.   'CD plr hs'=. ggbalxp AB
 NB.   'Pl Pr'=. p2P"1 plr
-NB.   Prinv=. %. Pr
+NB.   iPl=. %. Pl
+NB.   iPr=. %. Pr
 NB.
 NB. Notes:
-NB. - ggbalup implements LAPACK's xGGBAL('P')
+NB. - ggbalup implements LAPACK's xGGBAL('P') with the
+NB.   following difference: if both A and B are {upper,lower}
+NB.   triangular n×n-matrices of size n>2 then
+NB.   - in LAPACK: C11 and D11 are a 1×1-matrix, ILO=1, IHI=1
+NB.   - in mt: C11 and D11 are the 0×0-matrix, hs=(0 0) i.e.
+NB.     IHI=0
 
 ggballp=: 3 : 0
   s=. n=. c y
   h=. 0
   pl=. pr=. i. n
-  j=. h + s - 1
-  while. j >: h do.
-    v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
-    liso=. I. 0 ~: v
-    select. # liso
-      fcase. 1 do.
-        nst=. < j , h + s - 1
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-      case. 0 do.
-        nst=. < (h + {. liso) , h + s - 1
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-        s=. <: s
-        j=. h + s - 1
-      case. do.
-        j=. <: j
+  if. 1 < n do.
+    j=. h + s - 1
+    while. j >: h do.
+      v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
+      liso=. I. 0 ~: v
+      select. # liso
+        fcase. 1 do.
+          nst=. < j , h + s - 1
+          pr=. nst C. :: ] pr
+          y=. nst C."1 :: ] y
+        case. 0 do.
+          nst=. < (h + {. liso) , h + s - 1
+          pl=. nst C. :: ] pl
+          y=. nst C."2 :: ] y
+          s=. <: s
+          j=. h + s - 1
+        case. do.
+          j=. <: j
+      end.
     end.
-  end.
-  i=. h
-  while. i < h + s do.
-    v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
-    liso=. I. 0 ~: v
-    select. # liso
-      fcase. 1 do.
-        nst=. < i , h
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-      case. 0 do.
-        nst=. < (h + {. liso) , h
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-        i=. h=. >: h
-        s=. <: s
-      case. do.
-        i=. >: i
+    i=. h
+    while. i < h + s do.
+      v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
+      liso=. I. 0 ~: v
+      select. # liso
+        fcase. 1 do.
+          nst=. < i , h
+          pl=. nst C. :: ] pl
+          y=. nst C."2 :: ] y
+        case. 0 do.
+          nst=. < (h + {. liso) , h
+          pr=. nst C. :: ] pr
+          y=. nst C."1 :: ] y
+          i=. h=. >: h
+          s=. <: s
+        case. do.
+          i=. >: i
+      end.
     end.
   end.
   y ; (pl ,: pr) ; h , s
@@ -613,42 +640,44 @@ ggbalup=: 3 : 0
   s=. n=. c y
   h=. 0
   pl=. pr=. i. n
-  i=. h + s - 1
-  while. i >: h do.
-    v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
-    liso=. I. 0 ~: v
-    select. # liso
-      fcase. 1 do.
-        nst=. < i , h + s - 1
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-      case. 0 do.
-        nst=. < (h + {. liso) , h + s - 1
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-        s=. <: s
-        i=. h + s - 1
-      case. do.
-        i=. <: i
+  if. 1 < n do.
+    i=. h + s - 1
+    while. i >: h do.
+      v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
+      liso=. I. 0 ~: v
+      select. # liso
+        fcase. 1 do.
+          nst=. < i , h + s - 1
+          pl=. nst C. :: ] pl
+          y=. nst C."2 :: ] y
+        case. 0 do.
+          nst=. < (h + {. liso) , h + s - 1
+          pr=. nst C. :: ] pr
+          y=. nst C."1 :: ] y
+          s=. <: s
+          i=. h + s - 1
+        case. do.
+          i=. <: i
+      end.
     end.
-  end.
-  j=. h
-  while. j < h + s do.
-    v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
-    liso=. I. 0 ~: v
-    select. # liso
-      fcase. 1 do.
-        nst=. < j , h
-        pr=. nst C. :: ] pr
-        y=. nst C."1 :: ] y
-      case. 0 do.
-        nst=. < (h + {. liso) , h
-        pl=. nst C. :: ] pl
-        y=. nst C."2 :: ] y
-        j=. h=. >: h
-        s=. <: s
-      case. do.
-        j=. >: j
+    j=. h
+    while. j < h + s do.
+      v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
+      liso=. I. 0 ~: v
+      select. # liso
+        fcase. 1 do.
+          nst=. < j , h
+          pr=. nst C. :: ] pr
+          y=. nst C."1 :: ] y
+        case. 0 do.
+          nst=. < (h + {. liso) , h
+          pl=. nst C. :: ] pl
+          y=. nst C."2 :: ] y
+          j=. h=. >: h
+          s=. <: s
+        case. do.
+          j=. >: j
+      end.
     end.
   end.
   y ; (pl ,: pr) ; h , s
@@ -683,17 +712,22 @@ NB.   dl  - n-vector, diagonal of scaling matrix Dl
 NB.   dr  - n-vector, diagonal of scaling matrix Dr
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   EF -: Dl mp"2 CD mp"2 Dr
+NB.   iDl -: %. Dl
+NB.   iDr -: %. Dr
+NB.   EF -:  Dl mp"2 CD mp"2  Dr  NB. scale rows by dl and columns by dr of both C and D
+NB.   CD -: iDl mp"2 EF mp"2 iDr  NB. unscale rows by dl and columns by dr of both E and F
 NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
+NB.   CD -: EF ((%"2  {.) (%"1 {:) ]) dlr
 NB.   EF11 -: (0 2 ,. ,.~ hs) ];.0 EF
 NB. where
 NB.   'EF plr hs dlr'=. ggbals CD ; plr ; hs
 NB.   'Dl Dr'=. diagmat"1 dlr
+NB.   'iDl iDr'=. diagmat"1 % dlr
 NB.
 NB. Application:
 NB. - scale non-permuted matrices A and B (default plr and
 NB.   hs), i.e. balance without eigenvalues isolating step:
-NB.     'EF plr hs dlr'=. ggbals (] ; a:"_ ; 0 , c) AB
+NB.     'EF plr hs dlr'=. ggbals (] ; '' ; 0 , c) AB
 NB.
 NB. Notes:
 NB. - ggbals implements LAPACK's xGGBAL('S')
@@ -729,8 +763,7 @@ ggbals=: 3 : 0
     NB. determine correction to current iteration
     aw10=. alpha * w10
     dlr=. dlr + aw10
-    cmax=. normi , aw10
-    if. cmax < 0.5 do. break. end.
+    if. 0.5 > normi , aw10 do. break. end.
     w45=. w45 - alpha * w23
     pgamma=. gamma
     k=. >: k
@@ -740,9 +773,9 @@ ggbals=: 3 : 0
   lsfmax=. <.    GGBALSCLFAC ^. % FP_SFMIN
   irab=. h + (0 2 ,. hs ,. h , _) liofmax"1;.0 CD
   icab=. (0 2 ,. (0 , h + s) ,. hs) liofmax"1@:(|:"2);.0 CD
-  rab=. >./ | (<"1 irab ,.~"1 dhs2liso hs) {"1 2 CD
-  cab=. >./ | (<"1 icab ,. "1 dhs2liso hs) {"1 2 CD
-  lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab ,: cab
+  rab=. normi (<"1 irab ,.~"1 dhs2liso hs) {"1 2 CD
+  cab=. normi (<"1 icab ,. "1 dhs2liso hs) {"1 2 CD
+  lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab , cab
   dlr=. GGBALSCLFAC ^ lsfmax <. (lsfmax - lxab) <. lsfmin >. <. 0.5 + dlr
   dlr=. (-h) |."1 (c CD) {.!.1"1 dlr  NB. adjust dlr's shape
   CD=. ({. dlr) *"1 2 CD              NB. row scaling of matrices C and D
@@ -785,22 +818,36 @@ NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   plr -: plrp
 NB.   hs -: hsp
-NB.   Prinv -: |: Pr
-NB.   CD -: Pl mp"2 AB mp"2 Prinv             NB. apply pr to columns of A and B
-NB.   CD -: AB ((C."2~ {.) (C."1~ {:) ]) plr
-NB.   EF -: Dl mp"2 CD mp"2 Dr
+NB.   iPl -: |: Pl
+NB.   iPr -: |: Pr
+NB.   iDl -: %. Dl
+NB.   iDr -: %. Dr
+NB.   CD -:  Pl mp"2 AB mp"2 iPr  NB. permute rows by pl and columns by pr of both A and B
+NB.   AB -: iPl mp"2 CD mp"2  Pr  NB. undo permuting rows by pl and columns by pr of both C and D
+NB.   CD -: AB ((C.    "2~ {.) (C.    "1~ {:) ]) plr
+NB.   AB -: CD ((C.^:_1"2~ {.) (C.^:_1"1~ {:) ]) plr
+NB.   EF -:  Dl mp"2 CD mp"2  Dr  NB. scale rows by dl and columns by dr of both C and D
+NB.   CD -: iDl mp"2 EF mp"2 iDr  NB. unscale rows by dl and columns by dr of both E and F
 NB.   EF -: CD ((*"2~ {.) (*"1 {:) ]) dlr
+NB.   CD -: EF ((%"2  {.) (%"1 {:) ]) dlr
 NB.   CD11 -: (0 2 ,. ,.~ hs) ];.0 CD
 NB.   EF11 -: (0 2 ,. ,.~ hs) ];.0 EF
 NB. where
 NB.   'CD plrp hsp'=. ggbalxp AB
 NB.   'EF plr hs dlr'=. ggbalx AB
 NB.   'Pl Pr'=. p2P"1 plr
-NB.   Prinv=. %. Pr
+NB.   iPl=. %. Pl
+NB.   iPr=. %. Pr
 NB.   'Dl Dr'=. diagmat"1 dlr
+NB.   'iDl iDr'=. diagmat"1 % dlr
 NB.
 NB. Notes:
-NB. - ggbalu implements LAPACK's xGGBAL('B')
+NB. - ggbalu implements LAPACK's xGGBAL('B') with the
+NB.   following difference: if both A and B are {upper,lower}
+NB.   triangular n×n-matrices of size n>2 then
+NB.   - in LAPACK: C11 and D11 are a 1×1-matrix, ILO=1, IHI=1
+NB.   - in mt: C11 and D11 are the 0×0-matrix, hs=(0 0) i.e.
+NB.     IHI=0
 
 ggball=: ggbals@ggballp
 ggbalu=: ggbals@ggbalup
@@ -813,8 +860,8 @@ NB. testgebal
 NB.
 NB. Description:
 NB.   Test:
-NB.   - gebal (math/lapack)
-NB.   - gebalx (math/mt)
+NB.   - xGEBAL (math/lapack2 addon)
+NB.   - gebalx (math/mt addon)
 NB.   by square matrix
 NB.
 NB. Syntax:
@@ -822,24 +869,49 @@ NB.   testgebal A
 NB. where
 NB.   A - n×n-matrix
 NB.
-NB. TODO:
-NB. - consider [1]
+NB. Formula:
+NB.   err0 := ||Abal||_1 / ||A||_1                                           if not a permute only
+NB.   err1 := ||A - P^_1 *     Abal *        P||_1 / (FP_EPS * ||A||_1 * n)  if a permute only
+NB.   err1 := ||A -        D * Abal * D^_1    ||_1 / (FP_EPS * ||A||_1 * n)  if a scale only
+NB.   err1 := ||A - P^_1 * D * Abal * D^_1 * P||_1 / (FP_EPS * ||A||_1 * n)  if a permute and a scale
+NB. where
+NB.   err0 - how 1-norm is changed: <1=reduced, 1=no effect, >1=increased
+NB.   err1 - how consistent output data is
 NB.
-NB. References:
-NB. [1] Michael H. Schneider, Stavros A. Zenios. A
-NB.     Comparative Study of Algorithms for Matrix Balancing.
-NB.     Operations Research. Vol. 38, No. 3, May-June 1990.
+NB. Notes:
+NB. - err0 is outputted in ferr column
+NB. - err1 is outputted in berr column
 
 testgebal=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'gebal'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gebal'
 
-  rcond=. gecon1 y
+  'rcondl rcondu'=. (geconi , gecon1) y
 
-  ('gebal_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  vferr2=:  %~&norm1 0&{::
+  vp2=:     (1&{:: , 2&{::) makeper_jlapack2_ 3&{::
+  vd2=:     (#\@i.@#@(3&{::) ((>: {.) *. (<: {:)) 1&{:: , 2&{::)`(1 ,: 3&{::)}
+  vscale2=: 0&{:: (%"1 * ]) 3&{::
+  vdenom2=: (FP_EPS * 1:^:(0&=)@norm1 * #)@[
 
-  ('geball' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebalu' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
+  ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
+
+  ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
+  ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
+
+  ('geballp'             tmonad (]                 `]`(rcondl"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+  ('gebalup'             tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+
+  ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcondl"_)`vferr2   `(norm1@(-                      vscale2        ) % vdenom2))) y
+  ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcondl"_)`(4 {:: ])`(norm1@(-                      vscale2        ) % vdenom2))) y
+
+  ('geball'              tmonad (]                 `]`(rcondl"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
+  ('gebalu'              tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
+
+  coerase < 'mttmp'
+  erase 'vferr2 vp2 vd2 vscale2 vdenom2'
 
   EMPTY
 )
@@ -848,18 +920,65 @@ NB. ---------------------------------------------------------
 NB. testggbal
 NB.
 NB. Description:
-NB.   Test ggbalx by pair of square matrices
+NB.   Test:
+NB.   - xGGBAL (math/lapack2 addon)
+NB.   - ggbalx (math/mt addon)
+NB.   by pair of square matrices
 NB.
 NB. Syntax:
 NB.   testggbal AB
 NB. where
 NB.   AB - 2×n×n-brick
+NB.
+NB. Formula:
+NB.   err0X := ||Xbal||_1 / ||X||_1                                           if not a permute only
+NB.   err1X := ||X - P^_1 *     Xbal *        P||_1 / (FP_EPS * ||X||_1 * n)  if a permute only
+NB.   err1X := ||X -        D * Xbal * D^_1    ||_1 / (FP_EPS * ||X||_1 * n)  if a scale only
+NB.   err1X := ||X - P^_1 * D * Xbal * D^_1 * P||_1 / (FP_EPS * ||X||_1 * n)  if a permute and a scale
+NB.   err0  := max(err0A , err0B)
+NB.   err1  := max(err1A , err1B)
+NB. where
+NB.   X    - A or B
+NB.   err0 - how 1-norm is changed: <1=reduced, 1=no effect, >1=increased
+NB.   err1 - how consistent output data is
+NB.
+NB. Notes:
+NB. - err0 is outputted in ferr column
+NB. - err1 is outputted in berr column
 
 testggbal=: 3 : 0
-  rcond=. <./ gecon1"2 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/ggbal'
 
-  ('ggball' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
-  ('ggbalu' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  'rcondl rcondu'=. <./ (geconi , gecon1)"2 y
+
+  vgeto2=:   0 0 1 1 2 2&(]&.:>/.)
+  vferr2=:   >./@:(%~&norm1"2) 0&{::
+  vp2=:      1&{:: makeper_jlapack2_"1 (2&{::)
+  vd2=:      (#\@i.@{:@$@(2&{::) ((>: {.) ,:~@:*. (<: {:)) 1&{::)`(1 ,: 2&{::)}
+  vperm2=:   (C.^:_1"2~ {.) (C.^:_1"1~ {:) ]
+  vscale2=:  (%"2 {.) (%"1 {:) ]
+  vscale03=: 0&{:: vscale2 3&{::
+  vdenom2=:  (FP_EPS * 1:^:(0&=)@norm1"2 * c)@[
+
+  ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
+  ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
+  ('''b''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
+
+  ('''p''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
+  ('''s''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
+  ('''b''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
+
+  ('ggballp'             tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
+  ('ggbalup'             tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
+
+  ('ggbals'              tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
+  ('(2^_44)&ggbals'      tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
+
+  ('ggball'              tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
+  ('ggbalu'              tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
+
+  coerase < 'mttmp'
+  erase 'vgeto2 vferr2 vp2 vd2 vperm2 vscale2 vscale03 vdenom2'
 
   EMPTY
 )

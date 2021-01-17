@@ -8,9 +8,9 @@ NB. testhgeq  Test hgexxxxx by square matrices
 NB. testeq    Adv. to make verb to test hgexxxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2011-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -162,7 +162,7 @@ hgezq=: 1 : 0
   '`hgezqxo init reset step'=. m
   e=. +/ 'h s'=. x
   dQ1=. dZ1=. 0 4 $ 0
-  abnorm=. (0 2 ,. ,.~ x) norms"2 ;. 0 y
+  abnorm=. (0 2 ,. ,.~ x) norms"2;.0 y
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgezqxo y  NB. process eigenvalues (columns) h+s:n-1
@@ -204,7 +204,7 @@ hgezq=: 1 : 0
             elseif. atol >: sorim (< 0 , j - 1 0) { y do.
               y=. 0 (< 0 , j - 1 0)} y
               ilazro=. 1
-            elseif. do.
+            else.
               ilazro=. 0
             end.
             NB. test 2: T[j,j]=0
@@ -387,7 +387,7 @@ hgeqz=: 1 : 0
   '`hgeqzxo init reset step'=. m
   e=. +/ 'h s'=. x
   dQ1=. dZ1=. 0 4 $ 0
-  abnorm=. (0 2 ,. ,.~ x) norms"2 ;. 0 y
+  abnorm=. (0 2 ,. ,.~ x) norms"2;.0 y
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgeqzxo y  NB. process eigenvalues (columns) h+s:n-1
@@ -428,7 +428,7 @@ hgeqz=: 1 : 0
             elseif. atol >: sorim (< 0 , j - 0 1) { y do.
               y=. 0 (< 0 , j - 0 1)} y
               ilazro=. 1
-            elseif. do.
+            else.
               ilazro=. 0
             end.
             NB. test 2: T[j,j]=0
@@ -676,30 +676,34 @@ NB.     A * R^H * E = B * R^H * E
 NB.
 NB. Syntax:
 NB.   e1e2=.        hs hgezqenn H ,: T
-NB.   'e1e2 Z2'=.   hs hgezqenv H , T ,: Z1
-NB.   'e1e2 Q2'=.   hs hgezqevn H , T ,: Q1
-NB.   'e1e2 Q2Z2'=. hs hgezqevv H , T , Q1 ,: Z1
+NB.   'e1e2 Z2'=.   hs hgezqenv H ,  T ,: Z1
+NB.   'e1e2 Q2'=.   hs hgezqevn H ,  T ,: Q1
+NB.   'e1e2 Q2Z2'=. hs hgezqevv H ,  T ,  Q1 ,: Z1
 NB.   'S P'=.       hs hgezqsnn H ,: T
-NB.   'S P Z2'=.    hs hgezqsnv H , T ,: Z1
-NB.   'S P Q2'=.    hs hgezqsvn H , T ,: Q1
-NB.   'S P Q2 Z2'=. hs hgezqsvv H , T , Q1 ,: Z1
+NB.   'S P Z2'=.    hs hgezqsnv H ,  T ,: Z1
+NB.   'S P Q2'=.    hs hgezqsvn H ,  T ,: Q1
+NB.   'S P Q2 Z2'=. hs hgezqsvv H ,  T ,  Q1 ,: Z1
 NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices H11 and T11 position in H
 NB.          and T, respectively, see ggballp and gehrdl
-NB.   H    - n×n-matrix, lower Hessenberg inside the
+NB.   H    - n×n-matrix, the lower Hessenberg inside the
 NB.          submatrix H[h:h+s-1,h:h+s-1], and lower
 NB.          triangular outside
-NB.   T    - n×n-matrix, lower triangular
+NB.   T    - n×n-matrix, the lower triangular
 NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
 NB.            e1e2 -: e1 ,: e2
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
-NB.   Q2   - n×n-matrix, the unitary (orthogonal)
+NB.   Q2   - n×n-matrix, the unitary (orthogonal), the left
+NB.          Schur vectors of (H,T) pair if Q1=I, and of
+NB.          (A,B) pair otherwise
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z2   - n×n-matrix, the unitary (orthogonal)
+NB.   Z2   - n×n-matrix, the unitary (orthogonal), the right
+NB.          Schur vectors of (H,T) pair if Z1=I, and of
+NB.          (A,B) pair otherwise
 NB.   Q2Z2 -:Q2 ,: Z2
-NB.   S    - n×n-matrix, lower triangular
-NB.   P    - n×n-matrix, lower triangular
+NB.   S    - n×n-matrix, the lower triangular
+NB.   P    - n×n-matrix, the lower triangular
 NB.
 NB. Notes:
 NB. - non-converged eigenvalues are set to NaN
@@ -710,6 +714,8 @@ NB.   Q2       -: dQ1 mp Q1
 NB.   Z2       -: dZ1 mp Z1
 NB.   (H ,: T) -: dQ1 (mp~ ct)~"2 (S ,: P) mp"2 dZ1
 NB.   (C ,: D) -: Q2 (mp~ ct)~"2 (S ,: P) mp"2 Z2
+NB.   I        -: Q2^H * Q2
+NB.   I        -: Z2^H * Z2
 NB. where
 NB.   C - n×n-matrix, general
 NB.   D - n×n-matrix, general
@@ -789,30 +795,34 @@ NB.     A * R * E = B * R * E
 NB.
 NB. Syntax:
 NB.   e1e2=.        hs hgeqzenn H ,: T
-NB.   'e1e2 Z2'=.   hs hgeqzenv H , T ,: Z1
-NB.   'e1e2 Q2'=.   hs hgeqzevn H , T ,: Q1
-NB.   'e1e2 Q2Z2'=. hs hgeqzevv H , T , Q1 ,: Z1
+NB.   'e1e2 Z2'=.   hs hgeqzenv H ,  T ,: Z1
+NB.   'e1e2 Q2'=.   hs hgeqzevn H ,  T ,: Q1
+NB.   'e1e2 Q2Z2'=. hs hgeqzevv H ,  T ,  Q1 ,: Z1
 NB.   'S P'=.       hs hgeqzsnn H ,: T
-NB.   'S P Z2'=.    hs hgeqzsnv H , T ,: Z1
-NB.   'S P Q2'=.    hs hgeqzsvn H , T ,: Q1
-NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
+NB.   'S P Z2'=.    hs hgeqzsnv H ,  T ,: Z1
+NB.   'S P Q2'=.    hs hgeqzsvn H ,  T ,: Q1
+NB.   'S P Q2 Z2'=. hs hgeqzsvv H ,  T ,  Q1 ,: Z1
 NB. where
 NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
 NB.          defines submatrices H11 and T11 position in H
 NB.          and T, respectively, see ggbalup and gehrdu
-NB.   H    - n×n-matrix, upper Hessenberg inside the
+NB.   H    - n×n-matrix, the upper Hessenberg inside the
 NB.          submatrix H[h:h+s-1,h:h+s-1], and upper
 NB.          triangular outside
-NB.   T    - n×n-matrix, upper triangular
+NB.   T    - n×n-matrix, the upper triangular
 NB.   e1e2 - 2×n-matrix of eigenvalues e1 and e2:
 NB.            e1e2 -: e1 ,: e2
 NB.   Q1   - n×n-matrix, the unitary (orthogonal)
-NB.   Q2   - n×n-matrix, the unitary (orthogonal)
+NB.   Q2   - n×n-matrix, the unitary (orthogonal), the left
+NB.          Schur vectors of (H,T) pair if Q1=I, and of
+NB.          (A,B) pair otherwise
 NB.   Z1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z2   - n×n-matrix, the unitary (orthogonal)
+NB.   Z2   - n×n-matrix, the unitary (orthogonal), the right
+NB.          Schur vectors of (H,T) pair if Z1=I, and of
+NB.          (A,B) pair otherwise
 NB.   Q2Z2 -:Q2 ,: Z2
-NB.   S    - n×n-matrix, upper triangular
-NB.   P    - n×n-matrix, upper triangular
+NB.   S    - n×n-matrix, the upper triangular
+NB.   P    - n×n-matrix, the upper triangular
 NB.
 NB. Notes:
 NB. - non-converged eigenvalues are set to NaN
@@ -831,6 +841,8 @@ NB.   Q2       -: Q1 mp dQ1
 NB.   Z2       -: Z1 mp dZ1
 NB.   (H ,: T) -: dQ1 mp"2 (S ,: P) (mp ct)"2 dZ1
 NB.   (C ,: D) -: Q2 mp"2 (S ,: P) (mp ct)"2 Z2
+NB.   I        -: Q2 * Q2^H
+NB.   I        -: Z2 * Z2^H
 NB. where
 NB.   C - n×n-matrix, general
 NB.   D - n×n-matrix, general
@@ -845,34 +857,34 @@ NB.   'S P Q2 Z2'=. hs hgeqzsvv H , T , Q1 ,: Z1
 NB.   'S P dQ1 dZ1'=. hs hgeqzsvv H , T , ,:~ I
 NB.
 NB. Application:
-NB. - model LAPACK's xHGEQZ('E','N','I'):
+NB. - models LAPACK's xHGEQZ('E','N','I'):
 NB.     NB. 'e1e2 dZ1'=. hs hgeqzeni H ,: T
 NB.     hgeqzeni=: hgeqzenv (, idmat@c)
-NB. - model LAPACK's xHGEQZ('E','I','N'):
+NB. - models LAPACK's xHGEQZ('E','I','N'):
 NB.     NB. 'e1e2 dQ1'=. hs hgeqzein H ,: T
 NB.     hgeqzein=: hgeqzevn (, idmat@c)
-NB. - model LAPACK's xHGEQZ('E','I','I'):
+NB. - models LAPACK's xHGEQZ('E','I','I'):
 NB.     NB. 'e1e2 dQ1dZ1'=. hs hgeqzeii H ,: T
 NB.     hgeqzeii=: hgeqzevv (,~^:2~ idmat@c)
-NB. - model LAPACK's xHGEQZ('E','I','V'):
+NB. - models LAPACK's xHGEQZ('E','I','V'):
 NB.     NB. 'e1e2 dQ1Z2'=. hs hgeqzeiv H , T ,: Z1
 NB.     hgeqzeiv=: hgeqzevv (1&A.@, idmat@c)
-NB. - model LAPACK's xHGEQZ('E','V','I'):
+NB. - models LAPACK's xHGEQZ('E','V','I'):
 NB.     NB. 'e1e2 Q2dZ1'=. hs hgeqzevi H , T ,: Q1
 NB.     hgeqzevi=: hgeqzevv (, idmat@c)
-NB. - model LAPACK's xHGEQZ('S','N','I'):
+NB. - models LAPACK's xHGEQZ('S','N','I'):
 NB.     NB. 'S P dZ1'=. hs hgeqzsni H ,: T
 NB.     hgeqzsni=: hgeqzsnv (, idmat@c)
-NB. - model LAPACK's xHGEQZ('S','I','N'):
+NB. - models LAPACK's xHGEQZ('S','I','N'):
 NB.     NB. 'S P dQ1'=. hs hgeqzsin H ,: T
 NB.     hgeqzsin=: hgeqzsvn (, idmat@c)
-NB. - model LAPACK's xHGEQZ('S','I','I'):
+NB. - models LAPACK's xHGEQZ('S','I','I'):
 NB.     NB. 'S P dQ1 dZ1'=. hs hgeqzsii H ,: T
 NB.     hgeqzsii=: hgeqzsvv (,~^:2~ idmat@c)
-NB. - model LAPACK's xHGEQZ('S','I','V'):
+NB. - models LAPACK's xHGEQZ('S','I','V'):
 NB.     NB. 'S P dQ1 Z2'=. hs hgeqzsiv H , T ,: Z1
 NB.     hgeqzsiv=: hgeqzsvv (1&A.@, idmat@c)
-NB. - model LAPACK's xHGEQZ('S','V','I'):
+NB. - models LAPACK's xHGEQZ('S','V','I'):
 NB.     NB. 'S P Q2 dZ1'=. hs hgeqzsvi H , T ,: Q1
 NB.     hgeqzsvi=: hgeqzsvv (, idmat@c)
 NB. - detect case of non-convergence (0=converged,
@@ -903,71 +915,117 @@ NB. ---------------------------------------------------------
 NB. testhgeq
 NB.
 NB. Description:
-NB.   Test ZQ and QZ algorithms hgexxxxx by pair of square
-NB.   matrices
+NB.   Test:
+NB.   - xHGEQZ (math/lapack2 addon)
+NB.   - hgexxxxx (math/mt addon)
+NB.   by pair of square matrices
 NB.
 NB. Syntax:
 NB.   testhgeq AB
 NB. where
 NB.   AB - 2×n×n-brick
-NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1,berr2,berr3)
-NB. where
-NB.   ||M|| := max(||M||_1 , FP_SFMIN)
-NB.   'S P dQ1 dZ1'=. (0,n) hgexxsvv H , T , ,:~ I
-NB.   - hgezqxxx:
-NB.       berr0 := ||H - dQ1^H * S * dZ1|| / (FP_PREC * ||H|| * n)
-NB.       berr1 := ||T - dQ1^H * P * dZ1|| / (FP_PREC * ||T|| * n)
-NB.       berr2 := ||I - dQ1^H * dQ1|| / (FP_PREC * n)
-NB.       berr3 := ||I - dZ1^H * dZ1|| / (FP_PREC * n)
-NB.   - hgeqzxxx:
-NB.       berr0 := ||H - dQ1 * S * dZ1^H|| / (FP_PREC * ||H|| * n)
-NB.       berr1 := ||T - dQ1 * P * dZ1^H|| / (FP_PREC * ||T|| * n)
-NB.       berr2 := ||I - dQ1 * dQ1^H|| / (FP_PREC * n)
-NB.       berr3 := ||I - dZ1 * dZ1^H|| / (FP_PREC * n)
 
 testhgeq=: 3 : 0
-  prep=. (,~ <@(2&{.))~ _2&(<\)                                                                         NB. L,R: 'HT SP dQ1dZ1'=. (H,T,I,:I) prep (S,P,dQ1,:dZ1)
-  safenorm=. FP_SFMIN >. norm1"2                                                                        NB. compute 1-norm safely: ||M|| := max(||M||_1 , FP_SFMIN)
-  cdiff1=: 2 : '0&{:: safenorm@:- (u@{.@] mp"2 (mp"2 v@{:))&>/@}.'                                      NB. L: (ct cdiff1 ]) : ||H - dQ1^H * S * dZ1|| , ||T - dQ1^H * P * dZ1||
-                                                                                                        NB. R: (] cdiff1 ct) : ||H - dQ1 * S * dZ1^H|| , ||T - dQ1 * P * dZ1^H||
-  adiff2=: 1 : '(safenorm@(<: upddiag)@(u ct)"2)@(2&{::)'                                               NB. L: (mp~ adiff2) : ||I - dQ1^H * dQ1|| , ||I - dZ1^H * dZ1||
-                                                                                                        NB. R: (mp  adiff2) : ||I - dQ1 * dQ1^H|| , ||I - dZ1 * dZ1^H||
-  denom1=. safenorm@(0&{::)                                                                             NB. ||H|| , ||T||
-  getn=. c@(0&{::)                                                                                      NB. n
-  safediv=. ((({: <. %/@}:)`((<./@(}: * 1 , {:)) % 1&{)@.(1 > 1&{))`(%/@}:)@.(</@}:)) % (FP_PREC * {:)  NB. compute u%d safely: u_by_d=. safediv (u,d,n)
-  cberr01=. 2 : 'safediv"1@:((u cdiff1 v) ,. denom1 ,. getn)'                                           NB. L: (ct cberr01 ]) : (berr0 , berr1) for L
-                                                                                                        NB. R: (] cberr01 ct) : (berr0 , berr1) for R
-  aberr23=. 1 : '((<. (u adiff2))~ % FP_PREC * ]) getn'                                                 NB. L: (mp~ aberr23) : (berr2 , berr3) for L
-                                                                                                        NB. R: (mp  aberr23) : (berr2 , berr3) for R
-  vberrl=: (>./@((ct cberr01 ]) , (mp~ aberr23))@prep) f.
-  vberru=: (>./@((] cberr01 ct) , (mp  aberr23))@prep) f.
+  load_mttmp_ :: ] 'math/mt/test/lapack2/hgeqz'
 
-  I=. idmat c y
-  HTl=. (gghrdlnn~ 0 , c)@((,: trl)/) y
-  HTu=. (gghrdunn~ 0 , c)@((,: tru)/) y
-  rcondl=. <./ 0 1 (gecon1&.{.)`(trlcon1&.{.) ag HTl
-  rcondu=. <./ 0 1 (gecon1&.{.)`(trucon1&.{.) ag HTu
+  n=. c y
+  hs=. 0 , n
+  I=. idmat n
 
-  ('hgezqenn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqenv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqevn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqevv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , ,:~ I
-  ('hgezqsnn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl
-  ('hgezqsnv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvn' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`(_."_))) HTl , I
-  ('hgezqsvv' tdyad ((0 , c)`]`]`(rcondl"_)`(_."_)`vberrl)) HTl , ,:~ I
-  ('hgeqzenn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
-  ('hgeqzenv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzevn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzevv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , ,:~ I
-  ('hgeqzsnn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu
-  ('hgeqzsnv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvn' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`(_."_))) HTu , I
-  ('hgeqzsvv' tdyad ((0 , c)`]`]`(rcondu"_)`(_."_)`vberru)) HTu , ,:~ I
+  'Hl Tl'=. HTl=. hs gghrdlnn (((mp  ct@unglq) ,: trlpick@(_1 }."1 ])) gelqf)/ y
+  'Hu Tu'=. HTu=. hs gghrdunn (((mp~ ct@ungqr) ,: trupick@(_1 }.   ])) geqrf)/ y
 
-  erase 'cdiff1 adiff2 vberrl vberru'
+  rcondl=. (geconi Hl) <. trlconi Tl
+  rcondu=. (gecon1 Hu) <. trucon1 Tu
+
+  normsl=. ;/ normi"2 HTl
+  normsu=. ;/ norm1"2 HTu
+
+  argslapack=. normsu , ;/ HTu , ,:~ I  NB. arguments for xHGEQZ            t511u t513u
+  argsmtl=.    normsl ,  < HTl          NB. arguments for hgezqxnn          t511l t513l
+  argsmtvl=.   normsl ,  < HTl ,     I  NB. arguments for hgezqxnv hgezqxvn t511l t513l
+  argsmtvvl=.  normsl ,  < HTl , ,:~ I  NB. arguments for hgezqxvv          t511l t513l
+  argsmtu=.    normsu ,  < HTu          NB. arguments for hgeqzxnn          t511u t513u
+  argsmtvu=.   normsu ,  < HTu ,     I  NB. arguments for hgeqzxnv hgeqzxvn t511u t513u
+  argsmtvvu=.  normsu ,  < HTu , ,:~ I  NB. arguments for hgeqzxvv          t511u t513u
+
+  t511u1=: (t511u"1~ (  2             0      ,:  3            1)&{  )~      (0 4 5 ,: 1 4 5)&{
+  t511l2=: (t511l"1~ (((2 ; 0)&{::) ; 0&{::) ,: (2 ; 1)&{:: ; 1 &{::)~ <"2@((0 2 3 ,: 1 2 3)&{)
+  t511u2=: (t511u"1~ (((2 ; 0)&{::) ; 0&{::) ,: (2 ; 1)&{:: ; 1 &{::)~ <"2@((0 2 3 ,: 1 2 3)&{)
+
+  t513u4=:               t513u@(4 {:: ])
+  t513u5=:               t513u@(5 {:: ])
+  t513u45=: (4 {:: ]) >.&t513u  5 {:: ]
+
+  t513l1=:                   t513l@(1     {:: ])
+  t513u1=:                   t513u@(1     {:: ])
+  t513l2=:                   t513l@(2     {   ])
+  t513u2=:                   t513u@(2     {   ])
+  t513l01=: ((1;0) {:: ]) >.&t513l  (1;1) {:: ]
+  t513u01=: ((1;0) {:: ]) >.&t513u  (1;1) {:: ]
+  t513l23=: (2     {   ]) >.&t513l  3     {   ]
+  t513u23=: (2     {   ]) >.&t513u  3     {   ]
+
+  ('''enn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  ('''eni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''env''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''ein''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''eii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''eiv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''evn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''evi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''evv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+
+  ('''snn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  ('''sni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''snv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''sin''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''sii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''siv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''svn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''svi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''svv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+
+  ('''enn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  ('''eni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''env''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''ein''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''eii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''eiv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''evn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''evi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  ('''evv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+
+  ('''snn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  ('''sni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''snv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  ('''sin''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''sii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''siv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''svn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  ('''svi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  ('''svv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+
+  ('hgezqenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
+  ('hgezqenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
+  ('hgezqevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
+  ('hgezqevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l01))) argsmtvvl
+  ('hgezqsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
+  ('hgezqsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
+  ('hgezqsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
+  ('hgezqsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23))) argsmtvvl
+
+  ('hgeqzenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
+  ('hgeqzenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
+  ('hgeqzevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
+  ('hgeqzevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u01))) argsmtvvu
+  ('hgeqzsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
+  ('hgeqzsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
+  ('hgeqzsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
+  ('hgeqzsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23))) argsmtvvu
+
+  coerase < 'mttmp'
+  erase 't511u1 t511l2 t511u2 t513u4 t513u5 t513u45 t513l1 t513u1 t513l2 t513u2 t513l01 t513u01 t513l23 t513u23'
 
   EMPTY
 )

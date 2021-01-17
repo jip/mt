@@ -9,9 +9,9 @@ NB. testgebak  Test gebakxx by square matrix
 NB. testbak    Adv. to make verb to test gebakxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -57,9 +57,9 @@ NB.   d    - n-vector, diagonal of scaling matrix D
 NB.   B    - n×n-matrix, transformed eigenvectors
 NB.
 NB. Application:
-NB. - model xGGBAK('S','L')
+NB. - models xGGBAK('S','L')
 NB.     'CD pl'=. gebakxsx EF ; ({. plr) ; ({. dlr)
-NB. - model xGGBAK('S','R')
+NB. - models xGGBAK('S','R')
 NB.     'CD pr'=. gebakxsx EF ; ({: plr) ; ({: dlr)
 NB.
 NB. Notes:
@@ -86,9 +86,9 @@ NB.   p  - n-vector, permutation of B
 NB.   C  - n×n-matrix, transformed eigenvectors
 NB.
 NB. Application:
-NB. - model xGGBAK('P','L')
+NB. - models xGGBAK('P','L')
 NB.     AB=. gebakup CD ; ({. plr)
-NB. - model xGGBAK('P','R')
+NB. - models xGGBAK('P','R')
 NB.     AB=. gebakup CD ; ({: plr)
 NB.
 NB. Notes:
@@ -98,11 +98,11 @@ gebaklp=: C."1~&>/
 gebakup=: C."2~&>/
 
 NB. ---------------------------------------------------------
-NB. Verb:      Balancer used:     Eigenvectors to form:
-NB. gebakll    geball (lower)     left
-NB. gebaklr    geball (lower)     right
-NB. gebakul    gebalu (upper)     left
-NB. gebakur    gebalu (upper)     right
+NB. Verb:      Balancer used:    Eigenvectors to form:
+NB. gebakll    geball (lower)    left
+NB. gebaklr    geball (lower)    right
+NB. gebakul    gebalu (upper)    left
+NB. gebakur    gebalu (upper)    right
 NB.
 NB. Description:
 NB.   Form eigenvectors of a general matrix by backward
@@ -119,9 +119,9 @@ NB.   d - n-vector, diagonal of scaling matrix D
 NB.   C - n×n-matrix, transformed eigenvectors
 NB.
 NB. Application:
-NB. - model xGGBAK('B','L')
+NB. - models xGGBAK('B','L')
 NB.     AB=. gebakul EF ; ({. plr) ; ({. dlr)
-NB. - model xGGBAK('B','R')
+NB. - models xGGBAK('B','R')
 NB.     AB=. gebakur EF ; ({: plr) ; ({: dlr)
 NB.
 NB. Notes:
@@ -148,12 +148,12 @@ NB. where
 NB.   A - n×n-matrix
 
 testgebak=: 3 : 0
-  rcond=. gecon1 y
+  'rcondl rcondu'=. (geconi , gecon1) y
 
-  ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcond"_)`(_."_)`(_."_))) y
+  ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
+  ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
+  ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
+  ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
 
   EMPTY
 )

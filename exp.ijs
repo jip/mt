@@ -11,9 +11,9 @@ NB. testheexp  Test heexp by Hermitian (symmetric) matrix
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.10.2 2017-10-19
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -49,7 +49,7 @@ NB. Syntax:
 NB.   B=. s sdiag A
 NB. where
 NB.   A - n×n-matrix or m×n×n-brick
-NB.   s - scalar or m-vector, shift of diagonal[s] in A
+NB.   s - scalar or m-vector, the shift of diagonal[s] in A
 NB.   B - array of the same shape as A, the shifted A:
 NB.         B -: A + s (*"0 2) idmat n
 NB.
@@ -78,8 +78,8 @@ geexpm2r=: 4 : 0
   NB. b[i] coeffcients of degree 13 Padé approximant for V (1st row) and U (2nd row)
   bc=. _2 (|:@(]\)) (>: x) {. 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
 
-  NB. U=. A*Σ(b[i+1]*(A^i),i=0,2,..,m-1)
-  NB. V=.   Σ(b[i  ]*(A^i),i=0,2,..,m-1)
+  NB. U=. A*Σ(b[i+1]*(A^i),i=0,2,...,m-1)
+  NB. V=.   Σ(b[i  ]*(A^i),i=0,2,...,m-1)
   if. x < 13 do.
     NB. A powers (2 [4 [6 [8]]]), shape: p×n×n
     pA=. (+: }. i. >. -: x) gepow y
@@ -99,7 +99,7 @@ geexpm2r=: 4 : 0
 
     NB. V=.      V + b[6]*A6+b[4]*A4+b[2]*A2+b[0]*I
     NB. U=. A * (U + b[7]*A6+b[5]*A4+b[3]*A2+b[1]*I)
-    'V U'=. VU + pA (b0b1 sdiag (rbyvs (0 1 ,: 2 3)&(] ;. 0))) bc
+    'V U'=. VU + pA (b0b1 sdiag (rbyvs (0 1 ,: 2 3)&(];.0))) bc
   end.
   U=. y mp U
 
@@ -326,9 +326,7 @@ NB. where
 NB.   A - n×n-matrix
 
 testgeexp=: 3 : 0
-  rcond=. gecon1 y
-
-  ('geexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) y
+  ('geexp' tmonad (]`]`(geconi@[)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -342,13 +340,12 @@ NB.
 NB. Syntax:
 NB.   testdiexp A
 NB. where
-NB.   A - n×n-matrix, diagonalizable
+NB.   A - n×n-matrix, the diagonalizable
 
 testdiexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  geevlvv=. 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1])) % normsr)"2&.>)ag ggevlvv@(,: idmat@c)
+  geevlvv=. {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1])) % normsr)"2&.>)"0@ggevlvv@(,: idmat@c)
 
-  rcond=. gecon1 y
   try.
     'v LR'=. geevlvv y                 NB. eigendecomposition
     'L R'=. LR
@@ -360,7 +357,7 @@ testdiexp=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  ('diexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) (ct R) ; v ; iRh
+  ('diexp' tmonad (]`]`(geconi@[)`(_."_)`(_."_))) (ct R) ; v ; iRh
 
   EMPTY
 )
@@ -374,13 +371,12 @@ NB.
 NB. Syntax:
 NB.   testheexp A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric)
+NB.   A - n×n-matrix, the Hermitian (symmetric)
 
 testheexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  heevlv=. 0 1 ((9 o.{.)&.>)`((%%:@diag@(mp ct))&.>)ag ggevlvn@(,:(idmat@c))
+  heevlv=. (9 o. {.)&.>`((%%:@diag@(mp ct))&.>)"0@ggevlvn@(,:(idmat@c))
 
-  rcond=. hecon1 y
   try.
     'v R'=. heevlv y                NB. eigendecomposition
     v=. j./ (*"1 (-@*@{.)) |: +. v  NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
@@ -389,7 +385,7 @@ testheexp=: 3 : 0
     v=. R=. _.
   end.
 
-  ('heexp' tmonad (]`]`(rcond"_)`(_."_)`(_."_))) v ; ct R
+  ('heexp' tmonad (]`]`(heconi@[)`(_."_)`(_."_))) v ; ct R
 
   EMPTY
 )

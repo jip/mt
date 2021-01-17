@@ -8,6 +8,7 @@ NB. normi    Magnitude-based ∞-norm of vector (matrix)
 NB. normic   Magnitude-based ∞-norm of vector (matrix
 NB.          columns)
 NB. normir   Magnitude-based ∞-norm of vector (matrix rows)
+NB. normm    Magnitude-based max of modules of elements
 NB. norm1t   Taxicab-based 1-norm of vector (matrix)
 NB. norm1tc  Taxicab-based 1-norm of vector (matrix columns)
 NB. norm1tr  Taxicab-based 1-norm of vector (matrix rows)
@@ -19,9 +20,9 @@ NB.          vector (matrix)
 NB. normsc   Square-based Euclidean norm of matrix columns
 NB. normsr   Square-based Euclidean norm of matrix rows
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -46,13 +47,11 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-max=: >./`0:@.(0 = #)  NB. max of, 0 for empty list
+csum=: +/"2@:    NB. vector: sum of, matrix: column sums
+rsum=: +/"1@:    NB. vector: sum of, matrix: row sums
 
-csum=: +/"2@:          NB. vector: sum of, matrix: column sums
-rsum=: +/"1@:          NB. vector: sum of, matrix: row sums
-
-cmax=: max"2@:         NB. vector: max of, matrix: column maximums
-rmax=: max"1@:         NB. vector: max of, matrix: row maximums
+cmax=: maxc"2@:  NB. vector: max of, matrix: column maximums
+rmax=: max "1@:  NB. vector: max of, matrix: row maximums
 
 NB. =========================================================
 NB. Interface
@@ -64,9 +63,38 @@ NB. norm1r
 NB. normi
 NB. normic
 NB. normir
+NB. normm
 NB.
 NB. Description:
 NB.   Magnitude-based norms |y|
+NB.
+NB. Assertions:
+NB.   0     -: norm1_mt_  0 0 $ 0
+NB.   0     -: norm1_mt_  0 3 $ 0
+NB.   0     -: norm1_mt_  3 0 $ 0
+NB.   ''    -: norm1c_mt_ 0 0 $ 0
+NB.   0 0 0 -: norm1c_mt_ 0 3 $ 0
+NB.   ''    -: norm1c_mt_ 3 0 $ 0
+NB.   ''    -: norm1r_mt_ 0 0 $ 0
+NB.   ''    -: norm1r_mt_ 0 3 $ 0
+NB.   0 0 0 -: norm1r_mt_ 3 0 $ 0
+NB.   0     -: normi_mt_  0 0 $ 0
+NB.   0     -: normi_mt_  0 3 $ 0
+NB.   0     -: normi_mt_  3 0 $ 0
+NB.   ''    -: normic_mt_ 0 0 $ 0
+NB.   0 0 0 -: normic_mt_ 0 3 $ 0
+NB.   ''    -: normic_mt_ 3 0 $ 0
+NB.   ''    -: normir_mt_ 0 0 $ 0
+NB.   ''    -: normir_mt_ 0 3 $ 0
+NB.   0 0 0 -: normir_mt_ 3 0 $ 0
+NB.   (norm1_mt_"1@|: -: norm1c_mt_)       10 10 ?@$ 0
+NB.   (norm1_mt_"1@|: -: norm1c_mt_) j./ 2 10 10 ?@$ 0
+NB.   (norm1_mt_"1    -: norm1r_mt_)       10 10 ?@$ 0
+NB.   (norm1_mt_"1    -: norm1r_mt_) j./ 2 10 10 ?@$ 0
+NB.   (normi_mt_"1@|: -: normic_mt_)       10 10 ?@$ 0
+NB.   (normi_mt_"1@|: -: normic_mt_) j./ 2 10 10 ?@$ 0
+NB.   (normi_mt_"1    -: normir_mt_)       10 10 ?@$ 0
+NB.   (normi_mt_"1    -: normir_mt_) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
 NB. - norm1 implements LAPACK's DZSUM1, DLANSY('1'),
@@ -81,14 +109,22 @@ NB. - to force normi act like any of: DLANSB('i'),
 NB.   DLANST('i'), xLANGB('i'), xLANGT('i'), xLANHS('i'),
 NB.   xLANTB('i'), xLANTR('i'), ZLANHB('i'), ZLANHT('i'),-
 NB.   extraneous values in matrix must be zeroed
+NB. - normm implements LAPACK's DLANSY('m'), xLANGE('m'),
+NB.   ZLANHE('m')
+NB. - to force normm act like any of: DLANSB('m'),
+NB.   DLANST('m'), xLANGB('m'), xLANGT('m'), xLANHS('m'),
+NB.   xLANTB('m'), xLANTR('m'), ZLANHB('m'), ZLANHT('m'),-
+NB.   extraneous values in matrix must be zeroed
 
-norm1=:  | csum      (max@)  NB. 1-norm of vector (matrix)
-norm1c=: | csum              NB. 1-norm of vector (matrix columns)
-norm1r=: | rsum              NB. 1-norm of vector (matrix rows)
+norm1=:  norm1c      (max@)    NB. 1-norm of vector (matrix)
+norm1c=: | csum                NB. 1-norm of vector (matrix columns)
+norm1r=: | rsum                NB. 1-norm of vector (matrix rows)
 
-normi=:  | (+/"_1@:) (max@)  NB. ∞-norm of vector (matrix)
-normic=: | cmax              NB. ∞-norm of vector (matrix columns)
-normir=: | rmax              NB. ∞-norm of vector (matrix rows)
+normi=:  | (+/"_1@:) (max@)    NB. ∞-norm of vector (matrix)
+normic=: | cmax                NB. ∞-norm of vector (matrix columns)
+normir=: | rmax                NB. ∞-norm of vector (matrix rows)
+
+normm=:  >./@,@:|`0:@.(0 = #)  NB. max of modules of elements of vector (matrix)
 
 NB. ---------------------------------------------------------
 NB. norm1t
@@ -101,10 +137,38 @@ NB.
 NB. Description:
 NB.   Taxicab-based norms |Re(y)| + |Im(y)|
 NB.
+NB. Assertions:
+NB.   0     -: norm1t_mt_  0 0 $ 0
+NB.   0     -: norm1t_mt_  0 3 $ 0
+NB.   0     -: norm1t_mt_  3 0 $ 0
+NB.   ''    -: norm1tc_mt_ 0 0 $ 0
+NB.   0 0 0 -: norm1tc_mt_ 0 3 $ 0
+NB.   ''    -: norm1tc_mt_ 3 0 $ 0
+NB.   ''    -: norm1tr_mt_ 0 0 $ 0
+NB.   ''    -: norm1tr_mt_ 0 3 $ 0
+NB.   0 0 0 -: norm1tr_mt_ 3 0 $ 0
+NB.   0     -: normit_mt_  0 0 $ 0
+NB.   0     -: normit_mt_  0 3 $ 0
+NB.   0     -: normit_mt_  3 0 $ 0
+NB.   ''    -: normitc_mt_ 0 0 $ 0
+NB.   0 0 0 -: normitc_mt_ 0 3 $ 0
+NB.   ''    -: normitc_mt_ 3 0 $ 0
+NB.   ''    -: normitr_mt_ 0 0 $ 0
+NB.   ''    -: normitr_mt_ 0 3 $ 0
+NB.   0 0 0 -: normitr_mt_ 3 0 $ 0
+NB.   (norm1t_mt_"1@|: -: norm1tc_mt_)       10 10 ?@$ 0
+NB.   (norm1t_mt_"1@|: -: norm1tc_mt_) j./ 2 10 10 ?@$ 0
+NB.   (norm1t_mt_"1    -: norm1tr_mt_)       10 10 ?@$ 0
+NB.   (norm1t_mt_"1    -: norm1tr_mt_) j./ 2 10 10 ?@$ 0
+NB.   (normit_mt_"1@|: -: normitc_mt_)       10 10 ?@$ 0
+NB.   (normit_mt_"1@|: -: normitc_mt_) j./ 2 10 10 ?@$ 0
+NB.   (normit_mt_"1    -: normitr_mt_)       10 10 ?@$ 0
+NB.   (normit_mt_"1    -: normitr_mt_) j./ 2 10 10 ?@$ 0
+NB.
 NB. Notes:
 NB. - norm1t implements BLAS's DASUM, DZASUM
 
-norm1t=:  sorim csum      (max@)  NB. 1-norm of vector (matrix)
+norm1t=:  norm1tc         (max@)  NB. 1-norm of vector (matrix)
 norm1tc=: sorim csum              NB. 1-norm of vector (matrix columns)
 norm1tr=: sorim rsum              NB. 1-norm of vector (matrix rows)
 
@@ -119,16 +183,34 @@ NB. normsr
 NB.
 NB. Description:
 NB.   Square-based Euclidean (Frobenius) norm of vector
-NB.   (matrix) |y|^2
+NB.   (matrix) sqrt(|y|^2)
+NB.
+NB. Assertions:
+NB.   0     -: norms_mt_  0 0 $ 0
+NB.   0     -: norms_mt_  0 3 $ 0
+NB.   0     -: norms_mt_  3 0 $ 0
+NB.   ''    -: normsc_mt_ 0 0 $ 0
+NB.   0 0 0 -: normsc_mt_ 0 3 $ 0
+NB.   ''    -: normsc_mt_ 3 0 $ 0
+NB.   ''    -: normsr_mt_ 0 0 $ 0
+NB.   ''    -: normsr_mt_ 0 3 $ 0
+NB.   0 0 0 -: normsr_mt_ 3 0 $ 0
+NB.   (norms_mt_"1@|: -: normsc_mt_)       10 10 ?@$ 0
+NB.   (norms_mt_"1@|: -: normsc_mt_) j./ 2 10 10 ?@$ 0
+NB.   (norms_mt_"1    -: normsr_mt_)       10 10 ?@$ 0
+NB.   (norms_mt_"1    -: normsr_mt_) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
-NB. - norms implements BLAS's DZNRM2 and partially xLASSQ,
-NB.   LAPACK's DLANSY('f'), xLANGE('f'), ZLANHE('f')
+NB. - norms implements BLAS's DNRM2, DZNRM2 and models
+NB.   xLASSQ, LAPACK's DLANSY('f'), xLANGE('f'), ZLANHE('f')
 NB. - to force norms act like any of: DLANSB('f'),
 NB.   DLANST('f'), xLANGB('f'), xLANGT('f'), xLANHS('f'),
 NB.   xLANTB('f'), xLANTR('f'), ZLANHB('f'), ZLANHT('f'),-
 NB.   extraneous values in matrix must be zeroed
+NB.
+NB. TODO:
+NB. - fix index error in normsc for complex vector input
 
-norms=:  ((+/          &.:*:@: %    * ]) >./           )@:|@,@:+.  NB. E-norm of vector (F-norm of matrix)
-normsc=: ((+/"1@ (+/  )&.:*:@:(%"2) * ]) >./"1@ (>./  ))@:|  @:+.  NB. E-norm of matrix columns
-normsr=: ((+/"1@:(+/"2)&.:*:@: %    * ]) >./"1@:(>./"2))@:|  @:+.  NB. E-norm of matrix rows
+norms=:  ((+/  &.:*:@: %    * ]) >./  )@,@:|                                                 @ (+.^:(JCMPX = 3!:0))  NB. E-norm of vector (F-norm of matrix)
+normsc=: ((+/  &.:*:@:(%"1) * ]) >./  )  @:|`(((+/@,"2&.:*:@:% * ]) >./@,"2)@(0 2&|:)@:|@:+.)@.     (JCMPX = 3!:0)   NB. E-norm of matrix columns
+normsr=: ((+/"1&.:*:@: %    * ]) >./"1)  @:|`(((+/@,"2&.:*:@:% * ]) >./@,"2)         @:|@:+.)@.     (JCMPX = 3!:0)   NB. E-norm of matrix rows

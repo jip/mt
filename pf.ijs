@@ -13,9 +13,9 @@ NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2012-2020 Igor Zhuravlov
+NB. Copyright 2011-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -91,7 +91,7 @@ NB.   osmin  - an estimate for the smallest singular value of
 NB.            R(0:k,0:k)
 NB.   ov     - (k+1)-vector, an approximate smallest left
 NB.            singular vector of R(0:k,0:k)
-NB.   R      - m×n-matrix, upper triangular (trapezoidal)
+NB.   R      - m×n-matrix, the upper trapezoidal
 NB.
 NB. Notes:
 NB. - models RRQR's xLAUC1 [1, 2]
@@ -116,11 +116,11 @@ NB.
 NB. Description:
 NB.   Continue a partial LQ factorization on
 NB.   A(offset:offset+dsrd-1,:). If A(0:offset-1,:) has been
-NB.   reduced to lower triangular (trapezoidal) form, then
-NB.   gelpc applies the traditional row pivoting strategy
-NB.   to identify dsrd more independent rows of A with the
-NB.   restriction that the condition number of the leading
-NB.   lower triangle of A should not be larger than 1/rcond.
+NB.   reduced to lower trapezoidal form, then gelpc applies
+NB.   the traditional row pivoting strategy to identify dsrd
+NB.   more independent rows of A with the restriction that
+NB.   the condition number of the leading lower triangle of A
+NB.   should not be larger than 1/rcond.
 NB.   If lacptd (≤ dsrd) such rows are found, then the
 NB.   condition number of lower triangle in
 NB.   A(0:offset+lacptd-1,0:offset+lacptd-1) is less than
@@ -174,12 +174,12 @@ NB.               iQ -: unglq LQf
 NB.   iL      -:trl (2 # offset) {. LQf
 NB.   oL      -:trl (2 # offset+lacptd) {. LQf , dLQf
 NB.   iQ      - offset×(n+1)-matrix with orthonormal rows,
-NB.             which is defined as the product of offset
+NB.             which is defined as the product of (offset)
 NB.             elementary reflectors
 NB.   oQ      - (offset+lacptd)×(n+1)-matrix with orthonormal
 NB.             rows, which is defined as the product of
 NB.             (offset+lacptd) elementary reflectors
-NB.   L       - m×k-matrix, lower triangular (trapezoidal)
+NB.   L       - m×k-matrix, the lower trapezoidal
 NB.   A       - m×n-matrix to factorize
 NB.   k       = min(m,n)
 NB.
@@ -296,11 +296,11 @@ NB.
 NB. Description:
 NB.   Continue a partial QR factorization on
 NB.   A(:,offset:offset+dsrd-1). If A(:,0:offset-1) has been
-NB.   reduced to upper triangular (trapezoidal) form, then
-NB.   geprc applies the traditional column pivoting strategy
-NB.   to identify dsrd more independent columns of A with the
-NB.   restriction that the condition number of the leading
-NB.   upper triangle of A should not be larger than 1/rcond.
+NB.   reduced to upper trapezoidal form, then geprc applies
+NB.   the traditional column pivoting strategy to identify
+NB.   dsrd more independent columns of A with the restriction
+NB.   that the condition number of the leading upper triangle
+NB.   of A should not be larger than 1/rcond.
 NB.   If lacptd (≤ dsrd) such columns are found, then the
 NB.   condition number of upper triangle in
 NB.   A(0:offset+lacptd-1,0:offset+lacptd-1) is less than
@@ -352,14 +352,14 @@ NB.             and iR:
 NB.               iR -: tru }: QfR
 NB.               iQ -: ungqr QfR
 NB.   iQ      - (m+1)×offset-matrix with orthonormal columns,
-NB.             which is defined as the product of offset
+NB.             which is defined as the product of (offset)
 NB.             elementary reflectors
 NB.   oQ      - (m+1)×(offset+lacptd)-matrix with orthonormal
 NB.             columns, which is defined as the product of
 NB.             (offset+lacptd) elementary reflectors
 NB.   iR      -:tru (2 # offset) {. QfR
 NB.   oR      -:tru (2 # offset+lacptd) {. QfR ,. dQfR
-NB.   R       - k×n-matrix, upper triangular (trapezoidal)
+NB.   R       - k×n-matrix, the upper trapezoidal
 NB.   A       - m×n-matrix to factorize
 NB.   k       = min(m,n)
 NB.
@@ -371,8 +371,8 @@ NB.      offset  n-offset                 offset  lacptd  n-offset-lacptd
 NB.
 NB. Notes:
 NB. - models RRQR's xGEQPC [1, 2] with following differences:
-NB.   - returned Q is represented as a product of elementary
-NB.     reflectors, and is merged with R
+NB.   - Q returned is represented as the product of
+NB.     elementary reflectors, and is merged with R
 NB. - mxnm is updated only when offset = 0
 
 geprc=: 3 : 0
@@ -550,7 +550,7 @@ NB.              iQ -: unglq LQf
 NB.   iL     -:trl (2 # offset) {. LQf
 NB.   oL     -:trl (2 # offset+lacptd) {. LQf , dLQf
 NB.   iQ     - offset×(n+1)-matrix with orthonormal rows,
-NB.            which is defined as the product of offset
+NB.            which is defined as the product of (offset)
 NB.            elementary reflectors
 NB.   oQ     - (offset+lacptd)×(n+1)-matrix with orthonormal
 NB.            rows, which is defined as the product of
@@ -701,7 +701,7 @@ NB.            and iR:
 NB.              iR -: tru }: QfR
 NB.              iQ -: ungqr QfR
 NB.   iQ     - (m+1)×offset-matrix with orthonormal columns,
-NB.            which is defined as the product of offset
+NB.            which is defined as the product of (offset)
 NB.            elementary reflectors
 NB.   oQ     - (m+1)×(offset+lacptd)-matrix with orthonormal
 NB.            columns, which is defined as the product of
@@ -791,14 +791,14 @@ NB.   to reveal the rank of A by a suitably dimensioned
 NB.   trailing submatrix L11 with norm(L11) being small.
 NB.
 NB. Syntax:
-NB.   'p L Qn orcond rank svlues'=. ircond gelpb A
+NB.   'ip L Qn orcond rank svlues'=. ircond gelpb A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, 1/ircond specifies an upper bound on the
 NB.            condition number of L00
-NB.   p      - m-vector, rows inversed permutation of A,
+NB.   ip     - m-vector, rows inversed permutation of A,
 NB.            represents permutation m×m-matrix P
-NB.   L      - m×k-matrix, lower triangular (trapezoidal)
+NB.   L      - m×k-matrix, the lower trapezoidal
 NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {. Qn
@@ -813,8 +813,8 @@ NB.            the leading rows were not well-conditioned
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see gelpf
 NB.   Q      - k×n-matrix with orthonormal rows, which is
-NB.            defined as the first k rows of a product of k
-NB.            elementary reflectors
+NB.            defined as the first k rows of the product of
+NB.            k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -915,7 +915,7 @@ NB.   to reveal the rank of A by a suitably dimensioned
 NB.   trailing submatrix R11 with norm(R11) being small.
 NB.
 NB. Syntax:
-NB.   'Qm R p orcond rank svlues'=. ircond geprb A
+NB.   'Qm R ip orcond rank svlues'=. ircond geprb A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, 1/ircond specifies an upper bound on the
@@ -923,8 +923,8 @@ NB.            condition number of R00
 NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {."1 Qm
-NB.   R      - k×n-matrix, upper triangular (trapezoidal)
-NB.   p      - n-vector, columns inversed permutation of A,
+NB.   R      - k×n-matrix, the upper trapezoidal
+NB.   ip     - n-vector, columns inversed permutation of A,
 NB.            represents permutation n×n-matrix P
 NB.   orcond > 0, 1/orcond is an estimate for the condition
 NB.            number of R00
@@ -937,8 +937,8 @@ NB.            the leading columns were not well-conditioned
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see geprf
 NB.   Q      - m×k-matrix with orthonormal columns, which is
-NB.            defined as the first k columns of a product of
-NB.            k elementary reflectors
+NB.            defined as the first k columns of the product
+NB.            of k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -1042,12 +1042,12 @@ NB. trlpr
 NB.
 NB. Description:
 NB.   Compute an estimate for the numerical rank of an
-NB.   lower triangular (trapezoidal) matrix
+NB.   lower trapezoidal matrix
 NB.
 NB. Syntax:
 NB.   rank=. rcond trlpr L
 NB. where
-NB.   L     - m×k-matrix, lower triangular (trapezoidal), k≤m
+NB.   L     - m×k-matrix, the lower trapezoidal, k≤m
 NB.   rcond > 0, 1/rcond specifies an upper bound on the
 NB.           condition number of L
 NB.   rank  ≥ 0, an estimate for the numerical rank of L
@@ -1076,12 +1076,12 @@ NB. trprr
 NB.
 NB. Description:
 NB.   Compute an estimate for the numerical rank of an
-NB.   upper triangular (trapezoidal) matrix
+NB.   upper trapezoidal matrix
 NB.
 NB. Syntax:
 NB.   rank=. rcond trprr R
 NB. where
-NB.   R     - k×n-matrix, upper triangular (trapezoidal), k≤n
+NB.   R     - k×n-matrix, the upper trapezoidal, k≤n
 NB.   rcond > 0, 1/rcond specifies an upper bound on the
 NB.           condition number of R
 NB.   rank  ≥ 0, an estimate for the numerical rank of R
@@ -1121,7 +1121,7 @@ NB.   'dQ L'=. gelpg3 A
 NB. where
 NB.   A  - m×k-matrix, has zeros above 1st subdiagonal,
 NB.        excepting the first row
-NB.   L  - m×k-matrix, lower triangular (trapezoidal)
+NB.   L  - m×k-matrix, the lower trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1165,7 +1165,7 @@ NB.   'dQ R'=. geprg3 A
 NB. where
 NB.   A  - k×n-matrix, has zeros below 1st superdiagonal,
 NB.        excepting the first column
-NB.   R  - k×n-matrix, upper triangular (trapezoidal)
+NB.   R  - k×n-matrix, the upper trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1215,8 +1215,8 @@ NB.
 NB. Syntax:
 NB.   'dQ L'=. hslph3 H
 NB. where
-NB.   H  - m×k-matrix, lower Hessenberg, k≤m
-NB.   L  - m×k-matrix, lower triangular (trapezoidal)
+NB.   H  - m×k-matrix, the lower Hessenberg, k≤m
+NB.   L  - m×k-matrix, the lower trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1250,8 +1250,8 @@ NB.
 NB. Syntax:
 NB.   'dQ R'=. hsprh3 H
 NB. where
-NB.   H  - k×n-matrix, upper Hessenberg, k≤n
-NB.   R  - k×n-matrix, upper triangular (trapezoidal)
+NB.   H  - k×n-matrix, the upper Hessenberg, k≤n
+NB.   R  - k×n-matrix, the upper trapezoidal
 NB.   dQ - r×4-matrix, rotations accumulated, where each row
 NB.        defines one rotation and is 4-vector of values:
 NB.          c , s , iof , iog
@@ -1301,14 +1301,12 @@ NB.   'op oL dQ isovrn rcnr rcnrp1 svlues'=. trprc ip;iL;rank
 NB. where
 NB.   ip     - m-vector, rows inversed permutation of iL,
 NB.            represents permutation m×m-matrix
-NB.   iL     - m×k-matrix, input lower triangular
-NB.            (trapezoidal)
+NB.   iL     - m×k-matrix, input lower trapezoidal
 NB.   rank   - integer in range [0,k], the estimate for the
 NB.            rank of iL
 NB.   op     - m-vector, rows inversed permutation of oL,
 NB.            represents permutation m×m-matrix
-NB.   oL     - m×k-matrix, output lower triangular
-NB.            (trapezoidal)
+NB.   oL     - m×k-matrix, output lower trapezoidal
 NB.   dQ     - r×4-matrix, rotations accumulated, where each
 NB.            row defines one rotation and is 4-vector of
 NB.            values:
@@ -1334,7 +1332,7 @@ NB. Notes:
 NB. - if the leading block of L is singular or near singular,
 NB.   there will be no permutation because in that case the
 NB.   right (and left) singular vectors are the canonical
-NB.   ones ((0,0,...0,1)^T). That is, there will not be
+NB.   ones ((0,0,...,0,1)^T). That is, there will not be
 NB.   permutation if rcond <: PFSF * FP_SFMIN
 
 trlpc=: 3 : 0
@@ -1395,7 +1393,7 @@ trlpc=: 3 : 0
     isovrn=. 0
     svlues=. 1 3#smax,smin
     rcnr=. rcnrp1=. smin%smax
-  elseif. do.
+  else.
     NB. Apply modified Pan&Tang algorithm 3
     ns=. 0
     mxstps=. 25 + m
@@ -1458,8 +1456,7 @@ trlpc=: 3 : 0
         'dQi L'=. gelpg3 L
         dQ=. dQ , dQi
         NB. Estimate the largest singular value
-        itemp=. liofmax (>: rank) {. rnorms
-        mxrp1=. (3 %: >: rank) * itemp { rnorms
+        mxrp1=. (3 %: >: rank) * normitr (>: rank) {. rnorms
         NB. Estimate the left singular vector
         if. mnrp1 > mxrp1 * PFSF * FP_SFMIN do.
           NB. Matrix is not singular or not nearly singular
@@ -1577,8 +1574,7 @@ NB.
 NB. Syntax:
 NB.   'dQ oR op isovrn rcnr rcnrp1 svlues'=. trprc iR;ip;rank
 NB. where
-NB.   iR     - k×n-matrix, input upper triangular
-NB.            (trapezoidal)
+NB.   iR     - k×n-matrix, input upper trapezoidal
 NB.   ip     - n-vector, columns inversed permutation of iR,
 NB.            represents permutation n×n-matrix
 NB.   rank   - integer in range [0,k], the estimate for the
@@ -1587,8 +1583,7 @@ NB.   dQ     - r×4-matrix, rotations accumulated, where each
 NB.            row defines one rotation and is 4-vector of
 NB.            values:
 NB.              c , s , iof , iog
-NB.   oR     - k×n-matrix, output upper triangular
-NB.            (trapezoidal)
+NB.   oR     - k×n-matrix, output upper trapezoidal
 NB.   op     - n-vector, columns inversed permutation of oR,
 NB.            represents permutation n×n-matrix
 NB.   isovrn - boolean, signals about allowed maximum number
@@ -1614,7 +1609,7 @@ NB.   difference: matrix C is an identity matrix
 NB. - if the leading block of R is singular or near singular,
 NB.   there will be no permutation because in that case the
 NB.   right (and left) singular vectors are the canonical
-NB.   ones ((0,0,...0,1)^T). That is, there will not be
+NB.   ones ((0,0,...,0,1)^T). That is, there will not be
 NB.   permutation if rcond <: PFSF * FP_SFMIN
 
 trprc=: 3 : 0
@@ -1675,7 +1670,7 @@ trprc=: 3 : 0
     isovrn=. 0
     svlues=. 1 3#smax,smin
     rcnr=. rcnrp1=. smin%smax
-  elseif. do.
+  else.
     NB. Apply modified Pan&Tang algorithm 3
     ns=. 0
     mxstps=. 25 + n
@@ -1739,8 +1734,7 @@ trprc=: 3 : 0
         'dQi R'=. geprg3 R
         dQ=. dQ , dQi
         NB. Estimate the largest singular value
-        itemp=. liofmax (>: rank) {. cnorms
-        mxrp1=. (3 %: >: rank) * itemp { cnorms
+        mxrp1=. (3 %: >: rank) * normitr (>: rank) {. cnorms
         NB. Estimate the right singular vector
         if. mnrp1 > mxrp1 * PFSF * FP_SFMIN do.
           NB. Matrix is not singular or not nearly singular
@@ -1848,13 +1842,13 @@ NB. ---------------------------------------------------------
 NB. trlpy
 NB.
 NB. Description:
-NB.   Detect the right rank for lower triangular
-NB.   (trapezoidal) matrix L. The algorithm used here is an
-NB.   version of Pan and Tang's RRQR algorithm number 3. This
-NB.   algorithm is applied to matrix L until the right rank
-NB.   is obtained. If the input ordering of matrix L is not
-NB.   accepted, the matrix will be permuted and
-NB.   retriangularized until the rank is revealed.
+NB.   Detect the right rank for lower trapezoidal matrix L.
+NB.   The algorithm used here is an version of Pan and Tang's
+NB.   RRQR algorithm number 3. This algorithm is applied to
+NB.   matrix L until the right rank is obtained. If the input
+NB.   ordering of matrix L is not accepted, the matrix will
+NB.   be permuted and retriangularized until the rank is
+NB.   revealed.
 NB.
 NB. Syntax:
 NB.   'op oL oQn orcond rank svlues'=. ircond trlpy ip;iL;iQn;trash;trash;trash
@@ -1863,14 +1857,14 @@ NB.   ircond > 0, 1/ircond is an upper bound on the condition
 NB.            number of iL00
 NB.   ip     - m-vector, rows inversed permutation of iL,
 NB.            represents permutation m×m-matrix
-NB.   iL     - m×k-matrix, lower triangular (trapezoidal)
+NB.   iL     - m×k-matrix, the lower trapezoidal
 NB.            before rank detecting
 NB.   iQn    - n×n-matrix, the unitary (orthogonal), embeds
 NB.            iQ:
 NB.              iQ -: k {. iQn
 NB.   op     - m-vector, rows inversed permutation of oL,
 NB.            represents permutation m×m-matrix
-NB.   oL     - m×k-matrix, lower triangular (trapezoidal)
+NB.   oL     - m×k-matrix, the lower trapezoidal
 NB.            after rank detecting
 NB.   oQn    - n×n-matrix, the unitary (orthogonal), embeds
 NB.            oQ:
@@ -1882,11 +1876,11 @@ NB.            rank offered by this algorithm
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see gelpf
 NB.   iQ     - k×n-matrix with orthonormal rows, which is
-NB.            defined as the first k rows of a product of k
-NB.            elementary reflectors, before rank detecting
+NB.            defined as the first k rows of the product of
+NB.            k elementary reflectors, before rank detecting
 NB.   oQ     - k×n-matrix with orthonormal rows, which is
-NB.            defined as the first k rows of a product of k
-NB.            elementary reflectors, after rank detecting
+NB.            defined as the first k rows of the product of
+NB.            k elementary reflectors, after rank detecting
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -1917,7 +1911,7 @@ trlpy=: 4 : 0
       elseif. x <: rcnr <. rcnrp1 do.
         if. is1st +. godown do.
           rank=. >: rank
-        elseif. do.
+        else.
           nornkdtd=. 0
           rank=. _.
         end.
@@ -1931,7 +1925,7 @@ trlpy=: 4 : 0
           godown=. 0
           rank=. <: rank
         end.
-      elseif. do.
+      else.
         nornkdtd=. 0
         rank=. _.
       end.
@@ -1948,13 +1942,13 @@ NB. ---------------------------------------------------------
 NB. trpry
 NB.
 NB. Description:
-NB.   Detect the right rank for upper triangular
-NB.   (trapezoidal) matrix R. The algorithm used here is an
-NB.   version of Pan and Tang's RRQR algorithm number 3. This
-NB.   algorithm is applied to matrix R until the right rank
-NB.   is obtained. If the input ordering of matrix R is not
-NB.   accepted, the matrix will be permuted and
-NB.   retriangularized until the rank is revealed.
+NB.   Detect the right rank for upper trapezoidal matrix R.
+NB.   The algorithm used here is an version of Pan and Tang's
+NB.   RRQR algorithm number 3. This algorithm is applied to
+NB.   matrix R until the right rank is obtained. If the input
+NB.   ordering of matrix R is not accepted, the matrix will
+NB.   be permuted and retriangularized until the rank is
+NB.   revealed.
 NB.
 NB. Syntax:
 NB.   'oQm oR op orcond rank svlues'=. ircond trpry iQm;iR;ip;trash;trash;trash
@@ -1964,14 +1958,14 @@ NB.            number of iR00
 NB.   iQm    - m×m-matrix, the unitary (orthogonal), embeds
 NB.            iQ:
 NB.              iQ -: k {."1 iQm
-NB.   iR     - k×n-matrix, upper triangular (trapezoidal)
+NB.   iR     - k×n-matrix, the upper trapezoidal
 NB.            before rank detecting
 NB.   ip     - n-vector, columns inversed permutation of iR,
 NB.            represents permutation n×n-matrix
 NB.   oQm    - m×m-matrix, the unitary (orthogonal), embeds
 NB.            oQ:
 NB.              oQ -: k {."1 oQm
-NB.   oR     - k×n-matrix, upper triangular (trapezoidal)
+NB.   oR     - k×n-matrix, the upper trapezoidal
 NB.            after rank detecting
 NB.   op     - n-vector, columns inversed permutation of oR,
 NB.            represents permutation n×n-matrix
@@ -1982,11 +1976,13 @@ NB.            rank offered by this algorithm
 NB.   svlues - 4-vector, estimates of the singular values,
 NB.            see geprf
 NB.   iQ     - m×k-matrix with orthonormal columns, which is
-NB.            defined as the first k columns of a product of
-NB.            k elementary reflectors, before rank detecting
+NB.            defined as the first k columns of the product
+NB.            of k elementary reflectors, before rank
+NB.            detecting
 NB.   oQ     - m×k-matrix with orthonormal columns, which is
-NB.            defined as the first k columns of a product of
-NB.            k elementary reflectors, after rank detecting
+NB.            defined as the first k columns of the product
+NB.            of k elementary reflectors, after rank
+NB.            detecting
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout:
@@ -2023,7 +2019,7 @@ trpry=: 4 : 0
       elseif. x <: rcnr <. rcnrp1 do.
         if. is1st +. goright do.
           rank=. >: rank
-        elseif. do.
+        else.
           nornkdtd=. 0
           rank=. _.
         end.
@@ -2037,7 +2033,7 @@ trpry=: 4 : 0
           goright=. 0
           rank=. <: rank
         end.
-      elseif. do.
+      else.
         nornkdtd=. 0
         rank=. _.
       end.
@@ -2066,15 +2062,15 @@ NB.   rank of A by a suitably dimensioned trailing submatrix
 NB.   L11 with norm(L11) being small.
 NB.
 NB. Syntax:
-NB.   'p L Qn orcond rank svlues'=. [ircond] gelpf A
+NB.   'ip L Qn orcond rank svlues'=. [ircond] gelpf A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, optional, default is FP_EPS. 1/ircond
 NB.            specifies an upper bound on the condition
 NB.            number of L00
-NB.   p      - m-vector, rows inversed permutation of L,
+NB.   ip     - m-vector, rows inversed permutation of L,
 NB.            represents permutation m×m-matrix
-NB.   L      - m×k-matrix, lower triangular (trapezoidal)
+NB.   L      - m×k-matrix, the lower trapezoidal
 NB.   Qn     - n×n-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {. Qn
@@ -2095,8 +2091,8 @@ NB.            By examining these values, one can confirm
 NB.            that the rank is well defined with respect to
 NB.            the threshold chosen
 NB.   Q      - k×n-matrix with orthonormal rows, which is
-NB.            defined as the first k rows of a product of k
-NB.            elementary reflectors
+NB.            defined as the first k rows of the product of
+NB.            k elementary reflectors
 NB.   k      = min(m,n)
 NB.
 NB. Storage layout:
@@ -2123,7 +2119,7 @@ NB.   Q=. (c L) {. Qn
 
 gelpf=: FP_EPS&$: :([ ]`trlpy@.(0 < 3 {:: ]) gelpb)
 
-NB. NB. 'Q L p orcond rank svlues'=. [ircond] geplf A
+NB. NB. 'Qm L ip orcond rank svlues'=. [ircond] geplf A
 NB. geplf=: FP_EPS&$: :([ ]`trply@.(0 < 3 {:: ]) geplb)
 
 NB. ---------------------------------------------------------
@@ -2139,7 +2135,7 @@ NB.   rank of A by a suitably dimensioned trailing submatrix
 NB.   R11 with norm(R11) being small.
 NB.
 NB. Syntax:
-NB.   'Qm R p orcond rank svlues'=. [ircond] geprf A
+NB.   'Qm R ip orcond rank svlues'=. [ircond] geprf A
 NB. where
 NB.   A      - m×n-matrix, the input to factorize
 NB.   ircond > 0, optional, default is FP_EPS. 1/ircond
@@ -2148,8 +2144,8 @@ NB.            number of R00
 NB.   Qm     - m×m-matrix, the unitary (orthogonal), embeds
 NB.            Q:
 NB.              Q -: k {."1 Qm
-NB.   R      - k×n-matrix, upper triangular (trapezoidal)
-NB.   p      - n-vector, columns inversed permutation of R,
+NB.   R      - k×n-matrix, the upper trapezoidal
+NB.   ip     - n-vector, columns inversed permutation of R,
 NB.            represents permutation n×n-matrix
 NB.   orcond > 0, 1/orcond is an estimate for the condition
 NB.            number of R00
@@ -2168,7 +2164,7 @@ NB.            By examining these values, one can confirm
 NB.            that the rank is well defined with respect to
 NB.            the threshold chosen
 NB.   Q      - m×k-matrix with orthonormal columns, which is
-NB.            defined as the first k columns of a product
+NB.            defined as the first k columns of the product
 NB.            of k elementary reflectors
 NB.   k      = min(m,n)
 NB.
@@ -2195,7 +2191,7 @@ NB.   P=. p2P p
 NB.   Q=. (# R) {."1 Qm
 NB.
 NB. Notes:
-NB. - simulates LAPACK's xGEQPx
+NB. - simulates LAPACK's xGEQP3
 NB. - implements RRQR's xGEQPY(3) [1, 2] with following
 NB.   differences:
 NB.   - matrix C is an identity matrix
@@ -2204,7 +2200,7 @@ NB.     gets value NaN
 
 geprf=: FP_EPS&$: :([ ]`trpry@.(0 < 3 {:: ]) geprb)
 
-NB. NB. 'p R Q orcond rank svlues'=. [ircond] gerpf A
+NB. NB. 'ip R Qn orcond rank svlues'=. [ircond] gerpf A
 NB. gerpf=: FP_EPS&$: :([ ]`trrpy@.(0 < 3 {:: ]) gerpb)
 
 NB. =========================================================
@@ -2214,34 +2210,53 @@ NB. ---------------------------------------------------------
 NB. testgepf
 NB.
 NB. Description:
-NB.   Test orthogonal factorization with pivoting algorithms:
-NB.   - gelpf geplf geprf gerpf (math/mt addon)
-NB.   by general matrix
+NB.   Test gexxf by general matrix
 NB.
 NB. Syntax:
 NB.   testgepf A
 NB. where
 NB.   A - m×n-matrix
 NB.
-NB. Formula:
-NB. - for LP: berr := max( ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB. - for PL: berr := max( ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for PR: berr := max( ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for RP: berr := max( ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB.
 NB. TODO:
-NB. - for LP: berr := max( ||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - P * L * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB. - for PL: berr := max( ||SVD(A) - SVD(L)|| / (FP_EPS * ||SVD(L)|| * max(m,n)), ||A - Q * L * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for PR: berr := max( ||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - Q * R * P|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for RP: berr := max( ||SVD(A) - SVD(R)|| / (FP_EPS * ||SVD(R)|| * max(m,n)), ||A - P * R * Q|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
+NB. - add xQRT12 test
 
 testgepf=: 3 : 0
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  load_mttmp_ :: ] 'math/mt/test/lapack2/geqp3'
 
-  ('gelpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~   c)~)     2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
-  ('geplf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~ -@#) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
-  ('geprf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: (({."1~   #) mp ]) 1&{::  C.^:_1"1~ (2&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct)@(0 {:: ]))))) y
-  ('gerpf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- 0&{:: C.^:_1 (1&{::) ([ mp ({.~ -@c)~)     2&{:: ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(mp  ct)@(2 {:: ]))))) y
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+
+  norm=. norm1 y
+
+  args=. y ; norm
+
+  NB. current pf verbs return Q in non-factorized form,
+  NB. this differs from xGEQP3 so specialized adapters
+  NB. are needed
+  NB. berrA=. (A ; normA) xpt01a (ip ; x ; Qn ; trash)
+  NB. berrA=. (A ; normA) pxt01a (Qm ; x ; ip ; trash)
+  lpt01a=: ((1 {:: [) %~^:(0 < [)   C.  ~&(0&{::)          (normi % FP_EPS * >./@$)@:- (1 {:: ]) ([ mp ({.~   c)~ ) 2 {:: ])`0:@.(0 e. $@(0 {:: [))
+  plt01a=: ((1 {:: [) %~^:(0 < [) ((C."1  (0&{::))~ 2&{::) (norm1 % FP_EPS * >./@$)@:- (0 {:: ]) (({."1~ -@#) mp ]) 1 {:: ])`0:@.(0 e. $@(0 {:: [))
+  prt01a=: ((1 {:: [) %~^:(0 < [) ((C."1  (0&{::))~ 2&{::) (norm1 % FP_EPS * >./@$)@:- (0 {:: ]) (({."1~   #) mp ]) 1 {:: ])`0:@.(0 e. $@(0 {:: [))
+  rpt01a=: ((1 {:: [) %~^:(0 < [)   C.  ~&(0&{::)          (normi % FP_EPS * >./@$)@:- (1 {:: ]) ([ mp ({.~ -@c)~ ) 2 {:: ])`0:@.(0 e. $@(0 {:: [))
+  NB. berrQn=. trash0 xqt11a (trash1 ; trash2 ; Qn ; trash3)
+  NB. berrQm=. trash0 qxt11a (Qm ; trash1 ; trash2 ; trash3)
+  lqt11a=: (normi@(<: upddiag)@(mp  ct) % FP_EPS * #)@(2 {:: ])
+  qlt11a=: (norm1@(<: upddiag)@(mp~ ct) % FP_EPS * #)@(0 {:: ])
+  qrt11a=: (norm1@(<: upddiag)@(mp~ ct) % FP_EPS * #)@(0 {:: ])
+  rqt11a=: (normi@(<: upddiag)@(mp  ct) % FP_EPS * #)@(2 {:: ])
+
+  ('dgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  ('dgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+
+  ('gelpf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(lpt01a >. lqt11a))) args
+  ('geplf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(plt01a >. qlt11a))) args
+  ('geprf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(prt01a >. qrt11a))) args
+  ('gerpf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(rpt01a >. rqt11a))) args
+
+  coerase < 'mttmp'
+  erase 'lpt01a plt01a prt01a rpt01a lqt11a qlt11a qrt11a'
 
   EMPTY
 )

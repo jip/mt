@@ -7,9 +7,9 @@ NB.         matrix in a given norm
 NB. laic1x  Apply one step of incremental condition
 NB.         estimation
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -86,6 +86,7 @@ NB. tru1coni
 NB. trucon1
 NB. truconi
 NB. uncon1
+NB. unconi
 NB.
 NB. Description:
 NB.   Calculate reciprocal of the condition number of a
@@ -97,7 +98,7 @@ NB.   rcondH=. heconx H
 NB.   rcondP=. poconx P
 NB.   rcondT=. ptconx T
 NB.   rcondR=. trxxconx R
-NB.   rcondQ=. uncon1 Q
+NB.   rcondQ=. unconx Q
 NB. where
 NB.   G      - n×n-matrix of type: general, band,
 NB.            tridiagonal, triangular or triangular band
@@ -112,13 +113,13 @@ NB.            positive definite tridiagonal
 NB.   rcondT ≥ 0, reciprocal of the condition number of T
 NB.   R      - n×n-matrix of type: triangular
 NB.   rcondR ≥ 0, reciprocal of the condition number of R
-NB.   Q      - n×n-matrix, unitary (orthogonal)
+NB.   Q      - n×n-matrix, the unitary (orthogonal)
 NB.   rcondQ ≥ 0, reciprocal of the condition number of Q in
 NB.            1-norm
 NB.
 NB. Notes:
-NB. - extraneous values in triangular, band matrices must be
-NB.   zeroed
+NB. - extraneous values in band, tridiagonal, triangular and
+NB.   triangular band matrices must be zeroed
 NB. - gecon1 simulates LAPACK's xGECON('1'), xGBCON('1'),
 NB.   xGTCON('1'), xTBCON('1')
 NB. - geconi simulates LAPACK's xGECON('i'), xGBCON('i'),
@@ -139,7 +140,7 @@ NB. - trucon1 simulates LAPACK's xTRCON('1','U','N')
 NB. - truconi simulates LAPACK's xTRCON('i','U','N')
 
 gecon1=: 1:`(norm1 con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
-geconi=: 1:`(normI con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
+geconi=: 1:`(normi con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
 
 hecon1=: 1:`(norm1 con (hetripl@hetrfpl) :: 0:)@.(*@#)
 heconi=: 1:`(normi con (hetripl@hetrfpl) :: 0:)@.(*@#)
@@ -160,6 +161,7 @@ trucon1=:  1:`(norm1 con trtriu  :: 0:)@.(*@#)
 truconi=:  1:`(normi con trtriu  :: 0:)@.(*@#)
 
 uncon1=: 1:`(norm1 con ct :: 0:)@.(*@#)
+unconi=: 1:`(normi con ct :: 0:)@.(*@#)
 
 NB. ---------------------------------------------------------
 NB. laic11
@@ -219,7 +221,7 @@ laic11=: 3 : 0
     end.
   elseif. +./ absest <: FP_EPS * absga do.
     stardot ga
-  elseif. do.
+  else.
     NB. normal case
     b=. -: 1 - +/ 't c'=. *: absga % absest
     if. 0 < b do.
@@ -258,7 +260,7 @@ laic12=: 3 : 0
     else.
       (absest * tmp % scl) ; cs
     end.
-  elseif. do.
+  else.
     NB. normal case
     norma=. (>:@(+/)@(* {.) >. +/@(* {:)) zeta=. absag % absest
     if. 0 <: >: +: (- * +)/ zeta do.

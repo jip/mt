@@ -11,9 +11,9 @@ NB. qnmod      Magnitude
 NB. qnsign     Signum
 NB. qnf        Adv. to quaternificate verb
 NB.
-NB. Version: 0.10.4 2018-11-02
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2018 Igor Zhuravlov
+NB. Copyright 2011-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -39,21 +39,21 @@ NB. =========================================================
 NB. Concepts
 NB.
 NB. Let:
-NB.   a,b,c,d ∊ ℝ        Basis elements multiplication table:
+NB.   a,b,c,d ∊ ℝ       Basis elements multiplication table:
 NB.   ℂi ≡ ℝ  + ℝ *i          i   j   k
 NB.   ℂj ≡ ℝ  + ℝ *j      i  _1   k  -j
 NB.   ℂk ≡ ℝ  + ℝ *k      j  -k  _1   i
 NB.   ℍ  ≡ ℂi + ℂi*j      k   j  -i  _1
 NB.
-NB. J:                    Math:
-NB.  x -: a j. b            x = a + b*i ∊ ℂi
-NB.  y -: c j. d            y = c + d*i ∊ ℂi
-NB.  z -: a j. c            z = a + c*j ∊ ℂj
-NB.  w -: a j. d            w = a + d*k ∊ ℂk
-NB.  q -: x , y             q = x + y*j = a + b*i + c*j + d*k ∊ ℍ
+NB. J:                  Math:
+NB.  x -: a j. b          x = a + b*i ∊ ℂi
+NB.  y -: c j. d          y = c + d*i ∊ ℂi
+NB.  z -: a j. c          z = a + c*j ∊ ℂj
+NB.  w -: a j. d          w = a + d*k ∊ ℂk
+NB.  q -: x , y           q = x + y*j = a + b*i + c*j + d*k ∊ ℍ
 NB.
 NB. Notes:
-NB. - elements from ℂi, ℂj, ℂk must not be mixed with each
+NB. - elements from ℝ, ℂi, ℂj, ℂk must not be mixed with each
 NB.   other by math operators in J
 
 NB. =========================================================
@@ -65,20 +65,20 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Get/set component[s]
 NB.
-NB. Verb:        Syntax (monad):        Syntax (dyad):
-NB. qn1          a=. qn1  q             qa=. a qn1  q
-NB. qni          b=. qni  q             qb=. b qni  q
-NB. qnj          c=. qnj  q             qc=. c qnj  q
-NB. qnk          d=. qnk  q             qd=. d qnk  q
-NB. qn1i         x=. qn1i q             qx=. x qn1i q
-NB. qnjk         y=. qnjk q             qy=. y qnjk q
-NB. qn1j         z=. qn1j q             qz=. z qn1j q
-NB. qn1k         w=. qn1k q             qw=. w qn1k q
+NB. Verb:    Syntax (monad):    Syntax (dyad):
+NB. qn1      a=. qn1  q         qa=. a qn1  q
+NB. qni      b=. qni  q         qb=. b qni  q
+NB. qnj      c=. qnj  q         qc=. c qnj  q
+NB. qnk      d=. qnk  q         qd=. d qnk  q
+NB. qn1i     x=. qn1i q         qx=. x qn1i q
+NB. qnjk     y=. qnjk q         qy=. y qnjk q
+NB. qn1j     z=. qn1j q         qz=. z qn1j q
+NB. qn1k     w=. qn1k q         qw=. w qn1k q
 
-qn1=:  9&o.@{. : ((j. qni) 0} ])
-qni=: 11&o.@{. : ((j.~qn1) 0} ])
-qnj=:  9&o.@{: : ((j. qnk) 1} ])
-qnk=: 11&o.@{: : ((j.~qnj) 1} ])
+qn1=: ( 9 o. {.) : ((j.  qni) 0} ])
+qni=: (11 o. {.) : ((j.~ qn1) 0} ])
+qnj=: ( 9 o. {:) : ((j.  qnk) 1} ])
+qnk=: (11 o. {:) : ((j.~ qnj) 1} ])
 
 qn1i=: {.            : (0})
 qnjk=: {:            : (1})
@@ -88,51 +88,51 @@ qn1k=: j./@(9 11&o.) : ((2 2 $ 0 0 ; 2 0 ; 1 1 ; 0 1) j./@:{ ,&:+.)
 NB. ---------------------------------------------------------
 NB. Markers
 NB.
-NB. Verb:        Action:                  Syntax:
-NB. qnmark1      a + 0*i + 0*j + 0*k      qa=.   qnmark1   q
-NB. qnmarki      0 + b*i + 0*j + 0*k      qb=.   qnmarki   q
-NB. qnmarkj      0 + 0*i + c*j + 0*k      qc=.   qnmarkj   q
-NB. qnmarkk      0 + 0*i + 0*j + d*k      qd=.   qnmarkk   q
-NB. qnmark1i     a + b*i + 0*j + 0*k      qab=.  qnmark1i  q
-NB. qnmark1j     a + 0*i + c*j + 0*k      qac=.  qnmark1j  q
-NB. qnmark1k     a + 0*i + 0*j + d*k      qad=.  qnmark1k  q
-NB. qnmarkij     0 + b*i + c*j + 0*k      qbc=.  qnmarkij  q
-NB. qnmarkik     0 + b*i + 0*j + d*k      qbd=.  qnmarkik  q
-NB. qnmarkjk     0 + 0*i + c*j + d*k      qcd=.  qnmarkjk  q
-NB. qnmark1ij    a + b*i + c*j + 0*k      q1ij=. qnmark1ij q
-NB. qnmark1ik    a + b*i + 0*j + d*k      q1ik=. qnmark1ik q
-NB. qnmark1jk    a + 0*i + c*j + d*k      q1jk=. qnmark1jk q
-NB. qnmarkijk    0 + b*i + c*j + d*k      qijk=. qnmarkijk q
+NB. Verb:        Action:                Syntax:
+NB. qnmark1      a + 0*i + 0*j + 0*k    qa=.   qnmark1   q
+NB. qnmarki      0 + b*i + 0*j + 0*k    qb=.   qnmarki   q
+NB. qnmarkj      0 + 0*i + c*j + 0*k    qc=.   qnmarkj   q
+NB. qnmarkk      0 + 0*i + 0*j + d*k    qd=.   qnmarkk   q
+NB. qnmark1i     a + b*i + 0*j + 0*k    qab=.  qnmark1i  q
+NB. qnmark1j     a + 0*i + c*j + 0*k    qac=.  qnmark1j  q
+NB. qnmark1k     a + 0*i + 0*j + d*k    qad=.  qnmark1k  q
+NB. qnmarkij     0 + b*i + c*j + 0*k    qbc=.  qnmarkij  q
+NB. qnmarkik     0 + b*i + 0*j + d*k    qbd=.  qnmarkik  q
+NB. qnmarkjk     0 + 0*i + c*j + d*k    qcd=.  qnmarkjk  q
+NB. qnmark1ij    a + b*i + c*j + 0*k    q1ij=. qnmark1ij q
+NB. qnmark1ik    a + b*i + 0*j + d*k    q1ik=. qnmark1ik q
+NB. qnmark1jk    a + 0*i + c*j + d*k    q1jk=. qnmark1jk q
+NB. qnmarkijk    0 + b*i + c*j + d*k    qijk=. qnmarkijk q
 
-qnmark1=: ( 9    o. {.),0:
-qnmarki=: (11 j.@o. {.),0:
-qnmarkj=: 0, 9    o. {:
-qnmarkk=: 0,11 j.@o. {:
+qnmark1=: (0 ,~    qn1) : [:
+qnmarki=: (0 ,~ j.@qni) : [:
+qnmarkj=: (0 ,     qnj) : [:
+qnmarkk=: (0 ,  j.@qnk) : [:
 
-qnmark1i=: 0&(1})
-qnmarkjk=: 0&(0})
-qnmark1j=:       9&o.
-qnmarkik=: j.@:(11&o.)
-qnmark1k=: ( 9    o. {.) , 11 j.@o. {:
-qnmarkij=: (11 j.@o. {.) ,  9    o. {:
+qnmark1i=: 0&(1})          : [:
+qnmarkjk=: 0&(0})          : [:
+qnmark1j=:      9&o.       : [:
+qnmarkik=: j.@(11&o.)      : [:
+qnmark1k=: (qn1 ,  j.@qnk) : [:
+qnmarkij=: (qnj ,~ j.@qni) : [:
 
-qnmark1ij=: 1}~ ( 9    o. {:)
-qnmark1ik=: 1}~ (11 j.@o. {:)
-qnmark1jk=: 0}~ ( 9    o. {.)
-qnmarkijk=: 0}~ (11 j.@o. {.)
+qnmark1ij=: (1}~    qnj) : [:
+qnmark1ik=: (1}~ j.@qnk) : [:
+qnmark1jk=: (0}~    qn1) : [:
+qnmarkijk=: (0}~ j.@qni) : [:
 
 NB. ---------------------------------------------------------
 NB. Conjugators
 NB.
-NB. Verb:        Action:                  Syntax:
-NB. qncon1       -a + b*i + c*j + d*k     qc=. qncon1  q
-NB. qnconi        a - b*i + c*j + d*k     qc=. qnconi  q
-NB. qnconj        a + b*i - c*j + d*k     qc=. qnconj  q
-NB. qnconk        a + b*i + c*j - d*k     qc=. qnconk  q
-NB. qnconij       a - b*i - c*j + d*k     qc=. qnconij q
-NB. qnconjk       a + b*i - c*j - d*k     qc=. qnconjk q
-NB. qnconik       a - b*i + c*j - d*k     qc=. qnconik q
-NB. qnconv        a - b*i - c*j - d*k     qc=. qnconv  q
+NB. Verb:      Action:                 Syntax:
+NB. qncon1     -a + b*i + c*j + d*k    qc=. qncon1  q
+NB. qnconi      a - b*i + c*j + d*k    qc=. qnconi  q
+NB. qnconj      a + b*i - c*j + d*k    qc=. qnconj  q
+NB. qnconk      a + b*i + c*j - d*k    qc=. qnconk  q
+NB. qnconij     a - b*i - c*j + d*k    qc=. qnconij q
+NB. qnconjk     a + b*i - c*j - d*k    qc=. qnconjk q
+NB. qnconik     a - b*i + c*j - d*k    qc=. qnconik q
+NB. qnconv      a - b*i - c*j - d*k    qc=. qnconv  q
 NB.
 NB. References:
 NB. [1] E. A. Karataev. Inner conjugation of quaternions.
@@ -163,8 +163,8 @@ NB. Reciprocal
 qnrec=: qnconv % +/@:*:@,@:+.
 
 NB. Divide
-qndivl=: qnmul qnrec  NB. via left quotient
-qndivr=: qnmul~qnrec  NB. via right quotient
+qndivl=: qnmul  qnrec  NB. via left quotient
+qndivr=: qnmul~ qnrec  NB. via right quotient
 
 NB. Magnitude
 qnmod=: norms

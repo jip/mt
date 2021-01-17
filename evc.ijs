@@ -9,9 +9,9 @@ NB. testtgevc   Test tgevcxxx by square matrices
 NB. testevc     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2011-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -63,29 +63,29 @@ NB.   d        - k×n-matrix
 tgevci=: 4 : 0
   bignum=. % FP_SFMIN * c y
   small=. % FP_PREC * bignum
-  d0=. diag"2 y                                                                NB. 2×n-matrix
-  d1=. 0 1 ]`(9&o.) ag d0                                                      NB. 2×n-matrix
-  d2=. 0 1 sorim`| ag d1
-  temp=. norm1tr"2 y                                                           NB. 2×n-matrix
-  abnorm=. >./"1 temp                                                          NB. 2-vector
+  d0=. diag"2 y                                                         NB. 2×n-matrix
+  d1=. ]`(9&o.)"1 d0                                                    NB. 2×n-matrix
+  d2=. sorim`|"1 d1
+  temp=. norm1tr"2 y                                                    NB. 2×n-matrix
+  abnorm=. >./"1 temp                                                   NB. 2-vector
   abrwork=. temp - sorim d0
-  abscale=. % FP_SFMIN >. abnorm                                               NB. 2-vector
-  temp=. % (>./) FP_SFMIN , abscale * d2                                       NB. n-vector
-  sba=. |. abscale * temp *"1 d1                                               NB. 2×n-matrix
-  abcoeff=. abscale * sba
+  abscale=. % FP_SFMIN >. abnorm                                        NB. 2-vector
+  temp=. % (>./) FP_SFMIN , abscale * d2                                NB. n-vector
+  sba=. |. abscale * temp *"1 d1                                        NB. 2×n-matrix
+  abcoeff=. abscale * sba                                               NB. 2×n-matrix
   NB. scale to avoid underflow
-  lsab=. *./ 0 1 (>:&FP_SFMIN)`(<&small) ag 0 1 (|`sorim ag)"2 sba ,: abcoeff  NB. 2×n-matrix
-  scale=. >./ lsab} 1 ,: ((% small) <. abnorm) * small % 0 1 |`sorim ag sba    NB. n-vector
-  scale=. (+./ lsab)} scale ,: scale <. % FP_SFMIN * (>./) 1 , 0 1 |`sorim ag abcoeff
+  lsab=. *./ >:&FP_SFMIN`(<&small)"2 |`sorim"1"2 sba ,: abcoeff         NB. 2×n-matrix
+  scale=. >./ lsab} 1 ,: ((% small) <. abnorm) * small % |`sorim"1 sba  NB. n-vector
+  scale=. (+./ lsab)} scale ,: scale <. % FP_SFMIN * >./ 1 , |`sorim"1 abcoeff
   abcoeff=. lsab} (abcoeff *"1 scale) ,: (abscale * scale *"1 sba)
-  abcoeffa=. 0 1 |`sorim ag abcoeff
+  abcoeffa=. |`sorim"1 abcoeff
   cond1=. +/ abcoeffa * abrwork
-  dmin=. (# x) # ,: >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa                 NB. k×n-matrix
-  d=. (x { |: abcoeff) mp 0 1 ]`- ag d0
+  dmin=. (# x) # ,: >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa          NB. k×n-matrix
+  d=. (x { |: abcoeff) mp ]`-"1 d0
   d=. (dmin < sorim d)} dmin ,: d
-  cond2=. bignum (((1>]),.*) sorim) d
+  cond2=. bignum (((1 > ]) ,. *) sorim) d
 
-  bignum ; (|:d2) ; (|:abrwork) ; cond1 ; cond2 ; (|:abcoeff) ; (|:abcoeffa) ; d
+  bignum ; (|: d2) ; (|: abrwork) ; cond1 ; cond2 ; (|: abcoeff) ; (|: abcoeffa) ; d
 )
 
 NB. ---------------------------------------------------------
@@ -120,7 +120,7 @@ tgevcly=: 4 : 0
       NB.   y * (a*A - b*B) = 0  (rowwise)
       NB. work[0:j-1] contains sums w
       NB. work[j+1:je] contains y
-      work=. 1 ,~ (-/) ((je { iso) { abcoeff) * (((0,],0:),:(2 1,])) je { iso) ({.@(1 0 2&|:)) ;. 0 y
+      work=. 1 ,~ -/ ((je { iso) { abcoeff) * (((0 , ] , 0:) ,: 2 1 , ]) je { iso) {.@(1 0 2&|:);.0 y
       di=. je { d
       j=. <: je { iso
       while. j >: 0 do.
@@ -138,7 +138,7 @@ tgevcly=: 4 : 0
           if. ((abcoeffa mp&(j&{) abrwork) >: (bignum % abs1wj)) *. (1 < abs1wj) do.
             work=. work % abs1wj
           end.
-          workadd=. (((je { iso) { abcoeff) * j { work) * (((0,],0:),:(2 1,])) j) ({.@(1 0 2&|:)) ;. 0 y
+          workadd=. (((je { iso) { abcoeff) * j { work) * (((0 , ] , 0:) ,: 2 1 , ]) j) {.@(1 0 2&|:);.0 y
           work=. (i. j) +`-/@(,&workadd) upd work
         end.
         j=. <: j
@@ -197,7 +197,7 @@ tgevclx=: 4 : 0
           work=. work % xmax
           xmax=. 1
         end.
-        sum=. -/ (0 1 ]`+ ag (je { iso) { abcoeff) * work mp (j ((0,, ),:(2 1,- )) je { iso) (+@{.@(0&|:)) ;. 0 y
+        sum=. -/ (]`+"0 (je { iso) { abcoeff) * work mp (j ((0 , ,) ,: (2 1 , -)) je { iso) +@{.@(0&|:);.0 y
         NB. form:
         NB.   x[j] = - sum / conjg(a*S[j,j] - b*P[j,j])
         NB. with scaling and perturbation of the denominator
@@ -212,7 +212,7 @@ tgevclx=: 4 : 0
         xmax=. xmax >. sorim workj
         j=. >: j
       end.
-      work=. (-n) {. work
+      work=. (- n) {. work
     end.
     je=. >: je
     W=. W , work
@@ -518,86 +518,23 @@ NB. Syntax:
 NB.   testtgevc AB
 NB. where
 NB.   AB - 2×n×n-brick
-NB.
-NB. Formula:
-NB.   berr := max(berr0,berr1)
-NB. where
-NB.   ||M|| := max(||M||_1 , FP_SFMIN)
-NB.   ||v|| := max(|Re(v(i))|+|Im(v(i))|)
-NB.   e1(i) - i-th eigenvalue, also i-th element on S
-NB.           diagonal
-NB.   e2(i) - i-th eigenvalue, also i-th element on P
-NB.           diagonal
-NB.   l(i)  - i-th left eigenvector
-NB.   lb(i) - i-th back transformed left eigenvector
-NB.   r(i)  - i-th right eigenvector
-NB.   rb(i) - i-th back transformed right eigenvector
-NB.   - tgevcll:
-NB.       berr0 := max(||l(i) * (e2(i)*S - e1(i)*P)  || / (FP_PREC * max(|| e2(i)*S   ||,|| e1(i)*P   ||)))
-NB.       berr1 := max(| ||l(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevclr:
-NB.       berr0 := max(||r(i) * (e2(i)*S - e1(i)*P)^H|| / (FP_PREC * max(||(e2(i)*S)^H||,||(e1(i)*P)^H||)))
-NB.       berr1 := max(| ||r(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevclb:
-NB.       berr0 := berr(tgevcll)
-NB.       berr1 := berr(tgevclr)
-NB.   - tgevcllb:
-NB.       berr0 := max(||l(i) * (e2(i)*H - e1(i)*T)  || / (FP_PREC * max(|| e2(i)*H   ||,|| e1(i)*T   ||)))
-NB.       berr1 := max(| ||lb(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevclrb:
-NB.       berr0 := max(||r(i) * (e2(i)*H - e1(i)*T)^H|| / (FP_PREC * max(||(e2(i)*H)^H||,||(e1(i)*T)^H||)))
-NB.       berr1 := max(| ||rb(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevclbb:
-NB.       berr0 := berr(tgevcllb)
-NB.       berr1 := berr(tgevclrb)
-NB.   - tgevcul:
-NB.       berr0 := max(||(e2(i)*S - e1(i)*P)^H * l(i)|| / (FP_PREC * max(||(e2(i)*S)^H||,||(e1(i)*P)^H||)))
-NB.       berr1 := max(| ||l(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevcur:
-NB.       berr0 := max(||(e2(i)*S - e1(i)*P)   * r(i)|| / (FP_PREC * max(|| e2(i)*S   ||,|| e1(i)*P   ||)))
-NB.       berr1 := max(| ||r(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevcub:
-NB.       berr0 := berr(tgevcul)
-NB.       berr1 := berr(tgevcur)
-NB.   - tgevculb:
-NB.       berr0 := max(||(e2(i)*H - e1(i)*T)^H * l(i)|| / (FP_PREC * max(||(e2(i)*H)^H||,||(e1(i)*T)^H||)))
-NB.       berr1 := max(| ||lb(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevcurb:
-NB.       berr0 := max(||(e2(i)*H - e1(i)*T)   * r(i)|| / (FP_PREC * max(|| e2(i)*H   ||,|| e1(i)*T   ||)))
-NB.       berr1 := max(| ||rb(i)|| - 1 |) / (FP_PREC * n)
-NB.   - tgevcubb:
-NB.       berr0 := berr(tgevculb)
-NB.       berr1 := berr(tgevcurb)
-NB.
-NB. Notes:
-NB. - berrxx are non-iterative and are require O(N^3) RAM
 
 testtgevc=: 3 : 0
-  vberrll=:  (     normir@:((((  norm1r@:((mp"1 2 -/"3)~     )                                         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:( norm1       "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitr % FP_PREC * c)@]
-  vberrlr=:  (     normir@:((((                                 norm1r@:((mp"2 1~ -/"3)~+    )         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:(       normi "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitr % FP_PREC * c)@]
-  vberrlb=:  (>./@:normir@:((((((norm1r@:( mp"1 2      ~   {.),:norm1r@:((mp"2 1      ) + @{:))~ -/"3)~) (>./@:%) (FP_PREC * (FP_SFMIN >. |:@:(>./"2)@:((norm1,normi)"2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitr % FP_PREC * c)@]
-
-  vberrul=:  (     normir@:((((  norm1r@:((mp"1 2 -/"3)~ct   )                                         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:( normi       "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitc % FP_PREC * c)@]
-  vberrur=:  (     normir@:((((                                 norm1r@:((mp"2 1~ -/"3)~|:   )         )       %  (FP_PREC * (FP_SFMIN >.     (>./"1)@:(       norm1 "2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(     normir@:<:@:normitc % FP_PREC * c)@]
-  vberrub=:  (>./@:normir@:((((((norm1r@:( mp"1 2      ~ct@{.),:norm1r@:((mp"2 1      ) |:@{:))~ -/"3)~) (>./@:%) (FP_PREC * (FP_SFMIN >. |:@:(>./"2)@:((normi,norm1)"2)@[)))~ ((_2&{.)*"_ 1|:@|.@:(diag"2)@(2&{.)))~))>.(>./@:normir@:<:@:normitc % FP_PREC * c)@]
-
-  rcondl=. <./ trlcon1"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
+  rcondl=. <./ trlconi"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
   rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ 0&,)~ ((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
 
-  ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrll)) SPl
-  ('tgevclr'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrlr)) SPl
-  ('tgevclb'  tmonad (]          `]`(rcondl"_)`(_."_)`vberrlb)) SPl
-  ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`(_."_)`vberrll)) SPQZHTl
-  ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`(_."_)`vberrlr)) SPQZHTl
-  ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`(_."_)`vberrlb)) SPQZHTl
-  ('tgevcul'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrul)) SPu
-  ('tgevcur'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrur)) SPu
-  ('tgevcub'  tmonad (]          `]`(rcondu"_)`(_."_)`vberrub)) SPu
-  ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`(_."_)`vberrul)) SPQZHTu
-  ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`(_."_)`vberrur)) SPQZHTu
-  ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`(_."_)`vberrub)) SPQZHTu
-
-  erase 'vberrll vberrlr vberrlb vberrul vberrur vberrub'
+  ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`t52ll)) SPl
+  ('tgevclr'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lr)) SPl
+  ('tgevclb'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lb)) SPl
+  ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`(_."_)`t52ll)) SPQZHTl
+  ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`(_."_)`t52lr)) SPQZHTl
+  ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`(_."_)`t52lb)) SPQZHTl
+  ('tgevcul'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ul)) SPu
+  ('tgevcur'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ur)) SPu
+  ('tgevcub'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ub)) SPu
+  ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`(_."_)`t52ul)) SPQZHTu
+  ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`(_."_)`t52ur)) SPQZHTu
+  ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`(_."_)`t52ub)) SPQZHTu
 
   EMPTY
 )

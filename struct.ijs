@@ -5,9 +5,9 @@ NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. cp        Conjugate pertranspose
 NB. fp        Full (symmetric) permutation
-NB. p2P       Transform permutation vector to permutation
-NB.           matrix
-NB. ip2P      Transform inversed permutation vector to
+NB. p2P       Transform permutation vector to/from
+NB.           permutation matrix
+NB. ip2P      Transform inversed permutation vector to/from
 NB.           permutation matrix
 NB. rt        Restrained Take
 NB. icut      Inversed cut
@@ -33,38 +33,34 @@ NB. hsupick   Zeroize elements outside upper Hessenberg part
 NB.           of the matrix
 NB. gtpick    Zeroize elements outside tridiagonal part of
 NB.           the matrix
-NB. trlpick   Zeroize elements outside lower triangular part
+NB. trlpick   Zeroize elements outside lower trapezoidal part
 NB.           of the matrix
-NB. trupick   Zeroize elements outside upper triangular part
+NB. trupick   Zeroize elements outside upper trapezoidal part
 NB.           of the matrix
-NB. trl1pick  Zeroize elements outside lower triangular part
+NB. trl1pick  Zeroize elements outside lower trapezoidal part
 NB.           of the matrix and set diagonal to 1
-NB. tru1pick  Zeroize elements outside upper triangular part
+NB. tru1pick  Zeroize elements outside upper trapezoidal part
 NB.           of the matrix and set diagonal to 1
 NB.
 NB. idmat     Make identity matrix with units on solid part
 NB.           of diagonal
 NB. diagmat   Make diagonal matrix
-NB. trl       Extract lower triangular (trapezoidal) matrix
-NB. tru       Extract upper triangular (trapezoidal) matrix
-NB. trl0      Extract strictly lower triangular (trapezoidal)
-NB.           matrix
-NB. tru0      Extract strictly upper triangular (trapezoidal)
-NB.           matrix
-NB. trl1      Extract unit lower triangular (trapezoidal)
-NB.           matrix
-NB. tru1      Extract unit upper triangular (trapezoidal)
-NB.           matrix
+NB. trl       Extract lower trapezoidal matrix
+NB. tru       Extract upper trapezoidal matrix
+NB. trl0      Extract strictly lower trapezoidal matrix
+NB. tru0      Extract strictly upper trapezoidal matrix
+NB. trl1      Extract unit lower trapezoidal matrix
+NB. tru1      Extract unit upper trapezoidal matrix
 NB. tr2he     Make Hermitian (symmetric) matrix from
 NB.           triangular one
-NB. he        Make Hermitian (symmetric) matrix from lower
-NB.           triangle of general square one
+NB. hex       Make Hermitian (symmetric) matrix from lower
+NB.           (upper) triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2007-2020 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
+NB. Copyright 2007-2021 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -95,19 +91,18 @@ NB. Miscellaneous
 NB. convert table y to table of diagonals
 t2td=: /(&i.)/(@$)
 
-NB. conj. to extract matrix circumscribing the triangular
-NB. (trapezoidal) matrix starting from diagonal number x in
-NB. the matrix y
+NB. conj. to extract matrix circumscribing the trapezoidal
+NB. matrix starting from diagonal number x in the matrix y
 trcut=: 2 : '((m&*)@:(<./"1)@v $) {. ]'
 
-NB. extract upper triangular (trapezoidal) matrix
+NB. extract upper trapezoidal matrix
 trucut=: 1 _1 trcut (] ,. (-~ {:))
 
-NB. extract lower triangular (trapezoidal) matrix
+NB. extract lower trapezoidal matrix
 trlcut=: _1 1 trcut ((+ {.) ,. ])
 
-NB. conj. to extract triangular (trapezoidal) matrix starting
-NB. from diagonal number x in the circumscribing matrix y
+NB. conj. to extract trapezoidal matrix starting from
+NB. diagonal number x in the circumscribing matrix y
 tr=: 2 : '0&$: :([ (] * (u~ (-~ t2td))) v)'
 
 NB. ---------------------------------------------------------
@@ -189,7 +184,7 @@ NB. ---------------------------------------------------------
 NB. diagliso
 NB.
 NB. Description:
-NB.   Return lISO of solid part of diagonal of matrix
+NB.   Return lISO solid part of diagonal of matrix
 NB.
 NB. Syntax:
 NB.   liso=. [(d[,h[,s]])] diagliso [m,]n
@@ -216,7 +211,7 @@ NB. - the whole diagonal's size:
 NB.     S := max(0,min(m,n,⌊(n+m-|n-m-2*d|)/2⌋))
 NB.
 NB. Notes:
-NB. - (h,s) pair defines raveled rISO of solid part of
+NB. - (h,s) pair defines raveled rISO solid part of
 NB.   diagonal
 
 diagliso=: 0 0 _&$: :(4 : 0)
@@ -224,7 +219,7 @@ diagliso=: 0 0 _&$: :(4 : 0)
   'm n'=. y=. 2 $ y
   H=. n (-@*^:(0 > ])) d
   S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
-  (h ,: (s <. S)) (] ;. 0) (>: n) dhs2liso H , S
+  (h ,: s <. S) ];.0 (>: n) dhs2liso H , S
 )
 
 NB. =========================================================
@@ -240,16 +235,21 @@ trace=: +/@diag  NB. Matrix trace
 ct=: +@:|:       NB. Conjugate transpose
 cp=: ct&.|.      NB. Conjugate pertranspose
 
-fp=: [ C."1 C.   NB. Full (symmetric) permutation
+NB. Do/undo full (symmetric) permutation
+NB. Syntax:
+NB.   Aperm=. p fp     A
+NB.   A=.     p fp^:_1 Aperm
+fp=: ([ C."1 C.) :. ([ C.^:_1"1 C.^:_1)
 
-NB. Transform permutation vector to permutation matrix, to
-NB. permute rows by y or columns by (/:y)
-p2P=:  {    =
+NB. Transform permutation vector to/from permutation matrix,
+NB. to permute rows by y or columns by (/: y)
+p2P=:  ({    =) :. (     i.&1"1 )
 
-NB. Transform inversed permutation vector to permutation
-NB. matrix, or permutation vector to inversed permutation
-NB. matrix, to permute rows by (/:y) or columns by y
-ip2P=: {^:_1=
+NB. Transform inversed permutation vector to/from permutation
+NB. matrix, or permutation vector to/from inversed
+NB. permutation matrix, to permute rows by (/: y) or columns
+NB. by y
+ip2P=: ({^:_1=) :. (/:@:(i.&1"1))
 
 NB. ---------------------------------------------------------
 NB. icut
@@ -321,7 +321,7 @@ NB.   u    - monad to update subA; is called as:
 NB.            subAupd=. u subA
 NB.   vapp - verb to update A; is called as:
 NB.            Aupd=. iso vapp A
-NB.   iso  - ISO of subA in the A
+NB.   iso  - ISO subA in the A
 NB.   subA - subarray in the A
 NB.   A    - array
 NB.   Aupd - A with subA being replaced by subAupd
@@ -588,7 +588,7 @@ NB. Syntax:
 NB.   B=. bdlpick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   B - m×n-matrix, lower bidiagonal
+NB.   B - m×n-matrix, the lower bidiagonal
 NB.
 NB. TODO:
 NB. - B would be sparse
@@ -606,7 +606,7 @@ NB. Syntax:
 NB.   B=. bdupick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   B - m×n-matrix, upper bidiagonal
+NB.   B - m×n-matrix, the upper bidiagonal
 NB.
 NB. TODO:
 NB. - B would be sparse
@@ -624,7 +624,7 @@ NB. Syntax:
 NB.   B=. hslpick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   B - m×n-matrix, lower Hessenberg
+NB.   B - m×n-matrix, the lower Hessenberg
 
 hslpick=: * __ 1&mbstencil
 
@@ -639,7 +639,7 @@ NB. Syntax:
 NB.   B=. hsupick A
 NB. where
 NB.   A - m×n-matrix, contains B
-NB.   B - m×n-matrix, upper Hessenberg
+NB.   B - m×n-matrix, the upper Hessenberg
 
 hsupick=: * _1 _&mbstencil
 
@@ -664,7 +664,7 @@ NB. ---------------------------------------------------------
 NB. trlpick
 NB.
 NB. Description:
-NB.   Zeroize elements outside lower triangular part of the
+NB.   Zeroize elements outside lower trapezoidal part of the
 NB.   matrix
 NB.
 NB. Syntax:
@@ -673,7 +673,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, lower triangular
+NB.   B - m×n-matrix, the lower trapezoidal
 
 trlpick=: 0&$: :(((__ , [) mbstencil ]) * ])
 
@@ -681,7 +681,7 @@ NB. ---------------------------------------------------------
 NB. trupick
 NB.
 NB. Description:
-NB.   Zeroize elements outside upper triangular part of the
+NB.   Zeroize elements outside upper trapezoidal part of the
 NB.   matrix
 NB.
 NB. Syntax:
@@ -690,7 +690,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], lIO first non-zero
 NB.       diagonal, default is 0
-NB.   B - m×n-matrix, upper triangular
+NB.   B - m×n-matrix, the upper trapezoidal
 
 trupick=: 0&$: :(((_ ,~ [) mbstencil ]) * ])
 
@@ -698,7 +698,7 @@ NB. ---------------------------------------------------------
 NB. trl1pick
 NB.
 NB. Description:
-NB.   Zeroize elements outside lower triangular part of the
+NB.   Zeroize elements outside lower trapezoidal part of the
 NB.   matrix and set diagonal to 1
 NB.
 NB. Syntax:
@@ -707,8 +707,8 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, lower triangular with unit on diagonal
-NB.       d
+NB.   B - m×n-matrix, the lower trapezoidal with unit on
+NB.       diagonal d
 
 trl1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , ,:&0)} y')
 
@@ -716,7 +716,7 @@ NB. ---------------------------------------------------------
 NB. tru1pick
 NB.
 NB. Description:
-NB.   Zeroize elements outside upper triangular part of the
+NB.   Zeroize elements outside upper trapezoidal part of the
 NB.   matrix and set diagonal to 1
 NB.
 NB. Syntax:
@@ -725,8 +725,8 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO first
 NB.       non-zero diagonal, default is 0
-NB.   B - m×n-matrix, upper triangular with unit on diagonal
-NB.       d
+NB.   B - m×n-matrix, the upper trapezoidal with unit on
+NB.       diagonal d
 
 tru1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , 0&,:)} y')
 
@@ -809,6 +809,17 @@ NB. 3 0 0                        3 0 0 0
 NB. 0 5 0                        0 5 0 0
 NB. 0 0 7                        0 0 7 0
 NB. 0 0 0
+NB.    1 1 diagmat 3 5 7            _1 _1 diagmat 3 5 7
+NB. 0 3 0 0                      0 0 0 0
+NB. 0 0 5 0                      3 0 0 0
+NB. 0 0 0 7                      0 5 0 0
+NB. 0 0 0 0                      0 0 7 0
+NB.    1 _1 diagmat 3 5 7           _1 1 diagmat 3 5 7
+NB. 0 3 0 0 0                    0 0 0
+NB. 0 0 5 0 0                    3 0 0
+NB. 0 0 0 7 0                    0 5 0
+NB.                              0 0 7
+NB.                              0 0 0
 NB.
 NB. TODO:
 NB. - D would be sparse
@@ -819,8 +830,8 @@ NB. ---------------------------------------------------------
 NB. trl
 NB.
 NB. Description:
-NB.   Extract lower triangular (trapezoidal) matrix with
-NB.   optional shrinking
+NB.   Extract lower trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    trl >: i. 3 4                0 trl >: i. 3 4
@@ -843,8 +854,8 @@ NB. ---------------------------------------------------------
 NB. tru
 NB.
 NB. Description:
-NB.   Extract upper triangular (trapezoidal) matrix with
-NB.   optional shrinking
+NB.   Extract upper trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    tru >: i. 3 4                0 tru >: i. 3 4
@@ -867,8 +878,8 @@ NB. ---------------------------------------------------------
 NB. trl0
 NB.
 NB. Description:
-NB.   Extract strictly lower triangular (trapezoidal) matrix
-NB.   with optional shrinking
+NB.   Extract strictly lower trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    trl0 >: i. 4 3               0 trl0 >: i. 4 3
@@ -892,8 +903,8 @@ NB. ---------------------------------------------------------
 NB. tru0
 NB.
 NB. Description:
-NB.   Extract strictly upper triangular (trapezoidal) matrix
-NB.   with optional shrinking
+NB.   Extract strictly upper trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    tru0 >: i. 3 4               0 tru0 >: i. 3 4
@@ -916,8 +927,8 @@ NB. ---------------------------------------------------------
 NB. trl1
 NB.
 NB. Description:
-NB.   Extract unit lower triangular (trapezoidal) matrix with
-NB.   optional shrinking
+NB.   Extract unit lower trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    trl1 >: i. 4 3               0 trl1 >: i. 4 3
@@ -941,8 +952,8 @@ NB. ---------------------------------------------------------
 NB. tru1
 NB.
 NB. Description:
-NB.   Extract unit upper triangular (trapezoidal) matrix with
-NB.   optional shrinking
+NB.   Extract unit upper trapezoidal matrix with optional
+NB.   shrinking
 NB.
 NB. Examples:
 NB.    tru1 >: i. 3 4               0 tru1 >: i. 3 4
@@ -971,25 +982,27 @@ NB.
 NB. Syntax:
 NB.   H=. tr2he T
 NB. where
-NB.   T - n×n-matrix, lower or upper triangular
-NB.   H - n×n-matrix, Hermitian (symmetric)
+NB.   T - n×n-matrix, the lower or upper triangular
+NB.   H - n×n-matrix, the Hermitian (symmetric)
 
 tr2he=: (-: upddiag)@(+ ct)
 
 NB. ---------------------------------------------------------
-NB. he
+NB. hel
+NB. heu
 NB.
 NB. Description:
-NB.   Make Hermitian (symmetric) matrix from lower triangle
-NB.   of general square one
+NB.   Make Hermitian (symmetric) matrix from lower (upper)
+NB.   triangle of general square one
 NB.
 NB. Syntax:
-NB.   H=. he G
+NB.   H=. hex G
 NB. where
 NB.   G - n×n-matrix
-NB.   H - n×n-matrix, Hermitian (symmetric)
+NB.   H - n×n-matrix, the Hermitian (symmetric)
 
-he=: tr2he@trl
+hel=: (</~@i.@#)`(,: ct)}
+heu=: (>/~@i.@#)`(,: ct)}
 
 NB. ---------------------------------------------------------
 NB. po
@@ -1002,6 +1015,6 @@ NB. Syntax:
 NB.   P=. po G
 NB. where
 NB.   G - n×n-matrix, invertible
-NB.   H - n×n-matrix, Hermitian (symmetric)
+NB.   H - n×n-matrix, the Hermitian (symmetric)
 
 po=: mp ct

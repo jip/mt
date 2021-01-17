@@ -2,9 +2,9 @@ NB. Benchmark
 NB.
 NB. benchmark  Adv. to make dyad to benchmark mt addon
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2017-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -29,7 +29,7 @@ coclass 'mt'
 NB. =========================================================
 NB. Concepts
 NB.
-NB. Presets:
+NB. Conventions:
 NB.   1) mt's benchmarking process uses matrices of size(s)
 NB.      and generator given
 NB.   2) benchmarking process produces scalar result for each
@@ -85,13 +85,13 @@ NB.   vapp  - monad to benchmark mt addon algorithms with
 NB.           matrix generator given; is called as:
 NB.             out=. descr vapp sizes
 NB.           formatted result (sizes ,. out) will also be
-NB.           saved into file:
+NB.           stored into file:
 NB.             jpath '~temp/mt.benchmark.',descr,'.result'
 NB.           also, a raw data derived from measurement and
-NB.           used for calculation will be saved into file:
+NB.           used for calculation will be stored into file:
 NB.             jpath '~temp/mt.benchmark.',descr,'.raw'
 NB.           also, a raw measurement log used to form raw
-NB.           data will be saved into file:
+NB.           data will be stored into file:
 NB.             jpath '~temp/mt.benchmark.',descr,'.log'
 NB.   n     > 0, the size of square matrices used for tests
 NB.   descr - literal vector, benchmark description

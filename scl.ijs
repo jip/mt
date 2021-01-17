@@ -2,9 +2,9 @@ NB. Scale
 NB.
 NB. scl  Try to scale without overflow or underflow
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -49,13 +49,13 @@ NB.       under- or overflow, if possible
 NB.   r ≥ 0, integer
 NB.
 NB. Formula:
-NB.   if |(f*FP_SFMIN)*FP_SFMIN| > |t|
+NB.   if |(f*FP_SFMIN)*FP_SFMIN| > |t| then
 NB.     B := (t/((f*FP_SFMIN)*FP_SFMIN))*((A*FP_SFMIN)*FP_SFMIN)
-NB.   elseif |f*FP_SFMIN| > |t|
+NB.   elseif |f*FP_SFMIN| > |t| then
 NB.     B := (t/(f*FP_SFMIN))*(A*FP_SFMIN)
-NB.   elseif |(t/FP_SFMAX)/FP_SFMAX| > |f|
+NB.   elseif |(t/FP_SFMAX)/FP_SFMAX| > |f| then
 NB.     B := (((t/FP_SFMAX)/FP_SFMAX)/f)*((A*FP_SFMAX)*FP_SFMAX)
-NB.   elseif |t/FP_SFMAX| > |f|
+NB.   elseif |t/FP_SFMAX| > |f| then
 NB.     B := ((t/FP_SFMAX)/f)*(A*FP_SFMAX)
 NB.   else
 NB.     B := (t/f)*A

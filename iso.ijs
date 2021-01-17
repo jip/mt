@@ -9,12 +9,12 @@ NB. dhs2liso   Generate lISO from head, size and optional
 NB.            delta
 NB. riso2iso   Convert rISO to ISO
 NB. riso2liso  Convert rISO to lISO
-NB. lisoX      lISO of vector laying between diagonal and
+NB. lisoX      lISO vector laying between diagonal and
 NB.            matrix edge
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -47,15 +47,15 @@ NB. rISO - rectangular ISO, for r-rank array is a 2×r-array
 NB.        of integers ((head0,head1,...),:(size0,size1,...))
 NB.
 NB. Following are equivalents:
-NB.   (3 5 _7,:2 _3 4) (] ;. 0) brick
-NB.   (< 3 4;7 6 5;_10 _9 _8 _7) { brick
-NB.   (riso2iso (3 5 _7,:2 _3 4)) { brick
-NB.   (iso2riso (< 3 4;7 6 5;_10 _9 _8 _7)) (] ;. 0) brick
+NB.   (3 5 _7 ,: 2 _3 4) ];.0 brick
+NB.   (< 3 4 ; 7 6 5 ; _10 _9 _8 _7) { brick
+NB.   (riso2iso 3 5 _7 ,: 2 _3 4) { brick
+NB.   (iso2riso < 3 4 ; 7 6 5 ; _10 _9 _8 _7) ];.0 brick
 NB.
 NB. Following are equivalents:
 NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4
 NB.   (4 liso2iso 1 6 11) { i. 3 4
-NB.   (4 iso2liso (0 1 ; 1 2 ; 2 3)) ({,) i. 3 4
+NB.   (4 iso2liso 0 1 ; 1 2 ; 2 3) ({,) i. 3 4
 NB.   1 6 11 ({,) i. 3 4
 
 NB. =========================================================
@@ -151,12 +151,12 @@ NB.
 NB. Syntax:
 NB.   liso=. sh riso2liso riso
 NB. where
-NB.   riso  - 2×r-array of integers, rISO of subarray:
+NB.   riso  - 2×r-array of integers, rISO subarray:
 NB.             (2,r) $ from[0:r-1],size[0:r-1]
 NB.   sh    - r-array of integers, shape of array to explore:
 NB.             Size[0:r-1]
 NB.   liso  - |Π{size[i],i=0:r-1}|-array of integers, rowwise
-NB.           lISO of subarray elements
+NB.           lISO subarray elements
 NB.   r     ≥ 0, integer, rank of array to explore
 NB.
 NB. Formula:
@@ -166,7 +166,7 @@ NB.   k       = 0:|Π{size[i],i=0:r-1}|-1, IO liso' item
 NB.   n[k][i] - i-th axis' IO for k-th liso' item
 NB.
 NB. Assertions:
-NB.   (liso ({,) array) -: (riso (, ;. 0) array)
+NB.   (liso ({,) array) -: (riso ,;.0 array)
 NB. where
 NB.   riso=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
 NB.   sh=. 10 11 12 13
@@ -182,7 +182,7 @@ NB. lisoS
 NB. lisoW
 NB.
 NB. Description:
-NB.   lISO of vector laying between diagonal and matrix edge
+NB.   lISO vector laying between diagonal and matrix edge
 NB.   in any of one cardinal direction: east, north, south or
 NB.   west; and having optional gap between diagonal, at head
 NB.   or tail
@@ -195,7 +195,7 @@ NB.   gap   - integer, negative value means "from
 NB.           head", otherwise "from tail"
 NB.   vapp  - dyad to return liso; is called as:
 NB.             liso=. l vapp n
-NB.   liso  - l-vector of integers, lISO of v in ravelled A
+NB.   liso  - l-vector of integers, lISO v in ravelled A
 NB.   v     - l-vector from A:
 NB.             v -: liso ({,) A
 NB.   A     - m×n-matrix

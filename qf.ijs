@@ -15,9 +15,9 @@ NB. testtzqf  Test tzxxf by trapezoidal matrix
 NB. testqf    Adv. to make verb to test gexxf and tzxxf by
 NB.           matrix of generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -63,18 +63,16 @@ NB.           vector:
 NB.             eA -: A ,. Trash
 NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - m-vector, will be replaced by Tau
-NB.   LQf   - m×(n+1)-matrix, combined L and Qf (unit
-NB.           diagonal not stored)
-NB.   L     - m×k-matrix, lower triangular
-NB.   Qf    - k×(n+1)-matrix, unit upper triangular, the Q
-NB.           represented in factored form
-NB.   Q     - k×n-matrix with orthonormal rows, which is
-NB.           defined as the first k rows of a product of m
-NB.           elementary reflectors H(i) of order n:
-NB.             Q = Π{H(i)',i=m-1:0}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.             H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0) = I
+NB.   LQf   - m×(n+1)-matrix, L and Qf combined
+NB.   L     - m×k-matrix, the lower trapezoidal
+NB.   Qf    - k×(n+1)-matrix, the unit upper trapezoidal
+NB.           (unit diagonal not stored), represents the Q in
+NB.           factored form
+NB.   Q     - n×n-matrix, the unitary (orthogonal), which is
+NB.           defined as the product of k elementary
+NB.           reflectors H(i) of order n:
+NB.             Q = Π{H(i)',i=k-1:0}
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -97,10 +95,10 @@ NB.   τi             - scalar value conj(τ(i))
 NB.   (0,...,0,1,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = L * Q
+NB.   (}:"1 -: ( trl        @:(}:"1) mp unglq)@gelq2) eA
 NB.   NB. A = L * (Q)
 NB.   (}:"1 -: (unmlqrn  trlpick        @:(}:"1))@gelq2) eA
-NB.   NB. I = Q * (Q^H)
-NB.   (( 0         idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmlqrc unglq)@gelq2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGELQ2
@@ -137,18 +135,16 @@ NB.           vector:
 NB.             eA -: Trash , A
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
-NB.   QfL   - (m+1)×n-matrix, combined Qf (unit diagonal not
-NB.           stored) and L
-NB.   Qf    - (m+1)×k-matrix, unit upper triangular, the Q
-NB.           represented in factored form
-NB.   L     - k×n-matrix, lower triangular
-NB.   Q     - m×k-matrix with orthonormal columns, which is
-NB.           defined as the last k columns of a product of n
-NB.           elementary reflectors H(i) of order m:
-NB.             Q = Π{H(i),i=n-1:0}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.             H(n-1:k) ≡ H(u(n-1:k),τ(n-1:k)) = H(0,0) = I
+NB.   QfL   - (m+1)×n-matrix, Qf and L combined
+NB.   Qf    - (m+1)×k-matrix, the unit upper trapezoidal
+NB.           (unit diagonal not stored), represents the Q in
+NB.           factored form
+NB.   L     - k×n-matrix, the lower trapezoidal
+NB.   Q     - m×m-matrix, the unitary (orthogonal), which is
+NB.           defined as the product of k elementary
+NB.           reflectors H(i) of order m:
+NB.             Q = Π{H(i),i=k-1:0}
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -168,10 +164,10 @@ NB.   τi             - scalar value τ(i)
 NB.   (vi,1,0,...,0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Q * L
+NB.   (}.   -: (ungql mp (trl~ -~/@$)@: }.   )@geql2) eA
 NB.   NB. A = (Q) * L
 NB.   (}.   -: (unmqlln (trlpick~ -~/@$)@  }.   )@geql2) eA
-NB.   NB. I = (Q^H) * Q
-NB.   (((0 <. -~/) idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqllc ungql)@geql2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQL2
@@ -208,18 +204,16 @@ NB.           vector:
 NB.             eA -: A , Trash
 NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - n-vector, will be replaced by Tau
-NB.   QfR   - (m+1)×n-matrix, combined Qf (unit diagonal not
-NB.           stored) and R
-NB.   Qf    - (m+1)×k-matrix, unit lower triangular, the Q
-NB.           represented in factored form
-NB.   R     - k×n-matrix, upper triangular
-NB.   Q     - m×k-matrix with orthonormal columns, which is
-NB.           defined as the first k columns of a product of n
-NB.           elementary reflectors H(i) of order m:
-NB.             Q = Π{H(i),i=0:n-1}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.             H(k:n-1) ≡ H(u(k:n-1),τ(k:n-1)) = H(0,0) = I
+NB.   QfR   - (m+1)×n-matrix, Qf and R combined
+NB.   Qf    - (m+1)×k-matrix, the unit lower trapezoidal
+NB.           (unit diagonal not stored), represents the Q in
+NB.           factored form
+NB.   R     - k×n-matrix, the upper trapezoidal
+NB.   Q     - m×m-matrix, the unitary (orthogonal), which is
+NB.           defined as the product of k elementary
+NB.           reflectors H(i) of order m:
+NB.             Q = Π{H(i),i=0:k-1}
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -239,14 +233,14 @@ NB.   τi             - scalar value τ(i)
 NB.   (0,...,0,1,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Q * R
+NB.   (}:   -: (ungqr mp  tru        @: }:   )@geqr2) eA
 NB.   NB. A = (Q) * R
 NB.   (}:   -: (unmqrln  trupick        @  }:   )@geqr2) eA
-NB.   NB. I = (Q^H) * Q
-NB.   (( 0         idmat ([ , <.)/)@(_1 0 + $) (-: clean) (unmqrlc ungqr)@geqr2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQR2
-NB. - gerq2 and geqrf are topologic equivalents
+NB. - geqr2 and geqrf are topologic equivalents
 NB. - if R diagonal's non-negativity is required, then larfgf
 NB.   should be replaced by larfpf
 
@@ -279,18 +273,16 @@ NB.           vector:
 NB.             eA -: Trash ,. A
 NB.   Trash - m-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
-NB.   RQf   - m×(n+1)-matrix, combined R and  Qf (unit
-NB.           diagonal not stored)
-NB.   R     - m×k-matrix, upper triangular
-NB.   Qf    - k×(n+1)-matrix, unit lower triangular, the Q
-NB.           represented in factored form
-NB.   Q     - k×n-matrix with orthonormal rows which is
-NB.           defined as the last k rows of a product of m
-NB.           elementary reflectors H(i) of order n:
-NB.             Q = Π{H(i)',i=0:m-1}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.             H(k:m-1) ≡ H(u(k:m-1),τ(k:m-1)) = H(0,0) = I
+NB.   RQf   - m×(n+1)-matrix, R and Qf combined
+NB.   R     - m×k-matrix, the upper trapezoidal
+NB.   Qf    - k×(n+1)-matrix, the unit lower trapezoidal
+NB.           (unit diagonal not stored), represents the Q in
+NB.           factored form
+NB.   Q     - n×n-matrix, the unitary (orthogonal), which is
+NB.           defined as the product of k elementary
+NB.           reflectors H(i) of order n:
+NB.             Q = Π{H(i)',i=0:k-1}
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k     = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -313,10 +305,10 @@ NB.   τi             - scalar value conj(τ(i))
 NB.   (vi,1,0,...,0) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = R * Q
+NB.   (}."1 -: ((tru~ -~/@$)@:(}."1) mp ungrq)@gerq2) eA
 NB.   NB. A = R * (Q)
 NB.   (}."1 -: (unmrqrn (trupick~ -~/@$)@:(}."1))@gerq2) eA
-NB.   NB. I = Q * (Q^H)
-NB.   (((0 >. -~/) idmat (<. , ])/)@(0 _1 + $) (-: clean) (unmrqrc ungrq)@gerq2) eA
 NB.
 NB. Notes:
 NB. - models LAPACK's xGERQ2
@@ -354,22 +346,22 @@ NB.             eA -: Trash ,. iA1 ,. A2 ,. iL
 NB.   Trash - m-vector, will be replaced by Tau
 NB.   iA1   - m×(l-1)-matrix, part to be replaced by Zf
 NB.   A2    - m×(n-m-l+1)-matrix, is not changed
-NB.   iL    - m×m-matrix, lower triangular
-NB.   LZf   - m×(n+1)-matrix, combined unit lower trapezoidal
-NB.           Zf and lower trapezoidal L:
+NB.   iL    - m×m-matrix, the lower triangular
+NB.   LZf   - m×(n+1)-matrix, the unit lower trapezoidal Zf
+NB.           and the lower trapezoidal L combined:
 NB.             LZf -: Tau ,. oA1 ,. A2 ,. oL
 NB.   Tau   - m-vector, scalars τ[0:m-1] for Zf
 NB.   oA1   - m×(l-1)-matrix, rows are vectors v[0:m-1] for
 NB.           Zf
-NB.   oL    - m×m-matrix, lower triangular
+NB.   oL    - m×m-matrix, the lower triangular
 NB.   Zf    - m×(n+1)-matrix, the Z represented in factored
 NB.           form
-NB.   Z     - n×n-matrix with orthonormal rows which is
+NB.   Z     - n×n-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of m elementary
 NB.           reflectors H(i) of order n:
 NB.             Q = Π{H(i)',i=m-1:0}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=9, l=5:
 NB.   eA:
@@ -389,14 +381,14 @@ NB.     (  τ0 v0 v0 v0 v0 0  0  1  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 0  0  0  1  0   )
 NB.     (  τ2 v2 v2 v2 v2 0  0  0  0  1   )
 NB. where
-NB.   *                    - any scalar value, is not used
-NB.   a1                   - elements of iA1
-NB.   a2                   - elements of A2
-NB.   il                   - elements of iL
-NB.   ol                   - elements of oL
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
+NB.   *                      - any scalar value, is not used
+NB.   a1                     - elements of iA1
+NB.   a2                     - elements of A2
+NB.   il                     - elements of iL
+NB.   ol                     - elements of oL
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (vi,0,...,0,1,0,...,0) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - latlz and tzlzf are topologic equivalents
@@ -434,25 +426,25 @@ NB. where
 NB.   eA    - (m+1)×n-matrix, being A augmented by trash
 NB.           vector:
 NB.             eA -: iL , A1 , iA2 , Trash
-NB.   iL    - n×n-matrix, lower triangular
+NB.   iL    - n×n-matrix, the lower triangular
 NB.   A1    - (m-n-l+1)×n-matrix, is not changed
 NB.   iA2   - (l-1)×n-matrix, part to be replaced by Zf
 NB.   Trash - n-vector, will be replaced by Tau
-NB.   ZfL   - (m+1)×n-matrix, combined lower trapezoidal L
-NB.           and unit lower trapezoidal Zf:
+NB.   ZfL   - (m+1)×n-matrix, the lower trapezoidal L and the
+NB.           unit lower trapezoidal Zf combined:
 NB.             ZfL -: oL , A1 , oA2 , Tau
-NB.   oL    - n×n-matrix, lower triangular
+NB.   oL    - n×n-matrix, the lower triangular
 NB.   oA2   - (l-1)×n-matrix, columns are vectors v[0:n-1]
 NB.           for Zf
 NB.   Tau   - n-vector, scalars τ[0:n-1] for Zf
 NB.   Zf    - (m+1)×n-matrix, the Z represented in factored
 NB.           form
-NB.   Z     - m×m-matrix with orthonormal columns which is
+NB.   Z     - m×m-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of n elementary
 NB.           reflectors H(i) of order m:
 NB.             Z = Π{H(i),i=n-1:0}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
+NB.   m   ≥ n
 NB.
 NB. Storage layout for m=9, n=3, l=5:
 NB.   eA:               ZfL:              Zf:               L:
@@ -467,15 +459,15 @@ NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a2 a2 a2  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  *  *  *   )    (  τ0 τ1 τ2  )    (  τ0 τ1 τ2  )
 NB. where
-NB.   il                   - elements of iL
-NB.   a1                   - elements of A1
-NB.   a2                   - elements of iA2
-NB.   *                    - any scalar value, is not used
-NB.   ol                   - elements of oL
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (0,...0,1,0,..,0,vi) - m-vector u(i)
-NB.                          elementary re
+NB.   il                     - elements of iL
+NB.   a1                     - elements of A1
+NB.   a2                     - elements of iA2
+NB.   *                      - any scalar value, is not used
+NB.   ol                     - elements of oL
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (0,...,0,1,0,...,0,vi) - m-vector u(i)
+NB.                            elementary re
 NB.
 NB. Notes:
 NB. - latzl and tzzlf are topologic equivalents
@@ -516,22 +508,22 @@ NB.             eA -: Trash , iA1 , A2 , iR
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   iA1   - (l-1)×n-matrix, part to be replaced by Zf
 NB.   A2    - (m-n-l+1)×n-matrix, is not changed
-NB.   iR    - n×n-matrix, upper triangular
-NB.   ZfR   - (m+1)×n-matrix, combined upper trapezoidal R
-NB.           and unit upper trapezoidal Zf:
+NB.   iR    - n×n-matrix, the upper triangular
+NB.   ZfR   - (m+1)×n-matrix, the upper trapezoidal R and the
+NB.           unit upper trapezoidal Zf combined:
 NB.             ZfR -: Tau , oA1 , A2 , oR
 NB.   Tau   - n-vector, scalars τ[0:n-1] for Zf
 NB.   oA1   - (l-1)×n-matrix, columns are vectors v[0:n-1]
 NB.           for Zf
-NB.   oR    - n×n-matrix, upper triangular
+NB.   oR    - n×n-matrix, the upper triangular
 NB.   Zf    - (m+1)×n-matrix, the Z represented in factored
 NB.           form
-NB.   Z     - m×m-matrix with orthonormal columns which is
+NB.   Z     - m×m-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of n elementary
 NB.           reflectors H(i) of order m:
 NB.             Z = Π{H(i),i=0:n-1}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
+NB.   m   ≥ n
 NB.
 NB. Storage layout for m=9, n=3, l=5:
 NB.   eA:               ZfR:              Zf:               R:
@@ -546,14 +538,14 @@ NB.   (  ir ir ir  )    (  or or or  )    (  1  0  0   )    (  or or or  )
 NB.   (  0  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
 NB.   (  0  0  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
 NB. where
-NB.   *                    - any scalar value, is not used
-NB.   a1                   - elements of iA1
-NB.   a2                   - elements of A2
-NB.   ir                   - elements of iR
-NB.   or                   - elements of oR
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (vi,0,...0,1,0,..,0) - m-vector u(i)
+NB.   *                      - any scalar value, is not used
+NB.   a1                     - elements of iA1
+NB.   a2                     - elements of A2
+NB.   ir                     - elements of iR
+NB.   or                     - elements of oR
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (vi,0,...,0,1,0,...,0) - m-vector u(i)
 NB.
 NB. Notes:
 NB. - latzr and tzzrf are topologic equivalents
@@ -591,25 +583,25 @@ NB. where
 NB.   eA    - m×(n+1)-matrix, being A augmented by trash
 NB.           vector:
 NB.             eA -: iR ,. A1 ,. iA2 ,. Trash
-NB.   iR    - m×m-matrix, upper triangular
+NB.   iR    - m×m-matrix, the upper triangular
 NB.   A1    - m×(n-m-l+1)-matrix, is not changed
 NB.   iA2   - m×(l-1)-matrix, part to be replaced by Zf
 NB.   Trash - m-vector, will be replaced by Tau
-NB.   RZf   - m×(n+1)-matrix, combined upper trapezoidal R
-NB.           and unit upper trapezoidal Zf:
+NB.   RZf   - m×(n+1)-matrix, the upper trapezoidal R and the
+NB.           unit upper trapezoidal Zf combined:
 NB.             RZf -: oR ,. A1 ,. oA2 ,. Tau
-NB.   oR    - m×m-matrix, upper triangular
+NB.   oR    - m×m-matrix, the upper triangular
 NB.   oA2   - m×(l-1)-matrix, rows are vectors v[0:m-1] for
 NB.           Zf
 NB.   Tau   - m-vector, scalars τ[0:m-1] for Zf
 NB.   Zf    - m×(n+1)-matrix, the Z represented in factored
 NB.           form
-NB.   Z     - n×n-matrix with orthonormal rows which is
+NB.   Z     - n×n-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of m elementary
 NB.           reflectors H(i) of order n:
 NB.             Z = Π{H(i)',i=0:m-1}
-NB.           where
-NB.             H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.             H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=9, l=5:
 NB.   eA:
@@ -629,20 +621,20 @@ NB.     (  1  0  0  0  0  v0 v0 v0 v0 τ0  )
 NB.     (  0  1  0  0  0  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  1  0  0  v2 v2 v2 v2 τ2  )
 NB. where
-NB.   ir                   - elements of iR
-NB.   a1                   - elements of A1
-NB.   a2                   - elements of iA2
-NB.   *                    - any scalar value, is not used
-NB.   or                   - elements of oR
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (0,...0,1,0,..,0,vi) - n-vector u(i)
+NB.   ir                     - elements of iR
+NB.   a1                     - elements of A1
+NB.   a2                     - elements of iA2
+NB.   *                      - any scalar value, is not used
+NB.   or                     - elements of oR
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (0,...,0,1,0,...,0,vi) - n-vector u(i)
 NB.
 NB. Notes:
 NB. - models LAPACK's xLATRZ with the following difference:
-NB.   - v(i) is saved instead of conj(v(i))
-NB.   - conj(τ(i)) is saved instead of τ(i)
-NB.   to keep consistence with gexxf
+NB.   - v(i) is stored instead of conj(v(i))
+NB.   - conj(τ(i)) is stored instead of τ(i)
+NB.   to keep consistency with gexxf
 NB. - latrz and tzrzf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
@@ -678,18 +670,16 @@ NB. Syntax:
 NB.   LQf=. gelqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   LQf - m×(n+1)-matrix, combined L and Qf (unit
-NB.         diagonal not stored)
-NB.   L   - m×k-matrix, lower triangular
-NB.   Qf  - k×(n+1)-matrix, unit upper triangular, the Q
-NB.         represented in factored form
-NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the first k rows of a product of m
-NB.         elementary reflectors H(i) of order n:
-NB.           Q = Π{H(i)',i=m-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(m-1:k) ≡ H(u(m-1:k),τ(m-1:k)) = H(0,0)=I
+NB.   LQf - m×(n+1)-matrix, L and Qf combined
+NB.   L   - m×k-matrix, the lower trapezoidal
+NB.   Qf  - k×(n+1)-matrix, the unit upper trapezoidal (unit
+NB.         diagonal not stored), represents the Q in
+NB.         factored form
+NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of k elementary
+NB.         reflectors H(i) of order n:
+NB.           Q = Π{H(i)',i=k-1:0}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -712,10 +702,10 @@ NB.   τi             - scalar value conj(τ(i))
 NB.   (0,...,0,1,vi) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = L * Q
+NB.   (     -: ( trl        @:(}:"1) mp unglq)@gelqf) A
 NB.   NB. A = L * (Q)
 NB.   (     -: (unmlqrn  trlpick        @:(}:"1))@gelqf) A
-NB.   NB. I = Q * (Q^H)
-NB.   (( 0         idmat (<. , ])/)@        $  (-: clean) (unmlqrc unglq)@gelqf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGELQF
@@ -747,18 +737,16 @@ NB. Syntax:
 NB.   QfL=. geqlf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   QfL - (m+1)×n-matrix, combined Qf (unit diagonal not
-NB.         stored) and L
-NB.   Qf  - (m+1)×k-matrix, unit upper triangular, the Q
-NB.         represented in factored form
-NB.   L   - k×n-matrix, lower triangular
-NB.   Q   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the last k columns of a product of n
-NB.         elementary reflectors H(i) of order m:
-NB.           Q = Π{H(i),i=n-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.           H(n-1:k) ≡ H(u(n-1:k),τ(n-1:k)) = H(0,0) = I
+NB.   QfL - (m+1)×n-matrix, Qf and L combined
+NB.   Qf  - (m+1)×k-matrix, the unit upper trapezoidal (unit
+NB.         diagonal not stored), represents the Q in
+NB.         factored form
+NB.   L   - k×n-matrix, the lower trapezoidal
+NB.   Q   - m×m-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of k elementary
+NB.         reflectors H(i) of order m:
+NB.           Q = Π{H(i),i=k-1:0}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -778,10 +766,10 @@ NB.   τi             - scalar value τ(i)
 NB.   (vi,1,0,...,0) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Q * L
+NB.   (     -: (ungql mp (trl~ -~/@$)@: }.   )@geqlf) A
 NB.   NB. A = (Q) * L
 NB.   (     -: (unmqlln (trlpick~ -~/@$)@  }.   )@geqlf) A
-NB.   NB. I = (Q^H) * Q
-NB.   (((0 <. -~/) idmat ([ , <.)/)@        $  (-: clean) (unmqllc ungql)@geqlf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQLF
@@ -813,18 +801,16 @@ NB. Syntax:
 NB.   QfR=. geqrf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   QfR - (m+1)×n-matrix, combined Qf (unit diagonal not
-NB.         stored) and R
-NB.   Qf  - (m+1)×k-matrix, unit lower triangular, the Q
-NB.         represented in factored form
-NB.   R   - k×n-matrix, upper triangular
-NB.   Q   - m×k-matrix with orthonormal columns, which is
-NB.         defined as the first k columns of a product of n
-NB.         elementary reflectors H(i) of order m:
-NB.           Q = Π{H(i),i=0:n-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
-NB.           H(k:n-1) ≡ H(u(k:n-1),τ(k:n-1)) = H(0,0) = I
+NB.   QfR - (m+1)×n-matrix, Qf and R combined
+NB.   Qf  - (m+1)×k-matrix, the unit lower trapezoidal (unit
+NB.         diagonal not stored), represents the Q in
+NB.         factored form
+NB.   R   - k×n-matrix, the upper trapezoidal
+NB.   Q   - m×m-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of k elementary reflectors
+NB.         H(i) of order m:
+NB.           Q = Π{H(i),i=0:k-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=7, n=3:
@@ -844,14 +830,14 @@ NB.   τi             - scalar value τ(i)
 NB.   (0,...,0,1,vi) - m-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Q * R
+NB.   (     -: (ungqr mp  tru        @: }:   )@geqrf) A
 NB.   NB. A = (Q) * R
 NB.   (     -: (unmqrln  trupick        @  }:   )@geqrf) A
-NB.   NB. I = (Q^H) * Q
-NB.   (( 0         idmat ([ , <.)/)@        $  (-: clean) (unmqrlc ungqr)@geqrf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGEQRF
-NB. - gerq2 and geqrf are topologic equivalents
+NB. - geqr2 and geqrf are topologic equivalents
 
 geqrf=: 3 : 0
   y=. y , 0
@@ -879,18 +865,16 @@ NB. Syntax:
 NB.   RQf=. gerqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
-NB.   RQf - m×(n+1)-matrix, combined R and Qf (unit diagonal
-NB.         not stored)
-NB.   R   - m×k-matrix, upper triangular
-NB.   Qf  - k×(n+1)-matrix, unit lower triangular, the Q
-NB.         represented in factored form
-NB.   Q   - k×n-matrix with orthonormal rows, which is
-NB.         defined as the last k rows of a product of m
-NB.         elementary reflectors H(i) of order n:
-NB.           Q = Π{H(i)',i=0:m-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
-NB.           H(k:m-1) ≡ H(u(k:m-1),τ(k:m-1)) = H(0,0) = I
+NB.   RQf - m×(n+1)-matrix, R and Qf combined
+NB.   R   - m×k-matrix, the upper trapezoidal
+NB.   Qf  - k×(n+1)-matrix, the unit lower trapezoidal (unit
+NB.         diagonal not stored), represents the Q in
+NB.         factored form
+NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of k elementary reflectors
+NB.         H(i) of order n:
+NB.           Q = Π{H(i)',i=0:k-1}
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
 NB.   k   = min(m,n)
 NB.
 NB. Storage layout for m=3, n=7:
@@ -913,10 +897,10 @@ NB.   τi             - scalar value conj(τ(i))
 NB.   (vi,1,0,...,0) - n-vector u(i)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = R * Q
+NB.   (     -: ((tru~ -~/@$)@:(}."1) mp ungrq)@gerqf) A
 NB.   NB. A = R * (Q)
 NB.   (     -: (unmrqrn (trupick~ -~/@$)@:(}."1))@gerqf) A
-NB.   NB. I = Q * (Q^H)
-NB.   (((0 >. -~/) idmat (<. , ])/)@        $  (-: clean) (unmrqrc ungrq)@gerqf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xGERQF
@@ -950,26 +934,26 @@ NB. where
 NB.   A   - m×n-matrix:
 NB.           A -: iA0 ,. iL
 NB.   iA0 - m×(n-m)-matrix, part to be replaced by Zf
-NB.   iL  - m×m-matrix, lower triangular
-NB.   LZf - m×(n+1)-matrix, combined lower trapezoidal L and
-NB.         unit lower trapezoidal Zf:
+NB.   iL  - m×m-matrix
+NB.   LZf - m×(n+1)-matrix, the lower trapezoidal L and unit
+NB.         lower trapezoidal Zf combined:
 NB.           LZf -: Tau ,. oA0 ,. oL
 NB.   Tau - m-vector, scalars τ[0:m-1] for Zf
 NB.   oA0 - m×(n-m)-matrix, rows are vectors v[0:m-1] for Zf
-NB.   oL  - m×m-matrix, lower triangular
+NB.   oL  - m×m-matrix, the lower triangular
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored
 NB.         form
-NB.   Z   - n×n-matrix with orthonormal rows which is defined
-NB.         as the product of m elementary reflectors H(i) of
-NB.         order n:
+NB.   Z   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of m elementary reflectors
+NB.         H(i) of order n:
 NB.           Z = Π{H(i)',i=m-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=7:
 NB.   A:
-NB.     (     a0 a0 a0 a0 il 0  0   )
-NB.     (     a0 a0 a0 a0 il il 0   )
+NB.     (     a0 a0 a0 a0 il *  *   )
+NB.     (     a0 a0 a0 a0 il il *   )
 NB.     (     a0 a0 a0 a0 il il il  )
 NB.   LZf:
 NB.     (  τ0 v0 v0 v0 v0 ol 0  0   )
@@ -984,17 +968,24 @@ NB.     (  τ0 v0 v0 v0 v0 1  0  0   )
 NB.     (  τ1 v1 v1 v1 v1 0  1  0   )
 NB.     (  τ2 v2 v2 v2 v2 0  0  1   )
 NB. where
-NB.   a0                   - elements of iA0
-NB.   il                   - elements of iL
-NB.   ol                   - elements of oL
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (vi,0,...0,1,0,..,0) - n-vector u(i)
+NB.   a0                     - elements of iA0
+NB.   il                     - elements of iL
+NB.   ol                     - elements of oL
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (vi,0,...,0,1,0,...,0) - n-vector u(i)
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = L * Z
+NB.   (-: (({."1~ -@#) mp unglz)@tzlzf) A
+NB.   NB. A = L * (Z)
+NB.   (-: (unmlzrn ((1 -  c) {."1 ({."1~ -@#)))@tzlzf) A
 NB.
 NB. Notes:
 NB. - latlz and tzlzf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
+NB. - strict upper triangle of iL is ignored
 
 tzlzf=: 3 : 0
   y=. 0 ,. y
@@ -1027,28 +1018,28 @@ NB.   ZfL=. tzzlf A
 NB. where
 NB.   A   - m×n-matrix:
 NB.           A -: iL , iA0
-NB.   iL  - n×n-matrix, lower triangular
+NB.   iL  - n×n-matrix
 NB.   iA0 - (m-n)×n-matrix, part to be replaced by Zf
-NB.   ZfL - (m+1)×n-matrix, combined unit upper trapezoidal
-NB.         Zf and lower trapezoidal L:
+NB.   ZfL - (m+1)×n-matrix, the unit upper trapezoidal Zf and
+NB.         lower trapezoidal L combined:
 NB.           ZfL -: oL , oA0 , Tau
-NB.   oL  - n×n-matrix, lower triangular
+NB.   oL  - n×n-matrix, the lower triangular
 NB.   oA0 - (m-n)×n-matrix, columns are vectors v[0:m-1] for
 NB.         Zf
 NB.   Tau - n-vector, scalars τ[0:n-1] for Zf
 NB.   Zf  - (m+1)×n-matrix, the Z represented in factored
 NB.         form
-NB.   Z   - m×m-matrix with orthonormal columns which is
+NB.   Z   - m×m-matrix, the unitary (orthogonal), which is
 NB.         defined as the product of n elementary reflectors
-NB.         of order m:
+NB.         H(i) of order m:
 NB.           Z = Π{H(i),i=n-1:0}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
+NB.   m   ≥ n
 NB.
 NB. Storage layout for m=7, n=3:
 NB.   A:                ZfL:              Zf:               L:
-NB.   (  il 0  0   )    (  ol 0  0   )    (  1  0  0   )    (  ol 0  0   )
-NB.   (  il il 0   )    (  ol ol 0   )    (  0  1  0   )    (  ol ol 0   )
+NB.   (  il *  *   )    (  ol 0  0   )    (  1  0  0   )    (  ol 0  0   )
+NB.   (  il il *   )    (  ol ol 0   )    (  0  1  0   )    (  ol ol 0   )
 NB.   (  il il il  )    (  ol ol ol  )    (  0  0  1   )    (  ol ol ol  )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
@@ -1056,17 +1047,24 @@ NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.                     (  τ0 τ1 τ2  )    (  τ0 τ1 τ2  )
 NB. where
-NB.   il                   - elements of iL
-NB.   a0                   - elements of iA0
-NB.   ol                   - elements of oL
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (0,...0,1,0,..,0,vi) - m-vector u(i)
+NB.   il                     - elements of iL
+NB.   a0                     - elements of iA0
+NB.   ol                     - elements of oL
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (0,...,0,1,0,...,0,vi) - m-vector u(i)
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Z * L
+NB.   (-: (ungzl mp ({.  ~   c))@tzzlf) A
+NB.   NB. A = (Z) * L
+NB.   (-: (unmzlln ((1 -~ #) {.   ({.  ~   c)))@tzzlf) A
 NB.
 NB. Notes:
 NB. - latzl and tzzlf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
+NB. - strict upper triangle of iL is ignored
 
 tzzlf=: 3 : 0
   y=. y , 0
@@ -1100,22 +1098,22 @@ NB. where
 NB.   A   - m×n-matrix:
 NB.           A -: iA0 , iR
 NB.   iA0 - (m-n)×n-matrix, part to be replaced by Zf
-NB.   iR  - n×n-matrix, upper triangular
-NB.   ZfR - (m+1)×n-matrix, combined unit upper trapezoidal
-NB.         Zf and upper trapezoidal R:
+NB.   iR  - n×n-matrix
+NB.   ZfR - (m+1)×n-matrix, the unit upper trapezoidal Zf and
+NB.         upper trapezoidal R combined:
 NB.           ZfR -: Tau , oA0 , oR
 NB.   Tau - n-vector, scalars τ[0:n-1] for Zf
 NB.   oA0 - (m-n)×n-matrix, columns are vectors v[0:m-1] for
 NB.         Zf
-NB.   oR  - n×n-matrix, upper triangular
+NB.   oR  - n×n-matrix, the upper triangular
 NB.   Zf  - (m+1)×n-matrix, the Z represented in factored
 NB.         form
-NB.   Z   - m×m-matrix with orthonormal columns which is
+NB.   Z   - m×m-matrix, the unitary (orthogonal), which is
 NB.         defined as the product of n elementary reflectors
-NB.         of order m:
+NB.         H(i) of order m:
 NB.           Z = Π{H(i),i=0:n-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * (u(i))^H
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
+NB.   m   ≥ n
 NB.
 NB. Storage layout for m=7, n=3:
 NB.   A:                ZfR:              Zf:               R:
@@ -1125,20 +1123,27 @@ NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  a0 a0 a0  )    (  v0 v1 v2  )    (  v0 v1 v2  )    (  0  0  0   )
 NB.   (  ir ir ir  )    (  or or or  )    (  1  0  0   )    (  or or or  )
-NB.   (  0  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
-NB.   (  0  0  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
+NB.   (  *  ir ir  )    (  0  or or  )    (  0  1  0   )    (  0  or or  )
+NB.   (  *  *  ir  )    (  0  0  or  )    (  0  0  1   )    (  0  0  or  )
 NB. where
-NB.   a0                   - elements of iA0
-NB.   ir                   - elements of iR
-NB.   or                   - elements of oR
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value τ(i)
-NB.   (vi,0,...0,1,0,..,0) - m-vector u(i)
+NB.   a0                     - elements of iA0
+NB.   ir                     - elements of iR
+NB.   or                     - elements of oR
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value τ(i)
+NB.   (vi,0,...,0,1,0,...,0) - m-vector u(i)
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = Z * R
+NB.   (-: (ungzr mp ({.  ~ -@c))@tzzrf) A
+NB.   NB. A = (Z) * R
+NB.   (-: (unmzrln ((1 -  #) {.   ({.  ~ -@c)))@tzzrf) A
 NB.
 NB. Notes:
 NB. - latzr and tzzrf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
+NB. - strict lower triangle of iR is ignored
 
 tzzrf=: 3 : 0
   y=. 0 , y
@@ -1171,28 +1176,28 @@ NB.   RZf=. tzrzf A
 NB. where
 NB.   A   - m×n-matrix:
 NB.           A -: iR ,. iA1
-NB.   iR  - m×m-matrix, upper triangular
+NB.   iR  - m×m-matrix
 NB.   iA1 - m×(n-m)-matrix, part to be replaced by Zf
-NB.   RZf - m×(n+1)-matrix, combined upper trapezoidal R and
-NB.         unit upper trapezoidal Zf:
+NB.   RZf - m×(n+1)-matrix, the upper trapezoidal R and unit
+NB.         upper trapezoidal Zf combined:
 NB.           RZf -: oR ,. oA1 ,. Tau
-NB.   oR  - m×m-matrix, upper triangular
-NB.   oA1 - m×(-m)-matrix, rows are vectors v[0:m-1] for Zf
+NB.   oR  - m×m-matrix, the upper triangular
+NB.   oA1 - m×(n-m)-matrix, rows are vectors v[0:m-1] for Zf
 NB.   Tau - m-vector, scalars τ[0:m-1] for Zf
 NB.   Zf  - m×(n+1)-matrix, the Z represented in factored
 NB.         form
-NB.   Z   - n×n-matrix with orthonormal rows which is defined
-NB.         as the product of m elementary reflectors H(i) of
-NB.         order n:
+NB.   Z   - n×n-matrix, the unitary (orthogonal), which is
+NB.         defined as the product of m elementary reflectors
+NB.         H(i) of order n:
 NB.           Z = Π{H(i)',i=0:m-1}
-NB.         where
-NB.           H(i) ≡ H(u(i),τ(i)) := I - (u(i))^H * τ(i) * u(i)
+NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i)' * τ(i) * u(i)
+NB.   m   ≤ n
 NB.
 NB. Storage layout for m=3, n=7:
 NB.   A:
 NB.     (  ir ir ir a1 a1 a1 a1     )
-NB.     (  0  ir ir a1 a1 a1 a1     )
-NB.     (  0  0  ir a1 a1 a1 a1     )
+NB.     (  *  ir ir a1 a1 a1 a1     )
+NB.     (  *  *  ir a1 a1 a1 a1     )
 NB.   RZf:
 NB.     (  or or or v0 v0 v0 v0 τ0  )
 NB.     (  0  or or v1 v1 v1 v1 τ1  )
@@ -1206,23 +1211,29 @@ NB.     (  1  0  0  v0 v0 v0 v0 τ0  )
 NB.     (  0  1  0  v1 v1 v1 v1 τ1  )
 NB.     (  0  0  1  v2 v2 v2 v2 τ2  )
 NB. where
-NB.   ir                   - elements of iR
-NB.   a1                   - elements of iA1
-NB.   or                   - elements of oR
-NB.   vi                   - l-vector v(i)
-NB.   τi                   - scalar value conj(τ(i))
-NB.   (0,...0,1,0,..,0,vi) - n-vector u(i)
+NB.   ir                     - elements of iR
+NB.   a1                     - elements of iA1
+NB.   or                     - elements of oR
+NB.   vi                     - l-vector v(i)
+NB.   τi                     - scalar value conj(τ(i))
+NB.   (0,...,0,1,0,...,0,vi) - n-vector u(i)
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   NB. A = R * Z
+NB.   (-: (({."1~   #) mp ungrz)@tzrzf) A
+NB.   NB. A = R * (Z)
+NB.   (-: (unmrzrn ((1 -~ c) {."1 ({."1~   #)))@tzrzf) A
 NB.
 NB. Notes:
 NB. - models LAPACK's xTZRZF with the following differences:
-NB.   - v(i) is saved instead of conj(v(i))
-NB.   - conj(τ(i)) is saved instead of τ(i)
+NB.   - v(i) is stored instead of conj(v(i))
+NB.   - conj(τ(i)) is stored instead of τ(i)
 NB. - latrz and tzrzf are topologic equivalents
 NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
+NB. - strict lower triangle of iR is ignored
 
 tzrzf=: 3 : 0
-NB.QFNB=. QFNX=. 3
   y=. y ,. 0
   l=. -/ 'm n1'=. $ y
   pfxL=. m {."1 y
@@ -1249,9 +1260,10 @@ NB. ---------------------------------------------------------
 NB. testgeqf
 NB.
 NB. Description:
-NB.   Test orthogonal factorization algorithms:
+NB.   Test:
 NB.   - 128!:0 (built-in)
-NB.   - gelqf geqlf geqrf gerqf (math/lapack addon)
+NB.   - qrd (math/misc addon)
+NB.   - xGELQF xGEQLF xGEQRF xGERQF (math/lapack2 addon)
 NB.   - gelqf geqlf geqrf gerqf (math/mt addon)
 NB.   by general matrix
 NB.
@@ -1259,30 +1271,44 @@ NB. Syntax:
 NB.   testgeqf A
 NB. where
 NB.   A - m×n-matrix
-NB.
-NB. Formula:
-NB. - for LQ: berr := max( ||L - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
-NB. - for QL: berr := max( ||L - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for QR: berr := max( ||R - Q^H * A|| / (FP_EPS * ||A|| * m), ||Q^H * Q - I|| / (FP_EPS * m) )
-NB. - for RQ: berr := max( ||R - A * Q^H|| / (FP_EPS * ||A|| * n), ||Q * Q^H - I|| / (FP_EPS * n) )
 
 testgeqf=: 3 : 0
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'gelqf geqlf geqrf gerqf'
+  load        :: ] 'numeric'
+  load_mttmp_ :: ] 'math/misc/mathutil'
+  load_mttmp_ :: ] 'math/misc/makemat'
+  load_mttmp_ :: ] 'math/misc/matutil'
+  load_mttmp_ :: ] 'math/misc/linear'
+  load_mttmp_ :: ] 'math/misc/matfacto'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gelqf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/geqlf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/geqrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/gerqf'
 
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('128!:0'                tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (( mp~ ct                   )  0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(mp~ ct       )@(0&{::))))) y
+  norm=. norm1 y
 
-  ('2b1110&gelqf_jlapack_' tmonad (]`({. ,  ,. &.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((   <./ @$@]) {."1 unmlqrc)~ 1&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmlqrc unglq)@(1&{::))))) y
-  ('2b0111&geqlf_jlapack_' tmonad (]`({: ,~ , ~&.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((-@(<./)@$@]) {.   unmqllc)~ 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqllc ungql)@(0&{::))))) y
-  ('2b0111&geqrf_jlapack_' tmonad (]`({: ,~ ,  &.>/@}:)`(rcond"_)`(_."_)`((norm1@((1 {:: ])              - (((   <./ @$@]) {.   unmqrlc)~ 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqrlc ungqr)@(0&{::))))) y
-  ('2b1110&gerqf_jlapack_' tmonad (]`({. ,  ,.~&.>/@}.)`(rcond"_)`(_."_)`((norm1@((0 {:: ])              - (((-@(<./)@$@]) {."1 unmrqrc)~ 1&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmrqrc ungrq)@(1&{::))))) y
+  args=. y ; norm
 
-  ('gelqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( trl        @:(}:"1)@] -  ((   <./ @$@]) {."1 unmlqrc)~       ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmlqrc unglq)        )))) y
-  ('geqlf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((trl~ -~/@$)@  }.   @] -  ((-@(<./)@$@]) {.   unmqllc)~       ) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqllc ungql)        )))) y
-  ('geqrf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@( tru        @  }:   @] -  ((   <./ @$@]) {.   unmqrlc)~       ) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@(<: upddiag)@(unmqrlc ungqr)        )))) y
-  ('gerqf'                 tmonad (]`]                 `(rcond"_)`(_."_)`((norm1@((tru~ -~/@$)@:(}."1)@] -  ((-@(<./)@$@]) {."1 unmrqrc)~       ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@(<: upddiag)@(unmrqrc ungrq)        )))) y
+  ('128!:0'        tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
+  ('qrd_mttmp_'    tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
+
+  ('dgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
+  ('dgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
+  ('dgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
+  ('dgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+
+  ('zgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
+  ('zgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
+  ('zgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
+  ('zgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+
+  ('gelqf'         tmonad ((0&{::)`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`(_."_)`lqt01)) args
+  ('geqlf'         tmonad ((0&{::)`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`(_."_)`qlt01)) args
+  ('geqrf'         tmonad ((0&{::)`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`(_."_)`qrt01)) args
+  ('gerqf'         tmonad ((0&{::)`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`(_."_)`rqt01)) args
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -1291,7 +1317,8 @@ NB. ---------------------------------------------------------
 NB. testtzqf
 NB.
 NB. Description:
-NB.   Test orthogonal factorization algorithms:
+NB.   Test:
+NB.   - xTZRZF (math/lapack2 addon)
 NB.   - tzlzf tzzlf tzzrf tzrzf (math/mt addon)
 NB.   by trapezoidal matrix
 NB.
@@ -1300,21 +1327,30 @@ NB.   testtzqf A
 NB. where
 NB.   A - m×n-matrix
 NB.
-NB. Formula:
-NB. - for LZ: berr := max( ||A - L * Z|| / (FP_EPS * ||A|| * m), ||Z * Z^H - I|| / (FP_EPS * n) )
-NB. - for ZL: berr := max( ||A - Z * L|| / (FP_EPS * ||A|| * n), ||Z^H * Z - I|| / (FP_EPS * m) )
-NB. - for ZR: berr := max( ||A - Z * R|| / (FP_EPS * ||A|| * n), ||Z^H * Z - I|| / (FP_EPS * m) )
-NB. - for RZ: berr := max( ||A - R * Z|| / (FP_EPS * ||A|| * m), ||Z * Z^H - I|| / (FP_EPS * n) )
+NB. TODO:
+NB. - add xQRT12 test
 
 testtzqf=: 3 : 0
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
-  Awide=. |:^:(>/@$) y
-  Atall=. |:^:(</@$) y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/tzrzf'
 
-  ('tzlzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmlzrn (0:`((a: <@; 0 th2liso~ -~/)@[)`]}~ $)@:(}."1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@((<: upddiag)~ 0 >. -~/@$)@(unmlzrc unglz))))) (trl~ -~/@$) Awide
-  ('tzzlf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzlln (0:`(          th2liso~/    @[)`]}~ $)@  }:   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@( <: upddiag             )@(unmzllc ungzl)))))  trl         Atall
-  ('tzzrf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmzrln (0:`((       0 th2liso~ -~/)@[)`]}~ $)@  }.   )) % (FP_EPS * (1:`]@.*)@norm1 * #)@[) >. ((% FP_EPS * #)~ norm1@((<: upddiag)~ 0 <. -~/@$)@(unmzrlc ungzr))))) (tru~ -~/@$) Atall
-  ('tzrzf' tmonad (]`]`(rcond"_)`(_."_)`((norm1@(- (unmrzrn (0:`((a: <@;   th2liso~/   )@[)`]}~ $)@:(}:"1))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[) >. ((% FP_EPS * c)~ norm1@( <: upddiag             )@(unmrzrc ungrz)))))  tru         Awide
+  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+
+  normw=. norm1 Awide=. |:^:(>/@$) y
+  normt=. normi Atall=. |:^:(</@$) y
+
+  NB. LAPACK doesn't clean strict lower triangle in R, so we need a rzt01 variant
+  rzt01a=: ((1 {:: [) %~^:(0 < [) (norm1 % FP_EPS * 1 >. c)@((- trupick@(0&{::))~ (unmrzrn ((1 -~ c) {."1 trupick@({."1~ #)))))`0:@.(0 e. $@]) >. (norm1 % FP_EPS * 1 >. c)@(<: upddiag)@(unmrzrc ungrz)`0:@.(0 e. $)@]
+
+  ('dtzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
+  ('ztzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
+
+  ('tzlzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`lzt01  )) Awide ; normw
+  ('tzzlf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zlt01  )) Atall ; normt
+  ('tzzrf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zrt01  )) Atall ; normt
+  ('tzrzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`rzt01  )) Awide ; normw
+
+  coerase < 'mttmp'
+  erase 'rzt01a'
 
   EMPTY
 )
@@ -1323,7 +1359,7 @@ NB. ---------------------------------------------------------
 NB. testqf
 NB.
 NB. Description:
-NB.   Adv. to make verb to test gexxx by matrix of generator
+NB.   Adv. to make verb to test gexxf by matrix of generator
 NB.   and shape given
 NB.
 NB. Syntax:

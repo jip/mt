@@ -12,9 +12,9 @@ NB. testhepow  Test hepow by Hermitian (symmetric) matrix
 NB. testpow    Adv. to make verb to test xxpow by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.10.0 2017-04-23
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2017 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -53,8 +53,8 @@ NB.   P=. p gepow A
 NB. where
 NB.   A  - n×n-matrix, a general matrix
 NB.   p  - sh-array of non-negative integers, power[s]
-NB.   P  - sh×n×n-array if r>0, a matrix A in power[s] p
-NB.        n×n-array    if r=0, a matrix A in power p
+NB.   P  - sh×n×n-array if r>0, the matrix A in power[s] p
+NB.        n×n-array    if r=0, the matrix A in power p
 NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
 NB.
@@ -253,9 +253,7 @@ NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
 
 testgepow=: 3 : 0
-  rcond=. gecon1 y
-
-  ('gepow' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) 5 7 ; y
+  ('gepow' tdyad ((5 7"_)`]`]`(geconi@[)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -269,16 +267,15 @@ NB.
 NB. Syntax:
 NB.   testdipow A
 NB. where
-NB.   A - n×n-matrix, diagonalizable
+NB.   A - n×n-matrix, the diagonalizable
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
 
 testdipow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  geevlvv=. 0 1 ({.&.>)`(((* *@+@((i. >./)"1@sorim{"0 1 ])) % normsr)"2&.>)ag ggevlvv@(,: idmat@c)
+  geevlvv=. {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1 ])) % normsr)"2&.>)"0@ggevlvv@(,: idmat@c)
 
-  rcond=. gecon1 y
   try.
     'v LR'=. geevlvv y               NB. eigendecomposition
     'L R'=. LR
@@ -288,7 +285,7 @@ testdipow=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  ('dipow' tdyad ((0&{::)`}.`]`(rcond"_)`(_."_)`(_."_))) 5 7 ; (ct R) ; v ; iRh
+  ('dipow' tdyad ((5 7"_)`]`]`(geconi@[)`(_."_)`(_."_))) (ct R) ; v ; iRh
 
   EMPTY
 )
@@ -302,20 +299,19 @@ NB.
 NB. Syntax:
 NB.   testhepow A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric)
+NB.   A - n×n-matrix, the Hermitian (symmetric)
 
 testhepow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
-  heevlv=. 0 1 ((9 o.{.)&.>)`((%%:@diag@(mp ct))&.>)ag ggevlvn@(,: idmat@c)
+  heevlv=. (9 o. {.)&.>`((%%:@diag@(mp ct))&.>)"0@ggevlvn@(,: idmat@c)
 
-  rcond=. hecon1 y
   try.
     'v R'=. heevlv y  NB. eigendecomposition
   catch.
     v=. R=. _.
   end.
 
-  ('hepow' tdyad ((0&{::)`}.`]`(rcond"_)`(_."_)`(_."_))) 5 7 ; v ; ct R
+  ('hepow' tdyad ((5 7"_)`]`]`(heconi@[)`(_."_)`(_."_))) v ; ct R
 
   EMPTY
 )

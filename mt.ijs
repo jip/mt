@@ -30,9 +30,9 @@ NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -105,7 +105,7 @@ NB. ---------------------------------------------------------
 NB. System definitions
 
 require 'math/misc/mathutil'   NB. mp_mt_
-require 'general/misc/format'  NB. clipfmt clipunfmt
+require 'general/misc/format'  NB. clipfmt_z_
 
 NB. ---------------------------------------------------------
 NB. Addon definitions
@@ -225,7 +225,7 @@ testhigh=: 1 : 0
 )
 
 test=: 1 : 0
-  fmtlog_mt_ 'algorithm';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'
+  smoutput fmtlog_mt_ 'sentence';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'
 
   (u testlow_mt_ ) y  NB. low-level algorithms
   (u testmid_mt_ ) y  NB. mid-level algorithms

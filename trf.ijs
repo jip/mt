@@ -19,9 +19,9 @@ NB.            definite tridiagonal matrix
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -65,15 +65,16 @@ NB. Syntax:
 NB.   'ipo B lto t0o t1o'=. lahefpl ipi;subA;lti;t0i;t1i
 NB. where
 NB.   ipi       -:i. (n-i)
-NB.   subA      - (n-i)×(n-i)-matrix to factorize, Hermitian
-NB.               (symmetric), the bottom right part of A
-NB.   lti       - (n-i)-vector, is defined as:
+NB.   subA      - (n-i)×(n-i)-matrix to factorize, the
+NB.               Hermitian (symmetric), the bottom right
+NB.               part of A
+NB.   lti       - (n-i)-vector, which is defined as:
 NB.                 lti=. ti 0} li
 NB.   t0i       - i-vector, float, leading elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i,n-1))-vector, leading elements
 NB.               of subdiagonal of T
-NB.   ipo       - (n-i)-vector of integers, inversed full
+NB.   ipo       - (n-i)-vector of integers, the inversed full
 NB.               permutation, corresponding to subP
 NB.   B         - (n-i)×(n-i)-matrix, contains subL110,
 NB.               subH10^H, strict lower triangle of subL100,
@@ -89,31 +90,33 @@ NB.   li        - (n-i)-vector, the 1st scaled column of
 NB.               subL1, having 1 in the 1st element
 NB.   ti        - scalar, the max from li before it was
 NB.               scaled, can be any value when i=0
-NB.   subL100   - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, unit
-NB.               lower triangular, top left part of subL1
+NB.   subL100   - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, the
+NB.               unit lower triangular, top left part of
+NB.               subL1
 NB.   subL110   - max(0,n-i-TRFNB)×min(TRFNB,n-i)-matrix,
-NB.               bottom left part of subL1
-NB.   subH00    - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, lower
-NB.               Hessenberg, top left part of subH
+NB.               the bottom left part of subL1
+NB.   subH00    - min(TRFNB,n-i)×min(TRFNB,n-i)-matrix, the
+NB.               lower Hessenberg, top left part of subH
 NB.   subH10    - max(0,n-i-TRFNB)×min(TRFNB,n-i)-matrix,
-NB.               bottom left part of subH
+NB.               the bottom left part of subH
 NB.   subA11upd - max(0,n-i-TRFNB)×max(0,n-i-TRFNB), not yet
 NB.               factored bottom right part of subA
-NB.   subP      - (n-i)×(n-i)-matrix, boolean, full
+NB.   subP      - (n-i)×(n-i)-matrix, boolean, the full
 NB.               permutation of subA
-NB.   subL1     - (n-i)×(n-i)-matrix, unit lower triangular,
-NB.               being columns i:min(i+TRFNB,n) of L1
-NB.   subH      - (n-i)×(n-i)-matrix, lower Hessenberg, is
-NB.               defined as:
+NB.   subL1     - (n-i)×(n-i)-matrix, the unit lower
+NB.               triangular, being columns i:min(i+TRFNB,n)
+NB.               of L1
+NB.   subH      - (n-i)×(n-i)-matrix, the lower Hessenberg,
+NB.               which is defined as:
 NB.                 subH=. subL1 mp subT
-NB.   subT      - (n-i)×(n-i)-matrix, Hermitian (symmetric)
-NB.               tridiagonal, being bottom right part of T
-NB.   i         - integer from set:
-NB.                 {(0:⌈n/TRFNB⌉)*TRFNB} ,
-NB.               lIO subA's 1st row and column within A
-NB.   A         - n×n-matrix, Hermitian (symmetric)
-NB.   L1        - n×n-matrix, unit lower triangular
-NB.   T         - n×n-matrix, Hermitian (symmetric)
+NB.   subT      - (n-i)×(n-i)-matrix, the Hermitian
+NB.               (symmetric) tridiagonal, being bottom right
+NB.               part of T
+NB.   i         ∊ {(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's 1st row
+NB.               and column within A
+NB.   A         - n×n-matrix, the Hermitian (symmetric)
+NB.   L1        - n×n-matrix, the unit lower triangular
+NB.   T         - n×n-matrix, the Hermitian (symmetric)
 NB.               tridiagonal
 NB.
 NB. Storage layout 1 (assume TRFNB<n):
@@ -122,10 +125,10 @@ NB.     ( subA00 subA10^H ) TRFNB        ( subL100H00h subH10^H  ) TRFNB
 NB.     ( subA10 subA11   ) n-i-TRFNB    ( subL110     subA11upd ) n-i-TRFNB
 NB.       TRFNB  n-i-TRFNB                 TRFNB       n-i-TRFNB
 NB. where
-NB.   subL100H00h - TRFNB×TRFNB-matrix, combined strict lower
-NB.                 triangle of L100, and strict upper
-NB.                 triangle of subH00^H, diagonal is
-NB.                 undefined
+NB.   subL100H00h - TRFNB×TRFNB-matrix, a strict lower
+NB.                 triangle of L100 combined with a strict
+NB.                 upper triangle of subH00^H, the diagonal
+NB.                 is undefined
 NB.
 NB. Example for output B when TRFNB=2, n=5:
 NB.   ( *    h00h h10h h10h h10h )
@@ -264,8 +267,8 @@ NB.   3) use output from the last iteration as algorithm's
 NB.      output
 NB.
 NB. Notes:
-NB. - for n>TRFNB is similar to LAPACK's DLASYF('L') and
-NB.   ZLAHEF('L'), but uses another factorization
+NB. - for n>TRFNB models LAPACK's DLASYF_AA('L') and
+NB.   ZLAHEF_AA('L')
 NB. - for n<:TRFNB is similar to LAPACK's DSYTF2('L') and
 NB.   ZHETF2('L'), but uses another factorization
 NB. - diagonals 0 and 1 of subH (main diagonal and
@@ -311,14 +314,14 @@ NB.   ipi       -:i. (n+i+1)
 NB.   subA      - (n+i+1)×(n+i+1)-matrix to factorize,
 NB.               Hermitian (symmetric), the top left part of
 NB.               A
-NB.   uti       - (n+i+1)-vector, is defined as:
+NB.   uti       - (n+i+1)-vector, which is defined as:
 NB.                 uti=. ti _1} ui
 NB.   t0i       - (i+1)-vector, float, tail elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i+1,n-1))-vector, tail elements
 NB.               of superdiagonal of T
-NB.   ipo       - (n+i+1)-vector of integers, inversed full
-NB.               permutation, corresponding to subP
+NB.   ipo       - (n+i+1)-vector of integers, the inversed
+NB.               full permutation, corresponding to subP
 NB.   B         - (n+i+1)×(n+i+1)-matrix, contains subU101,
 NB.               subH01^H, strict upper triangle of subU111,
 NB.               strict lower triangle of subH11^H, and
@@ -334,32 +337,32 @@ NB.               subU1, having 1 in the last element
 NB.   ti        - scalar, the max from ui before it was
 NB.               scaled, can be any value when i=_1
 NB.   subU111   - min(TRFNB,n+i+1)×min(TRFNB,n+i+1)-matrix,
-NB.               unit upper triangular, bottom right part of
-NB.               subU1
+NB.               the unit upper triangular, bottom right
+NB.               part of subU1
 NB.   subU101   - max(0,n+i+1-TRFNB)×min(TRFNB,n+i+1)-matrix,
-NB.               top right part of subU1
+NB.               the top right part of subU1
 NB.   subH11    - min(TRFNB,n+i+1)×min(TRFNB,n+i+1)-matrix,
-NB.               upper Hessenberg, bottom right part of subH
+NB.               the upper Hessenberg, bottom right part of
+NB.               subH
 NB.   subH01    - max(0,n+i+1-TRFNB)×min(TRFNB,n+i+1)-matrix,
-NB.               top right part of subH
+NB.               the top right part of subH
 NB.   subA00upd - max(0,n+i+1-TRFNB)×max(0,n+i+1-TRFNB), not
 NB.               yet factored top left part of subA
-NB.   subP      - (n+i+1)×(n+i+1)-matrix, boolean, full
+NB.   subP      - (n+i+1)×(n+i+1)-matrix, boolean, the full
 NB.               permutation of subA
-NB.   subU1     - (n+i+1)×(n+i+1)-matrix, unit upper
+NB.   subU1     - (n+i+1)×(n+i+1)-matrix, the unit upper
 NB.               triangular, being columns 0:n+i of U1
-NB.   subH      - (n+i+1)×(n+i+1)-matrix, upper Hessenberg,
-NB.               is defined as:
+NB.   subH      - (n+i+1)×(n+i+1)-matrix, the upper
+NB.               Hessenberg, is defined as:
 NB.                 subH=. subU1 mp subT
-NB.   subT      - (n+i+1)×(n+i+1)-matrix, Hermitian
+NB.   subT      - (n+i+1)×(n+i+1)-matrix, the Hermitian
 NB.               (symmetric) tridiagonal, being top left
 NB.               part of T
-NB.   i         - integer from set:
-NB.                 {_1-(0:⌈n/TRFNB⌉)*TRFNB},
-NB.               lIO subA's last row and column within A
-NB.   A         - n×n-matrix, Hermitian (symmetric)
-NB.   U1        - n×n-matrix, unit upper triangular
-NB.   T         - n×n-matrix, Hermitian (symmetric)
+NB.   i         ∊ {_1-(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's last
+NB.               row and column within A
+NB.   A         - n×n-matrix, the Hermitian (symmetric)
+NB.   U1        - n×n-matrix, the unit upper triangular
+NB.   T         - n×n-matrix, the Hermitian (symmetric)
 NB.               tridiagonal
 NB.
 NB. Storage layout 1 (assume TRFNB<n):
@@ -368,10 +371,10 @@ NB.     ( subA00    subA10^H ) n+i-TRFNB    ( subA00upd subU101     ) n+i-TRFNB
 NB.     ( subA10    subA11   ) TRFNB        ( subH01^H  subU111H11h ) TRFNB
 NB.       n+i-TRFNB TRFNB                     n+i-TRFNB TRFNB
 NB. where
-NB.   subU111H11h - TRFNB×TRFNB-matrix, combined strict upper
-NB.                 triangle of U111, and strict lower
-NB.                 triangle of subH11^H, diagonal is
-NB.                 undefined
+NB.   subU111H11h - TRFNB×TRFNB-matrix, a strict upper
+NB.                 triangle of U111 combined with a strict
+NB.                 lower triangle of subH11^H, the diagonal
+NB.                 is undefined
 NB.
 NB. Example for output B when TRFNB=2, n=5:
 NB.   ( a00u a00u a00u u101 u101 )
@@ -552,11 +555,12 @@ NB.     'ip LU1'=. getrflu1p A
 NB. where
 NB.   A   - m×n-matrix to factorize
 NB.   ip  - n-vector, columns inversed permutation of A
-NB.   LU1 - m×n-matrix, lower triangle contains L, and strict
-NB.         upper triangle contains U1 without unit diagonal
+NB.   LU1 - m×n-matrix, the lower triangle contains L, and
+NB.         the strict upper triangle contains U1 without
+NB.         unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
-NB.   L   - m×min(m,n)-matrix, lower triangular
-NB.   U1  - min(m,n)×n-matrix, unit upper triangular
+NB.   L   - m×min(m,n)-matrix, the lower trapezoidal
+NB.   U1  - min(m,n)×n-matrix, the unit upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       L's partitioning:
@@ -568,10 +572,10 @@ NB.     k   ( U1aa U1ab ) := ( U1a ) := U1      k   ( LaaU1aa U1ab    ) := LU1
 NB.     m-k (      U1bb )    ( U1b )            m-k ( Lba     LbbU1bb )
 NB.           k    n-k         n                      k       n-k
 NB. where
-NB.   LaaU1aa - combined Laa and U1aa, U1aa's unit diagonal
-NB.             isn't stored
-NB.   LbbU1bb - combined Lbb and U1bb, U1bb's unit diagonal
-NB.             isn't stored
+NB.   LaaU1aa - Laa and U1aa combined, U1aa's unit diagonal
+NB.             not stored
+NB.   LbbU1bb - Lbb and U1bb combined, U1bb's unit diagonal
+NB.             not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -655,7 +659,7 @@ NB.                    ip[k:n-1] := Pb^H * ip[k:n-1]
 NB.           4.7.2) permute columns of U1ab according to
 NB.                  Pb^H :
 NB.                    U1ab := U1ab * Pb^H
-NB.           4.7.3) assemble triangular matrices L and U1
+NB.           4.7.3) assemble trapezoidal matrices L and U1
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -677,12 +681,12 @@ getrflu1p=: 3 : 0
   'm n'=. sh=. $ y
   if. 0 e. sh do.
     (i. n) ; y
-  elseif. 1=m do.
+  elseif. 1 = m do.
     dip=. < 0 , liofmax {. y
     ip=. dip C. :: ] i. n
     y=. ((] 0:} %) 0&({,)) dip C."1 :: ] y
     ip ; y
-  elseif. do.
+  else.
     k=. n (<. >.@-:) m
     'ip LaaU1a'=. getrflu1p k {. y
     y=. ip C."1 k }. y
@@ -706,11 +710,12 @@ NB.     'ip L1U'=. getrfpl1u A
 NB. where
 NB.   A   - m×n-matrix to factorize
 NB.   ip  - m-vector, rows inversed permutation of A
-NB.   L1U - m×n-matrix, upper triangle contains U, and strict
-NB.         lower triangle contains L1 without unit diagonal
+NB.   L1U - m×n-matrix, the upper triangle contains U, and
+NB.         the strict lower triangle contains L1 without
+NB.         unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
-NB.   L1  - m×min(m,n)-matrix, unit lower triangular
-NB.   U   - min(m,n)×n-matrix, upper triangular
+NB.   L1  - m×min(m,n)-matrix, the unit lower trapezoidal
+NB.   U   - min(m,n)×n-matrix, the upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           U's partitioning:
@@ -722,10 +727,10 @@ NB.     k   ( L1aa      ) := ( L1a L1b ) := L1      k   ( L1aaUaa Uba     ) := L
 NB.     m-k ( L1ab L1bb )                           m-k ( L1ab    L1bbUbb )
 NB.           k    n-k         k   n-k                    k       n-k
 NB. where
-NB.   L1aaUaa - combined L1aa and Uaa, L1aa's unit diagonal
-NB.             isn't stored
-NB.   L1bbUbb - combined L1bb and Ubb, L1bb's unit diagonal
-NB.             isn't stored
+NB.   L1aaUaa - L1aa and Uaa combined, L1aa's unit diagonal
+NB.             not stored
+NB.   L1bbUbb - L1bb and Ubb combined, L1bb's unit diagonal
+NB.             not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -809,7 +814,7 @@ NB.                    ip[k:m-1] := Pb^H * ip[k:m-1]
 NB.           4.7.2) permute rows of L1ab according to
 NB.                  Pb^H :
 NB.                    L1ab := Pb^H * L1ab
-NB.           4.7.3) assemble triangular matrices L1 and U
+NB.           4.7.3) assemble trapezoidal matrices L1 and U
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -828,7 +833,7 @@ NB.   L1=. trl1 L1U
 NB.   U=. tru L1U
 NB.
 NB. Notes:
-NB. - models LAPACK's xGETRF
+NB. - implements LAPACK's xGETRF
 
 getrfpl1u=: 3 : 0
   'm n'=. sh=. $ y
@@ -839,7 +844,7 @@ getrfpl1u=: 3 : 0
     ip=. dip C. :: ] i. m
     y=. ((] 0:} %) 0&({,)) dip C. :: ] y
     ip ; y
-  elseif. do.
+  else.
     k=. m (<. >.@-:) n
     'pi L1aUaa'=. getrfpl1u k {."1 y
     y=. pi C. k }."1 y
@@ -863,11 +868,12 @@ NB.     'ip U1L'=. getrfpu1l A
 NB. where
 NB.   ip  - m-vector, rows inversed permutation of A
 NB.   A   - m×n-matrix to factorize
-NB.   U1L - m×n-matrix, lower triangle contains L, and strict
-NB.         upper triangle contains U1 without unit diagonal
+NB.   U1L - m×n-matrix, the lower triangle contains L, and
+NB.         the strict upper triangle contains U1 without
+NB.         unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
-NB.   L   - m×min(m,n)-matrix, lower triangular
-NB.   U1  - min(m,n)×n-matrix, unit upper triangular
+NB.   L   - m×min(m,n)-matrix, the lower trapezoidal
+NB.   U1  - min(m,n)×n-matrix, the unit upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           L's partitioning:
@@ -879,10 +885,10 @@ NB.     m-k ( U1aa U1ba ) := ( U1a U1b ) := U1      m-k ( U1aaLaa U1ba    ) := U
 NB.     k   (      U1bb )                           k   ( Lab     U1bbLbb )
 NB.           n-k  k           n-k k                      n-k       k
 NB. where
-NB.   U1aaLaa - combined U1aa and Laa, U1aa's unit diagonal
-NB.             isn't stored
-NB.   U1bbLbb - combined U1bb and Lbb, U1bb's unit diagonal
-NB.             isn't stored
+NB.   U1aaLaa - U1aa and Laa combined, U1aa's unit diagonal
+NB.             not stored
+NB.   U1bbLbb - U1bb and Lbb combined, U1bb's unit diagonal
+NB.             not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -966,7 +972,7 @@ NB.                    ip[0:m-k-1] := Pa^H * ip[0:m-k-1]
 NB.           4.7.2) permute rows of U1ba according to
 NB.                  Pa^H :
 NB.                    U1ba := Pa^H * U1ba
-NB.           4.7.3) assemble triangular matrices U1 and L
+NB.           4.7.3) assemble trapezoidal matrices U1 and L
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -993,7 +999,7 @@ getrfpu1l=: 3 : 0
     ip=. dip C. :: ] i. m
     y=. ((] _1:} %) _1&({,)) dip C. :: ] y
     ip ; y
-  elseif. do.
+  else.
     k=. m (<. >.@-:) n
     'ip U1bLbb'=. getrfpu1l (-k) {."1 y
     y=. ip C. (-k) }."1 y
@@ -1017,11 +1023,12 @@ NB.     'ip UL1'=. getrful1p A
 NB. where
 NB.   A   - m×n-matrix to factorize
 NB.   ip  - n-vector, columns inversed permutation of A
-NB.   UL1 - m×n-matrix, upper triangle contains U, and strict
-NB.         lower triangle contains L1 without unit diagonal
+NB.   UL1 - m×n-matrix, the upper triangle contains U, and
+NB.         the strict lower triangle contains L1 without
+NB.         unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
-NB.   L1  - m×min(m,n)-matrix, unit lower triangular
-NB.   U   - min(m,n)×n-matrix, upper triangular
+NB.   L1  - m×min(m,n)-matrix, the unit lower trapezoidal
+NB.   U   - min(m,n)×n-matrix, the upper trapezoidal
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       U's partitioning:
@@ -1033,10 +1040,10 @@ NB.     m-k ( L1aa      ) := ( L1a ) := L1      m-k ( UaaL1aa Uab     ) := UL1
 NB.     k   ( L1ba L1bb )    ( L1b )            k   ( L1ba    UbbL1bb )
 NB.           n-k  k           n                      n-k     k
 NB. where
-NB.   UaaL1aa - combined Uaa and L1aa, L1aa's unit diagonal
-NB.             isn't stored
-NB.   UbbL1bb - combined Ubb and L1bb, L1bb's unit diagonal
-NB.             isn't stored
+NB.   UaaL1aa - Uaa and L1aa combined, L1aa's unit diagonal
+NB.             not stored
+NB.   UbbL1bb - Ubb and L1bb combined, L1bb's unit diagonal
+NB.             not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1120,7 +1127,7 @@ NB.                    ip[0:k-1] := Pa^H * ip[0:k-1]
 NB.           4.7.2) permute columns of L1ba according to
 NB.                  Pa^H :
 NB.                    L1ba := L1ba * Pa^H
-NB.           4.7.3) assemble triangular matrices L1 and U
+NB.           4.7.3) assemble trapezoidal matrices L1 and U
 NB.
 NB. Assertions:
 NB.   P -: %. iP
@@ -1147,7 +1154,7 @@ getrful1p=: 3 : 0
     ip=. dip C. :: ] i. n
     y=. ((] _1:} %) _1&({,)) dip C."1 :: ] y
     ip ; y
-  elseif. do.
+  else.
     k=. n (<. >.@-:) m
     'ip UbbL1b'=. getrful1p (-k) {. y
     y=. ip C."1 (-k) }. y
@@ -1171,12 +1178,12 @@ NB.
 NB. Syntax:
 NB.     'ip L1 T'=. hetrfpl A
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric)
-NB.   ip - n-vector of integers, full inversed permutation of
-NB.        A
-NB.   L1 - n×n-matrix, unit lower triangular
-NB.   T  - n×n-matrix, Hermitian (symmetric) tridiagonal
-NB.   P  - n×n-matrix, full permutation of A
+NB.   A  - n×n-matrix, the Hermitian (symmetric)
+NB.   ip - n-vector of integers, the full inversed
+NB.        permutation of A
+NB.   L1 - n×n-matrix, the unit lower triangular
+NB.   T  - n×n-matrix, the Hermitian (symmetric) tridiagonal
+NB.   P  - n×n-matrix, the full permutation of A
 NB.
 NB. Algorithm (assume TRFNB<n-i):
 NB.   In: A
@@ -1228,7 +1235,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   A -: clean (/: ip) fp L1 (mp mp ct@[) T
+NB.   A -: clean ip fp^:_1 L1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) L1 (mp mp ct@[) T
 NB. where
 NB.   'ip L1 T'=. hetrfpl A
@@ -1236,8 +1243,7 @@ NB.   iP=. p2P ip
 NB.   P=. ip2P ip
 NB.
 NB. Notes:
-NB. - is similar to LAPACK's DSYTRF and ZHETRF, but uses
-NB.   another factorization
+NB. - models LAPACK's DSYTRF_AA('L') and ZHETRF_AA('L')
 NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
@@ -1281,12 +1287,12 @@ NB.
 NB. Syntax:
 NB.     'ip U1 T'=. hetrfpu A
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric)
-NB.   ip - n-vector of integers, full inversed permutation of
-NB.        A
-NB.   U1 - n×n-matrix, unit upper triangular
-NB.   T  - n×n-matrix, Hermitian (symmetric) tridiagonal
-NB.   P  - n×n-matrix, full permutation of A
+NB.   A  - n×n-matrix, the Hermitian (symmetric)
+NB.   ip - n-vector of integers, the full inversed
+NB.        permutation of A
+NB.   U1 - n×n-matrix, the unit upper triangular
+NB.   T  - n×n-matrix, the Hermitian (symmetric) tridiagonal
+NB.   P  - n×n-matrix, the full permutation of A
 NB.
 NB. Algorithm (assume TRFNB<n+i+1):
 NB.   In: A
@@ -1338,7 +1344,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   A -: clean (/: ip) fp U1 (mp mp ct@[) T
+NB.   A -: clean ip fp^:_1 U1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) U1 (mp mp ct@[) T
 NB. where
 NB.   'ip U1 T'=. hetrfpu A
@@ -1385,9 +1391,10 @@ NB.
 NB. Syntax:
 NB.   L=. potrfl A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.   L - n×n-matrix, lower triangular with positive diagonal
-NB.       entries, Cholesky triangle
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
+NB.   L - n×n-matrix, the lower triangular with positive
+NB.       diagonal entries, the Cholesky triangle
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1425,8 +1432,7 @@ NB. where
 NB.   L=. potrfl A
 NB.
 NB. Notes:
-NB. - models LAPACK's xPOTRF('L'), but uses blocked, not
-NB.   partitioned algorithm
+NB. - implements LAPACK's xPOTRF('L')
 
 potrfl=: %:`((0:`0:`0:`]`]`(potrfl@(0 0&{::))`,`(ct@])`trsmllnn`(0 1&{::)`[`mp`[`]`(1 1&{::)`stitchb`(potrfl@:-~)`]`[`0:`0: fork6)@(<;.1~ (;~@((0) 1:`(, >.@-:)`(#~)} #))))@.(1<#)
 
@@ -1445,30 +1451,6 @@ NB.     %: y
 NB.   end.
 NB. )
 
-potrfl2=: 3 : 0
-  n=. # y
-  ATL=. EMPTY
-  ATR=. i. 0 , n
-  ABL=. i. n , 0
-  ABR=. y
-  while.
-    n > # ATL
-  do.
-    b=. TRFNB <. # ABR
-    A10=. b {. ABL
-    NB. ( A11 ) = ( A11 ) - ( A10 ) * A10'
-    NB. ( A21 )   ( A21 )   ( A20 )
-    'A11 A21'=. b ({. ; }.) (b {."1 ABR) - ABL mp ct A10
-    A11=. potrfl2 A11  NB. may fail
-    A21=. A21 mp 128!:1 ct A11  NB. A21=. A21 mp ct trtril A11
-    ATL=. ATL , A10 ,. A11
-    ATR=. (b }."1 ATR) , b ((([ , -) c) {. ]) ABR
-    ABL=. (b }. ABL) ,. A21
-    ABR=. (2 # b) }. ABR
-  end.
-  (ATL ,. ABR) , ABL ,. ABR
-)
-
 NB. ---------------------------------------------------------
 NB. potrfu
 NB.
@@ -1480,9 +1462,10 @@ NB.
 NB. Syntax:
 NB.   U=. potrfu A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive definite
-NB.   U - n×n-matrix, upper triangular with positive diagonal
-NB.       entries, Cholesky triangle
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
+NB.   U - n×n-matrix, the upper triangular with positive
+NB.       diagonal entries, the Cholesky triangle
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1532,9 +1515,9 @@ NB.
 NB. Syntax:
 NB.   'L1 D'=. pttrfl A
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric) positive
+NB.   A  - n×n-matrix, the Hermitian (symmetric) positive
 NB.        definite tridiagonal
-NB.   L1 - n×n-matrix, unit lower bidiangonal
+NB.   L1 - n×n-matrix, the unit lower bidiangonal
 NB.   D  - n×n-matrix, diagonal with positive diagonal
 NB.        entries
 NB.
@@ -1566,9 +1549,7 @@ NB. where
 NB.   'L1 D'=. pttrfl A
 NB.
 NB. Notes:
-NB. - implements LAPACK's xPTTRF
-NB. - if A is indefinite then factors may have unacceptably
-NB.   large elements
+NB. - models LAPACK's xPTTRF
 NB.
 NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
@@ -1591,9 +1572,9 @@ NB.
 NB. Syntax:
 NB.   'U1 D'=. pttrfu A
 NB. where
-NB.   A  - n×n-matrix, Hermitian (symmetric) positive
+NB.   A  - n×n-matrix, the Hermitian (symmetric) positive
 NB.        definite tridiagonal
-NB.   U1 - n×n-matrix, unit upper bidiangonal
+NB.   U1 - n×n-matrix, the unit upper bidiangonal
 NB.   D  - n×n-matrix, diagonal with positive diagonal
 NB.        entries
 NB.
@@ -1646,47 +1627,40 @@ NB. testgetrf
 NB.
 NB. Description:
 NB.   Test:
-NB.   - lud (math/misc)
-NB.   - getrf (math/lapack)
-NB.   - getrfxxxx (math/mt)
+NB.   - lud (math/misc addon)
+NB.   - xGETRF (math/lapack2 addon)
+NB.   - getrfxxxx (math/mt addon)
 NB.   by general matrix
 NB.
 NB. Syntax:
 NB.   testgetrf A
 NB. where
 NB.   A - m×n-matrix
-NB.
-NB. Formula:
-NB. - for L * U1 * P = A :
-NB.     berr := ||L * U1 * P - A|| / (FP_EPS * ||A|| * m)
-NB. - for P * L1 * U = A :
-NB.     berr := ||P * L1 * U - A|| / (FP_EPS * ||A|| * n)
-NB. - for P * U1 * L = A :
-NB.     berr := ||P * U1 * L - A|| / (FP_EPS * ||A|| * n)
-NB. - for U * L1 * P = A :
-NB.     berr := ||U * L1 * P - A|| / (FP_EPS * ||A|| * m)
-NB.
-NB. Notes:
-NB. - use temporary locale mttmp to avoid mt's names
-NB.   redefinition
 
 testgetrf=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'getrf'
+  load        :: ] 'numeric'
+  load_mttmp_ :: ] 'math/misc/mathutil'
+  load_mttmp_ :: ] 'math/misc/makemat'
+  load_mttmp_ :: ] 'math/misc/matutil'
+  load_mttmp_ :: ] 'math/misc/linear'
+  load_mttmp_ :: ] 'math/misc/matfacto'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
 
-  rcond=. (_."_)`gecon1@.(=/@$) y  NB. meaninigful for square matrices only
+  'rcondl rcondu'=. (_. _."_)`(geconi , gecon1)@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('lud_mttmp_'     tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: %.               2&{::)                        ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  'norml normu'=. (normi , norm1) y
 
-  ('getrf_jlapack_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (mp&>/@}: invperm_jlapack_ 2&{::)                        ) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('lud_mttmp_'    tmonad ((0&{::)`(ip2P^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
 
-  ('getrflu1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
-  ('getrfpl1u'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('getrfpu1l'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('getrful1p'      tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- (0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('dgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  ('zgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
 
-  coerase <'mttmp'
+  ('getrflu1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))`(rcondl"_)`(_."_)`(normi get01 #))) y ; norml
+  ('getrfpl1u'     tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  ('getrfpu1l'     tmonad ((0&{::)`(0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  ('getrful1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))`(rcondl"_)`(_."_)`(normi get01 #))) y ; norml
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -1695,24 +1669,55 @@ NB. ---------------------------------------------------------
 NB. testhetrf
 NB.
 NB. Description:
-NB.   Test hetrfpx by Hermitian (symmetric) matrix
+NB.   Test:
+NB.   - DSYTRF DSYTRF_AA ZHETRF ZHETRF_AA (math/lapack2
+NB.     addon)
+NB.   - hetrfpx (math/mt addon)
+NB.   by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
 NB.   testhetrf A
 NB. where
-NB.   A - n×n-matrix, Hermitian
+NB.   A - n×n-matrix, the Hermitian
 NB.
-NB. Formula:
-NB. - for P * L1 * T * L1^H * P^H = A :
-NB.     berr := ||P * L1 * T * L1^H * P^H - A|| / (FP_EPS * ||A|| * n)
-NB. - for P * U1 * T * U1^H * P^H = A :
-NB.     berr := ||P * U1 * T * U1^H * P^H - A|| / (FP_EPS * ||A|| * n)
+NB. Notes:
+NB. - no berrA calc for LAPACK's DSYTRF and ZHETRF yet since
+NB.   its output is intricate
 
 testhetrf=: 3 : 0
-  rcond=. hecon1 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf_aa'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf_aa'
 
-  ('hetrfpl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('hetrfpu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/@}. (fp~ /:) 0&{::)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  rcond=. heconi y
+
+  norm=. normi y
+
+  NB. Aapprox=. calcAxx (DT1 ; ipiv)
+  calcAdl=: makeper_jlapack2_@(1&{::) fp ((setdiag~  1 ;~    _1&diag )@bdlpick (mp~ mp  |:@]) trl1pick@:(|.!.0"1))@(0&{::)
+  calcAdu=: makeper_jlapack2_@(1&{::) fp ((setdiag~ _1 ;~     1&diag )@bdupick (mp  mp~ |:@]) tru1pick@:(|.!.0  ))@(0&{::)
+  calcAzl=: makeper_jlapack2_@(1&{::) fp ((setdiag~  1 ;~ +@(_1&diag))@bdlpick (mp~ mp  ct@]) trl1pick@:(|.!.0"1))@(0&{::)
+  calcAzu=: makeper_jlapack2_@(1&{::) fp ((setdiag~ _1 ;~ +@( 1&diag))@bdupick (mp  mp~ ct@]) tru1pick@:(|.!.0  ))@(0&{::)
+
+  NB. Aapprox=. calcA (ip ; T1 ; T)  NB. where T1 is L1 or U1
+  calcA=: 0&{:: fp^:_1 (mp mp ct@[)&>/@}.
+
+  ('''l''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+  ('''u''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+  ('''l''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+  ('''u''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+
+  ('''l''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdl`(rcond"_)`(_."_)`het01 )) y ; norm
+  ('''u''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdu`(rcond"_)`(_."_)`het01 )) y ; norm
+  ('''l''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzl`(rcond"_)`(_."_)`het01 )) y ; norm
+  ('''u''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzu`(rcond"_)`(_."_)`het01 )) y ; norm
+
+  ('hetrfpl'                tmonad ((0&{::)`calcA  `(rcond"_)`(_."_)`het01 )) y ; norm
+  ('hetrfpu'                tmonad ((0&{::)`calcA  `(rcond"_)`(_."_)`het01 )) y ; norm
+
+  coerase < 'mttmp'
+  erase 'calcAdl calcAdu calcAzl calcAzu calcA calcA'
 
   EMPTY
 )
@@ -1723,41 +1728,40 @@ NB.
 NB. Description:
 NB.   Test:
 NB.   - choleski (math/misc addon)
-NB.   - potrf (math/lapack addon)
+NB.   - xPOTRF (math/lapack2 addon)
 NB.   - potrfx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix
 NB.
 NB. Syntax:
 NB.   testpotrf A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite
-NB.
-NB. Formula:
-NB. - for L * L^H = A :
-NB.     berr := ||L * L^H - A|| / (FP_EPS * ||A|| * n)
-NB. - for U * U^H = A :
-NB.     berr := ||U * U^H - A|| / (FP_EPS * ||A|| * n)
-NB.
-NB. Notes:
-NB. - use temporary locale mttmp to avoid mt's names
-NB.   redefinition
 
 testpotrf=: 3 : 0
-  load_mttmp_ :: ] '~addons/math/misc/matfacto.ijs'
-  require :: ] '~addons/math/lapack/lapack.ijs'
-  need_jlapack_ :: ] 'potrf'
+  load        :: ] 'numeric'
+  load_mttmp_ :: ] 'math/misc/mathutil'
+  load_mttmp_ :: ] 'math/misc/makemat'
+  load_mttmp_ :: ] 'math/misc/matutil'
+  load_mttmp_ :: ] 'math/misc/linear'
+  load_mttmp_ :: ] 'math/misc/matfacto'
+  load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
 
-  rcond=. pocon1 y
+  rcond=. poconi y
 
-  ('choleski_mttmp_' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  norm=. normi y
 
-  ('potrf_jlapack_'  tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
+  ('choleski_mttmp_'     tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
 
-  ('potrfl'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('potrfu'          tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- po) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  ('''l''&dpotrf_mttmp_' tmonad ((0&{::)`((mp  |:)@trl)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('''u''&dpotrf_mttmp_' tmonad ((0&{::)`((mp~ |:)@tru)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('''l''&zpotrf_mttmp_' tmonad ((0&{::)`((mp  ct)@trl)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('''u''&zpotrf_mttmp_' tmonad ((0&{::)`((mp~ ct)@tru)`(rcond"_)`(_."_)`het01)) y ; norm
 
-  coerase <'mttmp'
+  ('potrfl'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
+  ('potrfu'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
+
+  coerase < 'mttmp'
 
   EMPTY
 )
@@ -1766,29 +1770,42 @@ NB. ---------------------------------------------------------
 NB. testpttrf
 NB.
 NB. Description:
-NB.   Test pttrfpx by Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix
+NB.   Test:
+NB.   - xPTTRF (math/lapack2 addon)
+NB.   - pttrfx (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite tridiagonal
+NB.   matrix
 NB.
 NB. Syntax:
 NB.   testpttrf A
 NB. where
-NB.   A - n×n-matrix, Hermitian (symmetric) positive
+NB.   A - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite tridiagonal
-NB.
-NB. Formula:
-NB. - for L1 * D * L1^H = A :
-NB.     berr := ||L1 * D * L1^H - A|| / (FP_EPS * ||A|| * n)
-NB. - for U1 * D * U1^H = A :
-NB.     berr := ||U1 * D * U1^H - A|| / (FP_EPS * ||A|| * n)
 NB.
 NB. TODO:
 NB. - A should be sparse
 
 testpttrf=: 3 : 0
-  rcond=. ptcon1 y
+  load_mttmp_ :: ] 'math/mt/test/lapack2/pttrf'
 
-  ('pttrfl' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * (1:`]@.*)@norm1 * c)@[))) y
-  ('pttrfu' tmonad (]`]`(rcond"_)`(_."_)`(norm1@(- ((mp mp ct@[)&>/)) % (FP_EPS * (1:`]@.*)@norm1 * #)@[))) y
+  rcond=. ptconi y
+
+  norm=. normi y
+
+  NB. Aapprox=. L1 calcAm D
+  calcAm=: mp mp ct@[
+  NB. Aapprox=. dD calcAxl eT1
+  calcAdl=: ((setdiag~ ;&_1)~ idmat@#)~ (mp mp |:@[) diagmat@[
+  calcAzl=: ((setdiag~ ;&_1)~ idmat@#)~ calcAm       diagmat@[
+
+  ('dpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAdl&>/)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('zpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAzl&>/)`(rcond"_)`(_."_)`het01)) y ; norm
+
+  ('pttrfl'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`(_."_)`het01)) y ; norm
+  ('pttrfu'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`(_."_)`het01)) y ; norm
+
+  coerase < 'mttmp'
+  erase 'calcAdl calcAzl calcAm'
 
   EMPTY
 )

@@ -9,9 +9,9 @@ NB.
 NB. testlartg  Test lartg by vectors
 NB. testrot    Test rotation algorithms by predefined matrix
 NB.
-NB. Version: 0.10.5 2020-03-30
+NB. Version: 0.11.0 2021-01-17
 NB.
-NB. Copyright 2010-2020 Igor Zhuravlov
+NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -190,7 +190,7 @@ NB.   subA    - 2×any-matrix or any×2-matrix, array of
 NB.             2-vectors to apply rotation
 NB.   subAupd - matrix of the same shape as subA, the rotated
 NB.             subA
-NB.   isosubA - ISO of subA (subAupd) within A (Aupd)
+NB.   isosubA - ISO subA (subAupd) within A (Aupd)
 NB.   isofg   - ISO within subA of 2-vector (f,g) which
 NB.             defines rotation
 
@@ -327,7 +327,7 @@ NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 testlartg=: 3 : 0
   NB. implement Algorithm 1 [1]
-  algo1=: 3 : 'if. 0 = {: y do. (sgn , 0:) {. y elseif. 0 = {. y do. (0 , sgn@+) {: y elseif. do. try. ((| f),((sgn f) * (+ g))) % %: +/ soris ''f g''=. y catch. 2 # _. end. end.'
+  algo1=: 3 : 'if. 0 = {: y do. (sgn , 0:) {. y elseif. 0 = {. y do. (0 , sgn@+) {: y else. try. ((| f),((sgn f) * (+ g))) % %: +/ soris ''f g''=. y catch. 2 # _. end. end.'
 
   NB. exclude rows containing NaN from the table y
   xrNaN=: #~ +:/"1@(128!:5)

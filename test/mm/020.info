@@ -1,0 +1,3 @@
+error: each data row must contain 2 ISO and a real and imaginary part of single matrix entry (1)
+reason: last data row contains insufficient quantity of numbers
+based on id#018

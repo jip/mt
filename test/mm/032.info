@@ -1,0 +1,2 @@
+error: integer data type was expected but real data type is detected
+reason: last data row contains real not integer value

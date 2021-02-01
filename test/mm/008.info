@@ -1,0 +1,2 @@
+error: size values '1 2.3' must be integer'
+reason: size row is invalid (contains non-integer)

@@ -1,0 +1,2 @@
+error: 'integer' and 'skew-Hermitian' qualifiers are incompatible
+reason: header row contains incompatible qualifiers

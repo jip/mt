@@ -1,0 +1,2 @@
+error: not a MatrixMarket format
+reason: header row contains not 5 fields

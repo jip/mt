@@ -1,0 +1,2 @@
+error: entries either on or above the main diagonal are detected
+reason: last data row contains ISO for diagonal element of matrix

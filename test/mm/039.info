@@ -1,0 +1,2 @@
+error: entries above the main diagonal are detected
+reason: 2nd data row contains ISO for strict upper triangular part of matrix

@@ -1,0 +1,2 @@
+error: index exceeding dimension is detected
+reason: last data row contains 2nd index (4) excessing 2nd dimension (3)

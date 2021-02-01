@@ -58,7 +58,7 @@ NB.           (upper) triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.12.0 2021-02-01
 NB.
 NB. Copyright 2005-2021 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.

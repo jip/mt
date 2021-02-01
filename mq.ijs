@@ -428,7 +428,7 @@ NB. Notes:
 NB. - unml3{ln,lc,rn,rc} and unmlz{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 NB. - if not all reflectors are needed then part of LZf
-NB.   should be zeroed, e.g.:
+NB.   would be zeroed, e.g.:
 NB.     original LZf with m=5, n=9:
 NB.       (  τ0 v0 v0 v0 v0 l  0  0  0  0  )
 NB.       (  τ1 v1 v1 v1 v1 l  l  0  0  0  )
@@ -481,7 +481,7 @@ NB. Notes:
 NB. - unm3l{ln,lc,rn,rc} and unmzl{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 NB. - if not all reflectors are needed then part of ZfL
-NB.   should be zeroed, e.g.:
+NB.   would be zeroed, e.g.:
 NB.     original ZfL with m=9, n=5:    ZfL used as x argument when k=2:
 NB.       (  l  0  0  0  0   )           (  l  0   )
 NB.       (  l  l  0  0  0   )           (  l  l   )
@@ -536,7 +536,7 @@ NB. Notes:
 NB. - unm3r{ln,lc,rn,rc} and unmzr{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 NB. - if not all reflectors are needed then part of ZfR
-NB.   should be zeroed, e.g.:
+NB.   would be zeroed, e.g.:
 NB.     original ZfR with m=9, n=5:    ZfR used as x argument when k=2:
 NB.       (  τ0 τ1 τ2 τ3 τ4  )           (  τ3 τ4  )
 NB.       (  v0 v1 v2 v3 v4  )           (  v3 v4  )
@@ -592,7 +592,7 @@ NB. - unmr3{ln,lc,rn,rc} and unmrz{ln,lc,rn,rc} respectively
 NB.   are topologic equivalents
 NB. - implement LAPACK's DORMRZ, ZUNMRZ with the following
 NB.   difference: if not all reflectors are needed then
-NB.   part of RZf should be zeroed, e.g.:
+NB.   part of RZf would be zeroed, e.g.:
 NB.     original RZf with m=5, n=9:
 NB.       (  r  r  r  r  r v0 v0 v0 v0 τ0  )
 NB.       (  0  r  r  r  r v1 v1 v1 v1 τ1  )

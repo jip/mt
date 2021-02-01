@@ -400,7 +400,7 @@ NB.   xGEBAL('A')
 NB. - dyadic case models SLICOT's TB01ID with
 NB.   following differences:
 NB.   - (SCLFAC = 2) instead of (SCLFAC = 10)
-NB.   - no default maxred, 10 should be supplied instead
+NB.   - no default maxred, 10 would be supplied instead
 NB.
 NB. References:
 NB. [1] Daniel Kressner. Numerical methods and software for

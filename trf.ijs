@@ -1783,7 +1783,7 @@ NB.   A - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite tridiagonal
 NB.
 NB. TODO:
-NB. - A should be sparse
+NB. - A would be sparse
 
 testpttrf=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/pttrf'

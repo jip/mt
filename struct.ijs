@@ -275,7 +275,7 @@ NB.     2005-11-24 03:53:19.
 NB.     http://code.jsoftware.com/wiki/Essays/Block%20Matrix%20Inverse
 NB.
 NB. TODO:
-NB. - fret should be sparse
+NB. - fret would be sparse
 
 icut=: [: > 3 : ',"(#$y)&.>/y'^:(#@$)
 

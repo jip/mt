@@ -120,7 +120,7 @@ NB.   reduced to lower trapezoidal form, then gelpc applies
 NB.   the traditional row pivoting strategy to identify dsrd
 NB.   more independent rows of A with the restriction that
 NB.   the condition number of the leading lower triangle of A
-NB.   should not be larger than 1/rcond.
+NB.   would not be larger than 1/rcond.
 NB.   If lacptd (≤ dsrd) such rows are found, then the
 NB.   condition number of lower triangle in
 NB.   A(0:offset+lacptd-1,0:offset+lacptd-1) is less than
@@ -300,7 +300,7 @@ NB.   reduced to upper trapezoidal form, then geprc applies
 NB.   the traditional column pivoting strategy to identify
 NB.   dsrd more independent columns of A with the restriction
 NB.   that the condition number of the leading upper triangle
-NB.   of A should not be larger than 1/rcond.
+NB.   of A would not be larger than 1/rcond.
 NB.   If lacptd (≤ dsrd) such columns are found, then the
 NB.   condition number of upper triangle in
 NB.   A(0:offset+lacptd-1,0:offset+lacptd-1) is less than
@@ -590,7 +590,7 @@ gelpw=: 3 : 0
       p=. ((# dLQf)&+&.:> dip) C. p
     end.
     NB. Determine (offset+lacptd)st diagonal element gamma
-    NB. of matrix A should elementary reflector be applied
+    NB. of matrix A would elementary reflector be applied
     gamma=. rnorms (negpos~ 9&o.) & (0&({,)) A11
     NB. Update estimate for largest singular value
     smax=. mxnm * 3 %: >: c A10
@@ -745,7 +745,7 @@ geprw=: 3 : 0
       p=. ((c dQfR)&+&.:> dip) C. p
     end.
     NB. Determine (offset+lacptd)st diagonal element gamma
-    NB. of matrix A should elementary reflector be applied
+    NB. of matrix A would elementary reflector be applied
     gamma=. cnorms (negpos~ 9&o.) & (0&({,)) A11
     NB. Update estimate for largest singular value
     smax=. mxnm * 3 %: >: # A01

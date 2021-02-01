@@ -342,7 +342,7 @@ NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
 NB.
 NB. TODO:
-NB. - fret should be sparse
+NB. - fret would be sparse
 
 trlmat=:  1 : '1&([`(+/\@i.@{.@])`(0 $~ -:@(* >:)@{.@])}) ];.1 u@-:@(* >:)@{.'
 trl1mat=: 1 : '(1;a:)&setdiag_mt_@(u trlmat_mt_)'
@@ -681,7 +681,7 @@ NB. - ptmat2 produces well-conditioned matrices for big n
 NB.   (>400)
 NB.
 NB. TODO:
-NB. - T should be sparse
+NB. - T would be sparse
 
 ptmat=: 1 : 'po_mt_@(>:@| upddiag_mt_)@(((setdiag_mt_ diagmat_mt_)~ (}: ; _1:))/)@:u@(2,{.)'
 ptmat2=: 1 : '(9&o. upddiag_mt_)@gtpick_mt_@%.@(u kmsmatrho_mt_ kmsmat_mt_)'
@@ -763,7 +763,7 @@ NB. - make random real sparse 3×4-matrix S:
 NB.     S=. (randnr spmat 0.25) 3 4
 NB.
 NB. TODO:
-NB. - S should be sparse
+NB. - S would be sparse
 
 spmat=: 2 : 'u@<.@(n * */) ((?@$~ #)~ (*/@$))} $&0'
 

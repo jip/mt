@@ -210,5 +210,5 @@ math/mt - change history
  * util:     - ag removed
              - sorix get particular code branch for non-complex data types
 
-== 0.12.0 ==
+== 0.12.1 ==
  + mm: new interface and tests for MatrixMarket format converter

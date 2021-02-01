@@ -1,0 +1,2 @@
+error: size format is Dim1 ... DimN Len but '2 2' found
+reason: size row is invalid (contains less than 3 numbers)

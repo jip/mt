@@ -58,9 +58,9 @@ NB.           (upper) triangle of general square one
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.12.0 2021-02-01
 NB.
-NB. Copyright 2007-2021 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
+NB. Copyright 2005-2021 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -275,7 +275,7 @@ NB.     2005-11-24 03:53:19.
 NB.     http://code.jsoftware.com/wiki/Essays/Block%20Matrix%20Inverse
 NB.
 NB. TODO:
-NB. - fret should be sparse
+NB. - fret would be sparse
 
 icut=: [: > 3 : ',"(#$y)&.>/y'^:(#@$)
 

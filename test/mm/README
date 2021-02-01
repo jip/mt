@@ -1,0 +1,34 @@
+File names:
+  *.mm     - an array in MatrixMarket format
+  *.ijs    - J sentence to create an array
+  *.info   - information about an array (optional)
+
+An array file name is a string defined by regex:
+  ^[0-9]{3}(_[ac][pirc][gskhw]_\d+)?\.(ijs|mm)$
+where
+  [0-9]{3}  - array id
+  additional info, for valid mm-files only:
+    [ac]      - format: array (dense) or coordinate (sparse)
+    [pirc]    - field: pattern (boolean), integer, real or complex
+    [gskhw]   - symmetry: general, symmetric, skew-symmetric, Hermitian or skew-Hermitian
+    \d+       - rank of array, >1
+  ijs       - file contents is a J sentence to create an
+              array, is presented for valid corresp. mm-file
+              only
+  mm        - file contents is in MatrixMarket data format
+              [2], is presented if corresp. object from
+              ijs-file is supported
+e.g.
+  000_aig_2.ijs - dense matrix, intger, without symmetry,
+                  with id 000, in J sentence format
+  999.mm        - invalid file in MatrixMarket format with id 999
+
+Files content:
+  for mm format the line terminator string is either CR or LF or CRLF
+  for ijs format the line must be non-terminated
+
+References:
+[1] Text File Formats
+    https://math.nist.gov/MatrixMarket/formats.html
+[2] The SuiteSparse Matrix Collection
+    https://sparse.tamu.edu

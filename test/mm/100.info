@@ -1,0 +1,3 @@
+error: diagonal values must be imaginary
+reason: last data row contains value for diagonal element of skew-Hermitian matrix which has non-zero real part
+based on id#038

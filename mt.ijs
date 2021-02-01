@@ -30,7 +30,7 @@ NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.12.0 2021-02-01
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -106,6 +106,7 @@ NB. System definitions
 
 require 'math/misc/mathutil'   NB. mp_mt_
 require 'general/misc/format'  NB. clipfmt_z_
+require 'stats/base'           NB. comb_z_ combrep_z_ perm_z_
 
 NB. ---------------------------------------------------------
 NB. Addon definitions
@@ -115,6 +116,7 @@ require 'math/mt/dbg'          NB. Debug
 require 'math/mt/fork'         NB. Extended forks
 require 'math/mt/util'         NB. Utilities
 require 'math/mt/iso'          NB. ISO
+require 'math/mt/mm'           NB. MatrixMarket format converter
 require 'math/mt/norm'         NB. Norms
 require 'math/mt/quatern'      NB. Quaternions
 require 'math/mt/struct'       NB. Structure handlers
@@ -220,6 +222,7 @@ testhigh=: 1 : 0
   (u testexp_mt_ ) y  NB. square matrices only
   (u testpow_mt_ ) y  NB. square matrices only
   (u testsv_mt_  ) y  NB. square matrices only
+  (u testmm_mt_  ) y
 
   EMPTY
 )
@@ -233,3 +236,21 @@ test=: 1 : 0
 
   EMPTY
 )
+
+NB. =========================================================
+NB. Verification suite
+
+NB. ---------------------------------------------------------
+NB. verify
+NB.
+NB. Description:
+NB.   Nilad to verify mt, output result to console and return
+NB.   it
+NB.
+NB. Syntax:
+NB.   'probed failed'=. verify ''
+NB. where
+NB.   probed ≥ 0, tests probed counter
+NB.   failed ≥ 0, tests failed counter
+
+verify=: verifymm

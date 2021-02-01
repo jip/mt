@@ -1,0 +1,2 @@
+error: not a MatrixMarket format
+reason: 2nd field in header row is not 'matrix'

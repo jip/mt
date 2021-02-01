@@ -16,7 +16,7 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.12.0 2021-02-01
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -400,7 +400,7 @@ NB.   xGEBAL('A')
 NB. - dyadic case models SLICOT's TB01ID with
 NB.   following differences:
 NB.   - (SCLFAC = 2) instead of (SCLFAC = 10)
-NB.   - no default maxred, 10 should be supplied instead
+NB.   - no default maxred, 10 would be supplied instead
 NB.
 NB. References:
 NB. [1] Daniel Kressner. Numerical methods and software for

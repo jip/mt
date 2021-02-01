@@ -50,7 +50,7 @@ NB.              multiple RHS
 NB. testtrs      Adv. to make verb to test xxtrsxxx by matrix
 NB.              of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.12.0 2021-02-01
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -981,7 +981,7 @@ NB.       definite tridiagonal
 NB.   x - n-vector, the exact solution
 NB.
 NB. TODO:
-NB. - A should be sparse
+NB. - A would be sparse
 
 testpttrs1=: 3 : 0
   'A x'=. y
@@ -1038,7 +1038,7 @@ NB.       definite tridiagonal
 NB.   X - n×3-matrix, the exact solutions
 NB.
 NB. TODO:
-NB. - A should be sparse
+NB. - A would be sparse
 
 testpttrs3=: 3 : 0
   load_mttmp_ :: ] 'math/mt/test/lapack2/pttrf'

@@ -209,3 +209,6 @@ math/mt - change history
              - pttrsuxx and pttrsxux fixed
  * util:     - ag removed
              - sorix get particular code branch for non-complex data types
+
+== 0.12.0 ==
+ + mm: new interface and tests for MatrixMarket format converter

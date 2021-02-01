@@ -15,7 +15,7 @@ NB. testtzqf  Test tzxxf by trapezoidal matrix
 NB. testqf    Adv. to make verb to test gexxf and tzxxf by
 NB.           matrix of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.12.0 2021-02-01
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -104,7 +104,7 @@ NB. Notes:
 NB. - models LAPACK's xGELQ2
 NB. - gelq2 and gelqf are topologic equivalents
 NB. - if L diagonal's non-negativity is required, then
-NB.   larfgfc should be replaced by larfpfc
+NB.   larfgfc would be replaced by larfpfc
 
 gelq2=: 3 : 0
   pfx=. 0 {."1 y
@@ -173,7 +173,7 @@ NB. Notes:
 NB. - models LAPACK's xGEQL2
 NB. - geql2 and geqlf are topologic equivalents
 NB. - if L diagonal's non-negativity is required, then larfgb
-NB.   should be replaced by larfpb
+NB.   would be replaced by larfpb
 
 geql2=: 3 : 0
   pfxR=. 0 {."1 y
@@ -242,7 +242,7 @@ NB. Notes:
 NB. - models LAPACK's xGEQR2
 NB. - geqr2 and geqrf are topologic equivalents
 NB. - if R diagonal's non-negativity is required, then larfgf
-NB.   should be replaced by larfpf
+NB.   would be replaced by larfpf
 
 geqr2=: 3 : 0
   pfx=. 0 {. y
@@ -314,7 +314,7 @@ NB. Notes:
 NB. - models LAPACK's xGERQ2
 NB. - gerq2 and gerqf are topologic equivalents
 NB. - if R diagonal's non-negativity is required, then
-NB.   larfgbc should be replaced by larfpbc
+NB.   larfgbc would be replaced by larfpbc
 
 gerq2=: 3 : 0
   pfxB=. 0 {. y

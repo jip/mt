@@ -1,0 +1,2 @@
+error: each data row must contain 2 ISO and a single matrix entry (2)
+reason: last data row contains excessive number delimited by TABs span, which is considered as not a delimiter in MatrixMarket format, but a delimiter in J

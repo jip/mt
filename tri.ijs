@@ -18,7 +18,7 @@ NB.            definite tridiagonal matrix
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.12.0 2021-02-01
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -800,7 +800,7 @@ NB.     http://jsoftware.com/pipermail/programming/2010-June/019617.html
 NB.
 NB. TODO:
 NB. - pttriu
-NB. - A should be sparse
+NB. - A would be sparse
 
 pttril=: ($:~ pttrfl) : ((4 : 0)^:(((0:`(+@])`(_1&diag)`,.`((-@,. 1&(|.!.0))~ }.)`diag fork3)@])`(0>.<:@#@])`(EMPTY"_`,.@.(0<#)@(]`-"0@(*/\)&.|.)@(((, %@(_1&{ :: ]))~ +)~&>/)@:(_1&diag&.>`(diag&.>)"0)@[)))
   io=. -c y

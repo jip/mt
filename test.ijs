@@ -1202,12 +1202,6 @@ NB.               normVectors=. normitx vectors
 NB.   A       - n×n-matrix of linear system to solve
 NB.   B       - n×nrhs-matrix or nrhs×n-matrix, exact RHS
 NB.   b       - n-vector, the exact RHS
-NB.   Bapprox - same shape as B, approximate RHS:
-NB.               Bapprox := op(A) * Xapprox  or
-NB.               Bapprox := Xapprox * op(A)
-NB.   bapprox - n-vector, the approximate RHS:
-NB.               bapprox := op(A) * xapprox  or
-NB.               bapprox := xapprox * op(A)
 NB.   X       - same shape as B, exact solutions of equation:
 NB.               op(A) * X = B  or
 NB.               X * op(A) = B
@@ -1239,8 +1233,6 @@ NB.     ferrX := ferrX / FP_EPS
 NB.   endif
 NB. where
 NB.   ||vector|| := normit(vector)
-NB.   Bapprox    := op(A) * Xapprox  for (op(A) * X = B) equations
-NB.              := Xapprox * op(A)  for (X * op(A) = B) equations
 NB.
 NB. Notes:
 NB. - models LAPACK's xGET04

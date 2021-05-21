@@ -63,11 +63,12 @@ NB.
 NB. Syntax:
 NB.   S=. [supp] randu sh
 NB. where
-NB.   sh   - r-vector of non-negative integers, shape of S
+NB.   sh   - rnk-vector of non-negative integers, the shape
+NB.          of S
 NB.   supp - optional 2-vector (a,b), a<b, support of
 NB.          distribution, open interval, default is (0 1)
 NB.   S    - sh-array of values s ~ U(a,b)
-NB.   r    ≥ 0, the rank of S
+NB.   rnk  ≥ 0, the rank of S
 NB.
 NB. Formula:
 NB.   s ← a + (b-a)*u
@@ -93,10 +94,9 @@ NB.
 NB. Syntax:
 NB.   S=. [μ] rande sh
 NB. where
-NB.   sh - r-vector of non-negative integers, shape of S
+NB.   sh - vector of non-negative integers, the shape of S
 NB.   μ  > 0, optional mean, default is 1
 NB.   S  - sh-array of values s ~ E(μ)
-NB.   r  ≥ 0, the rank of S
 NB.
 NB. Formula:
 NB.   s ← -μ*log(1-u)
@@ -133,7 +133,7 @@ NB.   R=. [par] randnr sh
 NB.   C=. [par] randnc sh
 NB.   Q=. [par] randnq sh
 NB. where
-NB.   sh  - r-vector of non-negative integers, the shape of
+NB.   sh  - rnk-vector of non-negative integers, the shape of
 NB.         R, C and Q
 NB.   par - optional 2-vector (μ,σ), σ>0, parameters of
 NB.         distribution, default is (0 1)
@@ -141,7 +141,7 @@ NB.   R   - sh-array of real values r ~ N(μ,σ^2)
 NB.   C   - sh-array of complex values c ~ N(μ,σ^2)
 NB.   Q   - sh-array of quaternion values q ~ N(μ,σ^2)
 NB.         represented as (sh,2)-array of complex numbers
-NB.   r   ≥ 0, the rank of R, C and Q
+NB.   rnk ≥ 0, the rank of R, C and Q
 NB.
 NB. Formula:
 NB.   nr1r ← sqrt(e1)*cos(u1)        NB. see...
@@ -162,7 +162,7 @@ NB. Algorithm for monadic randnr:
 NB.   In: sh
 NB.   Out: R
 NB.   0) calc ceiled half of elements quantity in R:
-NB.        n := ⌈Π{sh[i],i=0:r-1}/2⌉
+NB.        n := ⌈Π{sh[i],i=0:rnk-1}/2⌉
 NB.   1) make random complex n-vector with elements
 NB.      having real and imagine parts both independently
 NB.      distributed normally:
@@ -227,12 +227,11 @@ NB.
 NB. Syntax:
 NB.   R=. [par] randtnr sh
 NB. where
-NB.   sh   - r-vector of non-negative integers, shape of R
+NB.   sh  - vector of non-negative integers, the shape of R
 NB.   par - optional 4-vector (μ,σ,a,b), σ>0, a≤b, (μ,σ) are
 NB.         normal distribution parameters, [a,b] is range,
 NB.         default is (0 1 -∞ +∞)
 NB.   R   - sh-array of values r ~ N(μ,σ^2), a ≤ r ≤ b
-NB.   r   ≥ 0, the rank of R
 NB.
 NB. Application:
 NB. - verb to make complex matrix R with elements r having
@@ -263,7 +262,7 @@ NB.   randx - monad to generate random numbers; is called as:
 NB.             A=. randx sh
 NB.   vapp  - nilad to generate rho; is called as:
 NB.             rho=. vapp any_noun
-NB.   sh    - size or shape, the shape of A
+NB.   sh    - size or shape of A
 NB.
 NB. Notes:
 NB. - randx is used to acquire datatype only
@@ -319,22 +318,22 @@ NB.
 NB. Application:
 NB. - make real lower triangular 4×4-matrix L with elements l
 NB.   having:
-NB.     mantissa(l) ~ U(_1,1)
-NB.     exponent(l) ~ TN(0,3^2,_6,4)
+NB.     mantissa(l) ~ U(-1,1)
+NB.     exponent(l) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     L=. _1 1 0 3 _6 4&gemat trlmat 4 4
 NB. - make complex lower triangular 4×4-matrix L with
 NB.   elements l having:
-NB.     mantissa(Re(l)),mantissa(Im(l)) ~ U(_1,1)
-NB.     exponent(Re(l)),exponent(Im(l)) ~ TN(0,3^2,_6,4)
+NB.     mantissa(Re(l)),mantissa(Im(l)) ~ U(-1,1)
+NB.     exponent(Re(l)),exponent(Im(l)) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     L=. _1 1 0 3 _6 4&(gemat j. gemat) trlmat 4
 NB. - make complex lower triangular 4×4-matrix L with
 NB.   elements l having:
 NB.     mantissa(Re(l)) ~ U(0,1)
 NB.     exponent(Re(l)) ~ TN(0,1,-∞,+∞)
-NB.     mantissa(Im(l)) ~ U(_1,1)
-NB.     exponent(Im(l)) ~ TN(0,3^2,_6,4)
+NB.     mantissa(Im(l)) ~ U(-1,1)
+NB.     exponent(Im(l)) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     L=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) trlmat 4
 NB.
@@ -422,14 +421,13 @@ NB.
 NB. Syntax:
 NB.   G=. [par] gemat sh
 NB. where
-NB.   sh  - r-vector of non-negative integers, shape of G
+NB.   sh  - vector of non-negative integers, the shape of G
 NB.   par - optional 6-vector (ma,mb,μ,σ,ea,eb), σ>0, where
 NB.         (ma,mb) are mantissa's uniform distribution
 NB.         parameters, and (μ,σ,ea,eb) are exponent's
 NB.         truncated normal distribution parameters, default
-NB.         is: (_1 1 0 (FP_FLEN/2) FP_EMIN FP_EMAX)
+NB.         is: (-1 1 0 (FP_FLEN/2) FP_EMIN FP_EMAX)
 NB.   G   - sh-array, random
-NB.   r   ≥ 0, the rank of G
 NB.
 NB. Formula:
 NB.   g ← mantissa * 2 ^ exponent
@@ -439,20 +437,20 @@ NB.   exponent ~ TN(μ,σ,ea,eb)
 NB.
 NB. Application:
 NB. - make real 4×4-matrix G with elements g having:
-NB.     mantissa(g) ~ U(_1,1)
-NB.     exponent(g) ~ TN(0,3^2,_6,4)
+NB.     mantissa(g) ~ U(-1,1)
+NB.     exponent(g) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     G=. _1 1 0 3 _6 4 gemat 4 4
 NB. - make complex 4×4-matrix G with elements g having:
-NB.     mantissa(Re(g)),mantissa(Im(g)) ~ U(_1,1)
-NB.     exponent(Re(g)),exponent(Im(g)) ~ TN(0,3^2,_6,4)
+NB.     mantissa(Re(g)),mantissa(Im(g)) ~ U(-1,1)
+NB.     exponent(Re(g)),exponent(Im(g)) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     G=. _1 1 0 3 _6 4 (gemat j. gemat) 4 4
 NB. - make complex 4×4-matrix G with elements g having:
 NB.     mantissa(Re(g)) ~ U(0,1)
 NB.     exponent(Re(g)) ~ TN(0,1,-∞,+∞)
-NB.     mantissa(Im(g)) ~ U(_1,1)
-NB.     exponent(Im(g)) ~ TN(0,3^2,_6,4)
+NB.     mantissa(Im(g)) ~ U(-1,1)
+NB.     exponent(Im(g)) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     G=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) 4 4
 NB.
@@ -494,21 +492,21 @@ NB. Application:
 NB. - make real diagonalizable 4×4-matrix A with eigenvalues
 NB.   d having:
 NB.     mantissa(d) ~ U(1,3)
-NB.     exponent(d) ~ TN(0,4^2,_5,6)
+NB.     exponent(d) ~ TN(0,4^2,-5,6)
 NB.   and eigenvectors Q derived via QR-factorization from
 NB.   real matrix B:
 NB.     A=. 1 3 0 4 _5 6&gemat dimat (randnr unmat) 4 4
 NB. - make complex diagonalizable Hermitian 4×4-matrix A with
 NB.   eigenvalues d having:
 NB.     mantissa(d) ~ U(1,3)
-NB.     exponent(d) ~ TN(0,4^2,_5,6)
+NB.     exponent(d) ~ TN(0,4^2,-5,6)
 NB.   and eigenvectors Q derived via QR-factorization from
 NB.   complex matrix B:
 NB.     A=. 1 3 0 4 _5 6&gemat dimat (randnc unmat) 4
 NB. - make complex diagonalizable 4×4-matrix A with
 NB.   eigenvalues d having:
 NB.     mantissa(Re(d)),mantissa(Im(d)) ~ U(1,3)
-NB.     exponent(Re(d)),exponent(Im(d)) ~ TN(0,4^2,_5,6)
+NB.     exponent(Re(d)),exponent(Im(d)) ~ TN(0,4^2,-5,6)
 NB.   and eigenvectors Q derived via QR-factorization from
 NB.   complex matrix B:
 NB.     A=. 1 3 0 4 _5 6&(gemat j. gemat) dimat (randnc unmat) 4
@@ -546,22 +544,22 @@ NB.
 NB. Application:
 NB. - make real symmetric 4×4-matrix H with  elements h
 NB.  having:
-NB.     mantissa(h) ~ U(_1,1)
-NB.     exponent(h) ~ TN(0,3^2,_6,4)
+NB.     mantissa(h) ~ U(-1,1)
+NB.     exponent(h) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     H=. _1 1 0 3 _6 4&gemat hemat 4 4
 NB. - make complex Hermitian 4×4-matrix L with elements h
 NB.   having:
-NB.     mantissa(Re(h)),mantissa(Im(h)) ~ U(_1,1)
-NB.     exponent(Re(h)),exponent(Im(h)) ~ TN(0,3^2,_6,4)
+NB.     mantissa(Re(h)),mantissa(Im(h)) ~ U(-1,1)
+NB.     exponent(Re(h)),exponent(Im(h)) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     H=. _1 1 0 3 _6 4&(gemat j. gemat) hemat 4
 NB. - make complex Hermitian 4×4-matrix L with elements h
 NB.   having:
 NB.     mantissa(Re(h)) ~ U(0,1)
 NB.     exponent(Re(h)) ~ TN(0,1,-∞,+∞)
-NB.     mantissa(Im(h)) ~ U(_1,1)
-NB.     exponent(Im(h)) ~ TN(0,3^2,_6,4)
+NB.     mantissa(Im(h)) ~ U(-1,1)
+NB.     exponent(Im(h)) ~ TN(0,3^2,-6,4)
 NB.   :
 NB.     H=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) hemat 4
 NB.
@@ -595,13 +593,13 @@ NB. Application:
 NB. - make real symmetric positive definite 4×4-matrix P with
 NB.   elements p having:
 NB.     mantissa(p) ~ U(1,3)
-NB.     exponent(p) ~ TN(0,4^2,_5,6)
+NB.     exponent(p) ~ TN(0,4^2,-5,6)
 NB.   :
 NB.     P=. 1 3 0 4 _5 6&gemat pomat 4 4
 NB. - make complex Hermitian positive definite 4×4-matrix P
 NB.   with elements p having:
 NB.     mantissa(Re(p)),mantissa(Im(p)) ~ U(1,3)
-NB.     exponent(Re(p)),exponent(Im(p)) ~ TN(0,4^2,_5,6)
+NB.     exponent(Re(p)),exponent(Im(p)) ~ TN(0,4^2,-5,6)
 NB.   :
 NB.     P=. 1 3 0 4 _5 6&(gemat j. gemat) pomat 4
 NB. - make complex Hermitian positive definite 4×4-matrix P
@@ -609,13 +607,13 @@ NB.   with elements p having:
 NB.     mantissa(Re(p)) ~ U(1,2)
 NB.     exponent(Re(p)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(p)) ~ U(1,3)
-NB.     exponent(Im(p)) ~ TN(0,4^2,_5,6)
+NB.     exponent(Im(p)) ~ TN(0,4^2,-5,6)
 NB.   :
 NB.     P=. (1 2 0 1 __ _&gemat j. 1 3 0 4 _5 6&gemat) pomat 4
 NB. - make real symmetric negative definite 4×4-matrix P
 NB.   with elements p having:
 NB.     mantissa(p) ~ U(1,3)
-NB.     exponent(p) ~ TN(0,4^2,_5,6)
+NB.     exponent(p) ~ TN(0,4^2,-5,6)
 NB.   :
 NB.     P=. -@(1 3 0 4 _5 6&gemat pomat) 4 4
 
@@ -658,13 +656,13 @@ NB. Application:
 NB. - make real symmetric positive definite tridiagonal
 NB.   4×4-matrix T with elements d and e having:
 NB.     mantissa(d),mantissa(e) ~ U(1,3)
-NB.     mantissa(d),exponent(e) ~ TN(0,4^2,_5,6)
+NB.     mantissa(d),exponent(e) ~ TN(0,4^2,-5,6)
 NB.   :
 NB.     T=. 1 3 0 4 _5 6&gemat ptmat 4 4
 NB. - make complex Hermitian positive definite tridiagonal
 NB.   4×4-matrix T with elements d and e having:
 NB.     mantissa(d),mantissa(Re(e)),mantissa(Im(e)) ~ U(1,3)
-NB.     exponent(d),exponent(Re(e)),exponent(Im(e)) ~ TN(0,4^2,_5,6)
+NB.     exponent(d),exponent(Re(e)),exponent(Im(e)) ~ TN(0,4^2,-5,6)
 NB.   :
 NB.     T=. 1 3 0 4 _5 6&(gemat j. gemat) ptmat 4
 NB. - make complex Hermitian positive definite tridiagonal
@@ -672,7 +670,7 @@ NB.   4×4-matrix T with elements d and e having:
 NB.     mantissa(d),mantissa(Re(e)) ~ U(0,1)
 NB.     mantissa(d),exponent(Re(e)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(e)) ~ U(1,3)
-NB.     exponent(Im(e)) ~ TN(0,4^2,_5,6)
+NB.     exponent(Im(e)) ~ TN(0,4^2,-5,6)
 NB.   :
 NB.     T=. gemat j. 1 3 0 4 _5 6&gemat ptmat 4
 NB.
@@ -701,7 +699,7 @@ NB.            randnc; is called as:
 NB.              A=. randnx y
 NB.   vapp   - monad to make Q; is called as:
 NB.              Q=. vapp sh
-NB.   sh     - size or shape, either n or (n,n)
+NB.   sh     - size or shape, which is either n or (n,n)
 NB.   A      - n×n-matrix, non-singular, with elements
 NB.            distributed as N(0,1)
 NB.   Q      - n×n-matrix, random unitary (orthogonal)
@@ -755,8 +753,7 @@ NB.   vapp  - monad to create S; is called as:
 NB.             S=. vapp sh
 NB.   S     - sh-array, sparsed randomly, being is zero
 NB.           sh-array inhabited with values from A
-NB.   sh    - r-vector of non-negative integers, a shape of S
-NB.   r     ≥ 0, the rank of S
+NB.   sh    - vector of non-negative integers, the shape of S
 NB.
 NB. Application:
 NB. - make random real sparse 3×4-matrix S:
@@ -807,8 +804,8 @@ NB.
 NB. Syntax:
 NB.   testgemat sh
 NB. where
-NB.   sh - r-vector of non-negative integers, the shape of
-NB.        matrix
+NB.   sh  - vector of non-negative integers, the shape of
+NB.         matrix
 NB.
 NB. Notes:
 NB. - result is not taken into account by benchmark
@@ -915,7 +912,7 @@ NB.
 NB. Syntax:
 NB.   testspmat sh
 NB. where
-NB.   sh - r-vector of non-negative integers, the shape of
+NB.   sh - vector of non-negative integers, the shape of
 NB.        matrix
 NB.
 NB. Notes:
@@ -936,7 +933,7 @@ NB.
 NB. Syntax:
 NB.   testrand sh
 NB. where
-NB.   sh - r-vector of non-negative integers, the shape of
+NB.   sh - vector of non-negative integers, the shape of
 NB.        matrix
 
 testrand=: EMPTY [ testspmat [ testptmat [ testpomat [ testhemat [ testdimat^:(=/) [ testgemat [ testtrmat

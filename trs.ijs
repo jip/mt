@@ -1113,5 +1113,8 @@ NB.   limited value's amplitude:
 NB.     _1 1 0 4 _6 4&gemat_mt_ testtrs_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testtrs_mt_ 150 150
+NB.
+NB. Notes:
+NB. - nrhs=3 is assumed
 
 testtrs=: 1 : 'EMPTY [ ((((u ptmat2_mt_)@# (testpttrs3_mt_@; [ testpttrs1_mt_@(; {:"1)) ]) [ ((u pomat_mt_)@# (testpotrs3_mt_@; [ testpotrs1_mt_@(; {:"1)) ]) [ ((u hemat_mt_)@# (testhetrs3_mt_@; [ testhetrs1_mt_@(; {:"1)) ]))@u@({. , 3:) [ ((}."1 (testgetrs3_mt_@; [ testgetrs1_mt_@(; {:"1)) {."1)~ _3:)@u@(+&0 3))^:(=/)'

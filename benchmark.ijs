@@ -2,7 +2,7 @@ NB. Benchmark
 NB.
 NB. benchmark  Adv. to make dyad to benchmark mt addon
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.13.0 2021-05-21
 NB.
 NB. Copyright 2017-2021 Igor Zhuravlov
 NB.

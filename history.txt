@@ -212,3 +212,11 @@ math/mt - change history
 
 == 0.12.1 ==
  + mm: new interface and tests for MatrixMarket format converter
+
+== 0.13.0 ==
+ + ls:   new interfaces with test suite: gelsax gelsacx
+ * mm:   fixed to avoid a conversion of integer columns to datatype float
+ * rand: comments improved
+ * scl:  extended to support inversion
+ * test: new interfaces: qrt14 qrt16x qrt171
+ * util: copysign vectorized

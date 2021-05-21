@@ -22,9 +22,11 @@
 
 9. replace pf (RRQR) by qp (xGEQP3) [4]
 
-10. (getc2,geqp3) -> a matrix canonization algorithm [5]
+10. geqp3 -> gelsy
 
-11. rewrite loops via Fold (F.. F.: F. F:. F:: F:)
+11. (getc2,geqp3) -> a matrix canonization algorithm [5]
+
+12. rewrite loops via Fold (F.. F.: F. F:. F:: F:)
 
 References:
 [1] Bo Kågström, Daniel Kressner, Enrique S. Quintana-Ortí,

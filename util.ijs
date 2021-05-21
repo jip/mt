@@ -9,7 +9,7 @@ NB. sorim     Sum of real and imaginary parts' modules
 NB. soris     Sum of real and imaginary parts' squares
 NB. fmtlog    Format log string
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.13.0 2021-05-21
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -48,7 +48,7 @@ maxc=: >./`(c {. 0:)@.(0 = #)                                   NB. max-of, '' f
 negneg=: -@]^:(0>[)                                             NB. if x<0 then -y else y endif
 negpos=: -@]^:(0<:[)                                            NB. if x≥0 then -y else y endif
 
-copysign=: -@]^:((=-)&*)                                        NB. if x<0 then -|y| else |y| endif
+copysign=: (=/&:*`((,:~ -)@{:))}@,:                             NB. if x<0 then -|y| else |y| endif
 
 sorim=: | `(+/"1@:| @:+.)@.(JCMPX = 3!:0)                       NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
 soris=: *:`(+/"1@:*:@:+.)@.(JCMPX = 3!:0)                       NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2

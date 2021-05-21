@@ -2,7 +2,7 @@ NB. Benchmark
 NB.
 NB. benchmark  Adv. to make dyad to benchmark mt addon
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.13.0 2021-05-21
 NB.
 NB. Copyright 2017-2021 Igor Zhuravlov
 NB.
@@ -183,7 +183,7 @@ benchmark=: 1 : 0
     titles=. titles , < (6!:0 'YYYY-MM-DD hh:mm:ss') , ', datatype: ' , datatypename , ', size: ' , (": size) , LF
     run=. 1
     while. run <: BMKRUNS_mt_ do.
-      smoutput (6!:0 'YYYY-MM-DD hh:mm:ss') , ', datatype: ' , datatypename , ', size: ' , (": size) , ', run#: ' , (": run) , ' of ' , (": BMKRUNS_mt_)
+      echo (6!:0 'YYYY-MM-DD hh:mm:ss') , ', datatype: ' , datatypename , ', size: ' , (": size) , ', run#: ' , (": run) , ' of ' , (": BMKRUNS_mt_)
       TESTLOG_mt_=: ''
       (u test_mt_) 2 # size
       measurement=. measurement ,. :: (,.@]) '(\d+\.\d+|n/a)(?=\s+(n/a)$)' rxall TESTLOG_mt_

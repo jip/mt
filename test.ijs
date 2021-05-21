@@ -25,6 +25,13 @@ NB.         the solution[s] computed
 NB. xxt11   Dyads to compute the relative backward error for
 NB.         the unitary (orthogonal) matrix reconstructed
 NB.         from gexpf gepxf output
+NB. qrt14   Checks whether X is in the row space of op(A)
+NB. qrt16x  Adv. to make dyad to compute the residual for a
+NB.         solution[s] computed of an overdetermined or
+NB.         underdetermined system involving a matrix of full
+NB.         rank, or its [conjugate-]transpose
+NB. qrt171  Adv. to make dyad to compute the ratio for
+NB.         zero-residual problem
 NB. t211    Dyad to compute the relative backward error of
 NB.         eigenvectors produced by symmetric eigenvalue
 NB.         problem solvers
@@ -38,7 +45,7 @@ NB.         produced by hgexxsxx
 NB. t52xx   Dyads to compute the error of Schur vectors
 NB.         produced by tgevcxxx
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.13.0 2021-05-21
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -1202,12 +1209,6 @@ NB.               normVectors=. normitx vectors
 NB.   A       - n×n-matrix of linear system to solve
 NB.   B       - n×nrhs-matrix or nrhs×n-matrix, exact RHS
 NB.   b       - n-vector, the exact RHS
-NB.   Bapprox - same shape as B, approximate RHS:
-NB.               Bapprox := op(A) * Xapprox  or
-NB.               Bapprox := Xapprox * op(A)
-NB.   bapprox - n-vector, the approximate RHS:
-NB.               bapprox := op(A) * xapprox  or
-NB.               bapprox := xapprox * op(A)
 NB.   X       - same shape as B, exact solutions of equation:
 NB.               op(A) * X = B  or
 NB.               X * op(A) = B
@@ -1239,8 +1240,6 @@ NB.     ferrX := ferrX / FP_EPS
 NB.   endif
 NB. where
 NB.   ||vector|| := normit(vector)
-NB.   Bapprox    := op(A) * Xapprox  for (op(A) * X = B) equations
-NB.              := Xapprox * op(A)  for (X * op(A) = B) equations
 NB.
 NB. Notes:
 NB. - models LAPACK's xGET04
@@ -1287,6 +1286,184 @@ lqt11=: ((normi@(<: upddiag)@(mp  ct)@unglq~ (% FP_EPS&*) ]) <:@c)@(1 {:: ])
 qlt11=: ((norm1@(<: upddiag)@(mp~ ct)@ungql~ (% FP_EPS&*) ]) <:@#)@(1 {:: ])
 qrt11=: ((norm1@(<: upddiag)@(mp~ ct)@ungqr~ (% FP_EPS&*) ]) <:@#)@(1 {:: ])
 rqt11=: ((normi@(<: upddiag)@(mp  ct)@ungrq~ (% FP_EPS&*) ]) <:@c)@(1 {:: ])
+
+NB. ---------------------------------------------------------
+NB. qrt14
+NB.
+NB. Description:
+NB.   Checks whether X is in the row space of op(A)
+NB. where
+NB.   op(A) is A or A^T or A^H
+NB.
+NB. Syntax:
+NB.   errX=. (A ; B ; trash ; normA) qrt14 Xapprox
+NB. where
+NB.   A       - m×n-matrix of full rank
+NB.   B       - m×nrhs-matrix or n×nrhs-matrix or m-vector or
+NB.             n-vector, exact RHS
+NB.   normA   ≥ 0, the norm of op(A)
+NB.   Xapprox - n×nrhs-matrix or m×nrhs-matrix or n-vector or
+NB.             m-vector, approximate solutions of equation:
+NB.               op(A) * X = B
+NB.   errX    ≥ 0, the error
+NB.   m       ≥ 0, the number of rows in A
+NB.   n       ≥ 0, the number of columns in A
+NB.   nrhs    ≥ 0, the number of RHS and the number of
+NB.             columns in B, Bapprox, X and Xapprox
+
+NB. Formula (for op(A) = A):
+NB.   In: A, Xapprox
+NB.   Out: a measure of distance from X to row space of op(A)
+NB.   1) scale both X and A such that their norms are in the
+NB.      range [sqrt(FP_EPS), 1/sqrt(FP_EPS)]
+NB.   2) compute a Q-factorization:
+NB.      2.1) if op(A) = A^T or A^H (which implies m≥n) then:
+NB.             Q * R = [A,X]
+NB.      2.2) else (which implies op(A)=A, m<n):
+NB.             L * Q = op([A,X^H])
+NB.   3) T := trailing triangle
+NB.   4) return ||T|| / (FP_EPS * max(m,n,nrhs))
+NB.
+NB. Notes:
+NB. - is called for overdetermined system, one of:
+NB.   - op(A) = A, m < n
+NB.   - op(A) = A^T or A^H, m ≥ n
+NB. - models LAPACK's xQRT14
+
+qrt14=: ((((FP_EPS * >./@(, $))~ c) * normm@((tru@}:;.0~ (_ ,:~ 2 # c))@geqr2@(,. , 0:)`((trl@:(}:"1);.0~ (_ ,:~ 2 # #))@gelq2@((, ct) ,. 0:))@.(</@$@[))&((scl~ ,&1)~^:(0 < [)~ normm))~ 0&{::)~`0:@.((0 e. (, $@(0&{::  )))~ c)
+
+NB. ---------------------------------------------------------
+NB. qrt16m
+NB. qrt16v
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the residual for a
+NB.   solution[s] computed of an overdetermined or
+NB.   underdetermined system involving a matrix of full rank,
+NB.   or its [conjugate-]transpose
+NB.
+NB. Syntax:
+NB.   resX=. (A ; B ; trash ; normA) (calcB qrt16m) Xapprox
+NB.   resx=. (A ; b ; trash ; normA) (calcb qrt16v) xapprox
+NB. where
+NB.   calcB   - dyad to compute Bapprox; is called as:
+NB.               Bapprox=. Xapprox calcB A
+NB.   calcb   - dyad to compute bapprox; is called as:
+NB.               bapprox=. xapprox calcb A
+NB.   A       - m×n-matrix of full rank
+NB.   B       - nrhs×n-matrix or nrhs×m-matrix, exact RHS
+NB.   b       - n-vector or m-vector, the exact RHS
+NB.   Bapprox - same shape as B, approximate RHS
+NB.   bapprox - same shape as b, the approximate RHS
+NB.   Xapprox - n×nrhs-matrix or m×nrhs-matrix, approximate
+NB.             solutions of equation:
+NB.               op(A) * X = B
+NB.   xapprox - n-vector or m-vector, the approximate
+NB.             solution of equation:
+NB.               op(A) * x = b
+NB.   normA   ≥ 0, the norm of op(A)
+NB.   resX    ≥ 0, the max of residuals of solutions
+NB.   resx    ≥ 0, the residual of the solution
+NB.   m       ≥ 0, the number of rows in A
+NB.   n       ≥ 0, the number of columns in A
+NB.   nrhs    ≥ 0, the number of RHS
+NB.
+NB. Formula:
+NB.   m := rows(A)
+NB.   (n,nrhs) := shape(X)
+NB.   if 0 = m or 0 = n or 0 = nrhs then
+NB.     resX := 0
+NB.   else
+NB.     foreach i-th computed solution Xapprox from nrhs solutions do
+NB.       if 0 = ||op(A)|| and 0 = ||B - Bapprox|| then
+NB.         resX[i] := 0
+NB.       elseif 0 = ||op(A)|| or 0 = ||Xapprox|| then
+NB.         resX[i] := 1 / FP_EPS
+NB.       else
+NB.         resX[i] := ((||B - Bapprox|| / ||op(A)||) / ||Xapprox||) / FP_EPS
+NB.       endif
+NB.     endfor
+NB.     resX := max(resX[i])
+NB.   endif
+NB. where
+NB.   ||vector|| := norm1t(vector)
+NB.   ||matrix|| := ||matrix||_1     when op(A) is A
+NB.              := ||matrix||_inf   when op(A) is either A^T or A^H
+NB.   Bapprox    := op(A) * Xapprox
+NB.
+NB. Notes:
+NB. - qrt16m models LAPACK's xQRT16
+
+qrt16m=: 1 : 'max@(((FP_EPS * >./@$@(0 {:: [)) , 3 {:: [) (0:`(%@FP_EPS`(%~/@,@,.)@.((*.&(*@{:)) |.))@.(+.&(*@{:)))"1 ] ,.&norm1tc (u 0&{::)~ -~ 1 {:: [)`0:@.((0 e. (, $@(0&{::  )))~ c)'
+qrt16v=: 1 : '    (((FP_EPS * >./@$@(0 {:: [)) , 3 {:: [) (0:`(%@FP_EPS`(%~/@,@,.)@.((*.&(*@{:)) |.))@.(+.&(*@{:)))   ] , &norm1t  (u 0&{::)~ -~ 1 {:: [)`0:@.((0 e.    $@(0 {:: [) )   )'
+
+NB. ---------------------------------------------------------
+NB. qrt171
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the ratio:
+NB.     || R' * op(A) || / ( ||A|| * ||B|| * max(m,n,nrhs) * FP_EPS )
+NB.   for zero-residual problem
+NB. where
+NB.   R = B - op(A) * Xapprox
+NB.   op(A) is A or A^T or A^H
+NB.
+NB. Syntax:
+NB.   ratio=. (A ; B ; trash ; normA) (calcB qrt171) Xapprox
+NB. where
+NB.   calcB   - dyad to compute Bapprox; is called as:
+NB.               Bapprox=. Xapprox calcB A
+NB.   A       - m×n-matrix of full rank
+NB.   B       - m×nrhs-matrix or n×nrhs-matrix or m-vector or
+NB.             n-vector, exact RHS
+NB.   Bapprox - same shape as B, approximate RHS
+NB.   Xapprox - n×nrhs-matrix or m×nrhs-matrix or n-vector or
+NB.             m-vector, approximate solutions of equation:
+NB.               op(A) * X = B
+NB.   normA   ≥ 0, the norm of op(A)
+NB.   ratio   ≥ 0, the ratio
+NB.   m       ≥ 0, the number of rows in A
+NB.   n       ≥ 0, the number of columns in A
+NB.   nrhs    ≥ 0, the number of RHS and the number of
+NB.             columns in B, Bapprox, X and Xapprox
+NB.
+NB. Formula:
+NB.   (m,n) := shape(A)
+NB.   nrhs := columns(X)
+NB.   if 0 = m or 0 = n or 0 = nrhs then
+NB.     err := 0
+NB.   else
+NB.     C := B - op(A) * Xapprox
+NB.     normRS := || C ||_max
+NB.     if normRS > (FP_SFMIN / FP_PREC) then
+NB.       C := (normRS , 1) scl C
+NB.     endif
+NB.     err := || C^H * A ||_1
+NB.     if || A ||_1 > 0 then
+NB.       err := err / || A ||_1
+NB.     endif
+NB.     if normRS > (FP_SFMIN / FP_PREC) then
+NB.       err := err * normRS
+NB.     endif
+NB.     if || B ||_1 > 0 then
+NB.       err := err / || B ||_1
+NB.     endif
+NB.     err := err / (FP_EPS * max(m,n,nrhs))
+NB.   endif
+NB.
+NB. Notes:
+NB. - is called for LS problem, one of:
+NB.   - op(A) = A, m ≥ n
+NB.   - op(A) = A^T or A^H, m < n
+NB. - models LAPACK's xQRT17(1) with the following
+NB.   difference:
+NB.   - normA is ||op(A)||_1 not ||A||_1
+NB. - executing:
+NB.     err := err * normRS
+NB.   is undoing a scaling, indeed:
+NB.     err := (normRS , 1) scl^-1 err
+
+qrt171=: 1 : '(0:`0:`0:`]`(normm@])`((u 0&{::)~ -~ 1 {:: [)`[`((scl~ ,&1)~^:((FP_SFMIN % FP_PREC) < [))`[`0:`(%~`(%~^:(0 < [))/@((2 {. ]) , (*^:((FP_SFMIN % FP_PREC) < [) 2&{)))`((2 {:: ]) , (3 {:: ]) %~^:(0 < [) norm1@((mp~ ct)~ ct^:(</@$)@(0&{::)))`]`]`((2}~ ((((FP_EPS * >./@(, {.)) <@, 1 { ])~ $@(0&{::))~ (c , norm1)@(1&{::)))@[) fork5)`0:@.((0 e. (, $@(0&{::  )))~ c)'
 
 NB. ---------------------------------------------------------
 NB. t211

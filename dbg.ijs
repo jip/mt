@@ -33,15 +33,15 @@ NB. get shape
 dbgshape=: $`($ (; <) $ L: 0)@.(0 < L.)
 
 NB. failure handler
-dbgfailed=: 1 : '(dbsig@dberr [ smoutput@(m ; ''FAILED'' ; coname))@'''''
+dbgfailed=: 1 : '(dbsig@dberr [ echo@(m ; ''FAILED'' ; coname))@'''''
 
 NB. success handlers
-dbgsucceed1=: 1 : '[ smoutput@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_    )'
-dbgsucceed2=: 1 : '[ smoutput@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_ ; <)'
+dbgsucceed1=: 1 : '[ echo@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_    )'
+dbgsucceed2=: 1 : '[ echo@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_ ; <)'
 
 NB. argument[s] handlers
-dbgarg1=: 2 : '] [ smoutput@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_     ) : ((''x'' ; ''y'') ,@,. ,:& dbgshape_mt_     ))'
-dbgarg2=: 2 : '] [ smoutput@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_ ; < ) : ((''x'' ; ''y'') ,@,. ,:&(dbgshape_mt_ ; <)))'
+dbgarg1=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_     ) : ((''x'' ; ''y'') ,@,. ,:& dbgshape_mt_     ))'
+dbgarg2=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_ ; < ) : ((''x'' ; ''y'') ,@,. ,:&(dbgshape_mt_ ; <)))'
 
 NB. ---------------------------------------------------------
 NB. dbg1

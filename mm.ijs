@@ -875,4 +875,4 @@ NB. where
 NB.   probed ≥ 0, tests probed counter
 NB.   failed ≥ 0, tests failed counter
 
-verifymm_mt_=: (] [ smoutput@('module: mm, tests probed: ' , ":@{. , ', failed: ' , ":@{:))@(+/)@:(testdir_mtmm_`testinv_mtmm_`:0)
+verifymm_mt_=: (] [ echo@('module: mm, tests probed: ' , ":@{. , ', failed: ' , ":@{:))@(+/)@:(testdir_mtmm_`testinv_mtmm_`:0)

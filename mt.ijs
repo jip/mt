@@ -148,6 +148,7 @@ require 'math/mt/trs'          NB. Solve linear monomial equation by trf
 NB. high-level
 require 'math/mt/ev'           NB. Eigenvalues and eigenvectors
 require 'math/mt/exp'          NB. Matrix exponential
+require 'math/mt/ls'           NB. Solve overdetermined or underdetermined linear monomial equation
 require 'math/mt/pow'          NB. Raise matrix to integer power[s]
 require 'math/mt/sv'           NB. Solve linear monomial equation
 
@@ -222,6 +223,7 @@ testhigh=: 1 : 0
   (u testexp_mt_ ) y  NB. square matrices only
   (u testpow_mt_ ) y  NB. square matrices only
   (u testsv_mt_  ) y  NB. square matrices only
+  (u testls_mt_  ) y
   (u testmm_mt_  ) y
 
   EMPTY

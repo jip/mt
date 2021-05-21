@@ -77,11 +77,34 @@ NB.   u ~ U(0,1)
 NB.   s ~ U(a,b)
 NB.
 NB. Application:
-NB. - verb to make complex matrix S with elements s having:
-NB.     Re(s) ~ U(0,1)
-NB.     Im(s) ~ U(_1,1)
-NB.   :
-NB.     unirand=: randu j. _1 1&randu
+NB. - verb to model LAPACK's DLARNV(2)
+NB.   x ~ U(-1,1)
+NB.     NB. x=. dlarnv2 n
+NB.     dlarnv2=: _1 1&randu
+NB. - verb to model LAPACK's ZLARNV(1)
+NB.   Re(x) ~ U(0,1), Im(x) ~ U(0,1)
+NB.     NB. x=. zlarnv1 n
+NB.     zlarnv1=: randu j. randu
+NB. - verb to model LAPACK's ZLARNV(2)
+NB.   Re(x) ~ U(-1,1), Im(x) ~ U(-1,1)
+NB.     NB. x=. zlarnv2 n
+NB.     zlarnv2=: _1 1&(randu j. randu)
+NB. - verb to model LAPACK's ZLARNV(4)
+NB.   x ~ U(|x| < 1) [1, pg.236]
+NB.     NB. x=. zlarnv4 n
+NB.     zlarnv4=: %:@randu r. 0 2p1&randu
+NB. - verb to model LAPACK's ZLARNV(5)
+NB.   x ~ U(|x| = 1)
+NB.     NB. x=. zlarnv5 n
+NB.     zlarnv5=: r.@(0 2p1&randu)
+NB.
+NB. Notes:
+NB. - for rnk=1 models LAPACK's DLARNV(1)
+NB.
+NB. References:
+NB. [1] Non-Uniform Random Variate Generation. Luc Devroye, 2003.
+NB.     School of Computer Science, McGill University.
+NB.     http://luc.devroye.org/rnbookindex.html
 
 randu=: (?@$&0) :((p.~ -~/\)~ $:)
 
@@ -189,9 +212,14 @@ NB.   having:
 NB.     q ~ N(4+i*5+j*6+k*7,3^2)
 NB.   :
 NB.     normrand=: (4j5 6j7 3)&randnq
+NB. - verb to model LAPACK's ZLARNV(3)
+NB.   Re(x) ~ N(0,1), Im(x) ~ N(0,1)
+NB.     NB. x=. zlarnv5 n
+NB.     zlarnv5=: randnr j. randnr
 NB.
 NB. Notes:
 NB. - randnr requests only ⌈Π{sh[:]}/2⌉ numbers from RNG
+NB. - for rnk=1 randnr models LAPACK's DLARNV(3)
 NB. - randnc generates C-gaussian complex numbers [3]
 NB. - randnq generates Q-gaussian quaternion numbers [3]
 NB.

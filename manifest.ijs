@@ -10,7 +10,7 @@ number estimating. Is based mostly on LAPACK algorithms, but
 doesn't require LAPACK.
 )
 
-VERSION=: '0.12.1'
+VERSION=: '0.13.0'
 
 RELEASE=: 'j903'
 
@@ -38,6 +38,7 @@ gq.ijs
 history.txt
 hrd.ijs
 iso.ijs
+ls.ijs
 mm.ijs
 mq.ijs
 mt.ijs

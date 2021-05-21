@@ -681,6 +681,7 @@ mm=: (3 : 0) :. (3 : 0)
   ((": rank) , '-rank arrays aren''t supported') assert 1 < rank
   'ioFormat ioField'=. 2 4 #: (JB01 , JINT , JFL , JCMPX , 1024 4096 8192 16384) i. 3!:0 y
   ioSymmetry=. shape issym`(issym`2:@.isskw)`(((issym`2:@.isskw)`3:@.ishmt)`4:@.isskwhmt)@.(0 2 I. ioField)@]`0:@.(({. +./@:~: }.)@[) y
+  flFmt=. 0 j. - <. 10 ^. 9!:18 ''  NB. (2^_44) = 5.68434e_14 = (10^_13.2453)
   if. ioFormat do.
     NB. coordinate
     'MatrixMarket format supports the 0 only as a sparse element' assert 0 = 3 $. y
@@ -690,18 +691,20 @@ mm=: (3 : 0) :. (3 : 0)
     y=. (>: iso) [`(,. 5&$.)`(,. 5&$.)`(,. +.@(5&$.))@.ioField y
     NB. filter out repeating elements known due to symmetry
     y=. y [`(#~ trlmask)`(#~ trl0mask)`(#~ trlmask)`(#~ trlmask)@.ioSymmetry iso
+    colFmt=. (rank # 0) , ioField {:: '' ; 0 ; flFmt ; 2 # flFmt
   else.
     NB. array
     NB. compose data
     y=. +.^:(3 = ioField) , |:"2^:(0 = ioSymmetry) y
     NB. filter out repeating elements known due to symmetry
     y=. y [`({~ isosym^:_1)`({~ isoskw^:_1)`({~ isohmt^:_1)`({~ isohmt^:_1)@.ioSymmetry shape
+    colFmt=. ioField {:: _. ; 0 ; flFmt ; 2 # flFmt
   end.
   size=. ": (# y) ,~^:ioFormat shape  NB. append a quantity presented if coordinate format
   format=.   ioFormat   {:: FORMATS
   field=.    ioField    {:: FIELDS
   symmetry=. ioSymmetry {:: SYMMETRIES
-  str=. BANNER , ' ' , OBJECT , ' ' , format , ' ' , field , ' ' , symmetry , LF , size , LF , , (": ,. y) ,. LF
+  str=. BANNER , ' ' , OBJECT , ' ' , format , ' ' , field , ' ' , symmetry , LF , size , LF , , (colFmt ": ,. y) ,. LF
 )
 
 NB. =========================================================

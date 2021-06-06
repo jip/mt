@@ -20,7 +20,7 @@ NB.          vector (matrix)
 NB. normsc   Square-based Euclidean norm of matrix columns
 NB. normsr   Square-based Euclidean norm of matrix rows
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.13.1 2021-06-06
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.

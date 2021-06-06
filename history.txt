@@ -220,3 +220,6 @@ math/mt - change history
  * scl:  extended to support inversion
  * test: new interfaces: qrt14 qrt16x qrt171
  * util: copysign vectorized
+
+== 0.13.1 ==
+ * mm: verification process fixed

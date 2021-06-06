@@ -873,7 +873,7 @@ NB.   Nilad to verify MM converter, output result to console
 NB.   and return it
 NB.
 NB. Syntax:
-NB.   'probed failed'=. verify_mt_ ''
+NB.   'probed failed'=. verifymm_mt_ ''
 NB. where
 NB.   probed ≥ 0, tests probed counter
 NB.   failed ≥ 0, tests failed counter

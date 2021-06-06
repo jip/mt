@@ -1,5 +1,5 @@
 %%matrixmarket matrix array real skew-symmetric
 3 3
-21.1
-31.2
-32.3
+21.100000000000001
+31.199999999999999
+32.299999999999997

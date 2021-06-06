@@ -20,7 +20,7 @@ NB.          vector (matrix)
 NB. normsc   Square-based Euclidean norm of matrix columns
 NB. normsr   Square-based Euclidean norm of matrix rows
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.13.1 2021-06-06
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -97,7 +97,7 @@ NB.   (normi_mt_"1    -: normir_mt_)       10 10 ?@$ 0
 NB.   (normi_mt_"1    -: normir_mt_) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
-NB. - norm1 implements LAPACK's DZSUM1, DLANSY('1'),
+NB. - norm1 implements LAPACK's DASUM, DZSUM1, DLANSY('1'),
 NB.   xLANGE('1'), ZLANHE('1')
 NB. - to force norm1 act like any of: DLANSB('1'),
 NB.   DLANST('1'), xLANGB('1'), xLANGT('1'), xLANHS('1'),

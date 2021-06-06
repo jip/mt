@@ -29,8 +29,10 @@ NB.              algorithms by matrix of generator and shape
 NB.              given
 NB. test         Adv. to make verb to test algorithms by
 NB.              matrix of generator and shape given
+NB. verify       Nilad to verify mt, output result to console
+NB.              and return it
 NB.
-NB. Version: 0.13.0 2021-05-21
+NB. Version: 0.13.1 2021-06-06
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -250,7 +252,7 @@ NB.   Nilad to verify mt, output result to console and return
 NB.   it
 NB.
 NB. Syntax:
-NB.   'probed failed'=. verify ''
+NB.   'probed failed'=. verify_mt_ ''
 NB. where
 NB.   probed ≥ 0, tests probed counter
 NB.   failed ≥ 0, tests failed counter

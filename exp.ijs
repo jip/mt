@@ -326,7 +326,7 @@ NB. where
 NB.   A - n×n-matrix
 
 testgeexp=: 3 : 0
-  ('geexp' tmonad (]`]`(geconi@[)`(_."_)`(_."_))) y
+  ('geexp' tmonad (]`]`geconi`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -357,7 +357,7 @@ testdiexp=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  ('diexp' tmonad (]`]`(geconi@[)`(_."_)`(_."_))) (ct R) ; v ; iRh
+  ('diexp' tmonad (]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
 
   EMPTY
 )
@@ -385,7 +385,7 @@ testheexp=: 3 : 0
     v=. R=. _.
   end.
 
-  ('heexp' tmonad (]`]`(heconi@[)`(_."_)`(_."_))) v ; ct R
+  ('heexp' tmonad (]`]`heconi`(_."_)`(_."_))) v ; ct R
 
   EMPTY
 )

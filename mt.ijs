@@ -86,8 +86,8 @@ NB. constants
 
 NB. basic values
 FP_BASE=: 2                                              NB. floating point base
-FP_ELEN=: 11                                             NB. exponent field length (bits)
-FP_FLEN=: 53                                             NB. fraction field length (bits)
+FP_ELEN=: IF64 {  8 11                                   NB. exponent field length (bits)
+FP_FLEN=: IF64 { 24 53                                   NB. fraction field length (bits)
 FP_IGUNFL=: 1                                            NB. is gradual underflow? (boolean)
 
 NB. derived values

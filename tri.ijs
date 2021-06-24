@@ -18,7 +18,7 @@ NB.            definite tridiagonal matrix
 NB. testtri    Adv. to make verb to test xxtrixx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.12.0 2021-02-01
+NB. Version: 0.13.2 2021-06-24
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -839,21 +839,21 @@ testtrtri=: 3 : 0
   norm1U=.  norm1 U
   norm1U1=. norm1 U1
 
-  ('128!:1'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U
+  ('128!:1'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U
 
-  ('''ln''&dtrtri_mttmp_' tmonad ((3&{::)`trlpick `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
-  ('''lu''&dtrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
-  ('''un''&dtrtri_mttmp_' tmonad ((3&{::)`trupick `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
-  ('''uu''&dtrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
-  ('''ln''&ztrtri_mttmp_' tmonad ((3&{::)`trlpick `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
-  ('''lu''&ztrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
-  ('''un''&ztrtri_mttmp_' tmonad ((3&{::)`trupick `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
-  ('''uu''&ztrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
+  ('''ln''&dtrtri_mttmp_' tmonad ((3&{::)`trlpick `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
+  ('''lu''&dtrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
+  ('''un''&dtrtri_mttmp_' tmonad ((3&{::)`trupick `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
+  ('''uu''&dtrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
+  ('''ln''&ztrtri_mttmp_' tmonad ((3&{::)`trlpick `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
+  ('''lu''&ztrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
+  ('''un''&ztrtri_mttmp_' tmonad ((3&{::)`trupick `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
+  ('''uu''&ztrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
 
-  ('trtril'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) L  ; rcondL  ; norm1L
-  ('trtril1'              tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1
-  ('trtriu'               tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U  ; rcondU  ; norm1U
-  ('trtriu1'              tmonad ((0&{::)`]       `(1 {:: [)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1
+  ('trtril'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L
+  ('trtril1'              tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1
+  ('trtriu'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U
+  ('trtriu1'              tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1
 
   coerase < 'mttmp'
 
@@ -883,15 +883,15 @@ testgetri=: 3 : 0
 
   'norml normu'=. (normi , norm1) y
 
-  ('%.'            tmonad ((               0&{:: )`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
+  ('%.'            tmonad ((               0&{:: )`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
 
-  ('dgetri_mttmp_' tmonad ((dgetrf_mttmp_@(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
-  ('zgetri_mttmp_' tmonad ((zgetrf_mttmp_@(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
+  ('dgetri_mttmp_' tmonad ((dgetrf_mttmp_@(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
+  ('zgetri_mttmp_' tmonad ((zgetrf_mttmp_@(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
 
-  ('getrilu1p'     tmonad ((getrflu1p    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
-  ('getripl1u'     tmonad ((getrfpl1u    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
-  ('getripu1l'     tmonad ((getrfpu1l    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondu ; normu
-  ('getriul1p'     tmonad ((getrful1p    @(0&{::))`]`(1 {:: [)`(_."_)`t03)) y ; rcondl ; norml
+  ('getrilu1p'     tmonad ((getrflu1p    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
+  ('getripl1u'     tmonad ((getrfpl1u    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
+  ('getripu1l'     tmonad ((getrfpu1l    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
+  ('getriul1p'     tmonad ((getrful1p    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
 
   coerase < 'mttmp'
 
@@ -922,13 +922,13 @@ testhetri=: 3 : 0
 
   norm=. normi y
 
-  ('''l''&dsytri2_mttmp_' tmonad (('l' dsytrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
-  ('''u''&dsytri2_mttmp_' tmonad (('u' dsytrf_mttmp_  0&{:: )`heu`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
-  ('''l''&zhetri2_mttmp_' tmonad (('l' zhetrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
-  ('''u''&zhetri2_mttmp_' tmonad (('u' zhetrf_mttmp_  0&{:: )`heu`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&dsytri2_mttmp_' tmonad (('l' dsytrf_mttmp_  0&{:: )`hel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''u''&dsytri2_mttmp_' tmonad (('u' dsytrf_mttmp_  0&{:: )`heu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&zhetri2_mttmp_' tmonad (('l' zhetrf_mttmp_  0&{:: )`hel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''u''&zhetri2_mttmp_' tmonad (('u' zhetrf_mttmp_  0&{:: )`heu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
-  ('hetripl'              tmonad ((    hetrfpl      @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
-  ('hetripu'              tmonad ((    hetrfpu      @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('hetripl'              tmonad ((    hetrfpl      @(0&{::))`]  `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('hetripu'              tmonad ((    hetrfpu      @(0&{::))`]  `(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
   coerase < 'mttmp'
 
@@ -958,11 +958,11 @@ testpotri=: 3 : 0
 
   norm=. norm1 y
 
-  ('''l''&dpotri_mttmp_' tmonad (('l' dpotrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
-  ('''l''&zpotri_mttmp_' tmonad (('l' zpotrf_mttmp_  0&{:: )`hel`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&dpotri_mttmp_' tmonad (('l' dpotrf_mttmp_  0&{:: )`hel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&zpotri_mttmp_' tmonad (('l' zpotrf_mttmp_  0&{:: )`hel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
-  ('potril'              tmonad ((    potrfl       @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
-  ('potriu'              tmonad ((    potrfu       @(0&{::))`]  `(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('potril'              tmonad ((    potrfl       @(0&{::))`]  `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('potriu'              tmonad ((    potrfu       @(0&{::))`]  `(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
   coerase < 'mttmp'
 
@@ -990,8 +990,8 @@ testpttri=: 3 : 0
 
   norm=. norm1 y
 
-  ('pttril' tmonad ((        0&{:: )        `]`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
-  ('pttril' tdyad  ((pttrfl@(0&{::))`(0&{::)`]`(1 {:: [)`(_."_)`t03)) y ; rcond ; norm
+  ('pttril' tmonad ((        0&{:: )        `]`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('pttril' tdyad  ((pttrfl@(0&{::))`(0&{::)`]`(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
   coerase < 'mttmp'
 

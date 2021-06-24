@@ -45,7 +45,7 @@ NB.         produced by hgexxsxx
 NB. t52xx   Dyads to compute the error of Schur vectors
 NB.         produced by tgevcxxx
 NB.
-NB. Version: 0.13.0 2021-05-21
+NB. Version: 0.13.2 2021-06-24
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -198,8 +198,8 @@ NB.              argy=. vgety y
 NB.   vgeto  - monad to extract output from ret;
 NB.            is called as:
 NB.              out=. vgeto ret
-NB.   vrcond - dyad to find rcond; is called as:
-NB.              rcond=. y vrcond out
+NB.   vrcond - monad to find rcond; is called as:
+NB.              rcond=. vrcond y
 NB.   vferr  - dyad to find ferr; is called as:
 NB.              ferr=. y vferr out
 NB.   vberr  - dyad to find berr; is called as:
@@ -234,7 +234,7 @@ NB.
 NB. Application:
 NB. - to test geqrf:
 NB.     NB. to estimate rcond in 1-norm
-NB.     vrcond=. (_."_)`gecon1@.(=/@$)@[
+NB.     vrcond=. (_."_)`gecon1@.(=/@$)
 NB.     NB. to calc. berr, assuming:
 NB.     NB.   berr := ||A - realA||_1 / (FP_EPS * ||A||_1 * m)
 NB.     vberr=. ((- %&norm1 [) % FP_EPS * (norm1 * #)@[) unmqr
@@ -242,7 +242,7 @@ NB.     NB. do the job
 NB.     ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
 NB. - to test getrs:
 NB.     NB. to estimate rcond in ∞-norm
-NB.     vrcond=. (_."_)`geconi@.(=/@$)@(0 {:: [)
+NB.     vrcond=. (_."_)`geconi@.(=/@$)@(0&{::)
 NB.     NB. to calc. ferr, assuming:
 NB.     NB.   ferr := ||x - realx||_inf / ||realx||_inf
 NB.     vferr=. ((- %&normi [) 1&{::)~
@@ -254,23 +254,23 @@ NB.     ('getrs' tdyad (0&{::)`(mp&>/)`]`vrcond`vferr`vberr) (A;x)
 
 tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n
+  try. rcond=. vrcond y catch. rcond=. _ end.
   try.
     argy=. vgety y
     try.
       't s'=. timespacex 'ret=. ' , m , ' argy'
       try.
         out=. vgeto ret
-        try. rcond=. y vrcond out catch. rcond=. _  end.
-        try. ferr=.  y vferr  out catch. ferr=.  _. end.
-        try. berr=.  y vberr  out catch. berr=.  _. end.
+        try. ferr=. y vferr out catch. ferr=. _. end.
+        try. berr=. y vberr out catch. berr=. _. end.
       catch.
-        'rcond ferr berr'=. 1 2 # _ _.
+        'ferr berr'=. 2 # _.
       end.
     catch.
       dbsig 3  NB. jump to upper catch block
     end.
   catch.
-    'rcond ferr berr t s'=. 1 4 # _ _.
+    'ferr berr t s'=. 4 # _.
   end.
   logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
@@ -282,6 +282,7 @@ tmonad=: 2 : 0
 
 tdyad=: 2 : 0
   '`vgetx vgety vgeto vrcond vferr vberr'=. n
+  try. rcond=. vrcond y catch. rcond=. _ end.
   try.
     argx=. vgetx y
     argy=. vgety y
@@ -289,17 +290,16 @@ tdyad=: 2 : 0
       't s'=. timespacex 'ret=. argx ' , m , ' argy'
       try.
         out=. vgeto ret
-        try. rcond=. y vrcond out catch. rcond=. _  end.
-        try. ferr=.  y vferr  out catch. ferr=.  _. end.
-        try. berr=.  y vberr  out catch. berr=.  _. end.
+        try. ferr=. y vferr out catch. ferr=. _. end.
+        try. berr=. y vberr out catch. berr=. _. end.
       catch.
-        'rcond ferr berr'=. 1 2 # _ _.
+        'ferr berr'=. 2 # _.
       end.
     catch.
       dbsig 3  NB. jump to upper catch block
     end.
   catch.
-    'rcond ferr berr t s'=. 1 4 # _ _.
+    'ferr berr t s'=. 4 # _.
   end.
   logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2

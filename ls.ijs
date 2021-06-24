@@ -10,7 +10,7 @@ NB. testgels3  Test gelsxxx by general matrix and multiple
 NB.            RHS
 NB. testls     Test xxlsxxx
 NB.
-NB. Version: 0.13.0 2021-05-21
+NB. Version: 0.13.2 2021-06-24
 NB.
 NB. Copyright 2020-2021 Igor Zhuravlov
 NB.
@@ -307,8 +307,8 @@ testgels1=: 3 :0
     xc=. m {. xn=. x
   end.
 
-  ('gelsax'  tdyad ((0&{::)`(1&{::)`]`(2 {:: [)`(_."_)`(( mp~     qrt16v) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; (    A  mp xn) ; rcondA ; norm1A
-  ('gelsacx' tdyad ((0&{::)`(1&{::)`]`(2 {:: [)`(_."_)`(((mp~ ct) qrt16v) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; ((ct A) mp xc) ; rcondA ; normiA
+  ('gelsax'  tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(( mp~     qrt16v) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; (    A  mp xn) ; rcondA ; norm1A
+  ('gelsacx' tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(((mp~ ct) qrt16v) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; ((ct A) mp xc) ; rcondA ; normiA
 
   EMPTY
 )
@@ -345,13 +345,13 @@ testgels3=: 3 : 0
   Bax=.      A  mp Xn
   Bacx=. (ct A) mp Xc
 
-  ('dgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2 {:: [)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  ('dgels_mttmp_' tdyad (('t'"_)`(2&{. )`]`(2 {:: [)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
-  ('zgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2 {:: [)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  ('zgels_mttmp_' tdyad (('c'"_)`(2&{. )`]`(2 {:: [)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  ('dgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  ('dgels_mttmp_' tdyad (('t'"_)`(2&{. )`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  ('zgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  ('zgels_mttmp_' tdyad (('c'"_)`(2&{. )`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
 
-  ('gelsax'       tdyad ((0&{::)`(1&{::)`]`(2 {:: [)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  ('gelsacx'      tdyad ((0&{::)`(1&{::)`]`(2 {:: [)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  ('gelsax'       tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  ('gelsacx'      tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
 
   coerase < 'mttmp'
 

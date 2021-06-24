@@ -27,7 +27,7 @@ NB. testptmat  Test ptmatx by matrix size given
 NB. testspmat  Test spmat by matrix shape given
 NB. testrand   Test xxxxmatx by matrix shape given
 NB.
-NB. Version: 0.13.0 2021-05-21
+NB. Version: 0.13.2 2021-06-24
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -810,15 +810,15 @@ NB. Notes:
 NB. - result is not taken into account by benchmark
 
 testtrmat=: 3 : 0
-  (' randu           trl1mat' tmonad (]`]`(trl1con1@])`(_."_)`(_."_))) y
-  (' randu           trlmat ' tmonad (]`]`(trlcon1 @])`(_."_)`(_."_))) y
-  (' randu           tru1mat' tmonad (]`]`(tru1con1@])`(_."_)`(_."_))) y
-  (' randu           trumat ' tmonad (]`]`(trucon1 @])`(_."_)`(_."_))) y
+  (' randu           trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  (' randu           trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  (' randu           tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  (' randu           trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
-  ('(randu j. randu) trl1mat' tmonad (]`]`(trl1con1@])`(_."_)`(_."_))) y
-  ('(randu j. randu) trlmat ' tmonad (]`]`(trlcon1 @])`(_."_)`(_."_))) y
-  ('(randu j. randu) tru1mat' tmonad (]`]`(tru1con1@])`(_."_)`(_."_))) y
-  ('(randu j. randu) trumat ' tmonad (]`]`(trucon1 @])`(_."_)`(_."_))) y
+  ('(randu j. randu) trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(randu j. randu) trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(randu j. randu) tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(randu j. randu) trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -839,7 +839,7 @@ NB. Notes:
 NB. - result is not taken into account by benchmark
 
 testgemat=: 3 : 0
-  ('gemat' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
+  ('gemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
   EMPTY
 )
 
@@ -858,11 +858,11 @@ NB. Notes:
 NB. - result is not taken into account by benchmark
 
 testdimat=: 3 : 0
-  (' gemat           dimat (randnr unmat)' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
-  (' gemat           dimat (randnc unmat)' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
+  (' gemat           dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  (' gemat           dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
-  ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
-  ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
+  ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -882,8 +882,8 @@ NB. Notes:
 NB. - result is not taken into account by benchmark
 
 testhemat=: 3 : 0
-  (' randu           hemat' tmonad (]`]`(hecon1@])`(_."_)`(_."_))) y
-  ('(randu j. randu) hemat' tmonad (]`]`(hecon1@])`(_."_)`(_."_))) y
+  (' randu           hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(randu j. randu) hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
   EMPTY
 )
 
@@ -902,8 +902,8 @@ NB. Notes:
 NB. - result is not taken into account by benchmark
 
 testpomat=: 3 : 0
-  (' randu           pomat' tmonad (]`]`(pocon1@])`(_."_)`(_."_))) y
-  ('(randu j. randu) pomat' tmonad (]`]`(pocon1@])`(_."_)`(_."_))) y
+  (' randu           pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(randu j. randu) pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
   EMPTY
 )
 
@@ -922,11 +922,11 @@ NB. Notes:
 NB. - result is not taken into account by benchmark
 
 testptmat=: 3 : 0
-  (' randu           ptmat ' tmonad (]`]`(ptcon1@])`(_."_)`(_."_))) y
-  ('(randu j. randu) ptmat ' tmonad (]`]`(ptcon1@])`(_."_)`(_."_))) y
+  (' randu           ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(randu j. randu) ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
-  (' randu           ptmat2' tmonad (]`]`(ptcon1@])`(_."_)`(_."_))) y
-  ('(randu j. randu) ptmat2' tmonad (]`]`(ptcon1@])`(_."_)`(_."_))) y
+  (' randu           ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(randu j. randu) ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -947,8 +947,8 @@ NB. Notes:
 NB. - result is not taken into account by benchmark
 
 testspmat=: 3 : 0
-  (' randu           spmat 0.25' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
-  ('(randu j. randu) spmat 0.25' tmonad (]`]`(gecon1@])`(_."_)`(_."_))) y
+  (' randu           spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(randu j. randu) spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
   EMPTY
 )
 

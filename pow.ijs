@@ -12,7 +12,7 @@ NB. testhepow  Test hepow by Hermitian (symmetric) matrix
 NB. testpow    Adv. to make verb to test xxpow by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.13.2 2021-06-24
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.
@@ -253,7 +253,7 @@ NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
 
 testgepow=: 3 : 0
-  ('gepow' tdyad ((5 7"_)`]`]`(geconi@[)`(_."_)`(_."_))) y
+  ('gepow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))) y
 
   EMPTY
 )
@@ -285,7 +285,7 @@ testdipow=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  ('dipow' tdyad ((5 7"_)`]`]`(geconi@[)`(_."_)`(_."_))) (ct R) ; v ; iRh
+  ('dipow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
 
   EMPTY
 )
@@ -311,7 +311,7 @@ testhepow=: 3 : 0
     v=. R=. _.
   end.
 
-  ('hepow' tdyad ((5 7"_)`]`]`(heconi@[)`(_."_)`(_."_))) v ; ct R
+  ('hepow' tdyad ((5 7"_)`]`]`heconi`(_."_)`(_."_))) v ; ct R
 
   EMPTY
 )

@@ -223,3 +223,9 @@ math/mt - change history
 
 == 0.13.1 ==
  * mm: verification process fixed
+
+== 0.13.2 ==
+ * mm:   fix to support negative numbers, adjust verification suite
+ * mt:   - fix IEEE 754 constants
+         - extend IEEE 754 constants from 64-bit platform only to both 32- and 64-bit
+ * test: simplify code by reducing vrcond valency

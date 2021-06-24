@@ -37,16 +37,22 @@ NB.
 NB. Conventions:
 NB. 1) MM allows the 0 only as a sparse element in sparse
 NB.    matrices
-NB. 2) MM matrix object may have any rank>1, this extends
+NB. 2) MM matrix object may have any rank>1, this extends an
 NB.    original specification
 NB. 3) MM matrix object may have skew-Hermitian symmetry,
-NB.    this extends original specification
+NB.    this extends an original specification
 NB. 4) the following definitions are assumed in the examples
 NB.    below:
 NB.      delimiters=. LF , ' '
 NB.      string=. 'foo bar  baz' , LF , 'qux' , LF2 , 'quux' , LF , ' corge ' , LF , 'flob'
+NB. 5) ±inf and nan aren't still supported in exporting J
+NB.    array to MM matrix object, this reduces an original
+NB.    specification
 NB.
 NB. TODO:
+NB. - replace Format (":) by Format (8!:n) in arr->str
+NB.   conversion when and if (8!:n) will be extended to
+NB.   support ±inf and ±nan
 NB. - add datatypes: extended, rational, quaternion,
 NB.   octonion
 NB.
@@ -701,7 +707,7 @@ mm=: (3 : 0) :. (3 : 0)
   format=.   ioFormat   {:: FORMATS
   field=.    ioField    {:: FIELDS
   symmetry=. ioSymmetry {:: SYMMETRIES
-  str=. BANNER , ' ' , OBJECT , ' ' , format , ' ' , field , ' ' , symmetry , LF , size , LF , , (":!.(IF64 { 9 17) ,. y) ,. LF
+  str=. BANNER , ' ' , OBJECT , ' ' , format , ' ' , field , ' ' , symmetry , LF , size , LF , , ((=&'_')`(,:&'-')} ":!.(IF64 { 9 17) ,. y) ,. LF
 )
 
 NB. =========================================================

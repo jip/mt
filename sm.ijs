@@ -15,7 +15,7 @@ NB.            multiple RHS
 NB. testsm     Adv. to make verb to test trsmxxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
+NB. Version: 0.13.2 2021-06-24
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.

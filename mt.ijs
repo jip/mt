@@ -85,20 +85,20 @@ NB. IEEE 754-1985 double-precision 64 bit floating point
 NB. constants
 
 NB. basic values
-FP_BASE=: 2                                           NB. floating point base
-FP_ELEN=: 11                                          NB. exponent field length (bits)
-FP_FLEN=: 53                                          NB. fraction field length (bits)
-FP_IGUNFL=: 1                                         NB. is gradual underflow? (boolean)
+FP_BASE=: 2                                              NB. floating point base
+FP_ELEN=: 11                                             NB. exponent field length (bits)
+FP_FLEN=: 53                                             NB. fraction field length (bits)
+FP_IGUNFL=: 1                                            NB. is gradual underflow? (boolean)
 
 NB. derived values
-FP_EBIAS=: (FP_BASE ^ (FP_ELEN - 1)) - 1              NB. exponent bias for normalized numbers = 1023
-FP_EPS=: FP_BASE ^ (- FP_FLEN)                        NB. machine epsilon ε = 2^_53
-FP_PREC=: FP_BASE * FP_EPS                            NB. machine precision β = 2^_52
-FP_EMIN=: 1 - FP_EBIAS                                NB. min exponent for normalized numbers = _1022
-FP_UNFL=: FP_BASE ^ FP_EMIN                           NB. min normalized positive number = 2^_1022
-FP_EMAX=: ((FP_BASE ^ FP_ELEN) - FP_BASE) - FP_EBIAS  NB. max exponent for normalized numbers = 1023
-FP_OVFL=: (FP_BASE - FP_PREC) * (FP_BASE ^ FP_EMAX)   NB. max normalized positive number = (1-ε)*2^1024
-FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))         NB. safe min, such that 1/FP_SFMIN does not overflow
+FP_EBIAS=: <. (FP_BASE ^ (FP_ELEN - 1)) - 1              NB. exponent bias for normalized numbers (127 or 1023)
+FP_EPS=: FP_BASE ^ (- FP_FLEN)                           NB. machine epsilon ε (2^_24 or 2^_53)
+FP_PREC=: FP_BASE * FP_EPS                               NB. machine precision β (2^_23 or 2^_52)
+FP_EMIN=: <. 1 - FP_EBIAS                                NB. min exponent for normalized numbers (_126 or _1022)
+FP_UNFL=: FP_BASE ^ FP_EMIN                              NB. min normalized positive number (2^_126 or 2^_1022)
+FP_EMAX=: <. ((FP_BASE ^ FP_ELEN) - FP_BASE) - FP_EBIAS  NB. max exponent for normalized numbers (127 or 1023)
+FP_OVFL=: (FP_BASE - FP_PREC) * (FP_BASE ^ FP_EMAX)      NB. max normalized positive number ((1-ε)*2^128 or (1-ε)*2^1024)
+FP_SFMIN=: FP_BASE ^ (FP_EMIN >. (- FP_EMAX))            NB. safe min, such that 1/FP_SFMIN does not overflow
 
 NB. =========================================================
 NB. Includes

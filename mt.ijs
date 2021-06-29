@@ -32,7 +32,7 @@ NB.              matrix of generator and shape given
 NB. verify       Nilad to verify mt, output result to console
 NB.              and return it
 NB.
-NB. Version: 0.13.2 2021-06-24
+NB. Version: 0.13.3 2021-06-29
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
 NB.

@@ -6,7 +6,7 @@ NB.
 NB. testmm    Test mm
 NB. verifymm  Verify mm
 NB.
-NB. Version: 0.13.2 2021-06-24
+NB. Version: 0.13.3 2021-06-29
 NB.
 NB. Copyright 2020-2021 Igor Zhuravlov
 NB.

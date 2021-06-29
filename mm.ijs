@@ -1,12 +1,12 @@
-NB. MatrixMarket format converter
+NB. Matrix Market exchange formats converter
 NB.
-NB. mm        Convert J numeric array to/from MatrixMarket
-NB.           string
+NB. mm        Convert J numeric array to/from suitable Matrix
+NB.           Market exchange format string
 NB.
 NB. testmm    Test mm
 NB. verifymm  Verify mm
 NB.
-NB. Version: 0.13.2 2021-06-24
+NB. Version: 0.13.3 2021-06-29
 NB.
 NB. Copyright 2020-2021 Igor Zhuravlov
 NB.
@@ -32,7 +32,7 @@ NB. =========================================================
 NB. Concepts
 NB.
 NB. Notation:
-NB.   MM - MatrixMarket format
+NB.   MM - Matrix Market exchange formats
 NB.
 NB. Conventions:
 NB. 1) MM allows the 0 only as a sparse element in sparse
@@ -161,9 +161,9 @@ NB.   splitted_string=. cut3 string
 NB.
 NB. Examples:
 NB.    cut3 string
-NB. ┌────┬────┬────────────────────────┐
-NB. │foo │ar  │az qux  quux  corge  flo│
-NB. └────┴────┴────────────────────────┘
+NB. +----+----+------------------------+
+NB. |foo |ar  |az qux  quux  corge  flo|
+NB. +----+----+------------------------+
 
 cut3=: <;._2
 
@@ -185,13 +185,13 @@ NB. - dyad (cut2) is an inverse of (joinby)
 NB.
 NB. Examples:
 NB.    cut2 string
-NB. ┌───┬───┬┬──────────────┬─────┬─────┐
-NB. │foo│bar││baz qux  quux │corge│ flob│
-NB. └───┴───┴┴──────────────┴─────┴─────┘
+NB. +---+---++--------------+-----+-----+
+NB. |foo|bar||baz qux  quux |corge| flob|
+NB. +---+---++--------------+-----+-----+
 NB.    LF cut2 string
-NB. ┌────────────┬───┬┬────┬───────┬────┐
-NB. │foo bar  baz│qux││quux│ corge │flob│
-NB. └────────────┴───┴┴────┴───────┴────┘
+NB. +------------+---++----+-------+----+
+NB. |foo bar  baz|qux||quux| corge |flob|
+NB. +------------+---++----+-------+----+
 
 cut2=: ' '&$: : (cut3@,~)
 
@@ -212,13 +212,13 @@ NB. - identic to (cut) verb from the Standard Library
 NB.
 NB. Examples:
 NB.    cut string
-NB. ┌───┬───┬──────────────┬─────┬─────┐
-NB. │foo│bar│baz qux  quux │corge│ flob│
-NB. └───┴───┴──────────────┴─────┴─────┘
+NB. +---+---+--------------+-----+-----+
+NB. |foo|bar|baz qux  quux |corge| flob|
+NB. +---+---+--------------+-----+-----+
 NB.    LF cut string
-NB. ┌────────────┬───┬────┬───────┬────┐
-NB. │foo bar  baz│qux│quux│ corge │flob│
-NB. └────────────┴───┴────┴───────┴────┘
+NB. +------------+---+----+-------+----+
+NB. |foo bar  baz|qux|quux| corge |flob|
+NB. +------------+---+----+-------+----+
 
 cut=: -.&a:@cut2
 
@@ -238,9 +238,9 @@ NB. - like (cutl) verb, but doesn't drop repeating delimiters
 NB.
 NB. Examples:
 NB.    delimiters cutl2 string
-NB. ┌───┬───┬┬───┬───┬┬────┬┬─────┬┬────┐
-NB. │foo│bar││baz│qux││quux││corge││flob│
-NB. └───┴───┴┴───┴───┴┴────┴┴─────┴┴────┘
+NB. +---+---++---+---++----++-----++----+
+NB. |foo|bar||baz|qux||quux||corge||flob|
+NB. +---+---++---+---++----++-----++----+
 
 cutl2=: ((, {.) (e. cut3 [) ])~
 
@@ -260,9 +260,9 @@ NB. - drops repeating delimiters
 NB.
 NB. Examples:
 NB.    delimiters cutl string
-NB. ┌───┬───┬───┬───┬────┬─────┬────┐
-NB. │foo│bar│baz│qux│quux│corge│flob│
-NB. └───┴───┴───┴───┴────┴─────┴────┘
+NB. +---+---+---+---+----+-----+----+
+NB. |foo|bar|baz|qux|quux|corge|flob|
+NB. +---+---+---+---+----+-----+----+
 
 cutl=: -.&a:@cutl2
 
@@ -626,13 +626,13 @@ NB. ---------------------------------------------------------
 NB. mm
 NB.
 NB. Description:
-NB.   Convert J numeric array to/from MatrixMarket string
+NB.   Convert J numeric array to/from suitable MM string
 NB.
 NB. Syntax:
 NB.   str=. mm     arr
 NB.   arr=. mm^:_1 str
 NB. where
-NB.   str - string, arr in MatrixMarket format
+NB.   str - string, arr in MM
 NB.   arr - r-rank array, numeric
 NB.   r   > 1, array's rank
 NB.
@@ -658,7 +658,7 @@ mm=: (3 : 0) :. (3 : 0)
   header=. cut_mtmm_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
   y=. (#~ ('%' ~: {.) S: 0) y   NB. remove header and comments
   y=. (#~ a:&~:) dltb L: 0 y    NB. remove empty lines
-  'not a MatrixMarket format' assert_mtmm_ 5 = # header
+  'not a Matrix Market exchange format' assert_mtmm_ 5 = # header
   ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mtmm_ BANNER_mtmm_ -: 0 {:: header
   ('object '''   , (1 {:: header) , ''' is not recognized') assert_mtmm_ OBJECT_mtmm_ -: 1 {:: header
   ioFormat=.   FORMATS_mtmm_    i. 2 { header
@@ -689,7 +689,7 @@ mm=: (3 : 0) :. (3 : 0)
   ioSymmetry=. shape issym`(issym`2:@.isskw)`(((issym`2:@.isskw)`3:@.ishmt)`4:@.isskwhmt)@.(0 2 I. ioField)@]`0:@.(({. +./@:~: }.)@[) y
   if. ioFormat do.
     NB. coordinate
-    'MatrixMarket format supports the 0 only as a sparse element' assert 0 = 3 $. y
+    'Matrix Market exchange formats support the 0 only as a sparse element' assert 0 = 3 $. y
     y=. 8 $. y    NB. remove sparse elements
     iso=. 4 $. y  NB. generate all ISO
     NB. compose data

@@ -161,9 +161,9 @@ NB.   splitted_string=. cut3 string
 NB.
 NB. Examples:
 NB.    cut3 string
-NB. ┌────┬────┬────────────────────────┐
-NB. │foo │ar  │az qux  quux  corge  flo│
-NB. └────┴────┴────────────────────────┘
+NB. +----+----+------------------------+
+NB. |foo |ar  |az qux  quux  corge  flo|
+NB. +----+----+------------------------+
 
 cut3=: <;._2
 
@@ -185,13 +185,13 @@ NB. - dyad (cut2) is an inverse of (joinby)
 NB.
 NB. Examples:
 NB.    cut2 string
-NB. ┌───┬───┬┬──────────────┬─────┬─────┐
-NB. │foo│bar││baz qux  quux │corge│ flob│
-NB. └───┴───┴┴──────────────┴─────┴─────┘
+NB. +---+---++--------------+-----+-----+
+NB. |foo|bar||baz qux  quux |corge| flob|
+NB. +---+---++--------------+-----+-----+
 NB.    LF cut2 string
-NB. ┌────────────┬───┬┬────┬───────┬────┐
-NB. │foo bar  baz│qux││quux│ corge │flob│
-NB. └────────────┴───┴┴────┴───────┴────┘
+NB. +------------+---++----+-------+----+
+NB. |foo bar  baz|qux||quux| corge |flob|
+NB. +------------+---++----+-------+----+
 
 cut2=: ' '&$: : (cut3@,~)
 
@@ -212,13 +212,13 @@ NB. - identic to (cut) verb from the Standard Library
 NB.
 NB. Examples:
 NB.    cut string
-NB. ┌───┬───┬──────────────┬─────┬─────┐
-NB. │foo│bar│baz qux  quux │corge│ flob│
-NB. └───┴───┴──────────────┴─────┴─────┘
+NB. +---+---+--------------+-----+-----+
+NB. |foo|bar|baz qux  quux |corge| flob|
+NB. +---+---+--------------+-----+-----+
 NB.    LF cut string
-NB. ┌────────────┬───┬────┬───────┬────┐
-NB. │foo bar  baz│qux│quux│ corge │flob│
-NB. └────────────┴───┴────┴───────┴────┘
+NB. +------------+---+----+-------+----+
+NB. |foo bar  baz|qux|quux| corge |flob|
+NB. +------------+---+----+-------+----+
 
 cut=: -.&a:@cut2
 
@@ -238,9 +238,9 @@ NB. - like (cutl) verb, but doesn't drop repeating delimiters
 NB.
 NB. Examples:
 NB.    delimiters cutl2 string
-NB. ┌───┬───┬┬───┬───┬┬────┬┬─────┬┬────┐
-NB. │foo│bar││baz│qux││quux││corge││flob│
-NB. └───┴───┴┴───┴───┴┴────┴┴─────┴┴────┘
+NB. +---+---++---+---++----++-----++----+
+NB. |foo|bar||baz|qux||quux||corge||flob|
+NB. +---+---++---+---++----++-----++----+
 
 cutl2=: ((, {.) (e. cut3 [) ])~
 
@@ -260,9 +260,9 @@ NB. - drops repeating delimiters
 NB.
 NB. Examples:
 NB.    delimiters cutl string
-NB. ┌───┬───┬───┬───┬────┬─────┬────┐
-NB. │foo│bar│baz│qux│quux│corge│flob│
-NB. └───┴───┴───┴───┴────┴─────┴────┘
+NB. +---+---+---+---+----+-----+----+
+NB. |foo|bar|baz|qux|quux|corge|flob|
+NB. +---+---+---+---+----+-----+----+
 
 cutl=: -.&a:@cutl2
 

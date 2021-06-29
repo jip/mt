@@ -118,7 +118,7 @@ require 'math/mt/dbg'          NB. Debug
 require 'math/mt/fork'         NB. Extended forks
 require 'math/mt/util'         NB. Utilities
 require 'math/mt/iso'          NB. ISO
-require 'math/mt/mm'           NB. MatrixMarket format converter
+require 'math/mt/mm'           NB. Matrix Market exchange formats converter
 require 'math/mt/norm'         NB. Norms
 require 'math/mt/quatern'      NB. Quaternions
 require 'math/mt/struct'       NB. Structure handlers

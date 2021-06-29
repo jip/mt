@@ -211,7 +211,7 @@ math/mt - change history
              - sorix get particular code branch for non-complex data types
 
 == 0.12.1 ==
- + mm: new interface and tests for MatrixMarket format converter
+ + mm: new interface and tests for Matrix Market exchange formats converter
 
 == 0.13.0 ==
  + ls:   new interfaces with test suite: gelsax gelsacx

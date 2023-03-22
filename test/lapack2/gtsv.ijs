@@ -24,10 +24,10 @@ NB. - the verbs below are loaded into the current locale
 dgtsv=: 3 : 0
   'dl d du B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_ *. (<: n) = #) dl
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_ *.     n  = #) d
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_ *. (<: n) = #) du
-  assert. (ismatrix_jlapack2_ *. isreal_jlapack2_              ) B
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) dl
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) du
+  assert. (ismatrix_jlapack2_ , isreal_jlapack2_             ) B
   select. 3!:0 dl
     case. JCMPX do. dl=. 9 o. dl
     case. JFL   do.
@@ -56,10 +56,10 @@ dgtsv=: 3 : 0
 zgtsv=: 3 : 0
   'dl d du B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ *. (<: n) = #) dl
-  assert. (isvector_jlapack2_ *.     n  = #) d
-  assert. (isvector_jlapack2_ *. (<: n) = #) du
-  assert.  ismatrix_jlapack2_                B
+  assert. (isvector_jlapack2_ , (<: n) = #) dl
+  assert. (isvector_jlapack2_ ,     n  = #) d
+  assert. (isvector_jlapack2_ , (<: n) = #) du
+  assert.  ismatrix_jlapack2_               B
   if. JCMPX ~: 3!:0 dl do. dl=. dl + 0j0 end.
   if. JCMPX ~: 3!:0 d  do. d=.  d  + 0j0 end.
   if. JCMPX ~: 3!:0 du do. du=. du + 0j0 end.

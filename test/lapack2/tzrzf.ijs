@@ -34,7 +34,7 @@ NB. - the verbs below are loaded into the current locale
 dtzrzf=: 3 : 0
   'm n'=. $ y
   assert. m <: n
-  assert. (ismatrix_jlapack2_ *. isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
     case. JFL   do.

@@ -24,8 +24,8 @@ NB. - the verbs below are loaded into the current locale
 dgetri=: 3 : 0
   'L1U ipiv'=. y
   n=. # ipiv
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) L1U
-  assert. (isvector_jlapack2_ *.                       (-: <.) :: 0:            ) ipiv
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) L1U
+  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0:           ) ipiv
   select. 3!:0 L1U
     case. JCMPX do. L1U=. 9 o. L1U
     case. JFL   do.
@@ -42,8 +42,8 @@ dgetri=: 3 : 0
 zgetri=: 3 : 0
   'L1U ipiv'=. y
   n=. # ipiv
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) L1U
-  assert. (isvector_jlapack2_ *. (-: <.) :: 0:              ) ipiv
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
+  assert. (isvector_jlapack2_ , (-: <.) :: 0:             ) ipiv
   if. JCMPX ~: 3!:0 L1U do. L1U=. L1U + 0j0 end.
   if. JINT  ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
   NB. lwork=. , 1 >. n  NB. minimal

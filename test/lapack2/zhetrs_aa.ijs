@@ -38,9 +38,9 @@ zhetrs_aa=: 4 : 0
   'DT1 ipiv B'=. y
   'n nrhs'=. $ B
   assert. (e.&'lLuU' , #) x
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) DT1
-  assert. (isvector_jlapack2_ *. (-: <.) :: 0:      *. n = #) ipiv
-  assert.  ismatrix_jlapack2_                                 B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DT1
+  assert. (isvector_jlapack2_ , (-: <.) :: 0:      , n = #) ipiv
+  assert.  ismatrix_jlapack2_                               B
   if. JCMPX ~: 3!:0 DT1  do. DT1=.  DT1 + 0j0    end.
   if. JCMPX ~: 3!:0 B    do. B=.    B   + 0j0    end.
   if. JINT  ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.

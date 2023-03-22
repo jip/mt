@@ -33,7 +33,7 @@ dgehrd=: 3 : 0
   n=. # A
   assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) A
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) A
   select. 3!:0 A
     case. JCMPX do. A=. 9 o. A
     case. JFL   do.
@@ -51,7 +51,7 @@ zgehrd=: 3 : 0
   n=. # A
   assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) A
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 4160 32&p.`1:@.(2&>) n  NB. optimal

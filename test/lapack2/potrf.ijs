@@ -26,7 +26,7 @@ NB. - no check for positive definiteness
 
 dpotrf=: 4 : 0
   assert. (e.&'lLuU' , #) x
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
     case. JFL   do.
@@ -40,7 +40,7 @@ dpotrf=: 4 : 0
 
 zpotrf=: 4 : 0
   assert. (e.&'lLuU' , #) x
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   cdrc=. zpotrf_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1

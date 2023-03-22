@@ -26,7 +26,7 @@ dsyev=: 4 : 0
   'jobV uplo'=. x
   assert. (e.&'nNvV' , #) jobV
   assert. (e.&'lLuU' , #) uplo
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
     case. JFL   do.

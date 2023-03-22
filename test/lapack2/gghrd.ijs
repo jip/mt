@@ -52,8 +52,8 @@ dgghrd=: 4 : 0
   n=. # A
   assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
-  assert.                      (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_                                   ) A
-  assert.                      (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. (-: utri_jlapack2_)    *. n = #) B
+  assert.                      (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  isreal_jlapack2_                                   ) A
+  assert.                      (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  isreal_jlapack2_ ,  (-: utri_jlapack2_)    ,  n = #) B
   assert. (compQ e. 'nNiI') +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Q1
   assert. (compZ e. 'nNiI') +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Z1
   select. 3!:0 A
@@ -97,8 +97,8 @@ zgghrd=: 4 : 0
   n=. # A
   assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
-  assert.                      (ismatrix_jlapack2_ *. issquare_jlapack2_                                  ) A
-  assert.                      (ismatrix_jlapack2_ *. issquare_jlapack2_ *. (-: utri_jlapack2_) *. (n = #)) B
+  assert.                      (ismatrix_jlapack2_ ,  issquare_jlapack2_                                  ) A
+  assert.                      (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_) ,  (n = #)) B
   assert. (compQ e. 'iInN') +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isunitary_jlapack2_ *. (n = #)) Q1
   assert. (compZ e. 'iInN') +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isunitary_jlapack2_ *. (n = #)) Z1
   if.                    JCMPX ~: 3!:0 A  do. A=.  A  + 0j0 end.

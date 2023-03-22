@@ -31,8 +31,8 @@ dorghr=: 3 : 0
   n=. # A
   assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
-  assert. (ismatrix_jlapack2_ *. isreal_jlapack2_ *. issquare_jlapack2_) A
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_ *. (<: n) = #        ) tau
+  assert. (ismatrix_jlapack2_ , isreal_jlapack2_ , issquare_jlapack2_) A
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #        ) tau
   select. 3!:0 A
     case. JCMPX do. A=. 9 o. A
     case. JFL   do.

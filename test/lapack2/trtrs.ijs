@@ -35,8 +35,8 @@ dtrtrs=: 4 : 0
   assert. (e.&'lLuU'   , #) uplo
   assert. (e.&'nNtTcC' , #) trans
   assert. (e.&'nNuU'   , #) diag
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) A
-  assert. (ismatrix_jlapack2_ *.                       isreal_jlapack2_         ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
+  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 A
     case. JCMPX do. A=. 9 o. A
     case. JFL   do.
@@ -60,8 +60,8 @@ ztrtrs=: 4 : 0
   assert. (e.&'lLuU'   , #) uplo
   assert. (e.&'nNtTcC' , #) trans
   assert. (e.&'nNuU'   , #) diag
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) A
-  assert.  ismatrix_jlapack2_                                 B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
+  assert.  ismatrix_jlapack2_                               B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
   if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   ld=. , 1 >. n

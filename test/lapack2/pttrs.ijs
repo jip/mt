@@ -37,9 +37,9 @@ NB. - no check for positive definiteness
 dpttrs=: 3 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_ *.     n  = #) d
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_ *. (<: n) = #) e
-  assert. (ismatrix_jlapack2_ *. isreal_jlapack2_              ) B
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) e
+  assert. (ismatrix_jlapack2_ , isreal_jlapack2_             ) B
   select. 3!:0 d
     case. JCMPX do. d=. 9 o. d
     case. JFL   do.
@@ -64,9 +64,9 @@ zpttrs=: 4 : 0
   'd e B'=. y
   'n nrhs'=. $ B
   assert. (e.&'lLuU' , #) x
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_ *.     n  = #) d
-  assert. (isvector_jlapack2_ *.                     (<: n) = #) e
-  assert.  ismatrix_jlapack2_                                    B
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
+  assert. (isvector_jlapack2_ ,                    (<: n) = #) e
+  assert.  ismatrix_jlapack2_                                  B
   select. 3!:0 d
     case. JCMPX do. d=. 9 o. d
     case. JFL   do.

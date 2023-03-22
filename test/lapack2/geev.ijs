@@ -30,7 +30,7 @@ NB.   Euclidean norm equal to 1 and largest component real
 dgeev=: 4 : 0
   assert. (e.&'nNvV' , 2 = #) x
   'jobVl jobVr'=. x
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
     case. JFL   do.
@@ -57,7 +57,7 @@ dgeev=: 4 : 0
 zgeev=: 4 : 0
   assert. (e.&'nNvV' , 2 = #) x
   'jobVl jobVr'=. x
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   Vl=. (0 0 [^:(jobVl e. 'nN') $ y) $ 0j0

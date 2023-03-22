@@ -31,8 +31,8 @@ NB. - no check for positive definiteness
 dpttrf=: 3 : 0
   'd e'=. y
   n=. # d
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_              ) d
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_ *. (<: n) = #) e
+  assert. (isvector_jlapack2_ , isreal_jlapack2_             ) d
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) e
   select. 3!:0 d
     case. JCMPX do. d=. 9 o. d
     case. JFL   do.
@@ -51,8 +51,8 @@ dpttrf=: 3 : 0
 zpttrf=: 3 : 0
   'd e'=. y
   n=. # d
-  assert. (isvector_jlapack2_ *. isreal_jlapack2_) d
-  assert. (isvector_jlapack2_ *. (<: n) = #      ) e
+  assert. (isvector_jlapack2_ , isreal_jlapack2_) d
+  assert. (isvector_jlapack2_ , (<: n) = #      ) e
   select. 3!:0 d
     case. JCMPX do. d=. 9 o. d
     case. JFL   do.

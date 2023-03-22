@@ -26,7 +26,7 @@ zheev=: 4 : 0
   'jobV uplo'=. x
   assert. (e.&'nNvV' , #) jobV
   assert. (e.&'lLuU' , #) uplo
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_@((<0 1)&|:)) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_@((<0 1)&|:)) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   NB. lwork=. , 1 >. _1 2 p. n  NB. minimal

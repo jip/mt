@@ -28,7 +28,7 @@ dtrtri=: 4 : 0
   'uplo diag'=. x
   assert. (e.&'lLuU' , #) uplo
   assert. (e.&'nNuU' , #) diag
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
     case. JFL   do.
@@ -44,7 +44,7 @@ ztrtri=: 4 : 0
   'uplo diag'=. x
   assert. (e.&'lLuU' , #) uplo
   assert. (e.&'nNuU' , #) diag
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   cdrc=. ztrtri_jlapack2_ (, uplo) ; (, diag) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1

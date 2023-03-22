@@ -38,8 +38,8 @@ dggev=: 4 : 0
   'jobVl jobVr'=. x
   'A B'=. y
   n=. # A
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_         ) A
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_        ) A
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) B
   select. 3!:0 A
     case. JCMPX do. A=. 9 o. A
     case. JFL   do.
@@ -73,8 +73,8 @@ zggev=: 4 : 0
   'jobVl jobVr'=. x
   'A B'=. y
   n=. # A
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_         ) A
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
   if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   Vl=. (0 0 [^:(jobVl e. 'nN') }. $ y) $ 0j0

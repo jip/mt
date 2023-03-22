@@ -31,8 +31,8 @@ zunghr=: 3 : 0
   n=. # A
   assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) A
-  assert. (isvector_jlapack2_ *. (<: n) = #        ) tau
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
+  assert. (isvector_jlapack2_ , (<: n) = #        ) tau
   if. JCMPX ~: 3!:0 A do. A=.   A   + 0j0 end.
   if. JCMPX ~: 3!:0 A do. tau=. tau + 0j0 end.
   NB. lwork=. , 1 >. ihi-ilo  NB. minimal

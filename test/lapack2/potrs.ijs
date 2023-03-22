@@ -32,8 +32,8 @@ dpotrs=: 4 : 0
   'T B'=. y
   'n nrhs'=. $ B
   assert. (e.&'lLuU' , #) x
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) T
-  assert. (ismatrix_jlapack2_ *.                       isreal_jlapack2_         ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) T
+  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 T
     case. JCMPX do. T=. 9 o. T
     case. JFL   do.
@@ -54,8 +54,8 @@ zpotrs=: 4 : 0
   'T B'=. y
   'n nrhs'=. $ B
   assert. (e.&'lLuU' , #) x
-  assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) T
-  assert.  ismatrix_jlapack2_                                 B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) T
+  assert.  ismatrix_jlapack2_                               B
   if. JCMPX ~: 3!:0 T do. T=. T + 0j0 end.
   if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   ld=. , 1 >. n

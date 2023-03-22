@@ -40,7 +40,7 @@ dsytrs_aa=: 4 : 0
   'n nrhs'=. $ B
   assert. (e.&'lLuU' , #) x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) DT1
-  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0:    , n = #) ipiv
+  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0     , n = #) ipiv
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 DT1
     case. JCMPX do. DT1=. 9 o. DT1

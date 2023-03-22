@@ -42,7 +42,7 @@ dsytrs=: 4 : 0
   'n nrhs'=. $ B
   assert. (e.&'lLuU' , #) x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) DPT1
-  assert. (isvector_jlapack2_                      , (-: <.) :: 0:    , n = #) ipiv
+  assert. (isvector_jlapack2_                      , (-: <.) :: 0     , n = #) ipiv
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 DPT1
     case. JCMPX do. DPT1=. 9 o. DPT1

@@ -36,7 +36,7 @@ dgetrs=: 4 : 0
   'n nrhs'=. $ B
   assert. (e.&'nNtTcC' , #) x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) L1U
-  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0:    , n = #) ipiv
+  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0     , n = #) ipiv
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 L1U
     case. JCMPX do. L1U=. 9 o. L1U
@@ -60,7 +60,7 @@ zgetrs=: 4 : 0
   'n nrhs'=. $ B
   assert. (e.&'nNtTcC' , #) x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
-  assert. (isvector_jlapack2_ , (-: <.) :: 0:      , n = #) ipiv
+  assert. (isvector_jlapack2_ , (-: <.) :: 0       , n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
   if. JCMPX ~: 3!:0 L1U  do. L1U=.  L1U + 0j0    end.
   if. JCMPX ~: 3!:0 B    do. B=.    B   + 0j0    end.

@@ -139,29 +139,29 @@ NB. - tru1coni simulates LAPACK's xTRCON('i','U','U')
 NB. - trucon1 simulates LAPACK's xTRCON('1','U','N')
 NB. - truconi simulates LAPACK's xTRCON('i','U','N')
 
-gecon1=: 1:`(norm1 con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
-geconi=: 1:`(normi con (getrilu1p@getrflu1p) :: 0:)@.(*@#)
+gecon1=: 1:`(norm1 con (getrilu1p@getrflu1p) :: 0)@.(*@#)
+geconi=: 1:`(normi con (getrilu1p@getrflu1p) :: 0)@.(*@#)
 
-hecon1=: 1:`(norm1 con (hetripl@hetrfpl) :: 0:)@.(*@#)
-heconi=: 1:`(normi con (hetripl@hetrfpl) :: 0:)@.(*@#)
+hecon1=: 1:`(norm1 con (hetripl@hetrfpl) :: 0)@.(*@#)
+heconi=: 1:`(normi con (hetripl@hetrfpl) :: 0)@.(*@#)
 
-pocon1=: 1:`(norm1 con (potril@potrfl) :: 0:)@.(*@#)
-poconi=: 1:`(normi con (potril@potrfl) :: 0:)@.(*@#)
+pocon1=: 1:`(norm1 con (potril@potrfl) :: 0)@.(*@#)
+poconi=: 1:`(normi con (potril@potrfl) :: 0)@.(*@#)
 
-ptcon1=: 1:`(norm1 con pttril :: 0:)@.(*@#)
-ptconi=: 1:`(normi con pttril :: 0:)@.(*@#)
+ptcon1=: 1:`(norm1 con pttril :: 0)@.(*@#)
+ptconi=: 1:`(normi con pttril :: 0)@.(*@#)
 
-trl1con1=: 1:`(norm1 con trtril1 :: 0:)@.(*@#)
-trl1coni=: 1:`(normi con trtril1 :: 0:)@.(*@#)
-trlcon1=:  1:`(norm1 con trtril  :: 0:)@.(*@#)
-trlconi=:  1:`(normi con trtril  :: 0:)@.(*@#)
-tru1con1=: 1:`(norm1 con trtriu1 :: 0:)@.(*@#)
-tru1coni=: 1:`(normi con trtriu1 :: 0:)@.(*@#)
-trucon1=:  1:`(norm1 con trtriu  :: 0:)@.(*@#)
-truconi=:  1:`(normi con trtriu  :: 0:)@.(*@#)
+trl1con1=: 1:`(norm1 con trtril1 :: 0)@.(*@#)
+trl1coni=: 1:`(normi con trtril1 :: 0)@.(*@#)
+trlcon1=:  1:`(norm1 con trtril  :: 0)@.(*@#)
+trlconi=:  1:`(normi con trtril  :: 0)@.(*@#)
+tru1con1=: 1:`(norm1 con trtriu1 :: 0)@.(*@#)
+tru1coni=: 1:`(normi con trtriu1 :: 0)@.(*@#)
+trucon1=:  1:`(norm1 con trtriu  :: 0)@.(*@#)
+truconi=:  1:`(normi con trtriu  :: 0)@.(*@#)
 
-uncon1=: 1:`(norm1 con ct :: 0:)@.(*@#)
-unconi=: 1:`(normi con ct :: 0:)@.(*@#)
+uncon1=: 1:`(norm1 con ct :: 0)@.(*@#)
+unconi=: 1:`(normi con ct :: 0)@.(*@#)
 
 NB. ---------------------------------------------------------
 NB. laic11

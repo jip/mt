@@ -40,7 +40,7 @@ zhetri2=: 4 : 0
   assert. (e.&'lLuU' , #) x
   n=. # ipiv
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DPT1
-  assert. (isvector_jlapack2_ , (-: <.) :: 0:             ) ipiv
+  assert. (isvector_jlapack2_ , (-: <.) :: 0              ) ipiv
   if. JCMPX ~: 3!:0 DPT1 do. DPT1=. DPT1 + 0j0 end.
   if. JINT  ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
   lwork=. , (n + 64 + 1) * (64 + 3)  NB. minimal

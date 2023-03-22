@@ -56,7 +56,7 @@ zptsv=: 3 : 0
   'n nrhs'=. $ B
   assert. (isvector_jlapack2_ *. isreal_jlapack2_ *.     n  = #) d
   assert. (isvector_jlapack2_ *.                     (<: n) = #) e
-  assert.  ismatrix_jlapack2_                                 B
+  assert.  ismatrix_jlapack2_                                    B
   select. 3!:0 d
     case. JCMPX do. d=. 9 o. d
     case. JFL   do.

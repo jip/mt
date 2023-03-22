@@ -51,8 +51,8 @@ dormlq=: 4 : 0
   'm n'=. sh=. $ C
   'lda s'=. $ A
   k=. # tau
-  assert. (1 = # side ) , side  e. 'lLrR'
-  assert. (1 = # trans) , trans e. 'nNtT'
+  assert. (e.&'lLrR' , #) side
+  assert. (e.&'nNtT' , #) trans
   assert. s = sh {~ side e. 'rR'
   assert. (_1 , s) I. k
   assert. lda >: 1 >. k

@@ -25,7 +25,7 @@ NB. - the verbs below are loaded into the current locale
 NB. - no check for positive definiteness
 
 dpotrf=: 4 : 0
-  assert. (1 = # x) , x e. 'lLuU'
+  assert. (e.&'lLuU' , #) x
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
@@ -39,7 +39,7 @@ dpotrf=: 4 : 0
 )
 
 zpotrf=: 4 : 0
-  assert. (1 = # x) , x e. 'lLuU'
+  assert. (e.&'lLuU' , #) x
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y

@@ -24,8 +24,8 @@ NB. - the verbs below are loaded into the current locale
 
 zheev=: 4 : 0
   'jobV uplo'=. x
-  assert. (1 = # jobV) , jobV e. 'nNvV'
-  assert. (1 = # uplo) , uplo e. 'lLuU'
+  assert. (e.&'nNvV' , #) jobV
+  assert. (e.&'lLuU' , #) uplo
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_@((<0 1)&|:)) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y

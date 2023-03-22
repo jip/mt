@@ -57,9 +57,9 @@ NB. - the verbs below are loaded into the current locale
 
 dhgeqz=: 4 : 0
   'job compQ compZ'=. x
-  assert. (1 = # job  ) , job   e. 'eEsS'
-  assert. (1 = # compQ) , compQ e. 'nNiIvV'
-  assert. (1 = # compZ) , compZ e. 'nNiIvV'
+  assert. (e.&'eEsS'   , #) job
+  assert. (e.&'nNiIvV' , #) compQ
+  assert. (e.&'nNiIvV' , #) compZ
   'ilo ihi H T Q1 Z1'=. y
   n=. # H
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
@@ -107,9 +107,9 @@ dhgeqz=: 4 : 0
 
 zhgeqz=: 4 : 0
   'job compQ compZ'=. x
-  assert. (1 = # job  ) , job   e. 'eEsS'
-  assert. (1 = # compQ) , compQ e. 'nNiIvV'
-  assert. (1 = # compZ) , compZ e. 'nNiIvV'
+  assert. (e.&'eEsS'   , #) job
+  assert. (e.&'nNiIvV' , #) compQ
+  assert. (e.&'nNiIvV' , #) compZ
   'ilo ihi H T Q1 Z1'=. y
   n=. # H
   assert. (= <.)                          ilo , ihi

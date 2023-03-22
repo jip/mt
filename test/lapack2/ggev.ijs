@@ -34,7 +34,7 @@ NB. - each eigenvector is scaled so the largest component has
 NB.     |Re(V(i))| + |Im(Vi)| = 1
 
 dggev=: 4 : 0
-  assert. (2 = # x) , x e. 'nNvV'
+  assert. (e.&'nNvV' , 2 = #) x
   'jobVl jobVr'=. x
   'A B'=. y
   n=. # A
@@ -69,7 +69,7 @@ dggev=: 4 : 0
 )
 
 zggev=: 4 : 0
-  assert. (2 = # x) , x e. 'nNvV'
+  assert. (e.&'nNvV' , 2 = #) x
   'jobVl jobVr'=. x
   'A B'=. y
   n=. # A

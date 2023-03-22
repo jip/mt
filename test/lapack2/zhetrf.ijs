@@ -33,7 +33,7 @@ NB. Notes:
 NB. - the verbs below are loaded into the current locale
 
 zhetrf=: 4 : 0
-  assert. (1 = # x) , x e. 'lLuU'
+  assert. (e.&'lLuU' , #) x
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y

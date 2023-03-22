@@ -51,8 +51,8 @@ zunmql=: 4 : 0
   'm n'=. sh=. $ C
   'lda k'=. $ A
   s=. sh {~ side e. 'rR'
-  assert. (1 = # side ) , side  e. 'lLrR'
-  assert. (1 = # trans) , trans e. 'nNcC'
+  assert. (e.&'lLrR' , #) side
+  assert. (e.&'nNcC' , #) trans
   assert. (_1 , s) I. k
   assert. lda >: 1 >. s
   assert.  ismatrix_jlapack2_           A

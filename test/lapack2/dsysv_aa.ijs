@@ -37,7 +37,7 @@ NB. - the verbs below are loaded into the current locale
 dsysv_aa=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. (1 = # x) , x e. 'lLuU'
+  assert. (e.&'lLuU' , #) x
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) A
   assert. (ismatrix_jlapack2_ *.                       isreal_jlapack2_         ) B
   select. 3!:0 A

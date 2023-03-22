@@ -35,7 +35,7 @@ dgels=: 4 : 0
   'A B'=. y
   'm n'=. $ A
   'k nrhs'=. $ B
-  assert. *./ (1 = # x) , x e. 'nNtT'
+  assert. (1 = # x) , x e. 'nNtT'
   assert. (ismatrix_jlapack2_ *. isreal_jlapack2_) A
   assert. (ismatrix_jlapack2_ *. isreal_jlapack2_) B
   if. x e. 'nN' do.
@@ -69,7 +69,7 @@ zgels=: 4 : 0
   'A B'=. y
   'm n'=. $ A
   'k nrhs'=. $ B
-  assert. *./ (1 = # x) , x e. 'nNcC'
+  assert. (1 = # x) , x e. 'nNcC'
   assert. ismatrix_jlapack2_ A
   assert. ismatrix_jlapack2_ B
   if. x e. 'nN' do.

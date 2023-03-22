@@ -38,7 +38,7 @@ NB. - the verbs below are loaded into the current locale
 dsytrs_aa=: 4 : 0
   'DT1 ipiv B'=. y
   'n nrhs'=. $ B
-  assert. *./ (1 = # x) , x e. 'lLuU'
+  assert. (1 = # x) , x e. 'lLuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) DT1
   assert. (isvector_jlapack2_ *.                       (-: <.) :: 0: *.    n = #) ipiv
   assert. (ismatrix_jlapack2_ *.                       isreal_jlapack2_         ) B

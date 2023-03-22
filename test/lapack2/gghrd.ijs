@@ -46,7 +46,7 @@ NB. Notes:
 NB. - the verbs below are loaded into the current locale
 
 dgghrd=: 4 : 0
-  assert. *./ (2 = # x) , x e. 'nNiIvV'
+  assert. (2 = # x) , x e. 'nNiIvV'
   'compQ compZ'=. x
   'ilo ihi A B Q1 Z1'=. y
   n=. # A
@@ -91,7 +91,7 @@ dgghrd=: 4 : 0
 )
 
 zgghrd=: 4 : 0
-  assert. *./ (2 = # x) , x e. 'nNiIvV'
+  assert. (2 = # x) , x e. 'nNiIvV'
   'compQ compZ'=. x
   'ilo ihi A B Q1 Z1'=. y
   n=. # A

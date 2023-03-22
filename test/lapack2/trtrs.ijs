@@ -32,9 +32,9 @@ dtrtrs=: 4 : 0
   'uplo trans diag'=. x
   'A B'=. y
   'n nrhs'=. $ B
-  assert. *./ (1 = # uplo ) , uplo  e. 'lLuU'
-  assert. *./ (1 = # trans) , trans e. 'nNtTcC'
-  assert. *./ (1 = # diag ) , diag  e. 'nNuU'
+  assert. (1 = # uplo ) , uplo  e. 'lLuU'
+  assert. (1 = # trans) , trans e. 'nNtTcC'
+  assert. (1 = # diag ) , diag  e. 'nNuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) A
   assert. (ismatrix_jlapack2_ *.                       isreal_jlapack2_         ) B
   select. 3!:0 A
@@ -57,9 +57,9 @@ ztrtrs=: 4 : 0
   'uplo trans diag'=. x
   'A B'=. y
   'n nrhs'=. $ B
-  assert. *./ (1 = # uplo ) , uplo  e. 'lLuU'
-  assert. *./ (1 = # trans) , trans e. 'nNtTcC'
-  assert. *./ (1 = # diag ) , diag  e. 'nNuU'
+  assert. (1 = # uplo ) , uplo  e. 'lLuU'
+  assert. (1 = # trans) , trans e. 'nNtTcC'
+  assert. (1 = # diag ) , diag  e. 'nNuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) A
   assert.  ismatrix_jlapack2_                                 B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.

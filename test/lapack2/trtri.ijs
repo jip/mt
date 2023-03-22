@@ -26,8 +26,8 @@ NB. - the verbs below are loaded into the current locale
 
 dtrtri=: 4 : 0
   'uplo diag'=. x
-  assert. *./ (1 = # uplo) , uplo  e. 'lLuU'
-  assert. *./ (1 = # diag) , diag  e. 'nNuU'
+  assert. (1 = # uplo) , uplo  e. 'lLuU'
+  assert. (1 = # diag) , diag  e. 'nNuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
@@ -42,8 +42,8 @@ dtrtri=: 4 : 0
 
 ztrtri=: 4 : 0
   'uplo diag'=. x
-  assert. *./ (1 = # uplo) , uplo  e. 'lLuU'
-  assert. *./ (1 = # diag) , diag  e. 'nNuU'
+  assert. (1 = # uplo) , uplo  e. 'lLuU'
+  assert. (1 = # diag) , diag  e. 'nNuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y

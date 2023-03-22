@@ -37,7 +37,7 @@ NB. - the verbs below are loaded into the current locale
 
 dsytri2=: 4 : 0
   'DPT1 ipiv'=. y
-  assert. *./ (1 = # x) , x e. 'lLuU'
+  assert. (1 = # x) , x e. 'lLuU'
   n=. # ipiv
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) DPT1
   assert. (isvector_jlapack2_ *.                       (-: <.) :: 0:            ) ipiv

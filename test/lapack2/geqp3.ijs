@@ -40,8 +40,8 @@ NB. - the verbs below are loaded into the current locale
 dgeqp3=: 3 : 0
   'A pvt'=. y
   k=. <./ 'm n'=. $ A
-  assert. (ismatrix_jlapack2_ *. isreal_jlapack2_         ) A
-  assert. (isvector_jlapack2_ *. *./@(0 1 e.~ ,)  *. n = #) pvt
+  assert. (ismatrix_jlapack2_ *. isreal_jlapack2_        ) A
+  assert. (isvector_jlapack2_ ,  (0 1 e.~ ,)      , n = #) pvt
   select. 3!:0 A
     case. JCMPX do. A=. 9 o. A
     case. JFL   do.
@@ -58,8 +58,8 @@ dgeqp3=: 3 : 0
 zgeqp3=: 3 : 0
   'A pvt'=. y
   k=. <./ 'm n'=. $ A
-  assert.  ismatrix_jlapack2_                               A
-  assert. (isvector_jlapack2_ *. *./@(0 1 e.~ ,)  *. n = #) pvt
+  assert.  ismatrix_jlapack2_                        A
+  assert. (isvector_jlapack2_ , (0 1 e.~ ,) , n = #) pvt
   if. JCMPX ~: 3!:0 A   do. A=.   A  + 0j0 end.
   if. JINT  ~: 3!:0 pvt do. pvt=. pvt + 00 end.
   NB. lwork=. , >: n  NB. minimal

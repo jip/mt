@@ -28,7 +28,7 @@ NB. - the computed eigenvectors are normalized to have
 NB.   Euclidean norm equal to 1 and largest component real
 
 dgeev=: 4 : 0
-  assert. *./ (2 = # x) , x e. 'nNvV'
+  assert. (2 = # x) , x e. 'nNvV'
   'jobVl jobVr'=. x
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
   select. 3!:0 y
@@ -55,7 +55,7 @@ dgeev=: 4 : 0
 )
 
 zgeev=: 4 : 0
-  assert. *./ (2 = # x) , x e. 'nNvV'
+  assert. (2 = # x) , x e. 'nNvV'
   'jobVl jobVr'=. x
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.

@@ -52,8 +52,8 @@ zunmhr=: 4 : 0
   'ilo ihi A tau C'=. y
   'm n'=. sh=. $ C
   s=. # A
-  assert. *./ (1 = # side ) , side  e. 'lLrR'
-  assert. *./ (1 = # trans) , trans e. 'nNcC'
+  assert. (1 = # side ) , side  e. 'lLrR'
+  assert. (1 = # trans) , trans e. 'nNcC'
   assert. s = sh {~ side e. 'rR'
   assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , s)&I. , <:/)@.(* s) ilo , ihi

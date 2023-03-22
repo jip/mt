@@ -473,7 +473,7 @@ mmic=: 4 : 0
   iso=. <. iso  NB. convert to integer type
   'indices must be 1-based' assert 0 (< ,) iso
   iso=. <: iso  NB. translate MM's 1-based ISO to J's 0-based ones
-  'index exceeding dimension is detected' assert *./ iso <"1 shape
+  'index exceeding dimension is detected' assert iso <"1 shape
   if. ioField e. 1 2 do.  NB. integer or real
     'integer data type was expected but real data type is detected' assert (JFL = 3!:0 dat) *: 1 = ioField
       NB. don't check a reverse situation since the following is possible: (42 -: ". '42.0')

@@ -34,7 +34,7 @@ NB. - the verbs below are loaded into the current locale
 dgetrs=: 4 : 0
   'L1U ipiv B'=. y
   'n nrhs'=. $ B
-  assert. *./ (1 = # x) , x e. 'nNtTcC'
+  assert. (1 = # x) , x e. 'nNtTcC'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) L1U
   assert. (isvector_jlapack2_ *.                       (-: <.) :: 0:    *. n = #) ipiv
   assert. (ismatrix_jlapack2_ *.                       isreal_jlapack2_         ) B
@@ -58,7 +58,7 @@ dgetrs=: 4 : 0
 zgetrs=: 4 : 0
   'L1U ipiv B'=. y
   'n nrhs'=. $ B
-  assert. *./ (1 = # x) , x e. 'nNtTcC'
+  assert. (1 = # x) , x e. 'nNtTcC'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) L1U
   assert. (isvector_jlapack2_ *. (-: <.) :: 0:      *. n = #) ipiv
   assert.  ismatrix_jlapack2_                                 B

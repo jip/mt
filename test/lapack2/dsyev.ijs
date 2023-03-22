@@ -24,8 +24,8 @@ NB. - the verbs below are loaded into the current locale
 
 dsyev=: 4 : 0
   'jobV uplo'=. x
-  assert. *./ (1 = # jobV) , jobV e. 'nNvV'
-  assert. *./ (1 = # uplo) , uplo e. 'lLuU'
+  assert. (1 = # jobV) , jobV e. 'nNvV'
+  assert. (1 = # uplo) , uplo e. 'lLuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y

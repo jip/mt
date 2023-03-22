@@ -31,7 +31,7 @@ NB. Notes:
 NB. - the verbs below are loaded into the current locale
 
 dsytrf_aa=: 4 : 0
-  assert. *./ (1 = # x) , x e. 'lLuU'
+  assert. (1 = # x) , x e. 'lLuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y

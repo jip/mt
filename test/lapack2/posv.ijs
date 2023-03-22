@@ -31,7 +31,7 @@ NB. - no check for positive definiteness
 dposv=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. *./ (1 = # x) , x e. 'lLuU'
+  assert. (1 = # x) , x e. 'lLuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. n = #) A
   assert. (ismatrix_jlapack2_ *.                       isreal_jlapack2_         ) B
   select. 3!:0 A
@@ -53,7 +53,7 @@ dposv=: 4 : 0
 zposv=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. *./ (1 = # x) , x e. 'lLuU'
+  assert. (1 = # x) , x e. 'lLuU'
   assert. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. n = #) A
   assert.  ismatrix_jlapack2_                                 B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.

@@ -57,7 +57,6 @@ dgels=: 4 : 0
   end.
   lda=. , 1 >. m
   ldb=. , lda >. n
-  B=. ldb {. B
   NB. lwork=. , 1 >. nrhs (] + >.) m <. n  NB. minimal
   lwork=. , 1 >. nrhs (] + 32 * >.) m <. n  NB. optimal
   cdrc=. dgels_jlapack2_ (, x) ; (, m) ; (, n) ; (, nrhs) ; (|: A) ; lda ; (|: B) ; ldb ; (lwork $ 0.0) ; lwork ; , _1
@@ -83,7 +82,6 @@ zgels=: 4 : 0
   if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   lda=. , 1 >. m
   ldb=. , lda >. n
-  B=. ldb {. B
   NB. lwork=. , 1 >. nrhs (] + >.) m <. n  NB. minimal
   lwork=. , 1 >. nrhs (] + 32 * >.) m <. n  NB. optimal
   cdrc=. zgels_jlapack2_ (, x) ; (, m) ; (, n) ; (, nrhs) ; (|: A) ; lda ; (|: B) ; ldb ; (lwork $ 0j0) ; lwork ; , _1

@@ -16,7 +16,7 @@ NB.   trans - scalar, character, case-insensitive, specifies
 NB.           op(Q):
 NB.             'N' - op(Q) := Q    (no transpose)
 NB.             'T' - op(Q) := Q^T  (transpose)
-NB.   A     - lda×k-matrix, contains Qf
+NB.   A     - s×k-matrix, contains Qf
 NB.   tau   - k-vector, the scalar factors of elementary
 NB.           reflectors as returned by DGEQRF
 NB.   C     - m×n-matrix, real, the input to be multiplied by
@@ -40,7 +40,6 @@ NB.   n     ≥ 0, the number of columns in B and C
 NB.   s     = m if side='L' or s = n if side='R'
 NB.   k     ∈ [0,s], the number of elementary reflectors
 NB.           whose product defines the matrix Q
-NB.   lda   ≥ max(1,s)
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale
@@ -49,12 +48,10 @@ dormqr=: 4 : 0
   'side trans'=. x
   'A tau C'=. y
   'm n'=. sh=. $ C
-  'lda k'=. $ A
-  s=. sh {~ side e. 'rR'
+  's k'=. $ A
   assert. (e.&'lLrR' , #) side
   assert. (e.&'nNtT' , #) trans
   assert. (_1 , s) I. k
-  assert. lda >: 1 >. s
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_        ) A
   assert. (isvector_jlapack2_ , isreal_jlapack2_ , k = #) tau
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_        ) C
@@ -80,7 +77,7 @@ dormqr=: 4 : 0
   tsize=. nbmax * ldt
   nb=. nbmax <. ilaenv
   lwork=. , tsize + nb * 1 >. sh {~ side e. 'lL'  NB. optimal
-  cdrc=. dormqr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (|: A) ; (, lda) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0.0) ; lwork ; , _1
+  cdrc=. dormqr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
   |: 9 {:: cdrc
 )

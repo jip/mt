@@ -19,7 +19,7 @@ NB.             'C' - op(Z) := Z^H  (transpose)
 NB.   l     ∈ [0,s], the number of columns of the matrix A
 NB.           containing the meaningful part of the
 NB.           Householder reflectors
-NB.   A     - lda×s-matrix, contains Zf
+NB.   A     - k×s-matrix, contains Zf
 NB.   tau   - k-vector, the scalar factors of elementary
 NB.           reflectors as returned by ZTZRZF
 NB.   C     - m×n-matrix, complex, the input to be multiplied
@@ -43,7 +43,6 @@ NB.   n     ≥ 0, the number of columns in B and C
 NB.   s     = m if side='L' or s = n if side='R'
 NB.   k     ∈ [0,s], the number of elementary reflectors
 NB.           whose product defines the matrix Z
-NB.   lda   ≥ max(1,k)
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale
@@ -52,13 +51,11 @@ zunmrz=: 4 : 0
   'side trans'=. x
   'l A tau C'=. y
   'm n'=. sh=. $ C
-  'lda s'=. $ A
-  k=. # tau
+  'k s'=. $ A
   assert. (e.&'lLrR' , #) side
   assert. (e.&'nNcC' , #) trans
   assert. s = sh {~ side e. 'rR'
   assert. (_1 , s) I. k , l
-  assert. lda >: 1 >. k
   assert. ismatrix_jlapack2_           A
   assert. (isvector_jlapack2_ , k = #) tau
   assert.  ismatrix_jlapack2_          C
@@ -72,7 +69,7 @@ zunmrz=: 4 : 0
   tsize=. nbmax * ldt
   nb=. nbmax <. ilaenv
   lwork=. , tsize + nb * 1 >. sh {~ side e. 'lL'  NB. optimal
-  cdrc=. zunmrz_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (, l) ; (|: A) ; (, lda) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
+  cdrc=. zunmrz_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (, l) ; (|: A) ; (, 1 >. k) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
   |: 10 {:: cdrc
 )

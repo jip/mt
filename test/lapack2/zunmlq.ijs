@@ -16,7 +16,7 @@ NB.   trans - scalar, character, case-insensitive, specifies
 NB.           op(Q):
 NB.             'N' - op(Q) := Q    (no transpose)
 NB.             'C' - op(Q) := Q^H  (conjugate transpose)
-NB.   A     - lda×s-matrix, contains Qf
+NB.   A     - k×s-matrix, contains Qf
 NB.   tau   - k-vector, the scalar factors of elementary
 NB.           reflectors as returned by ZGELQF
 NB.   C     - m×n-matrix, complex, the input to be multiplied
@@ -40,7 +40,6 @@ NB.   n     ≥ 0, the number of columns in B and C
 NB.   s     = m if side='L' or s = n if side='R'
 NB.   k     ∈ [0,s], the number of elementary reflectors
 NB.           whose product defines the matrix Q
-NB.   lda   ≥ max(1,k)
 NB.
 NB. Notes:
 NB. - the verbs below are loaded into the current locale
@@ -49,13 +48,11 @@ zunmlq=: 4 : 0
   'side trans'=. x
   'A tau C'=. y
   'm n'=. sh=. $ C
-  'lda s'=. $ A
-  k=. # tau
+  'k s'=. $ A
   assert. (e.&'lLrR' , #) side
   assert. (e.&'nNcC' , #) trans
   assert. s = sh {~ side e. 'rR'
   assert. (_1 , s) I. k
-  assert. lda >: 1 >. k
   assert.  ismatrix_jlapack2_          A
   assert. (isvector_jlapack2_ , k = #) tau
   assert.  ismatrix_jlapack2_          C
@@ -69,7 +66,7 @@ zunmlq=: 4 : 0
   tsize=. nbmax * ldt
   nb=. nbmax <. ilaenv
   lwork=. , tsize + nb * 1 >. sh {~ side e. 'lL'  NB. optimal
-  cdrc=. zunmlq_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (|: A) ; (, lda) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
+  cdrc=. zunmlq_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. k) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
   |: 9 {:: cdrc
 )

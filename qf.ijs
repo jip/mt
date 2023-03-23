@@ -1264,7 +1264,7 @@ NB.   Test:
 NB.   - 128!:0 (built-in)
 NB.   - qrd (math/misc addon)
 NB.   - xGELQF xGEQLF xGEQRF xGERQF (math/lapack2 addon)
-NB.   - gelqf geqlf geqrf gerqf (math/mt addon)
+NB.   - gexxf (math/mt addon)
 NB.   by general matrix
 NB.
 NB. Syntax:
@@ -1319,7 +1319,7 @@ NB.
 NB. Description:
 NB.   Test:
 NB.   - xTZRZF (math/lapack2 addon)
-NB.   - tzlzf tzzlf tzzrf tzrzf (math/mt addon)
+NB.   - tzxxf (math/mt addon)
 NB.   by trapezoidal matrix
 NB.
 NB. Syntax:

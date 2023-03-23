@@ -166,7 +166,7 @@ NB.   (normit_mt_"1    -: normitr_mt_)       10 10 ?@$ 0
 NB.   (normit_mt_"1    -: normitr_mt_) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
-NB. - norm1t implements BLAS's DASUM, DZASUM
+NB. - norm1t implements BLAS' DASUM, DZASUM
 
 norm1t=:  norm1tc         (max@)  NB. 1-norm of vector (matrix)
 norm1tc=: sorim csum              NB. 1-norm of vector (matrix columns)
@@ -201,7 +201,7 @@ NB.   (norms_mt_"1    -: normsr_mt_)       10 10 ?@$ 0
 NB.   (norms_mt_"1    -: normsr_mt_) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
-NB. - norms implements BLAS's DNRM2, DZNRM2 and models
+NB. - norms implements BLAS' DNRM2, DZNRM2 and models
 NB.   xLASSQ, LAPACK's DLANSY('f'), xLANGE('f'), ZLANHE('f')
 NB. - to force norms act like any of: DLANSB('f'),
 NB.   DLANST('f'), xLANGB('f'), xLANGT('f'), xLANHS('f'),

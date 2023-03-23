@@ -81,8 +81,8 @@ NB. ---------------------------------------------------------
 NB. System config
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NB. IEEE 754-1985 double-precision 64 bit floating point
-NB. constants
+NB. IEEE 754-1985 floating point constants for single
+NB. (32-bit) and double (64-bit) precision
 
 NB. basic values
 FP_BASE=: 2                                              NB. floating point base

@@ -715,7 +715,10 @@ NB. ---------------------------------------------------------
 NB. testunmq
 NB.
 NB. Description:
-NB.   Test unmxxxx by general matrices
+NB.   Test:
+NB.   - DORMxx ZUNMxx (math/lapack2 addon)
+NB.   - unmxxxx (math/mt addon)
+NB.   by general matrices
 NB.
 NB. Syntax:
 NB.   testunmq (A;C)
@@ -1057,7 +1060,10 @@ NB. ---------------------------------------------------------
 NB. testunmz
 NB.
 NB. Description:
-NB.   Test unmxxxx by trapezoidal and general matrices
+NB.   Test:
+NB.   - DORMRZ ZUNMRZ (math/lapack2 addon)
+NB.   - unmxxxx (math/mt addon)
+NB.   by trapezoidal and general matrices
 NB.
 NB. Syntax:
 NB.   testunmz (A;C)
@@ -1274,7 +1280,10 @@ NB. ---------------------------------------------------------
 NB. testunmhr
 NB.
 NB. Description:
-NB.   Test unmhrxxx by square matrices
+NB.   Test:
+NB.   - DORMHR ZUNMHR (math/lapack2 addon)
+NB.   - unmhrxxx (math/mt addon)
+NB.   by square matrices
 NB.
 NB. Syntax:
 NB.   testunmhr (A;C)

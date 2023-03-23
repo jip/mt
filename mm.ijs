@@ -738,7 +738,7 @@ NB.
 NB. Syntax:
 NB.   testmm A
 NB. where
-NB.   A - m×n-matrix
+NB.   A - array of any rank > 1
 NB.
 NB. Notes:
 NB. - berr shows boolean 'is matched exactly'

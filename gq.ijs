@@ -503,7 +503,10 @@ NB. ---------------------------------------------------------
 NB. testungq
 NB.
 NB. Description:
-NB.   Test ungxx by general matrix
+NB.   Test:
+NB.   - DORGxx ZUNGxx (math/lapack2 addon)
+NB.   - ungxx (math/mt addon)
+NB.   by general matrix
 NB.
 NB. Syntax:
 NB.   testungq A
@@ -678,7 +681,10 @@ NB. ---------------------------------------------------------
 NB. testunghr
 NB.
 NB. Description:
-NB.   Test unghrx by square matrix
+NB.   Test:
+NB.   - DORGHR ZUNGHR (math/lapack2 addon)
+NB.   - unghrx (math/mt addon)
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   testunghr A

@@ -8,10 +8,9 @@ NB. Syntax:
 NB.   'DPT1 ipiv X'=. uplo dsysv A ; B
 NB. where
 NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of DPT1 only, form
-NB.                  is:
+NB.            'L' - use lower triangle of A only, form is:
 NB.                    PL1 * D * PL1^T = A
-NB.            'U' - use upper triangle of DPT1 only, form
+NB.            'U' - use upper triangle of A only, form
 NB.                  is:
 NB.                    PU1 * D * PU1^T = A
 NB.   A    - n×n-matrix, real, the symmetric to be factored

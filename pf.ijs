@@ -38,6 +38,8 @@ NB. <http://www.gnu.org/licenses/>.
 coclass 'mt'
 
 NB. =========================================================
+NB. Concepts
+NB.
 NB. References:
 NB. [1] C. H. Bischof, G. Quintana-Ortí. Computing Rank-
 NB.     Revealing QR Factorizations of Dense Matrices. ACM
@@ -2210,7 +2212,10 @@ NB. ---------------------------------------------------------
 NB. testgepf
 NB.
 NB. Description:
-NB.   Test gexxf by general matrix
+NB.   Test:
+NB.   - xGEQP3 (math/lapack2 addon)
+NB.   - gexxf (math/mt addon)
+NB.   by general matrix
 NB.
 NB. Syntax:
 NB.   testgepf A

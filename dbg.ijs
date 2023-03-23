@@ -83,7 +83,7 @@ NB.   v     - verb to switch to debug mode
 NB.   vdbg  - being verb v equipped by output of debug info
 NB.
 NB. Application:
-NB. - to debug verb '*' in verb (+/ .*) try:
-NB.     C=. A (+/ .(* dbg_mt_ '*')) B
+NB. - to debug verb '+/' in verb (+/ .*) try:
+NB.     C=. A ((+/ dbg_mt_ '+/') .*) B
 
 dbg=: 2 : 'u`(u dbg1_mt_ n)`(u dbg2_mt_ n)@.(''DEBUG_mt_''~)'

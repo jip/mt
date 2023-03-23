@@ -4,7 +4,7 @@ NB. Description:
 NB.   Compute the inverse of a triangular matrix
 NB.
 NB. Syntax:
-NB.   T=. uplo xtrtri A
+NB.   T=. (uplo ; diag) xtrtri A
 NB. where
 NB.   uplo - scalar, character, case-insensitive:
 NB.            'L' - use lower triangle of A only

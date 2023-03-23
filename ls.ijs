@@ -61,7 +61,7 @@ NB.
 NB. Notes:
 NB. - for scalar sh:
 NB.   - dlarnv2 models LAPACK's DLARNV(2)
-NB.   - zlarnv2 models LAPACK's DLARNV(2)
+NB.   - zlarnv2 models LAPACK's ZLARNV(2)
 
 dlarnv2=: _1 1& randu
 zlarnv2=: _1 1&(randu j. randu)

@@ -68,6 +68,8 @@ dhgeqz=: 4 : 0
   assert.                      (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  isreal_jlapack2_ ,  (-: utri_jlapack2_)    ,  n = #) T
   assert. (compQ e. 'nNiI') +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Q1
   assert. (compZ e. 'nNiI') +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Z1
+  if. JINT ~: 3!:0 ilo do. ilo=. <. 9 o. ilo end.
+  if. JINT ~: 3!:0 ihi do. ihi=. <. 9 o. ihi end.
   select. 3!:0 H
     case. JCMPX do. H=. 9 o. H
     case. JFL   do.
@@ -119,10 +121,12 @@ zhgeqz=: 4 : 0
   assert.                      (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_) ,  n = #) T
   assert. (compQ e. 'iInN') +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isunitary_jlapack2_ *. n = #) Q1
   assert. (compZ e. 'iInN') +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isunitary_jlapack2_ *. n = #) Z1
-  if.                    JCMPX ~: 3!:0 H  do. H=.  H  + 0j0 end.
-  if.                    JCMPX ~: 3!:0 T  do. T=.  T  + 0j0 end.
-  if. (compQ e. 'vV') *. JCMPX ~: 3!:0 Q1 do. Q1=. Q1 + 0j0 end.
-  if. (compZ e. 'vV') *. JCMPX ~: 3!:0 Z1 do. Z1=. Z1 + 0j0 end.
+  if.                    JINT  ~: 3!:0 ilo do. ilo=. <. 9 o. ilo end.
+  if.                    JINT  ~: 3!:0 ihi do. ihi=. <. 9 o. ihi end.
+  if.                    JCMPX ~: 3!:0 H   do. H=.   H  + 0j0    end.
+  if.                    JCMPX ~: 3!:0 T   do. T=.   T  + 0j0    end.
+  if. (compQ e. 'vV') *. JCMPX ~: 3!:0 Q1  do. Q1=.  Q1 + 0j0    end.
+  if. (compZ e. 'vV') *. JCMPX ~: 3!:0 Z1  do. Z1=.  Z1 + 0j0    end.
   Q1=. n (0 0 $ 0j0)"_`(0j0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compQ) Q1
   Z1=. n (0 0 $ 0j0)"_`(0j0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. compZ) Z1
   ldHT=. , 1 >. n

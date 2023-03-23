@@ -60,9 +60,11 @@ zunmhr=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
   assert. (isvector_jlapack2_ , (<: s) = #        ) tau
   assert.  ismatrix_jlapack2_                       C
-  if. JCMPX ~: 3!:0 A do. A=.   A   + 0j0 end.
-  if. JCMPX ~: 3!:0 tau do. tau=. tau + 0j0 end.
-  if. JCMPX ~: 3!:0 C do. C=.   C   + 0j0 end.
+  if. JINT  ~: 3!:0 ilo do. ilo=. <. 9 o. ilo end.
+  if. JINT  ~: 3!:0 ihi do. ihi=. <. 9 o. ihi end.
+  if. JCMPX ~: 3!:0 A   do. A=.   A   + 0j0   end.
+  if. JCMPX ~: 3!:0 tau do. tau=. tau + 0j0   end.
+  if. JCMPX ~: 3!:0 C   do. C=.   C   + 0j0   end.
   NB. lwork=. , 1 >. sh {~ side e. 'lL'  NB. minimal
   lwork=. , 32 * 1 >. sh {~ side e. 'lL'  NB. optimal
   cdrc=. zunmhr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1

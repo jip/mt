@@ -60,6 +60,8 @@ dormhr=: 4 : 0
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_ , issquare_jlapack2_) A
   assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: s) = #        ) tau
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_                     ) C
+  if. JINT ~: 3!:0 ilo do. ilo=. <. 9 o. ilo end.
+  if. JINT ~: 3!:0 ihi do. ihi=. <. 9 o. ihi end.
   select. 3!:0 A
     case. JCMPX do. A=. 9 o. A
     case. JFL   do.

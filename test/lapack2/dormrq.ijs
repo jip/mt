@@ -57,7 +57,7 @@ dormrq=: 4 : 0
   assert. (_1 , s) I. k
   assert. lda >: 1 >. k
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) A
-  assert. (isvector_jlapack2_ , isreal_jlapack2_) tau
+  assert. (isvector_jlapack2_ , isreal_jlapack2_ , k = #) tau
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) C
   select. 3!:0 A
     case. JCMPX do. A=. 9 o. A

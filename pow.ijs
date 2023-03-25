@@ -279,7 +279,7 @@ testdipow=: 3 : 0
   try.
     'v LR'=. geevlvv y               NB. eigendecomposition
     'L R'=. LR
-    assert ((-: ~.) v) +. (-: ct) y  NB. A must be normal (diagonalizable)
+    assert. ((-: ~.) v) +. (-: ct) y  NB. A must be normal (diagonalizable)
     iRh=. L ([ % (mp"1 +)) R         NB. reconstruct R^_1^H , see [1] in dipow
   catch.
     R=. v=. iRh=. _.

@@ -430,7 +430,7 @@ NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  h        )
 NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a     )
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   ((idmat@#) -: po) Q
+NB.   (idmat@# -: po) Q
 NB.   H -: A (mp~ mp ct@]) Q
 NB. where
 NB.   HQf=. (gehrdl~ 0 , #) A
@@ -518,7 +518,7 @@ NB.   (                    a  )    (                    a  )
 NB.                                (     τ1 τ2 τ3 τ4       )
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   ((idmat@#) -: (mp~ ct)) Q
+NB.   (idmat@# -: (mp~ ct)) Q
 NB.   H -: A (ct@] mp mp) Q
 NB. where
 NB.   HQf=. (gehrdu~ 0, #) A

@@ -41,9 +41,9 @@ dsytrs_aa=: 4 : 0
   'DT1 ipiv B'=. y
   'n nrhs'=. $ B
   assert. 'lLuU' e.~ {. x
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) DT1
-  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0     , n = #) ipiv
-  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DT1
+  assert. (isvector_jlapack2_ ,                      n = #) ipiv
+  assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   lwork=. , 1 >. _2 3 p. n  NB. minimal
   cdrc=. dsytrs_aa_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DT1) ; ld ; ipiv ; (|: B) ; ld ; (lwork $ 0.0) ; lwork ; , _1

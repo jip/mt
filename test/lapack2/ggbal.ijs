@@ -35,8 +35,8 @@ dggbal=: 4 : 0
   assert. 'nNpPsSbB' e.~ {. x
   'A B'=. y
   n=. # A
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_        ) A
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) B
   ld=. , 1 >. n
   work=. ((6 * n) >.^:('sSbB' e.~ {. x) 1) $ 0.0
   cdrc=. dggbal_jlapack2_ (, x) ; (, n) ; (|: A) ; ld ; (|: B) ; ld ; (, 0) ; (, 0) ; (n $ 0.0) ; (n $ 0.0) ; work ; , _1

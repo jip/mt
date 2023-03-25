@@ -36,8 +36,8 @@ dgels=: 4 : 0
   'm n'=. $ A
   'k nrhs'=. $ B
   assert. 'nNtT' e.~ {. x
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_) A
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_) B
+  assert. ismatrix_jlapack2_ A
+  assert. ismatrix_jlapack2_ B
   if. 'nN' e.~ {. x do.
     assert. m = k
     xh=. n

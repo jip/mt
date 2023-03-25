@@ -40,8 +40,8 @@ dsysv_aa=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
   assert. 'lLuU' e.~ {. x
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
-  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
+  assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   NB. lwork=. , >./ 1 , (+: n) , (_2 3 p. n)  NB. minimal
   lwork_dsytrf_aa=. 1 >. n * >: 64

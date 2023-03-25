@@ -43,7 +43,7 @@ zhetrs=: 4 : 0
   'n nrhs'=. $ B
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DPT1
-  assert. (isvector_jlapack2_ , (-: <.) :: 0       , n = #) ipiv
+  assert. (isvector_jlapack2_ ,                      n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   cdrc=. zhetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DPT1) ; ld ; ipiv ; (|: B) ; ld ; , _1

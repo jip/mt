@@ -29,7 +29,7 @@ dsyev=: 4 : 0
   'jobV uplo'=. x
   assert. 'nNvV' e.~ {. jobV
   assert. 'lLuU' e.~ {. uplo
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   NB. lwork=. , 1 >. _1 3 p. n  NB. minimal
   lwork=. , 1 >. n * 34  NB. optimal

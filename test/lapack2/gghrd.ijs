@@ -52,12 +52,11 @@ dgghrd=: 4 : 0
   assert. compQ ,&('nNiIvV' e.~ {.) compZ
   'ilo ihi A B Q1 Z1'=. y
   n=. # A
-  assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
-  assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  isreal_jlapack2_                                   ) A
-  assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  isreal_jlapack2_ ,  (-: utri_jlapack2_)    ,  n = #) B
-  assert. ('nNiI' e.~ {. compQ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Q1
-  assert. ('nNiI' e.~ {. compZ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Z1
+  assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_                                   ) A
+  assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_)    ,  n = #) B
+  assert. ('nNiI' e.~ {. compQ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Q1
+  assert. ('nNiI' e.~ {. compZ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Z1
   Q1=. n (0 0 $ 0.0)"_`(0.0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. {. compQ) Q1
   Z1=. n (0 0 $ 0.0)"_`(0.0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. {. compZ) Z1
   ldAB=. , 1 >. n
@@ -73,7 +72,6 @@ zgghrd=: 4 : 0
   assert. compQ ,&('nNiIvV' e.~ {.) compZ
   'ilo ihi A B Q1 Z1'=. y
   n=. # A
-  assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_                                ) A
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_) ,  n = #) B

@@ -40,9 +40,9 @@ NB. - no check for positive definiteness
 dpttrs=: 3 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) e
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_             ) B
+  assert. (isvector_jlapack2_ ,     n  = #) d
+  assert. (isvector_jlapack2_ , (<: n) = #) e
+  assert.  ismatrix_jlapack2_               B
   cdrc=. dpttrs_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   |: 5 {:: cdrc
@@ -52,9 +52,9 @@ zpttrs=: 4 : 0
   'd e B'=. y
   'n nrhs'=. $ B
   assert. 'lLuU' e.~ {. x
-  assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ ,                    (<: n) = #) e
-  assert.  ismatrix_jlapack2_                                  B
+  assert. (isvector_jlapack2_ ,     n  = #) d
+  assert. (isvector_jlapack2_ , (<: n) = #) e
+  assert.  ismatrix_jlapack2_               B
   cdrc=. zpttrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   |: 6 {:: cdrc

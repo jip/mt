@@ -41,8 +41,8 @@ dsytri2=: 4 : 0
   'DPT1 ipiv'=. y
   assert. 'lLuU' e.~ {. x
   n=. # ipiv
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) DPT1
-  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0            ) ipiv
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DPT1
+  assert.  isvector_jlapack2_                               ipiv
   lwork=. , (n + 64 + 1) * (64 + 3)  NB. minimal
   cdrc=. dsytri2_jlapack2_ (, x) ; (, n) ; (|: DPT1) ; (, 1 >. n) ; ipiv ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc

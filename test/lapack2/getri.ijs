@@ -24,8 +24,8 @@ NB. - the verbs below are loaded into the current locale
 dgetri=: 3 : 0
   'L1U ipiv'=. y
   n=. # ipiv
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) L1U
-  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0            ) ipiv
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
+  assert.  isvector_jlapack2_                               ipiv
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal
   cdrc=. dgetri_jlapack2_ (, n) ; (|: L1U) ; (, 1 >. n) ; ipiv ; (lwork $ 0.0) ; lwork ; , _1
@@ -37,7 +37,7 @@ zgetri=: 3 : 0
   'L1U ipiv'=. y
   n=. # ipiv
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
-  assert. (isvector_jlapack2_ , (-: <.) :: 0              ) ipiv
+  assert.  isvector_jlapack2_                               ipiv
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal
   cdrc=. zgetri_jlapack2_ (, n) ; (|: L1U) ; (, 1 >. n) ; ipiv ; (lwork $ 0j0) ; lwork ; , _1

@@ -34,8 +34,8 @@ dposv=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
   assert. 'lLuU' e.~ {. x
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
-  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
+  assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   cdrc=. dposv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

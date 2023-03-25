@@ -31,7 +31,7 @@ dtrtri=: 4 : 0
   'uplo diag'=. x
   assert. 'lLuU' e.~ {. uplo
   assert. 'nNuU' e.~ {. diag
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   cdrc=. dtrtri_jlapack2_ (, uplo) ; (, diag) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc

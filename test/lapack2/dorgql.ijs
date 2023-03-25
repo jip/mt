@@ -32,8 +32,8 @@ dorgql=: 3 : 0
   'm n'=. $ A
   k=. # tau
   assert. (_1 , n) I. k
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_) A
-  assert. (isvector_jlapack2_ , isreal_jlapack2_) tau
+  assert. ismatrix_jlapack2_ A
+  assert. isvector_jlapack2_ tau
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32 *^:(128 < ]) n  NB. optimal
   cdrc=. dorgql_jlapack2_ (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. m) ; tau ; (lwork $ 0.0) ; lwork ; , _1

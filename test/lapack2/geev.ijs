@@ -32,7 +32,7 @@ NB.   Euclidean norm equal to 1 and largest component real
 dgeev=: 4 : 0
   'jobVl jobVr'=. x
   assert. jobVl ,&('nNvV' e.~ {.) jobVr
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   Vl=. (0 0 [^:('nN' e.~ {. jobVl) $ y) $ 0.0
   Vr=. (0 0 [^:('nN' e.~ {. jobVr) $ y) $ 0.0

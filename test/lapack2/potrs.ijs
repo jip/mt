@@ -34,8 +34,8 @@ dpotrs=: 4 : 0
   'T B'=. y
   'n nrhs'=. $ B
   assert. 'lLuU' e.~ {. x
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) T
-  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) T
+  assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   cdrc=. dpotrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: T) ; ld ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

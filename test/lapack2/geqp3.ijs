@@ -40,8 +40,8 @@ NB. - the verbs below are loaded into the current locale
 dgeqp3=: 3 : 0
   'A pvt'=. y
   k=. <./ 'm n'=. $ A
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_        ) A
-  assert. (isvector_jlapack2_ , (0 1 e.~ ,)      , n = #) pvt
+  assert.  ismatrix_jlapack2_          A
+  assert. (isvector_jlapack2_ , n = #) pvt
   NB. lwork=. , >: n  NB. minimal
   lwork=. , 1 >. (32 + 0 2) p. n  NB. optimal
   cdrc=. dgeqp3_jlapack2_ (, m) ; (, n) ; (|: A) ; (, 1 >. m) ; pvt ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
@@ -52,8 +52,8 @@ dgeqp3=: 3 : 0
 zgeqp3=: 3 : 0
   'A pvt'=. y
   k=. <./ 'm n'=. $ A
-  assert.  ismatrix_jlapack2_                        A
-  assert. (isvector_jlapack2_ , (0 1 e.~ ,) , n = #) pvt
+  assert.  ismatrix_jlapack2_          A
+  assert. (isvector_jlapack2_ , n = #) pvt
   NB. lwork=. , >: n  NB. minimal
   lwork=. , 1 >. 32 * >: n  NB. optimal
   cdrc=. zgeqp3_jlapack2_ (, m) ; (, n) ; (|: A) ; (, 1 >. m) ; pvt ; (k $ 0j0) ; (lwork $ 0j0) ; lwork ; ((+: n) $ 0.0) ; , _1

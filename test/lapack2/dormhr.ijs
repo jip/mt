@@ -55,11 +55,10 @@ dormhr=: 4 : 0
   assert. 'lLrR' e.~ {. side
   assert. 'nNtT' e.~ {. trans
   assert. s = sh {~ 'rR' e.~ {. side
-  assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , s)&I. , <:/)@.(* s) ilo , ihi
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_ , issquare_jlapack2_) A
-  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: s) = #        ) tau
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_                     ) C
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
+  assert. (isvector_jlapack2_ , (<: s) = #        ) tau
+  assert.  ismatrix_jlapack2_                       C
   NB. lwork=. , 1 >. sh {~ 'lL' e.~ {. side  NB. minimal
   lwork=. , 32 * 1 >. sh {~ 'lL' e.~ {. side  NB. optimal
   cdrc=. dormhr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0.0) ; lwork ; , _1

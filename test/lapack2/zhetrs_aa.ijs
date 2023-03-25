@@ -41,7 +41,7 @@ zhetrs_aa=: 4 : 0
   'n nrhs'=. $ B
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DT1
-  assert. (isvector_jlapack2_ , (-: <.) :: 0       , n = #) ipiv
+  assert. (isvector_jlapack2_ ,                      n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   lwork=. , 1 >. _2 3 p. n  NB. minimal

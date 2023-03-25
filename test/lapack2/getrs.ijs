@@ -35,9 +35,9 @@ dgetrs=: 4 : 0
   'L1U ipiv B'=. y
   'n nrhs'=. $ B
   assert. 'nNtTcC' e.~ {. x
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) L1U
-  assert. (isvector_jlapack2_ ,                      (-: <.) :: 0     , n = #) ipiv
-  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
+  assert. (isvector_jlapack2_ ,                      n = #) ipiv
+  assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   cdrc=. dgetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: L1U) ; ld ; ipiv ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc
@@ -49,7 +49,7 @@ zgetrs=: 4 : 0
   'n nrhs'=. $ B
   assert. 'nNtTcC' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
-  assert. (isvector_jlapack2_ , (-: <.) :: 0       , n = #) ipiv
+  assert. (isvector_jlapack2_ ,                      n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   cdrc=. zgetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: L1U) ; ld ; ipiv ; (|: B) ; ld ; , _1

@@ -31,8 +31,8 @@ NB. - no check for positive definiteness
 dpttrf=: 3 : 0
   'd e'=. y
   n=. # d
-  assert. (isvector_jlapack2_ , isreal_jlapack2_             ) d
-  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) e
+  assert.  isvector_jlapack2_               d
+  assert. (isvector_jlapack2_ , (<: n) = #) e
   cdrc=. dpttrf_jlapack2_ (, n) ; d ; e ; , _1
   assert. 0 = _1 {:: cdrc
   2 3 { cdrc
@@ -41,8 +41,8 @@ dpttrf=: 3 : 0
 zpttrf=: 3 : 0
   'd e'=. y
   n=. # d
-  assert. (isvector_jlapack2_ , isreal_jlapack2_) d
-  assert. (isvector_jlapack2_ , (<: n) = #      ) e
+  assert.  isvector_jlapack2_               d
+  assert. (isvector_jlapack2_ , (<: n) = #) e
   cdrc=. zpttrf_jlapack2_ (, n) ; d ; e ; , _1
   assert. 0 = _1 {:: cdrc
   2 3 { cdrc

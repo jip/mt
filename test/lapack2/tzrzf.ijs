@@ -34,7 +34,7 @@ NB. - the verbs below are loaded into the current locale
 dtzrzf=: 3 : 0
   'm n'=. $ y
   assert. m <: n
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_) y
+  assert. ismatrix_jlapack2_ y
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32&*`1:@.(m=n) m  NB. optimal
   cdrc=. dtzrzf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (m $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1

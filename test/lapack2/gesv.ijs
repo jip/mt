@@ -28,8 +28,8 @@ NB. - the verbs below are loaded into the current locale
 dgesv=: 3 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
-  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
+  assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   cdrc=. dgesv_jlapack2_ (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

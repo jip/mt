@@ -29,7 +29,7 @@ zheev=: 4 : 0
   'jobV uplo'=. x
   assert. 'nNvV' e.~ {. jobV
   assert. 'lLuU' e.~ {. uplo
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_@((<0 1)&|:)) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   NB. lwork=. , 1 >. _1 2 p. n  NB. minimal
   lwork=. , 1 >. n * 33  NB. optimal

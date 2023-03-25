@@ -40,8 +40,8 @@ dggev=: 4 : 0
   assert. jobVl ,&('nNvV' e.~ {.) jobVr
   'A B'=. y
   n=. # A
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_        ) A
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) B
   Vl=. (0 0 [^:('nN' e.~ {. jobVl) }. $ y) $ 0.0
   Vr=. (0 0 [^:('nN' e.~ {. jobVr) }. $ y) $ 0.0
   ldAB=. , 1 >. n

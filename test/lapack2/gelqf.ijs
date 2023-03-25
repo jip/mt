@@ -29,7 +29,7 @@ NB. - the verbs below are loaded into the current locale
 
 dgelqf=: 3 : 0
   k=. <./ 'm n'=. $ y
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_) y
+  assert. ismatrix_jlapack2_ y
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32&*^:(k>128) m  NB. optimal
   cdrc=. dgelqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1

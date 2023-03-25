@@ -39,8 +39,8 @@ dtrtrs=: 4 : 0
   assert. 'lLuU'   e.~ {. uplo
   assert. 'nNtTcC' e.~ {. trans
   assert. 'nNuU'   e.~ {. diag
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
-  assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
+  assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   cdrc=. dtrtrs_jlapack2_ (, uplo) ; (, trans) ; (, diag) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

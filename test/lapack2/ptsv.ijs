@@ -33,9 +33,9 @@ NB. - no check for positive definiteness
 dptsv=: 3 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) e
-  assert. (ismatrix_jlapack2_ , isreal_jlapack2_             ) B
+  assert. (isvector_jlapack2_ ,     n  = #) d
+  assert. (isvector_jlapack2_ , (<: n) = #) e
+  assert.  ismatrix_jlapack2_               B
   cdrc=. dptsv_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   (|: L: 0) 3 4 5 { cdrc  NB. (|:) doesn't affect to d and e
@@ -44,9 +44,9 @@ dptsv=: 3 : 0
 zptsv=: 3 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ ,                    (<: n) = #) e
-  assert.  ismatrix_jlapack2_                                  B
+  assert. (isvector_jlapack2_ ,     n  = #) d
+  assert. (isvector_jlapack2_ , (<: n) = #) e
+  assert.  ismatrix_jlapack2_               B
   cdrc=. zptsv_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   (|: L: 0) 3 4 5 { cdrc  NB. (|:) doesn't affect to d and e

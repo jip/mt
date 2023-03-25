@@ -28,7 +28,7 @@ NB. - no check for positive definiteness
 
 dpotrf=: 4 : 0
   assert. 'lLuU' e.~ {. x
-  assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
+  assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   cdrc=. dpotrf_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc

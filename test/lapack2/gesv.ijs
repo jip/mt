@@ -7,7 +7,7 @@ NB.
 NB. Syntax:
 NB.   'L1U ipiv X'=. xgesv A ; B
 NB. where
-NB.   A    - n×n-matrix to be factored into L1U and ipiv as:
+NB.   A    - n×n-matrix to be factored to L1U and ipiv as:
 NB.            P * L1 * U = A
 NB.   B    - n×nrhs-matrix, RHS
 NB.   L1U  - n×n-matrix, L1 and U combined

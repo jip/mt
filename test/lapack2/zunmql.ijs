@@ -2,7 +2,7 @@ require 'math/lapack2'
 
 NB. Description:
 NB.   Multiply a complex general matrix by a complex unitary
-NB.   matrix which is defined as a product of elementary
+NB.   matrix which is defined as the product of elementary
 NB.   reflectors
 NB.
 NB. Syntax:

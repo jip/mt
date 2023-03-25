@@ -14,8 +14,8 @@ NB.            'L' - lower, the form is:
 NB.                    PL1 * D * PL1^H = A
 NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^H = A
-NB.   A    - n×n-matrix, the Hermitian to be factored into
-NB.          DPT1 and ipiv
+NB.   A    - n×n-matrix, the Hermitian to be factored to DPT1
+NB.          and ipiv
 NB.   B    - n×nrhs-matrix, RHS
 NB.   DPT1 - n×n-matrix, D and PT1 combined
 NB.   ipiv - n-vector, integer, the pivot indices that define

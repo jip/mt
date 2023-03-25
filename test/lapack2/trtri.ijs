@@ -12,7 +12,7 @@ NB.            'U' - use upper triangle of A only
 NB.   diag - scalar, character, case-insensitive:
 NB.            'N' - A is non-unit triangular
 NB.            'U' - A is unit triangular, the diagonal
-NB.                  elements of A are not
+NB.                  elements of A are not referenced
 NB.   A    - n×n-matrix to be inversed, [unit]
 NB.          {lower,upper}-triangular or general which
 NB.          contains the triangle to invert

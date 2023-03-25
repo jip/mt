@@ -17,7 +17,7 @@ NB.             'C' - A^H * X = B  (conjugate transpose)
 NB.   diag  - scalar, character, case-insensitive:
 NB.             'N' - A is non-unit triangular
 NB.             'U' - A is unit triangular, the diagonal
-NB.                   elements of A are not
+NB.                   elements of A are not referenced
 NB.   A     - n×n-matrix, [unit] {lower,upper}-triangular
 NB.   B     - n×nrhs-matrix, RHS
 NB.   X     - n×nrhs-matrix, solutions

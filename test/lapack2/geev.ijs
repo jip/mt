@@ -33,7 +33,6 @@ dgeev=: 4 : 0
   'jobVl jobVr'=. x
   assert. jobVl ,&('nNvV' e.~ {.) jobVr
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
-  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   n=. # y
   Vl=. (0 0 [^:('nN' e.~ {. jobVl) $ y) $ 0.0
   Vr=. (0 0 [^:('nN' e.~ {. jobVr) $ y) $ 0.0
@@ -56,7 +55,6 @@ zgeev=: 4 : 0
   'jobVl jobVr'=. x
   assert. jobVl ,&('nNvV' e.~ {.) jobVr
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
-  if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   Vl=. (0 0 [^:('nN' e.~ {. jobVl) $ y) $ 0j0
   Vr=. (0 0 [^:('nN' e.~ {. jobVr) $ y) $ 0j0

@@ -42,8 +42,6 @@ dggev=: 4 : 0
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_        ) A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) B
-  if. JFL ~: 3!:0 A do. A=. 9 o. A end.
-  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   Vl=. (0 0 [^:('nN' e.~ {. jobVl) }. $ y) $ 0.0
   Vr=. (0 0 [^:('nN' e.~ {. jobVr) }. $ y) $ 0.0
   ldAB=. , 1 >. n
@@ -69,8 +67,6 @@ zggev=: 4 : 0
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) B
-  if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
-  if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   Vl=. (0 0 [^:('nN' e.~ {. jobVl) }. $ y) $ 0j0
   Vr=. (0 0 [^:('nN' e.~ {. jobVr) }. $ y) $ 0j0
   ldAB=. , 1 >. n

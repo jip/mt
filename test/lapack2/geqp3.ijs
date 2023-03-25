@@ -42,8 +42,6 @@ dgeqp3=: 3 : 0
   k=. <./ 'm n'=. $ A
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_        ) A
   assert. (isvector_jlapack2_ , (0 1 e.~ ,)      , n = #) pvt
-  if. JFL  ~: 3!:0 A   do. A=.      9 o. A   end.
-  if. JINT ~: 3!:0 pvt do. pvt=. <. 9 o. pvt end.
   NB. lwork=. , >: n  NB. minimal
   lwork=. , 1 >. (32 + 0 2) p. n  NB. optimal
   cdrc=. dgeqp3_jlapack2_ (, m) ; (, n) ; (|: A) ; (, 1 >. m) ; pvt ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
@@ -56,8 +54,6 @@ zgeqp3=: 3 : 0
   k=. <./ 'm n'=. $ A
   assert.  ismatrix_jlapack2_                        A
   assert. (isvector_jlapack2_ , (0 1 e.~ ,) , n = #) pvt
-  if. JCMPX ~: 3!:0 A   do. A=.   A  + 0j0    end.
-  if. JINT  ~: 3!:0 pvt do. pvt=. <. 9 o. pvt end.
   NB. lwork=. , >: n  NB. minimal
   lwork=. , 1 >. 32 * >: n  NB. optimal
   cdrc=. zgeqp3_jlapack2_ (, m) ; (, n) ; (|: A) ; (, 1 >. m) ; pvt ; (k $ 0j0) ; (lwork $ 0j0) ; lwork ; ((+: n) $ 0.0) ; , _1

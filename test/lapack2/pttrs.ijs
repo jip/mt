@@ -43,9 +43,6 @@ dpttrs=: 3 : 0
   assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) e
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_             ) B
-  if. JFL ~: 3!:0 d do. d=. 9 o. d end.
-  if. JFL ~: 3!:0 e do. e=. 9 o. e end.
-  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   cdrc=. dpttrs_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   |: 5 {:: cdrc
@@ -58,9 +55,6 @@ zpttrs=: 4 : 0
   assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ ,                    (<: n) = #) e
   assert.  ismatrix_jlapack2_                                  B
-  if. JFL   ~: 3!:0 d do. d=. 9 o. d  end.
-  if. JCMPX ~: 3!:0 e do. e=. e + 0j0 end.
-  if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   cdrc=. zpttrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   |: 6 {:: cdrc

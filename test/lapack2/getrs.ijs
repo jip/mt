@@ -38,9 +38,6 @@ dgetrs=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) L1U
   assert. (isvector_jlapack2_ ,                      (-: <.) :: 0     , n = #) ipiv
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
-  if. JFL  ~: 3!:0 L1U  do. L1U=.     9 o. L1U  end.
-  if. JINT ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
-  if. JFL  ~: 3!:0 B    do. B=.       9 o. B    end.
   ld=. , 1 >. n
   cdrc=. dgetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: L1U) ; ld ; ipiv ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc
@@ -54,9 +51,6 @@ zgetrs=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
   assert. (isvector_jlapack2_ , (-: <.) :: 0       , n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
-  if. JCMPX ~: 3!:0 L1U  do. L1U=.  L1U + 0j0    end.
-  if. JCMPX ~: 3!:0 B    do. B=.    B   + 0j0    end.
-  if. JINT  ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
   ld=. , 1 >. n
   cdrc=. zgetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: L1U) ; ld ; ipiv ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

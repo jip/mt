@@ -45,9 +45,6 @@ zhetrs=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DPT1
   assert. (isvector_jlapack2_ , (-: <.) :: 0       , n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
-  if. JCMPX ~: 3!:0 DPT1 do. DPT1=. DPT1 + 0j0   end.
-  if. JCMPX ~: 3!:0 B    do. B=.    B    + 0j0   end.
-  if. JINT  ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
   ld=. , 1 >. n
   cdrc=. zhetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DPT1) ; ld ; ipiv ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

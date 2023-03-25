@@ -34,8 +34,6 @@ zungqr=: 3 : 0
   assert. (_1 , n) I. k
   assert. ismatrix_jlapack2_ A
   assert. isvector_jlapack2_ tau
-  if. JCMPX ~: 3!:0 A   do. A=.   A   + 0j0 end.
-  if. JCMPX ~: 3!:0 tau do. tau=. tau + 0j0 end.
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32 *^:(128 < ]) n  NB. optimal
   cdrc=. zungqr_jlapack2_ (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. m) ; tau ; (lwork $ 0j0) ; lwork ; , _1

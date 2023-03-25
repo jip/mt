@@ -42,8 +42,6 @@ zhesv_aa=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
-  if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
-  if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   ld=. , 1 >. n
   NB. lwork=. , >./ 1 , (+: n) , (_2 3 p. n)  NB. minimal
   lwork_zhetrf_aa=. 1 >. n * >: 64

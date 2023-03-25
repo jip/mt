@@ -42,8 +42,6 @@ dsysv=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
-  if. JFL ~: 3!:0 A do. A=. 9 o. A end.
-  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   ld=. , 1 >. n
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal

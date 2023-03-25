@@ -28,10 +28,6 @@ dgtsv=: 3 : 0
   assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) du
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_             ) B
-  if. JFL ~: 3!:0 dl do. dl=. 9 o. dl end.
-  if. JFL ~: 3!:0 d  do. d=.  9 o. d  end.
-  if. JFL ~: 3!:0 du do. du=. 9 o. du end.
-  if. JFL ~: 3!:0 B  do. B=.  9 o. B  end.
   cdrc=. dgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   |: 6 {:: cdrc
@@ -44,10 +40,6 @@ zgtsv=: 3 : 0
   assert. (isvector_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , (<: n) = #) du
   assert.  ismatrix_jlapack2_               B
-  if. JCMPX ~: 3!:0 dl do. dl=. dl + 0j0 end.
-  if. JCMPX ~: 3!:0 d  do. d=.  d  + 0j0 end.
-  if. JCMPX ~: 3!:0 du do. du=. du + 0j0 end.
-  if. JCMPX ~: 3!:0 B  do. B=.  B + 0j0  end.
   cdrc=. zgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   |: 6 {:: cdrc

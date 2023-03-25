@@ -45,8 +45,6 @@ dgels=: 4 : 0
     assert. n = k
     xh=. m
   end.
-  if. JFL ~: 3!:0 A do. A=. 9 o. A end.
-  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   lda=. , 1 >. m
   ldb=. , lda >. n
   NB. lwork=. , 1 >. nrhs (] + >.) m <. n  NB. minimal
@@ -70,8 +68,6 @@ zgels=: 4 : 0
     assert. n = k
     xh=. m
   end.
-  if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
-  if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   lda=. , 1 >. m
   ldb=. , lda >. n
   NB. lwork=. , 1 >. nrhs (] + >.) m <. n  NB. minimal

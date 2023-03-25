@@ -35,7 +35,6 @@ NB. - the verbs below are loaded into the current locale
 dsytrf=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
-  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   n=. # y
   NB. lwork=. , 1  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal

@@ -56,9 +56,6 @@ dormrq=: 4 : 0
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_        ) A
   assert. (isvector_jlapack2_ , isreal_jlapack2_ , k = #) tau
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_        ) C
-  if. JFL ~: 3!:0 A   do. A=.   9 o. A   end.
-  if. JFL ~: 3!:0 tau do. tau=. 9 o. tau end.
-  if. JFL ~: 3!:0 C   do. C=.   9 o. C   end.
   NB. lwork=. , 1 >. sh {~ 'lL' e.~ {. side  NB. minimal
   nbmax=. 64
   ilaenv=. 32

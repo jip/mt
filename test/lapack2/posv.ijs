@@ -36,8 +36,6 @@ dposv=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
-  if. JFL ~: 3!:0 A do. A=. 9 o. A end.
-  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   ld=. , 1 >. n
   cdrc=. dposv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc
@@ -50,8 +48,6 @@ zposv=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
-  if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
-  if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   ld=. , 1 >. n
   cdrc=. zposv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

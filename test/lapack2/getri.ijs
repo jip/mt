@@ -26,8 +26,6 @@ dgetri=: 3 : 0
   n=. # ipiv
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) L1U
   assert. (isvector_jlapack2_ ,                      (-: <.) :: 0            ) ipiv
-  if. JFL  ~: 3!:0 L1U  do. L1U=.     9 o. L1U  end.
-  if. JINT ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal
   cdrc=. dgetri_jlapack2_ (, n) ; (|: L1U) ; (, 1 >. n) ; ipiv ; (lwork $ 0.0) ; lwork ; , _1
@@ -40,8 +38,6 @@ zgetri=: 3 : 0
   n=. # ipiv
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
   assert. (isvector_jlapack2_ , (-: <.) :: 0              ) ipiv
-  if. JCMPX ~: 3!:0 L1U  do. L1U=. L1U + 0j0     end.
-  if. JINT  ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal
   cdrc=. zgetri_jlapack2_ (, n) ; (|: L1U) ; (, 1 >. n) ; ipiv ; (lwork $ 0j0) ; lwork ; , _1

@@ -37,7 +37,6 @@ NB. - the verbs below are loaded into the current locale
 zhetrf=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
-  if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   NB. lwork=. , 1  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal

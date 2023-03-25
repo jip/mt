@@ -29,7 +29,6 @@ NB. - the verbs below are loaded into the current locale
 dgerqf=: 3 : 0
   k=. <./ 'm n'=. $ y
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) y
-  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32&*^:(k>128) m  NB. optimal
   cdrc=. dgerqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
@@ -40,7 +39,6 @@ dgerqf=: 3 : 0
 zgerqf=: 3 : 0
   k=. <./ 'm n'=. $ y
   assert. ismatrix_jlapack2_ y
-  if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32&*^:(k>128) m  NB. optimal
   cdrc=. zgerqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1

@@ -34,8 +34,6 @@ dorgrq=: 3 : 0
   assert. (_1 , m) I. k
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) A
   assert. (isvector_jlapack2_ , isreal_jlapack2_) tau
-  if. JFL ~: 3!:0 A   do. A=.   9 o. A   end.
-  if. JFL ~: 3!:0 tau do. tau=. 9 o. tau end.
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32 *^:(128 < ]) m  NB. optimal
   cdrc=. dorgrq_jlapack2_ (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. m) ; tau ; (lwork $ 0.0) ; lwork ; , _1

@@ -44,9 +44,6 @@ dsytrs=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) DPT1
   assert. (isvector_jlapack2_                      , (-: <.) :: 0     , n = #) ipiv
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
-  if. JFL  ~: 3!:0 DPT1 do. DPT1=.    9 o. DPT1 end.
-  if. JINT ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
-  if. JFL  ~: 3!:0 B    do. B=.       9 o. B    end.
   ld=. , 1 >. n
   cdrc=. dsytrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DPT1) ; ld ; ipiv ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

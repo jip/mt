@@ -26,7 +26,6 @@ NB. - the verbs below are loaded into the current locale
 dgetrf=: 3 : 0
   k=. <./ 'm n'=. $ y
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) y
-  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   cdrc=. dgetrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 00) ; , _1
   assert. 0 = _1 {:: cdrc
   (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to ipiv
@@ -35,7 +34,6 @@ dgetrf=: 3 : 0
 zgetrf=: 3 : 0
   k=. <./ 'm n'=. $ y
   assert. ismatrix_jlapack2_ y
-  if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   cdrc=. zgetrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 00) ; , _1
   assert. 0 = _1 {:: cdrc
   (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to ipiv

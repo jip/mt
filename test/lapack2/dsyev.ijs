@@ -30,7 +30,6 @@ dsyev=: 4 : 0
   assert. 'nNvV' e.~ {. jobV
   assert. 'lLuU' e.~ {. uplo
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
-  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   n=. # y
   NB. lwork=. , 1 >. _1 3 p. n  NB. minimal
   lwork=. , 1 >. n * 34  NB. optimal

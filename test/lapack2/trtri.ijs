@@ -32,7 +32,6 @@ dtrtri=: 4 : 0
   assert. 'lLuU' e.~ {. uplo
   assert. 'nNuU' e.~ {. diag
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
-  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   n=. # y
   cdrc=. dtrtri_jlapack2_ (, uplo) ; (, diag) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
@@ -44,7 +43,6 @@ ztrtri=: 4 : 0
   assert. 'lLuU' e.~ {. uplo
   assert. 'nNuU' e.~ {. diag
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
-  if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   cdrc=. ztrtri_jlapack2_ (, uplo) ; (, diag) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc

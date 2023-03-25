@@ -32,7 +32,6 @@ NB. - the verbs below are loaded into the current locale
 dpotri=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
-  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   n=. # y
   cdrc=. dpotri_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
@@ -42,7 +41,6 @@ dpotri=: 4 : 0
 zpotri=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
-  if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y
   cdrc=. zpotri_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc

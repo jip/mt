@@ -55,9 +55,6 @@ zunmql=: 4 : 0
   assert.  ismatrix_jlapack2_          A
   assert. (isvector_jlapack2_ , k = #) tau
   assert.  ismatrix_jlapack2_          C
-  if. JCMPX ~: 3!:0 A   do. A=.   A   + 0j0 end.
-  if. JCMPX ~: 3!:0 tau do. tau=. tau + 0j0 end.
-  if. JCMPX ~: 3!:0 C   do. C=.   C   + 0j0 end.
   NB. lwork=. , 1 >. sh {~ 'lL' e.~ {. side  NB. minimal
   nbmax=. 64
   ilaenv=. 32

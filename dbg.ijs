@@ -40,8 +40,8 @@ dbgsucceed1=: 1 : '[ echo@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape
 dbgsucceed2=: 1 : '[ echo@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_ ; <@":)'  NB. use (":) to avoid nonce error in (;) when result is sparsed
 
 NB. argument[s] handlers
-dbgarg1=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_        ) : ((''x'' ; ''y'') ,@,. ,:& dbgshape_mt_        ))'
-dbgarg2=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_ ; <@": ) : ((''x'' ; ''y'') ,@,. ,:&(dbgshape_mt_ ; <@":)))'  NB. use (":) to avoid nonce error in (;) when result is sparsed
+dbgarg1=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_       ) : ((''x'' ; ''y'') ,@,. ,:& dbgshape_mt_        ))'
+dbgarg2=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_ ; <@":) : ((''x'' ; ''y'') ,@,. ,:&(dbgshape_mt_ ; <@":)))'  NB. use (":) to avoid nonce error in (;) when result is sparsed
 
 NB. ---------------------------------------------------------
 NB. dbg1

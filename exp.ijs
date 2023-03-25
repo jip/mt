@@ -347,12 +347,12 @@ testdiexp=: 3 : 0
   geevlvv=. {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1])) % normsr)"2&.>)"0@ggevlvv@(,: idmat@c)
 
   try.
-    'v LR'=. geevlvv y                 NB. eigendecomposition
+    'v LR'=. geevlvv y                  NB. eigendecomposition
     'L R'=. LR
-    v=. j./ (*"1 -@*@{.) |: +. v       NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
-                                       NB. A to be negative definite, this will avoid NaN error in diexp
+    v=. j./ (*"1 -@*@{.) |: +. v        NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
+                                        NB. A to be negative definite, this will avoid NaN error in diexp
     assert. ((-: ~.) v) +. ((-: ct) y)  NB. A must be normal (diagonalizable)
-    iRh=. L ([ % (mp"1 +)) R           NB. reconstruct R^_1^H , see [1] in diexp
+    iRh=. L ([ % (mp"1 +)) R            NB. reconstruct R^_1^H , see [1] in diexp
   catch.
     R=. v=. iRh=. _.
   end.

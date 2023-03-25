@@ -116,10 +116,10 @@ NB.   d    ≥ 0 integer, optional delta of liso, default is 1
 NB.   liso - |s|-vector of integers
 NB.
 NB. Examples:
-NB.    2 dhs2liso 4 3                 2 dhs2liso _4 3
-NB. 4 6 8                          _8 _6 _4
-NB.    2 dhs2liso 4 _3                2 dhs2liso _4 _3
-NB. 8 6 4                          _4 _6 _8
+NB.    2 dhs2liso 4 3              2 dhs2liso _4 3
+NB. 4 6 8                       _8 _6 _4
+NB.    2 dhs2liso 4 _3             2 dhs2liso _4 _3
+NB. 8 6 4                       _4 _6 _8
 NB.
 NB. Notes:
 NB. - monadic case models rISO in (u;.0) with following

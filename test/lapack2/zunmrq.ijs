@@ -56,9 +56,9 @@ zunmrq=: 4 : 0
   assert. s = sh {~ side e. 'rR'
   assert. (_1 , s) I. k
   assert. lda >: 1 >. k
-  assert. ismatrix_jlapack2_ A
+  assert.  ismatrix_jlapack2_          A
   assert. (isvector_jlapack2_ , k = #) tau
-  assert. ismatrix_jlapack2_ C
+  assert.  ismatrix_jlapack2_          C
   if. JCMPX ~: 3!:0 A   do. A=.   A   + 0j0 end.
   if. JCMPX ~: 3!:0 tau do. tau=. tau + 0j0 end.
   if. JCMPX ~: 3!:0 C   do. C=.   C   + 0j0 end.

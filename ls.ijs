@@ -293,7 +293,7 @@ NB. where
 NB.   A - m×n-matrix
 NB.   x - max(m,n)-vector, pool for the exact solution values
 
-testgels1=: 3 :0
+testgels1=: 3 : 0
   'A x'=. y
 
   rcondA=. (_."_)`gecon1@.(=/@$) A  NB. meaninigful for square matrices only

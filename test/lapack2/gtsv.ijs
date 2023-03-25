@@ -63,7 +63,7 @@ zgtsv=: 3 : 0
   if. JCMPX ~: 3!:0 dl do. dl=. dl + 0j0 end.
   if. JCMPX ~: 3!:0 d  do. d=.  d  + 0j0 end.
   if. JCMPX ~: 3!:0 du do. du=. du + 0j0 end.
-  if. JCMPX ~: 3!:0 B  do. B=.  B + 0j0 end.
+  if. JCMPX ~: 3!:0 B  do. B=.  B + 0j0  end.
   cdrc=. zgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   |: 6 {:: cdrc

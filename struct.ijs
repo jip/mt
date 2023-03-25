@@ -168,10 +168,12 @@ NB.    1 mbstencil i. 3 5                    1 mabstencil i. 3 5
 NB. 0 1 0 0 0                             0 0 0 1 0
 NB. 0 0 1 0 0                             0 0 1 0 0
 NB. 0 0 0 1 0                             0 1 0 0 0
+NB.
 NB.    2 3 mbstencil i. 3 5                  2 3 mabstencil i. 3 5
 NB. 0 0 1 1 0                             0 1 1 0 0
 NB. 0 0 0 1 1                             1 1 0 0 0
 NB. 0 0 0 0 1                             1 0 0 0 0
+NB.
 NB.    (__ _1 ,: 2 3) mbstencil i. 3 5       (__ _1 ,: 2 3) mabstencil i. 3 5
 NB. 0 0 1 1 0                             0 1 1 0 0
 NB. 1 0 0 1 1                             1 1 0 0 1
@@ -291,16 +293,20 @@ NB. Examples:
 NB.    2 rt i. 3 4                  _2 rt i. 3 4
 NB. 0 1 2 3                      4 5  6  7
 NB. 4 5 6 7                      8 9 10 11
+NB.
 NB.    2 30 rt i. 3 4               2 _ rt i. 3 4
 NB. 0 1 2 3                      0 1 2 3
 NB. 4 5 6 7                      4 5 6 7
+NB.
 NB.    20 3 rt i. 3 4               _ 3 rt i. 3 4
 NB. 0 1  2                       0 1  2
 NB. 4 5  6                       4 5  6
 NB. 8 9 10                       8 9 10
+NB.
 NB.    _2 _30 rt i. 3 4             _2 __ rt i. 3 4
 NB. 4 5  6  7                    4 5  6  7
 NB. 8 9 10 11                    8 9 10 11
+NB.
 NB.    _20 _3 rt i. 3 4             __ _3 rt i. 3 4
 NB. 1  2  3                      1  2  3
 NB. 5  6  7                      5  6  7
@@ -340,6 +346,7 @@ NB. -----                             -----
 NB. *****                             *****
 NB. -----                             *****
 NB. -----                             -----
+NB.
 NB.    (<1 2) ('*'"_ upd) 4 5$'-'        (1 2;2 3) ('*'"_ upd) 4 5$'-'
 NB. -----                             -----
 NB. --*--                             --*--
@@ -373,6 +380,7 @@ NB. 1 1 1 1 0 0         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB. 1 1 1 1 0 0         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
 NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
+NB.
 NB.    _2 e0 3 4 $ 1       _2 3 e0 3 4 $ 1       _2 _3 e0 3 4 $ 1
 NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
 NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
@@ -404,6 +412,7 @@ NB. 3 3 3                        3 3 3
 NB. 3 3 3                        3 3 3
 NB. 2 2 0                        0 2 2
 NB. 2 2 0                        0 2 2
+NB.
 NB.    (2 2$2) appendl (3 3$3)      (2 2$2) appendr (3 3$3)
 NB. 2 2 0                        0 2 2
 NB. 2 2 0                        0 2 2
@@ -432,6 +441,7 @@ NB.    (3 3$3) stitcht (2 2$2)      (3 3$3) stitchb (2 2$2)
 NB. 3 3 3 2 2                    3 3 3 0 0
 NB. 3 3 3 2 2                    3 3 3 2 2
 NB. 3 3 3 0 0                    3 3 3 2 2
+NB.
 NB.    (2 2$2) stitcht (3 3$3)      (2 2$2) stitchb (3 3$3)
 NB. 2 2 3 3 3                    0 0 3 3 3
 NB. 2 2 3 3 3                    2 2 3 3 3
@@ -510,21 +520,23 @@ NB.   S    ≥ 0, the length of d-th diagonal
 NB.   k    ≤ S, the length of vector e
 NB.
 NB. Examples:
-NB.    (2;a:) setdiag 4 4 $ 0          (2;_1 1 1) setdiag 4 4 $ 0
-NB. 2 0 0 0                         0 0 0 0
-NB. 0 2 0 0                         0 0 0 0
-NB. 0 0 2 0                         0 2 0 0
-NB. 0 0 0 2                         0 0 0 0
-NB.    (2;_1) setdiag 4 4 $ 0          (1 2 3;_1) setdiag 4 4 $ 0
-NB. 0 0 0 0                         0 0 0 0
-NB. 2 0 0 0                         1 0 0 0
-NB. 0 2 0 0                         0 2 0 0
-NB. 0 0 2 0                         0 0 3 0
-NB.    (2;_1 1) setdiag 4 4 $ 0        (1 2 3;_1 _1 _3) setdiag 4 4 $ 0
-NB. 0 0 0 0                         0 0 0 0
-NB. 0 0 0 0                         3 0 0 0
-NB. 0 2 0 0                         0 2 0 0
-NB. 0 0 2 0                         0 0 1 0
+NB.    (2;a:) setdiag 4 4 $ 0         (2;_1 1 1) setdiag 4 4 $ 0
+NB. 2 0 0 0                        0 0 0 0
+NB. 0 2 0 0                        0 0 0 0
+NB. 0 0 2 0                        0 2 0 0
+NB. 0 0 0 2                        0 0 0 0
+NB.
+NB.    (2;_1) setdiag 4 4 $ 0         (1 2 3;_1) setdiag 4 4 $ 0
+NB. 0 0 0 0                        0 0 0 0
+NB. 2 0 0 0                        1 0 0 0
+NB. 0 2 0 0                        0 2 0 0
+NB. 0 0 2 0                        0 0 3 0
+NB.
+NB.    (2;_1 1) setdiag 4 4 $ 0       (1 2 3;_1 _1 _3) setdiag 4 4 $ 0
+NB. 0 0 0 0                        0 0 0 0
+NB. 0 0 0 0                        3 0 0 0
+NB. 0 2 0 0                        0 2 0 0
+NB. 0 0 2 0                        0 0 1 0
 
 setdiag=: 4 : 0
   'e dhs'=. x
@@ -759,6 +771,7 @@ NB.    idmat 3                      idmat 3 4
 NB. 1 0 0                        1 0 0 0
 NB. 0 1 0                        0 1 0 0
 NB. 0 0 1                        0 0 1 0
+NB.
 NB.    1 idmat 3 4                  _1 idmat 3 4
 NB. 0 1 0 0                      0 0 0 0
 NB. 0 0 1 0                      1 0 0 0
@@ -767,7 +780,7 @@ NB.
 NB. TODO:
 NB. - I would be sparse
 
-idmat=: a:&$: :((1;[) setdiag (0 $~ 2 $ ]))
+idmat=: a:&$: :((1 ; [) setdiag (0 $~ 2 $ ]))
 
 NB. ---------------------------------------------------------
 NB. diagmat
@@ -795,31 +808,35 @@ NB.   2) generate lIO h-th diagonal
 NB.   3) write e into matrix of zeros
 NB.
 NB. Examples:
-NB.    diagmat 3 5 7                0 0 diagmat 3 5 7
-NB. 3 0 0                        3 0 0
-NB. 0 5 0                        0 5 0
-NB. 0 0 7                        0 0 7
-NB.    1 0 diagmat 3 5 7            _1 0 diagmat 3 5 7
-NB. 0 3 0 0                      0 0 0
-NB. 0 0 5 0                      3 0 0
-NB. 0 0 0 7                      0 5 0
-NB.                              0 0 7
-NB.    0 1 diagmat 3 5 7            0 _1 diagmat 3 5 7
-NB. 3 0 0                        3 0 0 0
-NB. 0 5 0                        0 5 0 0
-NB. 0 0 7                        0 0 7 0
+NB.    diagmat 3 5 7            0 0 diagmat 3 5 7
+NB. 3 0 0                    3 0 0
+NB. 0 5 0                    0 5 0
+NB. 0 0 7                    0 0 7
+NB.
+NB.    1 0 diagmat 3 5 7        _1 0 diagmat 3 5 7
+NB. 0 3 0 0                  0 0 0
+NB. 0 0 5 0                  3 0 0
+NB. 0 0 0 7                  0 5 0
+NB.                          0 0 7
+NB.
+NB.    0 1 diagmat 3 5 7        0 _1 diagmat 3 5 7
+NB. 3 0 0                    3 0 0 0
+NB. 0 5 0                    0 5 0 0
+NB. 0 0 7                    0 0 7 0
 NB. 0 0 0
-NB.    1 1 diagmat 3 5 7            _1 _1 diagmat 3 5 7
-NB. 0 3 0 0                      0 0 0 0
-NB. 0 0 5 0                      3 0 0 0
-NB. 0 0 0 7                      0 5 0 0
-NB. 0 0 0 0                      0 0 7 0
-NB.    1 _1 diagmat 3 5 7           _1 1 diagmat 3 5 7
-NB. 0 3 0 0 0                    0 0 0
-NB. 0 0 5 0 0                    3 0 0
-NB. 0 0 0 7 0                    0 5 0
-NB.                              0 0 7
-NB.                              0 0 0
+NB.
+NB.    1 1 diagmat 3 5 7        _1 _1 diagmat 3 5 7
+NB. 0 3 0 0                  0 0 0 0
+NB. 0 0 5 0                  3 0 0 0
+NB. 0 0 0 7                  0 5 0 0
+NB. 0 0 0 0                  0 0 7 0
+NB.
+NB.    1 _1 diagmat 3 5 7       _1 1 diagmat 3 5 7
+NB. 0 3 0 0 0                0 0 0
+NB. 0 0 5 0 0                3 0 0
+NB. 0 0 0 7 0                0 5 0
+NB.                          0 0 7
+NB.                          0 0 0
 NB.
 NB. TODO:
 NB. - D would be sparse
@@ -834,18 +851,20 @@ NB.   Extract lower trapezoidal matrix with optional
 NB.   shrinking
 NB.
 NB. Examples:
-NB.    trl >: i. 3 4                0 trl >: i. 3 4
-NB. 1  0  0                      1  0  0
-NB. 5  6  0                      5  6  0
-NB. 9 10 11                      9 10 11
-NB.    1 trl >: i. 3 4              _1 trl >: i. 3 4
-NB. 1  2  0  0                   5  0
-NB. 5  6  7  0                   9 10
+NB.    trl >: i. 3 4         0 trl >: i. 3 4
+NB. 1  0  0               1  0  0
+NB. 5  6  0               5  6  0
+NB. 9 10 11               9 10 11
+NB.
+NB.    1 trl >: i. 3 4       _1 trl >: i. 3 4
+NB. 1  2  0  0            5  0
+NB. 5  6  7  0            9 10
 NB. 9 10 11 12
-NB.    1 trl >: i. 4 3              _1 trl >: i. 4 3
-NB.  1  2  0                      4  0  0
-NB.  4  5  6                      7  8  0
-NB.  7  8  9                     10 11 12
+NB.
+NB.    1 trl >: i. 4 3       _1 trl >: i. 4 3
+NB.  1  2  0               4  0  0
+NB.  4  5  6               7  8  0
+NB.  7  8  9              10 11 12
 NB. 10 11 12
 
 trl=: (>:~ 0&>.) tr trlcut
@@ -858,19 +877,21 @@ NB.   Extract upper trapezoidal matrix with optional
 NB.   shrinking
 NB.
 NB. Examples:
-NB.    tru >: i. 3 4                0 tru >: i. 3 4
-NB. 1 2  3  4                    1 2  3  4
-NB. 0 6  7  8                    0 6  7  8
-NB. 0 0 11 12                    0 0 11 12
-NB.    1 tru >: i. 3 4              _1 tru >: i. 3 4
-NB. 2 3  4                       1  2  3  4
-NB. 0 7  8                       5  6  7  8
-NB. 0 0 12                       0 10 11 12
-NB.    1 tru >: i. 4 3              _1 tru >: i. 4 3
-NB. 2 3                          1 2  3
-NB. 0 6                          4 5  6
-NB.                              0 8  9
-NB.                              0 0 12
+NB.    tru >: i. 3 4         0 tru >: i. 3 4
+NB. 1 2  3  4             1 2  3  4
+NB. 0 6  7  8             0 6  7  8
+NB. 0 0 11 12             0 0 11 12
+NB.
+NB.    1 tru >: i. 3 4       _1 tru >: i. 3 4
+NB. 2 3  4                1  2  3  4
+NB. 0 7  8                5  6  7  8
+NB. 0 0 12                0 10 11 12
+NB.
+NB.    1 tru >: i. 4 3       _1 tru >: i. 4 3
+NB. 2 3                   1 2  3
+NB. 0 6                   4 5  6
+NB.                       0 8  9
+NB.                       0 0 12
 
 tru=: (<:~ 0&<.) tr trucut
 
@@ -882,19 +903,21 @@ NB.   Extract strictly lower trapezoidal matrix with optional
 NB.   shrinking
 NB.
 NB. Examples:
-NB.    trl0 >: i. 4 3               0 trl0 >: i. 4 3
-NB.  0  0  0                      0  0  0
-NB.  4  0  0                      4  0  0
-NB.  7  8  0                      7  8  0
-NB. 10 11 12                     10 11 12
-NB.    1 trl0 >: i. 4 3             _1 trl0 >: i. 4 3
-NB.  1  0  0                      0  0 0
-NB.  4  5  0                      7  0 0
-NB.  7  8  9                     10 11 0
+NB.    trl0 >: i. 4 3         0 trl0 >: i. 4 3
+NB.  0  0  0                0  0  0
+NB.  4  0  0                4  0  0
+NB.  7  8  0                7  8  0
+NB. 10 11 12               10 11 12
+NB.
+NB.    1 trl0 >: i. 4 3       _1 trl0 >: i. 4 3
+NB.  1  0  0                0  0 0
+NB.  4  5  0                7  0 0
+NB.  7  8  9               10 11 0
 NB. 10 11 12
-NB.    1 trl0 >: i. 3 4             _1 trl0 >: i. 3 4
-NB. 1  0  0 0                    0 0
-NB. 5  6  0 0                    9 0
+NB.
+NB.    1 trl0 >: i. 3 4       _1 trl0 >: i. 3 4
+NB. 1  0  0 0              0 0
+NB. 5  6  0 0              9 0
 NB. 9 10 11 0
 
 trl0=: (>~ 0&>.) tr trlcut
@@ -907,19 +930,21 @@ NB.   Extract strictly upper trapezoidal matrix with optional
 NB.   shrinking
 NB.
 NB. Examples:
-NB.    tru0 >: i. 3 4               0 tru0 >: i. 3 4
-NB. 0 2 3  4                     0 2 3  4
-NB. 0 0 7  8                     0 0 7  8
-NB. 0 0 0 12                     0 0 0 12
-NB.    1 tru0 >: i. 3 4             _1 tru0 >: i. 3 4
-NB. 0 3 4                        1 2  3  4
-NB. 0 0 8                        0 6  7  8
-NB. 0 0 0                        0 0 11 12
-NB.    1 tru0 >: i. 4 3             _1 tru0 >: i. 4 3
-NB. 0 3                          1 2 3
-NB. 0 0                          0 5 6
-NB.                              0 0 9
-NB.                              0 0 0
+NB.    tru0 >: i. 3 4         0 tru0 >: i. 3 4
+NB. 0 2 3  4               0 2 3  4
+NB. 0 0 7  8               0 0 7  8
+NB. 0 0 0 12               0 0 0 12
+NB.
+NB.    1 tru0 >: i. 3 4       _1 tru0 >: i. 3 4
+NB. 0 3 4                  1 2  3  4
+NB. 0 0 8                  0 6  7  8
+NB. 0 0 0                  0 0 11 12
+NB.
+NB.    1 tru0 >: i. 4 3       _1 tru0 >: i. 4 3
+NB. 0 3                    1 2 3
+NB. 0 0                    0 5 6
+NB.                        0 0 9
+NB.                        0 0 0
 
 tru0=: (<~ 0&<.) tr trucut
 
@@ -931,22 +956,24 @@ NB.   Extract unit lower trapezoidal matrix with optional
 NB.   shrinking
 NB.
 NB. Examples:
-NB.    trl1 >: i. 4 3               0 trl1 >: i. 4 3
-NB.  1  0  0                      1  0  0
-NB.  4  1  0                      4  1  0
-NB.  7  8  1                      7  8  1
-NB. 10 11 12                     10 11 12
-NB.    1 trl1 >: i. 4 3             _1 trl1 >: i. 4 3
-NB.  1  1  0                      1  0 0
-NB.  4  5  1                      7  1 0
-NB.  7  8  9                     10 11 1
+NB.    trl1 >: i. 4 3         0 trl1 >: i. 4 3
+NB.  1  0  0                1  0  0
+NB.  4  1  0                4  1  0
+NB.  7  8  1                7  8  1
+NB. 10 11 12               10 11 12
+NB.
+NB.    1 trl1 >: i. 4 3       _1 trl1 >: i. 4 3
+NB.  1  1  0                1  0 0
+NB.  4  5  1                7  1 0
+NB.  7  8  9               10 11 1
 NB. 10 11 12
-NB.    1 trl1 >: i. 3 4             _1 trl1 >: i. 3 4
-NB. 1  1  0 0                    1 0
-NB. 5  6  1 0                    9 1
+NB.
+NB.    1 trl1 >: i. 3 4       _1 trl1 >: i. 3 4
+NB. 1  1  0 0              1 0
+NB. 5  6  1 0              9 1
 NB. 9 10 11 1
 
-trl1=: 0&$: :([ trl (1;[) setdiag ])
+trl1=: 0&$: :([ trl (1 ; [) setdiag ])
 
 NB. ---------------------------------------------------------
 NB. tru1
@@ -956,21 +983,23 @@ NB.   Extract unit upper trapezoidal matrix with optional
 NB.   shrinking
 NB.
 NB. Examples:
-NB.    tru1 >: i. 3 4               0 tru1 >: i. 3 4
-NB. 1 2 3  4                     1 2 3  4
-NB. 0 1 7  8                     0 1 7  8
-NB. 0 0 1 12                     0 0 1 12
-NB.    1 tru1 >: i. 3 4             _1 tru1 >: i. 3 4
-NB. 1 3 4                        1 2  3  4
-NB. 0 1 8                        1 6  7  8
-NB. 0 0 1                        0 1 11 12
-NB.    1 tru1 >: i. 4 3             _1 tru1 >: i. 4 3
-NB. 1 3                          1 2 3
-NB. 0 1                          1 5 6
-NB.                              0 1 9
-NB.                              0 0 1
+NB.    tru1 >: i. 3 4         0 tru1 >: i. 3 4
+NB. 1 2 3  4               1 2 3  4
+NB. 0 1 7  8               0 1 7  8
+NB. 0 0 1 12               0 0 1 12
+NB.
+NB.    1 tru1 >: i. 3 4       _1 tru1 >: i. 3 4
+NB. 1 3 4                  1 2  3  4
+NB. 0 1 8                  1 6  7  8
+NB. 0 0 1                  0 1 11 12
+NB.
+NB.    1 tru1 >: i. 4 3       _1 tru1 >: i. 4 3
+NB. 1 3                    1 2 3
+NB. 0 1                    1 5 6
+NB.                        0 1 9
+NB.                        0 0 1
 
-tru1=: 0&$: :([ tru (1;[) setdiag ])
+tru1=: 0&$: :([ tru (1 ; [) setdiag ])
 
 NB. ---------------------------------------------------------
 NB. tr2he

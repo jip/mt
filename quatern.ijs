@@ -71,9 +71,9 @@ NB. qni      b=. qni  q         qb=. b qni  q
 NB. qnj      c=. qnj  q         qc=. c qnj  q
 NB. qnk      d=. qnk  q         qd=. d qnk  q
 NB. qn1i     x=. qn1i q         qx=. x qn1i q
-NB. qnjk     y=. qnjk q         qy=. y qnjk q
 NB. qn1j     z=. qn1j q         qz=. z qn1j q
 NB. qn1k     w=. qn1k q         qw=. w qn1k q
+NB. qnjk     y=. qnjk q         qy=. y qnjk q
 
 qn1=: ( 9 o. {.) : ((j.  qni) 0} ])
 qni=: (11 o. {.) : ((j.~ qn1) 0} ])

@@ -37,7 +37,6 @@ NB.     |Re(V(i))| + |Im(Vi)| = 1
 
 dggev=: 4 : 0
   'jobVl jobVr'=. x
-  assert. jobVl ,&('nNvV' e.~ {.) jobVr
   'A B'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A
@@ -62,7 +61,6 @@ dggev=: 4 : 0
 
 zggev=: 4 : 0
   'jobVl jobVr'=. x
-  assert. jobVl ,&('nNvV' e.~ {.) jobVr
   'A B'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A

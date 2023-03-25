@@ -51,7 +51,6 @@ dpttrs=: 3 : 0
 zpttrs=: 4 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. 'lLuU' e.~ {. x
   assert. (isvector_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , (<: n) = #) e
   assert.  ismatrix_jlapack2_               B

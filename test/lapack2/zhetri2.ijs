@@ -39,7 +39,6 @@ NB. - the verbs below are loaded into the current locale
 
 zhetri2=: 4 : 0
   'DPT1 ipiv'=. y
-  assert. 'lLuU' e.~ {. x
   n=. # ipiv
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DPT1
   assert.  isvector_jlapack2_                               ipiv

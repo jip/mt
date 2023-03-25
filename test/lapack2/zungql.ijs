@@ -31,7 +31,6 @@ zungql=: 3 : 0
   'A tau'=. y
   'm n'=. $ A
   k=. # tau
-  assert. (_1 , n) I. k
   assert. ismatrix_jlapack2_ A
   assert. isvector_jlapack2_ tau
   NB. lwork=. , 1 >. m  NB. minimal

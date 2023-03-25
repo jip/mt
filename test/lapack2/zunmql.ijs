@@ -49,9 +49,6 @@ zunmql=: 4 : 0
   'A tau C'=. y
   'm n'=. sh=. $ C
   's k'=. $ A
-  assert. 'lLrR' e.~ {. side
-  assert. 'nNcC' e.~ {. trans
-  assert. (_1 , s) I. k
   assert.  ismatrix_jlapack2_          A
   assert. (isvector_jlapack2_ , k = #) tau
   assert.  ismatrix_jlapack2_          C

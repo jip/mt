@@ -49,10 +49,7 @@ dormlq=: 4 : 0
   'A tau C'=. y
   'm n'=. sh=. $ C
   'k s'=. $ A
-  assert. 'lLrR' e.~ {. side
-  assert. 'nNtT' e.~ {. trans
   assert. s = sh {~ 'rR' e.~ {. side
-  assert. (_1 , s) I. k
   assert.  ismatrix_jlapack2_          A
   assert. (isvector_jlapack2_ , k = #) tau
   assert.  ismatrix_jlapack2_          C

@@ -29,7 +29,6 @@ NB. - the verbs below are loaded into the current locale
 dorghr=: 3 : 0
   'ilo ihi A tau'=. y
   n=. # A
-  assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
   assert. (isvector_jlapack2_ , (<: n) = #        ) tau
   NB. lwork=. , 1 >. ihi-ilo  NB. minimal

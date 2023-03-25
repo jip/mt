@@ -32,7 +32,6 @@ NB. Notes:
 NB. - the verbs below are loaded into the current locale
 
 dggbal=: 4 : 0
-  assert. 'nNpPsSbB' e.~ {. x
   'A B'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A
@@ -46,7 +45,6 @@ dggbal=: 4 : 0
 )
 
 zggbal=: 4 : 0
-  assert. 'nNpPsSbB' e.~ {. x
   'A B'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A

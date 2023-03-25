@@ -27,8 +27,6 @@ NB. - the verbs below are loaded into the current locale
 
 dsyev=: 4 : 0
   'jobV uplo'=. x
-  assert. 'nNvV' e.~ {. jobV
-  assert. 'lLuU' e.~ {. uplo
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   NB. lwork=. , 1 >. _1 3 p. n  NB. minimal

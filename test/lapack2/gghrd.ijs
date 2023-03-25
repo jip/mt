@@ -49,10 +49,8 @@ NB. - the verbs below are loaded into the current locale
 
 dgghrd=: 4 : 0
   'compQ compZ'=. x
-  assert. compQ ,&('nNiIvV' e.~ {.) compZ
   'ilo ihi A B Q1 Z1'=. y
   n=. # A
-  assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_                                   ) A
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_)    ,  n = #) B
   assert. ('nNiI' e.~ {. compQ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Q1
@@ -69,10 +67,8 @@ dgghrd=: 4 : 0
 
 zgghrd=: 4 : 0
   'compQ compZ'=. x
-  assert. compQ ,&('nNiIvV' e.~ {.) compZ
   'ilo ihi A B Q1 Z1'=. y
   n=. # A
-  assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_                                ) A
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_) ,  n = #) B
   assert. ('nNiI' e.~ {. compQ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isunitary_jlapack2_ *. n = #) Q1

@@ -36,9 +36,6 @@ dtrtrs=: 4 : 0
   'uplo trans diag'=. x
   'A B'=. y
   'n nrhs'=. $ B
-  assert. 'lLuU'   e.~ {. uplo
-  assert. 'nNtTcC' e.~ {. trans
-  assert. 'nNuU'   e.~ {. diag
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
@@ -51,9 +48,6 @@ ztrtrs=: 4 : 0
   'uplo trans diag'=. x
   'A B'=. y
   'n nrhs'=. $ B
-  assert. 'lLuU'   e.~ {. uplo
-  assert. 'nNtTcC' e.~ {. trans
-  assert. 'nNuU'   e.~ {. diag
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n

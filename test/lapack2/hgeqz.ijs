@@ -60,11 +60,8 @@ NB. - the verbs below are loaded into the current locale
 
 dhgeqz=: 4 : 0
   'job compQ compZ'=. x
-  assert. 'eEsS' e.~ {. job
-  assert. compQ ,&('nNiIvV' e.~ {.) compZ
   'ilo ihi H T Q1 Z1'=. y
   n=. # H
-  assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   ishessenberg=. -: ((ilo , ihi) uhmat_jlapack2_ $)`(0&,:)}
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  ishessenberg                   ) H
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_)    ,  n = #) T
@@ -85,11 +82,8 @@ dhgeqz=: 4 : 0
 
 zhgeqz=: 4 : 0
   'job compQ compZ'=. x
-  assert. 'eEsS' e.~ {. job
-  assert. compQ ,&('nNiIvV' e.~ {.) compZ
   'ilo ihi H T Q1 Z1'=. y
   n=. # H
-  assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   ishessenberg=. -: ((ilo , ihi) uhmat_jlapack2_ $)`(0&,:)}
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  ishessenberg                ) H
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_) ,  n = #) T

@@ -52,10 +52,7 @@ zunmhr=: 4 : 0
   'ilo ihi A tau C'=. y
   'm n'=. sh=. $ C
   s=. # A
-  assert. 'lLrR' e.~ {. side
-  assert. 'nNtT' e.~ {. trans
   assert. s = sh {~ 'rR' e.~ {. side
-  assert. 1 0&=`((0 , s)&I. , <:/)@.(* s) ilo , ihi
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
   assert. (isvector_jlapack2_ , (<: s) = #        ) tau
   assert.  ismatrix_jlapack2_                       C

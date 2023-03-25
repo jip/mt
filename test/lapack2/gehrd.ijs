@@ -31,7 +31,6 @@ NB. - the verbs below are loaded into the current locale
 dgehrd=: 3 : 0
   'ilo ihi A'=. y
   n=. # A
-  assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 4160 32&p.`1:@.(2&>) n  NB. optimal
@@ -43,7 +42,6 @@ dgehrd=: 3 : 0
 zgehrd=: 3 : 0
   'ilo ihi A'=. y
   n=. # A
-  assert. 1 0&=`((0 , n)&I. , <:/)@.(* n) ilo , ihi
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 4160 32&p.`1:@.(2&>) n  NB. optimal

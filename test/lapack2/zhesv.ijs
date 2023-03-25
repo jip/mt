@@ -41,7 +41,6 @@ NB. - the verbs below are loaded into the current locale
 zhesv=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n

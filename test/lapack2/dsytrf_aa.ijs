@@ -33,7 +33,6 @@ NB. Notes:
 NB. - the verbs below are loaded into the current locale
 
 dsytrf_aa=: 4 : 0
-  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   NB. lwork=. , 1 >. +: n  NB. minimal

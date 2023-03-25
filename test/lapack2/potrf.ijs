@@ -27,7 +27,6 @@ NB. - the verbs below are loaded into the current locale
 NB. - no check for positive definiteness
 
 dpotrf=: 4 : 0
-  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   cdrc=. dpotrf_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
@@ -36,7 +35,6 @@ dpotrf=: 4 : 0
 )
 
 zpotrf=: 4 : 0
-  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
   cdrc=. zpotrf_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1

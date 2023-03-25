@@ -35,11 +35,7 @@ dtzrzf=: 3 : 0
   'm n'=. $ y
   assert. m <: n
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) y
-  select. 3!:0 y
-    case. JCMPX do. y=. 9 o. y
-    case. JFL   do.
-    case.       do. y=. y + 0.0
-  end.
+  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32&*`1:@.(m=n) m  NB. optimal
   cdrc=. dtzrzf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (m $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1

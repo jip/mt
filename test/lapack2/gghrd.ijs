@@ -60,29 +60,13 @@ dgghrd=: 4 : 0
   assert. ('nNiI' e.~ {. compZ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isreal_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Z1
   if. JINT ~: 3!:0 ilo do. ilo=. <. 9 o. ilo end.
   if. JINT ~: 3!:0 ihi do. ihi=. <. 9 o. ihi end.
-  select. 3!:0 A
-    case. JCMPX do. A=. 9 o. A
-    case. JFL   do.
-    case.       do. A=. A + 0.0
-  end.
-  select. 3!:0 B
-    case. JCMPX do. B=. 9 o. B
-    case. JFL   do.
-    case.       do. B=. B + 0.0
-  end.
+  if. JFL  ~: 3!:0 A   do. A=.      9 o. A   end.
+  if. JFL  ~: 3!:0 B   do. B=.      9 o. B   end.
   if. 'vV' e.~ {. compQ do.
-    select. 3!:0 Q1
-      case. JCMPX do. Q1=. 9 o. Q1
-      case. JFL   do.
-      case.       do. Q1=. Q1 + 0.0
-    end.
+    if. JFL ~: 3!:0 Q1 do. Q1=. 9 o. Q1 end.
   end.
   if. 'vV' e.~ {. compZ do.
-    select. 3!:0 Z1
-      case. JCMPX do. Z1=. 9 o. Z1
-      case. JFL   do.
-      case.       do. Z1=. Z1 + 0.0
-    end.
+    if. JFL ~: 3!:0 Z1 do. Z1=. 9 o. Z1 end.
   end.
   Q1=. n (0 0 $ 0.0)"_`(0.0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. {. compQ) Q1
   Z1=. n (0 0 $ 0.0)"_`(0.0 $~ 2 # [)`(|:@])@.(1 3 5 I. 'nNiIvV' i. {. compZ) Z1

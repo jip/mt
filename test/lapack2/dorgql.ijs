@@ -34,16 +34,8 @@ dorgql=: 3 : 0
   assert. (_1 , n) I. k
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) A
   assert. (isvector_jlapack2_ , isreal_jlapack2_) tau
-  select. 3!:0 A
-    case. JCMPX do. A=. 9 o. A
-    case. JFL   do.
-    case.       do. A=. A + 0.0
-  end.
-  select. 3!:0 tau
-    case. JCMPX do. tau=. 9 o. tau
-    case. JFL   do.
-    case.       do. tau=. tau + 0.0
-  end.
+  if. JFL ~: 3!:0 A   do. A=.   9 o. A   end.
+  if. JFL ~: 3!:0 tau do. tau=. 9 o. tau end.
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32 *^:(128 < ]) n  NB. optimal
   cdrc=. dorgql_jlapack2_ (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. m) ; tau ; (lwork $ 0.0) ; lwork ; , _1

@@ -37,16 +37,8 @@ dggbal=: 4 : 0
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_        ) A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) B
-  select. 3!:0 A
-    case. JCMPX do. A=. 9 o. A
-    case. JFL   do.
-    case.       do. A=. A + 0.0
-  end.
-  select. 3!:0 B
-    case. JCMPX do. B=. 9 o. B
-    case. JFL   do.
-    case.       do. B=. B + 0.0
-  end.
+  if. JFL ~: 3!:0 A do. A=. 9 o. A end.
+  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   ld=. , 1 >. n
   work=. ((6 * n) >.^:('sSbB' e.~ {. x) 1) $ 0.0
   cdrc=. dggbal_jlapack2_ (, x) ; (, n) ; (|: A) ; ld ; (|: B) ; ld ; (, 0) ; (, 0) ; (n $ 0.0) ; (n $ 0.0) ; work ; , _1

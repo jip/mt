@@ -44,17 +44,9 @@ dsytrs_aa=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) DT1
   assert. (isvector_jlapack2_ ,                      (-: <.) :: 0     , n = #) ipiv
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
-  select. 3!:0 DT1
-    case. JCMPX do. DT1=. 9 o. DT1
-    case. JFL   do.
-    case.       do. DT1=. DT1 + 0.0
-  end.
-  select. 3!:0 B
-    case. JCMPX do. B=. 9 o. B
-    case. JFL   do.
-    case.       do. B=. B + 0.0
-  end.
+  if. JFL  ~: 3!:0 DPT1 do. DPT1=.    9 o. DPT1 end.
   if. JINT ~: 3!:0 ipiv do. ipiv=. <. 9 o. ipiv end.
+  if. JFL  ~: 3!:0 B    do. B=.       9 o. B    end.
   ld=. , 1 >. n
   lwork=. , 1 >. _2 3 p. n  NB. minimal
   cdrc=. dsytrs_aa_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DT1) ; ld ; ipiv ; (|: B) ; ld ; (lwork $ 0.0) ; lwork ; , _1

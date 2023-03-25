@@ -35,16 +35,8 @@ dorghr=: 3 : 0
   assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #        ) tau
   if. JINT ~: 3!:0 ilo do. ilo=. <. 9 o. ilo end.
   if. JINT ~: 3!:0 ihi do. ihi=. <. 9 o. ihi end.
-  select. 3!:0 A
-    case. JCMPX do. A=. 9 o. A
-    case. JFL   do.
-    case.       do. A=. A + 0.0
-  end.
-  select. 3!:0 tau
-    case. JCMPX do. tau=. 9 o. tau
-    case. JFL   do.
-    case.       do. tau=. tau + 0.0
-  end.
+  if. JFL  ~: 3!:0 A   do. A=.      9 o. A   end.
+  if. JFL  ~: 3!:0 tau do. tau=.    9 o. tau end.
   NB. lwork=. , 1 >. ihi-ilo  NB. minimal
   lwork=. , 1 >. 32 * ihi - ilo  NB. optimal
   cdrc=. dorghr_jlapack2_ (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. n) ; tau ; (lwork $ 0.0) ; lwork ; , _1

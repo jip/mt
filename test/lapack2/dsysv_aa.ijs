@@ -42,16 +42,8 @@ dsysv_aa=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
-  select. 3!:0 A
-    case. JCMPX do. A=. 9 o. A
-    case. JFL   do.
-    case.       do. A=. A + 0.0
-  end.
-  select. 3!:0 B
-    case. JCMPX do. B=. 9 o. B
-    case. JFL   do.
-    case.       do. B=. B + 0.0
-  end.
+  if. JFL ~: 3!:0 A do. A=. 9 o. A end.
+  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   ld=. , 1 >. n
   NB. lwork=. , >./ 1 , (+: n) , (_2 3 p. n)  NB. minimal
   lwork_dsytrf_aa=. 1 >. n * >: 64

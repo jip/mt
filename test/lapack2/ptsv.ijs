@@ -36,16 +36,8 @@ dptsv=: 3 : 0
   assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , isreal_jlapack2_ , (<: n) = #) e
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_             ) B
-  select. 3!:0 d
-    case. JCMPX do. d=. 9 o. d
-    case. JFL   do.
-    case.       do. d=. d + 0.0
-  end.
-  select. 3!:0 e
-    case. JCMPX do. e=. 9 o. e
-    case. JFL   do.
-    case.       do. e=. e + 0.0
-  end.
+  if. JFL ~: 3!:0 d do. d=. 9 o. d end.
+  if. JFL ~: 3!:0 e do. e=. 9 o. e end.
   cdrc=. dptsv_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc
   (|: L: 0) 3 4 5 { cdrc  NB. (|:) doesn't affect to d and e
@@ -57,11 +49,7 @@ zptsv=: 3 : 0
   assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ ,                    (<: n) = #) e
   assert.  ismatrix_jlapack2_                                  B
-  select. 3!:0 d
-    case. JCMPX do. d=. 9 o. d
-    case. JFL   do.
-    case.       do. d=. d + 0.0
-  end.
+  if. JFL   ~: 3!:0 d do. d=. 9 o. d  end.
   if. JCMPX ~: 3!:0 e do. e=. e + 0j0 end.
   cdrc=. zptsv_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
   assert. 0 = _1 {:: cdrc

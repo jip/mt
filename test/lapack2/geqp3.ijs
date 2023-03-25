@@ -42,11 +42,7 @@ dgeqp3=: 3 : 0
   k=. <./ 'm n'=. $ A
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_        ) A
   assert. (isvector_jlapack2_ , (0 1 e.~ ,)      , n = #) pvt
-  select. 3!:0 A
-    case. JCMPX do. A=. 9 o. A
-    case. JFL   do.
-    case.       do. A=. A + 0.0
-  end.
+  if. JFL  ~: 3!:0 A   do. A=.      9 o. A   end.
   if. JINT ~: 3!:0 pvt do. pvt=. <. 9 o. pvt end.
   NB. lwork=. , >: n  NB. minimal
   lwork=. , 1 >. (32 + 0 2) p. n  NB. optimal

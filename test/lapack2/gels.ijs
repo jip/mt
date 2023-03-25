@@ -45,16 +45,8 @@ dgels=: 4 : 0
     assert. n = k
     xh=. m
   end.
-  select. 3!:0 A
-    case. JCMPX do. A=. 9 o. A
-    case. JFL   do.
-    case.       do. A=. A + 0.0
-  end.
-  select. 3!:0 B
-    case. JCMPX do. B=. 9 o. B
-    case. JFL   do.
-    case.       do. B=. B + 0.0
-  end.
+  if. JFL ~: 3!:0 A do. A=. 9 o. A end.
+  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   lda=. , 1 >. m
   ldb=. , lda >. n
   NB. lwork=. , 1 >. nrhs (] + >.) m <. n  NB. minimal

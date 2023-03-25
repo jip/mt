@@ -36,16 +36,8 @@ dpotrs=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) T
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
-  select. 3!:0 T
-    case. JCMPX do. T=. 9 o. T
-    case. JFL   do.
-    case.       do. T=. T + 0.0
-  end.
-  select. 3!:0 B
-    case. JCMPX do. B=. 9 o. B
-    case. JFL   do.
-    case.       do. B=. B + 0.0
-  end.
+  if. JFL ~: 3!:0 T do. T=. 9 o. T end.
+  if. JFL ~: 3!:0 B do. B=. 9 o. B end.
   ld=. , 1 >. n
   cdrc=. dpotrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: T) ; ld ; (|: B) ; ld ; , _1
   assert. 0 = _1 {:: cdrc

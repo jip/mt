@@ -62,21 +62,9 @@ dormhr=: 4 : 0
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_                     ) C
   if. JINT ~: 3!:0 ilo do. ilo=. <. 9 o. ilo end.
   if. JINT ~: 3!:0 ihi do. ihi=. <. 9 o. ihi end.
-  select. 3!:0 A
-    case. JCMPX do. A=. 9 o. A
-    case. JFL   do.
-    case.       do. A=. A + 0.0
-  end.
-  select. 3!:0 tau
-    case. JCMPX do. tau=. 9 o. tau
-    case. JFL   do.
-    case.       do. tau=. tau + 0.0
-  end.
-  select. 3!:0 C
-    case. JCMPX do. C=. 9 o. C
-    case. JFL   do.
-    case.       do. C=. C + 0.0
-  end.
+  if. JFL  ~: 3!:0 A   do. A=.      9 o. A   end.
+  if. JFL  ~: 3!:0 tau do. tau=.    9 o. tau end.
+  if. JFL  ~: 3!:0 C   do. C=.      9 o. C   end.
   NB. lwork=. , 1 >. sh {~ 'lL' e.~ {. side  NB. minimal
   lwork=. , 32 * 1 >. sh {~ 'lL' e.~ {. side  NB. optimal
   cdrc=. dormhr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0.0) ; lwork ; , _1

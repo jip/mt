@@ -28,11 +28,7 @@ NB. - the verbs below are loaded into the current locale
 dgebal=: 4 : 0
   assert. 'nNpPsSbB' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
-  select. 3!:0 y
-    case. JCMPX do. y=. 9 o. y
-    case. JFL   do.
-    case.       do. y=. y + 0.0
-  end.
+  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   n=. # y
   cdrc=. dgebal_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; (, 0) ; (, 0) ; (n $ 0.0) ; , _1
   assert. 0 = _1 {:: cdrc

@@ -35,11 +35,7 @@ NB. - the verbs below are loaded into the current locale
 dsytrf_aa=: 4 : 0
   assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
-  select. 3!:0 y
-    case. JCMPX do. y=. 9 o. y
-    case. JFL   do.
-    case.       do. y=. y + 0.0
-  end.
+  if. JFL ~: 3!:0 y do. y=. 9 o. y end.
   n=. # y
   NB. lwork=. , 1 >. +: n  NB. minimal
   lwork=. , 1 >. n * >: 64  NB. optimal

@@ -7,10 +7,12 @@ NB.
 NB. Syntax:
 NB.   iAA=. uplo xpotri T
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of A only, form is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.           specifies which triangular part of A is to be
+NB.           referenced:
+NB.            'L' - lower, the form is:
 NB.                    L * L^H = A
-NB.            'U' - use upper triangle of A only, form is:
+NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
 NB.   T    - n×n-matrix, contains the triangle factor either
 NB.          L or U to invert
@@ -28,7 +30,7 @@ NB. Notes:
 NB. - the verbs below are loaded into the current locale
 
 dpotri=: 4 : 0
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
@@ -42,7 +44,7 @@ dpotri=: 4 : 0
 )
 
 zpotri=: 4 : 0
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y

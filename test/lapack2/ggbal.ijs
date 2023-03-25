@@ -7,7 +7,8 @@ NB. Syntax:
 NB.   'Abal Bbal ilo ihi lscale rscale'=. job xggbal A ;  B
 NB.   'Abal Bbal ilo ihi lscale rscale'=. job xggbal A ,: B
 NB. where
-NB.   job       - scalar, character, case-insensitive:
+NB.   job       - literal, case-insensitive, in which the
+NB.               head specifies what to do:
 NB.                 'N' - to init ilo, ihi and xscale
 NB.                 'P' - to permute only
 NB.                 'S' - to scale only
@@ -31,7 +32,7 @@ NB. Notes:
 NB. - the verbs below are loaded into the current locale
 
 dggbal=: 4 : 0
-  assert. (e.&'nNpPsSbB' , #) x
+  assert. 'nNpPsSbB' e.~ {. x
   'A B'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_        ) A
@@ -47,7 +48,7 @@ dggbal=: 4 : 0
     case.       do. B=. B + 0.0
   end.
   ld=. , 1 >. n
-  work=. ((6 * n) >.^:(x e. 'sSbB') 1) $ 0.0
+  work=. ((6 * n) >.^:('sSbB' e.~ {. x) 1) $ 0.0
   cdrc=. dggbal_jlapack2_ (, x) ; (, n) ; (|: A) ; ld ; (|: B) ; ld ; (, 0) ; (, 0) ; (n $ 0.0) ; (n $ 0.0) ; work ; , _1
   assert. 0 = _1 {:: cdrc
   'A B ilo ihi lscale rscale'=. 3 5 7 8 9 10 { cdrc
@@ -55,7 +56,7 @@ dggbal=: 4 : 0
 )
 
 zggbal=: 4 : 0
-  assert. (e.&'nNpPsSbB' , #) x
+  assert. 'nNpPsSbB' e.~ {. x
   'A B'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A
@@ -63,7 +64,7 @@ zggbal=: 4 : 0
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
   if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   ld=. , 1 >. n
-  work=. ((6 * n) >.^:(x e. 'sSbB') 1) $ 0.0
+  work=. ((6 * n) >.^:('sSbB' e.~ {. x) 1) $ 0.0
   cdrc=. zggbal_jlapack2_ (, x) ; (, n) ; (|: A) ; ld ; (|: B) ; ld ; (, 0) ; (, 0) ; (n $ 0.0) ; (n $ 0.0) ; work ; , _1
   assert. 0 = _1 {:: cdrc
   'A B ilo ihi lscale rscale'=. 3 5 7 8 9 10 { cdrc

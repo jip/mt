@@ -13,8 +13,8 @@ NB.   X2=. 'C' zgels A1 ; B2  NB. case 3: A1^H * X2 = B2
 NB.   X1=. 'T' dgels A2 ; B1  NB. case 4: A2^T * X1 = B1
 NB.   X1=. 'C' zgels A2 ; B1  NB. case 4: A2^H * X1 = B1
 NB. where
-NB.   trans - scalar, character, case-insensitive, specifies
-NB.           the form of the system of equations:
+NB.   trans - literal, case-insensitive, in which the head
+NB.           specifies the form of the system of equations:
 NB.             'N' - A   * X = B  (no transpose)
 NB.             'T' - A^T * X = B  (transpose)
 NB.             'C' - A^H * X = B  (conjugate transpose)
@@ -35,10 +35,10 @@ dgels=: 4 : 0
   'A B'=. y
   'm n'=. $ A
   'k nrhs'=. $ B
-  assert. (e.&'nNtT' , #) x
+  assert. 'nNtT' e.~ {. x
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) A
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_) B
-  if. x e. 'nN' do.
+  if. 'nN' e.~ {. x do.
     assert. m = k
     xh=. n
   else.
@@ -68,10 +68,10 @@ zgels=: 4 : 0
   'A B'=. y
   'm n'=. $ A
   'k nrhs'=. $ B
-  assert. (e.&'nNcC' , #) x
+  assert. 'nNcC' e.~ {. x
   assert. ismatrix_jlapack2_ A
   assert. ismatrix_jlapack2_ B
-  if. x e. 'nN' do.
+  if. 'nN' e.~ {. x do.
     assert. m = k
     xh=. n
   else.

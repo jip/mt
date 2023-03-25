@@ -7,10 +7,12 @@ NB.
 NB. Syntax:
 NB.   'DT1 ipiv X'=. uplo dsysv_aa A ; B
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of DT1 only, form is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.          specifies which triangular part of DT1 is to be
+NB.          referenced:
+NB.            'L' - lower, the form is:
 NB.                    P * L1 * D * L1^T * P^T = A
-NB.            'U' - use upper triangle of DT1 only, form is:
+NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^T * P^T = A
 NB.   A    - n×n-matrix, real, the symmetric to be factored
 NB.          to DT1 and ipiv
@@ -37,7 +39,7 @@ NB. - the verbs below are loaded into the current locale
 dsysv_aa=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 A

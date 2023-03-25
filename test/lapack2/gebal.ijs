@@ -6,7 +6,8 @@ NB.
 NB. Syntax:
 NB.   'Abal ilo ihi scale'=. job xgebal A
 NB. where
-NB.   job   - scalar, character, case-insensitive:
+NB.   job   - literal, case-insensitive, in which the head
+NB.           specifies what to do:
 NB.             'N' - to init ilo, ihi and scale
 NB.             'P' - to permute only
 NB.             'S' - to scale only
@@ -25,7 +26,7 @@ NB. Notes:
 NB. - the verbs below are loaded into the current locale
 
 dgebal=: 4 : 0
-  assert. (e.&'nNpPsSbB' , #) x
+  assert. 'nNpPsSbB' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
@@ -40,7 +41,7 @@ dgebal=: 4 : 0
 )
 
 zgebal=: 4 : 0
-  assert. (e.&'nNpPsSbB' , #) x
+  assert. 'nNpPsSbB' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y

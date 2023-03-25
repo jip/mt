@@ -5,14 +5,17 @@ NB.   Compute the eigenvalues and, optionally, eigenvectors
 NB.   for non-complex square symmetric matrix
 NB.
 NB. Syntax:
-NB.   'w V'=. (jobV , uplo) dsyev A
+NB.   'w V'=. (jobV ; uplo) dsyev A
 NB. where
-NB.   jobV - scalar, character, case-insensitive:
-NB.            'N' - do not compute V
-NB.            'V' - to compute V
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of A only
-NB.            'U' - use upper triangle of A only
+NB.   jobV - literal, case-insensitive, in which the head
+NB.          specifies whether to compute V:
+NB.            'N' - to not compute
+NB.            'V' - to compute
+NB.   uplo - literal, case-insensitive, in which the head
+NB.          specifies which triangular part of A is to be
+NB.          referenced:
+NB.            'L' - lower
+NB.            'U' - upper
 NB.   A    - n×n-matrix, real, the symmetric or
 NB.          lower or upper triangular
 NB.   w    - n-vector, real, eigenvalues of A
@@ -24,8 +27,8 @@ NB. - the verbs below are loaded into the current locale
 
 dsyev=: 4 : 0
   'jobV uplo'=. x
-  assert. (e.&'nNvV' , #) jobV
-  assert. (e.&'lLuU' , #) uplo
+  assert. 'nNvV' e.~ {. jobV
+  assert. 'lLuU' e.~ {. uplo
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
@@ -38,6 +41,6 @@ dsyev=: 4 : 0
   cdrc=. dsyev_jlapack2_ (, jobV) ; (, uplo) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
   'w V'=. 6 4 { cdrc
-  if. jobV e. 'vV' do. V=. |: V else. V=. EMPTY end.
+  if. 'vV' e.~ {. jobV do. V=. |: V else. V=. EMPTY end.
   w ; V
 )

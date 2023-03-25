@@ -6,14 +6,14 @@ NB.   matrix which is defined as a product of elementary
 NB.   reflectors
 NB.
 NB. Syntax:
-NB.   B=. (side , trans) dormrq A ; tau ; C
+NB.   B=. (side ; trans) dormrq A ; tau ; C
 NB. where
-NB.   side  - scalar, character, case-insensitive, specifies
-NB.           the side of op(Q):
+NB.   side  - literal, case-insensitive, in which the head
+NB.           specifies the side of op(Q):
 NB.             'L' - op(Q) * C  (apply op(Q) from the left)
 NB.             'R' - C * op(Q)  (apply op(Q) from the right)
-NB.   trans - scalar, character, case-insensitive, specifies
-NB.           op(Q):
+NB.   trans - literal, case-insensitive, in which the head
+NB.           specifies the form of op(Q):
 NB.             'N' - op(Q) := Q    (no transpose)
 NB.             'T' - op(Q) := Q^T  (transpose)
 NB.   A     - k×s-matrix, contains Qf
@@ -49,9 +49,9 @@ dormrq=: 4 : 0
   'A tau C'=. y
   'm n'=. sh=. $ C
   'k s'=. $ A
-  assert. (e.&'lLrR' , #) side
-  assert. (e.&'nNtT' , #) trans
-  assert. s = sh {~ side e. 'rR'
+  assert. 'lLrR' e.~ {. side
+  assert. 'nNtT' e.~ {. trans
+  assert. s = sh {~ 'rR' e.~ {. side
   assert. (_1 , s) I. k
   assert. (ismatrix_jlapack2_ , isreal_jlapack2_        ) A
   assert. (isvector_jlapack2_ , isreal_jlapack2_ , k = #) tau
@@ -71,13 +71,13 @@ dormrq=: 4 : 0
     case. JFL   do.
     case.       do. C=. C + 0.0
   end.
-  NB. lwork=. , 1 >. sh {~ side e. 'lL'  NB. minimal
+  NB. lwork=. , 1 >. sh {~ 'lL' e.~ {. side  NB. minimal
   nbmax=. 64
   ilaenv=. 32
   ldt=. >: nbmax
   tsize=. nbmax * ldt
   nb=. nbmax <. ilaenv
-  lwork=. , tsize + nb * 1 >. sh {~ side e. 'lL'  NB. optimal
+  lwork=. , tsize + nb * 1 >. sh {~ 'lL' e.~ {. side  NB. optimal
   cdrc=. dormrq_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. k) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
   |: 9 {:: cdrc

@@ -8,10 +8,12 @@ NB.
 NB. Syntax:
 NB.   'T X'=. uplo xposv A ; B
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of A only, form is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.           specifies which triangular part of A is to be
+NB.           referenced:
+NB.            'L' - lower, the form is:
 NB.                    L * L^H = A
-NB.            'U' - use upper triangle of A only, form is:
+NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite to be factored to T
@@ -31,7 +33,7 @@ NB. - no check for positive definiteness
 dposv=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 A
@@ -53,7 +55,7 @@ dposv=: 4 : 0
 zposv=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.

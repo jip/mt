@@ -8,12 +8,12 @@ NB.
 NB. Syntax:
 NB.   X=. uplo dsytrs DPT1 ; ipiv ; B
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of DPT1 only, form
-NB.                  is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.          specifies which triangular part of DPT1 is to be
+NB.          referenced:
+NB.            'L' - lower, the form is:
 NB.                    PL1 * D * PL1^T = A
-NB.            'U' - use upper triangle of DPT1 only, form
-NB.                  is:
+NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^T = A
 NB.   DPT1 - n×n-matrix, D and PT1 combined
 NB.   ipiv - n-vector, integer, the pivot indices that define
@@ -40,7 +40,7 @@ NB. - the verbs below are loaded into the current locale
 dsytrs=: 4 : 0
   'DPT1 ipiv B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) DPT1
   assert. (isvector_jlapack2_                      , (-: <.) :: 0     , n = #) ipiv
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B

@@ -9,10 +9,13 @@ NB. Syntax:
 NB.   X=.      dpttrs dD ; eT1 ; B
 NB.   X=. uplo zpttrs dD ; eT1 ; B
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - eT1 is the subdiagonal of L1, form is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.           specifies what is eT1:
+NB.            'L' - eT1 is the subdiagonal of L1, the form
+NB.                  is:
 NB.                    L1 * D * L1^H = A
-NB.            'U' - eT1 is the superdiagonal of U1, form is:
+NB.            'U' - eT1 is the superdiagonal of U1, the form
+NB.                  is:
 NB.                    U1^H * D * U1 = A
 NB.   dD   - n-vector, real, diagonal of D
 NB.   eT1  - (n-1)-vector, subdiagonal of L1, or the
@@ -63,7 +66,7 @@ dpttrs=: 3 : 0
 zpttrs=: 4 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (isvector_jlapack2_ , isreal_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ ,                    (<: n) = #) e
   assert.  ismatrix_jlapack2_                                  B

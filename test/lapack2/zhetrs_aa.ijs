@@ -7,10 +7,12 @@ NB.
 NB. Syntax:
 NB.   X=. uplo zhetrs_aa DT1 ; ipiv ; B
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of DT1 only, form is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.          specifies which triangular part of DT1 is to be
+NB.          referenced:
+NB.            'L' - lower, the form is:
 NB.                    P * L1 * D * L1^H * P^H = A
-NB.            'U' - use upper triangle of DT1 only, form is:
+NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^H * P^H = A
 NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, the pivot indices that define
@@ -37,7 +39,7 @@ NB. - the verbs below are loaded into the current locale
 zhetrs_aa=: 4 : 0
   'DT1 ipiv B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) DT1
   assert. (isvector_jlapack2_ , (-: <.) :: 0       , n = #) ipiv
   assert.  ismatrix_jlapack2_                               B

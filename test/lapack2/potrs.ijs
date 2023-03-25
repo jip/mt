@@ -8,10 +8,12 @@ NB.
 NB. Syntax:
 NB.   X=. uplo xpotrs T ; B
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of A only, form is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.           specifies which triangular part of A is to be
+NB.           referenced:
+NB.            'L' - lower, the form is:
 NB.                    L * L^H = A
-NB.            'U' - use upper triangle of A only, form is:
+NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
 NB.   T    - n×n-matrix, L or U factor
 NB.   B    - n×nrhs-matrix, RHS
@@ -31,7 +33,7 @@ NB. - no check for positive definiteness
 dpotrs=: 4 : 0
   'T B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) T
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 T
@@ -53,7 +55,7 @@ dpotrs=: 4 : 0
 zpotrs=: 4 : 0
   'T B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) T
   assert.  ismatrix_jlapack2_                               B
   if. JCMPX ~: 3!:0 T do. T=. T + 0j0 end.

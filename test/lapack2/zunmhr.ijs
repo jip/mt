@@ -6,14 +6,14 @@ NB.   matrix which is defined as a product of elementary
 NB.   reflectors
 NB.
 NB. Syntax:
-NB.   B=. (side , trans) zunmhr ilo ; ihi ; A ; tau ; C
+NB.   B=. (side ; trans) zunmhr ilo ; ihi ; A ; tau ; C
 NB. where
-NB.   side  - scalar, character, case-insensitive, specifies
-NB.           the side of op(Q):
+NB.   side  - literal, case-insensitive, in which the head
+NB.           specifies the side of op(Q):
 NB.             'L' - op(Q) * C  (apply op(Q) from the left)
 NB.             'R' - C * op(Q)  (apply op(Q) from the right)
-NB.   trans - scalar, character, case-insensitive, specifies
-NB.           op(Q):
+NB.   trans - literal, case-insensitive, in which the head
+NB.           specifies the form of op(Q):
 NB.             'N' - op(Q) := Q    (no transpose)
 NB.             'C' - op(Q) := Q^H  (transpose)
 NB.   ilo   ∈ [1,max(1,ihi)], IO starting row and column,
@@ -52,9 +52,9 @@ zunmhr=: 4 : 0
   'ilo ihi A tau C'=. y
   'm n'=. sh=. $ C
   s=. # A
-  assert. (e.&'lLrR' , #) side
-  assert. (e.&'nNcC' , #) trans
-  assert. s = sh {~ side e. 'rR'
+  assert. 'lLrR' e.~ {. side
+  assert. 'nNtT' e.~ {. trans
+  assert. s = sh {~ 'rR' e.~ {. side
   assert. (= <.)                          ilo , ihi
   assert. 1 0&=`((0 , s)&I. , <:/)@.(* s) ilo , ihi
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
@@ -65,8 +65,8 @@ zunmhr=: 4 : 0
   if. JCMPX ~: 3!:0 A   do. A=.   A   + 0j0   end.
   if. JCMPX ~: 3!:0 tau do. tau=. tau + 0j0   end.
   if. JCMPX ~: 3!:0 C   do. C=.   C   + 0j0   end.
-  NB. lwork=. , 1 >. sh {~ side e. 'lL'  NB. minimal
-  lwork=. , 32 * 1 >. sh {~ side e. 'lL'  NB. optimal
+  NB. lwork=. , 1 >. sh {~ 'lL' e.~ {. side  NB. minimal
+  lwork=. , 32 * 1 >. sh {~ 'lL' e.~ {. side  NB. optimal
   cdrc=. zunmhr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
   |: 10 {:: cdrc

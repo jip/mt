@@ -6,15 +6,17 @@ NB.   generalized eigenvalues and, optionally, the left
 NB.   and/or right generalized eigenvectors
 NB.
 NB. Syntax:
-NB.   'alpha beta Vl Vr'=. (jobVl , jobVr) xggev A ;  B
-NB.   'alpha beta Vl Vr'=. (jobVl , jobVr) xggev A ,: B
+NB.   'alpha beta Vl Vr'=. (jobVl ; jobVr) xggev A ;  B
+NB.   'alpha beta Vl Vr'=. (jobVl ; jobVr) xggev A ,: B
 NB. where
-NB.   jobVl - scalar, character, case-insensitive:
-NB.             'N' - do not compute Vl
-NB.             'V' - to compute Vl
-NB.   jobVr - scalar, character, case-insensitive:
-NB.             'N' - do not compute Vr
-NB.             'V' - to computed Vr
+NB.   jobVl - literal, case-insensitive, in which the head
+NB.           specifies whether to compute Vl:
+NB.             'N' - to not compute
+NB.             'V' - to compute
+NB.   jobVr - literal, case-insensitive, in which the head
+NB.           specifies whether to compute Vr:
+NB.             'N' - to not compute
+NB.             'V' - to compute
 NB.   A,B   - n×n-matrix, a matrix pair
 NB.   alpha - n-vector, generalized eigenvalues nominator of
 NB.           matrix pair (A,B)
@@ -34,8 +36,8 @@ NB. - each eigenvector is scaled so the largest component has
 NB.     |Re(V(i))| + |Im(Vi)| = 1
 
 dggev=: 4 : 0
-  assert. (e.&'nNvV' , 2 = #) x
   'jobVl jobVr'=. x
+  assert. jobVl ,&('nNvV' e.~ {.) jobVr
   'A B'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_        ) A
@@ -50,8 +52,8 @@ dggev=: 4 : 0
     case. JFL   do.
     case.       do. B=. B + 0.0
   end.
-  Vl=. (0 0 [^:(jobVl e. 'nN') }. $ y) $ 0.0
-  Vr=. (0 0 [^:(jobVr e. 'nN') }. $ y) $ 0.0
+  Vl=. (0 0 [^:('nN' e.~ {. jobVl) }. $ y) $ 0.0
+  Vr=. (0 0 [^:('nN' e.~ {. jobVr) }. $ y) $ 0.0
   ldAB=. , 1 >. n
   ldVl=. , 1 >. # Vl
   ldVr=. , 1 >. # Vr
@@ -62,23 +64,23 @@ dggev=: 4 : 0
   'alphar alphai beta Vl Vr'=. (|: L: 0) 8 9 10 11 13 { cdrc  NB. (|:) doesn't affect to alphar, alphai and beta
   alpha=. alphar j. alphai
   if. # cx=. I. alphai ~: 0 do.
-    if. jobVl e. 'vV' do. Vl=. cx cxpair_jlapack2_ Vl end.
-    if. jobVr e. 'vV' do. Vr=. cx cxpair_jlapack2_ Vr end.
+    if. 'vV' e.~ {. jobVl do. Vl=. cx cxpair_jlapack2_ Vl end.
+    if. 'vV' e.~ {. jobVr do. Vr=. cx cxpair_jlapack2_ Vr end.
   end.
   alpha ; beta ; Vl ; Vr
 )
 
 zggev=: 4 : 0
-  assert. (e.&'nNvV' , 2 = #) x
   'jobVl jobVr'=. x
+  assert. jobVl ,&('nNvV' e.~ {.) jobVr
   'A B'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_        ) A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
   if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
-  Vl=. (0 0 [^:(jobVl e. 'nN') }. $ y) $ 0j0
-  Vr=. (0 0 [^:(jobVr e. 'nN') }. $ y) $ 0j0
+  Vl=. (0 0 [^:('nN' e.~ {. jobVl) }. $ y) $ 0j0
+  Vr=. (0 0 [^:('nN' e.~ {. jobVr) }. $ y) $ 0j0
   ldAB=. , 1 >. n
   ldVl=. , 1 >. # Vl
   ldVr=. , 1 >. # Vr

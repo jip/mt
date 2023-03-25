@@ -7,10 +7,12 @@ NB.
 NB. Syntax:
 NB.   T=. uplo xpotrf A
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of A only, form is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.           specifies which triangular part of A is to be
+NB.           referenced:
+NB.            'L' - lower, the form is:
 NB.                    L * L^H = A
-NB.            'U' - use upper triangle of A only, form is:
+NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
 NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite or upper or lower triangular
@@ -25,7 +27,7 @@ NB. - the verbs below are loaded into the current locale
 NB. - no check for positive definiteness
 
 dpotrf=: 4 : 0
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_) y
   select. 3!:0 y
     case. JCMPX do. y=. 9 o. y
@@ -39,7 +41,7 @@ dpotrf=: 4 : 0
 )
 
 zpotrf=: 4 : 0
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   if. JCMPX ~: 3!:0 y do. y=. y + 0j0 end.
   n=. # y

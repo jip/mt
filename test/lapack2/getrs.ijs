@@ -8,8 +8,8 @@ NB.
 NB. Syntax:
 NB.   X=. trans xgetrs L1U ; ipiv ; B
 NB. where
-NB.   trans - scalar, character, case-insensitive, specifies
-NB.           the form of the system of equations:
+NB.   trans - literal, case-insensitive, in which the head
+NB.           specifies the form of the system of equations:
 NB.             'N' - A   * X = B  (no transpose)
 NB.             'T' - A^T * X = B  (transpose)
 NB.             'C' - A^H * X = B  (conjugate transpose)
@@ -34,7 +34,7 @@ NB. - the verbs below are loaded into the current locale
 dgetrs=: 4 : 0
   'L1U ipiv B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'nNtTcC' , #) x
+  assert. 'nNtTcC' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) L1U
   assert. (isvector_jlapack2_ ,                      (-: <.) :: 0     , n = #) ipiv
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
@@ -58,7 +58,7 @@ dgetrs=: 4 : 0
 zgetrs=: 4 : 0
   'L1U ipiv B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'nNtTcC' , #) x
+  assert. 'nNtTcC' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) L1U
   assert. (isvector_jlapack2_ , (-: <.) :: 0       , n = #) ipiv
   assert.  ismatrix_jlapack2_                               B

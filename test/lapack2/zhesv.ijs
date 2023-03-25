@@ -7,10 +7,12 @@ NB.
 NB. Syntax:
 NB.   'DPT1 ipiv X'=. uplo zhesv A ; B
 NB. where
-NB.   uplo - scalar, character, case-insensitive:
-NB.            'L' - use lower triangle of A only, form is:
+NB.   uplo - literal, case-insensitive, in which the head
+NB.          specifies which triangular part of A is to be
+NB.          referenced:
+NB.            'L' - lower, the form is:
 NB.                    PL1 * D * PL1^H = A
-NB.            'U' - use upper triangle of A only, form is:
+NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^H = A
 NB.   A    - n×n-matrix, the Hermitian to be factored into
 NB.          DPT1 and ipiv
@@ -39,13 +41,13 @@ NB. - the verbs below are loaded into the current locale
 zhesv=: 4 : 0
   'A B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU' , #) x
+  assert. 'lLuU' e.~ {. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.
   if. JCMPX ~: 3!:0 B do. B=. B + 0j0 end.
   ld=. , 1 >. n
-  nb=. 1:^:((x e. 'uU') *. 64 > n) 64
+  nb=. 1:^:(('uU' e.~ {. x) *. 64 > n) 64
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * nb  NB. optimal
   cdrc=. zhesv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; (lwork $ 0j0) ; lwork ; , _1

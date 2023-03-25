@@ -1,20 +1,24 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Solve a triangular system
+NB.   Solve a triangular system:
+NB.     op(A) * X = B
 NB.
 NB. Syntax:
-NB.   X=. (uplo , trans , diag) xtrtrs A ; B
+NB.   X=. (uplo ; trans ; diag) xtrtrs A ; B
 NB. where
-NB.   uplo  - scalar, character, case-insensitive:
-NB.             'L' - use lower triangle of A only
-NB.             'U' - use upper triangle of A only
-NB.   trans - scalar, character, case-insensitive, specifies
-NB.           the form of the system of equations:
-NB.             'N' - A   * X = B  (no transpose)
-NB.             'T' - A^T * X = B  (transpose)
-NB.             'C' - A^H * X = B  (conjugate transpose)
-NB.   diag  - scalar, character, case-insensitive:
+NB.   uplo  - literal, case-insensitive, in which the head
+NB.            specifies which triangular part of A is to be
+NB.            referenced:
+NB.             'L' - lower
+NB.             'U' - upper
+NB.   trans - literal, case-insensitive, in which the head
+NB.           specifies the form of op(A):
+NB.             'N' - op(A) := A    (no transpose)
+NB.             'T' - op(A) := A^T  (transpose)
+NB.             'C' - op(A) := A^H  (conjugate transpose)
+NB.   diag  - literal, case-insensitive, in which the head
+NB.            specifies the form of A:
 NB.             'N' - A is non-unit triangular
 NB.             'U' - A is unit triangular, the diagonal
 NB.                   elements of A are not referenced
@@ -32,9 +36,9 @@ dtrtrs=: 4 : 0
   'uplo trans diag'=. x
   'A B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU'   , #) uplo
-  assert. (e.&'nNtTcC' , #) trans
-  assert. (e.&'nNuU'   , #) diag
+  assert. 'lLuU'   e.~ {. uplo
+  assert. 'nNtTcC' e.~ {. trans
+  assert. 'nNuU'   e.~ {. diag
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , isreal_jlapack2_ , n = #) A
   assert. (ismatrix_jlapack2_ ,                      isreal_jlapack2_        ) B
   select. 3!:0 A
@@ -57,9 +61,9 @@ ztrtrs=: 4 : 0
   'uplo trans diag'=. x
   'A B'=. y
   'n nrhs'=. $ B
-  assert. (e.&'lLuU'   , #) uplo
-  assert. (e.&'nNtTcC' , #) trans
-  assert. (e.&'nNuU'   , #) diag
+  assert. 'lLuU'   e.~ {. uplo
+  assert. 'nNtTcC' e.~ {. trans
+  assert. 'nNuU'   e.~ {. diag
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   if. JCMPX ~: 3!:0 A do. A=. A + 0j0 end.

@@ -830,6 +830,18 @@ testgghrd=: 3 : 0
   ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
   ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
 
+  ('''nn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
+  ('''ni''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  ('''nv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+
+  ('''in''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  ('''ii''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  ('''iv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+
+  ('''vn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  ('''vi''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  ('''vv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+
   ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                 ))) argsmtl
   ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
   ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl

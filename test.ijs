@@ -276,7 +276,7 @@ tmonad=: 2 : 0
   logline (1!:2) 2
   wd^:IFQT 'msgs'
   logline (1!:3~ ,&LF)~^:(0 < #@]) TESTLOGFILE_mt_
-  TESTLOG_mt_=: TESTLOG_mt_ , logline
+  TESTLOG_mt_=: TESTLOG_mt_ , logline , LF
   EMPTY
 )
 
@@ -305,7 +305,7 @@ tdyad=: 2 : 0
   logline (1!:2) 2
   wd^:IFQT 'msgs'
   logline (1!:3~ ,&LF)~^:(0 < #@]) TESTLOGFILE_mt_
-  TESTLOG_mt_=: TESTLOG_mt_ , logline
+  TESTLOG_mt_=: TESTLOG_mt_ , logline , LF
   EMPTY
 )
 

@@ -117,7 +117,7 @@ NB. like fread, but may throw 'file name' error
 fread2=: (1!:1)@fboxname@boxopen@jpath
 
 NB. fix system's (assert) to match (assert.) control
-assert=: 0 0 $ dbsig@12^:(1 +./@:~: ])^:(9!:34@'')
+assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')
 
 NB. predicate to check is array symmetric
 NB. based on:

@@ -207,10 +207,7 @@ NB. - to force norms act like any of: DLANSB('f'),
 NB.   DLANST('f'), xLANGB('f'), xLANGT('f'), xLANHS('f'),
 NB.   xLANTB('f'), xLANTR('f'), ZLANHB('f'), ZLANHT('f'),-
 NB.   extraneous values in matrix must be zeroed
-NB.
-NB. TODO:
-NB. - fix index error in normsc for complex vector input
 
-norms=:  ((+/  &.:*:@: %    * ]) >./  )@,@:|                                                 @ (+.^:(JCMPX = 3!:0))  NB. E-norm of vector (F-norm of matrix)
-normsc=: ((+/  &.:*:@:(%"1) * ]) >./  )  @:|`(((+/@,"2&.:*:@:% * ]) >./@,"2)@(0 2&|:)@:|@:+.)@.     (JCMPX = 3!:0)   NB. E-norm of matrix columns
-normsr=: ((+/"1&.:*:@: %    * ]) >./"1)  @:|`(((+/@,"2&.:*:@:% * ]) >./@,"2)         @:|@:+.)@.     (JCMPX = 3!:0)   NB. E-norm of matrix rows
+norms=:  ((+/  &.:*:@: %    * ]) >./  )@,@:|                                                      @ (+.^:(JCMPX = 3!:0))  NB. E-norm of vector (F-norm of matrix)
+normsc=: ((+/  &.:*:@:(%"1) * ]) >./  )  @:|`(((+/@,"2&.:*:@:% * ]) >./@,"2)@(0 2&|: :: ])@:|@:+.)@.     (JCMPX = 3!:0)   NB. E-norm of matrix columns
+normsr=: ((+/"1&.:*:@: %    * ]) >./"1)  @:|`(((+/@,"2&.:*:@:% * ]) >./@,"2)              @:|@:+.)@.     (JCMPX = 3!:0)   NB. E-norm of matrix rows

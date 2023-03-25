@@ -62,7 +62,7 @@ NB. =========================================================
 NB. Local definitions
 
 NB. convert rISO to opened (non-boxed) ISO
-riso2oiso=: <@dhs2liso/"1@:|:
+riso2oiso=: <@dhs2liso"1@:|:
 
 NB. =========================================================
 NB. Interface

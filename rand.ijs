@@ -861,7 +861,7 @@ testdimat=: 3 : 0
   (' gemat           dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
   (' gemat           dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
-  ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  ('(gemat j. gemat) dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
   ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
   EMPTY

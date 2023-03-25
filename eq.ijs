@@ -276,7 +276,7 @@ hgezq=: 1 : 0
             j=. <: j
           end.
           NB. drop-through is impossible
-          ((< _.) setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
+          ((_. ; '') setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
           return.
         else.
           y=. 0 (< 1 , ,~ ilast)} y
@@ -500,7 +500,7 @@ hgeqz=: 1 : 0
             j=. <: j
           end.
           NB. drop-through is impossible
-          ((< _.) setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
+          ((_. ; '') setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
           return.
         else.
           y=. 0 (< 1 , ,~ ilast)} y

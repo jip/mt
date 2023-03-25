@@ -94,7 +94,7 @@ NB.           also, a raw measurement log used to form raw
 NB.           data will be stored into file:
 NB.             jpath '~temp/mt.benchmark.',descr,'.log'
 NB.   n     > 0, the size of square matrices used for tests
-NB.   descr - literal vector, benchmark description
+NB.   descr - literal, benchmark description
 NB.   sizes - s-vector, integer, test matrices sizes
 NB.   out   - s-vector, float, benchmark results for corresp.
 NB.           sizes
@@ -174,12 +174,12 @@ benchmark=: 1 : 0
   timespacex_z_=: timex , (_."_)
   TESTLOGFILE_mt_=: < jpath '~temp/mt.benchmark.' , x , '.log'
 
-  measurements=. i. 0 0 0  NB. (# y)×(# verbs)×BMKRUNS-brick of boxed strings 'n/a' or with formatted float
+  measurements=. i. 0 0 0  NB. (# y)×(# verbs)×BMKRUNS-brick of boxed literals 'n/a' or with formatted float
   titles=. ''  NB. (# y)-vector of boxed titles
   iosize=. 0
   while. iosize < # y do.
     size=. iosize { y
-    measurement=. ''  NB. (# verbs)×BMKRUNS-matrix of boxed strings 'n/a' or with formatted float
+    measurement=. ''  NB. (# verbs)×BMKRUNS-matrix of boxed literals 'n/a' or with formatted float
     titles=. titles , < (6!:0 'YYYY-MM-DD hh:mm:ss') , ', datatype: ' , datatypename , ', size: ' , (": size) , LF
     run=. 1
     while. run <: BMKRUNS_mt_ do.

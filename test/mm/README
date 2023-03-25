@@ -3,7 +3,7 @@ File names:
   *.ijs    - J sentence to create an array
   *.info   - information about an array (optional)
 
-An array file name is a string defined by regex:
+An array file name is a literal defined by regex:
   ^[0-9]{3}(_[ac][pirc][gskhw]_\d+)?\.(ijs|mm)$
 where
   [0-9]{3}  - array id
@@ -24,7 +24,7 @@ e.g.
   999.mm        - invalid file in MatrixMarket format with id 999
 
 Files content:
-  for mm format the line terminator string is either CR or LF or CRLF
+  for mm format the line terminator literal is either CR or LF or CRLF
   for ijs format the line must be non-terminated
 
 References:

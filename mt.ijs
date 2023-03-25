@@ -2,7 +2,7 @@ NB. 'Matrix toolbox' addon's entry point
 NB.
 NB. TESTLOGFILE  a: to switch logging off or boxed logfile
 NB.              name
-NB. TESTLOG      Literal array, being formatted test log
+NB. TESTLOG      String, being formatted test log
 NB. DEBUG        Debug level
 NB. FP_BASE      Floating point base
 NB. FP_ELEN      Exponent field length (bits)
@@ -66,7 +66,7 @@ NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Tests logging
 
 TESTLOGFILE=: < jpath '~temp/mt.log'  NB. assign a: to switch off file logging
-TESTLOG=: ''                          NB. literal array, being formatted test log
+TESTLOG=: ''                          NB. string, being formatted test log
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Debug level used by dbg conj., the atom:

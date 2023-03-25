@@ -654,7 +654,7 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
   y=. CRLF cutl_mtmm_ y  NB. cut by spans of CR and LF
-  'line longer than 1024 characters was detected' assert_mtmm_ (1024 >: #) S: 0 y
+  'line longer than 1024 bytes was detected' assert_mtmm_ (1024 >: #) S: 0 y
   header=. cut_mtmm_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
   y=. (#~ ('%' ~: {.) S: 0) y   NB. remove header and comments
   y=. (#~ a:&~:) dltb L: 0 y    NB. remove empty lines

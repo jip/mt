@@ -45,10 +45,9 @@ dgels=: 4 : 0
     xh=. m
   end.
   lda=. , 1 >. m
-  ldb=. , lda >. n
   NB. lwork=. , 1 >. nrhs (] + >.) m <. n  NB. minimal
   lwork=. , 1 >. nrhs (] + 32 * >.) m <. n  NB. optimal
-  cdrc=. dgels_jlapack2_ (, x) ; (, m) ; (, n) ; (, nrhs) ; (|: A) ; lda ; (|: B) ; ldb ; (lwork $ 0.0) ; lwork ; , _1
+  cdrc=. dgels_jlapack2_ (, x) ; (, m) ; (, n) ; (, nrhs) ; (|: A) ; lda ; (|: B) ; (, lda >. n) ; (lwork $ 0.0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
   xh {. |: 7 {:: cdrc
 )
@@ -67,10 +66,9 @@ zgels=: 4 : 0
     xh=. m
   end.
   lda=. , 1 >. m
-  ldb=. , lda >. n
   NB. lwork=. , 1 >. nrhs (] + >.) m <. n  NB. minimal
   lwork=. , 1 >. nrhs (] + 32 * >.) m <. n  NB. optimal
-  cdrc=. zgels_jlapack2_ (, x) ; (, m) ; (, n) ; (, nrhs) ; (|: A) ; lda ; (|: B) ; ldb ; (lwork $ 0j0) ; lwork ; , _1
+  cdrc=. zgels_jlapack2_ (, x) ; (, m) ; (, n) ; (, nrhs) ; (|: A) ; lda ; (|: B) ; (, lda >. n) ; (lwork $ 0j0) ; lwork ; , _1
   assert. 0 = _1 {:: cdrc
   xh {. |: 7 {:: cdrc
 )

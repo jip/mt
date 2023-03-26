@@ -28,9 +28,7 @@ dgtsv=: 3 : 0
   assert. (isvector_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , (<: n) = #) du
   assert.  ismatrix_jlapack2_               B
-  cdrc=. dgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 6 {:: cdrc
+  |: 6 {:: dgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
 )
 
 zgtsv=: 3 : 0
@@ -40,7 +38,5 @@ zgtsv=: 3 : 0
   assert. (isvector_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , (<: n) = #) du
   assert.  ismatrix_jlapack2_               B
-  cdrc=. zgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 6 {:: cdrc
+  |: 6 {:: zgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
 )

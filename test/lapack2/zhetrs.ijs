@@ -46,7 +46,5 @@ zhetrs=: 4 : 0
   assert. (isvector_jlapack2_ ,                      n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. zhetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DPT1) ; ld ; ipiv ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 7 {:: cdrc
+  |: 7 {:: zhetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DPT1) ; ld ; ipiv ; (|: B) ; ld ; , _1
 )

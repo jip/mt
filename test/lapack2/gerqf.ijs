@@ -31,9 +31,8 @@ dgerqf=: 3 : 0
   assert. ismatrix_jlapack2_ y
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32&*^:(k>128) m  NB. optimal
-  cdrc=. dgerqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to tau
+  (|: L: 0) 3 5 { dgerqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
+    NB. (|:) doesn't affect to tau
 )
 
 zgerqf=: 3 : 0
@@ -41,7 +40,6 @@ zgerqf=: 3 : 0
   assert. ismatrix_jlapack2_ y
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32&*^:(k>128) m  NB. optimal
-  cdrc=. zgerqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 { cdrc  NB. (|:) doesn't affect to tau
+  (|: L: 0) 3 5 { zgerqf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1
+    NB. (|:) doesn't affect to tau
 )

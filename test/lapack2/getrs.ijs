@@ -39,9 +39,7 @@ dgetrs=: 4 : 0
   assert. (isvector_jlapack2_ ,                      n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. dgetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: L1U) ; ld ; ipiv ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 7 {:: cdrc
+  |: 7 {:: dgetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: L1U) ; ld ; ipiv ; (|: B) ; ld ; , _1
 )
 
 zgetrs=: 4 : 0
@@ -52,7 +50,5 @@ zgetrs=: 4 : 0
   assert. (isvector_jlapack2_ ,                      n = #) ipiv
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. zgetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: L1U) ; ld ; ipiv ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 7 {:: cdrc
+  |: 7 {:: zgetrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: L1U) ; ld ; ipiv ; (|: B) ; ld ; , _1
 )

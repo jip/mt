@@ -34,9 +34,8 @@ dgehrd=: 3 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 4160 32&p.`1:@.(2&>) n  NB. optimal
-  cdrc=. dgehrd_jlapack2_ (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. n) ; ((<: n) $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 4 6 { cdrc  NB. (|:) doesn't affect to tau
+  (|: L: 0) 4 6 { dgehrd_jlapack2_ (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. n) ; ((<: n) $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
+    NB. (|:) doesn't affect to tau
 )
 
 zgehrd=: 3 : 0
@@ -45,7 +44,6 @@ zgehrd=: 3 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 4160 32&p.`1:@.(2&>) n  NB. optimal
-  cdrc=. zgehrd_jlapack2_ (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. n) ; ((<: n) $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 4 6 { cdrc  NB. (|:) doesn't affect to tau
+  (|: L: 0) 4 6 { zgehrd_jlapack2_ (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. n) ; ((<: n) $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1
+    NB. (|:) doesn't affect to tau
 )

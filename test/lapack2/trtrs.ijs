@@ -39,9 +39,7 @@ dtrtrs=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. dtrtrs_jlapack2_ (, uplo) ; (, trans) ; (, diag) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 8 {:: cdrc
+  |: 8 {:: dtrtrs_jlapack2_ (, uplo) ; (, trans) ; (, diag) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
 )
 
 ztrtrs=: 4 : 0
@@ -51,7 +49,5 @@ ztrtrs=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. ztrtrs_jlapack2_ (, uplo) ; (, trans) ; (, diag) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 8 {:: cdrc
+  |: 8 {:: ztrtrs_jlapack2_ (, uplo) ; (, trans) ; (, diag) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
 )

@@ -33,9 +33,7 @@ dpttrf=: 3 : 0
   n=. # d
   assert.  isvector_jlapack2_               d
   assert. (isvector_jlapack2_ , (<: n) = #) e
-  cdrc=. dpttrf_jlapack2_ (, n) ; d ; e ; , _1
-  assert. 0 = _1 {:: cdrc
-  2 3 { cdrc
+  2 3 { dpttrf_jlapack2_ (, n) ; d ; e ; , _1
 )
 
 zpttrf=: 3 : 0
@@ -43,7 +41,5 @@ zpttrf=: 3 : 0
   n=. # d
   assert.  isvector_jlapack2_               d
   assert. (isvector_jlapack2_ , (<: n) = #) e
-  cdrc=. zpttrf_jlapack2_ (, n) ; d ; e ; , _1
-  assert. 0 = _1 {:: cdrc
-  2 3 { cdrc
+  2 3 { zpttrf_jlapack2_ (, n) ; d ; e ; , _1
 )

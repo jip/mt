@@ -73,9 +73,8 @@ dhgeqz=: 4 : 0
   ldQ=.  , 1 >. 0:^:('nN' e.~ {. compQ) n
   ldZ=.  , 1 >. 0:^:('nN' e.~ {. compZ) n
   lwork=. , 1 >. n  NB. minimal
-  cdrc=. dhgeqz_jlapack2_ (, job) ; (, compQ) ; (, compZ) ; (, n) ; (, ilo) ; (, ihi) ; (|: H) ; ldHT ; (|: T) ; ldHT ; (n $ 0.0) ; (n $ 0.0) ; (n $ 0.0) ; Q1 ; ldQ ; Z1 ; ldZ ; (lwork $ 0.0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  'H T alphar alphai beta Q1 Z1'=. (|: L: 0) 7 9 11 12 13 14 16 { cdrc  NB. (|:) doesn't affect to alphar, alphai and beta
+  'H T alphar alphai beta Q1 Z1'=. (|: L: 0) 7 9 11 12 13 14 16 { dhgeqz_jlapack2_ (, job) ; (, compQ) ; (, compZ) ; (, n) ; (, ilo) ; (, ihi) ; (|: H) ; ldHT ; (|: T) ; ldHT ; (n $ 0.0) ; (n $ 0.0) ; (n $ 0.0) ; Q1 ; ldQ ; Z1 ; ldZ ; (lwork $ 0.0) ; lwork ; , _1
+    NB. (|:) doesn't affect to alphar, alphai and beta
   alpha=. alphar j. alphai
   H ; T ; alpha ; beta ; Q1 ; Z1
 )
@@ -95,7 +94,6 @@ zhgeqz=: 4 : 0
   ldQ=.  , 1 >. 0:^:('nN' e.~ {. compQ) n
   ldZ=.  , 1 >. 0:^:('nN' e.~ {. compZ) n
   lwork=. , 1 >. n  NB. minimal
-  cdrc=. zhgeqz_jlapack2_ (, job) ; (, compQ) ; (, compZ) ; (, n) ; (, ilo) ; (, ihi) ; (|: H) ; ldHT ; (|: T) ; ldHT ; (n $ 0.0) ; (n $ 0.0) ; Q1 ; ldQ ; Z1 ; ldZ ; (lwork $ 0j0) ; lwork ; (n $ 0.0) ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 7 9 11 12 13 15 { cdrc  NB. (|:) doesn't affect to alpha and beta
+  (|: L: 0) 7 9 11 12 13 15 { zhgeqz_jlapack2_ (, job) ; (, compQ) ; (, compZ) ; (, n) ; (, ilo) ; (, ihi) ; (|: H) ; ldHT ; (|: T) ; ldHT ; (n $ 0.0) ; (n $ 0.0) ; Q1 ; ldQ ; Z1 ; ldZ ; (lwork $ 0j0) ; lwork ; (n $ 0.0) ; , _1
+    NB. (|:) doesn't affect to alpha and beta
 )

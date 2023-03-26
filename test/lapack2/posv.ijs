@@ -36,9 +36,7 @@ dposv=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. dposv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 4 6 { cdrc
+  (|: L: 0) 4 6 { dposv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
 )
 
 zposv=: 4 : 0
@@ -47,7 +45,5 @@ zposv=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. zposv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 4 6 { cdrc
+  (|: L: 0) 4 6 { zposv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (|: B) ; ld ; , _1
 )

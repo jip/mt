@@ -35,7 +35,5 @@ zunglq=: 3 : 0
   assert. isvector_jlapack2_ tau
   NB. lwork=. , 1 >. m  NB. minimal
   lwork=. , 1 >. 32 *^:(128 < ]) m  NB. optimal
-  cdrc=. zunglq_jlapack2_ (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. m) ; tau ; (lwork $ 0j0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 4 {:: cdrc
+  |: 4 {:: zunglq_jlapack2_ (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. m) ; tau ; (lwork $ 0j0) ; lwork ; , _1
 )

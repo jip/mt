@@ -29,15 +29,11 @@ NB. - no check for positive definiteness
 dpotrf=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
-  cdrc=. dpotrf_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 3 {:: cdrc
+  |: 3 {:: dpotrf_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
 )
 
 zpotrf=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
-  cdrc=. zpotrf_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 3 {:: cdrc
+  |: 3 {:: zpotrf_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
 )

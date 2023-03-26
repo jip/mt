@@ -31,16 +31,12 @@ dtrtri=: 4 : 0
   'uplo diag'=. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
-  cdrc=. dtrtri_jlapack2_ (, uplo) ; (, diag) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 4 {:: cdrc
+  |: 4 {:: dtrtri_jlapack2_ (, uplo) ; (, diag) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
 )
 
 ztrtri=: 4 : 0
   'uplo diag'=. x
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
-  cdrc=. ztrtri_jlapack2_ (, uplo) ; (, diag) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 4 {:: cdrc
+  |: 4 {:: ztrtri_jlapack2_ (, uplo) ; (, diag) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
 )

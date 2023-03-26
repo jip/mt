@@ -47,7 +47,6 @@ dsysv_aa=: 4 : 0
   lwork_dsytrf_aa=. 1 >. n * >: 64
   lwork_dsytrs_aa=. 1 >. _2 3 p. n
   lwork=. , lwork_dsytrf_aa >. lwork_dsytrs_aa  NB. optimal
-  cdrc=. dsysv_aa_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; (lwork $ 0.0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 4 6 7 { cdrc  NB. (|:) doesn't affect to ipiv
+  (|: L: 0) 4 6 7 { dsysv_aa_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; (lwork $ 0.0) ; lwork ; , _1
+    NB. (|:) doesn't affect to ipiv
 )

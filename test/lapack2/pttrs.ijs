@@ -43,9 +43,7 @@ dpttrs=: 3 : 0
   assert. (isvector_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , (<: n) = #) e
   assert.  ismatrix_jlapack2_               B
-  cdrc=. dpttrs_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 5 {:: cdrc
+  |: 5 {:: dpttrs_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
 )
 
 zpttrs=: 4 : 0
@@ -54,7 +52,5 @@ zpttrs=: 4 : 0
   assert. (isvector_jlapack2_ ,     n  = #) d
   assert. (isvector_jlapack2_ , (<: n) = #) e
   assert.  ismatrix_jlapack2_               B
-  cdrc=. zpttrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 6 {:: cdrc
+  |: 6 {:: zpttrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
 )

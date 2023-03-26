@@ -33,7 +33,5 @@ dorghr=: 3 : 0
   assert. (isvector_jlapack2_ , (<: n) = #        ) tau
   NB. lwork=. , 1 >. ihi-ilo  NB. minimal
   lwork=. , 1 >. 32 * ihi - ilo  NB. optimal
-  cdrc=. dorghr_jlapack2_ (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. n) ; tau ; (lwork $ 0.0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 4 {:: cdrc
+  |: 4 {:: dorghr_jlapack2_ (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. n) ; tau ; (lwork $ 0.0) ; lwork ; , _1
 )

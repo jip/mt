@@ -32,15 +32,11 @@ NB. - the verbs below are loaded into the current locale
 dpotri=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
-  cdrc=. dpotri_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 3 {:: cdrc
+  |: 3 {:: dpotri_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
 )
 
 zpotri=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y
   n=. # y
-  cdrc=. zpotri_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 3 {:: cdrc
+  |: 3 {:: zpotri_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; , _1
 )

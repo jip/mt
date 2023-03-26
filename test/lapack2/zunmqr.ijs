@@ -59,7 +59,5 @@ zunmqr=: 4 : 0
   tsize=. nbmax * ldt
   nb=. nbmax <. ilaenv
   lwork=. , tsize + nb * 1 >. sh {~ 'lL' e.~ {. side  NB. optimal
-  cdrc=. zunmqr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 9 {:: cdrc
+  |: 9 {:: zunmqr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, k) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
 )

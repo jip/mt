@@ -44,9 +44,8 @@ dgeqp3=: 3 : 0
   assert. (isvector_jlapack2_ , n = #) pvt
   NB. lwork=. , >: n  NB. minimal
   lwork=. , 1 >. (32 + 0 2) p. n  NB. optimal
-  cdrc=. dgeqp3_jlapack2_ (, m) ; (, n) ; (|: A) ; (, 1 >. m) ; pvt ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 6 { cdrc  NB. (|:) doesn't affect to pvt and tau
+  (|: L: 0) 3 5 6 { dgeqp3_jlapack2_ (, m) ; (, n) ; (|: A) ; (, 1 >. m) ; pvt ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
+    NB. (|:) doesn't affect to pvt and tau
 )
 
 zgeqp3=: 3 : 0
@@ -56,7 +55,6 @@ zgeqp3=: 3 : 0
   assert. (isvector_jlapack2_ , n = #) pvt
   NB. lwork=. , >: n  NB. minimal
   lwork=. , 1 >. 32 * >: n  NB. optimal
-  cdrc=. zgeqp3_jlapack2_ (, m) ; (, n) ; (|: A) ; (, 1 >. m) ; pvt ; (k $ 0j0) ; (lwork $ 0j0) ; lwork ; ((+: n) $ 0.0) ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 3 5 6 { cdrc  NB. (|:) doesn't affect to pvt and tau
+  (|: L: 0) 3 5 6 { zgeqp3_jlapack2_ (, m) ; (, n) ; (|: A) ; (, 1 >. m) ; pvt ; (k $ 0j0) ; (lwork $ 0j0) ; lwork ; ((+: n) $ 0.0) ; , _1
+    NB. (|:) doesn't affect to pvt and tau
 )

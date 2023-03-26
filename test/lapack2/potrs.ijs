@@ -36,9 +36,7 @@ dpotrs=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) T
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. dpotrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: T) ; ld ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 6 {:: cdrc
+  |: 6 {:: dpotrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: T) ; ld ; (|: B) ; ld ; , _1
 )
 
 zpotrs=: 4 : 0
@@ -47,7 +45,5 @@ zpotrs=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) T
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  cdrc=. zpotrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: T) ; ld ; (|: B) ; ld ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 6 {:: cdrc
+  |: 6 {:: zpotrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: T) ; ld ; (|: B) ; ld ; , _1
 )

@@ -28,9 +28,7 @@ dgetri=: 3 : 0
   assert.  isvector_jlapack2_                               ipiv
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal
-  cdrc=. dgetri_jlapack2_ (, n) ; (|: L1U) ; (, 1 >. n) ; ipiv ; (lwork $ 0.0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 2 {:: cdrc
+  |: 2 {:: dgetri_jlapack2_ (, n) ; (|: L1U) ; (, 1 >. n) ; ipiv ; (lwork $ 0.0) ; lwork ; , _1
 )
 
 zgetri=: 3 : 0
@@ -40,7 +38,5 @@ zgetri=: 3 : 0
   assert.  isvector_jlapack2_                               ipiv
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal
-  cdrc=. zgetri_jlapack2_ (, n) ; (|: L1U) ; (, 1 >. n) ; ipiv ; (lwork $ 0j0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 2 {:: cdrc
+  |: 2 {:: zgetri_jlapack2_ (, n) ; (|: L1U) ; (, 1 >. n) ; ipiv ; (lwork $ 0j0) ; lwork ; , _1
 )

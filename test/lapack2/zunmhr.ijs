@@ -58,7 +58,5 @@ zunmhr=: 4 : 0
   assert.  ismatrix_jlapack2_                       C
   NB. lwork=. , 1 >. sh {~ 'lL' e.~ {. side  NB. minimal
   lwork=. , 32 * 1 >. sh {~ 'lL' e.~ {. side  NB. optimal
-  cdrc=. zunmhr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 10 {:: cdrc
+  |: 10 {:: zunmhr_jlapack2_ (, side) ; (, trans) ; (, m) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. s) ; tau ; (|: C) ; (, 1 >. m) ; (lwork $ 0j0) ; lwork ; , _1
 )

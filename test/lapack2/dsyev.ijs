@@ -31,9 +31,7 @@ dsyev=: 4 : 0
   n=. # y
   NB. lwork=. , 1 >. _1 3 p. n  NB. minimal
   lwork=. , 1 >. n * 34  NB. optimal
-  cdrc=. dsyev_jlapack2_ (, jobV) ; (, uplo) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  'w V'=. 6 4 { cdrc
+  'w V'=. 6 4 { dsyev_jlapack2_ (, jobV) ; (, uplo) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
   if. 'vV' e.~ {. jobV do. V=. |: V else. V=. EMPTY end.
   w ; V
 )

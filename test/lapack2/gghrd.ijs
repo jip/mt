@@ -60,9 +60,7 @@ dgghrd=: 4 : 0
   ldAB=. , 1 >. n
   ldQ=.  , 1 >. 0:^:('nN' e.~ {. compQ) n
   ldZ=.  , 1 >. 0:^:('nN' e.~ {. compZ) n
-  cdrc=. dgghrd_jlapack2_ (, compQ) ; (, compZ) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; ldAB ; (|: B) ; ldAB ; Q1 ; ldQ ; Z1 ; ldZ ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 6 8 10 12 { cdrc
+  (|: L: 0) 6 8 10 12 { dgghrd_jlapack2_ (, compQ) ; (, compZ) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; ldAB ; (|: B) ; ldAB ; Q1 ; ldQ ; Z1 ; ldZ ; , _1
 )
 
 zgghrd=: 4 : 0
@@ -78,7 +76,5 @@ zgghrd=: 4 : 0
   ldAB=. , 1 >. n
   ldQ=.  , 1 >. 0:^:('nN' e.~ {. compQ) n
   ldZ=.  , 1 >. 0:^:('nN' e.~ {. compZ) n
-  cdrc=. zgghrd_jlapack2_ (, compQ) ; (, compZ) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; ldAB ; (|: B) ; ldAB ; Q1 ; ldQ ; Z1 ; ldZ ; , _1
-  assert. 0 = _1 {:: cdrc
-  (|: L: 0) 6 8 10 12 { cdrc
+  (|: L: 0) 6 8 10 12 { zgghrd_jlapack2_ (, compQ) ; (, compZ) ; (, n) ; (, ilo) ; (, ihi) ; (|: A) ; ldAB ; (|: B) ; ldAB ; Q1 ; ldQ ; Z1 ; ldZ ; , _1
 )

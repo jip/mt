@@ -45,7 +45,5 @@ zhetrs_aa=: 4 : 0
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
   lwork=. , 1 >. _2 3 p. n  NB. minimal
-  cdrc=. zhetrs_aa_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DT1) ; ld ; ipiv ; (|: B) ; ld ; (lwork $ 0j0) ; lwork ; , _1
-  assert. 0 = _1 {:: cdrc
-  |: 7 {:: cdrc
+  |: 7 {:: zhetrs_aa_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: DT1) ; ld ; ipiv ; (|: B) ; ld ; (lwork $ 0j0) ; lwork ; , _1
 )

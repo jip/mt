@@ -62,8 +62,7 @@ dhgeqz=: 4 : 0
   'job compQ compZ'=. x
   'ilo ihi H T Q1 Z1'=. y
   n=. # H
-  ishessenberg=. -: ((ilo , ihi) uhmat_jlapack2_ $)`(0&,:)}
-  assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  ishessenberg                   ) H
+  assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (ilo , ihi)&(uhmat_jlapack2_ ishessenberg_jlapack2_)) H
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_)    ,  n = #) T
   assert. ('nNiI' e.~ {. compQ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Q1
   assert. ('nNiI' e.~ {. compZ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isorthogonal_jlapack2_ *. n = #) Z1
@@ -83,8 +82,7 @@ zhgeqz=: 4 : 0
   'job compQ compZ'=. x
   'ilo ihi H T Q1 Z1'=. y
   n=. # H
-  ishessenberg=. -: ((ilo , ihi) uhmat_jlapack2_ $)`(0&,:)}
-  assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  ishessenberg                ) H
+  assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (ilo , ihi)&(uhmat_jlapack2_ ishessenberg_jlapack2_)) H
   assert.                          (ismatrix_jlapack2_ ,  issquare_jlapack2_ ,  (-: utri_jlapack2_) ,  n = #) T
   assert. ('nNiI' e.~ {. compQ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isunitary_jlapack2_ *. n = #) Q1
   assert. ('nNiI' e.~ {. compZ) +. (ismatrix_jlapack2_ *. issquare_jlapack2_ *. isunitary_jlapack2_ *. n = #) Z1

@@ -219,7 +219,7 @@ NB.   A - n×n-matrix, triangular
 NB.   X - n×3-matrix, exact solutions
 
 testtrsm3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/trtrs'
+  load_mttmp_ 'math/mt/test/lapack2/trtrs'
 
   'A Xv'=. y
   Xh=. |: Xv

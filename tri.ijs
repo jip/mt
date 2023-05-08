@@ -827,7 +827,7 @@ NB. where
 NB.   A - n×n-matrix
 
 testtrtri=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/trtri'
+  load_mttmp_ 'math/mt/test/lapack2/trtri'
 
   rcondL=.  trlcon1  L=.  trlpick y
   rcondU=.  trucon1  U=.  trupick y
@@ -876,8 +876,8 @@ NB. where
 NB.   A - n×n-matrix
 
 testgetri=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/getri'
+  load_mttmp_ 'math/mt/test/lapack2/getrf'
+  load_mttmp_ 'math/mt/test/lapack2/getri'
 
   'rcondl rcondu'=. (geconi , gecon1) y
 
@@ -913,10 +913,10 @@ NB. where
 NB.   A - n×n-matrix, the Hermitian (symmetric)
 
 testhetri=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytri2'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetri2'
+  load_mttmp_ 'math/mt/test/lapack2/dsytrf'
+  load_mttmp_ 'math/mt/test/lapack2/dsytri2'
+  load_mttmp_ 'math/mt/test/lapack2/zhetrf'
+  load_mttmp_ 'math/mt/test/lapack2/zhetri2'
 
   rcond=. heconi y
 
@@ -951,8 +951,8 @@ NB.   A - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite
 
 testpotri=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/potri'
+  load_mttmp_ 'math/mt/test/lapack2/potrf'
+  load_mttmp_ 'math/mt/test/lapack2/potri'
 
   rcond=. pocon1 y
 

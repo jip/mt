@@ -406,7 +406,7 @@ NB. where
 NB.   A - n×n-matrix
 
 testgeev=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/geev'
+  load_mttmp_ 'math/mt/test/lapack2/geev'
 
   rcondu=. gecon1 y
 
@@ -440,8 +440,8 @@ NB. where
 NB.   A - n×n-matrix, the Hermitian (symmetric)
 
 testheev=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsyev'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zheev'
+  load_mttmp_ 'math/mt/test/lapack2/dsyev'
+  load_mttmp_ 'math/mt/test/lapack2/zheev'
 
   rcondl=. heconi y
 
@@ -477,7 +477,7 @@ NB. where
 NB.   AB - 2×n×n-brick
 
 testggev=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/ggev'
+  load_mttmp_ 'math/mt/test/lapack2/ggev'
 
   'rcondl rcondu'=. <./ (geconi , gecon1)"2 y
 

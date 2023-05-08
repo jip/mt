@@ -419,7 +419,7 @@ NB.   A - n×n-matrix
 NB.   X - n×3-matrix, exact solutions
 
 testgesv3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gesv'
+  load_mttmp_ 'math/mt/test/lapack2/gesv'
 
   'A Xv'=. y
   Xh=. |: Xv
@@ -508,7 +508,7 @@ NB.   A - n×n-matrix, the tridiagonal
 NB.   X - n×3-matrix, exact solutions
 
 testgtsv3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gtsv'
+  load_mttmp_ 'math/mt/test/lapack2/gtsv'
 
   'A Xv'=. y
   Xh=. |: Xv
@@ -595,10 +595,10 @@ NB. - no berrA calc for LAPACK's DSYSV and ZHESV yet since
 NB.   its output is intricate
 
 testhesv3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsysv'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsysv_aa'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhesv'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhesv_aa'
+  load_mttmp_ 'math/mt/test/lapack2/dsysv'
+  load_mttmp_ 'math/mt/test/lapack2/dsysv_aa'
+  load_mttmp_ 'math/mt/test/lapack2/zhesv'
+  load_mttmp_ 'math/mt/test/lapack2/zhesv_aa'
 
   'A Xv'=. y
   Xh=. |: Xv
@@ -693,7 +693,7 @@ NB.       definite
 NB.   X - n×3-matrix, exact solutions
 
 testposv3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/posv'
+  load_mttmp_ 'math/mt/test/lapack2/posv'
 
   'A Xv'=. y
   Xh=. |: Xv
@@ -783,7 +783,7 @@ NB.       definite tridiagonal
 NB.   X - n×3-matrix, exact solutions
 
 testptsv3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/ptsv'
+  load_mttmp_ 'math/mt/test/lapack2/ptsv'
 
   'A Xv'=. y
   Xh=. |: Xv

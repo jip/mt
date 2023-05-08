@@ -329,7 +329,7 @@ NB.   A - m×n-matrix
 NB.   X - max(m,n)×3-matrix, pool for exact solutions values
 
 testgels3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gels'
+  load_mttmp_ 'math/mt/test/lapack2/gels'
 
   'A X'=. y
   rcondA=. (_."_)`gecon1@.(=/@$) A  NB. meaninigful for square matrices only

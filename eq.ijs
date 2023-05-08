@@ -926,7 +926,7 @@ NB. where
 NB.   AB - 2×n×n-brick
 
 testhgeq=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/hgeqz'
+  load_mttmp_ 'math/mt/test/lapack2/hgeqz'
 
   n=. c y
   hs=. 0 , n

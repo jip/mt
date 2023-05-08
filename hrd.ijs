@@ -745,7 +745,7 @@ NB. where
 NB.   A - n×n-matrix
 
 testgehrd=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gehrd'
+  load_mttmp_ 'math/mt/test/lapack2/gehrd'
 
   'rcondl rcondu'=. (geconi , gecon1) y
 
@@ -784,7 +784,7 @@ NB. where
 NB.   AB - 2×n×n-brick
 
 testgghrd=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gghrd'
+  load_mttmp_ 'math/mt/test/lapack2/gghrd'
 
   I=. idmat c y
 

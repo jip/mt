@@ -639,8 +639,8 @@ NB.   A - n×n-matrix
 NB.   X - n×3-matrix, exact solutions
 
 testgetrs3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/getrs'
+  load_mttmp_ 'math/mt/test/lapack2/getrf'
+  load_mttmp_ 'math/mt/test/lapack2/getrs'
 
   'A Xv'=. y
   Xh=. |: Xv
@@ -790,14 +790,14 @@ NB.   difference:
 NB.   - ferr is computed, too by call to t04m
 
 testhetrs3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf_aa'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf_aa'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrs'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrs_aa'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrs'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrs_aa'
+  load_mttmp_ 'math/mt/test/lapack2/dsytrf'
+  load_mttmp_ 'math/mt/test/lapack2/dsytrf_aa'
+  load_mttmp_ 'math/mt/test/lapack2/zhetrf'
+  load_mttmp_ 'math/mt/test/lapack2/zhetrf_aa'
+  load_mttmp_ 'math/mt/test/lapack2/dsytrs'
+  load_mttmp_ 'math/mt/test/lapack2/dsytrs_aa'
+  load_mttmp_ 'math/mt/test/lapack2/zhetrs'
+  load_mttmp_ 'math/mt/test/lapack2/zhetrs_aa'
 
   'A Xv'=. y
   Xh=. |: Xv
@@ -918,8 +918,8 @@ NB.       definite
 NB.   X - n×3-matrix, exact solutions
 
 testpotrs3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/potrs'
+  load_mttmp_ 'math/mt/test/lapack2/potrf'
+  load_mttmp_ 'math/mt/test/lapack2/potrs'
 
   'A Xv'=. y
   Xh=. |: Xv
@@ -1041,8 +1041,8 @@ NB. TODO:
 NB. - A would be sparse
 
 testpttrs3=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/pttrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/pttrs'
+  load_mttmp_ 'math/mt/test/lapack2/pttrf'
+  load_mttmp_ 'math/mt/test/lapack2/pttrs'
 
   'A Xv'=. y
   Xh=. |: Xv

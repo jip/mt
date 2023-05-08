@@ -514,14 +514,14 @@ NB. where
 NB.   A - m×n-matrix
 
 testungq=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorglq'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorgql'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorgqr'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorgrq'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zunglq'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zungql'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zungqr'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zungrq'
+  load_mttmp_ 'math/mt/test/lapack2/dorglq'
+  load_mttmp_ 'math/mt/test/lapack2/dorgql'
+  load_mttmp_ 'math/mt/test/lapack2/dorgqr'
+  load_mttmp_ 'math/mt/test/lapack2/dorgrq'
+  load_mttmp_ 'math/mt/test/lapack2/zunglq'
+  load_mttmp_ 'math/mt/test/lapack2/zungql'
+  load_mttmp_ 'math/mt/test/lapack2/zungqr'
+  load_mttmp_ 'math/mt/test/lapack2/zungrq'
 
   rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
@@ -692,8 +692,8 @@ NB. where
 NB.   A - n×n-matrix
 
 testunghr=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorghr'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zunghr'
+  load_mttmp_ 'math/mt/test/lapack2/dorghr'
+  load_mttmp_ 'math/mt/test/lapack2/zunghr'
 
   'rcondl rcondu'=. (geconi , gecon1) y
 

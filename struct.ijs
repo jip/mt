@@ -86,10 +86,41 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. Miscellaneous
+NB. ft4lisoa
+NB.
+NB. Description:
+NB.   Functional table for linear ISO, all axes
+NB.
+NB. Syntax:
+NB.   ft=. (op ft4lisoa) a
+NB. where
+NB.   op - dyad to compute a value from axes IO
+NB.   a  - m×n-matrix
+NB.   ft - the same shape as a, functional table:
+NB.          ft -: m op/&i. n
+NB.
+NB. Examples:
+NB.      < ft4lisoa_mt_ 3 4 $ 0        > ft4lisoa_mt_ 3 4 $ 0
+NB.   0 1 1 1                       0 0 0 0
+NB.   0 0 1 1                       1 0 0 0
+NB.   0 0 0 1                       1 1 0 0
+NB.      <: ft4lisoa_mt_ 3 4 $ 0       >: ft4lisoa_mt_ 3 4 $ 0
+NB.   1 1 1 1                       1 0 0 0
+NB.   0 1 1 1                       1 1 0 0
+NB.   0 0 1 1                       1 1 1 0
+NB.      - ft4lisoa_mt_ 3 4 $ 0        -~ ft4lisoa_mt_ 3 4 $ 0
+NB.   0 _1 _2 _3                     0  1 2 3
+NB.   1  0 _1 _2                    _1  0 1 2
+NB.   2  1  0 _1                    _2 _1 0 1
+NB.      + ft4lisoa_mt_ 3 4 $ 0
+NB.   0 1 2 3
+NB.   1 2 3 4
+NB.   2 3 4 5
 
-NB. convert table y to table of diagonals
-t2td=: /(&i.)/(@$)
+ft4lisoa=: /(&i.)/(@$)
+
+NB. ---------------------------------------------------------
+NB. Miscellaneous
 
 NB. conj. to extract matrix circumscribing the trapezoidal
 NB. matrix starting from diagonal number x in the matrix y
@@ -103,7 +134,7 @@ trlcut=: _1 1 trcut ((+ {.) ,. ])
 
 NB. conj. to extract trapezoidal matrix starting from
 NB. diagonal number x in the circumscribing matrix y
-tr=: 2 : '0&$: :([ ((u~ (-~ t2td)) {.`(0 ,: {:)}@,: ]) v)'
+tr=: 2 : '0&$: :([ ((u~ (-~ ft4lisoa)) {.`(0 ,: {:)}@,: ]) v)'
 
 NB. ---------------------------------------------------------
 NB. mxbstencil
@@ -138,7 +169,7 @@ NB.
 NB. Examples:
 NB. - see mbstencil, mabstencil
 
-mxbstencil=: 1 : '(+./^:(_2 + #@$)@:((1=I.)"1 2)~ -&1 0"1)~ (u t2td)'
+mxbstencil=: 1 : '(+./^:(_2 + #@$)@:((1=I.)"1 2)~ -&1 0"1)~ (u ft4lisoa)'
 
 NB. ---------------------------------------------------------
 NB. mbstencil
@@ -687,7 +718,7 @@ NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, the lower trapezoidal
 
-trlpick=: (>: t2td)`(0&,:)} :(4 : '((__ , x) mbstencil ])`(0 ,: ])} y')
+trlpick=: (>: ft4lisoa)`(0&,:)} :(4 : '((__ , x) mbstencil ])`(0 ,: ])} y')
 
 NB. ---------------------------------------------------------
 NB. trupick
@@ -704,7 +735,7 @@ NB.   d - integer in range [-∞,+∞], lIO first non-zero
 NB.       diagonal, default is 0
 NB.   B - m×n-matrix, the upper trapezoidal
 
-trupick=: (<: t2td)`(0&,:)} :(4 : '((x , _) mbstencil ])`(0 ,: ])} y')
+trupick=: (<: ft4lisoa)`(0&,:)} :(4 : '((x , _) mbstencil ])`(0 ,: ])} y')
 
 NB. ---------------------------------------------------------
 NB. trl1pick

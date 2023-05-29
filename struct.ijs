@@ -103,7 +103,7 @@ trlcut=: _1 1 trcut ((+ {.) ,. ])
 
 NB. conj. to extract trapezoidal matrix starting from
 NB. diagonal number x in the circumscribing matrix y
-tr=: 2 : '0&$: :([ (] * (u~ (-~ t2td))) v)'
+tr=: 2 : '0&$: :([ ((u~ (-~ t2td)) {.`(0 ,: {:)}@,: ]) v)'
 
 NB. ---------------------------------------------------------
 NB. mxbstencil
@@ -605,7 +605,7 @@ NB.
 NB. TODO:
 NB. - B would be sparse
 
-bdlpick=: * _1 0&mbstencil
+bdlpick=: _1 0&mbstencil`(0&,:)}
 
 NB. ---------------------------------------------------------
 NB. bdupick
@@ -623,7 +623,7 @@ NB.
 NB. TODO:
 NB. - B would be sparse
 
-bdupick=: * 0 1&mbstencil
+bdupick=: 0 1&mbstencil`(0&,:)}
 
 NB. ---------------------------------------------------------
 NB. hslpick
@@ -638,7 +638,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, the lower Hessenberg
 
-hslpick=: * __ 1&mbstencil
+hslpick=: __ 1&mbstencil`(0&,:)}
 
 NB. ---------------------------------------------------------
 NB. hsupick
@@ -653,7 +653,7 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, the upper Hessenberg
 
-hsupick=: * _1 _&mbstencil
+hsupick=: _1 _&mbstencil`(0&,:)}
 
 NB. ---------------------------------------------------------
 NB. gtpick
@@ -670,7 +670,7 @@ NB.
 NB. TODO:
 NB. - B would be sparse
 
-gtpick=: * _1 1&mbstencil
+gtpick=: _1 1&mbstencil`(0&,:)}
 
 NB. ---------------------------------------------------------
 NB. trlpick
@@ -687,7 +687,7 @@ NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, the lower trapezoidal
 
-trlpick=: 0&$: :(((__ , [) mbstencil ]) * ])
+trlpick=: (>: t2td)`(0&,:)} :(4 : '((__ , x) mbstencil ])`(0 ,: ])} y')
 
 NB. ---------------------------------------------------------
 NB. trupick
@@ -704,7 +704,7 @@ NB.   d - integer in range [-∞,+∞], lIO first non-zero
 NB.       diagonal, default is 0
 NB.   B - m×n-matrix, the upper trapezoidal
 
-trupick=: 0&$: :(((_ ,~ [) mbstencil ]) * ])
+trupick=: (<: t2td)`(0&,:)} :(4 : '((x , _) mbstencil ])`(0 ,: ])} y')
 
 NB. ---------------------------------------------------------
 NB. trl1pick
@@ -722,7 +722,7 @@ NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, the lower trapezoidal with unit on
 NB.       diagonal d
 
-trl1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , ,:&0)} y')
+trl1pick=: 0&$: :((1 ; [) setdiag trlpick)
 
 NB. ---------------------------------------------------------
 NB. tru1pick
@@ -740,7 +740,7 @@ NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, the upper trapezoidal with unit on
 NB.       diagonal d
 
-tru1pick=: 0&$: :(4 : '(x *@:+ - t2td)`(1 , 0&,:)} y')
+tru1pick=: 0&$: :((1 ; [) setdiag trupick)
 
 NB. ---------------------------------------------------------
 NB. idmat

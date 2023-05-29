@@ -394,7 +394,7 @@ NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
 NB.         1st superdiagonal
 NB.   Qf  - (s-1)×(n-h)-matrix, the unit upper trapezoidal
-NB.         (unit diagonal not stored), represents Q in
+NB.         (unit diagonal is not stored), represents Q in
 NB.         factored form:
 NB.           Q = Π{H(i)',i=h+s-2:h}
 NB.           H(i) = I - v[i]' * τ[i] * v[i]
@@ -481,7 +481,7 @@ NB.   H   - n×n-matrix, it has zeros under 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros below
 NB.         1st subdiagonal
 NB.   Qf  - (n-h)×(s-1)-matrix, the unit lower trapezoidal
-NB.         (unit diagonal not stored), represents Q in
+NB.         (unit diagonal is not stored), represents Q in
 NB.         factored form:
 NB.           Q = Π{H(i),i=h:h+s-2}
 NB.           H(i) = I - v[i] * τ[i] * v[i]'

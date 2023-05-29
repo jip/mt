@@ -66,8 +66,8 @@ NB.   Trash - m-vector, will be replaced by Tau
 NB.   LQf   - m×(n+1)-matrix, L and Qf combined
 NB.   L     - m×k-matrix, the lower trapezoidal
 NB.   Qf    - k×(n+1)-matrix, the unit upper trapezoidal
-NB.           (unit diagonal not stored), represents the Q in
-NB.           factored form
+NB.           (unit diagonal is not stored), represents the Q
+NB.           in factored form
 NB.   Q     - n×n-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of k elementary
 NB.           reflectors H(i) of order n:
@@ -137,8 +137,8 @@ NB.   Trash - n-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
 NB.   QfL   - (m+1)×n-matrix, Qf and L combined
 NB.   Qf    - (m+1)×k-matrix, the unit upper trapezoidal
-NB.           (unit diagonal not stored), represents the Q in
-NB.           factored form
+NB.           (unit diagonal is not stored), represents the Q
+NB.           in factored form
 NB.   L     - k×n-matrix, the lower trapezoidal
 NB.   Q     - m×m-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of k elementary
@@ -206,8 +206,8 @@ NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   QfR   - (m+1)×n-matrix, Qf and R combined
 NB.   Qf    - (m+1)×k-matrix, the unit lower trapezoidal
-NB.           (unit diagonal not stored), represents the Q in
-NB.           factored form
+NB.           (unit diagonal is not stored), represents the Q
+NB.           in factored form
 NB.   R     - k×n-matrix, the upper trapezoidal
 NB.   Q     - m×m-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of k elementary
@@ -276,8 +276,8 @@ NB.   A     - m×n-matrix, the input to factorize
 NB.   RQf   - m×(n+1)-matrix, R and Qf combined
 NB.   R     - m×k-matrix, the upper trapezoidal
 NB.   Qf    - k×(n+1)-matrix, the unit lower trapezoidal
-NB.           (unit diagonal not stored), represents the Q in
-NB.           factored form
+NB.           (unit diagonal is not stored), represents the Q
+NB.           in factored form
 NB.   Q     - n×n-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of k elementary
 NB.           reflectors H(i) of order n:
@@ -673,7 +673,7 @@ NB.   A   - m×n-matrix, the input to factorize
 NB.   LQf - m×(n+1)-matrix, L and Qf combined
 NB.   L   - m×k-matrix, the lower trapezoidal
 NB.   Qf  - k×(n+1)-matrix, the unit upper trapezoidal (unit
-NB.         diagonal not stored), represents the Q in
+NB.         diagonal is not stored), represents the Q in
 NB.         factored form
 NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
 NB.         defined as the product of k elementary
@@ -739,7 +739,7 @@ NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   QfL - (m+1)×n-matrix, Qf and L combined
 NB.   Qf  - (m+1)×k-matrix, the unit upper trapezoidal (unit
-NB.         diagonal not stored), represents the Q in
+NB.         diagonal is not stored), represents the Q in
 NB.         factored form
 NB.   L   - k×n-matrix, the lower trapezoidal
 NB.   Q   - m×m-matrix, the unitary (orthogonal), which is
@@ -803,7 +803,7 @@ NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   QfR - (m+1)×n-matrix, Qf and R combined
 NB.   Qf  - (m+1)×k-matrix, the unit lower trapezoidal (unit
-NB.         diagonal not stored), represents the Q in
+NB.         diagonal is not stored), represents the Q in
 NB.         factored form
 NB.   R   - k×n-matrix, the upper trapezoidal
 NB.   Q   - m×m-matrix, the unitary (orthogonal), which is
@@ -868,7 +868,7 @@ NB.   A   - m×n-matrix, the input to factorize
 NB.   RQf - m×(n+1)-matrix, R and Qf combined
 NB.   R   - m×k-matrix, the upper trapezoidal
 NB.   Qf  - k×(n+1)-matrix, the unit lower trapezoidal (unit
-NB.         diagonal not stored), represents the Q in
+NB.         diagonal is not stored), represents the Q in
 NB.         factored form
 NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
 NB.         defined as the product of k elementary reflectors

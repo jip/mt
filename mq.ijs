@@ -240,8 +240,8 @@ NB.   represented in factored form LQf as returned by gelqf
 NB. where
 NB.   B,C - m×n-matrices
 NB.   LQf - n×(m+1)-matrix (ln,lc cases) or m×(n+1)-matrix
-NB.         (rn,rc), contains Qf (unit diagonal not stored),
-NB.         the output of gelqf
+NB.         (rn,rc), contains Qf (unit diagonal is not
+NB.         stored), the output of gelqf
 NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
 NB.         unit upper trapezoidal, represents the Q in
 NB.         factored form
@@ -281,8 +281,8 @@ NB.   represented in factored form QfL as returned by geqlf
 NB. where
 NB.   B,C - m×n-matrices
 NB.   QfL - (m+1)×n-matrix (ln,lc cases), (n+1)×m-matrix
-NB.         (rn,rc), contains Qf (unit diagonal not stored),
-NB.         the output of geqlf
+NB.         (rn,rc), contains Qf (unit diagonal is not
+NB.         stored), the output of geqlf
 NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
 NB.         unit upper trapezoidal, represents the Q in
 NB.         factored form
@@ -322,8 +322,8 @@ NB.   represented in factored form QfR as returned by geqrf
 NB. where
 NB.   B,C - m×n-matrices
 NB.   QfR - (m+1)×n-matrix (ln,lc cases), (n+1)×m-matrix
-NB.         (rn,rc), contains Qf (unit diagonal not stored),
-NB.         the output of geqrf
+NB.         (rn,rc), contains Qf (unit diagonal is not
+NB.         stored), the output of geqrf
 NB.   Qf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
 NB.         unit lower trapezoidal, represents the Q in
 NB.         factored form
@@ -364,8 +364,8 @@ NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   RQf - l×(m+1)-matrix (ln,lc cases) or l×(n+1)-matrix
-NB.         (rn,rc), contains Qf (unit diagonal not stored),
-NB.         the output of gerqf
+NB.         (rn,rc), contains Qf (unit diagonal is not
+NB.         stored), the output of gerqf
 NB.   Qf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
 NB.         unit lower trapezoidal, represents the Q in
 NB.         factored form
@@ -406,7 +406,7 @@ NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   LZf - k×(m+1)-matrix (ln,lc cases) or k×(n+1)-matrix
-NB.         (rn,rc), contains Zf (identity submatrix not
+NB.         (rn,rc), contains Zf (identity submatrix is not
 NB.         stored), the output of tzlzf
 NB.   Zf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
 NB.         trailing k×k-submatrix is identity, the Z
@@ -459,7 +459,7 @@ NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   ZfL - (m+1)×k-matrix (ln,lc cases) or (n+1)×k-matrix
-NB.         (rn,rc), contains Zf (identity submatrix not
+NB.         (rn,rc), contains Zf (identity submatrix is not
 NB.         stored), the output of tzzlf
 NB.   Zf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
 NB.         leading k×k-submatrix is identity, the Z
@@ -514,7 +514,7 @@ NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   ZfR - (m+1)×k-matrix (ln,lc cases) or (n+1)×k-matrix
-NB.         (rn,rc), contains Zf (identity submatrix not
+NB.         (rn,rc), contains Zf (identity submatrix is not
 NB.         stored), the output of tzzrf
 NB.   Zf  - (m+1)×k-matrix (ln,lc) or (n+1)×k-matrix (rn,rc),
 NB.         trailing k×k-submatrix is identity, the Z
@@ -569,7 +569,7 @@ NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   RZf - k×(m+1)-matrix (ln,lc cases) or k×(n+1)-matrix
-NB.         (rn,rc), contains Zf (identity submatrix not
+NB.         (rn,rc), contains Zf (identity submatrix is not
 NB.         stored), the output of tzrzf
 NB.   Zf  - k×(m+1)-matrix (ln,lc) or k×(n+1)-matrix (rn,rc),
 NB.         leading k×k-submatrix is identity, the Z
@@ -623,8 +623,8 @@ NB.   returned by gehrdl
 NB. where
 NB.   B,C - m×n-matrices
 NB.   HQf - m×(m+1)-matrix (ln,lc cases) or n×(n+1)-matrix
-NB.         (rn,rc), contains Qf (unit diagonal not stored),
-NB.         the output of gehrdl
+NB.         (rn,rc), contains Qf (unit diagonal is not
+NB.         stored), the output of gehrdl
 NB.   Qf  - (s-1)×(m-h)-matrix (ln,lc) or (s-1)×(n-h)-matrix
 NB.         (rn,rc), the unit upper trapezoidal, represents
 NB.         the Q in factored form, located in
@@ -672,8 +672,8 @@ NB.   returned by gehrdu
 NB. where
 NB.   B,C - m×n-matrices
 NB.   HQf - (m+1)×m-matrix (ln,lc cases) or (n+1)×n-matrix
-NB.         (rn,rc), contains Qf (unit diagonal not stored),
-NB.         the output of gehrdu
+NB.         (rn,rc), contains Qf (unit diagonal is not
+NB.         stored), the output of gehrdu
 NB.   Qf  - (m-h)×(s-1)-matrix (ln,lc) or (n-h)×(s-1)-matrix
 NB.         (rn,rc), the unit lower trapezoidal, represents
 NB.         the Q in factored form, located in

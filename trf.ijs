@@ -573,9 +573,9 @@ NB.     m-k (      U1bb )    ( U1b )            m-k ( Lba     LbbU1bb )
 NB.           k    n-k         n                      k       n-k
 NB. where
 NB.   LaaU1aa - Laa and U1aa combined, U1aa's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.   LbbU1bb - Lbb and U1bb combined, U1bb's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -728,9 +728,9 @@ NB.     m-k ( L1ab L1bb )                           m-k ( L1ab    L1bbUbb )
 NB.           k    n-k         k   n-k                    k       n-k
 NB. where
 NB.   L1aaUaa - L1aa and Uaa combined, L1aa's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.   L1bbUbb - L1bb and Ubb combined, L1bb's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -886,9 +886,9 @@ NB.     k   (      U1bb )                           k   ( Lab     U1bbLbb )
 NB.           n-k  k           n-k k                      n-k       k
 NB. where
 NB.   U1aaLaa - U1aa and Laa combined, U1aa's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.   U1bbLbb - U1bb and Lbb combined, U1bb's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1041,9 +1041,9 @@ NB.     k   ( L1ba L1bb )    ( L1b )            k   ( L1ba    UbbL1bb )
 NB.           n-k  k           n                      n-k     k
 NB. where
 NB.   UaaL1aa - Uaa and L1aa combined, L1aa's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.   UbbL1bb - Ubb and L1bb combined, L1bb's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.
 NB. Algorithm:
 NB.   In: A

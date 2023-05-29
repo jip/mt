@@ -115,7 +115,8 @@ NB.               part of T
 NB.   i         ∊ {(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's 1st row
 NB.               and column within A
 NB.   A         - n×n-matrix, the Hermitian (symmetric)
-NB.   L1        - n×n-matrix, the unit lower triangular
+NB.   L1        - n×n-matrix, the unit lower triangular (unit
+NB.               diagonal is not stored)
 NB.   T         - n×n-matrix, the Hermitian (symmetric)
 NB.               tridiagonal
 NB.
@@ -361,7 +362,8 @@ NB.               part of T
 NB.   i         ∊ {_1-(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's last
 NB.               row and column within A
 NB.   A         - n×n-matrix, the Hermitian (symmetric)
-NB.   U1        - n×n-matrix, the unit upper triangular
+NB.   U1        - n×n-matrix, the unit upper triangular (unit
+NB.               diagonal is not stored)
 NB.   T         - n×n-matrix, the Hermitian (symmetric)
 NB.               tridiagonal
 NB.
@@ -561,6 +563,7 @@ NB.         unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
 NB.   L   - m×min(m,n)-matrix, the lower trapezoidal
 NB.   U1  - min(m,n)×n-matrix, the unit upper trapezoidal
+NB.         (unit diagonal is not stored)
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       L's partitioning:
@@ -715,6 +718,7 @@ NB.         the strict lower triangle contains L1 without
 NB.         unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
 NB.   L1  - m×min(m,n)-matrix, the unit lower trapezoidal
+NB.         (unit diagonal is not stored)
 NB.   U   - min(m,n)×n-matrix, the upper trapezoidal
 NB.
 NB. Storage layout:
@@ -874,6 +878,7 @@ NB.         unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
 NB.   L   - m×min(m,n)-matrix, the lower trapezoidal
 NB.   U1  - min(m,n)×n-matrix, the unit upper trapezoidal
+NB.         (unit diagonal is not stored)
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           L's partitioning:
@@ -1028,6 +1033,7 @@ NB.         the strict lower triangle contains L1 without
 NB.         unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
 NB.   L1  - m×min(m,n)-matrix, the unit lower trapezoidal
+NB.         (unit diagonal is not stored)
 NB.   U   - min(m,n)×n-matrix, the upper trapezoidal
 NB.
 NB. Storage layout:
@@ -1181,7 +1187,8 @@ NB. where
 NB.   A  - n×n-matrix, the Hermitian (symmetric)
 NB.   ip - n-vector of integers, the full inversed
 NB.        permutation of A
-NB.   L1 - n×n-matrix, the unit lower triangular
+NB.   L1 - n×n-matrix, the unit lower triangular (unit
+NB.        diagonal is not stored)
 NB.   T  - n×n-matrix, the Hermitian (symmetric) tridiagonal
 NB.   P  - n×n-matrix, the full permutation of A
 NB.
@@ -1290,7 +1297,8 @@ NB. where
 NB.   A  - n×n-matrix, the Hermitian (symmetric)
 NB.   ip - n-vector of integers, the full inversed
 NB.        permutation of A
-NB.   U1 - n×n-matrix, the unit upper triangular
+NB.   U1 - n×n-matrix, the unit upper triangular (unit
+NB.        diagonal is not stored)
 NB.   T  - n×n-matrix, the Hermitian (symmetric) tridiagonal
 NB.   P  - n×n-matrix, the full permutation of A
 NB.

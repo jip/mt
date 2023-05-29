@@ -15,6 +15,7 @@ NB. norm1tr  Taxicab-based 1-norm of vector (matrix rows)
 NB. normit   Taxicab-based ∞-norm of vector (matrix)
 NB. normitc  Taxicab-based ∞-norm of vector (matrix columns)
 NB. normitr  Taxicab-based ∞-norm of vector (matrix rows)
+NB. normmt   Taxicab-based max of modules of elements
 NB. norms    Square-based Euclidean (Frobenius) norm of
 NB.          vector (matrix)
 NB. normsc   Square-based Euclidean norm of matrix columns
@@ -133,6 +134,7 @@ NB. norm1tr
 NB. normit
 NB. normitc
 NB. normitr
+NB. normmt
 NB.
 NB. Description:
 NB.   Taxicab-based norms |Re(y)| + |Im(y)|
@@ -168,13 +170,15 @@ NB.
 NB. Notes:
 NB. - norm1t implements BLAS' DASUM, DZASUM
 
-norm1t=:  norm1tc         (max@)  NB. 1-norm of vector (matrix)
-norm1tc=: sorim csum              NB. 1-norm of vector (matrix columns)
-norm1tr=: sorim rsum              NB. 1-norm of vector (matrix rows)
+norm1t=:  norm1tc         (max@)    NB. 1-norm of vector (matrix)
+norm1tc=: sorim csum                NB. 1-norm of vector (matrix columns)
+norm1tr=: sorim rsum                NB. 1-norm of vector (matrix rows)
 
-normit=:  sorim (+/"_1@:) (max@)  NB. ∞-norm of vector (matrix)
-normitc=: sorim cmax              NB. ∞-norm of vector (matrix columns)
-normitr=: sorim rmax              NB. ∞-norm of vector (matrix rows)
+normit=:  sorim (+/"_1@:) (max@)    NB. ∞-norm of vector (matrix)
+normitc=: sorim cmax                NB. ∞-norm of vector (matrix columns)
+normitr=: sorim rmax                NB. ∞-norm of vector (matrix rows)
+
+normmt=:  >./@,@:sorim`0:@.(0 = #)  NB. max of modules of elements of vector (matrix)
 
 NB. ---------------------------------------------------------
 NB. norms

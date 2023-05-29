@@ -331,17 +331,17 @@ NB. where
 NB.   L   - n×n-matrix, the lower triangular
 NB.   iL  - n×n-matrix, the lower triangular, an inversion of
 NB.         L
-NB.   L1  - n×n-matrix, the unit lower triangular (diagonal
-NB.         is not stored)
-NB.   iL1 - n×n-matrix, the unit lower triangular (diagonal
-NB.         is not stored), the inversion of L1
+NB.   L1  - n×n-matrix, the unit lower triangular (unit
+NB.         diagonal is not stored)
+NB.   iL1 - n×n-matrix, the unit lower triangular (unit
+NB.         diagonal is not stored), the inversion of L1
 NB.   U   - n×n-matrix, the upper triangular
 NB.   iU  - n×n-matrix, the upper triangular, the inversion
 NB.         of U
-NB.   U1  - n×n-matrix, the unit upper triangular (diagonal
-NB.         is not stored)
-NB.   iU1 - n×n-matrix, the unit upper triangular (diagonal
-NB.         is not stored), the inversion of U1
+NB.   U1  - n×n-matrix, the unit upper triangular (unit
+NB.         diagonal is not stored)
+NB.   iU1 - n×n-matrix, the unit upper triangular (unit
+NB.         diagonal is not stored), the inversion of U1
 NB.
 NB. Algorithm for trtriu:
 NB.   In: U

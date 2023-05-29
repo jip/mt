@@ -28,35 +28,35 @@ NB.   ilo   ∈ [1,max(1,ihi)], IO starting row and column,
 NB.           1-based
 NB.   ihi   ∈ [min(ilo,n),n], IO ending row and column,
 NB.           1-based
-NB.   H     - n×n-matrix, the upper Hessenberg in rows and
+NB.   H     - n×n-matrix, upper Hessenberg in rows and
 NB.           columns ilo:ihi and upper triangular outside
-NB.   T     - n×n-matrix, the upper triangular
-NB.   Q1    - n×n-matrix, the unitary (orthogonal) if compQ='V',
+NB.   T     - n×n-matrix, upper triangular
+NB.   Q1    - n×n-matrix, unitary (orthogonal) if compQ='V',
 NB.           or any noun otherwise
-NB.   Z1    - n×n-matrix, the unitary (orthogonal) if compZ='V',
+NB.   Z1    - n×n-matrix, unitary (orthogonal) if compZ='V',
 NB.           or any noun otherwise
-NB.   S     - n×n-matrix, the upper triangular from the
+NB.   S     - n×n-matrix, upper triangular from the
 NB.           generalized Schur factorization if job='S', or
 NB.           matrix with diagonal matching that of S
-NB.   P     - n×n-matrix, the upper triangular from the
+NB.   P     - n×n-matrix, upper triangular from the
 NB.           generalized Schur factorization if job='S', or
 NB.           matrix with diagonal matching that of P
 NB.   alpha - n-vector, generalized eigenvalues nominator,
 NB.           also a diagonal of S
 NB.   beta  - n-vector, generalized eigenvalues denominator,
 NB.           also a diagonal of P
-NB.   Q     - 0×0-matrix if compQ='N', or n×n-matrix, the
-NB.           unitary (orthogonal), the left Schur vectors:
+NB.   Q     - 0×0-matrix if compQ='N', or n×n-matrix, unitary
+NB.           (orthogonal), left Schur vectors:
 NB.             Q     for matrix pair (H,T) if compQ='I'
 NB.             Q1*Q  for matrix pair (A,B) if compQ='V'
-NB.   Z     - 0×0-matrix if compZ='N', or n×n-matrix, the
-NB.           unitary (orthogonal), the right Schur vectors:
+NB.   Z     - 0×0-matrix if compZ='N', or n×n-matrix, unitary
+NB.           (orthogonal), right Schur vectors:
 NB.             Z     for matrix pair (H,T) if compZ='I'
 NB.             Z1*Z  for matrix pair (A,B) if compZ='V'
 NB.   n     ≥ 0, the size of H, T, S, P, alpha and beta
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dhgeqz=: 4 : 0
   'job compQ compZ'=. x

@@ -84,8 +84,8 @@ NB.   L1   - n×n-matrix, the unit lower triangular (diagonal
 NB.          is not stored)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, solutions
-NB.   Xh   - same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, solutions
+NB.   Xh   - the same shape as Bh, solutions
 NB.   n    ≥ 0, the order of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.

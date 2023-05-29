@@ -11,21 +11,21 @@ NB.
 NB. Syntax:
 NB.   'dD eT1'=. xpttrf dA ; eA
 NB. where
-NB.   dA  - n-vector, real, diagonal of A
-NB.   eA  - (n-1)-vector, subdiagonal of A
-NB.   dD  - n-vector, real, diagonal of D
-NB.   eT1 - (n-1)-vector, subdiagonal of L1, the same as
+NB.   dA  - n-vector, real, the diagonal of A
+NB.   eA  - (n-1)-vector, the subdiagonal of A
+NB.   dD  - n-vector, real, the diagonal of D
+NB.   eT1 - (n-1)-vector, the subdiagonal of L1, the same as
 NB.         superdiagonal of U1
-NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
+NB.   A   - n×n-matrix, Hermitian (symmetric) positive
 NB.         definite tridiagonal
-NB.   D   - n×n-matrix, diagonal, with dD as diagonal
+NB.   D   - n×n-matrix, the diagonal, with dD as diagonal
 NB.         elements
-NB.   L1  - n×n-matrix, the unit lower bidiagonal
-NB.   U1  - n×n-matrix, the unit upper bidiagonal
+NB.   L1  - n×n-matrix, unit lower bidiagonal
+NB.   U1  - n×n-matrix, unit upper bidiagonal
 NB.   n   ≥ 0, the size of A, D, L1 and U1
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 NB. - no check for positive definiteness
 
 dpttrf=: 3 : 0

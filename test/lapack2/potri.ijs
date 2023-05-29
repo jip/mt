@@ -19,15 +19,15 @@ NB.          L or U to invert
 NB.   iAA  - n×n-matrix, contains the triangular part of iA
 NB.          in changed triangle and unchanged elements of T
 NB.          in opposite strict triangle
-NB.   iA   - n×n-matrix, the Hermitian (symmetric) positive
+NB.   iA   - n×n-matrix, Hermitian (symmetric) positive
 NB.          definite, the inversion of A
-NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, Hermitian (symmetric) positive
 NB.          definite, represented in the factored form by L
 NB.          or U
 NB.   n    ≥ 0, the size of A and iA
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dpotri=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y

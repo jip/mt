@@ -14,27 +14,26 @@ NB.            'L' - lower, the form is:
 NB.                    P * L1 * D * L1^T * P^T = A
 NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^T * P^T = A
-NB.   A    - n×n-matrix, real, the symmetric to be factored
-NB.          to DT1 and ipiv
+NB.   A    - n×n-matrix, real, symmetric to be factored to
+NB.          DT1 and ipiv
 NB.   B    - n×nrhs-matrix, real, RHS
 NB.   DT1  - n×n-matrix, D and T1 combined
-NB.   ipiv - n-vector, integer, the pivot indices that define
-NB.          P
+NB.   ipiv - n-vector, integer, pivot indices that define P
 NB.   X    - n×nrhs-matrix, real, solutions of equation:
 NB.            A * X = B
-NB.   D    - n×n-matrix, real, the symmetric tridiagonal
-NB.          (opposite diagonal not stored)
+NB.   D    - n×n-matrix, real, symmetric tridiagonal
+NB.          (opposite diagonal is not stored)
 NB.   T1   - n×n-matrix, either L1 or U1
-NB.   L1   - n×n-matrix, real, the unit lower triangular
-NB.          (unit diagonal not stored)
-NB.   U1   - n×n-matrix, real, the unit upper triangular
-NB.          (unit diagonal not stored)
+NB.   L1   - n×n-matrix, real, unit lower triangular (unit
+NB.          diagonal is not stored)
+NB.   U1   - n×n-matrix, real, unit upper triangular (unit
+NB.          diagonal is not stored)
 NB.   P    - n×n-matrix, boolean, the permutation matrix
 NB.   n    ≥ 0, the order of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dsysv_aa=: 4 : 0
   'A B'=. y

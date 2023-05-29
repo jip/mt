@@ -25,8 +25,8 @@ NB.           0×0-matrix
 NB.   n     ≥ 0, the size of A, Vl, Vr and w
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
-NB. - the computed eigenvectors are normalized to have
+NB. - verbs below are loaded into the current locale
+NB. - eigenvectors computed are normalized to have
 NB.   Euclidean norm equal to 1 and largest component real
 
 dgeev=: 4 : 0

@@ -11,19 +11,18 @@ NB.   A    - n×n-matrix to be factored to L1U and ipiv as:
 NB.            P * L1 * U = A
 NB.   B    - n×nrhs-matrix, RHS
 NB.   L1U  - n×n-matrix, L1 and U combined
-NB.   ipiv - n-vector, integer, the pivot indices that define
-NB.          P
+NB.   ipiv - n-vector, integer, pivot indices that define P
 NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
-NB.   L1   - n×n-matrix, the unit lower triangular (unit
-NB.          diagonal not stored)
-NB.   U    - n×n-matrix, the upper triangular
+NB.   L1   - n×n-matrix, unit lower triangular (unit diagonal
+NB.          is not stored)
+NB.   U    - n×n-matrix, upper triangular
 NB.   P    - n×n-matrix, boolean, the permutation matrix
 NB.   n    ≥ 0, the order of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgesv=: 3 : 0
   'A B'=. y

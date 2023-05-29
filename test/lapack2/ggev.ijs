@@ -29,8 +29,8 @@ NB.           jobVr='V' or 0×0-matrix otherwise
 NB.   n     ≥ 0, the size of A, B, Vl, Vr, alpha and beta
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
-NB. - the computed eigenvectors are normalized to have
+NB. - verbs below are loaded into the current locale
+NB. - eigenvectors computed are normalized to have
 NB.   Euclidean norm equal to 1 and largest component real
 NB. - each eigenvector is scaled so the largest component has
 NB.     |Re(V(i))| + |Im(Vi)| = 1

@@ -20,7 +20,7 @@ NB.   l     ∈ [0,s], the number of columns of the matrix A
 NB.           containing the meaningful part of the
 NB.           Householder reflectors
 NB.   A     - k×s-matrix, contains Zf
-NB.   tau   - k-vector, the scalar factors of elementary
+NB.   tau   - k-vector, scalar factors of elementary
 NB.           reflectors as returned by DTZRZF
 NB.   C     - m×n-matrix, real, the input to be multiplied by
 NB.           op(Z)
@@ -29,8 +29,8 @@ NB.             Z   * C    if side='L' and trans='N'
 NB.             Z^T * C    if side='L' and trans='T'
 NB.             C   * Z    if side='R' and trans='N'
 NB.             C   * Z^T  if side='R' and trans='T'
-NB.   Zf    - k×s-matrix, the unit lower trapezoidal (unit
-NB.           diagonal not stored), contains elementary
+NB.   Zf    - k×s-matrix, unit lower trapezoidal (unit
+NB.           diagonal is not stored), contains elementary
 NB.           reflectors as returned by DTZRZF, with the tau
 NB.           it represents the Z in the factored form
 NB.   Z     - s×s-matrix, real, orthogonal, which is defined
@@ -45,7 +45,7 @@ NB.   k     ∈ [0,s], the number of elementary reflectors
 NB.           whose product defines the matrix Z
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dormrz=: 4 : 0
   'side trans'=. x

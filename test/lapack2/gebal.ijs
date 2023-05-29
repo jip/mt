@@ -23,7 +23,7 @@ NB.           and scaling factors applied to A
 NB.   n     ≥ 0, the size of A, Abal and scale
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgebal=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) y

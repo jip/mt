@@ -14,22 +14,21 @@ NB.             'N' - A   * X = B  (no transpose)
 NB.             'T' - A^T * X = B  (transpose)
 NB.             'C' - A^H * X = B  (conjugate transpose)
 NB.   L1U   - n×n-matrix, L1 and U combined
-NB.   ipiv  - n-vector, integer, the pivot indices that
-NB.           define P
+NB.   ipiv  - n-vector, integer, pivot indices that define P
 NB.   B     - n×nrhs-matrix, RHS
 NB.   X     - n×nrhs-matrix, solutions of equation:
 NB.             op(A) * X = B
 NB.   A     - n×n-matrix, represented in the factored form by
 NB.           L1U and ipiv
-NB.   L1    - n×n-matrix, the unit lower triangular (unit
-NB.           diagonal not stored)
-NB.   U     - n×n-matrix, the upper triangular
+NB.   L1    - n×n-matrix, unit lower triangular (unit
+NB.           diagonal is not stored)
+NB.   U     - n×n-matrix, upper triangular
 NB.   P     - n×n-matrix, boolean, the permutation matrix
 NB.   n     ≥ 0, the order of system
 NB.   nrhs  ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgetrs=: 4 : 0
   'L1U ipiv B'=. y

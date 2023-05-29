@@ -8,13 +8,13 @@ NB.   'LQf tau'=. xgelqf A
 NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   LQf - m×n-matrix, L and Qf combined
-NB.   tau - k-vector, the scalar factors of elementary
-NB.         reflectors applied to A
-NB.   L   - m×k-matrix, the lower trapezoidal
-NB.   Qf  - k×n-matrix, the unit upper trapezoidal (unit
-NB.         diagonal not stored), with the tau it represents
-NB.         the Q in the factored form
-NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.   tau - k-vector, scalar factors of elementary reflectors
+NB.         applied to A
+NB.   L   - m×k-matrix, lower trapezoidal
+NB.   Qf  - k×n-matrix, unit upper trapezoidal (unit diagonal
+NB.         is not stored), with the tau it represents the Q
+NB.         in the factored form
+NB.   Q   - n×n-matrix, unitary (orthogonal), which is
 NB.         defined as the product of k elementary reflectors
 NB.         H(i) of order n:
 NB.           Q = Π{H(i)',i=k-1:0}
@@ -25,7 +25,7 @@ NB.   n   ≥ 0, the number of columns in A, LQf and Qf, and
 NB.            the size of Q
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgelqf=: 3 : 0
   k=. <./ 'm n'=. $ y

@@ -127,7 +127,7 @@ NB.               Aapprox=. mul factors
 NB.   A       - n×n-matrix to decompose
 NB.   normA   ≥ 0, the norm of A
 NB.   factors - any noun, boxed factors of Aapprox
-NB.   Aapprox - same shape as A, approximate A
+NB.   Aapprox - the same shape as A, approximate A
 NB.   berr    ≥ 0, the relative backward error
 NB.   n       ≥ 0, the size of A and Aapprox
 NB.
@@ -461,7 +461,7 @@ NB.               normM=. normx M
 NB.   getSize - monad to get size of G; is called as:
 NB.               size=. getSize G
 NB.   G       - m×n-matrix, general
-NB.   Gapprox - same shape as G, the approximate G
+NB.   Gapprox - the same shape as G, the approximate G
 NB.   normG   ≥ 0, the norm of G
 NB.   size    ∈ {m,n}, the size of G
 NB.   berrG   ≥ 0, the relative backward error for Gapprox
@@ -503,7 +503,7 @@ NB.   H       - n×n-matrix, the Hermitian (symmetric),
 NB.             possibly positive definite, and possibly
 NB.             tridiagonal
 NB.   normH   ≥ 0, the norm of H
-NB.   Happrox - same shape as H, the approximate H
+NB.   Happrox - the same shape as H, the approximate H
 NB.   berrH   ≥ 0, the relative backward error for Happrox
 NB.   n       ≥ 0, the size of H
 NB.
@@ -553,7 +553,7 @@ NB. where
 NB.   normx   - monad to compute matrix norm; is called as:
 NB.               normM=. normx M
 NB.   S       - n×n-matrix, the lower or upper Hessenberg
-NB.   Sapprox - same shape as S, the approximate S
+NB.   Sapprox - the same shape as S, the approximate S
 NB.   normS   ≥ 0, the norm of S
 NB.   berrS   ≥ 0, the relative backward error for Sapprox
 NB.   n       ≥ 0, the size of S
@@ -794,19 +794,20 @@ NB.               berrX=. (A ; b ; x ; trash ; normA) vberrx xapprox
 NB.   A       - n×n-matrix of linear system to solve
 NB.   B       - n×nrhs-matrix or nrhs×n-matrix, exact RHS
 NB.   b       - n-vector, the exact RHS
-NB.   Bapprox - same shape as B, approximate RHS:
+NB.   Bapprox - the same shape as B, approximate RHS:
 NB.               Bapprox := op(A) * Xapprox  or
 NB.               Bapprox := Xapprox * op(A)
 NB.   bapprox - n-vector, the approximate RHS:
 NB.               bapprox := op(A) * xapprox  or
 NB.               bapprox := xapprox * op(A)
-NB.   X       - same shape as B, exact solutions of equation:
+NB.   X       - the same shape as B, exact solutions of
+NB.             equation:
 NB.               op(A) * X = B  or
 NB.               X * op(A) = B
 NB.   x       - n-vector, the exact solution of equation:
 NB.               op(A) * x = b  or
 NB.               x * op(A) = b
-NB.   Xapprox - same shape as B, approximate solutions
+NB.   Xapprox - the same shape as B, approximate solutions
 NB.   xapprox - n-vector, the approximate solution
 NB.   normA   ≥ 0, the norm of op(A)
 NB.   berrX   ≥ 0, the relative backward error
@@ -1209,13 +1210,13 @@ NB.               normVectors=. normitx vectors
 NB.   A       - n×n-matrix of linear system to solve
 NB.   B       - n×nrhs-matrix or nrhs×n-matrix, exact RHS
 NB.   b       - n-vector, the exact RHS
-NB.   X       - same shape as B, exact solutions of equation:
+NB.   X       - the same shape as B, exact solutions of equation:
 NB.               op(A) * X = B  or
 NB.               X * op(A) = B
 NB.   x       - n-vector, the exact solution of equation:
 NB.               op(A) * x = b  or
 NB.               x * op(A) = b
-NB.   Xapprox - same shape as B, approximate solutions
+NB.   Xapprox - the same shape as B, approximate solutions
 NB.   xapprox - n-vector, the approximate solution
 NB.   rcondA  ≥ 0, the reciprocal of the condition number of
 NB.             op(A)
@@ -1353,8 +1354,8 @@ NB.               bapprox=. xapprox calcb A
 NB.   A       - m×n-matrix of full rank
 NB.   B       - nrhs×n-matrix or nrhs×m-matrix, exact RHS
 NB.   b       - n-vector or m-vector, the exact RHS
-NB.   Bapprox - same shape as B, approximate RHS
-NB.   bapprox - same shape as b, the approximate RHS
+NB.   Bapprox - the same shape as B, approximate RHS
+NB.   bapprox - the same shape as b, the approximate RHS
 NB.   Xapprox - n×nrhs-matrix or m×nrhs-matrix, approximate
 NB.             solutions of equation:
 NB.               op(A) * X = B
@@ -1416,7 +1417,7 @@ NB.               Bapprox=. Xapprox calcB A
 NB.   A       - m×n-matrix of full rank
 NB.   B       - m×nrhs-matrix or n×nrhs-matrix or m-vector or
 NB.             n-vector, exact RHS
-NB.   Bapprox - same shape as B, approximate RHS
+NB.   Bapprox - the same shape as B, approximate RHS
 NB.   Xapprox - n×nrhs-matrix or m×nrhs-matrix or n-vector or
 NB.             m-vector, approximate solutions of equation:
 NB.               op(A) * X = B

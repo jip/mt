@@ -16,14 +16,14 @@ NB.          specifies which triangular part of A is to be
 NB.          referenced:
 NB.            'L' - lower
 NB.            'U' - upper
-NB.   A    - n×n-matrix, real, the symmetric or
-NB.          lower or upper triangular
+NB.   A    - n×n-matrix, real, symmetric or lower or upper
+NB.          triangular
 NB.   w    - n-vector, real, eigenvalues of A
 NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
 NB.   n    ≥ 0, the size of A, V and w
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dsyev=: 4 : 0
   'jobV uplo'=. x

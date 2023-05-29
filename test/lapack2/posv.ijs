@@ -21,13 +21,13 @@ NB.   B    - n×nrhs-matrix, RHS
 NB.   T    - n×n-matrix, L or U factor
 NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
-NB.   L    - n×n-matrix, the lower triangular
-NB.   U    - n×n-matrix, the upper triangular
+NB.   L    - n×n-matrix, lower triangular
+NB.   U    - n×n-matrix, upper triangular
 NB.   n    ≥ 0, the order of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 NB. - no check for positive definiteness
 
 dposv=: 4 : 0

@@ -17,24 +17,24 @@ NB.                    L1 * D * L1^H = A
 NB.            'U' - eT1 is the superdiagonal of U1, the form
 NB.                  is:
 NB.                    U1^H * D * U1 = A
-NB.   dD   - n-vector, real, diagonal of D
-NB.   eT1  - (n-1)-vector, subdiagonal of L1, or the
+NB.   dD   - n-vector, real, the diagonal of D
+NB.   eT1  - (n-1)-vector, the subdiagonal of L1, or the
 NB.          superdiagonal of U1
 NB.   B    - n×nrhs-matrix, RHS
 NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
-NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, Hermitian (symmetric) positive
 NB.          definite tridiagonal represented in factored
 NB.          form by dD and eT1
-NB.   D    - n×n-matrix, diagonal, with dD as diagonal
+NB.   D    - n×n-matrix, the diagonal, with dD as diagonal
 NB.          elements
-NB.   L1   - n×n-matrix, the unit lower bidiagonal
-NB.   U1   - n×n-matrix, the unit upper bidiagonal
+NB.   L1   - n×n-matrix, unit lower bidiagonal
+NB.   U1   - n×n-matrix, unit upper bidiagonal
 NB.   n    ≥ 0, the order of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 NB. - no check for positive definiteness
 
 dpttrs=: 3 : 0

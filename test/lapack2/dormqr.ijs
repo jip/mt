@@ -17,7 +17,7 @@ NB.           specifies the form of op(Q):
 NB.             'N' - op(Q) := Q    (no transpose)
 NB.             'T' - op(Q) := Q^T  (transpose)
 NB.   A     - s×k-matrix, contains Qf
-NB.   tau   - k-vector, the scalar factors of elementary
+NB.   tau   - k-vector, scalar factors of elementary
 NB.           reflectors as returned by DGEQRF
 NB.   C     - m×n-matrix, real, the input to be multiplied by
 NB.           op(Q)
@@ -26,8 +26,8 @@ NB.             Q   * C    if side='L' and trans='N'
 NB.             Q^T * C    if side='L' and trans='T'
 NB.             C   * Q    if side='R' and trans='N'
 NB.             C   * Q^T  if side='R' and trans='T'
-NB.   Qf    - s×k-matrix, the unit lower trapezoidal (unit
-NB.           diagonal not stored), contains elementary
+NB.   Qf    - s×k-matrix, unit lower trapezoidal (unit
+NB.           diagonal is not stored), contains elementary
 NB.           reflectors as returned by DGEQRF, with the tau
 NB.           it represents the Q in the factored form
 NB.   Q     - s×s-matrix, real, orthogonal, which is defined
@@ -42,7 +42,7 @@ NB.   k     ∈ [0,s], the number of elementary reflectors
 NB.           whose product defines the matrix Q
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dormqr=: 4 : 0
   'side trans'=. x

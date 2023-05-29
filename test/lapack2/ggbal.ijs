@@ -29,7 +29,7 @@ NB.   n         ≥ 0, the size of A, B, Abal, Bbal, lscale and
 NB.               rscale
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dggbal=: 4 : 0
   'A B'=. y

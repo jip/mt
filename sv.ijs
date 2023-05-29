@@ -95,7 +95,7 @@ NB. where
 NB.   ds   - (n+1)×3-matrix defined as:
 NB.            ds -: (dA , trash0) ,. (duA , trash1 , trash2) ,. (dlA , trash3 , trash4)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
-NB.   Xv   - same shape as Bv, solutions
+NB.   Xv   - the same shape as Bv, solutions
 NB.   dA   - n-vector, diagonal of A
 NB.   duA  - (n-1)-vector, superdiagonal of A
 NB.   dlA  - (n-1)-vector, subdiagonal of A
@@ -178,8 +178,8 @@ NB. where
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, solutions
-NB.   Xh   - same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, solutions
+NB.   Xh   - the same shape as Bh, solutions
 NB.   P    - n×n-matrix, rows permutation of A
 NB.   L1   - n×n-matrix, the unit lower triangular
 NB.   U    - n×n-matrix, the upper triangular
@@ -221,8 +221,8 @@ NB. where
 NB.   A    - n×n-matrix, the tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, solutions
-NB.   Xh   - same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, solutions
+NB.   Xh   - the same shape as Bh, solutions
 NB.   P    - n×n-matrix, rows permutation of A
 NB.   L1   - n×n-matrix, the unit lower triangular
 NB.   U    - n×n-matrix, the upper triangular
@@ -263,8 +263,8 @@ NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, solutions
-NB.   Xh   - same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, solutions
+NB.   Xh   - the same shape as Bh, solutions
 NB.   P    - n×n-matrix, the full permutation of A
 NB.   L1   - n×n-matrix, the unit lower triangular
 NB.   T    - n×n-matrix, the Hermitian (symmetric)
@@ -303,8 +303,8 @@ NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, solutions
-NB.   Xh   - same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, solutions
+NB.   Xh   - the same shape as Bh, solutions
 NB.   L    - n×n-matrix, the lower triangular with positive
 NB.          diagonal entries, the Cholesky triangle
 NB.   n    ≥ 0, the size of A
@@ -341,8 +341,8 @@ NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - same shape as Bv, solutions
-NB.   Xh   - same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, solutions
+NB.   Xh   - the same shape as Bh, solutions
 NB.   L1   - n×n-matrix, the unit lower bidiangonal
 NB.   D    - n×n-matrix, diagonal with positive diagonal
 NB.          entries

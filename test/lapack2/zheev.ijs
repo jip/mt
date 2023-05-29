@@ -16,14 +16,13 @@ NB.          specifies which triangular part of A is to be
 NB.          referenced:
 NB.            'L' - lower
 NB.            'U' - upper
-NB.   A    - n×n-matrix, the Hermitian or lower or upper
-NB.          triangular
+NB.   A    - n×n-matrix, Hermitian or lower or upper
 NB.   w    - n-vector, eigenvalues of A
 NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
 NB.   n    ≥ 0, the size of A, V and w
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 zheev=: 4 : 0
   'jobV uplo'=. x

@@ -29,7 +29,7 @@ NB.   X2    - n2×nrhs-matrix, solutions
 NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgels=: 4 : 0
   'A B'=. y

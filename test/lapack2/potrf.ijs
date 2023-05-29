@@ -18,12 +18,12 @@ NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite or upper or lower triangular
 NB.   T    - n×n-matrix, L or U factor combined with
 NB.          untouched elements from A in opposite triangle
-NB.   L    - n×n-matrix, the lower triangular
-NB.   U    - n×n-matrix, the upper triangular
+NB.   L    - n×n-matrix, lower triangular
+NB.   U    - n×n-matrix, upper triangular
 NB.   n    ≥ 0, the size of A, L and U
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 NB. - no check for positive definiteness
 
 dpotrf=: 4 : 0

@@ -23,29 +23,29 @@ NB.   ilo   ∈ [1,max(1,ihi)], IO starting row and column,
 NB.           1-based
 NB.   ihi   ∈ [min(ilo,n),n], IO ending row and column,
 NB.           1-based
-NB.   A     - n×n-matrix, the upper triangular in rows and
+NB.   A     - n×n-matrix, upper triangular in rows and
 NB.           columns outside ilo:ihi
-NB.   B     - n×n-matrix, the upper triangular
-NB.   Q1    - n×n-matrix, the unitary (orthogonal) if
-NB.           compQ='V' or any noun otherwise
-NB.   Z1    - n×n-matrix, the unitary (orthogonal) if
-NB.           compZ='V' or any noun otherwise
-NB.   H     - n×n-matrix, the upper Hessenberg in rows and
+NB.   B     - n×n-matrix, upper triangular
+NB.   Q1    - n×n-matrix, unitary (orthogonal) if compQ='V'
+NB.           or any noun otherwise
+NB.   Z1    - n×n-matrix, unitary (orthogonal) if compZ='V'
+NB.           or any noun otherwise
+NB.   H     - n×n-matrix, upper Hessenberg in rows and
 NB.           columns ilo:ihi and upper triangular outside
-NB.   T     - n×n-matrix, the upper triangular:
+NB.   T     - n×n-matrix, upper triangular:
 NB.             T = Q^H B Z
-NB.   Q     - 0×0-matrix if compQ='N', or n×n-matrix, the
-NB.           unitary (orthogonal):
+NB.   Q     - 0×0-matrix if compQ='N', or n×n-matrix, unitary
+NB.           (orthogonal):
 NB.             Q    if compQ='I'
 NB.             Q1*Q if compQ='V'
-NB.   Z     - 0×0-matrix if compZ='N', or n×n-matrix, the
-NB.           unitary (orthogonal):
+NB.   Z     - 0×0-matrix if compZ='N', or n×n-matrix, unitary
+NB.           (orthogonal):
 NB.             Z    if compZ='I'
 NB.             Z1*Z if compZ='V'
 NB.   n     ≥ 0, the size of A, B, H and T
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgghrd=: 4 : 0
   'compQ compZ'=. x

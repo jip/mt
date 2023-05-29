@@ -14,7 +14,7 @@ NB.            'U' - upper
 NB.   diag - literal, case-insensitive, in which the head
 NB.           specifies the form of A:
 NB.            'N' - A is non-unit triangular
-NB.            'U' - A is unit triangular, the diagonal
+NB.            'U' - A is unit triangular, diagonal
 NB.                  elements of A are not referenced
 NB.   A    - n×n-matrix to be inversed, [unit]
 NB.          {lower,upper}-triangular or general which
@@ -25,7 +25,7 @@ NB.          elements of A in [strict] opposite triangle
 NB.   n    ≥ 0, the size of A and T
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dtrtri=: 4 : 0
   'uplo diag'=. x

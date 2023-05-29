@@ -15,26 +15,25 @@ NB.                    P * L1 * D * L1^H * P^H = A
 NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^H * P^H = A
 NB.   DT1  - n×n-matrix, D and T1 combined
-NB.   ipiv - n-vector, integer, the pivot indices that define
-NB.          P
+NB.   ipiv - n-vector, integer, pivot indices that define P
 NB.   B    - n×nrhs-matrix, RHS
 NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
-NB.   A    - n×n-matrix, the Hermitian represented in
+NB.   A    - n×n-matrix, Hermitian, represented in the
 NB.          factored form by DT1 and ipiv
-NB.   D    - n×n-matrix, the Hermitian tridiagonal (opposite
-NB.          diagonal not stored)
+NB.   D    - n×n-matrix, Hermitian tridiagonal (opposite
+NB.          diagonal is not stored)
 NB.   T1   - n×n-matrix, either L1 or U1
-NB.   L1   - n×n-matrix, the unit lower triangular (unit
-NB.          diagonal not stored)
-NB.   U1   - n×n-matrix, the unit upper triangular (unit
-NB.          diagonal not stored)
+NB.   L1   - n×n-matrix, unit lower triangular (unit diagonal
+NB.          is not stored)
+NB.   U1   - n×n-matrix, unit upper triangular (unit diagonal
+NB.          is not stored)
 NB.   P    - n×n-matrix, boolean, the permutation matrix
 NB.   n    ≥ 0, the order of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 zhetrs_aa=: 4 : 0
   'DT1 ipiv B'=. y

@@ -21,7 +21,7 @@ NB.           1-based
 NB.   ihi   ∈ [min(ilo,s),s], IO ending row and column,
 NB.           1-based
 NB.   A     - s×s-matrix, contains Qf
-NB.   tau   - (s-1)-vector, the scalar factors of elementary
+NB.   tau   - (s-1)-vector, scalar factors of elementary
 NB.           reflectors as returned by DGEHRD
 NB.   C     - m×n-matrix, real, the input to be multiplied by
 NB.           op(Q)
@@ -45,7 +45,7 @@ NB.   n     ≥ 0, the number of columns in B and C
 NB.   s     = m if side='L' or s = n if side='R'
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dormhr=: 4 : 0
   'side trans'=. x

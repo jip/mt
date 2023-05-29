@@ -14,11 +14,11 @@ NB.                    PL1 * D * PL1^H = A
 NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^H = A
 NB.   DPT1 - n×n-matrix, D and PT1 combined
-NB.   ipiv - n-vector, integer, the pivot indices that define
+NB.   ipiv - n-vector, integer, pivot indices that define
 NB.          permutations
-NB.   D    - n×n-matrix, the Hermitian and block diagonal
-NB.          with 1×1 and 2×2 diagonal blocks (opposite
-NB.          diagonal not stored)
+NB.   D    - n×n-matrix, Hermitian and block diagonal with
+NB.          1×1 and 2×2 diagonal blocks (opposite diagonal
+NB.          is not stored)
 NB.   PT1  - n×n-matrix, either PL1 or PU1
 NB.   PL1  - n×n-matrix, the product of permutation and unit
 NB.          lower triangular matrices (unit diagonal not
@@ -30,12 +30,12 @@ NB.   iAA  - n×n-matrix, contains the triangular part of iA
 NB.          in changed triangle and unchanged elements of
 NB.          DPT1 in opposite strict triangle
 NB.   iA   - n×n-matrix, the Hermitian inversion of A
-NB.   A    - n×n-matrix, the Hermitian represented in
+NB.   A    - n×n-matrix, Hermitian, to invert, represented in
 NB.          factored form by DPT1 and ipiv
 NB.   n    ≥ 0, the size of A and iA
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 zhetri2=: 4 : 0
   'DPT1 ipiv'=. y

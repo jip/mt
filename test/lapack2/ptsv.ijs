@@ -9,25 +9,25 @@ NB.
 NB. Syntax:
 NB.   'dD eT1 X'=. xptsv dA ; eA ; B
 NB. where
-NB.   dA  - n-vector, real, diagonal of A
-NB.   eA  - (n-1)-vector, subdiagonal of A
+NB.   dA  - n-vector, real, the diagonal of A
+NB.   eA  - (n-1)-vector, the subdiagonal of A
 NB.   B    - n×nrhs-matrix, RHS
-NB.   dD   - n-vector, real, diagonal of D
-NB.   eT1  - (n-1)-vector, subdiagonal of L1, or the
+NB.   dD   - n-vector, real, the diagonal of D
+NB.   eT1  - (n-1)-vector, the subdiagonal of L1, or the
 NB.          superdiagonal of U1
 NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
-NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
+NB.   A    - n×n-matrix, Hermitian (symmetric) positive
 NB.          definite tridiagonal represented by dA and eA
 NB.   D    - n×n-matrix, diagonal, with dD as diagonal
 NB.          elements
-NB.   L1   - n×n-matrix, the unit lower bidiagonal
-NB.   U1   - n×n-matrix, the unit upper bidiagonal
+NB.   L1   - n×n-matrix, unit lower bidiagonal
+NB.   U1   - n×n-matrix, unit upper bidiagonal
 NB.   n    ≥ 0, the order of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 NB. - no check for positive definiteness
 
 dptsv=: 3 : 0

@@ -12,12 +12,12 @@ NB.   pvt - n-vector, boolean, marks leading columns (which
 NB.         are permuted to the front of A*P)
 NB.   QfR - m×n-matrix, Qf and R combined
 NB.   ip  - n-vector, integer, columns inversed permutation
-NB.   tau - k-vector, the scalar factors of elementary
-NB.         reflectors applied to A
-NB.   Qf  - m×k-matrix, the unit lower trapezoidal (unit
-NB.         diagonal not stored), with the tau it represents
-NB.         the Q in the factored form
-NB.   R   - k×n-matrix, the upper trapezoidal
+NB.   tau - k-vector, scalar factors of elementary reflectors
+NB.         applied to A
+NB.   Qf  - m×k-matrix, unit lower trapezoidal (unit diagonal
+NB.         is not stored), with the tau it represents the Q
+NB.         in the factored form
+NB.   R   - k×n-matrix, upper trapezoidal
 NB.   Q   - m×m-matrix, unitary (orthogonal), which is
 NB.         defined as the product of k elementary reflectors
 NB.         H(i) of order m:
@@ -35,7 +35,7 @@ NB.   (dgeqrf -: (< < < 1) { dgeqp3@(; 1 #~ c)) A
 NB.   (zgeqrf -: (< < < 1) { zgeqp3@(; 1 #~ c)) A
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgeqp3=: 3 : 0
   'A pvt'=. y

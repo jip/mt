@@ -20,7 +20,7 @@ NB.             'C' - op(A) := A^H  (conjugate transpose)
 NB.   diag  - literal, case-insensitive, in which the head
 NB.            specifies the form of A:
 NB.             'N' - A is non-unit triangular
-NB.             'U' - A is unit triangular, the diagonal
+NB.             'U' - A is unit triangular, diagonal
 NB.                   elements of A are not referenced
 NB.   A     - n×n-matrix, [unit] {lower,upper}-triangular
 NB.   B     - n×nrhs-matrix, RHS
@@ -29,7 +29,7 @@ NB.   n     ≥ 0, the order of system
 NB.   nrhs  ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 NB. - trans='T' and trans='C' are identic for dtrtrs
 
 dtrtrs=: 4 : 0

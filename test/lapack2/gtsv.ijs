@@ -7,9 +7,9 @@ NB.
 NB. Syntax:
 NB.   X=. xgtsv dlA ; dA ; duA ; B
 NB. where
-NB.   dlA  - (n-1)-vector, subdiagonal of A
-NB.   dA   - n-vector, diagonal of A
-NB.   duA  - (n-1)-vector, superdiagonal of A
+NB.   dlA  - (n-1)-vector, the subdiagonal of A
+NB.   dA   - n-vector, the diagonal of A
+NB.   duA  - (n-1)-vector, the superdiagonal of A
 NB.   B    - n×nrhs-matrix, RHS
 NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
@@ -19,7 +19,7 @@ NB.   n    ≥ 0, the order of system
 NB.   nrhs ≥ 0, the number of RHS
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgtsv=: 3 : 0
   'dl d du B'=. y

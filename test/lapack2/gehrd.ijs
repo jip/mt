@@ -10,23 +10,23 @@ NB. where
 NB.   ilo ∈ [1,max(1,ihi)], IO starting row and column,
 NB.         1-based
 NB.   ihi ∈ [min(ilo,n),n], IO ending row and column, 1-based
-NB.   A   - n×n-matrix, a matrix to reduce, the upper
-NB.         triangular in rows and columns outside ilo:ihi
+NB.   A   - n×n-matrix, a matrix to reduce, upper triangular
+NB.         in rows and columns outside ilo:ihi
 NB.   HQf - n×n-matrix, H and Qf combined
-NB.   tau - (n-1)-vector, the scalar factors of elementary
+NB.   tau - (n-1)-vector, scalar factors of elementary
 NB.         reflectors applied to A, in elements ilo:ihi
-NB.   H   - n×n-matrix, the upper Hessenberg in rows and
-NB.         columns ilo:ihi and upper triangular outside
+NB.   H   - n×n-matrix, upper Hessenberg in rows and columns
+NB.         ilo:ihi and upper triangular outside
 NB.   Qf  - n×n-matrix, columns below the first subdiagonal
 NB.         with the tau represent the Q in the factored
 NB.         form
-NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
+NB.   Q   - n×n-matrix, unitary (orthogonal), which is
 NB.         defined as the product of (ihi-ilo) elementary
 NB.         reflectors
 NB.   n   ≥ 0, the size of A, HQf, H, Qf, Q and tau
 NB.
 NB. Notes:
-NB. - the verbs below are loaded into the current locale
+NB. - verbs below are loaded into the current locale
 
 dgehrd=: 3 : 0
   'ilo ihi A'=. y

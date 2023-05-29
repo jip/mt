@@ -51,10 +51,8 @@ NB. trl0      Extract strictly lower trapezoidal matrix
 NB. tru0      Extract strictly upper trapezoidal matrix
 NB. trl1      Extract unit lower trapezoidal matrix
 NB. tru1      Extract unit upper trapezoidal matrix
-NB. tr2he     Make Hermitian (symmetric) matrix from
-NB.           triangular one
-NB. hex       Make Hermitian (symmetric) matrix from lower
-NB.           (upper) triangle of general square one
+NB. xx4gex    Compose structured matrix from SLT (SUT) part
+NB.           and diagonal of general square matrix
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
@@ -81,6 +79,23 @@ NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
+
+NB. =========================================================
+NB. Concepts
+NB.
+NB. Notation:
+NB.   r-rank   - an array of rank   r  e.g. "3-rank array A"
+NB.   l-vector - a vector of length l  e.g. "2-vector v"
+NB.   s-matrix - a matrix of shape  s  e.g. "2×3-matrix M"
+NB.   s-brick  - a brick  of shape  s  e.g. "2×3×4-brick B"
+NB.   L        -        lower triangular         matrix
+NB.   L1       - unit   lower triangular         matrix
+NB.   U        -        upper triangular         matrix
+NB.   U1       - unit   upper triangular         matrix
+NB.   LT       -        lower triangular part of matrix
+NB.   SLT      - strict lower triangular part of matrix
+NB.   UT       -        upper triangular part of matrix
+NB.   SUT      - strict upper triangular part of matrix
 
 NB. =========================================================
 NB. Local definitions
@@ -1033,36 +1048,34 @@ NB.                        0 0 1
 tru1=: 0&$: :([ tru (1 ; [) setdiag ])
 
 NB. ---------------------------------------------------------
-NB. tr2he
+NB. Verb      Reads    Overwrites    Diagonal        Composes matrix
+NB. sy4gel    SLT      SUT           leave as is     symmetric
+NB. sy4geu    SUT      SLT           leave as is     symmetric
+NB. he4gel    SLT      SUT           reificate       Hermitian
+NB. he4geu    SUT      SLT           reificate       Hermitian
+NB. ss4gel    SLT      SUT           zeroize         skew-symmetric
+NB. ss4geu    SUT      SLT           zeroize         skew-symmetric
+NB. sh4gel    SLT      SUT           zeroize         skew-Hermitian
+NB. sh4geu    SUT      SLT           zeroize         skew-Hermitian
 NB.
 NB. Description:
-NB.   Make Hermitian (symmetric) matrix from lower or upper
-NB.   triangular one
+NB.   Compose structured matrix from SLT (SUT) part and
+NB.   diagonal of general square matrix
 NB.
 NB. Syntax:
-NB.   H=. tr2he T
-NB. where
-NB.   T - n×n-matrix, the lower or upper triangular
-NB.   H - n×n-matrix, the Hermitian (symmetric)
-
-tr2he=: (-: upddiag)@(+ ct)
-
-NB. ---------------------------------------------------------
-NB. hel
-NB. heu
-NB.
-NB. Description:
-NB.   Make Hermitian (symmetric) matrix from lower (upper)
-NB.   triangle of general square one
-NB.
-NB. Syntax:
-NB.   H=. hex G
+NB.   S=. xx4gex G
 NB. where
 NB.   G - n×n-matrix
-NB.   H - n×n-matrix, the Hermitian (symmetric)
+NB.   S - the same shape as G, structured
 
-hel=: (</~@i.@#)`(,: ct)}
-heu=: (>/~@i.@#)`(,: ct)}
+sy4gel=:                  (</~@i.@#)`(,:   |:)}
+sy4geu=:                  (>/~@i.@#)`(,:   |:)}
+he4gel=: 0 (9&o. upddiag) (</~@i.@#)`(,:   ct)}
+he4geu=: 0 (9&o. upddiag) (>/~@i.@#)`(,:   ct)}
+ss4gel=: (0 ; a:) setdiag (</~@i.@#)`(,: -@|:)}
+ss4geu=: (0 ; a:) setdiag (>/~@i.@#)`(,: -@|:)}
+sh4gel=: (0 ; a:) setdiag (</~@i.@#)`(,: -@ct)}
+sh4geu=: (0 ; a:) setdiag (>/~@i.@#)`(,: -@ct)}
 
 NB. ---------------------------------------------------------
 NB. po

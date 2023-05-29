@@ -713,14 +713,6 @@ mm=: (3 : 0) :. (3 : 0)
 NB. =========================================================
 NB. Test suite
 
-NB. make structured matrix from general one
-NB. syntax: strmat=. xx4ge mat
-
-sy4ge=: (</~@i.@#)`(,:      |:)}       NB. symmetric
-ss4ge=: (</~@i.@#)`(,:    -@|:)}@trl0  NB. skew-symmetric
-he4ge=: tr2he                   @trl   NB. Hermitian
-sh4ge=: (</~@i.@#)`(,: +@:-@|:)}@trl0  NB. skew-Hermitian
-
 NB. ---------------------------------------------------------
 NB. testmm
 NB.
@@ -779,7 +771,7 @@ NB.     ?@$&0 testmm_mt_ 15 10
 NB. - test by random square complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testmm_mt_ 10 10
 
-testmm_mt_=: 1 : 'EMPTY [ ((testmm_mtmm_@sh4ge_mtmm_ [ testmm_mtmm_@he4ge_mtmm_ [ testmm_mtmm_@ss4ge_mtmm_ [ testmm_mtmm_@sy4ge_mtmm_)^:(=/@$) [ testmm_mtmm_)@(u spmat_mt_ 0.25) [ ((testmm_mtmm_@sh4ge_mtmm_ [ testmm_mtmm_@he4ge_mtmm_ [ testmm_mtmm_@ss4ge_mtmm_ [ testmm_mtmm_@sy4ge_mtmm_)^:(=/@$) [ testmm_mtmm_)@u'
+testmm_mt_=: 1 : 'EMPTY [ ((testmm_mtmm_@sh4gel_mt_ [ testmm_mtmm_@he4gel_mt_ [ testmm_mtmm_@ss4gel_mt_ [ testmm_mtmm_@sy4gel_mt_)^:(=/@$) [ testmm_mtmm_)@(u spmat_mt_ 0.25) [ ((testmm_mtmm_@sh4gel_mt_ [ testmm_mtmm_@he4gel_mt_ [ testmm_mtmm_@ss4gel_mt_ [ testmm_mtmm_@sy4gel_mt_)^:(=/@$) [ testmm_mtmm_)@u'
 
 NB. =========================================================
 NB. Verification suite

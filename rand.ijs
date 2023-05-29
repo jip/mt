@@ -438,7 +438,7 @@ NB. [1] W.F. Trench, "Numerical solution of the eigenvalue
 NB.     problem for Hermitian Toeplitz matrices", SIAM J.
 NB.     Matrix Analysis and Appl., 10 (1989), pp. 135-146.
 
-kmsmat=: 1 : 'hel_mt_@(+@u ^ -/~@i.@{.)'
+kmsmat=: 1 : 'he4gel_mt_@(+@u ^ -/~@i.@{.)'
 
 NB. ---------------------------------------------------------
 NB. gemat
@@ -594,7 +594,7 @@ NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
 
-hemat=: 1 : 'tr2he_mt_@(u trlmat_mt_)@(2&$)'
+hemat=: 1 : 'he4gel_mt_@(u trlmat_mt_)@(2&$)'
 
 NB. ---------------------------------------------------------
 NB. pomat

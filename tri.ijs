@@ -922,13 +922,13 @@ testhetri=: 3 : 0
 
   norm=. normi y
 
-  ('''l''&dsytri2_mttmp_' tmonad (('l' dsytrf_mttmp_  0&{:: )`hel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('''u''&dsytri2_mttmp_' tmonad (('u' dsytrf_mttmp_  0&{:: )`heu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('''l''&zhetri2_mttmp_' tmonad (('l' zhetrf_mttmp_  0&{:: )`hel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('''u''&zhetri2_mttmp_' tmonad (('u' zhetrf_mttmp_  0&{:: )`heu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&dsytri2_mttmp_' tmonad (('l' dsytrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''u''&dsytri2_mttmp_' tmonad (('u' dsytrf_mttmp_  0&{:: )`he4geu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&zhetri2_mttmp_' tmonad (('l' zhetrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''u''&zhetri2_mttmp_' tmonad (('u' zhetrf_mttmp_  0&{:: )`he4geu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
-  ('hetripl'              tmonad ((    hetrfpl      @(0&{::))`]  `(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('hetripu'              tmonad ((    hetrfpu      @(0&{::))`]  `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('hetripl'              tmonad ((    hetrfpl      @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('hetripu'              tmonad ((    hetrfpu      @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
   coerase < 'mttmp'
 
@@ -958,11 +958,11 @@ testpotri=: 3 : 0
 
   norm=. norm1 y
 
-  ('''l''&dpotri_mttmp_' tmonad (('l' dpotrf_mttmp_  0&{:: )`hel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('''l''&zpotri_mttmp_' tmonad (('l' zpotrf_mttmp_  0&{:: )`hel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&dpotri_mttmp_' tmonad (('l' dpotrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('''l''&zpotri_mttmp_' tmonad (('l' zpotrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
-  ('potril'              tmonad ((    potrfl       @(0&{::))`]  `(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('potriu'              tmonad ((    potrfu       @(0&{::))`]  `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('potril'              tmonad ((    potrfl       @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  ('potriu'              tmonad ((    potrfu       @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
   coerase < 'mttmp'
 

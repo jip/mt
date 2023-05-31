@@ -187,14 +187,13 @@ NB.   sgn(q) = q/|q|,     if q ≠ 0
 NB.          = undefined, if q = 0
 NB.
 NB. Syntax:
-NB.   vapp=. f qnf
+NB.   o=. (f qnf) y
 NB. where
-NB.   f    - monad to compute real or complex function value
-NB.          of real or complex argument, is called as:
-NB.            o=. f y
-NB.   vapp - monad to compute quaternion function value of
-NB.          quaternion argument, is called as:
-NB.            o=. vapp y
+NB.   f - monad to compute real or complex function value of
+NB.       real or complex argument, is called as:
+NB.         o=. f y
+NB.   y - quaternion argument
+NB.   o - quaternion function value of y
 NB.
 NB. Examples:
 NB.    ^ 1

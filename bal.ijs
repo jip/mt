@@ -77,11 +77,11 @@ NB. ---------------------------------------------------------
 NB. gebalxp1d
 NB.
 NB. Description:
-NB.   Adv. to make verb to traverse single direction
+NB.   Adv. to make dyad to traverse single direction
 NB.   (rowwise or columnwise) within gebalxp process
 NB.
 NB. Syntax:
-NB.   vapp=. ioz`getv`mkt`dhs gebalxp1d
+NB.   'p hs'=. A (ioz`getv`mkt`dhs gebalxp1d) (p ; hs ; nz)
 NB. where
 NB.   ioz  - dyad to scan vector, either (i.) or (i:), is
 NB.          called as:
@@ -97,9 +97,6 @@ NB.          and column which are intersecting in the element
 NB.          with IO either (<0 0) or (<_1 _1), is either
 NB.          (+&0 _1) or (+&1 _1), is called as:
 NB.            hs=. dhs hs
-NB.   vapp - dyad to traverse single direction, is
-NB.          called as:
-NB.            'p hs'=. A vapp (p ; hs ; nz)
 NB.   nz   - n-vector of non-negative integers, count of
 NB.          non-zero elements in rows (columns) of A
 NB.   A    - n×n-matrix
@@ -155,11 +152,11 @@ NB. ---------------------------------------------------------
 NB. gebalxp2d
 NB.
 NB. Description:
-NB.   Adv. to make verb to traverse both directions (rowwise
+NB.   Adv. to make dyad to traverse both directions (rowwise
 NB.   and columnwise) within gebalxp process
 NB.
 NB. Syntax:
-NB.   vapp=. getv0`getv1 gebalxp2d
+NB.   'p hs'=. A (getv0`getv1 gebalxp2d) (nz0 ,: nz1)
 NB. where
 NB.   getv0 - dyad to extract vector (either row or column)
 NB.           from matrix, is either ({) or ({"1), is called
@@ -169,8 +166,6 @@ NB.   getv1 - dyad to extract vector (either column or row)
 NB.           from matrix, of direction opposite to getv0, is
 NB.           either ({"1) or ({), is called as:
 NB.             vector=. iovector getv matrix
-NB.   vapp  - dyad to traverse both directions, is called as:
-NB.             'p hs'=. A vapp (nz0 ,: nz1)
 NB.   nz0   - n-vector of non-negative integers, count of
 NB.           non-zero elements in either rows or columns
 NB.           excluding diagonal

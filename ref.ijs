@@ -10,7 +10,8 @@ NB.            the right
 NB. larxbxxxx  Dyads to build and apply a block reflector or
 NB.            its transpose to a matrix from either the left
 NB.            or the right
-NB. refga      Conj. to make verb to get and apply reflection
+NB. refga      Conj. to make monad to generate and apply
+NB.            reflector
 NB.
 NB. testlarfg  Test larfx by general vector
 NB. testlarf   Test larfxxxx by general matrix
@@ -59,18 +60,16 @@ NB. ---------------------------------------------------------
 NB. larxtx
 NB.
 NB. Description:
-NB.   Conj. to make monads to form the triangular factor Τ of
+NB.   Conj. to make monad to form the triangular factor Τ of
 NB.   a block reflector
 NB.
 NB. Syntax:
-NB.   vapp=. ioTau larxtx mprod
+NB.   T=. (ioTau larxtx mprod) VTau
 NB. where
 NB.   ioTau - IOs Tau in VTau:
 NB.             Tau -: ioTau { VTau
 NB.   mprod - dyad to multiply matrices, is called as:
 NB.             M3=. M1 mprod M2
-NB.   vapp  - monad to calculate Τ, is called as:
-NB.             T=. vapp VTau
 NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, V and Tau combined
 NB.   T     - k×k-matrix, triangular
 NB.   V     - m×k- or k×n-matrix, the unit trapezoidal
@@ -83,17 +82,15 @@ NB. ---------------------------------------------------------
 NB. larxxxxx
 NB.
 NB. Description:
-NB.   Adv. to make dyads to apply an elementary reflector H
+NB.   Adv. to make dyad to apply an elementary reflector H
 NB.   or its transpose H' to a matrix, from either the left
 NB.   or the right. H is defined by pair (v,τ).
 NB.
 NB. Syntax:
-NB.   vapp=. iotau larxxxxx
+NB.   eCupd=. Vtau (iotau larxxxxx) eC
 NB. where
 NB.   iotau - IO tau in Vtau:
 NB.             tau -: iotau { Vtau
-NB.   vapp  - dyad to calculate Τ, is called as:
-NB.             eCupd=. Vtau larxxxxx eC
 NB.   Vtau  - vector V augmented by scalar τ
 NB.   eC    - matrix C augmented by trash vector
 NB.   eCupd - an updated eC
@@ -114,20 +111,18 @@ NB. ---------------------------------------------------------
 NB. larxbxxxx
 NB.
 NB. Description:
-NB.   Conj. to make dyads to apply an elementary reflector H
+NB.   Conj. to make dyad to apply an elementary reflector H
 NB.   or its transpose H' to a matrix, from either the left
 NB.   or the right. H is defined by pair (V,Τ).
 NB.
 NB. Syntax:
-NB.   vapp=. ioTau larxbxxxx makeT
+NB.   eCupd=. VTau (ioTau larxbxxxx makeT) eC
 NB. where
 NB.   ioTau - IO tau in VTau:
 NB.             Tau -: ioTau { VTau
 NB.   makeT - monad to make Τ, usually one of larxtxx, is
 NB.           called as:
 NB.             T=. makeT VTau
-NB.   vapp  - dyad to calculate Τ, is called as:
-NB.             eCupd=. VTau larxbxxxx eC
 NB.   VTau  - matrix V augmented by vector τ
 NB.   eC    - matrix C augmented by trash vector
 NB.   eCupd - an updated eC
@@ -645,18 +640,15 @@ NB. ---------------------------------------------------------
 NB. refga
 NB.
 NB. Description:
-NB.   Conj. to make verb to get and apply reflection
+NB.   Conj. to make monad to generate and apply reflector
 NB.
 NB. Syntax:
-NB.   vapp=. larfxxx refga larfxxxx
+NB.   'Aupd vtau'=. (larfxxx refga larfxxxx) A ; isosubA ; isoy ; isoa
 NB. where
 NB.   larfxxx  - monad to generate a reflector; is called as:
 NB.                z=. iso larfxxx y
 NB.   larfxxxx - dyad to apply a reflector; is called as:
 NB.                subAupd=. vtau larfxxxx subA
-NB.   vapp     - monad to generate and apply a reflector; is
-NB.              called as:
-NB.                'Aupd vtau'=. vapp A ; isosubA ; isoy ; isoa
 NB.   z        - vector, source to produce vector vtau
 NB.   A        - m×n-matrix to update, is augmented by trash
 NB.              vector according to larfxxxx

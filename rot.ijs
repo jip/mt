@@ -170,16 +170,13 @@ NB. Description:
 NB.   Adv. to make monad to generate and apply rotation
 NB.
 NB. Syntax:
-NB.   vapp=. vrota rotga
+NB.   'Aupd cs'=. (vrota rotga) A ; isosubA ; isofg
 NB. where
 NB.   vrota   - dyad to apply rotation; is called as:
 NB.               subAupd=. cs vrota subA
 NB.             and is any of:
-NB.               rot&.|:  NB. apply rotation to rows
-NB.               rot      NB. apply rotation to columns
-NB.   vapp    - monad to generate and apply rotation; is
-NB.             called as:
-NB.               'Aupd cs'=. vapp A ; isosubA ; isofg
+NB.               rot      NB. apply rotation to rows
+NB.               rot&.|:  NB. apply rotation to columns
 NB.   cs      - 2-vector (c,s), output of lartg, defines
 NB.             rotation matrix
 NB.   A       - m×n-matrix to update

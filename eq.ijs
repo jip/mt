@@ -123,13 +123,13 @@ NB. hgezq
 NB. hgeqz
 NB.
 NB. Description:
-NB.   Adv. to make verbs to find eigenvalues of either lower
+NB.   Adv. to make dyad to find eigenvalues of either lower
 NB.   (hgezq) or upper (hgeqz) Hessenberg-triangular pair
 NB.   (H,T) and, optionally, to reduce this pair to
 NB.   generalized Schur form
 NB.
 NB. Syntax:
-NB.   vapp=. hgexxxo`init`reset`step hgexx
+NB.   'HTupd dQ1 dZ1'=. hs (hgexxxo`init`reset`step hgexx) HT
 NB. where
 NB.   hgexxxo - monad to compute generalized eigenvalues of
 NB.             hs-segment and, optionally, to reduce
@@ -145,14 +145,9 @@ NB.               'ifrstm ilastm'=. (h , ilast) reset (ifrstm , ilastm)
 NB.   step    - monad to change counter optionally, is
 NB.             called as:
 NB.               ifrstm=. ifirst step ifrstm
-NB.   vapp    - dyad to find eigenvalues of lower (upper)
-NB.             Hessenberg-triangular pair (H,T) and,
-NB.             optionally, to reduce this pair to
-NB.             generalized Schur form, is called as:
-NB.               'HTupd dQ1 dZ1'=. hs vapp HT
-NB.             see hgeqzxxxx
 NB.
 NB. Notes:
+NB. - refer to hgeqzxxxx below for parameters description
 NB. - non-converged eigenvalues are set to NaN
 
 hgezq=: 1 : 0

@@ -191,19 +191,16 @@ NB. ---------------------------------------------------------
 NB. mxbstencil
 NB.
 NB. Description:
-NB.   Adv. to make verbs returning [multi-][anti-]band
+NB.   Adv. to make dyad returning [multi-][anti-]band
 NB.   stencil for matrix
 NB.
 NB. Syntax:
-NB.   vapp=. vmix mxbstencil
+NB.   S=. bs (vmix mxbstencil) A
 NB. where
 NB.   vmix - dyad to mix lISO x and y, is either (-~) for
 NB.          band, or (+) for anti-band stencils, is called
 NB.          as:
 NB.            mix=. lIOrow vmix lIOcolumn
-NB.   vapp - dyad to make multi-[anti-]band stencil, is
-NB.          called as:
-NB.            S=. bs vapp A
 NB.   bs   - k×2-matrix of (b)s, or single b, or d, defines
 NB.          [anti-]bands to stencil
 NB.   b    - 2-vector (h,t), defines one [anti-]band to
@@ -634,14 +631,10 @@ NB. Description:
 NB.   Adv. to make verbs to update a solid part of diagonal
 NB.
 NB. Syntax:
-NB.   vapp=. u upddiag
+NB.   Aupd=. [(d,[h[,s]])] (u upddiag) A
 NB. where
 NB.   u    - monad to change elements; is called as:
 NB.            eupd=. u e
-NB.   vapp - ambivalent verb to update a solid part of
-NB.          diagonal of matrix A by monad u; is called
-NB.          as:
-NB.             Aupd=. [(d,[h[,s]])] vapp A
 NB.   d    - integer in range [1-m,n-1], optional lIO
 NB.          diagonal, default is 0 (main diagonal)
 NB.   h    - integer in range [-S,S-1], optional lIO extreme

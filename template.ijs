@@ -121,16 +121,13 @@ NB. Description: <optional section>
 NB.   Adv. to make verb to <description>
 NB.
 NB. Syntax: <optional section>
-NB.   vapp=. <u> <LocalAdverb>
-NB.   vapp=. <u0>`<u1>`... <LocalAdverb>
-NB. where
-NB.   <u>  - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] <u> <y>
-NB.   vapp - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] vapp <y>
-NB.   <y>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <x>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <o>  - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o>=. [<x>] (<u> <LocalAdverb>) <y>
+NB. where <optional section>
+NB.   <u> - monad/dyad to <description>, is called as:
+NB.           <o>=. [<x>] <u> <y>
+NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <x> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.
 NB. Formula: <optional section>
 NB. - <description>:
@@ -198,18 +195,15 @@ NB. Description: <optional section>
 NB.   Conj. to make verb to <description>
 NB.
 NB. Syntax: <optional section>
-NB.   vapp=. <u> <LocalConjunction> <v>
-NB.   vapp=. <u0>`<u1>`... <LocalConjunction> <v0>`<v1>`...
-NB. where
-NB.   <u>  - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] <u> <y>
-NB.   <v>  - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] <v> <y>
-NB.   vapp - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] vapp <y>
-NB.   <y>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <x>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <o>  - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o>=. [<x>] (<u> <LocalConjunction> <v>) <y>
+NB. where <optional section>
+NB.   <u> - monad/dyad to <description>, is called as:
+NB.           <o>=. [<x>] <u> <y>
+NB.   <v> - monad/dyad to <description>, is called as:
+NB.           <o>=. [<x>] <v> <y>
+NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <x> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.
 NB. Formula: <optional section>
 NB. - <description>:
@@ -405,16 +399,13 @@ NB. Description: <optional section>
 NB.   Adv. to make verb to <description>
 NB.
 NB. Syntax: <optional section>
-NB.   vapp=. <u> <Adverb>
-NB.   vapp=. <u0>`<u1>`... <Adverb>
-NB. where
-NB.   <u>  - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] <u> <y>
-NB.   vapp - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] vapp <y>
-NB.   <y>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <x>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <o>  - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o>=. [<x>] (<u> <Adverb>) <y>
+NB. where <optional section>
+NB.   <u> - monad/dyad to <description>, is called as:
+NB.           <o>=. [<x>] <u> <y>
+NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <x> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.
 NB. Formula: <optional section>
 NB. - <description>:
@@ -482,18 +473,15 @@ NB. Description: <optional section>
 NB.   Conj. to make verb to <description>
 NB.
 NB. Syntax: <optional section>
-NB.   vapp=. <u> <Conjunction> <v>
-NB.   vapp=. <u0>`<u1>`... <Conjunction> <v0>`<v1>`...
-NB. where
-NB.   <u>  - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] <u> <y>
-NB.   <v>  - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] <v> <y>
-NB.   vapp - monad/dyad to <description>, is called as:
-NB.            <o>=. [<x>] vapp <y>
-NB.   <y>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <x>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <o>  - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o>=. [<x>] (<u> <Conjunction> <v>) <y>
+NB. where <optional section>
+NB.   <u> - monad/dyad to <description>, is called as:
+NB.           <o>=. [<x>] <u> <y>
+NB.   <v> - monad/dyad to <description>, is called as:
+NB.           <o>=. [<x>] <v> <y>
+NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <x> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.
 NB. Formula: <optional section>
 NB. - <description>:
@@ -707,14 +695,12 @@ NB.   Adv. to make verb to test <names> by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat <testname>
-NB. where
+NB.   log=. (mkmat <testname>) (m,n)
+NB. where <optional section>
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Formula: <optional section>
 NB. - <description>:

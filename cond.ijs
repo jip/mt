@@ -1,6 +1,6 @@
 NB. Condition number
 NB.
-NB. con     Conj. to make verb estimating the reciprocal of
+NB. con     Conj. to make monad estimating the reciprocal of
 NB.         the condition number of a matrix in a given norm
 NB. xxconx  Calculate reciprocal of the condition number of a
 NB.         matrix in a given norm
@@ -47,20 +47,16 @@ NB. ---------------------------------------------------------
 NB. con
 NB.
 NB. Description:
-NB.   Conj. to make verb estimating the reciprocal of the
+NB.   Conj. to make monad estimating the reciprocal of the
 NB.   condition number of a matrix in a given norm
 NB.
 NB. Syntax:
-NB.   vapp=. norm con inv
+NB.   rcondA=. (norm con inv) A
 NB. where
 NB.   norm - monad to calculate norm of matrix, is called as:
 NB.            normA=. norm A
 NB.   inv  - monad to inverse square matrix, is called as:
 NB.            invA=. inv A
-NB.   vapp - monad to calculate the reciprocal of the
-NB.          condition number of a matrix in a given norm, is
-NB.          called as:
-NB.            rcondA=. vapp A
 NB.   A    - n×n-matrix
 NB.
 NB. TODO:

@@ -5,18 +5,19 @@ NB.            triangular matrix
 NB. kmsmat     Adv. to make monad to make random
 NB.            Kac-Murdock-Szego (KMS) matrix
 NB. gemat      Make random real array
-NB. dimat      Conj. to make verb to make random
+NB. dimat      Conj. to make monad to make random
 NB.            diagonalizable matrix
-NB. hemat      Adv. to make verb to make random Hermitian
+NB. hemat      Adv. to make monad to make random Hermitian
 NB.            (symmetric) matrix
-NB. pomat      Adv. to make verb to make random Hermitian
+NB. pomat      Adv. to make monad to make random Hermitian
 NB.            (symmetric) positive definite matrix
-NB. ptmatx     Adv. to make verb to make random Hermitian
+NB. ptmatx     Adv. to make monad to make random Hermitian
 NB.            (symmetric) positive definite tridiagonal
 NB.            matrix
-NB. unmat      Adv. to make verb to make random unitary
+NB. unmat      Adv. to make monad to make random unitary
 NB.            (orthogonal) matrix
-NB. spmat      Conj. to make verb to make random sparse array
+NB. spmat      Conj. to make monad to make random sparse
+NB.            array
 NB.
 NB. testtrmat  Test trxxmat by matrix size given
 NB. testgemat  Test gemat by matrix shape given
@@ -280,16 +281,14 @@ NB. ---------------------------------------------------------
 NB. kmsmatrho
 NB.
 NB. Description:
-NB.   Adv. to make nilad to produce rho parameter for
+NB.   Adv. to make nilad to generate rho parameter for
 NB.   rho-parametrized KMS matrix K(rho)
 NB.
 NB. Syntax:
-NB.   vapp=. randx kmsmatrho
+NB.   rho=. (randx kmsmatrho) any_noun
 NB. where
 NB.   randx - monad to generate random numbers; is called as:
 NB.             A=. randx sh
-NB.   vapp  - nilad to generate rho; is called as:
-NB.             rho=. vapp any_noun
 NB.   sh    - size or shape of A
 NB.
 NB. Notes:
@@ -303,27 +302,24 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb       Syntax                  Is called as
-NB. trl1mat    vapp=. randx trl1mat    L1=. vapp sh
-NB. trlmat     vapp=. randx trlmat     L=.  vapp sh
-NB. tru1mat    vapp=. randx tru1mat    U1=. vapp sh
-NB. trumat     vapp=. randx trumat     U=.  vapp sh
+NB. Verb       Syntax
+NB. trl1mat    L1=. (randx trl1mat) sh
+NB. trlmat     L=.  (randx trlmat ) sh
+NB. tru1mat    U1=. (randx tru1mat) sh
+NB. trumat     U=.  (randx trumat ) sh
 NB.
 NB. Description:
-NB.   Adv. to make verb to make random square triangular
+NB.   Adv. to make monad to make random square triangular
 NB.   matrix
 NB. where
 NB.   randx - monad to make random y-array; is called as:
 NB.             A=. randx y
-NB.   vapp  - monad to make triangular n×n-matrix T; is
-NB.           called as:
-NB.             T=. vapp sh
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
 NB.   L1    - n×n-matrix, random unit lower triangular
-NB.   L     - n×n-matrix, random lower triangular
+NB.   L     - n×n-matrix, random      lower triangular
 NB.   U1    - n×n-matrix, random unit upper triangular
-NB.   U     - n×n-matrix, random upper triangular
+NB.   U     - n×n-matrix, random      upper triangular
 NB.
 NB. Algorithm for basic adverb trlmat:
 NB.   In: n randx
@@ -384,12 +380,10 @@ NB.   Adv. to make monad to make random Kac-Murdock-Szego
 NB.   (KMS) matrix [1].
 NB.
 NB. Syntax:
-NB.   vapp=. randx kmsmat
+NB.   K=. (randx kmsmat) sh
 NB. where
 NB.   randx - nilad to make rho; is called as:
 NB.             rho=. randx any_noun
-NB.   vapp  - monad to make KMS; is called as:
-NB.             K=. vapp sh
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
 NB.   rho   - scalar number, the KMS matrix parameter
@@ -497,14 +491,12 @@ NB.   Conj. to make verb to make random diagonalizable
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   vapp=. randx dimat randq
+NB.   A=. (randx dimat randq) sh
 NB. where
 NB.   randq - monad to make Q; is called as:
 NB.             Q=. randq sh
 NB.   randx - monad to make d; is called as:
 NB.             d=. randx n
-NB.   vapp  - monad to make A; is called as:
-NB.             A=. vapp sh
 NB.   sh    - size or shape, which is either n or (n,n)
 NB.   Q     - n×n-matrix, random unitary (orthogonal):
 NB.             I = Q^H * Q
@@ -554,12 +546,10 @@ NB.   Adv. to make verb to make random Hermitian (symmetric)
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   vapp=. randx hemat
+NB.   H=. (randx hemat) sh
 NB. where
 NB.   randx - monad to make random y-array; is called as:
 NB.             A=. randx y
-NB.   vapp  - monad to make H; is called as:
-NB.             H=. vapp sh
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
 NB.   H     - n×n-matrix, random Hermitian (symmetric)
@@ -604,12 +594,10 @@ NB.   Adv. to make verb to make random Hermitian (symmetric)
 NB.   positive definite matrix
 NB.
 NB. Syntax:
-NB.   vapp=. randx pomat
+NB.   P=. (randx pomat) sh
 NB. where
 NB.   randx - monad to make A; is called as:
 NB.             A=. randx y
-NB.   vapp  - monad to make P; is called as:
-NB.             P=. vapp sh
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
 NB.   A     - n×n-matrix, random general square invertible
@@ -652,19 +640,15 @@ NB. ptmat
 NB. ptmat2
 NB.
 NB. Description:
-NB.   Adv. to make verb to make random Hermitian (symmetric)
+NB.   Adv. to make monad to make random Hermitian (symmetric)
 NB.   positive definite tridiagonal matrix
 NB.
 NB. Syntax:
-NB.   vapp=.  randx ptmat
-NB.   vapp2=. randx ptmat2
+NB.   T=.  (randx ptmat ) sh
+NB.   T2=. (randx ptmat2) sh
 NB. where
 NB.   randx - monad to make random y-array A; is called as:
 NB.             A=. randx y
-NB.   vapp  - monad to make T; is called as:
-NB.             T=. vapp sh
-NB.   vapp2 - monad to make T2; is called as:
-NB.             T2=. vapp2 sh
 NB.   T     - n×n-matrix, random Hermitian (symmetric)
 NB.           positive definite tridiagonal, which is defined
 NB.           as:
@@ -717,17 +701,15 @@ NB. ---------------------------------------------------------
 NB. unmat
 NB.
 NB. Description:
-NB.   Adv. to make verb to make random unitary (orthogonal)
+NB.   Adv. to make monad to make random unitary (orthogonal)
 NB.   matrix with distribution given by Haar measure
 NB.
 NB. Syntax:
-NB.   vapp=. randnx unmat
+NB.   Q=. (randnx unmat) sh
 NB. where
 NB.   randnx - monad to make A, it is either randnr or
 NB.            randnc; is called as:
 NB.              A=. randnx y
-NB.   vapp   - monad to make Q; is called as:
-NB.              Q=. vapp sh
 NB.   sh     - size or shape, which is either n or (n,n)
 NB.   A      - n×n-matrix, non-singular, with elements
 NB.            distributed as N(0,1)
@@ -769,17 +751,15 @@ NB. ---------------------------------------------------------
 NB. spmat
 NB.
 NB. Description:
-NB.   Conj. to make verb to make random sparse array
+NB.   Conj. to make monad to make random sparse array
 NB.
 NB. Syntax:
-NB.   vapp=. randx spmat ratio
+NB.   S=. (randx spmat ratio) sh
 NB. where
 NB.   randx - monad to make random y-array A; is called as:
 NB.             A=. randx y
 NB.   ratio - scalar in range [0,1], specifies desired
 NB.           portion of non-zero elements
-NB.   vapp  - monad to create S; is called as:
-NB.             S=. vapp sh
 NB.   S     - sh-array, sparsed randomly, being is zero
 NB.           sh-array inhabited with values from A
 NB.   sh    - vector of non-negative integers, the shape of S

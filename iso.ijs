@@ -9,8 +9,8 @@ NB. liso4dhs   Generate lISO from head, size and optional
 NB.            delta
 NB. iso4riso   Convert rISO to/from ISO
 NB. liso4riso  Convert rISO to lISO
-NB. lisoX      lISO vector laying between diagonal and
-NB.            matrix edge
+NB. lisoX      Adv. to make dyad to compute lISO vector
+NB.            laying between diagonal and matrix edge
 NB.
 NB. Version: 0.11.0 2021-01-17
 NB.
@@ -210,23 +210,23 @@ NB. lisoS
 NB. lisoW
 NB.
 NB. Description:
-NB.   lISO vector laying between diagonal and matrix edge
-NB.   in any of one cardinal direction: east, north, south or
-NB.   west; and having optional gap between diagonal, at head
-NB.   or tail
+NB.   Adv. to make dyad to compute lISO vector laying between
+NB.   diagonal and matrix edge in any of one cardinal
+NB.   direction: east, north, south or west; and having
+NB.   optional gap to diagonal, at head or tail
 NB.
 NB. Syntax:
-NB.   vapp=. gap lisoX
+NB.   liso=. l (gap lisoE) n
+NB.   liso=. l (gap lisoN) n
+NB.   liso=. l (gap lisoS) n
+NB.   liso=. l (gap lisoW) n
 NB. where
-NB.   lisoX - adv., any of: lisoE lisoN lisoS lisoW
-NB.   gap   - integer, negative value means "from
-NB.           head", otherwise "from tail"
-NB.   vapp  - dyad to return liso; is called as:
-NB.             liso=. l vapp n
-NB.   liso  - l-vector of integers, lISO v in ravelled A
-NB.   v     - l-vector from A:
-NB.             v -: liso ({,) A
-NB.   A     - m×n-matrix
+NB.   gap  - integer, negative value means "from
+NB.          head", otherwise "from tail"
+NB.   liso - l-vector of integers, lISO v in ravelled A
+NB.   v    - l-vector from A:
+NB.            v -: liso ({,) A
+NB.   A    - m×n-matrix
 NB.
 NB. Examples:
 NB.    '***' ((((0 lisoE)&c)}),.' ',.(((1 lisoE)&c)}),.' ',.(((_1 lisoE)&c)})) 5 6$'-'

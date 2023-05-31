@@ -553,7 +553,7 @@ gehrdu=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Verb:       Syntax:
+NB. Verb        Syntax
 NB. gghrdlnn    'H T'=.       hs gghrdlnn A ,: B
 NB. gghrdlnv    'H T Z1'=.    hs gghrdlnv A ,  B ,: Z0
 NB. gghrdlvn    'H T Q1'=.    hs gghrdlvn A ,  B ,: Q0
@@ -624,7 +624,7 @@ gghrdlvn=:    {:@]  ((0 {:: ]) , (rotscll 1 {:: ]  )) (gghrdl   }:)
 gghrdlvv=: (2 }. ]) ((0 {:: ]) , (rotscll&:>"2 0 }.)) (gghrdl 2&{.)
 
 NB. ---------------------------------------------------------
-NB. Verb:       Syntax:
+NB. Verb        Syntax
 NB. gghrdunn    'H T'=.       hs gghrdunn A ,: B
 NB. gghrdunv    'H T Z1'=.    hs gghrdunv A ,  B ,: Z0
 NB. gghrduvn    'H T Q1'=.    hs gghrduvn A ,  B ,: Q0

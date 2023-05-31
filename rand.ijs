@@ -303,7 +303,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:      Syntax:                 Is called as:
+NB. Verb       Syntax                  Is called as
 NB. trl1mat    vapp=. randx trl1mat    L1=. vapp sh
 NB. trlmat     vapp=. randx trlmat     L=.  vapp sh
 NB. tru1mat    vapp=. randx tru1mat    U1=. vapp sh

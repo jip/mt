@@ -46,7 +46,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:       Solves:         Syntax:
+NB. Verb        Solves          Syntax
 NB. trsmllcn    L^H  * X = B    Xv=. A trsmllcn Bv
 NB. trsmllcu    L1^H * X = B    Xv=. A trsmllcu Bv
 NB. trsmllnn    L    * X = B    Xv=. A trsmllnn Bv

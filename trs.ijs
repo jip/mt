@@ -81,7 +81,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:        Syntax:
+NB. Verb           Solves         Syntax
 NB. getrslu1px     A   * X = B    Xv=. LU1p getrslu1px  Bv
 NB. getrslu1pcx    A^H * X = B    Xv=. LU1p getrslu1pcx Bv
 NB. getrslu1ptx    A^T * X = B    Xv=. LU1p getrslu1ptx Bv
@@ -123,7 +123,7 @@ getrslu1ptx=: (1 {:: [) ([ trsmlltn trsmlutu) ((0 {:: [) C.   ])
 getrsxlu1p=:  (1 {:: [) ([ trsmrlnn trsmrunu) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:        Syntax:
+NB. Verb           Solves         Syntax
 NB. getrspl1ux     A   * X = B    Xv=. pL1U getrspl1ux  Bv
 NB. getrspl1ucx    A^H * X = B    Xv=. pL1U getrspl1ucx Bv
 NB. getrspl1utx    A^T * X = B    Xv=. pL1U getrspl1utx Bv
@@ -168,7 +168,7 @@ getrspl1utx=: (0 {:: [) C.^:_1   ((] trsmlltu trsmlutn~) 1&{::)~
 getrsxpl1u=:  (0 {:: [) C.^:_1"1 ((] trsmrlnu trsmrunn~) 1&{::)~
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:        Syntax:
+NB. Verb           Solves         Syntax
 NB. getrspu1lx     A   * X = B    Xv=. pU1L getrspu1lx  Bv
 NB. getrspu1lcx    A^H * X = B    Xv=. pU1L getrspu1lcx Bv
 NB. getrspu1ltx    A^T * X = B    Xv=. pU1L getrspu1ltx Bv
@@ -210,7 +210,7 @@ getrspu1ltx=: (0 {:: [) C.^:_1   ((] trsmlutu trsmlltn~) 1&{::)~
 getrsxpu1l=:  (0 {:: [) C.^:_1"1 ((] trsmrunu trsmrlnn~) 1&{::)~
 
 NB. ---------------------------------------------------------
-NB. Verb:          Solves:        Syntax:
+NB. Verb           Solves         Syntax
 NB. getrsul1px     A   * X = B    Xv=. UL1p getrsul1px  Bv
 NB. getrsul1pcx    A^H * X = B    Xv=. UL1p getrsul1pcx Bv
 NB. getrsul1ptx    A^T * X = B    Xv=. UL1p getrsul1ptx Bv
@@ -252,7 +252,7 @@ getrsul1ptx=: (1 {:: [) ([ trsmlutn trsmlltu) ((0 {:: [) C.   ])
 getrsxul1p=:  (1 {:: [) ([ trsmrunn trsmrlnu) ((0 {:: [) C."1 ])
 
 NB. ---------------------------------------------------------
-NB. Verb:        Solves:        Syntax:
+NB. Verb         Solves         Syntax
 NB. hetrsplx     A   * X = B    Xv=. pL1T hetrsplx  Bv
 NB. hetrspltx    A^T * X = B    Xv=. pL1T hetrspltx Bv
 NB. hetrsxpl     X * A   = B    Xh=. pL1T hetrsxpl  Bh
@@ -290,7 +290,7 @@ hetrsxpl=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmrlnu (2 {:: [) gtsvxa (1 {:: [
 hetrsxplt=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmrlnu (2 {:: [) gtsvxa (1 {:: [) trsmrlcu (0 {:: [) C."1 ]) +
 
 NB. ---------------------------------------------------------
-NB. Verb:        Solves:        Syntax:
+NB. Verb         Solves         Syntax
 NB. hetrspux     A   * X = B    Xv=. pU1T hetrspux  Bv
 NB. hetrsputx    A^T * X = B    Xv=. pU1T hetrsputx Bv
 NB. hetrsxpu     X * A   = B    Xh=. pU1T hetrsxpu  Bh
@@ -325,7 +325,7 @@ hetrsxpu=:   (0 {:: [)    C.^:_1"1  (1 {:: [) trsmrunu (2 {:: [) gtsvxa (1 {:: [
 hetrsxput=: ((0 {:: [) +@(C.^:_1"1) (1 {:: [) trsmrunu (2 {:: [) gtsvxa (1 {:: [) trsmrucu (0 {:: [) C."1 ]) +
 
 NB. ---------------------------------------------------------
-NB. Verb:       Solves:        Syntax:
+NB. Verb        Solves         Syntax
 NB. potrslx     A   * X = B    Xv=. L potrslx  Bv
 NB. potrsltx    A^T * X = B    Xv=. L potrsltx Bv
 NB. potrsxl     X * A   = B    Xh=. L potrsxl  Bh
@@ -367,7 +367,7 @@ potrsxl=:   [   trsmrlnn trsmrlcn
 potrsxlt=: ([ +@trsmrlnn trsmrlcn) +
 
 NB. ---------------------------------------------------------
-NB. Verb:       Solves:        Syntax:
+NB. Verb        Solves         Syntax
 NB. potrsux     A   * X = B    Xv=. U potrsux  Bv
 NB. potrsutx    A^T * X = B    Xv=. U potrsutx Bv
 NB. potrsxu     X * A   = B    Xh=. U potrsxu  Bh
@@ -406,7 +406,7 @@ potrsxu=:   [   trsmrunn trsmrucn
 potrsxut=: ([ +@trsmrunn trsmrucn) +
 
 NB. ---------------------------------------------------------
-NB. Verb:       Solves:        Syntax:
+NB. Verb        Solves         Syntax
 NB. pttrslx     A   * X = B    Xv=. L1D pttrslx  Bv
 NB. pttrsltx    A^T * X = B    Xv=. L1D pttrsltx Bv
 NB. pttrsxl     X * A   = B    Xh=. L1D pttrsxl  Bh
@@ -478,7 +478,7 @@ pttrsxl=:  pttrsltx&.(a:`|:)
 pttrsxlt=: pttrslx &.(a:`|:)
 
 NB. ---------------------------------------------------------
-NB. Verb:       Solves:        Syntax:
+NB. Verb        Solves         Syntax
 NB. pttrsux     A   * X = B    Xv=. U1D pttrsux  Bv
 NB. pttrsutx    A^T * X = B    Xv=. U1D pttrsutx Bv
 NB. pttrsxu     X * A   = B    Xh=. U1D pttrsxu  Bh

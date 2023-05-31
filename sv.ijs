@@ -162,7 +162,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:      Solves:        Syntax:
+NB. Verb       Solves         Syntax
 NB. gesvax     A   * X = B    Xv=. A gesvax  Bv
 NB. gesvacx    A^H * X = B    Xv=. A gesvacx Bv
 NB. gesvatx    A^T * X = B    Xv=. A gesvatx Bv
@@ -205,7 +205,7 @@ gesvxac=: (getrsxpl1uc~ getrfpl1u)~
 gesvxat=: (getrsxpl1ut~ getrfpl1u)~
 
 NB. ---------------------------------------------------------
-NB. Verb:      Solves:        Syntax:
+NB. Verb       Solves         Syntax
 NB. gtsvax     A   * X = B    Xv=. A gtsvax  Bv
 NB. gtsvacx    A^H * X = B    Xv=. A gtsvacx Bv
 NB. gtsvatx    A^T * X = B    Xv=. A gtsvatx Bv
@@ -249,7 +249,7 @@ gtsvxac=: (gtsv~ +@:(0  1 _1&({"1))@(($,)~ >:@$))~&.(a:`|:)
 gtsvxat=: gtsvax                                  &.(a:`|:)
 
 NB. ---------------------------------------------------------
-NB. Verb:      Solves:        Syntax:
+NB. Verb       Solves         Syntax
 NB. hesvax     A   * X = B    Xv=. A hesvax  Bv
 NB. hesvatx    A^T * X = B    Xv=. A hesvatx Bv
 NB. hesvxa     X * A   = B    Xh=. A hesvxa  Bh
@@ -287,7 +287,7 @@ hesvxa=:  (hetrsxpl ~ hetrfpl)~
 hesvxat=: (hetrsxplt~ hetrfpl)~
 
 NB. ---------------------------------------------------------
-NB. Verb:      Solves:        Syntax:
+NB. Verb       Solves         Syntax
 NB. posvax     A   * X = B    Xv=. A posvax  Bv
 NB. posvatx    A^T * X = B    Xv=. A posvatx Bv
 NB. posvxa     X * A   = B    Xh=. A posvxa  Bh
@@ -325,7 +325,7 @@ posvxa=:  (potrsxl ~ potrfl)~
 posvxat=: (potrsxlt~ potrfl)~
 
 NB. ---------------------------------------------------------
-NB. Verb:      Solves:        Syntax:
+NB. Verb       Solves         Syntax
 NB. ptsvax     A   * X = B    Xv=. A ptsvax  Bv
 NB. ptsvatx    A^T * X = B    Xv=. A ptsvatx Bv
 NB. ptsvxa     X * A   = B    Xh=. A ptsvxa  Bh

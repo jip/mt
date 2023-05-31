@@ -65,15 +65,15 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Get/set component[s]
 NB.
-NB. Verb:    Syntax (monad):    Syntax (dyad):
-NB. qn1      a=. qn1  q         qa=. a qn1  q
-NB. qni      b=. qni  q         qb=. b qni  q
-NB. qnj      c=. qnj  q         qc=. c qnj  q
-NB. qnk      d=. qnk  q         qd=. d qnk  q
-NB. qn1i     x=. qn1i q         qx=. x qn1i q
-NB. qn1j     z=. qn1j q         qz=. z qn1j q
-NB. qn1k     w=. qn1k q         qw=. w qn1k q
-NB. qnjk     y=. qnjk q         qy=. y qnjk q
+NB. Verb    Syntax (monad)    Syntax (dyad)
+NB. qn1     a=. qn1  q        qa=. a qn1  q
+NB. qni     b=. qni  q        qb=. b qni  q
+NB. qnj     c=. qnj  q        qc=. c qnj  q
+NB. qnk     d=. qnk  q        qd=. d qnk  q
+NB. qn1i    x=. qn1i q        qx=. x qn1i q
+NB. qn1j    z=. qn1j q        qz=. z qn1j q
+NB. qn1k    w=. qn1k q        qw=. w qn1k q
+NB. qnjk    y=. qnjk q        qy=. y qnjk q
 
 qn1=: ( 9 o. {.) : ((j.  qni) 0} ])
 qni=: (11 o. {.) : ((j.~ qn1) 0} ])
@@ -88,7 +88,7 @@ qn1k=: j./@(9 11&o.) : ((2 2 $ 0 0 ; 2 0 ; 1 1 ; 0 1) j./@:{ ,&:+.)
 NB. ---------------------------------------------------------
 NB. Markers
 NB.
-NB. Verb:        Action:                Syntax:
+NB. Verb         Action                 Syntax
 NB. qnmark1      a + 0*i + 0*j + 0*k    qa=.   qnmark1   q
 NB. qnmarki      0 + b*i + 0*j + 0*k    qb=.   qnmarki   q
 NB. qnmarkj      0 + 0*i + c*j + 0*k    qc=.   qnmarkj   q
@@ -124,7 +124,7 @@ qnmarkijk=: (0}~ j.@qni) : [:
 NB. ---------------------------------------------------------
 NB. Conjugators
 NB.
-NB. Verb:      Action:                 Syntax:
+NB. Verb       Action                  Syntax
 NB. qncon1     -a + b*i + c*j + d*k    qc=. qncon1  q
 NB. qnconi      a - b*i + c*j + d*k    qc=. qnconi  q
 NB. qnconj      a + b*i - c*j + d*k    qc=. qnconj  q

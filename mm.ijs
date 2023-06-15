@@ -116,9 +116,6 @@ notOr=:  2 : '-.@u `    1:@.v'  NB. (not u)             or      v     notuorv=. 
 NB. like fread, but may throw 'file name' error
 fread2=: (1!:1)@fboxname@boxopen@jpath
 
-NB. fix system's (assert) to match (assert.) control
-assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')
-
 NB. predicate to check is array symmetric
 NB. based on:
 NB.   https://code.jsoftware.com/wiki/Essays/Symmetric_Array
@@ -654,30 +651,30 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
   y=. CRLF cutl_mtmm_ y  NB. cut by spans of CR and LF
-  'line longer than 1024 bytes was detected' assert_mtmm_ (1024 >: #) S: 0 y
+  'line longer than 1024 bytes was detected' assert_mt_ (1024 >: #) S: 0 y
   header=. cut_mtmm_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
   y=. (#~ ('%' ~: {.) S: 0) y   NB. remove header and comments
   y=. (#~ a:&~:) dltb L: 0 y    NB. remove empty lines
-  'not a Matrix Market exchange format' assert_mtmm_ 5 = # header
-  ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mtmm_ BANNER_mtmm_ -: 0 {:: header
-  ('object '''   , (1 {:: header) , ''' is not recognized') assert_mtmm_ OBJECT_mtmm_ -: 1 {:: header
+  'not a Matrix Market exchange format' assert_mt_ 5 = # header
+  ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mt_ BANNER_mtmm_ -: 0 {:: header
+  ('object '''   , (1 {:: header) , ''' is not recognized') assert_mt_ OBJECT_mtmm_ -: 1 {:: header
   ioFormat=.   FORMATS_mtmm_    i. 2 { header
   ioField=.    FIELDS_mtmm_     i. 3 { header
   ioSymmetry=. SYMMETRIES_mtmm_ i. 4 { header
-  ('format '''   , (2 {:: header) , ''' is not recognized') assert_mtmm_ ioFormat   < # FORMATS_mtmm_
-  ('field '''    , (3 {:: header) , ''' is not recognized') assert_mtmm_ ioField    < # FIELDS_mtmm_
-  ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mtmm_ ioSymmetry < # SYMMETRIES_mtmm_
+  ('format '''   , (2 {:: header) , ''' is not recognized') assert_mt_ ioFormat   < # FORMATS_mtmm_
+  ('field '''    , (3 {:: header) , ''' is not recognized') assert_mt_ ioField    < # FIELDS_mtmm_
+  ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mt_ ioSymmetry < # SYMMETRIES_mtmm_
   size=. ". 0 {:: y
-  ('size values ''' , (": size) , ''' must be integer') assert_mtmm_ (3!:0 size) e. JB01 , JINT
+  ('size values ''' , (": size) , ''' must be integer') assert_mt_ (3!:0 size) e. JB01 , JINT
   y=. }. y
   if. ioFormat do.  NB. coordinate
-    ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mtmm_ 2 < # size
-    ('''coordinate'' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mtmm_ (0 < ioField) +. (ioSymmetry e. 0 1) *. (0 = ioField)
+    ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mt_ 2 < # size
+    ('''coordinate'' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mt_ (0 < ioField) +. (ioSymmetry e. 0 1) *. (0 = ioField)
     'shape le'=. (}: ; {:) size  NB. shape, quantity expected
     y=. (le ; shape ; ioField ; ioSymmetry) mmic_mtmm_ y
   else.  NB. array
-    ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mtmm_ 1 < # size
-    ('''array'' and ''pattern'' qualifiers are incompatible') assert_mtmm_ 0 < ioField
+    ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mt_ 1 < # size
+    ('''array'' and ''pattern'' qualifiers are incompatible') assert_mt_ 0 < ioField
     y=. (size ; ioField ; ioSymmetry) mmia_mtmm_ y
   end.
   y

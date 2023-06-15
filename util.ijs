@@ -8,6 +8,7 @@ NB. copysign  Copy sign
 NB. sorim     Sum of real and imaginary parts' modules
 NB. soris     Sum of real and imaginary parts' squares
 NB. fmtlog    Format log string
+NB. assert    Advanced version of the (assert.) control
 NB.
 NB. Version: 0.13.0 2021-05-21
 NB.
@@ -54,3 +55,28 @@ sorim=: | `(+/"1@:| @:+.)@.(JCMPX = 3!:0)                       NB. sum of real 
 soris=: *:`(+/"1@:*:@:+.)@.(JCMPX = 3!:0)                       NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
 
 fmtlog=: ;@:(40 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))  NB. log string format
+
+NB. ---------------------------------------------------------
+NB. assert
+NB.
+NB. Description:
+NB.   Advanced version of the (assert.) control
+NB.
+NB. Syntax:
+NB.   trash=. [msg] assert chk
+NB. where
+NB.   msg - literal, optional, will be shown if assertion is
+NB.         failed
+NB.   chk - numeric vector
+NB.
+NB. Notes:
+NB. - fixes system's (assert) to match (assert.) control
+NB. - is equipped with error message
+NB.
+NB. References:
+NB. [1] Igor Zhuravlov. [Jprogramming] assert verb from
+NB.     stdlib mismatches assert. control
+NB.     2019-12-30 00:43:46 UTC.
+NB.     http://www.jsoftware.com/pipermail/programming/2019-December/054693.html
+
+assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')

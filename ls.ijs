@@ -233,12 +233,8 @@ NB.        3.4.4) solve the equation (L^H * X = RHS) for X
 NB.   4) undo scaling
 NB.
 NB. Notes:
-NB. - gelsax models LAPACK's xGELS('N') with the
-NB.   following difference:
-NB.   - no check is A singular before trsmxxxx call
-NB. - gelsacx models LAPACK's DGELS('T') and ZGELS('C') with
-NB.   the following difference:
-NB.   - no check is A singular before trsmxxxx call
+NB. - gelsax models LAPACK's xGELS('N')
+NB. - gelsacx models LAPACK's DGELS('T') and ZGELS('C')
 
 gelsax=: 4 : 0
   'smlnum bignum'=. FP_SFMIN (% , %~) FP_PREC
@@ -252,10 +248,10 @@ gelsax=: 4 : 0
   sclb=. ] `((bnrm , smlnum)&scl)`]`((bnrm , bignum)&scl)@.(segs I. bnrm)
   if. m < n do.
     NB. case 2
-    y=. x sclb^:_1@scla@((([ unmlqlc n {. (trsmllnn~ m&({."1))~) sclb)~ gelqf@scla)~ :: (xsh $ 0:) y
+    y=. x sclb^:_1@scla@((([ unmlqlc n {. (trtrslnn~ m&({."1))~) sclb)~ gelqf@scla)~ :: (xsh $ 0:) y
   else.
     NB. case 1
-    y=. x sclb^:_1@scla@((([ trsmlunn&(n&{.) unmqrlc) sclb)~ geqrf@scla)~ :: (xsh $ 0:) y
+    y=. x sclb^:_1@scla@((([ trtrsunn&(n&{.) unmqrlc) sclb)~ geqrf@scla)~ :: (xsh $ 0:) y
   end.
 )
 
@@ -271,10 +267,10 @@ gelsacx=: 4 : 0
   sclb=. ] `((bnrm , smlnum)&scl)`]`((bnrm , bignum)&scl)@.(segs I. bnrm)
   if. m < n do.
     NB. case 4
-    y=. x sclb^:_1@scla@((((m {."1 [) trsmllcn m {. unmlqln) sclb)~ gelqf@scla)~ :: (xsh $ 0:) y
+    y=. x sclb^:_1@scla@((((m {."1 [) trtrslcn m {. unmlqln) sclb)~ gelqf@scla)~ :: (xsh $ 0:) y
   else.
     NB. case 3
-    y=. x sclb^:_1@scla@((([ unmqrln m {. (trsmlucn~ n& {.   )~) sclb)~ geqrf@scla)~ :: (xsh $ 0:) y
+    y=. x sclb^:_1@scla@((([ unmqrln m {. (trtrsucn~ n& {.   )~) sclb)~ geqrf@scla)~ :: (xsh $ 0:) y
   end.
 )
 

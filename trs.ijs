@@ -28,6 +28,13 @@ NB.              matrix, represented in factored form; op(A)
 NB.              is either A itself, or A^T (the
 NB.              transposition of A); B is known right-hand
 NB.              sides (RHS), X is unknown solutions
+NB. trtrsxxx     Solve equation (op(A) * X = B) or
+NB.              (X * op(A) = B), where A is either unit or
+NB.              non-unit, either lower or upper, triangular
+NB.              matrix; op(A) is either A itself, or A^T,
+NB.              the transposition of A, or A^H, the conjugate
+NB.              transposition of A; B is known right-hand
+NB.              sides (RHS), X is unknown solutions
 NB.
 NB. testgetrs1   Test getrsxxxxxx by general square matrix
 NB.              and single RHS
@@ -46,6 +53,10 @@ NB.              positive definite tridiagonal matrix and
 NB.              single RHS
 NB. testpttrs3   Test pttrsxxx by Hermitian (symmetric)
 NB.              positive definite tridiagonal matrix and
+NB.              multiple RHS
+NB. testtrtrs1   Test trtrsxxx by triangular matrix and
+NB.              single RHS
+NB. testtrtrs3   Test trtrsxxx by triangular matrix and
 NB.              multiple RHS
 NB. testtrs      Adv. to make verb to test xxtrsxxx by matrix
 NB.              of generator and shape given
@@ -547,6 +558,52 @@ pttrsux=:  $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1   diag (0 {:: [))`
 pttrsutx=: $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1 +@diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.&.|.@(c@] ({.@] % ({,))` 0:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.    )@stitcht~)`] fork3)
 pttrsxu=:  pttrsutx&.(a:`|:)
 pttrsxut=: pttrsux &.(a:`|:)
+
+NB. ---------------------------------------------------------
+NB. Verb        Reads in A    Solves          Syntax
+NB. trtrslnn     LT           L    * X = B    X=. A trtrslnn B
+NB. trtrslnu    SLT           L1   * X = B    X=. A trtrslnu B
+NB. trtrsltn     LT           L^T  * X = B    X=. A trtrsltn B
+NB. trtrsltu    SLT           L1^T * X = B    X=. A trtrsltu B
+NB. trtrslcn     LT           L^H  * X = B    X=. A trtrslcn B
+NB. trtrslcu    SLT           L1^H * X = B    X=. A trtrslcu B
+NB. trtrsunn     UT           U    * X = B    X=. A trtrsunn B
+NB. trtrsunu    SUT           U1   * X = B    X=. A trtrsunu B
+NB. trtrsutn     UT           U^T  * X = B    X=. A trtrsutn B
+NB. trtrsutu    SUT           U1^T * X = B    X=. A trtrsutu B
+NB. trtrsucn     UT           U^H  * X = B    X=. A trtrsucn B
+NB. trtrsucu    SUT           U1^H * X = B    X=. A trtrsucu B
+NB.
+NB. Description:
+NB.   Solve the linear monomial matrix equation:
+NB.     op(A) * X = B
+NB.   where A is triangular and non-singular
+NB.
+NB. Syntax:
+NB.   X=. B trtrsxxx A
+NB. where
+NB.   A  - m×m-matrix, contains either L, L1, U or U1
+NB.        (unit diagonal is not stored)
+NB.   B  - m×n-matrix or m-vector, the RHS
+NB.   X  - m×n-matrix or m-vector, the solution[s]
+NB.   m  ≥ 0, the size of A and the number of rows in B and X
+NB.   n  ≥ 0, the number of columns in B and X
+NB.
+NB. Notes:
+NB. - models LAPACK's xTRTRS when B and X are 2-rank
+
+trtrslnn=: [: : ((trsmllnn~ ([ 'matrix is singular' assert 0 *./@:~: diag))~)
+trtrslnu=: [: :   trsmllnu
+trtrsltn=: [: : ((trsmlltn~ ([ 'matrix is singular' assert 0 *./@:~: diag))~)
+trtrsltu=: [: :   trsmlltu
+trtrslcn=: [: : ((trsmllcn~ ([ 'matrix is singular' assert 0 *./@:~: diag))~)
+trtrslcu=: [: :   trsmllcu
+trtrsunn=: [: : ((trsmlunn~ ([ 'matrix is singular' assert 0 *./@:~: diag))~)
+trtrsunu=: [: :   trsmlunu
+trtrsutn=: [: : ((trsmlutn~ ([ 'matrix is singular' assert 0 *./@:~: diag))~)
+trtrsutu=: [: :   trsmlutu
+trtrsucn=: [: : ((trsmlucn~ ([ 'matrix is singular' assert 0 *./@:~: diag))~)
+trtrsucu=: [: :   trsmlucu
 
 NB. =========================================================
 NB. Test suite
@@ -1088,6 +1145,162 @@ testpttrs3=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
+NB. testtrtrs1
+NB.
+NB. Description:
+NB.   Test trtrsxxx by triangular matrix and single RHS
+NB.
+NB. Syntax:
+NB.   testtrtrs1 (A ; x)
+NB. where
+NB.   A - n×n-matrix
+NB.   x - n-vector, the exact solution
+
+testtrtrs1=: 3 : 0
+  'A x'=. y
+
+  rcondL=.  trlcon1  L=.  trlpick A
+  rcondU=.  trucon1  U=.  trupick A
+  rcondL1=. trl1con1 L1=. (1 ; '') setdiag L
+  rcondU1=. tru1con1 U1=. (1 ; '') setdiag U
+
+  'norm1L  normiL '=. (norm1 , normi) L
+  'norm1L1 normiL1'=. (norm1 , normi) L1
+  'norm1U  normiU '=. (norm1 , normi) U
+  'norm1U1 normiU1'=. (norm1 , normi) U1
+
+  vberrxnx=:  mp~     t02v
+  vberrxcx=: (mp~ ct) t02v
+  vberrxtx=: (mp~ |:) t02v
+
+  ('trtrslnn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxnx)) L  ; (L   mp       x ) ; x ; rcondL  ; norm1L
+  ('trtrslnu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxnx)) L1 ; (L1  mp       x ) ; x ; rcondL1 ; norm1L1
+  ('trtrslcn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxcx)) L  ; (L  (mp~ ct)~ x ) ; x ; rcondL  ; normiL
+  ('trtrslcu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxcx)) L1 ; (L1 (mp~ ct)~ x ) ; x ; rcondL1 ; normiL1
+  ('trtrsltn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxtx)) L  ; (L  (mp~ |:)~ x ) ; x ; rcondL  ; normiL
+  ('trtrsltu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxtx)) L1 ; (L1 (mp~ |:)~ x ) ; x ; rcondL1 ; normiL1
+
+  ('trtrsunn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxnx)) U  ; (U   mp       x ) ; x ; rcondU  ; norm1U
+  ('trtrsunu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxnx)) U1 ; (U1  mp       x ) ; x ; rcondU1 ; norm1U1
+  ('trtrsucn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxcx)) U  ; (U  (mp~ ct)~ x ) ; x ; rcondU  ; normiU
+  ('trtrsucu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxcx)) U1 ; (U1 (mp~ ct)~ x ) ; x ; rcondU1 ; normiU1
+  ('trtrsutn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxtx)) U  ; (U  (mp~ |:)~ x ) ; x ; rcondU  ; normiU
+  ('trtrsutu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrxtx)) U1 ; (U1 (mp~ |:)~ x ) ; x ; rcondU1 ; normiU1
+
+  coerase < 'mttmp'
+  erase 'vberrxnx vberrxcx vberrxtx'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
+NB. testtrtrs3
+NB.
+NB. Description:
+NB.   Test:
+NB.   - xTRTRS (math/lapack2 addon)
+NB.   - trtrsxxx (math/mt addon)
+NB.   by triangular matrix and multiple RHS
+NB.
+NB. Syntax:
+NB.   testtrtrs3 (A ; X)
+NB. where
+NB.   A - n×n-matrix
+NB.   X - n×3-matrix, exact solutions
+
+testtrtrs3=: 3 : 0
+  load_mttmp_ 'math/mt/test/lapack2/trtrs'
+
+  'A X'=. y
+
+  rcondL=.  trlcon1  L=.  trlpick  A
+  rcondU=.  trucon1  U=.  trupick  A
+  rcondL1=. trl1con1 L1=. (1 ; '') setdiag L
+  rcondU1=. tru1con1 U1=. (1 ; '') setdiag U
+
+  'norm1L  normiL '=. (norm1 , normi) L
+  'norm1L1 normiL1'=. (norm1 , normi) L1
+  'norm1U  normiU '=. (norm1 , normi) U
+  'norm1U1 normiU1'=. (norm1 , normi) U1
+
+  Blnn=.     L   mp X
+  Blnu=.     L1  mp X
+  Blcn=. (ct L ) mp X
+  Blcu=. (ct L1) mp X
+  Bltn=. (|: L ) mp X
+  Bltu=. (|: L1) mp X
+
+  Bunn=.     U   mp X
+  Bunu=.     U1  mp X
+  Bucn=. (ct U ) mp X
+  Bucu=. (ct U1) mp X
+  Butn=. (|: U ) mp X
+  Butu=. (|: U1) mp X
+
+  vferrv=: normitc t04m
+
+  vberrlnn=: (mp~    trlpick ) t02m norm1tc
+  vberrlnu=: (mp~    trl1pick) t02m norm1tc
+  vberrlcn=: (mp~ ct@trlpick ) t02m norm1tc
+  vberrlcu=: (mp~ ct@trl1pick) t02m norm1tc
+  vberrltn=: (mp~ |:@trlpick ) t02m norm1tc
+  vberrltu=: (mp~ |:@trl1pick) t02m norm1tc
+  vberrunn=: (mp~    trupick ) t02m norm1tc
+  vberrunu=: (mp~    tru1pick) t02m norm1tc
+  vberrucn=: (mp~ ct@trupick ) t02m norm1tc
+  vberrucu=: (mp~ ct@tru1pick) t02m norm1tc
+  vberrutn=: (mp~ |:@trupick ) t02m norm1tc
+  vberrutu=: (mp~ |:@tru1pick) t02m norm1tc
+
+  ('''lnn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrlnn)) A  ; Blnn ; X ; rcondL  ; norm1L
+  ('''lnu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrlnu)) A  ; Blnu ; X ; rcondL1 ; norm1L1
+  ('''ltn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrltn)) A  ; Bltn ; X ; rcondL  ; normiL
+  ('''ltu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrltu)) A  ; Bltu ; X ; rcondL1 ; normiL1
+  ('''lcn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrlcn)) A  ; Blcn ; X ; rcondL  ; normiL
+  ('''lcu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrlcu)) A  ; Blcu ; X ; rcondL1 ; normiL1
+
+  ('''unn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrunn)) A  ; Bunn ; X ; rcondL  ; norm1U
+  ('''unu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrunu)) A  ; Bunu ; X ; rcondL1 ; norm1U1
+  ('''utn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrutn)) A  ; Butn ; X ; rcondL  ; normiU
+  ('''utu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrutu)) A  ; Butu ; X ; rcondL1 ; normiU1
+  ('''ucn''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrucn)) A  ; Bucn ; X ; rcondL  ; normiU
+  ('''ucu''&dtrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrucu)) A  ; Bucu ; X ; rcondL1 ; normiU1
+
+  ('''lnn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrlnn)) A  ; Blnn ; X ; rcondL  ; norm1L
+  ('''lnu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrlnu)) A  ; Blnu ; X ; rcondL1 ; norm1L1
+  ('''ltn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrltn)) A  ; Bltn ; X ; rcondL  ; normiL
+  ('''ltu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrltu)) A  ; Bltu ; X ; rcondL1 ; normiL1
+  ('''lcn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrlcn)) A  ; Blcn ; X ; rcondL  ; normiL
+  ('''lcu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrlcu)) A  ; Blcu ; X ; rcondL1 ; normiL1
+
+  ('''unn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrunn)) A  ; Bunn ; X ; rcondL  ; norm1U
+  ('''unu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrunu)) A  ; Bunu ; X ; rcondL1 ; norm1U1
+  ('''utn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrutn)) A  ; Butn ; X ; rcondL  ; normiU
+  ('''utu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrutu)) A  ; Butu ; X ; rcondL1 ; normiU1
+  ('''ucn''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrucn)) A  ; Bucn ; X ; rcondL  ; normiU
+  ('''ucu''&ztrtrs_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`vferrv`vberrucu)) A  ; Bucu ; X ; rcondL1 ; normiU1
+
+  ('trtrslnn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrlnn)) L  ; Blnn ; X ; rcondL  ; norm1L
+  ('trtrslnu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrlnu)) L1 ; Blnu ; X ; rcondL1 ; norm1L1
+  ('trtrsltn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrltn)) L  ; Bltn ; X ; rcondL  ; normiL
+  ('trtrsltu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrltu)) L1 ; Bltu ; X ; rcondL1 ; normiL1
+  ('trtrslcn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrlcn)) L  ; Blcn ; X ; rcondL  ; normiL
+  ('trtrslcu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrlcu)) L1 ; Blcu ; X ; rcondL1 ; normiL1
+
+  ('trtrsunn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrunn)) U  ; Bunn ; X ; rcondU  ; norm1U
+  ('trtrsunu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrunu)) U1 ; Bunu ; X ; rcondU1 ; norm1U1
+  ('trtrsutn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrutn)) U  ; Butn ; X ; rcondU  ; normiU
+  ('trtrsutu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrutu)) U1 ; Butu ; X ; rcondU1 ; normiU1
+  ('trtrsucn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrucn)) U  ; Bucn ; X ; rcondU  ; normiU
+  ('trtrsucu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrv`vberrucu)) U1 ; Bucu ; X ; rcondU1 ; normiU1
+
+  coerase < 'mttmp'
+  erase 'vferrv vberrlnn vberrlnu vberrltn vberrltu vberrlcn vberrlcu vberrunn vberrunu vberrutn vberrutu vberrucn vberrucu'
+
+  EMPTY
+)
+
+NB. ---------------------------------------------------------
 NB. testtrs
 NB.
 NB. Description:
@@ -1117,4 +1330,4 @@ NB.
 NB. Notes:
 NB. - nrhs=3 is assumed
 
-testtrs=: 1 : 'EMPTY [ ((((u ptmat2_mt_)@# (testpttrs3_mt_@; [ testpttrs1_mt_@(; {:"1)) ]) [ ((u pomat_mt_)@# (testpotrs3_mt_@; [ testpotrs1_mt_@(; {:"1)) ]) [ ((u hemat_mt_)@# (testhetrs3_mt_@; [ testhetrs1_mt_@(; {:"1)) ]))@u@({. , 3:) [ ((}."1 (testgetrs3_mt_@; [ testgetrs1_mt_@(; {:"1)) {."1)~ _3:)@u@(+&0 3))^:(=/)'
+testtrs=: 1 : 'EMPTY [ ((((u ptmat2_mt_)@# (testpttrs3_mt_@; [ testpttrs1_mt_@(; {:"1)) ]) [ ((u pomat_mt_)@# (testpotrs3_mt_@; [ testpotrs1_mt_@(; {:"1)) ]) [ ((u hemat_mt_)@# (testhetrs3_mt_@; [ testhetrs1_mt_@(; {:"1)) ]))@u@({. , 3:) [ ((}."1 (testtrtrs3_mt_@; [ testtrtrs1_mt_@(; {:"1) [ testgetrs3_mt_@; [ testgetrs1_mt_@(; {:"1)) {."1)~ _3:)@u@(+&0 3))^:(=/)'

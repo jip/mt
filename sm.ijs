@@ -75,13 +75,8 @@ NB.
 NB. Description:
 NB.   Solve linear monomial equation with triangular matrix
 NB. where
-NB.   A    - n×n-matrix, containing either U, U1, L or L1
-NB.   U    - n×n-matrix, the upper triangular
-NB.   U1   - n×n-matrix, the unit upper triangular (unit
-NB.          diagonal is not stored)
-NB.   L    - n×n-matrix, the lower triangular
-NB.   L1   - n×n-matrix, the unit lower triangular (unit
-NB.          diagonal is not stored)
+NB.   A    - n×n-matrix, containing either L, L1, U or U1
+NB.          (unit diagonal is not stored)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
 NB.   Xv   - the same shape as Bv, solutions

@@ -127,6 +127,7 @@ require 'math/mt/test'         NB. Test
 require 'math/mt/benchmark'    NB. Benchmark
 
 NB. low-level
+require 'math/mt/basic'        NB. Basic linear algebra operations
 require 'math/mt/bak'          NB. Restore original eigenvectors
 require 'math/mt/bal'          NB. Balance
 require 'math/mt/cond'         NB. Condition number
@@ -135,7 +136,6 @@ require 'math/mt/rot'          NB. Rotation
 require 'math/mt/gq'           NB. Generate Q from its factored form
 require 'math/mt/mq'           NB. Multiply by Q represented in factored form
 require 'math/mt/scl'          NB. Scale
-require 'math/mt/sm'           NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
 require 'math/mt/eq'           NB. Eigenvalues and Schur form
@@ -195,38 +195,38 @@ NB.   matrix:
 NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
 testlow=: 1 : 0
-     testrand_mt_  y
-  (u testbak_mt_ ) y  NB. square matrices only
-  (u testbal_mt_ ) y  NB. square matrices only
-  (u testref_mt_ ) y  NB. matrices with min dimention ≤ 200 only
-  (u testrot_mt_ ) y  NB. matrix of shape (2 1:} y) is used
-  (u testgq_mt_  ) y
-  (u testmq_mt_  ) y
-  (u testsm_mt_  ) y  NB. square matrices with size ≤ 500 only
+     testrand_mt_   y
+  (u testbasic_mt_) y
+  (u testbak_mt_  ) y  NB. square matrices only
+  (u testbal_mt_  ) y  NB. square matrices only
+  (u testref_mt_  ) y  NB. matrices with min dimention ≤ 200 only
+  (u testrot_mt_  ) y  NB. matrix of shape (2 1:} y) is used
+  (u testgq_mt_   ) y
+  (u testmq_mt_   ) y
 
   EMPTY
 )
 
 testmid=: 1 : 0
-  (u testeq_mt_  ) y  NB. square matrices only
-  (u testevc_mt_ ) y  NB. square matrices only
-  (u testhrd_mt_ ) y  NB. square matrices only
-  (u testpf_mt_  ) y
-  (u testqf_mt_  ) y
-  (u testtrf_mt_ ) y
-  (u testtri_mt_ ) y  NB. square matrices only
-  (u testtrs_mt_ ) y  NB. square matrices only
+  (u testeq_mt_   ) y  NB. square matrices only
+  (u testevc_mt_  ) y  NB. square matrices only
+  (u testhrd_mt_  ) y  NB. square matrices only
+  (u testpf_mt_   ) y
+  (u testqf_mt_   ) y
+  (u testtrf_mt_  ) y
+  (u testtri_mt_  ) y  NB. square matrices only
+  (u testtrs_mt_  ) y  NB. square matrices only
 
   EMPTY
 )
 
 testhigh=: 1 : 0
-  (u testev_mt_  ) y  NB. square matrices only
-  (u testexp_mt_ ) y  NB. square matrices only
-  (u testpow_mt_ ) y  NB. square matrices only
-  (u testsv_mt_  ) y  NB. square matrices only
-  (u testls_mt_  ) y
-  (u testmm_mt_  ) y
+  (u testev_mt_   ) y  NB. square matrices only
+  (u testexp_mt_  ) y  NB. square matrices only
+  (u testpow_mt_  ) y  NB. square matrices only
+  (u testsv_mt_   ) y  NB. square matrices only
+  (u testls_mt_   ) y
+  (u testmm_mt_   ) y
 
   EMPTY
 )
@@ -234,9 +234,9 @@ testhigh=: 1 : 0
 test=: 1 : 0
   echo fmtlog_mt_ 'sentence';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'
 
-  (u testlow_mt_ ) y  NB. low-level algorithms
-  (u testmid_mt_ ) y  NB. mid-level algorithms
-  (u testhigh_mt_) y  NB. high-level algorithms
+  (u testlow_mt_  ) y  NB. low-level algorithms
+  (u testmid_mt_  ) y  NB. mid-level algorithms
+  (u testhigh_mt_ ) y  NB. high-level algorithms
 
   EMPTY
 )

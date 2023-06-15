@@ -26,6 +26,7 @@ README
 TODO
 bak.ijs
 bal.ijs
+basic.ijs
 benchmark.ijs
 cond.ijs
 dbg.ijs
@@ -51,7 +52,6 @@ rand.ijs
 ref.ijs
 rot.ijs
 scl.ijs
-sm.ijs
 struct.ijs
 sv.ijs
 template.ijs

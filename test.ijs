@@ -1,49 +1,90 @@
 NB. Test
 NB.
-NB. tmonad  Conj. to make monad to test computational monad
-NB. tdyad   Conj. to make monad to test computational dyad
-NB. drvevx  Dyads to compute the normalization error of
-NB.         eigenvectors produced by nonsymmetric eigenvalue
-NB.         problem solvers
-NB. drgev   Adv. to make dyad to compute the relative
-NB.         backward error of eigenvectors produced by
-NB.         generalized nonsymmetric eigenvalue problem
-NB.         solvers
-NB. xxt01   Actors to compute the relative backward error for
-NB.         the matrix reconstructed from gexxf,tzxxf output
-NB. t02x    Modifiers to make dyad to compute the relative
-NB.         backward error for the solution[s] computed
-NB. xxt02   Dyads to compute the relative backward error for
-NB.         the matrix reconstructed partially from ungxx
-NB.         output
-NB. t03     Dyad to compute the relative backward error for
-NB.         the matrix times its inverse reconstructed
-NB. xxt03   Actors to compute the relative backward error for
-NB.         the matrix [partial] multiplication by unmxxxx
-NB. t04x    Actors to compute the relative forward error for
-NB.         the solution[s] computed
-NB. xxt11   Dyads to compute the relative backward error for
-NB.         the unitary (orthogonal) matrix reconstructed
-NB.         from gexpf gepxf output
-NB. qrt14   Checks whether X is in the row space of op(A)
-NB. qrt16x  Adv. to make dyad to compute the residual for a
-NB.         solution[s] computed of an overdetermined or
-NB.         underdetermined system involving a matrix of full
-NB.         rank, or its [conjugate-]transpose
-NB. qrt171  Adv. to make dyad to compute the ratio for
-NB.         zero-residual problem
-NB. t211    Dyad to compute the relative backward error of
-NB.         eigenvectors produced by symmetric eigenvalue
-NB.         problem solvers
-NB. t22x    Dyads to compute the error of eigenvectors
-NB.         produced by nonsymmetric eigenvalue problem
-NB.         solvers
-NB. t511x   Dyads to compute the error of generalized Schur
-NB.         form produced by hgexxsxx
-NB. t513x   Monads to compute the error of Schur vectors
-NB.         produced by hgexxsxx
-NB. t52xx   Dyads to compute the error of Schur vectors
-NB.         produced by tgevcxxx
+NB. tmonad   Conj. to make monad to test computational monad
+NB. tdyad    Conj. to make monad to test computational dyad
+NB. drvevx   Dyads to compute the normalization error of
+NB.          eigenvectors produced by nonsymmetric eigenvalue
+NB.          problem solvers
+NB. drgev    Adv. to make dyad to compute the relative
+NB.          backward error of eigenvectors produced by
+NB.          generalized nonsymmetric eigenvalue problem
+NB.          solvers
+NB. xxt01    Actors to compute the relative backward error
+NB.          for the matrix reconstructed from gexxf,tzxxf
+NB.          output
+NB. t02x     Modifiers to make dyad to compute the relative
+NB.          backward error for the solution[s] computed
+NB. xxt02    Dyads to compute the relative backward error for
+NB.          the matrix reconstructed partially from ungxx
+NB.          output
+NB. t03      Dyad to compute the relative backward error for
+NB.          the matrix times its inverse reconstructed
+NB. xxt03    Actors to compute the relative backward error
+NB.          for the matrix [partial] multiplication by
+NB.          unmxxxx
+NB. t04x     Actors to compute the relative forward error for
+NB.          the solution[s] computed
+NB. xxt11    Dyads to compute the relative backward error for
+NB.          the unitary (orthogonal) matrix reconstructed
+NB.          from gexpf gepxf output
+NB. qrt14    Checks whether X is in the row space of op(A)
+NB. qrt16x   Adv. to make dyad to compute the residual for a
+NB.          solution[s] computed of an overdetermined or
+NB.          underdetermined system involving a matrix of
+NB.          full rank, or its [conjugate-]transpose
+NB. qrt171   Adv. to make dyad to compute the ratio for
+NB.          zero-residual problem
+NB. t211     Dyad to compute the relative backward error of
+NB.          eigenvectors produced by symmetric eigenvalue
+NB.          problem solvers
+NB. t22x     Dyads to compute the error of eigenvectors
+NB.          produced by nonsymmetric eigenvalue problem
+NB.          solvers
+NB. t511x    Dyads to compute the error of generalized Schur
+NB.          form produced by hgexxsxx
+NB. t513x    Monads to compute the error of Schur vectors
+NB.          produced by hgexxsxx
+NB. t52xx    Dyads to compute the error of Schur vectors
+NB.          produced by tgevcxxx
+NB. chk1mv   Adv. to make dyad to compute the relative
+NB.          backward error for the basic matrix-vector
+NB.          operations with general matrix
+NB. chk1mm   Adv. to make dyad to compute the relative
+NB.          backward error for the basic matrix-matrix
+NB.          operations with general matrices
+NB. chk2mv   Adv. to make dyad to compute the relative
+NB.          backward error for the basic hermitian
+NB.          (symmetric) matrix-vector operations
+NB. chk2mm   Conj. to make dyad to compute the relative
+NB.          backward error for the basic hermitian
+NB.          (symmetric) matrix-matrix operations
+NB. chk3mv   Adv. to make dyad to compute the relative
+NB.          backward error for the basic matrix-vector
+NB.          operations with triangular matrix
+NB. chk3mm   Conj. to make dyad to compute the relative
+NB.          backward error for the basic matrix-matrix
+NB.          operations with triangular matrix
+NB. chk3sv   Adv. to make dyad to compute the relative
+NB.          backward error for the basic equation solvers
+NB.          with triangular matrix
+NB. chk3sm   Adv. to make dyad to compute the relative
+NB.          backward error for the basic matrix equation
+NB.          solvers with triangular matrix
+NB. chk4r    Adv. to make dyad to compute the relative
+NB.          backward error for the basic rank 1 operations
+NB.          with general matrix
+NB. chk4rk   Conj. to make dyad to compute the relative
+NB.          backward error for the basic hermitian
+NB.          (symmetric) rank k operations
+NB. chk5r    Conj. to make dyad to compute the relative
+NB.          backward error for the basic hermitian
+NB.          (symmetric) rank 1 operations
+NB. chk5r2k  Conj. to make dyad to compute the relative
+NB.          backward error for the basic hermitian
+NB.          (symmetric) rank 2k operations
+NB. chk6r2   Conj. to make dyad to compute the relative
+NB.          backward error for the basic hermitian
+NB.          (symmetric) rank 2 operations
 NB.
 NB. Version: 0.13.2 2021-06-24
 NB.
@@ -1749,3 +1790,682 @@ t52lb=: (>./@:normir@:((((((norm1r@:( mp"1 2      ~    {.) ,: norm1r@:((mp"2 1  
 t52ul=: (     normir@:((((  norm1r@:((mp"1 2 -/"3)~ ct   )                                            )       %  (FP_PREC * FP_SFMIN >.      >./"1 @:( normi       "2)@[))~ (_2&{. *"_ 1|:@|.@:(diag"2)@(2&{.)))~)) >. (     normir@:<:@:normitc % FP_PREC * c)@]
 t52ur=: (     normir@:((((                                    norm1r@:((mp"2 1~ -/"3)~ |:   )         )       %  (FP_PREC * FP_SFMIN >.      >./"1 @:(       norm1 "2)@[))~ (_2&{. *"_ 1|:@|.@:(diag"2)@(2&{.)))~)) >. (     normir@:<:@:normitc % FP_PREC * c)@]
 t52ub=: (>./@:normir@:((((((norm1r@:( mp"1 2      ~ ct@{.) ,: norm1r@:((mp"2 1      )  |:@{:))~ -/"3)~) (>./@:%) (FP_PREC * FP_SFMIN >. |:@:(>./"2)@:((normi,norm1)"2)@[))~ (_2&{. *"_ 1|:@|.@:(diag"2)@(2&{.)))~)) >. (>./@:normir@:<:@:normitc % FP_PREC * c)@]
+
+NB. ---------------------------------------------------------
+NB. chk1mv
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the relative backward
+NB.   error for the basic matrix-vector operations with
+NB.   general matrix
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; A ; x ; incx ; beta ; y ; incy) (gemvx chk1mv) yapprox
+NB. where
+NB.   gemvx   - monad, the reference implementation to
+NB.             compute yexact:
+NB.               yexact=. gemvx (alpha ; A ; x ; incx ; beta ; y ; incy)
+NB.   alpha   - scalar
+NB.   x       - (1+(kx-1)*|incx|)-vector
+NB.   incx    ≠ 0, the increment for the elements of x
+NB.   beta    - scalar
+NB.   y       - (1+(ky-1)*|incy|)-vector
+NB.   incy    ≠ 0, the increment for the elements of y
+NB.   A       - m×n-matrix
+NB.   yapprox - the same shape as y, the approximate yexact, is
+NB.             computed by the verb being tested
+NB.   berr    ≥ 0, the relative backward error for yapprox
+NB.   kx      = n for gemvn or kx = m otherwise
+NB.   ky      = m for gemvn or ky = n otherwise
+NB.   m       ≥ 0, the number of rows in A
+NB.   n       ≥ 0, the number of columns in A
+NB.
+NB. Formula:
+NB.   (m,n) := shape(A)
+NB.   if 0 = m or 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||g|| then
+NB.     berr := ||yexact - yapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(yexact - yapprox)[i] / g[i]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||v|| := normmt(v)
+NB.   g := |alpha| * |A| * |x| + |beta| * |y|, the gauge vector
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK1('DGEMV') and ZCHK1('ZGEMV') with the
+NB.   following difference:
+NB.   - alpha,A,x,incx,y,incy are not generated but are
+NB.     coming from outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk1mv=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 3 6) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 e. $@(1 {:: [))'
+
+NB. ---------------------------------------------------------
+NB. chk1mm
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the relative backward
+NB.   error for the basic matrix-matrix operations with
+NB.   general matrices
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; A ; B ; beta ; C) (gemmxx chk1mm) Capprox
+NB. where
+NB.   xxmmxx  - monad, the reference implementation to
+NB.             compute Cexact:
+NB.               Cexact=. gemmxx (alpha ; A ; B ; beta ; C)
+NB.   alpha   - scalar
+NB.   A       - ma×ka-matrix
+NB.   B       - kb×nb-matrix
+NB.   beta    - scalar
+NB.   C       - m×n-matrix
+NB.   Capprox - the same shape as C, computed by the verb being
+NB.             tested, approximates Cexact
+NB.   berr    ≥ 0, the relative backward error for Capprox
+NB.   m       ≥ 0, the number of rows in C and op(A)
+NB.   n       ≥ 0, the number of columns in C and op(B)
+NB.   k       ≥ 0, the number of columns in op(A) and the
+NB.             number of rows in op(B)
+NB.   ma      = m for gemmnx or ma = k otherwise
+NB.   ka      = k for gemmnx or ka = m otherwise
+NB.   kb      = k for gemmxn or kb = n otherwise
+NB.   nb      = n for gemmxn or nb = k otherwise
+NB.
+NB. Formula:
+NB.   (m,k) := shape(A)
+NB.   (k,n) := shape(B)
+NB.   if 0 = m or 0 = n or 0 = k then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||Cexact - Capprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(Cexact - Capprox)[i,j] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G - the gauge matrix:
+NB.     G := |alpha| * |op(A)| * |op(B)| + |beta| * |C|
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK1('DGEMM') and ZCHK1('ZGEMM') with the
+NB.   following difference:
+NB.   - alpha,A,B,beta,C are not generated but are coming
+NB.     from outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk1mm=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@[          )`0:@.(0 e. (1&{:: ,&$ 2&{::)@[)'
+
+NB. ---------------------------------------------------------
+NB. chk2mv
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the relative backward
+NB.   error for the basic hermitian (symmetric) matrix-vector
+NB.   operations
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; A ; x ; incx ; beta ; y ; incy) (xxmvx chk2mv) yapprox
+NB. where
+NB.   xxmvx   - monad, the reference implementation to
+NB.             compute yexact:
+NB.               yexact=. xxmvx (alpha ; A ; x ; incx ; beta ; y ; incy)
+NB.   alpha   - scalar
+NB.   x       - (1+(n-1)*|incx|)-vector
+NB.   incx    ≠ 0, the increment for the elements of x
+NB.   beta    - scalar
+NB.   y       - (1+(n-1)*|incy|)-vector
+NB.   incy    ≠ 0, the increment for the elements of y
+NB.   A       - n×n-matrix with real diagonal
+NB.   yapprox - the same shape as y, the approximate yexact, is
+NB.             computed by the verb being tested
+NB.   berr    ≥ 0, the relative backward error for yapprox
+NB.   n       ≥ 0, size of A, x, y, yexact and yapprox
+NB.
+NB. Formula:
+NB.   n := size(A)
+NB.   if 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||g|| then
+NB.     berr := ||yexact - yapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(yexact - yapprox)[i] / g[i]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||v|| := normmt(v)
+NB.   g := |alpha| * |A| * |x| + |beta| * |y|, the gauge vector
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK2('DSYMV') and ZCHK2('ZSYMV') with the
+NB.   following difference:
+NB.   - alpha,A,x,incx,y,incy are not generated but are
+NB.     coming from outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk2mv=:  chk1mv
+
+NB. ---------------------------------------------------------
+NB. chk2mm
+NB.
+NB. Description:
+NB.   Conj. to make dyad to compute the relative backward
+NB.   error for the basic hermitian (symmetric) matrix-matrix
+NB.   operations
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; A ; B ; beta ; C) (xxmmxx chk2mm trxpick) Capprox
+NB. where
+NB.   xxmmxx  - monad, the reference implementation to
+NB.             compute Cexact:
+NB.               Cexact=. xxmmxx (alpha ; A ; B ; beta ; C)
+NB.   trxpick - monad to pick triangular part, is one of:
+NB.               trlpick_mt_  NB. if xxmmxl_mt_ is used
+NB.               trupick_mt_  NB. if xxmmxu_mt_ is used
+NB.   alpha   - scalar
+NB.   A       - ma×ma-matrix
+NB.   B       - m×n-matrix
+NB.   beta    - scalar
+NB.   C       - m×n-matrix
+NB.   Capprox - the same shape as C, computed by the verb
+NB.             being tested, where LT (if xxmmxl_mt_ was
+NB.             tested) or UT (if xxmmxu_mt_ was tested)
+NB.             approximates Cexact, and the rest elements
+NB.             weren't changed and match C
+NB.   m       ≥ 0, the number of rows in C and B
+NB.   n       ≥ 0, the number of columns in C and B
+NB.   ma      = m for xxmmlx_mt_ or ma = n for xxmmux_mt_
+NB.
+NB. Formula:
+NB.   (m,n) := shape(C)
+NB.   if 0 = m or 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||Cexact - Capprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(Cexact - Capprox)[i,j] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G - the gauge matrix, is one of:
+NB.     G := |alpha| * |A| * |B| + |beta| * |C|, for xxmmlx_mt_
+NB.     G := |alpha| * |B| * |A| + |beta| * |C|, for xxmmrx_mt_
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK2('DSYMM'), ZCHK2('ZSYMM') and
+NB.   ZCHK2('ZHEMM') with the following difference:
+NB.   - alpha,A,B,beta,C are not generated but are coming
+NB.     from outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk2mm=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@[          )`0:@.(0 e. $@]        )'
+
+NB. ---------------------------------------------------------
+NB. chk3mv
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the relative backward
+NB.   error for the basic matrix-vector operations with
+NB.   triangular matrix
+NB.
+NB. Syntax:
+NB.   berr=. (A ; x ; incx) (trmvxxx chk3mv) xapprox
+NB. where
+NB.   trmvxxx - monad, the reference implementation to
+NB.             compute xexact:
+NB.               xexact=. trmvxxx (A ; x ; incx)
+NB.   A       - n×n-matrix
+NB.   x       - (1+(n-1)*|incx|)-vector
+NB.   incx    ≠ 0, the increment for the elements of x
+NB.   xapprox - the same shape as x, the approximate xexact, is
+NB.             computed by the verb being tested
+NB.   berr    ≥ 0, the relative backward error for xapprox
+NB.   n       ≥ 0, size of A
+NB.
+NB. Formula:
+NB.   n := size(A)
+NB.   if 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||g|| then
+NB.     berr := ||xexact - xapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(xexact - xapprox)[i] / g[i]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||v|| := normmt(v)
+NB.   g := |A| * |x|, the gauge vector
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK3('DTRMV') and ZCHK3('ZTRMV') with the
+NB.   following difference:
+NB.   - A,x,incx are not generated but are coming from
+NB.     outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk3mv=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 2  ) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@(0 {:: [))'
+
+NB. ---------------------------------------------------------
+NB. chk3mm
+NB.
+NB. Description:
+NB.   Conj. to make dyad to compute the relative backward
+NB.   error for the basic matrix-matrix operations with
+NB.   triangular matrix
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; A ; B) (trmmxxxx chk3mm trxpick) Bapprox
+NB. where
+NB.   trmmxxxx - monad, the reference implementation to
+NB.              compute Bexact:
+NB.                Bexact=. trmmxxxx (alpha ; A ; B)
+NB.   trxpick  - monad to pick triangular part, is one of:
+NB.                trlpick_mt_  NB. if trmmxl_mt_ is used
+NB.                trupick_mt_  NB. if trmmxu_mt_ is used
+NB.   alpha    - scalar
+NB.   A        - k×k-matrix, contains either L, L1, U or U1
+NB.              (unit diagonal is not stored)
+NB.   B        - m×n-matrix
+NB.   Bapprox  - the same shape as B, the approximate Bexact, is
+NB.              computed by the verb being tested
+NB.   berr     ≥ 0, the relative backward error for Bapprox
+NB.   m        ≥ 0, the number of rows in B
+NB.   n        ≥ 0, the number of columns in B
+NB.   k        = m for trmmlxxx_mt_ or k = n for trmmrxxx_mt_
+NB.
+NB. Formula:
+NB.   (m,n) := shape(B)
+NB.   if 0 = m or 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||Bexact - Bapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(Bexact - Bapprox)[i] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G - the gauge matrix, is one of:
+NB.     G := |alpha| * |op(A)| * |B    |, for trmmlxxx_mt_
+NB.     G := |alpha| * |B    | * |op(A)|, for trmmrxxx_mt_
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK3('DTRMM') and ZCHK3('ZTRMM') with the
+NB.   following difference:
+NB.   - A,B are not generated but are coming from outside as
+NB.     input parameters
+NB. - berr is considered good if lower than 16
+
+chk3mm=:  chk2mm
+
+NB. ---------------------------------------------------------
+NB. chk3sv
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the relative backward
+NB.   error for the basic equation solvers with triangular
+NB.   matrix
+NB.
+NB. Syntax:
+NB.   berr=. (A ; b ; incb) (trmvxxx chk3sv) xapprox
+NB. where
+NB.   trmvxxx - monad to compute matrix-vector product:
+NB.               bapprox=. trmvxxx (A ; xapprox ; incx)
+NB.   A       - n×n-matrix, contains either L, L1, U or U1
+NB.             (unit diagonal is not stored)
+NB.   b       - (1+(n-1)*|incb|)-vector, the RHS
+NB.   incb    ≠ 0, the increment for the elements of b and
+NB.             xapprox
+NB.   xapprox - the same shape as b, the approximate
+NB.             solution, is computed by the verb being
+NB.             tested
+NB.   berr    ≥ 0, the relative backward error for xapprox
+NB.   bapprox - the same shape as b, the approximate b, is
+NB.             computed by trsmxxxx
+NB.   n       ≥ 0, the size of A
+NB.
+NB. Formula:
+NB.   n := size(A)
+NB.   if 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||b - bapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(b - bapprox)[i] / g[i]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||v|| := normmt(v)
+NB.   bapprox := op(A) * xapprox
+NB.   g := |op(A)| * |xapprox|, the gauge vector
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK3('DTRSV') and ZCHK3('ZTRSV') with the
+NB.   following difference:
+NB.   - A,b,incb are not generated but are coming from
+NB.     outside as input parameters
+NB. - berr is considered good if lower than 16
+NB. - since (filler != 0) then 0s replaced by 1 in g are from
+NB.   bapprox only, so (b - bapprox) won't get huge value
+
+chk3sv=:  1 : '((FP_EPS %~ ((1 {:: [)         sorim_mt_@:- u@(1  }~ <  )) ) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 2  ) sorim_mt_&.> upd_mt_ (1}~ <))            )`0:@.(0 =  #@(0 {:: [))'
+
+NB. ---------------------------------------------------------
+NB. chk3sm
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the relative backward
+NB.   error for the basic matrix equation solvers with
+NB.   triangular matrix
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; A ; B) (trmmxxxx chk3sm) Xapprox
+NB. where
+NB.   trmmxxxx - monad to compute matrix-matrix product:
+NB.                alphabyBapprox=. trmmxxxx (1 ; A ; Xapprox)
+NB.   alpha    - scalar
+NB.   A        - k×k-matrix, contains either L, L1, U or U1
+NB.              (unit diagonal is not stored)
+NB.   B        - m×n-matrix, RHS
+NB.   Xapprox  - the same shape as B, approximate solutions,
+NB.              are computed by the verb being tested
+NB.   berr     ≥ 0, the relative backward error for Xapprox
+NB.   m        ≥ 0, the number of rows in B and Xapprox
+NB.   n        ≥ 0, the number of columns in B and Xapprox
+NB.   k        = m for trmmlxxx_mt_ or k = n for trmmrxxx_mt_
+NB.
+NB. Formula:
+NB.   (m,n) := shape(B)
+NB.   if 0 = m or 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||alpha * B - op(A) * Xapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(alpha * B - op(A) * Xapprox)[i,j] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G - the gauge matrix, is one of:
+NB.     G := |op(A)| * |Xapprox|, for trmmlxxx_mt_
+NB.     G := |Xapprox| * |op(A)|, for trmmrxxx_mt_
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK3('DTRSM') and ZCHK3('ZTRSM') with the
+NB.   following difference:
+NB.   - alpha,A,B are not generated but are coming from
+NB.     outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk3sm=:  1 : '((FP_EPS %~ ((0&{:: * 2&{::)@[ sorim_mt_@:- u@(0 2}~ 1&;)) ) normmt_mt_  @:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@(0 2}~ 1&;))`0:@.(0 e. $@]        )'
+
+NB. ---------------------------------------------------------
+NB. chk4r
+NB.
+NB. Description:
+NB.   Adv. to make dyad to compute the relative backward
+NB.   error for the basic rank 1 operations with general
+NB.   matrix
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; x ; incx ; y ; incy ; A) (gerx chk4r) Aapprox
+NB. where
+NB.   gerx    - monad, the reference implementation to
+NB.             compute Aexact:
+NB.               Aexact=. gerx (alpha ; x ; incx ; y ; incy ; A)
+NB.   alpha   - scalar
+NB.   x       - (1+(m-1)*|incx|)-vector
+NB.   incx    ≠ 0, the increment for the elements of x
+NB.   y       - (1+(n-1)*|incy|)-vector
+NB.   incy    ≠ 0, the increment for the elements of y
+NB.   A       - m×n-matrix, general
+NB.   Aapprox - the same shape as A, the approximate Aexact, is
+NB.             computed by the verb being tested
+NB.   berr    ≥ 0, the relative backward error for Aapprox
+NB.   m       ≥ 0, rows in A, Aexact and Aapprox
+NB.   n       ≥ 0, columns in A, Aexact and Aapprox
+NB.
+NB. Formula:
+NB.   (m,n) := shape(A)
+NB.   if 0 = m or 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||Aexact - Aapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(Aexact - Aapprox)[i,j] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G := |alpha| * |x| * |op(y)| + |A|, the gauge matrix
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK4('DGER'), ZCHK4('ZGERC') and
+NB.   ZCHK4('ZGERU') with the following difference:
+NB.   - alpha,x,incx,y,incy,A are not generated but are
+NB.     coming from outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk4r=:   1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 2 4) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 e. $@]        )'
+
+NB. ---------------------------------------------------------
+NB. chk4rk
+NB.
+NB. Description:
+NB.   Conj. to make dyad to compute the relative backward
+NB.   error for the basic hermitian (symmetric) rank k
+NB.   operations
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; A ; beta ; C) (xxrkxx chk4rk trxpick) Capprox
+NB. where
+NB.   xxrkxx  - monad, the reference implementation to
+NB.             compute Cexact:
+NB.               Cexact=. xxrkxx (alpha ; A ; beta ; C)
+NB.   trxpick - monad to pick triangular part, is one of:
+NB.               trlpick_mt_  NB. if xxrklx_mt_ is used
+NB.               trupick_mt_  NB. if xxrkux_mt_ is used
+NB.   alpha   - scalar
+NB.   A       - na×ka-matrix
+NB.   beta    - scalar
+NB.   C       - n×n-matrix with real diagonal
+NB.   Capprox - the same shape as C, computed by the verb
+NB.             being tested, where LT (if xxrklx_mt_ was
+NB.             tested) or UT (if xxrkux_mt_ was tested)
+NB.             approximates Cexact, and the rest elements
+NB.             weren't changed and match C
+NB.   berr    ≥ 0, the relative backward error for Capprox
+NB.   n       ≥ 0, the size of C, Cexact and Capprox and the
+NB.             number of rows or columns in A
+NB.   k       ≥ 0, the number of columns or rows in A
+NB.   ka      = k for xxrkxn_mt_ testing or ka = n otherwise
+NB.   na      = n for xxrkxn_mt_ testing or na = k otherwise
+NB.
+NB. Formula:
+NB.   (n,k) := shape(A)
+NB.   if 0 = k or 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||Cexact - Capprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(Cexact - Capprox)[i,j] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G - the gauge matrix, is one of:
+NB.     G := |alpha| * |   A | * |op(A)| + |beta| * |C|, for xxrkxn_mt_
+NB.     G := |alpha| * |op(A)| * |   A | + |beta| * |C|, otherwise
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK4('DSYRK'), ZCHK4('ZSYRK') and
+NB.   ZCHK4('ZHERK') with the following difference:
+NB.   - alpha,A,beta,C are not generated but are coming from
+NB.     outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk4rk=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@[          )`0:@.(0 e. $@(1 {:: [))'
+
+NB. ---------------------------------------------------------
+NB. chk5r
+NB.
+NB. Description:
+NB.   Conj. to make dyad to compute the relative backward
+NB.   error for the basic hermitian (symmetric) rank 1
+NB.   operations
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; x ; incx ; A) (xxrx chk5r trxpick) Aapprox
+NB. where
+NB.   herx    - monad, the reference implementation to
+NB.             compute Aexact:
+NB.               Aexact=. xxrx (alpha ; x ; incx ; A)
+NB.   trxpick - monad to pick triangular part, is one of:
+NB.               trlpick_mt_  NB. if herl_mt_ is used
+NB.               trupick_mt_  NB. if heru_mt_ is used
+NB.   alpha   - scalar
+NB.   x       - (1+(n-1)*|incx|)-vector
+NB.   incx    ≠ 0, the increment for the elements of x
+NB.   A       - n×n-matrix with real diagonal
+NB.   Aapprox - the same shape as A, computed by the verb being
+NB.             tested, with the lower triangle (if
+NB.             xxxrl_mttst_ was tested) or upper triangle
+NB.             (if xxxru_mttst_ was tested) approximates
+NB.             Aexact, and the rest elements are not changed
+NB.             and match A
+NB.   berr    ≥ 0, the relative backward error for Aapprox
+NB.   n       ≥ 0, the size of A, Aexact and Aapprox
+NB.
+NB. Formula:
+NB.   n := size(A)
+NB.   if 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||Aexact - Aapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(Aexact - Aapprox)[i,j] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G - the gauge matrix, is one of:
+NB.     G := |alpha| * |x| * |x^T| + |A|, for dsyrx_mt_
+NB.     G := |alpha| * |x| * |x^H| + |A|, for zherx_mt_
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK5('DSYR') and ZCHK5('ZHER') with
+NB.   the following difference:
+NB.   - alpha,x,incx,A are not generated but are coming from
+NB.     outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk5r=:   2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ ((<<< 2  ) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@]        )'
+
+NB. ---------------------------------------------------------
+NB. chk5r2k
+NB.
+NB. Description:
+NB.   Conj. to make dyad to compute the relative backward
+NB.   error for the basic hermitian (symmetric) rank 2k
+NB.   operations
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; A ; B ; beta ; C) (xxr2kxx chk5r2k trxpick) Capprox
+NB. where
+NB.   xxr2kxx - monad, the reference implementation to
+NB.             compute Cexact:
+NB.               Cexact=. xxr2kxx (alpha ; A ; B ; beta ; C)
+NB.   trxpick - monad to pick triangular part, is one of:
+NB.               trlpick_mt_  NB. if xxr2klx_mt_ is used
+NB.               trupick_mt_  NB. if xxr2kux_mt_ is used
+NB.   alpha   - scalar
+NB.   A       - nab×kab-matrix
+NB.   B       - nab×kab-matrix
+NB.   beta    - scalar
+NB.   C       - n×n-matrix with real diagonal
+NB.   Capprox - the same shape as C, computed by the verb
+NB.             being tested, where LT (if xxr2klx_mt_ was
+NB.             tested) or UT (if xxr2kux_mt_ was tested)
+NB.             approximates Cexact, and the rest elements
+NB.             weren't changed and match C
+NB.   berr    ≥ 0, the relative backward error for Capprox
+NB.   n       ≥ 0, the size of C, Cexact and Capprox and the
+NB.             number of rows or columns in A and B
+NB.   k       ≥ 0, the number of columns or rows in A and B
+NB.   kab     = k for xxr2kxn_mt_ testing or kab = n
+NB.             otherwise
+NB.   nab     = n for xxr2kxn_mt_ testing or nab = k
+NB.             otherwise
+NB.
+NB. Formula:
+NB.   (n,k) := shape(A)
+NB.   if 0 = k or 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||Cexact - Capprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(Cexact - Capprox)[i,j] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G - the gauge matrix, is one of:
+NB.     G := |alpha| * |   A | * |op(B)| + |alpha| * |   B | * |op(A)| + |beta| * |C|, for xxr2kxn_mt_
+NB.     G := |alpha| * |op(A)| * |   B | + |alpha| * |op(B)| * |   A | + |beta| * |C|, otherwise
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK5('DSYR2K'), ZCHK5('ZSYR2K') and
+NB.   ZCHK5('ZHER2K') with the following difference:
+NB.   - alpha,A,B,beta,C are not generated but are coming from
+NB.     outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk5r2k=: chk4rk
+
+NB. ---------------------------------------------------------
+NB. chk6r2
+NB.
+NB. Description:
+NB.   Conj. to make dyad to compute the relative backward
+NB.   error for the basic hermitian (symmetric) rank 2
+NB.   operations
+NB.
+NB. Syntax:
+NB.   berr=. (alpha ; x ; incx ; y ; incy ; A) (her2x chk6r2 trxpick) Aapprox
+NB. where
+NB.   her2x   - monad, the reference implementation to
+NB.             compute Aexact:
+NB.               Aexact=. her2x (alpha ; x ; incx ; y ; incy ; A)
+NB.   trxpick - monad to pick triangular part, is one of:
+NB.               trlpick_mt_  NB. if her2l_mt_ is used
+NB.               trupick_mt_  NB. if her2u_mt_ is used
+NB.   alpha   - scalar
+NB.   x       - (1+(n-1)*|incx|)-vector
+NB.   incx    ≠ 0, the increment for the elements of x
+NB.   y       - (1+(n-1)*|incy|)-vector
+NB.   incy    ≠ 0, the increment for the elements of y
+NB.   A       - n×n-matrix with real diagonal
+NB.   Aapprox - the same shape as A, computed by the verb being
+NB.             tested, with the lower triangle (if
+NB.             xxxr2l_mttst_ was tested) or upper triangle
+NB.             (if xxxr2u_mttst_ was tested) approximates
+NB.             Aexact, and the rest elements are not changed
+NB.             and match A
+NB.   berr    ≥ 0, the relative backward error for Aapprox
+NB.   n       ≥ 0, the size of A, Aexact and Aapprox
+NB.
+NB. Formula:
+NB.   n := size(A)
+NB.   if 0 = n then
+NB.     berr := 0
+NB.   elseif 0 = ||G|| then
+NB.     berr := ||Aexact - Aapprox|| / FP_EPS
+NB.   else
+NB.     berr := ||(Aexact - Aapprox)[i,j] / G[i,j]|| / FP_EPS
+NB.   endif
+NB. where
+NB.   ||M|| := normmt(M)
+NB.   G - the gauge matrix, is one of:
+NB.     G := |alpha| * |x| * |y^T| + |alpha| * |y| * |x^T| + |A|, for dsyrx_mt_
+NB.     G := |alpha| * |x| * |y^H| + |alpha| * |y| * |x^H| + |A|, for zherx_mt_
+NB.
+NB. Notes:
+NB. - models BLAS' DCHK6('DSYR2') and ZCHK6('ZHER2') with
+NB.   the following difference:
+NB.   - alpha,x,incx,y,incy,A are not generated but are coming from
+NB.     outside as input parameters
+NB. - berr is considered good if lower than 16
+
+chk6r2=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ ((<<< 2 4) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@]        )'

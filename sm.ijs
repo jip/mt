@@ -169,33 +169,33 @@ testtrsm1=: 3 : 0
   vberrrxcx=: (mp  ct) t02v
   vberrrxtx=: (mp  |:) t02v
 
-  ('trsmllnn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxnx)) L  ; (L   mp       x ) ; x  ; rcondL  ; norm1L
-  ('trsmllnu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxnx)) L1 ; (L1  mp       x ) ; x  ; rcondL1 ; norm1L1
-  ('trsmllcn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxcx)) L  ; (L  (mp~ ct)~ x ) ; x  ; rcondL  ; normiL
-  ('trsmllcu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxcx)) L1 ; (L1 (mp~ ct)~ x ) ; x  ; rcondL1 ; normiL1
-  ('trsmlltn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxtx)) L  ; (L  (mp~ |:)~ x ) ; x  ; rcondL  ; normiL
-  ('trsmlltu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxtx)) L1 ; (L1 (mp~ |:)~ x ) ; x  ; rcondL1 ; normiL1
+  ('trsmllnn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxnx)) L  ; (L   mp       x ) ; x ; rcondL  ; norm1L
+  ('trsmllnu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxnx)) L1 ; (L1  mp       x ) ; x ; rcondL1 ; norm1L1
+  ('trsmllcn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxcx)) L  ; (L  (mp~ ct)~ x ) ; x ; rcondL  ; normiL
+  ('trsmllcu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxcx)) L1 ; (L1 (mp~ ct)~ x ) ; x ; rcondL1 ; normiL1
+  ('trsmlltn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxtx)) L  ; (L  (mp~ |:)~ x ) ; x ; rcondL  ; normiL
+  ('trsmlltu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxtx)) L1 ; (L1 (mp~ |:)~ x ) ; x ; rcondL1 ; normiL1
 
-  ('trsmlunn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxnx)) U  ; (U   mp       x ) ; x  ; rcondU  ; norm1U
-  ('trsmlunu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxnx)) U1 ; (U1  mp       x ) ; x  ; rcondU1 ; norm1U1
-  ('trsmlucn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxcx)) U  ; (U  (mp~ ct)~ x ) ; x  ; rcondU  ; normiU
-  ('trsmlucu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxcx)) U1 ; (U1 (mp~ ct)~ x ) ; x  ; rcondU1 ; normiU1
-  ('trsmlutn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxtx)) U  ; (U  (mp~ |:)~ x ) ; x  ; rcondU  ; normiU
-  ('trsmlutu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxtx)) U1 ; (U1 (mp~ |:)~ x ) ; x  ; rcondU1 ; normiU1
+  ('trsmlunn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxnx)) U  ; (U   mp       x ) ; x ; rcondU  ; norm1U
+  ('trsmlunu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxnx)) U1 ; (U1  mp       x ) ; x ; rcondU1 ; norm1U1
+  ('trsmlucn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxcx)) U  ; (U  (mp~ ct)~ x ) ; x ; rcondU  ; normiU
+  ('trsmlucu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxcx)) U1 ; (U1 (mp~ ct)~ x ) ; x ; rcondU1 ; normiU1
+  ('trsmlutn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxtx)) U  ; (U  (mp~ |:)~ x ) ; x ; rcondU  ; normiU
+  ('trsmlutu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrlxtx)) U1 ; (U1 (mp~ |:)~ x ) ; x ; rcondU1 ; normiU1
 
-  ('trsmrlnn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxnx)) L  ; (x   mp       L ) ; x  ; rcondL  ; normiL
-  ('trsmrlnu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxnx)) L1 ; (x   mp       L1) ; x  ; rcondL1 ; normiL1
-  ('trsmrlcn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxcx)) L  ; (x  (mp  ct)  L ) ; x  ; rcondL  ; norm1L
-  ('trsmrlcu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxcx)) L1 ; (x  (mp  ct)  L1) ; x  ; rcondL1 ; norm1L1
-  ('trsmrltn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxtx)) L  ; (x  (mp  |:)  L ) ; x  ; rcondL  ; norm1L
-  ('trsmrltu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxtx)) L1 ; (x  (mp  |:)  L1) ; x  ; rcondL1 ; norm1L1
+  ('trsmrlnn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxnx)) L  ; (x   mp       L ) ; x ; rcondL  ; normiL
+  ('trsmrlnu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxnx)) L1 ; (x   mp       L1) ; x ; rcondL1 ; normiL1
+  ('trsmrlcn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxcx)) L  ; (x  (mp  ct)  L ) ; x ; rcondL  ; norm1L
+  ('trsmrlcu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxcx)) L1 ; (x  (mp  ct)  L1) ; x ; rcondL1 ; norm1L1
+  ('trsmrltn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxtx)) L  ; (x  (mp  |:)  L ) ; x ; rcondL  ; norm1L
+  ('trsmrltu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxtx)) L1 ; (x  (mp  |:)  L1) ; x ; rcondL1 ; norm1L1
 
-  ('trsmrunn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxnx)) U  ; (x   mp       U ) ; x  ; rcondU  ; normiU
-  ('trsmrunu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxnx)) U1 ; (x   mp       U1) ; x  ; rcondU1 ; normiU1
-  ('trsmrucn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxcx)) U  ; (x  (mp  ct)  U ) ; x  ; rcondU  ; norm1U
-  ('trsmrucu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxcx)) U1 ; (x  (mp  ct)  U1) ; x  ; rcondU1 ; norm1U1
-  ('trsmrutn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxtx)) U  ; (x  (mp  |:)  U ) ; x  ; rcondU  ; norm1U
-  ('trsmrutu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxtx)) U1 ; (x  (mp  |:)  U1) ; x  ; rcondU1 ; norm1U1
+  ('trsmrunn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxnx)) U  ; (x   mp       U ) ; x ; rcondU  ; normiU
+  ('trsmrunu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxnx)) U1 ; (x   mp       U1) ; x ; rcondU1 ; normiU1
+  ('trsmrucn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxcx)) U  ; (x  (mp  ct)  U ) ; x ; rcondU  ; norm1U
+  ('trsmrucu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxcx)) U1 ; (x  (mp  ct)  U1) ; x ; rcondU1 ; norm1U1
+  ('trsmrutn' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxtx)) U  ; (x  (mp  |:)  U ) ; x ; rcondU  ; norm1U
+  ('trsmrutu' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`vberrrxtx)) U1 ; (x  (mp  |:)  U1) ; x ; rcondU1 ; norm1U1
 
   coerase < 'mttmp'
   erase 'vberrlxnx vberrlxcx vberrlxtx vberrrxnx vberrrxcx vberrrxtx'

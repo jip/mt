@@ -1,57 +1,44 @@
 NB. Solve linear monomial equation
 NB.
-NB. gesvxxx    Solve equation (op(A) * X = B) or
-NB.            (X * op(A) = B), where A is a general square
-NB.            matrix; op(A) is either A itself, or A^T (the
-NB.            transposition of A), or A^H (the conjugate
-NB.            transposition of A); B is known right-hand
-NB.            sides (RHS), X is unknown solutions
-NB. gtsvxxx    Solve equation (op(A) * X = B) or
-NB.            (X * op(A) = B), where A is a tridiagonal
-NB.            matrix; op(A) is either A itself, or A^T (the
-NB.            transposition of A), or A^H (the conjugate
-NB.            transposition of A); B is known right-hand
-NB.            sides (RHS), X is unknown solutions
-NB. hesvxxx    Solve equation (op(A) * X = B) or
-NB.            (X * op(A) = B), where A is a Hermitian
-NB.            (symmetric) matrix; op(A) is either A itself,
-NB.            or A^T (the transposition of A); B is known
-NB.            right-hand sides (RHS), X is unknown solutions
-NB. posvxxx    Solve equation (op(A) * X = B) or
-NB.            (X * op(A) = B), where A is a Hermitian
-NB.            (symmetric) positive definite matrix; op(A) is
-NB.            either A itself, or A^T (the transposition of
-NB.            A); B is known right-hand sides (RHS), X is
-NB.            unknown solutions
-NB. ptsvxxx    Solve equation (op(A) * X = B) or
-NB.            (X * op(A) = B), where A is a Hermitian
-NB.            (symmetric) positive definite tridiagonal
-NB.            matrix; op(A) is either A itself, or A^T (the
-NB.            transposition of A); B is known right-hand
-NB.            sides (RHS), X is unknown solutions
+NB. gesvxxx   Solve equation (op(A) * X = B) or
+NB.           (X * op(A) = B), where A is a general square
+NB.           matrix; op(A) is either A itself, or A^T (the
+NB.           transposition of A), or A^H (the conjugate
+NB.           transposition of A); B is known right-hand
+NB.           sides (RHS), X is unknown solutions
+NB. gtsvxxx   Solve equation (op(A) * X = B) or
+NB.           (X * op(A) = B), where A is a tridiagonal
+NB.           matrix; op(A) is either A itself, or A^T (the
+NB.           transposition of A), or A^H (the conjugate
+NB.           transposition of A); B is known right-hand
+NB.           sides (RHS), X is unknown solutions
+NB. hesvxxx   Solve equation (op(A) * X = B) or
+NB.           (X * op(A) = B), where A is a Hermitian
+NB.           (symmetric) matrix; op(A) is either A itself,
+NB.           or A^T (the transposition of A); B is known
+NB.           right-hand sides (RHS), X is unknown solutions
+NB. posvxxx   Solve equation (op(A) * X = B) or
+NB.           (X * op(A) = B), where A is a Hermitian
+NB.           (symmetric) positive definite matrix; op(A) is
+NB.           either A itself, or A^T (the transposition of
+NB.           A); B is known right-hand sides (RHS), X is
+NB.           unknown solutions
+NB. ptsvxxx   Solve equation (op(A) * X = B) or
+NB.           (X * op(A) = B), where A is a Hermitian
+NB.           (symmetric) positive definite tridiagonal
+NB.           matrix; op(A) is either A itself, or A^T (the
+NB.           transposition of A); B is known right-hand
+NB.           sides (RHS), X is unknown solutions
 NB.
-NB. testgesv1  Test gesvxxx by general square matrix and
-NB.            single RHS
-NB. testgesv3  Test gesvxxx by general square matrix and
-NB.            multiple RHS
-NB. testgtsv1  Test gtsvxxx by tridiagonal matrix and single
-NB.            RHS
-NB. testgtsv3  Test gtsvxxx by tridiagonal matrix and multiple
-NB.            RHS
-NB. testhesv1  Test hesvxxx by Hermitian (symmetric) matrix
-NB.            and single RHS
-NB. testhesv3  Test hesvxxx by Hermitian (symmetric) matrix
-NB.            and multiple RHS
-NB. testposv1  Test posvxxx by Hermitian (symmetric) positive
-NB.            definite matrix and single RHS
-NB. testposv3  Test posvxxx by Hermitian (symmetric) positive
-NB.            definite matrix and multiple RHS
-NB. testptsv1  Test ptsvxxx by Hermitian (symmetric) positive
-NB.            definite tridiagonal matrix and single RHS
-NB. testptsv3  Test ptsvxxx by Hermitian (symmetric) positive
-NB.            definite tridiagonal matrix and multiple RHS
-NB. testsv     Adv. to make verb to test xxsvxxx by matrix of
-NB.            generator and shape given
+NB. testgesv  Test gesvxxx by general square matrix
+NB. testgtsv  Test gtsvxxx by tridiagonal matrix
+NB. testhesv  Test hesvxxx by Hermitian (symmetric) matrix
+NB. testposv  Test posvxxx by Hermitian (symmetric) positive
+NB.           definite matrix
+NB. testptsv  Test ptsvxxx by Hermitian (symmetric) positive
+NB.           definite tridiagonal matrix
+NB. testsv    Adv. to make verb to test xxsvxxx by matrix of
+NB.           generator and shape given
 NB.
 NB. Version: 0.13.2 2021-06-24
 NB.
@@ -369,75 +356,53 @@ NB. =========================================================
 NB. Test suite
 
 NB. ---------------------------------------------------------
-NB. testgesv1
-NB.
-NB. Description:
-NB.   Test:
-NB.   - %. (built-in)
-NB.   - gesvxxx (math/mt addon)
-NB.   by general square matrix and single RHS
-NB.
-NB. Syntax:
-NB.   testgesv1 (A ; x)
-NB. where
-NB.   A - n×n-matrix
-NB.   x - n-vector, the exact solution
-
-testgesv1=: 3 : 0
-  'A x'=. y
-
-  'rcondA rcondAc rcondAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
-
-  'normiAt norm1At'=. 'normiAc norm1Ac'=. 'norm1A normiA'=. (norm1 , normi) A
-
-  ('%.'      tdyad ((1&{::)`(0&{::)`]`(3&{::)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA  ; norm1A
-
-  ('gesvax'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA  ; norm1A
-  ('gesvacx' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp~ ct) t02v))) A ; ((ct A) mp x) ; x ; rcondAc ; norm1Ac
-  ('gesvatx' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondAt ; norm1At
-  ('gesvxa'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA  ; normiA
-  ('gesvxac' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp  ct) t02v))) A ; (x mp ct A  ) ; x ; rcondAc ; normiAc
-  ('gesvxat' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondAt ; normiAt
-
-  EMPTY
-)
-
-NB. ---------------------------------------------------------
-NB. testgesv3
+NB. testgesv
 NB.
 NB. Description:
 NB.   Test:
 NB.   - %. (built-in)
 NB.   - xGESV (math/lapack2 addon)
 NB.   - gesvxxx (math/mt addon)
-NB.   by general square matrix and multiple RHS
+NB.   by general square matrix
 NB.
 NB. Syntax:
-NB.   testgesv3 (A ; X)
+NB.   testgesv (X ; A)
 NB. where
-NB.   A - n×n-matrix
-NB.   X - n×3-matrix, exact solutions
+NB.   X - m×n-matrix, exact solutions
+NB.   A - k×k-matrix
+NB.   k = max(m,n)
+NB.
+NB. Notes:
+NB. - models LAPACK's xDRVGE
 
-testgesv3=: 3 : 0
+testgesv=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/gesv'
 
-  'A Xv'=. y
-  Xh=. |: Xv
+  'X A'=. y
+  'm n'=. $ X
+  Am=. (2 # m) {. A
+  An=. (2 # n) {. A
 
-  'rcondA rcondAc rcondAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
+  'rcondAm rcondAcm rcondAtm'=. (gecon1 , gecon1@ct , gecon1@|:) Am
+  'rcondAn rcondAcn rcondAtn'=. (gecon1 , gecon1@ct , gecon1@|:) An
 
-  'normiAt norm1At'=. 'normiAc norm1Ac'=. 'norm1A normiA'=. (norm1 , normi) A
+  'normiAtm norm1Atm'=. 'normiAcm norm1Acm'=. 'norm1Am normiAm'=. (norm1 , normi) Am
+  'normiAtn norm1Atn'=. 'normiAcn norm1Acn'=. 'norm1An normiAn'=. (norm1 , normi) An
 
-  Bax=. A mp Xv
+  NB. matrix X
 
-  vferrv=: normitc t04m  NB. for Xv
-  vferrh=: normitr t04m  NB. for Xh
+  Bax=. A mp X
 
-  NB. vberrX for Xv at right side
+  NB. vferrx
+  vferrr=: normitc t04m  NB. for X at right side
+  vferrl=: normitr t04m  NB. for X at left side
+
+  NB. vberrX for X at right side
   vberrax=:   mp~     t02m norm1tc
   vberracx=: (mp~ ct) t02m norm1tc
   vberratx=: (mp~ |:) t02m norm1tc
-  NB. vberrX for Xh at left side
+
+  NB. vberrX for X at left side
   vberrxa=:   mp      t02m norm1tr
   vberrxac=: (mp  ct) t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
@@ -445,177 +410,167 @@ testgesv3=: 3 : 0
   NB. Aapprox=. calcA (L1U ; ipiv ; trash)
   calcA=: ((C.~ makeper_jlapack2_)~ trl1pick mp trupick)~&>/@}:
 
-  ('%.'           tdyad  ((1&{::)`(0&{::)`]`(3&{::)` vferrv       `  vberrax                                             )) A ; Bax            ; Xv ; rcondA  ; norm1A
+  ('%.'           tdyad  ((1&{::)`(0&{::)`]`(3&{::)` vferrr       `  vberrax                                             )) Am ; Bax           ; X  ; rcondAm  ; norm1Am
 
-  ('dgesv_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`(vferrv 2&{::)`((vberrax 2&{::) >. (((norm1 get01 #)~ 0 4&{)~ calcA)))) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('zgesv_mttmp_' tmonad ((2&{. )`        ]`(3&{::)`(vferrv 2&{::)`((vberrax 2&{::) >. (((norm1 get01 #)~ 0 4&{)~ calcA)))) A ; Bax            ; Xv ; rcondA  ; norm1A
+  ('dgesv_mttmp_' tmonad (        (2&{. )`]`(3&{::)`(vferrr 2&{::)`((vberrax 2&{::) >. (((norm1 get01 #)~ 0 4&{)~ calcA)))) Am ; Bax           ; X  ; rcondAm  ; norm1Am
+  ('zgesv_mttmp_' tmonad (        (2&{. )`]`(3&{::)`(vferrr 2&{::)`((vberrax 2&{::) >. (((norm1 get01 #)~ 0 4&{)~ calcA)))) Am ; Bax           ; X  ; rcondAm  ; norm1Am
 
-  ('gesvax'       tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrv       `  vberrax                                             )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('gesvacx'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrv       `  vberracx                                            )) A ; ((ct A) mp Xv) ; Xv ; rcondAc ; norm1Ac
-  ('gesvatx'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrv       `  vberratx                                            )) A ; ((|: A) mp Xv) ; Xv ; rcondAt ; norm1At
-  ('gesvxa'       tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrh       `  vberrxa                                             )) A ; (Xh mp    A  ) ; Xh ; rcondA  ; normiA
-  ('gesvxac'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrh       `  vberrxac                                            )) A ; (Xh mp ct A  ) ; Xh ; rcondAc ; normiAc
-  ('gesvxat'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrh       `  vberrxat                                            )) A ; (Xh mp |: A  ) ; Xh ; rcondAt ; normiAt
+  ('gesvax'       tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrr       `  vberrax                                             )) Am ; Bax           ; X  ; rcondAm  ; norm1Am
+  ('gesvacx'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrr       `  vberracx                                            )) Am ; (X  mp~ ct A) ; X  ; rcondAcm ; norm1Acm
+  ('gesvatx'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrr       `  vberratx                                            )) Am ; (X  mp~ |: A) ; X  ; rcondAtm ; norm1Atm
+  ('gesvxa'       tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrl       `  vberrxa                                             )) An ; (X  mp     A) ; X  ; rcondAn  ; normiAn
+  ('gesvxac'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrl       `  vberrxac                                            )) An ; (X  mp  ct A) ; X  ; rcondAcn ; normiAcn
+  ('gesvxat'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrl       `  vberrxat                                            )) An ; (X  mp  |: A) ; X  ; rcondAtn ; normiAtn
+
+  NB. vector x
+
+  'xm xn'=. ({."1 ; {.) X
+
+  ('%.'           tdyad  ((1&{::)`(0&{::)`]`(3&{::)` t04v         `( mp~     t02v)                                       )) Am ; (xm mp~    A) ; xm ; rcondAm  ; norm1Am
+
+  ('gesvax'       tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `( mp~     t02v)                                       )) Am ; (xm mp~    A) ; xm ; rcondAm  ; norm1Am
+  ('gesvacx'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `((mp~ ct) t02v)                                       )) Am ; (xm mp~ ct A) ; xm ; rcondAcm ; norm1Acm
+  ('gesvatx'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `((mp~ |:) t02v)                                       )) Am ; (xm mp~ |: A) ; xm ; rcondAtm ; norm1Atm
+  ('gesvxa'       tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `( mp      t02v)                                       )) An ; (xn mp     A) ; xn ; rcondAn  ; normiAn
+  ('gesvxac'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `((mp  ct) t02v)                                       )) An ; (xn mp  ct A) ; xn ; rcondAcn ; normiAcn
+  ('gesvxat'      tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `((mp  |:) t02v)                                       )) An ; (xn mp  |: A) ; xn ; rcondAtn ; normiAtn
 
   coerase < 'mttmp'
-  erase 'vferrv vferrh vberrax vberracx vberratx vberrxa vberrxac vberrxat calcA'
+  erase 'vferrr vferrl vberrax vberracx vberratx vberrxa vberrxac vberrxat calcA'
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. testgtsv1
-NB.
-NB. Description:
-NB.   Test gtsvxxx by tridiagonal matrix and single RHS
-NB.
-NB. Syntax:
-NB.   testgtsv1 (A ; x)
-NB. where
-NB.   A - n×n-matrix, the tridiagonal
-NB.   x - n-vector, the exact solution
-
-testgtsv1=: 3 : 0
-  'A x'=. y
-
-  'rcondA rcondAc rcondAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
-
-  'normiAt norm1At'=. 'normiAc norm1Ac'=. 'norm1A normiA'=. (norm1 , normi) A
-
-  ('gtsvax'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA  ; norm1A
-  ('gtsvacx' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp~ ct) t02v))) A ; ((ct A) mp x) ; x ; rcondAc ; norm1Ac
-  ('gtsvatx' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondAt ; norm1At
-  ('gtsvxa'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA  ; normiA
-  ('gtsvxac' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp  ct) t02v))) A ; (x mp ct A  ) ; x ; rcondAc ; normiAc
-  ('gtsvxat' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondAt ; normiAt
-
-  EMPTY
-)
-
-NB. ---------------------------------------------------------
-NB. testgtsv3
+NB. testgtsv
 NB.
 NB. Description:
 NB.   Test:
 NB.   - xGTSV (math/lapack2 addon)
 NB.   - gtsvxxx (math/mt addon)
-NB.   by tridiagonal matrix and multiple RHS
+NB.   by tridiagonal matrix
 NB.
 NB. Syntax:
-NB.   testgtsv3 (A ; X)
+NB.   testgtsv (X ; A)
 NB. where
-NB.   A - n×n-matrix, the tridiagonal
-NB.   X - n×3-matrix, exact solutions
+NB.   X - m×n-matrix, exact solutions
+NB.   A - k×k-matrix, the tridiagonal
+NB.   k = max(m,n)
+NB.
+NB. Notes:
+NB. - models LAPACK's xDRVGT
 
-testgtsv3=: 3 : 0
+testgtsv=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/gtsv'
 
-  'A Xv'=. y
-  Xh=. |: Xv
+  'X A'=. y
+  'm n'=. $ X
+  Am=. (2 # m) {. A
+  An=. (2 # n) {. A
 
-  'rcondA rcondAc rcondAt'=. (gecon1 , gecon1@ct , gecon1@|:) A
+  'rcondAm rcondAcm rcondAtm'=. (gecon1 , gecon1@ct , gecon1@|:) Am
+  'rcondAn rcondAcn rcondAtn'=. (gecon1 , gecon1@ct , gecon1@|:) An
 
-  'normiAt norm1At'=. 'normiAc norm1Ac'=. 'norm1A normiA'=. (norm1 , normi) A
+  'normiAtm norm1Atm'=. 'normiAcm norm1Acm'=. 'norm1Am normiAm'=. (norm1 , normi) Am
+  'normiAtn norm1Atn'=. 'normiAcn norm1Acn'=. 'norm1An normiAn'=. (norm1 , normi) An
 
-  Bax=. A mp Xv
+  NB. matrix X
 
-  vferrv=: normitc t04m  NB. for Xv
-  vferrh=: normitr t04m  NB. for Xh
+  Bax=. A mp X
 
-  NB. vberrX for Xv at right side
+  NB. vferrx
+  vferrr=: normitc t04m  NB. for X at right side
+  vferrl=: normitr t04m  NB. for X at left side
+
+  NB. vberrX for X at right side
   vberrax=:   mp~     t02m norm1tc
   vberracx=: (mp~ ct) t02m norm1tc
   vberratx=: (mp~ |:) t02m norm1tc
-  NB. vberrX for Xh at left side
+
+  NB. vberrX for X at left side
   vberrxa=:   mp      t02m norm1tr
   vberrxac=: (mp  ct) t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
-  ('dgtsv_mttmp_' tmonad (((_1&diag ; diag ; 1&diag)@(0&{::) , 1&{)`        ]`(3&{::)`vferrv`vberrax )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('zgtsv_mttmp_' tmonad (((_1&diag ; diag ; 1&diag)@(0&{::) , 1&{)`        ]`(3&{::)`vferrv`vberrax )) A ; Bax            ; Xv ; rcondA  ; norm1A
+  ('dgtsv_mttmp_' tmonad (        ((_1&diag ; diag ; 1&diag)@(0&{::) , 1&{)`]`(3&{::)`vferrr`vberrax        )) Am ; Bax           ; X  ; rcondAm  ; norm1Am
+  ('zgtsv_mttmp_' tmonad (        ((_1&diag ; diag ; 1&diag)@(0&{::) , 1&{)`]`(3&{::)`vferrr`vberrax        )) Am ; Bax           ; X  ; rcondAm  ; norm1Am
 
-  ('gtsvax'       tdyad  ((                           0&{::       )`(1&{::)`]`(3&{::)`vferrv`vberrax )) A ; Bax            ; Xv ; rcondA  ; norm1A
-  ('gtsvacx'      tdyad  ((                           0&{::       )`(1&{::)`]`(3&{::)`vferrv`vberracx)) A ; ((ct A) mp Xv) ; Xv ; rcondAc ; norm1Ac
-  ('gtsvatx'      tdyad  ((                           0&{::       )`(1&{::)`]`(3&{::)`vferrv`vberratx)) A ; ((|: A) mp Xv) ; Xv ; rcondAt ; norm1At
-  ('gtsvxa'       tdyad  ((                           0&{::       )`(1&{::)`]`(3&{::)`vferrh`vberrxa )) A ; (Xh mp    A  ) ; Xh ; rcondA  ; normiA
-  ('gtsvxac'      tdyad  ((                           0&{::       )`(1&{::)`]`(3&{::)`vferrh`vberrxac)) A ; (Xh mp ct A  ) ; Xh ; rcondAc ; normiAc
-  ('gtsvxat'      tdyad  ((                           0&{::       )`(1&{::)`]`(3&{::)`vferrh`vberrxat)) A ; (Xh mp |: A  ) ; Xh ; rcondAt ; normiAt
+  ('gtsvax'       tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`vferrr`vberrax        )) Am ; Bax           ; X  ; rcondAm  ; norm1Am
+  ('gtsvacx'      tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`vferrr`vberracx       )) Am ; (X  mp~ ct A) ; X  ; rcondAcm ; norm1Acm
+  ('gtsvatx'      tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`vferrr`vberratx       )) Am ; (X  mp~ |: A) ; X  ; rcondAtm ; norm1Atm
+  ('gtsvxa'       tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`vferrl`vberrxa        )) An ; (X  mp     A) ; X  ; rcondAn  ; normiAn
+  ('gtsvxac'      tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`vferrl`vberrxac       )) An ; (X  mp  ct A) ; X  ; rcondAcn ; normiAcn
+  ('gtsvxat'      tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`vferrl`vberrxat       )) An ; (X  mp  |: A) ; X  ; rcondAtn ; normiAtn
+
+  NB. vector x
+
+  'xm xn'=. ({."1 ; {.) X
+
+  ('gtsvax'       tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`t04v  `( mp~     t02v))) Am ; (xm mp~    A) ; xm ; rcondAm  ; norm1Am
+  ('gtsvacx'      tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`t04v  `((mp~ ct) t02v))) Am ; (xm mp~ ct A) ; xm ; rcondAcm ; norm1Acm
+  ('gtsvatx'      tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`t04v  `((mp~ |:) t02v))) Am ; (xm mp~ |: A) ; xm ; rcondAtm ; norm1Atm
+  ('gtsvxa'       tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`t04v  `( mp      t02v))) An ; (xn mp     A) ; xn ; rcondAn  ; normiAn
+  ('gtsvxac'      tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`t04v  `((mp  ct) t02v))) An ; (xn mp  ct A) ; xn ; rcondAcn ; normiAcn
+  ('gtsvxat'      tdyad  ((0&{::)`(1&{::                                  )`]`(3&{::)`t04v  `((mp  |:) t02v))) An ; (xn mp  |: A) ; xn ; rcondAtn ; normiAtn
 
   coerase < 'mttmp'
-  erase 'vferrv vferrh vberrax vberracx vberratx vberrxa vberrxac vberrxat'
+  erase 'vferrr vferrl vberrax vberracx vberratx vberrxa vberrxac vberrxat'
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. testhesv1
-NB.
-NB. Description:
-NB.   Test hesvxxx by Hermitian (symmetric) matrix and single
-NB.   RHS
-NB.
-NB. Syntax:
-NB.   testhesv1 (A ; x)
-NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric)
-NB.   x - n-vector, the exact solution
-
-testhesv1=: 3 : 0
-  'A x'=. y
-
-  rcondA=. hecon1 A
-
-  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
-
-  ('hesvax'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA ; norm1A
-  ('hesvatx' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondA ; norm1At
-  ('hesvxa'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA ; normiA
-  ('hesvxat' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondA ; normiAt
-
-  EMPTY
-)
-
-NB. ---------------------------------------------------------
-NB. testhesv3
+NB. testhesv
 NB.
 NB. Description:
 NB.   Test:
 NB.   - DSYSV DSYSV_AA ZHESV ZHESV_AA (math/lapack2 addon)
 NB.   - hesvxxx (math/mt addon)
-NB.   by Hermitian (symmetric) matrix and multiple RHS
+NB.   by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testhesv3 (A ; X)
+NB.   testhesv (X ; A)
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric)
-NB.   X - n×3-matrix, exact solutions
+NB.   X - m×n-matrix, exact solutions
+NB.   A - k×k-matrix, the Hermitian (symmetric)
+NB.   k = max(m,n)
 NB.
 NB. Notes:
-NB. - no berrA calc for LAPACK's DSYSV and ZHESV yet since
-NB.   its output is intricate
+NB. - models LAPACK's DDRVSY and ZDRVHE with the following
+NB.   difference:
+NB.   - no berrA calc for LAPACK's DSYSV and ZHESV yet since
+NB.     its output is intricate
 
-testhesv3=: 3 : 0
+testhesv=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/dsysv'
   load_mttmp_ 'math/mt/test/lapack2/dsysv_aa'
   load_mttmp_ 'math/mt/test/lapack2/zhesv'
   load_mttmp_ 'math/mt/test/lapack2/zhesv_aa'
 
-  'A Xv'=. y
-  Xh=. |: Xv
+  'X A'=. y
+  'm n'=. $ X
+  Am=. (2 # m) {. A
+  An=. (2 # n) {. A
 
-  rcondA=. hecon1 A
+  rcondAm=. hecon1 Am
+  rcondAn=. hecon1 An
 
-  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+  'normiAtm norm1Atm'=. 'norm1Am normiAm'=. (norm1 , normi) Am
+  'normiAtn norm1Atn'=. 'norm1An normiAn'=. (norm1 , normi) An
 
-  Bax=. A mp Xv
+  NB. matrix X
 
-  vferrv=: normitc t04m  NB. for Xv
-  vferrh=: normitr t04m  NB. for Xh
+  Bax=. A mp X
 
-  NB. vberrX for Xv at right side
+  NB. vferrx
+  vferrr=: normitc t04m  NB. for X at right side
+  vferrl=: normitr t04m  NB. for X at left side
+
+  NB. vberrX for X at right side
   vberrax=:  (mp~   ) t02m norm1tc
   vberratx=: (mp~ |:) t02m norm1tc
-  NB. vberrX for Xh at left side
+
+  NB. vberrX for X at left side
   vberrxa=:  (mp    ) t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
@@ -625,92 +580,83 @@ testhesv3=: 3 : 0
   calcAzl=: makeper_jlapack2_@(1&{::) fp ((setdiag~  1 ;~ +@(_1&diag))@bdlpick (mp~ mp  ct@]) trl1pick@:(|.!.0"1))@(0&{::)
   calcAzu=: makeper_jlapack2_@(1&{::) fp ((setdiag~ _1 ;~ +@( 1&diag))@bdupick (mp  mp~ ct@]) tru1pick@:(|.!.0  ))@(0&{::)
 
-  ('''l''&dsysv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3&{::)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''u''&dsysv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3&{::)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''l''&zhesv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3&{::)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''u''&zhesv_mttmp_'    tmonad ((2&{. )        `(2&{::)`(3&{::)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''l''&dsysv_mttmp_'    tmonad (        (2&{. )`(2&{::)`(3&{::)` vferrr       `  vberrax                                      )) Am ; Bax           ; X  ; rcondAm ; norm1Am
+  ('''u''&dsysv_mttmp_'    tmonad (        (2&{. )`(2&{::)`(3&{::)` vferrr       `  vberrax                                      )) Am ; Bax           ; X  ; rcondAm ; norm1Am
+  ('''l''&zhesv_mttmp_'    tmonad (        (2&{. )`(2&{::)`(3&{::)` vferrr       `  vberrax                                      )) Am ; Bax           ; X  ; rcondAm ; norm1Am
+  ('''u''&zhesv_mttmp_'    tmonad (        (2&{. )`(2&{::)`(3&{::)` vferrr       `  vberrax                                      )) Am ; Bax           ; X  ; rcondAm ; norm1Am
 
-  ('''l''&dsysv_aa_mttmp_' tmonad ((2&{. )        `]      `(3&{::)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''u''&dsysv_aa_mttmp_' tmonad ((2&{. )        `]      `(3&{::)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdu)))) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''l''&zhesv_aa_mttmp_' tmonad ((2&{. )        `]      `(3&{::)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''u''&zhesv_aa_mttmp_' tmonad ((2&{. )        `]      `(3&{::)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzu)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''l''&dsysv_aa_mttmp_' tmonad (        (2&{. )`]      `(3&{::)`(vferrr 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdl)))) Am ; Bax           ; X  ; rcondAm ; norm1Am
+  ('''u''&dsysv_aa_mttmp_' tmonad (        (2&{. )`]      `(3&{::)`(vferrr 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdu)))) Am ; Bax           ; X  ; rcondAm ; norm1Am
+  ('''l''&zhesv_aa_mttmp_' tmonad (        (2&{. )`]      `(3&{::)`(vferrr 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzl)))) Am ; Bax           ; X  ; rcondAm ; norm1Am
+  ('''u''&zhesv_aa_mttmp_' tmonad (        (2&{. )`]      `(3&{::)`(vferrr 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzu)))) Am ; Bax           ; X  ; rcondAm ; norm1Am
 
-  ('hesvax'                tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('hesvatx'               tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondA ; norm1At
-  ('hesvxa'                tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` vferrh       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA ; normiA
-  ('hesvxat'               tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` vferrh       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondA ; normiAt
+  ('hesvax'                tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` vferrr       `  vberrax                                      )) Am ; Bax           ; X  ; rcondAm ; norm1Am
+  ('hesvatx'               tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` vferrr       `  vberratx                                     )) Am ; (X  mp~ |: A) ; X  ; rcondAm ; norm1Atm
+  ('hesvxa'                tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` vferrl       `  vberrxa                                      )) An ; (X  mp     A) ; X  ; rcondAn ; normiAn
+  ('hesvxat'               tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` vferrl       `  vberrxat                                     )) An ; (X  mp  |: A) ; X  ; rcondAn ; normiAtn
+
+  NB. vector x
+
+  'xm xn'=. ({."1 ; {.) X
+
+  ('hesvax'                tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` t04v         `( mp~     t02v                                ))) Am ; (xm mp~    A) ; xm ; rcondAm ; norm1Am
+  ('hesvatx'               tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` t04v         `((mp~ |:) t02v                                ))) Am ; (xm mp~ |: A) ; xm ; rcondAm ; norm1Atm
+  ('hesvxa'                tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` t04v         `( mp      t02v                                ))) An ; (xn mp     A) ; xn ; rcondAn ; normiAn
+  ('hesvxat'               tdyad  ((0&{::)`(1&{::)`]      `(3&{::)` t04v         `((mp  |:) t02v                                ))) An ; (xn mp  |: A) ; xn ; rcondAn ; normiAtn
 
   coerase < 'mttmp'
-  erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat'
+  erase 'vferrr vferrl vberrax vberratx vberrxa vberrxat calcAdl calcAdu calcAzl calcAzu'
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. testposv1
-NB.
-NB. Description:
-NB.   Test posvxxx by Hermitian (symmetric) positive definite
-NB.   matrix and single RHS
-NB.
-NB. Syntax:
-NB.   testposv1 (A ; x)
-NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric) positive
-NB.       definite
-NB.   x - n-vector, the exact solution
-
-testposv1=: 3 : 0
-  'A x'=. y
-
-  rcondA=. pocon1 A
-
-  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
-
-  ('posvax'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA ; norm1A
-  ('posvatx' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondA ; norm1At
-  ('posvxa'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA ; normiA
-  ('posvxat' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondA ; normiAt
-
-  EMPTY
-)
-
-NB. ---------------------------------------------------------
-NB. testposv3
+NB. testposv
 NB.
 NB. Description:
 NB.   Test:
 NB.   - xPOSV (math/lapack2 addon)
 NB.   - posvxxx (math/mt addon)
-NB.   by Hermitian (symmetric) positive definite matrix and
-NB.   multiple RHS
+NB.   by Hermitian (symmetric) positive definite matrix
 NB.
 NB. Syntax:
-NB.   testposv3 (A ; X)
+NB.   testposv (X ; A)
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.   X - m×n-matrix, exact solutions
+NB.   A - k×k-matrix, the Hermitian (symmetric) positive
 NB.       definite
-NB.   X - n×3-matrix, exact solutions
+NB.   k = max(m,n)
+NB.
+NB. Notes:
+NB. - models LAPACK's xDRVPO
 
-testposv3=: 3 : 0
+testposv=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/posv'
 
-  'A Xv'=. y
-  Xh=. |: Xv
+  'X A'=. y
+  'm n'=. $ X
+  Am=. (2 # m) {. A
+  An=. (2 # n) {. A
 
-  rcondA=. pocon1 A
+  rcondAm=. pocon1 Am
+  rcondAn=. pocon1 An
 
-  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+  'normiAtm norm1Atm'=. 'norm1Am normiAm'=. (norm1 , normi) Am
+  'normiAtn norm1Atn'=. 'norm1An normiAn'=. (norm1 , normi) An
 
-  Bax=. A mp Xv
+  NB. matrix X
 
-  vferrv=: normitc t04m  NB. for Xv
-  vferrh=: normitr t04m  NB. for Xh
+  Bax=. A mp X
 
-  NB. vberrX for Xv at right side
+  NB. vferrx
+  vferrr=: normitc t04m  NB. for X at right side
+  vferrl=: normitr t04m  NB. for X at left side
+
+  NB. vberrX for X at right side
   vberrax=:  (mp~   ) t02m norm1tc
   vberratx=: (mp~ |:) t02m norm1tc
-  NB. vberrX for Xh at left side
+
+  NB. vberrX for X at left side
   vberrxa=:  (mp    ) t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
@@ -720,87 +666,79 @@ testposv3=: 3 : 0
   calcAzl=: (mp  ct)@trlpick@(0&{::)
   calcAzu=: (mp~ ct)@trupick@(0&{::)
 
-  ('''l''&dposv_mttmp_' tmonad ((2&{. )       `]`(3&{::)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''u''&dposv_mttmp_' tmonad ((2&{. )       `]`(3&{::)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAdu)))) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''l''&zposv_mttmp_' tmonad ((2&{. )       `]`(3&{::)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('''u''&zposv_mttmp_' tmonad ((2&{. )       `]`(3&{::)`(vferrv 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAzu)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('''l''&dposv_mttmp_' tmonad (        (2&{. )`]`(3&{::)`(vferrr 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAdl)))) Am ; Bax          ; X  ; rcondAm ; norm1Am
+  ('''u''&dposv_mttmp_' tmonad (        (2&{. )`]`(3&{::)`(vferrr 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAdu)))) Am ; Bax          ; X  ; rcondAm ; norm1Am
+  ('''l''&zposv_mttmp_' tmonad (        (2&{. )`]`(3&{::)`(vferrr 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAzl)))) Am ; Bax          ; X  ; rcondAm ; norm1Am
+  ('''u''&zposv_mttmp_' tmonad (        (2&{. )`]`(3&{::)`(vferrr 1&{::)`((vberrax  1&{::) >. ((het01~ 0 4&{)~ calcAzu)))) Am ; Bax          ; X  ; rcondAm ; norm1Am
 
-  ('posvax'             tdyad ((0&{::)`(1&{::)`]`(3&{::)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('posvatx'            tdyad ((0&{::)`(1&{::)`]`(3&{::)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondA ; norm1At
-  ('posvxa'             tdyad ((0&{::)`(1&{::)`]`(3&{::)` vferrh       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA ; normiA
-  ('posvxat'            tdyad ((0&{::)`(1&{::)`]`(3&{::)` vferrh       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondA ; normiAt
+  ('posvax'             tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrr       `  vberrax                                      )) Am ; Bax          ; X  ; rcondAm ; norm1Am
+  ('posvatx'            tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrr       `  vberratx                                     )) Am ; (X mp~ |: A) ; X  ; rcondAm ; norm1Atm
+  ('posvxa'             tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrl       `  vberrxa                                      )) An ; (X mp     A) ; X  ; rcondAn ; normiAn
+  ('posvxat'            tdyad  ((0&{::)`(1&{::)`]`(3&{::)` vferrl       `  vberrxat                                     )) An ; (X mp  |: A) ; X  ; rcondAn ; normiAtn
+
+  NB. vector x
+
+  'xm xn'=. ({."1 ; {.) X
+
+  ('posvax'             tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `( mp~     t02v                                ))) Am ; (xm mp~    A) ; xm ; rcondAm ; norm1Am
+  ('posvatx'            tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `((mp~ |:) t02v                                ))) Am ; (xm mp~ |: A) ; xm ; rcondAm ; norm1Atm
+  ('posvxa'             tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `( mp      t02v                                ))) An ; (xn mp     A) ; xn ; rcondAn ; normiAn
+  ('posvxat'            tdyad  ((0&{::)`(1&{::)`]`(3&{::)` t04v         `((mp  |:) t02v                                ))) An ; (xn mp  |: A) ; xn ; rcondAn ; normiAtn
 
   coerase < 'mttmp'
-  erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat calcAdl calcAdu calcAzl calcAzu'
+  erase 'vferrr vferrl vberrax vberratx vberrxa vberrxat calcAdl calcAdu calcAzl calcAzu'
 
   EMPTY
 )
 
 NB. ---------------------------------------------------------
-NB. testptsv1
-NB.
-NB. Description:
-NB.   Test ptsvxxx by Hermitian (symmetric) positive definite
-NB.   tridiagonal matrix and single RHS
-NB.
-NB. Syntax:
-NB.   testptsv1 (A ; x)
-NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric) positive
-NB.       definite tridiagonal
-NB.   x - n-vector, the exact solution
-
-testptsv1=: 3 : 0
-  'A x'=. y
-
-  rcondA=. ptcon1 A
-
-  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
-
-  ('ptsvax'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp~     t02v))) A ; (    A  mp x) ; x ; rcondA ; norm1A
-  ('ptsvatx' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp~ |:) t02v))) A ; ((|: A) mp x) ; x ; rcondA ; norm1At
-  ('ptsvxa'  tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`( mp      t02v))) A ; (x mp    A  ) ; x ; rcondA ; normiA
-  ('ptsvxat' tdyad ((0&{::)`(1&{::)`]`(3&{::)`t04v`((mp  |:) t02v))) A ; (x mp |: A  ) ; x ; rcondA ; normiAt
-
-  EMPTY
-)
-
-NB. ---------------------------------------------------------
-NB. testptsv3
+NB. testptsv
 NB.
 NB. Description:
 NB.   Test:
 NB.   - xPTSV (math/lapack2 addon)
 NB.   - ptsvxxx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite tridiagonal
-NB.   matrix and multiple RHS
+NB.   matrix
 NB.
 NB. Syntax:
-NB.   testptsv3 (A ; X)
+NB.   testptsv (X ; A)
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric) positive
+NB.   X - m×n-matrix, exact solutions
+NB.   A - k×k-matrix, the Hermitian (symmetric) positive
 NB.       definite tridiagonal
-NB.   X - n×3-matrix, exact solutions
+NB.   k = max(m,n)
+NB.
+NB. Notes:
+NB. - models LAPACK's xDRVPT
 
-testptsv3=: 3 : 0
+testptsv=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/ptsv'
 
-  'A Xv'=. y
-  Xh=. |: Xv
+  'X A'=. y
+  'm n'=. $ X
+  Am=. (2 # m) {. A
+  An=. (2 # n) {. A
 
-  rcondA=. ptcon1 A
+  rcondAm=. ptcon1 Am
+  rcondAn=. ptcon1 An
 
-  'normiAt norm1At'=. 'norm1A normiA'=. (norm1 , normi) A
+  'normiAtm norm1Atm'=. 'norm1Am normiAm'=. (norm1 , normi) Am
+  'normiAtn norm1Atn'=. 'norm1An normiAn'=. (norm1 , normi) An
 
-  Bax=. A mp Xv
+  NB. matrix X
 
-  vferrv=: normitc t04m  NB. for Xv
-  vferrh=: normitr t04m  NB. for Xh
+  Bax=. A mp X
 
-  NB. vberrX for Xv at right side
+  NB. vferrx
+  vferrr=: normitc t04m  NB. for X at right side
+  vferrl=: normitr t04m  NB. for X at left side
+
+  NB. vberrX for X at right side
   vberrax=:  (mp~   ) t02m norm1tc
   vberratx=: (mp~ |:) t02m norm1tc
-  NB. vberrX for Xh at left side
+
+  NB. vberrX for X at left side
   vberrxa=:  (mp    ) t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
@@ -808,16 +746,25 @@ testptsv3=: 3 : 0
   calcAdl=: (((setdiag~ ;&_1)~ idmat@#)~ (mp mp |:@[) diagmat@[)&>/@}:
   calcAzl=: (((setdiag~ ;&_1)~ idmat@#)~ (mp mp ct@[) diagmat@[)&>/@}:
 
-  ('dptsv_mttmp_' tmonad (((diag ; _1&diag)@(0&{::) , 1&{)`]`(3&{::)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdl)))) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('zptsv_mttmp_' tmonad (((diag ; _1&diag)@(0&{::) , 1&{)`]`(3&{::)`(vferrv 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzl)))) A ; Bax            ; Xv ; rcondA ; norm1A
+  ('dptsv_mttmp_' tmonad (        ((diag ; _1&diag)@(0&{::) , 1&{)`]`(3&{::)`(vferrr 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAdl)))) Am ; Bax          ; X  ; rcondAm ; norm1Am
+  ('zptsv_mttmp_' tmonad (        ((diag ; _1&diag)@(0&{::) , 1&{)`]`(3&{::)`(vferrr 2&{::)`((vberrax  2&{::) >. ((het01~ 0 4&{)~ calcAzl)))) Am ; Bax          ; X  ; rcondAm ; norm1Am
 
-  ('ptsvax'       tdyad  ((0&{::)`(1&{::)                 `]`(3&{::)` vferrv       `  vberrax                                      )) A ; Bax            ; Xv ; rcondA ; norm1A
-  ('ptsvatx'      tdyad  ((0&{::)`(1&{::)                 `]`(3&{::)` vferrv       `  vberratx                                     )) A ; ((|: A) mp Xv) ; Xv ; rcondA ; norm1At
-  ('ptsvxa'       tdyad  ((0&{::)`(1&{::)                 `]`(3&{::)` vferrv       `  vberrxa                                      )) A ; (Xh mp    A  ) ; Xh ; rcondA ; normiA
-  ('ptsvxat'      tdyad  ((0&{::)`(1&{::)                 `]`(3&{::)` vferrv       `  vberrxat                                     )) A ; (Xh mp |: A  ) ; Xh ; rcondA ; normiAt
+  ('ptsvax'       tdyad  ((0&{::)`(1&{::                         )`]`(3&{::)` vferrr       `  vberrax                                      )) Am ; Bax          ; X  ; rcondAm ; norm1Am
+  ('ptsvatx'      tdyad  ((0&{::)`(1&{::                         )`]`(3&{::)` vferrr       `  vberratx                                     )) Am ; (X mp~ |: A) ; X  ; rcondAm ; norm1Atm
+  ('ptsvxa'       tdyad  ((0&{::)`(1&{::                         )`]`(3&{::)` vferrr       `  vberrxa                                      )) An ; (X mp     A) ; X  ; rcondAn ; normiAn
+  ('ptsvxat'      tdyad  ((0&{::)`(1&{::                         )`]`(3&{::)` vferrr       `  vberrxat                                     )) An ; (X mp  |: A) ; X  ; rcondAn ; normiAtn
+
+  NB. vector x
+
+  'xm xn'=. ({."1 ; {.) X
+
+  ('ptsvax'       tdyad  ((0&{::)`(1&{::                         )`]`(3&{::)` t04v         `( mp~     t02v                                ))) Am ; (xm mp~    A) ; xm ; rcondAm ; norm1Am
+  ('ptsvatx'      tdyad  ((0&{::)`(1&{::                         )`]`(3&{::)` t04v         `((mp~ |:) t02v                                ))) Am ; (xm mp~ |: A) ; xm ; rcondAm ; norm1Atm
+  ('ptsvxa'       tdyad  ((0&{::)`(1&{::                         )`]`(3&{::)` t04v         `( mp      t02v                                ))) An ; (xn mp     A) ; xn ; rcondAn ; normiAn
+  ('ptsvxat'      tdyad  ((0&{::)`(1&{::                         )`]`(3&{::)` t04v         `((mp  |:) t02v                                ))) An ; (xn mp  |: A) ; xn ; rcondAn ; normiAtn
 
   coerase < 'mttmp'
-  erase 'vferrv vferrh vberrax vberratx vberrxa vberrxat calcAdl calcAzl'
+  erase 'vferrr vferrl vberrax vberratx vberrxa vberrxat calcAdl calcAzl'
 
   EMPTY
 )
@@ -832,24 +779,30 @@ NB.
 NB. Syntax:
 NB.   vtest=. mkmat testsv
 NB. where
-NB.   mkmat - monad to generate a matrix; is called as:
-NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
+NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
+NB.             mat=. mkmat (m,n)
+NB.   vtest - monad to test algorithms by matrices composed
+NB.           from mat; is called as:
 NB.             vtest (m,n)
-NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   (m,n) - 2-vector of integers, the shape of mat
 NB.
 NB. Application:
-NB. - test by random square real matrix with elements
-NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testsv_mt_ 150 150
-NB. - test by random square real matrix with elements with
-NB.   limited value's amplitude:
+NB. - test by random real matrices with elements distributed
+NB.   uniformly with support (0,1), system is either
+NB.   100×100-matrix or 150×150-matrix and RHS is either
+NB.   100-vector or 150-vector or 100×150-matrix:
+NB.     ?@$&0 testsv_mt_ 100 150
+NB. - test by random real matrices with elements with
+NB.   limited value's amplitude, system is 150×150-matrix and
+NB.   RHS is either 150-vector or 150×150-matrix:
 NB.     _1 1 0 4 _6 4&gemat_mt_ testsv_mt_ 150 150
-NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testsv_mt_ 150 150
+NB. - test by random complex matrices, system is either
+NB.   200×200-matrix or 150×150-matrix and RHS is either
+NB.   200-vector or 150-vector or 200×150-matrix:
+NB.     (gemat_mt_ j. gemat_mt_) testsv_mt_ 200 150
 NB.
 NB. Notes:
 NB. - nrhs=3 is assumed
 
-testsv=: 1 : 'EMPTY [ ((((u ptmat2_mt_)@# (testptsv3_mt_@; [ testptsv1_mt_@(; {:"1)) ]) [ ((u pomat_mt_)@# (testposv3_mt_@; [ testposv1_mt_@(; {:"1)) ]) [ ((u hemat_mt_)@# (testhesv3_mt_@; [ testhesv1_mt_@(; {:"1)) ]))@u@({. , 3:) [ ((}."1 ((gtpick_mt_@[ (testgtsv3_mt_@; [ testgtsv1_mt_@(; {:"1)) ]) [ testgesv3_mt_@; [ testgesv1_mt_@(; {:"1)) {."1)~ _3:)@u@(+&0 3))^:(=/)'
+testsv=: 1 : 'EMPTY [ (testptsv_mt_@(u@{. ; (u ptmat2_mt_)@{:) [ testposv_mt_@(u@{. ; (u pomat_mt_)@{:) [ testhesv_mt_@(u@{. ; (u hemat_mt_)@{:) [ testgtsv_mt_@(u@{. ; gtpick_mt_@u@{:) [ testgesv_mt_@:(<@u"1))@(,: >./)'

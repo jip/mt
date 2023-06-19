@@ -215,7 +215,7 @@ testmid=: 1 : 0
   (u testqf_mt_   ) y
   (u testtrf_mt_  ) y
   (u testtri_mt_  ) y  NB. square matrices only
-  (u testtrs_mt_  ) y  NB. square matrices only
+  (u testtrs_mt_  ) y
 
   EMPTY
 )
@@ -224,7 +224,7 @@ testhigh=: 1 : 0
   (u testev_mt_   ) y  NB. square matrices only
   (u testexp_mt_  ) y  NB. square matrices only
   (u testpow_mt_  ) y  NB. square matrices only
-  (u testsv_mt_   ) y  NB. square matrices only
+  (u testsv_mt_   ) y
   (u testls_mt_   ) y
   (u testmm_mt_   ) y
 

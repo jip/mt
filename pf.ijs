@@ -559,8 +559,8 @@ NB.            rows, which is defined as the product of
 NB.            (offset+lacptd) elementary reflectors
 NB.   lacptd ≤ nb
 NB.   lwsize ≤ n-offset, the size of pivot window
-NB.   eA     - m×(n+1)-matrix, being A, augmented by zero
-NB.            vector
+NB.   eA     - m×(n+1)-matrix, being A augmented by zero
+NB.            vector:
 NB.              eA -: A ,. 0
 NB.
 NB. Storage layout:
@@ -712,8 +712,8 @@ NB.   iR      -:tru (2 # offset) {. QfR
 NB.   oR      -:tru (2 # offset+lacptd) {. QfR ,. dQfR
 NB.   lacptd ≤ nb
 NB.   lwsize ≤ n-offset, the size of pivot window
-NB.   eA     - (m+1)×n-matrix, being A, augmented by zero
-NB.            vector
+NB.   eA     - (m+1)×n-matrix, being A augmented by zero
+NB.            vector:
 NB.              eA -: A , 0
 NB.
 NB. Storage layout:

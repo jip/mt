@@ -62,8 +62,8 @@ NB.   V     - HRDNB×(n-i)-matrix, the unit upper trapezoidal,
 NB.           the last column contains τ[i:i+HRDNB-1]
 NB.   T     - HRDNB×HRDNB-matrix, the lower triangular
 NB.   H     - HRDNB×HRDNB-matrix, the lower triangular
-NB.   eA    - n×(n+1)-matrix, being A with stitched trash
-NB.           column
+NB.   eA    - n×(n+1)-matrix, being A with trash column
+NB.           stitched
 NB.   A     - n×n-matrix to reduce
 NB.   Q     - (n-i)×(n-i)-matrix, the block reflector,
 NB.             Q = I - V'*T*V
@@ -116,7 +116,7 @@ NB.   V     - (n-i)×HRDNB-matrix, the unit lower trapezoidal,
 NB.           the last row contains τ[i:i+HRDNB-1]
 NB.   T     - HRDNB×HRDNB-matrix, the upper triangular
 NB.   H     - HRDNB×HRDNB-matrix, the upper triangular
-NB.   eA    - (n+1)×n-matrix, being A with appended trash row
+NB.   eA    - (n+1)×n-matrix, being A with trash row appended
 NB.   A     - n×n-matrix to reduce
 NB.   Q     - (n-i)×(n-i)-matrix, the block reflector,
 NB.             Q = I - V*T*V'

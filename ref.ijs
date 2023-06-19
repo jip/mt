@@ -95,7 +95,7 @@ NB.             tau -: iotau { Vtau
 NB.   vapp  - dyad to calculate Τ, is called as:
 NB.             eCupd=. Vtau larxxxxx eC
 NB.   Vtau  - vector V augmented by scalar τ
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   eCupd - an updated eC
 
 larxlcxc=: 1 : '] - [ */ (mp~ +@(0&(m}) * m&{))~'  NB. C - v * ((v * τ)' * C)
@@ -129,7 +129,7 @@ NB.             T=. makeT VTau
 NB.   vapp  - dyad to calculate Τ, is called as:
 NB.             eCupd=. VTau larxbxxxx eC
 NB.   VTau  - matrix V augmented by vector τ
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   eCupd - an updated eC
 
 larxblcxc=: 2 : '] - [ mp (mp~ ct@(0&(m}) mp v))~'   NB. C - V * ((V * Τ)' * C)
@@ -426,7 +426,7 @@ NB.
 NB. Syntax:
 NB.   eCupd=. vtau larfxxxx eC
 NB. where
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   vtau  - vector v augmented by scalar τ
 NB.   eCupd - an updated eC
 NB.   v     - vector with 1 at head (forward direction) or
@@ -485,7 +485,7 @@ NB.
 NB. Syntax:
 NB.   eCupd=. vtau larzxxxx eC
 NB. where
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   vtau  - vector v augmented by scalar τ
 NB.   eCupd - an updated eC
 NB.   v     - vector with 1 at head (backward direction) or
@@ -546,7 +546,7 @@ NB.
 NB. Syntax:
 NB.   eCupd=. VTau larfbxxxx eC
 NB. where
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
 NB.   eCupd - an updated eC
 NB.   V     - unit trapezoidal matrix
@@ -607,7 +607,7 @@ NB.
 NB. Syntax:
 NB.   eCupd=. VTau larzbxxxx eC
 NB. where
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
 NB.   eCupd - an updated eC
 NB.   V     - unit trapezoidal matrix, with 0s in atoms to be

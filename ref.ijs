@@ -96,8 +96,7 @@ NB.   vapp  - dyad to calculate Τ, is called as:
 NB.             eCupd=. Vtau larxxxxx eC
 NB.   Vtau  - vector V augmented by scalar τ
 NB.   eC    - matrix C to update, augmented by trash vector
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 
 larxlcxc=: 1 : '] - [ */ (mp~ +@(0&(m}) * m&{))~'  NB. C - v * ((v * τ)' * C)
 larxlcxr=: 1 : '] - +@(* m&{)@[ */ (0 m} [) mp ]'  NB. C - (τ * v)' * (v * C)
@@ -131,8 +130,7 @@ NB.   vapp  - dyad to calculate Τ, is called as:
 NB.             eCupd=. VTau larxbxxxx eC
 NB.   VTau  - matrix V augmented by vector τ
 NB.   eC    - matrix C to update, augmented by trash vector
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 
 larxblcxc=: 2 : '] - [ mp (mp~ ct@(0&(m}) mp v))~'   NB. C - V * ((V * Τ)' * C)
 larxblcxr=: 2 : '] - ct@(mp~ v)@[ mp (0 m} [) mp ]'  NB. C - (Τ * V)' * (V * C)
@@ -430,8 +428,7 @@ NB.   eCupd=. vtau larfxxxx eC
 NB. where
 NB.   eC    - matrix C to update, augmented by trash vector
 NB.   vtau  - vector v augmented by scalar τ
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 NB.   v     - vector with 1 at head (forward direction) or
 NB.           tail (backward direction)
 NB.
@@ -490,8 +487,7 @@ NB.   eCupd=. vtau larzxxxx eC
 NB. where
 NB.   eC    - matrix C to update, augmented by trash vector
 NB.   vtau  - vector v augmented by scalar τ
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 NB.   v     - vector with 1 at head (backward direction) or
 NB.           tail (forward direction), and 0s in atoms to be
 NB.           ignored
@@ -552,8 +548,7 @@ NB.   eCupd=. VTau larfbxxxx eC
 NB. where
 NB.   eC    - matrix C to update, augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 NB.   V     - unit trapezoidal matrix
 NB.   Tau   - k-vector τ[0:k-1] corresp. to V
 NB.
@@ -614,8 +609,7 @@ NB.   eCupd=. VTau larzbxxxx eC
 NB. where
 NB.   eC    - matrix C to update, augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 NB.   V     - unit trapezoidal matrix, with 0s in atoms to be
 NB.           ignored
 NB.   Tau   - k-vector τ[0:k-1] corresp. to V
@@ -666,11 +660,9 @@ NB.                'Aupd vtau'=. vapp A ; isosubA ; isoy ; isoa
 NB.   z        - vector, source to produce vector vtau
 NB.   A        - m×n-matrix to update, is augmented by trash
 NB.              vector according to larfxxxx
-NB.   Aupd     - m×n-matrix, updated A, being A with subA
-NB.              replaced by subAupd
+NB.   Aupd     - A with subA replaced by subAupd
 NB.   subA     - submatrix of A to apply reflection
-NB.   subAupd  - submatrix of the same shape as subA, the
-NB.              reflected subA
+NB.   subAupd  - subA reflected
 NB.   isosubA  - ISO subA (subAupd) within A (Aupd)
 NB.   isoy     - ISO within subA of vector y which  defines
 NB.              reflector

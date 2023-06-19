@@ -126,8 +126,7 @@ NB.         (ix[i],iy[i]), defines number[s] to rotate
 NB.         (complex or quaternion)
 NB.   cs  - 2-vector of Cayley-Dickson halves (c,s), defines
 NB.         rotating number (complex or quaternion)
-NB.   oxy - array of the same shape as ixy, the rotated
-NB.         number[s]
+NB.   oxy - the same shape as ixy, the rotated number[s]
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   cs (rot -: (qnmul qnconj)~) ixy
@@ -151,11 +150,10 @@ NB.   ixy - 2-vector of Cayley-Dickson halves (ix,iy) or
 NB.         n×2-matrix of laminated Cayley-Dickson halves
 NB.         (ix[i],iy[i]), defines number[s] to rotate
 NB.         (complex or quaternion)
-NB.   cs  - array of the same shape as ixy, 2-vector of
-NB.         Cayley-Dickson halves (c,s) or n×2-matrix of
-NB.         laminated Cayley-Dickson halves (c[i],s[i]),
-NB.         defines rotating number[s] (complex or
-NB.         quaternion)
+NB.   cs  - the same shape as ixy, 2-vector of Cayley-Dickson
+NB.         halves (c,s) or n×2-matrix of laminated
+NB.         Cayley-Dickson halves (c[i],s[i]), defines
+NB.         rotating number[s] (complex or quaternion)
 NB.   oxy - array of the same shape as ixy, the rotated
 NB.         number[s]
 NB.
@@ -184,12 +182,10 @@ NB.               'Aupd cs'=. vapp A ; isosubA ; isofg
 NB.   cs      - 2-vector (c,s), output of lartg, defines
 NB.             rotation matrix
 NB.   A       - m×n-matrix to update
-NB.   Aupd    - m×n-matrix, updated A, being A with subA
-NB.             replaced by subAupd
+NB.   Aupd    - A with subA replaced by subAupd
 NB.   subA    - 2×any-matrix or any×2-matrix, array of
 NB.             2-vectors to apply rotation
-NB.   subAupd - matrix of the same shape as subA, the rotated
-NB.             subA
+NB.   subAupd - subA rotated
 NB.   isosubA - ISO subA (subAupd) within A (Aupd)
 NB.   isofg   - ISO within subA of 2-vector (f,g) which
 NB.             defines rotation

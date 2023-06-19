@@ -74,7 +74,8 @@ NB.   abnrmio -:abnrm ,. abio
 NB.   abnrm   - 2-vector, norms of A and B
 NB.   abio    - 2-vector of integers, defines both necessity
 NB.             and value of scaling for A and B
-NB.   ABupd   - 2×n×n-matrix, scaled and permuted A and B
+NB.   ABupd   - an updated AB, contains scaled and permuted A
+NB.             and B
 NB.   plr     - 2×n-matrix of integers, permutations of A and
 NB.             B, produced by ggbalp
 NB.   hs      - 2-vector of integers, defines submatrices

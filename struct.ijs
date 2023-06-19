@@ -376,7 +376,7 @@ NB.            Aupd=. iso vapp A
 NB.   iso  - ISO subA in the A
 NB.   subA - subarray in the A
 NB.   A    - array
-NB.   Aupd - A with subA being replaced by subAupd
+NB.   Aupd - A with subA replaced by subAupd
 NB.
 NB. Assertions:
 NB.   Aupd -: iso vapp A
@@ -615,8 +615,8 @@ NB.   s    - integer in range [-S,S] or ±∞, optional size of
 NB.          solid part of diagonal, default is +∞ (all
 NB.          elements in forward direction)
 NB.   A    - m×n-matrix to update
-NB.   Aupd - m×n-matrix A with solid part of d-th diagonal
-NB.          being updated by monad u
+NB.   Aupd - A with solid part of d-th diagonal updated by
+NB.          monad u
 NB.   S    ≥ 0, the length of d-th diagonal
 NB.
 NB. TODO:

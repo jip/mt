@@ -817,16 +817,16 @@ NB.   u0test=. u0 testround0
 NB.   u1test=. u1 testround1
 NB. where
 NB.   u0     - predicate monad to test which would fail,
-NB.            is evoked as:
+NB.            is called as:
 NB.              isFailed=. u0 (fnamei , fexti)
 NB.   u1     - predicate monad to test which would succeed,
-NB.            is evoked as:
+NB.            is called as:
 NB.              isSucceed=. u1 fnamei
 NB.   u0test - verb to test files which would fail, is
-NB.            evoked as:
+NB.            called as:
 NB.              'probed failed'=. u0test ((fname0 , fexti) ; (fname1 fexti) ; ...)
 NB.   u1test - verb to test files which would succeed, is
-NB.            evoked as:
+NB.            called as:
 NB.              'probed failed'=. u1test (fname0 ; fname1 ; ...)
 NB.   fnamei - string, a test file's full name with path and
 NB.            without extension

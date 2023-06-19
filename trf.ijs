@@ -1828,12 +1828,13 @@ NB.
 NB. Syntax:
 NB.   vtest=. mkmat testtrf
 NB. where
-NB.   mkmat - monad to generate a matrix; is called as:
-NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
+NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
+NB.             mat=. mkmat (m,n)
+NB.   vtest - monad to test algorithms by matrix composed
+NB.           from mat; is called as:
 NB.             vtest (m,n)
-NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   (m,n) - 2-vector of integers, the shape of mat
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements

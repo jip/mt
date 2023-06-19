@@ -15,8 +15,8 @@ NB. testpotri  Test potrix by Hermitian (symmetric) positive
 NB.            definite matrix
 NB. testpttri  Test pttrix by Hermitian (symmetric) positive
 NB.            definite tridiagonal matrix
-NB. testtri    Adv. to make verb to test xxtrixx by matrix of
-NB.            generator and shape given
+NB. testtri    Adv. to make verb to test xxtrixxxx by matrix
+NB.            of generator and shape given
 NB.
 NB. Version: 0.13.2 2021-06-24
 NB.
@@ -1002,8 +1002,8 @@ NB. ---------------------------------------------------------
 NB. testtri
 NB.
 NB. Description:
-NB.   Adv. to make verb to test triangular inversion
-NB.   algorithms by matrix of generator and shape given
+NB.   Adv. to make verb to test xxtrixxxx by matrix of
+NB.   generator and shape given
 NB.
 NB. Syntax:
 NB.   vtest=. mkmat testtri

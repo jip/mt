@@ -364,12 +364,13 @@ NB.
 NB. Syntax:
 NB.   vtest=. mkmat testls
 NB. where
-NB.   mkmat - monad to generate a matrix; is called as:
-NB.             mat=. mkmat (m,n)
-NB.           it is used to detect mat datatype only
+NB.   mkmat - monad to generate a datatype; is called as:
+NB.             dat=. mkmat 1
+NB.           and is used to detect dat datatype only
 NB.   vtest - monad to test algorithms; is called as:
 NB.             vtest (m,n)
-NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   (m,n) - 2-vector of integers, the shape of matrix to
+NB.           generate
 NB.
 NB. Application:
 NB. - test by random real wide matrices:

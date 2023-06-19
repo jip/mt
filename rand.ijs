@@ -673,7 +673,8 @@ NB.   T2    - n×n-matrix, random Hermitian (symmetric)
 NB.           positive definite tridiagonal, which is defined
 NB.           as:
 NB.             T := K^_1
-NB.   sh    - size or shape, which is either n or (n,n)
+NB.   sh    - size or shape, which is either n or
+NB.           (n,any_number)
 NB.   L     - n×n-matrix, random lower bidiagonal with
 NB.           positive diagonal entries
 NB.   K     - n×n-matrix, random K(rho) generated from rho

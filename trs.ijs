@@ -44,8 +44,8 @@ NB.              positive definite matrix
 NB. testpttrs    Test pttrsxxx by Hermitian (symmetric)
 NB.              positive definite tridiagonal matrix
 NB. testtrtrs    Test trtrsxxx by triangular matrix
-NB. testtrs      Adv. to make verb to test xxtrsxxx by matrix
-NB.              of generator and shape given
+NB. testtrs      Adv. to make verb to test xxtrsxxxxxx by
+NB.              matrix of generator and shape given
 NB.
 NB. Version: 0.13.2 2021-06-24
 NB.
@@ -1217,7 +1217,7 @@ NB. ---------------------------------------------------------
 NB. testtrs
 NB.
 NB. Description:
-NB.   Adv. to make verb to test xxtrsxxx by matrix of
+NB.   Adv. to make verb to test xxtrsxxxxxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:

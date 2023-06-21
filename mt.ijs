@@ -124,7 +124,6 @@ require 'math/mt/quatern'      NB. Quaternions
 require 'math/mt/struct'       NB. Structure handlers
 require 'math/mt/rand'         NB. Random arrays
 require 'math/mt/test'         NB. Test
-require 'math/mt/benchmark'    NB. Benchmark
 
 NB. low-level
 require 'math/mt/basic'        NB. Basic linear algebra operations

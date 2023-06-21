@@ -806,9 +806,6 @@ NB. Syntax:
 NB.   testtrmat sz
 NB. where
 NB.   sz - size or shape, which is either n or (n,any_number)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
 
 testtrmat=: 3 : 0
   (' randu           trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
@@ -835,9 +832,6 @@ NB.   testgemat sh
 NB. where
 NB.   sh  - vector of non-negative integers, the shape of
 NB.         matrix
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
 
 testgemat=: 3 : 0
   ('gemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
@@ -854,9 +848,6 @@ NB. Syntax:
 NB.   testdimat sz
 NB. where
 NB.   sz - size or shape, which is either n or (n,n)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
 
 testdimat=: 3 : 0
   (' gemat           dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
@@ -878,9 +869,6 @@ NB. Syntax:
 NB.   testhemat sz
 NB. where
 NB.   sz - size or shape, which is either n or (n,any_number)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
 
 testhemat=: 3 : 0
   (' randu           hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
@@ -898,9 +886,6 @@ NB. Syntax:
 NB.   testpomat sz
 NB. where
 NB.   sz - size or shape, which is either n or (n,any_number)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
 
 testpomat=: 3 : 0
   (' randu           pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
@@ -918,9 +903,6 @@ NB. Syntax:
 NB.   testptmat sz
 NB. where
 NB.   sz - size or shape, which is either n or (n,any_number)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
 
 testptmat=: 3 : 0
   (' randu           ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
@@ -943,9 +925,6 @@ NB.   testspmat sh
 NB. where
 NB.   sh - vector of non-negative integers, the shape of
 NB.        matrix
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
 
 testspmat=: 3 : 0
   (' randu           spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y

@@ -27,7 +27,6 @@ TODO
 bak.ijs
 bal.ijs
 basic.ijs
-benchmark.ijs
 cond.ijs
 dbg.ijs
 eq.ijs

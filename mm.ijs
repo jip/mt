@@ -41,11 +41,7 @@ NB. 2) MM matrix object may have any rank>1, this extends an
 NB.    original specification
 NB. 3) MM matrix object may have skew-Hermitian symmetry,
 NB.    this extends an original specification
-NB. 4) the following definitions are assumed in the examples
-NB.    below:
-NB.      delimiters=. LF , ' '
-NB.      string=. 'foo bar  baz' , LF , 'qux' , LF2 , 'quux' , LF , ' corge ' , LF , 'flob'
-NB. 5) ±inf and nan aren't still supported in exporting J
+NB. 4) ±inf and nan aren't still supported in exporting J
 NB.    array to MM matrix object, this reduces an original
 NB.    specification
 NB.
@@ -146,122 +142,6 @@ dkey=: 1 : 0
 :
   x ((~. x) { m)/. y
 )
-
-NB. ---------------------------------------------------------
-NB. cut3
-NB.
-NB. Description:
-NB.   Split string by delimiter character from its tail.
-NB.
-NB. Syntax:
-NB.   splitted_string=. cut3 string
-NB.
-NB. Examples:
-NB.    cut3 string
-NB. +----+----+------------------------+
-NB. |foo |ar  |az qux  quux  corge  flo|
-NB. +----+----+------------------------+
-
-cut3=: <;._2
-
-NB. ---------------------------------------------------------
-NB. cut2
-NB.
-NB. Description:
-NB.   Split string by delimiter character.
-NB.
-NB. Syntax:
-NB.   splitted_string=.           cut2 string
-NB.   splitted_string=. delimiter cut2 string
-NB.
-NB. Notes:
-NB. - default delimiter is ' '
-NB. - doesn't drop repeating delimiters
-NB. - monad (cut2) is an inverse of (' '&joinby)
-NB. - dyad (cut2) is an inverse of (joinby)
-NB.
-NB. Examples:
-NB.    cut2 string
-NB. +---+---++--------------+-----+-----+
-NB. |foo|bar||baz qux  quux |corge| flob|
-NB. +---+---++--------------+-----+-----+
-NB.    LF cut2 string
-NB. +------------+---++----+-------+----+
-NB. |foo bar  baz|qux||quux| corge |flob|
-NB. +------------+---++----+-------+----+
-
-cut2=: ' '&$: : (cut3@,~)
-
-NB. ---------------------------------------------------------
-NB. cut
-NB.
-NB. Description:
-NB.   Split string by delimiter character.
-NB.
-NB. Syntax:
-NB.   splitted_string=.           cut string
-NB.   splitted_string=. delimiter cut string
-NB.
-NB. Notes:
-NB. - default delimiter is ' '
-NB. - drops repeating delimiters
-NB. - identic to (cut) verb from the Standard Library
-NB.
-NB. Examples:
-NB.    cut string
-NB. +---+---+--------------+-----+-----+
-NB. |foo|bar|baz qux  quux |corge| flob|
-NB. +---+---+--------------+-----+-----+
-NB.    LF cut string
-NB. +------------+---+----+-------+----+
-NB. |foo bar  baz|qux|quux| corge |flob|
-NB. +------------+---+----+-------+----+
-
-cut=: -.&a:@cut2
-
-NB. ---------------------------------------------------------
-NB. cutl2
-NB.
-NB. Description:
-NB.   Split string by any delimiter character.
-NB.
-NB. Syntax:
-NB.   splitted_string=. delimiters cutl2 string
-NB.
-NB. Notes:
-NB. - like (cut2) verb, but delimiter can be any character
-NB.   from (delimiters) argument
-NB. - like (cutl) verb, but doesn't drop repeating delimiters
-NB.
-NB. Examples:
-NB.    delimiters cutl2 string
-NB. +---+---++---+---++----++-----++----+
-NB. |foo|bar||baz|qux||quux||corge||flob|
-NB. +---+---++---+---++----++-----++----+
-
-cutl2=: ((, {.) (e. cut3 [) ])~
-
-NB. ---------------------------------------------------------
-NB. cutl
-NB.
-NB. Description:
-NB.   Split string by any delimiter character.
-NB.
-NB. Syntax:
-NB.   splitted_string=. delimiters cutl string
-NB.
-NB. Notes:
-NB. - like (cut) verb, but delimiter can be any character
-NB.   from (delimiters) argument
-NB. - drops repeating delimiters
-NB.
-NB. Examples:
-NB.    delimiters cutl string
-NB. +---+---+---+---+----+-----+----+
-NB. |foo|bar|baz|qux|quux|corge|flob|
-NB. +---+---+---+---+----+-----+----+
-
-cutl=: -.&a:@cutl2
 
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -650,9 +530,9 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
-  y=. CRLF cutl_mtmm_ y  NB. cut by spans of CR and LF
+  y=. CRLF cutl_mt_ y  NB. cut by spans of CR and LF
   'line longer than 1024 bytes was detected' assert_mt_ (1024 >: #) S: 0 y
-  header=. cut_mtmm_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
+  header=. cut_mt_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
   y=. (#~ ('%' ~: {.) S: 0) y   NB. remove header and comments
   y=. (#~ a:&~:) dltb L: 0 y    NB. remove empty lines
   'not a Matrix Market exchange format' assert_mt_ 5 = # header

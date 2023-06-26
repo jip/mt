@@ -1635,6 +1635,7 @@ NB. testgetrf
 NB.
 NB. Description:
 NB.   Test:
+NB.   - 128!:10 (built-in)
 NB.   - lud (math/misc addon)
 NB.   - xGETRF (math/lapack2 addon)
 NB.   - getrfxxxx (math/mt addon)
@@ -1657,6 +1658,8 @@ testgetrf=: 3 : 0
   'rcondl rcondu'=. (_. _."_)`(geconi , gecon1)@.(=/@$) y  NB. meaninigful for square matrices only
 
   'norml normu'=. (normi , norm1) y
+
+  ('128!:10'       tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
 
   ('lud_mttmp_'    tmonad ((0&{::)`(ip2P^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
 

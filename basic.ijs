@@ -1272,13 +1272,31 @@ NB.     with (incb=1)
 NB.   - dyadic case simulates BLAS' xTRSV with (incb=1)
 NB. - (alpha=0) means (X -: 0"0 B)
 
-trsmllnn=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {.         y for_i. i.   # y do. z=. z ,      ((i {   y) - (    i       {. ai    ) mp  z) % i { ai=. i {   x end.   z}}
-trsmlltn=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {.         y for_i. i. - # y do. z=. z ,~     ((i {   y) - ((>: i)      }. ai    ) mp  z) % i { ai=. i {"1 x end.   z}}
-trsmllcn=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {.   y=. + y for_i. i. - # y do. z=. z ,~     ((i {   y) - ((>: i)      }. ai    ) mp  z) % i { ai=. i {"1 x end. + z}}
-
-trsmlunn=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {.         y for_i. i. - # y do. z=. z ,~     ((i {   y) - ((>: i)      }. ai    ) mp  z) % i { ai=. i {   x end.   z}}
-trsmlutn=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {.         y for_i. i.   # y do. z=. z ,      ((i {   y) - (    i       {. ai    ) mp  z) % i { ai=. i {"1 x end.   z}}
-trsmlucn=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {.   y=. + y for_i. i.   # y do. z=. z ,      ((i {   y) - (    i       {. ai    ) mp  z) % i { ai=. i {"1 x end. + z}}
+NB. new code below relying on Matrix Divide (%.) is imprecise
+trsmllnn0=: (%.              trlpick_mt_ ) trsm
+trsmllnu0=: (%.              trl1pick_mt_) trsm
+trsmlltn0=: (%.   |:    @    trlpick_mt_ ) trsm
+trsmlltu0=: (%.   |:    @    trl1pick_mt_) trsm
+trsmllcn0=: (%.   ct_mt_@    trlpick_mt_ ) trsm
+trsmllcu0=: (%.   ct_mt_@    trl1pick_mt_) trsm
+trsmlunn0=: (%.              trupick_mt_ ) trsm
+trsmlunu0=: (%.              tru1pick_mt_) trsm
+trsmlutn0=: (%.   |:    @    trupick_mt_ ) trsm
+trsmlutu0=: (%.   |:    @    tru1pick_mt_) trsm
+trsmlucn0=: (%.   ct_mt_@    trupick_mt_ ) trsm
+trsmlucu0=: (%.   ct_mt_@    tru1pick_mt_) trsm
+trsmrlnn0=: (%.&. |:         trlpick_mt_ ) trsm
+trsmrlnu0=: (%.&. |:         trl1pick_mt_) trsm
+trsmrltn0=: (%.&.(|:    `a:) trlpick_mt_ ) trsm
+trsmrltu0=: (%.&.(|:    `a:) trl1pick_mt_) trsm
+trsmrlcn0=: (%.&.(ct_mt_`a:) trlpick_mt_ ) trsm
+trsmrlcu0=: (%.&.(ct_mt_`a:) trl1pick_mt_) trsm
+trsmrunn0=: (%.&. |:         trupick_mt_ ) trsm
+trsmrunu0=: (%.&. |:         tru1pick_mt_) trsm
+trsmrutn0=: (%.&.(|:    `a:) trupick_mt_ ) trsm
+trsmrutu0=: (%.&.(|:    `a:) tru1pick_mt_) trsm
+trsmrucn0=: (%.&.(ct_mt_`a:) trupick_mt_ ) trsm
+trsmrucu0=: (%.&.(ct_mt_`a:) tru1pick_mt_) trsm
 
 trsmrlnn=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {."1       y for_i. i. - c y do. z=. z ,~"1 0 ((i {"1 y) - ((>: i)      }. ai    ) mp~ z) % i { ai=. i {"1 x end.   z}}
 trsmrltn=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {."1       y for_i. i.   c y do. z=. z , "1 0 ((i {"1 y) - (    i       {. ai    ) mp~ z) % i { ai=. i {   x end.   z}}
@@ -1303,6 +1321,60 @@ trsmrlcu=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {."1 y=. + y for_i. i.   c y do.
 trsmrunu=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {."1       y for_i. i.   c y do. z=. z , "1 0  (i {"1 y) - (    i (   [ {. {"1) x) mp~ z                     end.   z}}
 trsmrutu=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {."1       y for_i. i. - c y do. z=. z ,~"1 0  (i {"1 y) - (    i (>:@[ }. {  ) x) mp~ z                     end.   z}}
 trsmrucu=: (1&{:: $: (0&{:: * 2&{::)) : {{z=. 0 {."1 y=. + y for_i. i. - c y do. z=. z ,~"1 0  (i {"1 y) - (    i (>:@[ }. {  ) x) mp~ z                     end. + z}}
+
+NB. fastest versions
+
+NB. J903+:
+NB.   +/@:*"1!.0
+NB.   +/!.0
+
+NB. X=. A trsmxxxx2 B
+trsmllnn2=: {{z=. 0 {.         y for_i. i.   # y do. z=. z ,      ((i {   y) - (    i       {. ai    ) mp  z) % i { ai=. i {   x end.   z}}
+trsmlltn2=: {{z=. 0 {.         y for_i. i. - # y do. z=. z ,~     ((i {   y) - ((>: i)      }. ai    ) mp  z) % i { ai=. i {"1 x end.   z}}
+trsmllcn2=: {{z=. 0 {.   y=. + y for_i. i. - # y do. z=. z ,~     ((i {   y) - ((>: i)      }. ai    ) mp  z) % i { ai=. i {"1 x end. + z}}
+
+trsmlunn2=: {{z=. 0 {.         y for_i. i. - # y do. z=. z ,~     ((i {   y) - ((>: i)      }. ai    ) mp  z) % i { ai=. i {   x end.   z}}
+trsmlutn2=: {{z=. 0 {.         y for_i. i.   # y do. z=. z ,      ((i {   y) - (    i       {. ai    ) mp  z) % i { ai=. i {"1 x end.   z}}
+trsmlucn2=: {{z=. 0 {.   y=. + y for_i. i.   # y do. z=. z ,      ((i {   y) - (    i       {. ai    ) mp  z) % i { ai=. i {"1 x end. + z}}
+
+trsmrlnn2=: {{z=. 0 {."1       y for_i. i. - c y do. z=. z ,~"1 0 ((i {"1 y) - ((>: i)      }. ai    ) mp~ z) % i { ai=. i {"1 x end.   z}}
+trsmrltn2=: {{z=. 0 {."1       y for_i. i.   c y do. z=. z , "1 0 ((i {"1 y) - (    i       {. ai    ) mp~ z) % i { ai=. i {   x end.   z}}
+trsmrlcn2=: {{z=. 0 {."1 y=. + y for_i. i.   c y do. z=. z , "1 0 ((i {"1 y) - (    i       {. ai    ) mp~ z) % i { ai=. i {   x end. + z}}
+
+trsmrunn2=: {{z=. 0 {."1       y for_i. i.   c y do. z=. z , "1 0 ((i {"1 y) - (    i       {. ai    ) mp~ z) % i { ai=. i {"1 x end.   z}}
+trsmrutn2=: {{z=. 0 {."1       y for_i. i. - c y do. z=. z ,~"1 0 ((i {"1 y) - ((>: i)      }. ai    ) mp~ z) % i { ai=. i {   x end.   z}}
+trsmrucn2=: {{z=. 0 {."1 y=. + y for_i. i. - c y do. z=. z ,~"1 0 ((i {"1 y) - ((>: i)      }. ai    ) mp~ z) % i { ai=. i {   x end. + z}}
+
+trsmllnu2=: {{z=. 0 {.         y for_i. i.   # y do. z=. z ,       (i {   y) - (    i (   [ {. {  ) x) mp  z                     end.   z}}
+trsmlltu2=: {{z=. 0 {.         y for_i. i. - # y do. z=. z ,~      (i {   y) - (    i (>:@[ }. {"1) x) mp  z                     end.   z}}
+trsmllcu2=: {{z=. 0 {.   y=. + y for_i. i. - # y do. z=. z ,~      (i {   y) - (    i (>:@[ }. {"1) x) mp  z                     end. + z}}
+
+trsmlunu2=: {{z=. 0 {.         y for_i. i. - # y do. z=. z ,~      (i {   y) - (    i (>:@[ }. {  ) x) mp  z                     end.   z}}
+trsmlutu2=: {{z=. 0 {.         y for_i. i.   # y do. z=. z ,       (i {   y) - (    i (   [ {. {"1) x) mp  z                     end.   z}}
+trsmlucu2=: {{z=. 0 {.   y=. + y for_i. i.   # y do. z=. z ,       (i {   y) - (    i (   [ {. {"1) x) mp  z                     end. + z}}
+
+trsmrlnu2=: {{z=. 0 {."1       y for_i. i. - c y do. z=. z ,~"1 0  (i {"1 y) - (    i (>:@[ }. {"1) x) mp~ z                     end.   z}}
+trsmrltu2=: {{z=. 0 {."1       y for_i. i.   c y do. z=. z , "1 0  (i {"1 y) - (    i (   [ {. {  ) x) mp~ z                     end.   z}}
+trsmrlcu2=: {{z=. 0 {."1 y=. + y for_i. i.   c y do. z=. z , "1 0  (i {"1 y) - (    i (   [ {. {  ) x) mp~ z                     end. + z}}
+
+trsmrunu2=: {{z=. 0 {."1       y for_i. i.   c y do. z=. z , "1 0  (i {"1 y) - (    i (   [ {. {"1) x) mp~ z                     end.   z}}
+trsmrutu2=: {{z=. 0 {."1       y for_i. i. - c y do. z=. z ,~"1 0  (i {"1 y) - (    i (>:@[ }. {  ) x) mp~ z                     end.   z}}
+trsmrucu2=: {{z=. 0 {."1 y=. + y for_i. i. - c y do. z=. z ,~"1 0  (i {"1 y) - (    i (>:@[ }. {  ) x) mp~ z                     end. + z}}
+
+NB. row-wise
+trsmlltn3=: {{z=. 0 {.         y for_i. i. - # y do. 'z y'=. (}:   ((z ,~     ]) ; [ - (    i        {.    ai) */  ]) (i { ai) %~ {:  ) y [ ai=. i { x end.   z}}
+trsmllcn3=: {{z=. 0 {.   y=. + y for_i. i. - # y do. 'z y'=. (}:   ((z ,~     ]) ; [ - (    i        {.    ai) */  ]) (i { ai) %~ {:  ) y [ ai=. i { x end. + z}}
+trsmlutn3=: {{z=. 0 {.         y for_i. i.   # y do. 'z y'=. (}.   ((z ,      ]) ; [ - ((>: i)       }.    ai) */  ]) (i { ai) %~ {.  ) y [ ai=. i { x end.   z}}
+trsmlucn3=: {{z=. 0 {.   y=. + y for_i. i.   # y do. 'z y'=. (}.   ((z ,      ]) ; [ - ((>: i)       }.    ai) */  ]) (i { ai) %~ {.  ) y [ ai=. i { x end. + z}}
+trsmrlnn3=: {{z=. 0 {."1       y for_i. i. - c y do. 'z y'=. (}:"1 ((z ,~"1 0 ]) ; [ - (    i        {.    ai) */~ ]) (i { ai) %~ {:"1) y [ ai=. i { x end.   z}}
+trsmrunn3=: {{z=. 0 {."1       y for_i. i.   c y do. 'z y'=. (}."1 ((z , "1 0 ]) ; [ - ((>: i)       }.    ai) */~ ]) (i { ai) %~ {."1) y [ ai=. i { x end.   z}}
+
+trsmlltu3=: {{z=. 0 {.         y for_i. i. - # y do. 'z y'=. (}:   ((z ,~     ]) ; [ - (    i  (   [ {. {) x ) */  ])             {:  ) y              end.   z}}
+trsmllcu3=: {{z=. 0 {.   y=. + y for_i. i. - # y do. 'z y'=. (}:   ((z ,~     ]) ; [ - (    i  (   [ {. {) x ) */  ])             {:  ) y              end. + z}}
+trsmlutu3=: {{z=. 0 {.         y for_i. i.   # y do. 'z y'=. (}.   ((z ,      ]) ; [ - (    i  (>:@[ }. {) x ) */  ])             {.  ) y              end.   z}}
+trsmlucu3=: {{z=. 0 {.   y=. + y for_i. i.   # y do. 'z y'=. (}.   ((z ,      ]) ; [ - (    i  (>:@[ }. {) x ) */  ])             {.  ) y              end. + z}}
+trsmrlnu3=: {{z=. 0 {."1       y for_i. i. - c y do. 'z y'=. (}:"1 ((z ,~"1 0 ]) ; [ - (    i  (   [ {. {) x ) */~ ])             {:"1) y              end.   z}}
+trsmrunu3=: {{z=. 0 {."1       y for_i. i.   c y do. 'z y'=. (}."1 ((z , "1 0 ]) ; [ - (    i  (>:@[ }. {) x ) */~ ])             {."1) y              end.   z}}
 
 NB. =========================================================
 NB. Test suite
@@ -2224,6 +2296,31 @@ testbasictrsm=: 3 : 0
   NB. - we use RHS vectors bm and bn here as solution vectors
   NB.   xm and xn for (2{::x), RHS is computed explicitely
   NB.   and is supplied in (1{::x)
+  ('trsmllnn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trlpick ) t02v))) Lm  ; (Lm   mp       bm ) ; bm ; Am ; norm1Lm
+  ('trsmllnu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trl1pick) t02v))) L1m ; (L1m  mp       bm ) ; bm ; Am ; norm1L1m
+  ('trsmlltn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trlpick ) t02v))) Lm  ; (Lm  (mp~ ct)~ bm ) ; bm ; Am ; normiLm
+  ('trsmlltu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trl1pick) t02v))) L1m ; (L1m (mp~ ct)~ bm ) ; bm ; Am ; normiL1m
+  ('trsmllcn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trlpick ) t02v))) Lm  ; (Lm  (mp~ |:)~ bm ) ; bm ; Am ; normiLm
+  ('trsmllcu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trl1pick) t02v))) L1m ; (L1m (mp~ |:)~ bm ) ; bm ; Am ; normiL1m
+  ('trsmlunn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trupick ) t02v))) Um  ; (Um   mp       bm ) ; bm ; Am ; norm1Um
+  ('trsmlunu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    tru1pick) t02v))) U1m ; (U1m  mp       bm ) ; bm ; Am ; norm1U1m
+  ('trsmlutn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trupick ) t02v))) Um  ; (Um  (mp~ ct)~ bm ) ; bm ; Am ; normiUm
+  ('trsmlutu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@tru1pick) t02v))) U1m ; (U1m (mp~ ct)~ bm ) ; bm ; Am ; normiU1m
+  ('trsmlucn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trupick ) t02v))) Um  ; (Um  (mp~ |:)~ bm ) ; bm ; Am ; normiUm
+  ('trsmlucu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@tru1pick) t02v))) U1m ; (U1m (mp~ |:)~ bm ) ; bm ; Am ; normiU1m
+  ('trsmrlnn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trlpick ) t02v))) Ln  ; (bn   mp       Ln ) ; bn ; An ; normiLn
+  ('trsmrlnu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trl1pick) t02v))) L1n ; (bn   mp       L1n) ; bn ; An ; normiL1n
+  ('trsmrltn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trlpick ) t02v))) Ln  ; (bn  (mp  ct)  Ln ) ; bn ; An ; norm1Ln
+  ('trsmrltu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trl1pick) t02v))) L1n ; (bn  (mp  ct)  L1n) ; bn ; An ; norm1L1n
+  ('trsmrlcn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trlpick ) t02v))) Ln  ; (bn  (mp  |:)  Ln ) ; bn ; An ; norm1Ln
+  ('trsmrlcu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trl1pick) t02v))) L1n ; (bn  (mp  |:)  L1n) ; bn ; An ; norm1L1n
+  ('trsmrunn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trupick ) t02v))) Un  ; (bn   mp       Un ) ; bn ; An ; normiUn
+  ('trsmrunu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     tru1pick) t02v))) U1n ; (bn   mp       U1n) ; bn ; An ; normiU1n
+  ('trsmrutn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trupick ) t02v))) Un  ; (bn  (mp  ct)  Un ) ; bn ; An ; norm1Un
+  ('trsmrutu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@tru1pick) t02v))) U1n ; (bn  (mp  ct)  U1n) ; bn ; An ; norm1U1n
+  ('trsmrucn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trupick ) t02v))) Un  ; (bn  (mp  |:)  Un ) ; bn ; An ; norm1Un
+  ('trsmrucu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@tru1pick) t02v))) U1n ; (bn  (mp  |:)  U1n) ; bn ; An ; norm1U1n
+
   ('trsmllnn'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trlpick ) t02v))) Lm  ; (Lm   mp       bm ) ; bm ; Am ; norm1Lm
   ('trsmllnu'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trl1pick) t02v))) L1m ; (L1m  mp       bm ) ; bm ; Am ; norm1L1m
   ('trsmlltn'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trlpick ) t02v))) Lm  ; (Lm  (mp~ ct)~ bm ) ; bm ; Am ; normiLm
@@ -2249,11 +2346,74 @@ testbasictrsm=: 3 : 0
   ('trsmrucn'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trupick ) t02v))) Un  ; (bn  (mp  |:)  Un ) ; bn ; An ; norm1Un
   ('trsmrucu'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@tru1pick) t02v))) U1n ; (bn  (mp  |:)  U1n) ; bn ; An ; norm1U1n
 
+  ('trsmllnn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trlpick ) t02v))) Lm  ; (Lm   mp       bm ) ; bm ; Am ; norm1Lm
+  ('trsmllnu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trl1pick) t02v))) L1m ; (L1m  mp       bm ) ; bm ; Am ; norm1L1m
+  ('trsmlltn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trlpick ) t02v))) Lm  ; (Lm  (mp~ ct)~ bm ) ; bm ; Am ; normiLm
+  ('trsmlltu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trl1pick) t02v))) L1m ; (L1m (mp~ ct)~ bm ) ; bm ; Am ; normiL1m
+  ('trsmllcn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trlpick ) t02v))) Lm  ; (Lm  (mp~ |:)~ bm ) ; bm ; Am ; normiLm
+  ('trsmllcu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trl1pick) t02v))) L1m ; (L1m (mp~ |:)~ bm ) ; bm ; Am ; normiL1m
+  ('trsmlunn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trupick ) t02v))) Um  ; (Um   mp       bm ) ; bm ; Am ; norm1Um
+  ('trsmlunu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    tru1pick) t02v))) U1m ; (U1m  mp       bm ) ; bm ; Am ; norm1U1m
+  ('trsmlutn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trupick ) t02v))) Um  ; (Um  (mp~ ct)~ bm ) ; bm ; Am ; normiUm
+  ('trsmlutu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@tru1pick) t02v))) U1m ; (U1m (mp~ ct)~ bm ) ; bm ; Am ; normiU1m
+  ('trsmlucn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trupick ) t02v))) Um  ; (Um  (mp~ |:)~ bm ) ; bm ; Am ; normiUm
+  ('trsmlucu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@tru1pick) t02v))) U1m ; (U1m (mp~ |:)~ bm ) ; bm ; Am ; normiU1m
+  ('trsmrlnn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trlpick ) t02v))) Ln  ; (bn   mp       Ln ) ; bn ; An ; normiLn
+  ('trsmrlnu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trl1pick) t02v))) L1n ; (bn   mp       L1n) ; bn ; An ; normiL1n
+  ('trsmrltn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trlpick ) t02v))) Ln  ; (bn  (mp  ct)  Ln ) ; bn ; An ; norm1Ln
+  ('trsmrltu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trl1pick) t02v))) L1n ; (bn  (mp  ct)  L1n) ; bn ; An ; norm1L1n
+  ('trsmrlcn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trlpick ) t02v))) Ln  ; (bn  (mp  |:)  Ln ) ; bn ; An ; norm1Ln
+  ('trsmrlcu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trl1pick) t02v))) L1n ; (bn  (mp  |:)  L1n) ; bn ; An ; norm1L1n
+  ('trsmrunn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trupick ) t02v))) Un  ; (bn   mp       Un ) ; bn ; An ; normiUn
+  ('trsmrunu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     tru1pick) t02v))) U1n ; (bn   mp       U1n) ; bn ; An ; normiU1n
+  ('trsmrutn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trupick ) t02v))) Un  ; (bn  (mp  ct)  Un ) ; bn ; An ; norm1Un
+  ('trsmrutu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@tru1pick) t02v))) U1n ; (bn  (mp  ct)  U1n) ; bn ; An ; norm1U1n
+  ('trsmrucn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trupick ) t02v))) Un  ; (bn  (mp  |:)  Un ) ; bn ; An ; norm1Un
+  ('trsmrucu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@tru1pick) t02v))) U1n ; (bn  (mp  |:)  U1n) ; bn ; An ; norm1U1n
+
+  ('trsmlltn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trlpick ) t02v))) Lm  ; (Lm  (mp~ ct)~ bm ) ; bm ; Am ; normiLm
+  ('trsmlltu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trl1pick) t02v))) L1m ; (L1m (mp~ ct)~ bm ) ; bm ; Am ; normiL1m
+  ('trsmllcn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trlpick ) t02v))) Lm  ; (Lm  (mp~ |:)~ bm ) ; bm ; Am ; normiLm
+  ('trsmllcu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trl1pick) t02v))) L1m ; (L1m (mp~ |:)~ bm ) ; bm ; Am ; normiL1m
+  ('trsmlutn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trupick ) t02v))) Um  ; (Um  (mp~ ct)~ bm ) ; bm ; Am ; normiUm
+  ('trsmlutu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@tru1pick) t02v))) U1m ; (U1m (mp~ ct)~ bm ) ; bm ; Am ; normiU1m
+  ('trsmlucn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trupick ) t02v))) Um  ; (Um  (mp~ |:)~ bm ) ; bm ; Am ; normiUm
+  ('trsmlucu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@tru1pick) t02v))) U1m ; (U1m (mp~ |:)~ bm ) ; bm ; Am ; normiU1m
+  ('trsmrlnn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trlpick ) t02v))) Ln  ; (bn   mp       Ln ) ; bn ; An ; normiLn
+  ('trsmrlnu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trl1pick) t02v))) L1n ; (bn   mp       L1n) ; bn ; An ; normiL1n
+  ('trsmrunn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trupick ) t02v))) Un  ; (bn   mp       Un ) ; bn ; An ; normiUn
+  ('trsmrunu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     tru1pick) t02v))) U1n ; (bn   mp       U1n) ; bn ; An ; normiU1n
+
   NB. dyadic trsmxxxx, 2-rank B and X
   NB. notes:
   NB. - we use RHS matrix B here as solution vector X for
   NB.   (2{::x), RHS is computed explicitely and is supplied
   NB.   in (1{::x)
+  ('trsmllnn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trlpick ) t02m norm1tc))) Lm  ; (Lm   mp       B ) ; B  ; Am ; norm1Lm
+  ('trsmllnu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trl1pick) t02m norm1tc))) L1m ; (L1m  mp       B ) ; B  ; Am ; norm1L1m
+  ('trsmlltn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ ct)~ B ) ; B  ; Am ; normiLm
+  ('trsmlltu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ ct)~ B ) ; B  ; Am ; normiL1m
+  ('trsmllcn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ |:)~ B ) ; B  ; Am ; normiLm
+  ('trsmllcu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ |:)~ B ) ; B  ; Am ; normiL1m
+  ('trsmlunn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trupick ) t02m norm1tc))) Um  ; (Um   mp       B ) ; B  ; Am ; norm1Um
+  ('trsmlunu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    tru1pick) t02m norm1tc))) U1m ; (U1m  mp       B ) ; B  ; Am ; norm1U1m
+  ('trsmlutn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ ct)~ B ) ; B  ; Am ; normiUm
+  ('trsmlutu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ ct)~ B ) ; B  ; Am ; normiU1m
+  ('trsmlucn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ |:)~ B ) ; B  ; Am ; normiUm
+  ('trsmlucu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ |:)~ B ) ; B  ; Am ; normiU1m
+  ('trsmrlnn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trlpick ) t02m normitc))) Ln  ; (B   mp       Ln ) ; B  ; An ; normiLn
+  ('trsmrlnu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trl1pick) t02m normitc))) L1n ; (B   mp       L1n) ; B  ; An ; normiL1n
+  ('trsmrltn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trlpick ) t02m normitc))) Ln  ; (B  (mp  ct)  Ln ) ; B  ; An ; norm1Ln
+  ('trsmrltu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trl1pick) t02m normitc))) L1n ; (B  (mp  ct)  L1n) ; B  ; An ; norm1L1n
+  ('trsmrlcn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trlpick ) t02m normitc))) Ln  ; (B  (mp  |:)  Ln ) ; B  ; An ; norm1Ln
+  ('trsmrlcu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trl1pick) t02m normitc))) L1n ; (B  (mp  |:)  L1n) ; B  ; An ; norm1L1n
+  ('trsmrunn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trupick ) t02m normitc))) Un  ; (B   mp       Un ) ; B  ; An ; normiUn
+  ('trsmrunu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     tru1pick) t02m normitc))) U1n ; (B   mp       U1n) ; B  ; An ; normiU1n
+  ('trsmrutn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trupick ) t02m normitc))) Un  ; (B  (mp  ct)  Un ) ; B  ; An ; norm1Un
+  ('trsmrutu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@tru1pick) t02m normitc))) U1n ; (B  (mp  ct)  U1n) ; B  ; An ; norm1U1n
+  ('trsmrucn0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trupick ) t02m normitc))) Un  ; (B  (mp  |:)  Un ) ; B  ; An ; norm1Un
+  ('trsmrucu0'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@tru1pick) t02m normitc))) U1n ; (B  (mp  |:)  U1n) ; B  ; An ; norm1U1n
+
   ('trsmllnn'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trlpick ) t02m norm1tc))) Lm  ; (Lm   mp       B ) ; B  ; Am ; norm1Lm
   ('trsmllnu'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trl1pick) t02m norm1tc))) L1m ; (L1m  mp       B ) ; B  ; Am ; norm1L1m
   ('trsmlltn'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ ct)~ B ) ; B  ; Am ; normiLm
@@ -2278,6 +2438,44 @@ testbasictrsm=: 3 : 0
   ('trsmrutu'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@tru1pick) t02m normitc))) U1n ; (B  (mp  ct)  U1n) ; B  ; An ; norm1U1n
   ('trsmrucn'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trupick ) t02m normitc))) Un  ; (B  (mp  |:)  Un ) ; B  ; An ; norm1Un
   ('trsmrucu'         tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@tru1pick) t02m normitc))) U1n ; (B  (mp  |:)  U1n) ; B  ; An ; norm1U1n
+
+  ('trsmllnn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trlpick ) t02m norm1tc))) Lm  ; (Lm   mp       B ) ; B  ; Am ; norm1Lm
+  ('trsmllnu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trl1pick) t02m norm1tc))) L1m ; (L1m  mp       B ) ; B  ; Am ; norm1L1m
+  ('trsmlltn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ ct)~ B ) ; B  ; Am ; normiLm
+  ('trsmlltu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ ct)~ B ) ; B  ; Am ; normiL1m
+  ('trsmllcn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ |:)~ B ) ; B  ; Am ; normiLm
+  ('trsmllcu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ |:)~ B ) ; B  ; Am ; normiL1m
+  ('trsmlunn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    trupick ) t02m norm1tc))) Um  ; (Um   mp       B ) ; B  ; Am ; norm1Um
+  ('trsmlunu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~    tru1pick) t02m norm1tc))) U1m ; (U1m  mp       B ) ; B  ; Am ; norm1U1m
+  ('trsmlutn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ ct)~ B ) ; B  ; Am ; normiUm
+  ('trsmlutu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ ct)~ B ) ; B  ; Am ; normiU1m
+  ('trsmlucn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ |:)~ B ) ; B  ; Am ; normiUm
+  ('trsmlucu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ |:)~ B ) ; B  ; Am ; normiU1m
+  ('trsmrlnn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trlpick ) t02m normitc))) Ln  ; (B   mp       Ln ) ; B  ; An ; normiLn
+  ('trsmrlnu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trl1pick) t02m normitc))) L1n ; (B   mp       L1n) ; B  ; An ; normiL1n
+  ('trsmrltn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trlpick ) t02m normitc))) Ln  ; (B  (mp  ct)  Ln ) ; B  ; An ; norm1Ln
+  ('trsmrltu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trl1pick) t02m normitc))) L1n ; (B  (mp  ct)  L1n) ; B  ; An ; norm1L1n
+  ('trsmrlcn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trlpick ) t02m normitc))) Ln  ; (B  (mp  |:)  Ln ) ; B  ; An ; norm1Ln
+  ('trsmrlcu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trl1pick) t02m normitc))) L1n ; (B  (mp  |:)  L1n) ; B  ; An ; norm1L1n
+  ('trsmrunn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trupick ) t02m normitc))) Un  ; (B   mp       Un ) ; B  ; An ; normiUn
+  ('trsmrunu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     tru1pick) t02m normitc))) U1n ; (B   mp       U1n) ; B  ; An ; normiU1n
+  ('trsmrutn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@trupick ) t02m normitc))) Un  ; (B  (mp  ct)  Un ) ; B  ; An ; norm1Un
+  ('trsmrutu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  |:@tru1pick) t02m normitc))) U1n ; (B  (mp  ct)  U1n) ; B  ; An ; norm1U1n
+  ('trsmrucn2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@trupick ) t02m normitc))) Un  ; (B  (mp  |:)  Un ) ; B  ; An ; norm1Un
+  ('trsmrucu2'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp  ct@tru1pick) t02m normitc))) U1n ; (B  (mp  |:)  U1n) ; B  ; An ; norm1U1n
+
+  ('trsmlltn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ ct)~ B ) ; B  ; Am ; normiLm
+  ('trsmlltu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ ct)~ B ) ; B  ; Am ; normiL1m
+  ('trsmllcn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ |:)~ B ) ; B  ; Am ; normiLm
+  ('trsmllcu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ |:)~ B ) ; B  ; Am ; normiL1m
+  ('trsmlutn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ ct)~ B ) ; B  ; Am ; normiUm
+  ('trsmlutu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ |:@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ ct)~ B ) ; B  ; Am ; normiU1m
+  ('trsmlucn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ |:)~ B ) ; B  ; Am ; normiUm
+  ('trsmlucu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp~ ct@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ |:)~ B ) ; B  ; Am ; normiU1m
+  ('trsmrlnn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trlpick ) t02m normitc))) Ln  ; (B   mp       Ln ) ; B  ; An ; normiLn
+  ('trsmrlnu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trl1pick) t02m normitc))) L1n ; (B   mp       L1n) ; B  ; An ; normiL1n
+  ('trsmrunn3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     trupick ) t02m normitc))) Un  ; (B   mp       Un ) ; B  ; An ; normiUn
+  ('trsmrunu3'        tdyad  ((3&{::)`(1&{::)`]`(_."_)`(_."_)`((mp     tru1pick) t02m normitc))) U1n ; (B   mp       U1n) ; B  ; An ; normiU1n
 
   EMPTY
 )

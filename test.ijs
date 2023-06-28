@@ -2339,8 +2339,8 @@ NB.   incx    ≠ 0, the increment for the elements of x
 NB.   A       - n×n-matrix with real diagonal
 NB.   Aapprox - the same shape as A, computed by the verb being
 NB.             tested, with the lower triangle (if
-NB.             xxxrl_mttst_ was tested) or upper triangle
-NB.             (if xxxru_mttst_ was tested) approximates
+NB.             xxxrl_mtbla_ was tested) or upper triangle
+NB.             (if xxxru_mtbla_ was tested) approximates
 NB.             Aexact, and the rest elements are not changed
 NB.             and match A
 NB.   berr    ≥ 0, the relative backward error for Aapprox
@@ -2455,8 +2455,8 @@ NB.   incy    ≠ 0, the increment for the elements of y
 NB.   A       - n×n-matrix with real diagonal
 NB.   Aapprox - the same shape as A, computed by the verb being
 NB.             tested, with the lower triangle (if
-NB.             xxxr2l_mttst_ was tested) or upper triangle
-NB.             (if xxxr2u_mttst_ was tested) approximates
+NB.             xxxr2l_mtbla_ was tested) or upper triangle
+NB.             (if xxxr2u_mtbla_ was tested) approximates
 NB.             Aexact, and the rest elements are not changed
 NB.             and match A
 NB.   berr    ≥ 0, the relative backward error for Aapprox

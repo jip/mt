@@ -234,7 +234,7 @@ NB.           called as:
 NB.             trash=. (mkmat atest) (m,n)
 NB.   rx    - string, optional, a regular expression to
 NB.           filter out sentences, default is:
-NB.             ^((?!_mt(mm|t(mp|st))_\b|\b128!:([01]|10)\b|%\.|\+\/ \. ?\*).)+
+NB.             ^((?!_mt(mm|tmp|lap|fla|bl[ai])_\b|\b128!:([01]|10)\b|%\.|\+\/ \. ?\*).)+
 NB.           meaning: benchmark all sentences except ones
 NB.           listed below:
 NB.             128!:0
@@ -243,8 +243,13 @@ NB.             128!:10
 NB.             +/ .*
 NB.             +/ . *
 NB.             %.
-NB.             with name which contains either _mtmm_ or
-NB.               _mttmp_ or _mttst_
+NB.             with name which contains any of the next:
+NB.               _mtmm_
+NB.               _mttmp_
+NB.               _mtlap_
+NB.               _mtfla_
+NB.               _mtbla_
+NB.               _mtbli_
 NB.   (m,n) - a shape of test matrices to be used by tests
 NB.   d     > 0, a total duration (in seconds) of tested
 NB.           sentences execution time
@@ -271,7 +276,7 @@ NB.   54321 654321 7654321 87654321 987654321
 NB.      exit ''
 
 benchmark=: 1 : 0
-  '^((?!_mt(mm|t(mp|st))_\b|\b128!:([01]|10)\b|%\.|\+\/ \. ?\*).)+' u benchmark_mt_ y
+  '^((?!_mt(mm|tmp|lap|fla|bl[ai])_\b|\b128!:([01]|10)\b|%\.|\+\/ \. ?\*).)+' u benchmark_mt_ y
 :
   bkp=. TESTLOG_mt_
   TESTLOG_mt_=: ''

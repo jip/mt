@@ -1,7 +1,6 @@
-NB. Interface to BLAS
+NB. API definitions
 NB.
-NB. xxxxxcd   Cover verbs to call BLAS subroutine or function
-NB. basicxxx  Utilities to either check or modify argument
+NB. xxxxxcd  Cover verbs to call BLAS subroutine or function
 NB.
 NB. Version: 0.14.0 2023-03-21
 NB.
@@ -25,18 +24,22 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
+NB. =========================================================
+NB. Concepts
+NB.
+NB. Conventions:
+NB. 1) LIB_mtbla_ global noun must exist
+
+NB. =========================================================
+NB. Configuration
+
 coclass 'mtbla'
 coinsert 'mt'
 
 NB. =========================================================
-NB. Includes
-
-require 'math/lapack2'
-
-NB. =========================================================
 NB. Local definitions
 
-lib=. dquote liblapack_jlapack2_
+lib=. dquote LIB
 ifw=. IFWIN # '+'
 
 NB. =========================================================
@@ -180,33 +183,7 @@ NB. SUBROUTINE _TRSM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA, B, LDB )
 dtrsmcd=: (lib,' dtrsm_ ',ifw,' n &c &c &c &c &i &i &d &d &i *d &i')&cd
 ztrsmcd=: (lib,' ztrsm_ ',ifw,' n &c &c &c &c &i &i &j &j &i *j &i')&cd
 
+NB. =========================================================
+NB. Clean-up
+
 erase 'lib ifw'
-
-NB. ---------------------------------------------------------
-NB. Utilities
-
-NB. check
-NB. - ranks
-basiccr0=: 0 2 2         -: #@$S:0
-basiccr1=: 2 1 0         -: #@$S:0
-basiccr2=: 0 1 0 2       -: #@$S:0
-basiccr3=: 0 2 0 2       -: #@$S:0
-basiccr4=: 0 2 2 0 2     -: #@$S:0
-basiccr5=: 0 1 0 1 0 2   -: #@$S:0
-basiccr6=: 0 2 1 0 0 1 0 -: #@$S:0
-NB. - shape
-basiccs0=: issquare_jlapack2_@(0&{::)
-basiccs1=: issquare_jlapack2_@(1&{::)
-basiccs3=: issquare_jlapack2_@(3&{::)
-basiccs4=: issquare_jlapack2_@(4&{::)
-basiccs5=: issquare_jlapack2_@(5&{::)
-NB. - compare shapes
-basiccmp=: -:/@($L:0)@(1 2&{)
-
-NB. modify
-NB. - conjugate under ISO specified
-basiccj0=: 1      &(+&.> upd)
-basiccj1=: 0 1 3  &(+&.> upd)
-basiccj2=: 0 2 4 5&(+&.> upd)
-NB. - swap elements
-basicswp=: (< 1 2)&C.

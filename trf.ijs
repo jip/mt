@@ -70,7 +70,7 @@ NB.               Hermitian (symmetric), the bottom right
 NB.               part of A
 NB.   lti       - (n-i)-vector, which is defined as:
 NB.                 lti=. ti 0} li
-NB.   t0i       - i-vector, float, leading elements of main
+NB.   t0i       - i-vector, real, leading elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i,n-1))-vector, leading elements
 NB.               of subdiagonal of T
@@ -82,7 +82,7 @@ NB.               strict upper triangle of subH00^H, and
 NB.               subA11upd (see layout 1 below)
 NB.   lto       - max(0,n-i-TRFNB)-vector, aimed to be lti at
 NB.               the next call from hetrfpl
-NB.   t0o       - min(n,i+TRFNB)-vector, float, leading
+NB.   t0o       - min(n,i+TRFNB)-vector, real, leading
 NB.               elements of main diagonal of T
 NB.   t1o       - min(n-1,i+TRFNB)-vector, leading elements
 NB.               of subdiagonal of T
@@ -317,7 +317,7 @@ NB.               Hermitian (symmetric), the top left part of
 NB.               A
 NB.   uti       - (n+i+1)-vector, which is defined as:
 NB.                 uti=. ti _1} ui
-NB.   t0i       - (i+1)-vector, float, tail elements of main
+NB.   t0i       - (i+1)-vector, real, tail elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i+1,n-1))-vector, tail elements
 NB.               of superdiagonal of T
@@ -329,7 +329,7 @@ NB.               strict lower triangle of subH11^H, and
 NB.               subA00upd (see layout 1 below)
 NB.   uto       - max(0,n+i+1-TRFNB)-vector, aimed to be uti
 NB.               at the next call from hetrfpu
-NB.   t0o       - min(n,i+1+TRFNB)-vector, float, tail
+NB.   t0o       - min(n,i+1+TRFNB)-vector, real, tail
 NB.               elements of main diagonal of T
 NB.   t1o       - min(n-1,i+1+TRFNB)-vector, tail elements of
 NB.               superdiagonal of T

@@ -36,7 +36,7 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. Signum of float/complex/quaternion, monad, sgn(0)=1
+NB. Signum of real/complex/quaternion, monad, sgn(0)=1
 sgn=: (1:^:(0&(=!.0))@(*!.0))`(1 0"_^:(0 0&(-:!.0))@qnsign)@.(2=#)
 
 NB. =========================================================

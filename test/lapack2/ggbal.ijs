@@ -19,11 +19,11 @@ NB.   ilo       ∈ [1,max(1,ihi)], IO starting row and column,
 NB.               1-based
 NB.   ihi       ∈ [min(ilo,n),n], IO ending row and column,
 NB.               1-based
-NB.   lscale    - n-vector, float, details of the
-NB.               permutations and scaling factors applied
+NB.   lscale    - n-vector, real, details of the permutations
+NB.               and scaling factors applied
 NB.               to the left side of A and B
-NB.   rscale    - n-vector, float, details of the
-NB.               permutations and scaling factors applied
+NB.   rscale    - n-vector, real, details of the permutations
+NB.               and scaling factors applied
 NB.               to the right side of A and B
 NB.   n         ≥ 0, the size of A, B, Abal, Bbal, lscale and
 NB.               rscale

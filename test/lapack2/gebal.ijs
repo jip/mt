@@ -18,7 +18,7 @@ NB.   ilo   ∈ [1,max(1,ihi)], IO starting row and column,
 NB.           1-based
 NB.   ihi   ∈ [min(ilo,n),n], IO ending row and column,
 NB.           1-based
-NB.   scale - n-vector, float, details of the permutations
+NB.   scale - n-vector, real, details of the permutations
 NB.           and scaling factors applied to A
 NB.   n     ≥ 0, the size of A, Abal and scale
 NB.

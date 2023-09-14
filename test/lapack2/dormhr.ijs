@@ -20,12 +20,12 @@ NB.   ilo   ∈ [1,max(1,ihi)], IO starting row and column,
 NB.           1-based
 NB.   ihi   ∈ [min(ilo,s),s], IO ending row and column,
 NB.           1-based
-NB.   A     - s×s-matrix, contains Qf
-NB.   tau   - (s-1)-vector, scalar factors of elementary
-NB.           reflectors as returned by DGEHRD
+NB.   A     - s×s-matrix, real, contains Qf
+NB.   tau   - (s-1)-vector, real, scalar factors of
+NB.           elementary reflectors as returned by DGEHRD
 NB.   C     - m×n-matrix, real, the input to be multiplied by
 NB.           op(Q)
-NB.   B     - m×n-matrix, the result of multiplication:
+NB.   B     - m×n-matrix, real, the result of multiplication:
 NB.             Q   * C    if side='L' and trans='N'
 NB.             Q^T * C    if side='L' and trans='T'
 NB.             C   * Q    if side='R' and trans='N'

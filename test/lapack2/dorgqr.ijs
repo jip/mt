@@ -7,12 +7,12 @@ NB.
 NB. Syntax:
 NB.   Q=. dorgqr A ; tau
 NB. where
-NB.   A   - m×n-matrix, contains Qf
-NB.   tau - k-vector, scalar factors of elementary
+NB.   A   - m×n-matrix, real, contains Qf
+NB.   tau - k-vector, real, scalar factors of elementary
 NB.         reflectors as returned by DGEQRF
-NB.   Q   - m×n-matrix with orthonormal columns, which is
-NB.         defined as the first n columns of the product of
-NB.         k elementary reflectors H(i) of order m:
+NB.   Q   - m×n-matrix, real, with orthonormal columns, which
+NB.         is defined as the first n columns of the product
+NB.         of k elementary reflectors H(i) of order m:
 NB.           Q = Π{H(i),i=0:k-1}
 NB.           H(i) ≡ H(u(i),τ(i)) := I - u(i) * τ(i) * u(i)'
 NB.   Qf  - m×n-matrix, unit lower trapezoidal (unit diagonal

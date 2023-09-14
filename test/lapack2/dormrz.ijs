@@ -19,12 +19,12 @@ NB.             'T' - op(Z) := Z^T  (transpose)
 NB.   l     ∈ [0,s], the number of columns of the matrix A
 NB.           containing the meaningful part of the
 NB.           Householder reflectors
-NB.   A     - k×s-matrix, contains Zf
-NB.   tau   - k-vector, scalar factors of elementary
+NB.   A     - k×s-matrix, real, contains Zf
+NB.   tau   - k-vector, real, scalar factors of elementary
 NB.           reflectors as returned by DTZRZF
 NB.   C     - m×n-matrix, real, the input to be multiplied by
 NB.           op(Z)
-NB.   B     - m×n-matrix, the result of multiplication:
+NB.   B     - m×n-matrix, real, the result of multiplication:
 NB.             Z   * C    if side='L' and trans='N'
 NB.             Z^T * C    if side='L' and trans='T'
 NB.             C   * Z    if side='R' and trans='N'

@@ -7,10 +7,10 @@ NB.
 NB. Syntax:
 NB.   Q=. dorgrq A ; tau
 NB. where
-NB.   A   - m×n-matrix, contains Qf
-NB.   tau - k-vector, scalar factors of elementary
+NB.   A   - m×n-matrix, real, contains Qf
+NB.   tau - k-vector, real, scalar factors of elementary
 NB.         reflectors as returned by DGERQF
-NB.   Q   - m×n-matrix with orthonormal rows, which is
+NB.   Q   - m×n-matrix, real, with orthonormal rows, which is
 NB.         defined as the last m rows of the product of k
 NB.         elementary reflectors H(i) of order n:
 NB.           Q = Π{H(i)',i=0:k-1}

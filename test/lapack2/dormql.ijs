@@ -16,12 +16,12 @@ NB.   trans - literal, case-insensitive, in which the head
 NB.           specifies the form of op(Q):
 NB.             'N' - op(Q) := Q    (no transpose)
 NB.             'T' - op(Q) := Q^T  (transpose)
-NB.   A     - s×k-matrix, contains Qf
-NB.   tau   - k-vector, scalar factors of elementary
+NB.   A     - s×k-matrix, real, contains Qf
+NB.   tau   - k-vector, real, scalar factors of elementary
 NB.           reflectors as returned by DGEQLF
 NB.   C     - m×n-matrix, real, the input to be multiplied by
 NB.           op(Q)
-NB.   B     - m×n-matrix, the result of multiplication:
+NB.   B     - m×n-matrix, real, the result of multiplication:
 NB.             Q   * C    if side='L' and trans='N'
 NB.             Q^T * C    if side='L' and trans='T'
 NB.             C   * Q    if side='R' and trans='N'

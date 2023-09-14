@@ -20,12 +20,12 @@ NB.   D    - n×n-matrix, real, symmetric and block diagonal
 NB.          with 1×1 and 2×2 diagonal blocks (opposite
 NB.          diagonal is not stored)
 NB.   PT1  - n×n-matrix, either PL1 or PU1
-NB.   PL1  - n×n-matrix, the product of permutation and unit
-NB.          lower triangular matrices (unit diagonal not
-NB.          stored)
-NB.   PU1  - n×n-matrix, the product of permutation and unit
-NB.          upper triangular matrices (unit diagonal not
-NB.          stored)
+NB.   PL1  - n×n-matrix, real, the product of permutation and
+NB.          unit lower triangular matrices (unit diagonal
+NB.          not stored)
+NB.   PU1  - n×n-matrix, real, the product of permutation and
+NB.          unit upper triangular matrices (unit diagonal
+NB.          not stored)
 NB.   iAA  - n×n-matrix, contains the triangular part of iA
 NB.          in changed triangle and unchanged elements of
 NB.          DPT1 in opposite strict triangle

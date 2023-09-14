@@ -19,7 +19,8 @@ NB.            'U' - upper
 NB.   A    - n×n-matrix, real, symmetric or lower or upper
 NB.          triangular
 NB.   w    - n-vector, real, eigenvalues of A
-NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
+NB.   V    - n×n-matrix, real, eigenvectors of A or
+NB.          0×0-matrix
 NB.   n    ≥ 0, the size of A, V and w
 NB.
 NB. Notes:

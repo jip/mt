@@ -9,12 +9,12 @@ NB. where
 NB.   ilo ∈ [1,max(1,ihi)], IO starting row and column,
 NB.         1-based
 NB.   ihi ∈ [min(ilo,n),n], IO ending row and column, 1-based
-NB.   A   - n×n-matrix, contains Qf
+NB.   A   - n×n-matrix, real, contains Qf
 NB.   Qf  - n×n-matrix, columns ilo:ihi below the first
 NB.         subdiagonal contain elementary reflectors as
 NB.         returned by DGEHRD, with the tau it represents
 NB.         the Q in the factored form
-NB.   tau - (n-1)-vector, scalar factors of elementary
+NB.   tau - (n-1)-vector, real, scalar factors of elementary
 NB.         reflectors as returned by DGEHRD
 NB.   Q   - n×n-matrix, real, orthogonal, which is defined as
 NB.         the product of (ihi-ilo) elementary reflectors

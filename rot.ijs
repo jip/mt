@@ -1,7 +1,7 @@
 NB. Rotation
 NB.
 NB. lartg      Generates a plane rotation of a 2-vector
-NB. rot        Applies a plane rotation[s] to a 2-vector[s]
+NB. rot        Applies a plane rotation(s) to a 2-vector(s)
 NB. rotga      Adv. to make verb to get and apply rotation
 NB. rotsclx    Update array by rotations and scalings
 NB.            accumulated
@@ -122,11 +122,11 @@ NB.     oxy=. cs rot ixy
 NB. where
 NB.   ixy - 2-vector of Cayley-Dickson halves (ix,iy) or
 NB.         2×n-matrix of stitched Cayley-Dickson halves
-NB.         (ix[i],iy[i]), defines number[s] to rotate
+NB.         (ix[i],iy[i]), defines number(s) to rotate
 NB.         (complex or quaternion)
 NB.   cs  - 2-vector of Cayley-Dickson halves (c,s), defines
 NB.         rotating number (complex or quaternion)
-NB.   oxy - the same shape as ixy, the rotated number[s]
+NB.   oxy - the same shape as ixy, the rotated number(s)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   cs (rot -: (qnmul qnconj)~) ixy
@@ -148,14 +148,14 @@ NB.   oxy=. cs lartv ixy
 NB. where
 NB.   ixy - 2-vector of Cayley-Dickson halves (ix,iy) or
 NB.         n×2-matrix of laminated Cayley-Dickson halves
-NB.         (ix[i],iy[i]), defines number[s] to rotate
+NB.         (ix[i],iy[i]), defines number(s) to rotate
 NB.         (complex or quaternion)
 NB.   cs  - the same shape as ixy, 2-vector of Cayley-Dickson
 NB.         halves (c,s) or n×2-matrix of laminated
 NB.         Cayley-Dickson halves (c[i],s[i]), defines
-NB.         rotating number[s] (complex or quaternion)
+NB.         rotating number(s) (complex or quaternion)
 NB.   oxy - array of the same shape as ixy, the rotated
-NB.         number[s]
+NB.         number(s)
 NB.
 NB. Notes:
 NB. - implements LAPACK's xLARTV

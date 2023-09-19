@@ -1,8 +1,8 @@
 NB. Quaternions
 NB.
-NB. qnxx       Get/set component[s]
-NB. qnmarkxxx  Mark component[s]
-NB. qnconxx    Conjugate component[s]
+NB. qnxx       Get/set component(s)
+NB. qnmarkxxx  Mark component(s)
+NB. qnconxx    Conjugate component(s)
 NB. qnmul      Multiply
 NB. qnrec      Reciprocal
 NB. qndivl     Divide (left quotient)
@@ -63,7 +63,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Get/set component[s]
+NB. Get/set component(s)
 NB.
 NB. Verb    Syntax (monad)    Syntax (dyad)
 NB. qn1     a=. qn1  q        qa=. a qn1  q
@@ -86,7 +86,7 @@ qn1j=: j./@(9   &o.) : ((j.~ +.)~ 11&o.)
 qn1k=: j./@(9 11&o.) : ((2 2 $ 0 0 ; 2 0 ; 1 1 ; 0 1) j./@:{ ,&:+.)
 
 NB. ---------------------------------------------------------
-NB. Markers
+NB. Mark component(s)
 NB.
 NB. Verb         Action                 Syntax
 NB. qnmark1      a + 0*i + 0*j + 0*k    qa=.   qnmark1   q
@@ -122,7 +122,7 @@ qnmark1jk=: (0}~    qn1) : [:
 qnmarkijk=: (0}~ j.@qni) : [:
 
 NB. ---------------------------------------------------------
-NB. Conjugators
+NB. Conjugate component(s)
 NB.
 NB. Verb       Action                  Syntax
 NB. qncon1     -a + b*i + c*j + d*k    qc=. qncon1  q

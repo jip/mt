@@ -1261,7 +1261,7 @@ NB.   A       k×k-matrix, triangular
 NB.   AA    - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A
 NB.   B     - l-vector or m×n-matrix, the RHS
-NB.   X     - the same shape as B, the solution[s]
+NB.   X     - the same shape as B, the solution(s)
 NB.   m     ≥ 0, the number of rows in B and X
 NB.   n     ≥ 0, the number of columns in B and X
 NB.   k     = m for trsmlxxx or k = n for trsmrxxx

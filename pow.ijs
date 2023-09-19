@@ -1,10 +1,10 @@
-NB. Raise matrix to an integer power[s]
+NB. Raise matrix to an integer power(s)
 NB.
-NB. gepow      Raise a general matrix to integer power[s]
+NB. gepow      Raise a general matrix to integer power(s)
 NB. dipow      Raise a diagonalizable matrix to integer
-NB.            power[s]
+NB.            power(s)
 NB. hepow      Raise a Hermitian (symmetric) matrix to
-NB.            integer power[s]
+NB.            integer power(s)
 NB.
 NB. testgepow  Test gepow by square matrix
 NB. testdipow  Test dipow by diagonalizable matrix
@@ -46,14 +46,14 @@ NB. ---------------------------------------------------------
 NB. gepow
 NB.
 NB. Description:
-NB.   Raise a general matrix A to integer power[s]
+NB.   Raise a general matrix A to integer power(s)
 NB.
 NB. Syntax:
 NB.   P=. p gepow A
 NB. where
 NB.   A  - n×n-matrix, a general matrix
-NB.   p  - sh-array of non-negative integers, power[s]
-NB.   P  - sh×n×n-array if r>0, the matrix A in power[s] p
+NB.   p  - sh-array of non-negative integers, power(s)
+NB.   P  - sh×n×n-array if r>0, the matrix A in power(s) p
 NB.        n×n-array    if r=0, the matrix A in power p
 NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
@@ -78,7 +78,7 @@ NB. ---------------------------------------------------------
 NB. dipow
 NB.
 NB. Description:
-NB.   Raise a diagonalizable matrix to integer power[s]
+NB.   Raise a diagonalizable matrix to integer power(s)
 NB.
 NB. Syntax:
 NB.   P=. p dipow iLl ; vl ; Ll
@@ -100,9 +100,9 @@ NB.   iLl -:%. Ll
 NB.   iLu -:%. Lu
 NB.   iRl -:%. Rl
 NB.   iRu -:%. Ru
-NB.   p   - sh-array of positive integers, power[s]
+NB.   p   - sh-array of positive integers, power(s)
 NB.   P   - sh×n×n-array if r>0,
-NB.         n×n-array    if r=0, a matrix A in power[s] p
+NB.         n×n-array    if r=0, a matrix A in power(s) p
 NB.   sh  - r-vector of non-negative integers, the shape of p
 NB.   r   ≥ 0, the rank of p
 NB.
@@ -178,7 +178,7 @@ NB. hepow
 NB.
 NB. Description:
 NB.   Raise a Hermitian (symmetric) matrix to integer
-NB.   power[s]
+NB.   power(s)
 NB.
 NB. Syntax:
 NB.   P=. p hepow vl ; iRl
@@ -191,9 +191,9 @@ NB.         of heevuv
 NB.   vl  - n-vector, eigenvalues of A, output of heevlx
 NB.   vu  - n-vector, eigenvalues of A, output of heevux
 NB.   iRl -:%. Rl
-NB.   p   - sh-array of positive integers, power[s]
+NB.   p   - sh-array of positive integers, power(s)
 NB.   P   - sh×n×n-array if r>0,
-NB.         n×n-array    if r=0, a matrix A in power[s] p
+NB.         n×n-array    if r=0, a matrix A in power(s) p
 NB.   sh  - r-vector of non-negative integers, the shape of p
 NB.   r   ≥ 0, the rank of p
 NB.

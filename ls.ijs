@@ -185,12 +185,12 @@ NB.   A1 - m1×n1-matrix of full rank, m1>=n1, will be
 NB.        factored by QR
 NB.   B1 - m1-vector or m1×nrhs-matrix, the RHS
 NB.   X1 - n1-vector or n1×nrhs-matrix, same rank as B1,
-NB.        the solution[s]
+NB.        the solution(s)
 NB.   A2 - m2×n2-matrix of full rank, m2<n2, will be
 NB.        factored by LQ
 NB.   B2 - m2-vector or m2×nrhs-matrix, the RHS
 NB.   X2 - n2-vector or n2×nrhs-matrix, same rank as B2,
-NB.        the solution[s]
+NB.        the solution(s)
 NB.
 NB. Algorithm:
 NB.   In: A, B

@@ -49,7 +49,7 @@ NB. Syntax:
 NB.   B=. s sdiag A
 NB. where
 NB.   A - n×n-matrix or m×n×n-brick
-NB.   s - scalar or m-vector, the shift of diagonal[s] in A
+NB.   s - scalar or m-vector, the shift of diagonal(s) in A
 NB.   B - array of the same shape as A, the shifted A:
 NB.         B -: A + s (*"0 2) idmat n
 NB.

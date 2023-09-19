@@ -19,7 +19,7 @@ NB. stitchx   Enhance built-in Stitch verb (,.)
 NB. ds        Direct sum of matrices A⊕B
 NB.
 NB. diag      Return a solid part of diagonal
-NB. setdiag   Assign value[s] to a solid part of diagonal
+NB. setdiag   Assign value(s) to a solid part of diagonal
 NB. upddiag   Adv. to make verbs to update a solid part of
 NB.           diagonal
 NB.
@@ -186,7 +186,7 @@ NB.          [anti-]diagonal
 NB.   d    - integer in range [-∞,+∞], lIO single
 NB.          [anti-]diagonal to stencil
 NB.   A    - m×n-matrix
-NB.   S    - m×n-matrix, boolean, having 1s on [anti-]band[s]
+NB.   S    - m×n-matrix, boolean, having 1s on [anti-]band(s)
 NB.
 NB. Examples:
 NB. - see mbstencil, mabstencil
@@ -207,7 +207,7 @@ NB. where
 NB.   bs - k×2-matrix of (b)s, or single b, or d, defines
 NB.        [anti-]bands to stencil
 NB.   A  - m×n-matrix
-NB.   S  - m×n-matrix, boolean, having 1s on [anti-]band[s]
+NB.   S  - m×n-matrix, boolean, having 1s on [anti-]band(s)
 NB.   b  - 2-vector (h,t), defines one [anti-]band to stencil
 NB.   h  - integer in range [-∞,t], defines lIO head of
 NB.        [anti-]diagonal
@@ -551,13 +551,13 @@ NB. ---------------------------------------------------------
 NB. setdiag
 NB.
 NB. Description:
-NB.   Assign value[s] to a solid part of diagonal
+NB.   Assign value(s) to a solid part of diagonal
 NB.
 NB. Syntax:
 NB.   Aupd=. (e;[d[,h[,s]]]) setdiag A
 NB. where
 NB.   A    - m×n-matrix to change
-NB.   e    - {0,1}-rank array, value[s] to assign
+NB.   e    - {0,1}-rank array, value(s) to assign
 NB.   d    - integer in range [1-m,n-1], optional lIO
 NB.          diagonal, default is 0 (main diagonal)
 NB.   h    - integer in range [-S,S-1], optional lIO extreme
@@ -567,7 +567,7 @@ NB.   s    - integer in range [-S,S] or ±∞ when e is scalar,
 NB.          or any from set {±k,±∞} when e is vector;
 NB.          optional size of solid part of diagonal, default
 NB.          is +∞ (all elements in forward direction)
-NB.   Aupd - m×n-matrix A with value[s] e assigned to solid
+NB.   Aupd - m×n-matrix A with value(s) e assigned to solid
 NB.          part of d-th diagonal
 NB.   S    ≥ 0, the length of d-th diagonal
 NB.   k    ≤ S, the length of vector e

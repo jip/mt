@@ -150,7 +150,7 @@ NB. high-level
 require 'math/mt/ev'           NB. Eigenvalues and eigenvectors
 require 'math/mt/exp'          NB. Matrix exponential
 require 'math/mt/ls'           NB. Solve overdetermined or underdetermined linear monomial equation
-require 'math/mt/pow'          NB. Raise matrix to integer power[s]
+require 'math/mt/pow'          NB. Raise matrix to integer power(s)
 require 'math/mt/sv'           NB. Solve linear monomial equation
 
 NB. =========================================================

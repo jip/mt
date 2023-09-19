@@ -13,7 +13,7 @@ NB. xxt01    Actors to compute the relative backward error
 NB.          for the matrix reconstructed from gexxf,tzxxf
 NB.          output
 NB. t02x     Modifiers to make dyad to compute the relative
-NB.          backward error for the solution[s] computed
+NB.          backward error for the solution(s) computed
 NB. xxt02    Dyads to compute the relative backward error for
 NB.          the matrix reconstructed partially from ungxx
 NB.          output
@@ -23,13 +23,13 @@ NB. xxt03    Actors to compute the relative backward error
 NB.          for the matrix [partial] multiplication by
 NB.          unmxxxx
 NB. t04x     Actors to compute the relative forward error for
-NB.          the solution[s] computed
+NB.          the solution(s) computed
 NB. xxt11    Dyads to compute the relative backward error for
 NB.          the unitary (orthogonal) matrix reconstructed
 NB.          from gexpf gepxf output
 NB. qrt14    Checks whether X is in the row space of op(A)
 NB. qrt16x   Adv. to make dyad to compute the residual for a
-NB.          solution[s] computed of an overdetermined or
+NB.          solution(s) computed of an overdetermined or
 NB.          underdetermined system involving a matrix of
 NB.          full rank, or its [conjugate-]transpose
 NB. qrt171   Adv. to make dyad to compute the ratio for
@@ -828,7 +828,7 @@ NB. t02v  (dyadic adv.)
 NB.
 NB. Description:
 NB.   Modifiers to make dyad to compute the relative backward
-NB.   error for the solution[s] computed
+NB.   error for the solution(s) computed
 NB.
 NB. Syntax:
 NB.   vberrX=. calcB t02m norm1tx
@@ -1254,7 +1254,7 @@ NB. t04v  (dyad)
 NB.
 NB. Description:
 NB.   Actors to compute the relative forward error for
-NB.   the solution[s] computed
+NB.   the solution(s) computed
 NB.
 NB. Syntax:
 NB.   ferrX=. (A ; B ; X ; rcondA ; trash) (normitx t04m) Xapprox
@@ -1397,7 +1397,7 @@ NB. qrt16v
 NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the residual for a
-NB.   solution[s] computed of an overdetermined or
+NB.   solution(s) computed of an overdetermined or
 NB.   underdetermined system involving a matrix of full rank,
 NB.   or its [conjugate-]transpose
 NB.

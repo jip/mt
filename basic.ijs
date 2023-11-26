@@ -1358,11 +1358,13 @@ testbasicger=: 3 : 0
   zcoeff=. 0j0 1j0 0.7j_0.9
   inc=. 1 2 _1 _2
   'x y A'=. y
+  argsd=. { (<"0 dcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
+  argsz=. { (<"0 zcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
 
   NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; expanded_y_i ; incy_i ; A) to tmonad
-  ('dger_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { (<"0 dcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
-  ('zgerc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(gerc chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { (<"0 zcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
-  ('zgeru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { (<"0 zcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
+  ('dger_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 argsd
+  ('zgeru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 argsz
+  ('zgerc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(gerc chk4r)))@(3 expand 4)@(1 expand 2)@>"0 argsz
 
   EMPTY
 )
@@ -1385,12 +1387,13 @@ testbasicher=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   inc=. 1 2 _1 _2
   'x AA'=. y
+  args=. { (<"0 dcoeff) ; (< x) ; (<"0 inc) ; < < AA
 
   NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; AA) to tmonad
-  ('dsyrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrl chk5r trlpick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < AA
-  ('dsyru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syru chk5r trupick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < AA
-  ('zherl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herl chk5r trlpick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < AA
-  ('zheru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(heru chk5r trupick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < AA
+  ('dsyrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrl chk5r trlpick)))@(1 expand 2)@>"0 args
+  ('dsyru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syru chk5r trupick)))@(1 expand 2)@>"0 args
+  ('zherl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herl chk5r trlpick)))@(1 expand 2)@>"0 args
+  ('zheru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(heru chk5r trupick)))@(1 expand 2)@>"0 args
 
   EMPTY
 )
@@ -1442,12 +1445,14 @@ testbasicher2=: 3 : 0
   zcoeff=. 0j0 1j0 0.7j_0.9
   inc=. 1 2 _1 _2
   'x y AA'=. y
+  argsd=. { (<"0 dcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < AA
+  argsz=. { (<"0 zcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < AA
 
   NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; expanded_y_i ; incy_i ; AA) to tmonad
-  ('dsyr2l_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < AA
-  ('dsyr2u_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < AA
-  ('zher2l_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) zcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < AA
-  ('zher2u_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) zcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < AA
+  ('dsyr2l_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 argsd
+  ('dsyr2u_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 argsd
+  ('zher2l_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 argsz
+  ('zher2u_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 argsz
 
   EMPTY
 )
@@ -1500,16 +1505,20 @@ testbasicsyrk=: 3 : 0
   'A CC'=. y
   mn=. <./ 'm n'=. $ A
   CCmn=. (2 # mn) {. CC
+  argsdl=. { (<"0 dcoeff) ; (< A) ; (<"0 dcoeff) ; < < CCmn [^:(m < n) CC
+  argsdg=. { (<"0 dcoeff) ; (< A) ; (<"0 dcoeff) ; < < CCmn [^:(m > n) CC
+  argszl=. { (<"0 zcoeff) ; (< A) ; (<"0 zcoeff) ; < < CCmn [^:(m < n) CC
+  argszg=. { (<"0 zcoeff) ; (< A) ; (<"0 zcoeff) ; < < CCmn [^:(m > n) CC
 
   NB. for every i feed the tuple (alpha_i ; A ; beta_i ; CC) to tmonad
-  ('dsyrkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkln chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
-  ('dsyrklt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrklt chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
-  ('dsyrkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkun chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
-  ('dsyrkut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkut chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
-  ('zsyrkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkln chk4rk trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < CCmn [^:(m < n) CC
-  ('zsyrklt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrklt chk4rk trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < CCmn [^:(m > n) CC
-  ('zsyrkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkun chk4rk trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < CCmn [^:(m < n) CC
-  ('zsyrkut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkut chk4rk trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < CCmn [^:(m > n) CC
+  ('dsyrkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkln chk4rk trlpick)))@>"0 argsdl
+  ('dsyrklt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrklt chk4rk trlpick)))@>"0 argsdg
+  ('dsyrkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkun chk4rk trupick)))@>"0 argsdl
+  ('dsyrkut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkut chk4rk trupick)))@>"0 argsdg
+  ('zsyrkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkln chk4rk trlpick)))@>"0 argszl
+  ('zsyrklt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrklt chk4rk trlpick)))@>"0 argszg
+  ('zsyrkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkun chk4rk trupick)))@>"0 argszl
+  ('zsyrkut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkut chk4rk trupick)))@>"0 argszg
 
   EMPTY
 )
@@ -1534,12 +1543,14 @@ testbasicherk=: 3 : 0
   'A CC'=. y
   mn=. <./ 'm n'=. $ A
   CCmn=. (2 # mn) {. CC
+  argsl=. { (<"0 dcoeff) ; (< A) ; (<"0 dcoeff) ; < < CCmn [^:(m < n) CC
+  argsg=. { (<"0 dcoeff) ; (< A) ; (<"0 dcoeff) ; < < CCmn [^:(m > n) CC
 
   NB. for every i feed the tuple (alpha_i ; A ; beta_i ; CC) to tmonad
-  ('zherkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkln chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
-  ('zherklc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herklc chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
-  ('zherkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkun chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
-  ('zherkuc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkuc chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
+  ('zherkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkln chk4rk trlpick)))@>"0 argsl
+  ('zherklc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herklc chk4rk trlpick)))@>"0 argsg
+  ('zherkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkun chk4rk trupick)))@>"0 argsl
+  ('zherkuc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkuc chk4rk trupick)))@>"0 argsg
 
   EMPTY
 )
@@ -1593,16 +1604,20 @@ testbasicsyr2k=: 3 : 0
   'A B CC'=. y
   mn=. <./ 'm n'=. $ A
   CCmn=. (2 # mn) {. CC
+  argsdl=. { (<"0 dcoeff) ; (< A) ; (< B) ; (<"0 dcoeff) ; < < CCmn [^:(m < n) CC
+  argsdg=. { (<"0 dcoeff) ; (< A) ; (< B) ; (<"0 dcoeff) ; < < CCmn [^:(m > n) CC
+  argszl=. { (<"0 zcoeff) ; (< A) ; (< B) ; (<"0 zcoeff) ; < < CCmn [^:(m < n) CC
+  argszg=. { (<"0 zcoeff) ; (< A) ; (< B) ; (<"0 zcoeff) ; < < CCmn [^:(m > n) CC
 
   NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; CC) to tmonad
-  ('dsyr2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kln chk5r2k trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
-  ('dsyr2klt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2klt chk5r2k trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
-  ('dsyr2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kun chk5r2k trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
-  ('dsyr2kut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kut chk5r2k trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
-  ('zsyr2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kln chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < CCmn [^:(m < n) CC
-  ('zsyr2klt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2klt chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < CCmn [^:(m > n) CC
-  ('zsyr2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kun chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < CCmn [^:(m < n) CC
-  ('zsyr2kut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kut chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < CCmn [^:(m > n) CC
+  ('dsyr2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kln chk5r2k trlpick)))@>"0 argsdl
+  ('dsyr2klt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2klt chk5r2k trlpick)))@>"0 argsdg
+  ('dsyr2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kun chk5r2k trupick)))@>"0 argsdl
+  ('dsyr2kut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kut chk5r2k trupick)))@>"0 argsdg
+  ('zsyr2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kln chk5r2k trlpick)))@>"0 argszl
+  ('zsyr2klt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2klt chk5r2k trlpick)))@>"0 argszg
+  ('zsyr2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kun chk5r2k trupick)))@>"0 argszl
+  ('zsyr2kut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kut chk5r2k trupick)))@>"0 argszg
 
   EMPTY
 )
@@ -1629,12 +1644,14 @@ testbasicher2k=: 3 : 0
   'A B CC'=. y
   mn=. <./ 'm n'=. $ A
   CCmn=. (2 # mn) {. CC
+  argsl=. { (<"0 zcoeff) ; (< A) ; (< B) ; (<"0 dcoeff) ; < < CCmn [^:(m < n) CC
+  argsg=. { (<"0 zcoeff) ; (< A) ; (< B) ; (<"0 dcoeff) ; < < CCmn [^:(m > n) CC
 
   NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; CC) to tmonad
-  ('zher2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kln chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
-  ('zher2klc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2klc chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
-  ('zher2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kun chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
-  ('zher2kuc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kuc chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
+  ('zher2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kln chk5r2k trlpick)))@>"0 argsl
+  ('zher2klc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2klc chk5r2k trlpick)))@>"0 argsg
+  ('zher2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kun chk5r2k trupick)))@>"0 argsl
+  ('zher2kuc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kuc chk5r2k trupick)))@>"0 argsg
 
   EMPTY
 )
@@ -1729,12 +1746,14 @@ testbasichemv=: 3 : 0
   zcoeff=. 0j0 1j0 0.7j_0.9
   inc=. 1 2 _1 _2
   'AA x y'=. y
+  argsd=. { (<"0 dcoeff) ; (< AA) ; (< x) ; (<"0 inc) ; (<"0 dcoeff) ; (< y) ; < <"0 inc
+  argsz=. { (<"0 zcoeff) ; (< AA) ; (< x) ; (<"0 inc) ; (<"0 zcoeff) ; (< y) ; < <"0 inc
 
   NB. for every i feed the tuple (alpha_i ; AA ; expanded_x_i ; incx_i ; beta_i ; expanded_y_i ; incy_i) to tmonad
-  ('dsymvl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< AA) ; (< x) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< y) ; < <"0 inc
-  ('dsymvu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< AA) ; (< x) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< y) ; < <"0 inc
-  ('zhemvl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< AA) ; (< x) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< y) ; < <"0 inc
-  ('zhemvu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< AA) ; (< x) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< y) ; < <"0 inc
+  ('dsymvl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsd
+  ('dsymvu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsd
+  ('zhemvl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsz
+  ('zhemvu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsz
 
   EMPTY
 )
@@ -1756,28 +1775,29 @@ NB.   x  - n-vector
 testbasictrmv=: 3 : 0
   inc=. 1 2 _1 _2
   'AA y'=. y
+  args=. { (< AA) ; (< y) ; < <"0 inc
 
   NB. for every i feed the tuple (AA ; expanded_x_i ; incx_i) to tmonad
-  ('dtrmvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('dtrmvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('dtrmvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('dtrmvltu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('dtrmvunn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('dtrmvunu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('dtrmvutn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('dtrmvutu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvltu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvlcn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlcn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvlcu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlcu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvunn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvunu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvutn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvutu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvucn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvucn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
-  ('ztrmvucu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvucu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('dtrmvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3mv)))@(1 expand 2)@>"0 args
+  ('dtrmvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3mv)))@(1 expand 2)@>"0 args
+  ('dtrmvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3mv)))@(1 expand 2)@>"0 args
+  ('dtrmvltu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltu chk3mv)))@(1 expand 2)@>"0 args
+  ('dtrmvunn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunn chk3mv)))@(1 expand 2)@>"0 args
+  ('dtrmvunu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunu chk3mv)))@(1 expand 2)@>"0 args
+  ('dtrmvutn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutn chk3mv)))@(1 expand 2)@>"0 args
+  ('dtrmvutu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutu chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvltu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltu chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvlcn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlcn chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvlcu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlcu chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvunn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunn chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvunu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunu chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvutn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutn chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvutu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutu chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvucn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvucn chk3mv)))@(1 expand 2)@>"0 args
+  ('ztrmvucu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvucu chk3mv)))@(1 expand 2)@>"0 args
 
   EMPTY
 )
@@ -1835,8 +1855,8 @@ testbasicgemm=: 3 : 0
   As=. ks <@:({."0 1)"0 _ As                     NB. As[i] is m×k[i]-matrix
 
   NB. test for the case: ('alpha beta'=. 1.0 0.0) and (op(A) = A)
-  ('(+/ .*)'         tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
-  ('mp'              tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
+  ('(+/ .*)'         tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  B
+  ('mp'              tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  B
 
   NB. for every i feed the tuple (alpha_i ; A_i ; B_i ; beta_i ; C) to tmonad
   NB. note: A_i and B_i shapes are related; to emulate this,
@@ -1883,16 +1903,20 @@ testbasicsymm=: 3 : 0
   'm n'=. $ C
   Am=. (2 # m) {. AA
   An=. (2 # n) {. AA
+  argsdm=. { (<"0 dcoeff) ; (< Am) ; (< B) ; (<"0 dcoeff) ; < < C
+  argsdn=. { (<"0 dcoeff) ; (< An) ; (< B) ; (<"0 dcoeff) ; < < C
+  argszm=. { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
+  argszn=. { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
 
   NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
-  ('dsymmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmll chk2mm trlpick)))@>"0 { (<"0 dcoeff) ; (< Am) ; (< B) ; (<"0 dcoeff) ; < < C
-  ('dsymmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmlu chk2mm trupick)))@>"0 { (<"0 dcoeff) ; (< Am) ; (< B) ; (<"0 dcoeff) ; < < C
-  ('dsymmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmrl chk2mm trlpick)))@>"0 { (<"0 dcoeff) ; (< An) ; (< B) ; (<"0 dcoeff) ; < < C
-  ('dsymmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmru chk2mm trupick)))@>"0 { (<"0 dcoeff) ; (< An) ; (< B) ; (<"0 dcoeff) ; < < C
-  ('zsymmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmll chk2mm trlpick)))@>"0 { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
-  ('zsymmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmlu chk2mm trupick)))@>"0 { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
-  ('zsymmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmrl chk2mm trlpick)))@>"0 { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
-  ('zsymmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmru chk2mm trupick)))@>"0 { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
+  ('dsymmll_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm trlpick)))@>"0 argsdm
+  ('dsymmlu_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm trupick)))@>"0 argsdm
+  ('dsymmrl_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm trlpick)))@>"0 argsdn
+  ('dsymmru_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm trupick)))@>"0 argsdn
+  ('zsymmll_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm trlpick)))@>"0 argszm
+  ('zsymmlu_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm trupick)))@>"0 argszm
+  ('zsymmrl_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm trlpick)))@>"0 argszn
+  ('zsymmru_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm trupick)))@>"0 argszn
 
   EMPTY
 )
@@ -1919,12 +1943,14 @@ testbasichemm=: 3 : 0
   'm n'=. $ C
   Am=. (2 # m) {. AA
   An=. (2 # n) {. AA
+  argszm=. { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
+  argszn=. { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
 
-  NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
-  ('zhemmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmll chk2mm trlpick)))@>"0 { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
-  ('zhemmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmlu chk2mm trupick)))@>"0 { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
-  ('zhemmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmrl chk2mm trlpick)))@>"0 { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
-  ('zhemmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmru chk2mm trupick)))@>"0 { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
+  NB. for every i feed the tuple (alpha_i ; Ax ; B ; beta_i ; C) to tmonad
+  ('zhemmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmll chk2mm trlpick)))@>"0 argszm
+  ('zhemmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmlu chk2mm trupick)))@>"0 argszm
+  ('zhemmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmrl chk2mm trlpick)))@>"0 argszn
+  ('zhemmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmru chk2mm trupick)))@>"0 argszn
 
   EMPTY
 )
@@ -2123,10 +2149,10 @@ testbasictrsm=: 3 : 0
   'm n'=. $ B
   Am=. (2 # m) {. AA
   An=. (2 # n) {. AA
-  argsdm=. { ((<"0) dcoeff) ; (< Am) ; < < B
-  argsdn=. { ((<"0) dcoeff) ; (< An) ; < < B
-  argszm=. { ((<"0) zcoeff) ; (< Am) ; < < B
-  argszn=. { ((<"0) zcoeff) ; (< An) ; < < B
+  argsdm=. { (<"0 dcoeff) ; (< Am) ; < < B
+  argsdn=. { (<"0 dcoeff) ; (< An) ; < < B
+  argszm=. { (<"0 zcoeff) ; (< Am) ; < < B
+  argszn=. { (<"0 zcoeff) ; (< An) ; < < B
 
   NB. BLAS' staff
   NB. for every i feed the tuple (alpha_i ; AA ; B) to tmonad

@@ -23,9 +23,9 @@ NB.             'N' - A is non-unit triangular: L or U
 NB.             'U' - A is unit triangular: L1 or U1
 NB.   AA    - n×n-matrix, contains either non-zero or both
 NB.           part(s) of A
-NB.   A     - n×n-matrix, triangular
 NB.   B     - n×nrhs-matrix, RHS
 NB.   X     - n×nrhs-matrix, solutions
+NB.   A     - n×n-matrix, triangular
 NB.   n     ≥ 0, the order of system
 NB.   nrhs  ≥ 0, the number of RHS
 NB.

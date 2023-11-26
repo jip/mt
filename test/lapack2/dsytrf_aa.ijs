@@ -16,9 +16,9 @@ NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^T * P^T = A
 NB.   AA   - n×n-matrix, real, contains either lower or upper
 NB.          or both part(s) of A
-NB.   A    - n×n-matrix, real, symmetric, to factorize
 NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define P
+NB.   A    - n×n-matrix, real, symmetric, to factorize
 NB.   D    - n×n-matrix, real, symmetric tridiagonal
 NB.          (opposite diagonal is not stored)
 NB.   T1   - n×n-matrix, either L1 or U1

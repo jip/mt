@@ -73,10 +73,10 @@ NB.                  NB.   elements of A are not referenced
 NB.   alpha - scalar
 NB.   AAt   - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A^T
-NB.   A     - k×k-matrix, triangular
 NB.   Bt    - n×m-matrix, B^T, non-scaled RHS
 NB.   Xt    - n×m-matrix, X^T, solutions
 NB.           transposed
+NB.   A     - k×k-matrix, triangular
 NB.   m     ≥ 0, the number of columns in Bt and Xt
 NB.   n     ≥ 0, the number of rows in Bt and Xt
 NB.   k     = m if side='L' or k = n otherwise
@@ -158,9 +158,9 @@ NB. where
 NB.   alpha - scalar
 NB.   AA    - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A
-NB.   A     - k×k-matrix, triangular
 NB.   B     - m×n-matrix, non-scaled RHS
 NB.   X     - m×n-matrix, solutions
+NB.   A     - k×k-matrix, triangular
 NB.   m     ≥ 0, the number of rows in B and X
 NB.   n     ≥ 0, the number of columns in B and X
 NB.   k     = m for xtrsmlxxx or k = n for xtrsmrxxx

@@ -326,11 +326,11 @@ NB. where
 NB.   alpha - scalar
 NB.   AA    - mn×mn-matrix, contains either lower or upper or
 NB.           both part(s) of A
-NB.   A     - mn×mn-matrix, Hermitian (symmetric)
 NB.   B     - m×n-matrix
 NB.   beta  - scalar
 NB.   C     - m×n-matrix
 NB.   Cupd  - an updated C
+NB.   A     - mn×mn-matrix, Hermitian (symmetric)
 NB.   m     ≥ 0, the number of rows in C, Cupd and B
 NB.   n     ≥ 0, the number of columns in C, Cupd and B
 NB.   mn    = m for xxxmmlx or mn = n otherwise
@@ -422,9 +422,9 @@ NB. where
 NB.   alpha - scalar
 NB.   AA    - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A
-NB.   A     - k×k-matrix, triangular
 NB.   B     - m×n-matrix
 NB.   Bupd  - an updated B
+NB.   A     - k×k-matrix, triangular
 NB.   m     ≥ 0, the number of rows in B and Bupd
 NB.   n     ≥ 0, the number of columns in B and Bupd
 NB.   k     = m for xtrmmlxxx or k = n for xtrmmrxxx

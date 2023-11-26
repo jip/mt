@@ -9,10 +9,10 @@ NB.   'RZf tau'=. xtzrzf AA
 NB. where
 NB.   AA  - m×n-matrix, contains A in the leading upper
 NB.         trapezoidal part
-NB.   A   - m×n-matrix, upper trapezoidal, to be factored
 NB.   RZf - m×n-matrix, R and Zf combined
 NB.   tau - m-vector, scalar factors of elementary
 NB.         reflectors applied to A
+NB.   A   - m×n-matrix, upper trapezoidal, to be factored
 NB.   R   - m×m-matrix, where UT contains the part factored,
 NB.         and the strict LT contains corresp. elements from
 NB.         A unchanged

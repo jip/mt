@@ -332,11 +332,11 @@ NB. where
 NB.   alpha - scalar, real
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
-NB.   A     - n×n-matrix, Hermitian (symmetric)
 NB.   AA    - n×n-matrix, contains either LT or UT or both
 NB.           part(s) of A
 NB.   AAupd - AA with either LT (for xxrl) or UT (for xxru)
 NB.           updated
+NB.   A     - n×n-matrix, Hermitian (symmetric)
 NB.   n     ≥ 0, the size of A, AA and AAupd
 NB.
 NB. Notes:
@@ -403,11 +403,11 @@ NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   y     - (1+(n-1)*|incy|)-vector
 NB.   incy  ≠ 0, the increment for the elements of y
-NB.   A     - n×n-matrix, Hermitian (symmetric)
 NB.   AA    - n×n-matrix, contains either LT or UT or both
 NB.           part(s) of A
 NB.   AAupd - AA with either LT (for xxr2l) or UT (for
 NB.           xxr2u) updated
+NB.   A     - n×n-matrix, Hermitian (symmetric)
 NB.   n     ≥ 0, the size of A, AA and AAupd
 NB.
 NB. Notes:
@@ -475,11 +475,11 @@ NB. where
 NB.   alpha - scalar, must be real for herkxx
 NB.   A     - na×ka-matrix
 NB.   beta  - scalar, must be real for herkxx
-NB.   C     - n×n-matrix, Hermitian (symmetric)
 NB.   CC    - n×n-matrix, contains either LT or UT or both
 NB.           part(s) of C
 NB.   CCupd - CC with either LT (for xxrklx) or UT (for
 NB.           xxrkux) updated
+NB.   C     - n×n-matrix, Hermitian (symmetric)
 NB.   n     ≥ 0, the size of C, CC and CCupd and the number
 NB.           of rows or columns in A
 NB.   k     ≥ 0, the number of columns or rows in A
@@ -570,11 +570,11 @@ NB.   alpha - scalar
 NB.   A     - nab×kab-matrix
 NB.   B     - nab×kab-matrix
 NB.   beta  - scalar, must be real for her2kxx
-NB.   C     - n×n-matrix, Hermitian (symmetric)
 NB.   CC    - n×n-matrix, contains either LT or UT or both
 NB.           part(s) of C
 NB.   CCupd - CC with either LT (for xxr2klx) or UT (for
 NB.           xxr2kux) updated
+NB.   C     - n×n-matrix, Hermitian (symmetric)
 NB.   n     ≥ 0, the size of C, CC and CCupd and the number
 NB.           of rows or columns in A and B
 NB.   k     ≥ 0, the number of columns or rows in A and B
@@ -701,7 +701,6 @@ NB. Syntax:
 NB.   yupd=. xxmvx alpha ; AA ; x ; incx ; beta ; y ; incy
 NB. where
 NB.   alpha - scalar
-NB.   A     - n×n-matrix, Hermitian (symmetric)
 NB.   AA    - n×n-matrix, contains either LT or UT or both
 NB.           part(s) of A
 NB.   x     - (1+(n-1)*|incx|)-vector
@@ -710,6 +709,7 @@ NB.   beta  - scalar
 NB.   y     - (1+(n-1)*|incy|)-vector
 NB.   incy  ≠ 0, the increment for the elements of y
 NB.   yupd  - an updated y
+NB.   A     - n×n-matrix, Hermitian (symmetric)
 NB.   n     ≥ 0, the size of A and AA
 NB.
 NB. Notes:
@@ -780,12 +780,12 @@ NB.
 NB. Syntax:
 NB.   xupd=. trmvxxx AA ; x ; incx
 NB. where
-NB.   A    - n×n-matrix, triangular
 NB.   AA   - n×n-matrix, contains either non-zero or both
 NB.          part(s) of A
 NB.   x    - (1+(n-1)*|incx|)-vector
 NB.   incx ≠ 0, the increment for the elements of x
 NB.   xupd - an updated x
+NB.   A    - n×n-matrix, triangular
 NB.   n    ≥ 0, the size of A and AA
 NB.
 NB. Notes:
@@ -935,13 +935,13 @@ NB. Syntax:
 NB.   Cupd=. xxmmxx alpha ; AA ; B ; beta ; C
 NB. where
 NB.   alpha - scalar
-NB.   A     - mn×mn-matrix, Hermitian (symmetric)
 NB.   AA    - mn×mn-matrix, contains either LT or UT or both
 NB.           part(s) of A
 NB.   B     - m×n-matrix
 NB.   beta  - scalar
 NB.   C     - m×n-matrix
 NB.   Cupd  - an updated C
+NB.   A     - mn×mn-matrix, Hermitian (symmetric)
 NB.   m     ≥ 0, the number of rows in C, Cupd and B
 NB.   n     ≥ 0, the number of columns in C, Cupd and B
 NB.   mn    = m for xxmmlx or mn = n for xxmmrx
@@ -1040,11 +1040,11 @@ NB. Syntax:
 NB.   Bupd=. trmmxxxx alpha ; AA ; B
 NB. where
 NB.   alpha - scalar
-NB.   A     - k×k-matrix, triangular
 NB.   AA    - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A
 NB.   B     - m×n-matrix
 NB.   Bupd  - an updated B
+NB.   A     - k×k-matrix, triangular
 NB.   m     ≥ 0, the number of rows in B and Bupd
 NB.   n     ≥ 0, the number of columns in B and Bupd
 NB.   k     = m for trmmlxxx or k = n for trmmrxxx
@@ -1155,12 +1155,12 @@ NB.
 NB. Syntax:
 NB.   x=. trsvxxx AA ; b ; incb
 NB. where
-NB.   A    - n×n-matrix, triangular
 NB.   AA   - n×n-matrix, contains either non-zero or both
 NB.          part(s) of A
 NB.   b    - (1+(n-1)*|incb|)-vector, the RHS
 NB.   incb ≠ 0, the increment for the elements of b and x
 NB.   x    - the same shape as b, the solution
+NB.   A    - n×n-matrix, triangular
 NB.   n    ≥ 0, the size of A
 NB.
 NB. Notes:
@@ -1257,11 +1257,11 @@ NB.   X=.    trsmxxxx alpha ; AA ; B
 NB.   X=. AA trsmxxxx              B
 NB. where
 NB.   alpha - scalar, is supposed to be 1 in dyadic case
-NB.   A       k×k-matrix, triangular
 NB.   AA    - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A
 NB.   B     - l-vector or m×n-matrix, the RHS
 NB.   X     - the same shape as B, the solution(s)
+NB.   A     - k×k-matrix, triangular
 NB.   m     ≥ 0, the number of rows in B and X
 NB.   n     ≥ 0, the number of columns in B and X
 NB.   k     = m for trsmlxxx or k = n for trsmrxxx

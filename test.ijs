@@ -1823,12 +1823,12 @@ NB.   gemvx   - monad, the reference implementation to
 NB.             compute yexact:
 NB.               yexact=. gemvx (alpha ; A ; x ; incx ; beta ; y ; incy)
 NB.   alpha   - scalar
+NB.   A       - m×n-matrix
 NB.   x       - (1+(kx-1)*|incx|)-vector
 NB.   incx    ≠ 0, the increment for the elements of x
 NB.   beta    - scalar
 NB.   y       - (1+(ky-1)*|incy|)-vector
 NB.   incy    ≠ 0, the increment for the elements of y
-NB.   A       - m×n-matrix
 NB.   yapprox - the same shape as y, the approximate yexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for yapprox
@@ -1939,10 +1939,10 @@ NB.   beta    - scalar
 NB.   y       - (1+(n-1)*|incy|)-vector
 NB.   yexact  - an updated y
 NB.   incy    ≠ 0, the increment for the elements of y
-NB.   A       - n×n-matrix, Hermitian (symmetric)
 NB.   yapprox - the same shape as y, the approximate yexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for yapprox
+NB.   A       - n×n-matrix, Hermitian (symmetric)
 NB.   n       ≥ 0, the size of A and AA
 NB.
 NB. Formula:
@@ -1985,7 +1985,6 @@ NB.   trxpick - monad to pick a triangular part, is one of:
 NB.               trlpick  NB. if xxmmxlxx is used
 NB.               trupick  NB. if xxmmxuxx is used
 NB.   alpha   - scalar
-NB.   A       - mn×mn-matrix, Hermitian (symmetric)
 NB.   AA      - mn×mn-matrix, contains either LT or UT or
 NB.             both part(s) of A
 NB.   B       - m×n-matrix
@@ -1995,6 +1994,7 @@ NB.   Capprox - m×n-matrix, computed by the verb being
 NB.             tested, approximates Cexact
 NB.   berr    ≥ 0, the relative backward error for Capprox
 NB.   Cexact  - an updated C
+NB.   A       - mn×mn-matrix, Hermitian (symmetric)
 NB.   m       ≥ 0, the number of rows in C and B
 NB.   n       ≥ 0, the number of columns in C and B
 NB.   mn      = m for xxmmlx or mn = n for xxmmrx
@@ -2037,7 +2037,6 @@ NB. where
 NB.   trmvxxx - monad, the reference implementation to
 NB.             compute xexact:
 NB.               xexact=. trmvxxx (AA ; x ; incx)
-NB.   A       - n×n-matrix, triangular
 NB.   AA      - n×n-matrix, contains either non-zero or both
 NB.             part(s) of A
 NB.   x       - (1+(n-1)*|incx|)-vector
@@ -2046,6 +2045,7 @@ NB.   xapprox - the same shape as x, the approximate xexact,
 NB.             is computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for xapprox
 NB.   xexact  - an updated x
+NB.   A       - n×n-matrix, triangular
 NB.   n       ≥ 0, the size of A and AA
 NB.
 NB. Formula:
@@ -2088,7 +2088,6 @@ NB.   trxpick  - monad to pick a triangular part, is one of:
 NB.                trlpick  NB. if trmmxl is used
 NB.                trupick  NB. if trmmxu is used
 NB.   alpha    - scalar
-NB.   A        - k×k-matrix, triangular
 NB.   AA       - k×k-matrix, contains either non-zero or both
 NB.              part(s) of A
 NB.   B        - m×n-matrix
@@ -2096,6 +2095,7 @@ NB.   Bapprox  - m×n-matrix, the approximate Bexact, is
 NB.              computed by the verb being tested
 NB.   berr     ≥ 0, the relative backward error for Bapprox
 NB.   Bexact   - an updated B
+NB.   A        - k×k-matrix, triangular
 NB.   m        ≥ 0, the number of rows in B
 NB.   n        ≥ 0, the number of columns in B
 NB.   k        = m for trmmlxxx or k = n for trmmrxxx
@@ -2137,7 +2137,6 @@ NB.   berr=. (AA ; b ; incb) (trmvxxx chk3sv) xapprox
 NB. where
 NB.   trmvxxx - monad to compute matrix-vector product:
 NB.               bapprox=. trmvxxx (AA ; xapprox ; incx)
-NB.   A       - n×n-matrix, triangular
 NB.   AA      - n×n-matrix, contains either non-zero or both
 NB.             part(s) of A
 NB.   b       - (1+(n-1)*|incb|)-vector, the RHS
@@ -2148,6 +2147,7 @@ NB.             solution, is computed by the verb being
 NB.             tested
 NB.   berr    ≥ 0, the relative backward error for xapprox
 NB.   bapprox - the same shape as b, the approximate b
+NB.   A       - n×n-matrix, triangular
 NB.   n       ≥ 0, the size of A and AA
 NB.
 NB. Formula:
@@ -2189,13 +2189,13 @@ NB. where
 NB.   trmmxxxx - monad to compute matrix-matrix product:
 NB.                alphabyBapprox=. trmmxxxx (1 ; AA ; Xapprox)
 NB.   alpha    - scalar
-NB.   A        - k×k-matrix, triangular
 NB.   AA       - k×k-matrix, contains either non-zero or both
 NB.              part(s) of A
 NB.   B        - m×n-matrix, RHS
 NB.   Xapprox  - the same shape as B, approximate solutions,
 NB.              are computed by the verb being tested
 NB.   berr     ≥ 0, the relative backward error for Xapprox
+NB.   A        - k×k-matrix, triangular
 NB.   m        ≥ 0, the number of rows in B and Xapprox
 NB.   n        ≥ 0, the number of columns in B and Xapprox
 NB.   k        = m for trmmlxxx or k = n for trmmrxxx
@@ -2292,7 +2292,6 @@ NB.                trupick  NB. if xxrkux is used
 NB.   alpha    - scalar, must be real for herkxx
 NB.   A        - na×ka-matrix
 NB.   beta     - scalar, must be real for herkxx
-NB.   C        - n×n-matrix, Hermitian (symmetric)
 NB.   CC       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of C
 NB.   CCapprox - n×n-matrix, computed by the verb being
@@ -2302,6 +2301,7 @@ NB.              elements weren't changed and match CC
 NB.   berr     ≥ 0, the relative backward error for CCapprox
 NB.   CCexact  - CC with either LT (for xxrklx) or UT (for
 NB.              xxrkux) updated
+NB.   C        - n×n-matrix, Hermitian (symmetric)
 NB.   n        ≥ 0, the size of C, CC, CCexact and CCapprox,
 NB.              and the number of rows or columns in A
 NB.   k        ≥ 0, the number of columns or rows in A
@@ -2352,7 +2352,6 @@ NB.                trupick  NB. if xxru is used
 NB.   alpha    - scalar
 NB.   x        - (1+(n-1)*|incx|)-vector
 NB.   incx     ≠ 0, the increment for the elements of x
-NB.   A        - n×n-matrix, Hermitian (symmetric)
 NB.   AA       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of A
 NB.   AAapprox - n×n-matrix, computed by the verb being
@@ -2362,6 +2361,7 @@ NB.              weren't changed and match AA
 NB.   berr     ≥ 0, the relative backward error for AAapprox
 NB.   AAexact  - AA with either LT (for xxrl) or UT (for
 NB.              xxru) updated
+NB.   A        - n×n-matrix, Hermitian (symmetric)
 NB.   n        ≥ 0, the size of A, AA, AAexact and AAapprox
 NB.
 NB. Formula:
@@ -2409,7 +2409,6 @@ NB.   alpha    - scalar
 NB.   A        - nab×kab-matrix
 NB.   B        - nab×kab-matrix
 NB.   beta     - scalar, must be real for her2kxx
-NB.   C        - n×n-matrix, Hermitian (symmetric)
 NB.   CC       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of C
 NB.   CCapprox - n×n-matrix, computed by the verb being
@@ -2419,6 +2418,7 @@ NB.              elements weren't changed and match CC
 NB.   berr     ≥ 0, the relative backward error for CCapprox
 NB.   CCexact  - CC with either LT (for xxr2klx) or UT (for
 NB.              xxr2kux) updated
+NB.   C        - n×n-matrix, Hermitian (symmetric)
 NB.   n        ≥ 0, the size of C, CC, CCexact and CCapprox,
 NB.              and the number of rows or columns in A and B
 NB.   k        ≥ 0, the number of columns or rows in A and B
@@ -2471,7 +2471,6 @@ NB.   x        - (1+(n-1)*|incx|)-vector
 NB.   incx     ≠ 0, the increment for the elements of x
 NB.   y        - (1+(n-1)*|incy|)-vector
 NB.   incy     ≠ 0, the increment for the elements of y
-NB.   A        - n×n-matrix, Hermitian (symmetric)
 NB.   AA       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of A
 NB.   AAapprox - n×n-matrix, computed by the verb being
@@ -2481,6 +2480,7 @@ NB.              elements weren't changed and match AA
 NB.   berr     ≥ 0, the relative backward error for AAapprox
 NB.   AAexact  - AA with either LT (for xxr2l) or UT (for
 NB.              xxr2u) updated
+NB.   A        - n×n-matrix, Hermitian (symmetric)
 NB.   n        ≥ 0, the size of A, AA, AAexact and AAapprox
 NB.
 NB. Formula:

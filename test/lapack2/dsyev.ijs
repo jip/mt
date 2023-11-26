@@ -18,10 +18,10 @@ NB.            'L' - lower
 NB.            'U' - upper
 NB.   AA   - n×n-matrix, real, contains either lower or upper
 NB.          or both part(s) of A
-NB.   A    - n×n-matrix, real, symmetric, to be decomposed
 NB.   w    - n-vector, real, eigenvalues of A
 NB.   V    - n×n-matrix, real, eigenvectors of A or
 NB.          0×0-matrix
+NB.   A    - n×n-matrix, real, symmetric, to be decomposed
 NB.   n    ≥ 0, the size of A, AA, V and w
 NB.
 NB. Notes:

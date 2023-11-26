@@ -16,10 +16,10 @@ NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^T = A
 NB.   AA   - n×n-matrix, real, contains either lower or upper
 NB.          or both part(s) of A
-NB.   A    - n×n-matrix, real, symmetric, to factorize
 NB.   DPT1 - n×n-matrix, D and PT1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define
 NB.          permutations
+NB.   A    - n×n-matrix, real, symmetric, to factorize
 NB.   D    - n×n-matrix, real, symmetric and block diagonal
 NB.          with 1×1 and 2×2 diagonal blocks (opposite
 NB.          diagonal is not stored)

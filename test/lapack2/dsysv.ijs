@@ -16,14 +16,14 @@ NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^T = A
 NB.   AA   - n×n-matrix, real, contains either lower or upper
 NB.          or both part(s) of A
-NB.   A    - n×n-matrix, real, symmetric, to be factored to
-NB.          DPT1 and ipiv
 NB.   B    - n×nrhs-matrix, real, RHS
 NB.   DPT1 - n×n-matrix, D and PT1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define
 NB.          permutations
 NB.   X    - n×nrhs-matrix, real, solutions of equation:
 NB.            A * X = B
+NB.   A    - n×n-matrix, real, symmetric, to be factored to
+NB.          DPT1 and ipiv
 NB.   D    - n×n-matrix, real, symmetric and block diagonal
 NB.          with 1×1 and 2×2 diagonal blocks (opposite
 NB.          diagonal is not stored)

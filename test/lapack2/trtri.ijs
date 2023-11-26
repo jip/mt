@@ -17,10 +17,10 @@ NB.            'N' - A is non-unit triangular: L or U
 NB.            'U' - A is unit triangular: L1 or U1
 NB.   AA   - n×n-matrix, contains either non-zero or both
 NB.          part(s) of A
-NB.   A    - n×n-matrix to be inversed, triangular
 NB.   T    - n×n-matrix, contains inversed triangular
 NB.          matrix in changed triangle and unchanged
 NB.          elements of AA in [strict] opposite triangle
+NB.   A    - n×n-matrix to be inversed, triangular
 NB.   n    ≥ 0, the size of A and T
 NB.
 NB. Notes:

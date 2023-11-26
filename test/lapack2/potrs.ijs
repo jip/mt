@@ -17,12 +17,12 @@ NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
 NB.   AA   - n×n-matrix, contains either non-zero or both
 NB.          part(s) of T
-NB.   T    - n×n-matrix, L or U factor
 NB.   B    - n×nrhs-matrix, RHS
 NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
 NB.   A    - n×n-matrix, Hermitian (symmetric) positive
 NB.          definite, was factored to T by xPOTRF
+NB.   T    - n×n-matrix, L or U factor
 NB.   L    - n×n-matrix, lower triangular
 NB.   U    - n×n-matrix, upper triangular
 NB.   n    ≥ 0, the order of system

@@ -1976,28 +1976,28 @@ NB.   error for the basic hermitian (symmetric) matrix-matrix
 NB.   operation
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; AA ; B ; beta ; C) (xxmmxx chk2mm trxpick) Capprox
+NB.   berr=. (alpha ; AA ; B ; beta ; C) (xxmmxxxx chk2mm trxpick) Capprox
 NB. where
-NB.   xxmmxx  - monad, the reference implementation to
-NB.             compute Cexact:
-NB.               Cexact=. xxmmxx (alpha ; AA ; B ; beta ; C)
-NB.   trxpick - monad to pick a triangular part, is one of:
-NB.               trlpick  NB. if xxmmxlxx is used
-NB.               trupick  NB. if xxmmxuxx is used
-NB.   alpha   - scalar
-NB.   AA      - mn×mn-matrix, contains either LT or UT or
-NB.             both part(s) of A
-NB.   B       - m×n-matrix
-NB.   beta    - scalar
-NB.   C       - m×n-matrix
-NB.   Capprox - m×n-matrix, computed by the verb being
-NB.             tested, approximates Cexact
-NB.   berr    ≥ 0, the relative backward error for Capprox
-NB.   Cexact  - an updated C
-NB.   A       - mn×mn-matrix, Hermitian (symmetric)
-NB.   m       ≥ 0, the number of rows in C and B
-NB.   n       ≥ 0, the number of columns in C and B
-NB.   mn      = m for xxmmlx or mn = n for xxmmrx
+NB.   xxmmxxxx - monad, the reference implementation to
+NB.              compute Cexact:
+NB.                Cexact=. xxmmxxxx (alpha ; AA ; B ; beta ; C)
+NB.   trxpick  - monad to pick a triangular part, is one of:
+NB.                trlpick  NB. if xxmmxlxx is used
+NB.                trupick  NB. if xxmmxuxx is used
+NB.   alpha    - scalar
+NB.   AA       - mn×mn-matrix, contains either LT or UT or
+NB.              both part(s) of A
+NB.   B        - m×n-matrix
+NB.   beta     - scalar
+NB.   C        - m×n-matrix
+NB.   Capprox  - m×n-matrix, computed by the verb being
+NB.              tested, approximates Cexact
+NB.   berr     ≥ 0, the relative backward error for Capprox
+NB.   Cexact   - an updated C
+NB.   A        - mn×mn-matrix, Hermitian (symmetric)
+NB.   m        ≥ 0, the number of rows in C and B
+NB.   n        ≥ 0, the number of columns in C and B
+NB.   mn       = m for xxmmlxxx or mn = n for xxmmrxxx
 NB.
 NB. Formula:
 NB.   (m,n) := shape(C)
@@ -2011,8 +2011,8 @@ NB.   endif
 NB. where
 NB.   ||M|| := normmt(M)
 NB.   G - the gauge matrix, is one of:
-NB.     G := |alpha| * |A| * |B| + |beta| * |C|, for xxmmlx
-NB.     G := |alpha| * |B| * |A| + |beta| * |C|, for xxmmrx
+NB.     G := |alpha| * |A| * |B| + |beta| * |C|, for xxmmlxxx
+NB.     G := |alpha| * |B| * |A| + |beta| * |C|, for xxmmrxxx
 NB.
 NB. Notes:
 NB. - models BLAS' DCHK2('DSYMM'), ZCHK2('ZSYMM') and

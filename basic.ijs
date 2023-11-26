@@ -509,7 +509,7 @@ herkun=: <: herk (mp_mt_  ct_mt_)
 herkuc=: <: herk (mp_mt_~ ct_mt_)
 
 NB. ---------------------------------------------------------
-NB. r2k
+NB. her2k
 NB.
 NB. Description:
 NB.   Conj. to make monad to perform the hermitian
@@ -521,7 +521,7 @@ NB.   where C is Hermitian (symmetric), op1(M) is either M^T
 NB.   or M^H and op2(alpha) is either alpha or conj(alpha)
 NB.
 NB. Syntax:
-NB.   CCupd=. (cmp`trans r2k kind) alpha ; A ; B ; beta ; CC
+NB.   CCupd=. (cmp`trans her2k kind) alpha ; A ; B ; beta ; CC
 NB. where
 NB.   cmp   - dyad to define which triangular part of C is to
 NB.           be referenced, is one of:
@@ -536,13 +536,13 @@ NB.             0       NB. (2)
 NB.             1       NB. (1)
 NB.
 NB. Notes:
-NB. - r2k's design solves a problem: how to allow C1 to see
+NB. - her2k's design solves a problem: how to allow C1 to see
 NB.   V2 in the train (V0 C1 V2 A3), the solution is: send V2
 NB.   not (V2 A3) into C1, implement A3 functionality inside
 NB.   C1 inline, use switch N4 to control A3 behavior, the
 NB.   resulting train becomes (V0`V2 C1 N4)
 
-r2k=: 2 : 0
+her2k=: 2 : 0
   'alpha A B beta CC'=. y
   CC=. m@.0/~&i.@c_mt_`]} CC ,: ((+ m@.1) alpha * A (mp_mt_~ m@.1)~`(mp_mt_ m@.1)@.n B) + beta * CC
 )
@@ -593,15 +593,15 @@ NB.   her2kun    ZHER2K('U','N',...)
 NB.   her2kuc    ZHER2K('U','C',...)
 NB. - reference implementation
 
-syr2kln=: >:`|:     r2k 1
-syr2klt=: >:`|:     r2k 0
-syr2kun=: <:`|:     r2k 1
-syr2kut=: <:`|:     r2k 0
-            `
-her2kln=: >:`ct_mt_ r2k 1
-her2klc=: >:`ct_mt_ r2k 0
-her2kun=: <:`ct_mt_ r2k 1
-her2kuc=: <:`ct_mt_ r2k 0
+syr2kln=: >:`|:     her2k 1
+syr2klt=: >:`|:     her2k 0
+syr2kun=: <:`|:     her2k 1
+syr2kut=: <:`|:     her2k 0
+
+her2kln=: >:`ct_mt_ her2k 1
+her2klc=: >:`ct_mt_ her2k 0
+her2kun=: <:`ct_mt_ her2k 1
+her2kuc=: <:`ct_mt_ her2k 0
 
 NB. ---------------------------------------------------------
 NB. gemv
@@ -886,11 +886,11 @@ gemmnn=:   mp_mt_                   gemm
 gemmnt=:  (mp_mt_  |:    )          gemm
 gemmnc=:  (mp_mt_  ct_mt_)          gemm
 gemmtn=:  (mp_mt_~ |:    )~         gemm
-gemmtt=:  (mp_mt_& |:    )          gemm
+gemmtt=:   mp_mt_& |:               gemm
 gemmtc=: ((mp_mt_~ |:    )~ ct_mt_) gemm
 gemmcn=:  (mp_mt_~ ct_mt_)~         gemm
 gemmct=: ((mp_mt_~ ct_mt_)~ |:    ) gemm
-gemmcc=:  (mp_mt_& ct_mt_)          gemm
+gemmcc=:   mp_mt_& ct_mt_           gemm
 
 NB. ---------------------------------------------------------
 NB. hemm
@@ -1360,9 +1360,9 @@ testbasicger=: 3 : 0
   'x y A'=. y
 
   NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; expanded_y_i ; incy_i ; A) to tmonad
-  ('dger_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < A
-  ('zgerc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(gerc chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) zcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < A
-  ('zgeru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) zcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < A
+  ('dger_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { (<"0 dcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
+  ('zgerc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(gerc chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { (<"0 zcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
+  ('zgeru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 { (<"0 zcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
 
   EMPTY
 )
@@ -1696,15 +1696,15 @@ testbasicgemv=: 3 : 0
   yn=. n {. y
 
   NB. test for the case: ('alpha beta inc'=. 1 0 1) and (op(A) = A)
-  ('(+/ .*)'        tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))                                                     A  ;    xn
-  ('mp'             tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))                                                     A  ;    xn
+  ('(+/ .*)'        tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))                                                   A  ;    xn
+  ('mp'             tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))                                                   A  ;    xn
 
   NB. for every i feed the tuple (alpha_i ; A ; expanded_x_i ; incx_i ; beta_i ; expanded_y_i ; incy_i) to tmonad
-  ('dgemvn_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< A) ; (< xn) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< ym) ; < <"0 inc
-  ('dgemvt_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvt chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< A) ; (< xm) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< yn) ; < <"0 inc
-  ('zgemvn_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< A) ; (< xn) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< ym) ; < <"0 inc
-  ('zgemvt_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvt chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< A) ; (< xm) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< ym) ; < <"0 inc
-  ('zgemvc_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvc chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< A) ; (< xm) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< ym) ; < <"0 inc
+  ('dgemvn_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 dcoeff) ; (< A) ; (< xn) ; (<"0 inc) ; (<"0 dcoeff) ; (< ym) ; < <"0 inc
+  ('dgemvt_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvt chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 dcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 dcoeff) ; (< yn) ; < <"0 inc
+  ('zgemvn_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xn) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
+  ('zgemvt_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvt chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
+  ('zgemvc_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvc chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
 
   EMPTY
 )
@@ -1835,27 +1835,27 @@ testbasicgemm=: 3 : 0
   As=. ks <@:({."0 1)"0 _ As                     NB. As[i] is m×k[i]-matrix
 
   NB. test for the case: ('alpha beta'=. 1.0 0.0) and (op(A) = A)
-  ('(+/ .*)'        tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:             ))@(c (0 shrink 1)  {.   )@>"0 {                          As  ;  < <  B
-  ('mp'             tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:             ))@(c (0 shrink 1)  {.   )@>"0 {                          As  ;  < <  B
+  ('(+/ .*)'         tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
+  ('mp'              tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
 
   NB. for every i feed the tuple (alpha_i ; A_i ; B_i ; beta_i ; C) to tmonad
   NB. note: A_i and B_i shapes are related; to emulate this,
   NB.       a full fixed B is feeded to Catalogue ({) and
   NB.       then is shrinked to the shape suitable before
   NB.       call to tmonad
-  ('dgemmnn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { ((<"0) dcoeff) ;         As  ; (<    B) ; ((<"0) dcoeff) ; < < C
-  ('dgemmnt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { ((<"0) dcoeff) ;         As  ; (< |: B) ; ((<"0) dcoeff) ; < < C
-  ('dgemmtn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { ((<"0) dcoeff) ; (|: L:0 As) ; (<    B) ; ((<"0) dcoeff) ; < < C
-  ('dgemmtt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { ((<"0) dcoeff) ; (|: L:0 As) ; (< |: B) ; ((<"0) dcoeff) ; < < C
-  ('zgemmnn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { ((<"0) zcoeff) ;         As  ; (<    B) ; ((<"0) zcoeff) ; < < C
-  ('zgemmnt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { ((<"0) zcoeff) ;         As  ; (< |: B) ; ((<"0) zcoeff) ; < < C
-  ('zgemmnc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnc chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { ((<"0) zcoeff) ;         As  ; (< ct B) ; ((<"0) zcoeff) ; < < C
-  ('zgemmtn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { ((<"0) zcoeff) ; (|: L:0 As) ; (<    B) ; ((<"0) zcoeff) ; < < C
-  ('zgemmtt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { ((<"0) zcoeff) ; (|: L:0 As) ; (< |: B) ; ((<"0) zcoeff) ; < < C
-  ('zgemmtc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { ((<"0) zcoeff) ; (|: L:0 As) ; (< ct B) ; ((<"0) zcoeff) ; < < C
-  ('zgemmcn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmcn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { ((<"0) zcoeff) ; (ct L:0 As) ; (<    B) ; ((<"0) zcoeff) ; < < C
-  ('zgemmct_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmct chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { ((<"0) zcoeff) ; (ct L:0 As) ; (< |: B) ; ((<"0) zcoeff) ; < < C
-  ('zgemmcc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmcc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { ((<"0) zcoeff) ; (ct L:0 As) ; (< ct B) ; ((<"0) zcoeff) ; < < C
+  ('dgemmnn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { (<"0 dcoeff) ;         As  ; (<    B) ; (<"0 dcoeff) ; < < C
+  ('dgemmnt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 dcoeff) ;         As  ; (< |: B) ; (<"0 dcoeff) ; < < C
+  ('dgemmtn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 dcoeff) ; (|: L:0 As) ; (<    B) ; (<"0 dcoeff) ; < < C
+  ('dgemmtt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 dcoeff) ; (|: L:0 As) ; (< |: B) ; (<"0 dcoeff) ; < < C
+  ('zgemmnn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ;         As  ; (<    B) ; (<"0 zcoeff) ; < < C
+  ('zgemmnt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< |: B) ; (<"0 zcoeff) ; < < C
+  ('zgemmnc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnc chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< ct B) ; (<"0 zcoeff) ; < < C
+  ('zgemmtn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (<    B) ; (<"0 zcoeff) ; < < C
+  ('zgemmtt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< |: B) ; (<"0 zcoeff) ; < < C
+  ('zgemmtc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< ct B) ; (<"0 zcoeff) ; < < C
+  ('zgemmcn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmcn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (<    B) ; (<"0 zcoeff) ; < < C
+  ('zgemmct_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmct chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< |: B) ; (<"0 zcoeff) ; < < C
+  ('zgemmcc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmcc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< ct B) ; (<"0 zcoeff) ; < < C
 
   EMPTY
 )
@@ -1885,14 +1885,14 @@ testbasicsymm=: 3 : 0
   An=. (2 # n) {. AA
 
   NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
-  ('dsymmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmll chk2mm trlpick)))@>"0 { ((<"0) dcoeff) ; (< Am) ; (< B) ; ((<"0) dcoeff) ; < < C
-  ('dsymmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmlu chk2mm trupick)))@>"0 { ((<"0) dcoeff) ; (< Am) ; (< B) ; ((<"0) dcoeff) ; < < C
-  ('dsymmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmrl chk2mm trlpick)))@>"0 { ((<"0) dcoeff) ; (< An) ; (< B) ; ((<"0) dcoeff) ; < < C
-  ('dsymmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmru chk2mm trupick)))@>"0 { ((<"0) dcoeff) ; (< An) ; (< B) ; ((<"0) dcoeff) ; < < C
-  ('zsymmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmll chk2mm trlpick)))@>"0 { ((<"0) zcoeff) ; (< Am) ; (< B) ; ((<"0) zcoeff) ; < < C
-  ('zsymmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmlu chk2mm trupick)))@>"0 { ((<"0) zcoeff) ; (< Am) ; (< B) ; ((<"0) zcoeff) ; < < C
-  ('zsymmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmrl chk2mm trlpick)))@>"0 { ((<"0) zcoeff) ; (< An) ; (< B) ; ((<"0) zcoeff) ; < < C
-  ('zsymmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmru chk2mm trupick)))@>"0 { ((<"0) zcoeff) ; (< An) ; (< B) ; ((<"0) zcoeff) ; < < C
+  ('dsymmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmll chk2mm trlpick)))@>"0 { (<"0 dcoeff) ; (< Am) ; (< B) ; (<"0 dcoeff) ; < < C
+  ('dsymmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmlu chk2mm trupick)))@>"0 { (<"0 dcoeff) ; (< Am) ; (< B) ; (<"0 dcoeff) ; < < C
+  ('dsymmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmrl chk2mm trlpick)))@>"0 { (<"0 dcoeff) ; (< An) ; (< B) ; (<"0 dcoeff) ; < < C
+  ('dsymmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmru chk2mm trupick)))@>"0 { (<"0 dcoeff) ; (< An) ; (< B) ; (<"0 dcoeff) ; < < C
+  ('zsymmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmll chk2mm trlpick)))@>"0 { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
+  ('zsymmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmlu chk2mm trupick)))@>"0 { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
+  ('zsymmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmrl chk2mm trlpick)))@>"0 { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
+  ('zsymmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmru chk2mm trupick)))@>"0 { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
 
   EMPTY
 )
@@ -1921,10 +1921,10 @@ testbasichemm=: 3 : 0
   An=. (2 # n) {. AA
 
   NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
-  ('zhemmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmll chk2mm trlpick)))@>"0 { ((<"0) zcoeff) ; (< Am) ; (< B) ; ((<"0) zcoeff) ; < < C
-  ('zhemmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmlu chk2mm trupick)))@>"0 { ((<"0) zcoeff) ; (< Am) ; (< B) ; ((<"0) zcoeff) ; < < C
-  ('zhemmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmrl chk2mm trlpick)))@>"0 { ((<"0) zcoeff) ; (< An) ; (< B) ; ((<"0) zcoeff) ; < < C
-  ('zhemmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmru chk2mm trupick)))@>"0 { ((<"0) zcoeff) ; (< An) ; (< B) ; ((<"0) zcoeff) ; < < C
+  ('zhemmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmll chk2mm trlpick)))@>"0 { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
+  ('zhemmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmlu chk2mm trupick)))@>"0 { (<"0 zcoeff) ; (< Am) ; (< B) ; (<"0 zcoeff) ; < < C
+  ('zhemmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmrl chk2mm trlpick)))@>"0 { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
+  ('zhemmru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmru chk2mm trupick)))@>"0 { (<"0 zcoeff) ; (< An) ; (< B) ; (<"0 zcoeff) ; < < C
 
   EMPTY
 )
@@ -1952,10 +1952,10 @@ testbasictrmm=: 3 : 0
   Am=. (2 # m) {. AA
   An=. (2 # n) {. AA
 
-  argsdm=. { ((<"0) dcoeff) ; (< Am) ; < < B
-  argsdn=. { ((<"0) dcoeff) ; (< An) ; < < B
-  argszm=. { ((<"0) zcoeff) ; (< Am) ; < < B
-  argszn=. { ((<"0) zcoeff) ; (< An) ; < < B
+  argsdm=. { (<"0 dcoeff) ; (< Am) ; < < B
+  argsdn=. { (<"0 dcoeff) ; (< An) ; < < B
+  argszm=. { (<"0 zcoeff) ; (< Am) ; < < B
+  argszn=. { (<"0 zcoeff) ; (< An) ; < < B
 
   NB. for every i feed the tuple (alpha_i ; A ; B) to tmonad
   ('dtrmmllnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmmllnn chk3mm trlpick)))@>"0 argsdm
@@ -2172,11 +2172,11 @@ testbasictrsm=: 3 : 0
   ('ztrsmrucu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmmrucu chk3sm)))@>"0 argszn
 
   acoeff=. /:~ ~. dcoeff , zcoeff
-  argsBm=. { ((<"0) acoeff) ; (< Am) ; < < B
-  argsBn=. { ((<"0) acoeff) ; (< An) ; < < B
+  argsBm=. { (<"0 acoeff) ; (< Am) ; < < B
+  argsBn=. { (<"0 acoeff) ; (< An) ; < < B
   'bm bn'=. ({."1 ; {.) B
-  argsbm=. { ((<"0) acoeff) ; (< Am) ; < < bm
-  argsbn=. { ((<"0) acoeff) ; (< An) ; < < bn
+  argsbm=. { (<"0 acoeff) ; (< Am) ; < < bm
+  argsbn=. { (<"0 acoeff) ; (< An) ; < < bn
 
   NB. monadic trsmxxxx, 1-rank b and x
   ('trsmllnn'         tmonad (]`]`(_."_)`(_."_)`(trmmllnn chk3sm)))@>"0 argsbm

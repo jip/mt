@@ -85,9 +85,9 @@ zgemvcore=: (4 : 0) ([ assert@basiccr6)
 )
 
 NB. ---------------------------------------------------------
-NB. Dyad         Domain
-NB. dsymvcore    real
-NB. zhemvcore    complex
+NB. Dyad         Domain     A
+NB. dsymvcore    real       SY
+NB. zhemvcore    complex    HE
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -231,11 +231,11 @@ zgemvt=: 'n'&   zgemvcore
 zgemvc=: 'n'&(+@zgemvcore basiccj2)
 
 NB. ---------------------------------------------------------
-NB. Monad     Domain     A            Reads in A
-NB. dsymvl    real       symmetric    LT
-NB. dsymvu    real       symmetric    UT
-NB. zhemvl    complex    Hermitian    LT
-NB. zhemvu    complex    Hermitian    UT
+NB. Monad     Domain     A     Reads in A
+NB. dsymvl    real       SY    LT
+NB. dsymvu    real       SY    UT
+NB. zhemvl    complex    HE    LT
+NB. zhemvu    complex    HE    UT
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:

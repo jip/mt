@@ -315,11 +315,11 @@ her=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    A            R/W in A    op(x)
-NB. syrl     symmetric    LT          x^T
-NB. syru     symmetric    UT          x^T
-NB. herl     Hermitian    LT          x^H
-NB. heru     Hermitian    UT          x^H
+NB. Monad    A     R/W in A    op(x)
+NB. syrl     SY    LT          x^T
+NB. syru     SY    UT          x^T
+NB. herl     HE    LT          x^H
+NB. heru     HE    UT          x^H
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 1 operation:
@@ -384,11 +384,11 @@ her2=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    A            R/W in A    op1(v)    op2(alpha)
-NB. syr2l    symmetric    LT          v^T       alpha
-NB. syr2u    symmetric    UT          v^T       alpha
-NB. her2l    Hermitian    LT          v^H       conj(alpha)
-NB. her2u    Hermitian    UT          v^H       conj(alpha)
+NB. Monad    A     R/W in A    op1(v)    op2(alpha)
+NB. syr2l    SY    LT          v^T       alpha
+NB. syr2u    SY    UT          v^T       alpha
+NB. her2l    HE    LT          v^H       conj(alpha)
+NB. her2u    HE    UT          v^H       conj(alpha)
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2 operation:
@@ -454,15 +454,15 @@ herk=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad     C            alpha,beta    R/W in C    op1(A)    op2(A)
-NB. syrkln    symmetric    any           LT          A         A^T
-NB. syrklt    symmetric    any           LT          A^T       A
-NB. syrkun    symmetric    any           UT          A         A^T
-NB. syrkut    symmetric    any           UT          A^T       A
-NB. herkln    Hermitian    real          LT          A         A^H
-NB. herklc    Hermitian    real          LT          A^H       A
-NB. herkun    Hermitian    real          UT          A         A^H
-NB. herkuc    Hermitian    real          UT          A^H       A
+NB. Monad     C     alpha,beta    R/W in C    op1(A)    op2(A)
+NB. syrkln    SY    any           LT          A         A^T
+NB. syrklt    SY    any           LT          A^T       A
+NB. syrkun    SY    any           UT          A         A^T
+NB. syrkut    SY    any           UT          A^T       A
+NB. herkln    HE    real          LT          A         A^H
+NB. herklc    HE    real          LT          A^H       A
+NB. herkun    HE    real          UT          A         A^H
+NB. herkuc    HE    real          UT          A^H       A
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank k operation:
@@ -548,15 +548,15 @@ her2k=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad      C            beta    R/W in C    op1(M)    op2(M)    op3(alpha)
-NB. syr2kln    symmetric    any     LT          M         M^T       alpha
-NB. syr2klt    symmetric    any     LT          M^T       M         alpha
-NB. syr2kun    symmetric    any     UT          M         M^T       alpha
-NB. syr2kut    symmetric    any     UT          M^T       M         alpha
-NB. her2kln    Hermitian    real    LT          M         M^H       conj(alpha)
-NB. her2klc    Hermitian    real    LT          M^H       M         conj(alpha)
-NB. her2kun    Hermitian    real    UT          M         M^H       conj(alpha)
-NB. her2kuc    Hermitian    real    UT          M^H       M         conj(alpha)
+NB. Monad      C     beta    R/W in C    op1(M)    op2(M)    op3(alpha)
+NB. syr2kln    SY    any     LT          M         M^T       alpha
+NB. syr2klt    SY    any     LT          M^T       M         alpha
+NB. syr2kun    SY    any     UT          M         M^T       alpha
+NB. syr2kut    SY    any     UT          M^T       M         alpha
+NB. her2kln    HE    real    LT          M         M^H       conj(alpha)
+NB. her2klc    HE    real    LT          M^H       M         conj(alpha)
+NB. her2kun    HE    real    UT          M         M^H       conj(alpha)
+NB. her2kuc    HE    real    UT          M^H       M         conj(alpha)
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2k operation:
@@ -686,11 +686,11 @@ NB.           he4geu  NB. UT, A is Hermitian
 hemv=: gemv
 
 NB. ---------------------------------------------------------
-NB. Monad    A            Reads in A
-NB. symvl    symmetric    LT
-NB. symvu    symmetric    UT
-NB. hemvl    Hermitian    LT
-NB. hemvu    Hermitian    UT
+NB. Monad    A     Reads in A
+NB. symvl    SY    LT
+NB. symvu    SY    UT
+NB. hemvl    HE    LT
+NB. hemvu    HE    UT
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -914,15 +914,15 @@ NB.           product=. AA mul B
 hemm=: gemm
 
 NB. ---------------------------------------------------------
-NB. Monad     A            Side    Reads in A
-NB. symmll    symmetric    (1)     LT
-NB. symmlu    symmetric    (1)     UT
-NB. symmrl    symmetric    (2)     LT
-NB. symmru    symmetric    (2)     UT
-NB. hemmll    Hermitian    (1)     LT
-NB. hemmlu    Hermitian    (1)     UT
-NB. hemmrl    Hermitian    (2)     LT
-NB. hemmru    Hermitian    (2)     UT
+NB. Monad     A     Side    Reads in A
+NB. symmll    SY    (1)     LT
+NB. symmlu    SY    (1)     UT
+NB. symmrl    SY    (2)     LT
+NB. symmru    SY    (2)     UT
+NB. hemmll    HE    (1)     LT
+NB. hemmlu    HE    (1)     UT
+NB. hemmrl    HE    (2)     LT
+NB. hemmru    HE    (2)     UT
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:

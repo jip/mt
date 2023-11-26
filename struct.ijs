@@ -84,18 +84,43 @@ NB. =========================================================
 NB. Concepts
 NB.
 NB. Notation:
-NB.   r-rank   - an array of rank   r  e.g. "3-rank array A"
-NB.   l-vector - a vector of length l  e.g. "2-vector v"
-NB.   s-matrix - a matrix of shape  s  e.g. "2×3-matrix M"
-NB.   s-brick  - a brick  of shape  s  e.g. "2×3×4-brick B"
-NB.   L        -        lower triangular         matrix
-NB.   L1       - unit   lower triangular         matrix
-NB.   U        -        upper triangular         matrix
-NB.   U1       - unit   upper triangular         matrix
-NB.   LT       -        lower triangular part of matrix
-NB.   SLT      - strict lower triangular part of matrix
-NB.   UT       -        upper triangular part of matrix
-NB.   SUT      - strict upper triangular part of matrix
+NB.   array ranks:
+NB.     l-vector   - a vector of length l  e.g. "2-vector v"
+NB.     s-matrix   - a matrix of shape  s  e.g. "2×3-matrix M"
+NB.     s-brick    - a brick  of shape  s  e.g. "2×3×4-brick B"
+NB.     r-rank     - an array of rank   r  e.g. "3-rank array A"
+NB.   matrix types:
+NB.     BD,BDL,BDU - [{lower,upper}] bidiagonal
+NB.     DI         - diagonalizable
+NB.     GE         - general
+NB.     GG         - general-general pair, generalized form
+NB.     GT         - general tridiagonal
+NB.     HE         - Hermitian for complex data type
+NB.                  (symmetric for float data type)
+NB.     HG         - Hessenberg-triangular pair, generalized
+NB.                  Hessenberg form
+NB.     HS,HSL,HSU - [{lower,upper}] Hessenberg
+NB.     HT         - Hermitian (symmetric) tridiagonal
+NB.     OR         - orthogonal
+NB.     PO         - Hermitian (symmetric) positive definite
+NB.     PT         - Hermitian (symmetric) positive definite
+NB.                  tridiagonal
+NB.     SY         - symmetric
+NB.     TG         - triangular-triangular pair, generalized
+NB.                  Schur form
+NB.     TR         - triangular
+NB.     TZ         - trapezoidal
+NB.     UN         - unitary for complex data type
+NB.                  (orthogonal for float data type)
+NB.   triangular matrix [parts]:
+NB.     L          -        lower triangular         matrix
+NB.     L1         - unit   lower triangular         matrix
+NB.     U          -        upper triangular         matrix
+NB.     U1         - unit   upper triangular         matrix
+NB.     LT         -        lower triangular part of matrix
+NB.     SLT        - strict lower triangular part of matrix
+NB.     UT         -        upper triangular part of matrix
+NB.     SUT        - strict upper triangular part of matrix
 NB.
 NB. Notes:
 NB. - unit diagonal in L1 and U1 is usually neither stored
@@ -1056,14 +1081,14 @@ tru1=: 0&$: :([ tru (1 ; [) setdiag ])
 
 NB. ---------------------------------------------------------
 NB. Verb      Reads    Overwrites    Diagonal        Composes matrix
-NB. sy4gel    SLT      SUT           leave as is     symmetric
-NB. sy4geu    SUT      SLT           leave as is     symmetric
-NB. he4gel    SLT      SUT           reificate       Hermitian
-NB. he4geu    SUT      SLT           reificate       Hermitian
-NB. ss4gel    SLT      SUT           zeroize         skew-symmetric
-NB. ss4geu    SUT      SLT           zeroize         skew-symmetric
-NB. sh4gel    SLT      SUT           zeroize         skew-Hermitian
-NB. sh4geu    SUT      SLT           zeroize         skew-Hermitian
+NB. sy4gel    SLT      SUT           leave as is     SY
+NB. sy4geu    SUT      SLT           leave as is     SY
+NB. he4gel    SLT       UT           reificate       HE
+NB. he4geu    SUT       LT           reificate       HE
+NB. ss4gel    SLT       UT           zeroize         skew-symmetric
+NB. ss4geu    SUT       LT           zeroize         skew-symmetric
+NB. sh4gel    SLT       UT           zeroize         skew-Hermitian
+NB. sh4geu    SUT       LT           zeroize         skew-Hermitian
 NB.
 NB. Description:
 NB.   Compose structured matrix from SLT (SUT) part and

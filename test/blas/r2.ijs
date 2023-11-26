@@ -36,9 +36,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. Dyad         Domain     A            op1(v)    op2(s)
-NB. dsyr2core    real       symmetric    v^T       s
-NB. zher2core    complex    Hermitian    v^H       conj(s)
+NB. Dyad         Domain     A     op1(v)    op2(s)
+NB. dsyr2core    real       SY    v^T       s
+NB. zher2core    complex    HE    v^H       conj(s)
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2 operation:
@@ -85,11 +85,11 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad     Domain     A            R/W in A    op1(v)    op2(alpha)
-NB. dsyr2l    real       symmetric    LT          v^T       alpha
-NB. dsyr2u    real       symmetric    UT          v^T       alpha
-NB. zher2l    complex    Hermitian    LT          v^H       conj(alpha)
-NB. zher2u    complex    Hermitian    UT          v^H       conj(alpha)
+NB. Monad     Domain     A     R/W in A    op1(v)    op2(alpha)
+NB. dsyr2l    real       SY    LT          v^T       alpha
+NB. dsyr2u    real       SY    UT          v^T       alpha
+NB. zher2l    complex    HE    LT          v^H       conj(alpha)
+NB. zher2u    complex    HE    UT          v^H       conj(alpha)
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2 operation:

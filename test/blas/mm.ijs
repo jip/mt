@@ -99,9 +99,9 @@ zgemmcore=: (4 : 0) basicswp@([ assert@basiccr4)
 
 NB. ---------------------------------------------------------
 NB. Dyad         Domain     A
-NB. dsymmcore    real       symmetric
-NB. zsymmcore    complex    symmetric
-NB. zhemmcore    complex    Hermitian
+NB. dsymmcore    real       SY
+NB. zsymmcore    complex    SY
+NB. zhemmcore    complex    HE
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
@@ -299,19 +299,19 @@ zgemmct=: 'tc'&zgemmcore
 zgemmcc=: 'cc'&zgemmcore
 
 NB. ---------------------------------------------------------
-NB. Monad      Domain     A            Reads in A    Side
-NB. dsymmll    real       symmetric    LT            (1)
-NB. dsymmlu    real       symmetric    UT            (1)
-NB. dsymmrl    real       symmetric    LT            (2)
-NB. dsymmru    real       symmetric    UT            (2)
-NB. zsymmll    complex    symmetric    LT            (1)
-NB. zsymmlu    complex    symmetric    UT            (1)
-NB. zsymmrl    complex    symmetric    LT            (2)
-NB. zsymmru    complex    symmetric    UT            (2)
-NB. zhemmll    complex    Hermitian    LT            (1)
-NB. zhemmlu    complex    Hermitian    UT            (1)
-NB. zhemmrl    complex    Hermitian    LT            (2)
-NB. zhemmru    complex    Hermitian    UT            (2)
+NB. Monad      Domain     A     Reads in A    Side
+NB. dsymmll    real       SY    LT            (1)
+NB. dsymmlu    real       SY    UT            (1)
+NB. dsymmrl    real       SY    LT            (2)
+NB. dsymmru    real       SY    UT            (2)
+NB. zsymmll    complex    SY    LT            (1)
+NB. zsymmlu    complex    SY    UT            (1)
+NB. zsymmrl    complex    SY    LT            (2)
+NB. zsymmru    complex    SY    UT            (2)
+NB. zhemmll    complex    HE    LT            (1)
+NB. zhemmlu    complex    HE    UT            (1)
+NB. zhemmrl    complex    HE    LT            (2)
+NB. zhemmru    complex    HE    UT            (2)
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:

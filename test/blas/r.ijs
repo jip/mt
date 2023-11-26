@@ -37,9 +37,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. Dyad        Domain     A            op(x)
-NB. dsyrcore    real       symmetric    x^T
-NB. zhercore    complex    Hermitian    x^H
+NB. Dyad        Domain     A     op(x)
+NB. dsyrcore    real       SY    x^T
+NB. zhercore    complex    HE    x^H
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 1 operation:
@@ -136,11 +136,11 @@ zgeru=: (3 : 0)@([ assert@basiccr5)
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    Domain     A            R/W in A    op(x)
-NB. dsyrl    real       symmetric    LT          x^T
-NB. dsyru    real       symmetric    UT          x^T
-NB. zherl    complex    Hermitian    LT          x^H
-NB. zheru    complex    Hermitian    UT          x^H
+NB. Monad    Domain     A     R/W in A    op(x)
+NB. dsyrl    real       SY    LT          x^T
+NB. dsyru    real       SY    UT          x^T
+NB. zherl    complex    HE    LT          x^H
+NB. zheru    complex    HE    UT          x^H
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 1 operation:

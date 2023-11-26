@@ -53,6 +53,10 @@ NB. trl1      Extract unit lower trapezoidal matrix
 NB. tru1      Extract unit upper trapezoidal matrix
 NB. xx4gex    Compose structured matrix from SLT (SUT) part
 NB.           and diagonal of general square matrix
+NB. xxxxxy    Compose matrix from triangular parts of general
+NB.           matrices
+NB. sxxsxy    Adv. to make dyad to compose matrix from strict
+NB.           triangular parts of general matrices
 NB. po        Make Hermitian (symmetric) positive definite
 NB.           matrix from general square invertible one
 NB.
@@ -1108,6 +1112,81 @@ ss4gel=: (0 ; a:) setdiag (</~@i.@#)`(,: -@|:)}
 ss4geu=: (0 ; a:) setdiag (>/~@i.@#)`(,: -@|:)}
 sh4gel=: (0 ; a:) setdiag (</~@i.@#)`(,: -@ct)}
 sh4geu=: (0 ; a:) setdiag (>/~@i.@#)`(,: -@ct)}
+
+NB. ---------------------------------------------------------
+NB. Actor     P.o.S.     x arg goes to    y arg goes to    Diagonal comes from
+NB. lxsuy     verb        LT              SUT              x
+NB. slxuy     verb       SLT               UT              y
+NB. suxly     verb       SUT               LT              y
+NB. uxsly     verb        UT              SLT              x
+NB. slxsuy    adverb     SLT              SUT              m
+NB. suxsly    adverb     SUT              SLT              m
+NB.
+NB. Description:
+NB.   Compose matrix from triangular parts of general
+NB.   matrices
+NB.
+NB. Syntax:
+NB.   C=. A    xxxxxy  B
+NB.   D=. A (d sxxsxy) B
+NB. where
+NB.   A - m×n-matrix or scalar
+NB.   B - m×n-matrix or scalar
+NB.   d - scalar to place in diagonal
+NB.   C - m×n-matrix composed from A and B triangular parts
+NB.   D - m×n-matrix composed from A and B strict triangular
+NB.       parts and d as diagonal elements
+NB.
+NB. Notes:
+NB. - at most one of A, B can be scalar
+NB.
+NB. Examples:
+NB.      ] 'X Y'=. 4 6 ;/@:($"1 0) 'xy'
+NB.   +------+------+
+NB.   |xxxxxx|yyyyyy|
+NB.   |xxxxxx|yyyyyy|
+NB.   |xxxxxx|yyyyyy|
+NB.   |xxxxxx|yyyyyy|
+NB.   +------+------+
+NB.      ] A=. (1 1 ,: 4 6) ];.0 i. 10 10
+NB.   11 12 13 14 15 16
+NB.   21 22 23 24 25 26
+NB.   31 32 33 34 35 36
+NB.   41 42 43 44 45 46
+NB.
+NB.      X lxsuy Y       X slxuy Y       X suxly Y       X uxsly Y
+NB.   xyyyyy          yyyyyy          yxxxxx          xxxxxx
+NB.   xxyyyy          xyyyyy          yyxxxx          yxxxxx
+NB.   xxxyyy          xxyyyy          yyyxxx          yyxxxx
+NB.   xxxxyy          xxxyyy          yyyyxx          yyyxxx
+NB.
+NB.      X '\' slxsuy Y                  X '\' suxsly Y
+NB.   \yyyyy                          \xxxxx
+NB.   x\yyyy                          y\xxxx
+NB.   xx\yyy                          yy\xxx
+NB.   xxx\yy                          yyy\xx
+NB.
+NB.      NB. simulate trlpick
+NB.      trlpick A          A lxsuy 0          0 suxly A
+NB.   11  0  0  0 0 0    11  0  0  0 0 0    11  0  0  0 0 0
+NB.   21 22  0  0 0 0    21 22  0  0 0 0    21 22  0  0 0 0
+NB.   31 32 33  0 0 0    31 32 33  0 0 0    31 32 33  0 0 0
+NB.   41 42 43 44 0 0    41 42 43 44 0 0    41 42 43 44 0 0
+NB.
+NB.      NB. simulate trl1pick
+NB.      trl1pick A         A 1 slxsuy 0       0 (1 suxsly) A
+NB.    1  0  0 0 0 0      1  0  0 0 0 0      1  0  0 0 0 0
+NB.   21  1  0 0 0 0     21  1  0 0 0 0     21  1  0 0 0 0
+NB.   31 32  1 0 0 0     31 32  1 0 0 0     31 32  1 0 0 0
+NB.   41 42 43 1 0 0     41 42 43 1 0 0     41 42 43 1 0 0
+
+lxsuy=: < /&i./@}.@$}@,:
+slxuy=: <:/&i./@}.@$}@,:
+suxly=: >:/&i./@}.@$}@,:
+uxsly=: > /&i./@}.@$}@,:
+
+slxsuy=: 1 : '*@:  (-/&i./)@}.@$}@(m , ,:)'
+suxsly=: 1 : '*@:-@(-/&i./)@}.@$}@(m , ,:)'
 
 NB. ---------------------------------------------------------
 NB. po

@@ -298,20 +298,19 @@ NB.   where A is Hermitian (symmetric), and op(x) is either
 NB.   x^T or x^H
 NB.
 NB. Syntax:
-NB.   AAupd=. (cmp her mul) alpha ; x ; incx ; AA
+NB.   AAupd=. (ref her mul) alpha ; x ; incx ; AA
 NB. where
-NB.   cmp - dyad to define which triangular part of A is to
-NB.         be referenced, is one of:
-NB.           >:     NB. LT
-NB.           <:     NB. UT
+NB.   ref - monad to pick a triangular part, is one of:
+NB.           trlpick  NB. LT
+NB.           trupick  NB. UT
 NB.   mul - dyad to define the form of op(A), is one of:
-NB.           *      NB. the symmetric operation: op(A) := A^T
-NB.           (* +)  NB. the hermitian operation: op(A) := A^H
+NB.           *        NB. the symmetric operation: op(A) := A^T
+NB.           (* +)    NB. the hermitian operation: op(A) := A^H
 
 her=: 2 : 0
   'alpha y incy AA'=. y
   y=. incy extract_mt_ y
-  AA=. AA + u/~&i.@#`(0&,:)} alpha (] */ v) y
+  AA=. AA + u alpha (] */ v) y
 )
 
 NB. ---------------------------------------------------------
@@ -348,11 +347,11 @@ NB. - herl models BLAS' ZHER('L',...)
 NB. - heru models BLAS' ZHER('U',...)
 NB. - reference implementation
 
-syrl=: >: her  *
-syru=: <: her  *
+syrl=: trlpick_mt_ her  *
+syru=: trupick_mt_ her  *
 
-herl=: >: her (* +)
-heru=: <: her (* +)
+herl=: trlpick_mt_ her (* +)
+heru=: trupick_mt_ her (* +)
 
 NB. ---------------------------------------------------------
 NB. her2
@@ -365,12 +364,11 @@ NB.   where A is Hermitian (symmetric), op1(x) is either x^T
 NB.   or x^H, and op2(alpha) is either alpha or conj(alpha)
 NB.
 NB. Syntax:
-NB.   AAupd=. (cmp her2 trans) alpha ; x ; incx ; y ; incy ; AA
+NB.   AAupd=. (ref her2 trans) alpha ; x ; incx ; y ; incy ; AA
 NB. where
-NB.   cmp   - dyad to define which triangular part of A is to
-NB.           be referenced, is one of:
-NB.             >:      NB. LT
-NB.             <:      NB. UT
+NB.   ref   - monad to pick a triangular part, is one of:
+NB.             trlpick  NB. LT
+NB.             trupick  NB. UT
 NB.   trans - monad to define the form of op1(v) and op2(s),
 NB.           is one of:
 NB.             |:      NB. the symmetric operation: op1(v) = v^T, op2(s) = s
@@ -380,7 +378,7 @@ her2=: 2 : 0
   'alpha xx incx y incy AA'=. y
   xx=. incx extract_mt_ xx
   y=.  incy extract_mt_ y
-  AA=. AA + u/~&i.@#`(0&,:)} (+ v)~ xx */ alpha * v y
+  AA=. AA + u (+ v)~ xx */ alpha * v y
 )
 
 NB. ---------------------------------------------------------
@@ -419,11 +417,11 @@ NB. - her2l models BLAS' ZHER2('L',...)
 NB. - her2u models BLAS' ZHER2('U',...)
 NB. - reference implementation
 
-syr2l=: >: her2 |:
-syr2u=: <: her2 |:
+syr2l=: trlpick_mt_ her2 |:
+syr2u=: trupick_mt_ her2 |:
 
-her2l=: >: her2 ct_mt_
-her2u=: <: her2 ct_mt_
+her2l=: trlpick_mt_ her2 ct_mt_
+her2u=: trupick_mt_ her2 ct_mt_
 
 NB. ---------------------------------------------------------
 NB. herk
@@ -438,20 +436,17 @@ NB.   where C is Hermitian (symmetric), and op(A) is either
 NB.   A^T or A^H
 NB.
 NB. Syntax:
-NB.   CCupd=. (cmp herk mul) alpha ; A ; beta ; CC
+NB.   CCupd=. (ctp herk mul) alpha ; A ; beta ; CC
 NB. where
-NB.   cmp - dyad to define which triangular part of C is to
-NB.         be referenced, is one of:
-NB.           >:  NB. LT
-NB.           <:  NB. UT
+NB.   ctp - dyad to compose a matrix from triangular parts,
+NB.         is one of:
+NB.           slxuy  NB. take SLT from CC, and UT from the matrix computed
+NB.           suxly  NB. take SUT from CC, and LT from the matrix computed
 NB.   mul - dyad to compute the product either (A * op(A)) or
 NB.         (op(A) * A), is called as:
 NB.           product=. mul A
 
-herk=: 2 : 0
-  'alpha A beta CC'=. y
-  CC=. u/~&i.@c_mt_`]} CC ,: (alpha * v~ A) + beta * CC
-)
+herk=: 2 : '3&{:: u (0&{:: (* v~) 1&{::) + 2&{:: * 3&{::'
 
 NB. ---------------------------------------------------------
 NB. Monad     C     alpha,beta    R/W in C    op1(A)    op2(A)
@@ -498,15 +493,15 @@ NB.   herkun    ZHERK('U','N',...)
 NB.   herkuc    ZHERK('U','C',...)
 NB. - reference implementation
 
-syrkln=: >: herk (mp_mt_  |:    )
-syrklt=: >: herk (mp_mt_~ |:    )
-syrkun=: <: herk (mp_mt_  |:    )
-syrkut=: <: herk (mp_mt_~ |:    )
+syrkln=: suxly_mt_ herk (mp_mt_  |:    )
+syrklt=: suxly_mt_ herk (mp_mt_~ |:    )
+syrkun=: slxuy_mt_ herk (mp_mt_  |:    )
+syrkut=: slxuy_mt_ herk (mp_mt_~ |:    )
 
-herkln=: >: herk (mp_mt_  ct_mt_)
-herklc=: >: herk (mp_mt_~ ct_mt_)
-herkun=: <: herk (mp_mt_  ct_mt_)
-herkuc=: <: herk (mp_mt_~ ct_mt_)
+herkln=: suxly_mt_ herk (mp_mt_  ct_mt_)
+herklc=: suxly_mt_ herk (mp_mt_~ ct_mt_)
+herkun=: slxuy_mt_ herk (mp_mt_  ct_mt_)
+herkuc=: slxuy_mt_ herk (mp_mt_~ ct_mt_)
 
 NB. ---------------------------------------------------------
 NB. her2k
@@ -521,19 +516,19 @@ NB.   where C is Hermitian (symmetric), op1(M) is either M^T
 NB.   or M^H and op2(alpha) is either alpha or conj(alpha)
 NB.
 NB. Syntax:
-NB.   CCupd=. (cmp`trans her2k kind) alpha ; A ; B ; beta ; CC
+NB.   CCupd=. (ctp`trans her2k kind) alpha ; A ; B ; beta ; CC
 NB. where
-NB.   cmp   - dyad to define which triangular part of C is to
-NB.           be referenced, is one of:
-NB.             >:      NB. LT
-NB.             <:      NB. UT
+NB.   ctp   - dyad to compose a matrix from triangular parts,
+NB.           is one of:
+NB.             slxuy  NB. take SLT from CC, and UT from the matrix computed
+NB.             suxly  NB. take SUT from CC, and LT from the matrix computed
 NB.   trans - monad to define the form of op1(M) and op2(s),
 NB.           is one of:
 NB.             |:      NB. the symmetric operation: op1(M) = M^T, op2(s) = s
 NB.             ct      NB. the hermitian operation: op1(M) = M^H, op2(s) = conj(s)
 NB.   kind  - boolean scalar to define operation:
-NB.             0       NB. (2)
-NB.             1       NB. (1)
+NB.             0      NB. (2)
+NB.             1      NB. (1)
 NB.
 NB. Notes:
 NB. - her2k's design solves a problem: how to allow C1 to see
@@ -542,10 +537,7 @@ NB.   not (V2 A3) into C1, implement A3 functionality inside
 NB.   C1 inline, use switch N4 to control A3 behavior, the
 NB.   resulting train becomes (V0`V2 C1 N4)
 
-her2k=: 2 : 0
-  'alpha A B beta CC'=. y
-  CC=. m@.0/~&i.@c_mt_`]} CC ,: ((+ m@.1) alpha * A (mp_mt_~ m@.1)~`(mp_mt_ m@.1)@.n B) + beta * CC
-)
+her2k=: 2 : '4&{:: m@.0 (0&{:: (+ m@.1)@:* 1&{:: (mp_mt_~ m@.1)~`(mp_mt_ m@.1)@.n 2&{::) + 3&{:: * 4&{::'
 
 NB. ---------------------------------------------------------
 NB. Monad      C     beta    R/W in C    op1(M)    op2(M)    op3(alpha)
@@ -593,15 +585,15 @@ NB.   her2kun    ZHER2K('U','N',...)
 NB.   her2kuc    ZHER2K('U','C',...)
 NB. - reference implementation
 
-syr2kln=: >:`|:     her2k 1
-syr2klt=: >:`|:     her2k 0
-syr2kun=: <:`|:     her2k 1
-syr2kut=: <:`|:     her2k 0
+syr2kln=: suxly_mt_`|:     her2k 1
+syr2klt=: suxly_mt_`|:     her2k 0
+syr2kun=: slxuy_mt_`|:     her2k 1
+syr2kut=: slxuy_mt_`|:     her2k 0
 
-her2kln=: >:`ct_mt_ her2k 1
-her2klc=: >:`ct_mt_ her2k 0
-her2kun=: <:`ct_mt_ her2k 1
-her2kuc=: <:`ct_mt_ her2k 0
+her2kln=: suxly_mt_`ct_mt_ her2k 1
+her2klc=: suxly_mt_`ct_mt_ her2k 0
+her2kun=: slxuy_mt_`ct_mt_ her2k 1
+her2kuc=: slxuy_mt_`ct_mt_ her2k 0
 
 NB. ---------------------------------------------------------
 NB. gemv

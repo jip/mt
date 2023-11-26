@@ -445,7 +445,7 @@ getrilu1p=: 3 : 0
   'ip LU1'=. y
   n=. c LU1
   y=. trtril trl LU1
-  y=. (</~ i. n)} y ,: LU1  NB. spec code
+  y=. y lxsuy LU1
   I=. <. n % TRINB
   ip (C.^:_1) 1 {:: getrilu1pstep^:I (TRINB * I) ({. ; ([ (tru1 trsmlunu trl) }.)) y
 )
@@ -519,7 +519,7 @@ getripl1u=: 3 : 0
   'ip L1U'=. y
   n=. # L1U
   y=. trtriu tru L1U
-  y=. (>/~ i. n)} y ,: L1U  NB. spec code
+  y=. y uxsly L1U
   I=. <. n % TRINB
   ip (C.^:_1"1) 1 {:: getripl1ustep^:I (TRINB * I) ({."1 ; (-@[ (trl1 trsmrlnu tru) }."1)) y
 )
@@ -584,7 +584,7 @@ getripu1l=: 3 : 0
   'ip U1L'=. y
   n=. c U1L
   y=. trtril trl U1L
-  y=. (</~ i. n)} y ,: U1L  NB. spec code
+  y=. y lxsuy U1L
   I=. <. n % TRINB
   ip (C.^:_1"1) 0 {:: getripu1lstep^:I (TRINB | n) ((((2 # [) {. ]) trsmrunu trl@:({."1)) ; }."1) y
 )
@@ -649,7 +649,7 @@ getriul1p=: 3 : 0
   'ip UL1'=. y
   n=. # UL1
   y=. trtriu tru UL1
-  y=. (>/~ i. n)} y ,: UL1  NB. spec code
+  y=. y uxsly UL1
   I=. <. n % TRINB
   ip (C.^:_1) 0 {:: getriul1pstep^:I (TRINB | n) ((((2 # [) {. ]) trsmllnu tru@{.) ; }.) y
 )

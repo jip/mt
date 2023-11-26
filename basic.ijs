@@ -1832,42 +1832,42 @@ NB.   - xGEMM (BLAS)
 NB.   by general matrices
 NB.
 NB. Syntax:
-NB.   testbasicgemv C ; As ; Bs
+NB.   testbasicgemm As ; Bs ; C
 NB. where
-NB.   C  - m×n-matrix
 NB.   As - m×(m+n)-matrix, A material
 NB.   Bs - (m+n)×n-matrix, B material
+NB.   C  - m×n-matrix
 
 testbasicgemm=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
-  'C As B'=. y
+  'As Bs C'=. y
   'm n'=. $ C
   ks=. /:~ ~. m (0 1 , (, >.@-:)@(, , +)) n  NB. 0,1,⌈m/2⌉,⌈n/2⌉,⌈(m+n)/2⌉,m,n,m+n
   As=. ks <@:({."0 1)"0 _ As                     NB. As[i] is m×k[i]-matrix
 
   NB. test for the case: ('alpha beta'=. 1.0 0.0) and (op(A) = A)
-  ('(+/ .*)'         tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  B
-  ('mp'              tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  B
+  ('(+/ .*)'         tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
+  ('mp'              tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
 
   NB. for every i feed the tuple (alpha_i ; A_i ; B_i ; beta_i ; C) to tmonad
   NB. note: A_i and B_i shapes are related; to emulate this,
   NB.       a full fixed B is feeded to Catalogue ({) and
   NB.       then is shrinked to the shape suitable before
   NB.       call to tmonad
-  ('dgemmnn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { (<"0 dcoeff) ;         As  ; (<    B) ; (<"0 dcoeff) ; < < C
-  ('dgemmnt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 dcoeff) ;         As  ; (< |: B) ; (<"0 dcoeff) ; < < C
-  ('dgemmtn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 dcoeff) ; (|: L:0 As) ; (<    B) ; (<"0 dcoeff) ; < < C
-  ('dgemmtt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 dcoeff) ; (|: L:0 As) ; (< |: B) ; (<"0 dcoeff) ; < < C
-  ('zgemmnn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ;         As  ; (<    B) ; (<"0 zcoeff) ; < < C
-  ('zgemmnt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< |: B) ; (<"0 zcoeff) ; < < C
-  ('zgemmnc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnc chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< ct B) ; (<"0 zcoeff) ; < < C
-  ('zgemmtn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (<    B) ; (<"0 zcoeff) ; < < C
-  ('zgemmtt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< |: B) ; (<"0 zcoeff) ; < < C
-  ('zgemmtc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< ct B) ; (<"0 zcoeff) ; < < C
-  ('zgemmcn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmcn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (<    B) ; (<"0 zcoeff) ; < < C
-  ('zgemmct_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmct chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< |: B) ; (<"0 zcoeff) ; < < C
-  ('zgemmcc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmcc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< ct B) ; (<"0 zcoeff) ; < < C
+  ('dgemmnn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { (<"0 dcoeff) ;         As  ; (<    Bs) ; (<"0 dcoeff) ; < < C
+  ('dgemmnt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 dcoeff) ;         As  ; (< |: Bs) ; (<"0 dcoeff) ; < < C
+  ('dgemmtn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 dcoeff) ; (|: L:0 As) ; (<    Bs) ; (<"0 dcoeff) ; < < C
+  ('dgemmtt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 dcoeff) ; (|: L:0 As) ; (< |: Bs) ; (<"0 dcoeff) ; < < C
+  ('zgemmnn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ;         As  ; (<    Bs) ; (<"0 zcoeff) ; < < C
+  ('zgemmnt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< |: Bs) ; (<"0 zcoeff) ; < < C
+  ('zgemmnc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmnc chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< ct Bs) ; (<"0 zcoeff) ; < < C
+  ('zgemmtn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (<    Bs) ; (<"0 zcoeff) ; < < C
+  ('zgemmtt_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< |: Bs) ; (<"0 zcoeff) ; < < C
+  ('zgemmtc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmtc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< ct Bs) ; (<"0 zcoeff) ; < < C
+  ('zgemmcn_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmcn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (<    Bs) ; (<"0 zcoeff) ; < < C
+  ('zgemmct_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmct chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< |: Bs) ; (<"0 zcoeff) ; < < C
+  ('zgemmcc_mtbla_' tmonad (        ]      `] `(_."_)`(_."_)`(gemmcc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< ct Bs) ; (<"0 zcoeff) ; < < C
 
   EMPTY
 )
@@ -2045,7 +2045,7 @@ NB.     _1 1 0 4 _6 4&gemat_mt_ testbasicmm_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testbasicmm_mt_ 150 200
 
-testbasicmm=: 1 : 'EMPTY [ testbasictrmm_mt_@(u@(2 # >./) ; u) [ testbasichemm_mt_@((9&o. upddiag_mt_)@u@(2 # >./) ; u ; u) [ testbasicsymm_mt_@(u@(2 # >./) ; u ; u) [ testbasicgemm_mt_@(u ; u@(+/\) ; u@(+/\.)) [ load@''math/mt/test/blas/mm'''
+testbasicmm=: 1 : 'EMPTY [ testbasictrmm_mt_@(u@(2 # >./) ; u) [ testbasichemm_mt_@((9&o. upddiag_mt_)@u@(2 # >./) ; u ; u) [ testbasicsymm_mt_@(u@(2 # >./) ; u ; u) [ testbasicgemm_mt_@(u@(+/\) ; u@(+/\.) ; u) [ load@''math/mt/test/blas/mm'''
 
 NB. ---------------------------------------------------------
 NB. testbasictrsv

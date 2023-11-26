@@ -582,7 +582,7 @@ NB.   kab   = k for xxr2kxn or kab = n otherwise
 NB.   nab   = n for xxr2kxn or nab = k otherwise
 NB.
 NB. Notes:
-NB. - verb       models BLAS'
+NB. - monad      models BLAS'
 NB.   syr2kln    xSYR2K('L','N',...)
 NB.   syr2klt    xSYR2K('L','T',...) and DSYR2K('L','C',...)
 NB.   syr2kun    xSYR2K('U','N',...)
@@ -947,7 +947,7 @@ NB.   n     ≥ 0, the number of columns in C, Cupd and B
 NB.   mn    = m for xxmmlx or mn = n for xxmmrx
 NB.
 NB. Notes:
-NB. - verb      models BLAS'
+NB. - monad     models BLAS'
 NB.   symmll    xSYMM('L','L',...)
 NB.   symmlu    xSYMM('L','U',...)
 NB.   symmrl    xSYMM('R','L',...)

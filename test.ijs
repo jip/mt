@@ -1879,7 +1879,7 @@ NB.   A       - ma×ka-matrix
 NB.   B       - kb×nb-matrix
 NB.   beta    - scalar
 NB.   C       - m×n-matrix
-NB.   Capprox - the same shape as C, computed by the verb being
+NB.   Capprox - m×n-matrix, computed by the verb being
 NB.             tested, approximates Cexact
 NB.   berr    ≥ 0, the relative backward error for Capprox
 NB.   Cexact  - an updated C
@@ -1991,8 +1991,8 @@ NB.             both part(s) of A
 NB.   B       - m×n-matrix
 NB.   beta    - scalar
 NB.   C       - m×n-matrix
-NB.   Capprox - the same shape as C, computed by the verb
-NB.             being tested, approximates Cexact
+NB.   Capprox - m×n-matrix, computed by the verb being
+NB.             tested, approximates Cexact
 NB.   berr    ≥ 0, the relative backward error for Capprox
 NB.   Cexact  - an updated C
 NB.   m       ≥ 0, the number of rows in C and B
@@ -2092,7 +2092,7 @@ NB.   A        - k×k-matrix, triangular
 NB.   AA       - k×k-matrix, contains either non-zero or both
 NB.              part(s) of A
 NB.   B        - m×n-matrix
-NB.   Bapprox  - the same shape as B, the approximate Bexact, is
+NB.   Bapprox  - m×n-matrix, the approximate Bexact, is
 NB.              computed by the verb being tested
 NB.   berr     ≥ 0, the relative backward error for Bapprox
 NB.   Bexact   - an updated B
@@ -2244,7 +2244,7 @@ NB.   incx    ≠ 0, the increment for the elements of x
 NB.   y       - (1+(n-1)*|incy|)-vector
 NB.   incy    ≠ 0, the increment for the elements of y
 NB.   A       - m×n-matrix, general
-NB.   Aapprox - the same shape as A, the approximate Aexact, is
+NB.   Aapprox - m×n-matrix, the approximate Aexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for Aapprox
 NB.   m       ≥ 0, rows in A, Aexact and Aapprox
@@ -2295,10 +2295,10 @@ NB.   beta     - scalar, must be real for herkxx
 NB.   C        - n×n-matrix, Hermitian (symmetric)
 NB.   CC       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of C
-NB.   CCapprox - the same shape as CC, computed by the verb
-NB.              being tested, where LT (for xxrklx) or UT
-NB.              (for xxrkux) approximates CCexact, and the
-NB.              rest elements weren't changed and match CC
+NB.   CCapprox - n×n-matrix, computed by the verb being
+NB.              tested, where LT (for xxrklx) or UT (for
+NB.              xxrkux) approximates CCexact, and the rest
+NB.              elements weren't changed and match CC
 NB.   berr     ≥ 0, the relative backward error for CCapprox
 NB.   CCexact  - CC with either LT (for xxrklx) or UT (for
 NB.              xxrkux) updated
@@ -2355,10 +2355,10 @@ NB.   incx     ≠ 0, the increment for the elements of x
 NB.   A        - n×n-matrix, Hermitian (symmetric)
 NB.   AA       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of A
-NB.   AAapprox - the same shape as A, computed by the verb
-NB.              being tested, with LT (for xxrl) or UT (for
-NB.              xxru) approximates AAexact, and the rest
-NB.              elements weren't changed and match AA
+NB.   AAapprox - n×n-matrix, computed by the verb being
+NB.              tested, where LT (for xxrl) or UT (for xxru)
+NB.              approximates AAexact, and the rest elements
+NB.              weren't changed and match AA
 NB.   berr     ≥ 0, the relative backward error for AAapprox
 NB.   AAexact  - AA with either LT (for xxrl) or UT (for
 NB.              xxru) updated
@@ -2474,8 +2474,8 @@ NB.   incy     ≠ 0, the increment for the elements of y
 NB.   A        - n×n-matrix, Hermitian (symmetric)
 NB.   AA       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of A
-NB.   AAapprox - the same shape as AA, computed by the verb
-NB.              being tested, with LT (for xxr2l) or UT (for
+NB.   AAapprox - n×n-matrix, computed by the verb being
+NB.              tested, where LT (for xxr2l) or UT (for
 NB.              xxr2u) approximates AAexact, and the rest
 NB.              elements weren't changed and match AA
 NB.   berr     ≥ 0, the relative backward error for AAapprox

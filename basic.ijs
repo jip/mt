@@ -944,7 +944,7 @@ NB.   C     - m×n-matrix
 NB.   Cupd  - an updated C
 NB.   m     ≥ 0, the number of rows in C, Cupd and B
 NB.   n     ≥ 0, the number of columns in C, Cupd and B
-NB.   ma    = m for xxmmlx or ma = n otherwise
+NB.   ma    = m for xxmmlx or ma = n for xxmmrx
 NB.
 NB. Notes:
 NB. - verb      models BLAS'

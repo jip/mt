@@ -1942,7 +1942,7 @@ NB.   A       - n×n-matrix with real diagonal
 NB.   yapprox - the same shape as y, the approximate yexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for yapprox
-NB.   n       ≥ 0, size of A and AA
+NB.   n       ≥ 0, the size of A and AA
 NB.
 NB. Formula:
 NB.   n := size(A)
@@ -1980,7 +1980,7 @@ NB. where
 NB.   xxmmxx  - monad, the reference implementation to
 NB.             compute Cexact:
 NB.               Cexact=. xxmmxx (alpha ; AA ; B ; beta ; C)
-NB.   trxpick - monad to pick triangular part, is one of:
+NB.   trxpick - monad to pick a triangular part, is one of:
 NB.               trlpick_mt_  NB. if xxmmxl_mt_ is used
 NB.               trupick_mt_  NB. if xxmmxu_mt_ is used
 NB.   alpha   - scalar
@@ -2045,7 +2045,7 @@ NB.   xapprox - the same shape as x, the approximate xexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for xapprox
 NB.   xexact  - an updated x
-NB.   n       ≥ 0, size of A and AA
+NB.   n       ≥ 0, the size of A and AA
 NB.
 NB. Formula:
 NB.   n := size(A)
@@ -2083,7 +2083,7 @@ NB. where
 NB.   trmmxxxx - monad, the reference implementation to
 NB.              compute Bexact:
 NB.                Bexact=. trmmxxxx (alpha ; AA ; B)
-NB.   trxpick  - monad to pick triangular part, is one of:
+NB.   trxpick  - monad to pick a triangular part, is one of:
 NB.                trlpick_mt_  NB. if trmmxl_mt_ is used
 NB.                trupick_mt_  NB. if trmmxu_mt_ is used
 NB.   alpha    - scalar
@@ -2285,7 +2285,7 @@ NB. where
 NB.   xxrkxx   - monad, the reference implementation to
 NB.              compute CCexact:
 NB.                CCexact=. xxrkxx (alpha ; A ; beta ; CC)
-NB.   trxpick  - monad to pick triangular part, is one of:
+NB.   trxpick  - monad to pick a triangular part, is one of:
 NB.                trlpick_mt_  NB. if xxrklx_mt_ is used
 NB.                trupick_mt_  NB. if xxrkux_mt_ is used
 NB.   alpha    - scalar, must be real for herkxx
@@ -2346,7 +2346,7 @@ NB. where
 NB.   xxrx     - monad, the reference implementation to
 NB.              compute AAexact:
 NB.                AAexact=. xxrx (alpha ; x ; incx ; AA)
-NB.   trxpick  - monad to pick triangular part, is one of:
+NB.   trxpick  - monad to pick a triangular part, is one of:
 NB.                trlpick_mt_  NB. if xxrl_mt_ is used
 NB.                trupick_mt_  NB. if xxru_mt_ is used
 NB.   alpha    - scalar
@@ -2402,7 +2402,7 @@ NB. where
 NB.   xxr2kxx  - monad, the reference implementation to
 NB.              compute CCexact:
 NB.                CCexact=. xxr2kxx (alpha ; A ; B ; beta ; CC)
-NB.   trxpick  - monad to pick triangular part, is one of:
+NB.   trxpick  - monad to pick a triangular part, is one of:
 NB.                trlpick_mt_  NB. if xxr2klx_mt_ is used
 NB.                trupick_mt_  NB. if xxr2kux_mt_ is used
 NB.   alpha    - scalar
@@ -2464,7 +2464,7 @@ NB. where
 NB.   xxr2x    - monad, the reference implementation to
 NB.              compute AAexact:
 NB.                AAexact=. xxr2x (alpha ; x ; incx ; y ; incy ; AA)
-NB.   trxpick  - monad to pick triangular part, is one of:
+NB.   trxpick  - monad to pick a triangular part, is one of:
 NB.                trlpick_mt_  NB. if xxr2l_mt_ is used
 NB.                trupick_mt_  NB. if xxr2u_mt_ is used
 NB.   alpha    - scalar

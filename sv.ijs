@@ -1,29 +1,29 @@
 NB. Solve linear monomial equation
 NB.
-NB. gesvxxx   Solve equation (op(A) * X = B) or
+NB. gesvxxx   Solve the equation (op(A) * X = B) or
 NB.           (X * op(A) = B), where A is a general square
 NB.           matrix; op(A) is either A itself, or A^T (the
 NB.           transposition of A), or A^H (the conjugate
 NB.           transposition of A); B is known right-hand
 NB.           sides (RHS), X is unknown solutions
-NB. gtsvxxx   Solve equation (op(A) * X = B) or
+NB. gtsvxxx   Solve the equation (op(A) * X = B) or
 NB.           (X * op(A) = B), where A is a tridiagonal
 NB.           matrix; op(A) is either A itself, or A^T (the
 NB.           transposition of A), or A^H (the conjugate
 NB.           transposition of A); B is known right-hand
 NB.           sides (RHS), X is unknown solutions
-NB. hesvxxx   Solve equation (op(A) * X = B) or
+NB. hesvxxx   Solve the equation (op(A) * X = B) or
 NB.           (X * op(A) = B), where A is a Hermitian
 NB.           (symmetric) matrix; op(A) is either A itself,
 NB.           or A^T (the transposition of A); B is known
 NB.           right-hand sides (RHS), X is unknown solutions
-NB. posvxxx   Solve equation (op(A) * X = B) or
+NB. posvxxx   Solve the equation (op(A) * X = B) or
 NB.           (X * op(A) = B), where A is a Hermitian
 NB.           (symmetric) positive definite matrix; op(A) is
 NB.           either A itself, or A^T (the transposition of
 NB.           A); B is known right-hand sides (RHS), X is
 NB.           unknown solutions
-NB. ptsvxxx   Solve equation (op(A) * X = B) or
+NB. ptsvxxx   Solve the equation (op(A) * X = B) or
 NB.           (X * op(A) = B), where A is a Hermitian
 NB.           (symmetric) positive definite tridiagonal
 NB.           matrix; op(A) is either A itself, or A^T (the
@@ -71,7 +71,7 @@ NB. ---------------------------------------------------------
 NB. gtsv
 NB.
 NB. Description:
-NB.   Solve linear monomial equation:
+NB.   Solves the linear monomial equation:
 NB.     A * X = B
 NB.   with tridiagonal matrix A via triangular factorization:
 NB.     P * L1 * U = A
@@ -82,7 +82,7 @@ NB. where
 NB.   ds   - (n+1)×3-matrix defined as:
 NB.            ds -: (dA , trash0) ,. (duA , trash1 , trash2) ,. (dlA , trash3 , trash4)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
-NB.   Xv   - the same shape as Bv, solutions
+NB.   Xv   - the same shape as Bv, the solution[s]
 NB.   dA   - n-vector, diagonal of A
 NB.   duA  - (n-1)-vector, superdiagonal of A
 NB.   dlA  - (n-1)-vector, subdiagonal of A
@@ -158,15 +158,15 @@ NB. gesvxac    X * A^H = B    Xh=. A gesvxac Bh
 NB. gesvxat    X * A^T = B    Xh=. A gesvxat Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with general square
+NB.   Solve the linear monomial equation with general square
 NB.   matrix A via triangular factorization:
 NB.     P * L1 * U = A
 NB. where
 NB.   A    - n×n-matrix
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - the same shape as Bv, solutions
-NB.   Xh   - the same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, the solution[s]
+NB.   Xh   - the same shape as Bh, the solution[s]
 NB.   P    - n×n-matrix, rows permutation of A
 NB.   L1   - n×n-matrix, the unit lower triangular
 NB.   U    - n×n-matrix, the upper triangular
@@ -201,15 +201,15 @@ NB. gtsvxac    X * A^H = B    Xh=. A gtsvxac Bh
 NB. gtsvxat    X * A^T = B    Xh=. A gtsvxat Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with tridiagonal
+NB.   Solve the linear monomial equation with tridiagonal
 NB.   matrix A via triangular factorization:
 NB.     P * L1 * U = A
 NB. where
 NB.   A    - n×n-matrix, the tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - the same shape as Bv, solutions
-NB.   Xh   - the same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, the solution[s]
+NB.   Xh   - the same shape as Bh, the solution[s]
 NB.   P    - n×n-matrix, rows permutation of A
 NB.   L1   - n×n-matrix, the unit lower triangular
 NB.   U    - n×n-matrix, the upper triangular
@@ -243,15 +243,15 @@ NB. hesvxa     X * A   = B    Xh=. A hesvxa  Bh
 NB. hesvxat    X * A^T = B    Xh=. A hesvxat Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with Hermitian
+NB.   Solve the linear monomial equation with Hermitian
 NB.   (symmetric) matrix A via triangular factorization:
 NB.     P * L1 * T * L1^H * P^H = A
 NB. where
 NB.   A    - n×n-matrix, the Hermitian (symmetric)
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - the same shape as Bv, solutions
-NB.   Xh   - the same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, the solution[s]
+NB.   Xh   - the same shape as Bh, the solution[s]
 NB.   P    - n×n-matrix, the full permutation of A
 NB.   L1   - n×n-matrix, the unit lower triangular
 NB.   T    - n×n-matrix, the Hermitian (symmetric)
@@ -281,7 +281,7 @@ NB. posvxa     X * A   = B    Xh=. A posvxa  Bh
 NB. posvxat    X * A^T = B    Xh=. A posvxat Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with Hermitian
+NB.   Solve the linear monomial equation with Hermitian
 NB.   (symmetric) positive definite matrix A via Cholesky
 NB.   factorization:
 NB.     L * L^H = A
@@ -290,8 +290,8 @@ NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - the same shape as Bv, solutions
-NB.   Xh   - the same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, the solution[s]
+NB.   Xh   - the same shape as Bh, the solution[s]
 NB.   L    - n×n-matrix, the lower triangular with positive
 NB.          diagonal entries, the Cholesky triangle
 NB.   n    ≥ 0, the size of A
@@ -319,7 +319,7 @@ NB. ptsvxa     X * A   = B    Xh=. A ptsvxa  Bh
 NB. ptsvxat    X * A^T = B    Xh=. A ptsvxat Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with Hermitian
+NB.   Solve the linear monomial equation with Hermitian
 NB.   (symmetric) positive definite tridiagonal matrix A via
 NB.   factorization:
 NB.     L1 * D * L1^H = A
@@ -328,8 +328,8 @@ NB.   A    - n×n-matrix, the Hermitian (symmetric) positive
 NB.          definite tridiagonal
 NB.   Bv   - n-vector or n×nrhs-matrix, the RHS
 NB.   Bh   - n-vector or nrhs×n-matrix, the RHS
-NB.   Xv   - the same shape as Bv, solutions
-NB.   Xh   - the same shape as Bh, solutions
+NB.   Xv   - the same shape as Bv, the solution[s]
+NB.   Xh   - the same shape as Bh, the solution[s]
 NB.   L1   - n×n-matrix, the unit lower bidiangonal
 NB.   D    - n×n-matrix, diagonal with positive diagonal
 NB.          entries

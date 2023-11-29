@@ -103,7 +103,7 @@ NB. zsymmcore    symmetric    any
 NB. zhemmcore    Hermitian    real
 NB.
 NB. Description:
-NB.   Performs matrix-matrix operations:
+NB.   Performs the matrix-matrix operation:
 NB.     C := alpha * A * B + beta * C  (1)
 NB.   or
 NB.     C := alpha * B * A + beta * C  (2)
@@ -166,7 +166,7 @@ NB. dtrmmcore
 NB. ztrmmcore
 NB.
 NB. Description:
-NB.   Performs matrix-matrix operations:
+NB.   Performs the matrix-matrix operation:
 NB.     B := alpha * op(A) * B  (1)
 NB.   or
 NB.     B := alpha * B * op(A)  (2)
@@ -311,7 +311,7 @@ NB. zhemmrl    Hermitian    real      LT            C := alpha * B * A + beta * 
 NB. zhemmru    Hermitian    real      UT            C := alpha * B * A + beta * C
 NB.
 NB. Description:
-NB.   Performs matrix-matrix operations:
+NB.   Performs the matrix-matrix operation:
 NB.     C := alpha * A * B + beta * C
 NB.   or
 NB.     C := alpha * B * A + beta * C
@@ -406,7 +406,7 @@ NB. ztrmmrucn     UT           B := alpha * B * U ^H
 NB. ztrmmrucu    SUT           B := alpha * B * U1^H
 NB.
 NB. Description:
-NB.   Performs matrix-matrix operations:
+NB.   Performs the matrix-matrix operation:
 NB.     B := alpha * op(A) * B
 NB.   or
 NB.     B := alpha * B * op(A)

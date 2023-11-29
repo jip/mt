@@ -821,7 +821,8 @@ NB. ---------------------------------------------------------
 NB. gemm
 NB.
 NB. Description:
-NB.   Adv. to make monad to perform matrix-matrix operation:
+NB.   Adv. to make monad to perform the matrix-matrix
+NB.   operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C
 NB.   where opX(M) is either M, M^T, conj(M) or M^H
 NB.
@@ -924,7 +925,7 @@ NB. hemmrl    Hermitian    real       LT            C := alpha * B * A + beta * 
 NB. hemmru    Hermitian    real       UT            C := alpha * B * A + beta * C
 NB.
 NB. Description:
-NB.   Performs matrix-matrix operations:
+NB.   Performs the matrix-matrix operation:
 NB.     C := alpha * A * B + beta * C
 NB.   or
 NB.     C := alpha * B * A + beta * C
@@ -1029,7 +1030,7 @@ NB. trmmrucn    U      UT           B := alpha * B * A^H
 NB. trmmrucu    U1    SUT           B := alpha * B * A^H
 NB.
 NB. Description:
-NB.   Performs matrix-matrix operations:
+NB.   Performs the matrix-matrix operation:
 NB.     B := alpha * op(A) * B
 NB.   or
 NB.     B := alpha * B * op(A)
@@ -1259,8 +1260,8 @@ NB.   alpha - scalar, is supposed to be 1 in dyadic case
 NB.   A       k×k-matrix, triangular
 NB.   AA    - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A
-NB.   B     - m×n-matrix or l-vector, RHS
-NB.   X     - m×n-matrix or l-vector, solution[s]
+NB.   B     - l-vector or m×n-matrix, the RHS
+NB.   X     - the same shape as B, the solution[s]
 NB.   m     ≥ 0, the number of rows in B and X
 NB.   n     ≥ 0, the number of columns in B and X
 NB.   k     = m for trsmlxxx_mt_ or k = n for trsmrxxx_mt_
@@ -1517,7 +1518,7 @@ NB. ---------------------------------------------------------
 NB. testbasicherk
 NB.
 NB. Description:
-NB.   Test hermitian rank k operation:
+NB.   Test the hermitian rank k operation:
 NB.   - ZHERK (BLAS)
 NB.   by general and Hermitian matrices
 NB.
@@ -1610,7 +1611,7 @@ NB. ---------------------------------------------------------
 NB. testbasicher2k
 NB.
 NB. Description:
-NB.   Test hermitian rank 2k operation:
+NB.   Test the hermitian rank 2k operation:
 NB.   - ZHER2K (BLAS)
 NB.   by general and Hermitian matrices
 NB.

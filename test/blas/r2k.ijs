@@ -40,7 +40,7 @@ NB. dsyr2kcore
 NB. zsyr2kcore
 NB.
 NB. Description:
-NB.   Performs symmetric rank 2k operations:
+NB.   Performs the symmetric rank 2k operation:
 NB.     C := alpha * A * B^T + alpha * B * A^T + beta * C  (1)
 NB.   or
 NB.     C := alpha * A^T * B + alpha * B^T * A + beta * C  (2)
@@ -99,7 +99,7 @@ NB. ---------------------------------------------------------
 NB. zher2kcore
 NB.
 NB. Description:
-NB.   Performs hermitian rank 2k operations:
+NB.   Performs the hermitian rank 2k operation:
 NB.     C := alpha * A * B^H + conj(alpha) * B * A^H + beta * C  (1)
 NB.   or
 NB.     C := alpha * A^H * B + conj(alpha) * B^H * A + beta * C  (2)

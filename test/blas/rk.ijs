@@ -40,7 +40,7 @@ NB. dsyrkcore
 NB. zsyrkcore
 NB.
 NB. Description:
-NB.   Performs symmetric rank k operations:
+NB.   Performs the symmetric rank k operation:
 NB.     C := alpha * A * A^T + beta * C  (1)
 NB.   or
 NB.     C := alpha * A^T * A + beta * C  (2)
@@ -96,7 +96,7 @@ NB. ---------------------------------------------------------
 NB. zherkcore
 NB.
 NB. Description:
-NB.   Performs hermitian rank k operations:
+NB.   Performs the hermitian rank k operation:
 NB.     C := alpha * A * A^H + beta * C  (1)
 NB.   or
 NB.     C := alpha * A^H * A + beta * C  (2)

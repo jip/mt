@@ -13,9 +13,9 @@ NB.   A   - m×n-matrix, upper trapezoidal, to be factored
 NB.   RZf - m×n-matrix, R and Zf combined
 NB.   tau - m-vector, scalar factors of elementary
 NB.         reflectors applied to A
-NB.   R   - m×m-matrix, the upper triangular part contains
-NB.         the part factored, the strict lower triangular
-NB.         part contains corresp. elements from A unchanged
+NB.   R   - m×m-matrix, where UT contains the part factored,
+NB.         and the strict LT contains corresp. elements from
+NB.         A unchanged
 NB.   Zf  - m×n-matrix, unit upper trapezoidal (unit diagonal
 NB.         is not stored), with the tau it represents the Z
 NB.         in the factored form

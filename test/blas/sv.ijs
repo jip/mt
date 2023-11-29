@@ -69,7 +69,7 @@ NB.   A     - n×n-matrix, triangular
 NB.   b     - (1+(n-1)*|incx|)-vector, the RHS
 NB.   incb  ≠ 0, the increment for the elements of b and x
 NB.   x     - the same shape as b, the solution
-NB.   n     ≥ 0, the size of matrices A and AAt
+NB.   n     ≥ 0, the size of A and AAt
 NB.
 NB. Notes:
 NB. - operate on transposed matrix to avoid transposition
@@ -129,7 +129,7 @@ NB.   A    - n×n-matrix, triangular
 NB.   b    - (1+(n-1)*|incb|)-vector, the RHS
 NB.   incb ≠ 0, the increment for the elements of b and x
 NB.   x    - the same shape as b, the solution
-NB.   n    ≥ 0, the size of matrices A and AA
+NB.   n    ≥ 0, the size of A and AA
 NB.
 NB. Notes:
 NB. - monad       provides BLAS'

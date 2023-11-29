@@ -22,7 +22,7 @@ NB.   B    - n×nrhs-matrix, RHS
 NB.   X    - n×nrhs-matrix, solutions of equation:
 NB.            A * X = B
 NB.   A    - n×n-matrix, Hermitian (symmetric) positive
-NB.          definite represented in the factored form by T
+NB.          definite, was factored to T by xPOTRF
 NB.   L    - n×n-matrix, lower triangular
 NB.   U    - n×n-matrix, upper triangular
 NB.   n    ≥ 0, the order of system

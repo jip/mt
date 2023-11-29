@@ -1,8 +1,8 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Compute the factorization of a non-complex symmetric
-NB.   matrix using the Aasen's algorithm
+NB.   Compute the factorization of a real symmetric matrix
+NB.   using the Aasen's algorithm
 NB.
 NB. Syntax:
 NB.   'DT1 ipiv'=. uplo dsytrf_aa AA

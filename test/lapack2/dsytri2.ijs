@@ -1,7 +1,7 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Compute the inverse of a factored symmetric matrix
+NB.   Compute the inverse of a factored real symmetric matrix
 NB.
 NB. Syntax:
 NB.   iAA=. uplo dsytri2 DPT1 ; ipiv

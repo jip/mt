@@ -1,7 +1,7 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Solve a system of linear equations with a non-complex
+NB.   Solve a system of linear equations with a real
 NB.   symmetric matrix, and factor the last one
 NB.
 NB. Syntax:

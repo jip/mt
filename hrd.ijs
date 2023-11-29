@@ -73,7 +73,7 @@ NB.           match, strict upper triangles of VH and V are
 NB.           match
 NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
-NB.   n     ≥ 0, integer, the size of matrix A
+NB.   n     ≥ 0, integer, the size of A
 NB.
 NB. Notes:
 NB. - v[i]'s direction is forward, but T is lower triangular
@@ -126,7 +126,7 @@ NB.           match, strict lower triangles of VH and V are
 NB.           match
 NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
-NB.   n     ≥ 0, integer, size of matrix A
+NB.   n     ≥ 0, integer, size of A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xLAHR2 with following differences:

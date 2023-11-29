@@ -858,7 +858,7 @@ NB.   bapprox - n-vector, the approximate RHS:
 NB.               bapprox := op(A) * xapprox  or
 NB.               bapprox := xapprox * op(A)
 NB.   X       - the same shape as B, exact solutions of
-NB.             equation:
+NB.             matrix equation:
 NB.               op(A) * X = B  or
 NB.               X * op(A) = B
 NB.   x       - n-vector, the exact solution of equation:
@@ -1267,7 +1267,8 @@ NB.               normVectors=. normitx vectors
 NB.   A       - n×n-matrix of linear system to solve
 NB.   B       - n×nrhs-matrix or nrhs×n-matrix, exact RHS
 NB.   b       - n-vector, the exact RHS
-NB.   X       - the same shape as B, exact solutions of equation:
+NB.   X       - the same shape as B, exact solutions of
+NB.             matrix equation:
 NB.               op(A) * X = B  or
 NB.               X * op(A) = B
 NB.   x       - n-vector, the exact solution of equation:
@@ -1414,7 +1415,7 @@ NB.   b       - n-vector or m-vector, the exact RHS
 NB.   Bapprox - the same shape as B, approximate RHS
 NB.   bapprox - the same shape as b, the approximate RHS
 NB.   Xapprox - n×nrhs-matrix or m×nrhs-matrix, approximate
-NB.             solutions of equation:
+NB.             solutions of matrix equation:
 NB.               op(A) * X = B
 NB.   xapprox - n-vector or m-vector, the approximate
 NB.             solution of equation:

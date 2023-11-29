@@ -676,8 +676,8 @@ NB.
 NB. Syntax:
 NB.   yupd=. (ref hemv) alpha ; AA ; x ; incx ; beta ; y ; incy
 NB. where
-NB.   ref - monad to define which triangular part of A is to
-NB.         be referenced, is one of:
+NB.   ref - monad to restore A from triangular part, is one
+NB.         of:
 NB.           sy4gel_mt_  NB. LT, A is symmetric
 NB.           sy4geu_mt_  NB. UT, A is symmetric
 NB.           he4gel_mt_  NB. LT, A is Hermitian
@@ -739,8 +739,8 @@ NB.
 NB. Syntax:
 NB.   xupd=. ((mp_mt_~ trans@ref) trmv) AA ; x ; incx
 NB. where
-NB.   ref   - monad to define which triangular part of A is
-NB.           to be referenced, is one of:
+NB.   ref   - monad to restore A from triangular part, is one
+NB.           of:
 NB.             trlpick_mt_   NB.  LT, A is L
 NB.             trl1pick_mt_  NB. SLT, A is L1
 NB.             trupick_mt_   NB.  UT, A is U
@@ -983,8 +983,8 @@ NB.
 NB. Syntax:
 NB.   Bupd=. ((mul trans@ref) trmm) alpha ; AA ; B
 NB. where
-NB.   ref   - monad to define which triangular part of A is
-NB.           to be referenced, is one of:
+NB.   ref   - monad to restore A from triangular part, is one
+NB.           of:
 NB.             trlpick_mt_   NB.  LT, A is L
 NB.             trl1pick_mt_  NB. SLT, A is L1
 NB.             trupick_mt_   NB.  UT, A is U
@@ -1117,10 +1117,10 @@ NB.   sol   - dyad to solve equation with triangular matrix,
 NB.           is called as:
 NB.             x=. b sol A
 NB.           e.g.
-NB.             (%. trans@ref)  NB. to exploit Matrix Divide (%.)
-NB.             trsmllnn_mt_~   NB. to exploit trsmllnn
-NB.   ref   - monad, defines what triangular part of A is to
-NB.           be referenced, is one of:
+NB.             (%. trans@ref)  NB. to exploit built-in Matrix Divide (%.)
+NB.             trsmllnn_mt_~   NB. to exploit mt's (trsmllnn)
+NB.   ref   - monad to restore A from triangular part, is one
+NB.           of:
 NB.             trlpick_mt_     NB.  LT, A is L
 NB.             trl1pick_mt_    NB. SLT, A is L1
 NB.             trupick_mt_     NB.  UT, A is U

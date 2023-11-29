@@ -1,8 +1,8 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Compute the factorization of a non-complex symmetric
-NB.   matrix using the Bunch-Kaufman diagonal pivoting method
+NB.   Compute the factorization of a real symmetric matrix
+NB.   using the Bunch-Kaufman diagonal pivoting method
 NB.
 NB. Syntax:
 NB.   'DPT1 ipiv'=. uplo dsytrf AA

@@ -2,7 +2,8 @@ require 'math/lapack2'
 
 NB. Description:
 NB.   Compute the inverse of a factored Hermitian (symmetric)
-NB.   positive definite matrix
+NB.   positive definite matrix using the factorization
+NB.   computed by xPOTRF
 NB.
 NB. Syntax:
 NB.   iAA=. uplo xpotri AA

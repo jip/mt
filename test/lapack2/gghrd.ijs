@@ -33,7 +33,7 @@ NB.           or any noun otherwise
 NB.   H     - n×n-matrix, upper Hessenberg in rows and
 NB.           columns ilo:ihi and upper triangular outside
 NB.   T     - n×n-matrix, upper triangular:
-NB.             T = Q^H B Z
+NB.             T = Q^H * B * Z
 NB.   Q     - 0×0-matrix if compQ='N', or n×n-matrix, unitary
 NB.           (orthogonal):
 NB.             Q    if compQ='I'

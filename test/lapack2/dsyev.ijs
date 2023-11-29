@@ -2,7 +2,7 @@ require 'math/lapack2'
 
 NB. Description:
 NB.   Compute the eigenvalues and, optionally, eigenvectors
-NB.   for non-complex square symmetric matrix
+NB.   for real square symmetric matrix
 NB.
 NB. Syntax:
 NB.   'w V'=. (jobV ; uplo) dsyev AA

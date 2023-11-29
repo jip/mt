@@ -44,7 +44,8 @@ NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C
-NB.   with transposed matrices
+NB.   with transposed matrices, where opX(M) is either M, M^T
+NB.   or M^H
 NB.
 NB. Syntax:
 NB.   Cupdt=. (transA ; transB) xgemmcore alpha ; At ; Bt ; beta ; Ct
@@ -128,6 +129,7 @@ NB.   Bt    - n×m-matrix, B^T
 NB.   beta  - scalar
 NB.   Ct    - n×m-matrix, C^T
 NB.   Cupdt - an updated Ct
+NB.   A     - ma×ma-matrix, Hermitian (symmetric)
 NB.   m     ≥ 0, the number of rows in C and B
 NB.   n     ≥ 0, the number of columns in C and B
 NB.   ma    = m if side='L' or ma = n otherwise
@@ -168,7 +170,8 @@ NB.   Performs matrix-matrix operations:
 NB.     B := alpha * op(A) * B  (1)
 NB.   or
 NB.     B := alpha * B * op(A)  (2)
-NB.   with transposed matrices, where A is triangular
+NB.   with transposed matrices, where A is triangular, and
+NB.   op(A) is either A, A^T or A^H
 NB.
 NB. Syntax:
 NB.   Bupdt=. (side ; uplo ; trans ; diag) xtrmmcore alpha ; AAt ; Bt
@@ -197,6 +200,7 @@ NB.   alpha - scalar
 NB.   AAt   - k×k-matrix, contains A^T
 NB.   Bt    - n×m-matrix, B^T
 NB.   Bupdt - an updated Bt
+NB.   A     - k×k-matrix, triangular
 NB.   m     ≥ 0, the number of rows in B
 NB.   n     ≥ 0, the number of columns in B
 NB.   k     = m if side='L' or k = n otherwise
@@ -240,6 +244,7 @@ NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C
+NB.   where opX(M) is either M, M^T or M^H
 NB.
 NB. Syntax:
 NB.   Cupd=. xgemmxx alpha ; A ; B ; beta ; C
@@ -405,7 +410,8 @@ NB.   Performs matrix-matrix operations:
 NB.     B := alpha * op(A) * B
 NB.   or
 NB.     B := alpha * B * op(A)
-NB.   where A is triangular
+NB.   where A is triangular, and op(A) is either A, A^T or
+NB.   A^H
 NB.
 NB. Syntax:
 NB.   Bupd=. xtrmmxxxx alpha ; AA ; B

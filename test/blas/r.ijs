@@ -42,7 +42,8 @@ NB. dsyrcore    symmetric    A := alpha * x * x^T + A
 NB. zhercore    Hermitian    A := alpha * x * x^H + A
 NB.
 NB. Description:
-NB.   Performs the hermitian (symmetric) rank 1 operation
+NB.   Performs the hermitian (symmetric) rank 1 operation:
+NB.     A := alpha * x * op(x) + A
 NB.   with transposed matrix, where A is Hermitian
 NB.   (symmetric)
 NB.
@@ -89,7 +90,8 @@ NB. zgerc    A := alpha * x * y^H + A
 NB. zgeru    A := alpha * x * y^T + A
 NB.
 NB. Description:
-NB.   Performs the rank 1 operation
+NB.   Performs the rank 1 operation:
+NB.     A := alpha * x * op(y) + A
 NB.
 NB. Syntax:
 NB.   Aupd=. xgerx alpha ; x ; incx ; y ; incy ; A
@@ -141,7 +143,8 @@ NB. zherl    Hermitian    LT          A := alpha * x * x^H + A
 NB. zheru    Hermitian    UT          A := alpha * x * x^H + A
 NB.
 NB. Description:
-NB.   Performs the hermitian (symmetric) rank 1 operation
+NB.   Performs the hermitian (symmetric) rank 1 operation:
+NB.     A := alpha * x * op(x) + A
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:

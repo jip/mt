@@ -18,7 +18,7 @@ NB.            'L' - lower
 NB.            'U' - upper
 NB.   AA   - n×n-matrix, contains either lower or upper or
 NB.          both part(s) of A
-NB.   A    - n×n-matrix, Hermitian
+NB.   A    - n×n-matrix, Hermitian, to decompose
 NB.   w    - n-vector, eigenvalues of A
 NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
 NB.   n    ≥ 0, the size of A, AA, V and w

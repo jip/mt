@@ -41,7 +41,8 @@ NB.
 NB. Description:
 NB.   Solves the equation:
 NB.     op(A) * x = b
-NB.   with transposed matrix, where A is triangular
+NB.   with transposed matrix, where A is triangular, and
+NB.   op(A) is either A, A^T or A^H
 NB.
 NB. Syntax:
 NB.   x=. (uplo ; trans ; diag) xtrsvcore AAt ; b ; incb
@@ -64,6 +65,7 @@ NB.             'U'  NB. A is either L1 or U1, diagonal
 NB.                  NB.   elements of A are not referenced
 NB.   AAt   - n×n-matrix, contains either non-zero or both
 NB.           part(s) of A^T
+NB.   A     - n×n-matrix, triangular
 NB.   b     - (1+(n-1)*|incx|)-vector, the RHS
 NB.   incb  ≠ 0, the increment for the elements of b and x
 NB.   x     - the same shape as b, the solution
@@ -115,13 +117,15 @@ NB.
 NB. Description:
 NB.   Solves the equation:
 NB.     op(A) * x = b
-NB.   where A is triangular
+NB.   where A is triangular, and op(A) is either A, A^T or
+NB.   A^H
 NB.
 NB. Syntax:
 NB.   x=. xtrsvxxx AA ; b ; incb
 NB. where
 NB.   AA   - n×n-matrix, contains either non-zero or both
 NB.          part(s) of A
+NB.   A    - n×n-matrix, triangular
 NB.   b    - (1+(n-1)*|incb|)-vector, the RHS
 NB.   incb ≠ 0, the increment for the elements of b and x
 NB.   x    - the same shape as b, the solution

@@ -2,6 +2,7 @@ require 'math/lapack2'
 
 NB. Description:
 NB.   Compute the inverse of a factored general square matrix
+NB.   using the LU factorization computed by xGETRF
 NB.
 NB. Syntax:
 NB.   iA=. xgetri L1U ; ipiv

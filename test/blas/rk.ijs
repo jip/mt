@@ -66,6 +66,7 @@ NB.   CCt    - n×n-matrix, contains either lower or upper or
 NB.            both part(s) of C^T
 NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
 NB.            uplo='L') updated
+NB.   C      - n×n-matrix, symmetric
 NB.   n      ≥ 0, the size of C, CCt and CCupdt and the
 NB.            number of columns or rows in At
 NB.   k      ≥ 0, the number of rows or columns in At
@@ -120,6 +121,7 @@ NB.   CCt    - n×n-matrix, contains either lower or upper or
 NB.            both part(s) of C^T
 NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
 NB.            uplo='L') updated
+NB.   C      - n×n-matrix, Hermitian
 NB.   n      ≥ 0, the size of C, CCt and CCupdt and the
 NB.            number of columns or rows in At
 NB.   k      ≥ 0, the number of rows or columns in At
@@ -149,11 +151,9 @@ NB. zsyrkun    UT          C := alpha * A   * A^T + beta * C
 NB. zsyrkut    UT          C := alpha * A^T * A   + beta * C
 NB.
 NB. Description:
-NB.   Performs symmetric rank k operations:
-NB.     C := alpha * A * A^T + beta * C
-NB.   or
-NB.     C := alpha * A^T * A + beta * C
-NB.   where C is symmetric
+NB.   Performs the symmetric rank k operation:
+NB.     C := alpha * op1(A) * op2(A) + beta * C
+NB.   where C is symmetric and opX(A) is either A or A^T
 NB.
 NB. Syntax:
 NB.   CCupd=. xsyrkxx alpha ; A ; beta ; CC
@@ -201,10 +201,8 @@ NB. zherkun    UT          C := alpha * A   * A^H + beta * C
 NB. zherkut    UT          C := alpha * A^H * A   + beta * C
 NB.
 NB. Description:
-NB.   Performs hermitian rank k operations:
-NB.     C := alpha * A * A^H + beta * C
-NB.   or
-NB.     C := alpha * A^H * A + beta * C
+NB.   Performs the hermitian rank k operation:
+NB.     C := alpha * op1(A) * op2(A) + beta * C
 NB.   where C is Hermitian
 NB.
 NB. Syntax:

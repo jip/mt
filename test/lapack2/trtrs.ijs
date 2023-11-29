@@ -19,8 +19,8 @@ NB.             'T' - op(A) := A^T  (transpose)
 NB.             'C' - op(A) := A^H  (conjugate transpose)
 NB.   diag  - literal, case-insensitive, in which the head
 NB.            specifies the form of A:
-NB.             'N' - A is non-unit triangular
-NB.             'U' - A is unit triangular
+NB.             'N' - A is non-unit triangular: L or U
+NB.             'U' - A is unit triangular: L1 or U1
 NB.   AA    - n×n-matrix, contains either non-zero or both
 NB.           part(s) of A
 NB.   A     - n×n-matrix, triangular

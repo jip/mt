@@ -104,6 +104,7 @@ NB.             'U'  NB. UT
 NB.   alpha - scalar
 NB.   AAt   - n×n-matrix, contains either lower or upper or
 NB.           both part(s) of A^T
+NB.   A     - n×n-matrix, Hermitian (symmetric)
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   beta  - scalar
@@ -157,6 +158,7 @@ NB.             'U'  NB. A is either L1 or U1, diagonal
 NB.                  NB.   elements of A are not referenced
 NB.   AAt   - n×n-matrix, contains either non-zero or both
 NB.           part(s) of A^T
+NB.   A     - n×n-matrix, triangular
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   xupd  - an updated x

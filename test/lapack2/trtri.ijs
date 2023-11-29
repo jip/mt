@@ -13,9 +13,8 @@ NB.            'L' - lower
 NB.            'U' - upper
 NB.   diag - literal, case-insensitive, in which the head
 NB.           specifies the form of A:
-NB.            'N' - A is non-unit triangular
-NB.            'U' - A is unit triangular, diagonal
-NB.                  elements of A are not referenced
+NB.            'N' - A is non-unit triangular: L or U
+NB.            'U' - A is unit triangular: L1 or U1
 NB.   AA   - n×n-matrix, contains either non-zero or both
 NB.          part(s) of A
 NB.   A    - n×n-matrix to be inversed, triangular

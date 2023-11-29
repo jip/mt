@@ -16,7 +16,8 @@ NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^H * P^H = A
 NB.   AA   - n×n-matrix, contains either lower or upper or
 NB.          both part(s) of A
-NB.   A    - n×n-matrix, Hermitian
+NB.   A    - n×n-matrix, Hermitian, to be factored to DT1 and
+NB.          ipiv
 NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define P
 NB.   D    - n×n-matrix, Hermitian tridiagonal (opposite

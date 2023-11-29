@@ -96,6 +96,10 @@ NB.   LT       -        lower triangular part of matrix
 NB.   SLT      - strict lower triangular part of matrix
 NB.   UT       -        upper triangular part of matrix
 NB.   SUT      - strict upper triangular part of matrix
+NB.
+NB. Notes:
+NB. - unit diagonal in L1 and U1 is usually neither stored
+NB.   nor referenced
 
 NB. =========================================================
 NB. Local definitions

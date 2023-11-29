@@ -1831,6 +1831,7 @@ NB.   A       - m×n-matrix
 NB.   yapprox - the same shape as y, the approximate yexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for yapprox
+NB.   yexact  - an updated y
 NB.   kx      = n for gemvn or kx = m otherwise
 NB.   ky      = m for gemvn or ky = n otherwise
 NB.   m       ≥ 0, the number of rows in A
@@ -1880,6 +1881,7 @@ NB.   C       - m×n-matrix
 NB.   Capprox - the same shape as C, computed by the verb being
 NB.             tested, approximates Cexact
 NB.   berr    ≥ 0, the relative backward error for Capprox
+NB.   Cexact  - an updated C
 NB.   m       ≥ 0, the number of rows in C and op(A)
 NB.   n       ≥ 0, the number of columns in C and op(B)
 NB.   k       ≥ 0, the number of columns in op(A) and the
@@ -1934,6 +1936,7 @@ NB.   x       - (1+(n-1)*|incx|)-vector
 NB.   incx    ≠ 0, the increment for the elements of x
 NB.   beta    - scalar
 NB.   y       - (1+(n-1)*|incy|)-vector
+NB.   yexact  - an updated y
 NB.   incy    ≠ 0, the increment for the elements of y
 NB.   A       - n×n-matrix with real diagonal
 NB.   yapprox - the same shape as y, the approximate yexact, is
@@ -1989,6 +1992,8 @@ NB.   beta    - scalar
 NB.   C       - m×n-matrix
 NB.   Capprox - the same shape as C, computed by the verb
 NB.             being tested, approximates Cexact
+NB.   berr    ≥ 0, the relative backward error for Capprox
+NB.   Cexact  - an updated C
 NB.   m       ≥ 0, the number of rows in C and B
 NB.   n       ≥ 0, the number of columns in C and B
 NB.   ma      = m for xxmmlx_mt_ or ma = n for xxmmux_mt_
@@ -2039,6 +2044,7 @@ NB.   incx    ≠ 0, the increment for the elements of x
 NB.   xapprox - the same shape as x, the approximate xexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for xapprox
+NB.   xexact  - an updated x
 NB.   n       ≥ 0, size of A and AA
 NB.
 NB. Formula:
@@ -2088,6 +2094,7 @@ NB.   B        - m×n-matrix
 NB.   Bapprox  - the same shape as B, the approximate Bexact, is
 NB.              computed by the verb being tested
 NB.   berr     ≥ 0, the relative backward error for Bapprox
+NB.   Bexact   - an updated B
 NB.   m        ≥ 0, the number of rows in B
 NB.   n        ≥ 0, the number of columns in B
 NB.   k        = m for trmmlxxx_mt_ or k = n for trmmrxxx_mt_
@@ -2293,6 +2300,8 @@ NB.              UT (for xxrkux_mt_) approximates CCexact,
 NB.              and the rest elements weren't changed and
 NB.              match CC
 NB.   berr     ≥ 0, the relative backward error for CCapprox
+NB.   CCexact  - CC with either LT (for xxrklx_mt_) or UT
+NB.              xxrkux_mt_) updated
 NB.   n        ≥ 0, the size of C, CC, CCexact and CCapprox,
 NB.              and the number of rows or columns in A
 NB.   k        ≥ 0, the number of columns or rows in A
@@ -2351,6 +2360,8 @@ NB.              being tested, with LT (for xxrl_mt_) or UT
 NB.              (for xxru_mt_) approximates AAexact, and the
 NB.              rest elements weren't changed and match AA
 NB.   berr     ≥ 0, the relative backward error for AAapprox
+NB.   AAexact  - AA with either LT (for xxrl_mt_) or UT (for
+NB.              xxru_mt_) updated
 NB.   n        ≥ 0, the size of A, AA, AAexact and AAapprox
 NB.
 NB. Formula:
@@ -2407,6 +2418,8 @@ NB.              (for xxr2kux_mt_) approximates CCexact, and
 NB.              the rest elements weren't changed and match
 NB.              CC
 NB.   berr     ≥ 0, the relative backward error for CCapprox
+NB.   CCexact  - CC with either LT (for xxr2klx_mt_) or UT
+NB.              (for xxr2kux_mt_) updated
 NB.   n        ≥ 0, the size of C, CC, CCexact and CCapprox,
 NB.              and the number of rows or columns in A and B
 NB.   k        ≥ 0, the number of columns or rows in A and B
@@ -2468,6 +2481,8 @@ NB.              (for xxr2u_mt_) approximates AAexact, and
 NB.              the rest elements weren't changed and match
 NB.              AA
 NB.   berr     ≥ 0, the relative backward error for AAapprox
+NB.   AAexact  - AA with either LT (for xxr2l_mt_) or UT (for
+NB.              xxr2u_mt_) updated
 NB.   n        ≥ 0, the size of A, AA, AAexact and AAapprox
 NB.
 NB. Formula:

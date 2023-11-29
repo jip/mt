@@ -237,6 +237,7 @@ NB.
 NB. Description:
 NB.   Adv. to make monad to perform the rank 1 operation:
 NB.     A := alpha * x * op(y) + A
+NB.   where op(y) is either y^T or y^H
 NB.
 NB. Syntax:
 NB.   Aupd=. (mul ger) alpha ; x ; incx ; y ; incy ; A
@@ -261,7 +262,9 @@ NB. gerc     A := alpha * x * y^H + A
 NB. geru     A := alpha * x * y^T + A
 NB.
 NB. Description:
-NB.   Performs the rank 1 operation
+NB.   Performs the rank 1 operation:
+NB.     A := alpha * x * op(y) + A
+NB.   where op(y) is either y^T or y^H
 NB.
 NB. Syntax:
 NB.   Aupd=. gerx alpha ; x ; incx ; y ; incy ; A
@@ -291,7 +294,8 @@ NB. Description:
 NB.   Conj. to make monad to perform the hermitian
 NB.   (symmetric) rank 1 operation:
 NB.     A := alpha * x * op(x) + A
-NB.   where A is Hermitian (symmetric)
+NB.   where A is Hermitian (symmetric), and op(x) is either
+NB.   x^T or x^H
 NB.
 NB. Syntax:
 NB.   AAupd=. (cmp her mul) alpha ; x ; incx ; AA
@@ -318,7 +322,8 @@ NB. herl     Hermitian    LT          A := alpha * x * x^H + A
 NB. heru     Hermitian    UT          A := alpha * x * x^H + A
 NB.
 NB. Description:
-NB.   Performs the hermitian (symmetric) rank 1 operation
+NB.   Performs the hermitian (symmetric) rank 1 operation:
+NB.     A := alpha * x * op(x) + A
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
@@ -356,7 +361,8 @@ NB. Description:
 NB.   Conj. to make monad to perform the hermitian
 NB.   (symmetric) rank 2 operation:
 NB.     A := alpha * x * op1(y) + op2(alpha) * y * op1(x) + A
-NB.   where A is Hermitian (symmetric)
+NB.   where A is Hermitian (symmetric), op1(x) is either x^T
+NB.   or x^H, and op2(alpha) is either alpha or conj(alpha)
 NB.
 NB. Syntax:
 NB.   AAupd=. (cmp her2 trans) alpha ; x ; incx ; y ; incy ; AA
@@ -385,7 +391,8 @@ NB. her2l    Hermitian    LT          A := alpha * x * y^H + conj(alpha) * y * x
 NB. her2u    Hermitian    UT          A := alpha * x * y^H + conj(alpha) * y * x^H + A
 NB.
 NB. Description:
-NB.   Performs the hermitian (symmetric) rank 2 operation
+NB.   Performs the hermitian (symmetric) rank 2 operation:
+NB.     A := alpha * x * op1(y) + op2(alpha) * y * op1(x) + A
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
@@ -427,7 +434,8 @@ NB.   (symmetric) rank k operations:
 NB.     C := alpha * A * op(A) + beta * C
 NB.   or
 NB.     C := alpha * op(A) * A + beta * C
-NB.   where C is Hermitian (symmetric)
+NB.   where C is Hermitian (symmetric), and op(A) is either
+NB.   A^T or A^H
 NB.
 NB. Syntax:
 NB.   CCupd=. (cmp herk mul) alpha ; A ; beta ; CC
@@ -457,7 +465,8 @@ NB. herkun   Hermitian    real                  UT          C := alpha * A   * A
 NB. herkuc   Hermitian    real                  UT          C := alpha * A^H * A   + beta * C
 NB.
 NB. Description:
-NB.   Performs the hermitian (symmetric) rank k operation
+NB.   Performs the hermitian (symmetric) rank k operation:
+NB.     C := alpha * op1(A) * op2(A) + beta * C
 NB.   where C is Hermitian (symmetric)
 NB.
 NB. Syntax:
@@ -508,7 +517,8 @@ NB.   (symmetric) rank 2k operations:
 NB.     C := alpha * A * op1(B) + op2(alpha) * B * op1(A) + beta * C  (1)
 NB.   or
 NB.     C := alpha * op1(A) * B + op2(alpha) * op1(B) * A + beta * C  (2)
-NB.   where C is Hermitian (symmetric)
+NB.   where C is Hermitian (symmetric), op1(M) is either M^T
+NB.   or M^H and op2(alpha) is either alpha or conj(alpha)
 NB.
 NB. Syntax:
 NB.   CCupd=. (cmp`trans r2k kind) alpha ; A ; B ; beta ; CC
@@ -549,7 +559,8 @@ NB. her2kun    Hermitian    real            UT          C := alpha * A   * B^H +
 NB. her2kuc    Hermitian    real            UT          C := alpha * A^H * B   + conj(alpha) * B^H * A   + beta * C
 NB.
 NB. Description:
-NB.   Performs the hermitian (symmetric) rank 2k operations
+NB.   Performs the hermitian (symmetric) rank 2k operation:
+NB.     C := alpha * op1(A) * op2(B) + op3(alpha) * op1(B) * op2(A) + beta * C
 NB.   where C is Hermitian (symmetric)
 NB.
 NB. Syntax:
@@ -623,7 +634,8 @@ NB. gemvt    C := alpha * A^T * x + beta * y
 NB. gemvc    C := alpha * A^H * x + beta * y
 NB.
 NB. Description:
-NB.   Performs the matrix-vector operation
+NB.   Performs the matrix-vector operation:
+NB.     y := alpha * op(A) * x + beta * y
 NB.
 NB. Syntax:
 NB.   yupd=. gemvx alpha ; A ; x ; incx ; beta ; y ; incy
@@ -811,6 +823,7 @@ NB.
 NB. Description:
 NB.   Adv. to make monad to perform matrix-matrix operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C
+NB.   where opX(M) is either M, M^T, conj(M) or M^H
 NB.
 NB. Syntax:
 NB.   Cupd=. (mul gemm) alpha ; A ; B ; beta ; C
@@ -963,7 +976,8 @@ NB.   operations:
 NB.     B := alpha * op(A) * B  (1)
 NB.   or
 NB.     B := alpha * B * op(A)  (2)
-NB.   where A is triangular
+NB.   where A is triangular, and op(A) is either A, A^T or
+NB.   A^H
 NB.
 NB. Syntax:
 NB.   Bupd=. ((mul trans@ref) trmm) alpha ; AA ; B

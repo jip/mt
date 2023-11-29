@@ -67,6 +67,7 @@ NB.   CCt    - n×n-matrix, contains either lower or upper or
 NB.            both part(s) of C^T
 NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
 NB.            uplo='L') updated
+NB.   C      - n×n-matrix, symmetric
 NB.   n      ≥ 0, the size of Ct and CCupdt and the number of
 NB.            columns or rows in At and Bt
 NB.   k      ≥ 0, the number of rows or columns in At and Bt
@@ -124,6 +125,7 @@ NB.   CCt    - n×n-matrix, contains either lower or upper or
 NB.            both part(s) of C^T
 NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
 NB.            uplo='L') updated
+NB.   C      - n×n-matrix, Hermitian
 NB.   n      ≥ 0, the size of C, CCt and CCupdt and the
 NB.            number of columns or rows in At and Bt
 NB.   k      ≥ 0, the number of rows or columns in At and Bt
@@ -157,10 +159,8 @@ NB. zsyr2kun    UT          C := alpha * A   * B^T + alpha * B   * A^T + beta * 
 NB. zsyr2kut    UT          C := alpha * A^T * B   + alpha * B^T * A   + beta * C
 NB.
 NB. Description:
-NB.   Performs symmetric rank 2k operations:
-NB.     C := alpha * A * B^T + alpha * B * A^T + beta * C
-NB.   or
-NB.     C := alpha * A^T * B + alpha * B^T * A + beta * C
+NB.   Performs the symmetric rank 2k operation:
+NB.     C := alpha * op1(A) * op2(B) + alpha * op1(B) * op2(A) + beta * C
 NB.   where C is symmetric
 NB.
 NB. Syntax:
@@ -210,11 +210,9 @@ NB. zher2kun    UT          C := alpha * A   * B^H + alpha * B   * A^H + beta * 
 NB. zher2kuc    UT          C := alpha * A^H * B   + alpha * B^H * A   + beta * C
 NB.
 NB. Description:
-NB.   Performs hermitian rank 2k operations:
-NB.     C := alpha * A * B^H + conj(alpha) * B * A^H + beta * C
-NB.   or
-NB.     C := alpha * A^H * B + conj(alpha) * B^H * A + beta * C
-NB.   where C is Hermitian
+NB.   Performs the hermitian rank 2k operation:
+NB.     C := alpha * op1(A) * op2(B) + conj(alpha) * op1(B) * op2(A) + beta * C
+NB.   where C is Hermitian and opX(M) is either M or M^H
 NB.
 NB. Syntax:
 NB.   CCupd=. zher2kxx alpha ; A ; B ; beta ; CC

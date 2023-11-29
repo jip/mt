@@ -43,7 +43,8 @@ NB.   Solves the matrix equation:
 NB.     op(A) * X = alpha * B  (1)
 NB.   or
 NB.     X * op(A) = alpha * B  (2)
-NB.   with transposed matrices, where A is triangular
+NB.   with transposed matrices, where A is triangular, and
+NB.   op(A) is either A, A^T or A^H
 NB.
 NB. Syntax:
 NB.   Xt=. (side ; uplo ; trans ; diag) xtrsmcore alpha ; AAt ; Bt
@@ -71,6 +72,7 @@ NB.                  NB.   elements of A are not referenced
 NB.   alpha - scalar
 NB.   AAt   - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A^T
+NB.   A     - k×k-matrix, triangular
 NB.   Bt    - n×m-matrix, B^T
 NB.   Xt    - the same shape as B^T, X^T, solution[s]
 NB.           transposed
@@ -146,7 +148,8 @@ NB.   Solves the matrix equation:
 NB.     op(A) * X = alpha * B
 NB.   or
 NB.     X * op(A) = alpha * B
-NB.   where A is triangular
+NB.   where A is triangular, and op(A) is either A, A^T or
+NB.   A^H
 NB.
 NB. Syntax:
 NB.   X=. xtrsmxxxx alpha ; AA ; B

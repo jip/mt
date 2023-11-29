@@ -41,7 +41,8 @@ NB. dsyr2core    symmetric    A := alpha * x * y^T +      alpha  * y * x^T + A
 NB. zher2core    Hermitian    A := alpha * x * y^H + conj(alpha) * y * x^H + A
 NB.
 NB. Description:
-NB.   Performs the hermitian (symmetric) rank 2 operation
+NB.   Performs the hermitian (symmetric) rank 2 operation:
+NB.     A := alpha * x * op1(y) + op2(alpha) * y * op1(x) + A
 NB.   with transposed matrix, where A is Hermitian
 NB.   (symmetric)
 NB.
@@ -62,6 +63,7 @@ NB.   AAt    - n×n-matrix, contains either lower or upper or
 NB.            both part(s) of A^T
 NB.   AAupdt - AAt with either LT (if uplo='U') or UT (if
 NB.           uplo='L') updated
+NB.   A      - n×n-matrix, Hermitian (symmetric)
 NB.   n      ≥ 0, the size of A, AAt and AAupdt
 NB.
 NB. Notes:
@@ -90,7 +92,8 @@ NB. zher2l    Hermitian    LT          A := alpha * x * y^H + conj(alpha) * y * 
 NB. zher2u    Hermitian    UT          A := alpha * x * y^H + conj(alpha) * y * x^H + A
 NB.
 NB. Description:
-NB.   Performs the hermitian (symmetric) rank 2 operation
+NB.   Performs the hermitian (symmetric) rank 2 operation:
+NB.     A := alpha * x * op1(y) + op2(alpha) * y * op1(x) + A
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:

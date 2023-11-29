@@ -30,8 +30,8 @@ NB.   iAA  - n×n-matrix, contains the triangular part of iA
 NB.          in changed triangle and unchanged elements of
 NB.          DPT1 in opposite strict triangle
 NB.   iA   - n×n-matrix, real, the symmetric inversion of A
-NB.   A    - n×n-matrix, real, symmetric, represented in
-NB.          factored form by DPT1 and ipiv
+NB.   A    - n×n-matrix, real, symmetric, to invert,
+NB.          represented in factored form by DPT1 and ipiv
 NB.   n    ≥ 0, the size of A, iA and iAA
 NB.
 NB. Notes:

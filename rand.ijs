@@ -363,7 +363,7 @@ NB.     exponent(Re(l)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(l)) ~ U(-1,1)
 NB.     exponent(Im(l)) ~ TN(0,3^2,-6,4)
 NB.   :
-NB.     L=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) trlmat 4
+NB.     L=. ((0 1 0 1 , FP_EMIN , FP_EMAX)&gemat j. _1 1 0 3 _6 4&gemat) trlmat 4
 NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
@@ -480,14 +480,14 @@ NB.     exponent(Re(g)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(g)) ~ U(-1,1)
 NB.     exponent(Im(g)) ~ TN(0,3^2,-6,4)
 NB.   :
-NB.     G=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) 4 4
+NB.     G=. ((0 1 0 1 , FP_EMIN , FP_EMAX)&gemat j. _1 1 0 3 _6 4&gemat) 4 4
 NB.
 NB. Notes:
 NB. - default par provides about 95% of g numbers falls into
 NB.   the range [-1/FP_EPS,-FP_EPS]U[FP_EPS,1/FP_EPS]
 NB.   ("68-95-99.7 rule")
 
-gemat=: (_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX)&$: :(((randu~ 2&{.) (* 2&^) (randtnr~ 2&}.))~)
+gemat=: (_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX)&$: :(((randu~ 2&{.) * 2 ^ (randtnr~ 2&}.))~)
 
 NB. ---------------------------------------------------------
 NB. dimat
@@ -589,7 +589,7 @@ NB.     exponent(Re(h)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(h)) ~ U(-1,1)
 NB.     exponent(Im(h)) ~ TN(0,3^2,-6,4)
 NB.   :
-NB.     H=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) hemat 4
+NB.     H=. ((0 1 0 1 , FP_EMIN , FP_EMAX)&gemat j. _1 1 0 3 _6 4&gemat) hemat 4
 NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
@@ -637,7 +637,7 @@ NB.     exponent(Re(p)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(p)) ~ U(1,3)
 NB.     exponent(Im(p)) ~ TN(0,4^2,-5,6)
 NB.   :
-NB.     P=. (1 2 0 1 __ _&gemat j. 1 3 0 4 _5 6&gemat) pomat 4
+NB.     P=. ((1 2 0 1 , FP_EMIN , FP_EMAX)&gemat j. 1 3 0 4 _5 6&gemat) pomat 4
 NB. - make real symmetric negative definite 4×4-matrix P
 NB.   with elements p having:
 NB.     mantissa(p) ~ U(1,3)

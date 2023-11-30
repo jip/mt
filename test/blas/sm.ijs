@@ -73,8 +73,8 @@ NB.   alpha - scalar
 NB.   AAt   - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A^T
 NB.   A     - k×k-matrix, triangular
-NB.   Bt    - n×m-matrix, B^T
-NB.   Xt    - the same shape as B^T, X^T, solution[s]
+NB.   Bt    - n×m-matrix, B^T, non-scaled RHS
+NB.   Xt    - the same shape as B^T, X^T, solutions
 NB.           transposed
 NB.   m     ≥ 0, the number of columns in Bt and Xt
 NB.   n     ≥ 0, the number of rows in Bt and Xt
@@ -158,11 +158,11 @@ NB.   alpha - scalar
 NB.   AA    - k×k-matrix, contains either non-zero or both
 NB.           part(s) of A
 NB.   A     - k×k-matrix, triangular
-NB.   B     - m×n-matrix, RHS
+NB.   B     - m×n-matrix, non-scaled RHS
 NB.   X     - the same shape as B, solutions
 NB.   m     ≥ 0, the number of rows in B and X
 NB.   n     ≥ 0, the number of columns in B and X
-NB.   k     = m for trsmlxxx_mt_ or k = n for trsmrxxx_mt_
+NB.   k     = m for xtrsmlxxx_mt_ or k = n for xtrsmrxxx_mt_
 NB.
 NB. Notes:
 NB. - monad        provides BLAS'

@@ -68,8 +68,8 @@ NB.            both part(s) of C^T
 NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
 NB.            uplo='L') updated
 NB.   C      - n×n-matrix, symmetric
-NB.   n      ≥ 0, the size of Ct and CCupdt and the number of
-NB.            columns or rows in At and Bt
+NB.   n      ≥ 0, the size of C, CCt and CCupdt and the
+NB.            number of columns or rows in At and Bt
 NB.   k      ≥ 0, the number of rows or columns in At and Bt
 NB.   kab    = k if trans='N' or kab = n otherwise
 NB.   nab    = n if trans='N' or nab = k otherwise

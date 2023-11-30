@@ -440,7 +440,7 @@ NB.
 NB. Syntax:
 NB.   CCupd=. (cmp herk mul) alpha ; A ; beta ; CC
 NB. where
-NB.   cmp - dyad to define which triangular part of A is to
+NB.   cmp - dyad to define which triangular part of C is to
 NB.         be referenced, is one of:
 NB.           >:  NB. LT
 NB.           <:  NB. UT
@@ -523,7 +523,7 @@ NB.
 NB. Syntax:
 NB.   CCupd=. (cmp`trans r2k kind) alpha ; A ; B ; beta ; CC
 NB. where
-NB.   cmp   - dyad to define which triangular part of A is to
+NB.   cmp   - dyad to define which triangular part of C is to
 NB.           be referenced, is one of:
 NB.             >:      NB. LT
 NB.             <:      NB. UT

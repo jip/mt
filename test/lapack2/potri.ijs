@@ -18,8 +18,7 @@ NB.                    U^H * U = A
 NB.   AA   - n×n-matrix, contains either lower or upper or
 NB.          both part(s) of A
 NB.   A    - n×n-matrix, Hermitian (symmetric) positive
-NB.          definite, represented in the factored form by L
-NB.          or U
+NB.          definite, to be factored to either L or U
 NB.   iAA  - n×n-matrix, contains the triangular part of iA
 NB.          in changed triangle and unchanged elements of AA
 NB.          in opposite strict triangle

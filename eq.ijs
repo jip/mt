@@ -59,10 +59,10 @@ NB.   'HTupd signbc'=. hs hgexxeo H ,: T
 NB. where
 NB.   hs     - 2-vector of integers (h,s) 'head' and 'size',
 NB.            defines eigenvalues range
-NB.   H      - n×n-matrix, either lower or upper Hessenberg
-NB.            inside the submatrix H[h:h+s-1,h:h+s-1], and
-NB.            lower or upper triangular outside
-NB.   T      - n×n-matrix, either lower or upper triangular
+NB.   H      - n×n-matrix, either HSL or HSU inside the
+NB.            submatrix H[h:h+s-1,h:h+s-1], and L or U
+NB.            outside
+NB.   T      - n×n-matrix, either L or U
 NB.   HTupd  -:Hupd ,: Tupd
 NB.   Hupd   - H with hs-segment of diagonal replaced by
 NB.            alpha (see hgexx)

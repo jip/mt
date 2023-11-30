@@ -1871,7 +1871,7 @@ NB.
 NB. Syntax:
 NB.   berr=. (alpha ; A ; B ; beta ; C) (gemmxx chk1mm) Capprox
 NB. where
-NB.   xxmmxx  - monad, the reference implementation to
+NB.   gemmxx  - monad, the reference implementation to
 NB.             compute Cexact:
 NB.               Cexact=. gemmxx (alpha ; A ; B ; beta ; C)
 NB.   alpha   - scalar
@@ -1939,7 +1939,7 @@ NB.   beta    - scalar
 NB.   y       - (1+(n-1)*|incy|)-vector
 NB.   yexact  - an updated y
 NB.   incy    ≠ 0, the increment for the elements of y
-NB.   A       - n×n-matrix with real diagonal
+NB.   A       - n×n-matrix, Hermitian (symmetric)
 NB.   yapprox - the same shape as y, the approximate yexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for yapprox
@@ -2498,8 +2498,8 @@ NB.   endif
 NB. where
 NB.   ||M|| := normmt(M)
 NB.   G - the gauge matrix, is one of:
-NB.     G := |alpha| * |x| * |y^T| + |alpha| * |y| * |x^T| + |A|, for dsyrx_mt_
-NB.     G := |alpha| * |x| * |y^H| + |alpha| * |y| * |x^H| + |A|, for zherx_mt_
+NB.     G := |alpha| * |x| * |y^T| + |alpha| * |y| * |x^T| + |A|, for dsyr2x_mt_
+NB.     G := |alpha| * |x| * |y^H| + |alpha| * |y| * |x^H| + |A|, for zher2x_mt_
 NB.
 NB. Notes:
 NB. - models BLAS' DCHK6('DSYR2') and ZCHK6('ZHER2') with

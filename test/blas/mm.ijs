@@ -111,7 +111,7 @@ NB.   with transposed matrices, where A is Hermitian
 NB.   (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupdt=. (side ; uplo) xsymmcore alpha ; AAt ; Bt ; beta ; Ct
+NB.   Cupdt=. (side ; uplo) xxxmmcore alpha ; AAt ; Bt ; beta ; Ct
 NB. where
 NB.   side  - literal, case-insensitive, in which the head
 NB.           specifies the side of A:
@@ -197,7 +197,8 @@ NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal
 NB.                  NB.   elements of A are not referenced
 NB.   alpha - scalar
-NB.   AAt   - k×k-matrix, contains A^T
+NB.   AAt   - k×k-matrix, contains either non-zero or both
+NB.           triangular parts of A^T
 NB.   Bt    - n×m-matrix, B^T
 NB.   Bupdt - an updated Bt
 NB.   A     - k×k-matrix, triangular

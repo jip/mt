@@ -65,7 +65,7 @@ NB. User config
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Tests logging
 
-TESTLOGFILE=: < jpath '~temp/mt.log'  NB. assign a: to switch off file logging
+TESTLOGFILE=: < jpath '~temp/mt.log'  NB. assign '' to switch off file logging
 TESTLOG=: ''                          NB. string, being formatted test log
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

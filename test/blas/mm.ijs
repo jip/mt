@@ -425,7 +425,7 @@ NB.   B     - m×n-matrix
 NB.   Bupd  - an updated B
 NB.   m     ≥ 0, the number of rows in B and Bupd
 NB.   n     ≥ 0, the number of columns in B and Bupd
-NB.   k     = m for xtrmmlxxx or k = n xtrmmrxxx
+NB.   k     = m for xtrmmlxxx or k = n for xtrmmrxxx
 NB.
 NB. Notes:
 NB. - monad        provides BLAS'

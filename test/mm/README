@@ -19,7 +19,7 @@ where
               [2], is presented if corresp. object from
               ijs-file is supported
 e.g.
-  000_aig_2.ijs - dense matrix, intger, without symmetry,
+  000_aig_2.ijs - dense matrix, integer, without symmetry,
                   with id 000, in J sentence format
   999.mm        - invalid file in MatrixMarket format with id 999
 

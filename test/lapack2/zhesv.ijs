@@ -16,7 +16,7 @@ NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^H = A
 NB.   AA   - n×n-matrix, contains either lower or upper or
 NB.          both part(s) of A
-NB.   A    - n×n-matrix, Hermitian to be factored to DPT1
+NB.   A    - n×n-matrix, Hermitian, to be factored to DPT1
 NB.          and ipiv
 NB.   B    - n×nrhs-matrix, RHS
 NB.   DPT1 - n×n-matrix, D and PT1 combined

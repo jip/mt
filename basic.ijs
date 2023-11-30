@@ -430,7 +430,7 @@ NB. herk
 NB.
 NB. Description:
 NB.   Conj. to make monad to perform the hermitian
-NB.   (symmetric) rank k operations:
+NB.   (symmetric) rank k operation:
 NB.     C := alpha * A * op(A) + beta * C
 NB.   or
 NB.     C := alpha * op(A) * A + beta * C
@@ -513,7 +513,7 @@ NB. r2k
 NB.
 NB. Description:
 NB.   Conj. to make monad to perform the hermitian
-NB.   (symmetric) rank 2k operations:
+NB.   (symmetric) rank 2k operation:
 NB.     C := alpha * A * op1(B) + op2(alpha) * B * op1(A) + beta * C  (1)
 NB.   or
 NB.     C := alpha * op1(A) * B + op2(alpha) * op1(B) * A + beta * C  (2)
@@ -897,7 +897,7 @@ NB. hemm
 NB.
 NB. Description:
 NB.   Adv. to make monad to perform the matrix-matrix
-NB.   operations:
+NB.   operation:
 NB.     C := alpha * A * B + beta * C
 NB.   or
 NB.     C := alpha * B * A + beta * C
@@ -973,7 +973,7 @@ NB. trmm
 NB.
 NB. Description:
 NB.   Adv. to make monad to perform the matrix-matrix
-NB.   operations:
+NB.   operation:
 NB.     B := alpha * op(A) * B  (1)
 NB.   or
 NB.     B := alpha * B * op(A)  (2)
@@ -1197,7 +1197,7 @@ NB. trsm
 NB.
 NB. Description:
 NB.   Adv. to make ambivalent verb to solve the linear
-NB.   monomial matrix equations:
+NB.   monomial matrix equation:
 NB.     op(A) * X = alpha * B
 NB.   or
 NB.     X * op(A) = alpha * B
@@ -1246,7 +1246,7 @@ NB. trsmrucu    SUT           X * U1^H = alpha * B
 NB.
 NB. Description:
 NB.   Ambivalent verb to solve the linear monomial matrix
-NB.   equations:
+NB.   equation:
 NB.     op(A) * X = alpha * B
 NB.   or
 NB.     X * op(A) = alpha * B

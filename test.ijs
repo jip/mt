@@ -4,11 +4,11 @@ NB. tmonad   Conj. to make monad to test computational monad
 NB. tdyad    Conj. to make monad to test computational dyad
 NB. drvevx   Dyads to compute the normalization error of
 NB.          eigenvectors produced by nonsymmetric eigenvalue
-NB.          problem solvers
+NB.          problem solver
 NB. drgev    Adv. to make dyad to compute the relative
 NB.          backward error of eigenvectors produced by
 NB.          generalized nonsymmetric eigenvalue problem
-NB.          solvers
+NB.          solver
 NB. xxt01    Actors to compute the relative backward error
 NB.          for the matrix reconstructed from gexxf,tzxxf
 NB.          output
@@ -36,10 +36,10 @@ NB. qrt171   Adv. to make dyad to compute the ratio for
 NB.          zero-residual problem
 NB. t211     Dyad to compute the relative backward error of
 NB.          eigenvectors produced by symmetric eigenvalue
-NB.          problem solvers
+NB.          problem solver
 NB. t22x     Dyads to compute the error of eigenvectors
 NB.          produced by nonsymmetric eigenvalue problem
-NB.          solvers
+NB.          solver
 NB. t511x    Dyads to compute the error of generalized Schur
 NB.          form produced by hgexxsxx
 NB. t513x    Monads to compute the error of Schur vectors
@@ -48,43 +48,43 @@ NB. t52xx    Dyads to compute the error of Schur vectors
 NB.          produced by tgevcxxx
 NB. chk1mv   Adv. to make dyad to compute the relative
 NB.          backward error for the basic matrix-vector
-NB.          operations with general matrix
+NB.          operation with general matrix
 NB. chk1mm   Adv. to make dyad to compute the relative
 NB.          backward error for the basic matrix-matrix
-NB.          operations with general matrices
+NB.          operation with general matrices
 NB. chk2mv   Adv. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
-NB.          (symmetric) matrix-vector operations
+NB.          (symmetric) matrix-vector operation
 NB. chk2mm   Conj. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
-NB.          (symmetric) matrix-matrix operations
+NB.          (symmetric) matrix-matrix operation
 NB. chk3mv   Adv. to make dyad to compute the relative
 NB.          backward error for the basic matrix-vector
-NB.          operations with triangular matrix
+NB.          operation with triangular matrix
 NB. chk3mm   Conj. to make dyad to compute the relative
 NB.          backward error for the basic matrix-matrix
-NB.          operations with triangular matrix
+NB.          operation with triangular matrix
 NB. chk3sv   Adv. to make dyad to compute the relative
-NB.          backward error for the basic equation solvers
+NB.          backward error for the basic equation solver
 NB.          with triangular matrix
 NB. chk3sm   Adv. to make dyad to compute the relative
 NB.          backward error for the basic matrix equation
-NB.          solvers with triangular matrix
+NB.          solver with triangular matrix
 NB. chk4r    Adv. to make dyad to compute the relative
-NB.          backward error for the basic rank 1 operations
+NB.          backward error for the basic rank 1 operation
 NB.          with general matrix
 NB. chk4rk   Conj. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
-NB.          (symmetric) rank k operations
+NB.          (symmetric) rank k operation
 NB. chk5r    Conj. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
-NB.          (symmetric) rank 1 operations
+NB.          (symmetric) rank 1 operation
 NB. chk5r2k  Conj. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
-NB.          (symmetric) rank 2k operations
+NB.          (symmetric) rank 2k operation
 NB. chk6r2   Conj. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
-NB.          (symmetric) rank 2 operations
+NB.          (symmetric) rank 2 operation
 NB.
 NB. Version: 0.13.2 2021-06-24
 NB.
@@ -119,7 +119,7 @@ NB.
 NB. Description:
 NB.   Monad to compute the normalization error of
 NB.   eigenvectors produced by nonsymmetric eigenvalue
-NB.   problem solvers
+NB.   problem solver
 NB.
 NB. Syntax:
 NB.   nerrV=. drvev V
@@ -373,7 +373,7 @@ NB.
 NB. Description:
 NB.   Dyads to compute the normalization error of
 NB.   eigenvectors produced by nonsymmetric eigenvalue
-NB.   problem solvers
+NB.   problem solver
 NB.
 NB. Syntax:
 NB.   errL=. trash drgevl (trash ; L     ; trash)
@@ -393,7 +393,7 @@ NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the relative backward
 NB.   error of eigenvectors produced by generalized
-NB.   nonsymmetric eigenvalue problem solvers
+NB.   nonsymmetric eigenvalue problem solver
 NB.
 NB. Syntax:
 NB.   vberr=. mmul`vmul`norma`normb drgev
@@ -887,8 +887,8 @@ NB. where
 NB.   ||vector|| := norm1t(vector)
 NB.   ||matrix|| := ||matrix||_1     when A is at left of X or either A^T or A^H is from right of X
 NB.              := ||matrix||_inf   when A is at right of X or either A^T or A^H is from left of X
-NB.   Bapprox    := op(A) * Xapprox  for (op(A) * X = B) equations
-NB.              := Xapprox * op(A)  for (X * op(A) = B) equations
+NB.   Bapprox    := op(A) * Xapprox  for (op(A) * X = B) equation
+NB.              := Xapprox * op(A)  for (X * op(A) = B) equation
 NB.
 NB. Notes:
 NB. - models LAPACK's xTRT02, xGET02, xGTT02, xPOT02, xPTT02
@@ -1530,7 +1530,7 @@ NB.
 NB. Description:
 NB.   Dyad to compute the relative backward error of
 NB.   eigenvectors produced by symmetric eigenvalue problem
-NB.   solvers
+NB.   solver
 NB.
 NB. Syntax:
 NB.   berr=. (H ; normH) t211 (w ; V)
@@ -1563,7 +1563,7 @@ NB. t22r
 NB.
 NB. Description:
 NB.   Dyads to compute the error of eigenvectors produced by
-NB.   nonsymmetric eigenvalue problem solvers
+NB.   nonsymmetric eigenvalue problem solver
 NB.
 NB. Syntax:
 NB.   errL=. (A ; normA ; trash) t22l (w ; L     ; trash)
@@ -1813,7 +1813,7 @@ NB. chk1mv
 NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the relative backward
-NB.   error for the basic matrix-vector operations with
+NB.   error for the basic matrix-vector operation with
 NB.   general matrix
 NB.
 NB. Syntax:
@@ -1865,7 +1865,7 @@ NB. chk1mm
 NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the relative backward
-NB.   error for the basic matrix-matrix operations with
+NB.   error for the basic matrix-matrix operation with
 NB.   general matrices
 NB.
 NB. Syntax:
@@ -1922,7 +1922,7 @@ NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the relative backward
 NB.   error for the basic hermitian (symmetric) matrix-vector
-NB.   operations
+NB.   operation
 NB.
 NB. Syntax:
 NB.   berr=. (alpha ; AA ; x ; incx ; beta ; y ; incy) (xxmvx chk2mv) yapprox
@@ -1973,7 +1973,7 @@ NB.
 NB. Description:
 NB.   Conj. to make dyad to compute the relative backward
 NB.   error for the basic hermitian (symmetric) matrix-matrix
-NB.   operations
+NB.   operation
 NB.
 NB. Syntax:
 NB.   berr=. (alpha ; AA ; B ; beta ; C) (xxmmxx chk2mm trxpick) Capprox
@@ -2028,7 +2028,7 @@ NB. chk3mv
 NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the relative backward
-NB.   error for the basic matrix-vector operations with
+NB.   error for the basic matrix-vector operation with
 NB.   triangular matrix
 NB.
 NB. Syntax:
@@ -2075,7 +2075,7 @@ NB. chk3mm
 NB.
 NB. Description:
 NB.   Conj. to make dyad to compute the relative backward
-NB.   error for the basic matrix-matrix operations with
+NB.   error for the basic matrix-matrix operation with
 NB.   triangular matrix
 NB.
 NB. Syntax:
@@ -2129,7 +2129,7 @@ NB. chk3sv
 NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the relative backward
-NB.   error for the basic equation solvers with triangular
+NB.   error for the basic equation solver with triangular
 NB.   matrix
 NB.
 NB. Syntax:
@@ -2180,7 +2180,7 @@ NB. chk3sm
 NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the relative backward
-NB.   error for the basic matrix equation solvers with
+NB.   error for the basic matrix equation solver with
 NB.   triangular matrix
 NB.
 NB. Syntax:
@@ -2229,7 +2229,7 @@ NB. chk4r
 NB.
 NB. Description:
 NB.   Adv. to make dyad to compute the relative backward
-NB.   error for the basic rank 1 operations with general
+NB.   error for the basic rank 1 operation with general
 NB.   matrix
 NB.
 NB. Syntax:
@@ -2278,7 +2278,7 @@ NB.
 NB. Description:
 NB.   Conj. to make dyad to compute the relative backward
 NB.   error for the basic hermitian (symmetric) rank k
-NB.   operations
+NB.   operation
 NB.
 NB. Syntax:
 NB.   berr=. (alpha ; A ; beta ; CC) (xxrkxx chk4rk trxpick) CCapprox
@@ -2338,7 +2338,7 @@ NB.
 NB. Description:
 NB.   Conj. to make dyad to compute the relative backward
 NB.   error for the basic hermitian (symmetric) rank 1
-NB.   operations
+NB.   operation
 NB.
 NB. Syntax:
 NB.   berr=. (alpha ; x ; incx ; AA) (xxrx chk5r trxpick) AAapprox
@@ -2394,7 +2394,7 @@ NB.
 NB. Description:
 NB.   Conj. to make dyad to compute the relative backward
 NB.   error for the basic hermitian (symmetric) rank 2k
-NB.   operations
+NB.   operation
 NB.
 NB. Syntax:
 NB.   berr=. (alpha ; A ; B ; beta ; CC) (xxr2kxx chk5r2k trxpick) CCapprox
@@ -2455,7 +2455,7 @@ NB.
 NB. Description:
 NB.   Conj. to make dyad to compute the relative backward
 NB.   error for the basic hermitian (symmetric) rank 2
-NB.   operations
+NB.   operation
 NB.
 NB. Syntax:
 NB.   berr=. (alpha ; x ; incx ; y ; incy ; AA) (xxr2x chk6r2 trxpick) AAapprox

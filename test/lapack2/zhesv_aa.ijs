@@ -14,8 +14,8 @@ NB.            'L' - lower, the form is:
 NB.                    P * L1 * D * L1^H * P^H = A
 NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^H * P^H = A
-NB.   AA   - n×n-matrix, contains either lower or upper or
-NB.          both part(s) of A
+NB.   AA   - n×n-matrix, contains either LT or UT or both
+NB.          part(s) of A
 NB.   B    - n×nrhs-matrix, RHS
 NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define P

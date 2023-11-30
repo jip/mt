@@ -58,8 +58,8 @@ NB.             'U'  NB. UT
 NB.   alpha  - scalar, real
 NB.   x      - (1+(n-1)*|incx|)-vector
 NB.   incx   ≠ 0, the increment for the elements of x
-NB.   AAt    - n×n-matrix, contains either lower or upper or
-NB.            both part(s) of A^T
+NB.   AAt    - n×n-matrix, contains either LT or UT or both
+NB.            part(s) of A^T
 NB.   AAupdt - AAt with either LT (if uplo='U') or UT (if
 NB.            uplo='L') updated
 NB.   A      - n×n-matrix, Hermitian (symmetric)
@@ -153,8 +153,8 @@ NB. where
 NB.   alpha - scalar, real
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
-NB.   AA    - n×n-matrix, contains either lower or upper or
-NB.           both part(s) of A
+NB.   AA    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of A
 NB.   AAupd - AA with either LT (for xxxrl) or UT (for xxxru)
 NB.           updated
 NB.   A     - n×n-matrix, Hermitian (symmetric)

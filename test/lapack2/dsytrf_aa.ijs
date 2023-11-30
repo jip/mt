@@ -14,8 +14,8 @@ NB.            'L' - lower, the form is:
 NB.                    P * L1 * D * L1^T * P^T = A
 NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^T * P^T = A
-NB.   AA   - n×n-matrix, real, contains either lower or upper
-NB.          or both part(s) of A
+NB.   AA   - n×n-matrix, real, contains either LT or UT or
+NB.          both part(s) of A
 NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define P
 NB.   A    - n×n-matrix, real, symmetric, to factorize

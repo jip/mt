@@ -15,8 +15,8 @@ NB.            'L' - lower, the form is:
 NB.                    L * L^H = A
 NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
-NB.   AA   - n×n-matrix, contains either lower or upper or
-NB.          both part(s) of A
+NB.   AA   - n×n-matrix, contains either LT or UT or both
+NB.          part(s) of A
 NB.   iAA  - n×n-matrix, contains the triangular part of iA
 NB.          in changed triangle and unchanged elements of AA
 NB.          in opposite strict triangle

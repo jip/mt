@@ -14,8 +14,8 @@ NB.            'L' - lower, the form is:
 NB.                    L * L^H = A
 NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
-NB.   AA   - n×n-matrix, contains either lower or upper or
-NB.          both part(s) of A
+NB.   AA   - n×n-matrix, contains either LT or UT or both
+NB.          part(s) of A
 NB.   T    - n×n-matrix, L or U factor combined with
 NB.          untouched elements from AA in opposite triangle
 NB.   A    - n×n-matrix, Hermitian (symmetric) positive

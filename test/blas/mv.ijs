@@ -104,8 +104,8 @@ NB.           referenced:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
 NB.   alpha - scalar
-NB.   AAt   - n×n-matrix, contains either lower or upper or
-NB.           both part(s) of A^T
+NB.   AAt   - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of A^T
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   beta  - scalar
@@ -246,8 +246,8 @@ NB. Syntax:
 NB.   yupd=. xxxmvx alpha ; AA ; x ; incx ; beta ; y ; incy
 NB. where
 NB.   alpha - scalar
-NB.   AA    - n×n-matrix, contains either lower or upper or
-NB.           both part(s) of A
+NB.   AA    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of A
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   beta  - scalar

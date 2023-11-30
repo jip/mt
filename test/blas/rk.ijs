@@ -63,8 +63,8 @@ NB.              'C'  NB. (2) for dsyrkcore
 NB.   alpha  - scalar
 NB.   At     - ka×na-matrix, A^T
 NB.   beta   - scalar
-NB.   CCt    - n×n-matrix, contains either lower or upper or
-NB.            both part(s) of C^T
+NB.   CCt    - n×n-matrix, contains either LT or UT or both
+NB.            part(s) of C^T
 NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
 NB.            uplo='L') updated
 NB.   C      - n×n-matrix, symmetric
@@ -118,8 +118,8 @@ NB.              'C'  NB. (2)
 NB.   alpha  - scalar, real
 NB.   At     - ka×na-matrix, A^T
 NB.   beta   - scalar, real
-NB.   CCt    - n×n-matrix, contains either lower or upper or
-NB.            both part(s) of C^T
+NB.   CCt    - n×n-matrix, contains either LT or UT or both
+NB.            part(s) of C^T
 NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
 NB.            uplo='L') updated
 NB.   C      - n×n-matrix, Hermitian
@@ -162,8 +162,8 @@ NB. where
 NB.   alpha - scalar
 NB.   A     - na×ka-matrix
 NB.   beta  - scalar
-NB.   CC    - n×n-matrix, contains either lower or upper or
-NB.           both part(s) of C
+NB.   CC    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of C
 NB.   CCupd - CC with either LT (for xsyrklx) or UT (for
 NB.           xsyrkux) updated
 NB.   C     - n×n-matrix, symmetric
@@ -212,8 +212,8 @@ NB. where
 NB.   alpha - scalar, real
 NB.   A     - na×ka-matrix
 NB.   beta  - scalar, real
-NB.   CC    - n×n-matrix, contains either lower or upper or
-NB.           both part(s) of C
+NB.   CC    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of C
 NB.   CCupd - CC with either LT (for zherklx) or UT (for
 NB.           zherkux) updated
 NB.   C     - n×n-matrix, Hermitian

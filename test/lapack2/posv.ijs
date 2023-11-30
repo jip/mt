@@ -15,8 +15,8 @@ NB.            'L' - lower, the form is:
 NB.                    L * L^H = A
 NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
-NB.   AA   - n×n-matrix, contains either lower or upper or
-NB.          both part(s) of A
+NB.   AA   - n×n-matrix, contains either LT or UT or both
+NB.          part(s) of A
 NB.   B    - n×nrhs-matrix, RHS
 NB.   T    - n×n-matrix, L or U factor
 NB.   X    - n×nrhs-matrix, solutions of equation:

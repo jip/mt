@@ -124,8 +124,8 @@ NB.           referenced:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
 NB.   alpha - scalar
-NB.   AAt   - mn×mn-matrix, contains either lower or upper or
-NB.           both part(s) of A^T
+NB.   AAt   - mn×mn-matrix, contains either LT or UT or both
+NB.           part(s) of A^T
 NB.   Bt    - n×m-matrix, B^T
 NB.   beta  - scalar
 NB.   Ct    - n×m-matrix, C^T
@@ -324,8 +324,8 @@ NB. Syntax:
 NB.   Cupd=. xxxmmxx alpha ; AA ; B ; beta ; C
 NB. where
 NB.   alpha - scalar
-NB.   AA    - mn×mn-matrix, contains either lower or upper or
-NB.           both part(s) of A
+NB.   AA    - mn×mn-matrix, contains either LT or UT or both
+NB.           part(s) of A
 NB.   B     - m×n-matrix
 NB.   beta  - scalar
 NB.   C     - m×n-matrix

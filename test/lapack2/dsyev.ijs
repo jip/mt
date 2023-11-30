@@ -16,8 +16,8 @@ NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower
 NB.            'U' - upper
-NB.   AA   - n×n-matrix, real, contains either lower or upper
-NB.          or both part(s) of A
+NB.   AA   - n×n-matrix, real, contains either LT or UT or
+NB.          both part(s) of A
 NB.   w    - n-vector, real, eigenvalues of A
 NB.   V    - n×n-matrix, real, eigenvectors of A or
 NB.          0×0-matrix

@@ -16,8 +16,8 @@ NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower
 NB.            'U' - upper
-NB.   AA   - n×n-matrix, contains either lower or upper or
-NB.          both part(s) of A
+NB.   AA   - n×n-matrix, contains either LT or UT or both
+NB.          part(s) of A
 NB.   w    - n-vector, eigenvalues of A
 NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
 NB.   A    - n×n-matrix, Hermitian, to decompose

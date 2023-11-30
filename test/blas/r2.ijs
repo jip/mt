@@ -59,8 +59,8 @@ NB.   x      - (1+(n-1)*|incx|)-vector
 NB.   incx   ≠ 0, the increment for the elements of x
 NB.   y      - (1+(n-1)*|incy|)-vector
 NB.   incy   ≠ 0, the increment for the elements of y
-NB.   AAt    - n×n-matrix, contains either lower or upper or
-NB.            both part(s) of A^T
+NB.   AAt    - n×n-matrix, contains either LT or UT or both
+NB.            part(s) of A^T
 NB.   AAupdt - AAt with either LT (if uplo='U') or UT (if
 NB.           uplo='L') updated
 NB.   A      - n×n-matrix, Hermitian (symmetric)
@@ -104,8 +104,8 @@ NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   y     - (1+(n-1)*|incy|)-vector
 NB.   incy  ≠ 0, the increment for the elements of y
-NB.   AA    - n×n-matrix, contains either lower or upper or
-NB.           both part(s) of A
+NB.   AA    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of A
 NB.   AAupd - AA with either LT (for xxxr2l) or UT (for
 NB.           xxxr2u) updated
 NB.   A     - n×n-matrix, Hermitian (symmetric)

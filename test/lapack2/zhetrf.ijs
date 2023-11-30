@@ -14,8 +14,8 @@ NB.            'L' - lower, the form is:
 NB.                    PL1 * D * PL1^H = A
 NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^H = A
-NB.   AA   - n×n-matrix, contains either lower or upper or
-NB.          both part(s) of A
+NB.   AA   - n×n-matrix, contains either LT or UT or both
+NB.          part(s) of A
 NB.   DPT1 - n×n-matrix, D and PT1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define
 NB.          permutations

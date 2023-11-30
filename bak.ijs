@@ -52,7 +52,7 @@ NB. Syntax:
 NB.   'B p'=. gebakxsx A ; p ; d
 NB. where
 NB.   A    - n×n-matrix, eigenvectors to be transformed
-NB.   p    - some parameter, transmitted immutably
+NB.   p    - some argument, transmitted immutably
 NB.   d    - n-vector, diagonal of scaling matrix D
 NB.   B    - n×n-matrix, transformed eigenvectors
 NB.

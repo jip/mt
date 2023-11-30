@@ -56,7 +56,7 @@ NB. ---------------------------------------------------------
 NB. ggevi
 NB.
 NB. Description:
-NB.   Adv. to make verb to calculate initial parameters for
+NB.   Adv. to make verb to calculate initial arguments for
 NB.   ggevxxx
 NB.
 NB. Syntax:
@@ -66,7 +66,7 @@ NB.   ggbalp  - monad to permute matrix pair (A,B) to isolate
 NB.             eigenvalues, is either ggballp or ggbalup, is
 NB.             called as:
 NB.               'CD plr hs'=. ggbalp AB
-NB.   vapp    - monad to calculate initial parameters for
+NB.   vapp    - monad to calculate initial arguments for
 NB.             ggevxxx, is called as:
 NB.               'abnrmio ABupd plr hs'=. vapp AB
 NB.   AB      - 2×n×n-matrix, matrix pair (A,B)

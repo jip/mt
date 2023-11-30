@@ -640,7 +640,7 @@ NB.   (idmat@c -: clean@(unmhrlrn ct@unghrl)@(gehrdl~ 0 , c)) A
 NB.   (idmat@c -: clean@(unmhrlrc    unghrl)@(gehrdl~ 0 , c)) A
 NB.
 NB. Notes:
-NB. - instead of using f and s parameters, the following
+NB. - instead of using f and s arguments, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i)',i=n-1:0} ,
 NB.   where
@@ -689,7 +689,7 @@ NB.   (idmat@# -: clean@(unmhrurc    unghru)@(gehrdu~ 0 , #)) A
 NB.
 NB. Notes:
 NB. - models LAPACK's DORMHR, ZUNMHR
-NB. - instead of using f and s parameters, the following
+NB. - instead of using f and s arguments, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i),i=0:n-1} ,
 NB.   where

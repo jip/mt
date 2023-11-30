@@ -1855,7 +1855,7 @@ NB. Notes:
 NB. - models BLAS' DCHK1('DGEMV') and ZCHK1('ZGEMV') with the
 NB.   following difference:
 NB.   - alpha,A,x,incx,y,incy are not generated but are
-NB.     coming from outside as input parameters
+NB.     coming from outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk1mv=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 3 6) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 e. $@(1 {:: [))'
@@ -1911,7 +1911,7 @@ NB. Notes:
 NB. - models BLAS' DCHK1('DGEMM') and ZCHK1('ZGEMM') with the
 NB.   following difference:
 NB.   - alpha,A,B,beta,C are not generated but are coming
-NB.     from outside as input parameters
+NB.     from outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk1mm=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@[          )`0:@.(0 e. (1&{:: ,&$ 2&{::)@[)'
@@ -1962,7 +1962,7 @@ NB. Notes:
 NB. - models BLAS' DCHK2('DSYMV') and ZCHK2('ZSYMV') with the
 NB.   following difference:
 NB.   - alpha,A,x,incx,y,incy are not generated but are
-NB.     coming from outside as input parameters
+NB.     coming from outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk2mv=:  chk1mv
@@ -2018,7 +2018,7 @@ NB. Notes:
 NB. - models BLAS' DCHK2('DSYMM'), ZCHK2('ZSYMM') and
 NB.   ZCHK2('ZHEMM') with the following difference:
 NB.   - alpha,A,B,beta,C are not generated but are coming
-NB.     from outside as input parameters
+NB.     from outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk2mm=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@[          )`0:@.(0 e. $@]        )'
@@ -2065,7 +2065,7 @@ NB. Notes:
 NB. - models BLAS' DCHK3('DTRMV') and ZCHK3('ZTRMV') with the
 NB.   following difference:
 NB.   - A,x,incx are not generated but are coming from
-NB.     outside as input parameters
+NB.     outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk3mv=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 2  ) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@(0 {:: [))'
@@ -2119,7 +2119,7 @@ NB. Notes:
 NB. - models BLAS' DCHK3('DTRMM') and ZCHK3('ZTRMM') with the
 NB.   following difference:
 NB.   - A,B are not generated but are coming from outside as
-NB.     input parameters
+NB.     arguments
 NB. - berr is considered good if lower than 16
 
 chk3mm=:  chk2mm
@@ -2168,7 +2168,7 @@ NB. Notes:
 NB. - models BLAS' DCHK3('DTRSV') and ZCHK3('ZTRSV') with the
 NB.   following difference:
 NB.   - A,b,incb are not generated but are coming from
-NB.     outside as input parameters
+NB.     outside as arguments
 NB. - berr is considered good if lower than 16
 NB. - since (filler != 0) then 0s replaced by 1 in g are from
 NB.   bapprox only, so (b - bapprox) won't get huge value
@@ -2219,7 +2219,7 @@ NB. Notes:
 NB. - models BLAS' DCHK3('DTRSM') and ZCHK3('ZTRSM') with the
 NB.   following difference:
 NB.   - alpha,A,B are not generated but are coming from
-NB.     outside as input parameters
+NB.     outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk3sm=:  1 : '((FP_EPS %~ ((0&{:: * 2&{::)@[ sorim_mt_@:- u@(0 2}~ 1&;)) ) normmt_mt_  @:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@(0 2}~ 1&;))`0:@.(0 e. $@]        )'
@@ -2267,7 +2267,7 @@ NB. Notes:
 NB. - models BLAS' DCHK4('DGER'), ZCHK4('ZGERC') and
 NB.   ZCHK4('ZGERU') with the following difference:
 NB.   - alpha,x,incx,y,incy,A are not generated but are
-NB.     coming from outside as input parameters
+NB.     coming from outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk4r=:   1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 2 4) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 e. $@]        )'
@@ -2327,7 +2327,7 @@ NB. Notes:
 NB. - models BLAS' DCHK4('DSYRK'), ZCHK4('ZSYRK') and
 NB.   ZCHK4('ZHERK') with the following difference:
 NB.   - alpha,A,beta,C are not generated but are coming from
-NB.     outside as input parameters
+NB.     outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk4rk=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@[          )`0:@.(0 e. $@(1 {:: [))'
@@ -2383,7 +2383,7 @@ NB. Notes:
 NB. - models BLAS' DCHK5('DSYR') and ZCHK5('ZHER') with
 NB.   the following difference:
 NB.   - alpha,x,incx,A are not generated but are coming from
-NB.     outside as input parameters
+NB.     outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk5r=:   2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ ((<<< 2  ) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@]        )'
@@ -2444,7 +2444,7 @@ NB. Notes:
 NB. - models BLAS' DCHK5('DSYR2K'), ZCHK5('ZSYR2K') and
 NB.   ZCHK5('ZHER2K') with the following difference:
 NB.   - alpha,A,B,beta,C are not generated but are coming
-NB.     from outside as input parameters
+NB.     from outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk5r2k=: chk4rk
@@ -2502,7 +2502,7 @@ NB. Notes:
 NB. - models BLAS' DCHK6('DSYR2') and ZCHK6('ZHER2') with
 NB.   the following difference:
 NB.   - alpha,x,incx,y,incy,A are not generated but are
-NB.     coming from outside as input parameters
+NB.     coming from outside as arguments
 NB. - berr is considered good if lower than 16
 
 chk6r2=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ ((<<< 2 4) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@]        )'

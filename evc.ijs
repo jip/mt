@@ -40,7 +40,7 @@ NB. ---------------------------------------------------------
 NB. tgevci
 NB.
 NB. Description:
-NB.   Calculate initial parameters for tgevcly and tgevclx
+NB.   Calculate initial arguments for tgevcly and tgevclx
 NB.
 NB. Syntax:
 NB.   'bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. iso tgevci SP

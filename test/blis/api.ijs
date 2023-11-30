@@ -73,7 +73,7 @@ NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. BLIS types
 
 NB. ---------------------------------------------------------
-NB. Enumerated parameter types
+NB. Enumerated argument types
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. num_t

@@ -453,7 +453,7 @@ NB.   NB. I = Q * Q^H
 NB.   (idmat@# -: clean@(mp  ct))@unghrl HQf
 NB.
 NB. Notes:
-NB. - instead of using h and s parameters, the following
+NB. - instead of using h and s arguments, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i)',i=n-1:0} ,
 NB.   where
@@ -486,7 +486,7 @@ NB.   (idmat@# -: clean@(mp~ ct))@unghru HQf
 NB.
 NB. Notes:
 NB. - models LAPACK's DORGHR, ZUNGHR
-NB. - instead of using h and s parameters, the following
+NB. - instead of using h and s arguments, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i),i=0:n-1} ,
 NB.   where

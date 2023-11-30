@@ -337,7 +337,7 @@ NB.   'Sscl trash trash1 d omaxred'=. imaxred gebals S ; (i. n) ; 0 _
 NB. where
 NB.   A       - n×n-matrix with isolated eigenvalues, the
 NB.             output of gebalxp
-NB.   p       - n-vector, some not changing parameter, the
+NB.   p       - n-vector, some not changing argument, the
 NB.             output of gebalxp
 NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
 NB.             defines submatrix A11 position in A, the
@@ -699,7 +699,7 @@ NB. where
 NB.   CD  -:C ,: D
 NB.   C,D - n×n-matrices with isolated eigenvalues, the
 NB.         output of ggbalxp
-NB.   plr - some not changing parameter, the output of
+NB.   plr - some not changing argument, the output of
 NB.         ggbalxp
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrices E11 and F11 position in E and

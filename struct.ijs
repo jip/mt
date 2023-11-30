@@ -119,19 +119,22 @@ NB.   ft - the same shape as a, functional table:
 NB.          ft -: m op/&i. n
 NB.
 NB. Examples:
-NB.      < ft4lisoa_mt_ 3 4 $ 0        > ft4lisoa_mt_ 3 4 $ 0
-NB.   0 1 1 1                       0 0 0 0
-NB.   0 0 1 1                       1 0 0 0
-NB.   0 0 0 1                       1 1 0 0
-NB.      <: ft4lisoa_mt_ 3 4 $ 0       >: ft4lisoa_mt_ 3 4 $ 0
-NB.   1 1 1 1                       1 0 0 0
-NB.   0 1 1 1                       1 1 0 0
-NB.   0 0 1 1                       1 1 1 0
-NB.      - ft4lisoa_mt_ 3 4 $ 0        -~ ft4lisoa_mt_ 3 4 $ 0
-NB.   0 _1 _2 _3                     0  1 2 3
-NB.   1  0 _1 _2                    _1  0 1 2
-NB.   2  1  0 _1                    _2 _1 0 1
-NB.      + ft4lisoa_mt_ 3 4 $ 0
+NB.      < ft4lisoa 3 4 $ 0        > ft4lisoa 3 4 $ 0
+NB.   0 1 1 1                   0 0 0 0
+NB.   0 0 1 1                   1 0 0 0
+NB.   0 0 0 1                   1 1 0 0
+NB.
+NB.      <: ft4lisoa 3 4 $ 0       >: ft4lisoa 3 4 $ 0
+NB.   1 1 1 1                   1 0 0 0
+NB.   0 1 1 1                   1 1 0 0
+NB.   0 0 1 1                   1 1 1 0
+NB.
+NB.      - ft4lisoa 3 4 $ 0        -~ ft4lisoa 3 4 $ 0
+NB.   0 _1 _2 _3                 0  1 2 3
+NB.   1  0 _1 _2                _1  0 1 2
+NB.   2  1  0 _1                _2 _1 0 1
+NB.
+NB.      + ft4lisoa 3 4 $ 0
 NB.   0 1 2 3
 NB.   1 2 3 4
 NB.   2 3 4 5

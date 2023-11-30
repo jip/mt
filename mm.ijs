@@ -738,7 +738,7 @@ testdir=: (+/)@((test0dir testround0)`(test1dir testround1) dkey~ '_'&e. S: 0)@(
 testinv=: (+/)@((test0inv testround0)`(test1inv testround1) dkey~ '_'&e. S: 0)@(1 dir (TEST_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
 
 NB. ---------------------------------------------------------
-NB. verify
+NB. verifymm_mt_
 NB.
 NB. Description:
 NB.   Nilad to verify MM converter, output result to console

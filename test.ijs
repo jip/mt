@@ -1982,8 +1982,8 @@ NB.   xxmmxx  - monad, the reference implementation to
 NB.             compute Cexact:
 NB.               Cexact=. xxmmxx (alpha ; AA ; B ; beta ; C)
 NB.   trxpick - monad to pick a triangular part, is one of:
-NB.               trlpick_mt_  NB. if xxmmxl_mt_ is used
-NB.               trupick_mt_  NB. if xxmmxu_mt_ is used
+NB.               trlpick  NB. if xxmmxlxx is used
+NB.               trupick  NB. if xxmmxuxx is used
 NB.   alpha   - scalar
 NB.   A       - ma×ma-matrix, Hermitian (symmetric)
 NB.   AA      - ma×ma-matrix, contains either LT or UT or
@@ -1997,7 +1997,7 @@ NB.   berr    ≥ 0, the relative backward error for Capprox
 NB.   Cexact  - an updated C
 NB.   m       ≥ 0, the number of rows in C and B
 NB.   n       ≥ 0, the number of columns in C and B
-NB.   ma      = m for xxmmlx_mt_ or ma = n for xxmmux_mt_
+NB.   ma      = m for xxmmlx or ma = n for xxmmrx
 NB.
 NB. Formula:
 NB.   (m,n) := shape(C)
@@ -2011,8 +2011,8 @@ NB.   endif
 NB. where
 NB.   ||M|| := normmt(M)
 NB.   G - the gauge matrix, is one of:
-NB.     G := |alpha| * |A| * |B| + |beta| * |C|, for xxmmlx_mt_
-NB.     G := |alpha| * |B| * |A| + |beta| * |C|, for xxmmrx_mt_
+NB.     G := |alpha| * |A| * |B| + |beta| * |C|, for xxmmlx
+NB.     G := |alpha| * |B| * |A| + |beta| * |C|, for xxmmrx
 NB.
 NB. Notes:
 NB. - models BLAS' DCHK2('DSYMM'), ZCHK2('ZSYMM') and
@@ -2085,8 +2085,8 @@ NB.   trmmxxxx - monad, the reference implementation to
 NB.              compute Bexact:
 NB.                Bexact=. trmmxxxx (alpha ; AA ; B)
 NB.   trxpick  - monad to pick a triangular part, is one of:
-NB.                trlpick_mt_  NB. if trmmxl_mt_ is used
-NB.                trupick_mt_  NB. if trmmxu_mt_ is used
+NB.                trlpick  NB. if trmmxl is used
+NB.                trupick  NB. if trmmxu is used
 NB.   alpha    - scalar
 NB.   A        - k×k-matrix, triangular
 NB.   AA       - k×k-matrix, contains either non-zero or both
@@ -2098,7 +2098,7 @@ NB.   berr     ≥ 0, the relative backward error for Bapprox
 NB.   Bexact   - an updated B
 NB.   m        ≥ 0, the number of rows in B
 NB.   n        ≥ 0, the number of columns in B
-NB.   k        = m for trmmlxxx_mt_ or k = n for trmmrxxx_mt_
+NB.   k        = m for trmmlxxx or k = n for trmmrxxx
 NB.
 NB. Formula:
 NB.   (m,n) := shape(B)
@@ -2198,7 +2198,7 @@ NB.              are computed by the verb being tested
 NB.   berr     ≥ 0, the relative backward error for Xapprox
 NB.   m        ≥ 0, the number of rows in B and Xapprox
 NB.   n        ≥ 0, the number of columns in B and Xapprox
-NB.   k        = m for trmmlxxx_mt_ or k = n for trmmrxxx_mt_
+NB.   k        = m for trmmlxxx or k = n for trmmrxxx
 NB.
 NB. Formula:
 NB.   (m,n) := shape(B)
@@ -2287,8 +2287,8 @@ NB.   xxrkxx   - monad, the reference implementation to
 NB.              compute CCexact:
 NB.                CCexact=. xxrkxx (alpha ; A ; beta ; CC)
 NB.   trxpick  - monad to pick a triangular part, is one of:
-NB.                trlpick_mt_  NB. if xxrklx_mt_ is used
-NB.                trupick_mt_  NB. if xxrkux_mt_ is used
+NB.                trlpick  NB. if xxrklx is used
+NB.                trupick  NB. if xxrkux is used
 NB.   alpha    - scalar, must be real for herkxx
 NB.   A        - na×ka-matrix
 NB.   beta     - scalar, must be real for herkxx
@@ -2296,18 +2296,17 @@ NB.   C        - n×n-matrix, Hermitian (symmetric)
 NB.   CC       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of C
 NB.   CCapprox - the same shape as CC, computed by the verb
-NB.              being tested, where LT (for xxrklx_mt_) or
-NB.              UT (for xxrkux_mt_) approximates CCexact,
-NB.              and the rest elements weren't changed and
-NB.              match CC
+NB.              being tested, where LT (for xxrklx) or UT
+NB.              (for xxrkux) approximates CCexact, and the
+NB.              rest elements weren't changed and match CC
 NB.   berr     ≥ 0, the relative backward error for CCapprox
-NB.   CCexact  - CC with either LT (for xxrklx_mt_) or UT
-NB.              xxrkux_mt_) updated
+NB.   CCexact  - CC with either LT (for xxrklx) or UT (for
+NB.              xxrkux) updated
 NB.   n        ≥ 0, the size of C, CC, CCexact and CCapprox,
 NB.              and the number of rows or columns in A
 NB.   k        ≥ 0, the number of columns or rows in A
-NB.   ka       = k for xxrkxn_mt_ or ka = n otherwise
-NB.   na       = n for xxrkxn_mt_ or na = k otherwise
+NB.   ka       = k for xxrkxn or ka = n otherwise
+NB.   na       = n for xxrkxn or na = k otherwise
 NB.
 NB. Formula:
 NB.   (n,k) := shape(A)
@@ -2321,7 +2320,7 @@ NB.   endif
 NB. where
 NB.   ||M|| := normmt(M)
 NB.   G - the gauge matrix, is one of:
-NB.     G := |alpha| * |   A | * |op(A)| + |beta| * |C|, for xxrkxn_mt_
+NB.     G := |alpha| * |   A | * |op(A)| + |beta| * |C|, for xxrkxn
 NB.     G := |alpha| * |op(A)| * |   A | + |beta| * |C|, otherwise
 NB.
 NB. Notes:
@@ -2348,8 +2347,8 @@ NB.   xxrx     - monad, the reference implementation to
 NB.              compute AAexact:
 NB.                AAexact=. xxrx (alpha ; x ; incx ; AA)
 NB.   trxpick  - monad to pick a triangular part, is one of:
-NB.                trlpick_mt_  NB. if xxrl_mt_ is used
-NB.                trupick_mt_  NB. if xxru_mt_ is used
+NB.                trlpick  NB. if xxrl is used
+NB.                trupick  NB. if xxru is used
 NB.   alpha    - scalar
 NB.   x        - (1+(n-1)*|incx|)-vector
 NB.   incx     ≠ 0, the increment for the elements of x
@@ -2357,12 +2356,12 @@ NB.   A        - n×n-matrix, Hermitian (symmetric)
 NB.   AA       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of A
 NB.   AAapprox - the same shape as A, computed by the verb
-NB.              being tested, with LT (for xxrl_mt_) or UT
-NB.              (for xxru_mt_) approximates AAexact, and the
-NB.              rest elements weren't changed and match AA
+NB.              being tested, with LT (for xxrl) or UT (for
+NB.              xxru) approximates AAexact, and the rest
+NB.              elements weren't changed and match AA
 NB.   berr     ≥ 0, the relative backward error for AAapprox
-NB.   AAexact  - AA with either LT (for xxrl_mt_) or UT (for
-NB.              xxru_mt_) updated
+NB.   AAexact  - AA with either LT (for xxrl) or UT (for
+NB.              xxru) updated
 NB.   n        ≥ 0, the size of A, AA, AAexact and AAapprox
 NB.
 NB. Formula:
@@ -2377,8 +2376,8 @@ NB.   endif
 NB. where
 NB.   ||M|| := normmt(M)
 NB.   G - the gauge matrix, is one of:
-NB.     G := |alpha| * |x| * |x^T| + |A|, for dsyrx_mt_
-NB.     G := |alpha| * |x| * |x^H| + |A|, for zherx_mt_
+NB.     G := |alpha| * |x| * |x^T| + |A|, for dsyrx
+NB.     G := |alpha| * |x| * |x^H| + |A|, for zherx
 NB.
 NB. Notes:
 NB. - models BLAS' DCHK5('DSYR') and ZCHK5('ZHER') with
@@ -2404,8 +2403,8 @@ NB.   xxr2kxx  - monad, the reference implementation to
 NB.              compute CCexact:
 NB.                CCexact=. xxr2kxx (alpha ; A ; B ; beta ; CC)
 NB.   trxpick  - monad to pick a triangular part, is one of:
-NB.                trlpick_mt_  NB. if xxr2klx_mt_ is used
-NB.                trupick_mt_  NB. if xxr2kux_mt_ is used
+NB.                trlpick  NB. if xxr2klx is used
+NB.                trupick  NB. if xxr2kux is used
 NB.   alpha    - scalar
 NB.   A        - nab×kab-matrix
 NB.   B        - nab×kab-matrix
@@ -2414,18 +2413,17 @@ NB.   C        - n×n-matrix, Hermitian (symmetric)
 NB.   CC       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of C
 NB.   CCapprox - n×n-matrix, computed by the verb being
-NB.              tested, where LT (for xxr2klx_mt_) or UT
-NB.              (for xxr2kux_mt_) approximates CCexact, and
-NB.              the rest elements weren't changed and match
-NB.              CC
+NB.              tested, where LT (for xxr2klx) or UT (for
+NB.              xxr2kux) approximates CCexact, and the rest
+NB.              elements weren't changed and match CC
 NB.   berr     ≥ 0, the relative backward error for CCapprox
-NB.   CCexact  - CC with either LT (for xxr2klx_mt_) or UT
-NB.              (for xxr2kux_mt_) updated
+NB.   CCexact  - CC with either LT (for xxr2klx) or UT (for
+NB.              xxr2kux) updated
 NB.   n        ≥ 0, the size of C, CC, CCexact and CCapprox,
 NB.              and the number of rows or columns in A and B
 NB.   k        ≥ 0, the number of columns or rows in A and B
-NB.   kab      = k for xxr2kxn_mt_ or kab = n otherwise
-NB.   nab      = n for xxr2kxn_mt_ or nab = k otherwise
+NB.   kab      = k for xxr2kxn or kab = n otherwise
+NB.   nab      = n for xxr2kxn or nab = k otherwise
 NB.
 NB. Formula:
 NB.   (n,k) := shape(A)
@@ -2439,7 +2437,7 @@ NB.   endif
 NB. where
 NB.   ||M|| := normmt(M)
 NB.   G - the gauge matrix, is one of:
-NB.     G := |alpha| * |   A | * |op(B)| + |alpha| * |   B | * |op(A)| + |beta| * |C|, for xxr2kxn_mt_
+NB.     G := |alpha| * |   A | * |op(B)| + |alpha| * |   B | * |op(A)| + |beta| * |C|, for xxr2kxn
 NB.     G := |alpha| * |op(A)| * |   B | + |alpha| * |op(B)| * |   A | + |beta| * |C|, otherwise
 NB.
 NB. Notes:
@@ -2466,8 +2464,8 @@ NB.   xxr2x    - monad, the reference implementation to
 NB.              compute AAexact:
 NB.                AAexact=. xxr2x (alpha ; x ; incx ; y ; incy ; AA)
 NB.   trxpick  - monad to pick a triangular part, is one of:
-NB.                trlpick_mt_  NB. if xxr2l_mt_ is used
-NB.                trupick_mt_  NB. if xxr2u_mt_ is used
+NB.                trlpick  NB. if xxr2l is used
+NB.                trupick  NB. if xxr2u is used
 NB.   alpha    - scalar
 NB.   x        - (1+(n-1)*|incx|)-vector
 NB.   incx     ≠ 0, the increment for the elements of x
@@ -2477,13 +2475,12 @@ NB.   A        - n×n-matrix, Hermitian (symmetric)
 NB.   AA       - n×n-matrix, contains either LT or UT or both
 NB.              part(s) of A
 NB.   AAapprox - the same shape as AA, computed by the verb
-NB.              being tested, with LT (for xxr2l_mt_) or UT
-NB.              (for xxr2u_mt_) approximates AAexact, and
-NB.              the rest elements weren't changed and match
-NB.              AA
+NB.              being tested, with LT (for xxr2l) or UT (for
+NB.              xxr2u) approximates AAexact, and the rest
+NB.              elements weren't changed and match AA
 NB.   berr     ≥ 0, the relative backward error for AAapprox
-NB.   AAexact  - AA with either LT (for xxr2l_mt_) or UT (for
-NB.              xxr2u_mt_) updated
+NB.   AAexact  - AA with either LT (for xxr2l) or UT (for
+NB.              xxr2u) updated
 NB.   n        ≥ 0, the size of A, AA, AAexact and AAapprox
 NB.
 NB. Formula:
@@ -2498,8 +2495,8 @@ NB.   endif
 NB. where
 NB.   ||M|| := normmt(M)
 NB.   G - the gauge matrix, is one of:
-NB.     G := |alpha| * |x| * |y^T| + |alpha| * |y| * |x^T| + |A|, for dsyr2x_mt_
-NB.     G := |alpha| * |x| * |y^H| + |alpha| * |y| * |x^H| + |A|, for zher2x_mt_
+NB.     G := |alpha| * |x| * |y^T| + |alpha| * |y| * |x^T| + |A|, for dsyr2x
+NB.     G := |alpha| * |x| * |y^H| + |alpha| * |y| * |x^H| + |A|, for zher2x
 NB.
 NB. Notes:
 NB. - models BLAS' DCHK6('DSYR2') and ZCHK6('ZHER2') with

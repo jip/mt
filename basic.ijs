@@ -374,7 +374,7 @@ NB.             <:      NB. UT
 NB.   trans - monad to define the form of op1(v) and op2(s),
 NB.           is one of:
 NB.             |:      NB. the symmetric operation: op1(v) = v^T, op2(s) = s
-NB.             ct_mt_  NB. the hermitian operation: op1(v) = v^H, op2(s) = conj(s)
+NB.             ct      NB. the hermitian operation: op1(v) = v^H, op2(s) = conj(s)
 
 her2=: 2 : 0
   'alpha xx incx y incy AA'=. y
@@ -530,7 +530,7 @@ NB.             <:      NB. UT
 NB.   trans - monad to define the form of op1(M) and op2(s),
 NB.           is one of:
 NB.             |:      NB. the symmetric operation: op1(M) = M^T, op2(s) = s
-NB.             ct_mt_  NB. the hermitian operation: op1(M) = M^H, op2(s) = conj(s)
+NB.             ct      NB. the hermitian operation: op1(M) = M^H, op2(s) = conj(s)
 NB.   kind  - boolean scalar to define operation:
 NB.             0       NB. (2)
 NB.             1       NB. (1)
@@ -615,9 +615,9 @@ NB. Syntax:
 NB.   yupd=. (trans gemv) alpha ; A ; x ; incx ; beta ; y ; incy
 NB. where
 NB.   trans - monad to define the form of op(A), is one of:
-NB.             ]       NB. op(A) := A
-NB.             |:      NB. op(A) := A^T
-NB.             ct_mt_  NB. op(A) := A^H
+NB.             ]   NB. op(A) := A
+NB.             |:  NB. op(A) := A^T
+NB.             ct  NB. op(A) := A^H
 
 gemv=: 1 : 0
   'alpha A xx incx beta ybak incy'=. y
@@ -678,10 +678,10 @@ NB.   yupd=. (ref hemv) alpha ; AA ; x ; incx ; beta ; y ; incy
 NB. where
 NB.   ref - monad to restore A from triangular part, is one
 NB.         of:
-NB.           sy4gel_mt_  NB. LT, A is symmetric
-NB.           sy4geu_mt_  NB. UT, A is symmetric
-NB.           he4gel_mt_  NB. LT, A is Hermitian
-NB.           he4geu_mt_  NB. UT, A is Hermitian
+NB.           sy4gel  NB. LT, A is symmetric
+NB.           sy4geu  NB. UT, A is symmetric
+NB.           he4gel  NB. LT, A is Hermitian
+NB.           he4geu  NB. UT, A is Hermitian
 
 hemv=: gemv
 
@@ -741,14 +741,14 @@ NB.   xupd=. ((mp_mt_~ trans@ref) trmv) AA ; x ; incx
 NB. where
 NB.   ref   - monad to restore A from triangular part, is one
 NB.           of:
-NB.             trlpick_mt_   NB.  LT, A is L
-NB.             trl1pick_mt_  NB. SLT, A is L1
-NB.             trupick_mt_   NB.  UT, A is U
-NB.             tru1pick_mt_  NB. SUT, A is U1
+NB.             trlpick   NB.  LT, A is L
+NB.             trl1pick  NB. SLT, A is L1
+NB.             trupick   NB.  UT, A is U
+NB.             tru1pick  NB. SUT, A is U1
 NB.   trans - monad to define the form of op(A), is one of:
-NB.             ]             NB. op(A) := A
-NB.             |:            NB. op(A) := A^T
-NB.             ct_mt_        NB. op(A) := A^H
+NB.             ]         NB. op(A) := A
+NB.             |:        NB. op(A) := A^T
+NB.             ct        NB. op(A) := A^H
 
 trmv=: 1 : 0
   'AA ybak incy'=. y
@@ -985,20 +985,20 @@ NB.   Bupd=. ((mul trans@ref) trmm) alpha ; AA ; B
 NB. where
 NB.   ref   - monad to restore A from triangular part, is one
 NB.           of:
-NB.             trlpick_mt_   NB.  LT, A is L
-NB.             trl1pick_mt_  NB. SLT, A is L1
-NB.             trupick_mt_   NB.  UT, A is U
-NB.             tru1pick_mt_  NB. SUT, A is U1
+NB.             trlpick   NB.  LT, A is L
+NB.             trl1pick  NB. SLT, A is L1
+NB.             trupick   NB.  UT, A is U
+NB.             tru1pick  NB. SUT, A is U1
 NB.   trans - monad to define the form of op(A), is one of:
-NB.             ]             NB. op(A) := A
-NB.             |:            NB. op(A) := A^T
-NB.             ct_mt_        NB. op(A) := A^H
+NB.             ]         NB. op(A) := A
+NB.             |:        NB. op(A) := A^T
+NB.             ct        NB. op(A) := A^H
 NB.   mul   - dyad to compute the product either (op(A) * B) or
 NB.           (B * op(A)), is called as:
 NB.             product=. B mul opA
 NB.           and is one of:
-NB.             mp_mt_~       NB. to compute (1)
-NB.             mp_mt_        NB. to compute (2)
+NB.             mp~       NB. to compute (1)
+NB.             mp        NB. to compute (2)
 
 trmm=: 1 : '(0&{:: * 2&{::) u 1&{::'
 
@@ -1118,17 +1118,17 @@ NB.           is called as:
 NB.             x=. b sol A
 NB.           e.g.
 NB.             (%. trans@ref)  NB. to exploit built-in Matrix Divide (%.)
-NB.             trsmllnn_mt_~   NB. to exploit mt's (trsmllnn)
+NB.             trsmllnn~       NB. to exploit mt's (trsmllnn)
 NB.   ref   - monad to restore A from triangular part, is one
 NB.           of:
-NB.             trlpick_mt_     NB.  LT, A is L
-NB.             trl1pick_mt_    NB. SLT, A is L1
-NB.             trupick_mt_     NB.  UT, A is U
-NB.             tru1pick_mt_    NB. SUT, A is U1
+NB.             trlpick         NB.  LT, A is L
+NB.             trl1pick        NB. SLT, A is L1
+NB.             trupick         NB.  UT, A is U
+NB.             tru1pick        NB. SUT, A is U1
 NB.   trans - monad to define the form of op(A), is one of:
 NB.             ]               NB. op(A) := A
 NB.             |:              NB. op(A) := A^T
-NB.             ct_mt_          NB. op(A) := A^H
+NB.             ct              NB. op(A) := A^H
 
 trsv=: trmv
 
@@ -1264,8 +1264,8 @@ NB.   B     - l-vector or m×n-matrix, the RHS
 NB.   X     - the same shape as B, the solution[s]
 NB.   m     ≥ 0, the number of rows in B and X
 NB.   n     ≥ 0, the number of columns in B and X
-NB.   k     = m for trsmlxxx_mt_ or k = n for trsmrxxx_mt_
-NB.   l     = n for trsmlxxx_mt_ or l = m for trsmrxxx_mt_
+NB.   k     = m for trsmlxxx or k = n for trsmrxxx
+NB.   l     = n for trsmlxxx or l = m for trsmrxxx
 NB.
 NB. Notes:
 NB. - for 2-rank B and X:

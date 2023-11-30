@@ -251,7 +251,7 @@ NB.   Nilad to verify mt, output result to console and return
 NB.   it
 NB.
 NB. Syntax:
-NB.   'probed failed'=. verify_mt_ ''
+NB.   'probed failed'=. verify ''
 NB. where
 NB.   probed ≥ 0, tests probed counter
 NB.   failed ≥ 0, tests failed counter

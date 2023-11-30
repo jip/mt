@@ -162,7 +162,7 @@ NB.   B     - m×n-matrix, non-scaled RHS
 NB.   X     - the same shape as B, solutions
 NB.   m     ≥ 0, the number of rows in B and X
 NB.   n     ≥ 0, the number of columns in B and X
-NB.   k     = m for xtrsmlxxx_mt_ or k = n for xtrsmrxxx_mt_
+NB.   k     = m for xtrsmlxxx or k = n for xtrsmrxxx
 NB.
 NB. Notes:
 NB. - monad        provides BLAS'

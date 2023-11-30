@@ -70,32 +70,32 @@ NB. Description:
 NB.   Magnitude-based norms |y|
 NB.
 NB. Assertions:
-NB.   0     -: norm1_mt_  0 0 $ 0
-NB.   0     -: norm1_mt_  0 3 $ 0
-NB.   0     -: norm1_mt_  3 0 $ 0
-NB.   ''    -: norm1c_mt_ 0 0 $ 0
-NB.   0 0 0 -: norm1c_mt_ 0 3 $ 0
-NB.   ''    -: norm1c_mt_ 3 0 $ 0
-NB.   ''    -: norm1r_mt_ 0 0 $ 0
-NB.   ''    -: norm1r_mt_ 0 3 $ 0
-NB.   0 0 0 -: norm1r_mt_ 3 0 $ 0
-NB.   0     -: normi_mt_  0 0 $ 0
-NB.   0     -: normi_mt_  0 3 $ 0
-NB.   0     -: normi_mt_  3 0 $ 0
-NB.   ''    -: normic_mt_ 0 0 $ 0
-NB.   0 0 0 -: normic_mt_ 0 3 $ 0
-NB.   ''    -: normic_mt_ 3 0 $ 0
-NB.   ''    -: normir_mt_ 0 0 $ 0
-NB.   ''    -: normir_mt_ 0 3 $ 0
-NB.   0 0 0 -: normir_mt_ 3 0 $ 0
-NB.   (norm1_mt_"1@|: -: norm1c_mt_)       10 10 ?@$ 0
-NB.   (norm1_mt_"1@|: -: norm1c_mt_) j./ 2 10 10 ?@$ 0
-NB.   (norm1_mt_"1    -: norm1r_mt_)       10 10 ?@$ 0
-NB.   (norm1_mt_"1    -: norm1r_mt_) j./ 2 10 10 ?@$ 0
-NB.   (normi_mt_"1@|: -: normic_mt_)       10 10 ?@$ 0
-NB.   (normi_mt_"1@|: -: normic_mt_) j./ 2 10 10 ?@$ 0
-NB.   (normi_mt_"1    -: normir_mt_)       10 10 ?@$ 0
-NB.   (normi_mt_"1    -: normir_mt_) j./ 2 10 10 ?@$ 0
+NB.   0     -: norm1  0 0 $ 0
+NB.   0     -: norm1  0 3 $ 0
+NB.   0     -: norm1  3 0 $ 0
+NB.   ''    -: norm1c 0 0 $ 0
+NB.   0 0 0 -: norm1c 0 3 $ 0
+NB.   ''    -: norm1c 3 0 $ 0
+NB.   ''    -: norm1r 0 0 $ 0
+NB.   ''    -: norm1r 0 3 $ 0
+NB.   0 0 0 -: norm1r 3 0 $ 0
+NB.   0     -: normi  0 0 $ 0
+NB.   0     -: normi  0 3 $ 0
+NB.   0     -: normi  3 0 $ 0
+NB.   ''    -: normic 0 0 $ 0
+NB.   0 0 0 -: normic 0 3 $ 0
+NB.   ''    -: normic 3 0 $ 0
+NB.   ''    -: normir 0 0 $ 0
+NB.   ''    -: normir 0 3 $ 0
+NB.   0 0 0 -: normir 3 0 $ 0
+NB.   (norm1"1@|: -: norm1c)       10 10 ?@$ 0
+NB.   (norm1"1@|: -: norm1c) j./ 2 10 10 ?@$ 0
+NB.   (norm1"1    -: norm1r)       10 10 ?@$ 0
+NB.   (norm1"1    -: norm1r) j./ 2 10 10 ?@$ 0
+NB.   (normi"1@|: -: normic)       10 10 ?@$ 0
+NB.   (normi"1@|: -: normic) j./ 2 10 10 ?@$ 0
+NB.   (normi"1    -: normir)       10 10 ?@$ 0
+NB.   (normi"1    -: normir) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
 NB. - norm1 implements LAPACK's DASUM, DZSUM1, DLANSY('1'),
@@ -140,32 +140,32 @@ NB. Description:
 NB.   Taxicab-based norms |Re(y)| + |Im(y)|
 NB.
 NB. Assertions:
-NB.   0     -: norm1t_mt_  0 0 $ 0
-NB.   0     -: norm1t_mt_  0 3 $ 0
-NB.   0     -: norm1t_mt_  3 0 $ 0
-NB.   ''    -: norm1tc_mt_ 0 0 $ 0
-NB.   0 0 0 -: norm1tc_mt_ 0 3 $ 0
-NB.   ''    -: norm1tc_mt_ 3 0 $ 0
-NB.   ''    -: norm1tr_mt_ 0 0 $ 0
-NB.   ''    -: norm1tr_mt_ 0 3 $ 0
-NB.   0 0 0 -: norm1tr_mt_ 3 0 $ 0
-NB.   0     -: normit_mt_  0 0 $ 0
-NB.   0     -: normit_mt_  0 3 $ 0
-NB.   0     -: normit_mt_  3 0 $ 0
-NB.   ''    -: normitc_mt_ 0 0 $ 0
-NB.   0 0 0 -: normitc_mt_ 0 3 $ 0
-NB.   ''    -: normitc_mt_ 3 0 $ 0
-NB.   ''    -: normitr_mt_ 0 0 $ 0
-NB.   ''    -: normitr_mt_ 0 3 $ 0
-NB.   0 0 0 -: normitr_mt_ 3 0 $ 0
-NB.   (norm1t_mt_"1@|: -: norm1tc_mt_)       10 10 ?@$ 0
-NB.   (norm1t_mt_"1@|: -: norm1tc_mt_) j./ 2 10 10 ?@$ 0
-NB.   (norm1t_mt_"1    -: norm1tr_mt_)       10 10 ?@$ 0
-NB.   (norm1t_mt_"1    -: norm1tr_mt_) j./ 2 10 10 ?@$ 0
-NB.   (normit_mt_"1@|: -: normitc_mt_)       10 10 ?@$ 0
-NB.   (normit_mt_"1@|: -: normitc_mt_) j./ 2 10 10 ?@$ 0
-NB.   (normit_mt_"1    -: normitr_mt_)       10 10 ?@$ 0
-NB.   (normit_mt_"1    -: normitr_mt_) j./ 2 10 10 ?@$ 0
+NB.   0     -: norm1t  0 0 $ 0
+NB.   0     -: norm1t  0 3 $ 0
+NB.   0     -: norm1t  3 0 $ 0
+NB.   ''    -: norm1tc 0 0 $ 0
+NB.   0 0 0 -: norm1tc 0 3 $ 0
+NB.   ''    -: norm1tc 3 0 $ 0
+NB.   ''    -: norm1tr 0 0 $ 0
+NB.   ''    -: norm1tr 0 3 $ 0
+NB.   0 0 0 -: norm1tr 3 0 $ 0
+NB.   0     -: normit  0 0 $ 0
+NB.   0     -: normit  0 3 $ 0
+NB.   0     -: normit  3 0 $ 0
+NB.   ''    -: normitc 0 0 $ 0
+NB.   0 0 0 -: normitc 0 3 $ 0
+NB.   ''    -: normitc 3 0 $ 0
+NB.   ''    -: normitr 0 0 $ 0
+NB.   ''    -: normitr 0 3 $ 0
+NB.   0 0 0 -: normitr 3 0 $ 0
+NB.   (norm1t"1@|: -: norm1tc)       10 10 ?@$ 0
+NB.   (norm1t"1@|: -: norm1tc) j./ 2 10 10 ?@$ 0
+NB.   (norm1t"1    -: norm1tr)       10 10 ?@$ 0
+NB.   (norm1t"1    -: norm1tr) j./ 2 10 10 ?@$ 0
+NB.   (normit"1@|: -: normitc)       10 10 ?@$ 0
+NB.   (normit"1@|: -: normitc) j./ 2 10 10 ?@$ 0
+NB.   (normit"1    -: normitr)       10 10 ?@$ 0
+NB.   (normit"1    -: normitr) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
 NB. - norm1t implements BLAS' DASUM, DZASUM
@@ -190,19 +190,19 @@ NB.   Square-based Euclidean (Frobenius) norm of vector
 NB.   (matrix) sqrt(|y|^2)
 NB.
 NB. Assertions:
-NB.   0     -: norms_mt_  0 0 $ 0
-NB.   0     -: norms_mt_  0 3 $ 0
-NB.   0     -: norms_mt_  3 0 $ 0
-NB.   ''    -: normsc_mt_ 0 0 $ 0
-NB.   0 0 0 -: normsc_mt_ 0 3 $ 0
-NB.   ''    -: normsc_mt_ 3 0 $ 0
-NB.   ''    -: normsr_mt_ 0 0 $ 0
-NB.   ''    -: normsr_mt_ 0 3 $ 0
-NB.   0 0 0 -: normsr_mt_ 3 0 $ 0
-NB.   (norms_mt_"1@|: -: normsc_mt_)       10 10 ?@$ 0
-NB.   (norms_mt_"1@|: -: normsc_mt_) j./ 2 10 10 ?@$ 0
-NB.   (norms_mt_"1    -: normsr_mt_)       10 10 ?@$ 0
-NB.   (norms_mt_"1    -: normsr_mt_) j./ 2 10 10 ?@$ 0
+NB.   0     -: norms  0 0 $ 0
+NB.   0     -: norms  0 3 $ 0
+NB.   0     -: norms  3 0 $ 0
+NB.   ''    -: normsc 0 0 $ 0
+NB.   0 0 0 -: normsc 0 3 $ 0
+NB.   ''    -: normsc 3 0 $ 0
+NB.   ''    -: normsr 0 0 $ 0
+NB.   ''    -: normsr 0 3 $ 0
+NB.   0 0 0 -: normsr 3 0 $ 0
+NB.   (norms"1@|: -: normsc)       10 10 ?@$ 0
+NB.   (norms"1@|: -: normsc) j./ 2 10 10 ?@$ 0
+NB.   (norms"1    -: normsr)       10 10 ?@$ 0
+NB.   (norms"1    -: normsr) j./ 2 10 10 ?@$ 0
 NB.
 NB. Notes:
 NB. - norms implements BLAS' DNRM2, DZNRM2 and models

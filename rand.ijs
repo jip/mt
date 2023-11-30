@@ -102,8 +102,8 @@ NB. Notes:
 NB. - for rnk=1 models LAPACK's DLARNV(1)
 NB.
 NB. References:
-NB. [1] Non-Uniform Random Variate Generation. Luc Devroye, 2003.
-NB.     School of Computer Science, McGill University.
+NB. [1] Non-Uniform Random Variate Generation. Luc Devroye,
+NB.     2003. School of Computer Science, McGill University.
 NB.     http://luc.devroye.org/rnbookindex.html
 
 randu=: (?@$&0) :((p.~ -~/\)~ $:)
@@ -830,8 +830,8 @@ NB.
 NB. Syntax:
 NB.   testgemat sh
 NB. where
-NB.   sh  - vector of non-negative integers, the shape of
-NB.         matrix
+NB.   sh - vector of non-negative integers, the shape of
+NB.        matrix
 
 testgemat=: 3 : 0
   ('gemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y

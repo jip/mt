@@ -533,8 +533,8 @@ mm=: (3 : 0) :. (3 : 0)
   y=. CRLF cutl_mt_ y  NB. cut by spans of CR and LF
   'line longer than 1024 bytes was detected' assert_mt_ (1024 >: #) S: 0 y
   header=. cut_mt_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
-  y=. (#~ ('%' ~: {.) S: 0) y   NB. remove header and comments
-  y=. (#~ a:&~:) dltb L: 0 y    NB. remove empty lines
+  y=. (#~ ('%' ~: {.) S: 0) y  NB. remove header and comments
+  y=. (#~ a:&~:) dltb L: 0 y   NB. remove empty lines
   'not a Matrix Market exchange format' assert_mt_ 5 = # header
   ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mt_ BANNER_mtmm_ -: 0 {:: header
   ('object '''   , (1 {:: header) , ''' is not recognized') assert_mt_ OBJECT_mtmm_ -: 1 {:: header

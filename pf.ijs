@@ -1705,7 +1705,7 @@ trprc=: 3 : 0
       diag=. (< ij , ii) { R
       i=. <: ij
       while. i >: rank do.
-        diag=. (mp~ lartg) ((< i , ii ) { R) , diag
+        diag=. (mp~ lartg) ((< i , ii) { R) , diag
         i=. <: i
       end.
       'mnrp1 cs'=. laic12 smin ; diag , ((< (i. rank) ; ii) { R) mp + x1
@@ -2255,10 +2255,10 @@ testgepf=: 3 : 0
   ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
   ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
 
-  ('gelpf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(lpt01a >. lqt11a))) args
-  ('geplf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(plt01a >. qlt11a))) args
-  ('geprf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(prt01a >. qrt11a))) args
-  ('gerpf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(rpt01a >. rqt11a))) args
+  ('gelpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(lpt01a >. lqt11a))) args
+  ('geplf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(plt01a >. qlt11a))) args
+  ('geprf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(prt01a >. qrt11a))) args
+  ('gerpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(rpt01a >. rqt11a))) args
 
   coerase < 'mttmp'
   erase 'lpt01a plt01a prt01a rpt01a lqt11a qlt11a qrt11a'

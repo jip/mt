@@ -454,15 +454,15 @@ herk=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    C            diag(C),alpha,beta    R/W in C    Action
-NB. syrkln   symmetric    any                   LT          C := alpha * A   * A^T + beta * C
-NB. syrklt   symmetric    any                   LT          C := alpha * A^T * A   + beta * C
-NB. syrkun   symmetric    any                   UT          C := alpha * A   * A^T + beta * C
-NB. syrkut   symmetric    any                   UT          C := alpha * A^T * A   + beta * C
-NB. herkln   Hermitian    real                  LT          C := alpha * A   * A^H + beta * C
-NB. herklc   Hermitian    real                  LT          C := alpha * A^H * A   + beta * C
-NB. herkun   Hermitian    real                  UT          C := alpha * A   * A^H + beta * C
-NB. herkuc   Hermitian    real                  UT          C := alpha * A^H * A   + beta * C
+NB. Monad     C            diag(C),alpha,beta    R/W in C    Action
+NB. syrkln    symmetric    any                   LT          C := alpha * A   * A^T + beta * C
+NB. syrklt    symmetric    any                   LT          C := alpha * A^T * A   + beta * C
+NB. syrkun    symmetric    any                   UT          C := alpha * A   * A^T + beta * C
+NB. syrkut    symmetric    any                   UT          C := alpha * A^T * A   + beta * C
+NB. herkln    Hermitian    real                  LT          C := alpha * A   * A^H + beta * C
+NB. herklc    Hermitian    real                  LT          C := alpha * A^H * A   + beta * C
+NB. herkun    Hermitian    real                  UT          C := alpha * A   * A^H + beta * C
+NB. herkuc    Hermitian    real                  UT          C := alpha * A^H * A   + beta * C
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank k operation:
@@ -997,8 +997,8 @@ NB.   mul   - dyad to compute the product either (op(A) * B) or
 NB.           (B * op(A)), is called as:
 NB.             product=. B mul opA
 NB.           and is one of:
-NB.               mp_mt_~       NB. to compute (1)
-NB.               mp_mt_        NB. to compute (2)
+NB.             mp_mt_~       NB. to compute (1)
+NB.             mp_mt_        NB. to compute (2)
 
 trmm=: 1 : '(0&{:: * 2&{::) u 1&{::'
 
@@ -1672,8 +1672,8 @@ NB.
 NB. Description:
 NB.   Test matrix-vector operations:
 NB.   - (+/ .*) (built-in)
-NB.   - mp      (math/misc/mathutil addon)
-NB.   - xGEMV   (BLAS)
+NB.   - mp (math/misc/mathutil addon)
+NB.   - xGEMV (BLAS)
 NB.   by general matrix and vectors
 NB.
 NB. Syntax:
@@ -1696,8 +1696,8 @@ testbasicgemv=: 3 : 0
   yn=. n {. y
 
   NB. test for the case: ('alpha beta inc'=. 1 0 1) and (op(A) = A)
-  ('(+/ .*)'        tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:                 ))                                                    A  ;    xn
-  ('mp'             tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:                 ))                                                    A  ;    xn
+  ('(+/ .*)'        tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))                                                     A  ;    xn
+  ('mp'             tdyad  ((0&{::)`(1&{::)`0:`(_."_)`(_."_)`0:            ))                                                     A  ;    xn
 
   NB. for every i feed the tuple (alpha_i ; A ; expanded_x_i ; incx_i ; beta_i ; expanded_y_i ; incy_i) to tmonad
   ('dgemvn_mtbla_' tmonad (         ]      `] `(_."_)`(_."_)`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< A) ; (< xn) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< ym) ; < <"0 inc
@@ -1815,8 +1815,8 @@ NB.
 NB. Description:
 NB.   Test matrix-matrix operations:
 NB.   - (+/ .*) (built-in)
-NB.   - mp      (math/misc/mathutil addon)
-NB.   - xGEMM   (BLAS)
+NB.   - mp (math/misc/mathutil addon)
+NB.   - xGEMM (BLAS)
 NB.   by general matrices
 NB.
 NB. Syntax:
@@ -2106,7 +2106,7 @@ NB.
 NB. Description:
 NB.   Test matrix equation solvers:
 NB.   - trsmxxxx (math/mt addon)
-NB.   - xTRSM    (BLAS)
+NB.   - xTRSM (BLAS)
 NB.   by triangular matrix
 NB.
 NB. Syntax:

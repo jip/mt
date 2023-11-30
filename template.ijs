@@ -279,9 +279,9 @@ NB.
 NB. Syntax:
 NB.   <o>=. [<x>] <LocalVerb> <y>
 NB. where
-NB.   <y>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <x>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <o>  - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <x> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.
 NB. Formula: <optional section>
 NB. - <description>:
@@ -563,9 +563,9 @@ NB.
 NB. Syntax:
 NB.   <o>=. [<x>] <Verb> <y>
 NB. where
-NB.   <y>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <x>  - scalar/n-vector/m×n-matrix/sh-array <description>
-NB.   <o>  - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <x> - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <o> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.
 NB. Formula: <optional section>
 NB. - <description>:
@@ -638,7 +638,7 @@ NB.
 NB. Syntax:
 NB.   <testxxname> <y>
 NB. where
-NB.   <y>  - scalar/n-vector/m×n-matrix/sh-array <description>
+NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.
 NB. Formula: <optional section>
 NB. - <description>:

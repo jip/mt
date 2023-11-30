@@ -181,7 +181,7 @@ NB. Application:
 NB. - test low-level algorithms by random square integer
 NB.   matrix with elements distributed uniformly with support
 NB.   [0,100):
-NB.    ?@$&100 testlow_mt_ 10 10
+NB.     ?@$&100 testlow_mt_ 10 10
 NB. - test mid-level algorithms by random rectangular real
 NB.   matrix with elements distributed uniformly with support
 NB.   (0,1):

@@ -272,14 +272,14 @@ larfp=: 4 : 0
 
 NB. ---------------------------------------------------------
 NB. Verb       Input             Output                  β
-NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∊ℝ
-NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∊ℝ
-NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∊ℝ
-NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ∊ℝ
-NB. larfpf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ≥0
-NB. larfpfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ≥0
-NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ≥0
-NB. larfpbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ≥0
+NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∊ ℝ
+NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∊ ℝ
+NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∊ ℝ
+NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ∊ ℝ
+NB. larfpf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ≥ 0
+NB. larfpfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ≥ 0
+NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ≥ 0
+NB. larfpbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ≥ 0
 NB.
 NB. Description:
 NB.   Monads to generate an elementary reflector, see larfg,
@@ -707,7 +707,7 @@ NB. Description:
 NB.   Test larfxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarf (trash;C)
+NB.   testlarf (trash ; C)
 NB. where
 NB.   C - m×n-matrix, is used as multiplier, the 1st row or
 NB.       column is used to form reflector
@@ -746,7 +746,7 @@ NB. Description:
 NB.   Test larzxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarz (trash;C)
+NB.   testlarz (trash ; C)
 NB. where
 NB.   C - m×n-matrix, is used as multiplier, the 1st row or
 NB.       column is used to form reflector
@@ -785,7 +785,7 @@ NB. Description:
 NB.   Test larftxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarft (A;trash)
+NB.   testlarft (A ; trash)
 NB. where
 NB.   A - m×n-matrix, is used to form Qf
 
@@ -808,7 +808,7 @@ NB. Description:
 NB.   Test larztxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarzt (A;trash)
+NB.   testlarzt (A ; trash)
 NB. where
 NB.   A - m×n-matrix, is used to form Qf
 
@@ -831,7 +831,7 @@ NB. Description:
 NB.   Test larfbxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarfb (A;C)
+NB.   testlarfb (A ; C)
 NB. where
 NB.   A - m×n-matrix, is used to form Qf
 NB.   C - m×n-matrix, is used as multiplier
@@ -875,7 +875,7 @@ NB. Description:
 NB.   Test larzbxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarzb (A;C)
+NB.   testlarzb (A ; C)
 NB. where
 NB.   A - m×n-matrix, is used to form Qf
 NB.   C - m×n-matrix, is used as multiplier

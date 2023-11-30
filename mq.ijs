@@ -715,7 +715,7 @@ NB.   - unmxxxx (math/mt addon)
 NB.   by general matrices
 NB.
 NB. Syntax:
-NB.   testunmq (A;C)
+NB.   testunmq (A ; C)
 NB. where
 NB.   A - m×n-matrix, is used to produce Qf
 NB.   C - m×n-matrix, is used as multiplier
@@ -1060,7 +1060,7 @@ NB.   - unmxxxx (math/mt addon)
 NB.   by trapezoidal and general matrices
 NB.
 NB. Syntax:
-NB.   testunmz (A;C)
+NB.   testunmz (A ; C)
 NB. where
 NB.   A - m×n-matrix, is used to produce Zf
 NB.   C - m×n-matrix, is used as multiplier
@@ -1280,7 +1280,7 @@ NB.   - unmhrxxx (math/mt addon)
 NB.   by square matrices
 NB.
 NB. Syntax:
-NB.   testunmhr (A;C)
+NB.   testunmhr (A ; C)
 NB. where
 NB.   A - n×n-matrix, is used to produce Qf
 NB.   C - n×n-matrix, is used as multiplier

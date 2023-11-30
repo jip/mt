@@ -794,8 +794,7 @@ NB.     anti-tridiagonal matrices. Applied Mathematics and
 NB.     Computation, 2008, Vol. 204, pp. 368-372.
 NB.     https://doi.org/10.1016/j.amc.2008.06.053
 NB. [2] Igor Zhuravlov. [Jprogramming] ravel items (,.) of
-NB.     empty list (i.0) .
-NB.     2010-06-05 10:08:56 HKT.
+NB.     empty list (i.0) . 2010-06-05 10:08:56 HKT.
 NB.     http://jsoftware.com/pipermail/programming/2010-June/019617.html
 NB.
 NB. TODO:
@@ -829,8 +828,8 @@ NB.   A - n×n-matrix
 testtrtri=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/trtri'
 
-  rcondL=.  trlcon1  L=.  trlpick y
-  rcondU=.  trucon1  U=.  trupick y
+  rcondL=.  trlcon1  L=.           trlpick y
+  rcondU=.  trucon1  U=.           trupick y
   rcondL1=. trl1con1 L1=. (1 ; '') setdiag L
   rcondU1=. tru1con1 U1=. (1 ; '') setdiag U
 

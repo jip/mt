@@ -1110,9 +1110,9 @@ NB.   for unmrqxx: Q(k) := H(0  )' * ... * H(k-1)'
 NB.
 NB. Notes:
 NB. - m≤n for LQ and RQ, m≥n for QL and QR
-NB. - xxt03 models corresp. LAPACK's xxxT03 with he following
-NB.   difference: only a sole test is performed, either
-NB.   (Q * C), (Q^H * C), (C * Q) or (C * Q^H)
+NB. - xxt03 models corresp. LAPACK's xxxT03 with the
+NB.   following difference: only a sole test is performed,
+NB.   either (Q * C), (Q^H * C), (C * Q) or (C * Q^H)
 NB.   - lqt03 models LAPACK's xLQT03
 NB.   - qlt03 models LAPACK's xQLT03
 NB.   - qrt03 models LAPACK's xQRT03
@@ -2042,8 +2042,8 @@ NB.   AA      - n×n-matrix, contains either non-zero or both
 NB.             part(s) of A
 NB.   x       - (1+(n-1)*|incx|)-vector
 NB.   incx    ≠ 0, the increment for the elements of x
-NB.   xapprox - the same shape as x, the approximate xexact, is
-NB.             computed by the verb being tested
+NB.   xapprox - the same shape as x, the approximate xexact,
+NB.             is computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for xapprox
 NB.   xexact  - an updated x
 NB.   n       ≥ 0, the size of A and AA
@@ -2445,8 +2445,8 @@ NB.
 NB. Notes:
 NB. - models BLAS' DCHK5('DSYR2K'), ZCHK5('ZSYR2K') and
 NB.   ZCHK5('ZHER2K') with the following difference:
-NB.   - alpha,A,B,beta,C are not generated but are coming from
-NB.     outside as input parameters
+NB.   - alpha,A,B,beta,C are not generated but are coming
+NB.     from outside as input parameters
 NB. - berr is considered good if lower than 16
 
 chk5r2k=: chk4rk
@@ -2504,8 +2504,8 @@ NB.
 NB. Notes:
 NB. - models BLAS' DCHK6('DSYR2') and ZCHK6('ZHER2') with
 NB.   the following difference:
-NB.   - alpha,x,incx,y,incy,A are not generated but are coming from
-NB.     outside as input parameters
+NB.   - alpha,x,incx,y,incy,A are not generated but are
+NB.     coming from outside as input parameters
 NB. - berr is considered good if lower than 16
 
 chk6r2=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ ((<<< 2 4) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@]        )'

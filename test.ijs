@@ -1985,8 +1985,8 @@ NB.   trxpick - monad to pick a triangular part, is one of:
 NB.               trlpick  NB. if xxmmxlxx is used
 NB.               trupick  NB. if xxmmxuxx is used
 NB.   alpha   - scalar
-NB.   A       - ma×ma-matrix, Hermitian (symmetric)
-NB.   AA      - ma×ma-matrix, contains either LT or UT or
+NB.   A       - mn×mn-matrix, Hermitian (symmetric)
+NB.   AA      - mn×mn-matrix, contains either LT or UT or
 NB.             both part(s) of A
 NB.   B       - m×n-matrix
 NB.   beta    - scalar
@@ -1997,7 +1997,7 @@ NB.   berr    ≥ 0, the relative backward error for Capprox
 NB.   Cexact  - an updated C
 NB.   m       ≥ 0, the number of rows in C and B
 NB.   n       ≥ 0, the number of columns in C and B
-NB.   ma      = m for xxmmlx or ma = n for xxmmrx
+NB.   mn      = m for xxmmlx or mn = n for xxmmrx
 NB.
 NB. Formula:
 NB.   (m,n) := shape(C)

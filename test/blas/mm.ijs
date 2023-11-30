@@ -124,16 +124,16 @@ NB.           referenced:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
 NB.   alpha - scalar
-NB.   AAt   - ma×ma-matrix, contains either lower or upper or
+NB.   AAt   - mn×mn-matrix, contains either lower or upper or
 NB.           both part(s) of A^T
 NB.   Bt    - n×m-matrix, B^T
 NB.   beta  - scalar
 NB.   Ct    - n×m-matrix, C^T
 NB.   Cupdt - an updated Ct
-NB.   A     - ma×ma-matrix, Hermitian (symmetric)
+NB.   A     - mn×mn-matrix, Hermitian (symmetric)
 NB.   m     ≥ 0, the number of rows in C and B
 NB.   n     ≥ 0, the number of columns in C and B
-NB.   ma    = m if side='L' or ma = n otherwise
+NB.   mn    = m if side='L' or mn = n otherwise
 NB.
 NB. Notes:
 NB. - operate on transposed matrices to avoid transposition
@@ -199,14 +199,14 @@ NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal
 NB.                  NB.   elements of A are not referenced
 NB.   alpha - scalar
-NB.   AAt   - k×k-matrix, contains either non-zero or both
+NB.   AAt   - mn×mn-matrix, contains either non-zero or both
 NB.           triangular parts of A^T
 NB.   Bt    - n×m-matrix, B^T
 NB.   Bupdt - an updated Bt
-NB.   A     - k×k-matrix, triangular
+NB.   A     - mn×mn-matrix, triangular
 NB.   m     ≥ 0, the number of rows in B
 NB.   n     ≥ 0, the number of columns in B
-NB.   k     = m if side='L' or k = n otherwise
+NB.   mn    = m if side='L' or mn = n otherwise
 NB.
 NB. Notes:
 NB. - operate on transposed matrices to avoid transposition
@@ -324,16 +324,16 @@ NB. Syntax:
 NB.   Cupd=. xxxmmxx alpha ; AA ; B ; beta ; C
 NB. where
 NB.   alpha - scalar
-NB.   AA    - ma×ma-matrix, contains either lower or upper or
+NB.   AA    - mn×mn-matrix, contains either lower or upper or
 NB.           both part(s) of A
-NB.   A     - ma×ma-matrix, Hermitian (symmetric)
+NB.   A     - mn×mn-matrix, Hermitian (symmetric)
 NB.   B     - m×n-matrix
 NB.   beta  - scalar
 NB.   C     - m×n-matrix
 NB.   Cupd  - an updated C
 NB.   m     ≥ 0, the number of rows in C, Cupd and B
 NB.   n     ≥ 0, the number of columns in C, Cupd and B
-NB.   ma    = m for xxxmmlx or ma = n otherwise
+NB.   mn    = m for xxxmmlx or mn = n otherwise
 NB.
 NB. Notes:
 NB. - monad      provides BLAS'

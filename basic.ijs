@@ -935,8 +935,8 @@ NB. Syntax:
 NB.   Cupd=. xxmmxx alpha ; AA ; B ; beta ; C
 NB. where
 NB.   alpha - scalar
-NB.   A     - ma×ma-matrix, Hermitian (symmetric)
-NB.   AA    - ma×ma-matrix, contains either LT or UT or both
+NB.   A     - mn×mn-matrix, Hermitian (symmetric)
+NB.   AA    - mn×mn-matrix, contains either LT or UT or both
 NB.           part(s) of A
 NB.   B     - m×n-matrix
 NB.   beta  - scalar
@@ -944,7 +944,7 @@ NB.   C     - m×n-matrix
 NB.   Cupd  - an updated C
 NB.   m     ≥ 0, the number of rows in C, Cupd and B
 NB.   n     ≥ 0, the number of columns in C, Cupd and B
-NB.   ma    = m for xxmmlx or ma = n for xxmmrx
+NB.   mn    = m for xxmmlx or mn = n for xxmmrx
 NB.
 NB. Notes:
 NB. - verb      models BLAS'

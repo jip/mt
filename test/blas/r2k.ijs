@@ -36,8 +36,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. dsyr2kcore
-NB. zsyr2kcore
+NB. Dyad          Domain
+NB. dsyr2kcore    real
+NB. zsyr2kcore    complex
 NB.
 NB. Description:
 NB.   Performs the symmetric rank 2k operation:
@@ -148,15 +149,15 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad       R/W in C    Operation
-NB. dsyr2kln    LT          C := alpha * A   * B^T + alpha * B   * A^T + beta * C
-NB. dsyr2klt    LT          C := alpha * A^T * B   + alpha * B^T * A   + beta * C
-NB. dsyr2kun    UT          C := alpha * A   * B^T + alpha * B   * A^T + beta * C
-NB. dsyr2kut    UT          C := alpha * A^T * B   + alpha * B^T * A   + beta * C
-NB. zsyr2kln    LT          C := alpha * A   * B^T + alpha * B   * A^T + beta * C
-NB. zsyr2klt    LT          C := alpha * A^T * B   + alpha * B^T * A   + beta * C
-NB. zsyr2kun    UT          C := alpha * A   * B^T + alpha * B   * A^T + beta * C
-NB. zsyr2kut    UT          C := alpha * A^T * B   + alpha * B^T * A   + beta * C
+NB. Monad       Domain     R/W in C    op1(M)    op2(M)
+NB. dsyr2kln    real       LT          M         M^T
+NB. dsyr2klt    real       LT          M^T       M
+NB. dsyr2kun    real       UT          M         M^T
+NB. dsyr2kut    real       UT          M^T       M
+NB. zsyr2kln    complex    LT          M         M^T
+NB. zsyr2klt    complex    LT          M^T       M
+NB. zsyr2kun    complex    UT          M         M^T
+NB. zsyr2kut    complex    UT          M^T       M
 NB.
 NB. Description:
 NB.   Performs the symmetric rank 2k operation:
@@ -203,11 +204,11 @@ zsyr2kun=: 'lt'&zsyr2kcore
 zsyr2kut=: 'ln'&zsyr2kcore
 
 NB. ---------------------------------------------------------
-NB. Monad       R/W in C    Operation
-NB. zher2kln    LT          C := alpha * A   * B^H + alpha * B   * A^H + beta * C
-NB. zher2klc    LT          C := alpha * A^H * B   + alpha * B^H * A   + beta * C
-NB. zher2kun    UT          C := alpha * A   * B^H + alpha * B   * A^H + beta * C
-NB. zher2kuc    UT          C := alpha * A^H * B   + alpha * B^H * A   + beta * C
+NB. Monad       Domain     R/W in C    op1(M)    op2(M)
+NB. zher2kln    complex    LT          M         M^H
+NB. zher2klc    complex    LT          M^H       M
+NB. zher2kun    complex    UT          M         M^H
+NB. zher2kuc    complex    UT          M^H       M
 NB.
 NB. Description:
 NB.   Performs the hermitian rank 2k operation:

@@ -38,8 +38,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. dgemmcore
-NB. zgemmcore
+NB. Dyad         Domain
+NB. dgemmcore    real
+NB. zgemmcore    complex
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
@@ -97,10 +98,10 @@ zgemmcore=: (4 : 0) basicswp@([ assert@basiccr4)
 )
 
 NB. ---------------------------------------------------------
-NB. Dyad         A            diag(A)
-NB. dsymmcore    symmetric    real
-NB. zsymmcore    symmetric    any
-NB. zhemmcore    Hermitian    real
+NB. Dyad         Domain     A
+NB. dsymmcore    real       symmetric
+NB. zsymmcore    complex    symmetric
+NB. zhemmcore    complex    Hermitian
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
@@ -162,8 +163,9 @@ zhemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
 )
 
 NB. ---------------------------------------------------------
-NB. dtrmmcore
-NB. ztrmmcore
+NB. Dyad         Domain
+NB. dtrmmcore    real
+NB. ztrmmcore    complex
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
@@ -227,20 +229,20 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad      Operation
-NB. dgemmnn    C := alpha * A   * B   + beta * C
-NB. dgemmnt    C := alpha * A   * B^T + beta * C
-NB. dgemmtn    C := alpha * A^T * B   + beta * C
-NB. dgemmtt    C := alpha * A^T * B^T + beta * C
-NB. zgemmnn    C := alpha * A   * B   + beta * C
-NB. zgemmnt    C := alpha * A   * B^T + beta * C
-NB. zgemmnc    C := alpha * A   * B^H + beta * C
-NB. zgemmtn    C := alpha * A^T * B   + beta * C
-NB. zgemmtt    C := alpha * A^T * B^T + beta * C
-NB. zgemmtc    C := alpha * A^T * B^H + beta * C
-NB. zgemmcn    C := alpha * A^H * B   + beta * C
-NB. zgemmct    C := alpha * A^H * B^T + beta * C
-NB. zgemmcc    C := alpha * A^H * B^H + beta * C
+NB. Monad      Domain     op1(A)    op2(B)
+NB. dgemmnn    real       A         B
+NB. dgemmnt    real       A         B^T
+NB. dgemmtn    real       A^T       B
+NB. dgemmtt    real       A^T       B^T
+NB. zgemmnn    complex    A         B
+NB. zgemmnt    complex    A         B^T
+NB. zgemmnc    complex    A         B^H
+NB. zgemmtn    complex    A^T       B
+NB. zgemmtt    complex    A^T       B^T
+NB. zgemmtc    complex    A^T       B^H
+NB. zgemmcn    complex    A^H       B
+NB. zgemmct    complex    A^H       B^T
+NB. zgemmcc    complex    A^H       B^H
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
@@ -297,25 +299,25 @@ zgemmct=: 'tc'&zgemmcore
 zgemmcc=: 'cc'&zgemmcore
 
 NB. ---------------------------------------------------------
-NB. Monad      A            diag(A)   Reads in A    Operation
-NB. dsymmll    symmetric    real      LT            C := alpha * A * B + beta * C
-NB. dsymmlu    symmetric    real      UT            C := alpha * A * B + beta * C
-NB. dsymmrl    symmetric    real      LT            C := alpha * B * A + beta * C
-NB. dsymmru    symmetric    real      UT            C := alpha * B * A + beta * C
-NB. zsymmll    symmetric    any       LT            C := alpha * A * B + beta * C
-NB. zsymmlu    symmetric    any       UT            C := alpha * A * B + beta * C
-NB. zsymmrl    symmetric    any       LT            C := alpha * B * A + beta * C
-NB. zsymmru    symmetric    any       UT            C := alpha * B * A + beta * C
-NB. zhemmll    Hermitian    real      LT            C := alpha * A * B + beta * C
-NB. zhemmlu    Hermitian    real      UT            C := alpha * A * B + beta * C
-NB. zhemmrl    Hermitian    real      LT            C := alpha * B * A + beta * C
-NB. zhemmru    Hermitian    real      UT            C := alpha * B * A + beta * C
+NB. Monad      Domain     A            Reads in A    Side
+NB. dsymmll    real       symmetric    LT            (1)
+NB. dsymmlu    real       symmetric    UT            (1)
+NB. dsymmrl    real       symmetric    LT            (2)
+NB. dsymmru    real       symmetric    UT            (2)
+NB. zsymmll    complex    symmetric    LT            (1)
+NB. zsymmlu    complex    symmetric    UT            (1)
+NB. zsymmrl    complex    symmetric    LT            (2)
+NB. zsymmru    complex    symmetric    UT            (2)
+NB. zhemmll    complex    Hermitian    LT            (1)
+NB. zhemmlu    complex    Hermitian    UT            (1)
+NB. zhemmrl    complex    Hermitian    LT            (2)
+NB. zhemmru    complex    Hermitian    UT            (2)
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
-NB.     C := alpha * A * B + beta * C
+NB.     C := alpha * A * B + beta * C  (1)
 NB.   or
-NB.     C := alpha * B * A + beta * C
+NB.     C := alpha * B * A + beta * C  (2)
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
@@ -364,53 +366,53 @@ zhemmrl=: 'lu'&zhemmcore
 zhemmru=: 'll'&zhemmcore
 
 NB. ---------------------------------------------------------
-NB. Monad        Reads in A    Operation
-NB. dtrmmllnn     LT           B := alpha * L    * B
-NB. dtrmmllnu    SLT           B := alpha * L1   * B
-NB. dtrmmlltn     LT           B := alpha * L ^T * B
-NB. dtrmmlltu    SLT           B := alpha * L1^T * B
-NB. dtrmmlunn     UT           B := alpha * U    * B
-NB. dtrmmlunu    SUT           B := alpha * U1   * B
-NB. dtrmmlutn     UT           B := alpha * U ^T * B
-NB. dtrmmlutu    SUT           B := alpha * U1^T * B
-NB. dtrmmrlnn     LT           B := alpha * B * L
-NB. dtrmmrlnu    SLT           B := alpha * B * L1
-NB. dtrmmrltn     LT           B := alpha * B * L ^T
-NB. dtrmmrltu    SLT           B := alpha * B * L1^T
-NB. dtrmmrunn     UT           B := alpha * B * U
-NB. dtrmmrunu    SUT           B := alpha * B * U1
-NB. dtrmmrutn     UT           B := alpha * B * U ^T
-NB. dtrmmrutu    SUT           B := alpha * B * U1^T
-NB. ztrmmllnn     LT           B := alpha * L    * B
-NB. ztrmmllnu    SLT           B := alpha * L1   * B
-NB. ztrmmlltn     LT           B := alpha * L ^T * B
-NB. ztrmmlltu    SLT           B := alpha * L1^T * B
-NB. ztrmmllcn     LT           B := alpha * L ^H * B
-NB. ztrmmllcu    SLT           B := alpha * L1^H * B
-NB. ztrmmlunn     UT           B := alpha * U    * B
-NB. ztrmmlunu    SUT           B := alpha * U1   * B
-NB. ztrmmlutn     UT           B := alpha * U ^T * B
-NB. ztrmmlutu    SUT           B := alpha * U1^T * B
-NB. ztrmmlucn     UT           B := alpha * U ^H * B
-NB. ztrmmlucu    SUT           B := alpha * U1^H * B
-NB. ztrmmrlnn     LT           B := alpha * B * L
-NB. ztrmmrlnu    SLT           B := alpha * B * L1
-NB. ztrmmrltn     LT           B := alpha * B * L ^T
-NB. ztrmmrltu    SLT           B := alpha * B * L1^T
-NB. ztrmmrlcn     LT           B := alpha * B * L ^H
-NB. ztrmmrlcu    SLT           B := alpha * B * L1^H
-NB. ztrmmrunn     UT           B := alpha * B * U
-NB. ztrmmrunu    SUT           B := alpha * B * U1
-NB. ztrmmrutn     UT           B := alpha * B * U ^T
-NB. ztrmmrutu    SUT           B := alpha * B * U1^T
-NB. ztrmmrucn     UT           B := alpha * B * U ^H
-NB. ztrmmrucu    SUT           B := alpha * B * U1^H
+NB. Monad        Domain     Side    A     Reads in A    op(A)
+NB. dtrmmllnn    real       (1)     L      LT           A
+NB. dtrmmllnu    real       (1)     L1    SLT           A
+NB. dtrmmlltn    real       (1)     L      LT           A^T
+NB. dtrmmlltu    real       (1)     L1    SLT           A^T
+NB. dtrmmlunn    real       (1)     U      UT           A
+NB. dtrmmlunu    real       (1)     U1    SUT           A
+NB. dtrmmlutn    real       (1)     U      UT           A^T
+NB. dtrmmlutu    real       (1)     U1    SUT           A^T
+NB. dtrmmrlnn    real       (2)     L      LT           A
+NB. dtrmmrlnu    real       (2)     L1    SLT           A
+NB. dtrmmrltn    real       (2)     L      LT           A^T
+NB. dtrmmrltu    real       (2)     L1    SLT           A^T
+NB. dtrmmrunn    real       (2)     U      UT           A
+NB. dtrmmrunu    real       (2)     U1    SUT           A
+NB. dtrmmrutn    real       (2)     U      UT           A^T
+NB. dtrmmrutu    real       (2)     U1    SUT           A^T
+NB. ztrmmllnn    complex    (1)     L      LT           A
+NB. ztrmmllnu    complex    (1)     L1    SLT           A
+NB. ztrmmlltn    complex    (1)     L      LT           A^T
+NB. ztrmmlltu    complex    (1)     L1    SLT           A^T
+NB. ztrmmllcn    complex    (1)     L      LT           A^H
+NB. ztrmmllcu    complex    (1)     L1    SLT           A^H
+NB. ztrmmlunn    complex    (1)     U      UT           A
+NB. ztrmmlunu    complex    (1)     U1    SUT           A
+NB. ztrmmlutn    complex    (1)     U      UT           A^T
+NB. ztrmmlutu    complex    (1)     U1    SUT           A^T
+NB. ztrmmlucn    complex    (1)     U      UT           A^H
+NB. ztrmmlucu    complex    (1)     U1    SUT           A^H
+NB. ztrmmrlnn    complex    (2)     L      LT           A
+NB. ztrmmrlnu    complex    (2)     L1    SLT           A
+NB. ztrmmrltn    complex    (2)     L      LT           A^T
+NB. ztrmmrltu    complex    (2)     L1    SLT           A^T
+NB. ztrmmrlcn    complex    (2)     L      LT           A^H
+NB. ztrmmrlcu    complex    (2)     L1    SLT           A^H
+NB. ztrmmrunn    complex    (2)     U      UT           A
+NB. ztrmmrunu    complex    (2)     U1    SUT           A
+NB. ztrmmrutn    complex    (2)     U      UT           A^T
+NB. ztrmmrutu    complex    (2)     U1    SUT           A^T
+NB. ztrmmrucn    complex    (2)     U      UT           A^H
+NB. ztrmmrucu    complex    (2)     U1    SUT           A^H
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
-NB.     B := alpha * op(A) * B
+NB.     B := alpha * op(A) * B  (1)
 NB.   or
-NB.     B := alpha * B * op(A)
+NB.     B := alpha * B * op(A)  (2)
 NB.   where A is triangular, and op(A) is either A, A^T or
 NB.   A^H
 NB.

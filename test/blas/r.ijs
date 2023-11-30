@@ -37,9 +37,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. Dyad        A            Operation
-NB. dsyrcore    symmetric    A := alpha * x * x^T + A
-NB. zhercore    Hermitian    A := alpha * x * x^H + A
+NB. Dyad        Domain     A            op(x)
+NB. dsyrcore    real       symmetric    x^T
+NB. zhercore    complex    Hermitian    x^H
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 1 operation:
@@ -84,10 +84,10 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad    Operation
-NB. dger     A := alpha * x * y^T + A
-NB. zgerc    A := alpha * x * y^H + A
-NB. zgeru    A := alpha * x * y^T + A
+NB. Monad    Domain     op(y)
+NB. dger     real       y^T
+NB. zgerc    complex    y^H
+NB. zgeru    complex    y^T
 NB.
 NB. Description:
 NB.   Performs the rank 1 operation:
@@ -136,11 +136,11 @@ zgeru=: (3 : 0)@([ assert@basiccr5)
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    A            R/W in A    Operation
-NB. dsyrl    symmetric    LT          A := alpha * x * x^T + A
-NB. dsyru    symmetric    UT          A := alpha * x * x^T + A
-NB. zherl    Hermitian    LT          A := alpha * x * x^H + A
-NB. zheru    Hermitian    UT          A := alpha * x * x^H + A
+NB. Monad    Domain     A            R/W in A    op(x)
+NB. dsyrl    real       symmetric    LT          x^T
+NB. dsyru    real       symmetric    UT          x^T
+NB. zherl    complex    Hermitian    LT          x^H
+NB. zheru    complex    Hermitian    UT          x^H
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 1 operation:

@@ -36,9 +36,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. Dyad         A            Operation
-NB. dsyr2core    symmetric    A := alpha * x * y^T +      alpha  * y * x^T + A
-NB. zher2core    Hermitian    A := alpha * x * y^H + conj(alpha) * y * x^H + A
+NB. Dyad         Domain     A            op1(v)    op2(s)
+NB. dsyr2core    real       symmetric    v^T       s
+NB. zher2core    complex    Hermitian    v^H       conj(s)
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2 operation:
@@ -85,11 +85,11 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad     A            R/W in A    Operation
-NB. dsyr2l    symmetric    LT          A := alpha * x * y^T +      alpha  * y * x^T + A
-NB. dsyr2u    symmetric    UT          A := alpha * x * y^T +      alpha  * y * x^T + A
-NB. zher2l    Hermitian    LT          A := alpha * x * y^H + conj(alpha) * y * x^H + A
-NB. zher2u    Hermitian    UT          A := alpha * x * y^H + conj(alpha) * y * x^H + A
+NB. Monad     Domain     A            R/W in A    op1(v)    op2(alpha)
+NB. dsyr2l    real       symmetric    LT          v^T       alpha
+NB. dsyr2u    real       symmetric    UT          v^T       alpha
+NB. zher2l    complex    Hermitian    LT          v^H       conj(alpha)
+NB. zher2u    complex    Hermitian    UT          v^H       conj(alpha)
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2 operation:

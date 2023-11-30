@@ -35,8 +35,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. dtrsmcore
-NB. ztrsmcore
+NB. Dyad         Domain
+NB. dtrsmcore    real
+NB. ztrsmcore    complex
 NB.
 NB. Description:
 NB.   Solves the matrix equation:
@@ -101,53 +102,53 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad        Reads in A    Solves
-NB. dtrsmllnn     LT           L    * X = alpha * B
-NB. dtrsmllnu    SLT           L1   * X = alpha * B
-NB. dtrsmlltn     LT           L ^T * X = alpha * B
-NB. dtrsmlltu    SLT           L1^T * X = alpha * B
-NB. dtrsmlunn     UT           U    * X = alpha * B
-NB. dtrsmlunu    SUT           U1   * X = alpha * B
-NB. dtrsmlutn     UT           U ^T * X = alpha * B
-NB. dtrsmlutu    SUT           U1^T * X = alpha * B
-NB. dtrsmrlnn     LT           X * L    = alpha * B
-NB. dtrsmrlnu    SLT           X * L1   = alpha * B
-NB. dtrsmrltn     LT           X * L ^T = alpha * B
-NB. dtrsmrltu    SLT           X * L1^T = alpha * B
-NB. dtrsmrunn     UT           X * U    = alpha * B
-NB. dtrsmrunu    SUT           X * U1   = alpha * B
-NB. dtrsmrutn     UT           X * U ^T = alpha * B
-NB. dtrsmrutu    SUT           X * U1^T = alpha * B
-NB. ztrsmllnn     LT           L    * X = alpha * B
-NB. ztrsmllnu    SLT           L1   * X = alpha * B
-NB. ztrsmlltn     LT           L ^T * X = alpha * B
-NB. ztrsmlltu    SLT           L1^T * X = alpha * B
-NB. ztrsmllcn     LT           L ^H * X = alpha * B
-NB. ztrsmllcu    SLT           L1^H * X = alpha * B
-NB. ztrsmlunn     UT           U    * X = alpha * B
-NB. ztrsmlunu    SUT           U1   * X = alpha * B
-NB. ztrsmlutn     UT           U ^T * X = alpha * B
-NB. ztrsmlutu    SUT           U1^T * X = alpha * B
-NB. ztrsmlucn     UT           U ^H * X = alpha * B
-NB. ztrsmlucu    SUT           U1^H * X = alpha * B
-NB. ztrsmrlnn     LT           X * L    = alpha * B
-NB. ztrsmrlnu    SLT           X * L1   = alpha * B
-NB. ztrsmrltn     LT           X * L ^T = alpha * B
-NB. ztrsmrltu    SLT           X * L1^T = alpha * B
-NB. ztrsmrlcn     LT           X * L ^H = alpha * B
-NB. ztrsmrlcu    SLT           X * L1^H = alpha * B
-NB. ztrsmrunn     UT           X * U    = alpha * B
-NB. ztrsmrunu    SUT           X * U1   = alpha * B
-NB. ztrsmrutn     UT           X * U ^T = alpha * B
-NB. ztrsmrutu    SUT           X * U1^T = alpha * B
-NB. ztrsmrucn     UT           X * U ^H = alpha * B
-NB. ztrsmrucu    SUT           X * U1^H = alpha * B
+NB. Monad        Domain     Side    A     Reads in A    op(A)
+NB. dtrsmllnn    real       (1)     L      LT           A
+NB. dtrsmllnu    real       (1)     L1    SLT           A
+NB. dtrsmlltn    real       (1)     L      LT           A^T
+NB. dtrsmlltu    real       (1)     L1    SLT           A^T
+NB. dtrsmlunn    real       (1)     U      UT           A
+NB. dtrsmlunu    real       (1)     U1    SUT           A
+NB. dtrsmlutn    real       (1)     U      UT           A^T
+NB. dtrsmlutu    real       (1)     U1    SUT           A^T
+NB. dtrsmrlnn    real       (2)     L      LT           A
+NB. dtrsmrlnu    real       (2)     L1    SLT           A
+NB. dtrsmrltn    real       (2)     L      LT           A^T
+NB. dtrsmrltu    real       (2)     L1    SLT           A^T
+NB. dtrsmrunn    real       (2)     U      UT           A
+NB. dtrsmrunu    real       (2)     U1    SUT           A
+NB. dtrsmrutn    real       (2)     U      UT           A^T
+NB. dtrsmrutu    real       (2)     U1    SUT           A^T
+NB. ztrsmllnn    complex    (1)     L      LT           A
+NB. ztrsmllnu    complex    (1)     L1    SLT           A
+NB. ztrsmlltn    complex    (1)     L      LT           A^T
+NB. ztrsmlltu    complex    (1)     L1    SLT           A^T
+NB. ztrsmllcn    complex    (1)     L      LT           A^H
+NB. ztrsmllcu    complex    (1)     L1    SLT           A^H
+NB. ztrsmlunn    complex    (1)     U      UT           A
+NB. ztrsmlunu    complex    (1)     U1    SUT           A
+NB. ztrsmlutn    complex    (1)     U      UT           A^T
+NB. ztrsmlutu    complex    (1)     U1    SUT           A^T
+NB. ztrsmlucn    complex    (1)     U      UT           A^H
+NB. ztrsmlucu    complex    (1)     U1    SUT           A^H
+NB. ztrsmrlnn    complex    (2)     L      LT           A
+NB. ztrsmrlnu    complex    (2)     L1    SLT           A
+NB. ztrsmrltn    complex    (2)     L      LT           A^T
+NB. ztrsmrltu    complex    (2)     L1    SLT           A^T
+NB. ztrsmrlcn    complex    (2)     L      LT           A^H
+NB. ztrsmrlcu    complex    (2)     L1    SLT           A^H
+NB. ztrsmrunn    complex    (2)     U      UT           A
+NB. ztrsmrunu    complex    (2)     U1    SUT           A
+NB. ztrsmrutn    complex    (2)     U      UT           A^T
+NB. ztrsmrutu    complex    (2)     U1    SUT           A^T
+NB. ztrsmrucn    complex    (2)     U      UT           A^H
+NB. ztrsmrucu    complex    (2)     U1    SUT           A^H
 NB.
 NB. Description:
 NB.   Solves the matrix equation:
-NB.     op(A) * X = alpha * B
+NB.     op(A) * X = alpha * B  (1)
 NB.   or
-NB.     X * op(A) = alpha * B
+NB.     X * op(A) = alpha * B  (2)
 NB.   where A is triangular, and op(A) is either A, A^T or
 NB.   A^H
 NB.

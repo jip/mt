@@ -38,8 +38,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. dgemvcore
-NB. zgemvcore
+NB. Dyad         Domain
+NB. dgemvcore    real
+NB. zgemvcore    complex
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -84,8 +85,9 @@ zgemvcore=: (4 : 0) ([ assert@basiccr6)
 )
 
 NB. ---------------------------------------------------------
-NB. dsymvcore
-NB. zhemvcore
+NB. Dyad         Domain
+NB. dsymvcore    real
+NB. zhemvcore    complex
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -129,8 +131,9 @@ zhemvcore=: (4 : 0) ([ assert@(basiccs1 , basiccr6))
 )
 
 NB. ---------------------------------------------------------
-NB. dtrmvcore
-NB. ztrmvcore
+NB. Dyad         Domain
+NB. dtrmvcore    real
+NB. ztrmvcore    complex
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -185,12 +188,12 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad     Operation
-NB. dgemvn    C := alpha * A   * x + beta * y
-NB. dgemvt    C := alpha * A^T * x + beta * y
-NB. zgemvn    C := alpha * A   * x + beta * y
-NB. zgemvt    C := alpha * A^T * x + beta * y
-NB. zgemvc    C := alpha * A^H * x + beta * y
+NB. Monad     Domain     op(A)
+NB. dgemvn    real       A
+NB. dgemvt    real       A^T
+NB. zgemvn    complex    A
+NB. zgemvt    complex    A^T
+NB. zgemvc    complex    A^H
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -228,11 +231,11 @@ zgemvt=: 'n'&   zgemvcore
 zgemvc=: 'n'&(+@zgemvcore basiccj2)
 
 NB. ---------------------------------------------------------
-NB. Monad     A            Reads in A
-NB. dsymvl    symmetric    LT
-NB. dsymvu    symmetric    UT
-NB. zhemvl    Hermitian    LT
-NB. zhemvu    Hermitian    UT
+NB. Monad     Domain     A            Reads in A
+NB. dsymvl    real       symmetric    LT
+NB. dsymvu    real       symmetric    UT
+NB. zhemvl    complex    Hermitian    LT
+NB. zhemvu    complex    Hermitian    UT
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -268,27 +271,27 @@ zhemvl=: 'u'&zhemvcore
 zhemvu=: 'l'&zhemvcore
 
 NB. ---------------------------------------------------------
-NB. Monad       A     Reads in A    Operation
-NB. dtrmvlnn    L      LT           x := A   * x
-NB. dtrmvlnu    L1    SLT           x := A   * x
-NB. dtrmvltn    L      LT           x := A^T * x
-NB. dtrmvltu    L1    SLT           x := A^T * x
-NB. dtrmvunn    U      UT           x := A   * x
-NB. dtrmvunu    U1    SUT           x := A   * x
-NB. dtrmvutn    U      UT           x := A^T * x
-NB. dtrmvutu    U1    SUT           x := A^T * x
-NB. ztrmvlnn    L      LT           x := A   * x
-NB. ztrmvlnu    L1    SLT           x := A   * x
-NB. ztrmvltn    L      LT           x := A^T * x
-NB. ztrmvltu    L1    SLT           x := A^T * x
-NB. ztrmvlcn    L      LT           x := A^H * x
-NB. ztrmvlcu    L1    SLT           x := A^H * x
-NB. ztrmvunn    U      UT           x := A   * x
-NB. ztrmvunu    U1    SUT           x := A   * x
-NB. ztrmvutn    U      UT           x := A^T * x
-NB. ztrmvutu    U1    SUT           x := A^T * x
-NB. ztrmvucn    U      UT           x := A^H * x
-NB. ztrmvucu    U1    SUT           x := A^H * x
+NB. Monad       Domain     A     Reads in A    op(A)
+NB. dtrmvlnn    real       L      LT           A
+NB. dtrmvlnu    real       L1    SLT           A
+NB. dtrmvltn    real       L      LT           A^T
+NB. dtrmvltu    real       L1    SLT           A^T
+NB. dtrmvunn    real       U      UT           A
+NB. dtrmvunu    real       U1    SUT           A
+NB. dtrmvutn    real       U      UT           A^T
+NB. dtrmvutu    real       U1    SUT           A^T
+NB. ztrmvlnn    complex    L      LT           A
+NB. ztrmvlnu    complex    L1    SLT           A
+NB. ztrmvltn    complex    L      LT           A^T
+NB. ztrmvltu    complex    L1    SLT           A^T
+NB. ztrmvlcn    complex    L      LT           A^H
+NB. ztrmvlcu    complex    L1    SLT           A^H
+NB. ztrmvunn    complex    U      UT           A
+NB. ztrmvunu    complex    U1    SUT           A
+NB. ztrmvutn    complex    U      UT           A^T
+NB. ztrmvutu    complex    U1    SUT           A^T
+NB. ztrmvucn    complex    U      UT           A^H
+NB. ztrmvucu    complex    U1    SUT           A^H
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:

@@ -257,9 +257,9 @@ ger=: 1 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    Operation
-NB. gerc     A := alpha * x * y^H + A
-NB. geru     A := alpha * x * y^T + A
+NB. Monad    op(y)
+NB. gerc     y^H
+NB. geru     y^T
 NB.
 NB. Description:
 NB.   Performs the rank 1 operation:
@@ -315,11 +315,11 @@ her=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    A            R/W in A    Operation
-NB. syrl     symmetric    LT          A := alpha * x * x^T + A
-NB. syru     symmetric    UT          A := alpha * x * x^T + A
-NB. herl     Hermitian    LT          A := alpha * x * x^H + A
-NB. heru     Hermitian    UT          A := alpha * x * x^H + A
+NB. Monad    A            R/W in A    op(x)
+NB. syrl     symmetric    LT          x^T
+NB. syru     symmetric    UT          x^T
+NB. herl     Hermitian    LT          x^H
+NB. heru     Hermitian    UT          x^H
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 1 operation:
@@ -384,11 +384,11 @@ her2=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    A            R/W in A    Operation
-NB. syr2l    symmetric    LT          A := alpha * x * y^T +      alpha  * y * x^T + A
-NB. syr2u    symmetric    UT          A := alpha * x * y^T +      alpha  * y * x^T + A
-NB. her2l    Hermitian    LT          A := alpha * x * y^H + conj(alpha) * y * x^H + A
-NB. her2u    Hermitian    UT          A := alpha * x * y^H + conj(alpha) * y * x^H + A
+NB. Monad    A            R/W in A    op1(v)    op2(alpha)
+NB. syr2l    symmetric    LT          v^T       alpha
+NB. syr2u    symmetric    UT          v^T       alpha
+NB. her2l    Hermitian    LT          v^H       conj(alpha)
+NB. her2u    Hermitian    UT          v^H       conj(alpha)
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2 operation:
@@ -454,15 +454,15 @@ herk=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad     C            diag(C),alpha,beta    R/W in C    Action
-NB. syrkln    symmetric    any                   LT          C := alpha * A   * A^T + beta * C
-NB. syrklt    symmetric    any                   LT          C := alpha * A^T * A   + beta * C
-NB. syrkun    symmetric    any                   UT          C := alpha * A   * A^T + beta * C
-NB. syrkut    symmetric    any                   UT          C := alpha * A^T * A   + beta * C
-NB. herkln    Hermitian    real                  LT          C := alpha * A   * A^H + beta * C
-NB. herklc    Hermitian    real                  LT          C := alpha * A^H * A   + beta * C
-NB. herkun    Hermitian    real                  UT          C := alpha * A   * A^H + beta * C
-NB. herkuc    Hermitian    real                  UT          C := alpha * A^H * A   + beta * C
+NB. Monad     C            alpha,beta    R/W in C    op1(A)    op2(A)
+NB. syrkln    symmetric    any           LT          A         A^T
+NB. syrklt    symmetric    any           LT          A^T       A
+NB. syrkun    symmetric    any           UT          A         A^T
+NB. syrkut    symmetric    any           UT          A^T       A
+NB. herkln    Hermitian    real          LT          A         A^H
+NB. herklc    Hermitian    real          LT          A^H       A
+NB. herkun    Hermitian    real          UT          A         A^H
+NB. herkuc    Hermitian    real          UT          A^H       A
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank k operation:
@@ -548,15 +548,15 @@ r2k=: 2 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad      C            diag(C),beta    R/W in C    Operation
-NB. syr2kln    symmetric    any             LT          C := alpha * A   * B^T +      alpha  * B   * A^T + beta * C
-NB. syr2klt    symmetric    any             LT          C := alpha * A^T * B   +      alpha  * B^T * A   + beta * C
-NB. syr2kun    symmetric    any             UT          C := alpha * A   * B^T +      alpha  * B   * A^T + beta * C
-NB. syr2kut    symmetric    any             UT          C := alpha * A^T * B   +      alpha  * B^T * A   + beta * C
-NB. her2kln    Hermitian    real            LT          C := alpha * A   * B^H + conj(alpha) * B   * A^H + beta * C
-NB. her2klc    Hermitian    real            LT          C := alpha * A^H * B   + conj(alpha) * B^H * A   + beta * C
-NB. her2kun    Hermitian    real            UT          C := alpha * A   * B^H + conj(alpha) * B   * A^H + beta * C
-NB. her2kuc    Hermitian    real            UT          C := alpha * A^H * B   + conj(alpha) * B^H * A   + beta * C
+NB. Monad      C            beta    R/W in C    op1(M)    op2(M)    op3(alpha)
+NB. syr2kln    symmetric    any     LT          M         M^T       alpha
+NB. syr2klt    symmetric    any     LT          M^T       M         alpha
+NB. syr2kun    symmetric    any     UT          M         M^T       alpha
+NB. syr2kut    symmetric    any     UT          M^T       M         alpha
+NB. her2kln    Hermitian    real    LT          M         M^H       conj(alpha)
+NB. her2klc    Hermitian    real    LT          M^H       M         conj(alpha)
+NB. her2kun    Hermitian    real    UT          M         M^H       conj(alpha)
+NB. her2kuc    Hermitian    real    UT          M^H       M         conj(alpha)
 NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2k operation:
@@ -628,10 +628,10 @@ gemv=: 1 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad    Operation
-NB. gemvn    C := alpha * A   * x + beta * y
-NB. gemvt    C := alpha * A^T * x + beta * y
-NB. gemvc    C := alpha * A^H * x + beta * y
+NB. Monad    op(A)
+NB. gemvn    A
+NB. gemvt    A^T
+NB. gemvc    A^H
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -686,11 +686,11 @@ NB.           he4geu  NB. UT, A is Hermitian
 hemv=: gemv
 
 NB. ---------------------------------------------------------
-NB. Monad    A            diag(A)    Reads in A
-NB. symvl    symmetric    any        LT
-NB. symvu    symmetric    any        UT
-NB. hemvl    Hermitian    real       LT
-NB. hemvu    Hermitian    real       UT
+NB. Monad    A            Reads in A
+NB. symvl    symmetric    LT
+NB. symvu    symmetric    UT
+NB. hemvl    Hermitian    LT
+NB. hemvu    Hermitian    UT
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -758,19 +758,19 @@ trmv=: 1 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Monad      Reads in A    Operation
-NB. trmvlnn     LT           x := L    * x
-NB. trmvlnu    SLT           x := L1   * x
-NB. trmvltn     LT           x := L ^T * x
-NB. trmvltu    SLT           x := L1^T * x
-NB. trmvlcn     LT           x := L ^H * x
-NB. trmvlcu    SLT           x := L1^H * x
-NB. trmvunn     UT           x := U    * x
-NB. trmvunu    SUT           x := U1   * x
-NB. trmvutn     UT           x := U ^T * x
-NB. trmvutu    SUT           x := U1^T * x
-NB. trmvucn     UT           x := U ^H * x
-NB. trmvucu    SUT           x := U1^H * x
+NB. Monad      A     Reads in A    op(A)
+NB. trmvlnn    L      LT           A
+NB. trmvlnu    L1    SLT           A
+NB. trmvltn    L      LT           A^T
+NB. trmvltu    L1    SLT           A^T
+NB. trmvlcn    L      LT           A^H
+NB. trmvlcu    L1    SLT           A^H
+NB. trmvunn    U      UT           A
+NB. trmvunu    U1    SUT           A
+NB. trmvutn    U      UT           A^T
+NB. trmvutu    U1    SUT           A^T
+NB. trmvucn    U      UT           A^H
+NB. trmvucu    U1    SUT           A^H
 NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
@@ -836,16 +836,16 @@ NB.           product=. A mul B
 gemm=: 1 : '(0&{:: * 1&{:: u 2&{::) + 3&{:: * 4&{::'
 
 NB. ---------------------------------------------------------
-NB. Monad     Operation
-NB. gemmnn    C := alpha * A   * B   + beta * C
-NB. gemmnt    C := alpha * A   * B^T + beta * C
-NB. gemmnc    C := alpha * A   * B^H + beta * C
-NB. gemmtn    C := alpha * A^T * B   + beta * C
-NB. gemmtt    C := alpha * A^T * B^T + beta * C
-NB. gemmtc    C := alpha * A^T * B^H + beta * C
-NB. gemmcn    C := alpha * A^H * B   + beta * C
-NB. gemmct    C := alpha * A^H * B^T + beta * C
-NB. gemmcc    C := alpha * A^H * B^H + beta * C
+NB. Monad     op1(A)    op2(B)
+NB. gemmnn    A         B
+NB. gemmnt    A         B^T
+NB. gemmnc    A         B^H
+NB. gemmtn    A^T       B
+NB. gemmtt    A^T       B^T
+NB. gemmtc    A^T       B^H
+NB. gemmcn    A^H       B
+NB. gemmct    A^H       B^T
+NB. gemmcc    A^H       B^H
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
@@ -914,21 +914,21 @@ NB.           product=. AA mul B
 hemm=: gemm
 
 NB. ---------------------------------------------------------
-NB. Monad     A            diag(A)    Reads in A    Operation
-NB. symmll    symmetric    any        LT            C := alpha * A * B + beta * C
-NB. symmlu    symmetric    any        UT            C := alpha * A * B + beta * C
-NB. symmrl    symmetric    any        LT            C := alpha * B * A + beta * C
-NB. symmru    symmetric    any        UT            C := alpha * B * A + beta * C
-NB. hemmll    Hermitian    real       LT            C := alpha * A * B + beta * C
-NB. hemmlu    Hermitian    real       UT            C := alpha * A * B + beta * C
-NB. hemmrl    Hermitian    real       LT            C := alpha * B * A + beta * C
-NB. hemmru    Hermitian    real       UT            C := alpha * B * A + beta * C
+NB. Monad     A            Side    Reads in A
+NB. symmll    symmetric    (1)     LT
+NB. symmlu    symmetric    (1)     UT
+NB. symmrl    symmetric    (2)     LT
+NB. symmru    symmetric    (2)     UT
+NB. hemmll    Hermitian    (1)     LT
+NB. hemmlu    Hermitian    (1)     UT
+NB. hemmrl    Hermitian    (2)     LT
+NB. hemmru    Hermitian    (2)     UT
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
-NB.     C := alpha * A * B + beta * C
+NB.     C := alpha * A * B + beta * C  (1)
 NB.   or
-NB.     C := alpha * B * A + beta * C
+NB.     C := alpha * B * A + beta * C  (2)
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
@@ -1003,37 +1003,37 @@ NB.             mp        NB. to compute (2)
 trmm=: 1 : '(0&{:: * 2&{::) u 1&{::'
 
 NB. ---------------------------------------------------------
-NB. Monad       A     Reads in A    Operation
-NB. trmmllnn    L      LT           B := alpha * A   * B
-NB. trmmllnu    L1    SLT           B := alpha * A   * B
-NB. trmmlltn    L      LT           B := alpha * A^T * B
-NB. trmmlltu    L1    SLT           B := alpha * A^T * B
-NB. trmmllcn    L      LT           B := alpha * A^H * B
-NB. trmmllcu    L1    SLT           B := alpha * A^H * B
-NB. trmmlunn    U      UT           B := alpha * A   * B
-NB. trmmlunu    U1    SUT           B := alpha * A   * B
-NB. trmmlutn    U      UT           B := alpha * A^T * B
-NB. trmmlutu    U1    SUT           B := alpha * A^T * B
-NB. trmmlucn    U      UT           B := alpha * A^H * B
-NB. trmmlucu    U1    SUT           B := alpha * A^H * B
-NB. trmmrlnn    L      LT           B := alpha * B * A
-NB. trmmrlnu    L1    SLT           B := alpha * B * A
-NB. trmmrltn    L      LT           B := alpha * B * A^T
-NB. trmmrltu    L1    SLT           B := alpha * B * A^T
-NB. trmmrlcn    L      LT           B := alpha * B * A^H
-NB. trmmrlcu    L1    SLT           B := alpha * B * A^H
-NB. trmmrunn    U      UT           B := alpha * B * A
-NB. trmmrunu    U1    SUT           B := alpha * B * A
-NB. trmmrutn    U      UT           B := alpha * B * A^T
-NB. trmmrutu    U1    SUT           B := alpha * B * A^T
-NB. trmmrucn    U      UT           B := alpha * B * A^H
-NB. trmmrucu    U1    SUT           B := alpha * B * A^H
+NB. Monad       Side    A     Reads in A    op(A)
+NB. trmmllnn    (1)     L      LT           A
+NB. trmmllnu    (1)     L1    SLT           A
+NB. trmmlltn    (1)     L      LT           A^T
+NB. trmmlltu    (1)     L1    SLT           A^T
+NB. trmmllcn    (1)     L      LT           A^H
+NB. trmmllcu    (1)     L1    SLT           A^H
+NB. trmmlunn    (1)     U      UT           A
+NB. trmmlunu    (1)     U1    SUT           A
+NB. trmmlutn    (1)     U      UT           A^T
+NB. trmmlutu    (1)     U1    SUT           A^T
+NB. trmmlucn    (1)     U      UT           A^H
+NB. trmmlucu    (1)     U1    SUT           A^H
+NB. trmmrlnn    (2)     L      LT           A
+NB. trmmrlnu    (2)     L1    SLT           A
+NB. trmmrltn    (2)     L      LT           A^T
+NB. trmmrltu    (2)     L1    SLT           A^T
+NB. trmmrlcn    (2)     L      LT           A^H
+NB. trmmrlcu    (2)     L1    SLT           A^H
+NB. trmmrunn    (2)     U      UT           A
+NB. trmmrunu    (2)     U1    SUT           A
+NB. trmmrutn    (2)     U      UT           A^T
+NB. trmmrutu    (2)     U1    SUT           A^T
+NB. trmmrucn    (2)     U      UT           A^H
+NB. trmmrucu    (2)     U1    SUT           A^H
 NB.
 NB. Description:
 NB.   Performs the matrix-matrix operation:
-NB.     B := alpha * op(A) * B
+NB.     B := alpha * op(A) * B  (1)
 NB.   or
-NB.     B := alpha * B * op(A)
+NB.     B := alpha * B * op(A)  (2)
 NB.   where A is triangular
 NB.
 NB. Syntax:
@@ -1133,19 +1133,19 @@ NB.             ct              NB. op(A) := A^H
 trsv=: trmv
 
 NB. ---------------------------------------------------------
-NB. Monad      Reads in A    Solves
-NB. trsvlnn     LT           L    * x = b
-NB. trsvlnu    SLT           L1   * x = b
-NB. trsvltn     LT           L ^T * x = b
-NB. trsvltu    SLT           L1^T * x = b
-NB. trsvlcn     LT           L ^H * x = b
-NB. trsvlcu    SLT           L1^H * x = b
-NB. trsvunn     UT           U    * x = b
-NB. trsvunu    SUT           U1   * x = b
-NB. trsvutn     UT           U ^T * x = b
-NB. trsvutu    SUT           U1^T * x = b
-NB. trsvucn     UT           U ^H * x = b
-NB. trsvucu    SUT           U1^H * x = b
+NB. Monad      A     Reads in A    op(A)
+NB. trsvlnn    L      LT           A
+NB. trsvlnu    L1    SLT           A
+NB. trsvltn    L      LT           A^T
+NB. trsvltu    L1    SLT           A^T
+NB. trsvlcn    L      LT           A^H
+NB. trsvlcu    L1    SLT           A^H
+NB. trsvunn    U      UT           A
+NB. trsvunu    U1    SUT           A
+NB. trsvutn    U      UT           A^T
+NB. trsvutu    U1    SUT           A^T
+NB. trsvucn    U      UT           A^H
+NB. trsvucu    U1    SUT           A^H
 NB.
 NB. Description:
 NB.   Solves the equation:
@@ -1218,38 +1218,38 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb        Reads in A    Solves
-NB. trsmllnn     LT           L    * X = alpha * B
-NB. trsmllnu    SLT           L1   * X = alpha * B
-NB. trsmlltn     LT           L ^T * X = alpha * B
-NB. trsmlltu    SLT           L1^T * X = alpha * B
-NB. trsmllcn     LT           L ^H * X = alpha * B
-NB. trsmllcu    SLT           L1^H * X = alpha * B
-NB. trsmlunn     UT           U    * X = alpha * B
-NB. trsmlunu    SUT           U1   * X = alpha * B
-NB. trsmlutn     UT           U ^T * X = alpha * B
-NB. trsmlutu    SUT           U1^T * X = alpha * B
-NB. trsmlucn     UT           U ^H * X = alpha * B
-NB. trsmlucu    SUT           U1^H * X = alpha * B
-NB. trsmrlnn     LT           X * L    = alpha * B
-NB. trsmrlnu    SLT           X * L1   = alpha * B
-NB. trsmrltn     LT           X * L ^T = alpha * B
-NB. trsmrltu    SLT           X * L1^T = alpha * B
-NB. trsmrlcn     LT           X * L ^H = alpha * B
-NB. trsmrlcu    SLT           X * L1^H = alpha * B
-NB. trsmrunn     UT           X * U    = alpha * B
-NB. trsmrunu    SUT           X * U1   = alpha * B
-NB. trsmrutn     UT           X * U ^T = alpha * B
-NB. trsmrutu    SUT           X * U1^T = alpha * B
-NB. trsmrucn     UT           X * U ^H = alpha * B
-NB. trsmrucu    SUT           X * U1^H = alpha * B
+NB. Verb        Side    A     Reads in A    op(A)
+NB. trsmllnn    (1)     L      LT           A
+NB. trsmllnu    (1)     L1    SLT           A
+NB. trsmlltn    (1)     L      LT           A^T
+NB. trsmlltu    (1)     L1    SLT           A^T
+NB. trsmllcn    (1)     L      LT           A^H
+NB. trsmllcu    (1)     L1    SLT           A^H
+NB. trsmlunn    (1)     U      UT           A
+NB. trsmlunu    (1)     U1    SUT           A
+NB. trsmlutn    (1)     U      UT           A^T
+NB. trsmlutu    (1)     U1    SUT           A^T
+NB. trsmlucn    (1)     U      UT           A^H
+NB. trsmlucu    (1)     U1    SUT           A^H
+NB. trsmrlnn    (2)     L      LT           A
+NB. trsmrlnu    (2)     L1    SLT           A
+NB. trsmrltn    (2)     L      LT           A^T
+NB. trsmrltu    (2)     L1    SLT           A^T
+NB. trsmrlcn    (2)     L      LT           A^H
+NB. trsmrlcu    (2)     L1    SLT           A^H
+NB. trsmrunn    (2)     U      UT           A
+NB. trsmrunu    (2)     U1    SUT           A
+NB. trsmrutn    (2)     U      UT           A^T
+NB. trsmrutu    (2)     U1    SUT           A^T
+NB. trsmrucn    (2)     U      UT           A^H
+NB. trsmrucu    (2)     U1    SUT           A^H
 NB.
 NB. Description:
 NB.   Ambivalent verb to solve the linear monomial matrix
 NB.   equation:
-NB.     op(A) * X = alpha * B
+NB.     op(A) * X = alpha * B  (1)
 NB.   or
-NB.     X * op(A) = alpha * B
+NB.     X * op(A) = alpha * B  (2)
 NB.   where A is triangular
 NB.
 NB. Syntax:

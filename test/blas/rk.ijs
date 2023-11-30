@@ -36,8 +36,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. dsyrkcore
-NB. zsyrkcore
+NB. Dyad         Domain
+NB. dsyrkcore    real
+NB. zsyrkcore    complex
 NB.
 NB. Description:
 NB.   Performs the symmetric rank k operation:
@@ -140,15 +141,15 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad      R/W in C    Operation
-NB. dsyrkln    LT          C := alpha * A   * A^T + beta * C
-NB. dsyrklt    LT          C := alpha * A^T * A   + beta * C
-NB. dsyrkun    UT          C := alpha * A   * A^T + beta * C
-NB. dsyrkut    UT          C := alpha * A^T * A   + beta * C
-NB. zsyrkln    LT          C := alpha * A   * A^T + beta * C
-NB. zsyrklt    LT          C := alpha * A^T * A   + beta * C
-NB. zsyrkun    UT          C := alpha * A   * A^T + beta * C
-NB. zsyrkut    UT          C := alpha * A^T * A   + beta * C
+NB. Monad      Domain     R/W in C    op1(A)    op2(A)
+NB. dsyrkln    real       LT          A         A^T
+NB. dsyrklt    real       LT          A^T       A
+NB. dsyrkun    real       UT          A         A^T
+NB. dsyrkut    real       UT          A^T       A
+NB. zsyrkln    complex    LT          A         A^T
+NB. zsyrklt    complex    LT          A^T       A
+NB. zsyrkun    complex    UT          A         A^T
+NB. zsyrkut    complex    UT          A^T       A
 NB.
 NB. Description:
 NB.   Performs the symmetric rank k operation:
@@ -194,11 +195,11 @@ zsyrkun=: 'lt'&zsyrkcore
 zsyrkut=: 'ln'&zsyrkcore
 
 NB. ---------------------------------------------------------
-NB. Monad      R/W in C    Operation
-NB. zherkln    LT          C := alpha * A   * A^H + beta * C
-NB. zherklt    LT          C := alpha * A^H * A   + beta * C
-NB. zherkun    UT          C := alpha * A   * A^H + beta * C
-NB. zherkut    UT          C := alpha * A^H * A   + beta * C
+NB. Monad      Domain     R/W in C    op1(A)    op2(A)
+NB. zherkln    complex    LT          A         A^H
+NB. zherklt    complex    LT          A^H       A
+NB. zherkun    complex    UT          A         A^H
+NB. zherkut    complex    UT          A^H       A
 NB.
 NB. Description:
 NB.   Performs the hermitian rank k operation:

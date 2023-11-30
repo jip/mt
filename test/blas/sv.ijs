@@ -35,8 +35,9 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. dtrsvcore
-NB. ztrsvcore
+NB. Dyad         Domain
+NB. dtrsvcore    real
+NB. ztrsvcore    complex
 NB.
 NB. Description:
 NB.   Solves the equation:
@@ -92,27 +93,27 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Monad       Reads in A    Solves
-NB. dtrsvlnn     LT           L    * x = b
-NB. dtrsvlnu    SLT           L1   * x = b
-NB. dtrsvltn     LT           L ^T * x = b
-NB. dtrsvltu    SLT           L1^T * x = b
-NB. dtrsvunn     UT           U    * x = b
-NB. dtrsvunu    SUT           U1   * x = b
-NB. dtrsvutn     UT           U ^T * x = b
-NB. dtrsvutu    SUT           U1^T * x = b
-NB. ztrsvlnn     LT           L    * x = b
-NB. ztrsvlnu    SLT           L1   * x = b
-NB. ztrsvltn     LT           L ^T * x = b
-NB. ztrsvltu    SLT           L1^T * x = b
-NB. ztrsvlcn     LT           L ^H * x = b
-NB. ztrsvlcu    SLT           L1^H * x = b
-NB. ztrsvunn     UT           U    * x = b
-NB. ztrsvunu    SUT           U1   * x = b
-NB. ztrsvutn     UT           U ^T * x = b
-NB. ztrsvutu    SUT           U1^T * x = b
-NB. ztrsvucn     UT           U ^H * x = b
-NB. ztrsvucu    SUT           U1^H * x = b
+NB. Monad       Domain     A     Reads in A    op(A)
+NB. dtrsvlnn    real       L      LT           A
+NB. dtrsvlnu    real       L1    SLT           A
+NB. dtrsvltn    real       L      LT           A^T
+NB. dtrsvltu    real       L1    SLT           A^T
+NB. dtrsvunn    real       U      UT           A
+NB. dtrsvunu    real       U1    SUT           A
+NB. dtrsvutn    real       U      UT           A^T
+NB. dtrsvutu    real       U1    SUT           A^T
+NB. ztrsvlnn    complex    L      LT           A
+NB. ztrsvlnu    complex    L1    SLT           A
+NB. ztrsvltn    complex    L      LT           A^T
+NB. ztrsvltu    complex    L1    SLT           A^T
+NB. ztrsvlcn    complex    L      LT           A^H
+NB. ztrsvlcu    complex    L1    SLT           A^H
+NB. ztrsvunn    complex    U      UT           A
+NB. ztrsvunu    complex    U1    SUT           A
+NB. ztrsvutn    complex    U      UT           A^T
+NB. ztrsvutu    complex    U1    SUT           A^T
+NB. ztrsvucn    complex    U      UT           A^H
+NB. ztrsvucu    complex    U1    SUT           A^H
 NB.
 NB. Description:
 NB.   Solves the equation:

@@ -371,8 +371,8 @@ NB.             trlpick  NB. LT
 NB.             trupick  NB. UT
 NB.   trans - monad to define the form of op1(v) and op2(s),
 NB.           is one of:
-NB.             |:      NB. the symmetric operation: op1(v) = v^T, op2(s) = s
-NB.             ct      NB. the hermitian operation: op1(v) = v^H, op2(s) = conj(s)
+NB.             |:       NB. the symmetric operation: op1(v) = v^T, op2(s) = s
+NB.             ct       NB. the hermitian operation: op1(v) = v^H, op2(s) = conj(s)
 
 her2=: 2 : 0
   'alpha xx incx y incy AA'=. y
@@ -524,8 +524,8 @@ NB.             slxuy  NB. take SLT from CC, and UT from the matrix computed
 NB.             suxly  NB. take SUT from CC, and LT from the matrix computed
 NB.   trans - monad to define the form of op1(M) and op2(s),
 NB.           is one of:
-NB.             |:      NB. the symmetric operation: op1(M) = M^T, op2(s) = s
-NB.             ct      NB. the hermitian operation: op1(M) = M^H, op2(s) = conj(s)
+NB.             |:     NB. the symmetric operation: op1(M) = M^T, op2(s) = s
+NB.             ct     NB. the hermitian operation: op1(M) = M^H, op2(s) = conj(s)
 NB.   kind  - boolean scalar to define operation:
 NB.             0      NB. (2)
 NB.             1      NB. (1)

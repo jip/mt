@@ -5,23 +5,24 @@ NB.   Compute the eigenvalues and, optionally, eigenvectors
 NB.   for non-complex square symmetric matrix
 NB.
 NB. Syntax:
-NB.   'w V'=. (jobV ; uplo) dsyev A
+NB.   'w V'=. (jobV ; uplo) dsyev AA
 NB. where
 NB.   jobV - literal, case-insensitive, in which the head
 NB.          specifies whether to compute V:
 NB.            'N' - to not compute
 NB.            'V' - to compute
 NB.   uplo - literal, case-insensitive, in which the head
-NB.          specifies which triangular part of A is to be
+NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower
 NB.            'U' - upper
-NB.   A    - n×n-matrix, real, symmetric or lower or upper
-NB.          triangular
+NB.   AA   - n×n-matrix, real, contains either lower or upper
+NB.          or both part(s) of A
+NB.   A    - n×n-matrix, real, symmetric, to be decomposed
 NB.   w    - n-vector, real, eigenvalues of A
 NB.   V    - n×n-matrix, real, eigenvectors of A or
 NB.          0×0-matrix
-NB.   n    ≥ 0, the size of A, V and w
+NB.   n    ≥ 0, the size of A, AA, V and w
 NB.
 NB. Notes:
 NB. - verbs below are loaded into the current locale

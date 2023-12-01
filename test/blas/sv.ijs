@@ -44,7 +44,7 @@ NB.     op(A) * x = b
 NB.   with transposed matrix, where A is triangular
 NB.
 NB. Syntax:
-NB.   x=. (uplo ; trans ; diag) xtrsvcore At ; b ; incb
+NB.   x=. (uplo ; trans ; diag) xtrsvcore AAt ; b ; incb
 NB. where
 NB.   uplo  - literal, case-insensitive, in which the head
 NB.           specifies whether the matrix A is upper or
@@ -62,11 +62,12 @@ NB.            specifies the form of A:
 NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal
 NB.                  NB.   elements of A are not referenced
-NB.   At    - n×n-matrix, A^T
+NB.   AAt   - n×n-matrix, contains either non-zero or both
+NB.           part(s) of A^T
 NB.   b     - (1+(n-1)*|incx|)-vector, the RHS
 NB.   incb  ≠ 0, the increment for the elements of b and x
 NB.   x     - the same shape as b, the solution
-NB.   n     ≥ 0, the size of matrix A and vectors b and x
+NB.   n     ≥ 0, the size of matrices A and AAt
 NB.
 NB. Notes:
 NB. - operate on transposed matrix to avoid transposition
@@ -117,14 +118,14 @@ NB.     op(A) * x = b
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   x=. xtrsvxxx A ; b ; incb
+NB.   x=. xtrsvxxx AA ; b ; incb
 NB. where
-NB.   A    - n×n-matrix, contains either L, L1, U or U1
-NB.          (unit diagonal is not stored)
+NB.   AA   - n×n-matrix, contains either non-zero or both
+NB.          part(s) of A
 NB.   b    - (1+(n-1)*|incb|)-vector, the RHS
 NB.   incb ≠ 0, the increment for the elements of b and x
 NB.   x    - the same shape as b, the solution
-NB.   n    ≥ 0, the size of matrix A, vectors b and x
+NB.   n    ≥ 0, the size of matrices A and AA
 NB.
 NB. Notes:
 NB. - monad       provides BLAS'

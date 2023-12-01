@@ -94,7 +94,7 @@ NB.   with transposed matrix, where A is Hermitian
 NB.   (symmetric)
 NB.
 NB. Syntax:
-NB.   yupd=. uplo xxxmvcore alpha ; At ; x ; incx ; beta ; y ; incy
+NB.   yupd=. uplo xxxmvcore alpha ; AAt ; x ; incx ; beta ; y ; incy
 NB. where
 NB.   uplo  - literal, case-insensitive, in which the head
 NB.           specifies which triangular part of A is to be
@@ -102,28 +102,29 @@ NB.           referenced:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
 NB.   alpha - scalar
-NB.   At    - n×n-matrix with real diagonal, A^T
+NB.   AAt   - n×n-matrix, contains either lower or upper or
+NB.           both part(s) of A^T
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   beta  - scalar
 NB.   y     - (1+(n-1)*|incy|)-vector
 NB.   incy  ≠ 0, the increment for the elements of y
 NB.   yupd  - an updated y
-NB.   n     ≥ 0, the size of A
+NB.   n     ≥ 0, the size of A and AAt
 NB.
 NB. Notes:
 NB. - operates on transposed matrix to avoid transposition
 
 dsymvcore=: (4 : 0) ([ assert@(basiccs1 , basiccr6))
-  'alpha At xx incx beta y incy'=. y
-  n=. # At
-  9 {:: dsymvcd (, x) ; (, n) ; (, alpha) ; At ; (, 1 >. n) ; xx ; (, incx) ; (, beta) ; y ; , incy
+  'alpha AAt xx incx beta y incy'=. y
+  n=. # AAt
+  9 {:: dsymvcd (, x) ; (, n) ; (, alpha) ; AAt ; (, 1 >. n) ; xx ; (, incx) ; (, beta) ; y ; , incy
 )
 
 zhemvcore=: (4 : 0) ([ assert@(basiccs1 , basiccr6))
-  'alpha At xx incx beta y incy'=. y
-  n=. # At
-  9 {:: zhemvcd (, x) ; (, n) ; (, alpha) ; At ; (, 1 >. n) ; xx ; (, incx) ; (, beta) ; y ; , incy
+  'alpha AAt xx incx beta y incy'=. y
+  n=. # AAt
+  9 {:: zhemvcd (, x) ; (, n) ; (, alpha) ; AAt ; (, 1 >. n) ; xx ; (, incx) ; (, beta) ; y ; , incy
 )
 
 NB. ---------------------------------------------------------
@@ -136,7 +137,7 @@ NB.     x := op(A) * x
 NB.   with transposed matrix, where A is triangular
 NB.
 NB. Syntax:
-NB.   xupd=. (uplo ; trans ; diag) xtrmvcore At ; x ; incx
+NB.   xupd=. (uplo ; trans ; diag) xtrmvcore AAt ; x ; incx
 NB. where
 NB.   uplo  - literal, case-insensitive, in which the head
 NB.           specifies whether the matrix A is upper or
@@ -154,27 +155,28 @@ NB.           specifies the form of A:
 NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal
 NB.                  NB.   elements of A are not referenced
-NB.   At    - n×n-matrix, A^T
+NB.   AAt   - n×n-matrix, contains either non-zero or both
+NB.           part(s) of A^T
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   xupd  - an updated x
-NB.   n     ≥ 0, the size of A
+NB.   n     ≥ 0, the size of A and AAt
 NB.
 NB. Notes:
 NB. - operate on transposed matrix to avoid transposition
 
 dtrmvcore=: (4 : 0) ([ assert@(basiccs0 , basiccr1))
   'uplo trans diag'=. x
-  'At y incy'=. y
-  n=. # At
-  7 {:: dtrmvcd (, uplo) ; (, trans) ; (, diag) ; (, n) ; At ; (, 1 >. n) ; y ; , incy
+  'AAt y incy'=. y
+  n=. # AAt
+  7 {:: dtrmvcd (, uplo) ; (, trans) ; (, diag) ; (, n) ; AAt ; (, 1 >. n) ; y ; , incy
 )
 
 ztrmvcore=: (4 : 0) ([ assert@(basiccs0 , basiccr1))
   'uplo trans diag'=. x
-  'At y incy'=. y
-  n=. # At
-  7 {:: ztrmvcd (, uplo) ; (, trans) ; (, diag) ; (, n) ; At ; (, 1 >. n) ; y ; , incy
+  'AAt y incy'=. y
+  n=. # AAt
+  7 {:: ztrmvcd (, uplo) ; (, trans) ; (, diag) ; (, n) ; AAt ; (, 1 >. n) ; y ; , incy
 )
 
 NB. =========================================================
@@ -236,17 +238,19 @@ NB.     y := alpha * A * x + beta * y
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   yupd=. xxxmvx alpha ; A ; x ; incx ; beta ; y ; incy
+NB.   yupd=. xxxmvx alpha ; AA ; x ; incx ; beta ; y ; incy
 NB. where
 NB.   alpha - scalar
-NB.   A     - n×n-matrix with real diagonal
+NB.   AA    - n×n-matrix, contains either lower or upper or
+NB.           both part(s) of A
+NB.   A     - n×n-matrix, Hermitian (symmetric)
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   beta  - scalar
 NB.   y     - (1+(n-1)*|incy|)-vector
 NB.   incy  ≠ 0, the increment for the elements of y
 NB.   yupd  - an updated y
-NB.   n     ≥ 0, the size of A
+NB.   n     ≥ 0, the size of A and AA
 NB.
 NB. Notes:
 NB. - monad     provides BLAS'
@@ -290,14 +294,15 @@ NB.     x := op(A) * x
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   xupd=. xtrmvxxx A ; x ; incx
+NB.   xupd=. xtrmvxxx AA ; x ; incx
 NB. where
-NB.   A    - n×n-matrix, contains either L, L1, U or U1
-NB.          (unit diagonal is not stored)
+NB.   AA   - n×n-matrix, contains either non-zero or both
+NB.          part(s) of A
+NB.   A    - n×n-matrix, triangular
 NB.   x    - (1+(n-1)*|incx|)-vector
 NB.   incx ≠ 0, the increment for the elements of x
 NB.   xupd - an updated x
-NB.   n    ≥ 0, the size of A
+NB.   n    ≥ 0, the size of A and AA
 NB.
 NB. Notes:
 NB. - monad       provides BLAS'

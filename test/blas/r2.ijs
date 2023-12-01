@@ -46,22 +46,23 @@ NB.   with transposed matrix, where A is Hermitian
 NB.   (symmetric)
 NB.
 NB. Syntax:
-NB.   Aupdt=. uplo xxxr2core alpha ; x ; incx ; y ; incy ; At
+NB.   AAupdt=. uplo xxxr2core alpha ; x ; incx ; y ; incy ; AAt
 NB. where
 NB.   uplo  - literal, case-insensitive, in which the head
 NB.           specifies which triangular part of A is to be
 NB.           referenced:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
-NB.   alpha - scalar
-NB.   x     - (1+(n-1)*|incx|)-vector
-NB.   incx  ≠ 0, the increment for the elements of x
-NB.   y     - (1+(n-1)*|incy|)-vector
-NB.   incy  ≠ 0, the increment for the elements of y
-NB.   At    - n×n-matrix with real diagonal, A^T
-NB.   Aupdt - At with either LT (if uplo='U') or UT (if
+NB.   alpha  - scalar
+NB.   x      - (1+(n-1)*|incx|)-vector
+NB.   incx   ≠ 0, the increment for the elements of x
+NB.   y      - (1+(n-1)*|incy|)-vector
+NB.   incy   ≠ 0, the increment for the elements of y
+NB.   AAt    - n×n-matrix, contains either lower or upper or
+NB.            both part(s) of A^T
+NB.   AAupdt - AAt with either LT (if uplo='U') or UT (if
 NB.           uplo='L') updated
-NB.   n     ≥ 0, the size of A and Aupdt
+NB.   n      ≥ 0, the size of A, AAt and AAupdt
 NB.
 NB. Notes:
 NB. - operate on transposed matrices to avoid transposition
@@ -93,17 +94,19 @@ NB.   Performs the hermitian (symmetric) rank 2 operation
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Aupd=. xxxr2x alpha ; x ; incx ; y ; incy ; A
+NB.   AAupd=. xxxr2x alpha ; x ; incx ; y ; incy ; AA
 NB. where
 NB.   alpha - scalar
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   y     - (1+(n-1)*|incy|)-vector
 NB.   incy  ≠ 0, the increment for the elements of y
-NB.   A     - n×n-matrix with real diagonal
-NB.   Aupd  - A with either LT (for xxxr2l) or UT (for
+NB.   AA    - n×n-matrix, contains either lower or upper or
+NB.           both part(s) of A
+NB.   AAupd - AA with either LT (for xxxr2l) or UT (for
 NB.           xxxr2u) updated
-NB.   n     ≥ 0, the size of A and Aupd
+NB.   A     - n×n-matrix, Hermitian (symmetric)
+NB.   n     ≥ 0, the size of A, AA and AAupd
 NB.
 NB. Notes:
 NB. - dsyr2l provides BLAS' DSYR2('L',...)

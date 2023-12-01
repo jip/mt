@@ -6,15 +6,17 @@ NB.   (symmetric) positive definite matrix using the
 NB.   factorization computed by xPOTRF
 NB.
 NB. Syntax:
-NB.   X=. uplo xpotrs T ; B
+NB.   X=. uplo xpotrs AA ; B
 NB. where
 NB.   uplo - literal, case-insensitive, in which the head
-NB.           specifies which triangular part of A is to be
+NB.           specifies which triangular part of AA is to be
 NB.           referenced:
 NB.            'L' - lower, the form is:
 NB.                    L * L^H = A
 NB.            'U' - upper, the form is:
 NB.                    U^H * U = A
+NB.   AA   - n×n-matrix, contains either non-zero or both
+NB.          part(s) of T
 NB.   T    - n×n-matrix, L or U factor
 NB.   B    - n×nrhs-matrix, RHS
 NB.   X    - n×nrhs-matrix, solutions of equation:

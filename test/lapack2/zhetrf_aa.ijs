@@ -5,17 +5,18 @@ NB.   Compute the factorization of a Hermitian matrix using
 NB.   the Aasen's algorithm
 NB.
 NB. Syntax:
-NB.   'DT1 ipiv'=. uplo zhetrf_aa A
+NB.   'DT1 ipiv'=. uplo zhetrf_aa AA
 NB. where
 NB.   uplo - literal, case-insensitive, in which the head
-NB.          specifies which triangular part of A is to be
+NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower, the form is:
 NB.                    P * L1 * D * L1^H * P^H = A
 NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^H * P^H = A
-NB.   A    - n×n-matrix, Hermitian or upper or lower
-NB.          triangular
+NB.   AA   - n×n-matrix, contains either lower or upper or
+NB.          both part(s) of A
+NB.   A    - n×n-matrix, Hermitian
 NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define P
 NB.   D    - n×n-matrix, Hermitian tridiagonal (opposite
@@ -26,7 +27,7 @@ NB.          is not stored)
 NB.   U1   - n×n-matrix, unit upper triangular (unit diagonal
 NB.          is not stored)
 NB.   P    - n×n-matrix, boolean, the permutation matrix
-NB.   n    ≥ 0, the size of A, D, L1, U1 and P
+NB.   n    ≥ 0, the size of A, AA, D, L1, U1 and P
 NB.
 NB. Notes:
 NB. - verbs below are loaded into the current locale

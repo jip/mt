@@ -47,34 +47,36 @@ NB.   with transposed matrix, where A is Hermitian
 NB.   (symmetric)
 NB.
 NB. Syntax:
-NB.   Aupdt=. uplo xxxrcore alpha ; x ; incx ; At
+NB.   AAupdt=. uplo xxxrcore alpha ; x ; incx ; AAt
 NB. where
 NB.   uplo  - literal, case-insensitive, in which the head
 NB.           specifies which triangular part of A is to be
 NB.           referenced:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
-NB.   alpha - scalar, real
-NB.   x     - (1+(n-1)*|incx|)-vector
-NB.   incx  ≠ 0, the increment for the elements of x
-NB.   At    - n×n-matrix with real diagonal, A^T
-NB.   Aupdt - At with either LT (if uplo='U') or UT (if
-NB.           uplo='L') updated
-NB.   n     ≥ 0, the size of A and Aupdt
+NB.   alpha  - scalar, real
+NB.   x      - (1+(n-1)*|incx|)-vector
+NB.   incx   ≠ 0, the increment for the elements of x
+NB.   AAt    - n×n-matrix, contains either lower or upper or
+NB.            both part(s) of A^T
+NB.   AAupdt - AAt with either LT (if uplo='U') or UT (if
+NB.            uplo='L') updated
+NB.   A      - n×n-matrix, Hermitian (symmetric)
+NB.   n      ≥ 0, the size of A, AAt and AAupdt
 NB.
 NB. Notes:
 NB. - operate on transposed matrices to avoid transposition
 
 dsyrcore=: (4 : 0) ([ assert@(basiccs3 , basiccr2))
-  'alpha y incy At'=. y
-  n=. # At
-  6 {:: dsyrcd (, x) ; (, n) ; (, alpha) ; y ; (, incy) ; At ; , 1 >. n
+  'alpha y incy AAt'=. y
+  n=. # AAt
+  6 {:: dsyrcd (, x) ; (, n) ; (, alpha) ; y ; (, incy) ; AAt ; , 1 >. n
 )
 
 zhercore=: (4 : 0) ([ assert@(basiccs3 , basiccr2))
-  'alpha y incy At'=. y
-  n=. # At
-  6 {:: zhercd (, x) ; (, n) ; (, alpha) ; y ; (, incy) ; At ; , 1 >. n
+  'alpha y incy AAt'=. y
+  n=. # AAt
+  6 {:: zhercd (, x) ; (, n) ; (, alpha) ; y ; (, incy) ; AAt ; , 1 >. n
 )
 
 NB. =========================================================
@@ -143,15 +145,17 @@ NB.   Performs the hermitian (symmetric) rank 1 operation
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Aupd=. xxxrx alpha ; x ; incx ; A
+NB.   AAupd=. xxxrx alpha ; x ; incx ; AA
 NB. where
 NB.   alpha - scalar, real
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
-NB.   A     - n×n-matrix with real diagonal
-NB.   Aupd  - A with either LT (for xxxrl) or UT (for xxxru)
+NB.   AA    - n×n-matrix, contains either lower or upper or
+NB.           both part(s) of A
+NB.   AAupd - AA with either LT (for xxxrl) or UT (for xxxru)
 NB.           updated
-NB.   n     ≥ 0, the size of A and Aupd
+NB.   A     - n×n-matrix, Hermitian (symmetric)
+NB.   n     ≥ 0, the size of A, AA and AAupd
 NB.
 NB. Notes:
 NB. - monad    provides BLAS'

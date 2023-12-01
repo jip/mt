@@ -110,7 +110,7 @@ NB.   with transposed matrices, where A is Hermitian
 NB.   (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupdt=. (side ; uplo) xsymmcore alpha ; At ; Bt ; beta ; Ct
+NB.   Cupdt=. (side ; uplo) xsymmcore alpha ; AAt ; Bt ; beta ; Ct
 NB. where
 NB.   side  - literal, case-insensitive, in which the head
 NB.           specifies the side of A:
@@ -122,8 +122,8 @@ NB.           referenced:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
 NB.   alpha - scalar
-NB.   At    - ma×ma-matrix, A^T, diagonal must be real for
-NB.           dsymmcore and zhemmcore
+NB.   AAt   - ma×ma-matrix, contains either lower or upper or
+NB.           both part(s) of A^T
 NB.   Bt    - n×m-matrix, B^T
 NB.   beta  - scalar
 NB.   Ct    - n×m-matrix, C^T
@@ -137,26 +137,26 @@ NB. - operate on transposed matrices to avoid transposition
 
 dsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'side uplo'=. x
-  'alpha At Bt beta Ct'=. y
+  'alpha AAt Bt beta Ct'=. y
   'n m'=. $ Ct
   ld=. , 1 >. m
-  11 {:: dsymmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; ld ; (, beta) ; Ct ; ld
+  11 {:: dsymmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
 )
 
 zsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'side uplo'=. x
-  'alpha At Bt beta Ct'=. y
+  'alpha AAt Bt beta Ct'=. y
   'n m'=. $ Ct
   ld=. , 1 >. m
-  11 {:: zsymmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; ld ; (, beta) ; Ct ; ld
+  11 {:: zsymmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
 )
 
 zhemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'side uplo'=. x
-  'alpha At Bt beta Ct'=. y
+  'alpha AAt Bt beta Ct'=. y
   'n m'=. $ Ct
   ld=. , 1 >. m
-  11 {:: zhemmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; ld ; (, beta) ; Ct ; ld
+  11 {:: zhemmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
 )
 
 NB. ---------------------------------------------------------
@@ -171,7 +171,7 @@ NB.     B := alpha * B * op(A)  (2)
 NB.   with transposed matrices, where A is triangular
 NB.
 NB. Syntax:
-NB.   Bupdt=. (side ; uplo ; trans ; diag) xtrmmcore alpha ; At ; Bt
+NB.   Bupdt=. (side ; uplo ; trans ; diag) xtrmmcore alpha ; AAt ; Bt
 NB. where
 NB.   side  - literal, case-insensitive, in which the head
 NB.           specifies the side of op(A):
@@ -194,7 +194,7 @@ NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal
 NB.                  NB.   elements of A are not referenced
 NB.   alpha - scalar
-NB.   At    - k×k-matrix, A^T
+NB.   AAt   - k×k-matrix, contains A^T
 NB.   Bt    - n×m-matrix, B^T
 NB.   Bupdt - an updated Bt
 NB.   m     ≥ 0, the number of rows in B
@@ -206,16 +206,16 @@ NB. - operate on transposed matrices to avoid transposition
 
 dtrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'side uplo trans diag'=. x
-  'alpha At Bt'=. y
+  'alpha AAt Bt'=. y
   'n m'=. $ Bt
-  10 {:: dtrmmcd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; , 1 >. m
+  10 {:: dtrmmcd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; , 1 >. m
 )
 
 ztrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'side uplo trans diag'=. x
-  'alpha At Bt'=. y
+  'alpha AAt Bt'=. y
   'n m'=. $ Bt
-  10 {:: ztrmmcd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; , 1 >. m
+  10 {:: ztrmmcd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; , 1 >. m
 )
 
 NB. =========================================================
@@ -313,11 +313,12 @@ NB.     C := alpha * B * A + beta * C
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupd=. xxxmmxx alpha ; A ; B ; beta ; C
+NB.   Cupd=. xxxmmxx alpha ; AA ; B ; beta ; C
 NB. where
 NB.   alpha - scalar
-NB.   A     - ma×ma-matrix, diagonal must be real for
-NB.           dsymmxx and zhemmxx
+NB.   AA    - ma×ma-matrix, contains either lower or upper or
+NB.           both part(s) of A
+NB.   A     - ma×ma-matrix, Hermitian (symmetric)
 NB.   B     - m×n-matrix
 NB.   beta  - scalar
 NB.   C     - m×n-matrix
@@ -407,11 +408,12 @@ NB.     B := alpha * B * op(A)
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   Bupd=. xtrmmxxxx alpha ; A ; B
+NB.   Bupd=. xtrmmxxxx alpha ; AA ; B
 NB. where
 NB.   alpha - scalar
-NB.   A     - k×k-matrix, contains either L, L1, U or U1
-NB.           (unit diagonal is not stored)
+NB.   AA    - k×k-matrix, contains either non-zero or both
+NB.           part(s) of A
+NB.   A     - k×k-matrix, triangular
 NB.   B     - m×n-matrix
 NB.   Bupd  - an updated B
 NB.   m     ≥ 0, the number of rows in B and Bupd

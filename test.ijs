@@ -1922,12 +1922,14 @@ NB.   error for the basic hermitian (symmetric) matrix-vector
 NB.   operations
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; A ; x ; incx ; beta ; y ; incy) (xxmvx chk2mv) yapprox
+NB.   berr=. (alpha ; AA ; x ; incx ; beta ; y ; incy) (xxmvx chk2mv) yapprox
 NB. where
 NB.   xxmvx   - monad, the reference implementation to
 NB.             compute yexact:
-NB.               yexact=. xxmvx (alpha ; A ; x ; incx ; beta ; y ; incy)
+NB.               yexact=. xxmvx (alpha ; AA ; x ; incx ; beta ; y ; incy)
 NB.   alpha   - scalar
+NB.   AA      - n×n-matrix, contains either LT or UT or both
+NB.             part(s) of A
 NB.   x       - (1+(n-1)*|incx|)-vector
 NB.   incx    ≠ 0, the increment for the elements of x
 NB.   beta    - scalar
@@ -1937,7 +1939,7 @@ NB.   A       - n×n-matrix with real diagonal
 NB.   yapprox - the same shape as y, the approximate yexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for yapprox
-NB.   n       ≥ 0, size of A, x, y, yexact and yapprox
+NB.   n       ≥ 0, size of A and AA
 NB.
 NB. Formula:
 NB.   n := size(A)
@@ -1970,24 +1972,23 @@ NB.   error for the basic hermitian (symmetric) matrix-matrix
 NB.   operations
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; A ; B ; beta ; C) (xxmmxx chk2mm trxpick) Capprox
+NB.   berr=. (alpha ; AA ; B ; beta ; C) (xxmmxx chk2mm trxpick) Capprox
 NB. where
 NB.   xxmmxx  - monad, the reference implementation to
 NB.             compute Cexact:
-NB.               Cexact=. xxmmxx (alpha ; A ; B ; beta ; C)
+NB.               Cexact=. xxmmxx (alpha ; AA ; B ; beta ; C)
 NB.   trxpick - monad to pick triangular part, is one of:
 NB.               trlpick_mt_  NB. if xxmmxl_mt_ is used
 NB.               trupick_mt_  NB. if xxmmxu_mt_ is used
 NB.   alpha   - scalar
-NB.   A       - ma×ma-matrix
+NB.   A       - ma×ma-matrix, Hermitian (symmetric)
+NB.   AA      - ma×ma-matrix, contains either LT or UT or
+NB.             both part(s) of A
 NB.   B       - m×n-matrix
 NB.   beta    - scalar
 NB.   C       - m×n-matrix
 NB.   Capprox - the same shape as C, computed by the verb
-NB.             being tested, where LT (if xxmmxl_mt_ was
-NB.             tested) or UT (if xxmmxu_mt_ was tested)
-NB.             approximates Cexact, and the rest elements
-NB.             weren't changed and match C
+NB.             being tested, approximates Cexact
 NB.   m       ≥ 0, the number of rows in C and B
 NB.   n       ≥ 0, the number of columns in C and B
 NB.   ma      = m for xxmmlx_mt_ or ma = n for xxmmux_mt_
@@ -2025,18 +2026,20 @@ NB.   error for the basic matrix-vector operations with
 NB.   triangular matrix
 NB.
 NB. Syntax:
-NB.   berr=. (A ; x ; incx) (trmvxxx chk3mv) xapprox
+NB.   berr=. (AA ; x ; incx) (trmvxxx chk3mv) xapprox
 NB. where
 NB.   trmvxxx - monad, the reference implementation to
 NB.             compute xexact:
-NB.               xexact=. trmvxxx (A ; x ; incx)
-NB.   A       - n×n-matrix
+NB.               xexact=. trmvxxx (AA ; x ; incx)
+NB.   A       - n×n-matrix, triangular
+NB.   AA      - n×n-matrix, contains either non-zero or both
+NB.             part(s) of A
 NB.   x       - (1+(n-1)*|incx|)-vector
 NB.   incx    ≠ 0, the increment for the elements of x
 NB.   xapprox - the same shape as x, the approximate xexact, is
 NB.             computed by the verb being tested
 NB.   berr    ≥ 0, the relative backward error for xapprox
-NB.   n       ≥ 0, size of A
+NB.   n       ≥ 0, size of A and AA
 NB.
 NB. Formula:
 NB.   n := size(A)
@@ -2069,17 +2072,18 @@ NB.   error for the basic matrix-matrix operations with
 NB.   triangular matrix
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; A ; B) (trmmxxxx chk3mm trxpick) Bapprox
+NB.   berr=. (alpha ; AA ; B) (trmmxxxx chk3mm trxpick) Bapprox
 NB. where
 NB.   trmmxxxx - monad, the reference implementation to
 NB.              compute Bexact:
-NB.                Bexact=. trmmxxxx (alpha ; A ; B)
+NB.                Bexact=. trmmxxxx (alpha ; AA ; B)
 NB.   trxpick  - monad to pick triangular part, is one of:
 NB.                trlpick_mt_  NB. if trmmxl_mt_ is used
 NB.                trupick_mt_  NB. if trmmxu_mt_ is used
 NB.   alpha    - scalar
-NB.   A        - k×k-matrix, contains either L, L1, U or U1
-NB.              (unit diagonal is not stored)
+NB.   A        - k×k-matrix, triangular
+NB.   AA       - k×k-matrix, contains either non-zero or both
+NB.              part(s) of A
 NB.   B        - m×n-matrix
 NB.   Bapprox  - the same shape as B, the approximate Bexact, is
 NB.              computed by the verb being tested
@@ -2121,12 +2125,13 @@ NB.   error for the basic equation solvers with triangular
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   berr=. (A ; b ; incb) (trmvxxx chk3sv) xapprox
+NB.   berr=. (AA ; b ; incb) (trmvxxx chk3sv) xapprox
 NB. where
 NB.   trmvxxx - monad to compute matrix-vector product:
-NB.               bapprox=. trmvxxx (A ; xapprox ; incx)
-NB.   A       - n×n-matrix, contains either L, L1, U or U1
-NB.             (unit diagonal is not stored)
+NB.               bapprox=. trmvxxx (AA ; xapprox ; incx)
+NB.   A       - n×n-matrix, triangular
+NB.   AA      - n×n-matrix, contains either non-zero or both
+NB.             part(s) of A
 NB.   b       - (1+(n-1)*|incb|)-vector, the RHS
 NB.   incb    ≠ 0, the increment for the elements of b and
 NB.             xapprox
@@ -2134,9 +2139,8 @@ NB.   xapprox - the same shape as b, the approximate
 NB.             solution, is computed by the verb being
 NB.             tested
 NB.   berr    ≥ 0, the relative backward error for xapprox
-NB.   bapprox - the same shape as b, the approximate b, is
-NB.             computed by trsmxxxx
-NB.   n       ≥ 0, the size of A
+NB.   bapprox - the same shape as b, the approximate b
+NB.   n       ≥ 0, the size of A and AA
 NB.
 NB. Formula:
 NB.   n := size(A)
@@ -2172,13 +2176,14 @@ NB.   error for the basic matrix equation solvers with
 NB.   triangular matrix
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; A ; B) (trmmxxxx chk3sm) Xapprox
+NB.   berr=. (alpha ; AA ; B) (trmmxxxx chk3sm) Xapprox
 NB. where
 NB.   trmmxxxx - monad to compute matrix-matrix product:
-NB.                alphabyBapprox=. trmmxxxx (1 ; A ; Xapprox)
+NB.                alphabyBapprox=. trmmxxxx (1 ; AA ; Xapprox)
 NB.   alpha    - scalar
-NB.   A        - k×k-matrix, contains either L, L1, U or U1
-NB.              (unit diagonal is not stored)
+NB.   A        - k×k-matrix, triangular
+NB.   AA       - k×k-matrix, contains either non-zero or both
+NB.              part(s) of A
 NB.   B        - m×n-matrix, RHS
 NB.   Xapprox  - the same shape as B, approximate solutions,
 NB.              are computed by the verb being tested
@@ -2268,29 +2273,31 @@ NB.   error for the basic hermitian (symmetric) rank k
 NB.   operations
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; A ; beta ; C) (xxrkxx chk4rk trxpick) Capprox
+NB.   berr=. (alpha ; A ; beta ; CC) (xxrkxx chk4rk trxpick) CCapprox
 NB. where
-NB.   xxrkxx  - monad, the reference implementation to
-NB.             compute Cexact:
-NB.               Cexact=. xxrkxx (alpha ; A ; beta ; C)
-NB.   trxpick - monad to pick triangular part, is one of:
-NB.               trlpick_mt_  NB. if xxrklx_mt_ is used
-NB.               trupick_mt_  NB. if xxrkux_mt_ is used
-NB.   alpha   - scalar
-NB.   A       - na×ka-matrix
-NB.   beta    - scalar
-NB.   C       - n×n-matrix with real diagonal
-NB.   Capprox - the same shape as C, computed by the verb
-NB.             being tested, where LT (if xxrklx_mt_ was
-NB.             tested) or UT (if xxrkux_mt_ was tested)
-NB.             approximates Cexact, and the rest elements
-NB.             weren't changed and match C
-NB.   berr    ≥ 0, the relative backward error for Capprox
-NB.   n       ≥ 0, the size of C, Cexact and Capprox and the
-NB.             number of rows or columns in A
-NB.   k       ≥ 0, the number of columns or rows in A
-NB.   ka      = k for xxrkxn_mt_ testing or ka = n otherwise
-NB.   na      = n for xxrkxn_mt_ testing or na = k otherwise
+NB.   xxrkxx   - monad, the reference implementation to
+NB.              compute CCexact:
+NB.                CCexact=. xxrkxx (alpha ; A ; beta ; CC)
+NB.   trxpick  - monad to pick triangular part, is one of:
+NB.                trlpick_mt_  NB. if xxrklx_mt_ is used
+NB.                trupick_mt_  NB. if xxrkux_mt_ is used
+NB.   alpha    - scalar, must be real for herkxx
+NB.   A        - na×ka-matrix
+NB.   beta     - scalar, must be real for herkxx
+NB.   C        - n×n-matrix, Hermitian (symmetric)
+NB.   CC       - n×n-matrix, contains either LT or UT or both
+NB.              part(s) of C
+NB.   CCapprox - the same shape as CC, computed by the verb
+NB.              being tested, where LT (for xxrklx_mt_) or
+NB.              UT (for xxrkux_mt_) approximates CCexact,
+NB.              and the rest elements weren't changed and
+NB.              match CC
+NB.   berr     ≥ 0, the relative backward error for CCapprox
+NB.   n        ≥ 0, the size of C, CC, CCexact and CCapprox,
+NB.              and the number of rows or columns in A
+NB.   k        ≥ 0, the number of columns or rows in A
+NB.   ka       = k for xxrkxn_mt_ or ka = n otherwise
+NB.   na       = n for xxrkxn_mt_ or na = k otherwise
 NB.
 NB. Formula:
 NB.   (n,k) := shape(A)
@@ -2325,26 +2332,26 @@ NB.   error for the basic hermitian (symmetric) rank 1
 NB.   operations
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; x ; incx ; A) (xxrx chk5r trxpick) Aapprox
+NB.   berr=. (alpha ; x ; incx ; AA) (xxrx chk5r trxpick) AAapprox
 NB. where
-NB.   herx    - monad, the reference implementation to
-NB.             compute Aexact:
-NB.               Aexact=. xxrx (alpha ; x ; incx ; A)
-NB.   trxpick - monad to pick triangular part, is one of:
-NB.               trlpick_mt_  NB. if herl_mt_ is used
-NB.               trupick_mt_  NB. if heru_mt_ is used
-NB.   alpha   - scalar
-NB.   x       - (1+(n-1)*|incx|)-vector
-NB.   incx    ≠ 0, the increment for the elements of x
-NB.   A       - n×n-matrix with real diagonal
-NB.   Aapprox - the same shape as A, computed by the verb being
-NB.             tested, with the lower triangle (if
-NB.             xxxrl_mtbla_ was tested) or upper triangle
-NB.             (if xxxru_mtbla_ was tested) approximates
-NB.             Aexact, and the rest elements are not changed
-NB.             and match A
-NB.   berr    ≥ 0, the relative backward error for Aapprox
-NB.   n       ≥ 0, the size of A, Aexact and Aapprox
+NB.   xxrx     - monad, the reference implementation to
+NB.              compute AAexact:
+NB.                AAexact=. xxrx (alpha ; x ; incx ; AA)
+NB.   trxpick  - monad to pick triangular part, is one of:
+NB.                trlpick_mt_  NB. if xxrl_mt_ is used
+NB.                trupick_mt_  NB. if xxru_mt_ is used
+NB.   alpha    - scalar
+NB.   x        - (1+(n-1)*|incx|)-vector
+NB.   incx     ≠ 0, the increment for the elements of x
+NB.   A        - n×n-matrix, Hermitian (symmetric)
+NB.   AA       - n×n-matrix, contains either LT or UT or both
+NB.              part(s) of A
+NB.   AAapprox - the same shape as A, computed by the verb
+NB.              being tested, with LT (for xxrl_mt_) or UT
+NB.              (for xxru_mt_) approximates AAexact, and the
+NB.              rest elements weren't changed and match AA
+NB.   berr     ≥ 0, the relative backward error for AAapprox
+NB.   n        ≥ 0, the size of A, AA, AAexact and AAapprox
 NB.
 NB. Formula:
 NB.   n := size(A)
@@ -2379,32 +2386,32 @@ NB.   error for the basic hermitian (symmetric) rank 2k
 NB.   operations
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; A ; B ; beta ; C) (xxr2kxx chk5r2k trxpick) Capprox
+NB.   berr=. (alpha ; A ; B ; beta ; CC) (xxr2kxx chk5r2k trxpick) CCapprox
 NB. where
-NB.   xxr2kxx - monad, the reference implementation to
-NB.             compute Cexact:
-NB.               Cexact=. xxr2kxx (alpha ; A ; B ; beta ; C)
-NB.   trxpick - monad to pick triangular part, is one of:
-NB.               trlpick_mt_  NB. if xxr2klx_mt_ is used
-NB.               trupick_mt_  NB. if xxr2kux_mt_ is used
-NB.   alpha   - scalar
-NB.   A       - nab×kab-matrix
-NB.   B       - nab×kab-matrix
-NB.   beta    - scalar
-NB.   C       - n×n-matrix with real diagonal
-NB.   Capprox - the same shape as C, computed by the verb
-NB.             being tested, where LT (if xxr2klx_mt_ was
-NB.             tested) or UT (if xxr2kux_mt_ was tested)
-NB.             approximates Cexact, and the rest elements
-NB.             weren't changed and match C
-NB.   berr    ≥ 0, the relative backward error for Capprox
-NB.   n       ≥ 0, the size of C, Cexact and Capprox and the
-NB.             number of rows or columns in A and B
-NB.   k       ≥ 0, the number of columns or rows in A and B
-NB.   kab     = k for xxr2kxn_mt_ testing or kab = n
-NB.             otherwise
-NB.   nab     = n for xxr2kxn_mt_ testing or nab = k
-NB.             otherwise
+NB.   xxr2kxx  - monad, the reference implementation to
+NB.              compute CCexact:
+NB.                CCexact=. xxr2kxx (alpha ; A ; B ; beta ; CC)
+NB.   trxpick  - monad to pick triangular part, is one of:
+NB.                trlpick_mt_  NB. if xxr2klx_mt_ is used
+NB.                trupick_mt_  NB. if xxr2kux_mt_ is used
+NB.   alpha    - scalar
+NB.   A        - nab×kab-matrix
+NB.   B        - nab×kab-matrix
+NB.   beta     - scalar, must be real for her2kxx
+NB.   C        - n×n-matrix, Hermitian (symmetric)
+NB.   CC       - n×n-matrix, contains either LT or UT or both
+NB.              part(s) of C
+NB.   CCapprox - n×n-matrix, computed by the verb being
+NB.              tested, where LT (for xxr2klx_mt_) or UT
+NB.              (for xxr2kux_mt_) approximates CCexact, and
+NB.              the rest elements weren't changed and match
+NB.              CC
+NB.   berr     ≥ 0, the relative backward error for CCapprox
+NB.   n        ≥ 0, the size of C, CC, CCexact and CCapprox,
+NB.              and the number of rows or columns in A and B
+NB.   k        ≥ 0, the number of columns or rows in A and B
+NB.   kab      = k for xxr2kxn_mt_ or kab = n otherwise
+NB.   nab      = n for xxr2kxn_mt_ or nab = k otherwise
 NB.
 NB. Formula:
 NB.   (n,k) := shape(A)
@@ -2439,28 +2446,29 @@ NB.   error for the basic hermitian (symmetric) rank 2
 NB.   operations
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; x ; incx ; y ; incy ; A) (her2x chk6r2 trxpick) Aapprox
+NB.   berr=. (alpha ; x ; incx ; y ; incy ; AA) (xxr2x chk6r2 trxpick) AAapprox
 NB. where
-NB.   her2x   - monad, the reference implementation to
-NB.             compute Aexact:
-NB.               Aexact=. her2x (alpha ; x ; incx ; y ; incy ; A)
-NB.   trxpick - monad to pick triangular part, is one of:
-NB.               trlpick_mt_  NB. if her2l_mt_ is used
-NB.               trupick_mt_  NB. if her2u_mt_ is used
-NB.   alpha   - scalar
-NB.   x       - (1+(n-1)*|incx|)-vector
-NB.   incx    ≠ 0, the increment for the elements of x
-NB.   y       - (1+(n-1)*|incy|)-vector
-NB.   incy    ≠ 0, the increment for the elements of y
-NB.   A       - n×n-matrix with real diagonal
-NB.   Aapprox - the same shape as A, computed by the verb being
-NB.             tested, with the lower triangle (if
-NB.             xxxr2l_mtbla_ was tested) or upper triangle
-NB.             (if xxxr2u_mtbla_ was tested) approximates
-NB.             Aexact, and the rest elements are not changed
-NB.             and match A
-NB.   berr    ≥ 0, the relative backward error for Aapprox
-NB.   n       ≥ 0, the size of A, Aexact and Aapprox
+NB.   xxr2x    - monad, the reference implementation to
+NB.              compute AAexact:
+NB.                AAexact=. xxr2x (alpha ; x ; incx ; y ; incy ; AA)
+NB.   trxpick  - monad to pick triangular part, is one of:
+NB.                trlpick_mt_  NB. if xxr2l_mt_ is used
+NB.                trupick_mt_  NB. if xxr2u_mt_ is used
+NB.   alpha    - scalar
+NB.   x        - (1+(n-1)*|incx|)-vector
+NB.   incx     ≠ 0, the increment for the elements of x
+NB.   y        - (1+(n-1)*|incy|)-vector
+NB.   incy     ≠ 0, the increment for the elements of y
+NB.   A        - n×n-matrix, Hermitian (symmetric)
+NB.   AA       - n×n-matrix, contains either LT or UT or both
+NB.              part(s) of A
+NB.   AAapprox - the same shape as AA, computed by the verb
+NB.              being tested, with LT (for xxr2l_mt_) or UT
+NB.              (for xxr2u_mt_) approximates AAexact, and
+NB.              the rest elements weren't changed and match
+NB.              AA
+NB.   berr     ≥ 0, the relative backward error for AAapprox
+NB.   n        ≥ 0, the size of A, AA, AAexact and AAapprox
 NB.
 NB. Formula:
 NB.   n := size(A)

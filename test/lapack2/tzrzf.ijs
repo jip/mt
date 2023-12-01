@@ -5,10 +5,11 @@ NB.   Reduce an upper trapezoidal matrix to upper triangular
 NB.   form by an unitary (orthogonal) transformations
 NB.
 NB. Syntax:
-NB.   'RZf tau'=. xtzrzf A
+NB.   'RZf tau'=. xtzrzf AA
 NB. where
-NB.   A   - m×n-matrix, the leading upper trapezoidal part of
-NB.         it must contain the matrix to be factored
+NB.   AA  - m×n-matrix, contains A in the leading upper
+NB.         trapezoidal part
+NB.   A   - m×n-matrix, upper trapezoidal, to be factored
 NB.   RZf - m×n-matrix, R and Zf combined
 NB.   tau - m-vector, scalar factors of elementary
 NB.         reflectors applied to A

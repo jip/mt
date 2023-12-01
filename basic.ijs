@@ -294,7 +294,7 @@ NB.     A := alpha * x * op(x) + A
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Aupd=. (cmp her mul) alpha ; x ; incx ; A
+NB.   AAupd=. (cmp her mul) alpha ; x ; incx ; AA
 NB. where
 NB.   cmp - dyad to define which triangular part of A is to
 NB.         be referenced, is one of:
@@ -305,9 +305,9 @@ NB.           *      NB. the symmetric operation: op(A) := A^T
 NB.           (* +)  NB. the hermitian operation: op(A) := A^H
 
 her=: 2 : 0
-  'alpha y incy A'=. y
+  'alpha y incy AA'=. y
   y=. incy extract_mt_ y
-  A=. A + u/~&i.@#`(0&,:)} alpha (] */ v) y
+  AA=. AA + u/~&i.@#`(0&,:)} alpha (] */ v) y
 )
 
 NB. ---------------------------------------------------------
@@ -322,15 +322,17 @@ NB.   Performs the hermitian (symmetric) rank 1 operation
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Aupd=. xxrx alpha ; x ; incx ; A
+NB.   AAupd=. xxrx alpha ; x ; incx ; AA
 NB. where
 NB.   alpha - scalar, real
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
-NB.   A     - n×n-matrix with real diagonal
-NB.   Aupd  - A with either LT (for xxrl) or UT (for xxru)
+NB.   A     - n×n-matrix, Hermitian (symmetric)
+NB.   AA    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of A
+NB.   AAupd - AA with either LT (for xxrl) or UT (for xxru)
 NB.           updated
-NB.   n     ≥ 0, the size of A and Aupd
+NB.   n     ≥ 0, the size of A, AA and AAupd
 NB.
 NB. Notes:
 NB. - syrl models BLAS' DSYR('L',...) with the following
@@ -357,7 +359,7 @@ NB.     A := alpha * x * op1(y) + op2(alpha) * y * op1(x) + A
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Aupd=. (cmp her2 trans) alpha ; x ; incx ; y ; incy ; A
+NB.   AAupd=. (cmp her2 trans) alpha ; x ; incx ; y ; incy ; AA
 NB. where
 NB.   cmp   - dyad to define which triangular part of A is to
 NB.           be referenced, is one of:
@@ -369,10 +371,10 @@ NB.             |:      NB. the symmetric operation: op1(v) = v^T, op2(s) = s
 NB.             ct_mt_  NB. the hermitian operation: op1(v) = v^H, op2(s) = conj(s)
 
 her2=: 2 : 0
-  'alpha xx incx y incy A'=. y
+  'alpha xx incx y incy AA'=. y
   xx=. incx extract_mt_ xx
   y=.  incy extract_mt_ y
-  A=. A + u/~&i.@#`(0&,:)} (+ v)~ xx */ alpha * v y
+  AA=. AA + u/~&i.@#`(0&,:)} (+ v)~ xx */ alpha * v y
 )
 
 NB. ---------------------------------------------------------
@@ -387,17 +389,19 @@ NB.   Performs the hermitian (symmetric) rank 2 operation
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Aupd=. xxr2x alpha ; x ; incx ; y ; incy ; A
+NB.   AAupd=. xxr2x alpha ; x ; incx ; y ; incy ; AA
 NB. where
 NB.   alpha - scalar
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   y     - (1+(n-1)*|incy|)-vector
 NB.   incy  ≠ 0, the increment for the elements of y
-NB.   A     - n×n-matrix with real diagonal
-NB.   Aupd  - A with either LT (for xxr2l) or UT (for xxr2u)
-NB.           updated
-NB.   n     ≥ 0, the size of A and Aupd
+NB.   A     - n×n-matrix, Hermitian (symmetric)
+NB.   AA    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of A
+NB.   AAupd - AA with either LT (for xxr2l) or UT (for
+NB.           xxr2u) updated
+NB.   n     ≥ 0, the size of A, AA and AAupd
 NB.
 NB. Notes:
 NB. - syr2l models BLAS' DSYR2('L',...) with the following
@@ -426,7 +430,7 @@ NB.     C := alpha * op(A) * A + beta * C
 NB.   where C is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupd=. (cmp herk mul) alpha ; A ; beta ; C
+NB.   CCupd=. (cmp herk mul) alpha ; A ; beta ; CC
 NB. where
 NB.   cmp - dyad to define which triangular part of A is to
 NB.         be referenced, is one of:
@@ -437,8 +441,8 @@ NB.         (op(A) * A), is called as:
 NB.           product=. mul A
 
 herk=: 2 : 0
-  'alpha A beta C'=. y
-  C=. u/~&i.@c_mt_`]} C ,: (alpha * v~ A) + beta * C
+  'alpha A beta CC'=. y
+  CC=. u/~&i.@c_mt_`]} CC ,: (alpha * v~ A) + beta * CC
 )
 
 NB. ---------------------------------------------------------
@@ -457,16 +461,18 @@ NB.   Performs the hermitian (symmetric) rank k operation
 NB.   where C is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupd=. xxrkxx alpha ; A ; beta ; C
+NB.   CCupd=. xxrkxx alpha ; A ; beta ; CC
 NB. where
 NB.   alpha - scalar, must be real for herkxx
 NB.   A     - na×ka-matrix
 NB.   beta  - scalar, must be real for herkxx
-NB.   C     - n×n-matrix, diagonal must be real for herkxx
-NB.   Cupd  - C with either LT (for xxrklx) or UT (for
+NB.   C     - n×n-matrix, Hermitian (symmetric)
+NB.   CC    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of C
+NB.   CCupd - CC with either LT (for xxrklx) or UT (for
 NB.           xxrkux) updated
-NB.   n     ≥ 0, the size of C and Cupd and the number of
-NB.           rows or columns in A
+NB.   n     ≥ 0, the size of C, CC and CCupd and the number
+NB.           of rows or columns in A
 NB.   k     ≥ 0, the number of columns or rows in A
 NB.   ka    = k for xxrkxn or ka = n otherwise
 NB.   na    = n for xxrkxn or na = k otherwise
@@ -505,7 +511,7 @@ NB.     C := alpha * op1(A) * B + op2(alpha) * op1(B) * A + beta * C  (2)
 NB.   where C is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupd=. (cmp`trans r2k kind) alpha ; A ; B ; beta ; C
+NB.   CCupd=. (cmp`trans r2k kind) alpha ; A ; B ; beta ; CC
 NB. where
 NB.   cmp   - dyad to define which triangular part of A is to
 NB.           be referenced, is one of:
@@ -527,8 +533,8 @@ NB.   C1 inline, use switch N4 to control A3 behavior, the
 NB.   resulting train becomes (V0`V2 C1 N4)
 
 r2k=: 2 : 0
-  'alpha A B beta C'=. y
-  C=. m@.0/~&i.@c_mt_`]} C ,: ((+ m@.1) alpha * A (mp_mt_~ m@.1)~`(mp_mt_ m@.1)@.n B) + beta * C
+  'alpha A B beta CC'=. y
+  CC=. m@.0/~&i.@c_mt_`]} CC ,: ((+ m@.1) alpha * A (mp_mt_~ m@.1)~`(mp_mt_ m@.1)@.n B) + beta * CC
 )
 
 NB. ---------------------------------------------------------
@@ -547,17 +553,19 @@ NB.   Performs the hermitian (symmetric) rank 2k operations
 NB.   where C is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupd=. xxr2kxx alpha ; A ; B ; beta ; C
+NB.   CCupd=. xxr2kxx alpha ; A ; B ; beta ; CC
 NB. where
 NB.   alpha - scalar
 NB.   A     - nab×kab-matrix
 NB.   B     - nab×kab-matrix
 NB.   beta  - scalar, must be real for her2kxx
-NB.   C     - n×n-matrix, diagonal must be real for her2kxx
-NB.   Cupd  - C with either LT (for xxr2klx) or UT (for
+NB.   C     - n×n-matrix, Hermitian (symmetric)
+NB.   CC    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of C
+NB.   CCupd - CC with either LT (for xxr2klx) or UT (for
 NB.           xxr2kux) updated
-NB.   n     ≥ 0, the size of C and Cupd and the number of
-NB.           rows or columns in A and B
+NB.   n     ≥ 0, the size of C, CC and CCupd and the number
+NB.           of rows or columns in A and B
 NB.   k     ≥ 0, the number of columns or rows in A and B
 NB.   kab   = k for xxr2kxn or kab = n otherwise
 NB.   nab   = n for xxr2kxn or nab = k otherwise
@@ -654,7 +662,7 @@ NB.     y := alpha * A * x + beta * y
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   yupd=. (ref hemv) alpha ; A ; x ; incx ; beta ; y ; incy
+NB.   yupd=. (ref hemv) alpha ; AA ; x ; incx ; beta ; y ; incy
 NB. where
 NB.   ref - monad to define which triangular part of A is to
 NB.         be referenced, is one of:
@@ -678,17 +686,19 @@ NB.     y := alpha * A * x + beta * y
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   yupd=. xxmvx alpha ; A ; x ; incx ; beta ; y ; incy
+NB.   yupd=. xxmvx alpha ; AA ; x ; incx ; beta ; y ; incy
 NB. where
 NB.   alpha - scalar
-NB.   A     - n×n-matrix, diagonal must be real for hemvx
+NB.   A     - n×n-matrix, Hermitian (symmetric)
+NB.   AA    - n×n-matrix, contains either LT or UT or both
+NB.           part(s) of A
 NB.   x     - (1+(n-1)*|incx|)-vector
 NB.   incx  ≠ 0, the increment for the elements of x
 NB.   beta  - scalar
 NB.   y     - (1+(n-1)*|incy|)-vector
 NB.   incy  ≠ 0, the increment for the elements of y
 NB.   yupd  - an updated y
-NB.   n     ≥ 0, the size of A
+NB.   n     ≥ 0, the size of A and AA
 NB.
 NB. Notes:
 NB. - symvl models BLAS' DSYMV('L',...) with the following
@@ -715,7 +725,7 @@ NB.     x := op(A) * x
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   xupd=. ((mp_mt_~ trans@ref) trmv) A ; x ; incx
+NB.   xupd=. ((mp_mt_~ trans@ref) trmv) AA ; x ; incx
 NB. where
 NB.   ref   - monad to define which triangular part of A is
 NB.           to be referenced, is one of:
@@ -729,9 +739,9 @@ NB.             |:            NB. op(A) := A^T
 NB.             ct_mt_        NB. op(A) := A^H
 
 trmv=: 1 : 0
-  'A ybak incy'=. y
+  'AA ybak incy'=. y
   y=. incy extract_mt_ ybak
-  y=. y u A
+  y=. y u AA
   y=. y (incy ([ ((* |)~ i.) negneg_mt_) #@[)} ybak
 )
 
@@ -756,14 +766,15 @@ NB.     x := op(A) * x
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   xupd=. trmvxxx A ; x ; incx
+NB.   xupd=. trmvxxx AA ; x ; incx
 NB. where
-NB.   A    - n×n-matrix, contains either L, L1, U or U1
-NB.          (unit diagonal is not stored)
+NB.   A    - n×n-matrix, triangular
+NB.   AA   - n×n-matrix, contains either non-zero or both
+NB.          part(s) of A
 NB.   x    - (1+(n-1)*|incx|)-vector
 NB.   incx ≠ 0, the increment for the elements of x
 NB.   xupd - an updated x
-NB.   n    ≥ 0, the size of A
+NB.   n    ≥ 0, the size of A and AA
 NB.
 NB. Notes:
 NB. - monad      models BLAS'
@@ -879,12 +890,12 @@ NB.     C := alpha * B * A + beta * C
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupd=. (mul hemm) alpha ; A ; B ; beta ; C
+NB.   Cupd=. (mul hemm) alpha ; AA ; B ; beta ; C
 NB. where
 NB.   mul - dyad to read triangular part of A and to compute
 NB.         the product either (A * B) or (B * A), is called
 NB.         as:
-NB.           product=. A mul B
+NB.           product=. AA mul B
 
 hemm=: gemm
 
@@ -907,10 +918,12 @@ NB.     C := alpha * B * A + beta * C
 NB.   where A is Hermitian (symmetric)
 NB.
 NB. Syntax:
-NB.   Cupd=. xxmmxx alpha ; A ; B ; beta ; C
+NB.   Cupd=. xxmmxx alpha ; AA ; B ; beta ; C
 NB. where
 NB.   alpha - scalar
-NB.   A     - ma×ma-matrix, diagonal must be real for hemmxx
+NB.   A     - ma×ma-matrix, Hermitian (symmetric)
+NB.   AA    - ma×ma-matrix, contains either LT or UT or both
+NB.           part(s) of A
 NB.   B     - m×n-matrix
 NB.   beta  - scalar
 NB.   C     - m×n-matrix
@@ -953,7 +966,7 @@ NB.     B := alpha * B * op(A)  (2)
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   Bupd=. ((mul trans@ref) trmm) alpha ; A ; B
+NB.   Bupd=. ((mul trans@ref) trmm) alpha ; AA ; B
 NB. where
 NB.   ref   - monad to define which triangular part of A is
 NB.           to be referenced, is one of:
@@ -1009,11 +1022,12 @@ NB.     B := alpha * B * op(A)
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   Bupd=. trmmxxxx alpha ; A ; B
+NB.   Bupd=. trmmxxxx alpha ; AA ; B
 NB. where
 NB.   alpha - scalar
-NB.   A     - k×k-matrix, contains either L, L1, U or U1
-NB.           (unit diagonal is not stored)
+NB.   A     - k×k-matrix, triangular
+NB.   AA    - k×k-matrix, contains either non-zero or both
+NB.           part(s) of A
 NB.   B     - m×n-matrix
 NB.   Bupd  - an updated B
 NB.   m     ≥ 0, the number of rows in B and Bupd
@@ -1082,7 +1096,7 @@ NB.     op(A) * x = b
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   x=. (sol trsv) A ; b ; incb
+NB.   x=. (sol trsv) AA ; b ; incb
 NB. where
 NB.   sol   - dyad to solve equation with triangular matrix,
 NB.           is called as:
@@ -1124,10 +1138,11 @@ NB.     op(A) * x = b
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   x=. trsvxxx A ; b ; incb
+NB.   x=. trsvxxx AA ; b ; incb
 NB. where
-NB.   A    - n×n-matrix, contains either L, L1, U or U1
-NB.          (unit diagonal is not stored)
+NB.   A    - n×n-matrix, triangular
+NB.   AA   - n×n-matrix, contains either non-zero or both
+NB.          part(s) of A
 NB.   b    - (1+(n-1)*|incb|)-vector, the RHS
 NB.   incb ≠ 0, the increment for the elements of b and x
 NB.   x    - the same shape as b, the solution
@@ -1174,8 +1189,8 @@ NB.     X * op(A) = alpha * B
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   X=.   (mdiv trsm) alpha ; A ; B  (1)
-NB.   X=. A (mdiv trsm)             B  (2)
+NB.   X=.    (mdiv trsm) alpha ; AA ; B  (1)
+NB.   X=. AA (mdiv trsm)              B  (2)
 NB. where
 NB.   mdiv - dyad, defines what equation is to be solved, is
 NB.          called as:
@@ -1223,12 +1238,13 @@ NB.     X * op(A) = alpha * B
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   X=.   trsmxxxx alpha ; A ; B
-NB.   X=. A trsmxxxx             B
+NB.   X=.    trsmxxxx alpha ; AA ; B
+NB.   X=. AA trsmxxxx              B
 NB. where
 NB.   alpha - scalar, is supposed to be 1 in dyadic case
-NB.   A     - k×k-matrix, contains either L, L1, U or U1
-NB.           (unit diagonal is not stored)
+NB.   A       k×k-matrix, triangular
+NB.   AA    - k×k-matrix, contains either non-zero or both
+NB.           part(s) of A
 NB.   B     - m×n-matrix or l-vector, RHS
 NB.   X     - m×n-matrix or l-vector, solution[s]
 NB.   m     ≥ 0, the number of rows in B and X
@@ -1345,21 +1361,21 @@ NB.   - DSYR ZHER (BLAS)
 NB.   by vector and Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testbasicher x ; A
+NB.   testbasicher x ; AA
 NB. where
-NB.   x - n-vector
-NB.   A - n×n-matrix with real diagonal
+NB.   x  - n-vector
+NB.   AA - n×n-matrix, A material with real diagonal
 
 testbasicher=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   inc=. 1 2 _1 _2
-  'x A'=. y
+  'x AA'=. y
 
-  NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; A) to tmonad
-  ('dsyrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrl chk5r trlpick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < A
-  ('dsyru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syru chk5r trupick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < A
-  ('zherl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herl chk5r trlpick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < A
-  ('zheru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(heru chk5r trupick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < A
+  NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; AA) to tmonad
+  ('dsyrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrl chk5r trlpick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < AA
+  ('dsyru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syru chk5r trupick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < AA
+  ('zherl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herl chk5r trlpick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < AA
+  ('zheru_mtbla_' tmonad (]`]`(_."_)`(_."_)`(heru chk5r trupick)))@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; < < AA
 
   EMPTY
 )
@@ -1400,23 +1416,23 @@ NB.   - DSYR2 ZHER2 (BLAS)
 NB.   by vectors and Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testbasicher2 x ; y ; A
+NB.   testbasicher2 x ; y ; AA
 NB. where
-NB.   x - n-vector
-NB.   y - n-vector
-NB.   A - n×n-matrix with real diagonal
+NB.   x  - n-vector
+NB.   y  - n-vector
+NB.   AA - n×n-matrix, A material with real diagonal
 
 testbasicher2=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
   inc=. 1 2 _1 _2
-  'x y A'=. y
+  'x y AA'=. y
 
-  NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; expanded_y_i ; incy_i ; A) to tmonad
-  ('dsyr2l_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < A
-  ('dsyr2u_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < A
-  ('zher2l_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) zcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < A
-  ('zher2u_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) zcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < A
+  NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; expanded_y_i ; incy_i ; AA) to tmonad
+  ('dsyr2l_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < AA
+  ('dsyr2u_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) dcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < AA
+  ('zher2l_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) zcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < AA
+  ('zher2u_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 { ((<"0) zcoeff) ; (< x) ; ((<"0) inc) ; (< y) ; ((<"0) inc) ; < < AA
 
   EMPTY
 )
@@ -1457,28 +1473,28 @@ NB.   - xSYRK (BLAS)
 NB.   by general and symmetric matrices
 NB.
 NB. Syntax:
-NB.   testbasicsyrk A ; C
+NB.   testbasicsyrk A ; CC
 NB. where
-NB.   A - m×n-matrix
-NB.   C - k×k-matrix
-NB.   k = max(m,n)
+NB.   A  - m×n-matrix
+NB.   CC - k×k-matrix, C material
+NB.   k  = max(m,n)
 
 testbasicsyrk=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
-  'A C'=. y
+  'A CC'=. y
   mn=. <./ 'm n'=. $ A
-  Cmn=. (2 # mn) {. C
+  CCmn=. (2 # mn) {. CC
 
-  NB. for every i feed the tuple (alpha_i ; A ; beta_i ; C) to tmonad
-  ('dsyrkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkln chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < Cmn [^:(m < n) C
-  ('dsyrklt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrklt chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < Cmn [^:(m > n) C
-  ('dsyrkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkun chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < Cmn [^:(m < n) C
-  ('dsyrkut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkut chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < Cmn [^:(m > n) C
-  ('zsyrkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkln chk4rk trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < Cmn [^:(m < n) C
-  ('zsyrklt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrklt chk4rk trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < Cmn [^:(m > n) C
-  ('zsyrkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkun chk4rk trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < Cmn [^:(m < n) C
-  ('zsyrkut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkut chk4rk trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < Cmn [^:(m > n) C
+  NB. for every i feed the tuple (alpha_i ; A ; beta_i ; CC) to tmonad
+  ('dsyrkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkln chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
+  ('dsyrklt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrklt chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
+  ('dsyrkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkun chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
+  ('dsyrkut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkut chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
+  ('zsyrkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkln chk4rk trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < CCmn [^:(m < n) CC
+  ('zsyrklt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrklt chk4rk trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < CCmn [^:(m > n) CC
+  ('zsyrkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkun chk4rk trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < CCmn [^:(m < n) CC
+  ('zsyrkut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syrkut chk4rk trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; ((<"0) zcoeff) ; < < CCmn [^:(m > n) CC
 
   EMPTY
 )
@@ -1492,23 +1508,23 @@ NB.   - ZHERK (BLAS)
 NB.   by general and Hermitian matrices
 NB.
 NB. Syntax:
-NB.   testbasicherk A ; C
+NB.   testbasicherk A ; CC
 NB. where
-NB.   A - m×n-matrix
-NB.   C - k×k-matrix with real diagonal
-NB.   k = max(m,n)
+NB.   A  - m×n-matrix
+NB.   CC - k×k-matrix, C material with real diagonal
+NB.   k  = max(m,n)
 
 testbasicherk=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
-  'A C'=. y
+  'A CC'=. y
   mn=. <./ 'm n'=. $ A
-  Cmn=. (2 # mn) {. C
+  CCmn=. (2 # mn) {. CC
 
-  NB. for every i feed the tuple (alpha_i ; A ; beta_i ; C) to tmonad
-  ('zherkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkln chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < Cmn [^:(m < n) C
-  ('zherklc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herklc chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < Cmn [^:(m > n) C
-  ('zherkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkun chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < Cmn [^:(m < n) C
-  ('zherkuc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkuc chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < Cmn [^:(m > n) C
+  NB. for every i feed the tuple (alpha_i ; A ; beta_i ; CC) to tmonad
+  ('zherkln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkln chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
+  ('zherklc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herklc chk4rk trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
+  ('zherkun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkun chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
+  ('zherkuc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(herkuc chk4rk trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
 
   EMPTY
 )
@@ -1549,29 +1565,29 @@ NB.   - xSYR2K (BLAS)
 NB.   by general and symmetric matrices
 NB.
 NB. Syntax:
-NB.   testbasicsyr2k A ; B ; C
+NB.   testbasicsyr2k A ; B ; CC
 NB. where
-NB.   A - m×n-matrix
-NB.   B - m×n-matrix
-NB.   C - k×k-matrix
-NB.   k = max(m,n)
+NB.   A  - m×n-matrix
+NB.   B  - m×n-matrix
+NB.   CC - k×k-matrix, C material
+NB.   k  = max(m,n)
 
 testbasicsyr2k=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
-  'A B C'=. y
+  'A B CC'=. y
   mn=. <./ 'm n'=. $ A
-  Cmn=. (2 # mn) {. C
+  CCmn=. (2 # mn) {. CC
 
-  NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; C) to tmonad
-  ('dsyr2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kln chk5r2k trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < Cmn [^:(m < n) C
-  ('dsyr2klt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2klt chk5r2k trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < Cmn [^:(m > n) C
-  ('dsyr2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kun chk5r2k trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < Cmn [^:(m < n) C
-  ('dsyr2kut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kut chk5r2k trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < Cmn [^:(m > n) C
-  ('zsyr2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kln chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < Cmn [^:(m < n) C
-  ('zsyr2klt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2klt chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < Cmn [^:(m > n) C
-  ('zsyr2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kun chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < Cmn [^:(m < n) C
-  ('zsyr2kut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kut chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < Cmn [^:(m > n) C
+  NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; CC) to tmonad
+  ('dsyr2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kln chk5r2k trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
+  ('dsyr2klt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2klt chk5r2k trlpick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
+  ('dsyr2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kun chk5r2k trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
+  ('dsyr2kut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kut chk5r2k trupick)))@>"0 { ((<"0) dcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
+  ('zsyr2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kln chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < CCmn [^:(m < n) CC
+  ('zsyr2klt_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2klt chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < CCmn [^:(m > n) CC
+  ('zsyr2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kun chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < CCmn [^:(m < n) CC
+  ('zsyr2kut_mtbla_' tmonad (]`]`(_."_)`(_."_)`(syr2kut chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) zcoeff) ; < < CCmn [^:(m > n) CC
 
   EMPTY
 )
@@ -1585,25 +1601,25 @@ NB.   - ZHER2K (BLAS)
 NB.   by general and Hermitian matrices
 NB.
 NB. Syntax:
-NB.   testbasicher2k A ; B ; C
+NB.   testbasicher2k A ; B ; CC
 NB. where
-NB.   A - m×n-matrix
-NB.   B - m×n-matrix
-NB.   C - k×k-matrix with real diagonal
-NB.   k = max(m,n)
+NB.   A  - m×n-matrix
+NB.   B  - m×n-matrix
+NB.   CC - k×k-matrix, C material with real diagonal
+NB.   k  = max(m,n)
 
 testbasicher2k=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
-  'A B C'=. y
+  'A B CC'=. y
   mn=. <./ 'm n'=. $ A
-  Cmn=. (2 # mn) {. C
+  CCmn=. (2 # mn) {. CC
 
-  NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; C) to tmonad
-  ('zher2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kln chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < Cmn [^:(m < n) C
-  ('zher2klc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2klc chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < Cmn [^:(m > n) C
-  ('zher2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kun chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < Cmn [^:(m < n) C
-  ('zher2kuc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kuc chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < Cmn [^:(m > n) C
+  NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; CC) to tmonad
+  ('zher2kln_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kln chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
+  ('zher2klc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2klc chk5r2k trlpick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
+  ('zher2kun_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kun chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m < n) CC
+  ('zher2kuc_mtbla_' tmonad (]`]`(_."_)`(_."_)`(her2kuc chk5r2k trupick)))@>"0 { ((<"0) zcoeff) ; (< A) ; (< B) ; ((<"0) dcoeff) ; < < CCmn [^:(m > n) CC
 
   EMPTY
 )
@@ -1687,23 +1703,23 @@ NB.   - DSYMV ZHEMV (BLAS)
 NB.   by Hermitian (symmetric) matrix and vectors
 NB.
 NB. Syntax:
-NB.   testbasichemv A ; x ; y
+NB.   testbasichemv AA ; x ; y
 NB. where
-NB.   A - n×n-matrix with real diagonal
-NB.   x - n-vector
-NB.   y - n-vector
+NB.   AA - n×n-matrix, A material with real diagonal
+NB.   x  - n-vector
+NB.   y  - n-vector
 
 testbasichemv=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
   inc=. 1 2 _1 _2
-  'A x y'=. y
+  'AA x y'=. y
 
-  NB. for every i feed the tuple (alpha_i ; A ; expanded_x_i ; incx_i ; beta_i ; expanded_y_i ; incy_i) to tmonad
-  ('dsymvl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< A) ; (< x) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< y) ; < <"0 inc
-  ('dsymvu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< A) ; (< x) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< y) ; < <"0 inc
-  ('zhemvl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< A) ; (< x) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< y) ; < <"0 inc
-  ('zhemvu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< A) ; (< x) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< y) ; < <"0 inc
+  NB. for every i feed the tuple (alpha_i ; AA ; expanded_x_i ; incx_i ; beta_i ; expanded_y_i ; incy_i) to tmonad
+  ('dsymvl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< AA) ; (< x) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< y) ; < <"0 inc
+  ('dsymvu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) dcoeff) ; (< AA) ; (< x) ; ((<"0) inc) ; ((<"0) dcoeff) ; (< y) ; < <"0 inc
+  ('zhemvl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< AA) ; (< x) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< y) ; < <"0 inc
+  ('zhemvu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 { ((<"0) zcoeff) ; (< AA) ; (< x) ; ((<"0) inc) ; ((<"0) zcoeff) ; (< y) ; < <"0 inc
 
   EMPTY
 )
@@ -1717,36 +1733,36 @@ NB.   - xTRMV (BLAS)
 NB.   by triangular matrix and vector
 NB.
 NB. Syntax:
-NB.   testbasictrmv A ; x
+NB.   testbasictrmv AA ; x
 NB. where
-NB.   A - n×n-matrix
-NB.   x - n-vector
+NB.   AA - n×n-matrix, A material
+NB.   x  - n-vector
 
 testbasictrmv=: 3 : 0
   inc=. 1 2 _1 _2
-  'A y'=. y
+  'AA y'=. y
 
-  NB. for every i feed the tuple (A ; expanded_x_i ; incx_i) to tmonad
-  ('dtrmvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('dtrmvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('dtrmvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('dtrmvltu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('dtrmvunn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('dtrmvunu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('dtrmvutn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('dtrmvutu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvltu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvlcn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlcn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvlcu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlcu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvunn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvunu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvutn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvutu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvucn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvucn chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
-  ('ztrmvucu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvucu chk3mv)))@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc
+  NB. for every i feed the tuple (AA ; expanded_x_i ; incx_i) to tmonad
+  ('dtrmvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('dtrmvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('dtrmvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('dtrmvltu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('dtrmvunn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('dtrmvunu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('dtrmvutn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('dtrmvutu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvltu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvlcn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlcn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvlcu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlcu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvunn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvunu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvunu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvutn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvutu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvutu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvucn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvucn chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
+  ('ztrmvucu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvucu chk3mv)))@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc
 
   EMPTY
 )
@@ -1838,22 +1854,22 @@ NB.   - xSYMM (BLAS)
 NB.   by symmetric matrix
 NB.
 NB. Syntax:
-NB.   testbasicsymm A ; B ; C
+NB.   testbasicsymm AA ; B ; C
 NB. where
-NB.   A - k×k-matrix
-NB.   B - m×n-matrix
-NB.   C - m×n-matrix
-NB.   k = max(m,n)
+NB.   AA - k×k-matrix, A material
+NB.   B  - m×n-matrix
+NB.   C  - m×n-matrix
+NB.   k  = max(m,n)
 
 testbasicsymm=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
-  'A B C'=. y
+  'AA B C'=. y
   'm n'=. $ C
-  Am=. (2 # m) {. A
-  An=. (2 # n) {. A
+  Am=. (2 # m) {. AA
+  An=. (2 # n) {. AA
 
-  NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; C) to tmonad
+  NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
   ('dsymmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmll chk2mm trlpick)))@>"0 { ((<"0) dcoeff) ; (< Am) ; (< B) ; ((<"0) dcoeff) ; < < C
   ('dsymmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmlu chk2mm trupick)))@>"0 { ((<"0) dcoeff) ; (< Am) ; (< B) ; ((<"0) dcoeff) ; < < C
   ('dsymmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(symmrl chk2mm trlpick)))@>"0 { ((<"0) dcoeff) ; (< An) ; (< B) ; ((<"0) dcoeff) ; < < C
@@ -1875,21 +1891,21 @@ NB.   - ZHEMM (BLAS)
 NB.   by Hermitian matrix
 NB.
 NB. Syntax:
-NB.   testbasichemm A ; B ; C
+NB.   testbasichemm AA ; B ; C
 NB. where
-NB.   A - k×k-matrix with real diagonal
-NB.   B - m×n-matrix
-NB.   C - m×n-matrix
-NB.   k = max(m,n)
+NB.   AA - k×k-matrix, A material with real diagonal
+NB.   B  - m×n-matrix
+NB.   C  - m×n-matrix
+NB.   k  = max(m,n)
 
 testbasichemm=: 3 : 0
   zcoeff=. 0j0 1j0 0.7j_0.9
-  'A B C'=. y
+  'AA B C'=. y
   'm n'=. $ C
-  Am=. (2 # m) {. A
-  An=. (2 # n) {. A
+  Am=. (2 # m) {. AA
+  An=. (2 # n) {. AA
 
-  NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; C) to tmonad
+  NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
   ('zhemmll_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmll chk2mm trlpick)))@>"0 { ((<"0) zcoeff) ; (< Am) ; (< B) ; ((<"0) zcoeff) ; < < C
   ('zhemmlu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmlu chk2mm trupick)))@>"0 { ((<"0) zcoeff) ; (< Am) ; (< B) ; ((<"0) zcoeff) ; < < C
   ('zhemmrl_mtbla_' tmonad (]`]`(_."_)`(_."_)`(hemmrl chk2mm trlpick)))@>"0 { ((<"0) zcoeff) ; (< An) ; (< B) ; ((<"0) zcoeff) ; < < C
@@ -1907,19 +1923,19 @@ NB.   - xTRMM (BLAS)
 NB.   by triangular matrix
 NB.
 NB. Syntax:
-NB.   testbasictrmm A ; B
+NB.   testbasictrmm AA ; B
 NB. where
-NB.   A - k×k-matrix
-NB.   B - m×n-matrix
-NB.   k = max(m,n)
+NB.   AA - k×k-matrix, A material
+NB.   B  - m×n-matrix
+NB.   k  = max(m,n)
 
 testbasictrmm=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
-  'A B'=. y
+  'AA B'=. y
   'm n'=. $ B
-  Am=. (2 # m) {. A
-  An=. (2 # n) {. A
+  Am=. (2 # m) {. AA
+  An=. (2 # n) {. AA
 
   argsdm=. { ((<"0) dcoeff) ; (< Am) ; < < B
   argsdn=. { ((<"0) dcoeff) ; (< An) ; < < B
@@ -2007,17 +2023,17 @@ NB.   - xTRSV (BLAS)
 NB.   by triangular matrix and vector
 NB.
 NB. Syntax:
-NB.   testbasictrsv A ; b
+NB.   testbasictrsv AA ; b
 NB. where
-NB.   A - n×n-matrix, contains triangular matrix
-NB.   x - n-vector, the RHS
+NB.   AA - n×n-matrix, A material
+NB.   x  - n-vector, the RHS
 
 testbasictrsv=: 3 : 0
   inc=. 1 2 _1 _2
-  'A y'=. y
-  args=. (1 reverse 2)@(1 expand 2)@>"0 { (< A) ; (< y) ; < <"0 inc  NB. 4×3-matrix of boxes, each row is argument to tmonad
+  'AA y'=. y
+  args=. (1 reverse 2)@(1 expand 2)@>"0 { (< AA) ; (< y) ; < <"0 inc  NB. 4×3-matrix of boxes, each row is argument to tmonad
 
-  NB. for every i feed the tuple (A ; expanded_b_i ; incb_i) to tmonad
+  NB. for every i feed the tuple (AA ; expanded_b_i ; incb_i) to tmonad
   ('dtrsvlnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnn chk3sv)))"1 args
   ('dtrsvlnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvlnu chk3sv)))"1 args
   ('dtrsvltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmvltn chk3sv)))"1 args
@@ -2079,27 +2095,26 @@ NB.   - xTRSM    (BLAS)
 NB.   by triangular matrix
 NB.
 NB. Syntax:
-NB.   testbasictrsm A ; B
+NB.   testbasictrsm AA ; B
 NB. where
-NB.   A - k×k-matrix, contains triangular either m×m-matrix
-NB.       or n×n-matrix
-NB.   B - m×n-matrix, RHS
-NB.   k = max(m,n)
+NB.   AA - k×k-matrix, A material
+NB.   B  - m×n-matrix, RHS
+NB.   k  = max(m,n)
 
 testbasictrsm=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
-  'A B'=. y
+  'AA B'=. y
   'm n'=. $ B
-  Am=. (2 # m) {. A
-  An=. (2 # n) {. A
+  Am=. (2 # m) {. AA
+  An=. (2 # n) {. AA
   argsdm=. { ((<"0) dcoeff) ; (< Am) ; < < B
   argsdn=. { ((<"0) dcoeff) ; (< An) ; < < B
   argszm=. { ((<"0) zcoeff) ; (< Am) ; < < B
   argszn=. { ((<"0) zcoeff) ; (< An) ; < < B
 
   NB. BLAS' staff
-  NB. for every i feed the tuple (alpha_i ; A ; B) to tmonad
+  NB. for every i feed the tuple (alpha_i ; AA ; B) to tmonad
   ('dtrsmllnn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmmllnn chk3sm)))@>"0 argsdm
   ('dtrsmllnu_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmmllnu chk3sm)))@>"0 argsdm
   ('dtrsmlltn_mtbla_' tmonad (]`]`(_."_)`(_."_)`(trmmlltn chk3sm)))@>"0 argsdm

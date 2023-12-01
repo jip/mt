@@ -7,7 +7,7 @@ NB. Syntax:
 NB.   iAA=. uplo dsytri2 DPT1 ; ipiv
 NB. where
 NB.   uplo - literal, case-insensitive, in which the head
-NB.          specifies which triangular part of A is to be
+NB.          specifies which triangular part of DPT1 is to be
 NB.          referenced:
 NB.            'L' - lower, the form is:
 NB.                    PL1 * D * PL1^T = A
@@ -32,7 +32,7 @@ NB.          DPT1 in opposite strict triangle
 NB.   iA   - n×n-matrix, real, the symmetric inversion of A
 NB.   A    - n×n-matrix, real, symmetric, represented in
 NB.          factored form by DPT1 and ipiv
-NB.   n    ≥ 0, the size of A and iA
+NB.   n    ≥ 0, the size of A, iA and iAA
 NB.
 NB. Notes:
 NB. - verbs below are loaded into the current locale

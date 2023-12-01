@@ -47,50 +47,51 @@ NB.     C := alpha * A^T * B + alpha * B^T * A + beta * C  (2)
 NB.   with transposed matrices, where C is symmetric
 NB.
 NB. Syntax:
-NB.   Cupdt=. (uplo ; trans) xsyr2kcore alpha ; At ; Bt ; beta ; Ct
+NB.   CCupdt=. (uplo ; trans) xsyr2kcore alpha ; At ; Bt ; beta ; CCt
 NB. where
-NB.   uplo  - literal, case-insensitive, in which the head
-NB.           specifies which triangular part of C is to be
-NB.           referenced:
-NB.             'L'  NB. LT
-NB.             'U'  NB. UT
-NB.   trans - literal, case-insensitive, in which the head
-NB.           specifies the operation:
-NB.             'N'  NB. (1)
-NB.             'T'  NB. (2)
-NB.             'C'  NB. (2) for dsyr2kcore
-NB.   alpha - scalar
-NB.   At    - kab×nab-matrix, A^T
-NB.   Bt    - kab×nab-matrix, B^T
-NB.   beta  - scalar
-NB.   Ct    - n×n-matrix, C^T
-NB.   Cupdt - Ct with either LT (if uplo='U') or UT (if
-NB.           uplo='L') updated
-NB.   n     ≥ 0, the size of Ct and Cupdt and the number of
-NB.           columns or rows in At and Bt
-NB.   k     ≥ 0, the number of rows or columns in At and Bt
-NB.   kab   = k if trans='N' or kab = n otherwise
-NB.   nab   = n if trans='N' or nab = k otherwise
+NB.   uplo   - literal, case-insensitive, in which the head
+NB.            specifies which triangular part of C is to be
+NB.            referenced:
+NB.              'L'  NB. LT
+NB.              'U'  NB. UT
+NB.   trans  - literal, case-insensitive, in which the head
+NB.            specifies the operation:
+NB.              'N'  NB. (1)
+NB.              'T'  NB. (2)
+NB.              'C'  NB. (2) for dsyr2kcore
+NB.   alpha  - scalar
+NB.   At     - kab×nab-matrix, A^T
+NB.   Bt     - kab×nab-matrix, B^T
+NB.   beta   - scalar
+NB.   CCt    - n×n-matrix, contains either lower or upper or
+NB.            both part(s) of C^T
+NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
+NB.            uplo='L') updated
+NB.   n      ≥ 0, the size of Ct and CCupdt and the number of
+NB.            columns or rows in At and Bt
+NB.   k      ≥ 0, the number of rows or columns in At and Bt
+NB.   kab    = k if trans='N' or kab = n otherwise
+NB.   nab    = n if trans='N' or nab = k otherwise
 NB.
 NB. Notes:
 NB. - operate on transposed matrices to avoid transposition
 
 dsyr2kcore=: (4 : 0) basicswp@([ assert@(basiccmp , basiccs4 , basiccr4))
   'uplo trans'=. x
-  'alpha At Bt beta Ct'=. y
-  n=. # Ct
+  'alpha At Bt beta CCt'=. y
+  n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
   ld=. , 1 >. c At
-  11 {:: dsyr2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; Ct ; , 1 >. n
+  11 {:: dsyr2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
 )
 
 zsyr2kcore=: (4 : 0) basicswp@([ assert@(basiccmp , basiccs4 , basiccr4))
   'uplo trans'=. x
-  'alpha At Bt beta Ct'=. y
-  n=. # Ct
+  'alpha At Bt beta CCt'=. y
+  n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
   ld=. , 1 >. c At
-  11 {:: zsyr2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; Ct ; , 1 >. n
+  11 {:: zsyr2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
 )
 
 NB. ---------------------------------------------------------
@@ -104,40 +105,41 @@ NB.     C := alpha * A^H * B + conj(alpha) * B^H * A + beta * C  (2)
 NB.   with transposed matrices, where C is Hermitian
 NB.
 NB. Syntax:
-NB.   Cupdt=. (uplo ; trans) zher2kcore alpha ; At ; Bt ; beta ; Ct
+NB.   CCupdt=. (uplo ; trans) zher2kcore alpha ; At ; Bt ; beta ; CCt
 NB. where
-NB.   uplo  - literal, case-insensitive, in which the head
-NB.           specifies which triangular part of C is to be
-NB.           referenced:
-NB.             'L'  NB. LT
-NB.             'U'  NB. UT
-NB.   trans - literal, case-insensitive, in which the head
-NB.           specifies the operation:
-NB.             'N'  NB. (1)
-NB.             'C'  NB. (2)
-NB.   alpha - scalar
-NB.   At    - kab×nab-matrix, A^T
-NB.   Bt    - kab×nab-matrix, B^T
-NB.   beta  - scalar, real
-NB.   Ct    - n×n-matrix with real diagonal, C^T
-NB.   Cupdt - Ct with either LT (if uplo='U') or UT (if
-NB.           uplo='L') updated
-NB.   n     ≥ 0, the size of Ct and Cupdt and the number of
-NB.           columns or rows in At and Bt
-NB.   k     ≥ 0, the number of rows or columns in At and Bt
-NB.   kab   = k if trans='N' or kab = n otherwise
-NB.   nab   = n if trans='N' or nab = k otherwise
+NB.   uplo   - literal, case-insensitive, in which the head
+NB.            specifies which triangular part of C is to be
+NB.            referenced:
+NB.              'L'  NB. LT
+NB.              'U'  NB. UT
+NB.   trans  - literal, case-insensitive, in which the head
+NB.            specifies the operation:
+NB.              'N'  NB. (1)
+NB.              'C'  NB. (2)
+NB.   alpha  - scalar
+NB.   At     - kab×nab-matrix, A^T
+NB.   Bt     - kab×nab-matrix, B^T
+NB.   beta   - scalar, real
+NB.   CCt    - n×n-matrix, contains either lower or upper or
+NB.            both part(s) of C^T
+NB.   CCupdt - CCt with either LT (if uplo='U') or UT (if
+NB.            uplo='L') updated
+NB.   n      ≥ 0, the size of C, CCt and CCupdt and the
+NB.            number of columns or rows in At and Bt
+NB.   k      ≥ 0, the number of rows or columns in At and Bt
+NB.   kab    = k if trans='N' or kab = n otherwise
+NB.   nab    = n if trans='N' or nab = k otherwise
 NB.
 NB. Notes:
 NB. - operates on transposed matrices to avoid transposition
 
 zher2kcore=: (4 : 0) basicswp@([ assert@(basiccmp , basiccs4 , basiccr4))
   'uplo trans'=. x
-  'alpha At Bt beta Ct'=. y
-  n=. # Ct
+  'alpha At Bt beta CCt'=. y
+  n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
   ld=. , 1 >. c At
-  11 {:: zher2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; Ct ; , 1 >. n
+  11 {:: zher2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
 )
 
 NB. =========================================================
@@ -162,17 +164,19 @@ NB.     C := alpha * A^T * B + alpha * B^T * A + beta * C
 NB.   where C is symmetric
 NB.
 NB. Syntax:
-NB.   Cupd=. xsyr2kxx alpha ; A ; B ; beta ; C
+NB.   CCupd=. xsyr2kxx alpha ; A ; B ; beta ; CC
 NB. where
 NB.   alpha - scalar
 NB.   A     - nab×kab-matrix
 NB.   B     - nab×kab-matrix
 NB.   beta  - scalar
-NB.   C     - n×n-matrix
-NB.   Cupd  - C with either LT (for xsyr2klx) or UT (for
+NB.   CC    - n×n-matrix, contains either lower or upper or
+NB.           both part(s) of C
+NB.   CCupd - CC with either LT (for xsyr2klx) or UT (for
 NB.           xsyr2kux) updated
-NB.   n     ≥ 0, the size of C and Cupd and the number of
-NB.           rows or columns in A and B
+NB.   C     - n×n-matrix, symmetric
+NB.   n     ≥ 0, the size of C, CC and CCupd and the number
+NB.           of rows or columns in A and B
 NB.   k     ≥ 0, the number of columns or rows in A and B
 NB.   kab   = k for xsyr2kxn or kab = n otherwise
 NB.   nab   = n for xsyr2kxn or nab = k otherwise
@@ -213,17 +217,19 @@ NB.     C := alpha * A^H * B + conj(alpha) * B^H * A + beta * C
 NB.   where C is Hermitian
 NB.
 NB. Syntax:
-NB.   Cupd=. zher2kxx alpha ; A ; B ; beta ; C
+NB.   CCupd=. zher2kxx alpha ; A ; B ; beta ; CC
 NB. where
 NB.   alpha - scalar
 NB.   A     - nab×kab-matrix
 NB.   B     - nab×kab-matrix
 NB.   beta  - scalar, real
-NB.   C     - n×n-matrix with real diagonal
-NB.   Cupd  - C with either LT (for zher2klx) or UT (for
+NB.   CC    - n×n-matrix, contains either lower or upper or
+NB.           both part(s) of C
+NB.   CCupd - CC with either LT (for zher2klx) or UT (for
 NB.           zher2kux) updated
-NB.   n     ≥ 0, the size of C and Cupd and the number of
-NB.           rows or columns in A and B
+NB.   C     - n×n-matrix, Hermitian
+NB.   n     ≥ 0, the size of C, CC and CCupd and the number
+NB.           of rows or columns in A and B
 NB.   k     ≥ 0, the number of columns or rows in A and B
 NB.   kab   = k for zher2kxn or kab = n otherwise
 NB.   nab   = n for zher2kxn or nab = k otherwise

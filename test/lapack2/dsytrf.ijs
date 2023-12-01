@@ -5,17 +5,18 @@ NB.   Compute the factorization of a non-complex symmetric
 NB.   matrix using the Bunch-Kaufman diagonal pivoting method
 NB.
 NB. Syntax:
-NB.   'DPT1 ipiv'=. uplo dsytrf A
+NB.   'DPT1 ipiv'=. uplo dsytrf AA
 NB. where
 NB.   uplo - literal, case-insensitive, in which the head
-NB.          specifies which triangular part of A is to be
+NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower, the form is:
 NB.                    PL1 * D * PL1^T = A
 NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^T = A
-NB.   A    - n×n-matrix, real, symmetric or upper or lower
-NB.          triangular
+NB.   AA   - n×n-matrix, real, contains either lower or upper
+NB.          or both part(s) of A
+NB.   A    - n×n-matrix, real, symmetric, to factorize
 NB.   DPT1 - n×n-matrix, D and PT1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define
 NB.          permutations
@@ -27,7 +28,7 @@ NB.   PL1  - n×n-matrix, real, the product of permutation and
 NB.          unit lower triangular matrices
 NB.   PU1  - n×n-matrix, real, the product of permutation and
 NB.          unit upper triangular matrices
-NB.   n    ≥ 0, the size of A, D, PL1 and PU1
+NB.   n    ≥ 0, the size of A, AA, D, PL1 and PU1
 NB.
 NB. Notes:
 NB. - verbs below are loaded into the current locale

@@ -5,15 +5,17 @@ NB.   Solve a system of linear equations with a Hermitian
 NB.   matrix, and factor the last one
 NB.
 NB. Syntax:
-NB.   'DPT1 ipiv X'=. uplo zhesv A ; B
+NB.   'DPT1 ipiv X'=. uplo zhesv AA ; B
 NB. where
 NB.   uplo - literal, case-insensitive, in which the head
-NB.          specifies which triangular part of A is to be
+NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower, the form is:
 NB.                    PL1 * D * PL1^H = A
 NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^H = A
+NB.   AA   - n×n-matrix, contains either lower or upper or
+NB.          both part(s) of A
 NB.   A    - n×n-matrix, Hermitian to be factored to DPT1
 NB.          and ipiv
 NB.   B    - n×nrhs-matrix, RHS

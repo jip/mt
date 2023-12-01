@@ -46,7 +46,7 @@ NB.     X * op(A) = alpha * B  (2)
 NB.   with transposed matrices, where A is triangular
 NB.
 NB. Syntax:
-NB.   Xt=. (side ; uplo ; trans ; diag) xtrsmcore alpha ; At ; Bt
+NB.   Xt=. (side ; uplo ; trans ; diag) xtrsmcore alpha ; AAt ; Bt
 NB. where
 NB.   side  - literal, case-insensitive, in which the head
 NB.           specifies the side of op(A):
@@ -69,7 +69,8 @@ NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal
 NB.                  NB.   elements of A are not referenced
 NB.   alpha - scalar
-NB.   At    - k×k-matrix, A^T
+NB.   AAt   - k×k-matrix, contains either non-zero or both
+NB.           part(s) of A^T
 NB.   Bt    - n×m-matrix, B^T
 NB.   Xt    - the same shape as B^T, X^T, solution[s]
 NB.           transposed
@@ -148,11 +149,12 @@ NB.     X * op(A) = alpha * B
 NB.   where A is triangular
 NB.
 NB. Syntax:
-NB.   X=. xtrsmxxxx alpha ; A ; B
+NB.   X=. xtrsmxxxx alpha ; AA ; B
 NB. where
 NB.   alpha - scalar
-NB.   A     - k×k-matrix, contains either L, L1, U or U1
-NB.           (unit diagonal is not stored)
+NB.   AA    - k×k-matrix, contains either non-zero or both
+NB.           part(s) of A
+NB.   A     - k×k-matrix, triangular
 NB.   B     - m×n-matrix, RHS
 NB.   X     - the same shape as B, solutions
 NB.   m     ≥ 0, the number of rows in B and X

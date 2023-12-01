@@ -5,17 +5,18 @@ NB.   Compute the factorization of a non-complex symmetric
 NB.   matrix using the Aasen's algorithm
 NB.
 NB. Syntax:
-NB.   'DT1 ipiv'=. uplo dsytrf_aa A
+NB.   'DT1 ipiv'=. uplo dsytrf_aa AA
 NB. where
 NB.   uplo - literal, case-insensitive, in which the head
-NB.          specifies which triangular part of A is to be
+NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower, the form is:
 NB.                    P * L1 * D * L1^T * P^T = A
 NB.            'U' - upper, the form is:
 NB.                    P * U1 * D * U1^T * P^T = A
-NB.   A    - n×n-matrix, real, symmetric or upper or lower
-NB.          triangular
+NB.   AA   - n×n-matrix, real, contains either lower or upper
+NB.          or both part(s) of A
+NB.   A    - n×n-matrix, real, symmetric, to factorize
 NB.   DT1  - n×n-matrix, D and T1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define P
 NB.   D    - n×n-matrix, real, symmetric tridiagonal
@@ -26,7 +27,7 @@ NB.          diagonal not stored)
 NB.   U1   - n×n-matrix, real, unit upper triangular (unit
 NB.          diagonal not stored)
 NB.   P    - n×n-matrix, boolean, the permutation matrix
-NB.   n    ≥ 0, the size of A, D, L1, U1 and P
+NB.   n    ≥ 0, the size of A, AA, D, L1, U1 and P
 NB.
 NB. Notes:
 NB. - verbs below are loaded into the current locale

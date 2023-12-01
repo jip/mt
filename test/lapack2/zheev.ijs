@@ -5,21 +5,23 @@ NB.   Compute the eigenvalues and, optionally, eigenvectors
 NB.   for square Hermitian matrix
 NB.
 NB. Syntax:
-NB.   'w V'=. (jobV ; uplo) zheev A
+NB.   'w V'=. (jobV ; uplo) zheev AA
 NB. where
 NB.   jobV - literal, case-insensitive, in which the head
 NB.          specifies whether to compute V:
 NB.            'N' - to not compute
 NB.            'V' - to compute
 NB.   uplo - literal, case-insensitive, in which the head
-NB.          specifies which triangular part of A is to be
+NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower
 NB.            'U' - upper
-NB.   A    - n×n-matrix, Hermitian or lower or upper
+NB.   AA   - n×n-matrix, contains either lower or upper or
+NB.          both part(s) of A
+NB.   A    - n×n-matrix, Hermitian
 NB.   w    - n-vector, eigenvalues of A
 NB.   V    - n×n-matrix, eigenvectors of A or 0×0-matrix
-NB.   n    ≥ 0, the size of A, V and w
+NB.   n    ≥ 0, the size of A, AA, V and w
 NB.
 NB. Notes:
 NB. - verbs below are loaded into the current locale

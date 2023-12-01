@@ -5,17 +5,18 @@ NB.   Compute the factorization of a Hermitian matrix using
 NB.   the Bunch-Kaufman diagonal pivoting method
 NB.
 NB. Syntax:
-NB.   'DPT1 ipiv'=. uplo zhetrf A
+NB.   'DPT1 ipiv'=. uplo zhetrf AA
 NB. where
 NB.   uplo - literal, case-insensitive, in which the head
-NB.          specifies which triangular part of A is to be
+NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower, the form is:
 NB.                    PL1 * D * PL1^H = A
 NB.            'U' - upper, the form is:
 NB.                    PU1 * D * PU1^H = A
-NB.   A    - n×n-matrix, Hermitian or upper or lower
-NB.          triangular
+NB.   AA   - n×n-matrix, contains either lower or upper or
+NB.          both part(s) of A
+NB.   A    - n×n-matrix, Hermitian
 NB.   DPT1 - n×n-matrix, D and PT1 combined
 NB.   ipiv - n-vector, integer, pivot indices that define
 NB.          permutations
@@ -29,7 +30,7 @@ NB.          stored)
 NB.   PU1  - n×n-matrix, a product of permutation and unit
 NB.          upper triangular matrices (unit diagonal not
 NB.          stored)
-NB.   n    ≥ 0, the size of A, D, PL1 and PU1
+NB.   n    ≥ 0, the size of A, AA, D, PL1 and PU1
 NB.
 NB. Notes:
 NB. - verbs below are loaded into the current locale

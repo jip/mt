@@ -26,11 +26,12 @@ NB. =========================================================
 NB. Configuration
 
 coclass 'mtbla'
-coinsert 'mt'
+coinsert 'mttst mt'
 
 NB. =========================================================
 NB. Includes
 
+require 'math/mt/test/util'       NB. Tests' utilities
 require 'math/mt/test/blas/init'  NB. Init LIB_mtbla_
 require 'math/mt/test/blas/api'   NB. API definitions
-require 'math/mt/test/blas/util'  NB. Utilities
+require 'math/mt/test/blas/util'  NB. BLAS Utilities

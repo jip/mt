@@ -1,6 +1,6 @@
 NB. Utilities
 NB.
-NB. basicxxx  Utilities to either check or modify argument
+NB. ver  Get version string
 NB.
 NB. Version: 0.14.0 2023-03-21
 NB.
@@ -28,35 +28,23 @@ NB. =========================================================
 NB. Configuration
 
 coclass 'mtbla'
-coinsert 'mt'
 
 NB. =========================================================
 NB. Interface
 
-issquare=: =/@$  NB. same as in the (math/lapack2) addon
+NB. Get version string
+NB. strVer=. ver_mtbla_ ''
 
-NB. check
-NB. - ranks
-basiccr0=: 0 2 2         -: #@$S:0
-basiccr1=: 2 1 0         -: #@$S:0
-basiccr2=: 0 1 0 2       -: #@$S:0
-basiccr3=: 0 2 0 2       -: #@$S:0
-basiccr4=: 0 2 2 0 2     -: #@$S:0
-basiccr5=: 0 1 0 1 0 2   -: #@$S:0
-basiccr6=: 0 2 1 0 0 1 0 -: #@$S:0
-NB. - shape
-basiccs0=: issquare@(0&{::)
-basiccs1=: issquare@(1&{::)
-basiccs3=: issquare@(3&{::)
-basiccs4=: issquare@(4&{::)
-basiccs5=: issquare@(5&{::)
-NB. - compare shapes
-basiccmp=: -:/@($L:0)@(1 2&{)
-
-NB. modify
-NB. - conjugate under ISO specified
-basiccj0=: 1      &(+&.> upd)
-basiccj1=: 0 1 3  &(+&.> upd)
-basiccj2=: 0 2 4 5&(+&.> upd)
-NB. - swap elements
-basicswp=: (< 1 2)&C.
+ver=: 3 : 0
+  ifw=. IFWIN # '+'
+  if. 0 {:: dlsym LIB ; 'openblas_get_config' do.
+    NB. OpenBLAS
+    memr 0 _1 2 ,~ ('"',LIB,'" openblas_get_config >',ifw,' x') cd ''
+  elseif. 0 {:: dlsym LIB ; 'ilaver_' do.
+    NB. LAPACK
+    3 }. ; ('.' , ":) L: 0 ('"',LIB,'" ilaver_ ',ifw,' n *i *i *i') cd 3 # < , 0
+  else.
+    NB. the reference BLAS has no version identifier
+    'unknown'
+  end.
+)

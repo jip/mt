@@ -80,7 +80,7 @@ NB.   m     ≥ 0, the number of rows in B and X
 NB.   n     ≥ 0, the number of columns in B and X
 NB.   k     = m for (1) or k = n for (2)
 
-trsmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr0_mtbla_))
+trsmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   y=. _1 memu&.> upd y                NB. unalias B
   objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
   (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"1 0 (1) {:: objs
@@ -92,14 +92,14 @@ trsmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr0_mtbla_))
   _1 {:: y                            NB. return changed copy of B
 )
 
-dtrsmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr0_mtbla_))
+dtrsmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'side uplo trans diag'=. _2 ic , x
   'alpha AA B'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ B
   11 {:: dtrsm_cd side ; uplo ; trans ; diag ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1
 )
 
-ztrsmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr0_mtbla_))
+ztrsmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'side uplo trans diag'=. _2 ic , x
   'alpha AA B'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ B

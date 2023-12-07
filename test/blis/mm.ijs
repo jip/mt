@@ -159,7 +159,7 @@ NB.            otherwise
 NB.   mb     = m if (op1(B) is either B or conj(B)) or mb = k
 NB.            otherwise
 
-gemmtcore=: (4 : 0) ([ assert@basiccr4_mtbla_)
+gemmtcore=: (4 : 0) ([ assert@basiccr4)
   y=. _1 memu&.> upd y  NB. unalias C
   objs=. obja L: 0 y    NB. allocate BLIS objects bonded to J nouns
   x (2 1 # obj_set_conjtrans`obj_set_uplo)"1 0 (,. 1 2 4) {:: objs
@@ -169,14 +169,14 @@ gemmtcore=: (4 : 0) ([ assert@basiccr4_mtbla_)
   _1 {:: y              NB. return changed copy of C
 )
 
-dgemmtcore=: (4 : 0) ([ assert@basiccr4_mtbla_)
+dgemmtcore=: (4 : 0) ([ assert@basiccr4)
   'uploC transA transB'=. _2 ic , x
   'ka mb m'=. 1 2 4 { c S: 0 'alpha A B beta C'=. y
   k=. ((1 { x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
   14 {:: dgemmt_cd uploC ; transA ; transB ; m ; k ; (, alpha) ; A ; ka ; 1 ; B ; mb ; 1 ; (, beta) ; C ; m ; 1
 )
 
-zgemmtcore=: (4 : 0) ([ assert@basiccr4_mtbla_)
+zgemmtcore=: (4 : 0) ([ assert@basiccr4)
   'uploC transA transB'=. _2 ic , x
   'ka mb m'=. 1 2 4 { c S: 0 'alpha A B beta C'=. y
   k=. ((1 { x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
@@ -234,7 +234,7 @@ NB.   n      ≥ 0, the number of columns in B, C and Cupd, the
 NB.            size of A and AA when (sideA != LEFT)
 NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 
-symmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
+symmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   y=. _1 memu&.> upd y                NB. unalias C
   objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
   (SYMMETRIC 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 (,. 1 1 1 2) {:: objs
@@ -246,7 +246,7 @@ symmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
   _1 {:: y                            NB. return changed copy of C
 )
 
-hemmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
+hemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   y=. _1 memu&.> upd y                NB. unalias C
   objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
   (HERMITIAN 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 (,. 1 1 1 2) {:: objs
@@ -258,21 +258,21 @@ hemmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
   _1 {:: y                            NB. return changed copy of C
 )
 
-dsymmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
+dsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'sideA uploA conjA transB'=. _2 ic , x
   'alpha AA B beta C'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ C
   15 {:: dsymm_cd sideA ; uploA ; conjA ; transB ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1 ; (, beta) ; C ; n ; 1
 )
 
-zsymmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
+zsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'sideA uploA conjA transB'=. _2 ic , x
   'alpha AA B beta C'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ C
   15 {:: zsymm_cd sideA ; uploA ; conjA ; transB ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1 ; (, beta) ; C ; n ; 1
 )
 
-zhemmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
+zhemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'sideA uploA conjA transB'=. _2 ic , x
   'alpha AA B beta C'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ C
@@ -327,7 +327,7 @@ NB.   n      ≥ 0, the number of columns in B and Bupd, the
 NB.            size of A and AA when (sideA != LEFT)
 NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 
-trmmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr0_mtbla_))
+trmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   y=. _1 memu&.> upd y                NB. unalias B
   objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
   (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"1 0 (1) {:: objs
@@ -339,14 +339,14 @@ trmmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr0_mtbla_))
   _1 {:: y                            NB. return changed copy of B
 )
 
-dtrmmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr0_mtbla_))
+dtrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'sideA uploA transA diagA'=. _2 ic , x
   'alpha AA B'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ B
   11 {:: dtrmm_cd sideA ; uploA ; transA ; diagA ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1
 )
 
-ztrmmcore=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr0_mtbla_))
+ztrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'sideA uploA transA diagA'=. _2 ic , x
   'alpha AA B'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ B
@@ -413,7 +413,7 @@ NB.            otherwise
 NB.   nb     = n if (op1(B) is either B or conj(B)) or nb = m
 NB.            otherwise
 
-trmm3core=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
+trmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   y=. _1 memu&.> upd y                 NB. unalias C
   objs=. obja L: 0 y                   NB. allocate BLIS objects bonded to J nouns
   (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag`obj_set_conjtrans"1 0 (,. 4 1 # 1 2) {:: objs
@@ -425,7 +425,7 @@ trmm3core=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
   _1 {:: y                             NB. return changed copy of C
 )
 
-dtrmm3core=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
+dtrmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'sideA uploA transA diagA transB'=. _2 ic , x
   'alpha AA B beta C'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ C
@@ -433,7 +433,7 @@ dtrmm3core=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
   16 {:: dtrmm3_cd sideA ; uploA ; transA ; diagA ; transB ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; nb ; 1 ; (, beta) ; C ; n ; 1
 )
 
-ztrmm3core=: (4 : 0) ([ assert@(basiccs1_mtbla_ , basiccr4_mtbla_))
+ztrmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'sideA uploA transA diagA transB'=. _2 ic , x
   'alpha AA B beta C'=. y
   mn=. (RIGHT -: {. x) { 'm n'=. $ C

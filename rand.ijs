@@ -711,7 +711,7 @@ NB. TODO:
 NB. - T would be sparse
 
 ptmat=: 1 : 'po_mt_@(>:@| upddiag_mt_)@(((setdiag_mt_ diagmat_mt_)~ (}: ; _1:))/)@:u@(2,{.)'
-ptmat2=: 1 : '(9&o. upddiag_mt_)@gtpick_mt_@%.@(u kmsmatrho_mt_ kmsmat_mt_)'
+ptmat2=: 1 : '(9&o. upddiag_mt_)@gtpick_mt_@potril_mt_@potrfl_mt_@(u kmsmatrho_mt_ kmsmat_mt_)'
 
 NB. ---------------------------------------------------------
 NB. unmat

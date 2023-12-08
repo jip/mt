@@ -55,13 +55,13 @@ NB.          operation with general matrices
 NB. chk2mv   Adv. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
 NB.          (symmetric) matrix-vector operation
-NB. chk2mm   Conj. to make dyad to compute the relative
+NB. chk2mm   Adv. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
 NB.          (symmetric) matrix-matrix operation
 NB. chk3mv   Adv. to make dyad to compute the relative
 NB.          backward error for the basic matrix-vector
 NB.          operation with triangular matrix
-NB. chk3mm   Conj. to make dyad to compute the relative
+NB. chk3mm   Adv. to make dyad to compute the relative
 NB.          backward error for the basic matrix-matrix
 NB.          operation with triangular matrix
 NB. chk3sv   Adv. to make dyad to compute the relative
@@ -1971,19 +1971,16 @@ NB. ---------------------------------------------------------
 NB. chk2mm
 NB.
 NB. Description:
-NB.   Conj. to make dyad to compute the relative backward
+NB.   Adv. to make dyad to compute the relative backward
 NB.   error for the basic hermitian (symmetric) matrix-matrix
 NB.   operation
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; AA ; B ; beta ; C) (xxmmxxxx chk2mm trxpick) Capprox
+NB.   berr=. (alpha ; AA ; B ; beta ; C) (xxmmxxxx chk2mm) Capprox
 NB. where
 NB.   xxmmxxxx - monad, the reference implementation to
 NB.              compute Cexact:
 NB.                Cexact=. xxmmxxxx (alpha ; AA ; B ; beta ; C)
-NB.   trxpick  - monad to pick a triangular part, is one of:
-NB.                trlpick  NB. if xxmmxlxx is used
-NB.                trupick  NB. if xxmmxuxx is used
 NB.   alpha    - scalar
 NB.   AA       - mn×mn-matrix, contains either LT or UT or
 NB.              both part(s) of A
@@ -2021,7 +2018,7 @@ NB.   - alpha,A,B,beta,C are not generated but are coming
 NB.     from outside as arguments
 NB. - berr is considered good if lower than 16
 
-chk2mm=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@[          )`0:@.(0 e. $@]        )'
+chk2mm=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@:(          sorim_mt_&.>                )@[          )`0:@.(0 e. $@]        )'
 
 NB. ---------------------------------------------------------
 NB. chk3mv
@@ -2074,19 +2071,16 @@ NB. ---------------------------------------------------------
 NB. chk3mm
 NB.
 NB. Description:
-NB.   Conj. to make dyad to compute the relative backward
+NB.   Adv. to make dyad to compute the relative backward
 NB.   error for the basic matrix-matrix operation with
 NB.   triangular matrix
 NB.
 NB. Syntax:
-NB.   berr=. (alpha ; AA ; B) (trmmxxxx chk3mm trxpick) Bapprox
+NB.   berr=. (alpha ; AA ; B) (trmmxxxx chk3mm) Bapprox
 NB. where
 NB.   trmmxxxx - monad, the reference implementation to
 NB.              compute Bexact:
 NB.                Bexact=. trmmxxxx (alpha ; AA ; B)
-NB.   trxpick  - monad to pick a triangular part, is one of:
-NB.                trlpick  NB. if trmmxl is used
-NB.                trupick  NB. if trmmxu is used
 NB.   alpha    - scalar
 NB.   AA       - k×k-matrix, contains either non-zero or both
 NB.              part(s) of A

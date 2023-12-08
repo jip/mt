@@ -2660,90 +2660,90 @@ testbasicsymm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
 
-  ('dsymmll_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm trlpick)))@>"0 argsdm
-  ('dsymmlu_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm trupick)))@>"0 argsdm
-  ('dsymmrl_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm trlpick)))@>"0 argsdn
-  ('dsymmru_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm trupick)))@>"0 argsdn
+  ('dsymmll_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm)))@>"0 argsdm
+  ('dsymmlu_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm)))@>"0 argsdm
+  ('dsymmrl_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm)))@>"0 argsdn
+  ('dsymmru_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm)))@>"0 argsdn
 
-  ('zsymmll_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm trlpick)))@>"0 argszm
-  ('zsymmlu_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm trupick)))@>"0 argszm
-  ('zsymmrl_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm trlpick)))@>"0 argszn
-  ('zsymmru_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm trupick)))@>"0 argszn
+  ('zsymmll_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm)))@>"0 argszm
+  ('zsymmlu_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm)))@>"0 argszm
+  ('zsymmrl_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm)))@>"0 argszn
+  ('zsymmru_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm)))@>"0 argszn
 
-  ('symmllnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm trlpick)))@>"0 argsam
-  ('symmllnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmllnt chk2mm trlpick)))@>"0 argsam
-  ('symmllnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmllnj chk2mm trlpick)))@>"0 argsam
-  ('symmllnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmllnc chk2mm trlpick)))@>"0 argsam
-  ('symmlljn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlljn chk2mm trlpick)))@>"0 argsam
-  ('symmlljt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlljt chk2mm trlpick)))@>"0 argsam
-  ('symmlljj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlljj chk2mm trlpick)))@>"0 argsam
-  ('symmlljc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlljc chk2mm trlpick)))@>"0 argsam
-  ('symmlunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm trupick)))@>"0 argsam
-  ('symmlunt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlunt chk2mm trupick)))@>"0 argsam
-  ('symmlunj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlunj chk2mm trupick)))@>"0 argsam
-  ('symmlunc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlunc chk2mm trupick)))@>"0 argsam
-  ('symmlujn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlujn chk2mm trupick)))@>"0 argsam
-  ('symmlujt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlujt chk2mm trupick)))@>"0 argsam
-  ('symmlujj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlujj chk2mm trupick)))@>"0 argsam
-  ('symmlujc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlujc chk2mm trupick)))@>"0 argsam
-  ('symmrlnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm trlpick)))@>"0 argsan
-  ('symmrlnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrlnt chk2mm trlpick)))@>"0 argsan
-  ('symmrlnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrlnj chk2mm trlpick)))@>"0 argsan
-  ('symmrlnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrlnc chk2mm trlpick)))@>"0 argsan
-  ('symmrljn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrljn chk2mm trlpick)))@>"0 argsan
-  ('symmrljt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrljt chk2mm trlpick)))@>"0 argsan
-  ('symmrljj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrljj chk2mm trlpick)))@>"0 argsan
-  ('symmrljc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrljc chk2mm trlpick)))@>"0 argsan
-  ('symmrunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm trupick)))@>"0 argsan
-  ('symmrunt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrunt chk2mm trupick)))@>"0 argsan
-  ('symmrunj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrunj chk2mm trupick)))@>"0 argsan
-  ('symmrunc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrunc chk2mm trupick)))@>"0 argsan
-  ('symmrujn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrujn chk2mm trupick)))@>"0 argsan
-  ('symmrujt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrujt chk2mm trupick)))@>"0 argsan
-  ('symmrujj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrujj chk2mm trupick)))@>"0 argsan
-  ('symmrujc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrujc chk2mm trupick)))@>"0 argsan
+  ('symmllnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm)))@>"0 argsam
+  ('symmllnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmllnt chk2mm)))@>"0 argsam
+  ('symmllnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmllnj chk2mm)))@>"0 argsam
+  ('symmllnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmllnc chk2mm)))@>"0 argsam
+  ('symmlljn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlljn chk2mm)))@>"0 argsam
+  ('symmlljt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlljt chk2mm)))@>"0 argsam
+  ('symmlljj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlljj chk2mm)))@>"0 argsam
+  ('symmlljc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlljc chk2mm)))@>"0 argsam
+  ('symmlunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm)))@>"0 argsam
+  ('symmlunt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlunt chk2mm)))@>"0 argsam
+  ('symmlunj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlunj chk2mm)))@>"0 argsam
+  ('symmlunc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlunc chk2mm)))@>"0 argsam
+  ('symmlujn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlujn chk2mm)))@>"0 argsam
+  ('symmlujt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlujt chk2mm)))@>"0 argsam
+  ('symmlujj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlujj chk2mm)))@>"0 argsam
+  ('symmlujc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmlujc chk2mm)))@>"0 argsam
+  ('symmrlnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm)))@>"0 argsan
+  ('symmrlnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrlnt chk2mm)))@>"0 argsan
+  ('symmrlnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrlnj chk2mm)))@>"0 argsan
+  ('symmrlnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrlnc chk2mm)))@>"0 argsan
+  ('symmrljn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrljn chk2mm)))@>"0 argsan
+  ('symmrljt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrljt chk2mm)))@>"0 argsan
+  ('symmrljj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrljj chk2mm)))@>"0 argsan
+  ('symmrljc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrljc chk2mm)))@>"0 argsan
+  ('symmrunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm)))@>"0 argsan
+  ('symmrunt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrunt chk2mm)))@>"0 argsan
+  ('symmrunj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrunj chk2mm)))@>"0 argsan
+  ('symmrunc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrunc chk2mm)))@>"0 argsan
+  ('symmrujn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrujn chk2mm)))@>"0 argsan
+  ('symmrujt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrujt chk2mm)))@>"0 argsan
+  ('symmrujj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrujj chk2mm)))@>"0 argsan
+  ('symmrujc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(symmrujc chk2mm)))@>"0 argsan
 
-  ('dsymmllnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm trlpick)))@>"0 argsdm
-  ('dsymmllnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnt chk2mm trlpick)))@>"0 argsdm
-  ('dsymmlunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm trupick)))@>"0 argsdm
-  ('dsymmlunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunt chk2mm trupick)))@>"0 argsdm
-  ('dsymmrlnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm trlpick)))@>"0 argsdn
-  ('dsymmrlnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnt chk2mm trlpick)))@>"0 argsdn
-  ('dsymmrunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm trupick)))@>"0 argsdn
-  ('dsymmrunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunt chk2mm trupick)))@>"0 argsdn
+  ('dsymmllnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm)))@>"0 argsdm
+  ('dsymmllnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnt chk2mm)))@>"0 argsdm
+  ('dsymmlunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm)))@>"0 argsdm
+  ('dsymmlunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunt chk2mm)))@>"0 argsdm
+  ('dsymmrlnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm)))@>"0 argsdn
+  ('dsymmrlnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnt chk2mm)))@>"0 argsdn
+  ('dsymmrunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm)))@>"0 argsdn
+  ('dsymmrunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunt chk2mm)))@>"0 argsdn
 
-  ('zsymmllnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm trlpick)))@>"0 argsam
-  ('zsymmllnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnt chk2mm trlpick)))@>"0 argsam
-  ('zsymmllnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnj chk2mm trlpick)))@>"0 argsam
-  ('zsymmllnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnc chk2mm trlpick)))@>"0 argsam
-  ('zsymmlljn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlljn chk2mm trlpick)))@>"0 argsam
-  ('zsymmlljt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlljt chk2mm trlpick)))@>"0 argsam
-  ('zsymmlljj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlljj chk2mm trlpick)))@>"0 argsam
-  ('zsymmlljc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlljc chk2mm trlpick)))@>"0 argsam
-  ('zsymmlunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm trupick)))@>"0 argsam
-  ('zsymmlunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunt chk2mm trupick)))@>"0 argsam
-  ('zsymmlunj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunj chk2mm trupick)))@>"0 argsam
-  ('zsymmlunc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunc chk2mm trupick)))@>"0 argsam
-  ('zsymmlujn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlujn chk2mm trupick)))@>"0 argsam
-  ('zsymmlujt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlujt chk2mm trupick)))@>"0 argsam
-  ('zsymmlujj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlujj chk2mm trupick)))@>"0 argsam
-  ('zsymmlujc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlujc chk2mm trupick)))@>"0 argsam
-  ('zsymmrlnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm trlpick)))@>"0 argsan
-  ('zsymmrlnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnt chk2mm trlpick)))@>"0 argsan
-  ('zsymmrlnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnj chk2mm trlpick)))@>"0 argsan
-  ('zsymmrlnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnc chk2mm trlpick)))@>"0 argsan
-  ('zsymmrljn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrljn chk2mm trlpick)))@>"0 argsan
-  ('zsymmrljt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrljt chk2mm trlpick)))@>"0 argsan
-  ('zsymmrljj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrljj chk2mm trlpick)))@>"0 argsan
-  ('zsymmrljc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrljc chk2mm trlpick)))@>"0 argsan
-  ('zsymmrunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm trupick)))@>"0 argsan
-  ('zsymmrunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunt chk2mm trupick)))@>"0 argsan
-  ('zsymmrunj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunj chk2mm trupick)))@>"0 argsan
-  ('zsymmrunc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunc chk2mm trupick)))@>"0 argsan
-  ('zsymmrujn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrujn chk2mm trupick)))@>"0 argsan
-  ('zsymmrujt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrujt chk2mm trupick)))@>"0 argsan
-  ('zsymmrujj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrujj chk2mm trupick)))@>"0 argsan
-  ('zsymmrujc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrujc chk2mm trupick)))@>"0 argsan
+  ('zsymmllnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnn chk2mm)))@>"0 argsam
+  ('zsymmllnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnt chk2mm)))@>"0 argsam
+  ('zsymmllnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnj chk2mm)))@>"0 argsam
+  ('zsymmllnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmllnc chk2mm)))@>"0 argsam
+  ('zsymmlljn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlljn chk2mm)))@>"0 argsam
+  ('zsymmlljt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlljt chk2mm)))@>"0 argsam
+  ('zsymmlljj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlljj chk2mm)))@>"0 argsam
+  ('zsymmlljc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlljc chk2mm)))@>"0 argsam
+  ('zsymmlunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunn chk2mm)))@>"0 argsam
+  ('zsymmlunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunt chk2mm)))@>"0 argsam
+  ('zsymmlunj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunj chk2mm)))@>"0 argsam
+  ('zsymmlunc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlunc chk2mm)))@>"0 argsam
+  ('zsymmlujn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlujn chk2mm)))@>"0 argsam
+  ('zsymmlujt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlujt chk2mm)))@>"0 argsam
+  ('zsymmlujj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlujj chk2mm)))@>"0 argsam
+  ('zsymmlujc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmlujc chk2mm)))@>"0 argsam
+  ('zsymmrlnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnn chk2mm)))@>"0 argsan
+  ('zsymmrlnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnt chk2mm)))@>"0 argsan
+  ('zsymmrlnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnj chk2mm)))@>"0 argsan
+  ('zsymmrlnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrlnc chk2mm)))@>"0 argsan
+  ('zsymmrljn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrljn chk2mm)))@>"0 argsan
+  ('zsymmrljt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrljt chk2mm)))@>"0 argsan
+  ('zsymmrljj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrljj chk2mm)))@>"0 argsan
+  ('zsymmrljc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrljc chk2mm)))@>"0 argsan
+  ('zsymmrunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunn chk2mm)))@>"0 argsan
+  ('zsymmrunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunt chk2mm)))@>"0 argsan
+  ('zsymmrunj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunj chk2mm)))@>"0 argsan
+  ('zsymmrunc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrunc chk2mm)))@>"0 argsan
+  ('zsymmrujn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrujn chk2mm)))@>"0 argsan
+  ('zsymmrujt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrujt chk2mm)))@>"0 argsan
+  ('zsymmrujj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrujj chk2mm)))@>"0 argsan
+  ('zsymmrujc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(symmrujc chk2mm)))@>"0 argsan
 
   EMPTY
 )
@@ -2786,76 +2786,76 @@ testbasichemm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; Ax ; B ; beta_i ; C) to tmonad
 
-  ('zhemmll_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(hemmllnn chk2mm trlpick)))@>"0 argszm
-  ('zhemmlu_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(hemmlunn chk2mm trupick)))@>"0 argszm
-  ('zhemmrl_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(hemmrlnn chk2mm trlpick)))@>"0 argszn
-  ('zhemmru_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(hemmrunn chk2mm trupick)))@>"0 argszn
+  ('zhemmll_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(hemmllnn chk2mm)))@>"0 argszm
+  ('zhemmlu_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(hemmlunn chk2mm)))@>"0 argszm
+  ('zhemmrl_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(hemmrlnn chk2mm)))@>"0 argszn
+  ('zhemmru_mtbla_'   tmonad (]`]`(_."_)`(_."_)`(hemmrunn chk2mm)))@>"0 argszn
 
-  ('hemmllnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmllnn chk2mm trlpick)))@>"0 argsam
-  ('hemmllnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmllnt chk2mm trlpick)))@>"0 argsam
-  ('hemmllnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmllnj chk2mm trlpick)))@>"0 argsam
-  ('hemmllnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmllnc chk2mm trlpick)))@>"0 argsam
-  ('hemmlljn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlljn chk2mm trlpick)))@>"0 argsam
-  ('hemmlljt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlljt chk2mm trlpick)))@>"0 argsam
-  ('hemmlljj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlljj chk2mm trlpick)))@>"0 argsam
-  ('hemmlljc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlljc chk2mm trlpick)))@>"0 argsam
-  ('hemmlunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlunn chk2mm trupick)))@>"0 argsam
-  ('hemmlunt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlunt chk2mm trupick)))@>"0 argsam
-  ('hemmlunj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlunj chk2mm trupick)))@>"0 argsam
-  ('hemmlunc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlunc chk2mm trupick)))@>"0 argsam
-  ('hemmlujn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlujn chk2mm trupick)))@>"0 argsam
-  ('hemmlujt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlujt chk2mm trupick)))@>"0 argsam
-  ('hemmlujj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlujj chk2mm trupick)))@>"0 argsam
-  ('hemmlujc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlujc chk2mm trupick)))@>"0 argsam
-  ('hemmrlnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrlnn chk2mm trlpick)))@>"0 argsan
-  ('hemmrlnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrlnt chk2mm trlpick)))@>"0 argsan
-  ('hemmrlnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrlnj chk2mm trlpick)))@>"0 argsan
-  ('hemmrlnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrlnc chk2mm trlpick)))@>"0 argsan
-  ('hemmrljn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrljn chk2mm trlpick)))@>"0 argsan
-  ('hemmrljt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrljt chk2mm trlpick)))@>"0 argsan
-  ('hemmrljj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrljj chk2mm trlpick)))@>"0 argsan
-  ('hemmrljc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrljc chk2mm trlpick)))@>"0 argsan
-  ('hemmrunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrunn chk2mm trupick)))@>"0 argsan
-  ('hemmrunt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrunt chk2mm trupick)))@>"0 argsan
-  ('hemmrunj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrunj chk2mm trupick)))@>"0 argsan
-  ('hemmrunc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrunc chk2mm trupick)))@>"0 argsan
-  ('hemmrujn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrujn chk2mm trupick)))@>"0 argsan
-  ('hemmrujt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrujt chk2mm trupick)))@>"0 argsan
-  ('hemmrujj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrujj chk2mm trupick)))@>"0 argsan
-  ('hemmrujc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrujc chk2mm trupick)))@>"0 argsan
+  ('hemmllnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmllnn chk2mm)))@>"0 argsam
+  ('hemmllnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmllnt chk2mm)))@>"0 argsam
+  ('hemmllnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmllnj chk2mm)))@>"0 argsam
+  ('hemmllnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmllnc chk2mm)))@>"0 argsam
+  ('hemmlljn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlljn chk2mm)))@>"0 argsam
+  ('hemmlljt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlljt chk2mm)))@>"0 argsam
+  ('hemmlljj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlljj chk2mm)))@>"0 argsam
+  ('hemmlljc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlljc chk2mm)))@>"0 argsam
+  ('hemmlunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlunn chk2mm)))@>"0 argsam
+  ('hemmlunt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlunt chk2mm)))@>"0 argsam
+  ('hemmlunj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlunj chk2mm)))@>"0 argsam
+  ('hemmlunc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlunc chk2mm)))@>"0 argsam
+  ('hemmlujn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlujn chk2mm)))@>"0 argsam
+  ('hemmlujt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlujt chk2mm)))@>"0 argsam
+  ('hemmlujj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlujj chk2mm)))@>"0 argsam
+  ('hemmlujc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmlujc chk2mm)))@>"0 argsam
+  ('hemmrlnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrlnn chk2mm)))@>"0 argsan
+  ('hemmrlnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrlnt chk2mm)))@>"0 argsan
+  ('hemmrlnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrlnj chk2mm)))@>"0 argsan
+  ('hemmrlnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrlnc chk2mm)))@>"0 argsan
+  ('hemmrljn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrljn chk2mm)))@>"0 argsan
+  ('hemmrljt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrljt chk2mm)))@>"0 argsan
+  ('hemmrljj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrljj chk2mm)))@>"0 argsan
+  ('hemmrljc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrljc chk2mm)))@>"0 argsan
+  ('hemmrunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrunn chk2mm)))@>"0 argsan
+  ('hemmrunt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrunt chk2mm)))@>"0 argsan
+  ('hemmrunj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrunj chk2mm)))@>"0 argsan
+  ('hemmrunc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrunc chk2mm)))@>"0 argsan
+  ('hemmrujn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrujn chk2mm)))@>"0 argsan
+  ('hemmrujt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrujt chk2mm)))@>"0 argsan
+  ('hemmrujj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrujj chk2mm)))@>"0 argsan
+  ('hemmrujc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(hemmrujc chk2mm)))@>"0 argsan
 
-  ('zhemmllnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmllnn chk2mm trlpick)))@>"0 argsam
-  ('zhemmllnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmllnt chk2mm trlpick)))@>"0 argsam
-  ('zhemmllnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmllnj chk2mm trlpick)))@>"0 argsam
-  ('zhemmllnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmllnc chk2mm trlpick)))@>"0 argsam
-  ('zhemmlljn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlljn chk2mm trlpick)))@>"0 argsam
-  ('zhemmlljt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlljt chk2mm trlpick)))@>"0 argsam
-  ('zhemmlljj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlljj chk2mm trlpick)))@>"0 argsam
-  ('zhemmlljc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlljc chk2mm trlpick)))@>"0 argsam
-  ('zhemmlunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlunn chk2mm trupick)))@>"0 argsam
-  ('zhemmlunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlunt chk2mm trupick)))@>"0 argsam
-  ('zhemmlunj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlunj chk2mm trupick)))@>"0 argsam
-  ('zhemmlunc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlunc chk2mm trupick)))@>"0 argsam
-  ('zhemmlujn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlujn chk2mm trupick)))@>"0 argsam
-  ('zhemmlujt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlujt chk2mm trupick)))@>"0 argsam
-  ('zhemmlujj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlujj chk2mm trupick)))@>"0 argsam
-  ('zhemmlujc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlujc chk2mm trupick)))@>"0 argsam
-  ('zhemmrlnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrlnn chk2mm trlpick)))@>"0 argsan
-  ('zhemmrlnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrlnt chk2mm trlpick)))@>"0 argsan
-  ('zhemmrlnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrlnj chk2mm trlpick)))@>"0 argsan
-  ('zhemmrlnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrlnc chk2mm trlpick)))@>"0 argsan
-  ('zhemmrljn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrljn chk2mm trlpick)))@>"0 argsan
-  ('zhemmrljt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrljt chk2mm trlpick)))@>"0 argsan
-  ('zhemmrljj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrljj chk2mm trlpick)))@>"0 argsan
-  ('zhemmrljc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrljc chk2mm trlpick)))@>"0 argsan
-  ('zhemmrunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrunn chk2mm trupick)))@>"0 argsan
-  ('zhemmrunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrunt chk2mm trupick)))@>"0 argsan
-  ('zhemmrunj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrunj chk2mm trupick)))@>"0 argsan
-  ('zhemmrunc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrunc chk2mm trupick)))@>"0 argsan
-  ('zhemmrujn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrujn chk2mm trupick)))@>"0 argsan
-  ('zhemmrujt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrujt chk2mm trupick)))@>"0 argsan
-  ('zhemmrujj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrujj chk2mm trupick)))@>"0 argsan
-  ('zhemmrujc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrujc chk2mm trupick)))@>"0 argsan
+  ('zhemmllnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmllnn chk2mm)))@>"0 argsam
+  ('zhemmllnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmllnt chk2mm)))@>"0 argsam
+  ('zhemmllnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmllnj chk2mm)))@>"0 argsam
+  ('zhemmllnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmllnc chk2mm)))@>"0 argsam
+  ('zhemmlljn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlljn chk2mm)))@>"0 argsam
+  ('zhemmlljt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlljt chk2mm)))@>"0 argsam
+  ('zhemmlljj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlljj chk2mm)))@>"0 argsam
+  ('zhemmlljc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlljc chk2mm)))@>"0 argsam
+  ('zhemmlunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlunn chk2mm)))@>"0 argsam
+  ('zhemmlunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlunt chk2mm)))@>"0 argsam
+  ('zhemmlunj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlunj chk2mm)))@>"0 argsam
+  ('zhemmlunc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlunc chk2mm)))@>"0 argsam
+  ('zhemmlujn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlujn chk2mm)))@>"0 argsam
+  ('zhemmlujt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlujt chk2mm)))@>"0 argsam
+  ('zhemmlujj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlujj chk2mm)))@>"0 argsam
+  ('zhemmlujc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmlujc chk2mm)))@>"0 argsam
+  ('zhemmrlnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrlnn chk2mm)))@>"0 argsan
+  ('zhemmrlnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrlnt chk2mm)))@>"0 argsan
+  ('zhemmrlnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrlnj chk2mm)))@>"0 argsan
+  ('zhemmrlnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrlnc chk2mm)))@>"0 argsan
+  ('zhemmrljn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrljn chk2mm)))@>"0 argsan
+  ('zhemmrljt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrljt chk2mm)))@>"0 argsan
+  ('zhemmrljj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrljj chk2mm)))@>"0 argsan
+  ('zhemmrljc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrljc chk2mm)))@>"0 argsan
+  ('zhemmrunn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrunn chk2mm)))@>"0 argsan
+  ('zhemmrunt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrunt chk2mm)))@>"0 argsan
+  ('zhemmrunj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrunj chk2mm)))@>"0 argsan
+  ('zhemmrunc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrunc chk2mm)))@>"0 argsan
+  ('zhemmrujn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrujn chk2mm)))@>"0 argsan
+  ('zhemmrujt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrujt chk2mm)))@>"0 argsan
+  ('zhemmrujj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrujj chk2mm)))@>"0 argsan
+  ('zhemmrujc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(hemmrujc chk2mm)))@>"0 argsan
 
   EMPTY
 )
@@ -2914,400 +2914,400 @@ testbasictrmm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; Ax ; B) to tmonad
 
-  ('dtrmmllnn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm trlpick )))@>"0 argsdm
-  ('dtrmmllnu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm trlpick )))@>"0 argsdm
-  ('dtrmmlltn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm trlpick )))@>"0 argsdm
-  ('dtrmmlltu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm trlpick )))@>"0 argsdm
-  ('dtrmmlunn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm trupick )))@>"0 argsdm
-  ('dtrmmlunu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm trupick )))@>"0 argsdm
-  ('dtrmmlutn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm trupick )))@>"0 argsdm
-  ('dtrmmlutu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm trupick )))@>"0 argsdm
-  ('dtrmmrlnn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm trlpick )))@>"0 argsdn
-  ('dtrmmrlnu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm trlpick )))@>"0 argsdn
-  ('dtrmmrltn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm trlpick )))@>"0 argsdn
-  ('dtrmmrltu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm trlpick )))@>"0 argsdn
-  ('dtrmmrunn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm trupick )))@>"0 argsdn
-  ('dtrmmrunu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm trupick )))@>"0 argsdn
-  ('dtrmmrutn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm trupick )))@>"0 argsdn
-  ('dtrmmrutu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm trupick )))@>"0 argsdn
+  ('dtrmmllnn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm)))@>"0 argsdm
+  ('dtrmmllnu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm)))@>"0 argsdm
+  ('dtrmmlltn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm)))@>"0 argsdm
+  ('dtrmmlltu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm)))@>"0 argsdm
+  ('dtrmmlunn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm)))@>"0 argsdm
+  ('dtrmmlunu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm)))@>"0 argsdm
+  ('dtrmmlutn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm)))@>"0 argsdm
+  ('dtrmmlutu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm)))@>"0 argsdm
+  ('dtrmmrlnn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm)))@>"0 argsdn
+  ('dtrmmrlnu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm)))@>"0 argsdn
+  ('dtrmmrltn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm)))@>"0 argsdn
+  ('dtrmmrltu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm)))@>"0 argsdn
+  ('dtrmmrunn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm)))@>"0 argsdn
+  ('dtrmmrunu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm)))@>"0 argsdn
+  ('dtrmmrutn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm)))@>"0 argsdn
+  ('dtrmmrutu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm)))@>"0 argsdn
 
-  ('ztrmmllnn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm trlpick )))@>"0 argszm
-  ('ztrmmllnu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm trlpick )))@>"0 argszm
-  ('ztrmmlltn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm trlpick )))@>"0 argszm
-  ('ztrmmlltu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm trlpick )))@>"0 argszm
-  ('ztrmmllcn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcn  chk3mm trlpick )))@>"0 argszm
-  ('ztrmmllcu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcu  chk3mm trlpick )))@>"0 argszm
-  ('ztrmmlunn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm trupick )))@>"0 argszm
-  ('ztrmmlunu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm trupick )))@>"0 argszm
-  ('ztrmmlutn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm trupick )))@>"0 argszm
-  ('ztrmmlutu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm trupick )))@>"0 argszm
-  ('ztrmmlucn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucn  chk3mm trupick )))@>"0 argszm
-  ('ztrmmlucu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucu  chk3mm trupick )))@>"0 argszm
-  ('ztrmmrlnn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm trlpick )))@>"0 argszn
-  ('ztrmmrlnu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm trlpick )))@>"0 argszn
-  ('ztrmmrltn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm trlpick )))@>"0 argszn
-  ('ztrmmrltu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm trlpick )))@>"0 argszn
-  ('ztrmmrlcn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcn  chk3mm trlpick )))@>"0 argszn
-  ('ztrmmrlcu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcu  chk3mm trlpick )))@>"0 argszn
-  ('ztrmmrunn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm trupick )))@>"0 argszn
-  ('ztrmmrunu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm trupick )))@>"0 argszn
-  ('ztrmmrutn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm trupick )))@>"0 argszn
-  ('ztrmmrutu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm trupick )))@>"0 argszn
-  ('ztrmmrucn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucn  chk3mm trupick )))@>"0 argszn
-  ('ztrmmrucu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucu  chk3mm trupick )))@>"0 argszn
+  ('ztrmmllnn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm)))@>"0 argszm
+  ('ztrmmllnu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm)))@>"0 argszm
+  ('ztrmmlltn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm)))@>"0 argszm
+  ('ztrmmlltu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm)))@>"0 argszm
+  ('ztrmmllcn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcn  chk3mm)))@>"0 argszm
+  ('ztrmmllcu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcu  chk3mm)))@>"0 argszm
+  ('ztrmmlunn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm)))@>"0 argszm
+  ('ztrmmlunu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm)))@>"0 argszm
+  ('ztrmmlutn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm)))@>"0 argszm
+  ('ztrmmlutu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm)))@>"0 argszm
+  ('ztrmmlucn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucn  chk3mm)))@>"0 argszm
+  ('ztrmmlucu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucu  chk3mm)))@>"0 argszm
+  ('ztrmmrlnn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm)))@>"0 argszn
+  ('ztrmmrlnu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm)))@>"0 argszn
+  ('ztrmmrltn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm)))@>"0 argszn
+  ('ztrmmrltu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm)))@>"0 argszn
+  ('ztrmmrlcn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcn  chk3mm)))@>"0 argszn
+  ('ztrmmrlcu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcu  chk3mm)))@>"0 argszn
+  ('ztrmmrunn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm)))@>"0 argszn
+  ('ztrmmrunu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm)))@>"0 argszn
+  ('ztrmmrutn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm)))@>"0 argszn
+  ('ztrmmrutu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm)))@>"0 argszn
+  ('ztrmmrucn_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucn  chk3mm)))@>"0 argszn
+  ('ztrmmrucu_mtbla_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucu  chk3mm)))@>"0 argszn
 
-  ('trmmllnn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm trlpick )))@>"0 argsam
-  ('trmmllnu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm trlpick )))@>"0 argsam
-  ('trmmlltn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm trlpick )))@>"0 argsam
-  ('trmmlltu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm trlpick )))@>"0 argsam
-  ('trmmlunn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm trupick )))@>"0 argsam
-  ('trmmlunu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm trupick )))@>"0 argsam
-  ('trmmlutn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm trupick )))@>"0 argsam
-  ('trmmlutu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm trupick )))@>"0 argsam
-  ('trmmrlnn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm trlpick )))@>"0 argsan
-  ('trmmrlnu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm trlpick )))@>"0 argsan
-  ('trmmrltn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm trlpick )))@>"0 argsan
-  ('trmmrltu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm trlpick )))@>"0 argsan
-  ('trmmrunn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm trupick )))@>"0 argsan
-  ('trmmrunu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm trupick )))@>"0 argsan
-  ('trmmrutn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm trupick )))@>"0 argsan
-  ('trmmrutu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm trupick )))@>"0 argsan
+  ('trmmllnn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm)))@>"0 argsam
+  ('trmmllnu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm)))@>"0 argsam
+  ('trmmlltn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm)))@>"0 argsam
+  ('trmmlltu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm)))@>"0 argsam
+  ('trmmlunn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm)))@>"0 argsam
+  ('trmmlunu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm)))@>"0 argsam
+  ('trmmlutn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm)))@>"0 argsam
+  ('trmmlutu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm)))@>"0 argsam
+  ('trmmrlnn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm)))@>"0 argsan
+  ('trmmrlnu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm)))@>"0 argsan
+  ('trmmrltn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm)))@>"0 argsan
+  ('trmmrltu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm)))@>"0 argsan
+  ('trmmrunn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm)))@>"0 argsan
+  ('trmmrunu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm)))@>"0 argsan
+  ('trmmrutn_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm)))@>"0 argsan
+  ('trmmrutu_mtbli_'   tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm)))@>"0 argsan
 
-  ('dtrmmllnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm trlpick )))@>"0 argsdm
-  ('dtrmmllnu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm trlpick )))@>"0 argsdm
-  ('dtrmmlltn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm trlpick )))@>"0 argsdm
-  ('dtrmmlltu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm trlpick )))@>"0 argsdm
-  ('dtrmmlunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm trupick )))@>"0 argsdm
-  ('dtrmmlunu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm trupick )))@>"0 argsdm
-  ('dtrmmlutn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm trupick )))@>"0 argsdm
-  ('dtrmmlutu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm trupick )))@>"0 argsdm
-  ('dtrmmrlnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm trlpick )))@>"0 argsdn
-  ('dtrmmrlnu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm trlpick )))@>"0 argsdn
-  ('dtrmmrltn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm trlpick )))@>"0 argsdn
-  ('dtrmmrltu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm trlpick )))@>"0 argsdn
-  ('dtrmmrunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm trupick )))@>"0 argsdn
-  ('dtrmmrunu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm trupick )))@>"0 argsdn
-  ('dtrmmrutn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm trupick )))@>"0 argsdn
-  ('dtrmmrutu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm trupick )))@>"0 argsdn
+  ('dtrmmllnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm)))@>"0 argsdm
+  ('dtrmmllnu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm)))@>"0 argsdm
+  ('dtrmmlltn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm)))@>"0 argsdm
+  ('dtrmmlltu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm)))@>"0 argsdm
+  ('dtrmmlunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm)))@>"0 argsdm
+  ('dtrmmlunu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm)))@>"0 argsdm
+  ('dtrmmlutn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm)))@>"0 argsdm
+  ('dtrmmlutu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm)))@>"0 argsdm
+  ('dtrmmrlnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm)))@>"0 argsdn
+  ('dtrmmrlnu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm)))@>"0 argsdn
+  ('dtrmmrltn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm)))@>"0 argsdn
+  ('dtrmmrltu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm)))@>"0 argsdn
+  ('dtrmmrunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm)))@>"0 argsdn
+  ('dtrmmrunu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm)))@>"0 argsdn
+  ('dtrmmrutn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm)))@>"0 argsdn
+  ('dtrmmrutu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm)))@>"0 argsdn
 
-  ('ztrmmllnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm trlpick )))@>"0 argsam
-  ('ztrmmllnu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm trlpick )))@>"0 argsam
-  ('ztrmmlltn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm trlpick )))@>"0 argsam
-  ('ztrmmlltu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm trlpick )))@>"0 argsam
-  ('ztrmmllcn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcn  chk3mm trlpick )))@>"0 argsam
-  ('ztrmmllcu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcu  chk3mm trlpick )))@>"0 argsam
-  ('ztrmmlunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm trupick )))@>"0 argsam
-  ('ztrmmlunu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm trupick )))@>"0 argsam
-  ('ztrmmlutn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm trupick )))@>"0 argsam
-  ('ztrmmlutu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm trupick )))@>"0 argsam
-  ('ztrmmlucn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucn  chk3mm trupick )))@>"0 argsam
-  ('ztrmmlucu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucu  chk3mm trupick )))@>"0 argsam
-  ('ztrmmrlnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm trlpick )))@>"0 argsan
-  ('ztrmmrlnu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm trlpick )))@>"0 argsan
-  ('ztrmmrltn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm trlpick )))@>"0 argsan
-  ('ztrmmrltu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm trlpick )))@>"0 argsan
-  ('ztrmmrlcn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcn  chk3mm trlpick )))@>"0 argsan
-  ('ztrmmrlcu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcu  chk3mm trlpick )))@>"0 argsan
-  ('ztrmmrunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm trupick )))@>"0 argsan
-  ('ztrmmrunu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm trupick )))@>"0 argsan
-  ('ztrmmrutn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm trupick )))@>"0 argsan
-  ('ztrmmrutu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm trupick )))@>"0 argsan
-  ('ztrmmrucn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucn  chk3mm trupick )))@>"0 argsan
-  ('ztrmmrucu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucu  chk3mm trupick )))@>"0 argsan
+  ('ztrmmllnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnn  chk3mm)))@>"0 argsam
+  ('ztrmmllnu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnu  chk3mm)))@>"0 argsam
+  ('ztrmmlltn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltn  chk3mm)))@>"0 argsam
+  ('ztrmmlltu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltu  chk3mm)))@>"0 argsam
+  ('ztrmmllcn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcn  chk3mm)))@>"0 argsam
+  ('ztrmmllcu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcu  chk3mm)))@>"0 argsam
+  ('ztrmmlunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunn  chk3mm)))@>"0 argsam
+  ('ztrmmlunu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunu  chk3mm)))@>"0 argsam
+  ('ztrmmlutn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutn  chk3mm)))@>"0 argsam
+  ('ztrmmlutu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutu  chk3mm)))@>"0 argsam
+  ('ztrmmlucn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucn  chk3mm)))@>"0 argsam
+  ('ztrmmlucu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucu  chk3mm)))@>"0 argsam
+  ('ztrmmrlnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnn  chk3mm)))@>"0 argsan
+  ('ztrmmrlnu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnu  chk3mm)))@>"0 argsan
+  ('ztrmmrltn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltn  chk3mm)))@>"0 argsan
+  ('ztrmmrltu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltu  chk3mm)))@>"0 argsan
+  ('ztrmmrlcn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcn  chk3mm)))@>"0 argsan
+  ('ztrmmrlcu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcu  chk3mm)))@>"0 argsan
+  ('ztrmmrunn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunn  chk3mm)))@>"0 argsan
+  ('ztrmmrunu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunu  chk3mm)))@>"0 argsan
+  ('ztrmmrutn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutn  chk3mm)))@>"0 argsan
+  ('ztrmmrutu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutu  chk3mm)))@>"0 argsan
+  ('ztrmmrucn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucn  chk3mm)))@>"0 argsan
+  ('ztrmmrucu_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucu  chk3mm)))@>"0 argsan
 
   NB. note: chk2mm accepts input in format compatible with
   NB.       BLIS' trmm3, so let's employ it
 
-  ('trmmllnnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnnn chk2mm trlpick )))@>"0 argsamm
-  ('trmmllnnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnnt chk2mm trlpick )))@>"0 argsamn
-  ('trmmllnnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnnj chk2mm trlpick )))@>"0 argsamm
-  ('trmmllnnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnnc chk2mm trlpick )))@>"0 argsamn
-  ('trmmllnun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnun chk2mm trl1pick)))@>"0 argsamm
-  ('trmmllnut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnut chk2mm trl1pick)))@>"0 argsamn
-  ('trmmllnuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnuj chk2mm trl1pick)))@>"0 argsamm
-  ('trmmllnuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnuc chk2mm trl1pick)))@>"0 argsamn
-  ('trmmlltnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltnn chk2mm trlpick )))@>"0 argsamm
-  ('trmmlltnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltnt chk2mm trlpick )))@>"0 argsamn
-  ('trmmlltnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltnj chk2mm trlpick )))@>"0 argsamm
-  ('trmmlltnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltnc chk2mm trlpick )))@>"0 argsamn
-  ('trmmlltun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltun chk2mm trl1pick)))@>"0 argsamm
-  ('trmmlltut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltut chk2mm trl1pick)))@>"0 argsamn
-  ('trmmlltuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltuj chk2mm trl1pick)))@>"0 argsamm
-  ('trmmlltuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltuc chk2mm trl1pick)))@>"0 argsamn
-  ('trmmlljnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljnn chk2mm trlpick )))@>"0 argsamm
-  ('trmmlljnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljnt chk2mm trlpick )))@>"0 argsamn
-  ('trmmlljnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljnj chk2mm trlpick )))@>"0 argsamm
-  ('trmmlljnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljnc chk2mm trlpick )))@>"0 argsamn
-  ('trmmlljun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljun chk2mm trl1pick)))@>"0 argsamm
-  ('trmmlljut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljut chk2mm trl1pick)))@>"0 argsamn
-  ('trmmlljuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljuj chk2mm trl1pick)))@>"0 argsamm
-  ('trmmlljuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljuc chk2mm trl1pick)))@>"0 argsamn
-  ('trmmllcnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcnn chk2mm trlpick )))@>"0 argsamm
-  ('trmmllcnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcnt chk2mm trlpick )))@>"0 argsamn
-  ('trmmllcnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcnj chk2mm trlpick )))@>"0 argsamm
-  ('trmmllcnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcnc chk2mm trlpick )))@>"0 argsamn
-  ('trmmllcun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcun chk2mm trl1pick)))@>"0 argsamm
-  ('trmmllcut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcut chk2mm trl1pick)))@>"0 argsamn
-  ('trmmllcuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcuj chk2mm trl1pick)))@>"0 argsamm
-  ('trmmllcuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcuc chk2mm trl1pick)))@>"0 argsamn
-  ('trmmlunnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunnn chk2mm trupick )))@>"0 argsamm
-  ('trmmlunnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunnt chk2mm trupick )))@>"0 argsamn
-  ('trmmlunnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunnj chk2mm trupick )))@>"0 argsamm
-  ('trmmlunnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunnc chk2mm trupick )))@>"0 argsamn
-  ('trmmlunun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunun chk2mm tru1pick)))@>"0 argsamm
-  ('trmmlunut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunut chk2mm tru1pick)))@>"0 argsamn
-  ('trmmlunuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunuj chk2mm tru1pick)))@>"0 argsamm
-  ('trmmlunuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunuc chk2mm tru1pick)))@>"0 argsamn
-  ('trmmlutnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutnn chk2mm trupick )))@>"0 argsamm
-  ('trmmlutnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutnt chk2mm trupick )))@>"0 argsamn
-  ('trmmlutnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutnj chk2mm trupick )))@>"0 argsamm
-  ('trmmlutnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutnc chk2mm trupick )))@>"0 argsamn
-  ('trmmlutun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutun chk2mm tru1pick)))@>"0 argsamm
-  ('trmmlutut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutut chk2mm tru1pick)))@>"0 argsamn
-  ('trmmlutuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutuj chk2mm tru1pick)))@>"0 argsamm
-  ('trmmlutuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutuc chk2mm tru1pick)))@>"0 argsamn
-  ('trmmlujnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujnn chk2mm trupick )))@>"0 argsamm
-  ('trmmlujnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujnt chk2mm trupick )))@>"0 argsamn
-  ('trmmlujnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujnj chk2mm trupick )))@>"0 argsamm
-  ('trmmlujnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujnc chk2mm trupick )))@>"0 argsamn
-  ('trmmlujun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujun chk2mm tru1pick)))@>"0 argsamm
-  ('trmmlujut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujut chk2mm tru1pick)))@>"0 argsamn
-  ('trmmlujuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujuj chk2mm tru1pick)))@>"0 argsamm
-  ('trmmlujuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujuc chk2mm tru1pick)))@>"0 argsamn
-  ('trmmlucnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucnn chk2mm trupick )))@>"0 argsamm
-  ('trmmlucnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucnt chk2mm trupick )))@>"0 argsamn
-  ('trmmlucnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucnj chk2mm trupick )))@>"0 argsamm
-  ('trmmlucnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucnc chk2mm trupick )))@>"0 argsamn
-  ('trmmlucun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucun chk2mm tru1pick)))@>"0 argsamm
-  ('trmmlucut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucut chk2mm tru1pick)))@>"0 argsamn
-  ('trmmlucuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucuj chk2mm tru1pick)))@>"0 argsamm
-  ('trmmlucuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucuc chk2mm tru1pick)))@>"0 argsamn
-  ('trmmrlnnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnnn chk2mm trlpick )))@>"0 argsanm
-  ('trmmrlnnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnnt chk2mm trlpick )))@>"0 argsann
-  ('trmmrlnnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnnj chk2mm trlpick )))@>"0 argsanm
-  ('trmmrlnnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnnc chk2mm trlpick )))@>"0 argsann
-  ('trmmrlnun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnun chk2mm trl1pick)))@>"0 argsanm
-  ('trmmrlnut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnut chk2mm trl1pick)))@>"0 argsann
-  ('trmmrlnuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnuj chk2mm trl1pick)))@>"0 argsanm
-  ('trmmrlnuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnuc chk2mm trl1pick)))@>"0 argsann
-  ('trmmrltnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltnn chk2mm trlpick )))@>"0 argsanm
-  ('trmmrltnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltnt chk2mm trlpick )))@>"0 argsann
-  ('trmmrltnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltnj chk2mm trlpick )))@>"0 argsanm
-  ('trmmrltnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltnc chk2mm trlpick )))@>"0 argsann
-  ('trmmrltun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltun chk2mm trl1pick)))@>"0 argsanm
-  ('trmmrltut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltut chk2mm trl1pick)))@>"0 argsann
-  ('trmmrltuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltuj chk2mm trl1pick)))@>"0 argsanm
-  ('trmmrltuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltuc chk2mm trl1pick)))@>"0 argsann
-  ('trmmrljnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljnn chk2mm trlpick )))@>"0 argsanm
-  ('trmmrljnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljnt chk2mm trlpick )))@>"0 argsann
-  ('trmmrljnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljnj chk2mm trlpick )))@>"0 argsanm
-  ('trmmrljnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljnc chk2mm trlpick )))@>"0 argsann
-  ('trmmrljun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljun chk2mm trl1pick)))@>"0 argsanm
-  ('trmmrljut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljut chk2mm trl1pick)))@>"0 argsann
-  ('trmmrljuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljuj chk2mm trl1pick)))@>"0 argsanm
-  ('trmmrljuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljuc chk2mm trl1pick)))@>"0 argsann
-  ('trmmrlcnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcnn chk2mm trlpick )))@>"0 argsanm
-  ('trmmrlcnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcnt chk2mm trlpick )))@>"0 argsann
-  ('trmmrlcnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcnj chk2mm trlpick )))@>"0 argsanm
-  ('trmmrlcnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcnc chk2mm trlpick )))@>"0 argsann
-  ('trmmrlcun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcun chk2mm trl1pick)))@>"0 argsanm
-  ('trmmrlcut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcut chk2mm trl1pick)))@>"0 argsann
-  ('trmmrlcuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcuj chk2mm trl1pick)))@>"0 argsanm
-  ('trmmrlcuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcuc chk2mm trl1pick)))@>"0 argsann
-  ('trmmrunnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunnn chk2mm trupick )))@>"0 argsanm
-  ('trmmrunnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunnt chk2mm trupick )))@>"0 argsann
-  ('trmmrunnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunnj chk2mm trupick )))@>"0 argsanm
-  ('trmmrunnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunnc chk2mm trupick )))@>"0 argsann
-  ('trmmrunun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunun chk2mm tru1pick)))@>"0 argsanm
-  ('trmmrunut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunut chk2mm tru1pick)))@>"0 argsann
-  ('trmmrunuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunuj chk2mm tru1pick)))@>"0 argsanm
-  ('trmmrunuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunuc chk2mm tru1pick)))@>"0 argsann
-  ('trmmrutnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutnn chk2mm trupick )))@>"0 argsanm
-  ('trmmrutnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutnt chk2mm trupick )))@>"0 argsann
-  ('trmmrutnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutnj chk2mm trupick )))@>"0 argsanm
-  ('trmmrutnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutnc chk2mm trupick )))@>"0 argsann
-  ('trmmrutun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutun chk2mm tru1pick)))@>"0 argsanm
-  ('trmmrutut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutut chk2mm tru1pick)))@>"0 argsann
-  ('trmmrutuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutuj chk2mm tru1pick)))@>"0 argsanm
-  ('trmmrutuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutuc chk2mm tru1pick)))@>"0 argsann
-  ('trmmrujnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujnn chk2mm trupick )))@>"0 argsanm
-  ('trmmrujnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujnt chk2mm trupick )))@>"0 argsann
-  ('trmmrujnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujnj chk2mm trupick )))@>"0 argsanm
-  ('trmmrujnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujnc chk2mm trupick )))@>"0 argsann
-  ('trmmrujun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujun chk2mm tru1pick)))@>"0 argsanm
-  ('trmmrujut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujut chk2mm tru1pick)))@>"0 argsann
-  ('trmmrujuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujuj chk2mm tru1pick)))@>"0 argsanm
-  ('trmmrujuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujuc chk2mm tru1pick)))@>"0 argsann
-  ('trmmrucnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucnn chk2mm trupick )))@>"0 argsanm
-  ('trmmrucnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucnt chk2mm trupick )))@>"0 argsann
-  ('trmmrucnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucnj chk2mm trupick )))@>"0 argsanm
-  ('trmmrucnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucnc chk2mm trupick )))@>"0 argsann
-  ('trmmrucun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucun chk2mm tru1pick)))@>"0 argsanm
-  ('trmmrucut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucut chk2mm tru1pick)))@>"0 argsann
-  ('trmmrucuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucuj chk2mm tru1pick)))@>"0 argsanm
-  ('trmmrucuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucuc chk2mm tru1pick)))@>"0 argsann
+  ('trmmllnnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnnn chk2mm)))@>"0 argsamm
+  ('trmmllnnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnnt chk2mm)))@>"0 argsamn
+  ('trmmllnnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnnj chk2mm)))@>"0 argsamm
+  ('trmmllnnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnnc chk2mm)))@>"0 argsamn
+  ('trmmllnun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnun chk2mm)))@>"0 argsamm
+  ('trmmllnut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnut chk2mm)))@>"0 argsamn
+  ('trmmllnuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnuj chk2mm)))@>"0 argsamm
+  ('trmmllnuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllnuc chk2mm)))@>"0 argsamn
+  ('trmmlltnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltnn chk2mm)))@>"0 argsamm
+  ('trmmlltnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltnt chk2mm)))@>"0 argsamn
+  ('trmmlltnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltnj chk2mm)))@>"0 argsamm
+  ('trmmlltnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltnc chk2mm)))@>"0 argsamn
+  ('trmmlltun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltun chk2mm)))@>"0 argsamm
+  ('trmmlltut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltut chk2mm)))@>"0 argsamn
+  ('trmmlltuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltuj chk2mm)))@>"0 argsamm
+  ('trmmlltuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlltuc chk2mm)))@>"0 argsamn
+  ('trmmlljnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljnn chk2mm)))@>"0 argsamm
+  ('trmmlljnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljnt chk2mm)))@>"0 argsamn
+  ('trmmlljnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljnj chk2mm)))@>"0 argsamm
+  ('trmmlljnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljnc chk2mm)))@>"0 argsamn
+  ('trmmlljun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljun chk2mm)))@>"0 argsamm
+  ('trmmlljut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljut chk2mm)))@>"0 argsamn
+  ('trmmlljuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljuj chk2mm)))@>"0 argsamm
+  ('trmmlljuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlljuc chk2mm)))@>"0 argsamn
+  ('trmmllcnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcnn chk2mm)))@>"0 argsamm
+  ('trmmllcnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcnt chk2mm)))@>"0 argsamn
+  ('trmmllcnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcnj chk2mm)))@>"0 argsamm
+  ('trmmllcnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcnc chk2mm)))@>"0 argsamn
+  ('trmmllcun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcun chk2mm)))@>"0 argsamm
+  ('trmmllcut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcut chk2mm)))@>"0 argsamn
+  ('trmmllcuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcuj chk2mm)))@>"0 argsamm
+  ('trmmllcuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmllcuc chk2mm)))@>"0 argsamn
+  ('trmmlunnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunnn chk2mm)))@>"0 argsamm
+  ('trmmlunnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunnt chk2mm)))@>"0 argsamn
+  ('trmmlunnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunnj chk2mm)))@>"0 argsamm
+  ('trmmlunnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunnc chk2mm)))@>"0 argsamn
+  ('trmmlunun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunun chk2mm)))@>"0 argsamm
+  ('trmmlunut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunut chk2mm)))@>"0 argsamn
+  ('trmmlunuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunuj chk2mm)))@>"0 argsamm
+  ('trmmlunuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlunuc chk2mm)))@>"0 argsamn
+  ('trmmlutnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutnn chk2mm)))@>"0 argsamm
+  ('trmmlutnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutnt chk2mm)))@>"0 argsamn
+  ('trmmlutnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutnj chk2mm)))@>"0 argsamm
+  ('trmmlutnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutnc chk2mm)))@>"0 argsamn
+  ('trmmlutun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutun chk2mm)))@>"0 argsamm
+  ('trmmlutut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutut chk2mm)))@>"0 argsamn
+  ('trmmlutuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutuj chk2mm)))@>"0 argsamm
+  ('trmmlutuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlutuc chk2mm)))@>"0 argsamn
+  ('trmmlujnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujnn chk2mm)))@>"0 argsamm
+  ('trmmlujnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujnt chk2mm)))@>"0 argsamn
+  ('trmmlujnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujnj chk2mm)))@>"0 argsamm
+  ('trmmlujnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujnc chk2mm)))@>"0 argsamn
+  ('trmmlujun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujun chk2mm)))@>"0 argsamm
+  ('trmmlujut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujut chk2mm)))@>"0 argsamn
+  ('trmmlujuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujuj chk2mm)))@>"0 argsamm
+  ('trmmlujuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlujuc chk2mm)))@>"0 argsamn
+  ('trmmlucnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucnn chk2mm)))@>"0 argsamm
+  ('trmmlucnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucnt chk2mm)))@>"0 argsamn
+  ('trmmlucnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucnj chk2mm)))@>"0 argsamm
+  ('trmmlucnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucnc chk2mm)))@>"0 argsamn
+  ('trmmlucun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucun chk2mm)))@>"0 argsamm
+  ('trmmlucut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucut chk2mm)))@>"0 argsamn
+  ('trmmlucuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucuj chk2mm)))@>"0 argsamm
+  ('trmmlucuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmlucuc chk2mm)))@>"0 argsamn
+  ('trmmrlnnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnnn chk2mm)))@>"0 argsanm
+  ('trmmrlnnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnnt chk2mm)))@>"0 argsann
+  ('trmmrlnnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnnj chk2mm)))@>"0 argsanm
+  ('trmmrlnnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnnc chk2mm)))@>"0 argsann
+  ('trmmrlnun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnun chk2mm)))@>"0 argsanm
+  ('trmmrlnut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnut chk2mm)))@>"0 argsann
+  ('trmmrlnuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnuj chk2mm)))@>"0 argsanm
+  ('trmmrlnuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlnuc chk2mm)))@>"0 argsann
+  ('trmmrltnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltnn chk2mm)))@>"0 argsanm
+  ('trmmrltnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltnt chk2mm)))@>"0 argsann
+  ('trmmrltnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltnj chk2mm)))@>"0 argsanm
+  ('trmmrltnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltnc chk2mm)))@>"0 argsann
+  ('trmmrltun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltun chk2mm)))@>"0 argsanm
+  ('trmmrltut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltut chk2mm)))@>"0 argsann
+  ('trmmrltuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltuj chk2mm)))@>"0 argsanm
+  ('trmmrltuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrltuc chk2mm)))@>"0 argsann
+  ('trmmrljnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljnn chk2mm)))@>"0 argsanm
+  ('trmmrljnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljnt chk2mm)))@>"0 argsann
+  ('trmmrljnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljnj chk2mm)))@>"0 argsanm
+  ('trmmrljnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljnc chk2mm)))@>"0 argsann
+  ('trmmrljun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljun chk2mm)))@>"0 argsanm
+  ('trmmrljut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljut chk2mm)))@>"0 argsann
+  ('trmmrljuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljuj chk2mm)))@>"0 argsanm
+  ('trmmrljuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrljuc chk2mm)))@>"0 argsann
+  ('trmmrlcnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcnn chk2mm)))@>"0 argsanm
+  ('trmmrlcnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcnt chk2mm)))@>"0 argsann
+  ('trmmrlcnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcnj chk2mm)))@>"0 argsanm
+  ('trmmrlcnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcnc chk2mm)))@>"0 argsann
+  ('trmmrlcun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcun chk2mm)))@>"0 argsanm
+  ('trmmrlcut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcut chk2mm)))@>"0 argsann
+  ('trmmrlcuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcuj chk2mm)))@>"0 argsanm
+  ('trmmrlcuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrlcuc chk2mm)))@>"0 argsann
+  ('trmmrunnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunnn chk2mm)))@>"0 argsanm
+  ('trmmrunnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunnt chk2mm)))@>"0 argsann
+  ('trmmrunnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunnj chk2mm)))@>"0 argsanm
+  ('trmmrunnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunnc chk2mm)))@>"0 argsann
+  ('trmmrunun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunun chk2mm)))@>"0 argsanm
+  ('trmmrunut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunut chk2mm)))@>"0 argsann
+  ('trmmrunuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunuj chk2mm)))@>"0 argsanm
+  ('trmmrunuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrunuc chk2mm)))@>"0 argsann
+  ('trmmrutnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutnn chk2mm)))@>"0 argsanm
+  ('trmmrutnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutnt chk2mm)))@>"0 argsann
+  ('trmmrutnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutnj chk2mm)))@>"0 argsanm
+  ('trmmrutnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutnc chk2mm)))@>"0 argsann
+  ('trmmrutun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutun chk2mm)))@>"0 argsanm
+  ('trmmrutut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutut chk2mm)))@>"0 argsann
+  ('trmmrutuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutuj chk2mm)))@>"0 argsanm
+  ('trmmrutuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrutuc chk2mm)))@>"0 argsann
+  ('trmmrujnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujnn chk2mm)))@>"0 argsanm
+  ('trmmrujnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujnt chk2mm)))@>"0 argsann
+  ('trmmrujnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujnj chk2mm)))@>"0 argsanm
+  ('trmmrujnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujnc chk2mm)))@>"0 argsann
+  ('trmmrujun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujun chk2mm)))@>"0 argsanm
+  ('trmmrujut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujut chk2mm)))@>"0 argsann
+  ('trmmrujuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujuj chk2mm)))@>"0 argsanm
+  ('trmmrujuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrujuc chk2mm)))@>"0 argsann
+  ('trmmrucnn_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucnn chk2mm)))@>"0 argsanm
+  ('trmmrucnt_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucnt chk2mm)))@>"0 argsann
+  ('trmmrucnj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucnj chk2mm)))@>"0 argsanm
+  ('trmmrucnc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucnc chk2mm)))@>"0 argsann
+  ('trmmrucun_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucun chk2mm)))@>"0 argsanm
+  ('trmmrucut_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucut chk2mm)))@>"0 argsann
+  ('trmmrucuj_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucuj chk2mm)))@>"0 argsanm
+  ('trmmrucuc_mtbli_'  tmonad (]`]`(_."_)`(_."_)`(trmmrucuc chk2mm)))@>"0 argsann
 
-  ('dtrmmllnnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnn chk2mm trlpick )))@>"0 argsdmm
-  ('dtrmmllnnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnt chk2mm trlpick )))@>"0 argsdmn
-  ('dtrmmllnun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnun chk2mm trl1pick)))@>"0 argsdmm
-  ('dtrmmllnut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnut chk2mm trl1pick)))@>"0 argsdmn
-  ('dtrmmlltnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnn chk2mm trlpick )))@>"0 argsdmm
-  ('dtrmmlltnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnt chk2mm trlpick )))@>"0 argsdmn
-  ('dtrmmlltun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltun chk2mm trl1pick)))@>"0 argsdmm
-  ('dtrmmlltut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltut chk2mm trl1pick)))@>"0 argsdmn
-  ('dtrmmlunnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnn chk2mm trupick )))@>"0 argsdmm
-  ('dtrmmlunnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnt chk2mm trupick )))@>"0 argsdmn
-  ('dtrmmlunun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunun chk2mm tru1pick)))@>"0 argsdmm
-  ('dtrmmlunut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunut chk2mm tru1pick)))@>"0 argsdmn
-  ('dtrmmlutnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnn chk2mm trupick )))@>"0 argsdmm
-  ('dtrmmlutnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnt chk2mm trupick )))@>"0 argsdmn
-  ('dtrmmlutun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutun chk2mm tru1pick)))@>"0 argsdmm
-  ('dtrmmlutut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutut chk2mm tru1pick)))@>"0 argsdmn
-  ('dtrmmrlnnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnn chk2mm trlpick )))@>"0 argsdnm
-  ('dtrmmrlnnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnt chk2mm trlpick )))@>"0 argsdnn
-  ('dtrmmrlnun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnun chk2mm trl1pick)))@>"0 argsdnm
-  ('dtrmmrlnut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnut chk2mm trl1pick)))@>"0 argsdnn
-  ('dtrmmrltnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnn chk2mm trlpick )))@>"0 argsdnm
-  ('dtrmmrltnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnt chk2mm trlpick )))@>"0 argsdnn
-  ('dtrmmrltun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltun chk2mm trl1pick)))@>"0 argsdnm
-  ('dtrmmrltut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltut chk2mm trl1pick)))@>"0 argsdnn
-  ('dtrmmrunnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnn chk2mm trupick )))@>"0 argsdnm
-  ('dtrmmrunnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnt chk2mm trupick )))@>"0 argsdnn
-  ('dtrmmrunun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunun chk2mm tru1pick)))@>"0 argsdnm
-  ('dtrmmrunut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunut chk2mm tru1pick)))@>"0 argsdnn
-  ('dtrmmrutnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnn chk2mm trupick )))@>"0 argsdnm
-  ('dtrmmrutnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnt chk2mm trupick )))@>"0 argsdnn
-  ('dtrmmrutun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutun chk2mm tru1pick)))@>"0 argsdnm
-  ('dtrmmrutut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutut chk2mm tru1pick)))@>"0 argsdnn
+  ('dtrmmllnnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnn chk2mm)))@>"0 argsdmm
+  ('dtrmmllnnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnt chk2mm)))@>"0 argsdmn
+  ('dtrmmllnun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnun chk2mm)))@>"0 argsdmm
+  ('dtrmmllnut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnut chk2mm)))@>"0 argsdmn
+  ('dtrmmlltnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnn chk2mm)))@>"0 argsdmm
+  ('dtrmmlltnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnt chk2mm)))@>"0 argsdmn
+  ('dtrmmlltun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltun chk2mm)))@>"0 argsdmm
+  ('dtrmmlltut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltut chk2mm)))@>"0 argsdmn
+  ('dtrmmlunnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnn chk2mm)))@>"0 argsdmm
+  ('dtrmmlunnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnt chk2mm)))@>"0 argsdmn
+  ('dtrmmlunun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunun chk2mm)))@>"0 argsdmm
+  ('dtrmmlunut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunut chk2mm)))@>"0 argsdmn
+  ('dtrmmlutnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnn chk2mm)))@>"0 argsdmm
+  ('dtrmmlutnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnt chk2mm)))@>"0 argsdmn
+  ('dtrmmlutun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutun chk2mm)))@>"0 argsdmm
+  ('dtrmmlutut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutut chk2mm)))@>"0 argsdmn
+  ('dtrmmrlnnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnn chk2mm)))@>"0 argsdnm
+  ('dtrmmrlnnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnt chk2mm)))@>"0 argsdnn
+  ('dtrmmrlnun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnun chk2mm)))@>"0 argsdnm
+  ('dtrmmrlnut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnut chk2mm)))@>"0 argsdnn
+  ('dtrmmrltnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnn chk2mm)))@>"0 argsdnm
+  ('dtrmmrltnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnt chk2mm)))@>"0 argsdnn
+  ('dtrmmrltun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltun chk2mm)))@>"0 argsdnm
+  ('dtrmmrltut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltut chk2mm)))@>"0 argsdnn
+  ('dtrmmrunnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnn chk2mm)))@>"0 argsdnm
+  ('dtrmmrunnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnt chk2mm)))@>"0 argsdnn
+  ('dtrmmrunun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunun chk2mm)))@>"0 argsdnm
+  ('dtrmmrunut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunut chk2mm)))@>"0 argsdnn
+  ('dtrmmrutnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnn chk2mm)))@>"0 argsdnm
+  ('dtrmmrutnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnt chk2mm)))@>"0 argsdnn
+  ('dtrmmrutun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutun chk2mm)))@>"0 argsdnm
+  ('dtrmmrutut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutut chk2mm)))@>"0 argsdnn
 
-  ('ztrmmllnnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnn chk2mm trlpick )))@>"0 argszmm
-  ('ztrmmllnnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnt chk2mm trlpick )))@>"0 argszmn
-  ('ztrmmllnnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnj chk2mm trlpick )))@>"0 argszmm
-  ('ztrmmllnnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnc chk2mm trlpick )))@>"0 argszmn
-  ('ztrmmllnun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnun chk2mm trl1pick)))@>"0 argszmm
-  ('ztrmmllnut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnut chk2mm trl1pick)))@>"0 argszmn
-  ('ztrmmllnuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnuj chk2mm trl1pick)))@>"0 argszmm
-  ('ztrmmllnuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnuc chk2mm trl1pick)))@>"0 argszmn
-  ('ztrmmlltnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnn chk2mm trlpick )))@>"0 argszmm
-  ('ztrmmlltnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnt chk2mm trlpick )))@>"0 argszmn
-  ('ztrmmlltnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnj chk2mm trlpick )))@>"0 argszmm
-  ('ztrmmlltnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnc chk2mm trlpick )))@>"0 argszmn
-  ('ztrmmlltun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltun chk2mm trl1pick)))@>"0 argszmm
-  ('ztrmmlltut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltut chk2mm trl1pick)))@>"0 argszmn
-  ('ztrmmlltuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltuj chk2mm trl1pick)))@>"0 argszmm
-  ('ztrmmlltuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltuc chk2mm trl1pick)))@>"0 argszmn
-  ('ztrmmlljnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljnn chk2mm trlpick )))@>"0 argszmm
-  ('ztrmmlljnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljnt chk2mm trlpick )))@>"0 argszmn
-  ('ztrmmlljnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljnj chk2mm trlpick )))@>"0 argszmm
-  ('ztrmmlljnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljnc chk2mm trlpick )))@>"0 argszmn
-  ('ztrmmlljun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljun chk2mm trl1pick)))@>"0 argszmm
-  ('ztrmmlljut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljut chk2mm trl1pick)))@>"0 argszmn
-  ('ztrmmlljuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljuj chk2mm trl1pick)))@>"0 argszmm
-  ('ztrmmlljuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljuc chk2mm trl1pick)))@>"0 argszmn
-  ('ztrmmllcnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcnn chk2mm trlpick )))@>"0 argszmm
-  ('ztrmmllcnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcnt chk2mm trlpick )))@>"0 argszmn
-  ('ztrmmllcnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcnj chk2mm trlpick )))@>"0 argszmm
-  ('ztrmmllcnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcnc chk2mm trlpick )))@>"0 argszmn
-  ('ztrmmllcun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcun chk2mm trl1pick)))@>"0 argszmm
-  ('ztrmmllcut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcut chk2mm trl1pick)))@>"0 argszmn
-  ('ztrmmllcuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcuj chk2mm trl1pick)))@>"0 argszmm
-  ('ztrmmllcuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcuc chk2mm trl1pick)))@>"0 argszmn
-  ('ztrmmlunnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnn chk2mm trupick )))@>"0 argszmm
-  ('ztrmmlunnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnt chk2mm trupick )))@>"0 argszmn
-  ('ztrmmlunnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnj chk2mm trupick )))@>"0 argszmm
-  ('ztrmmlunnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnc chk2mm trupick )))@>"0 argszmn
-  ('ztrmmlunun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunun chk2mm tru1pick)))@>"0 argszmm
-  ('ztrmmlunut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunut chk2mm tru1pick)))@>"0 argszmn
-  ('ztrmmlunuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunuj chk2mm tru1pick)))@>"0 argszmm
-  ('ztrmmlunuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunuc chk2mm tru1pick)))@>"0 argszmn
-  ('ztrmmlutnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnn chk2mm trupick )))@>"0 argszmm
-  ('ztrmmlutnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnt chk2mm trupick )))@>"0 argszmn
-  ('ztrmmlutnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnj chk2mm trupick )))@>"0 argszmm
-  ('ztrmmlutnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnc chk2mm trupick )))@>"0 argszmn
-  ('ztrmmlutun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutun chk2mm tru1pick)))@>"0 argszmm
-  ('ztrmmlutut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutut chk2mm tru1pick)))@>"0 argszmn
-  ('ztrmmlutuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutuj chk2mm tru1pick)))@>"0 argszmm
-  ('ztrmmlutuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutuc chk2mm tru1pick)))@>"0 argszmn
-  ('ztrmmlujnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujnn chk2mm trupick )))@>"0 argszmm
-  ('ztrmmlujnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujnt chk2mm trupick )))@>"0 argszmn
-  ('ztrmmlujnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujnj chk2mm trupick )))@>"0 argszmm
-  ('ztrmmlujnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujnc chk2mm trupick )))@>"0 argszmn
-  ('ztrmmlujun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujun chk2mm tru1pick)))@>"0 argszmm
-  ('ztrmmlujut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujut chk2mm tru1pick)))@>"0 argszmn
-  ('ztrmmlujuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujuj chk2mm tru1pick)))@>"0 argszmm
-  ('ztrmmlujuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujuc chk2mm tru1pick)))@>"0 argszmn
-  ('ztrmmlucnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucnn chk2mm trupick )))@>"0 argszmm
-  ('ztrmmlucnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucnt chk2mm trupick )))@>"0 argszmn
-  ('ztrmmlucnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucnj chk2mm trupick )))@>"0 argszmm
-  ('ztrmmlucnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucnc chk2mm trupick )))@>"0 argszmn
-  ('ztrmmlucun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucun chk2mm tru1pick)))@>"0 argszmm
-  ('ztrmmlucut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucut chk2mm tru1pick)))@>"0 argszmn
-  ('ztrmmlucuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucuj chk2mm tru1pick)))@>"0 argszmm
-  ('ztrmmlucuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucuc chk2mm tru1pick)))@>"0 argszmn
-  ('ztrmmrlnnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnn chk2mm trlpick )))@>"0 argsznm
-  ('ztrmmrlnnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnt chk2mm trlpick )))@>"0 argsznn
-  ('ztrmmrlnnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnj chk2mm trlpick )))@>"0 argsznm
-  ('ztrmmrlnnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnc chk2mm trlpick )))@>"0 argsznn
-  ('ztrmmrlnun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnun chk2mm trl1pick)))@>"0 argsznm
-  ('ztrmmrlnut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnut chk2mm trl1pick)))@>"0 argsznn
-  ('ztrmmrlnuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnuj chk2mm trl1pick)))@>"0 argsznm
-  ('ztrmmrlnuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnuc chk2mm trl1pick)))@>"0 argsznn
-  ('ztrmmrltnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnn chk2mm trlpick )))@>"0 argsznm
-  ('ztrmmrltnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnt chk2mm trlpick )))@>"0 argsznn
-  ('ztrmmrltnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnj chk2mm trlpick )))@>"0 argsznm
-  ('ztrmmrltnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnc chk2mm trlpick )))@>"0 argsznn
-  ('ztrmmrltun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltun chk2mm trl1pick)))@>"0 argsznm
-  ('ztrmmrltut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltut chk2mm trl1pick)))@>"0 argsznn
-  ('ztrmmrltuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltuj chk2mm trl1pick)))@>"0 argsznm
-  ('ztrmmrltuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltuc chk2mm trl1pick)))@>"0 argsznn
-  ('ztrmmrljnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljnn chk2mm trlpick )))@>"0 argsznm
-  ('ztrmmrljnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljnt chk2mm trlpick )))@>"0 argsznn
-  ('ztrmmrljnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljnj chk2mm trlpick )))@>"0 argsznm
-  ('ztrmmrljnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljnc chk2mm trlpick )))@>"0 argsznn
-  ('ztrmmrljun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljun chk2mm trl1pick)))@>"0 argsznm
-  ('ztrmmrljut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljut chk2mm trl1pick)))@>"0 argsznn
-  ('ztrmmrljuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljuj chk2mm trl1pick)))@>"0 argsznm
-  ('ztrmmrljuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljuc chk2mm trl1pick)))@>"0 argsznn
-  ('ztrmmrlcnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcnn chk2mm trlpick )))@>"0 argsznm
-  ('ztrmmrlcnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcnt chk2mm trlpick )))@>"0 argsznn
-  ('ztrmmrlcnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcnj chk2mm trlpick )))@>"0 argsznm
-  ('ztrmmrlcnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcnc chk2mm trlpick )))@>"0 argsznn
-  ('ztrmmrlcun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcun chk2mm trl1pick)))@>"0 argsznm
-  ('ztrmmrlcut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcut chk2mm trl1pick)))@>"0 argsznn
-  ('ztrmmrlcuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcuj chk2mm trl1pick)))@>"0 argsznm
-  ('ztrmmrlcuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcuc chk2mm trl1pick)))@>"0 argsznn
-  ('ztrmmrunnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnn chk2mm trupick )))@>"0 argsznm
-  ('ztrmmrunnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnt chk2mm trupick )))@>"0 argsznn
-  ('ztrmmrunnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnj chk2mm trupick )))@>"0 argsznm
-  ('ztrmmrunnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnc chk2mm trupick )))@>"0 argsznn
-  ('ztrmmrunun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunun chk2mm tru1pick)))@>"0 argsznm
-  ('ztrmmrunut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunut chk2mm tru1pick)))@>"0 argsznn
-  ('ztrmmrunuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunuj chk2mm tru1pick)))@>"0 argsznm
-  ('ztrmmrunuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunuc chk2mm tru1pick)))@>"0 argsznn
-  ('ztrmmrutnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnn chk2mm trupick )))@>"0 argsznm
-  ('ztrmmrutnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnt chk2mm trupick )))@>"0 argsznn
-  ('ztrmmrutnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnj chk2mm trupick )))@>"0 argsznm
-  ('ztrmmrutnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnc chk2mm trupick )))@>"0 argsznn
-  ('ztrmmrutun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutun chk2mm tru1pick)))@>"0 argsznm
-  ('ztrmmrutut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutut chk2mm tru1pick)))@>"0 argsznn
-  ('ztrmmrutuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutuj chk2mm tru1pick)))@>"0 argsznm
-  ('ztrmmrutuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutuc chk2mm tru1pick)))@>"0 argsznn
-  ('ztrmmrujnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujnn chk2mm trupick )))@>"0 argsznm
-  ('ztrmmrujnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujnt chk2mm trupick )))@>"0 argsznn
-  ('ztrmmrujnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujnj chk2mm trupick )))@>"0 argsznm
-  ('ztrmmrujnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujnc chk2mm trupick )))@>"0 argsznn
-  ('ztrmmrujun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujun chk2mm tru1pick)))@>"0 argsznm
-  ('ztrmmrujut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujut chk2mm tru1pick)))@>"0 argsznn
-  ('ztrmmrujuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujuj chk2mm tru1pick)))@>"0 argsznm
-  ('ztrmmrujuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujuc chk2mm tru1pick)))@>"0 argsznn
-  ('ztrmmrucnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucnn chk2mm trupick )))@>"0 argsznm
-  ('ztrmmrucnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucnt chk2mm trupick )))@>"0 argsznn
-  ('ztrmmrucnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucnj chk2mm trupick )))@>"0 argsznm
-  ('ztrmmrucnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucnc chk2mm trupick )))@>"0 argsznn
-  ('ztrmmrucun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucun chk2mm tru1pick)))@>"0 argsznm
-  ('ztrmmrucut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucut chk2mm tru1pick)))@>"0 argsznn
-  ('ztrmmrucuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucuj chk2mm tru1pick)))@>"0 argsznm
-  ('ztrmmrucuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucuc chk2mm tru1pick)))@>"0 argsznn
+  ('ztrmmllnnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnn chk2mm)))@>"0 argszmm
+  ('ztrmmllnnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnt chk2mm)))@>"0 argszmn
+  ('ztrmmllnnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnj chk2mm)))@>"0 argszmm
+  ('ztrmmllnnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnnc chk2mm)))@>"0 argszmn
+  ('ztrmmllnun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnun chk2mm)))@>"0 argszmm
+  ('ztrmmllnut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnut chk2mm)))@>"0 argszmn
+  ('ztrmmllnuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnuj chk2mm)))@>"0 argszmm
+  ('ztrmmllnuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllnuc chk2mm)))@>"0 argszmn
+  ('ztrmmlltnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnn chk2mm)))@>"0 argszmm
+  ('ztrmmlltnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnt chk2mm)))@>"0 argszmn
+  ('ztrmmlltnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnj chk2mm)))@>"0 argszmm
+  ('ztrmmlltnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltnc chk2mm)))@>"0 argszmn
+  ('ztrmmlltun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltun chk2mm)))@>"0 argszmm
+  ('ztrmmlltut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltut chk2mm)))@>"0 argszmn
+  ('ztrmmlltuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltuj chk2mm)))@>"0 argszmm
+  ('ztrmmlltuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlltuc chk2mm)))@>"0 argszmn
+  ('ztrmmlljnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljnn chk2mm)))@>"0 argszmm
+  ('ztrmmlljnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljnt chk2mm)))@>"0 argszmn
+  ('ztrmmlljnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljnj chk2mm)))@>"0 argszmm
+  ('ztrmmlljnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljnc chk2mm)))@>"0 argszmn
+  ('ztrmmlljun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljun chk2mm)))@>"0 argszmm
+  ('ztrmmlljut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljut chk2mm)))@>"0 argszmn
+  ('ztrmmlljuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljuj chk2mm)))@>"0 argszmm
+  ('ztrmmlljuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlljuc chk2mm)))@>"0 argszmn
+  ('ztrmmllcnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcnn chk2mm)))@>"0 argszmm
+  ('ztrmmllcnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcnt chk2mm)))@>"0 argszmn
+  ('ztrmmllcnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcnj chk2mm)))@>"0 argszmm
+  ('ztrmmllcnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcnc chk2mm)))@>"0 argszmn
+  ('ztrmmllcun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcun chk2mm)))@>"0 argszmm
+  ('ztrmmllcut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcut chk2mm)))@>"0 argszmn
+  ('ztrmmllcuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcuj chk2mm)))@>"0 argszmm
+  ('ztrmmllcuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmllcuc chk2mm)))@>"0 argszmn
+  ('ztrmmlunnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnn chk2mm)))@>"0 argszmm
+  ('ztrmmlunnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnt chk2mm)))@>"0 argszmn
+  ('ztrmmlunnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnj chk2mm)))@>"0 argszmm
+  ('ztrmmlunnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunnc chk2mm)))@>"0 argszmn
+  ('ztrmmlunun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunun chk2mm)))@>"0 argszmm
+  ('ztrmmlunut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunut chk2mm)))@>"0 argszmn
+  ('ztrmmlunuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunuj chk2mm)))@>"0 argszmm
+  ('ztrmmlunuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlunuc chk2mm)))@>"0 argszmn
+  ('ztrmmlutnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnn chk2mm)))@>"0 argszmm
+  ('ztrmmlutnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnt chk2mm)))@>"0 argszmn
+  ('ztrmmlutnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnj chk2mm)))@>"0 argszmm
+  ('ztrmmlutnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutnc chk2mm)))@>"0 argszmn
+  ('ztrmmlutun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutun chk2mm)))@>"0 argszmm
+  ('ztrmmlutut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutut chk2mm)))@>"0 argszmn
+  ('ztrmmlutuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutuj chk2mm)))@>"0 argszmm
+  ('ztrmmlutuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlutuc chk2mm)))@>"0 argszmn
+  ('ztrmmlujnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujnn chk2mm)))@>"0 argszmm
+  ('ztrmmlujnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujnt chk2mm)))@>"0 argszmn
+  ('ztrmmlujnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujnj chk2mm)))@>"0 argszmm
+  ('ztrmmlujnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujnc chk2mm)))@>"0 argszmn
+  ('ztrmmlujun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujun chk2mm)))@>"0 argszmm
+  ('ztrmmlujut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujut chk2mm)))@>"0 argszmn
+  ('ztrmmlujuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujuj chk2mm)))@>"0 argszmm
+  ('ztrmmlujuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlujuc chk2mm)))@>"0 argszmn
+  ('ztrmmlucnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucnn chk2mm)))@>"0 argszmm
+  ('ztrmmlucnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucnt chk2mm)))@>"0 argszmn
+  ('ztrmmlucnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucnj chk2mm)))@>"0 argszmm
+  ('ztrmmlucnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucnc chk2mm)))@>"0 argszmn
+  ('ztrmmlucun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucun chk2mm)))@>"0 argszmm
+  ('ztrmmlucut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucut chk2mm)))@>"0 argszmn
+  ('ztrmmlucuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucuj chk2mm)))@>"0 argszmm
+  ('ztrmmlucuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmlucuc chk2mm)))@>"0 argszmn
+  ('ztrmmrlnnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnn chk2mm)))@>"0 argsznm
+  ('ztrmmrlnnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnt chk2mm)))@>"0 argsznn
+  ('ztrmmrlnnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnj chk2mm)))@>"0 argsznm
+  ('ztrmmrlnnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnnc chk2mm)))@>"0 argsznn
+  ('ztrmmrlnun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnun chk2mm)))@>"0 argsznm
+  ('ztrmmrlnut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnut chk2mm)))@>"0 argsznn
+  ('ztrmmrlnuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnuj chk2mm)))@>"0 argsznm
+  ('ztrmmrlnuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlnuc chk2mm)))@>"0 argsznn
+  ('ztrmmrltnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnn chk2mm)))@>"0 argsznm
+  ('ztrmmrltnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnt chk2mm)))@>"0 argsznn
+  ('ztrmmrltnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnj chk2mm)))@>"0 argsznm
+  ('ztrmmrltnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltnc chk2mm)))@>"0 argsznn
+  ('ztrmmrltun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltun chk2mm)))@>"0 argsznm
+  ('ztrmmrltut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltut chk2mm)))@>"0 argsznn
+  ('ztrmmrltuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltuj chk2mm)))@>"0 argsznm
+  ('ztrmmrltuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrltuc chk2mm)))@>"0 argsznn
+  ('ztrmmrljnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljnn chk2mm)))@>"0 argsznm
+  ('ztrmmrljnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljnt chk2mm)))@>"0 argsznn
+  ('ztrmmrljnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljnj chk2mm)))@>"0 argsznm
+  ('ztrmmrljnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljnc chk2mm)))@>"0 argsznn
+  ('ztrmmrljun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljun chk2mm)))@>"0 argsznm
+  ('ztrmmrljut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljut chk2mm)))@>"0 argsznn
+  ('ztrmmrljuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljuj chk2mm)))@>"0 argsznm
+  ('ztrmmrljuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrljuc chk2mm)))@>"0 argsznn
+  ('ztrmmrlcnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcnn chk2mm)))@>"0 argsznm
+  ('ztrmmrlcnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcnt chk2mm)))@>"0 argsznn
+  ('ztrmmrlcnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcnj chk2mm)))@>"0 argsznm
+  ('ztrmmrlcnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcnc chk2mm)))@>"0 argsznn
+  ('ztrmmrlcun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcun chk2mm)))@>"0 argsznm
+  ('ztrmmrlcut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcut chk2mm)))@>"0 argsznn
+  ('ztrmmrlcuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcuj chk2mm)))@>"0 argsznm
+  ('ztrmmrlcuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrlcuc chk2mm)))@>"0 argsznn
+  ('ztrmmrunnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnn chk2mm)))@>"0 argsznm
+  ('ztrmmrunnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnt chk2mm)))@>"0 argsznn
+  ('ztrmmrunnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnj chk2mm)))@>"0 argsznm
+  ('ztrmmrunnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunnc chk2mm)))@>"0 argsznn
+  ('ztrmmrunun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunun chk2mm)))@>"0 argsznm
+  ('ztrmmrunut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunut chk2mm)))@>"0 argsznn
+  ('ztrmmrunuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunuj chk2mm)))@>"0 argsznm
+  ('ztrmmrunuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrunuc chk2mm)))@>"0 argsznn
+  ('ztrmmrutnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnn chk2mm)))@>"0 argsznm
+  ('ztrmmrutnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnt chk2mm)))@>"0 argsznn
+  ('ztrmmrutnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnj chk2mm)))@>"0 argsznm
+  ('ztrmmrutnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutnc chk2mm)))@>"0 argsznn
+  ('ztrmmrutun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutun chk2mm)))@>"0 argsznm
+  ('ztrmmrutut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutut chk2mm)))@>"0 argsznn
+  ('ztrmmrutuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutuj chk2mm)))@>"0 argsznm
+  ('ztrmmrutuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrutuc chk2mm)))@>"0 argsznn
+  ('ztrmmrujnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujnn chk2mm)))@>"0 argsznm
+  ('ztrmmrujnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujnt chk2mm)))@>"0 argsznn
+  ('ztrmmrujnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujnj chk2mm)))@>"0 argsznm
+  ('ztrmmrujnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujnc chk2mm)))@>"0 argsznn
+  ('ztrmmrujun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujun chk2mm)))@>"0 argsznm
+  ('ztrmmrujut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujut chk2mm)))@>"0 argsznn
+  ('ztrmmrujuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujuj chk2mm)))@>"0 argsznm
+  ('ztrmmrujuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrujuc chk2mm)))@>"0 argsznn
+  ('ztrmmrucnn_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucnn chk2mm)))@>"0 argsznm
+  ('ztrmmrucnt_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucnt chk2mm)))@>"0 argsznn
+  ('ztrmmrucnj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucnj chk2mm)))@>"0 argsznm
+  ('ztrmmrucnc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucnc chk2mm)))@>"0 argsznn
+  ('ztrmmrucun_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucun chk2mm)))@>"0 argsznm
+  ('ztrmmrucut_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucut chk2mm)))@>"0 argsznn
+  ('ztrmmrucuj_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucuj chk2mm)))@>"0 argsznm
+  ('ztrmmrucuc_mtbli_' tmonad (]`]`(_."_)`(_."_)`(trmmrucuc chk2mm)))@>"0 argsznn
 
   EMPTY
 )

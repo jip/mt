@@ -4,11 +4,11 @@ NB. liofmax    lIO 1st element with maximum sum of real and
 NB.            imagine parts' modules
 NB. liolmax    lIO last element with maximum sum of real and
 NB.            imagine parts' modules
-NB. th2liso    Generate lISO from tail and head
-NB. dhs2liso   Generate lISO from head, size and optional
+NB. liso4th    Generate lISO from tail and head
+NB. liso4dhs   Generate lISO from head, size and optional
 NB.            delta
-NB. riso2iso   Convert rISO to ISO
-NB. riso2liso  Convert rISO to lISO
+NB. iso4riso   Convert rISO to ISO
+NB. liso4riso  Convert rISO to lISO
 NB. lisoX      lISO vector laying between diagonal and
 NB.            matrix edge
 NB.
@@ -49,20 +49,20 @@ NB.
 NB. Following are equivalents:
 NB.   (3 5 _7 ,: 2 _3 4) ];.0 brick
 NB.   (< 3 4 ; 7 6 5 ; _10 _9 _8 _7) { brick
-NB.   (riso2iso 3 5 _7 ,: 2 _3 4) { brick
-NB.   (iso2riso < 3 4 ; 7 6 5 ; _10 _9 _8 _7) ];.0 brick
+NB.   (iso4riso 3 5 _7 ,: 2 _3 4) { brick
+NB.   (riso4iso < 3 4 ; 7 6 5 ; _10 _9 _8 _7) ];.0 brick
 NB.
 NB. Following are equivalents:
 NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4
-NB.   (4 liso2iso 1 6 11) { i. 3 4
-NB.   (4 iso2liso 0 1 ; 1 2 ; 2 3) ({,) i. 3 4
+NB.   (4 iso4liso 1 6 11) { i. 3 4
+NB.   (4 liso4iso 0 1 ; 1 2 ; 2 3) ({,) i. 3 4
 NB.   1 6 11 ({,) i. 3 4
 
 NB. =========================================================
 NB. Local definitions
 
 NB. convert rISO to opened (non-boxed) ISO
-riso2oiso=: <@dhs2liso"1@:|:
+oiso4riso=: <@liso4dhs"1@:|:
 
 NB. =========================================================
 NB. Interface
@@ -78,13 +78,13 @@ NB. lIO last element e with max(|Re(e)|+|Im(e)|) from list y
 liolmax=: (i:>./)@sorim
 
 NB. ---------------------------------------------------------
-NB. th2liso
+NB. liso4th
 NB.
 NB. Description:
 NB.   Generate lISO from tail and head
 NB.
 NB. Syntax:
-NB.   liso=. t th2liso h
+NB.   liso=. t liso4th h
 NB. where
 NB.   h    - integer, head of liso
 NB.   t    - integer, tail of liso
@@ -94,19 +94,19 @@ NB.            h (h+1) ... (t-1)
 NB.
 NB. Notes:
 NB. - monadic case is possible, though awkward:
-NB.     _3 _2 _1 -: th2liso _3
-NB.     5 4 3    -: th2liso  3
+NB.     _3 _2 _1 -: liso4th _3
+NB.     5 4 3    -: liso4th  3
 
-th2liso=: ] + i.@-
+liso4th=: ] + i.@-
 
 NB. ---------------------------------------------------------
-NB. dhs2liso
+NB. liso4dhs
 NB.
 NB. Description:
 NB.   Generate lISO from head, size and delta
 NB.
 NB. Syntax:
-NB.   liso=. [d] dhs2liso (h,s)
+NB.   liso=. [d] liso4dhs (h,s)
 NB. where
 NB.   h    - integer, head of liso, if h<0 then liso is
 NB.          pointed to h, otherwise away from h
@@ -116,40 +116,40 @@ NB.   d    ≥ 0 integer, optional delta of liso, default is 1
 NB.   liso - |s|-vector of integers
 NB.
 NB. Examples:
-NB.    2 dhs2liso 4 3              2 dhs2liso _4 3
+NB.    2 liso4dhs 4 3              2 liso4dhs _4 3
 NB. 4 6 8                       _8 _6 _4
-NB.    2 dhs2liso 4 _3             2 dhs2liso _4 _3
+NB.    2 liso4dhs 4 _3             2 liso4dhs _4 _3
 NB. 8 6 4                       _4 _6 _8
 NB.
 NB. Notes:
 NB. - monadic case models rISO in (u;.0) with following
 NB.   difference: s cannot be ±∞
 
-dhs2liso=: 1&$: :({.@] + (negneg~ {.) * i.@(negneg/)@])
+liso4dhs=: 1&$: :({.@] + (negneg~ {.) * i.@(negneg/)@])
 
 NB. ---------------------------------------------------------
-NB. riso2iso
+NB. iso4riso
 NB.
 NB. Description:
 NB.   Convert rISO to ISO
 NB.
 NB. Syntax:
-NB.   iso=. riso2iso riso
+NB.   iso=. iso4riso riso
 NB.
 NB. Notes:
 NB. - riso with columns count less than array's rank is
 NB.   indexing the slice
 
-riso2iso=: <"1@riso2oiso
+iso4riso=: <"1@oiso4riso
 
 NB. ---------------------------------------------------------
-NB. riso2liso
+NB. liso4riso
 NB.
 NB. Description:
 NB.   Convert rISO to lISO
 NB.
 NB. Syntax:
-NB.   liso=. sh riso2liso riso
+NB.   liso=. sh liso4riso riso
 NB. where
 NB.   riso  - 2×r-array of integers, rISO subarray:
 NB.             (2,r) $ from[0:r-1],size[0:r-1]
@@ -171,9 +171,9 @@ NB. where
 NB.   riso=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
 NB.   sh=. 10 11 12 13
 NB.   array=. i. sh
-NB.   liso=. sh riso2liso riso
+NB.   liso=. sh liso4riso riso
 
-riso2liso=: */\.@(1&(|.!.1))@[ +/@:* (+ 1&(|.!.0)@(0&>))@|:@:>@,@{@riso2oiso@]
+liso4riso=: */\.@(1&(|.!.1))@[ +/@:* (+ 1&(|.!.0)@(0&>))@|:@:>@,@{@oiso4riso@]
 
 NB. ---------------------------------------------------------
 NB. lisoE
@@ -226,8 +226,8 @@ NB. ***--- ------ ------
 NB. ------ ***--- -***--
 NB. ------ ------ ------
 
-lisoE=: 1 : 'dhs2liso_mt_@(((_1 - 0 >. m) -  (* ((<: | m)&+))~) , [)'
-lisoW=: 1 : 'dhs2liso_mt_@(((     0 <. m) -~ (* ((<: | m)&+))~) , [)'
+lisoE=: 1 : 'liso4dhs_mt_@(((_1 - 0 >. m) -  (* ((<: | m)&+))~) , [)'
+lisoW=: 1 : 'liso4dhs_mt_@(((     0 <. m) -~ (* ((<: | m)&+))~) , [)'
 
-lisoN=: 1 : '] dhs2liso_mt_ (((-~ ((<: | m)&+))~ (*&(0 <. m))) , [)'
-lisoS=: 1 : '] dhs2liso_mt_ (((-~ ((-  | m)&-))~ (*&(0 >. m))) , [)'
+lisoN=: 1 : '] liso4dhs_mt_ (((-~ ((<: | m)&+))~ (*&(0 <. m))) , [)'
+lisoS=: 1 : '] liso4dhs_mt_ (((-~ ((-  | m)&-))~ (*&(0 >. m))) , [)'

@@ -105,14 +105,14 @@ NB.            from hs-segment transformed to Shur form
 NB.   signbc - s-vector, scaling factors to form Q,Z later
 
 hgezqso=: 4 : 0
-  liso=. dhs2liso x
+  liso=. liso4dhs x
   'y signbc'=. x hgexxeo y
   subHT=. liso {"2 y
   (((,:~ liso >/ (i. c y))} subHT ,: subHT *"2 signbc) liso}"2 y) ; signbc
 )
 
 hgeqzso=: 4 : 0
-  liso=. dhs2liso x
+  liso=. liso4dhs x
   'y signbc'=. x hgexxeo y
   subHT=. liso {"1 y
   (((,:~ (i. c y) </ liso)} subHT ,: subHT *"1 signbc) liso}"1 y) ; signbc
@@ -164,7 +164,7 @@ hgezq=: 1 : 0
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgezqxo y  NB. process eigenvalues (columns) h+s:n-1
-  dZ1=. dZ1 , 4 {."1 signbc ,. (c y) th2liso e
+  dZ1=. dZ1 , 4 {."1 signbc ,. (c y) liso4th e
 
   NB. Eigenvalues h+s:n-1 have been found.
 
@@ -226,7 +226,7 @@ hgezq=: 1 : 0
               NB. done repeatedly.
               if. ilazro +. ilazr2 do.
                 jch=. j
-                liso=. (>: ilastm) th2liso j
+                liso=. (>: ilastm) liso4th j
                 while. jch < ilast do.
                   'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; (jch + 0 1)) ; 0
                   liso=. }. liso
@@ -251,8 +251,8 @@ hgezq=: 1 : 0
                 NB. T[ilast,ilast], then process as in the
                 NB. case T[ilast,ilast]=0
                 jch=. j
-                lisor=. (>: ilastm) th2liso <: j
-                lisoc=. (2 + j) th2liso ifrstm
+                lisor=. (>: ilastm) liso4th <: j
+                lisoc=. (2 + j) liso4th ifrstm
                 while. jch < ilast do.
                   'y cs'=. rot&.|: rotga y ; (< 1 ; (2 }. lisor) ; (jch + 0 1)) ; 0
                   y=. (< 0 ; lisor ; (jch + 0 1)) cs&(rot&.|:) upd y
@@ -282,7 +282,7 @@ hgezq=: 1 : 0
         label_l50.
         NB. T[ilast,ilast]=0 - clear H[ilast-1,ilast] to
         NB. split off a 1x1 block
-        liso=. (>: ilast) th2liso ifrstm
+        liso=. (>: ilast) liso4th ifrstm
         'y cs'=. rot rotga y ; (< 0 ; (ilast - 0 1) ; liso) ; < < a: ; _1
         y=. (< 1 ; (ilast - 0 1) ; (}: liso)) cs&rot upd y
         dQ1=. dQ1 , cs , ilast - 0 1
@@ -350,8 +350,8 @@ hgezq=: 1 : 0
       cs=. lartg ctemp , ascale * (< 0 , istart + 0 1) { y
       NB. sweep
       j=. istart
-      lisor=. (>: ilastm) th2liso j
-      lisoc=. (j + 2) th2liso ifrstm
+      lisor=. (>: ilastm) liso4th j
+      lisoc=. (j + 2) liso4th ifrstm
       while. j < ilast do.
         liso=. j + 0 1
         NB. is a first iteration?
@@ -389,7 +389,7 @@ hgeqz=: 1 : 0
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgeqzxo y  NB. process eigenvalues (columns) h+s:n-1
-  dZ1=. dZ1 , 4 {."1 signbc ,. (c y) th2liso e
+  dZ1=. dZ1 , 4 {."1 signbc ,. (c y) liso4th e
 
   NB. Eigenvalues h+s:n-1 have been found.
 
@@ -450,7 +450,7 @@ hgeqz=: 1 : 0
               NB. done repeatedly.
               if. ilazro +. ilazr2 do.
                 jch=. j
-                liso=. (>: ilastm) th2liso j
+                liso=. (>: ilastm) liso4th j
                 while. jch < ilast do.
                   'y cs'=. rot rotga y ; (< 0 ; (jch + 0 1) ; liso) ; < < a: ; 0
                   liso=. }. liso
@@ -475,8 +475,8 @@ hgeqz=: 1 : 0
                 NB. T[ilast,ilast], then process as in the
                 NB. case T[ilast,ilast]=0
                 jch=. j
-                lisoc=. (>: ilastm) th2liso <: j
-                lisor=. (2 + j) th2liso ifrstm
+                lisoc=. (>: ilastm) liso4th <: j
+                lisor=. (2 + j) liso4th ifrstm
                 while. jch < ilast do.
                   'y cs'=. rot rotga y ; (< 1 ; (jch + 0 1) ; (2 }. lisoc)) ; < < a: ; 0
                   y=. (< 0 ; (jch + 0 1) ; lisoc) cs&rot upd y
@@ -506,7 +506,7 @@ hgeqz=: 1 : 0
         label_u50.
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
-        liso=. (>: ilast) th2liso ifrstm
+        liso=. (>: ilast) liso4th ifrstm
         'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; (ilast - 0 1)) ; _1
         y=. (< 1 ; (}: liso) ; (ilast - 0 1)) cs&(rot&.|:) upd y
         dZ1=. dZ1 , cs , ilast - 0 1
@@ -574,8 +574,8 @@ hgeqz=: 1 : 0
       cs=. lartg ctemp , ascale * (< 0 , istart + 1 0) { y
       NB. sweep
       j=. istart
-      lisoc=. (>: ilastm) th2liso j
-      lisor=. (j + 2) th2liso ifrstm
+      lisoc=. (>: ilastm) liso4th j
+      lisor=. (j + 2) liso4th ifrstm
       while. j < ilast do.
         liso=. j + 0 1
         NB. is a first iteration?

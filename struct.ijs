@@ -5,9 +5,9 @@ NB. trace     Matrix trace
 NB. ct        Conjugate transpose
 NB. cp        Conjugate pertranspose
 NB. fp        Full (symmetric) permutation
-NB. p2P       Transform permutation vector to/from
+NB. P4p       Transform permutation vector to/from
 NB.           permutation matrix
-NB. ip2P      Transform inversed permutation vector to/from
+NB. P4ip      Transform inversed permutation vector to/from
 NB.           permutation matrix
 NB. rt        Restrained Take
 NB. icut      Inversed cut
@@ -303,7 +303,7 @@ diagliso=: 0 0 _&$: :(4 : 0)
   'm n'=. y=. 2 $ y
   H=. n (-@*^:(0 > ])) d
   S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
-  (h ,: s <. S) ];.0 (>: n) dhs2liso H , S
+  (h ,: s <. S) ];.0 (>: n) liso4dhs H , S
 )
 
 NB. =========================================================
@@ -327,13 +327,13 @@ fp=: ([ C."1 C.) :. ([ C.^:_1"1 C.^:_1)
 
 NB. Transform permutation vector to/from permutation matrix,
 NB. to permute rows by y or columns by (/: y)
-p2P=:  ({    =) :. (     i.&1"1 )
+P4p=:  ({    =) :. (     i.&1"1 )
 
 NB. Transform inversed permutation vector to/from permutation
 NB. matrix, or permutation vector to/from inversed
 NB. permutation matrix, to permute rows by (/: y) or columns
 NB. by y
-ip2P=: ({^:_1=) :. (/:@:(i.&1"1))
+P4ip=: ({^:_1=) :. (/:@:(i.&1"1))
 
 NB. ---------------------------------------------------------
 NB. icut

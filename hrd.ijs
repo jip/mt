@@ -186,7 +186,7 @@ gehd2l=: 4 : 0
     y=. (j {."1 eL) ,. eR
     j=. >: j
   end.
-  0 (< ((c y) th2liso&<: jlimit) ; _1)} A , y  NB. clear τ[h+s-1:n-1]
+  0 (< ((c y) liso4th&<: jlimit) ; _1)} A , y  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -225,7 +225,7 @@ gehd2u=: 4 : 0
     y=. (j {. eR) , eL
     j=. >: j
   end.
-  0 (< _1 ; (# y) th2liso&<: jlimit)} A ,. y  NB. clear τ[h+s-1:n-1]
+  0 (< _1 ; (# y) liso4th&<: jlimit)} A ,. y  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -269,11 +269,11 @@ gghrdl=: 4 : 0
   n=. c y
   dQ0=. dZ0=. 0 4 $ 0
   i=. h
-  lisor1a=. n th2liso i                        NB. (n-h)-vector h:n-1
+  lisor1a=. n liso4th i                        NB. (n-h)-vector h:n-1
   lisoc2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
   while. i < <: t do.                          NB. (s-2)-vector: h:h+s-3
     j=. t
-    lisor1b=. n th2liso <: j                   NB. (n-h-s+2)-vector h+s-2:n-1
+    lisor1b=. n liso4th <: j                   NB. (n-h-s+2)-vector h+s-2:n-1
     lisoc2b=. i. >: j                          NB. (j+1)-vector 0:h+s-1
     while. j > >: i do.                        NB. (h+s-i-2)-vector (desc) h+s-1:i+2
       liso=. j - 1 0
@@ -343,11 +343,11 @@ gghrdu=: 4 : 0
   n=. c y
   dQ0=. dZ0=. 0 4 $ 0
   j=. h
-  lisoc1a=. n th2liso j                        NB. (n-h)-vector h:n-1
+  lisoc1a=. n liso4th j                        NB. (n-h)-vector h:n-1
   lisor2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
   while. j < <: t do.                          NB. (s-2)-vector h:h+s-3
     i=. t
-    lisoc1b=. n th2liso <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
+    lisoc1b=. n liso4th <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
     lisor2b=. i. >: i                          NB. (i+1)-vector 0:h+s-1
     while. i > >: j do.                        NB. (h+s-j-2)-vector (desc) h+s-1:j+2
       liso=. i - 1 0
@@ -446,7 +446,7 @@ gehrdl=: 4 : 0
   y=. (h + 0 1) }. y
   I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB      NB. how many panels will be reduced
   'i ilimit'=. h + (0 , HRDNB) * I                 NB. 'i ilimit'=. h,(h+HRDNB*I)
-  while. i < ilimit do.                            NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2liso (h,I))
+  while. i < ilimit do.                            NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB liso4dhs (h,I))
     'Y V H T'=. lahr2l y                           NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
     eV0=. 0 ,. (0) _1}"1 V                         NB. prepend by zero column, replace τs by zeros
     Aleft=. Aleft - (ct eV0) mp T mp eV0 mp Aleft  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
@@ -537,7 +537,7 @@ gehrdu=: 4 : 0
   y=. (h + 1 0) }. y
   I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB     NB. how many panels will be reduced
   'i ilimit'=. h + (0 , HRDNB) * I                NB. 'i ilimit'=. h,(h+HRDNB*I)
-  while. i < ilimit do.                           NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2liso (h,I))
+  while. i < ilimit do.                           NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB liso4dhs (h,I))
     'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
     eV0=. 0 , (0) _1} V                           NB. prepend by zero row, replace τs by zeros
     Atop=. Atop - ((Atop mp eV0) mp T) mp ct eV0  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]

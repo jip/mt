@@ -667,7 +667,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: clean p {"1 L mp U1
 NB.   A -: clean p C."1 L mp U1
 NB.   A -: clean ip C.^:_1"1 L mp U1
@@ -675,8 +675,8 @@ NB.   A -: clean L mp U1 mp iP         NB. apply p to columns
 NB. where
 NB.   'ip LU1'=. getrflu1p A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   L=. trl LU1
 NB.   U1=. tru1 LU1
 
@@ -823,7 +823,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: clean p { L1 mp U
 NB.   A -: clean p C. L1 mp U
 NB.   A -: clean ip C.^:_1 L1 mp U
@@ -831,8 +831,8 @@ NB.   A -: clean P mp L1 mp U
 NB. where
 NB.   'ip L1U'=. getrfpl1u A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   L1=. trl1 L1U
 NB.   U=. tru L1U
 NB.
@@ -982,7 +982,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: clean p { U1 mp L
 NB.   A -: clean p C. U1 mp L
 NB.   A -: clean ip C.^:_1 U1 mp L
@@ -990,8 +990,8 @@ NB.   A -: clean P mp U1 mp L
 NB. where
 NB.   'ip U1L'=. getrfpu1l A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   U1=. (tru1~ -~/@$) U1L
 NB.   L=. (trl~ -~/@$) U1L
 
@@ -1138,7 +1138,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: clean p {"1 U mp L1
 NB.   A -: clean p C."1 U mp L1
 NB.   A -: clean ip C.^:_1"1 U mp L1
@@ -1146,8 +1146,8 @@ NB.   A -: clean U mp L1 mp iP         NB. apply p to columns
 NB. where
 NB.   'ip UL1'=. getrful1p A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   U=. (tru~ -~/@$) UL1
 NB.   L1=. (trl1~ -~/@$) UL1
 
@@ -1246,8 +1246,8 @@ NB.   A -: clean ip fp^:_1 L1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) L1 (mp mp ct@[) T
 NB. where
 NB.   'ip L1 T'=. hetrfpl A
-NB.   iP=. p2P ip
-NB.   P=. ip2P ip
+NB.   iP=. P4p ip
+NB.   P=. P4ip ip
 NB.
 NB. Notes:
 NB. - models LAPACK's DSYTRF_AA('L') and ZHETRF_AA('L')
@@ -1356,8 +1356,8 @@ NB.   A -: clean ip fp^:_1 U1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) U1 (mp mp ct@[) T
 NB. where
 NB.   'ip U1 T'=. hetrfpu A
-NB.   iP=. p2P ip
-NB.   P=. ip2P ip
+NB.   iP=. P4p ip
+NB.   P=. P4ip ip
 NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
@@ -1661,7 +1661,7 @@ testgetrf=: 3 : 0
 
   ('128!:10'       tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
 
-  ('lud_mttmp_'    tmonad ((0&{::)`(ip2P^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  ('lud_mttmp_'    tmonad ((0&{::)`(P4ip^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
 
   ('dgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
   ('zgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu

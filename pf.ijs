@@ -1349,7 +1349,7 @@ trlpc=: 3 : 0
     f=. PFFP
     NB. Move the best row of A(k1:m-1,0:n-1) to (k-1)-th
     NB. position
-    io=. liofmax (< m (th2liso ; ]) k1) { L
+    io=. liofmax (< m (liso4th ; ]) k1) { L
     if. io do.
       dip=. < k1 ([ , +) io
       L=. dip C. L
@@ -1384,7 +1384,7 @@ trlpc=: 3 : 0
         NB. rows/elements between io and rank-1, that is:
         NB. io->rank-1, io+1->io, io+2->io+1,...,
         NB. rank-1->rank-2
-        dip=. < 1 |. rank th2liso io
+        dip=. < 1 |. rank liso4th io
         L=. dip C. L
         p=. dip C. p
         NB. Retriangularize matrix A after the permutation
@@ -1449,7 +1449,7 @@ trlpc=: 3 : 0
         NB. rows/elements between rank and ii, that is,
         NB. rank->rank+1, rank+1->rank+2,...,ii-1->ii,
         NB. ii->rank
-        dip=. < |. (>: ii) th2liso rank
+        dip=. < |. (>: ii) liso4th rank
         L=. dip C. L
         p=. dip C. p
         rnorms=. dip C. rnorms
@@ -1477,7 +1477,7 @@ trlpc=: 3 : 0
             NB. rows/elements between io and rank, that
             NB. is, io->rank,io+1->io,io+2->io+1,...,
             NB. rank->rank-1
-            dip=. < 1 |. (>: rank) th2liso io
+            dip=. < 1 |. (>: rank) liso4th io
             L=. dip C. L
             p=. dip C. p
             rnorms=. dip C. rnorms
@@ -1517,7 +1517,7 @@ trlpc=: 3 : 0
       NB. rows/elements between rank and ii, that is,
       NB. rank->rank+1, rank+1->rank+2,...,io-1->io,
       NB. io->rank
-      dip=. < |. (>: io) th2liso rank
+      dip=. < |. (>: io) liso4th rank
       L=. dip C. L
       p=. dip C. p
       NB. Retriangularize matrix A after permutation
@@ -1626,7 +1626,7 @@ trprc=: 3 : 0
     f=. PFFP
     NB. Move the best column of A(0:m-1,k1:n-1) to (k-1)-th
     NB. position
-    io=. liofmax (< n (] ; th2liso) k1) { R
+    io=. liofmax (< n (] ; liso4th) k1) { R
     if. io do.
       dip=. < k1 ([ , +) io
       R=. dip C."1 R
@@ -1661,7 +1661,7 @@ trprc=: 3 : 0
         NB. columns/elements between io and rank-1, that is:
         NB. io->rank-1, io+1->io, io+2->io+1,...,
         NB. rank-1->rank-2
-        dip=. < 1 |. rank th2liso io
+        dip=. < 1 |. rank liso4th io
         R=. dip C."1 R
         p=. dip C. p
         NB. Retriangularize matrix A after the permutation
@@ -1727,7 +1727,7 @@ trprc=: 3 : 0
         NB. columns/elements between rank and ii, that is,
         NB. rank->rank+1, rank+1->rank+2,...,ii-1->ii,
         NB. ii->rank
-        dip=. < |. (>: ii) th2liso rank
+        dip=. < |. (>: ii) liso4th rank
         R=. dip C."1 R
         p=. dip C. p
         cnorms=. dip C. cnorms
@@ -1755,7 +1755,7 @@ trprc=: 3 : 0
             NB. columns/elements between io and rank, that
             NB. is, io->rank,io+1->io,io+2->io+1,...,
             NB. rank->rank-1
-            dip=. < 1 |. (>: rank) th2liso io
+            dip=. < 1 |. (>: rank) liso4th io
             R=. dip C."1 R
             p=. dip C. p
             cnorms=. dip C. cnorms
@@ -1795,7 +1795,7 @@ trprc=: 3 : 0
       NB. columns/elements between rank and ii, that is,
       NB. rank->rank+1, rank+1->rank+2,...,io-1->io,
       NB. io->rank
-      dip=. < |. (>: io) th2liso rank
+      dip=. < |. (>: io) liso4th rank
       R=. dip C."1 R
       p=. dip C. p
       NB. Retriangularize matrix A after permutation
@@ -2106,7 +2106,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   _. ~: rank
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: p { L mp Q
 NB.   A -: p C. L mp Q
 NB.   A -: ip C.^:_1 L mp Q
@@ -2115,8 +2115,8 @@ NB.   (idmat c L) -: clean (mp ct) Q
 NB. where
 NB.   'ip L Qn rcond rank svlues'=. gelpf A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   Q=. (c L) {. Qn
 
 gelpf=: FP_EPS&$: :([ ]`trlpy@.(0 < 3 {:: ]) gelpb)
@@ -2179,7 +2179,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   _. ~: rank
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: p {"1 Q mp R
 NB.   A -: p C."1 Q mp R
 NB.   A -: ip C.^:_1"1 Q mp R
@@ -2188,8 +2188,8 @@ NB.   (idmat # R) -: clean (mp~ ct) Q
 NB. where
 NB.   'Qm R ip rcond rank svlues'=. geprf A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   Q=. (# R) {."1 Qm
 NB.
 NB. Notes:

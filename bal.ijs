@@ -303,7 +303,7 @@ NB.   A -: p fp^:_1 B
 NB.   B11 -: (,.~ hs) ];.0 B
 NB. where
 NB.   'B p hs'=. gebalxp A
-NB.   P=. p2P p
+NB.   P=. P4p p
 NB.   iP=. %. P
 NB.
 NB. Notes:
@@ -526,7 +526,7 @@ NB.   C11 -: (,.~ hs) ];.0 C
 NB. where
 NB.   'B pp hsp'=. gebalxp A
 NB.   'C p hs d'=. gebalx A
-NB.   P=. p2P p
+NB.   P=. P4p p
 NB.   iP=. %. P
 NB.   D=. diagmat d
 NB.   iD=. %. D
@@ -577,7 +577,7 @@ NB.   AB -: CD ((C.^:_1"2~ {.) (C.^:_1"1~ {:) ]) plr
 NB.   CD11 -: (0 2 ,. ,.~ hs) ];.0 CD
 NB. where
 NB.   'CD plr hs'=. ggbalxp AB
-NB.   'Pl Pr'=. p2P"1 plr
+NB.   'Pl Pr'=. P4p"1 plr
 NB.   iPl=. %. Pl
 NB.   iPr=. %. Pr
 NB.
@@ -773,8 +773,8 @@ ggbals=: 3 : 0
   lsfmax=. <.    GGBALSCLFAC ^. % FP_SFMIN
   irab=. h + (0 2 ,. hs ,. h , _) liofmax"1;.0 CD
   icab=. (0 2 ,. (0 , h + s) ,. hs) liofmax"1@:(|:"2);.0 CD
-  rab=. normi (<"1 irab ,.~"1 dhs2liso hs) {"1 2 CD
-  cab=. normi (<"1 icab ,. "1 dhs2liso hs) {"1 2 CD
+  rab=. normi (<"1 irab ,.~"1 liso4dhs hs) {"1 2 CD
+  cab=. normi (<"1 icab ,. "1 liso4dhs hs) {"1 2 CD
   lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab , cab
   dlr=. GGBALSCLFAC ^ lsfmax <. (lsfmax - lxab) <. lsfmin >. <. 0.5 + dlr
   dlr=. (-h) |."1 (c CD) {.!.1"1 dlr  NB. adjust dlr's shape
@@ -835,7 +835,7 @@ NB.   EF11 -: (0 2 ,. ,.~ hs) ];.0 EF
 NB. where
 NB.   'CD plrp hsp'=. ggbalxp AB
 NB.   'EF plr hs dlr'=. ggbalx AB
-NB.   'Pl Pr'=. p2P"1 plr
+NB.   'Pl Pr'=. P4p"1 plr
 NB.   iPl=. %. Pl
 NB.   iPr=. %. Pr
 NB.   'Dl Dr'=. diagmat"1 dlr

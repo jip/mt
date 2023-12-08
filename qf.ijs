@@ -396,7 +396,7 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latlz=: 4 : 0
-  iso=. < < < (dhs2liso 0 , x) , _1
+  iso=. < < < (liso4dhs 0 , x) , _1
   m=. # y
   sfxR=. (- m) {."1 y
   y=. (- m) }."1 y
@@ -475,7 +475,7 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latzl=: 4 : 0
-  iso=. < < < 0 , dhs2liso _1 , x
+  iso=. < < < 0 , liso4dhs _1 , x
   n=. c y
   pfxT=. n {. y
   y=. n }. y
@@ -553,7 +553,7 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latzr=: 4 : 0
-  iso=. < < < (dhs2liso 0 , x) , _1
+  iso=. < < < (liso4dhs 0 , x) , _1
   n=. c y
   sfxB=. (- n) {. y
   y=. (- n) }. y
@@ -640,7 +640,7 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latrz=: 4 : 0
-  iso=. < < < 0 , dhs2liso _1 , x
+  iso=. < < < 0 , liso4dhs _1 , x
   m=. # y
   pfxL=. m {."1 y
   y=. m }."1 y

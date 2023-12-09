@@ -313,9 +313,10 @@ tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n
   try. rcond=. vrcond y catch. rcond=. _ end.
   try.
-    argy=. vgety y
+    ybak=. memu argy=. vgety y
     try.
       't s'=. , (5 1 # i. 2) <./`]/. (5 1 # timex`(7!:2))`:0 'ret=. ' , m , ' argy'
+      if. -. argy -: ybak do. m=. m , ' NB. error: y changed' end.
       try.
         out=. vgeto ret
         try. ferr=. y vferr out catch. ferr=. _. end.
@@ -329,6 +330,7 @@ tmonad=: 2 : 0
   catch.
     'ferr berr t s'=. 4 # _.
   end.
+  erase 'argy ybak'
   logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
   wd^:IFQT 'msgs'
@@ -341,10 +343,15 @@ tdyad=: 2 : 0
   '`vgetx vgety vgeto vrcond vferr vberr'=. n
   try. rcond=. vrcond y catch. rcond=. _ end.
   try.
-    argx=. vgetx y
-    argy=. vgety y
+    xbak=. memu argx=. vgetx y
+    ybak=. memu argy=. vgety y
     try.
       't s'=. , (5 1 # i. 2) <./`]/. (5 1 # timex`(7!:2))`:0 'ret=. argx ' , m , ' argy'
+      select. #. (argx -: xbak) , argy -: ybak
+        case. 2 do. m=. m , ' NB. error: y was changed'
+        case. 1 do. m=. m , ' NB. error: x was changed'
+        case. 0 do. m=. m , ' NB. error: x and y were changed'
+      end.
       try.
         out=. vgeto ret
         try. ferr=. y vferr out catch. ferr=. _. end.
@@ -358,6 +365,7 @@ tdyad=: 2 : 0
   catch.
     'ferr berr t s'=. 4 # _.
   end.
+  erase 'argy ybak argx xbak'
   logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
   logline (1!:2) 2
   wd^:IFQT 'msgs'

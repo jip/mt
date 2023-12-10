@@ -1,36 +1,33 @@
 NB. 'Matrix toolbox' addon's entry point
 NB.
-NB. TESTLOGFILE  a: to switch logging off or boxed logfile
-NB.              name
-NB. TESTLOG      String, being formatted test log
-NB. DEBUG        Debug level
-NB. FP_BASE      Floating point base
-NB. FP_ELEN      Exponent field length (bits)
-NB. FP_FLEN      Fraction field length (bits)
-NB. FP_IGUNFL    Is gradual underflow? (boolean)
-NB. FP_EBIAS     Exponent bias for normalized numbers
-NB. FP_EPS       Machine epsilon
-NB. FP_PREC      Machine precision
-NB. FP_EMIN      Min exponent for normalized numbers
-NB. FP_UNFL      Min normalized positive number
-NB. FP_EMAX      Max exponent for normalized numbers
-NB. FP_OVFL      Max normalized positive number
-NB. FP_SFMIN     Safe min, such that 1/FP_SFMIN does not
-NB.              overflow
+NB. TESTLOG    Inverted table to store test log
+NB. DEBUG      Debug level
+NB. FP_BASE    Floating point base
+NB. FP_ELEN    Exponent field length (bits)
+NB. FP_FLEN    Fraction field length (bits)
+NB. FP_IGUNFL  Is gradual underflow? (boolean)
+NB. FP_EBIAS   Exponent bias for normalized numbers
+NB. FP_EPS     Machine epsilon
+NB. FP_PREC    Machine precision
+NB. FP_EMIN    Min exponent for normalized numbers
+NB. FP_UNFL    Min normalized positive number
+NB. FP_EMAX    Max exponent for normalized numbers
+NB. FP_OVFL    Max normalized positive number
+NB. FP_SFMIN   Safe min, such that 1/FP_SFMIN does not
+NB.            overflow
 NB.
-NB. testlow      Adv. to make verb to test low-level
-NB.              algorithms by matrix of generator and shape
-NB.              given
-NB. testmid      Adv. to make verb to test mid-level
-NB.              algorithms by matrix of generator and shape
-NB.              given
-NB. testhigh     Adv. to make verb to test high-level
-NB.              algorithms by matrix of generator and shape
-NB.              given
-NB. test         Adv. to make verb to test algorithms by
-NB.              matrix of generator and shape given
-NB. verify       Nilad to verify mt, output result to console
-NB.              and return it
+NB. testlow    Adv. to make verb to test low-level
+NB.            algorithms by matrix of generator and shape
+NB.            given
+NB. testmid    Adv. to make verb to test mid-level algorithms
+NB.            by matrix of generator and shape given
+NB. testhigh   Adv. to make verb to test high-level
+NB.            algorithms by matrix of generator and shape
+NB.            given
+NB. test       Adv. to make verb to test algorithms by matrix
+NB.            of generator and shape given
+NB. verify     Nilad to verify mt, output result to console
+NB.            and return it
 NB.
 NB. Version: 0.13.3 2021-06-29
 NB.
@@ -65,8 +62,15 @@ NB. User config
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Tests logging
 
-TESTLOGFILE=: < jpath '~temp/mt.log'  NB. assign '' to switch off file logging
-TESTLOG=: ''                          NB. string, being formatted test log
+NB. noun, the inverted table to store test log
+NB. - column     :  sentence  rcond   fwd.err   bwd.err   time     space
+NB. - column type:  string    float   float     float     float    integer
+NB. - rank       :  2         1       1         1         1        1
+NB. - unit       :  J code    %cond   relative  relative  seconds  bytes
+NB.
+NB. see: tmonad and tdyad in test.ijs
+
+TESTLOG=: 1 5 # EMPTY ; ''
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Debug level used by dbg conj., the atom:

@@ -259,8 +259,8 @@ NB.           sentences execution time
 NB.
 NB. Notes:
 NB. - side effects:
-NB.   - augments the TESTLOG_mt_ global noun
-NB.   - augments the TESTLOGFILE_mt_ file's content
+NB.    - augments the TESTLOG_mt_ global noun
+NB.    - outputs to the console
 NB.
 NB. Application:
 NB.      load 'math/mt'
@@ -282,10 +282,10 @@ benchmark=: 1 : 0
   '^((?!_mt(mm|tmp|lap|fla|bl[ai])_\b|\b128!:([01]|10)\b|%\.|\+\/ \. ?\*).)+' u benchmark_mt_ y
 :
   bkp=. TESTLOG_mt_
-  TESTLOG_mt_=: ''
+  TESTLOG_mt_=: 1 5 # EMPTY ; ''
   u y
-  ds=. +/!.0 ". S: 0 a: -.~ '(\d+\.\d+)(?=\s+(n/a|\d+)$)'&rxfirst L: 0 (#~ x&rxeq S: 0) cut3_mt_ TESTLOG_mt_
-  TESTLOG_mt_=: bkp , TESTLOG_mt_
+  ds=. +/!.0 ". S: 0 a: -.~ '(\d+\.\d+)(?=\s+(n/a|\d+)$)'&rxfirst L: 0 (#~ x&rxeq S: 0) cut3_mt_ TESTLOG_mt_  NB. FIXME
+  TESTLOG_mt_=: bkp ,&.> TESTLOG_mt_
   ds
 )
 

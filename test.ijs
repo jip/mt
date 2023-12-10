@@ -249,13 +249,13 @@ NB.   mname  - literal, the name of monad vm to test
 NB.   dname  - literal, the name of dyad vd to test
 NB.   vtestm - monad to test monad vm and to log result:
 NB.              mname rcond ferr berr time space
-NB.            on the screen, in the global var TESTLOG and,
-NB.            optionally, in the log file; is called as:
+NB.            in the global noun TESTLOG and to the console,
+NB.            is called as:
 NB.              vtestm y
 NB.   vtestd - monad to test dyad vd and to log result:
 NB.              dname rcond ferr berr time space
-NB.            on the screen, in the global var TESTLOG and,
-NB.            optionally, in the log file; is called as:
+NB.            in the global noun TESTLOG and to the console,
+NB.            is called as:
 NB.              vtestd y
 NB.   vm     - monad to test; is called as:
 NB.              ret=. vm argy
@@ -307,7 +307,7 @@ NB.    deviation <= 1% for CPU run-time estimator minimum on
 NB.    systems with load ≤ 80 is equal to 5 [1]
 NB. 2) side effects:
 NB.    - augments the TESTLOG_mt_ global noun
-NB.    - augments the TESTLOGFILE_mt_ file's content
+NB.    - outputs to the console
 
 tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n
@@ -331,11 +331,10 @@ tmonad=: 2 : 0
     'ferr berr t s'=. 4 # _.
   end.
   erase 'argy ybak'
-  logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
-  logline (1!:2) 2
+  logline=. m ; rcond ; ferr ; berr ; t ; s
+  (fmtlog_mt_ logline) (1!:2) 2
   wd^:IFQT 'msgs'
-  logline (1!:3~ ,&LF)~^:(0 < #@]) TESTLOGFILE_mt_
-  TESTLOG_mt_=: TESTLOG_mt_ , logline , LF
+  TESTLOG_mt_=: TESTLOG_mt_ ,&.> logline
   EMPTY
 )
 
@@ -366,11 +365,10 @@ tdyad=: 2 : 0
     'ferr berr t s'=. 4 # _.
   end.
   erase 'argy ybak argx xbak'
-  logline=. fmtlog_mt_ m ; rcond ; ferr ; berr ; t ; s
-  logline (1!:2) 2
+  logline=. m ; rcond ; ferr ; berr ; t ; s
+  (fmtlog_mt_ logline) (1!:2) 2
   wd^:IFQT 'msgs'
-  logline (1!:3~ ,&LF)~^:(0 < #@]) TESTLOGFILE_mt_
-  TESTLOG_mt_=: TESTLOG_mt_ , logline , LF
+  TESTLOG_mt_=: TESTLOG_mt_ ,&.> logline
   EMPTY
 )
 

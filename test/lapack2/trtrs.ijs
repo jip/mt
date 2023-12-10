@@ -7,17 +7,17 @@ NB.
 NB. Syntax:
 NB.   X=. (uplo ; trans ; diag) xtrtrs AA ; B
 NB. where
-NB.   uplo  - literal, case-insensitive, in which the head
+NB.   uplo  - string, case-insensitive, in which the head
 NB.            specifies which triangular part of AA is to be
 NB.            referenced:
 NB.             'L' - lower
 NB.             'U' - upper
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of op(A):
 NB.             'N' - op(A) := A    (no transpose)
 NB.             'T' - op(A) := A^T  (transpose)
 NB.             'C' - op(A) := A^H  (conjugate transpose)
-NB.   diag  - literal, case-insensitive, in which the head
+NB.   diag  - string, case-insensitive, in which the head
 NB.            specifies the form of A:
 NB.             'N' - A is non-unit triangular: L or U
 NB.             'U' - A is unit triangular: L1 or U1

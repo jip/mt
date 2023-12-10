@@ -6,7 +6,7 @@ NB.
 NB. Syntax:
 NB.   'Abal ilo ihi scale'=. job xgebal A
 NB. where
-NB.   job   - literal, case-insensitive, in which the head
+NB.   job   - string, case-insensitive, in which the head
 NB.           specifies what to do:
 NB.             'N' - to init ilo, ihi and scale
 NB.             'P' - to permute only

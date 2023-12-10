@@ -48,18 +48,18 @@ NB.
 NB. Syntax:
 NB.   x=. (uplo ; trans ; diag) xtrsvcore AAt ; b ; incb
 NB. where
-NB.   uplo  - literal, case-insensitive, in which the head
+NB.   uplo  - string, case-insensitive, in which the head
 NB.           specifies whether the matrix A is upper or
 NB.           lower triangular:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of op(A):
 NB.             'N'  NB. op(A) := A    (no transpose)
 NB.             'T'  NB. op(A) := A^T  (transpose)
 NB.             'C'  NB. op(A) := A^T  (transpose)           for dtrsvcore
 NB.                  NB.       := A^H  (conjugate transpose) for ztrsvcore
-NB.   diag  - literal, case-insensitive, in which the head
+NB.   diag  - string, case-insensitive, in which the head
 NB.            specifies the form of A:
 NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal

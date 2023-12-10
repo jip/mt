@@ -9,17 +9,17 @@ NB.
 NB. Syntax:
 NB.   'S P alpha beta Q Z'=. (job ; compQ ; compZ) xhgeqz ilo ; ihi ; H ; T ; Q1 ; Z1
 NB. where
-NB.   job   - literal, case-insensitive, in which the head
+NB.   job   - string, case-insensitive, in which the head
 NB.           specifies what to compute:
 NB.             'E' - to compute eigenvalues only
 NB.             'S' - to compute eigenvalues and the Schur
 NB.                   form
-NB.   compQ - literal, case-insensitive, in which the head
+NB.   compQ - string, case-insensitive, in which the head
 NB.           specifies what to do with Q:
 NB.             'N' - to not compute Q
 NB.             'I' - to compute Q
 NB.             'V' - to compute Q1*Q
-NB.   compZ - literal, case-insensitive, in which the head
+NB.   compZ - string, case-insensitive, in which the head
 NB.           specifies what to do with Z:
 NB.             'N' - to not compute Z
 NB.             'I' - to compute Z

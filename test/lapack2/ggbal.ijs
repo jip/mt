@@ -7,8 +7,8 @@ NB. Syntax:
 NB.   'Abal Bbal ilo ihi lscale rscale'=. job xggbal A ;  B
 NB.   'Abal Bbal ilo ihi lscale rscale'=. job xggbal A ,: B
 NB. where
-NB.   job       - literal, case-insensitive, in which the
-NB.               head specifies what to do:
+NB.   job       - string, case-insensitive, in which the head
+NB.               specifies what to do:
 NB.                 'N' - to init ilo, ihi and xscale
 NB.                 'P' - to permute only
 NB.                 'S' - to scale only

@@ -9,11 +9,11 @@ NB. Syntax:
 NB.   'alpha beta Vl Vr'=. (jobVl ; jobVr) xggev A ;  B
 NB.   'alpha beta Vl Vr'=. (jobVl ; jobVr) xggev A ,: B
 NB. where
-NB.   jobVl - literal, case-insensitive, in which the head
+NB.   jobVl - string, case-insensitive, in which the head
 NB.           specifies whether to compute Vl:
 NB.             'N' - to not compute
 NB.             'V' - to compute
-NB.   jobVr - literal, case-insensitive, in which the head
+NB.   jobVr - string, case-insensitive, in which the head
 NB.           specifies whether to compute Vr:
 NB.             'N' - to not compute
 NB.             'V' - to compute

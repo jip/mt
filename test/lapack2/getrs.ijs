@@ -8,7 +8,7 @@ NB.
 NB. Syntax:
 NB.   X=. trans xgetrs L1U ; ipiv ; B
 NB. where
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of the system of equations:
 NB.             'N' - A   * X = B  (no transpose)
 NB.             'T' - A^T * X = B  (transpose)

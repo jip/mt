@@ -8,11 +8,11 @@ NB.
 NB. Syntax:
 NB.   B=. (side ; trans) zunmrz l ; A ; tau ; C
 NB. where
-NB.   side  - literal, case-insensitive, in which the head
+NB.   side  - string, case-insensitive, in which the head
 NB.           specifies the side of op(Z):
 NB.             'L' - op(Z) * C  (apply op(Z) from the left)
 NB.             'R' - C * op(Z)  (apply op(Z) from the right)
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of op(Q):
 NB.             'N' - op(Z) := Z    (no transpose)
 NB.             'C' - op(Z) := Z^H  (transpose)

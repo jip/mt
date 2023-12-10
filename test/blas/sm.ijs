@@ -50,22 +50,22 @@ NB.
 NB. Syntax:
 NB.   Xt=. (side ; uplo ; trans ; diag) xtrsmcore alpha ; AAt ; Bt
 NB. where
-NB.   side  - literal, case-insensitive, in which the head
+NB.   side  - string, case-insensitive, in which the head
 NB.           specifies the side of op(A):
 NB.             'L'  NB. (1): op(A) is on the left
 NB.             'R'  NB. (2): op(A) is on the right
-NB.   uplo  - literal, case-insensitive, in which the head
+NB.   uplo  - string, case-insensitive, in which the head
 NB.           specifies whether the matrix A is upper or
 NB.           lower triangular:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of op(A):
 NB.             'N'  NB. op(A) := A    (no transpose)
 NB.             'T'  NB. op(A) := A^T  (transpose)
 NB.             'C'  NB. op(A) := A^T  (transpose)           for dtrsmcore
 NB.                  NB.       := A^H  (conjugate transpose) for ztrsmcore
-NB.   diag  - literal, case-insensitive, in which the head
+NB.   diag  - string, case-insensitive, in which the head
 NB.            specifies the form of A:
 NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal

@@ -7,11 +7,11 @@ NB.
 NB. Syntax:
 NB.   'w V'=. (jobV ; uplo) zheev AA
 NB. where
-NB.   jobV - literal, case-insensitive, in which the head
+NB.   jobV - string, case-insensitive, in which the head
 NB.          specifies whether to compute V:
 NB.            'N' - to not compute
 NB.            'V' - to compute
-NB.   uplo - literal, case-insensitive, in which the head
+NB.   uplo - string, case-insensitive, in which the head
 NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower

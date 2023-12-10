@@ -54,7 +54,7 @@ NB. Syntax:
 NB.   vdbg1=. v dbg1 title
 NB.   vdbg2=. v dbg2 title
 NB. where
-NB.   title - any literal to name v
+NB.   title - any string to name v
 NB.   v     - verb to switch to debug mode
 NB.   vdbg1 - being verb v equipped by output of its rank
 NB.           and valency, input's and output's shapes
@@ -78,7 +78,7 @@ NB.
 NB. Syntax:
 NB.   vdbg=. v dbg title
 NB. where
-NB.   title - any literal to name v
+NB.   title - any string to name v
 NB.   v     - verb to switch to debug mode
 NB.   vdbg  - being verb v equipped by output of debug info
 NB.

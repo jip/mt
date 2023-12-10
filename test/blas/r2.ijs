@@ -49,7 +49,7 @@ NB.
 NB. Syntax:
 NB.   AAupdt=. uplo xxxr2core alpha ; x ; incx ; y ; incy ; AAt
 NB. where
-NB.   uplo  - literal, case-insensitive, in which the head
+NB.   uplo  - string, case-insensitive, in which the head
 NB.           specifies which triangular part of A is to be
 NB.           referenced:
 NB.             'L'  NB. LT

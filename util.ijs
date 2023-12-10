@@ -79,7 +79,7 @@ NB.
 NB. Syntax:
 NB.   trash=. [msg] assert chk
 NB. where
-NB.   msg - literal, optional, will be shown if assertion is
+NB.   msg - string, optional, will be shown if assertion is
 NB.         failed
 NB.   chk - numeric vector
 NB.

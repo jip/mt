@@ -6,12 +6,12 @@ NB.
 NB. Syntax:
 NB.   T=. (uplo ; diag) xtrtri AA
 NB. where
-NB.   uplo - literal, case-insensitive, in which the head
+NB.   uplo - string, case-insensitive, in which the head
 NB.           specifies which triangular part of AA is to be
 NB.           referenced:
 NB.            'L' - lower
 NB.            'U' - upper
-NB.   diag - literal, case-insensitive, in which the head
+NB.   diag - string, case-insensitive, in which the head
 NB.           specifies the form of A:
 NB.            'N' - A is non-unit triangular: L or U
 NB.            'U' - A is unit triangular: L1 or U1

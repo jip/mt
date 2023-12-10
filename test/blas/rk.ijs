@@ -50,12 +50,12 @@ NB.
 NB. Syntax:
 NB.   CCupdt=. (uplo ; trans) xsyrkcore alpha ; At ; beta ; CCt
 NB. where
-NB.   uplo   - literal, case-insensitive, in which the head
+NB.   uplo   - string, case-insensitive, in which the head
 NB.            specifies which triangular part of C is to be
 NB.            referenced:
 NB.              'L'  NB. LT
 NB.              'U'  NB. UT
-NB.   trans  - literal, case-insensitive, in which the head
+NB.   trans  - string, case-insensitive, in which the head
 NB.            specifies the operation:
 NB.              'N'  NB. (1)
 NB.              'T'  NB. (2)
@@ -106,12 +106,12 @@ NB.
 NB. Syntax:
 NB.   CCupdt=. (uplo ; trans) zherkcore alpha ; At ; beta ; CCt
 NB. where
-NB.   uplo   - literal, case-insensitive, in which the head
+NB.   uplo   - string, case-insensitive, in which the head
 NB.            specifies which triangular part of C is to be
 NB.            referenced:
 NB.              'L'  NB. LT
 NB.              'U'  NB. UT
-NB.   trans  - literal, case-insensitive, in which the head
+NB.   trans  - string, case-insensitive, in which the head
 NB.            specifies the operation:
 NB.              'N'  NB. (1)
 NB.              'C'  NB. (2)

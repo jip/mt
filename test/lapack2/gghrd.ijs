@@ -9,12 +9,12 @@ NB.
 NB. Syntax:
 NB.   'H T Q Z'=. (compQ ; compZ) xgghrd ilo ; ihi ; A ; B ; Q1 ; Z1
 NB. where
-NB.   compQ - literal, case-insensitive, in which the head
+NB.   compQ - string, case-insensitive, in which the head
 NB.           specifies what to do with Q:
 NB.             'N' - to not compute Q
 NB.             'I' - to compute Q
 NB.             'V' - to compute Q1*Q
-NB.   compZ - literal, case-insensitive, in which the head
+NB.   compZ - string, case-insensitive, in which the head
 NB.           specifies what to do with Z:
 NB.             'N' - to not compute Z
 NB.             'I' - to compute Z

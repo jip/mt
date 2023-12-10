@@ -9,7 +9,7 @@ NB. Syntax:
 NB.   X=.      dpttrs dD ; eT1 ; B
 NB.   X=. uplo zpttrs dD ; eT1 ; B
 NB. where
-NB.   uplo - literal, case-insensitive, in which the head
+NB.   uplo - string, case-insensitive, in which the head
 NB.           specifies what is eT1:
 NB.            'L' - eT1 is the subdiagonal of L1, the form
 NB.                  is:

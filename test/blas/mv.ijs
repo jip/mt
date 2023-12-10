@@ -50,7 +50,7 @@ NB.
 NB. Syntax:
 NB.   yupd=. trans xgemvcore alpha ; At ; x ; incx ; beta ; y ; incy
 NB. where
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of op(A):
 NB.             'N'  NB. op(A) := A    (no transpose)
 NB.             'T'  NB. op(A) := A^T  (transpose)
@@ -98,7 +98,7 @@ NB.
 NB. Syntax:
 NB.   yupd=. uplo xxxmvcore alpha ; AAt ; x ; incx ; beta ; y ; incy
 NB. where
-NB.   uplo  - literal, case-insensitive, in which the head
+NB.   uplo  - string, case-insensitive, in which the head
 NB.           specifies which triangular part of A is to be
 NB.           referenced:
 NB.             'L'  NB. LT
@@ -143,18 +143,18 @@ NB.
 NB. Syntax:
 NB.   xupd=. (uplo ; trans ; diag) xtrmvcore AAt ; x ; incx
 NB. where
-NB.   uplo  - literal, case-insensitive, in which the head
+NB.   uplo  - string, case-insensitive, in which the head
 NB.           specifies whether the matrix A is upper or
 NB.           lower triangular:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of op(A):
 NB.             'N'  NB. op(A) := A    (no transpose)
 NB.             'T'  NB. op(A) := A^T  (transpose)
 NB.             'C'  NB. op(A) := A^T  (transpose)           for dtrmvcore
 NB.                  NB.       := A^H  (conjugate transpose) for ztrmvcore
-NB.   diag  - literal, case-insensitive, in which the head
+NB.   diag  - string, case-insensitive, in which the head
 NB.           specifies the form of A:
 NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal

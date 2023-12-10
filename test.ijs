@@ -245,8 +245,8 @@ NB.   vferr  - dyad to find ferr; is called as:
 NB.              ferr=. y vferr out
 NB.   vberr  - dyad to find berr; is called as:
 NB.              berr=. y vberr out
-NB.   mname  - literal, the name of monad vm to test
-NB.   dname  - literal, the name of dyad vd to test
+NB.   mname  - string, the name of monad vm to test
+NB.   dname  - string, the name of dyad vd to test
 NB.   vtestm - monad to test monad vm and to log result:
 NB.              mname rcond ferr berr time space
 NB.            in the global noun TESTLOG and to the console,

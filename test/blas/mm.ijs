@@ -51,13 +51,13 @@ NB.
 NB. Syntax:
 NB.   Cupdt=. (transA ; transB) xgemmcore alpha ; At ; Bt ; beta ; Ct
 NB. where
-NB.   transA - literal, case-insensitive, in which the head
+NB.   transA - string, case-insensitive, in which the head
 NB.            specifies the form of op1(A):
 NB.              'N'  NB. op1(A) := A    (no transpose)
 NB.              'T'  NB. op1(A) := A^T  (transpose)
 NB.              'C'  NB. op1(A) := A^T  (transpose)           for dgemmcore
 NB.                   NB.        := A^H  (conjugate transpose) for zgemmcore
-NB.   transB - literal, case-insensitive, in which the head
+NB.   transB - string, case-insensitive, in which the head
 NB.            specifies the form of op2(B):
 NB.              'N'  NB. op2(B) := B    (no transpose)
 NB.              'T'  NB. op2(B) := B^T  (transpose)
@@ -114,11 +114,11 @@ NB.
 NB. Syntax:
 NB.   Cupdt=. (side ; uplo) xxxmmcore alpha ; AAt ; Bt ; beta ; Ct
 NB. where
-NB.   side  - literal, case-insensitive, in which the head
+NB.   side  - string, case-insensitive, in which the head
 NB.           specifies the side of A:
 NB.             'L'  NB. to perform (1) (A on the left)
 NB.             'R'  NB. to perform (2) (A on the right)
-NB.   uplo  - literal, case-insensitive, in which the head
+NB.   uplo  - string, case-insensitive, in which the head
 NB.           specifies which triangular part of A is to be
 NB.           referenced:
 NB.             'L'  NB. LT
@@ -178,22 +178,22 @@ NB.
 NB. Syntax:
 NB.   Bupdt=. (side ; uplo ; trans ; diag) xtrmmcore alpha ; AAt ; Bt
 NB. where
-NB.   side  - literal, case-insensitive, in which the head
+NB.   side  - string, case-insensitive, in which the head
 NB.           specifies the side of op(A):
 NB.             'L'  NB. to perform (1) (op(A) on the left)
 NB.             'R'  NB. to perform (2) (op(A) on the right)
-NB.   uplo  - literal, case-insensitive, in which the head
+NB.   uplo  - string, case-insensitive, in which the head
 NB.           specifies whether the matrix A is upper or
 NB.           lower triangular:
 NB.             'L'  NB. LT
 NB.             'U'  NB. UT
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of op(A):
 NB.             'N'  NB. op(A) := A    (no transpose)
 NB.             'T'  NB. op(A) := A^T  (transpose)
 NB.             'C'  NB. op(A) := A^T  (transpose)           for dtrmmcore
 NB.                  NB. op(A) := A^H  (conjugate transpose) for ztrmmcore
-NB.   diag  - literal, case-insensitive, in which the head
+NB.   diag  - string, case-insensitive, in which the head
 NB.           specifies the form of A:
 NB.             'N'  NB. A is either L or U
 NB.             'U'  NB. A is either L1 or U1, diagonal

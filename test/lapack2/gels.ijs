@@ -13,7 +13,7 @@ NB.   X2=. 'C' zgels A1 ; B2  NB. case 3: A1^H * X2 = B2
 NB.   X1=. 'T' dgels A2 ; B1  NB. case 4: A2^T * X1 = B1
 NB.   X1=. 'C' zgels A2 ; B1  NB. case 4: A2^H * X1 = B1
 NB. where
-NB.   trans - literal, case-insensitive, in which the head
+NB.   trans - string, case-insensitive, in which the head
 NB.           specifies the form of the system of equations:
 NB.             'N' - A   * X = B  (no transpose)
 NB.             'T' - A^T * X = B  (transpose)

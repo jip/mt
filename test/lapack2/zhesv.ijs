@@ -7,7 +7,7 @@ NB.
 NB. Syntax:
 NB.   'DPT1 ipiv X'=. uplo zhesv AA ; B
 NB. where
-NB.   uplo - literal, case-insensitive, in which the head
+NB.   uplo - string, case-insensitive, in which the head
 NB.          specifies which triangular part of AA is to be
 NB.          referenced:
 NB.            'L' - lower, the form is:

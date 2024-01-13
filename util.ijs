@@ -17,9 +17,6 @@ NB. cutl       Split list by any delimiter
 NB. benchmark  Adv. to make ambivalent verb to benchmark
 NB.            sentences using matrices of generator and
 NB.            shape given
-NB. initnoun   Define global noun if not defined yet
-NB. dlsym      Obtain address of a symbol in a shared object
-NB.            or executable
 NB.
 NB. Version: 0.13.0 2021-05-21
 NB.
@@ -289,62 +286,3 @@ benchmark=: 1 : 0
   ds
 )
 
-NB. ---------------------------------------------------------
-NB. initnoun
-NB.
-NB. Description:
-NB.   Define global noun if not defined yet. Return its
-NB.   value.
-NB.
-NB. Syntax:
-NB.   firstval=. name initnoun val
-NB. where
-NB.   name     - string, global noun's name
-NB.   val      - noun's value to initialize
-NB.   firstval - value used to initialize noun
-NB.
-NB. Notes:
-NB. - is inspired by (defaultvalue) verb from
-NB.   /system/util/project.ijs
-
-initnoun=: 4 : 'if. 0 ~: nc < x do. (x)=: y else. x~ end.'
-
-NB. ---------------------------------------------------------
-NB. dlsym
-NB.
-NB. Description:
-NB.   Obtain address of a symbol in a shared object or
-NB.   executable
-NB.
-NB. Syntax:
-NB.   'addr errmsg'=. dlsym libpath ; symname
-NB. where
-NB.   libpath - string, library's FQFN
-NB.   symname - string, symbol name
-NB.   addr    - integer, an address or 0 if symbol is not
-NB.             found
-NB.   errmsg  - string, an error message if addr=0 or ''
-
-dlsym=: 3 : 0
-  'lib sym'=. y
-  select. UNAME
-    case. 'Win' do.
-      dl=. 'kernel32.dll'
-      sig=. ' GetProcAddress x x *c'
-      h=. 0 {:: (dl , ' LoadLibrary * *c') cd < lib
-    case. 'Linux' ; 'OpenBSD' ; 'FreeBSD' do.
-      dl=. '/usr/lib' , (IF64 {:: '' ; '64') , '/libdl.so'
-      sig=. ' dlsym x x *c'
-      h=. 0 {:: (dl , ' dlopen * *c i') cd lib ; 1  NB. lazy binding
-    case. 'Android' ; 'Darwin' ; 'Unknown' ; 'Wasm' do.
-      ('UNAME ' , UNAME , ' isn''t supported yet') dbsig 11
-    case. do.
-      ('UNAME ' , UNAME , ' isn''t recognized'   ) dbsig 11
-  end.
-  if. h do.
-    p=. 0 {:: (dl , sig) cd h ; sym
-  else.
-    p=. 0  NB. cannot open lib
-  end.
-  (<p) 0} cderx ''
-)

@@ -153,8 +153,8 @@ qnconij=: qnconik@qnconjk  NB. by i,j
 NB. vector conjugation
 qnconv=:  +@{. , -@{:
 
-NB. ---------------------------------------------------------
-NB. Operators
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NB. Other operators
 
 NB. Product
 qnmul=: mp (,: (-@{: ,. {.)@:+)

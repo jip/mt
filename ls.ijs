@@ -8,7 +8,8 @@ NB.
 NB. testgels1  Test gelsxxx by general matrix and single RHS
 NB. testgels3  Test gelsxxx by general matrix and multiple
 NB.            RHS
-NB. testls     Test xxlsxxx
+NB. testls     Adv. to make verb to test xxlsxxx by matrix of
+NB.            datatype and shape given
 NB.
 NB. Version: 0.13.2 2021-06-24
 NB.

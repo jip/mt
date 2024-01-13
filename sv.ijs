@@ -801,8 +801,5 @@ NB. - test by random complex matrices, system is either
 NB.   200×200-matrix or 150×150-matrix and RHS is either
 NB.   200-vector or 150-vector or 200×150-matrix:
 NB.     (gemat_mt_ j. gemat_mt_) testsv_mt_ 200 150
-NB.
-NB. Notes:
-NB. - nrhs=3 is assumed
 
 testsv=: 1 : 'EMPTY [ (testptsv_mt_@(u@{. ; (u ptmat2_mt_)@{:) [ testposv_mt_@(u@{. ; (u pomat_mt_)@{:) [ testhesv_mt_@(u@{. ; (u hemat_mt_)@{:) [ testgtsv_mt_@(u@{. ; gtpick_mt_@u@{:) [ testgesv_mt_@:(<@u"1))@(,: >./)'

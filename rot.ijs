@@ -2,7 +2,8 @@ NB. Rotation
 NB.
 NB. lartg      Generates a plane rotation of a 2-vector
 NB. rot        Applies a plane rotation(s) to a 2-vector(s)
-NB. rotga      Adv. to make verb to get and apply rotation
+NB. rotga      Adv. to make monad to generate and apply
+NB.            rotation
 NB. rotsclx    Update array by rotations and scalings
 NB.            accumulated
 NB.
@@ -166,7 +167,7 @@ NB. ---------------------------------------------------------
 NB. rotga
 NB.
 NB. Description:
-NB.   Adv. to make verb to get and apply rotation
+NB.   Adv. to make monad to generate and apply rotation
 NB.
 NB. Syntax:
 NB.   vapp=. vrota rotga

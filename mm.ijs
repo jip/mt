@@ -3,8 +3,9 @@ NB.
 NB. mm        Convert J numeric array to/from suitable Matrix
 NB.           Market exchange format string
 NB.
-NB. testmm    Test mm
-NB. verifymm  Verify mm
+NB. testmm    Test mm verb
+NB.
+NB. verifymm  Verify mm verb
 NB.
 NB. Version: 0.13.3 2021-06-29
 NB.

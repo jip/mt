@@ -687,17 +687,16 @@ NB. Description:
 NB.   Test larfx by general vector
 NB.
 NB. Syntax:
-NB.   testlarfg ey
+NB.   log=. testlarfg ey
 NB. where
-NB.   ey - (n+1)-vector
+NB.   ey  - (n+1)-vector
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarfg=: 3 : 0
   iso=. (2 ?@$ <:@#) y
 
-  ('larfg' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) iso ; y
-  ('larfp' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) iso ; y
-
-  EMPTY
+  log=.          ('larfg' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) iso ; y
+  log=. log lcat ('larfp' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) iso ; y
 )
 
 NB. ---------------------------------------------------------
@@ -707,36 +706,35 @@ NB. Description:
 NB.   Test larfxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarf (trash ; C)
+NB.   log=. testlarf (trash ; C)
 NB. where
-NB.   C - m×n-matrix, is used as multiplier, the 1st row or
-NB.       column is used to form reflector
+NB.   C   - m×n-matrix, is used as multiplier, the 1st row or
+NB.         column is used to form reflector
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarf=: 3 : 0
   y=. 1 {:: y
   rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
-  ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
-  ('larflcfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
-  ('larflcfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
+  log=.          ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
+  log=. log lcat ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
+  log=. log lcat ('larflcfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
+  log=. log lcat ('larflcfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
 
-  ('larflnbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
-  ('larflnbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
-  ('larflnfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
-  ('larflnfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
+  log=. log lcat ('larflnbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
+  log=. log lcat ('larflnbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
+  log=. log lcat ('larflnfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
+  log=. log lcat ('larflnfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
 
-  ('larfrcbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
-  ('larfrcbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
-  ('larfrcfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
-  ('larfrcfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
+  log=. log lcat ('larfrcbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
+  log=. log lcat ('larfrcbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
+  log=. log lcat ('larfrcfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
+  log=. log lcat ('larfrcfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
 
-  ('larfrnbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
-  ('larfrnbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
-  ('larfrnfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
-  ('larfrnfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
-
-  EMPTY
+  log=. log lcat ('larfrnbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
+  log=. log lcat ('larfrnbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
+  log=. log lcat ('larfrnfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
+  log=. log lcat ('larfrnfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
 )
 
 NB. ---------------------------------------------------------
@@ -746,36 +744,35 @@ NB. Description:
 NB.   Test larzxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarz (trash ; C)
+NB.   log=. testlarz (trash ; C)
 NB. where
-NB.   C - m×n-matrix, is used as multiplier, the 1st row or
-NB.       column is used to form reflector
+NB.   C   - m×n-matrix, is used as multiplier, the 1st row or
+NB.         column is used to form reflector
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarz=: 3 : 0
   y=. 1 {:: y
   rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
-  ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
-  ('larzlcfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
-  ('larzlcfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
+  log=.          ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
+  log=. log lcat ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
+  log=. log lcat ('larzlcfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
+  log=. log lcat ('larzlcfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
 
-  ('larzlnbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
-  ('larzlnbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
-  ('larzlnfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
-  ('larzlnfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
+  log=. log lcat ('larzlnbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
+  log=. log lcat ('larzlnbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
+  log=. log lcat ('larzlnfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
+  log=. log lcat ('larzlnfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
 
-  ('larzrcbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
-  ('larzrcbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
-  ('larzrcfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
-  ('larzrcfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
+  log=. log lcat ('larzrcbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
+  log=. log lcat ('larzrcbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
+  log=. log lcat ('larzrcfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
+  log=. log lcat ('larzrcfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
 
-  ('larzrnbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
-  ('larzrnbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
-  ('larzrnfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
-  ('larzrnfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
-
-  EMPTY
+  log=. log lcat ('larzrnbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
+  log=. log lcat ('larzrnbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
+  log=. log lcat ('larzrnfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
+  log=. log lcat ('larzrnfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
 )
 
 NB. ---------------------------------------------------------
@@ -785,20 +782,19 @@ NB. Description:
 NB.   Test larftxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarft (A ; trash)
+NB.   log=. testlarft (A ; trash)
 NB. where
-NB.   A - m×n-matrix, is used to form Qf
+NB.   A   - m×n-matrix, is used to form Qf
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarft=: 3 : 0
   y=. 0 {:: y
   rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larftbc' tmonad (((tru1~ -~/@$)@geqlf)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftbr' tmonad (((trl1~ -~/@$)@gerqf)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfc' tmonad (( trl1        @geqrf)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfr' tmonad (( tru1        @gelqf)`]`(rcond"_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=.          ('larftbc' tmonad (((tru1~ -~/@$)@geqlf)`]`(rcond"_)`(_."_)`(_."_))) y
+  log=. log lcat ('larftbr' tmonad (((trl1~ -~/@$)@gerqf)`]`(rcond"_)`(_."_)`(_."_))) y
+  log=. log lcat ('larftfc' tmonad (( trl1        @geqrf)`]`(rcond"_)`(_."_)`(_."_))) y
+  log=. log lcat ('larftfr' tmonad (( tru1        @gelqf)`]`(rcond"_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -808,20 +804,19 @@ NB. Description:
 NB.   Test larztxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarzt (A ; trash)
+NB.   log=. testlarzt (A ; trash)
 NB. where
-NB.   A - m×n-matrix, is used to form Qf
+NB.   A   - m×n-matrix, is used to form Qf
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarzt=: 3 : 0
   y=. 0 {:: y
   rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larztbc' tmonad ((((idmat@]`(           i. @])`[)} c)@tzzlf@ trl        )`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larztbr' tmonad ((((idmat@]`(a: <@;     i. @])`[)} #)@tzrzf@ tru        )`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larztfc' tmonad ((((idmat@]`(       (-~ i.)@])`[)} c)@tzzrf@(tru~ -~/@$))`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larztfr' tmonad ((((idmat@]`(a: <@; (-~ i.)@])`[)} #)@tzlzf@(trl~ -~/@$))`]`(rcond"_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=.          ('larztbc' tmonad ((((idmat@]`(           i. @])`[)} c)@tzzlf@ trl        )`]`(rcond"_)`(_."_)`(_."_))) y
+  log=. log lcat ('larztbr' tmonad ((((idmat@]`(a: <@;     i. @])`[)} #)@tzrzf@ tru        )`]`(rcond"_)`(_."_)`(_."_))) y
+  log=. log lcat ('larztfc' tmonad ((((idmat@]`(       (-~ i.)@])`[)} c)@tzzrf@(tru~ -~/@$))`]`(rcond"_)`(_."_)`(_."_))) y
+  log=. log lcat ('larztfr' tmonad ((((idmat@]`(a: <@; (-~ i.)@])`[)} #)@tzlzf@(trl~ -~/@$))`]`(rcond"_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -831,10 +826,11 @@ NB. Description:
 NB.   Test larfbxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarfb (A ; C)
+NB.   log=. testlarfb (A ; C)
 NB. where
-NB.   A - m×n-matrix, is used to form Qf
-NB.   C - m×n-matrix, is used as multiplier
+NB.   A   - m×n-matrix, is used to form Qf
+NB.   C   - m×n-matrix, is used as multiplier
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarfb=: 3 : 0
   'A C'=. y
@@ -845,27 +841,25 @@ testlarfb=: 3 : 0
   Qffc=.  trl1         geqrf A
   Qffr=.  tru1         gelqf A
 
-  ('larfblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  , ~ 0
-  ('larfblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) , ~ 0
-  ('larfblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  ,   0
-  ('larfblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) ,   0
+  log=.          ('larfblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  , ~ 0
+  log=. log lcat ('larfblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) , ~ 0
+  log=. log lcat ('larfblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  ,   0
+  log=. log lcat ('larfblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) ,   0
 
-  ('larfblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  , ~ 0
-  ('larfblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) , ~ 0
-  ('larfblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  ,   0
-  ('larfblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) ,   0
+  log=. log lcat ('larfblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  , ~ 0
+  log=. log lcat ('larfblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) , ~ 0
+  log=. log lcat ('larfblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  ,   0
+  log=. log lcat ('larfblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) ,   0
 
-  ('larfbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.~ 0
-  ('larfbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.~ 0
-  ('larfbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.  0
-  ('larfbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.  0
+  log=. log lcat ('larfbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.~ 0
+  log=. log lcat ('larfbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.~ 0
+  log=. log lcat ('larfbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.  0
+  log=. log lcat ('larfbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.  0
 
-  ('larfbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.~ 0
-  ('larfbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.~ 0
-  ('larfbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.  0
-  ('larfbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.  0
-
-  EMPTY
+  log=. log lcat ('larfbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.~ 0
+  log=. log lcat ('larfbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.~ 0
+  log=. log lcat ('larfbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.  0
+  log=. log lcat ('larfbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.  0
 )
 
 NB. ---------------------------------------------------------
@@ -875,10 +869,11 @@ NB. Description:
 NB.   Test larzbxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarzb (A ; C)
+NB.   log=. testlarzb (A ; C)
 NB. where
-NB.   A - m×n-matrix, is used to form Qf
-NB.   C - m×n-matrix, is used as multiplier
+NB.   A   - m×n-matrix, is used to form Qf
+NB.   C   - m×n-matrix, is used as multiplier
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarzb=: 3 : 0
   'A C'=. y
@@ -890,27 +885,25 @@ testlarzb=: 3 : 0
   Qffc=. I (       (-~ i.) k)} tzzrf (tru~ -~/@$) A
   Qffr=. I (< a: ; (-~ i.) k)} tzlzf (trl~ -~/@$) A
 
-  ('larzblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  ,   0
-  ('larzblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) ,   0
-  ('larzblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  , ~ 0
-  ('larzblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) , ~ 0
+  log=.          ('larzblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  ,   0
+  log=. log lcat ('larzblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) ,   0
+  log=. log lcat ('larzblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  , ~ 0
+  log=. log lcat ('larzblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) , ~ 0
 
-  ('larzblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  ,   0
-  ('larzblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) ,   0
-  ('larzblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  , ~ 0
-  ('larzblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) , ~ 0
+  log=. log lcat ('larzblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  ,   0
+  log=. log lcat ('larzblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) ,   0
+  log=. log lcat ('larzblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  , ~ 0
+  log=. log lcat ('larzblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) , ~ 0
 
-  ('larzbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.  0
-  ('larzbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.  0
-  ('larzbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.~ 0
-  ('larzbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.~ 0
+  log=. log lcat ('larzbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.  0
+  log=. log lcat ('larzbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.  0
+  log=. log lcat ('larzbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.~ 0
+  log=. log lcat ('larzbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.~ 0
 
-  ('larzbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.  0
-  ('larzbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.  0
-  ('larzbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.~ 0
-  ('larzbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.~ 0
-
-  EMPTY
+  log=. log lcat ('larzbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.  0
+  log=. log lcat ('larzbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.  0
+  log=. log lcat ('larzbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.~ 0
+  log=. log lcat ('larzbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.~ 0
 )
 
 NB. ---------------------------------------------------------
@@ -921,24 +914,22 @@ NB.   Adv. to make verb to test larfxxxxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testref
+NB.   log=. (mkmat testref) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testref_mt_ 200 150
+NB.     log=. ?@$&0 testref_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testref_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testref_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testref_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testref_mt_ 150 200
 NB.
 NB. Notes:
 NB. - non-blocked larfxxxx algos are tested implicitly in
@@ -946,4 +937,4 @@ NB.   testgq, testmq, testqf
 NB. - larxtxx and larxbxxxx are impractical for large
 NB.   matrices
 
-testref=: 1 : 'EMPTY [ (testlarzb_mt_ [ testlarfb_mt_ [ testlarzt_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'
+testref=: 1 : 'nolog_mt_`((testlarzb_mt_ ,&.>~ testlarfb_mt_ ,&.>~ testlarzt_mt_ ,&.>~ testlarft_mt_ ,&.>~ testlarz_mt_ ,&.>~ testlarf_mt_)@(u ; u))@.(200 >: <./) ,&.>~ testlarfg_mt_@u@>:@{.'

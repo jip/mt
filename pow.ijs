@@ -245,18 +245,15 @@ NB. Description:
 NB.   Test gepow by square matrix
 NB.
 NB. Syntax:
-NB.   testgepow A
+NB.   log=. testgepow A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
 
-testgepow=: 3 : 0
-  ('gepow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))) y
-
-  EMPTY
-)
+testgepow=: 'gepow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))
 
 NB. ---------------------------------------------------------
 NB. testdipow
@@ -265,9 +262,10 @@ NB. Description:
 NB.   Test dipow by diagonalizable matrix
 NB.
 NB. Syntax:
-NB.   testdipow A
+NB.   log=. testdipow A
 NB. where
-NB.   A - n×n-matrix, the diagonalizable
+NB.   A   - n×n-matrix, the diagonalizable
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
@@ -285,9 +283,7 @@ testdipow=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  ('dipow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
-
-  EMPTY
+  log=. ('dipow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
 )
 
 NB. ---------------------------------------------------------
@@ -297,9 +293,10 @@ NB. Description:
 NB.   Test hepow by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testhepow A
+NB.   log=. testhepow A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   A   - n×n-matrix, the Hermitian (symmetric)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhepow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -311,9 +308,7 @@ testhepow=: 3 : 0
     v=. R=. _.
   end.
 
-  ('hepow' tdyad ((5 7"_)`]`]`heconi`(_."_)`(_."_))) v ; ct R
-
-  EMPTY
+  log=. ('hepow' tdyad ((5 7"_)`]`]`heconi`(_."_)`(_."_))) v ; ct R
 )
 
 NB. ---------------------------------------------------------
@@ -324,23 +319,21 @@ NB.   Adv. to make verb to test xxpow by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testpow
+NB.   log=. (mkmat testpow) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testpow_mt_ 150 150
+NB.     log=. ?@$&0 testpow_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testpow_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testpow_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testpow_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testpow_mt_ 150 150
 
-testpow=: 1 : 'EMPTY [ (testhepow_mt_@(u hemat_mt_) [ testdipow_mt_@(u dimat_mt_ u) [ testgepow_mt_@u)^:(=/)'
+testpow=: 1 : 'nolog_mt_`(testhepow_mt_@(u hemat_mt_) ,&.>~ testdipow_mt_@(u dimat_mt_ u) ,&.>~ testgepow_mt_@u)@.(=/)'

@@ -268,10 +268,12 @@ NB. Description:
 NB.   Test gelsxxx by general matrix and single RHS
 NB.
 NB. Syntax:
-NB.   testgels1 (A ; x)
+NB.   log=. testgels1 (A ; x)
 NB. where
-NB.   A - m×n-matrix
-NB.   x - max(m,n)-vector, pool for the exact solution values
+NB.   A   - m×n-matrix
+NB.   x   - max(m,n)-vector, a material for the exact
+NB.         solution values
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgels1=: 3 : 0
   'A x'=. y
@@ -287,10 +289,8 @@ testgels1=: 3 : 0
     xc=. m {. xn=. x
   end.
 
-  ('gelsax'  tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(( mp~     qrt16v) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; (    A  mp xn) ; rcondA ; norm1A
-  ('gelsacx' tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(((mp~ ct) qrt16v) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; ((ct A) mp xc) ; rcondA ; normiA
-
-  EMPTY
+  log=.          ('gelsax'  tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(( mp~     qrt16v) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; (    A  mp xn) ; rcondA ; norm1A
+  log=. log lcat ('gelsacx' tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(((mp~ ct) qrt16v) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; ((ct A) mp xc) ; rcondA ; normiA
 )
 
 NB. ---------------------------------------------------------
@@ -303,10 +303,12 @@ NB.   - gelsxxx (math/mt addon)
 NB.   by general matrix and multiple RHS
 NB.
 NB. Syntax:
-NB.   testgels3 (A ; X)
+NB.   log=. testgels3 (A ; X)
 NB. where
-NB.   A - m×n-matrix
-NB.   X - max(m,n)×3-matrix, pool for exact solutions values
+NB.   A   - m×n-matrix
+NB.   X   - max(m,n)×3-matrix, a material for exact solutions
+NB.         values
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgels3=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/gels'
@@ -325,17 +327,17 @@ testgels3=: 3 : 0
   Bax=.      A  mp Xn
   Bacx=. (ct A) mp Xc
 
-  ('dgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  ('dgels_mttmp_' tdyad (('t'"_)`(2&{. )`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
-  ('zgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  ('zgels_mttmp_' tdyad (('c'"_)`(2&{. )`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  log=.          ('dgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  log=. log lcat ('dgels_mttmp_' tdyad (('t'"_)`(2&{. )`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  log=. log lcat ('zgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  log=. log lcat ('zgels_mttmp_' tdyad (('c'"_)`(2&{. )`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
 
-  ('gelsax'       tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  ('gelsacx'      tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  log=. log lcat ('gelsax'       tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  log=. log lcat ('gelsacx'      tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -346,16 +348,15 @@ NB.   Adv. to make verb to test gelsxxx by a matrix generated
 NB.   by generator given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testgels
+NB.   log=. (mkmat testgels) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms; is called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of non-negative integers, the shape of
 NB.           matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 
-testgels=: 1 : '(testgels3_mt_@; [ testgels1_mt_@(; {:"1))~ u'
+testgels=: 1 : '(testgels3_mt_@; ,&.>~ testgels1_mt_@(; {:"1))~ u'
 
 NB. ---------------------------------------------------------
 NB. testls
@@ -365,24 +366,23 @@ NB.   Adv. to make verb to test xxlsxxx by matrix of
 NB.   datatype and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testls
+NB.   log=. (mkmat testls) (m,n)
 NB. where
 NB.   mkmat - monad to generate a datatype; is called as:
 NB.             dat=. mkmat 1
 NB.           and is used to detect dat datatype only
-NB.   vtest - monad to test algorithms; is called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix to
 NB.           generate
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random real wide matrices:
-NB.     ?@$&0 testls_mt_ 100 150
+NB.     log=. ?@$&0 testls_mt_ 100 150
 NB. - test by random complex tall matrices:
-NB.     (gemat_mt_ j. gemat_mt_) testls_mt_ 150 100
+NB.     log=. (gemat_mt_ j. gemat_mt_) testls_mt_ 150 100
 NB.
 NB. Notes:
 NB. - nrhs=3 is assumed
 NB. - models part of LAPACK's xDRVLS which tests xGELS
 
-testls=: 1 : 'EMPTY [ (((dqrt133_mt_ testgels_mt_) [ (dqrt132_mt_ testgels_mt_) [ (dqrt131_mt_ testgels_mt_))~ (dlarnv2_mt_ % 3:)@(>./ , 3:))`(((zqrt133_mt_ testgels_mt_) [ (zqrt132_mt_ testgels_mt_) [ (zqrt131_mt_ testgels_mt_))~ (zlarnv2_mt_ % 3:)@(>./ , 3:))@.(JCMPX = 3!:0@u@1)'
+testls=: 1 : '(((dqrt133_mt_ testgels_mt_) ,&.>~ (dqrt132_mt_ testgels_mt_) ,&.>~ (dqrt131_mt_ testgels_mt_))~ (dlarnv2_mt_ % 3:)@(>./ , 3:))`(((zqrt133_mt_ testgels_mt_) ,&.>~ (zqrt132_mt_ testgels_mt_) ,&.>~ (zqrt131_mt_ testgels_mt_))~ (zlarnv2_mt_ % 3:)@(>./ , 3:))@.(JCMPX = 3!:0@u@1)'

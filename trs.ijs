@@ -604,11 +604,12 @@ NB.   - getrsxxxxxx (math/mt addon)
 NB.   by general square matrix
 NB.
 NB. Syntax:
-NB.   testgetrs (X ; A)
+NB.   log=. testgetrs (X ; A)
 NB. where
-NB.   X - m×n-matrix, exact solutions
-NB.   A - k×k-matrix
-NB.   k = max(m,n)
+NB.   X   - m×n-matrix, exact solutions
+NB.   A   - k×k-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   k   = max(m,n)
 NB.
 NB. Notes:
 NB. - models LAPACK's xCHKGE
@@ -655,41 +656,41 @@ testgetrs=: 3 : 0
   vberrxac=: (mp  ct) t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
-  ('''n''&dgetrs_mttmp_' tmonad (        (1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am
-  ('''c''&dgetrs_mttmp_' tmonad (        (1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm
-  ('''t''&dgetrs_mttmp_' tmonad (        (1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm
+  log=.          ('''n''&dgetrs_mttmp_' tmonad (        (1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am
+  log=. log lcat ('''c''&dgetrs_mttmp_' tmonad (        (1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm
+  log=. log lcat ('''t''&dgetrs_mttmp_' tmonad (        (1&{ ,~ dgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm
 
-  ('''n''&zgetrs_mttmp_' tmonad (        (1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am
-  ('''c''&zgetrs_mttmp_' tmonad (        (1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm
-  ('''t''&zgetrs_mttmp_' tmonad (        (1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm
+  log=. log lcat ('''n''&zgetrs_mttmp_' tmonad (        (1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am
+  log=. log lcat ('''c''&zgetrs_mttmp_' tmonad (        (1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm
+  log=. log lcat ('''t''&zgetrs_mttmp_' tmonad (        (1&{ ,~ zgetrf_mttmp_@(0&{::))`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm
 
-  ('getrslu1px'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am  ; LU1pm
-  ('getrslu1pcx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm ; LU1pm
-  ('getrslu1ptx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm ; LU1pm
-  ('getrsxlu1p'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondAn  ; normiAn  ; LU1pn
-  ('getrsxlu1pc'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxac)) An ; Bxac ; X  ; rcondAcn ; normiAcn ; LU1pn
-  ('getrsxlu1pt'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondAtn ; normiAtn ; LU1pn
+  log=. log lcat ('getrslu1px'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am  ; LU1pm
+  log=. log lcat ('getrslu1pcx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm ; LU1pm
+  log=. log lcat ('getrslu1ptx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm ; LU1pm
+  log=. log lcat ('getrsxlu1p'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondAn  ; normiAn  ; LU1pn
+  log=. log lcat ('getrsxlu1pc'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxac)) An ; Bxac ; X  ; rcondAcn ; normiAcn ; LU1pn
+  log=. log lcat ('getrsxlu1pt'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondAtn ; normiAtn ; LU1pn
 
-  ('getrspl1ux'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am  ; pL1Um
-  ('getrspl1ucx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm ; pL1Um
-  ('getrspl1utx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm ; pL1Um
-  ('getrsxpl1u'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondAn  ; normiAn  ; pL1Un
-  ('getrsxpl1uc'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxac)) An ; Bxac ; X  ; rcondAcn ; normiAcn ; pL1Un
-  ('getrsxpl1ut'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondAtn ; normiAtn ; pL1Un
+  log=. log lcat ('getrspl1ux'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am  ; pL1Um
+  log=. log lcat ('getrspl1ucx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm ; pL1Um
+  log=. log lcat ('getrspl1utx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm ; pL1Um
+  log=. log lcat ('getrsxpl1u'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondAn  ; normiAn  ; pL1Un
+  log=. log lcat ('getrsxpl1uc'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxac)) An ; Bxac ; X  ; rcondAcn ; normiAcn ; pL1Un
+  log=. log lcat ('getrsxpl1ut'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondAtn ; normiAtn ; pL1Un
 
-  ('getrspu1lx'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am  ; pU1Lm
-  ('getrspu1lcx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm ; pU1Lm
-  ('getrspu1ltx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm ; pU1Lm
-  ('getrsxpu1l'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondAn  ; normiAn  ; pU1Ln
-  ('getrsxpu1lc'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxac)) An ; Bxac ; X  ; rcondAcn ; normiAcn ; pU1Ln
-  ('getrsxpu1lt'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondAtn ; normiAtn ; pU1Ln
+  log=. log lcat ('getrspu1lx'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am  ; pU1Lm
+  log=. log lcat ('getrspu1lcx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm ; pU1Lm
+  log=. log lcat ('getrspu1ltx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm ; pU1Lm
+  log=. log lcat ('getrsxpu1l'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondAn  ; normiAn  ; pU1Ln
+  log=. log lcat ('getrsxpu1lc'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxac)) An ; Bxac ; X  ; rcondAcn ; normiAcn ; pU1Ln
+  log=. log lcat ('getrsxpu1lt'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondAtn ; normiAtn ; pU1Ln
 
-  ('getrsul1px'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am  ; UL1pm
-  ('getrsul1pcx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm ; UL1pm
-  ('getrsul1ptx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm ; UL1pm
-  ('getrsxul1p'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondAn  ; normiAn  ; UL1pn
-  ('getrsxul1pc'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxac)) An ; Bxac ; X  ; rcondAcn ; normiAcn ; UL1pn
-  ('getrsxul1pt'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondAtn ; normiAtn ; UL1pn
+  log=. log lcat ('getrsul1px'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondAm  ; norm1Am  ; UL1pm
+  log=. log lcat ('getrsul1pcx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberracx)) Am ; Bacx ; X  ; rcondAcm ; norm1Acm ; UL1pm
+  log=. log lcat ('getrsul1ptx'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondAtm ; norm1Atm ; UL1pm
+  log=. log lcat ('getrsxul1p'          tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondAn  ; normiAn  ; UL1pn
+  log=. log lcat ('getrsxul1pc'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxac)) An ; Bxac ; X  ; rcondAcn ; normiAcn ; UL1pn
+  log=. log lcat ('getrsxul1pt'         tdyad  ((_2&{.)`(1&{::                       )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondAtn ; normiAtn ; UL1pn
 
   NB. vector x
 
@@ -713,38 +714,38 @@ testgetrs=: 3 : 0
   vberrxac=: (mp  ct) t02v
   vberrxat=: (mp  |:) t02v
 
-  ('getrslu1px'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondAm  ; norm1Am  ; LU1pm
-  ('getrslu1pcx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberracx)) Am ; bacx ; xm ; rcondAcm ; norm1Acm ; LU1pm
-  ('getrslu1ptx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondAtm ; norm1Atm ; LU1pm
-  ('getrsxlu1p'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondAn  ; normiAn  ; LU1pn
-  ('getrsxlu1pc'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxac)) An ; bxac ; xn ; rcondAcn ; normiAcn ; LU1pn
-  ('getrsxlu1pt'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondAtn ; normiAtn ; LU1pn
+  log=. log lcat ('getrslu1px'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondAm  ; norm1Am  ; LU1pm
+  log=. log lcat ('getrslu1pcx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberracx)) Am ; bacx ; xm ; rcondAcm ; norm1Acm ; LU1pm
+  log=. log lcat ('getrslu1ptx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondAtm ; norm1Atm ; LU1pm
+  log=. log lcat ('getrsxlu1p'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondAn  ; normiAn  ; LU1pn
+  log=. log lcat ('getrsxlu1pc'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxac)) An ; bxac ; xn ; rcondAcn ; normiAcn ; LU1pn
+  log=. log lcat ('getrsxlu1pt'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondAtn ; normiAtn ; LU1pn
 
-  ('getrspl1ux'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondAm  ; norm1Am  ; pL1Um
-  ('getrspl1ucx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberracx)) Am ; bacx ; xm ; rcondAcm ; norm1Acm ; pL1Um
-  ('getrspl1utx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondAtm ; norm1Atm ; pL1Um
-  ('getrsxpl1u'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondAn  ; normiAn  ; pL1Un
-  ('getrsxpl1uc'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxac)) An ; bxac ; xn ; rcondAcn ; normiAcn ; pL1Un
-  ('getrsxpl1ut'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondAtn ; normiAtn ; pL1Un
+  log=. log lcat ('getrspl1ux'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondAm  ; norm1Am  ; pL1Um
+  log=. log lcat ('getrspl1ucx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberracx)) Am ; bacx ; xm ; rcondAcm ; norm1Acm ; pL1Um
+  log=. log lcat ('getrspl1utx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondAtm ; norm1Atm ; pL1Um
+  log=. log lcat ('getrsxpl1u'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondAn  ; normiAn  ; pL1Un
+  log=. log lcat ('getrsxpl1uc'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxac)) An ; bxac ; xn ; rcondAcn ; normiAcn ; pL1Un
+  log=. log lcat ('getrsxpl1ut'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondAtn ; normiAtn ; pL1Un
 
-  ('getrspu1lx'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondAm  ; norm1Am  ; pU1Lm
-  ('getrspu1lcx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberracx)) Am ; bacx ; xm ; rcondAcm ; norm1Acm ; pU1Lm
-  ('getrspu1ltx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondAtm ; norm1Atm ; pU1Lm
-  ('getrsxpu1l'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondAn  ; normiAn  ; pU1Ln
-  ('getrsxpu1lc'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxac)) An ; bxac ; xn ; rcondAcn ; normiAcn ; pU1Ln
-  ('getrsxpu1lt'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondAtn ; normiAtn ; pU1Ln
+  log=. log lcat ('getrspu1lx'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondAm  ; norm1Am  ; pU1Lm
+  log=. log lcat ('getrspu1lcx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberracx)) Am ; bacx ; xm ; rcondAcm ; norm1Acm ; pU1Lm
+  log=. log lcat ('getrspu1ltx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondAtm ; norm1Atm ; pU1Lm
+  log=. log lcat ('getrsxpu1l'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondAn  ; normiAn  ; pU1Ln
+  log=. log lcat ('getrsxpu1lc'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxac)) An ; bxac ; xn ; rcondAcn ; normiAcn ; pU1Ln
+  log=. log lcat ('getrsxpu1lt'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondAtn ; normiAtn ; pU1Ln
 
-  ('getrsul1px'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondAm  ; norm1Am  ; UL1pm
-  ('getrsul1pcx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberracx)) Am ; bacx ; xm ; rcondAcm ; norm1Acm ; UL1pm
-  ('getrsul1ptx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondAtm ; norm1Atm ; UL1pm
-  ('getrsxul1p'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondAn  ; normiAn  ; UL1pn
-  ('getrsxul1pc'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxac)) An ; bxac ; xn ; rcondAcn ; normiAcn ; UL1pn
-  ('getrsxul1pt'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondAtn ; normiAtn ; UL1pn
+  log=. log lcat ('getrsul1px'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondAm  ; norm1Am  ; UL1pm
+  log=. log lcat ('getrsul1pcx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberracx)) Am ; bacx ; xm ; rcondAcm ; norm1Acm ; UL1pm
+  log=. log lcat ('getrsul1ptx'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondAtm ; norm1Atm ; UL1pm
+  log=. log lcat ('getrsxul1p'          tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondAn  ; normiAn  ; UL1pn
+  log=. log lcat ('getrsxul1pc'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxac)) An ; bxac ; xn ; rcondAcn ; normiAcn ; UL1pn
+  log=. log lcat ('getrsxul1pt'         tdyad ((_2&{.)`(1&{::                        )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondAtn ; normiAtn ; UL1pn
 
   coerase < 'mttmp'
   erase 'vferrr vferrl vberrax vberracx vberratx vberrxa vberrxac vberrxat'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -758,11 +759,12 @@ NB.   - hetrsxxxx (math/mt addon)
 NB.   by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testhetrs (X ; A)
+NB.   log=. testhetrs (X ; A)
 NB. where
-NB.   X - m×n-matrix, exact solutions
-NB.   A - k×k-matrix, the Hermitian (symmetric)
-NB.   k = max(m,n)
+NB.   X   - m×n-matrix, exact solutions
+NB.   A   - k×k-matrix, the Hermitian (symmetric)
+NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   k   = max(m,n)
 NB.
 NB. Notes:
 NB. - models LAPACK's DCHKSY_AA, ZCHKHE_AA with the following
@@ -813,25 +815,25 @@ testhetrs=: 3 : 0
   vberrxa=:   mp      t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
-  ('''l''&dsytrs_mttmp_'    tmonad (        (1&{ ,~ 'l' dsytrf_mttmp_    0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''u''&dsytrs_mttmp_'    tmonad (        (1&{ ,~ 'u' dsytrf_mttmp_    0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''l''&zhetrs_mttmp_'    tmonad (        (1&{ ,~ 'l' zhetrf_mttmp_    0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''u''&zhetrs_mttmp_'    tmonad (        (1&{ ,~ 'u' zhetrf_mttmp_    0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=.          ('''l''&dsytrs_mttmp_'    tmonad (        (1&{ ,~ 'l' dsytrf_mttmp_    0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''u''&dsytrs_mttmp_'    tmonad (        (1&{ ,~ 'u' dsytrf_mttmp_    0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''l''&zhetrs_mttmp_'    tmonad (        (1&{ ,~ 'l' zhetrf_mttmp_    0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''u''&zhetrs_mttmp_'    tmonad (        (1&{ ,~ 'u' zhetrf_mttmp_    0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
 
-  ('''l''&dsytrs_aa_mttmp_' tmonad (        (1&{ ,~ 'l' dsytrf_aa_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''u''&dsytrs_aa_mttmp_' tmonad (        (1&{ ,~ 'u' dsytrf_aa_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''l''&zhetrs_aa_mttmp_' tmonad (        (1&{ ,~ 'l' zhetrf_aa_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''u''&zhetrs_aa_mttmp_' tmonad (        (1&{ ,~ 'u' zhetrf_aa_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''l''&dsytrs_aa_mttmp_' tmonad (        (1&{ ,~ 'l' dsytrf_aa_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''u''&dsytrs_aa_mttmp_' tmonad (        (1&{ ,~ 'u' dsytrf_aa_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''l''&zhetrs_aa_mttmp_' tmonad (        (1&{ ,~ 'l' zhetrf_aa_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''u''&zhetrs_aa_mttmp_' tmonad (        (1&{ ,~ 'u' zhetrf_aa_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
 
-  ('hetrsplx'               tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; pL1Tm
-  ('hetrspltx'              tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; pL1Tm
-  ('hetrsxpl'               tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; pL1Tn
-  ('hetrsxplt'              tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; pL1Tn
+  log=. log lcat ('hetrsplx'               tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; pL1Tm
+  log=. log lcat ('hetrspltx'              tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; pL1Tm
+  log=. log lcat ('hetrsxpl'               tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; pL1Tn
+  log=. log lcat ('hetrsxplt'              tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; pL1Tn
 
-  ('hetrspux'               tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; pU1Tm
-  ('hetrsputx'              tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; pU1Tm
-  ('hetrsxpu'               tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; pU1Tn
-  ('hetrsxput'              tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; pU1Tn
+  log=. log lcat ('hetrspux'               tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; pU1Tm
+  log=. log lcat ('hetrsputx'              tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; pU1Tm
+  log=. log lcat ('hetrsxpu'               tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; pU1Tn
+  log=. log lcat ('hetrsxput'              tdyad  ((_3&{.)`(1&{::                            )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; pU1Tn
 
   NB. vector x
 
@@ -851,20 +853,20 @@ testhetrs=: 3 : 0
   vberrxa=:   mp      t02v
   vberrxat=: (mp  |:) t02v
 
-  ('hetrsplx'               tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; pL1Tm
-  ('hetrspltx'              tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; pL1Tm
-  ('hetrsxpl'               tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; pL1Tn
-  ('hetrsxplt'              tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; pL1Tn
+  log=. log lcat ('hetrsplx'               tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; pL1Tm
+  log=. log lcat ('hetrspltx'              tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; pL1Tm
+  log=. log lcat ('hetrsxpl'               tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; pL1Tn
+  log=. log lcat ('hetrsxplt'              tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; pL1Tn
 
-  ('hetrspux'               tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; pU1Tm
-  ('hetrsputx'              tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; pU1Tm
-  ('hetrsxpu'               tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; pU1Tn
-  ('hetrsxput'              tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; pU1Tn
+  log=. log lcat ('hetrspux'               tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; pU1Tm
+  log=. log lcat ('hetrsputx'              tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; pU1Tm
+  log=. log lcat ('hetrsxpu'               tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; pU1Tn
+  log=. log lcat ('hetrsxput'              tdyad ((_3&{.)`(1&{::                             )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; pU1Tn
 
   coerase < 'mttmp'
   erase 'vferrr vferrl vberrax vberratx vberrxa vberrxat'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -877,12 +879,13 @@ NB.   - potrsxxx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix
 NB.
 NB. Syntax:
-NB.   testpotrs (X ; A)
+NB.   log=. testpotrs (X ; A)
 NB. where
-NB.   X - m×n-matrix, exact solutions
-NB.   A - k×k-matrix, the Hermitian (symmetric) positive
-NB.       definite
-NB.   k = max(m,n)
+NB.   X   - m×n-matrix, exact solutions
+NB.   A   - k×k-matrix, the Hermitian (symmetric) positive
+NB.         definite
+NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   k   = max(m,n)
 NB.
 NB. Notes:
 NB. - models LAPACK's xCHKPO
@@ -925,20 +928,20 @@ testpotrs=: 3 : 0
   vberrxa=:   mp      t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
-  ('''l''&dpotrs_mttmp_' tmonad (        (1&{ ;~ 'l' dpotrf_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''u''&dpotrs_mttmp_' tmonad (        (1&{ ;~ 'u' dpotrf_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''l''&zpotrs_mttmp_' tmonad (        (1&{ ;~ 'l' zpotrf_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''u''&zpotrs_mttmp_' tmonad (        (1&{ ;~ 'u' zpotrf_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=.          ('''l''&dpotrs_mttmp_' tmonad (        (1&{ ;~ 'l' dpotrf_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''u''&dpotrs_mttmp_' tmonad (        (1&{ ;~ 'u' dpotrf_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''l''&zpotrs_mttmp_' tmonad (        (1&{ ;~ 'l' zpotrf_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''u''&zpotrs_mttmp_' tmonad (        (1&{ ;~ 'u' zpotrf_mttmp_ 0&{::)`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
 
-  ('potrslx'             tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; Lm
-  ('potrsltx'            tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; Lm
-  ('potrsxl'             tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; Ln
-  ('potrsxlt'            tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; Ln
+  log=. log lcat ('potrslx'             tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; Lm
+  log=. log lcat ('potrsltx'            tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; Lm
+  log=. log lcat ('potrsxl'             tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; Ln
+  log=. log lcat ('potrsxlt'            tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; Ln
 
-  ('potrsux'             tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; Um
-  ('potrsutx'            tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; Um
-  ('potrsxu'             tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; Un
-  ('potrsxut'            tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; Un
+  log=. log lcat ('potrsux'             tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; Um
+  log=. log lcat ('potrsutx'            tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; Um
+  log=. log lcat ('potrsxu'             tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; Un
+  log=. log lcat ('potrsxut'            tdyad  ((5&{::)`(1&{::                         )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; Un
 
   NB. vector x
 
@@ -958,20 +961,20 @@ testpotrs=: 3 : 0
   vberrxa=:   mp      t02v
   vberrxat=: (mp  |:) t02v
 
-  ('potrslx'             tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; Lm
-  ('potrsltx'            tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; Lm
-  ('potrsxl'             tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; Ln
-  ('potrsxlt'            tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; Ln
+  log=. log lcat ('potrslx'             tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; Lm
+  log=. log lcat ('potrsltx'            tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; Lm
+  log=. log lcat ('potrsxl'             tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; Ln
+  log=. log lcat ('potrsxlt'            tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; Ln
 
-  ('potrsux'             tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; Um
-  ('potrsutx'            tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; Um
-  ('potrsxu'             tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; Un
-  ('potrsxut'            tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; Un
+  log=. log lcat ('potrsux'             tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; Um
+  log=. log lcat ('potrsutx'            tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; Um
+  log=. log lcat ('potrsxu'             tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; Un
+  log=. log lcat ('potrsxut'            tdyad ((5&{::)`(1&{::                          )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; Un
 
   coerase < 'mttmp'
   erase 'vferrr vferrl vberrax vberratx vberrxa vberrxat'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -985,12 +988,13 @@ NB.   by Hermitian (symmetric) positive definite tridiagonal
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   testpttrs (X ; A)
+NB.   log=. testpttrs (X ; A)
 NB. where
-NB.   X - m×n-matrix, exact solutions
-NB.   A - k×k-matrix, the Hermitian (symmetric) positive
-NB.       definite tridiagonal
-NB.   k = max(m,n)
+NB.   X   - m×n-matrix, exact solutions
+NB.   A   - k×k-matrix, the Hermitian (symmetric) positive
+NB.         definite tridiagonal
+NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   k   = max(m,n)
 NB.
 NB. Notes:
 NB. - models LAPACK's xCHKPT
@@ -1036,18 +1040,18 @@ testpttrs=: 3 : 0
   vberrxa=:   mp      t02m norm1tr
   vberrxat=: (mp  |:) t02m norm1tr
 
-  ('dpttrs_mttmp_'       tmonad (        (1&{ ,~ dpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
-  ('''l''&zpttrs_mttmp_' tmonad (        (1&{ ,~ zpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=.          ('dpttrs_mttmp_'       tmonad (        (1&{ ,~ dpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
+  log=. log lcat ('''l''&zpttrs_mttmp_' tmonad (        (1&{ ,~ zpttrf_mttmp_@(diag ; _1&diag)@(0&{::))`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am
 
-  ('pttrslx'             tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; L1Dm
-  ('pttrsltx'            tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; L1Dm
-  ('pttrsxl'             tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; L1Dn
-  ('pttrsxlt'            tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; L1Dn
+  log=. log lcat ('pttrslx'             tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; L1Dm
+  log=. log lcat ('pttrsltx'            tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; L1Dm
+  log=. log lcat ('pttrsxl'             tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; L1Dn
+  log=. log lcat ('pttrsxlt'            tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; L1Dn
 
-  ('pttrsux'             tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; U1Dm
-  ('pttrsutx'            tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; U1Dm
-  ('pttrsxu'             tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; U1Dn
-  ('pttrsxut'            tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; U1Dn
+  log=. log lcat ('pttrsux'             tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrr`vberrax )) Am ; Bax  ; X  ; rcondm ; norm1Am  ; U1Dm
+  log=. log lcat ('pttrsutx'            tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrr`vberratx)) Am ; Batx ; X  ; rcondm ; norm1Atm ; U1Dm
+  log=. log lcat ('pttrsxu'             tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrl`vberrxa )) An ; Bxa  ; X  ; rcondn ; normiAn  ; U1Dn
+  log=. log lcat ('pttrsxut'            tdyad  ((_2&{.)`(1&{::                                        )`]`(3&{::)`vferrl`vberrxat)) An ; Bxat ; X  ; rcondn ; normiAtn ; U1Dn
 
   NB. vector x
 
@@ -1067,20 +1071,20 @@ testpttrs=: 3 : 0
   vberrxa=:   mp      t02v
   vberrxat=: (mp  |:) t02v
 
-  ('pttrslx'             tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; L1Dm
-  ('pttrsltx'            tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; L1Dm
-  ('pttrsxl'             tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; L1Dn
-  ('pttrsxlt'            tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; L1Dn
+  log=. log lcat ('pttrslx'             tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; L1Dm
+  log=. log lcat ('pttrsltx'            tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; L1Dm
+  log=. log lcat ('pttrsxl'             tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; L1Dn
+  log=. log lcat ('pttrsxlt'            tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; L1Dn
 
-  ('pttrsux'             tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; U1Dm
-  ('pttrsutx'            tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; U1Dm
-  ('pttrsxu'             tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; U1Dn
-  ('pttrsxut'            tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; U1Dn
+  log=. log lcat ('pttrsux'             tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrax )) Am ; bax  ; xm ; rcondm ; norm1Am  ; U1Dm
+  log=. log lcat ('pttrsutx'            tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberratx)) Am ; batx ; xm ; rcondm ; norm1Atm ; U1Dm
+  log=. log lcat ('pttrsxu'             tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrxa )) An ; bxa  ; xn ; rcondn ; normiAn  ; U1Dn
+  log=. log lcat ('pttrsxut'            tdyad ((_2&{.)`(1&{::                                         )`]`(3&{::)`t04v  `vberrxat)) An ; bxat ; xn ; rcondn ; normiAtn ; U1Dn
 
   coerase < 'mttmp'
   erase 'vferrr vferrl vberrax vberratx vberrxa vberrxat'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1093,10 +1097,11 @@ NB.   - trtrsxxx (math/mt addon)
 NB.   by triangular matrix
 NB.
 NB. Syntax:
-NB.   testtrtrs (X ; A)
+NB.   log=. testtrtrs (X ; A)
 NB. where
-NB.   X - m×n-matrix, exact solutions
-NB.   A - m×m-matrix
+NB.   X   - m×n-matrix, exact solutions
+NB.   A   - m×m-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Notes:
 NB. - models LAPACK's xCHKTR
@@ -1147,70 +1152,70 @@ testtrtrs=: 3 : 0
   vberrutn=: (mp~ |:@trupick ) t02m norm1tc
   vberrutu=: (mp~ |:@tru1pick) t02m norm1tc
 
-  ('''lnn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlnn                )) A ; Blnn               ; X  ; rcondL  ; norm1L
-  ('''lnu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlnu                )) A ; Blnu               ; X  ; rcondL1 ; norm1L1
-  ('''ltn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrltn                )) A ; Bltn               ; X  ; rcondL  ; normiL
-  ('''ltu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrltu                )) A ; Bltu               ; X  ; rcondL1 ; normiL1
-  ('''lcn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlcn                )) A ; Blcn               ; X  ; rcondL  ; normiL
-  ('''lcu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlcu                )) A ; Blcu               ; X  ; rcondL1 ; normiL1
+  log=.          ('''lnn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlnn                )) A ; Blnn               ; X  ; rcondL  ; norm1L
+  log=. log lcat ('''lnu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlnu                )) A ; Blnu               ; X  ; rcondL1 ; norm1L1
+  log=. log lcat ('''ltn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrltn                )) A ; Bltn               ; X  ; rcondL  ; normiL
+  log=. log lcat ('''ltu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrltu                )) A ; Bltu               ; X  ; rcondL1 ; normiL1
+  log=. log lcat ('''lcn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlcn                )) A ; Blcn               ; X  ; rcondL  ; normiL
+  log=. log lcat ('''lcu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlcu                )) A ; Blcu               ; X  ; rcondL1 ; normiL1
 
-  ('''unn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrunn                )) A ; Bunn               ; X  ; rcondL  ; norm1U
-  ('''unu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrunu                )) A ; Bunu               ; X  ; rcondL1 ; norm1U1
-  ('''utn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrutn                )) A ; Butn               ; X  ; rcondL  ; normiU
-  ('''utu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrutu                )) A ; Butu               ; X  ; rcondL1 ; normiU1
-  ('''ucn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrucn                )) A ; Bucn               ; X  ; rcondL  ; normiU
-  ('''ucu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrucu                )) A ; Bucu               ; X  ; rcondL1 ; normiU1
+  log=. log lcat ('''unn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrunn                )) A ; Bunn               ; X  ; rcondL  ; norm1U
+  log=. log lcat ('''unu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrunu                )) A ; Bunu               ; X  ; rcondL1 ; norm1U1
+  log=. log lcat ('''utn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrutn                )) A ; Butn               ; X  ; rcondL  ; normiU
+  log=. log lcat ('''utu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrutu                )) A ; Butu               ; X  ; rcondL1 ; normiU1
+  log=. log lcat ('''ucn''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrucn                )) A ; Bucn               ; X  ; rcondL  ; normiU
+  log=. log lcat ('''ucu''&dtrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrucu                )) A ; Bucu               ; X  ; rcondL1 ; normiU1
 
-  ('''lnn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlnn                )) A ; Blnn               ; X  ; rcondL  ; norm1L
-  ('''lnu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlnu                )) A ; Blnu               ; X  ; rcondL1 ; norm1L1
-  ('''ltn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrltn                )) A ; Bltn               ; X  ; rcondL  ; normiL
-  ('''ltu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrltu                )) A ; Bltu               ; X  ; rcondL1 ; normiL1
-  ('''lcn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlcn                )) A ; Blcn               ; X  ; rcondL  ; normiL
-  ('''lcu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlcu                )) A ; Blcu               ; X  ; rcondL1 ; normiL1
+  log=. log lcat ('''lnn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlnn                )) A ; Blnn               ; X  ; rcondL  ; norm1L
+  log=. log lcat ('''lnu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlnu                )) A ; Blnu               ; X  ; rcondL1 ; norm1L1
+  log=. log lcat ('''ltn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrltn                )) A ; Bltn               ; X  ; rcondL  ; normiL
+  log=. log lcat ('''ltu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrltu                )) A ; Bltu               ; X  ; rcondL1 ; normiL1
+  log=. log lcat ('''lcn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlcn                )) A ; Blcn               ; X  ; rcondL  ; normiL
+  log=. log lcat ('''lcu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrlcu                )) A ; Blcu               ; X  ; rcondL1 ; normiL1
 
-  ('''unn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrunn                )) A ; Bunn               ; X  ; rcondL  ; norm1U
-  ('''unu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrunu                )) A ; Bunu               ; X  ; rcondL1 ; norm1U1
-  ('''utn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrutn                )) A ; Butn               ; X  ; rcondL  ; normiU
-  ('''utu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrutu                )) A ; Butu               ; X  ; rcondL1 ; normiU1
-  ('''ucn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrucn                )) A ; Bucn               ; X  ; rcondL  ; normiU
-  ('''ucu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrucu                )) A ; Bucu               ; X  ; rcondL1 ; normiU1
+  log=. log lcat ('''unn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrunn                )) A ; Bunn               ; X  ; rcondL  ; norm1U
+  log=. log lcat ('''unu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrunu                )) A ; Bunu               ; X  ; rcondL1 ; norm1U1
+  log=. log lcat ('''utn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrutn                )) A ; Butn               ; X  ; rcondL  ; normiU
+  log=. log lcat ('''utu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrutu                )) A ; Butu               ; X  ; rcondL1 ; normiU1
+  log=. log lcat ('''ucn''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrucn                )) A ; Bucn               ; X  ; rcondL  ; normiU
+  log=. log lcat ('''ucu''&ztrtrs_mttmp_' tmonad (        (2&{. )`]`(3&{::)`vferrr`vberrucu                )) A ; Bucu               ; X  ; rcondL1 ; normiU1
 
-  ('trtrslnn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrlnn                )) A ; Blnn               ; X  ; rcondL  ; norm1L
-  ('trtrslnu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrlnu                )) A ; Blnu               ; X  ; rcondL1 ; norm1L1
-  ('trtrsltn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrltn                )) A ; Bltn               ; X  ; rcondL  ; normiL
-  ('trtrsltu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrltu                )) A ; Bltu               ; X  ; rcondL1 ; normiL1
-  ('trtrslcn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrlcn                )) A ; Blcn               ; X  ; rcondL  ; normiL
-  ('trtrslcu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrlcu                )) A ; Blcu               ; X  ; rcondL1 ; normiL1
+  log=. log lcat ('trtrslnn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrlnn                )) A ; Blnn               ; X  ; rcondL  ; norm1L
+  log=. log lcat ('trtrslnu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrlnu                )) A ; Blnu               ; X  ; rcondL1 ; norm1L1
+  log=. log lcat ('trtrsltn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrltn                )) A ; Bltn               ; X  ; rcondL  ; normiL
+  log=. log lcat ('trtrsltu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrltu                )) A ; Bltu               ; X  ; rcondL1 ; normiL1
+  log=. log lcat ('trtrslcn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrlcn                )) A ; Blcn               ; X  ; rcondL  ; normiL
+  log=. log lcat ('trtrslcu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrlcu                )) A ; Blcu               ; X  ; rcondL1 ; normiL1
 
-  ('trtrsunn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrunn                )) A ; Bunn               ; X  ; rcondU  ; norm1U
-  ('trtrsunu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrunu                )) A ; Bunu               ; X  ; rcondU1 ; norm1U1
-  ('trtrsutn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrutn                )) A ; Butn               ; X  ; rcondU  ; normiU
-  ('trtrsutu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrutu                )) A ; Butu               ; X  ; rcondU1 ; normiU1
-  ('trtrsucn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrucn                )) A ; Bucn               ; X  ; rcondU  ; normiU
-  ('trtrsucu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrucu                )) A ; Bucu               ; X  ; rcondU1 ; normiU1
+  log=. log lcat ('trtrsunn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrunn                )) A ; Bunn               ; X  ; rcondU  ; norm1U
+  log=. log lcat ('trtrsunu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrunu                )) A ; Bunu               ; X  ; rcondU1 ; norm1U1
+  log=. log lcat ('trtrsutn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrutn                )) A ; Butn               ; X  ; rcondU  ; normiU
+  log=. log lcat ('trtrsutu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrutu                )) A ; Butu               ; X  ; rcondU1 ; normiU1
+  log=. log lcat ('trtrsucn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrucn                )) A ; Bucn               ; X  ; rcondU  ; normiU
+  log=. log lcat ('trtrsucu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`vferrr`vberrucu                )) A ; Bucu               ; X  ; rcondU1 ; normiU1
 
   NB. vector x
 
   xm=. {."1 X
 
-  ('trtrslnn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~    trlpick ) t02v))) A ; (L   mp       xm ) ; xm ; rcondL  ; norm1L
-  ('trtrslnu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~    trl1pick) t02v))) A ; (L1  mp       xm ) ; xm ; rcondL1 ; norm1L1
-  ('trtrslcn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ ct@trlpick ) t02v))) A ; (L  (mp~ ct)~ xm ) ; xm ; rcondL  ; normiL
-  ('trtrslcu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ ct@trl1pick) t02v))) A ; (L1 (mp~ ct)~ xm ) ; xm ; rcondL1 ; normiL1
-  ('trtrsltn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ |:@trlpick ) t02v))) A ; (L  (mp~ |:)~ xm ) ; xm ; rcondL  ; normiL
-  ('trtrsltu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ |:@trl1pick) t02v))) A ; (L1 (mp~ |:)~ xm ) ; xm ; rcondL1 ; normiL1
+  log=. log lcat ('trtrslnn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~    trlpick ) t02v))) A ; (L   mp       xm ) ; xm ; rcondL  ; norm1L
+  log=. log lcat ('trtrslnu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~    trl1pick) t02v))) A ; (L1  mp       xm ) ; xm ; rcondL1 ; norm1L1
+  log=. log lcat ('trtrslcn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ ct@trlpick ) t02v))) A ; (L  (mp~ ct)~ xm ) ; xm ; rcondL  ; normiL
+  log=. log lcat ('trtrslcu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ ct@trl1pick) t02v))) A ; (L1 (mp~ ct)~ xm ) ; xm ; rcondL1 ; normiL1
+  log=. log lcat ('trtrsltn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ |:@trlpick ) t02v))) A ; (L  (mp~ |:)~ xm ) ; xm ; rcondL  ; normiL
+  log=. log lcat ('trtrsltu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ |:@trl1pick) t02v))) A ; (L1 (mp~ |:)~ xm ) ; xm ; rcondL1 ; normiL1
 
-  ('trtrsunn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~    trupick ) t02v))) A ; (U   mp       xm ) ; xm ; rcondU  ; norm1U
-  ('trtrsunu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~    tru1pick) t02v))) A ; (U1  mp       xm ) ; xm ; rcondU1 ; norm1U1
-  ('trtrsucn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ ct@trupick ) t02v))) A ; (U  (mp~ ct)~ xm ) ; xm ; rcondU  ; normiU
-  ('trtrsucu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ ct@tru1pick) t02v))) A ; (U1 (mp~ ct)~ xm ) ; xm ; rcondU1 ; normiU1
-  ('trtrsutn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ |:@trupick ) t02v))) A ; (U  (mp~ |:)~ xm ) ; xm ; rcondU  ; normiU
-  ('trtrsutu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ |:@tru1pick) t02v))) A ; (U1 (mp~ |:)~ xm ) ; xm ; rcondU1 ; normiU1
+  log=. log lcat ('trtrsunn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~    trupick ) t02v))) A ; (U   mp       xm ) ; xm ; rcondU  ; norm1U
+  log=. log lcat ('trtrsunu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~    tru1pick) t02v))) A ; (U1  mp       xm ) ; xm ; rcondU1 ; norm1U1
+  log=. log lcat ('trtrsucn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ ct@trupick ) t02v))) A ; (U  (mp~ ct)~ xm ) ; xm ; rcondU  ; normiU
+  log=. log lcat ('trtrsucu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ ct@tru1pick) t02v))) A ; (U1 (mp~ ct)~ xm ) ; xm ; rcondU1 ; normiU1
+  log=. log lcat ('trtrsutn'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ |:@trupick ) t02v))) A ; (U  (mp~ |:)~ xm ) ; xm ; rcondU  ; normiU
+  log=. log lcat ('trtrsutu'              tdyad  ((0&{::)`(1&{::)`]`(3&{::)`t04v  `((mp~ |:@tru1pick) t02v))) A ; (U1 (mp~ |:)~ xm ) ; xm ; rcondU1 ; normiU1
 
   coerase < 'mttmp'
   erase 'vferrr vberrlnn vberrlnu vberrltn vberrltu vberrlcn vberrlcu vberrunn vberrunu vberrutn vberrutu vberrucn vberrucu vberrxnx vberrxcx vberrxtx'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1221,29 +1226,27 @@ NB.   Adv. to make verb to test xxtrsxxxxxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testtrs
+NB.   log=. (mkmat testtrs) (m,n)
 NB. where
 NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrices composed
-NB.           from mat; is called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random real matrices with elements distributed
 NB.   uniformly with support (0,1), system is either
 NB.   100×100-matrix or 150×150-matrix and RHS is either
 NB.   100-vector or 150-vector or 100×150-matrix:
-NB.     ?@$&0 testtrs_mt_ 100 150
+NB.     log=. ?@$&0 testtrs_mt_ 100 150
 NB. - test by random real matrices with elements with
 NB.   limited value's amplitude, system is 150×150-matrix and
 NB.   RHS is either 150-vector or 150×150-matrix:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testtrs_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testtrs_mt_ 150 150
 NB. - test by random complex matrices, system is either
 NB.   200×200-matrix or 150×150-matrix and RHS is either
 NB.   200-vector or 150-vector or 200×150-matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testtrs_mt_ 200 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testtrs_mt_ 200 150
 
-testtrs=: 1 : 'EMPTY [ testtrtrs_mt_@(u ; u@(2 # {.)) [ (testpttrs_mt_@(u@{. ; (u ptmat2_mt_)@{:) [ testpotrs_mt_@(u@{. ; (u pomat_mt_)@{:) [ testhetrs_mt_@(u@{. ; (u hemat_mt_)@{:) [ testgetrs_mt_@:(<@u"1))@(,: >./)'
+testtrs=: 1 : 'testtrtrs_mt_@(u ; u@(2 # {.)) ,&.>~ (testpttrs_mt_@(u@{. ; (u ptmat2_mt_)@{:) ,&.>~ testpotrs_mt_@(u@{. ; (u pomat_mt_)@{:) ,&.>~ testhetrs_mt_@(u@{. ; (u hemat_mt_)@{:) ,&.>~ testgetrs_mt_@:(<@u"1))@(,: >./)'

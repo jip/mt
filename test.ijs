@@ -1,7 +1,5 @@
 NB. Test
 NB.
-NB. tmonad   Conj. to make monad to test computational monad
-NB. tdyad    Conj. to make monad to test computational dyad
 NB. drvevx   Dyads to compute the normalization error of
 NB.          eigenvectors produced by nonsymmetric eigenvalue
 NB.          problem solver
@@ -107,6 +105,22 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Concepts
+NB.
+NB. Storage layout:
+NB.   test log is a noun represented as inverted table:
+NB.   - column     :  sentence  rcond   fwd.err   bwd.err   time     space
+NB.   - column type:  string    float   float     float     float    integer
+NB.   - rank       :  2         1       1         1         1        1
+NB.   - unit       :  J code    %cond   relative  relative  seconds  bytes
+NB.
+NB. Notes:
+NB. - see tmonad and tdyad in util.ijs
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -218,159 +232,6 @@ aberrU=: 1 : 'norm1@(<: upddiag)@u (<. % FP_PREC * ]) #'
 
 NB. =========================================================
 NB. Interface
-
-NB. ---------------------------------------------------------
-NB. tmonad
-NB. tdyad
-NB.
-NB. Description:
-NB.   Conj. to make monad to test computational verb
-NB.
-NB. Syntax:
-NB.   vtestm=. mname tmonad        vgety`vgeto`vrcond`vferr`vberr
-NB.   vtestd=. dname tdyad   vgetx`vgety`vgeto`vrcond`vferr`vberr
-NB. where
-NB.   vgetx  - monad to extract left argument for vd; is
-NB.            called as:
-NB.              argx=. vgetx y
-NB.   vgety  - monad to extract right argument for vm or vd;
-NB.            is called as:
-NB.              argy=. vgety y
-NB.   vgeto  - monad to extract output from ret;
-NB.            is called as:
-NB.              out=. vgeto ret
-NB.   vrcond - monad to find rcond; is called as:
-NB.              rcond=. vrcond y
-NB.   vferr  - dyad to find ferr; is called as:
-NB.              ferr=. y vferr out
-NB.   vberr  - dyad to find berr; is called as:
-NB.              berr=. y vberr out
-NB.   mname  - string, the name of monad vm to test
-NB.   dname  - string, the name of dyad vd to test
-NB.   vtestm - monad to test monad vm and to log result:
-NB.              mname rcond ferr berr time space
-NB.            in the global noun TESTLOG and to the console,
-NB.            is called as:
-NB.              vtestm y
-NB.   vtestd - monad to test dyad vd and to log result:
-NB.              dname rcond ferr berr time space
-NB.            in the global noun TESTLOG and to the console,
-NB.            is called as:
-NB.              vtestd y
-NB.   vm     - monad to test; is called as:
-NB.              ret=. vm argy
-NB.   vd     - dyad to test; is called as:
-NB.              ret=. argx vd argy
-NB.   y      - some input for vtestm or vtestd
-NB.   argx   - some left argument for vd
-NB.   argy   - some right argument for vm or vd
-NB.   ret    - some output from vm or vd
-NB.   out    - rectified ret, i.e. filtered output
-NB.   ferr   ≥ 0 or NaN, the relative forward error
-NB.   berr   ≥ 0 or NaN, the relative backward error
-NB.   rcond  ≥ 0, the estimated reciprocal of the condition
-NB.            number of the input matrix; +∞ if matrix is
-NB.            singular; NaN if matrix is non-square
-NB.
-NB. Application:
-NB. - to test geqrf:
-NB.     NB. to estimate rcond in 1-norm
-NB.     vrcond=. (_."_)`gecon1@.(=/@$)
-NB.     NB. to calc. berr, assuming:
-NB.     NB.   berr := ||A - realA||_1 / (FP_EPS * ||A||_1 * m)
-NB.     vberr=. ((- %&norm1 [) % FP_EPS * (norm1 * #)@[) unmqr
-NB.     NB. do the job
-NB.     ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
-NB. - to test getrs:
-NB.     NB. to estimate rcond in ∞-norm
-NB.     vrcond=. (_."_)`geconi@.(=/@$)@(0&{::)
-NB.     NB. to calc. ferr, assuming:
-NB.     NB.   ferr := ||x - realx||_inf / ||realx||_inf
-NB.     vferr=. ((- %&normi [) 1&{::)~
-NB.     NB. to calc. componentwise berr [LUG 75], assuming:
-NB.     NB.   berr := max_i(|b - A * realx|_i / (|A| * |realx| + |b|)_i)
-NB.     vberr=. (mp&>/@[ |@- (0 {:: [) mp ]) >./@% (((0 {:: [) mp&| ]) + |@mp&>/@[)
-NB.     NB. do the job
-NB.     ('getrs' tdyad (0&{::)`(mp&>/)`]`vrcond`vferr`vberr) (A;x)
-NB.
-NB. References:
-NB. [1] Magne Haveraaen, Hogne Hundvebakke. Some Statistical
-NB.     Performance Estimation Techniques for Dynamic
-NB.     Machines. Appeared in Weihai Yu & al. (eds.): Norsk
-NB.     Informatikk-konferanse 2001, Tapir, Trondheim Norway
-NB.     2001, pp. 176-185.
-NB.     https://www.ii.uib.no/saga/papers/perfor-5d.pdf
-NB.
-NB. Notes:
-NB. 1) recommended observations count to provide standard
-NB.    deviation <= 1% for CPU run-time estimator minimum on
-NB.    systems with load ≤ 80 is equal to 5 [1]
-NB. 2) side effects:
-NB.    - augments the TESTLOG_mt_ global noun
-NB.    - outputs to the console
-
-tmonad=: 2 : 0
-  '`vgety vgeto vrcond vferr vberr'=. n
-  try. rcond=. vrcond y catch. rcond=. _ end.
-  try.
-    ybak=. memu argy=. vgety y
-    try.
-      't s'=. , (5 1 # i. 2) <./`]/. (5 1 # timex`(7!:2))`:0 'ret=. ' , m , ' argy'
-      if. -. argy -: ybak do. m=. m , ' NB. error: y changed' end.
-      try.
-        out=. vgeto ret
-        try. ferr=. y vferr out catch. ferr=. _. end.
-        try. berr=. y vberr out catch. berr=. _. end.
-      catch.
-        'ferr berr'=. 2 # _.
-      end.
-    catch.
-      dbsig 3  NB. jump to upper catch block
-    end.
-  catch.
-    'ferr berr t s'=. 4 # _.
-  end.
-  erase 'argy ybak'
-  logline=. m ; rcond ; ferr ; berr ; t ; s
-  (fmtlog_mt_ logline) (1!:2) 2
-  wd^:IFQT 'msgs'
-  TESTLOG_mt_=: TESTLOG_mt_ ,&.> logline
-  EMPTY
-)
-
-tdyad=: 2 : 0
-  '`vgetx vgety vgeto vrcond vferr vberr'=. n
-  try. rcond=. vrcond y catch. rcond=. _ end.
-  try.
-    xbak=. memu argx=. vgetx y
-    ybak=. memu argy=. vgety y
-    try.
-      't s'=. , (5 1 # i. 2) <./`]/. (5 1 # timex`(7!:2))`:0 'ret=. argx ' , m , ' argy'
-      select. #. (argx -: xbak) , argy -: ybak
-        case. 2 do. m=. m , ' NB. error: y was changed'
-        case. 1 do. m=. m , ' NB. error: x was changed'
-        case. 0 do. m=. m , ' NB. error: x and y were changed'
-      end.
-      try.
-        out=. vgeto ret
-        try. ferr=. y vferr out catch. ferr=. _. end.
-        try. berr=. y vberr out catch. berr=. _. end.
-      catch.
-        'ferr berr'=. 2 # _.
-      end.
-    catch.
-      dbsig 3  NB. jump to upper catch block
-    end.
-  catch.
-    'ferr berr t s'=. 4 # _.
-  end.
-  erase 'argy ybak argx xbak'
-  logline=. m ; rcond ; ferr ; berr ; t ; s
-  (fmtlog_mt_ logline) (1!:2) 2
-  wd^:IFQT 'msgs'
-  TESTLOG_mt_=: TESTLOG_mt_ ,&.> logline
-  EMPTY
-)
 
 NB. ---------------------------------------------------------
 NB. drvevl

@@ -1,22 +1,22 @@
 NB. Utilities
 NB.
-NB. max        Max-of, 0 for empty list
-NB. maxc       Max-of, '' for empty list
-NB. negneg     Conditional negate
-NB. negpos     Conditional negate
-NB. copysign   Copy sign
-NB. sorim      Sum of real and imaginary parts' modules
-NB. soris      Sum of real and imaginary parts' squares
-NB. fmtlog     Format log string
-NB. assert     Advanced version of the (assert.) control
-NB. cut3       Split list by delimiter taken from its tail
-NB. cut2       Split list by delimiter
-NB. cut        Split list by delimiter
-NB. cutl2      Split list by any delimiter
-NB. cutl       Split list by any delimiter
-NB. benchmark  Adv. to make ambivalent verb to benchmark
-NB.            sentences using matrices of generator and
-NB.            shape given
+NB. max       Max-of, 0 for empty list
+NB. maxc      Max-of, '' for empty list
+NB. negneg    Conditional negate
+NB. negpos    Conditional negate
+NB. copysign  Copy sign
+NB. sorim     Sum of real and imaginary parts' modules
+NB. soris     Sum of real and imaginary parts' squares
+NB. lcat      Concatenate logs
+NB. nolog     Nilad to generate neutral for test actors
+NB. tmonad    Conj. to make monad to test computational monad
+NB. tdyad     Conj. to make monad to test computational dyad
+NB. assert    Advanced version of the (assert.) control
+NB. cut3      Split list by delimiter taken from its tail
+NB. cut2      Split list by delimiter
+NB. cut       Split list by delimiter
+NB. cutl2     Split list by any delimiter
+NB. cutl      Split list by any delimiter
 NB.
 NB. Version: 0.13.0 2021-05-21
 NB.
@@ -45,6 +45,9 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
+NB. Format log string
+fmtlog=: ;@:(40 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))
+
 NB. =========================================================
 NB. Interface
 
@@ -62,7 +65,182 @@ copysign=: (=/&:*`((,:~ -)@{:))}@,:                             NB. if x<0 then 
 sorim=: | `(+/"1@:| @:+.)@.(JCMPX = 3!:0)                       NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
 soris=: *:`(+/"1@:*:@:+.)@.(JCMPX = 3!:0)                       NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
 
-fmtlog=: ;@:(40 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))  NB. log string format
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NB. test suite utilities
+
+lcat=: ,&.>&:(,&.>/"2^:(<:@#@$))
+
+NB. ---------------------------------------------------------
+NB. nolog
+NB.
+NB. Description:
+NB.   Nilad to generate neutral for test actors
+NB.
+NB. Syntax:
+NB.   emptylog=. nolog ''
+NB. where
+NB.   emptylog - an empty log which could be joined with
+NB.              another log
+NB.
+NB. Assertions:
+NB.   log -: log      ,&.> emptylog
+NB.   log -: emptylog ,&.> log
+NB. where
+NB.   log - some another log
+NB.
+NB. Notes:
+NB. - test actor may finish with the neutral result if input
+NB.   is not applicable (say, non-square matrix for a method
+NB.   requiring square input)
+
+nolog=: 1 5 # EMPTY ; $@0
+
+NB. ---------------------------------------------------------
+NB. tmonad
+NB. tdyad
+NB.
+NB. Description:
+NB.   Conj. to make monad to test computational verb
+NB.
+NB. Syntax:
+NB.   'omsent rcond ferr berr time space'=. (imsent tmonad        vgety`vgeto`vrcond`vferr`vberr) y
+NB.   'odsent rcond ferr berr time space'=. (idsent tdyad   vgetx`vgety`vgeto`vrcond`vferr`vberr) y
+NB. where
+NB.   imsent - string, J sentence for monadic execution; is
+NB.            called as:
+NB.              ret=.      sentence argy
+NB.   idsent - string, J sentence for dyadic execution; is
+NB.            called as:
+NB.              ret=. argx sentence argy
+NB.   vgetx  - monad to extract left argument for vd; is
+NB.            called as:
+NB.              argx=. vgetx y
+NB.   vgety  - monad to extract right argument for vm or vd;
+NB.            is called as:
+NB.              argy=. vgety y
+NB.   vgeto  - monad to extract output from ret;
+NB.            is called as:
+NB.              out=. vgeto ret
+NB.   vrcond - monad to find rcond; is called as:
+NB.              rcond=. vrcond y
+NB.   vferr  - dyad to find ferr; is called as:
+NB.              ferr=. y vferr out
+NB.   vberr  - dyad to find berr; is called as:
+NB.              berr=. y vberr out
+NB.   y      - some input for monad made from conj.
+NB.   omsent -: ,: imsent
+NB.   odsent -: ,: idsent
+NB.   rcond  ≥ 0, the estimated reciprocal of the condition
+NB.            number of the input matrix; +∞ if matrix is
+NB.            singular; NaN if matrix is non-square
+NB.   ferr   ≥ 0 or NaN, the relative forward error
+NB.   berr   ≥ 0 or NaN, the relative backward error
+NB.   time   ≥ 0, estimation [1] of sentence execution time
+NB.   space  ≥ 0, the number of bytes used to execute the
+NB.            sentence
+NB.   argx   - some left argument for sentence
+NB.   argy   - some right argument for sentence
+NB.   ret    - some result of sentence execution
+NB.   out    - rectified ret, i.e. filtered output
+NB.
+NB. Application:
+NB. - to test geqrf:
+NB.     NB. to estimate rcond in 1-norm
+NB.     vrcond=. (_."_)`gecon1@.(=/@$)
+NB.     NB. to calc. berr, assuming:
+NB.     NB.   berr := ||A - realA||_1 / (FP_EPS * ||A||_1 * m)
+NB.     vberr=. ((- %&norm1 [) % FP_EPS * (norm1 * #)@[) unmqr
+NB.     NB. do the job
+NB.     'sent rcond ferr berr time space'=. ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
+NB. - to test getrs:
+NB.     NB. to estimate rcond in ∞-norm
+NB.     vrcond=. (_."_)`geconi@.(=/@$)@(0&{::)
+NB.     NB. to calc. ferr, assuming:
+NB.     NB.   ferr := ||x - realx||_inf / ||realx||_inf
+NB.     vferr=. ((- %&normi [) 1&{::)~
+NB.     NB. to calc. componentwise berr [LUG 75], assuming:
+NB.     NB.   berr := max_i(|b - A * realx|_i / (|A| * |realx| + |b|)_i)
+NB.     vberr=. (mp&>/@[ |@- (0 {:: [) mp ]) >./@% (((0 {:: [) mp&| ]) + |@mp&>/@[)
+NB.     NB. do the job
+NB.     'sent rcond ferr berr time space'=. ('getrs' tdyad (0&{::)`(mp&>/)`]`vrcond`vferr`vberr) (A;x)
+NB.
+NB. References:
+NB. [1] Magne Haveraaen, Hogne Hundvebakke. Some Statistical
+NB.     Performance Estimation Techniques for Dynamic
+NB.     Machines. Appeared in Weihai Yu & al. (eds.): Norsk
+NB.     Informatikk-konferanse 2001, Tapir, Trondheim Norway
+NB.     2001, pp. 176-185.
+NB.     https://www.ii.uib.no/saga/papers/perfor-5d.pdf
+NB.
+NB. Notes:
+NB. 1) recommended observations count to provide standard
+NB.    deviation <= 1% for CPU run-time estimator minimum on
+NB.    systems with load ≤ 80 is equal to 5 [1]
+NB. 2) side effect: the result is sent to the console
+
+tmonad=: 2 : 0
+  '`vgety vgeto vrcond vferr vberr'=. n
+  try. rcond=. vrcond y catch. rcond=. _ end.
+  try.
+    ybak=. memu argy=. vgety y
+    try.
+      't s'=. , (5 1 # i. 2) <./`]/. (5 1 # timex`(7!:2))`:0 'ret=. ' , m , ' argy'
+      if. -. argy -: ybak do. m=. m , ' NB. error: y changed' end.
+      try.
+        out=. vgeto ret
+        try. ferr=. y vferr out catch. ferr=. _. end.
+        try. berr=. y vberr out catch. berr=. _. end.
+      catch.
+        'ferr berr'=. 2 # _.
+      end.
+    catch.
+      dbsig 3  NB. jump to upper catch block
+    end.
+  catch.
+    'ferr berr t s'=. 4 # _.
+  end.
+  erase 'argy ybak'
+  logline=. (,: m) ; rcond ; ferr ; berr ; t ; s
+  (fmtlog_mt_ logline) (1!:2) 2
+  wd^:IFQT 'msgs'
+  logline
+)
+
+tdyad=: 2 : 0
+  '`vgetx vgety vgeto vrcond vferr vberr'=. n
+  try. rcond=. vrcond y catch. rcond=. _ end.
+  try.
+    xbak=. memu argx=. vgetx y
+    ybak=. memu argy=. vgety y
+    try.
+      't s'=. , (5 1 # i. 2) <./`]/. (5 1 # timex`(7!:2))`:0 'ret=. argx ' , m , ' argy'
+      select. #. (argx -: xbak) , argy -: ybak
+        case. 2 do. m=. m , ' NB. error: y was changed'
+        case. 1 do. m=. m , ' NB. error: x was changed'
+        case. 0 do. m=. m , ' NB. error: x and y were changed'
+      end.
+      try.
+        out=. vgeto ret
+        try. ferr=. y vferr out catch. ferr=. _. end.
+        try. berr=. y vberr out catch. berr=. _. end.
+      catch.
+        'ferr berr'=. 2 # _.
+      end.
+    catch.
+      dbsig 3  NB. jump to upper catch block
+    end.
+  catch.
+    'ferr berr t s'=. 4 # _.
+  end.
+  erase 'argy ybak argx xbak'
+  logline=. (,: m) ; rcond ; ferr ; berr ; t ; s
+  (fmtlog_mt_ logline) (1!:2) 2
+  wd^:IFQT 'msgs'
+  logline
+)
+
+NB. end of test suite utilities
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. flt staff
@@ -215,74 +393,3 @@ cutl=: -.&a:@cutl2
 
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-NB. ---------------------------------------------------------
-NB. benchmark
-NB.
-NB. Description:
-NB.   Adv. to make ambivalent verb to benchmark sentences
-NB.   using matrices of generator and shape given
-NB.
-NB. Syntax:
-NB.   d=. [rx] (mkmat atest) benchmark (m,n)
-NB. where
-NB.   mkmat - monad to generate a material for test matrices;
-NB.           is called as:
-NB.             mat=. mkmat (m,n)
-NB.   atest - adv. to make monadic procedure to run tests; is
-NB.           called as:
-NB.             trash=. (mkmat atest) (m,n)
-NB.   rx    - string, optional, a regular expression to
-NB.           filter out sentences, default is:
-NB.             ^((?!_mt(mm|tmp|lap|fla|bl[ai])_\b|\b128!:([01]|10)\b|%\.|\+\/ \. ?\*).)+
-NB.           meaning: benchmark all sentences except ones
-NB.           listed below:
-NB.             128!:0
-NB.             128!:1
-NB.             128!:10
-NB.             +/ .*
-NB.             +/ . *
-NB.             %.
-NB.             with name which contains any of the next:
-NB.               _mtmm_
-NB.               _mttmp_
-NB.               _mtlap_
-NB.               _mtfla_
-NB.               _mtbla_
-NB.               _mtbli_
-NB.   (m,n) - a shape of test matrices to be used by tests
-NB.   d     > 0, a total duration (in seconds) of tested
-NB.           sentences execution time
-NB.
-NB. Notes:
-NB. - side effects:
-NB.    - augments the TESTLOG_mt_ global noun
-NB.    - outputs to the console
-NB.
-NB. Application:
-NB.      load 'math/mt'
-NB.      ] sizes=. 100 * #\ i. 5
-NB.   100 200 300 400 500
-NB.      NB. benchmark solvers by real matrices with
-NB.      NB. elements distributed uniformly with support
-NB.      NB. (0,1) and by 3 RHS
-NB.      ] times=. ?@$&0 testsv_mt_ benchmark"1 sizes ,. 3
-NB.   12345 123456 1234567 12345678 123456789
-NB.      NB. benchmark triangular factorizators by square
-NB.      NB. complex matrices
-NB.      mkmat=. gemat_mt_ j. gemat_mt_
-NB.      ] times=. mkmat testtrf_mt_ benchmark"1 ,.~ sizes
-NB.   54321 654321 7654321 87654321 987654321
-NB.      exit ''
-
-benchmark=: 1 : 0
-  '^((?!_mt(mm|tmp|lap|fla|bl[ai])_\b|\b128!:([01]|10)\b|%\.|\+\/ \. ?\*).)+' u benchmark_mt_ y
-:
-  bkp=. TESTLOG_mt_
-  TESTLOG_mt_=: 1 5 # EMPTY ; ''
-  u y
-  ds=. +/!.0 ". S: 0 a: -.~ '(\d+\.\d+)(?=\s+(n/a|\d+)$)'&rxfirst L: 0 (#~ x&rxeq S: 0) cut3_mt_ TESTLOG_mt_  NB. FIXME
-  TESTLOG_mt_=: bkp ,&.> TESTLOG_mt_
-  ds
-)
-

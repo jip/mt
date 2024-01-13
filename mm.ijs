@@ -606,9 +606,10 @@ NB.   - dense (non sparse)
 NB.   - sparse
 NB.
 NB. Syntax:
-NB.   testmm A
+NB.   log=. testmm A
 NB. where
-NB.   A - array of any rank > 1
+NB.   A   - array of any rank > 1
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Notes:
 NB. - berr shows boolean 'is matched exactly'
@@ -616,10 +617,8 @@ NB. - berr shows boolean 'is matched exactly'
 testmm=: 3 : 0
   rcondA=. gecon1 y
 
-  ('mm_mtmm_'     tmonad (]       `(mm_mtmm_^:_1)`(rcondA"_)`(_."_)`-:)) y
-  ('mm_mtmm_^:_1' tmonad (mm_mtmm_`]             `(rcondA"_)`(_."_)`-:)) y
-
-  EMPTY
+  log=.          ('mm_mtmm_'     tmonad (]       `(mm_mtmm_^:_1)`(rcondA"_)`(_."_)`-:)) y
+  log=. log lcat ('mm_mtmm_^:_1' tmonad (mm_mtmm_`]             `(rcondA"_)`(_."_)`-:)) y
 )
 
 NB. ---------------------------------------------------------
@@ -630,26 +629,24 @@ NB.   Adv. to make verb to test mm by matrices of generator
 NB.   and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testmm_mt_
+NB.   log=. (mkmat testmm_mt_) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square boolean matrix:
-NB.     ?@$&2 testmm_mt_ 15 15
+NB.     log=. ?@$&2 testmm_mt_ 15 15
 NB. - test by random integer matrix:
-NB.     ?@$&100 testmm_mt_ 10 15
+NB.     log=. ?@$&100 testmm_mt_ 10 15
 NB. - test by random real matrix:
-NB.     ?@$&0 testmm_mt_ 15 10
+NB.     log=. ?@$&0 testmm_mt_ 15 10
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testmm_mt_ 10 10
+NB.     log=. (gemat_mt_ j. gemat_mt_) testmm_mt_ 10 10
 
-testmm_mt_=: 1 : 'EMPTY [ ((testmm_mtmm_@sh4gel_mt_ [ testmm_mtmm_@he4gel_mt_ [ testmm_mtmm_@ss4gel_mt_ [ testmm_mtmm_@sy4gel_mt_)^:(=/@$) [ testmm_mtmm_)@(u spmat_mt_ 0.25) [ ((testmm_mtmm_@sh4gel_mt_ [ testmm_mtmm_@he4gel_mt_ [ testmm_mtmm_@ss4gel_mt_ [ testmm_mtmm_@sy4gel_mt_)^:(=/@$) [ testmm_mtmm_)@u'
+testmm_mt_=: 1 : '(nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@(u spmat_mt_ 0.25) ,&.>~ (nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@u'
 
 NB. =========================================================
 NB. Verification suite

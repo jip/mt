@@ -803,22 +803,22 @@ NB. Description:
 NB.   Test trxxmat by matrix size given
 NB.
 NB. Syntax:
-NB.   testtrmat sz
+NB.   log=. testtrmat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,any_number)
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testtrmat=: 3 : 0
-  (' randu           trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  (' randu           trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  (' randu           tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  (' randu           trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat (' randu           trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat (' randu           tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat (' randu           trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
-  ('(randu j. randu) trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=. log lcat ('(randu j. randu) trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -828,15 +828,13 @@ NB. Description:
 NB.   Test gemat by matrix shape given
 NB.
 NB. Syntax:
-NB.   testgemat sh
+NB.   log=. testgemat sh
 NB. where
-NB.   sh - vector of non-negative integers, the shape of
-NB.        matrix
+NB.   sh  - vector of non-negative integers, the shape of
+NB.         matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testgemat=: 3 : 0
-  ('gemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  EMPTY
-)
+testgemat=: 'gemat' tmonad (]`]`(_."_)`(_."_)`(_."_))
 
 NB. ---------------------------------------------------------
 NB. testdimat
@@ -845,18 +843,17 @@ NB. Description:
 NB.   Test dimat by matrix size given
 NB.
 NB. Syntax:
-NB.   testdimat sz
+NB.   log=. testdimat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,n)
+NB.   sz  - size or shape, which is either n or (n,n)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testdimat=: 3 : 0
-  (' gemat           dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  (' gemat           dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' gemat           dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat (' gemat           dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
-  ('(gemat j. gemat) dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=. log lcat ('(gemat j. gemat) dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -866,14 +863,15 @@ NB. Description:
 NB.   Test hemat by matrix size given
 NB.
 NB. Syntax:
-NB.   testhemat sz
+NB.   log=. testhemat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,any_number)
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhemat=: 3 : 0
-  (' randu           hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  EMPTY
+  log=.          (' randu           hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -883,14 +881,15 @@ NB. Description:
 NB.   Test pomat by matrix size given
 NB.
 NB. Syntax:
-NB.   testpomat sz
+NB.   log=. testpomat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,any_number)
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testpomat=: 3 : 0
-  (' randu           pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  EMPTY
+  log=.          (' randu           pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -900,18 +899,18 @@ NB. Description:
 NB.   Test ptmatx by matrix size given
 NB.
 NB. Syntax:
-NB.   testptmat sz
+NB.   log=. testptmat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,any_number)
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testptmat=: 3 : 0
-  (' randu           ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 
-  (' randu           ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=. log lcat (' randu           ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -921,15 +920,15 @@ NB. Description:
 NB.   Test spmat by matrix shape given
 NB.
 NB. Syntax:
-NB.   testspmat sh
+NB.   log=. testspmat sh
 NB. where
-NB.   sh - vector of non-negative integers, the shape of
-NB.        matrix
+NB.   sh  - vector of non-negative integers, the shape of
+NB.         matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testspmat=: 3 : 0
-  (' randu           spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  EMPTY
+  log=.          (' randu           spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -939,9 +938,10 @@ NB. Description:
 NB.   Test xxxxmatx by matrix shape given
 NB.
 NB. Syntax:
-NB.   testrand sh
+NB.   log=. testrand sh
 NB. where
-NB.   sh - vector of non-negative integers, the shape of
-NB.        matrix
+NB.   sh  - vector of non-negative integers, the shape of
+NB.         matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testrand=: EMPTY [ testspmat [ testptmat [ testpomat [ testhemat [ testdimat^:(=/) [ testgemat [ testtrmat
+testrand=: testspmat ,&.>~ testptmat ,&.>~ testpomat ,&.>~ testhemat ,&.>~ nolog_mt_`testdimat@.(=/) ,&.>~ testgemat ,&.>~ testtrmat

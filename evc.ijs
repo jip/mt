@@ -515,28 +515,27 @@ NB. Description:
 NB.   Test tgevcxxx by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testtgevc AB
+NB.   log=. testtgevc AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testtgevc=: 3 : 0
   rcondl=. <./ trlconi"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
   rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ 0&,)~ ((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
 
-  ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`t52ll)) SPl
-  ('tgevclr'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lr)) SPl
-  ('tgevclb'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lb)) SPl
-  ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`(_."_)`t52ll)) SPQZHTl
-  ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`(_."_)`t52lr)) SPQZHTl
-  ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`(_."_)`t52lb)) SPQZHTl
-  ('tgevcul'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ul)) SPu
-  ('tgevcur'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ur)) SPu
-  ('tgevcub'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ub)) SPu
-  ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`(_."_)`t52ul)) SPQZHTu
-  ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`(_."_)`t52ur)) SPQZHTu
-  ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`(_."_)`t52ub)) SPQZHTu
-
-  EMPTY
+  log=.          ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`t52ll)) SPl
+  log=. log lcat ('tgevclr'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lr)) SPl
+  log=. log lcat ('tgevclb'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lb)) SPl
+  log=. log lcat ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`(_."_)`t52ll)) SPQZHTl
+  log=. log lcat ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`(_."_)`t52lr)) SPQZHTl
+  log=. log lcat ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`(_."_)`t52lb)) SPQZHTl
+  log=. log lcat ('tgevcul'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ul)) SPu
+  log=. log lcat ('tgevcur'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ur)) SPu
+  log=. log lcat ('tgevcub'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ub)) SPu
+  log=. log lcat ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`(_."_)`t52ul)) SPQZHTu
+  log=. log lcat ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`(_."_)`t52ur)) SPQZHTu
+  log=. log lcat ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`(_."_)`t52ub)) SPQZHTu
 )
 
 NB. ---------------------------------------------------------
@@ -547,23 +546,21 @@ NB.   Adv. to make verb to test tgevcxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testevc
+NB.   log=. (mkmat testevc) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testevc_mt_ 150 150
+NB.     log=. ?@$&0 testevc_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testevc_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testevc_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testevc_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testevc_mt_ 150 150
 
-testevc=: 1 : 'EMPTY [ testtgevc_mt_@u@(2&,)^:(=/)'
+testevc=: 1 : 'nolog_mt_`(testtgevc_mt_@u@(2&,))@.(=/)'

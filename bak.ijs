@@ -143,19 +143,18 @@ NB. Description:
 NB.   Test gebakxx by square matrix
 NB.
 NB. Syntax:
-NB.   testgebak A
+NB.   log=. testgebak A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgebak=: 3 : 0
   'rcondl rcondu'=. (geconi , gecon1) y
 
-  ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
-  ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
-  ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
-  ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=.          ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
+  log=. log lcat ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
+  log=. log lcat ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
+  log=. log lcat ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
 )
 
 NB. ---------------------------------------------------------
@@ -166,23 +165,21 @@ NB.   Adv. to make verb to test gebakxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testbak
+NB.   log=. (mkmat testbak) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testbak_mt_ 150 150
+NB.     log=. ?@$&0 testbak_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testbak_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbak_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testbak_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testbak_mt_ 150 150
 
-testbak=: 1 : 'EMPTY [ testgebak_mt_@u^:(=/)'
+testbak=: 1 : 'nolog_mt_`(testgebak_mt_@u)@.(=/)'

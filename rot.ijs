@@ -277,9 +277,10 @@ NB. Description:
 NB.   Test lartg by vectors
 NB.
 NB. Syntax:
-NB.   testlartg FG
+NB.   log=. testlartg FG
 NB. where
-NB.   FG - n×2-matrix of laminated (f,g) pairs to test
+NB.   FG  - n×2-matrix of laminated (f,g) pairs to test
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Algorithm for calculating backward error:
 NB.   In:  FG, CS
@@ -338,11 +339,11 @@ testlartg=: 3 : 0
   NB. backward error calculator:
   vberrlartg=: (mp algo1)"1@[ (|@:- >./@:xeInf@:% (FP_SFMIN * FP_PREC) >. FP_EPS * |@[)/@|:@xrInf@xrNaN@,. mp"1
 
-  ('lartg' tmonad (]`]`(_."_)`(_."_)`vberrlartg)) y
+  log=. ('lartg' tmonad (]`]`(_."_)`(_."_)`vberrlartg)) y
 
   erase 'algo1 xrNaN xrInf xeInf vberrlartg'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -353,23 +354,21 @@ NB.   Adv. to make verb to test rotation algorithms by matrix
 NB.   of generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testrot
+NB.   log=. (mkmat testrot) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by 200 random real 2-vectors with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testrot_mt_ 200 150
+NB.     log=. ?@$&0 testrot_mt_ 200 150
 NB. - test by 200 random real 2-vectors with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testrot_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testrot_mt_ 200 200
 NB. - test by 150 random complex 2-vectors:
-NB.     (gemat_mt_ j. gemat_mt_) testrot_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testrot_mt_ 150 200
 
-testrot=: 1 : 'EMPTY [ testlartg_mt_@u@({. , 2:)'
+testrot=: 1 : 'testlartg_mt_@u@({. , 2:)'

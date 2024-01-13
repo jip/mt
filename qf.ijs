@@ -1268,9 +1268,10 @@ NB.   - gexxf (math/mt addon)
 NB.   by general matrix
 NB.
 NB. Syntax:
-NB.   testgeqf A
+NB.   log=. testgeqf A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgeqf=: 3 : 0
   load        :: ] 'numeric'
@@ -1290,27 +1291,27 @@ testgeqf=: 3 : 0
 
   args=. y ; norm
 
-  ('128!:0'        tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
-  ('qrd_mttmp_'    tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
+  log=.          ('128!:0'        tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
+  log=. log lcat ('qrd_mttmp_'    tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
 
-  ('dgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
-  ('dgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
-  ('dgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
-  ('dgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('dgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
+  log=. log lcat ('dgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
+  log=. log lcat ('dgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
+  log=. log lcat ('dgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
 
-  ('zgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
-  ('zgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
-  ('zgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
-  ('zgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('zgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
+  log=. log lcat ('zgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
+  log=. log lcat ('zgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
+  log=. log lcat ('zgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
 
-  ('gelqf'         tmonad ((0&{::)`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`(_."_)`lqt01)) args
-  ('geqlf'         tmonad ((0&{::)`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`(_."_)`qlt01)) args
-  ('geqrf'         tmonad ((0&{::)`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`(_."_)`qrt01)) args
-  ('gerqf'         tmonad ((0&{::)`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('gelqf'         tmonad ((0&{::)`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`(_."_)`lqt01)) args
+  log=. log lcat ('geqlf'         tmonad ((0&{::)`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`(_."_)`qlt01)) args
+  log=. log lcat ('geqrf'         tmonad ((0&{::)`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`(_."_)`qrt01)) args
+  log=. log lcat ('gerqf'         tmonad ((0&{::)`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`(_."_)`rqt01)) args
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1323,9 +1324,10 @@ NB.   - tzxxf (math/mt addon)
 NB.   by trapezoidal matrix
 NB.
 NB. Syntax:
-NB.   testtzqf A
+NB.   log=. testtzqf A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. TODO:
 NB. - add xQRT12 test
@@ -1341,18 +1343,18 @@ testtzqf=: 3 : 0
   NB. LAPACK doesn't clean strict lower triangle in R, so we need a rzt01 variant
   rzt01a=: ((1 {:: [) %~^:(0 < [) (norm1 % FP_EPS * 1 >. c)@((- trupick@(0&{::))~ (unmrzrn ((1 -~ c) {."1 trupick@({."1~ #)))))`0:@.(0 e. $@]) >. (norm1 % FP_EPS * 1 >. c)@(<: upddiag)@(unmrzrc ungrz)`0:@.(0 e. $)@]
 
-  ('dtzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
-  ('ztzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
+  log=.          ('dtzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
+  log=. log lcat ('ztzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
 
-  ('tzlzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`lzt01  )) Awide ; normw
-  ('tzzlf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zlt01  )) Atall ; normt
-  ('tzzrf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zrt01  )) Atall ; normt
-  ('tzrzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`rzt01  )) Awide ; normw
+  log=. log lcat ('tzlzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`lzt01  )) Awide ; normw
+  log=. log lcat ('tzzlf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zlt01  )) Atall ; normt
+  log=. log lcat ('tzzrf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zrt01  )) Atall ; normt
+  log=. log lcat ('tzrzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`rzt01  )) Awide ; normw
 
   coerase < 'mttmp'
   erase 'rzt01a'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1363,23 +1365,21 @@ NB.   Adv. to make verb to test gexxf by matrix of generator
 NB.   and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testqf
+NB.   log=. (mkmat testqf) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testqf_mt_ 200 150
+NB.     log=. ?@$&0 testqf_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testqf_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testqf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testqf_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testqf_mt_ 150 200
 
-testqf=: 1 : 'EMPTY [ (testtzqf_mt_ [ testgeqf_mt_)@u'
+testqf=: (testtzqf_mt_ ,&.>~ testgeqf_mt_)@

@@ -1,6 +1,5 @@
 NB. 'Matrix toolbox' addon's entry point
 NB.
-NB. TESTLOG    Inverted table to store test log
 NB. DEBUG      Debug level
 NB. FP_BASE    Floating point base
 NB. FP_ELEN    Exponent field length (bits)
@@ -54,25 +53,60 @@ NB. <http://www.gnu.org/licenses/>.
 coclass 'mt'
 
 NB. =========================================================
+NB. Concepts
+NB.
+NB. Terms:
+NB.   modifier  - either adverb or conjunction
+NB.   actor     - either verb or modifier
+NB.   function  - a type of verb which returns useful result,
+NB.               usually is called as:
+NB.                 result=. function args
+NB.   procedure - a type of verb which returns useless
+NB.               result, is opposite to function, usually is
+NB.               called as anyone of:
+NB.                 procedure args
+NB.                 trash=. procedure args
+NB.                 EMPTY [ procedure args
+NB.   predicate - function returning boolean
+NB.   semipredicate
+NB.             - function returning either boolean or NULL
+NB.   identity  - a verb returning its argument[s]
+NB.   arity     - the number of arguments taken by a verb
+NB.   nilad, niladic verb
+NB.             - 0-ary verb, usually is called as:
+NB.                 out=. nilad ''
+NB.   monad, monadic verb
+NB.             - 1-ary verb
+NB.   dyad, dyadic verb
+NB.             - 2-ary verb
+NB.   ambivalent
+NB.             - either monadic or dyadic
+NB.   debug     - execute a verb and show debug info obtained
+NB.   test      - execute a verb with random arguments
+NB.               supplied, it's aimed to:
+NB.               - check whether the verb execution was
+NB.                 succeed
+NB.               - estimate a reciprocal of condition number
+NB.                 of input if it was a square non-singular
+NB.                 matrix
+NB.               - measure a relative forward error if verb
+NB.                 is a solver
+NB.               - measure a relative backward error
+NB.               - benchmark a time and space required for
+NB.                 execution
+NB.   verify    - execute a verb with thoroughly selected
+NB.               arguments to check the result correctness
+NB.
+NB. Conventions:
+NB. 1) a result returned from a test actor is an inverted
+NB.    table whose format is specified in test.ijs
+
+NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
 NB. User config
 
-NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NB. Tests logging
-
-NB. noun, the inverted table to store test log
-NB. - column     :  sentence  rcond   fwd.err   bwd.err   time     space
-NB. - column type:  string    float   float     float     float    integer
-NB. - rank       :  2         1       1         1         1        1
-NB. - unit       :  J code    %cond   relative  relative  seconds  bytes
-NB.
-NB. see: tmonad and tdyad in test.ijs
-
-TESTLOG=: 1 5 # EMPTY ; ''
-
-NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Debug level used by dbg conj., the atom:
 NB.   0 - execute debuging verb transparently and silently
 NB.   1 - show for debuging verb its rank and valency,
@@ -171,78 +205,38 @@ NB.   Adv. to make verb to test algorithms either all or not,
 NB.   by matrix of generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkge testxxxx
+NB.   log=. (mkge testxxxx) (m,n)
 NB. where
+NB.   mkge  - monad to generate random non-singular general
+NB.           y-matrix (shape is taken from y)
 NB.   (m,n) - 2-vector of integers, shape of random matrices
 NB.           to test algorithms; only algorithms which
 NB.           accept m and n given will be tested
-NB.   mkge  - monad to generate random non-singular general
-NB.           y-matrix (shape is taken from y)
-NB.   vtest - verb to test algorithms; is called as:
-NB.             vtest (m,n)
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test low-level algorithms by random square integer
 NB.   matrix with elements distributed uniformly with support
 NB.   [0,100):
-NB.     ?@$&100 testlow_mt_ 10 10
+NB.     log=. ?@$&100 testlow_mt_ 10 10
 NB. - test mid-level algorithms by random rectangular real
 NB.   matrix with elements distributed uniformly with support
 NB.   (0,1):
-NB.     ?@$&0 testmid_mt_ 200 150
+NB.     log=. ?@$&0 testmid_mt_ 200 150
 NB. - test high-level algorithms by random square real matrix
 NB.   with elements with limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
 NB. - test all algorithms by random rectangular complex
 NB.   matrix:
-NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
-testlow=: 1 : 0
-     testrand_mt_   y
-  (u testbasic_mt_) y
-  (u testbak_mt_  ) y  NB. square matrices only
-  (u testbal_mt_  ) y  NB. square matrices only
-  (u testref_mt_  ) y  NB. matrices with min dimention ≤ 200 only
-  (u testrot_mt_  ) y  NB. matrix of shape (2 1:} y) is used
-  (u testgq_mt_   ) y
-  (u testmq_mt_   ) y
+testlow=: 1 : '(u testmq_mt_) ,&.>~ (u testgq_mt_) ,&.>~ (u testrot_mt_) ,&.>~ (u testref_mt_) ,&.>~ (u testbal_mt_) ,&.>~ (u testbak_mt_) ,&.>~ (u testbasic_mt_) ,&.>~ testrand_mt_'
 
-  EMPTY
-)
+testmid=: 1 : '(u testtrs_mt_) ,&.>~ (u testtri_mt_) ,&.>~ (u testtrf_mt_) ,&.>~ (u testqf_mt_) ,&.>~ (u testpf_mt_) ,&.>~ (u testhrd_mt_) ,&.>~ (u testevc_mt_) ,&.>~ (u testeq_mt_)'
 
-testmid=: 1 : 0
-  (u testeq_mt_   ) y  NB. square matrices only
-  (u testevc_mt_  ) y  NB. square matrices only
-  (u testhrd_mt_  ) y  NB. square matrices only
-  (u testpf_mt_   ) y
-  (u testqf_mt_   ) y
-  (u testtrf_mt_  ) y
-  (u testtri_mt_  ) y  NB. square matrices only
-  (u testtrs_mt_  ) y
+testhigh=: 1 : '(u testmm_mt_) ,&.>~ (u testls_mt_) ,&.>~ (u testsv_mt_) ,&.>~ (u testpow_mt_) ,&.>~ (u testexp_mt_) ,&.>~ (u testev_mt_)'
 
-  EMPTY
-)
-
-testhigh=: 1 : 0
-  (u testev_mt_   ) y  NB. square matrices only
-  (u testexp_mt_  ) y  NB. square matrices only
-  (u testpow_mt_  ) y  NB. square matrices only
-  (u testsv_mt_   ) y
-  (u testls_mt_   ) y
-  (u testmm_mt_   ) y
-
-  EMPTY
-)
-
-test=: 1 : 0
-  echo fmtlog_mt_ 'sentence';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'
-
-  (u testlow_mt_  ) y  NB. low-level algorithms
-  (u testmid_mt_  ) y  NB. mid-level algorithms
-  (u testhigh_mt_ ) y  NB. high-level algorithms
-
-  EMPTY
-)
+test=: 1 : '(u testhigh_mt_) ,&.>~ (u testmid_mt_) ,&.>~ (u testlow_mt_)'
 
 NB. =========================================================
 NB. Verification suite

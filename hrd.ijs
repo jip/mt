@@ -740,9 +740,10 @@ NB.   - gehrdx (math/mt addon)
 NB.   by square matrix
 NB.
 NB. Syntax:
-NB.   testgehrd A
+NB.   log=. testgehrd A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgehrd=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/gehrd'
@@ -757,16 +758,16 @@ testgehrd=: 3 : 0
   unt01l=: (normi unt01 (mp  ct))@(1 {:: ])
   unt01u=: (norm1 unt01 (mp~ ct))@(1 {:: ])
 
-  ('dgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
-  ('zgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  log=.          ('dgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  log=. log lcat ('zgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
 
-  ('gehrdl'        tdyad  ((0 , #@(0&{::))`(0&{::)`(( 1 trlpick }:"1)  ; unghrl  )`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml
-  ('gehrdu'        tdyad  ((0 , #@(0&{::))`(0&{::)`((_1 trupick }:  )  ; unghru  )`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  log=. log lcat ('gehrdl'        tdyad  ((0 , #@(0&{::))`(0&{::)`(( 1 trlpick }:"1)  ; unghrl  )`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml
+  log=. log lcat ('gehrdu'        tdyad  ((0 , #@(0&{::))`(0&{::)`((_1 trupick }:  )  ; unghru  )`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
 
   coerase < 'mttmp'
   erase 'hst01l hst01u unt01l unt01u'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -779,9 +780,10 @@ NB.   - gghrdx (math/mt addon)
 NB.   by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testgghrd AB
+NB.   log=. testgghrd AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgghrd=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/gghrd'
@@ -818,44 +820,44 @@ testgghrd=: 3 : 0
   t513l23=:  (2 {   ]) >.&t513l  3 {   ]
   t513u23=:  (2 {   ]) >.&t513u  3 {   ]
 
-  ('''nn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
-  ('''ni''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
-  ('''nv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  log=.          ('''nn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
+  log=. log lcat ('''ni''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  log=. log lcat ('''nv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
 
-  ('''in''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  ('''ii''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  ('''iv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''in''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  log=. log lcat ('''ii''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''iv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
 
-  ('''vn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  log=. log lcat ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
 
-  ('''nn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
-  ('''ni''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
-  ('''nv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  log=. log lcat ('''nn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
+  log=. log lcat ('''ni''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  log=. log lcat ('''nv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
 
-  ('''in''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  ('''ii''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  ('''iv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''in''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  log=. log lcat ('''ii''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''iv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
 
-  ('''vn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  ('''vi''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  ('''vv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
+  log=. log lcat ('''vi''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
 
-  ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                 ))) argsmtl
-  ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
-  ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
-  ('gghrdlvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23 ))) argsmtvvl
+  log=. log lcat ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                 ))) argsmtl
+  log=. log lcat ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
+  log=. log lcat ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
+  log=. log lcat ('gghrdlvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23 ))) argsmtvvl
 
-  ('gghrdunn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                 ))) argsmtu
-  ('gghrdunv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
-  ('gghrduvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
-  ('gghrduvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23 ))) argsmtvvu
+  log=. log lcat ('gghrdunn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                 ))) argsmtu
+  log=. log lcat ('gghrdunv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
+  log=. log lcat ('gghrduvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
+  log=. log lcat ('gghrduvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23 ))) argsmtvvu
 
   coerase < 'mttmp'
   erase 't511u1 t511l2 t511u2 t513u2b t513u3b t513u23b t513l2 t513u2 t513l23 t513u23'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -866,23 +868,21 @@ NB.   Adv. to make verb to test gxhrdxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testhrd
+NB.   log=. (mkmat testhrd) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrices with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testhrd_mt_ 150 150
+NB.     log=. ?@$&0 testhrd_mt_ 150 150
 NB. - test by random square real matrices with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testhrd_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhrd_mt_ 150 150
 NB. - test by random square complex matrices:
-NB.     (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
 
-testhrd=: 1 : 'EMPTY [ (testgghrd_mt_@u@(2&,) [ testgehrd_mt_@u)^:(=/)'
+testhrd=: 1 : 'nolog_mt_`(testgghrd_mt_@u@(2&,) ,&.>~ testgehrd_mt_@u)@.(=/)'

@@ -865,9 +865,10 @@ NB.   - gebalx (math/mt addon)
 NB.   by square matrix
 NB.
 NB. Syntax:
-NB.   testgebal A
+NB.   log=. testgebal A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Formula:
 NB.   err0 := ||Abal||_1 / ||A||_1                                           if not a permute only
@@ -893,27 +894,27 @@ testgebal=: 3 : 0
   vscale2=: 0&{:: (%"1 * ]) 3&{::
   vdenom2=: (FP_EPS * 1:^:(0&=)@norm1 * #)@[
 
-  ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
-  ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
-  ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
+  log=.          ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
+  log=. log lcat ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
 
-  ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
-  ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
-  ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
+  log=. log lcat ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
+  log=. log lcat ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
 
-  ('geballp'             tmonad (]                 `]`(rcondl"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
-  ('gebalup'             tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('geballp'             tmonad (]                 `]`(rcondl"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('gebalup'             tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
 
-  ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcondl"_)`vferr2   `(norm1@(-                      vscale2        ) % vdenom2))) y
-  ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcondl"_)`(4 {:: ])`(norm1@(-                      vscale2        ) % vdenom2))) y
+  log=. log lcat ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcondl"_)`vferr2   `(norm1@(-                      vscale2        ) % vdenom2))) y
+  log=. log lcat ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcondl"_)`(4 {:: ])`(norm1@(-                      vscale2        ) % vdenom2))) y
 
-  ('geball'              tmonad (]                 `]`(rcondl"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
-  ('gebalu'              tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
+  log=. log lcat ('geball'              tmonad (]                 `]`(rcondl"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
+  log=. log lcat ('gebalu'              tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
 
   coerase < 'mttmp'
   erase 'vferr2 vp2 vd2 vscale2 vdenom2'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -926,9 +927,10 @@ NB.   - ggbalx (math/mt addon)
 NB.   by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testggbal AB
+NB.   log=. testggbal AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Formula:
 NB.   err0X := ||Xbal||_1 / ||X||_1                                           if not a permute only
@@ -960,27 +962,27 @@ testggbal=: 3 : 0
   vscale03=: 0&{:: vscale2 3&{::
   vdenom2=:  (FP_EPS * 1:^:(0&=)@norm1"2 * c)@[
 
-  ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
-  ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
-  ('''b''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
+  log=.          ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
+  log=. log lcat ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
+  log=. log lcat ('''b''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
 
-  ('''p''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
-  ('''s''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
-  ('''b''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
+  log=. log lcat ('''p''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
+  log=. log lcat ('''s''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
+  log=. log lcat ('''b''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
 
-  ('ggballp'             tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
-  ('ggbalup'             tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
+  log=. log lcat ('ggballp'             tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
+  log=. log lcat ('ggbalup'             tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
 
-  ('ggbals'              tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
-  ('(2^_44)&ggbals'      tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
+  log=. log lcat ('ggbals'              tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
+  log=. log lcat ('(2^_44)&ggbals'      tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
 
-  ('ggball'              tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
-  ('ggbalu'              tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
+  log=. log lcat ('ggball'              tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
+  log=. log lcat ('ggbalu'              tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
 
   coerase < 'mttmp'
   erase 'vgeto2 vferr2 vp2 vd2 vperm2 vscale2 vscale03 vdenom2'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -991,23 +993,21 @@ NB.   Adv. to make verb to test gxbalx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testbal
+NB.   log=. (mkmat testbal) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testbal_mt_ 150 150
+NB.     log=. ?@$&0 testbal_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testbal_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbal_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 150
 
-testbal=: 1 : 'EMPTY [ (testggbal_mt_@(u spmat_mt_ 0.25)@(2&,) [ testgebal_mt_@(u spmat_mt_ 0.25))^:(=/)'
+testbal=: 1 : 'nolog_mt_`(testggbal_mt_@(u spmat_mt_ 0.25)@(2&,) ,&.>~ testgebal_mt_@(u spmat_mt_ 0.25))@.(=/)'

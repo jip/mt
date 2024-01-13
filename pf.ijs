@@ -2218,9 +2218,10 @@ NB.   - gexxf (math/mt addon)
 NB.   by general matrix
 NB.
 NB. Syntax:
-NB.   testgepf A
+NB.   log=. testgepf A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. TODO:
 NB. - add xQRT12 test
@@ -2250,20 +2251,20 @@ testgepf=: 3 : 0
   qrt11a=: (norm1@(<: upddiag)@(mp~ ct) % FP_EPS * #)@(0 {:: ])
   rqt11a=: (normi@(<: upddiag)@(mp  ct) % FP_EPS * #)@(2 {:: ])
 
-  ('dgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  ('dgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  log=.          ('dgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  log=. log lcat ('dgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  log=. log lcat ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  log=. log lcat ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
 
-  ('gelpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(lpt01a >. lqt11a))) args
-  ('geplf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(plt01a >. qlt11a))) args
-  ('geprf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(prt01a >. qrt11a))) args
-  ('gerpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(rpt01a >. rqt11a))) args
+  log=. log lcat ('gelpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(lpt01a >. lqt11a))) args
+  log=. log lcat ('geplf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(plt01a >. qlt11a))) args
+  log=. log lcat ('geprf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(prt01a >. qrt11a))) args
+  log=. log lcat ('gerpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(rpt01a >. rqt11a))) args
 
   coerase < 'mttmp'
   erase 'lpt01a plt01a prt01a rpt01a lqt11a qlt11a qrt11a'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -2274,23 +2275,21 @@ NB.   Adv. to make verb to test gexxx by matrix of generator
 NB.   and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testpf
+NB.   log=. (mkmat testpf) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testpf_mt_ 200 150
+NB.     log=. ?@$&0 testpf_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testpf_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testpf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testpf_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testpf_mt_ 150 200
 
-testpf=: 1 : 'EMPTY [ testgepf_mt_@u'
+testpf=: testgepf_mt_@

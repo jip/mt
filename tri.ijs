@@ -821,9 +821,10 @@ NB.   - trtrixx (math/mt addon)
 NB.   by triangular matrix
 NB.
 NB. Syntax:
-NB.   testtrtri A
+NB.   log=. testtrtri A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testtrtri=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/trtri'
@@ -838,25 +839,25 @@ testtrtri=: 3 : 0
   norm1U=.  norm1 U
   norm1U1=. norm1 U1
 
-  ('128!:1'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U
+  log=.          ('128!:1'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U
 
-  ('''ln''&dtrtri_mttmp_' tmonad ((3&{::)`trlpick `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
-  ('''lu''&dtrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
-  ('''un''&dtrtri_mttmp_' tmonad ((3&{::)`trupick `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
-  ('''uu''&dtrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
-  ('''ln''&ztrtri_mttmp_' tmonad ((3&{::)`trlpick `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
-  ('''lu''&ztrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
-  ('''un''&ztrtri_mttmp_' tmonad ((3&{::)`trupick `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
-  ('''uu''&ztrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
+  log=. log lcat ('''ln''&dtrtri_mttmp_' tmonad ((3&{::)`trlpick `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
+  log=. log lcat ('''lu''&dtrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
+  log=. log lcat ('''un''&dtrtri_mttmp_' tmonad ((3&{::)`trupick `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
+  log=. log lcat ('''uu''&dtrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
+  log=. log lcat ('''ln''&ztrtri_mttmp_' tmonad ((3&{::)`trlpick `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L  ; y
+  log=. log lcat ('''lu''&ztrtri_mttmp_' tmonad ((3&{::)`trl1pick`(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1 ; y
+  log=. log lcat ('''un''&ztrtri_mttmp_' tmonad ((3&{::)`trupick `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U  ; y
+  log=. log lcat ('''uu''&ztrtri_mttmp_' tmonad ((3&{::)`tru1pick`(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1 ; y
 
-  ('trtril'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L
-  ('trtril1'              tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1
-  ('trtriu'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U
-  ('trtriu1'              tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1
+  log=. log lcat ('trtril'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) L  ; rcondL  ; norm1L
+  log=. log lcat ('trtril1'              tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) L1 ; rcondL1 ; norm1L1
+  log=. log lcat ('trtriu'               tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U  ; rcondU  ; norm1U
+  log=. log lcat ('trtriu1'              tmonad ((0&{::)`]       `(1&{::)`(_."_)`t03)) U1 ; rcondU1 ; norm1U1
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -870,9 +871,10 @@ NB.   - getrixxxx (math/mt addon)
 NB.   by square matrix
 NB.
 NB. Syntax:
-NB.   testgetri A
+NB.   log=. testgetri A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgetri=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/getrf'
@@ -882,19 +884,19 @@ testgetri=: 3 : 0
 
   'norml normu'=. (normi , norm1) y
 
-  ('%.'            tmonad ((               0&{:: )`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
+  log=.          ('%.'            tmonad ((               0&{:: )`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
 
-  ('dgetri_mttmp_' tmonad ((dgetrf_mttmp_@(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
-  ('zgetri_mttmp_' tmonad ((zgetrf_mttmp_@(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
+  log=. log lcat ('dgetri_mttmp_' tmonad ((dgetrf_mttmp_@(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
+  log=. log lcat ('zgetri_mttmp_' tmonad ((zgetrf_mttmp_@(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
 
-  ('getrilu1p'     tmonad ((getrflu1p    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
-  ('getripl1u'     tmonad ((getrfpl1u    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
-  ('getripu1l'     tmonad ((getrfpu1l    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
-  ('getriul1p'     tmonad ((getrful1p    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
+  log=. log lcat ('getrilu1p'     tmonad ((getrflu1p    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
+  log=. log lcat ('getripl1u'     tmonad ((getrfpl1u    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
+  log=. log lcat ('getripu1l'     tmonad ((getrfpu1l    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondu ; normu
+  log=. log lcat ('getriul1p'     tmonad ((getrful1p    @(0&{::))`]`(1&{::)`(_."_)`t03)) y ; rcondl ; norml
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -907,9 +909,10 @@ NB.   - hetripx (math/mt addon)
 NB.   by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testhetri A
+NB.   log=. testhetri A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   A   - n×n-matrix, the Hermitian (symmetric)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhetri=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/dsytrf'
@@ -921,17 +924,17 @@ testhetri=: 3 : 0
 
   norm=. normi y
 
-  ('''l''&dsytri2_mttmp_' tmonad (('l' dsytrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('''u''&dsytri2_mttmp_' tmonad (('u' dsytrf_mttmp_  0&{:: )`he4geu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('''l''&zhetri2_mttmp_' tmonad (('l' zhetrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('''u''&zhetri2_mttmp_' tmonad (('u' zhetrf_mttmp_  0&{:: )`he4geu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=.          ('''l''&dsytri2_mttmp_' tmonad (('l' dsytrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('''u''&dsytri2_mttmp_' tmonad (('u' dsytrf_mttmp_  0&{:: )`he4geu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('''l''&zhetri2_mttmp_' tmonad (('l' zhetrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('''u''&zhetri2_mttmp_' tmonad (('u' zhetrf_mttmp_  0&{:: )`he4geu`(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
-  ('hetripl'              tmonad ((    hetrfpl      @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('hetripu'              tmonad ((    hetrfpu      @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('hetripl'              tmonad ((    hetrfpl      @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('hetripu'              tmonad ((    hetrfpu      @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -944,10 +947,11 @@ NB.   - potrix (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix
 NB.
 NB. Syntax:
-NB.   testpotri A
+NB.   log=. testpotri A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric) positive
-NB.       definite
+NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
+NB.         definite
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testpotri=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/potrf'
@@ -957,15 +961,15 @@ testpotri=: 3 : 0
 
   norm=. norm1 y
 
-  ('''l''&dpotri_mttmp_' tmonad (('l' dpotrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('''l''&zpotri_mttmp_' tmonad (('l' zpotrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=.          ('''l''&dpotri_mttmp_' tmonad (('l' dpotrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('''l''&zpotri_mttmp_' tmonad (('l' zpotrf_mttmp_  0&{:: )`he4gel`(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
-  ('potril'              tmonad ((    potrfl       @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('potriu'              tmonad ((    potrfu       @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('potril'              tmonad ((    potrfl       @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('potriu'              tmonad ((    potrfu       @(0&{::))`]     `(1&{::)`(_."_)`t03)) y ; rcond ; norm
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -979,22 +983,19 @@ NB.   by Hermitian (symmetric) positive definite tridiagonal
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   testpttri A
+NB.   log=. testpttri A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric) positive
-NB.       definite tridiagonal
+NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
+NB.         definite tridiagonal
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testpttri=: 3 : 0
   rcond=. ptcon1 y
 
   norm=. norm1 y
 
-  ('pttril' tmonad ((        0&{:: )        `]`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-  ('pttril' tdyad  ((pttrfl@(0&{::))`(0&{::)`]`(1&{::)`(_."_)`t03)) y ; rcond ; norm
-
-  coerase < 'mttmp'
-
-  EMPTY
+  log=.          ('pttril' tmonad ((        0&{:: )        `]`(1&{::)`(_."_)`t03)) y ; rcond ; norm
+  log=. log lcat ('pttril' tdyad  ((pttrfl@(0&{::))`(0&{::)`]`(1&{::)`(_."_)`t03)) y ; rcond ; norm
 )
 
 NB. ---------------------------------------------------------
@@ -1005,24 +1006,22 @@ NB.   Adv. to make verb to test xxtrixxxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testtri
+NB.   log=. (mkmat testtri) (m,n)
 NB. where
 NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix composed
-NB.           from mat; is called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testtri_mt_ 150 150
+NB.     log=. ?@$&0 testtri_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testtri_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testtri_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testtri_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testtri_mt_ 150 150
 
-testtri=: 1 : 'EMPTY [ (testpttri_mt_@(u ptmat2_mt_) [ testpotri_mt_@(u pomat_mt_) [ testhetri_mt_@(u hemat_mt_) [ (testgetri_mt_ [ testtrtri_mt_)@u)^:(=/)'
+testtri=: 1 : 'nolog_mt_`(testpttri_mt_@(u ptmat2_mt_) ,&.>~ testpotri_mt_@(u pomat_mt_) ,&.>~ testhetri_mt_@(u hemat_mt_) ,&.>~ (testgetri_mt_ ,&.>~ testtrtri_mt_)@u)@.(=/)'

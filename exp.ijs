@@ -321,15 +321,12 @@ NB. Description:
 NB.   Test geexp by square matrix
 NB.
 NB. Syntax:
-NB.   testgeexp A
+NB.   log=. testgeexp A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testgeexp=: 3 : 0
-  ('geexp' tmonad (]`]`geconi`(_."_)`(_."_))) y
-
-  EMPTY
-)
+testgeexp=: 'geexp' tmonad (]`]`geconi`(_."_)`(_."_))
 
 NB. ---------------------------------------------------------
 NB. testdiexp
@@ -338,9 +335,10 @@ NB. Description:
 NB.   Test diexp by diagonalizable matrix
 NB.
 NB. Syntax:
-NB.   testdiexp A
+NB.   log=. testdiexp A
 NB. where
-NB.   A - n×n-matrix, the diagonalizable
+NB.   A   - n×n-matrix, the diagonalizable
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testdiexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -358,8 +356,6 @@ testdiexp=: 3 : 0
   end.
 
   ('diexp' tmonad (]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
-
-  EMPTY
 )
 
 NB. ---------------------------------------------------------
@@ -369,9 +365,10 @@ NB. Description:
 NB.   Test heexp by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testheexp A
+NB.   log=. testheexp A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   A   - n×n-matrix, the Hermitian (symmetric)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testheexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -386,8 +383,6 @@ testheexp=: 3 : 0
   end.
 
   ('heexp' tmonad (]`]`heconi`(_."_)`(_."_))) v ; ct R
-
-  EMPTY
 )
 
 NB. ---------------------------------------------------------
@@ -398,23 +393,21 @@ NB.   Adv. to make verb to test xxexp by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testexp
+NB.   log=. (mkmat testexp) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testexp_mt_ 150 150
+NB.     log=. ?@$&0 testexp_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testexp_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testexp_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testexp_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testexp_mt_ 150 150
 
-testexp=: 1 : 'EMPTY [ (testheexp_mt_@(u hemat_mt_) [ testdiexp_mt_@(u dimat_mt_ u) [ testgeexp_mt_@u)^:(=/)'
+testexp=: 1 : 'nolog_mt_`(testheexp_mt_@(u hemat_mt_) ,&.>~ testdiexp_mt_@(u dimat_mt_ u) ,&.>~ testgeexp_mt_@u)@.(=/)'

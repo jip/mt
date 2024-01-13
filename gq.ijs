@@ -509,9 +509,10 @@ NB.   - ungxx (math/mt addon)
 NB.   by general matrix
 NB.
 NB. Syntax:
-NB.   testungq A
+NB.   log=. testungq A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testungq=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/dorglq'
@@ -535,29 +536,31 @@ testungq=: 3 : 0
   QfR=. geqrf Atall
   RQf=. gerqf Awide
 
+  log=. nolog ''
+
   NB. LAPACK, real datatype
 
   ik=. 0
   while. ik < # ks do.
-    ('dorglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('dorglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('dorgql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('dorgql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('dorgqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('dorgqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('dorgrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('dorgrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
 
@@ -565,25 +568,25 @@ testungq=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    ('zunglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('zunglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('zungql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('zungql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('zungqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('zungqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('zungrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('zungrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
 
@@ -591,35 +594,35 @@ testungq=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    ('unglq' tdyad ((#@(0&{::))`(   3&{::  {.    2&{:: )`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('unglq' tdyad ((#@(0&{::))`(   3&{::  {.    2&{:: )`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
-  ('unglq' tmonad ((2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; m
+  log=. log lcat ('unglq' tmonad ((2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; m
 
   ik=. 0
   while. ik < # ks do.
-    ('ungql' tdyad ((c@(0&{::))`(-@(3&{::) {."1 (2&{::))`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('ungql' tdyad ((c@(0&{::))`(-@(3&{::) {."1 (2&{::))`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
-  ('ungql' tmonad ((2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; n
+  log=. log lcat ('ungql' tmonad ((2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; n
 
   ik=. 0
   while. ik < # ks do.
-    ('ungqr' tdyad ((c@(0&{::))`(   3&{::  {."1 (2&{::))`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('ungqr' tdyad ((c@(0&{::))`(   3&{::  {."1 (2&{::))`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
-  ('ungqr' tmonad ((2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; n
+  log=. log lcat ('ungqr' tmonad ((2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; n
 
   ik=. 0
   while. ik < # ks do.
-    ('ungrq' tdyad ((#@(0&{::))`(-@(3&{::) {.    2&{:: )`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('ungrq' tdyad ((#@(0&{::))`(-@(3&{::) {.    2&{:: )`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
-  ('ungrq' tmonad ((2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; m
+  log=. log lcat ('ungrq' tmonad ((2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; m
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -629,9 +632,10 @@ NB. Description:
 NB.   Test ungxx by trapezoidal matrix
 NB.
 NB. Syntax:
-NB.   testungz A
+NB.   log=. testungz A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testungz=: 3 : 0
   rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
@@ -646,35 +650,35 @@ testungz=: 3 : 0
   ZfR=. tzzrf Atall
   RZf=. tzrzf Awide
 
-  ik=. 0
-  while. ik < # ks do.
-    ('unglz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`(_."_)`lzt02)) Awide ; normw ; LZf ; ik { ks
-    ik=. >: ik
-  end.
-  ('unglz' tmonad ((2&{::)`]`(rcond"_)`(_."_)`lzt02)) Awide ; normw ; LZf ; m
+  log=. nolog ''
 
   ik=. 0
   while. ik < # ks do.
-    ('ungzl' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`(_."_)`zlt02)) Atall ; normt ; ZfL ; ik { ks
+    log=. log lcat ('unglz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`(_."_)`lzt02)) Awide ; normw ; LZf ; ik { ks
     ik=. >: ik
   end.
-  ('ungzl' tmonad ((2&{::)`]`(rcond"_)`(_."_)`zlt02)) Atall ; normt ; ZfL ; n
+  log=. log lcat ('unglz' tmonad ((2&{::)`]`(rcond"_)`(_."_)`lzt02)) Awide ; normw ; LZf ; m
 
   ik=. 0
   while. ik < # ks do.
-    ('ungzr' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`(_."_)`zrt02)) Atall ; normt ; ZfR ; ik { ks
+    log=. log lcat ('ungzl' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`(_."_)`zlt02)) Atall ; normt ; ZfL ; ik { ks
     ik=. >: ik
   end.
-  ('ungzr' tmonad ((2&{::)`]`(rcond"_)`(_."_)`zrt02)) Atall ; normt ; ZfR ; n
+  log=. log lcat ('ungzl' tmonad ((2&{::)`]`(rcond"_)`(_."_)`zlt02)) Atall ; normt ; ZfL ; n
 
   ik=. 0
   while. ik < # ks do.
-    ('ungrz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`(_."_)`rzt02)) Awide ; normw ; RZf ; ik { ks
+    log=. log lcat ('ungzr' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`(_."_)`zrt02)) Atall ; normt ; ZfR ; ik { ks
     ik=. >: ik
   end.
-  ('ungrz' tmonad ((2&{::)`]`(rcond"_)`(_."_)`rzt02)) Awide ; normw ; RZf ; m
+  log=. log lcat ('ungzr' tmonad ((2&{::)`]`(rcond"_)`(_."_)`zrt02)) Atall ; normt ; ZfR ; n
 
-  EMPTY
+  ik=. 0
+  while. ik < # ks do.
+    log=. log lcat ('ungrz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`(_."_)`rzt02)) Awide ; normw ; RZf ; ik { ks
+    ik=. >: ik
+  end.
+  log=. log lcat ('ungrz' tmonad ((2&{::)`]`(rcond"_)`(_."_)`rzt02)) Awide ; normw ; RZf ; m
 )
 
 NB. ---------------------------------------------------------
@@ -687,9 +691,10 @@ NB.   - unghrx (math/mt addon)
 NB.   by square matrix
 NB.
 NB. Syntax:
-NB.   testunghr A
+NB.   log=. testunghr A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testunghr=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/dorghr'
@@ -708,16 +713,16 @@ testunghr=: 3 : 0
   unt01l=: (normi unt01 (mp  ct))@]
   unt01u=: (norm1 unt01 (mp~ ct))@]
 
-  ('dorghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
-  ('zunghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=.          ('dorghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=. log lcat ('zunghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
 
-  ('unghrl'        tmonad ((                      2&{:: )`]`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml ; HlQf
-  ('unghru'        tmonad ((                      2&{:: )`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=. log lcat ('unghrl'        tmonad ((                      2&{:: )`]`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml ; HlQf
+  log=. log lcat ('unghru'        tmonad ((                      2&{:: )`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
 
   coerase < 'mttmp'
   erase 'hst01l hst01u unt01l unt01u'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -728,23 +733,21 @@ NB.   Adv. to make verb to test ungxxx by matrix of generator
 NB.   and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testgq
+NB.   log=. (mkmat testgq) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testgq_mt_ 200 150
+NB.     log=. ?@$&0 testgq_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testgq_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testgq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
 
-testgq=: 1 : 'EMPTY [ (testunghr_mt_^:(=/@$) [ testungz_mt_ [ testungq_mt_)@u'
+testgq=: 1 : '(nolog_mt_`testunghr_mt_@.(=/@$) ,&.>~ testungz_mt_ ,&.>~ testungq_mt_)@u'

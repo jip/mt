@@ -919,9 +919,10 @@ NB.   - hgexxxxx (math/mt addon)
 NB.   by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testhgeq AB
+NB.   log=. testhgeq AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhgeq=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/hgeqz'
@@ -964,68 +965,68 @@ testhgeq=: 3 : 0
   t513l23=: (2     {   ]) >.&t513l  3     {   ]
   t513u23=: (2     {   ]) >.&t513u  3     {   ]
 
-  ('''enn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
-  ('''eni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''env''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''ein''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''eii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''eiv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''evn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''evi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''evv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=.          ('''enn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  log=. log lcat ('''eni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  log=. log lcat ('''env''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  log=. log lcat ('''ein''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  log=. log lcat ('''eii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=. log lcat ('''eiv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=. log lcat ('''evn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  log=. log lcat ('''evi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=. log lcat ('''evv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
 
-  ('''snn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
-  ('''sni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''snv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''sin''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''sii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''siv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''svn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''svi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''svv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''snn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  log=. log lcat ('''sni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  log=. log lcat ('''snv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  log=. log lcat ('''sin''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  log=. log lcat ('''sii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''siv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''svn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  log=. log lcat ('''svi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''svv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
 
-  ('''enn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
-  ('''eni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''env''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''ein''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''eii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''eiv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''evn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''evi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''evv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=. log lcat ('''enn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  log=. log lcat ('''eni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  log=. log lcat ('''env''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  log=. log lcat ('''ein''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  log=. log lcat ('''eii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=. log lcat ('''eiv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=. log lcat ('''evn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  log=. log lcat ('''evi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=. log lcat ('''evv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
 
-  ('''snn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
-  ('''sni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''snv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''sin''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''sii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''siv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''svn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''svi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''svv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''snn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
+  log=. log lcat ('''sni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  log=. log lcat ('''snv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
+  log=. log lcat ('''sin''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  log=. log lcat ('''sii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''siv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''svn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
+  log=. log lcat ('''svi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''svv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
 
-  ('hgezqenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
-  ('hgezqenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
-  ('hgezqevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
-  ('hgezqevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l01))) argsmtvvl
-  ('hgezqsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
-  ('hgezqsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
-  ('hgezqsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
-  ('hgezqsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23))) argsmtvvl
+  log=. log lcat ('hgezqenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
+  log=. log lcat ('hgezqenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
+  log=. log lcat ('hgezqevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
+  log=. log lcat ('hgezqevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l01))) argsmtvvl
+  log=. log lcat ('hgezqsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
+  log=. log lcat ('hgezqsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
+  log=. log lcat ('hgezqsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
+  log=. log lcat ('hgezqsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23))) argsmtvvl
 
-  ('hgeqzenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
-  ('hgeqzenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
-  ('hgeqzevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
-  ('hgeqzevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u01))) argsmtvvu
-  ('hgeqzsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
-  ('hgeqzsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
-  ('hgeqzsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
-  ('hgeqzsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23))) argsmtvvu
+  log=. log lcat ('hgeqzenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
+  log=. log lcat ('hgeqzenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
+  log=. log lcat ('hgeqzevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
+  log=. log lcat ('hgeqzevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u01))) argsmtvvu
+  log=. log lcat ('hgeqzsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
+  log=. log lcat ('hgeqzsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
+  log=. log lcat ('hgeqzsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
+  log=. log lcat ('hgeqzsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23))) argsmtvvu
 
   coerase < 'mttmp'
   erase 't511u1 t511l2 t511u2 t513u4 t513u5 t513u45 t513l1 t513u1 t513l2 t513u2 t513l01 t513u01 t513l23 t513u23'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1036,23 +1037,21 @@ NB.   Adv. to make verb to test hgexxxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testeq
+NB.   log=. (mkmat testeq) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testeq_mt_ 150 150
+NB.     log=. ?@$&0 testeq_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testeq_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testeq_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testeq_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testeq_mt_ 150 150
 
-testeq=: 1 : 'EMPTY [ testhgeq_mt_@u@(2&,)^:(=/)'
+testeq=: 1 : 'nolog_mt_`(testhgeq_mt_@u@(2&,))@.(=/)'

@@ -51,7 +51,7 @@ NB.   'obj0 obj1 ...'=. o4n noun0 ; noun1 ; ...
 obja=: 3 : 0
   ydat=. symdat < 'y'
   yobj=. mema SIZEOF_OBJ_T
-  ytyp=. (8 16 i. 3!:0 y) { :: (('obja: datatype ' , (datatype y) , ' isn''t supported yet')&dbsig@11) _2 ic DOUBLE , DCOMPLEX
+  ytyp=. (4 8 16 i. 3!:0 y) { :: (('obja: datatype ' , (datatype y) , ' isn''t supported yet')&dbsig@11) _2 ic INT , DOUBLE , DCOMPLEX
   select. # $ y
     case. 2 do.
       'm n'=. $ y

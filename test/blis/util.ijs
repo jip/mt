@@ -38,18 +38,34 @@ coclass 'mtbli'
 NB. =========================================================
 NB. Interface
 
-NB. ---------------------------------------------------------
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. OAPI functions
 
 NB. free BLIS object by address given
 objf=: memf
 
-NB. allocate BLIS object for noun
-NB. obj=. obja noun
+NB. ---------------------------------------------------------
+NB. obja
+NB.
+NB. Description:
+NB.   Allocate BLIS object for noun
+NB.
+NB. Syntax:
+NB.   obj=. obja noun
+NB. where
+NB.   noun - any noun
+NB.   obj  - integer, pointer to an allocated memory
+NB.
+NB. Notes:
+NB. - obj's lifespan must not exceed the noun's one
+NB.
+NB. Application:
+NB. - allocate BLIS objects in a batch:
+NB.     'obj0 obj1'=. obja L: 0 (noun0 ; noun1)
+NB.
 NB. TODO:
-NB.   change interface to accept multiple nouns
-NB.   allocate objects for noun
-NB.   'obj0 obj1 ...'=. o4n noun0 ; noun1 ; ...
+NB. - increment noun's refcount since it's data will be
+NB.   referred in obj, and decrement it back in objf
 
 obja=: 3 : 0
   ydat=. symdat < 'y'
@@ -70,7 +86,7 @@ obja=: 3 : 0
   yobj
 )
 
-NB. ---------------------------------------------------------
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. Service functions
 
 NB. query a string with the size of gint_t signed integer

@@ -41,6 +41,9 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. OAPI functions
 
+NB. free BLIS object by address given
+objf=: memf
+
 NB. allocate BLIS object for noun
 NB. obj=. obja noun
 NB. TODO:
@@ -66,9 +69,6 @@ obja=: 3 : 0
   end.
   yobj
 )
-
-NB. free BLIS object by address given
-objf=: memf
 
 NB. ---------------------------------------------------------
 NB. Service functions

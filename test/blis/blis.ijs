@@ -31,7 +31,7 @@ coinsert 'mttst mt'
 NB. =========================================================
 NB. Includes
 
-require 'math/mt/test/util'       NB. Tests' utilities
-require 'math/mt/test/blis/init'  NB. Init LIB_mtbli_
-require 'math/mt/test/blis/api'   NB. API definitions
-require 'math/mt/test/blis/util'  NB. BLIS Utilities
+require                 'math/mt/test/util'       NB. Tests' utilities
+require                 'math/mt/test/blis/init'  NB. Init LIB_mtbli_
+require^:(*@#@".@'LIB') 'math/mt/test/blis/api'   NB. API definitions
+require^:(*@#@".@'LIB') 'math/mt/test/blis/util'  NB. BLIS Utilities

@@ -2,7 +2,7 @@ NB. Tests' utilities
 NB.
 NB. issquare  Same as in the (math/lapack2) addon
 NB. basicxxx  Utilities to either check or modify argument
-NB. initnoun  Define global noun if not defined yet
+NB. initnoun  Define global noun and return its value
 NB. dlsym     Obtain address of a symbol in a shared object
 NB.           or executable
 NB.
@@ -69,21 +69,15 @@ NB. ---------------------------------------------------------
 NB. initnoun
 NB.
 NB. Description:
-NB.   Define global noun if not defined yet. Return its
-NB.   value.
+NB.   Define global noun and return its value.
 NB.
 NB. Syntax:
-NB.   firstval=. name initnoun val
+NB.   val=. name initnoun val
 NB. where
-NB.   name     - string, global noun's name
-NB.   val      - noun's value to initialize
-NB.   firstval - value used to initialize noun
-NB.
-NB. Notes:
-NB. - is inspired by (defaultvalue) verb from
-NB.   /system/util/project.ijs
+NB.   name - string, global noun's name
+NB.   val  - noun's value to initialize
 
-initnoun=: 4 : 'if. 0 ~: nc < x do. (x)=: y else. x~ end.'
+initnoun=: 4 : '(x)=: y'
 
 NB. ---------------------------------------------------------
 NB. dlsym

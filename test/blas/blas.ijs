@@ -31,7 +31,7 @@ coinsert 'mttst mt'
 NB. =========================================================
 NB. Includes
 
-require 'math/mt/test/util'       NB. Tests' utilities
-require 'math/mt/test/blas/init'  NB. Init LIB_mtbla_
-require 'math/mt/test/blas/api'   NB. API definitions
-require 'math/mt/test/blas/util'  NB. BLAS Utilities
+require                 'math/mt/test/util'       NB. Tests' utilities
+require                 'math/mt/test/blas/init'  NB. Init LIB_mtbla_
+require^:(*@#@".@'LIB') 'math/mt/test/blas/api'   NB. API definitions
+require^:(*@#@".@'LIB') 'math/mt/test/blas/util'  NB. BLAS Utilities

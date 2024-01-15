@@ -1,6 +1,9 @@
 NB. Core utilities
 NB.
-NB. LIB  Noun, string, full path to BLIS library
+NB. LIB       Noun, string, full path to BLIS library or
+NB.           empty string
+NB.
+NB. initnoun  Init LIB global noun
 NB.
 NB. Version: 0.14.0 2023-07-04
 NB.
@@ -42,10 +45,10 @@ NB.
 NB. Syntax:
 NB.   fqfn=. findlib ''
 NB. where
-NB.   fqfn - string, FQFN of the first library found
+NB.   fqfn - string, FQFN of the first library found or
+NB.          empty string
 NB.
 NB. Notes:
-NB. - will throw exception if no library was found
 NB. - lib name has priority over path while lookup i.e.
 NB.   search pairs (path[i],name[j]) are ordered as:
 NB.     foreach_j(foreach_i(lookup(path[i],name[j])))
@@ -73,18 +76,18 @@ findlib=: 3 : 0
   end.
   paths=. termsep_j_ L: 0 (#~ fexist S: 0) paths
   fqfns=. (#~ (0 ~: 0 {:: dlsym@(;&'bli_info_get_version_str')) S: 0) , |: ;L:_1 { paths ,&< names
-  ('BLIS library file(s) ' , (; ,&' 'L:0 names) , 'was(-ere) not found') assert * # fqfns
-  0 {:: fqfns
+  fqfn=. 0 ({:: :: '') fqfns
 )
 
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Init LIB global noun by full path of first library found.
-NB. Throw error if no library was found.
+NB. Init LIB global noun by full path of first library found,
+NB. or by empty string if no library was found.
 NB.
 NB. Notes:
 NB. - OS-specific
+NB. - locatives always have global scope
 
 ('LIB_mtbli_' initnoun findlib)^:(0 ~: nc@<@'LIB_mtbli_') ''

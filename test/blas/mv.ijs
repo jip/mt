@@ -75,13 +75,13 @@ NB. - operate on transposed matrix to avoid transposition
 dgemvcore=: (4 : 0) ([ assert@basiccr6)
   'alpha At xx incx beta y incy'=. y
   'n m'=. $ At
-  10 {:: dgemvcd (, x) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. m) ; xx ; (, incx) ; (, beta) ; y ; , incy
+  10 {:: dgemv_cd (, x) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. m) ; xx ; (, incx) ; (, beta) ; y ; , incy
 )
 
 zgemvcore=: (4 : 0) ([ assert@basiccr6)
   'alpha At xx incx beta y incy'=. y
   'n m'=. $ At
-  10 {:: zgemvcd (, x) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. m) ; xx ; (, incx) ; (, beta) ; y ; , incy
+  10 {:: zgemv_cd (, x) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. m) ; xx ; (, incx) ; (, beta) ; y ; , incy
 )
 
 NB. ---------------------------------------------------------
@@ -121,13 +121,13 @@ NB. - operates on transposed matrix to avoid transposition
 dsymvcore=: (4 : 0) ([ assert@(basiccs1 , basiccr6))
   'alpha AAt xx incx beta y incy'=. y
   n=. # AAt
-  9 {:: dsymvcd (, x) ; (, n) ; (, alpha) ; AAt ; (, 1 >. n) ; xx ; (, incx) ; (, beta) ; y ; , incy
+  9 {:: dsymv_cd (, x) ; (, n) ; (, alpha) ; AAt ; (, 1 >. n) ; xx ; (, incx) ; (, beta) ; y ; , incy
 )
 
 zhemvcore=: (4 : 0) ([ assert@(basiccs1 , basiccr6))
   'alpha AAt xx incx beta y incy'=. y
   n=. # AAt
-  9 {:: zhemvcd (, x) ; (, n) ; (, alpha) ; AAt ; (, 1 >. n) ; xx ; (, incx) ; (, beta) ; y ; , incy
+  9 {:: zhemv_cd (, x) ; (, n) ; (, alpha) ; AAt ; (, 1 >. n) ; xx ; (, incx) ; (, beta) ; y ; , incy
 )
 
 NB. ---------------------------------------------------------
@@ -174,14 +174,14 @@ dtrmvcore=: (4 : 0) ([ assert@(basiccs0 , basiccr1))
   'uplo trans diag'=. x
   'AAt y incy'=. y
   n=. # AAt
-  7 {:: dtrmvcd (, uplo) ; (, trans) ; (, diag) ; (, n) ; AAt ; (, 1 >. n) ; y ; , incy
+  7 {:: dtrmv_cd (, uplo) ; (, trans) ; (, diag) ; (, n) ; AAt ; (, 1 >. n) ; y ; , incy
 )
 
 ztrmvcore=: (4 : 0) ([ assert@(basiccs0 , basiccr1))
   'uplo trans diag'=. x
   'AAt y incy'=. y
   n=. # AAt
-  7 {:: ztrmvcd (, uplo) ; (, trans) ; (, diag) ; (, n) ; AAt ; (, 1 >. n) ; y ; , incy
+  7 {:: ztrmv_cd (, uplo) ; (, trans) ; (, diag) ; (, n) ; AAt ; (, 1 >. n) ; y ; , incy
 )
 
 NB. =========================================================

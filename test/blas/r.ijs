@@ -71,13 +71,13 @@ NB. - operate on transposed matrices to avoid transposition
 dsyrcore=: (4 : 0) ([ assert@(basiccs3 , basiccr2))
   'alpha y incy AAt'=. y
   n=. # AAt
-  6 {:: dsyrcd (, x) ; (, n) ; (, alpha) ; y ; (, incy) ; AAt ; , 1 >. n
+  6 {:: dsyr_cd (, x) ; (, n) ; (, alpha) ; y ; (, incy) ; AAt ; , 1 >. n
 )
 
 zhercore=: (4 : 0) ([ assert@(basiccs3 , basiccr2))
   'alpha y incy AAt'=. y
   n=. # AAt
-  6 {:: zhercd (, x) ; (, n) ; (, alpha) ; y ; (, incy) ; AAt ; , 1 >. n
+  6 {:: zher_cd (, x) ; (, n) ; (, alpha) ; y ; (, incy) ; AAt ; , 1 >. n
 )
 
 NB. =========================================================
@@ -116,7 +116,7 @@ dger=: (3 : 0)@([ assert@basiccr5)
   'm n'=. $ A
   assert (0 >. >: (<: m) * | incx) = # x
   assert (0 >. >: (<: n) * | incy) = # y
-  8 {:: dgercd (, n) ; (, m) ; (, alpha) ;    y  ; (, incy) ;    x  ; (, incx) ; A ; , 1 >. n
+  8 {:: dger_cd (, n) ; (, m) ; (, alpha) ;    y  ; (, incy) ;    x  ; (, incx) ; A ; , 1 >. n
 )
 
 zgerc=: (3 : 0)@([ assert@basiccr5)
@@ -124,7 +124,7 @@ zgerc=: (3 : 0)@([ assert@basiccr5)
   'm n'=. $ A
   assert (0 >. >: (<: m) * | incx) = # x
   assert (0 >. >: (<: n) * | incy) = # y
-  8 {:: zgerccd (, n) ; (, m) ; (, alpha) ; (+ y) ; (, incy) ; (+ x) ; (, incx) ; A ; , 1 >. n
+  8 {:: zgerc_cd (, n) ; (, m) ; (, alpha) ; (+ y) ; (, incy) ; (+ x) ; (, incx) ; A ; , 1 >. n
 )
 
 zgeru=: (3 : 0)@([ assert@basiccr5)
@@ -132,7 +132,7 @@ zgeru=: (3 : 0)@([ assert@basiccr5)
   'm n'=. $ A
   assert (0 >. >: (<: m) * | incx) = # x
   assert (0 >. >: (<: n) * | incy) = # y
-  8 {:: zgerucd (, n) ; (, m) ; (, alpha) ;    y  ; (, incy) ;    x  ; (, incx) ; A ; , 1 >. n
+  8 {:: zgeru_cd (, n) ; (, m) ; (, alpha) ;    y  ; (, incy) ;    x  ; (, incx) ; A ; , 1 >. n
 )
 
 NB. ---------------------------------------------------------

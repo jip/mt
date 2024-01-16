@@ -84,7 +84,7 @@ dsyr2kcore=: (4 : 0) basicswp@([ assert@(basiccmp , basiccs4 , basiccr4))
   n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
   ld=. , 1 >. c At
-  11 {:: dsyr2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
+  11 {:: dsyr2k_cd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
 )
 
 zsyr2kcore=: (4 : 0) basicswp@([ assert@(basiccmp , basiccs4 , basiccr4))
@@ -93,7 +93,7 @@ zsyr2kcore=: (4 : 0) basicswp@([ assert@(basiccmp , basiccs4 , basiccr4))
   n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
   ld=. , 1 >. c At
-  11 {:: zsyr2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
+  11 {:: zsyr2k_cd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
 )
 
 NB. ---------------------------------------------------------
@@ -142,7 +142,7 @@ zher2kcore=: (4 : 0) basicswp@([ assert@(basiccmp , basiccs4 , basiccr4))
   n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
   ld=. , 1 >. c At
-  11 {:: zher2kcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
+  11 {:: zher2k_cd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; ld ; Bt ; ld ; (, beta) ; CCt ; , 1 >. n
 )
 
 NB. =========================================================

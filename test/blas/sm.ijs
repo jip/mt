@@ -88,14 +88,14 @@ dtrsmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'side uplo trans diag'=. x
   'alpha At Bt'=. y
   'n m'=. $ Bt
-  10 {:: dtrsmcd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; , 1 >. m
+  10 {:: dtrsm_cd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; , 1 >. m
 )
 
 ztrsmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'side uplo trans diag'=. x
   'alpha At Bt'=. y
   'n m'=. $ Bt
-  10 {:: ztrsmcd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; , 1 >. m
+  10 {:: ztrsm_cd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; , 1 >. m
 )
 
 NB. =========================================================

@@ -72,13 +72,13 @@ NB. - operate on transposed matrices to avoid transposition
 dsyr2core=: (4 : 0) ([ assert@(basiccs5 , basiccr5))
   'alpha xx incx y incy At'=. y
   n=. # At
-  8 {:: dsyr2cd (, x) ; (, n) ; (, alpha) ; xx ; (, incx) ; y ; (, incy) ; At ; , 1 >. n
+  8 {:: dsyr2_cd (, x) ; (, n) ; (, alpha) ; xx ; (, incx) ; y ; (, incy) ; At ; , 1 >. n
 )
 
 zher2core=: (4 : 0) ([ assert@(basiccs5 , basiccr5))
   'alpha xx incx y incy At'=. y
   n=. # At
-  8 {:: zher2cd (, x) ; (, n) ; (, alpha) ; xx ; (, incx) ; y ; (, incy) ; At ; , 1 >. n
+  8 {:: zher2_cd (, x) ; (, n) ; (, alpha) ; xx ; (, incx) ; y ; (, incy) ; At ; , 1 >. n
 )
 
 NB. =========================================================

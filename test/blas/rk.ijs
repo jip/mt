@@ -82,7 +82,7 @@ dsyrkcore=: (4 : 0) ([ assert@(basiccs3 , basiccr3))
   'alpha At beta CCt'=. y
   n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
-  9 {:: dsyrkcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; (, beta) ; CCt ; , 1 >. n
+  9 {:: dsyrk_cd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; (, beta) ; CCt ; , 1 >. n
 )
 
 zsyrkcore=: (4 : 0) ([ assert@(basiccs3 , basiccr3))
@@ -90,7 +90,7 @@ zsyrkcore=: (4 : 0) ([ assert@(basiccs3 , basiccr3))
   'alpha At beta CCt'=. y
   n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
-  9 {:: zsyrkcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; (, beta) ; CCt ; , 1 >. n
+  9 {:: zsyrk_cd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; (, beta) ; CCt ; , 1 >. n
 )
 
 NB. ---------------------------------------------------------
@@ -134,7 +134,7 @@ zherkcore=: (4 : 0) ([ assert@(basiccs3 , basiccr3))
   'alpha At beta CCt'=. y
   n=. # CCt
   k=. (-. 'nN' e.~ {. trans) { $ At
-  9 {:: zherkcd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; (, beta) ; CCt ; , 1 >. n
+  9 {:: zherk_cd (, uplo) ; (, trans) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; (, beta) ; CCt ; , 1 >. n
 )
 
 NB. =========================================================

@@ -86,7 +86,7 @@ dgemmcore=: (4 : 0) basicswp@([ assert@basiccr4)
   'alpha At Bt beta Ct'=. y
   'n m'=. $ Ct
   k=. (-. 'nN' e.~ {. transA) { $ At
-  12 {:: dgemmcd (, transA) ; (, transB) ; (, m) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; (, 1 >. c Bt) ; (, beta) ; Ct ; , 1 >. m
+  12 {:: dgemm_cd (, transA) ; (, transB) ; (, m) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; (, 1 >. c Bt) ; (, beta) ; Ct ; , 1 >. m
 )
 
 zgemmcore=: (4 : 0) basicswp@([ assert@basiccr4)
@@ -94,7 +94,7 @@ zgemmcore=: (4 : 0) basicswp@([ assert@basiccr4)
   'alpha At Bt beta Ct'=. y
   'n m'=. $ Ct
   k=. (-. 'nN' e.~ {. transA) { $ At
-  12 {:: zgemmcd (, transA) ; (, transB) ; (, m) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; (, 1 >. c Bt) ; (, beta) ; Ct ; , 1 >. m
+  12 {:: zgemm_cd (, transA) ; (, transB) ; (, m) ; (, n) ; (, k) ; (, alpha) ; At ; (, 1 >. c At) ; Bt ; (, 1 >. c Bt) ; (, beta) ; Ct ; , 1 >. m
 )
 
 NB. ---------------------------------------------------------
@@ -143,7 +143,7 @@ dsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'alpha AAt Bt beta Ct'=. y
   'n m'=. $ Ct
   ld=. , 1 >. m
-  11 {:: dsymmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
+  11 {:: dsymm_cd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
 )
 
 zsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
@@ -151,7 +151,7 @@ zsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'alpha AAt Bt beta Ct'=. y
   'n m'=. $ Ct
   ld=. , 1 >. m
-  11 {:: zsymmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
+  11 {:: zsymm_cd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
 )
 
 zhemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
@@ -159,7 +159,7 @@ zhemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   'alpha AAt Bt beta Ct'=. y
   'n m'=. $ Ct
   ld=. , 1 >. m
-  11 {:: zhemmcd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
+  11 {:: zhemm_cd (, side) ; (, uplo) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; ld ; (, beta) ; Ct ; ld
 )
 
 NB. ---------------------------------------------------------
@@ -215,14 +215,14 @@ dtrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'side uplo trans diag'=. x
   'alpha AAt Bt'=. y
   'n m'=. $ Bt
-  10 {:: dtrmmcd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; , 1 >. m
+  10 {:: dtrmm_cd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; , 1 >. m
 )
 
 ztrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
   'side uplo trans diag'=. x
   'alpha AAt Bt'=. y
   'n m'=. $ Bt
-  10 {:: ztrmmcd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; , 1 >. m
+  10 {:: ztrmm_cd (, side) ; (, uplo) ; (, trans) ; (, diag) ; (, m) ; (, n) ; (, alpha) ; AAt ; (, 1 >. c AAt) ; Bt ; , 1 >. m
 )
 
 NB. =========================================================

@@ -79,14 +79,14 @@ dtrsvcore=: (4 : 0) ([ assert@(basiccs0 , basiccr1))
   'uplo trans diag'=. x
   'At b incb'=. y
   n=. # At
-  7 {:: dtrsvcd (, uplo) ; (, trans) ; (, diag) ; (, n) ; At ; (, 1 >. n) ; b ; , incb
+  7 {:: dtrsv_cd (, uplo) ; (, trans) ; (, diag) ; (, n) ; At ; (, 1 >. n) ; b ; , incb
 )
 
 ztrsvcore=: (4 : 0) ([ assert@(basiccs0 , basiccr1))
   'uplo trans diag'=. x
   'At b incb'=. y
   n=. # At
-  7 {:: ztrsvcd (, uplo) ; (, trans) ; (, diag) ; (, n) ; At ; (, 1 >. n) ; b ; , incb
+  7 {:: ztrsv_cd (, uplo) ; (, trans) ; (, diag) ; (, n) ; At ; (, 1 >. n) ; b ; , incb
 )
 
 NB. =========================================================

@@ -186,7 +186,7 @@ isosym=: (3 : 0) :. (#. _2&C.&.|:@(# combrep {.))
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
   vals=. (# S: 0 # i.@#) iso               NB. replicate value for each ISO
   iso=. ; iso
-  vals (<"1 iso)} y $ 0
+  vals iso} y $ 0
 )
 
 NB. ---------------------------------------------------------
@@ -235,7 +235,7 @@ isoskw=: (3 : 0) :. (#. _2&C.&.|:@(# comb {.))
                                            NB. each ISO within group will have the same value
   par=. C.!.2 /:"1 iso                     NB. parity (is valid since there is no diagonals here)
   vals=. (          1 = par)} (,: -) vals  NB. negate evenly permuted values
-  vals (<"1 iso)} 1 $. y ; (i. # y) ; 00
+  vals iso} 1 $. y ; (i. # y) ; 00
 )
 
 NB. ---------------------------------------------------------
@@ -284,7 +284,7 @@ isohmt=: (3 : 0) :. (isosym^:_1)
   ndmask=. (# y) = #@~."1 iso              NB. ISO for non-diagonals mask
   par=. C.!.2 /:"1 iso                     NB. parity (is valid only for non-diagonals)
   vals=. (ndmask *. 1 = par)} (,: -) vals  NB. negate evenly permuted non-diagonal values
-  vals (<"1 iso)} y $ 0
+  vals iso} y $ 0
 )
 
 NB. ---------------------------------------------------------
@@ -423,7 +423,7 @@ mmic=: 4 : 0
   end.
   NB. place values at ISO positions in sparse array
   se=. ioField {:: 0 ; 00 ; 0.0 ; 0j0
-  y=. dat (<"1 iso)} 1 $. shape ; (i. rank) ; se
+  y=. dat iso} 1 $. shape ; (i. rank) ; se
 )
 
 NB. ---------------------------------------------------------

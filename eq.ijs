@@ -212,7 +212,7 @@ hgezq=: 1 : 0
               NB. superdiagonals in H
               ilazr2=. 0
               if. -. ilazro do.
-                'Hj1j Hjj1 Hjj'=. sorim ((<"1) 0 ,. (_1 0,0 1,:0 0) + j) { y
+                'Hj1j Hjj1 Hjj'=. sorim (< 0 ,. (_1 0,0 1,:0 0) + j) { y
                 if. 0 >: (Hj1j , Hjj) mp (ascale * (Hjj1 , -atol)) do.
                   ilazr2=. 1
                 end.
@@ -436,7 +436,7 @@ hgeqz=: 1 : 0
               NB. subdiagonals in H
               ilazr2=. 0
               if. -. ilazro do.
-                'Hjj1 Hj1j Hjj'=. sorim ((<"1) 0 ,. (0 _1,1 0,:0 0) + j) { y
+                'Hjj1 Hj1j Hjj'=. sorim (< 0 ,. (0 _1,1 0,:0 0) + j) { y
                 if. 0 >: (Hjj1 , Hjj) mp (ascale * (Hj1j , -atol)) do.
                   ilazr2=. 1
                 end.

@@ -7,7 +7,7 @@ NB.            imagine parts' modules
 NB. liso4th    Generate lISO from tail and head
 NB. liso4dhs   Generate lISO from head, size and optional
 NB.            delta
-NB. iso4riso   Convert rISO to ISO
+NB. iso4riso   Convert rISO to/from ISO
 NB. liso4riso  Convert rISO to lISO
 NB. lisoX      lISO vector laying between diagonal and
 NB.            matrix edge
@@ -39,24 +39,26 @@ coclass 'mt'
 NB. =========================================================
 NB. Concepts
 NB.
-NB. IO   - index of
-NB. lIO  - linear IO, is an integer
-NB. ISO  - indices of
-NB. lISO - linear ISO, is a vector of integers
-NB. rISO - rectangular ISO, for r-rank array is a 2×r-array
-NB.        of integers ((head0,head1,...),:(size0,size1,...))
+NB. Notation:
+NB.   IO   - index of
+NB.   lIO  - linear IO, is an integer
+NB.   ISO  - indices of
+NB.   lISO - linear ISO, is a vector of integers
+NB.   rISO - rectangular ISO, for r-rank array is a 2×r-array
+NB.          of integers ((head0,head1,...),:(size0,size1,...))
 NB.
-NB. Following are equivalents:
-NB.   (3 5 _7 ,: 2 _3 4) ];.0 brick
-NB.   (< 3 4 ; 7 6 5 ; _10 _9 _8 _7) { brick
-NB.   (iso4riso 3 5 _7 ,: 2 _3 4) { brick
-NB.   (riso4iso < 3 4 ; 7 6 5 ; _10 _9 _8 _7) ];.0 brick
-NB.
-NB. Following are equivalents:
-NB.   (0 1 ; 1 2 ; 2 3) { i. 3 4
-NB.   (4 iso4liso 1 6 11) { i. 3 4
-NB.   (4 liso4iso 0 1 ; 1 2 ; 2 3) ({,) i. 3 4
-NB.   1 6 11 ({,) i. 3 4
+NB. Assertions:
+NB.   riso -: iso4riso^:_1 iso               NB. ISO converted back to the same rISO
+NB.   (-: iso4riso^:_1@ iso4riso     ) riso  NB. rISO -> ISO -> back to the same rISO
+NB.   (-: iso4riso    @(iso4riso^:_1)) iso   NB. ISO -> rISO -> back to the same ISO
+NB.   (riso ];.0 arr) -: (iso { arr)         NB. riso and iso both are pointing to the same subarray
+NB.   (riso ,;.0 arr) -: (liso ({,) arr)     NB. riso and liso both are pointing to the same subarray
+NB. where
+NB.   sh=. 4 # 10                            NB. some shape
+NB.   arr=. i. sh                            NB. some array of shape sh is storing lISO values
+NB.   riso=. 3 5 _6 _2 ,: 2 _3 4 _5          NB. some rISO within arr
+NB.   iso=. iso4riso riso                    NB. ISO representation of riso
+NB.   liso=. sh liso4riso riso               NB. lISO representation of riso
 
 NB. =========================================================
 NB. Local definitions
@@ -87,17 +89,18 @@ NB. Syntax:
 NB.   liso=. t liso4th h
 NB. where
 NB.   h    - integer, head of liso
-NB.   t    - integer, tail of liso
+NB.   t    ≥ h, integer, tail of liso
 NB.   liso - (x-y)-vector of integers, lISO from head h to
 NB.          tail (t-1) with delta=1:
 NB.            h (h+1) ... (t-1)
 NB.
-NB. Notes:
-NB. - monadic case is possible, though awkward:
-NB.     _3 _2 _1 -: liso4th _3
-NB.     5 4 3    -: liso4th  3
+NB. Examples:
+NB.      3 liso4th 3           $ 3 liso4th 3
+NB.                         0
+NB.      4 liso4th 3           5 liso4th 3
+NB.   3                     3 4
 
-liso4th=: ] + i.@-
+liso4th=: [: : (] + i.@-)
 
 NB. ---------------------------------------------------------
 NB. liso4dhs
@@ -116,10 +119,12 @@ NB.   d    ≥ 0 integer, optional delta of liso, default is 1
 NB.   liso - |s|-vector of integers
 NB.
 NB. Examples:
-NB.    2 liso4dhs 4 3              2 liso4dhs _4 3
-NB. 4 6 8                       _8 _6 _4
-NB.    2 liso4dhs 4 _3             2 liso4dhs _4 _3
-NB. 8 6 4                       _4 _6 _8
+NB.      liso4dhs 4 3              1 liso4dhs 4 3
+NB.   4 5 6                     4 5 6
+NB.      2 liso4dhs 4 3            2 liso4dhs _4 3
+NB.   4 6 8                     _8 _6 _4
+NB.      2 liso4dhs 4 _3           2 liso4dhs _4 _3
+NB.   8 6 4                     _4 _6 _8
 NB.
 NB. Notes:
 NB. - monadic case models rISO in (u;.0) with following
@@ -131,16 +136,39 @@ NB. ---------------------------------------------------------
 NB. iso4riso
 NB.
 NB. Description:
-NB.   Convert rISO to ISO
+NB.   Convert rISO to/from ISO
 NB.
 NB. Syntax:
-NB.   iso=. iso4riso riso
+NB.   iso=.  iso4riso     riso
+NB.   riso=. iso4riso^:_1 iso
+NB.
+NB. Assertions:
+NB.   iso  -: iso4riso     riso
+NB.   riso -: iso4riso^:_1 iso
+NB. where
+NB.      ] riso=. 3 5 _6 _2 ,: 2 _3 4 _5
+NB.   3  5 _6 _2
+NB.   2 _3  4 _5
+NB.      ] iso=. < 3 4 ; 7 6 5 ; _9 _8 _7 _6 ; _2 _3 _4 _5 _6
+NB.   +--------------------------------------+
+NB.   |+---+-----+-----------+--------------+|
+NB.   ||3 4|7 6 5|_9 _8 _7 _6|_2 _3 _4 _5 _6||
+NB.   |+---+-----+-----------+--------------+|
+NB.   +--------------------------------------+
 NB.
 NB. Notes:
 NB. - riso with columns count less than array's rank is
 NB.   indexing the slice
 
-iso4riso=: <"1@oiso4riso
+iso4riso=: <"1@oiso4riso :. (3 : 0)
+  'not representable as rISO' assert (('' -: -.&_1 1) *. 2 > #@~.)S:0 (2&(-/\)^:(0 < #))L:0 y
+    NB. each open element is either (1) empty list or (2) scalar or (3) range which is (3a) continuous and either (3b1) increasing or (3b2) decreasing
+  dm=. -/@:|@(2&{.)`_1:@.(2 > #)       L:0 y  NB. deltas of modules
+  d=.  -/   @(2&{.)`_1:@.(2 > #)       L:0 y  NB. deltas
+  h=. dm [:`(_1 { ::0 ])`(0 { ::0 ])@.[S:0 y  NB. heads
+  s=. d  [:`(-@#@]     )`(#@]      )@.[S:0 y  NB. sizes
+  h ,: s
+)
 
 NB. ---------------------------------------------------------
 NB. liso4riso
@@ -166,12 +194,12 @@ NB.   k       = 0:|Π{size[i],i=0:r-1}|-1, IO liso' item
 NB.   n[k][i] - i-th axis' IO for k-th liso' item
 NB.
 NB. Assertions:
-NB.   (liso ({,) array) -: (riso ,;.0 array)
+NB.   (riso ,;.0 arr) -: (liso ({,) arr)
 NB. where
-NB.   riso=. 2 4 $ 7 _3 7 _3 2 2 _2 _2
-NB.   sh=. 10 11 12 13
-NB.   array=. i. sh
-NB.   liso=. sh liso4riso riso
+NB.   sh=. 4 # 10                    NB. some shape
+NB.   arr=. sh ?@$ 0                 NB. some array of shape sh
+NB.   riso=. 3 5 _6 _2 ,: 2 _3 4 _5  NB. some rISO within arr
+NB.   liso=. sh liso4riso riso       NB. lISO representation of riso
 
 liso4riso=: */\.@(1&(|.!.1))@[ +/@:* (+ 1&(|.!.0)@(0&>))@|:@:>@,@{@oiso4riso@]
 

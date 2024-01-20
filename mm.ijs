@@ -713,7 +713,7 @@ NB.   probed ≥ 0, tests probed counter
 NB.   failed ≥ 0, tests failed counter
 
 testround0=: 1 : '(#    ,    +/)@(u S: 0)'
-testround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(''.''&dropafter L: 0)'
+testround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ >:@(i:&''.'')) L: 0)'
 
 NB. ---------------------------------------------------------
 NB. testdir

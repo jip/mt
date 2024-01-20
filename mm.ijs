@@ -576,6 +576,7 @@ mm=: (3 : 0) :. (3 : 0)
     y=. y [`(#~ trlmask)`(#~ trl0mask)`(#~ trlmask)`(#~ trlmask)@.ioSymmetry iso
   else.
     NB. array
+    if. 0 = ioField do. ioField=. 1 end.  NB. represent boolean array as integer since 'array' and 'pattern' qualifiers are incompatible
     NB. compose data
     y=. +.^:(3 = ioField) , |:"2^:(0 = ioSymmetry) y
     NB. filter out repeating elements known due to symmetry

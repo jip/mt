@@ -80,7 +80,7 @@ NB. - v[i]'s direction is forward, but T is lower triangular
 
 lahr2l=: 3 : 0
   V=. 0 {. y
-  T=. H=. 0 0 $ 0
+  T=. H=. EMPTY
   j=. 0
   while. j < HRDNB do.
     b=. (j { y) - (+ (<: j) {"1 V) mp j {. y
@@ -136,7 +136,7 @@ NB.   - V is formed explicitely
 
 lahr2u=: 3 : 0
   V=. _ 0 {. y
-  T=. H=. 0 0 $ 0
+  T=. H=. EMPTY
   j=. 0
   while. j < HRDNB do.
     b=. (j {"1 y) - (j {."1 y) mp + (<: j) { V

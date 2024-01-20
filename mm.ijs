@@ -680,8 +680,8 @@ test0inv=: ((((1: echo) 'test0inv_mtmm_ failed with '&,))~ mm^:_1) :: 0 fread2
 
 NB. test1dir=: ,&'mm' ((-: mm    ) :: 0  ".)&fread2 ,&'ijs'
 NB. test1inv=: ,&'mm' ((-: mm^:_1) :: 0~ ".)&fread2 ,&'ijs'
-test1dir=: ,&'mm' ([:`1:@.(-: mm    )  ".)&fread2 ::  ((0: echo) 'test1dir_mtmm_ failed with '&,)   ,&'ijs'
-test1inv=: ,&'mm' ([:`1:@.(-: mm^:_1)~ ".)&fread2 :: (((0: echo) 'test1inv_mtmm_ failed with '&,)~) ,&'ijs'
+test1dir=: ,&'.mm' ([:`1:@.(-: mm    )  ".)&fread2 ::  ((0: echo) 'test1dir_mtmm_ failed with '&,)   ,&'.ijs'
+test1inv=: ,&'.mm' ([:`1:@.(-: mm^:_1)~ ".)&fread2 :: (((0: echo) 'test1inv_mtmm_ failed with '&,)~) ,&'.ijs'
 
 NB. ---------------------------------------------------------
 NB. testround0
@@ -713,7 +713,7 @@ NB.   probed ≥ 0, tests probed counter
 NB.   failed ≥ 0, tests failed counter
 
 testround0=: 1 : '(#    ,    +/)@(u S: 0)'
-testround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ >:@(i:&''.'')) L: 0)'
+testround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ i:&''.'') L: 0)'
 
 NB. ---------------------------------------------------------
 NB. testdir

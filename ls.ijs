@@ -88,8 +88,8 @@ NB. Notes:
 NB. - dqrt131 models LAPACK's DQRT13(1)
 NB. - zqrt131 models LAPACK's ZQRT13(1)
 
-dqrt131=: (setdiag~ '' ;~ diag ([ +  copysign        ) norm1tc@(({."1~ #)^:(</@$)))@dlarnv2
-zqrt131=: (setdiag~ '' ;~ diag ([ + (copysign~ 9&o.)~) norm1tc@(({."1~ #)^:(</@$)))@zlarnv2
+dqrt131=: (setdiag~ '' ;~ diag ([ +  negneg        ) norm1tc@(({."1~ #)^:(</@$)))@dlarnv2
+zqrt131=: (setdiag~ '' ;~ diag ([ + (negneg~ 9&o.)~) norm1tc@(({."1~ #)^:(</@$)))@zlarnv2
 
 NB. ---------------------------------------------------------
 NB. dqrt132

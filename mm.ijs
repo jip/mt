@@ -732,8 +732,8 @@ NB.   failedDir ≥ 0, tests failed counter for (mm    )
 NB.   probedInv ≥ 0, tests probed counter for (mm^:_1)
 NB.   failedInv ≥ 0, tests failed counter for (mm^:_1)
 
-testdir=: (+/)@((test0dir testround0)`(test1dir testround1) dkey~ '_'&e. S: 0)@(1 dir (TEST_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
-testinv=: (+/)@((test0inv testround0)`(test1inv testround1) dkey~ '_'&e. S: 0)@(1 dir (TEST_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
+testdir=: (+/)@((test0dir testround0)`(test1dir testround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (TEST_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
+testinv=: (+/)@((test0inv testround0)`(test1inv testround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (TEST_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
 
 NB. ---------------------------------------------------------
 NB. verifymm_mt_

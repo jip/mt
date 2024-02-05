@@ -324,13 +324,13 @@ fp=: ([ C."1 C.) :. ([ C.^:_1"1 C.^:_1)
 
 NB. Transform permutation vector to/from permutation matrix,
 NB. to permute rows by y or columns by (/: y)
-P4p=:  ({    =) :. (     i.&1"1 )
+P4p=:  (C.     =) :. (     i.&1"1 )
 
 NB. Transform inversed permutation vector to/from permutation
 NB. matrix, or permutation vector to/from inversed
 NB. permutation matrix, to permute rows by (/: y) or columns
 NB. by y
-P4ip=: ({^:_1=) :. (/:@:(i.&1"1))
+P4ip=: (C.^:_1 =) :. (/:@:(i.&1"1))
 
 NB. ---------------------------------------------------------
 NB. icut

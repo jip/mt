@@ -254,4 +254,4 @@ NB. where
 NB.   probed ≥ 0, assertions probed counter
 NB.   failed ≥ 0, assertions failed counter
 
-verify=: verifymm
+verify=: ('total' reportv)@(+/)@:(verifyutil`verifyiso`verifymm`verifynorm`verifyquatern`verifyrot`verifystruct`:0)

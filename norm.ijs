@@ -1,25 +1,31 @@
 NB. Norms
 NB.
-NB. norm1    Magnitude-based 1-norm of vector (matrix)
-NB. norm1c   Magnitude-based 1-norm of vector (matrix
-NB.          columns)
-NB. norm1r   Magnitude-based 1-norm of vector (matrix rows)
-NB. normi    Magnitude-based ∞-norm of vector (matrix)
-NB. normic   Magnitude-based ∞-norm of vector (matrix
-NB.          columns)
-NB. normir   Magnitude-based ∞-norm of vector (matrix rows)
-NB. normm    Magnitude-based max of modules of elements
-NB. norm1t   Taxicab-based 1-norm of vector (matrix)
-NB. norm1tc  Taxicab-based 1-norm of vector (matrix columns)
-NB. norm1tr  Taxicab-based 1-norm of vector (matrix rows)
-NB. normit   Taxicab-based ∞-norm of vector (matrix)
-NB. normitc  Taxicab-based ∞-norm of vector (matrix columns)
-NB. normitr  Taxicab-based ∞-norm of vector (matrix rows)
-NB. normmt   Taxicab-based max of modules of elements
-NB. norms    Square-based Euclidean (Frobenius) norm of
-NB.          vector (matrix)
-NB. normsc   Square-based Euclidean norm of matrix columns
-NB. normsr   Square-based Euclidean norm of matrix rows
+NB. norm1       Magnitude-based 1-norm of vector (matrix)
+NB. norm1c      Magnitude-based 1-norm of vector (matrix
+NB.             columns)
+NB. norm1r      Magnitude-based 1-norm of vector (matrix
+NB.             rows)
+NB. normi       Magnitude-based ∞-norm of vector (matrix)
+NB. normic      Magnitude-based ∞-norm of vector (matrix
+NB.             columns)
+NB. normir      Magnitude-based ∞-norm of vector (matrix
+NB.             rows)
+NB. normm       Magnitude-based max of modules of elements
+NB. norm1t      Taxicab-based 1-norm of vector (matrix)
+NB. norm1tc     Taxicab-based 1-norm of vector (matrix
+NB.             columns)
+NB. norm1tr     Taxicab-based 1-norm of vector (matrix rows)
+NB. normit      Taxicab-based ∞-norm of vector (matrix)
+NB. normitc     Taxicab-based ∞-norm of vector (matrix
+NB.             columns)
+NB. normitr     Taxicab-based ∞-norm of vector (matrix rows)
+NB. normmt      Taxicab-based max of modules of elements
+NB. norms       Square-based Euclidean (Frobenius) norm of
+NB.             vector (matrix)
+NB. normsc      Square-based Euclidean norm of matrix columns
+NB. normsr      Square-based Euclidean norm of matrix rows
+NB.
+NB. verifynorm  Verify norm verbs
 NB.
 NB. Version: 0.13.1 2021-06-06
 NB.
@@ -215,3 +221,93 @@ NB.   extraneous values in matrix must be zeroed
 norms=:  ((+/&.:*:  @: (% :: 1:  )    * ]) >./  )@,@:|@(+.             ^:(JCMPX = 3!:0))`(_."_   )@.(isnan@<)                    : [:  NB. E-norm of vector (F-norm of matrix)
 normsc=: ((+/&.:*:  @:((% :: 1:"0)"1) * ]) >./  )  @:|@((9&o. ,  11&o.)^:(JCMPX = 3!:0))`(_. #~ c)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. E-norm of matrix columns
 normsr=: ((+/&.:*:"1@: (% :: 1:"0)    * ]) >./"1)  @:|@((,"2@:+.      )^:(JCMPX = 3!:0))`(_. #~ #)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. E-norm of matrix rows
+
+NB. =========================================================
+NB. Verification suite
+
+NB. ---------------------------------------------------------
+NB. verifynorm
+NB.
+NB. Description:
+NB.   Nilad to verify norm actors, output result to console
+NB.   and return it
+NB.
+NB. Syntax:
+NB.   'probed failed'=. verifynorm ''
+NB. where
+NB.   probed ≥ 0, assertions probed counter
+NB.   failed ≥ 0, assertions failed counter
+
+verifynorm=: 3 : 0
+  res=.       0     -: norm1  0 0 $ 0
+  res=. res , 0     -: norm1  0 3 $ 0
+  res=. res , 0     -: norm1  3 0 $ 0
+  res=. res , ''    -: norm1c 0 0 $ 0
+  res=. res , 0 0 0 -: norm1c 0 3 $ 0
+  res=. res , ''    -: norm1c 3 0 $ 0
+  res=. res , ''    -: norm1r 0 0 $ 0
+  res=. res , ''    -: norm1r 0 3 $ 0
+  res=. res , 0 0 0 -: norm1r 3 0 $ 0
+  res=. res , 0     -: normi  0 0 $ 0
+  res=. res , 0     -: normi  0 3 $ 0
+  res=. res , 0     -: normi  3 0 $ 0
+  res=. res , ''    -: normic 0 0 $ 0
+  res=. res , 0 0 0 -: normic 0 3 $ 0
+  res=. res , ''    -: normic 3 0 $ 0
+  res=. res , ''    -: normir 0 0 $ 0
+  res=. res , ''    -: normir 0 3 $ 0
+  res=. res , 0 0 0 -: normir 3 0 $ 0
+  res=. res , (norm1"1@|: -: norm1c)       10 10 ?@$ 0
+  res=. res , (norm1"1@|: -: norm1c) j./ 2 10 10 ?@$ 0
+  res=. res , (norm1"1    -: norm1r)       10 10 ?@$ 0
+  res=. res , (norm1"1    -: norm1r) j./ 2 10 10 ?@$ 0
+  res=. res , (normi"1@|: -: normic)       10 10 ?@$ 0
+  res=. res , (normi"1@|: -: normic) j./ 2 10 10 ?@$ 0
+  res=. res , (normi"1    -: normir)       10 10 ?@$ 0
+  res=. res , (normi"1    -: normir) j./ 2 10 10 ?@$ 0
+
+  res=. res , 0     -: norm1t  0 0 $ 0
+  res=. res , 0     -: norm1t  0 3 $ 0
+  res=. res , 0     -: norm1t  3 0 $ 0
+  res=. res , ''    -: norm1tc 0 0 $ 0
+  res=. res , 0 0 0 -: norm1tc 0 3 $ 0
+  res=. res , ''    -: norm1tc 3 0 $ 0
+  res=. res , ''    -: norm1tr 0 0 $ 0
+  res=. res , ''    -: norm1tr 0 3 $ 0
+  res=. res , 0 0 0 -: norm1tr 3 0 $ 0
+  res=. res , 0     -: normit  0 0 $ 0
+  res=. res , 0     -: normit  0 3 $ 0
+  res=. res , 0     -: normit  3 0 $ 0
+  res=. res , ''    -: normitc 0 0 $ 0
+  res=. res , 0 0 0 -: normitc 0 3 $ 0
+  res=. res , ''    -: normitc 3 0 $ 0
+  res=. res , ''    -: normitr 0 0 $ 0
+  res=. res , ''    -: normitr 0 3 $ 0
+  res=. res , 0 0 0 -: normitr 3 0 $ 0
+  res=. res , (norm1t"1@|: -: norm1tc)       10 10 ?@$ 0
+  res=. res , (norm1t"1@|: -: norm1tc) j./ 2 10 10 ?@$ 0
+  res=. res , (norm1t"1    -: norm1tr)       10 10 ?@$ 0
+  res=. res , (norm1t"1    -: norm1tr) j./ 2 10 10 ?@$ 0
+  res=. res , (normit"1@|: -: normitc)       10 10 ?@$ 0
+  res=. res , (normit"1@|: -: normitc) j./ 2 10 10 ?@$ 0
+  res=. res , (normit"1    -: normitr)       10 10 ?@$ 0
+  res=. res , (normit"1    -: normitr) j./ 2 10 10 ?@$ 0
+
+  res=. res , 0     -: norms  0 0 $ 0
+  res=. res , 0     -: norms  0 3 $ 0
+  res=. res , 0     -: norms  3 0 $ 0
+  res=. res , ''    -: normsc 0 0 $ 0
+  res=. res , 0 0 0 -: normsc 0 3 $ 0
+  res=. res , ''    -: normsc 3 0 $ 0
+  res=. res , ''    -: normsr 0 0 $ 0
+  res=. res , ''    -: normsr 0 3 $ 0
+  res=. res , 0 0 0 -: normsr 3 0 $ 0
+  res=. res , 1 -: # ~. (norms , normsr , normsc)       10 ?@$ 0  NB. all norms are equal for vector
+  res=. res , 1 -: # ~. (norms , normsr , normsc) j./ 2 10 ?@$ 0  NB. all norms are equal for vector
+  res=. res , (norms"1@|: -: normsc)       10 10 ?@$ 0
+  res=. res , (norms"1@|: -: normsc) j./ 2 10 10 ?@$ 0
+  res=. res , (norms"1    -: normsr)       10 10 ?@$ 0
+  res=. res , (norms"1    -: normsr) j./ 2 10 10 ?@$ 0
+
+  'norm' reportv (# ([ , -) +/) res
+)

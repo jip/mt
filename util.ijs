@@ -1,23 +1,25 @@
 NB. Utilities
 NB.
-NB. isnan     Mark NaN values
-NB. max       Max-of, 0 for empty list
-NB. maxc      Max-of, '' for empty list
-NB. negneg    Conditional negate
-NB. negpos    Conditional negate
-NB. copysign  Copy sign
-NB. sorim     Sum of real and imaginary parts' modules
-NB. soris     Sum of real and imaginary parts' squares
-NB. lcat      Concatenate logs
-NB. nolog     Nilad to generate neutral for test actors
-NB. tmonad    Conj. to make monad to test computational monad
-NB. tdyad     Conj. to make monad to test computational dyad
-NB. assert    Advanced version of the (assert.) control
-NB. cut3      Split list by delimiter taken from its tail
-NB. cut2      Split list by delimiter
-NB. cut       Split list by delimiter
-NB. cutl2     Split list by any delimiter
-NB. cutl      Split list by any delimiter
+NB. isnan       Mark NaN values
+NB. max         Max-of, 0 for empty list
+NB. maxc        Max-of, '' for empty list
+NB. negneg      Conditional negate
+NB. negpos      Conditional negate
+NB. copysign    Copy sign
+NB. sorim       Sum of real and imaginary parts' modules
+NB. soris       Sum of real and imaginary parts' squares
+NB. lcat        Concatenate logs
+NB. nolog       Nilad to generate neutral for test actors
+NB. tmonad      Conj. to make monad to test computational monad
+NB. tdyad       Conj. to make monad to test computational dyad
+NB. assert      Advanced version of the (assert.) control
+NB. cut3        Split list by delimiter taken from its tail
+NB. cut2        Split list by delimiter
+NB. cut         Split list by delimiter
+NB. cutl2       Split list by any delimiter
+NB. cutl        Split list by any delimiter
+NB.
+NB. verifyutil  Verify util verbs
 NB.
 NB. Version: 0.13.0 2021-05-21
 NB.
@@ -249,6 +251,11 @@ NB. end of test suite utilities
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NB. verification suite utilities
+
+reportv=: 1 : '] [ echo@(m , '': assertions probed: '' , ":@{. , '', failed: '' , ":@{:)'
+
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. flt staff
 
 NB. ---------------------------------------------------------
@@ -399,3 +406,330 @@ cutl=: -.&a:@cutl2
 
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NB. =========================================================
+NB. Verification suite
+
+NB. ---------------------------------------------------------
+NB. verifyutil
+NB.
+NB. Description:
+NB.   Nilad to verify util actors, output result to console
+NB.   and return it
+NB.
+NB. Syntax:
+NB.   'probed failed'=. verifyutil ''
+NB. where
+NB.   probed ≥ 0, assertions probed counter
+NB.   failed ≥ 0, assertions failed counter
+
+verifyutil=: 3 : 0
+  delimiters=. LF , ' '
+  string=. 'foo bar  baz' , LF , 'qux' , LF2 , 'quux' , LF , ' corge ' , LF , 'flob'
+
+  NB. verify itself
+  res=.       0 0 1 0 0 -: isnan  _1 _0.0 _. 0.0 1
+  res=. res , 0 0 0 1 0 -: ispos0 _1 _0.0 _. 0.0 1
+  res=. res , 0 1 0 0 0 -: isneg0 _1 _0.0 _. 0.0 1
+
+  NB. max
+  res=. res ,  0 -:  max ''
+  res=. res , __ -:  max _.   _.
+  res=. res ,  _ -:  max _.    _ __
+  res=. res ,  1 -:  max  0    1 _.
+  res=. res ,  1 -:  max  0    1 _. __
+  res=. res , ispos0 max  0.0 _1
+  res=. res , isneg0 max _0.0 _1
+
+  NB. maxc
+  res=. res , '' -:  maxc ''
+  res=. res , __ -:  maxc _.   _.
+  res=. res ,  _ -:  maxc _.    _ __
+  res=. res ,  1 -:  maxc  0    1 _.
+  res=. res ,  1 -:  maxc  0    1 _. __
+  res=. res , ispos0 maxc  0.0 _1
+  res=. res , isneg0 maxc _0.0 _1
+
+  NB. negneg
+
+  res=. res ,        isnan _.   negneg _.
+  res=. res ,        isnan _.   negneg __
+  res=. res ,        isnan _.   negneg _1
+  res=. res ,        isnan _.   negneg _0.0
+  res=. res ,        isnan _.   negneg  0
+  res=. res ,        isnan _.   negneg  1
+  res=. res ,        isnan _.   negneg  _
+  res=. res , 1 1 -: isnan _.   negneg _. _.
+  res=. res , 1 1 -: isnan _.   negneg _.  2
+  res=. res , 1 1 -: isnan _.   negneg __  2
+  res=. res ,        isnan __   negneg _.
+  res=. res ,        isnan _1   negneg _.
+  res=. res ,        isnan _0.0 negneg _.
+  res=. res ,        isnan  0   negneg _.
+  res=. res ,        isnan  1   negneg _.
+  res=. res ,        isnan  _   negneg _.
+  res=. res , 1 1 -: isnan __   negneg _. _.
+  res=. res , 1 1 -: isnan _1   negneg _. _.
+  res=. res , 1 1 -: isnan _0.0 negneg _. _.
+  res=. res , 1 1 -: isnan  0   negneg _. _.
+  res=. res , 1 1 -: isnan  1   negneg _. _.
+  res=. res , 1 1 -: isnan  _   negneg _. _.
+  res=. res , 1 1 -: isnan __   negneg _.  2
+  res=. res , 1 1 -: isnan _1   negneg _.  2
+  res=. res , 1 1 -: isnan _0.0 negneg _.  2
+  res=. res , 1 1 -: isnan  0   negneg _.  2
+  res=. res , 1 1 -: isnan  1   negneg _.  2
+  res=. res , 1 1 -: isnan  _   negneg _.  2
+
+  res=. res , '' -: __   negneg ''
+  res=. res , '' -: _1   negneg ''
+  res=. res , '' -: _0.0 negneg ''
+  res=. res , '' -:  0   negneg ''
+  res=. res , '' -:  1   negneg ''
+  res=. res , '' -:  _   negneg ''
+
+  res=. res ,  _ -: __   negneg __
+  res=. res ,  _ -: _1   negneg __
+  res=. res ,  _ -: _0.0 negneg __
+  res=. res , __ -:  0   negneg __
+  res=. res , __ -:  1   negneg __
+  res=. res , __ -:  _   negneg __
+
+  res=. res ,  1 -: __   negneg _1
+  res=. res ,  1 -: _1   negneg _1
+  res=. res ,  1 -: _0.0 negneg _1
+  res=. res , _1 -:  0   negneg _1
+  res=. res , _1 -:  1   negneg _1
+  res=. res , _1 -:  _   negneg _1
+
+  res=. res , ispos0 __   negneg _0.0
+  res=. res , ispos0 _1   negneg _0.0
+  res=. res , ispos0 _0.0 negneg _0.0
+  res=. res , isneg0  0   negneg _0.0
+  res=. res , isneg0  1   negneg _0.0
+  res=. res , isneg0  _   negneg _0.0
+
+  res=. res , isneg0 __   negneg 0.0
+  res=. res , isneg0 _1   negneg 0.0
+  res=. res , isneg0 _0.0 negneg 0.0
+  res=. res , ispos0  0   negneg 0.0
+  res=. res , ispos0  1   negneg 0.0
+  res=. res , ispos0  _   negneg 0.0
+
+  res=. res , _1 -: __   negneg 1
+  res=. res , _1 -: _1   negneg 1
+  res=. res , _1 -: _0.0 negneg 1
+  res=. res ,  1 -:  0   negneg 1
+  res=. res ,  1 -:  1   negneg 1
+  res=. res ,  1 -:  _   negneg 1
+
+  res=. res , __ -: __   negneg _
+  res=. res , __ -: _1   negneg _
+  res=. res , __ -: _0.0 negneg _
+  res=. res ,  _ -:  0   negneg _
+  res=. res ,  _ -:  1   negneg _
+  res=. res ,  _ -:  _   negneg _
+
+  res=. res , ( _  1 0 0 _1 __&-: *. (0 0 0 1 0 0 -: isneg0) *. 0 0 1 0 0 0 -: ispos0) _1 negneg __ _1 _0.0 0 1 _
+  res=. res , (__ _1 0 0  1  _&-: *. (0 0 1 0 0 0 -: isneg0) *. 0 0 0 1 0 0 -: ispos0)  1 negneg __ _1 _0.0 0 1 _
+
+  NB. negpos
+
+  res=. res ,        isnan _.   negpos _.
+  res=. res ,        isnan _.   negpos __
+  res=. res ,        isnan _.   negpos _1
+  res=. res ,        isnan _.   negpos _0.0
+  res=. res ,        isnan _.   negpos  0
+  res=. res ,        isnan _.   negpos  1
+  res=. res ,        isnan _.   negpos  _
+  res=. res , 1 1 -: isnan _.   negpos _. _.
+  res=. res , 1 1 -: isnan _.   negpos _.  2
+  res=. res , 1 1 -: isnan _.   negpos __  2
+  res=. res ,        isnan __   negpos _.
+  res=. res ,        isnan _1   negpos _.
+  res=. res ,        isnan _0.0 negpos _.
+  res=. res ,        isnan  0   negpos _.
+  res=. res ,        isnan  1   negpos _.
+  res=. res ,        isnan  _   negpos _.
+  res=. res , 1 1 -: isnan __   negpos _. _.
+  res=. res , 1 1 -: isnan _1   negpos _. _.
+  res=. res , 1 1 -: isnan _0.0 negpos _. _.
+  res=. res , 1 1 -: isnan  0   negpos _. _.
+  res=. res , 1 1 -: isnan  1   negpos _. _.
+  res=. res , 1 1 -: isnan  _   negpos _. _.
+  res=. res , 1 1 -: isnan __   negpos _.  2
+  res=. res , 1 1 -: isnan _1   negpos _.  2
+  res=. res , 1 1 -: isnan _0.0 negpos _.  2
+  res=. res , 1 1 -: isnan  0   negpos _.  2
+  res=. res , 1 1 -: isnan  1   negpos _.  2
+  res=. res , 1 1 -: isnan  _   negpos _.  2
+
+  res=. res , '' -: __   negpos ''
+  res=. res , '' -: _1   negpos ''
+  res=. res , '' -: _0.0 negpos ''
+  res=. res , '' -:  0   negpos ''
+  res=. res , '' -:  1   negpos ''
+  res=. res , '' -:  _   negpos ''
+
+  res=. res , __ -: __   negpos __
+  res=. res , __ -: _1   negpos __
+  res=. res , __ -: _0.0 negpos __
+  res=. res ,  _ -:  0   negpos __
+  res=. res ,  _ -:  1   negpos __
+  res=. res ,  _ -:  _   negpos __
+
+  res=. res , _1 -: __   negpos _1
+  res=. res , _1 -: _1   negpos _1
+  res=. res , _1 -: _0.0 negpos _1
+  res=. res ,  1 -:  0   negpos _1
+  res=. res ,  1 -:  1   negpos _1
+  res=. res ,  1 -:  _   negpos _1
+
+  res=. res , isneg0 __   negpos _0.0
+  res=. res , isneg0 _1   negpos _0.0
+  res=. res , isneg0 _0.0 negpos _0.0
+  res=. res , ispos0  0   negpos _0.0
+  res=. res , ispos0  1   negpos _0.0
+  res=. res , ispos0  _   negpos _0.0
+
+  res=. res , ispos0 __   negpos 0.0
+  res=. res , ispos0 _1   negpos 0.0
+  res=. res , ispos0 _0.0 negpos 0.0
+  res=. res , isneg0  0   negpos 0.0
+  res=. res , isneg0  1   negpos 0.0
+  res=. res , isneg0  _   negpos 0.0
+
+  res=. res ,  1 -: __   negpos 1
+  res=. res ,  1 -: _1   negpos 1
+  res=. res ,  1 -: _0.0 negpos 1
+  res=. res , _1 -:  0   negpos 1
+  res=. res , _1 -:  1   negpos 1
+  res=. res , _1 -:  _   negpos 1
+
+  res=. res ,  _ -: __   negpos _
+  res=. res ,  _ -: _1   negpos _
+  res=. res ,  _ -: _0.0 negpos _
+  res=. res , __ -:  0   negpos _
+  res=. res , __ -:  1   negpos _
+  res=. res , __ -:  _   negpos _
+
+  res=. res , (__ _1 0 0  1  _&-: *. (0 0 1 0 0 0 -: isneg0) *. 0 0 0 1 0 0 -: ispos0) _1 negpos __ _1 _0.0 0 1 _
+  res=. res , ( _  1 0 0 _1 __&-: *. (0 0 0 1 0 0 -: isneg0) *. 0 0 1 0 0 0 -: ispos0)  1 negpos __ _1 _0.0 0 1 _
+
+  NB. copysign
+
+  res=. res ,        isnan _.   copysign _.
+  res=. res ,        isnan _.   copysign __
+  res=. res ,        isnan _.   copysign _1
+  res=. res ,        isnan _.   copysign _0.0
+  res=. res ,        isnan _.   copysign  0
+  res=. res ,        isnan _.   copysign  1
+  res=. res ,        isnan _.   copysign  _
+  res=. res , 1 1 -: isnan _.   copysign _. _.
+  res=. res , 1 1 -: isnan _.   copysign _.  2
+  res=. res , 1 1 -: isnan _.   copysign __  2
+  res=. res ,        isnan __   copysign _.
+  res=. res ,        isnan _1   copysign _.
+  res=. res ,        isnan _0.0 copysign _.
+  res=. res ,        isnan  0   copysign _.
+  res=. res ,        isnan  1   copysign _.
+  res=. res ,        isnan  _   copysign _.
+  res=. res , 1 1 -: isnan __   copysign _. _.
+  res=. res , 1 1 -: isnan _1   copysign _. _.
+  res=. res , 1 1 -: isnan _0.0 copysign _. _.
+  res=. res , 1 1 -: isnan  0   copysign _. _.
+  res=. res , 1 1 -: isnan  1   copysign _. _.
+  res=. res , 1 1 -: isnan  _   copysign _. _.
+  res=. res , 1 1 -: isnan __   copysign _.  2
+  res=. res , 1 1 -: isnan _1   copysign _.  2
+  res=. res , 1 1 -: isnan _0.0 copysign _.  2
+  res=. res , 1 1 -: isnan  0   copysign _.  2
+  res=. res , 1 1 -: isnan  1   copysign _.  2
+  res=. res , 1 1 -: isnan  _   copysign _.  2
+
+  res=. res , '' -: __   copysign ''
+  res=. res , '' -: _1   copysign ''
+  res=. res , '' -: _0.0 copysign ''
+  res=. res , '' -:  0   copysign ''
+  res=. res , '' -:  1   copysign ''
+  res=. res , '' -:  _   copysign ''
+
+  res=. res , __ -: __   copysign __
+  res=. res , __ -: _1   copysign __
+  res=. res , __ -: _0.0 copysign __
+  res=. res ,  _ -:  0   copysign __
+  res=. res ,  _ -:  1   copysign __
+  res=. res ,  _ -:  _   copysign __
+
+  res=. res , _1 -: __   copysign _1
+  res=. res , _1 -: _1   copysign _1
+  res=. res , _1 -: _0.0 copysign _1
+  res=. res ,  1 -:  0   copysign _1
+  res=. res ,  1 -:  1   copysign _1
+  res=. res ,  1 -:  _   copysign _1
+
+  res=. res , isneg0 __   copysign _0.0
+  res=. res , isneg0 _1   copysign _0.0
+  res=. res , isneg0 _0.0 copysign _0.0
+  res=. res , ispos0  0   copysign _0.0
+  res=. res , ispos0  1   copysign _0.0
+  res=. res , ispos0  _   copysign _0.0
+
+  res=. res , isneg0 __   copysign  0.0
+  res=. res , isneg0 _1   copysign  0.0
+  res=. res , isneg0 _0.0 copysign  0.0
+  res=. res , ispos0  0   copysign  0.0
+  res=. res , ispos0  1   copysign  0.0
+  res=. res , ispos0  _   copysign  0.0
+
+  res=. res , _1 -: __   copysign  1
+  res=. res , _1 -: _1   copysign  1
+  res=. res , _1 -: _0.0 copysign  1
+  res=. res ,  1 -:  0   copysign  1
+  res=. res ,  1 -:  1   copysign  1
+  res=. res ,  1 -:  _   copysign  1
+
+  res=. res , __ -: __   copysign  _
+  res=. res , __ -: _1   copysign  _
+  res=. res , __ -: _0.0 copysign  _
+  res=. res ,  _ -:  0   copysign  _
+  res=. res ,  _ -:  1   copysign  _
+  res=. res ,  _ -:  _   copysign  _
+
+  res=. res , (__ _1 0 0 _1 __&-: *. (0 0 1 1 0 0 -: isneg0) *. 0 0 0 0 0 0 -: ispos0) _1 copysign __ _1 _0.0 0 1 _
+  res=. res , ( _  1 0 0  1  _&-: *. (0 0 0 0 0 0 -: isneg0) *. 0 0 1 1 0 0 -: ispos0)  1 copysign __ _1 _0.0 0 1 _
+
+  NB. sorim
+  res=. res , '' -: sorim ''
+  res=. res , 0 2 3 -: sorim 0 2 _3
+  res=. res , (_. _ _ 0 2 2 7 7 7 7&-: *. 1 0 0 0 0 0 0 0 0 0 -: isnan) sorim _. __ _ 0 _2 2 _3j_4 _3j4 3j_4 3j4
+
+  NB. soris
+  res=. res , '' -: soris ''
+  res=. res , 0 4 9 -: soris 0 2 _3
+  res=. res , (_. _ _ 0 4 4 25 25 25 25&-: *. 1 0 0 0 0 0 0 0 0 0 -: isnan) soris _. __ _ 0 _2 2 _3j_4 _3j4 3j_4 3j4
+
+  NB. cut3
+  res=. res , '' -: cut3 ''
+  res=. res , ('foo ' ; 'ar  ' ; 'az' , LF , 'qux' , LF2 , 'quux' , LF , ' corge ' , LF , 'flo') -: cut3 string
+
+  NB. cut2
+  res=. res , (, a:) -: cut2 ''
+  res=. res , ('foo' ; 'bar' ; '' ; ('baz' , LF , 'qux' , LF2 , 'quux' , LF) ; 'corge' ; LF , 'flob') -: cut2 string
+  res=. res , ('foo bar  baz' ; 'qux' ; '' ; 'quux' ; ' corge ' ; 'flob') -: LF cut2 string
+
+  NB. cut
+  res=. res , '' -: cut ''
+  res=. res , ('foo' ; 'bar' ; ('baz' , LF , 'qux' , LF2 , 'quux' , LF) ; 'corge' ; LF , 'flob') -: cut string
+  res=. res , ('foo bar  baz' ; 'qux' ; 'quux' ; ' corge ' ; 'flob') -: LF cut string
+
+  NB. cutl2
+  res=. res , (, a:) -: delimiters cutl2 ''
+  res=. res , ('foo' ; 'bar' ; '' ; 'baz' ; 'qux' ; '' ; 'quux' ; '' ; 'corge' ; '' ; 'flob') -: delimiters cutl2 string
+
+  NB. cutl
+  res=. res , '' -: delimiters cutl ''
+  res=. res , ('foo' ; 'bar' ; 'baz' ; 'qux' ; 'quux' ; 'corge' ; 'flob') -: delimiters cutl string
+
+  'util' reportv (# ([ , -) +/) res
+)

@@ -653,88 +653,82 @@ NB. =========================================================
 NB. Verification suite
 
 NB. test files directory
-TEST_DIR=: '~addons/math/mt/test/mm/'
+MM_VFY_DATA_DIR=: '~addons/math/mt/test/mm/'
 
 NB. ---------------------------------------------------------
-NB. test0dir
-NB. test0inv
-NB. test1dir
-NB. test1inv
+NB. verifymm0dir
+NB. verifymm0inv
+NB. verifymm1dir
+NB. verifymm1inv
 NB.
 NB. Description:
-NB.   Predicate to test for direct (mm) or inverse (mm^:_1)
+NB.   Predicate to verify for direct (mm) or inverse (mm^:_1)
 NB.   conversion which must fail (0) or succeed (1)
 NB.
 NB. Syntax:
-NB.   isFailed=.  test0dir (fname , 'ijs')
-NB.   isFailed=.  test0inv (fname , 'mm' )
-NB.   isSucceed=. test1dir  fname
-NB.   isSucceed=. test1inv  fname
+NB.   isFailed=.  verifymm0dir (fname , 'ijs')
+NB.   isFailed=.  verifymm0inv (fname , 'mm' )
+NB.   isSucceed=. verifymm1dir  fname
+NB.   isSucceed=. verifymm1inv  fname
 NB. where
-NB.   fname - string, a test file's full name with path and
+NB.   fname - string, a verify file's full name with path and
 NB.           without extension
 
-NB. test0dir=: (1 [ mm    ) :: 0@fread2
-NB. test0inv=: (1 [ mm^:_1) :: 0@fread2
-test0dir=: ((((1: echo) 'test0dir_mtmm_ failed with '&,))~ mm    ) :: 0 fread2
-test0inv=: ((((1: echo) 'test0inv_mtmm_ failed with '&,))~ mm^:_1) :: 0 fread2
+NB. verifymm0dir=: (1 [ mm    ) :: 0@fread2
+NB. verifymm0inv=: (1 [ mm^:_1) :: 0@fread2
+verifymm0dir=: ((((1: echo) 'verifymm0dir_mtmm_ failed with '&,))~ mm    ) :: 0 fread2
+verifymm0inv=: ((((1: echo) 'verifymm0inv_mtmm_ failed with '&,))~ mm^:_1) :: 0 fread2
 
-NB. test1dir=: ,&'mm' ((-: mm    ) :: 0  ".)&fread2 ,&'ijs'
-NB. test1inv=: ,&'mm' ((-: mm^:_1) :: 0~ ".)&fread2 ,&'ijs'
-test1dir=: ,&'.mm' ([:`1:@.(-: mm    )  ".)&fread2 ::  ((0: echo) 'test1dir_mtmm_ failed with '&,)   ,&'.ijs'
-test1inv=: ,&'.mm' ([:`1:@.(-: mm^:_1)~ ".)&fread2 :: (((0: echo) 'test1inv_mtmm_ failed with '&,)~) ,&'.ijs'
+NB. verifymm1dir=: ,&'mm' ((-: mm    ) :: 0  ".)&fread2 ,&'ijs'
+NB. verifymm1inv=: ,&'mm' ((-: mm^:_1) :: 0~ ".)&fread2 ,&'ijs'
+verifymm1dir=: ,&'.mm' ([:`1:@.(-: mm    )  ".)&fread2 ::  ((0: echo) 'verifymm1dir_mtmm_ failed with '&,)   ,&'.ijs'
+verifymm1inv=: ,&'.mm' ([:`1:@.(-: mm^:_1)~ ".)&fread2 :: (((0: echo) 'verifymm1inv_mtmm_ failed with '&,)~) ,&'.ijs'
 
 NB. ---------------------------------------------------------
-NB. testround0
-NB. testround1
+NB. verifymmround0
+NB. verifymmround1
 NB.
 NB. Description:
-NB.   Adv. to count failures for tests
+NB.   Adv. to count assertions failures
 NB.
 NB. Syntax:
-NB.   u0test=. u0 testround0
-NB.   u1test=. u1 testround1
+NB.   'probed failed'=. (u0 verifymmround0) ((fname0 , fexti) ; (fname1 fexti) ; ...)
+NB.   'probed failed'=. (u1 verifymmround1) ( fname0          ;  fname1        ; ...)
 NB. where
-NB.   u0     - predicate monad to test which would fail,
+NB.   u0     - predicate monad to verify which would fail,
 NB.            is called as:
 NB.              isFailed=. u0 (fnamei , fexti)
-NB.   u1     - predicate monad to test which would succeed,
+NB.   u1     - predicate monad to verify which would succeed,
 NB.            is called as:
 NB.              isSucceed=. u1 fnamei
-NB.   u0test - verb to test files which would fail, is
-NB.            called as:
-NB.              'probed failed'=. u0test ((fname0 , fexti) ; (fname1 fexti) ; ...)
-NB.   u1test - verb to test files which would succeed, is
-NB.            called as:
-NB.              'probed failed'=. u1test (fname0 ; fname1 ; ...)
-NB.   fnamei - string, a test file's full name with path and
-NB.            without extension
+NB.   fnamei - string, an assertion file's full name with
+NB.            path and without extension
 NB.   fexti  - string, either 'mm' or 'ijs'
 NB.   probed ≥ 0, assertions probed counter
 NB.   failed ≥ 0, assertions failed counter
 
-testround0=: 1 : '(#    ,    +/)@(u S: 0)'
-testround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ i:&''.'') L: 0)'
+verifymmround0=: 1 : '(#    ,    +/)@(u S: 0)'
+verifymmround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ i:&''.'') L: 0)'
 
 NB. ---------------------------------------------------------
-NB. testdir
-NB. testinv
+NB. verifymmdir
+NB. verifymminv
 NB.
 NB. Description:
-NB.   Nilad to test for direct (mm) or inverse (mm^:_1) and
+NB.   Nilad to verify for direct (mm) or inverse (mm^:_1) and
 NB.   return a result
 NB.
 NB. Syntax:
-NB.   'probedDir failedDir'=. testdir ''
-NB.   'probedInv failedInv'=. testinv ''
+NB.   'probedDir failedDir'=. verifymmdir ''
+NB.   'probedInv failedInv'=. verifymminv ''
 NB. where
 NB.   probedDir ≥ 0, assertions probed counter for (mm    )
 NB.   failedDir ≥ 0, assertions failed counter for (mm    )
 NB.   probedInv ≥ 0, assertions probed counter for (mm^:_1)
 NB.   failedInv ≥ 0, assertions failed counter for (mm^:_1)
 
-testdir=: (+/)@((test0dir testround0)`(test1dir testround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (TEST_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
-testinv=: (+/)@((test0inv testround0)`(test1inv testround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (TEST_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
+verifymmdir=: (+/)@((verifymm0dir verifymmround0)`(verifymm1dir verifymmround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (MM_VFY_DATA_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
+verifymminv=: (+/)@((verifymm0inv verifymmround0)`(verifymm1inv verifymmround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (MM_VFY_DATA_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
 
 NB. ---------------------------------------------------------
 NB. verifymm_mt_
@@ -749,4 +743,4 @@ NB. where
 NB.   probed ≥ 0, assertions probed counter
 NB.   failed ≥ 0, assertions failed counter
 
-verifymm_mt_=: (] [ echo@('module: mm, tests probed: ' , ":@{. , ', failed: ' , ":@{:))@(+/)@:(testdir_mtmm_`testinv_mtmm_`:0)
+verifymm_mt_=: ('mm' reportv)@(verifymmdir_mtmm_ + verifymminv_mtmm_)

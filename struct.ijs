@@ -311,12 +311,12 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-c=: {:!.1@$      NB. Columns in noun
+c=: {:!.1@$         NB. Columns in noun
 
-trace=: +/@diag  NB. Matrix trace
+trace=: +/!.0@diag  NB. Matrix trace
 
-ct=: +@:|:       NB. Conjugate transpose
-cp=: ct&.|.      NB. Conjugate pertranspose
+ct=: +@:|:          NB. Conjugate transpose
+cp=: ct&.|.         NB. Conjugate pertranspose
 
 NB. Do/undo full (symmetric) permutation
 NB. Syntax:

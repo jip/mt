@@ -70,8 +70,8 @@ negneg=:   ($@] $    (isneg0 +. 0&>)@{.`((,:  -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<
 negpos=:   ($@] $    (isneg0 +: 0&>)@{.`((,:  -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x≥0 then - y  else  y  endif
 copysign=: ($@] $ =/&(isneg0 +. 0&>)   `((,:~ -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x<0 then -|y| else |y| endif
 
-sorim=: | `(+/"1@:| @:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
-soris=: *:`(+/"1@:*:@:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
+sorim=: | `(+/!.0"1@:| @:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
+soris=: *:`(+/!.0"1@:*:@:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. test suite utilities

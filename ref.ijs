@@ -239,29 +239,29 @@ larfg=: 4 : 0
 larfp=: 4 : 0
   'ioa iot'=. x
   alpha=. ioa { y
-  xnorm=. norms 0 x} y                                NB. ||x||
+  xnorm=. norms 0 x} y                                    NB. ||x||
   if. 0 = xnorm do.
-    y=. ((| , 1 - *) alpha) x} y                      NB. replace α by |β| and τ by (1-α/|α|)
+    y=. ((| , 1 - *) alpha) x} y                          NB. replace α by |β| and τ by (1-α/|α|)
   else.
-    beta=. (9 o. alpha) negpos norms alpha , xnorm    NB. β := -copysign(||y||,Re(α))
+    beta=. (9 o. alpha) negpos norms alpha , xnorm        NB. β := -copysign(||y||,Re(α))
     y=. (| beta) iot} y
     if. FP_SFMIN > | beta do.
-      y=. y % FP_SFMIN                                NB. scale (α,x[1],...,x[n-1],|β|)
+      y=. y % FP_SFMIN                                    NB. scale (α,x[1],...,x[n-1],|β|)
       xnorm=. xnorm % FP_SFMIN
     end.
     if. 0 <: beta do.
-      dzeta=. -/ x { y                                NB. ζ := α_scaled-|β_scaled|
-      tau=. - dzeta % iot { y                         NB. τ := -ζ/|β_scaled|
+      dzeta=. -/ x { y                                    NB. ζ := α_scaled-|β_scaled|
+      tau=. - dzeta % iot { y                             NB. τ := -ζ/|β_scaled|
     else.
-      beta=. - beta                                   NB. |β_unscaled|
-      'realpha imalpha'=. +. ioa { y                  NB. Re(α_scaled) , Im(α_scaled)
-      gamma=. realpha + iot { y                       NB. γ := Re(α_scaled)+|β_scaled|
-      delta=. (imalpha , xnorm) -@(+/)@([ * %) gamma  NB. δ := -(Im(α_scaled)*(Im(α_scaled)/γ)+||x||*(||x||/γ))
-      dzeta=. delta j. imalpha                        NB. ζ := δ+i*Im(α_scaled)
-      tau=. - dzeta % iot { y                         NB. τ := -ζ/|β_scaled|
+      beta=. - beta                                       NB. |β_unscaled|
+      'realpha imalpha'=. +. ioa { y                      NB. Re(α_scaled) , Im(α_scaled)
+      gamma=. realpha + iot { y                           NB. γ := Re(α_scaled)+|β_scaled|
+      delta=. - (imalpha , xnorm) ([ +/@:*"1!.0 %) gamma  NB. δ := -(Im(α_scaled)*(Im(α_scaled)/γ)+||x||*(||x||/γ))
+      dzeta=. delta j. imalpha                            NB. ζ := δ+i*Im(α_scaled)
+      tau=. - dzeta % iot { y                             NB. τ := -ζ/|β_scaled|
     end.
     y=. y % dzeta
-    y=. (beta , tau) x} y                             NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
+    y=. (beta , tau) x} y                                 NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
   end.
 )
 

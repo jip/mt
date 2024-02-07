@@ -1725,7 +1725,7 @@ NB.   - alpha,A,x,incx,y,incy are not generated but are
 NB.     coming from outside as arguments
 NB. - berr is considered good if lower than 16
 
-chk1mv=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 3 6) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 e. $@(1 {:: [))'
+chk1mv=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ (sorim_mt_&.>&.((<<< 3 6)&{)@[      )            )`0:@.(0 e. $@(1 {:: [))'
 
 NB. ---------------------------------------------------------
 NB. chk1mm
@@ -1932,7 +1932,7 @@ NB.   - A,x,incx are not generated but are coming from
 NB.     outside as arguments
 NB. - berr is considered good if lower than 16
 
-chk3mv=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 2  ) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@(0 {:: [))'
+chk3mv=:  1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ (sorim_mt_&.>&.((<<< 2  )&{)@[      )            )`0:@.(0 =  #@(0 {:: [))'
 
 NB. ---------------------------------------------------------
 NB. chk3mm
@@ -2034,7 +2034,7 @@ NB. - berr is considered good if lower than 16
 NB. - since (filler != 0) then 0s replaced by 1 in g are from
 NB.   bapprox only, so (b - bapprox) won't get huge value
 
-chk3sv=:  1 : '((FP_EPS %~ ((1 {:: [)         sorim_mt_@:- u@(1  }~ <  )) ) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 2  ) sorim_mt_&.> upd_mt_ (1}~ <))            )`0:@.(0 =  #@(0 {:: [))'
+chk3sv=:  1 : '((FP_EPS %~ ((1 {:: [)         sorim_mt_@:- u@(1  }~ <  )) ) normmt_mt_  @:% (=&0)`(,:&1)}@u@ (sorim_mt_&.>&.((<<< 2  )&{)@(1}~ <))            )`0:@.(0 =  #@(0 {:: [))'
 
 NB. ---------------------------------------------------------
 NB. chk3sm
@@ -2131,7 +2131,7 @@ NB.   - alpha,x,incx,y,incy,A are not generated but are
 NB.     coming from outside as arguments
 NB. - berr is considered good if lower than 16
 
-chk4r=:   1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ ((<<< 2 4) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 e. $@]        )'
+chk4r=:   1 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_  @:% (=&0)`(,:&1)}@u@ (sorim_mt_&.>&.((<<< 2 4)&{)@[      )            )`0:@.(0 e. $@]        )'
 
 NB. ---------------------------------------------------------
 NB. chk4rk
@@ -2247,7 +2247,7 @@ NB.   - alpha,x,incx,A are not generated but are coming from
 NB.     outside as arguments
 NB. - berr is considered good if lower than 16
 
-chk5r=:   2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ ((<<< 2  ) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@]        )'
+chk5r=:   2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ (sorim_mt_&.>&.((<<< 2  )&{)@[      )            )`0:@.(0 =  #@]        )'
 
 NB. ---------------------------------------------------------
 NB. chk5r2k
@@ -2366,4 +2366,4 @@ NB.   - alpha,x,incx,y,incy,A are not generated but are
 NB.     coming from outside as arguments
 NB. - berr is considered good if lower than 16
 
-chk6r2=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ ((<<< 2 4) sorim_mt_&.> upd_mt_ [      )            )`0:@.(0 =  #@]        )'
+chk6r2=:  2 : '((FP_EPS %~ (                  sorim_mt_@:- u            )~) normmt_mt_@v@:% (=&0)`(,:&1)}@u@ (sorim_mt_&.>&.((<<< 2 4)&{)@[      )            )`0:@.(0 =  #@]        )'

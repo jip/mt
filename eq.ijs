@@ -225,10 +225,10 @@ hgezq=: 1 : 0
                 while. jch < ilast do.
                   'y cs'=. rot rotga y ; (< 0 ; liso ; (jch + 0 1)) ; 0
                   liso=. }. liso
-                  y=. (< 1 ; liso ; (jch + 0 1)) cs&rot upd y
+                  y=. cs&rot&.((< 1 ; liso ; (jch + 0 1))&{) y
                   dZ1=. dZ1 , (+ cs) , jch + 0 1
                   if. ilazr2 do.
-                    y=. (< 0 , jch - 1 0) *&({. cs) upd y
+                    y=. *&({. cs)&.((< 0 , jch - 1 0)&{) y
                     ilazr2=. 0
                   end.
                   if. btol <: sorim (< 1 , jch + 1 1) { y do.
@@ -250,10 +250,10 @@ hgezq=: 1 : 0
                 lisoc=. (2 + j) liso4th ifrstm
                 while. jch < ilast do.
                   'y cs'=. rot rotga y ; (< 1 ; (2 }. lisor) ; (jch + 0 1)) ; 0
-                  y=. (< 0 ; lisor ; (jch + 0 1)) cs&rot upd y
+                  y=. cs&rot&.((< 0 ; lisor ; (jch + 0 1))&{) y
                   dZ1=. dZ1 , (+ cs) , jch + 0 1
                   'y cs'=. rot&.|: rotga y ; (< 0 ; (jch - 0 1) ; lisoc) ; < < a: ; _1
-                  y=. (< 1 ; (jch - 0 1) ; (_2 }. lisoc)) cs&(rot&.|:) upd y
+                  y=. cs&(rot&.|:)&.((< 1 ; (jch - 0 1) ; (_2 }. lisoc))&{) y
                   dQ1=. dQ1 , cs , jch - 0 1
                   lisor=. }. lisor
                   lisoc=. lisoc , 2 + jch
@@ -279,7 +279,7 @@ hgezq=: 1 : 0
         NB. split off a 1x1 block
         liso=. (>: ilast) liso4th ifrstm
         'y cs'=. rot&.|: rotga y ; (< 0 ; (ilast - 0 1) ; liso) ; < < a: ; _1
-        y=. (< 1 ; (ilast - 0 1) ; (}: liso)) cs&(rot&.|:) upd y
+        y=. cs&(rot&.|:)&.((< 1 ; (ilast - 0 1) ; (}: liso))&{) y
         dQ1=. dQ1 , cs , ilast - 0 1
       else.
         y=. 0 (< 0 , ilast - 1 0)} y
@@ -351,11 +351,11 @@ hgezq=: 1 : 0
         liso=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          y=. (< a: ; lisor ; liso) cs&rot"2 upd y
+          y=. cs&rot"2&.((< a: ; lisor ; liso)&{) y
         else.
           'y cs'=. rot rotga y ; (< 0 ; lisor ; liso) ; 0
           lisor=. }. lisor
-          y=. (< 1 ; lisor ; liso) cs&rot upd y
+          y=. cs&rot&.((< 1 ; lisor ; liso)&{) y
         end.
         dZ1=. dZ1 , (+ cs) , liso
         liso=. j + 1 0
@@ -364,7 +364,7 @@ hgezq=: 1 : 0
         if. j < <: ilast do.
           lisoc=. lisoc , j + 2
         end.
-        y=. (< 0 ; liso ; lisoc) cs&(rot&.|:) upd y
+        y=. cs&(rot&.|:)&.((< 0 ; liso ; lisoc)&{) y
         dQ1=. dQ1 , cs , liso
         j=. >: j
       end.
@@ -449,10 +449,10 @@ hgeqz=: 1 : 0
                 while. jch < ilast do.
                   'y cs'=. rot&.|: rotga y ; (< 0 ; (jch + 0 1) ; liso) ; < < a: ; 0
                   liso=. }. liso
-                  y=. (< 1 ; (jch + 0 1) ; liso) cs&(rot&.|:) upd y
+                  y=. cs&(rot&.|:)&.((< 1 ; (jch + 0 1) ; liso)&{) y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
                   if. ilazr2 do.
-                    y=. (< 0 , jch - 0 1) *&({. cs) upd y
+                    y=. *&({. cs)&.((< 0 , jch - 0 1)&{) y
                     ilazr2=. 0
                   end.
                   if. btol <: sorim (< 1 , jch + 1 1) { y do.
@@ -474,10 +474,10 @@ hgeqz=: 1 : 0
                 lisor=. (2 + j) liso4th ifrstm
                 while. jch < ilast do.
                   'y cs'=. rot&.|: rotga y ; (< 1 ; (jch + 0 1) ; (2 }. lisoc)) ; < < a: ; 0
-                  y=. (< 0 ; (jch + 0 1) ; lisoc) cs&(rot&.|:) upd y
+                  y=. cs&(rot&.|:)&.((< 0 ; (jch + 0 1) ; lisoc)&{) y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
                   'y cs'=. rot rotga y ; (< 0 ; lisor ; (jch - 0 1)) ; _1
-                  y=. (< 1 ; (_2 }. lisor) ; (jch - 0 1)) cs&rot upd y
+                  y=. cs&rot&.((< 1 ; (_2 }. lisor) ; (jch - 0 1))&{) y
                   dZ1=. dZ1 , cs , jch - 0 1
                   lisoc=. }. lisoc
                   lisor=. lisor , 2 + jch
@@ -503,7 +503,7 @@ hgeqz=: 1 : 0
         NB. split off a 1x1 block
         liso=. (>: ilast) liso4th ifrstm
         'y cs'=. rot rotga y ; (< 0 ; liso ; (ilast - 0 1)) ; _1
-        y=. (< 1 ; (}: liso) ; (ilast - 0 1)) cs&rot upd y
+        y=. cs&rot&.((< 1 ; (}: liso) ; (ilast - 0 1))&{) y
         dZ1=. dZ1 , cs , ilast - 0 1
       else.
         y=. 0 (< 0 , ilast - 0 1)} y
@@ -575,11 +575,11 @@ hgeqz=: 1 : 0
         liso=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          y=. (< a: ; liso ; lisoc) cs&(rot&.|:)"2 upd y
+          y=. cs&(rot&.|:)"2&.((< a: ; liso ; lisoc)&{) y
         else.
           'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc) ; < < a: ; 0
           lisoc=. }. lisoc
-          y=. (< 1 ; liso ; lisoc) cs&(rot&.|:) upd y
+          y=. cs&(rot&.|:)&.((< 1 ; liso ; lisoc)&{) y
         end.
         dQ1=. dQ1 , (+ cs) , liso
         liso=. j + 1 0
@@ -588,7 +588,7 @@ hgeqz=: 1 : 0
         if. j < <: ilast do.
           lisor=. lisor , j + 2
         end.
-        y=. (< 0 ; lisor ; liso) cs&rot upd y
+        y=. cs&rot&.((< 0 ; lisor ; liso)&{) y
         dZ1=. dZ1 , cs , liso
         j=. >: j
       end.

@@ -131,7 +131,7 @@ tgevcly=: 4 : 0
         if. *.`<:/ (j { cond2) , abs1wj do.
           work=. work % abs1wj
         end.
-        work=. j -@(%&(j{di)) upd work
+        work=. -@(%&(j{di))&.(j&{) work
         abs1wj=. sorim j { work
         if. j > 0 do.
           NB. w = w + y[j] * (a*S[:,j] - b*P[:,j]) with scaling
@@ -139,7 +139,7 @@ tgevcly=: 4 : 0
             work=. work % abs1wj
           end.
           workadd=. (((je { iso) { abcoeff) * j { work) * (((0 , ] , 0:) ,: 2 1 , ]) j) {.@(1 0 2&|:);.0 y
-          work=. (i. j) +`-/@(,&workadd) upd work
+          work=. +`-/@(,&workadd)&.((i. j)&{) work
         end.
         j=. <: j
       end.

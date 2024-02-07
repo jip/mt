@@ -98,9 +98,9 @@ NB. - gtsv implements LAPACK's xGTSV
 gtsv=: 4 : 0
   v=. ,`,:@.(1 < # $ y)
   'n n1 n2 n3'=. (# x) - 1 2 3 4
-  'k k1'=. 0 1
+  k=. {. kk1=. 0 1  NB. (k,k1)
   while. k < n1 do.
-    'dk duk dlk dk1 duk1 dlk1'=. , (k , k1) { x
+    'dk duk dlk dk1 duk1 dlk1'=. , kk1 { x
     if. 0 = dlk do.
       NB. subdiagonal is 0, no elimination is required
       if. 0 = dk do.
@@ -111,7 +111,7 @@ gtsv=: 4 : 0
       NB. no rows swapping required
       mul=. dlk % dk
       dk1=. dk1 - mul * duk
-      y=. k1 -&(mul * k { y) upd y
+      y=. (- mul&*)~/\&.(kk1&{) y
       if. k < n2 do.
         dlk=. 0
       end.
@@ -123,10 +123,10 @@ gtsv=: 4 : 0
       if. k < n2 do.
         'dlk duk1'=. duk1 ([ , *) - mul
       end.
-      y=. (k , k1) (] v (- mul&*))/ upd y
+      y=. (] v (- mul&*))/&.(kk1&{) y
     end.
-    x=. ((dk , duk , dlk) ,: dk1 , duk1 , dlk1) (k , k1)} x
-    'k k1'=. (, >:) k1
+    x=. ((dk , duk , dlk) ,: dk1 , duk1 , dlk1) kk1} x
+    k=. {. kk1=. >: kk1
   end.
   if. 0 = dk1 do.
     ($ y) $ _. return.

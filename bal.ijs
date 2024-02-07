@@ -467,8 +467,8 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
           if. di >: GEBALSFMAX1 % f do. continue. end.
         end.
         d=. (di * f) i} d
-        S=.         i  %&f upd S
-        S=. (< a: ; i) *&f upd S
+        S=. %&f&.(        i &{) S
+        S=. *&f&.((< a: ; i)&{) S
         noconv=. 1
       end.
     end.

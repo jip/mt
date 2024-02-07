@@ -239,15 +239,15 @@ NB.   them simultaneously
 
 rotscll=: 4 : 0
   i=. 0
-  while. i < # y do.               NB. traverse dA rows down
+  while. i < # y do.                NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y
     if. 0 0 -: iofg do.
       if. -. 0 0 -: cs do.
         'm io'=. cs
-        x=. io m&* upd x           NB. do scale
+        x=. m&*&.(io&{) x           NB. do scale
       end.
     else.
-      x=. iofg cs&(rot&.|:) upd x  NB. do rotation
+      x=. cs&(rot&.|:)&.(iofg&{) x  NB. do rotation
     end.
     i=. >: i
   end.
@@ -256,15 +256,15 @@ rotscll=: 4 : 0
 
 rotsclu=: 4 : 0
   i=. 0
-  while. i < # y do.                  NB. traverse dA rows down
+  while. i < # y do.                   NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y
     if. 0 0 -: iofg do.
       if. -. 0 0 -: cs do.
         'm io'=. cs
-        x=. (< a: ; io) m&* upd x     NB. do scale
+        x=. m&*&.((< a: ; io)&{) x     NB. do scale
       end.
     else.
-      x=. (< a: ; iofg) cs&rot upd x  NB. do rotation
+      x=. cs&rot&.((< a: ; iofg)&{) x  NB. do rotation
     end.
     i=. >: i
   end.

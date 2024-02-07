@@ -59,9 +59,9 @@ basiccmp=: -:/@($L:0)@(1 2&{)
 
 NB. modify
 NB. - conjugate under ISO specified
-basiccj0=: 1      &(+&.> upd)
-basiccj1=: 0 1 3  &(+&.> upd)
-basiccj2=: 0 2 4 5&(+&.> upd)
+basiccj0=: +&.>&.(1      &{)
+basiccj1=: +&.>&.(0 1 3  &{)
+basiccj2=: +&.>&.(0 2 4 5&{)
 NB. - swap elements
 basicswp=: (< 1 2)&C.
 

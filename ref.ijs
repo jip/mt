@@ -280,15 +280,15 @@ NB. Description:
 NB.   Monads to generate an elementary reflector, see larfg,
 NB.   larfp for details.
 
-larfgf=: 0 _1&larfg
-larfgfc=: _1 +upd larfgf
-larfgb=: _1 0&larfg
-larfgbc=: 0 +upd larfgb
+larfgf=:  0 _1&larfg
+larfgb=: _1  0&larfg
+larfpf=:  0 _1&larfp
+larfpb=: _1  0&larfp
 
-larfpf=: 0 _1&larfp
-larfpfc=: _1 +upd larfpf
-larfpb=: _1 0&larfp
-larfpbc=: 0 +upd larfpb
+larfgfc=: +&.(_1&{)@larfgf
+larfgbc=: +&.( 0&{)@larfgb
+larfpfc=: +&.(_1&{)@larfpf
+larfpbc=: +&.( 0&{)@larfpb
 
 NB. ---------------------------------------------------------
 NB. larftbc

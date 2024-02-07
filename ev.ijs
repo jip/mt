@@ -175,7 +175,8 @@ NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevlnn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (<0 1;;~liso4dhs hs) ([ ((gghrdlnn~0,c) upd) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/ upd) y
+  iso=. < 0 1 ; ;~ liso4dhs hs
+  y=. (gghrdlnn~ 0 , c)&.(iso&{) ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/&.(iso&{) y
   e1e2=. hs hgezqenn y
   e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
@@ -200,7 +201,8 @@ ggevlnv=: 3 : 0
 
 ggevlvn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (<0 1;(<i.{.hs);liso4dhs hs) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/ upd y
+  iso=. < 0 1 ; (< i. {. hs) ; liso4dhs hs
+  y=. ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/&.(iso&{) y
   y=. (((0,]) gghrdlvn (,idmat)) c) y
   y=. hs hgezqsvn y
   e1e2=. 2 {. diag"2 y
@@ -330,7 +332,8 @@ NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevunn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (<0 1;;~liso4dhs hs) ([ ((gghrdunn~0,c) upd) ((unmqrlc~,:tru@}:@])geqrf)/ upd) y
+  iso=. < 0 1 ; ;~ liso4dhs hs
+  y=. (gghrdunn~ 0 , c)&.(iso&{) ((unmqrlc~ ,: tru@}:@]) geqrf)/&.(iso&{) y
   e1e2=. hs hgeqzenn y
   e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
@@ -355,7 +358,8 @@ ggevuvn=: 3 : 0
 
 ggevunv=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (<0 1;(liso4dhs hs);<<i.{.hs) ((unmqrlc~,:tru@}:@])geqrf)/ upd y
+  iso=. < 0 1 ; (liso4dhs hs) ; < < i. {. hs
+  y=. ((unmqrlc~ ,: tru@}:@]) geqrf)/&.(iso&{) y
   y=. (((0,]) gghrdunv (,idmat)) c) y
   y=. hs hgeqzsnv y
   e1e2=. 2 {. diag"2 y

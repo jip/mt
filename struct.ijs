@@ -12,7 +12,6 @@ NB.               to/from permutation matrix
 NB. rt            Restrained Take
 NB. icut          Inversed cut
 NB.
-NB. upd           Adv. to update subarray by a monad
 NB. e0            Extend matrix by zeros
 NB. appendx       Enhance built-in Append verb (,)
 NB. stitchx       Enhance built-in Stitch verb (,.)
@@ -65,7 +64,7 @@ NB. verifystruct  Verify struct verbs
 NB.
 NB. Version: 0.12.0 2021-02-01
 NB.
-NB. Copyright 2005-2021 Oleg Kobchenko, Roger Hui, Igor Zhuravlov
+NB. Copyright 2005-2021 Roger Hui, Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -395,52 +394,6 @@ NB. 5  6  7                      5  6  7
 NB. 9 10 11                      9 10 11
 
 rt=: (*@[ * |@[ <. (({.~ #)~ $)) {. ]
-
-NB. ---------------------------------------------------------
-NB. upd
-NB.
-NB. Description:
-NB.   Adv. to update subarray by a monad
-NB.
-NB. Syntax:
-NB.   vapp=. u upd
-NB. where
-NB.   u    - monad to update subA; is called as:
-NB.            subAupd=. u subA
-NB.   vapp - verb to update A; is called as:
-NB.            Aupd=. iso vapp A
-NB.   iso  - ISO subA in the A
-NB.   subA - subarray in the A
-NB.   A    - array
-NB.   Aupd - A with subA replaced by subAupd
-NB.
-NB. Assertions:
-NB.   Aupd -: iso vapp A
-NB. where
-NB.   vapp=. u upd
-NB.   subA=. iso { A
-NB.   subAupd=. u subA
-NB.   Aupd=. subAupd iso} A
-NB.
-NB. Examples:
-NB.    1 ('*'"_ upd) 4 5$'-'             1 2 ('*'"_ upd) 4 5$'-'
-NB. -----                             -----
-NB. *****                             *****
-NB. -----                             *****
-NB. -----                             -----
-NB.
-NB.    (<1 2) ('*'"_ upd) 4 5$'-'        (1 2;2 3) ('*'"_ upd) 4 5$'-'
-NB. -----                             -----
-NB. --*--                             --*--
-NB. -----                             ---*-
-NB. -----                             -----
-NB.
-NB. References:
-NB. [1] Oleg Kobchenko. [Jprogramming] Transform to Amend.
-NB.     2007-03-02 22:15:54 HKT.
-NB.     http://www.jsoftware.com/pipermail/programming/2007-March/005415.html
-
-upd=: (@:{) (`[) (`])}
 
 NB. ---------------------------------------------------------
 NB. e0
@@ -2208,16 +2161,6 @@ verifystruct=: 3 : 0
   res=. res , (2 4 $ 4 5 6 7 8 9 10 11   ) -:  _2  __ rt ai34
   res=. res , (3 3 $ 1 2 3 5 6 7  9 10 11) -: _20  _3 rt ai34
   res=. res , (3 3 $ 1 2 3 5 6 7  9 10 11) -:  __  _3 rt ai34
-
-  NB. upd
-  res=. res , (-: ''&(_: upd)) EMPTY
-  res=. res , (3 4 $ 0 1 2 3 _4 _5 _6 _7  8  9  10  11) -: 1             -      upd ai34
-  res=. res , (3 4 $ 0 1 2 3 _4 _5 _6 _7 _8 _9 _10 _11) -: 1 2           -      upd ai34
-  res=. res , (3 4 $ 0 1 2 3 _4 _5 _6 _7 64 81 100 121) -: 1 2           -`*:"1 upd ai34
-  res=. res , (3 4 $ 0 1 2 3  4  5 _6  7  8  9  10  11) -: (< 1 2)       -      upd ai34
-  res=. res , (3 4 $ 0 1 2 3  4  5 _6  7  8  9  10 _11) -: (1 2 ; 2 3)   -      upd ai34
-  res=. res , (3 4 $ 0 1 2 3  4  5 _6  7  8  9  10 121) -: (1 2 ; 2 3)   -`*:"0 upd ai34
-  res=. res , (3 4 $ 0 1 2 3  4  5 _6 _7  8  9 _10 _11) -: (< 1 2 ; 2 3) -      upd ai34
 
   NB. e0
   res=. res , (-: 0  &e0) EMPTY

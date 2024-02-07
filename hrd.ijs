@@ -85,7 +85,7 @@ lahr2l=: 3 : 0
   while. j < HRDNB do.
     b=. (j { y) - (+ (<: j) {"1 V) mp j {. y
     b=. b - ((((0) _1} b) mp ct V) mp ct T) mp V  NB. matrix-by-vector ops only
-    z1=. 1 j} z=. _1 + upd (j , _1) larfg (0 (i. j)} b)
+    z1=. 1 j} z=. +&.(_1&{) (j , _1) larfg (0 (i. j)} b)
     u=. (* +@{:) z1
     w=. V +@mp + - (0) _1} u
     T=. T appendl (w mp T) , + {: z1
@@ -279,12 +279,12 @@ gghrdl=: 4 : 0
       liso=. j - 1 0
       NB. step 1: rotate columns liso to kill A[i,j]
       'y cs'=. rot rotga y ; (< 0 ; lisor1a ; liso) ; 0
-      y=. (< 1 ; lisor1b ; liso) cs&rot upd y
+      y=. cs&rot&.((< 1 ; lisor1b ; liso)&{) y
       dZ0=. dZ0 , cs , liso
       liso=. j - 0 1
       NB. step 2: rotate rows liso to kill B[j-1,j]
       'y cs'=. rot&.|: rotga y ; (< 1 ; liso ; lisoc2b) ; < < a: ; _1
-      y=. (< 0 ; liso ; lisoc2a) cs&(rot&.|:) upd y
+      y=. cs&(rot&.|:)&.((< 0 ; liso ; lisoc2a)&{) y
       dQ0=. dQ0 , cs , liso
       NB. step 3: update ISO
       lisor1b=. (j - 2) , lisor1b
@@ -353,12 +353,12 @@ gghrdu=: 4 : 0
       liso=. i - 1 0
       NB. step 1: rotate rows liso to kill A[i,j]
       'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc1a) ; < < a: ; 0
-      y=. (< 1 ; liso ; lisoc1b) cs&(rot&.|:) upd y
+      y=. cs&(rot&.|:)&.((< 1 ; liso ; lisoc1b)&{) y
       dQ0=. dQ0 , cs , liso
       liso=. i - 0 1
       NB. step 2: rotate columns liso to kill B[i,i-1]
       'y cs'=. rot rotga y ; (< 1 ; lisor2b ; liso) ; _1
-      y=. (< 0 ; lisor2a ; liso) cs&rot upd y
+      y=. cs&rot&.((< 0 ; lisor2a ; liso)&{) y
       dZ0=. dZ0 , cs , liso
       NB. step 3: update ISO
       lisoc1b=. (i - 2) , lisoc1b

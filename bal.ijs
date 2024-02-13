@@ -336,7 +336,7 @@ NB.   p       - n-vector, some not changing argument, the
 NB.             output of gebalxp
 NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
 NB.             defines submatrix A11 position in A, the
-NB.             output of gebalxp, s=∞ is allowed and means
+NB.             output of gebalxp, s=+∞ is allowed and means
 NB.             'all elements from h-th to the last one'
 NB.   S       - the input for TB01ID, any of:
 NB.               n×n-matrix:          A

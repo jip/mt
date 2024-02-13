@@ -2,7 +2,6 @@ NB. Utilities
 NB.
 NB. isnan       Mark NaN values
 NB. max         Max-of, 0 for empty list
-NB. maxc        Max-of, '' for empty list
 NB. negneg      Conditional negate
 NB. negpos      Conditional negate
 NB. copysign    Copy sign
@@ -63,8 +62,7 @@ NB. Miscellaneous
 
 isnan=: 128!:5  NB. mark NaN values in y
 
-max=:  >./`      0: @.(0 = #)  NB. max-of, 0 for empty list
-maxc=: >./`(c {. 0:)@.(0 = #)  NB. max-of, '' for empty list
+max=: >./`0:@.(0 = #)  NB. max-of, 0 for empty list
 
 negneg=:   ($@] $    (isneg0 +. 0&>)@{.`((,:  -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x<0 then - y  else  y  endif
 negpos=:   ($@] $    (isneg0 +: 0&>)@{.`((,:  -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x≥0 then - y  else  y  endif
@@ -440,15 +438,6 @@ verifyutil=: 3 : 0
   res=. res ,  1 -:  max  0    1 _. __
   res=. res , ispos0 max  0.0 _1
   res=. res , isneg0 max _0.0 _1
-
-  NB. maxc
-  res=. res , '' -:  maxc ''
-  res=. res , __ -:  maxc _.   _.
-  res=. res ,  _ -:  maxc _.    _ __
-  res=. res ,  1 -:  maxc  0    1 _.
-  res=. res ,  1 -:  maxc  0    1 _. __
-  res=. res , ispos0 maxc  0.0 _1
-  res=. res , isneg0 maxc _0.0 _1
 
   NB. negneg
 

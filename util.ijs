@@ -270,9 +270,56 @@ NB.   msg - string, optional, will be shown if assertion is
 NB.         failed
 NB.   chk - numeric vector
 NB.
+NB. Examples:
+NB. - when asserts are enabled:
+NB.      9!:34 ''  NB. check asserts are enabled
+NB.   1
+NB.      NB. mt                             NB. stdlib
+NB.      assert_mt_ 1 1 0                   assert_z_ 1 1 0
+NB.   |assertion failure: assert_mt_     |assertion failure: assert_z_
+NB.   |       assert_mt_ 1 1 0           |       assert_z_ 1 1 0
+NB.      assert_mt_ 1 1 1                   assert_z_ 1 1 1
+NB.      assert_mt_ 1 1 2                   assert_z_ 1 1 2          NB. no failure occured - it's a bug #1
+NB.   |assertion failure: assert_mt_
+NB.   |       assert_mt_ 1 1 2
+NB.
+NB.      'Oops!' assert_mt_ 1 1 0           'Oops!' assert_z_ 1 1 0
+NB.   |Oops!: assert_mt_                 |Oops!: assert_z_
+NB.   |   'Oops!'    assert_mt_ 1 1 0    |   'Oops!'    assert_z_ 1 1 0
+NB.      'Oops!' assert_mt_ 1 1 1           'Oops!' assert_z_ 1 1 1
+NB.      'Oops!' assert_mt_ 1 1 2           'Oops!' assert_z_ 1 1 2  NB. no failure occured - it's a bug #1
+NB.   |Oops!: assert_mt_
+NB.   |   'Oops!'    assert_mt_ 1 1 2
+NB.
+NB. - when asserts are disabled:
+NB.      9!:35 [ 0  NB. disable asserts
+NB.      9!:34 ''   NB. check asserts are disabled
+NB.   0
+NB.      NB. mt                             NB. stdlib
+NB.      assert_mt_ 1 1 1                   assert_z_ 1 1 1
+NB.      assert_mt_ 1 1 2                   assert_z_ 1 1 2
+NB.      assert_mt_ 1 1 0                   assert_z_ 1 1 0          NB. failure occured - it's a bug #2
+NB.                                      |assertion failure: assert_z_
+NB.                                      |       assert_z_ 1 1 0
+NB.
+NB.      'Oops!' assert_mt_ 1 1 1           'Oops!' assert_z_ 1 1 1
+NB.      'Oops!' assert_mt_ 1 1 2           'Oops!' assert_z_ 1 1 2
+NB.      'Oops!' assert_mt_ 1 1 0           'Oops!' assert_z_ 1 1 0  NB. failure occured - it's a bug #2
+NB.                                      |Oops!: assert_z_
+NB.                                      |   'Oops!'    assert_z_ 1 1 0
+NB.      9!:35 [ 1  NB. restore default setting
+NB.      9!:34 ''   NB. check asserts are enabled
+NB.   1
+NB.
 NB. Notes:
-NB. - fixes system's (assert) to match (assert.) control
-NB. - is equipped with error message
+NB. - ambivalent procedure
+NB. - fixes system's (assert_z_) to match (assert.) control
+NB. - depends on 9!:34 (Enable assert.) setting
+NB. - values of rank>1 are supported accidentally, too:
+NB.      NB. mt                             NB. stdlib
+NB.      assert_mt_ 1 1 ,: 1 0              assert_z_ 1 1 ,: 1 0  NB. no failure occured
+NB.   |assertion failure: assert_mt_
+NB.   |       assert_mt_ 1 1,:1 0
 NB.
 NB. References:
 NB. [1] Igor Zhuravlov. [Jprogramming] assert verb from
@@ -298,6 +345,53 @@ NB.          succeed if it is of all 1's
 NB.   msg  - string, optional, message to show instead of
 NB.          default one
 NB.   isOk - boolean 'is succeed?'
+NB.
+NB. Examples:
+NB.      9!:34 ''   NB. check asserts are enabled
+NB.   1
+NB.      fassert 1 1 1
+NB.   1
+NB.      fassert 1 1 0
+NB.   |assertion failure: dbsig
+NB.   |       fassert 1 1 0
+NB.
+NB.   0
+NB.      fassert 1 1 2
+NB.   |assertion failure: dbsig
+NB.   |       fassert 1 1 2
+NB.
+NB.   0
+NB.
+NB.      'Oops!' fassert 1 1 1
+NB.   1
+NB.      'Oops!' fassert 1 1 0
+NB.   |Oops!: dbsig
+NB.   |   'Oops!'    fassert 1 1 0
+NB.
+NB.   0
+NB.      'Oops!' fassert 1 1 2
+NB.   |Oops!: dbsig
+NB.   |   'Oops!'    fassert 1 1 2
+NB.
+NB.   0
+NB.      9!:35 [ 0  NB. disable asserts
+NB.      9!:34 ''   NB. check asserts are disabled
+NB.   0
+NB.      fassert 1 1 1
+NB.   1
+NB.      fassert 1 1 0
+NB.   1
+NB.      fassert 1 1 2
+NB.   1
+NB.      'Oops!' fassert 1 1 0
+NB.   1
+NB.      'Oops!' fassert 1 1 1
+NB.   1
+NB.      'Oops!' fassert 1 1 2
+NB.   1
+NB.      9!:35 [ 1  NB. restore default setting
+NB.      9!:34 ''   NB. check asserts are enabled
+NB.   1
 NB.
 NB. Notes:
 NB. - ambivalent predicate

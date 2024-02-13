@@ -280,29 +280,29 @@ NB.   failed ≥ 0, assertions failed counter
 
 verifyiso=: 3 : 0
   NB. liso4th
-  res=.       ''    -: 3 liso4th 3
-  res=. res , (, 3) -: 4 liso4th 3
-  res=. res , 3 4   -: 5 liso4th 3
+  res=.       fassert ''    -: 3 liso4th 3
+  res=. res , fassert (, 3) -: 4 liso4th 3
+  res=. res , fassert 3 4   -: 5 liso4th 3
 
   NB. liso4dhs
-  res=. res ,  4  5  6 -:   liso4dhs  4  3
-  res=. res ,  4  5  6 -: 1 liso4dhs  4  3
-  res=. res ,  4  6  8 -: 2 liso4dhs  4  3
-  res=. res , _6 _5 _4 -:   liso4dhs _4  3
-  res=. res , _6 _5 _4 -: 1 liso4dhs _4  3
-  res=. res , _8 _6 _4 -: 2 liso4dhs _4  3
-  res=. res ,  6  5  4 -:   liso4dhs  4 _3
-  res=. res ,  6  5  4 -: 1 liso4dhs  4 _3
-  res=. res ,  8  6  4 -: 2 liso4dhs  4 _3
-  res=. res , _4 _5 _6 -:   liso4dhs _4 _3
-  res=. res , _4 _5 _6 -: 1 liso4dhs _4 _3
-  res=. res , _4 _6 _8 -: 2 liso4dhs _4 _3
+  res=. res , fassert  4  5  6 -:   liso4dhs  4  3
+  res=. res , fassert  4  5  6 -: 1 liso4dhs  4  3
+  res=. res , fassert  4  6  8 -: 2 liso4dhs  4  3
+  res=. res , fassert _6 _5 _4 -:   liso4dhs _4  3
+  res=. res , fassert _6 _5 _4 -: 1 liso4dhs _4  3
+  res=. res , fassert _8 _6 _4 -: 2 liso4dhs _4  3
+  res=. res , fassert  6  5  4 -:   liso4dhs  4 _3
+  res=. res , fassert  6  5  4 -: 1 liso4dhs  4 _3
+  res=. res , fassert  8  6  4 -: 2 liso4dhs  4 _3
+  res=. res , fassert _4 _5 _6 -:   liso4dhs _4 _3
+  res=. res , fassert _4 _5 _6 -: 1 liso4dhs _4 _3
+  res=. res , fassert _4 _6 _8 -: 2 liso4dhs _4 _3
 
   NB. iso4riso
   riso=. 0 9 3 5 _6 _2 ,: 0 1 2 _3 4 _5
   iso=. < '' ; (, 9) ; 3 4 ; 7 6 5 ; _9 _8 _7 _6 ; _2 _3 _4 _5 _6
-  res=. res , iso  -: iso4riso     riso
-  res=. res , riso -: iso4riso^:_1 iso
+  res=. res , fassert iso  -: iso4riso     riso
+  res=. res , fassert riso -: iso4riso^:_1 iso
 
   NB. liso4riso
   sh=. 4 # 10
@@ -310,24 +310,24 @@ verifyiso=: 3 : 0
   riso=. 3 5 _6 _2 ,: 2 _3 4 _5
   iso=. iso4riso riso
   liso=. sh liso4riso riso
-  res=. res , (riso ];.0 arr) -: ( iso  {   arr)
-  res=. res , (riso ,;.0 arr) -: (liso ({,) arr)
+  res=. res , fassert (riso ];.0 arr) -: ( iso  {   arr)
+  res=. res , fassert (riso ,;.0 arr) -: (liso ({,) arr)
 
   NB. lisoX
   arr=. i. 5 6
   vec=. _1 _2 _3
-  res=. res , vec -: (< 2 ; 3 4 5) { vec ((( 0 lisoE)&c)}) arr
-  res=. res , vec -: (< 1 ; 2 3 4) { vec ((( 1 lisoE)&c)}) arr
-  res=. res , vec -: (< 1 ; 3 4 5) { vec (((_1 lisoE)&c)}) arr
-  res=. res , vec -: (< 2 ; 0 1 2) { vec ((( 0 lisoW)&c)}) arr
-  res=. res , vec -: (< 3 ; 0 1 2) { vec ((( 1 lisoW)&c)}) arr
-  res=. res , vec -: (< 3 ; 1 2 3) { vec (((_1 lisoW)&c)}) arr
-  res=. res , vec -: (< 0 1 2 ; 2) { vec ((( 0 lisoN)&c)}) arr
-  res=. res , vec -: (< 0 1 2 ; 3) { vec ((( 1 lisoN)&c)}) arr
-  res=. res , vec -: (< 1 2 3 ; 3) { vec (((_1 lisoN)&c)}) arr
-  res=. res , vec -: (< 2 3 4 ; 3) { vec ((( 0 lisoS)&c)}) arr
-  res=. res , vec -: (< 1 2 3 ; 2) { vec ((( 1 lisoS)&c)}) arr
-  res=. res , vec -: (< 2 3 4 ; 2) { vec (((_1 lisoS)&c)}) arr
+  res=. res , fassert vec -: (< 2 ; 3 4 5) { vec ((( 0 lisoE)&c)}) arr
+  res=. res , fassert vec -: (< 1 ; 2 3 4) { vec ((( 1 lisoE)&c)}) arr
+  res=. res , fassert vec -: (< 1 ; 3 4 5) { vec (((_1 lisoE)&c)}) arr
+  res=. res , fassert vec -: (< 2 ; 0 1 2) { vec ((( 0 lisoW)&c)}) arr
+  res=. res , fassert vec -: (< 3 ; 0 1 2) { vec ((( 1 lisoW)&c)}) arr
+  res=. res , fassert vec -: (< 3 ; 1 2 3) { vec (((_1 lisoW)&c)}) arr
+  res=. res , fassert vec -: (< 0 1 2 ; 2) { vec ((( 0 lisoN)&c)}) arr
+  res=. res , fassert vec -: (< 0 1 2 ; 3) { vec ((( 1 lisoN)&c)}) arr
+  res=. res , fassert vec -: (< 1 2 3 ; 3) { vec (((_1 lisoN)&c)}) arr
+  res=. res , fassert vec -: (< 2 3 4 ; 3) { vec ((( 0 lisoS)&c)}) arr
+  res=. res , fassert vec -: (< 1 2 3 ; 2) { vec ((( 1 lisoS)&c)}) arr
+  res=. res , fassert vec -: (< 2 3 4 ; 2) { vec (((_1 lisoS)&c)}) arr
 
   'iso' reportv (# ([ , -) +/) res
 )

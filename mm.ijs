@@ -330,7 +330,7 @@ mmic=: 4 : 0
   ('not more than ' , (": lemax) , ' elements was expected, but ' , (": lp) , ' data rows found') assert lemax >: lp  NB. some elements may be omitted
   NB. convert strings with data lines to J array
   'rp cp'=. 2 {.!.1 $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
-  'there are not recognized values' assert -. 128!:5 < y
+  'there are not recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' data rows found (2)') assert le = rp  NB. how is this possible to violate?
   fret=. ''  NB. makes sense for complex field only
   NB. check columns quantity
@@ -460,7 +460,7 @@ mmia=: 4 : 0
   ((": le) , ' elements was expected, but ' , (": lp) , ' data rows found') assert le = lp  NB. all elements must be presented
   NB. convert strings with data lines to J array
   'rp cp'=. 2 {.!.1 $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
-  'there are not recognized values' assert -. 128!:5 < y
+  'there are not recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' elements found') assert le = rp  NB. how is this possible to violate?
   NB. check columns quantity
   if. 3 = ioField do.  NB. complex

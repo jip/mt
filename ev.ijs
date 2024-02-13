@@ -187,7 +187,7 @@ ggevlnv=: 3 : 0
   y=. (gghrdlnv~0,c) y
   y=. hs hgezqsnv y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ 2 #c y
   else.
@@ -206,7 +206,7 @@ ggevlvn=: 3 : 0
   y=. (((0,]) gghrdlvn (,idmat)) c) y
   y=. hs hgezqsvn y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ 2 #c y
   else.
@@ -224,7 +224,7 @@ ggevlvv=: 3 : 0
   y=. (gghrdlvv~0,c) y
   y=. hs hgezqsvv y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ $ y
   else.
@@ -344,7 +344,7 @@ ggevuvn=: 3 : 0
   y=. (gghrduvn~0,c) y
   y=. hs hgeqzsvn y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ 2 #c y
   else.
@@ -363,7 +363,7 @@ ggevunv=: 3 : 0
   y=. (((0,]) gghrdunv (,idmat)) c) y
   y=. hs hgeqzsnv y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ 2 #c y
   else.
@@ -381,7 +381,7 @@ ggevuvv=: 3 : 0
   y=. (gghrduvv~0,c) y
   y=. hs hgeqzsvv y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ $ y
   else.

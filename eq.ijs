@@ -725,9 +725,9 @@ NB.
 NB. Application:
 NB. - detect case of non-convergence (0=converged,
 NB.   1=non-converged), any of:
-NB.     128!:5 < e1e2
-NB.     128!:5 < S,:P         NB. too expensive, use the next
-NB.     128!:5 < diag"2 S,:P
+NB.     isnan < e1e2
+NB.     isnan < S,:P         NB. too expensive, use the next
+NB.     isnan < diag"2 S,:P
 
 hgezqenn=:            diag"2@(0 {::                            hgezqe     )
 hgezqenv=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotscll  2&{::  )) (hgezqe 2&{.)
@@ -882,9 +882,9 @@ NB.     NB. 'S P Q2 dZ1'=. hs hgeqzsvi H , T ,: Q1
 NB.     hgeqzsvi=: hgeqzsvv (, idmat@c)
 NB. - detect case of non-convergence (0=converged,
 NB.   1=non-converged), any of:
-NB.     128!:5 < e1e2
-NB.     128!:5 < S,:P         NB. too expensive, use the next
-NB.     128!:5 < diag"2 S,:P
+NB.     isnan < e1e2
+NB.     isnan < S,:P         NB. too expensive, use the next
+NB.     isnan < diag"2 S,:P
 NB.
 NB. References:
 NB. [1] C. B. Moler, G. W. Stewart. An Algorithm for

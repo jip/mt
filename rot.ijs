@@ -122,7 +122,7 @@ NB.     cs := sgn(cd1st(cd1st(fg))) * sgn(cd1st(fg)) * sgn(qnconik(fg))
 NB.   To achieve this, use modified definition:
 NB.     lartg=: ((*&sgnc 9&o.)@{. * sgnq@:+)"1
 
-lartg=: 9&o.&.(0&{)@(sgnc@{. * sgnq@:+)`(_.j_. _.j_."_)@.(128!:5@<)"1 : [:
+lartg=: 9&o.&.(0&{)@(sgnc@{. * sgnq@:+)`(_.j_. _.j_."_)@.(isnan@<)"1 : [:
 
 NB. ---------------------------------------------------------
 NB. rot
@@ -168,7 +168,7 @@ NB. Notes:
 NB. - implements BLAS's DROT and LAPACK's ZROT and xLARTV
 NB. - resembles qnmul
 
-rot=: [: : (,.~@:(+./"1)@(128!:5)`(,:&_.j_.)}@(mp"2 1~ (,:"1 (+@:-@:({:"1) ,. {."1)))~)
+rot=: [: : (,.~@:(+./"1)@isnan`(,:&_.j_.)}@(mp"2 1~ (,:"1 (+@:-@:({:"1) ,. {."1)))~)
 
 NB. ---------------------------------------------------------
 NB. rotga
@@ -325,7 +325,7 @@ testlartg=: 3 : 0
   algo1=: 3 : 'if. 0 = {: y do. (sgn , 0:) {. y elseif. 0 = {. y do. (0 , sgn@+) {: y else. try. ((| f),((sgn f) * (+ g))) % %: +/ soris ''f g''=. y catch. 2 # _. end. end.'
 
   NB. exclude rows containing NaN from the table y
-  xrNaN=: #~ +:/"1@(128!:5)
+  xrNaN=: #~ +:/"1@isnan
 
   NB. exclude rows containing ±∞ from the table y
   xrInf=: #~ -.@(+./)@|:@:(_ = |)

@@ -38,7 +38,7 @@ dggbal=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) B
   ld=. , 1 >. n
   work=. ((6 * n) >.^:('sSbB' e.~ {. x) 1) $ 0.0
-  'A B ilo ihi lscale rscale'=. 3 5 7 8 9 10 { dggbal_jlapack2_ (, x) ; (, n) ; (|: A) ; ld ; (|: B) ; ld ; (, 0) ; (, 0) ; (n $ 0.0) ; (n $ 0.0) ; work ; , _1
+  'A B ilo ihi lscale rscale'=. 3 5 7 8 9 10 { dggbal_jlapack2_ (, x) ; (, n) ; (|: A) ; ld ; (|: B) ; ld ; ((, 0)) ; ((, 0)) ; (n $ 0.0) ; (n $ 0.0) ; work ; , _1
   (|: A) ; (|: B) ; ({. ilo) ; ({. ihi) ; lscale ; rscale
 )
 
@@ -49,6 +49,6 @@ zggbal=: 4 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) B
   ld=. , 1 >. n
   work=. ((6 * n) >.^:('sSbB' e.~ {. x) 1) $ 0.0
-  'A B ilo ihi lscale rscale'=. 3 5 7 8 9 10 { zggbal_jlapack2_ (, x) ; (, n) ; (|: A) ; ld ; (|: B) ; ld ; (, 0) ; (, 0) ; (n $ 0.0) ; (n $ 0.0) ; work ; , _1
+  'A B ilo ihi lscale rscale'=. 3 5 7 8 9 10 { zggbal_jlapack2_ (, x) ; (, n) ; (|: A) ; ld ; (|: B) ; ld ; ((, 0)) ; ((, 0)) ; (n $ 0.0) ; (n $ 0.0) ; work ; , _1
   (|: A) ; (|: B) ; ({. ilo) ; ({. ihi) ; lscale ; rscale
 )

@@ -251,7 +251,7 @@ gelsacx=: 4 : 0
   sclb=. ] `((bnrm , smlnum)&scl)`]`((bnrm , bignum)&scl)@.(segs I. bnrm)
   if. m < n do.
     NB. case 4
-    y=. x sclb^:_1@scla@((((m {."1 [) trtrslcn m {. unmlqln) sclb)~ gelqf@scla)~ :: (xsh $ 0:) y
+    y=. x sclb^:_1@scla@((((m ({."1) [) trtrslcn m {. unmlqln) sclb)~ gelqf@scla)~ :: (xsh $ 0:) y
   else.
     NB. case 3
     y=. x sclb^:_1@scla@((([ unmqrln m {. (trtrsucn~ n& {.   )~) sclb)~ geqrf@scla)~ :: (xsh $ 0:) y

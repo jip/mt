@@ -83,9 +83,9 @@ lahr2l=: 3 : 0
   T=. H=. EMPTY
   j=. 0
   while. j < HRDNB do.
-    b=. (j { y) - (+ (<: j) {"1 V) mp j {. y
+    b=. (j { y) - (+ (<: j) ({"1) V) mp j {. y
     b=. b - ((((0) _1} b) mp ct V) mp ct T) mp V  NB. matrix-by-vector ops only
-    z1=. 1 j} z=. +&.(_1&{) (j , _1) larfg (0 (i. j)} b)
+    z1=. 1 j} z=. (+&.(_1&{)) (j , _1) larfg (0 (i. j)} b)
     u=. (* +@{:) z1
     w=. V +@mp + - (0) _1} u
     T=. T appendl (w mp T) , + {: z1
@@ -139,7 +139,7 @@ lahr2u=: 3 : 0
   T=. H=. EMPTY
   j=. 0
   while. j < HRDNB do.
-    b=. (j {"1 y) - (j {."1 y) mp + (<: j) { V
+    b=. (j {"1 y) - (j ({."1) y) mp + (<: j) { V
     b=. b - V mp (ct T) mp (ct V) mp (0) _1} b  NB. matrix-by-vector ops only
     z1=. 1 j} z=. (j , _1) larfg 0 (i. j)} b
     u=. (* {:) z1
@@ -174,16 +174,15 @@ NB.         matrix A, see gehrdl
 NB.   HQf - (n+1)×(n+1)-matrix, H and Qf combined, see gehrdl
 
 gehd2l=: 4 : 0
-  A=. ({. x) {. y                              NB. skip ...
-  y=. ({. x) }. y                              NB. ...reduced rows
-  'j jlimit'=. 1 0 + +/\ x                     NB. 'j jlimit'=. (h+1),(h+s)
+  'A y'=. ({. x) ({. ; }.) y                   NB. skip reduced rows
+  'j jlimit'=. 1 0 + (+/\) x                   NB. 'j jlimit'=. (h+1),(h+s)
   while. j < jlimit do.                        NB. (s-1)-vector: h+1,h+2,...,h+s-1
     r=. {. y
     z1=. (1) 0} z=. larfgfc j }. r
     eL=. z1 larflcfr }. y                      NB. L := H' * L
-    eR=. z1 larfrnfr j }."1 eL                 NB. R := R * H
+    eR=. z1 larfrnfr j (}."1) eL               NB. R := R * H
     A=. A , (j {. r) , z
-    y=. (j {."1 eL) ,. eR
+    y=. (j ({."1) eL) ,. eR
     j=. >: j
   end.
   0 (< ((c y) liso4th&<: jlimit) ; _1)} A , y  NB. clear τ[h+s-1:n-1]
@@ -213,9 +212,8 @@ NB. Notes:
 NB. - implements LAPACK's xGEHD2 up to storage layout
 
 gehd2u=: 4 : 0
-  A=. ({. x) {."1 y                           NB. skip ...
-  y=. ({. x) }."1 y                           NB. ...reduced columns
-  'j jlimit'=. 1 0 + +/\ x                    NB. 'j jlimit'=. (h+1),(h+s)
+  'A y'=. ({. x) ({."1 ; }."1) y              NB. skip reduced columns
+  'j jlimit'=. 1 0 + (+/\) x                  NB. 'j jlimit'=. (h+1),(h+s)
   while. j < jlimit do.                       NB. (s-1)-vector: h+1,h+2,...,h+s-1
     c=. {."1 y
     z1=. (1) 0} z=. larfgf j }. c
@@ -267,7 +265,7 @@ gghrdl=: 4 : 0
   'h s'=. x
   t=. h + s - 1
   n=. c y
-  dQ0=. dZ0=. 0 4 $ 0
+  dQ0=. dZ0=. ((0 4 $ 0))
   i=. h
   lisor1a=. n liso4th i                        NB. (n-h)-vector h:n-1
   lisoc2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
@@ -283,7 +281,7 @@ gghrdl=: 4 : 0
       dZ0=. dZ0 , cs , liso
       liso=. j - 0 1
       NB. step 2: rotate rows liso to kill B[j-1,j]
-      'y cs'=. rot&.|: rotga y ; (< 1 ; liso ; lisoc2b) ; < < a: ; _1
+      'y cs'=. rot&.|: rotga y ; (< 1 ; liso ; lisoc2b) ; ((< < a: ; _1))
       y=. cs&(rot&.|:)&.((< 0 ; liso ; lisoc2a)&{) y
       dQ0=. dQ0 , cs , liso
       NB. step 3: update ISO
@@ -341,7 +339,7 @@ gghrdu=: 4 : 0
   'h s'=. x
   t=. h + s - 1
   n=. c y
-  dQ0=. dZ0=. 0 4 $ 0
+  dQ0=. dZ0=. ((0 4 $ 0))
   j=. h
   lisoc1a=. n liso4th j                        NB. (n-h)-vector h:n-1
   lisor2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
@@ -352,7 +350,7 @@ gghrdu=: 4 : 0
     while. i > >: j do.                        NB. (h+s-j-2)-vector (desc) h+s-1:j+2
       liso=. i - 1 0
       NB. step 1: rotate rows liso to kill A[i,j]
-      'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc1a) ; < < a: ; 0
+      'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc1a) ; ((< < a: ; 0))
       y=. cs&(rot&.|:)&.((< 1 ; liso ; lisoc1b)&{) y
       dQ0=. dQ0 , cs , liso
       liso=. i - 0 1
@@ -448,14 +446,14 @@ gehrdl=: 4 : 0
   'i ilimit'=. h + (0 , HRDNB) * I                 NB. 'i ilimit'=. h,(h+HRDNB*I)
   while. i < ilimit do.                            NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB liso4dhs (h,I))
     'Y V H T'=. lahr2l y                           NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
-    eV0=. 0 ,. (0) _1}"1 V                         NB. prepend by zero column, replace τs by zeros
+    eV0=. 0 ,. 0 (_1}"1) V                         NB. prepend by zero column, replace τs by zeros
     Aleft=. Aleft - (ct eV0) mp T mp eV0 mp Aleft  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
-    y=. (HRDNB }. y) - (ct HRDNB }."1 eV0) mp Y    NB. apply reflector from the left
-    y=. y - (y mp ct T mp (0) _1}"1 V) mp V        NB. apply reflector from the right
+    y=. (HRDNB }. y) - (ct HRDNB (}."1) eV0) mp Y  NB. apply reflector from the left
+    y=. y - (y mp ct T mp 0 (_1}"1) V) mp V        NB. apply reflector from the right
     V=. ((i. HRDNB) </ i. n - i)} H ,: V           NB. write H into V's lower triangle in-place
     Atop=. Atop , (HRDNB {. Aleft) ,. V
-    Aleft=. (HRDNB }. Aleft) ,. HRDNB {."1 y
-    y=. HRDNB }."1 y
+    Aleft=. (HRDNB }. Aleft) ,. HRDNB ({."1) y
+    y=. HRDNB (}."1) y
     i=. HRDNB + i
   end.
   _1 0 }. (x + 1 _1 * HRDNB * I) gehd2l Atop , Aleft ,. y
@@ -532,20 +530,20 @@ gehrdu=: 4 : 0
   'h s'=. x
   n1=. >: n=. # y
   y=. (2 $ n1) {. y
-  Aleft=. h {."1 y
+  Aleft=. h ({."1) y
   Atop=. (h - _1 , n1) {. y
   y=. (h + 1 0) }. y
   I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB     NB. how many panels will be reduced
   'i ilimit'=. h + (0 , HRDNB) * I                NB. 'i ilimit'=. h,(h+HRDNB*I)
   while. i < ilimit do.                           NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB liso4dhs (h,I))
     'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
-    eV0=. 0 , (0) _1} V                           NB. prepend by zero row, replace τs by zeros
+    eV0=. 0 , 0 (_1}) V                           NB. prepend by zero row, replace τs by zeros
     Atop=. Atop - ((Atop mp eV0) mp T) mp ct eV0  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
-    y=. (HRDNB }."1 y) - Y mp ct HRDNB }. eV0     NB. apply reflector from the right
-    y=. y - V mp (ct ((0) _1} V) mp T) mp y       NB. apply reflector from the left
+    y=. (HRDNB (}."1) y) - Y mp ct HRDNB }. eV0   NB. apply reflector from the right
+    y=. y - V mp (ct (0 (_1}) V) mp T) mp y       NB. apply reflector from the left
     V=. ((i. n - i) >/ i. HRDNB)} H ,: V          NB. write H into V's upper triangle in-place
-    Aleft=. Aleft ,. (HRDNB {."1 Atop) , V
-    Atop=. (HRDNB }."1 Atop) , HRDNB {. y
+    Aleft=. Aleft ,. (HRDNB ({."1) Atop) , V
+    Atop=. (HRDNB (}."1) Atop) , HRDNB {. y
     y=. HRDNB }. y
     i=. HRDNB + i
   end.

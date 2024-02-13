@@ -72,8 +72,8 @@ NB.   m ≥ 0, integer, approximant's degree
 NB.   r - n×n-matrix, r_m(A)
 
 geexpm2r=: 4 : 0
-  rbyvs=. +/@:*"3 1       NB. multiply brick x by each row of x, then sum bricks
-  b0b1=. (0 0 ; 1 0)&{@]  NB. extract (b[0] , b[1]) from y
+  rbyvs=. (+/@:*"3 1)         NB. multiply brick x by each row of x, then sum bricks
+  b0b1=. (((0 0 ; 1 0)) { ])  NB. extract (b[0] , b[1]) from y
 
   NB. b[i] coeffcients of degree 13 Padé approximant for V (1st row) and U (2nd row)
   bc=. _2 (|:@(]\)) (>: x) {. 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
@@ -99,7 +99,7 @@ geexpm2r=: 4 : 0
 
     NB. V=.      V + b[6]*A6+b[4]*A4+b[2]*A2+b[0]*I
     NB. U=. A * (U + b[7]*A6+b[5]*A4+b[3]*A2+b[1]*I)
-    'V U'=. VU + pA (b0b1 sdiag (rbyvs (0 1 ,: 2 3)&(];.0))) bc
+    'V U'=. VU + pA (b0b1 sdiag (rbyvs ((0 1 ,: 2 3))&(];.0))) bc
   end.
   U=. y mp U
 

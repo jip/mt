@@ -233,7 +233,7 @@ isoskw=: (3 : 0) :. (#. _2&C.&.|:@(# comb {.))
                                            NB. groups of equal size (! rank)
   vals=. (# (!@[ # #\@i.@!) {.) y          NB. assign a natural number to each ISO group,
                                            NB. each ISO within group will have the same value
-  par=. C.!.2 /:"1 iso                     NB. parity (is valid since there is no diagonals here)
+  par=. (C.!.2) (/:"1) iso                 NB. parity (is valid since there is no diagonals here)
   vals=. (          1 = par)} (,: -) vals  NB. negate evenly permuted values
   vals iso} 1 $. y ; (i. # y) ; 00
 )
@@ -281,8 +281,8 @@ isohmt=: (3 : 0) :. (isosym^:_1)
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
   vals=. (# S: 0 #    i.@#) iso            NB. replicate value for each ISO
   iso=. ; iso
-  ndmask=. (# y) = #@~."1 iso              NB. ISO for non-diagonals mask
-  par=. C.!.2 /:"1 iso                     NB. parity (is valid only for non-diagonals)
+  ndmask=. (# y) = (#@~."1) iso            NB. ISO for non-diagonals mask
+  par=. (C.!.2) (/:"1) iso                 NB. parity (is valid only for non-diagonals)
   vals=. (ndmask *. 1 = par)} (,: -) vals  NB. negate evenly permuted non-diagonal values
   vals iso} y $ 0
 )
@@ -329,7 +329,7 @@ mmic=: 4 : 0
   end.
   ('not more than ' , (": lemax) , ' elements was expected, but ' , (": lp) , ' data rows found') assert lemax >: lp  NB. some elements may be omitted
   NB. convert strings with data lines to J array
-  'rp cp'=. 2 {.!.1 $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
+  'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
   'there are not recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' data rows found (2)') assert le = rp  NB. how is this possible to violate?
   fret=. ''  NB. makes sense for complex field only
@@ -363,9 +363,9 @@ mmic=: 4 : 0
   select. ioSymmetry
     case. 1 ; 3 ; 4 do.  NB. symmetric, Hermitian or skew-Hermitian
       if. 3 = ioSymmetry do.  NB. Hermitian
-        'diagonal values must be real' assert 0 = 11 o. (rank ~: #@~."1 iso) # dat
+        'diagonal values must be real' assert 0 = 11 o. (rank ~: (#@~."1) iso) # dat
       elseif. 4 = ioSymmetry do.  NB. skew-Hermitian
-        'diagonal values must be imaginary' assert 0 = 9 o. (rank ~: #@~."1 iso) # dat
+        'diagonal values must be imaginary' assert 0 = 9 o. (rank ~: (#@~."1) iso) # dat
       end.
       NB. elements presented must have ISO satisfying:
       NB.   ISO[0] <= ISO[1] <= ... <= ISO[R-4] <= ISO[R-3] <= ISO[R-1] <= ISO[R-2]
@@ -396,7 +396,7 @@ mmic=: 4 : 0
       NB. - generate the set of permutations for each ISO
       NB.   - its cardinality are the same
       NB. - merge sets (no reshaping)
-      iso=. ,/ (i. count) A."_ 1 iso
+      iso=. ,/ (i. count) (A."_ 1) iso
   end.
   NB. restore values omitted
   NB. - replicate for each set
@@ -409,20 +409,20 @@ mmic=: 4 : 0
       NB. - negate values from strict upper triangle i.e. if
       NB.   the corresponding ISO is derived from (/:~ ISO)
       NB.   by even permutation
-      dat=. (1 = C.!.2 /:"1 iso)} (,:    -) count  # dat
+      dat=. (1 = (C.!.2) (/:"1) iso)} (,:    -) count  # dat
     case. 3 do.  NB. Hermitian
       NB. - conjugate values from strict upper triangle i.e.
       NB.   if the corresponding ISO is derived from
       NB.   (/:~ ISO) by even permutation
-      dat=. (1 = C.!.2 /:"1 iso)} (,: +   ) counts # dat
+      dat=. (1 = (C.!.2) (/:"1) iso)} (,: +   ) counts # dat
     case. 4 do.  NB. skew-Hermitian
       NB. - conjugate and negate values from strict upper
       NB.   triangle i.e. if the corresponding ISO is derived
       NB.   from (/:~ ISO) by even permutation
-      dat=. (1 = C.!.2 /:"1 iso)} (,: +@:-) counts # dat
+      dat=. (1 = (C.!.2) (/:"1) iso)} (,: +@:-) counts # dat
   end.
   NB. place values at ISO positions in sparse array
-  se=. ioField {:: 0 ; 00 ; 0.0 ; 0j0
+  se=. ioField {:: ((0 ; 00 ; 0.0 ; 0j0))
   y=. dat iso} 1 $. shape ; (i. rank) ; se
 )
 
@@ -442,7 +442,7 @@ mmia=: 4 : 0
   rank=. # shape
   NB. check max columns quantity presented
   if. 3 = ioField do.  NB. complex
-    'each data row must contain a real and imaginary part of single matrix entry (1)' assert ' '&e. S: 0 y
+    'each data row must contain a real and imaginary part of single matrix entry (1)' assert (' '&e.S:0) y
   end.
   NB. check elements quantity depending on symmetry
   lp=. # y
@@ -459,13 +459,13 @@ mmia=: 4 : 0
   end.
   ((": le) , ' elements was expected, but ' , (": lp) , ' data rows found') assert le = lp  NB. all elements must be presented
   NB. convert strings with data lines to J array
-  'rp cp'=. 2 {.!.1 $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
+  'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
   'there are not recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' elements found') assert le = rp  NB. how is this possible to violate?
   NB. check columns quantity
   if. 3 = ioField do.  NB. complex
     'each data row must contain a real and imaginary part of single matrix entry (2)' assert 2 = cp
-    y=. j./"1 y
+    y=. (j./"1) y
   else.  NB. integer or real (since mmia isn't called for pattern)
     'each data row must contain just a single matrix entry' assert 1 = cp
     'integer data type was expected but real data type is detected' assert (JFL = 3!:0 y) *: 1 = ioField
@@ -474,7 +474,7 @@ mmia=: 4 : 0
   NB. restore elements known due to symmetry
   select. ioSymmetry
     case. 0 do.  NB. general
-      y=. |:"2 (_2 C. shape) ($ ,) y
+      y=. (|:"2) (_2 C. shape) ($ ,) y
     case. 1 do.  NB. symmetric
       iso=. isosym shape
       y=. iso { y
@@ -483,13 +483,13 @@ mmia=: 4 : 0
       y=. iso { 0 , (, -@|.) y
     case. 3 do.  NB. Hermitian
       ('''' , (ioField {:: FIELDS) , ''' and ''Hermitian'' qualifiers are incompatible') assert 3 = ioField
-      mask=. rank > (#@~."1) _2&C.&.|: (# combrep {.) shape
+      mask=. rank > (#@~."1) (_2&C.&.|:) (# combrep {.) shape
       'diagonal values must be real' assert 0 = 11 o. mask # y
       iso=. isohmt shape
       y=. iso { (, +@|.@}.) y
     case. 4 do.  NB. skew-Hermitian
       ('''' , (ioField {:: FIELDS) , ''' and ''skew-Hermitian'' qualifiers are incompatible') assert 3 = ioField
-      mask=. rank > (#@~."1) _2&C.&.|: (# combrep {.) shape
+      mask=. rank > (#@~."1) (_2&C.&.|:) (# combrep {.) shape
       'diagonal values must be imaginary' assert 0 = 9 o. mask # y
       iso=. isohmt shape
       y=. iso { (, -@:+@|.@}.) y
@@ -532,7 +532,7 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
   y=. CRLF cutl_mt_ y  NB. cut by spans of CR and LF
-  'line longer than 1024 bytes was detected' assert_mt_ (1024 >: #) S: 0 y
+  'line longer than 1024 bytes was detected' assert_mt_ ((1024 >: #)S:0) y
   header=. cut_mt_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
   y=. (#~ ('%' ~: {.) S: 0) y  NB. remove header and comments
   y=. (#~ a:&~:) dltb L: 0 y   NB. remove empty lines
@@ -578,7 +578,7 @@ mm=: (3 : 0) :. (3 : 0)
     NB. array
     if. 0 = ioField do. ioField=. 1 end.  NB. represent boolean array as integer since 'array' and 'pattern' qualifiers are incompatible
     NB. compose data
-    y=. +.^:(3 = ioField) , |:"2^:(0 = ioSymmetry) y
+    y=. +.^:(3 = ioField) , (|:"2)^:(0 = ioSymmetry) y
     NB. filter out repeating elements known due to symmetry
     y=. y [`({~ isosym^:_1)`({~ isoskw^:_1)`({~ isohmt^:_1)`({~ isohmt^:_1)@.ioSymmetry shape
   end.
@@ -586,7 +586,7 @@ mm=: (3 : 0) :. (3 : 0)
   format=.   ioFormat   {:: FORMATS
   field=.    ioField    {:: FIELDS
   symmetry=. ioSymmetry {:: SYMMETRIES
-  str=. BANNER , ' ' , OBJECT , ' ' , format , ' ' , field , ' ' , symmetry , LF , size , LF , , ((=&'_')`(,:&'-')} ":!.(IF64 { 9 17) ,. y) ,. LF
+  str=. BANNER , ' ' , OBJECT , ' ' , format , ' ' , field , ' ' , symmetry , LF , size , LF , , (((=&'_')`(,:&'-')}) ":!.(IF64 { 9 17) ,. y) ,. LF
 )
 
 NB. =========================================================

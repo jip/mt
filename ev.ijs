@@ -183,7 +183,7 @@ ggevlnn=: 3 : 0
 
 ggevlnv=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (0 1;(<i.{.hs);liso4dhs hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
+  y=. (0 1;(<i.{.hs);liso4dhs hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`(((<0 1 2))<@(0})[)`((, idmat@c)@])} y
   y=. (gghrdlnv~0,c) y
   y=. hs hgezqsnv y
   e1e2=. 2 {. diag"2 y
@@ -220,7 +220,7 @@ ggevlvn=: 3 : 0
 
 ggevlvv=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (0 1;(<i.{.hs);liso4dhs hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 3)<@(0})[)`((, ,:~@idmat@c)@])} y
+  y=. (0 1;(<i.{.hs);liso4dhs hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`(((<0 1 3))<@(0})[)`((, ,:~@idmat@c)@])} y
   y=. (gghrdlvv~0,c) y
   y=. hs hgezqsvv y
   e1e2=. 2 {. diag"2 y
@@ -340,7 +340,7 @@ ggevunn=: 3 : 0
 
 ggevuvn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (0 1;(liso4dhs hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
+  y=. (0 1;(liso4dhs hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`(((<0 1 2))<@(0})[)`((, idmat@c)@])} y
   y=. (gghrduvn~0,c) y
   y=. hs hgeqzsvn y
   e1e2=. 2 {. diag"2 y
@@ -377,7 +377,7 @@ ggevunv=: 3 : 0
 
 ggevuvv=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (0 1;(liso4dhs hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, ,:~@idmat@c)@])} y
+  y=. (0 1;(liso4dhs hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`(((<0 1 2))<@(0})[)`((, ,:~@idmat@c)@])} y
   y=. (gghrduvv~0,c) y
   y=. hs hgeqzsvv y
   e1e2=. 2 {. diag"2 y

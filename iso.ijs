@@ -165,10 +165,10 @@ NB.   indexing the slice
 iso4riso=: <"1@oiso4riso :. (3 : 0)
   'not representable as rISO' assert (('' -: -.&_1 1) *. 2 > #@~.)S:0 (2&(-/\)^:(0 < #))L:0 y
     NB. each open element is either (1) empty list or (2) scalar or (3) range which is (3a) continuous and either (3b1) increasing or (3b2) decreasing
-  dm=. -/@:|@(2&{.)`_1:@.(2 > #)       L:0 y  NB. deltas of modules
-  d=.  -/   @(2&{.)`_1:@.(2 > #)       L:0 y  NB. deltas
-  h=. dm [:`(_1 { ::0 ])`(0 { ::0 ])@.[S:0 y  NB. heads
-  s=. d  [:`(-@#@]     )`(#@]      )@.[S:0 y  NB. sizes
+  dm=. (-/@:|@(2&{.)`_1:@.(2 > #)       L:0) y  NB. deltas of modules
+  d=.  (-/   @(2&{.)`_1:@.(2 > #)       L:0) y  NB. deltas
+  h=. dm ([:`(_1 { ::0 ])`(0 { ::0 ])@.[S:0) y  NB. heads
+  s=. d  ([:`(-@#@]     )`(#@]      )@.[S:0) y  NB. sizes
   h ,: s
 )
 

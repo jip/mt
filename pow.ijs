@@ -69,7 +69,7 @@ gepow=: 4 : 0
 
   pl=. i. >: <. 2 ^. >./ , x  NB. powers list: 2^i
   pc=. mp~^:pl y              NB. powers cache: A^2^i
-  pb=. <@I.@|."1@#: x         NB. pl bits boxed array of shape sh
+  pb=. (<@I.@|."1@#:) x       NB. pl bits boxed array of shape sh
 
   pc mpi3@({~ >)"3 0 pb       NB. extract and mp A's powers for each pl atom
 )

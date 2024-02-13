@@ -217,7 +217,7 @@ larfg=: 4 : 0
   alpha=. ioa { y
   y=. 0 iot} y                            NB. τ := 0
   ynorm=. norms y
-  if. ynorm =!.0 | 9 o. alpha do.         NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ ?
+  if. ynorm (=!.0) | 9 o. alpha do.       NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ ?
     y                                     NB. (α,0,0) i.e. H==I, τ==0, β==α, v==0
   else.
     if. REFSAFMIN > ynorm do.             NB. xnorm, β may be inaccurate; scale x and recompute them

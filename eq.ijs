@@ -45,7 +45,7 @@ NB. Notes: implements LAPACK's xLAQR1
 
 laqr1=: 4 : 0
   's1 s2'=. x
-  ((-&s1 upddiag ]) (mp (% norm1t)) ((-&s2 updl 0) {."1 ])) y
+  ((-&s1 upddiag ]) (mp (% norm1t)) ((-&s2 updl 0) ({."1) ])) y
 )
 
 NB. ---------------------------------------------------------
@@ -107,15 +107,15 @@ NB.   signbc - s-vector, scaling factors to form Q,Z later
 hgezqso=: 4 : 0
   liso=. liso4dhs x
   'y signbc'=. x hgexxeo y
-  subHT=. liso {"2 y
-  (((,:~ liso >/ (i. c y))} subHT ,: subHT *"2 signbc) liso}"2 y) ; signbc
+  subHT=. liso ({"2) y
+  ((((,:~) liso >/ (i. c y))} subHT ,: subHT (*"2) signbc) liso}"2 y) ; signbc
 )
 
 hgeqzso=: 4 : 0
   liso=. liso4dhs x
   'y signbc'=. x hgexxeo y
-  subHT=. liso {"1 y
-  (((,:~ (i. c y) </ liso)} subHT ,: subHT *"1 signbc) liso}"1 y) ; signbc
+  subHT=. liso ({"1) y
+  ((((,:~) (i. c y) </ liso)} subHT ,: subHT (*"1) signbc) liso}"1 y) ; signbc
 )
 
 NB. ---------------------------------------------------------
@@ -154,12 +154,12 @@ hgezq=: 1 : 0
 :
   '`hgezqxo init reset step'=. m
   e=. +/ 'h s'=. x
-  dQ1=. dZ1=. 0 4 $ 0
+  dQ1=. dZ1=. ((0 4 $ 0))
   abnorm=. (0 2 ,. ,.~ x) norms"2;.0 y
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgezqxo y  NB. process eigenvalues (columns) h+s:n-1
-  dZ1=. dZ1 , 4 {."1 signbc ,. (c y) liso4th e
+  dZ1=. dZ1 , 4 ({."1) signbc ,. (c y) liso4th e
 
   NB. Eigenvalues h+s:n-1 have been found.
 
@@ -207,7 +207,7 @@ hgezq=: 1 : 0
               NB. superdiagonals in H
               ilazr2=. 0
               if. -. ilazro do.
-                'Hj1j Hjj1 Hjj'=. sorim (< 0 ,. (_1 0,0 1,:0 0) + j) { y
+                'Hj1j Hjj1 Hjj'=. sorim (< 0 ,. ((_1 0,0 1,:0 0)) + j) { y
                 if. 0 >: (Hj1j , Hjj) mp (ascale * (Hjj1 , -atol)) do.
                   ilazr2=. 1
                 end.
@@ -252,7 +252,7 @@ hgezq=: 1 : 0
                   'y cs'=. rot rotga y ; (< 1 ; (2 }. lisor) ; (jch + 0 1)) ; 0
                   y=. cs&rot&.((< 0 ; lisor ; (jch + 0 1))&{) y
                   dZ1=. dZ1 , (+ cs) , jch + 0 1
-                  'y cs'=. rot&.|: rotga y ; (< 0 ; (jch - 0 1) ; lisoc) ; < < a: ; _1
+                  'y cs'=. rot&.|: rotga y ; (< 0 ; (jch - 0 1) ; lisoc) ; ((< < a: ; _1))
                   y=. cs&(rot&.|:)&.((< 1 ; (jch - 0 1) ; (_2 }. lisoc))&{) y
                   dQ1=. dQ1 , cs , jch - 0 1
                   lisor=. }. lisor
@@ -278,7 +278,7 @@ hgezq=: 1 : 0
         NB. T[ilast,ilast]=0 - clear H[ilast-1,ilast] to
         NB. split off a 1x1 block
         liso=. (>: ilast) liso4th ifrstm
-        'y cs'=. rot&.|: rotga y ; (< 0 ; (ilast - 0 1) ; liso) ; < < a: ; _1
+        'y cs'=. rot&.|: rotga y ; (< 0 ; (ilast - 0 1) ; liso) ; ((< < a: ; _1))
         y=. cs&(rot&.|:)&.((< 1 ; (ilast - 0 1) ; (}: liso))&{) y
         dQ1=. dQ1 , cs , ilast - 0 1
       else.
@@ -290,13 +290,13 @@ hgezq=: 1 : 0
       NB. H[ilast-1,ilast]=0 - standartize B, set alpha and
       NB. beta
       'y signbc'=. (ilast , 1) hgezqxo y  NB. process ilast-th eigenvalue (column)
-      dQ1=. dQ1 , 4 {."1 signbc ,. ilast
+      dQ1=. dQ1 , 4 ({."1) signbc ,. ilast
       NB. goto next block - exit if finished
       ilast=. <: ilast
       if. ilast < h do.
         NB. normal exit
         'y signbc'=. (0 , 0 >. <: h) hgezqxo y  NB. process eigenvalues (columns) 0:h-1
-        dQ1=. dQ1 , 4 {."1 signbc ,. i. 0 >. <: h
+        dQ1=. dQ1 , 4 ({."1) signbc ,. i. 0 >. <: h
         y ; dQ1 ; dZ1
         return.
       end.
@@ -321,25 +321,25 @@ hgezq=: 1 : 0
         NB. to the bottom-right element.
         NB. We factor T as D*L, where L is unit lower
         NB. triangular, and compute L^_1*(D^_1*H)
-        'L21 DA11 DA12 DA21 DA22'=. %/ (6 0 1 2 3 ,: 7 4 4 7 7) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
+        'L21 DA11 DA12 DA21 DA22'=. %/ ((6 0 1 2 3 ,: 7 4 4 7 7)) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
         IBA22=. DA22 - L21 * DA12
         t1=. -: DA11 + IBA22
         rtdisc=. %: (t1 , DA21 , -DA11) mp (t1 , DA12 , DA22)
-        temp=. +/!.0 (*/) +. rtdisc , t1 - IBA22
+        temp=. +/!.0 */ +. rtdisc , t1 - IBA22
         shift=. t1 - temp negneg rtdisc
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason
-        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (0 _1 ,: _1 _1) + ilast) { y
+        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. ((0 _1 ,: _1 _1)) + ilast) { y
         shift=. eshift
       end.
       NB. now check for two consecutive small subdiagonals
-      HTd=. (0 1 ,"0 1 ilast (] , -) ifirst) diag"1 2/ y
+      HTd=. (0 1 (,"0 1) ilast (] , -) ifirst) diag"1 2/ y
       ctemp=. (- (shift&*))/ abscale * {. HTd
-      temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
+      temp=. (sorim }."1 ctemp) ,: ascale * sorim ((< 1 ; 0 ; <<0)) { HTd
       tempr=. >./ temp
       temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr)} 1 , tempr ,: 1
-      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
+      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim ((< 1 ; 0 ; <<_1)) { HTd) i: 1
       NB. do an implicit-shift ZQ sweep
       NB. initial Z
       cs=. lartg ctemp , ascale * (< 0 , istart + 0 1) { y
@@ -359,7 +359,7 @@ hgezq=: 1 : 0
         end.
         dZ1=. dZ1 , (+ cs) , liso
         liso=. j + 1 0
-        'y cs'=. rot&.|: rotga y ; (< 1 ; liso ; lisoc) ; < < a: ; _1
+        'y cs'=. rot&.|: rotga y ; (< 1 ; liso ; lisoc) ; ((< < a: ; _1))
         NB. isn't a last iteration?
         if. j < <: ilast do.
           lisoc=. lisoc , j + 2
@@ -379,12 +379,12 @@ hgeqz=: 1 : 0
 :
   '`hgeqzxo init reset step'=. m
   e=. +/ 'h s'=. x
-  dQ1=. dZ1=. 0 4 $ 0
+  dQ1=. dZ1=. ((0 4 $ 0))
   abnorm=. (0 2 ,. ,.~ x) norms"2;.0 y
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgeqzxo y  NB. process eigenvalues (columns) h+s:n-1
-  dZ1=. dZ1 , 4 {."1 signbc ,. (c y) liso4th e
+  dZ1=. dZ1 , 4 ({."1) signbc ,. (c y) liso4th e
 
   NB. Eigenvalues h+s:n-1 have been found.
 
@@ -431,7 +431,7 @@ hgeqz=: 1 : 0
               NB. subdiagonals in H
               ilazr2=. 0
               if. -. ilazro do.
-                'Hjj1 Hj1j Hjj'=. sorim (< 0 ,. (0 _1,1 0,:0 0) + j) { y
+                'Hjj1 Hj1j Hjj'=. sorim (< 0 ,. ((0 _1,1 0,:0 0)) + j) { y
                 if. 0 >: (Hjj1 , Hjj) mp (ascale * (Hj1j , -atol)) do.
                   ilazr2=. 1
                 end.
@@ -447,7 +447,7 @@ hgeqz=: 1 : 0
                 jch=. j
                 liso=. (>: ilastm) liso4th j
                 while. jch < ilast do.
-                  'y cs'=. rot&.|: rotga y ; (< 0 ; (jch + 0 1) ; liso) ; < < a: ; 0
+                  'y cs'=. rot&.|: rotga y ; (< 0 ; (jch + 0 1) ; liso) ; ((< < a: ; 0))
                   liso=. }. liso
                   y=. cs&(rot&.|:)&.((< 1 ; (jch + 0 1) ; liso)&{) y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
@@ -473,7 +473,7 @@ hgeqz=: 1 : 0
                 lisoc=. (>: ilastm) liso4th <: j
                 lisor=. (2 + j) liso4th ifrstm
                 while. jch < ilast do.
-                  'y cs'=. rot&.|: rotga y ; (< 1 ; (jch + 0 1) ; (2 }. lisoc)) ; < < a: ; 0
+                  'y cs'=. rot&.|: rotga y ; (< 1 ; (jch + 0 1) ; (2 }. lisoc)) ; ((< < a: ; 0))
                   y=. cs&(rot&.|:)&.((< 0 ; (jch + 0 1) ; lisoc)&{) y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
                   'y cs'=. rot rotga y ; (< 0 ; lisor ; (jch - 0 1)) ; _1
@@ -493,7 +493,7 @@ hgeqz=: 1 : 0
             j=. <: j
           end.
           NB. drop-through is impossible
-          ((_. ; '') setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
+          (((_. ; '')) setdiag"2 y) ; ((,~ a:))  NB. set all eigenvalues to NaN
           return.
         else.
           y=. 0 (< 1 , ,~ ilast)} y
@@ -514,13 +514,13 @@ hgeqz=: 1 : 0
       NB. H[ilast,ilast-1]=0 - standartize B, set alpha and
       NB. beta
       'y signbc'=. (ilast , 1) hgeqzxo y  NB. process ilast-th eigenvalue (column)
-      dZ1=. dZ1 , 4 {."1 signbc ,. ilast
+      dZ1=. dZ1 , 4 ({."1) signbc ,. ilast
       NB. goto next block - exit if finished
       ilast=. <: ilast
       if. ilast < h do.
         NB. normal exit
         'y signbc'=. (0 , 0 >. <: h) hgeqzxo y  NB. process eigenvalues (columns) 0:h-1
-        dZ1=. dZ1 , 4 {."1 signbc ,. i. 0 >. <: h
+        dZ1=. dZ1 , 4 ({."1) signbc ,. i. 0 >. <: h
         y ; dQ1 ; dZ1
         return.
       end.
@@ -545,25 +545,25 @@ hgeqz=: 1 : 0
         NB. to the bottom-right element.
         NB. We factor T as U*D, where U is unit upper
         NB. triangular, and compute (H*D^_1)*U^_1
-        'U12 AD11 AD21 AD12 AD22'=. %/ (5 0 2 1 3 ,: 7 4 4 7 7) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
+        'U12 AD11 AD21 AD12 AD22'=. %/ ((5 0 2 1 3 ,: 7 4 4 7 7)) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
         ABI22=. AD22 - U12 * AD21
         t1=. -: AD11 + ABI22
         rtdisc=. %: (t1 , AD12 , -AD11) mp (t1 , AD21 , AD22)
-        temp=. +/!.0 (*/) +. rtdisc , t1 - ABI22
+        temp=. (+/!.0) */ +. rtdisc , t1 - ABI22
         shift=. t1 - temp negneg rtdisc
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason
-        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (_1 0 ,: _1 _1) + ilast) { y
+        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. ((_1 0 ,: _1 _1)) + ilast) { y
         shift=. eshift
       end.
       NB. now check for two consecutive small subdiagonals
-      HTd=. (0 _1 ,"0 1 ilast (] , -) ifirst) diag"1 2/ y
+      HTd=. (0 _1 (,"0 1) ilast (] , -) ifirst) diag"1 2/ y
       ctemp=. (- (shift&*))/ abscale * {. HTd
-      temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
-      tempr=. >./ temp
+      temp=. (sorim }."1 ctemp) ,: ascale * sorim ((< 1 ; 0 ; <<0)) { HTd
+      tempr=. (>./) temp
       temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr)} 1 , tempr ,: 1
-      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
+      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim ((< 1 ; 0 ; <<_1)) { HTd) i: 1
       NB. do an implicit-shift QZ sweep
       NB. initial Q
       cs=. lartg ctemp , ascale * (< 0 , istart + 1 0) { y
@@ -577,7 +577,7 @@ hgeqz=: 1 : 0
         if. j = istart do.
           y=. cs&(rot&.|:)"2&.((< a: ; liso ; lisoc)&{) y
         else.
-          'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc) ; < < a: ; 0
+          'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc) ; ((< < a: ; 0))
           lisoc=. }. lisoc
           y=. cs&(rot&.|:)&.((< 1 ; liso ; lisoc)&{) y
         end.

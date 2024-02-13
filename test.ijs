@@ -354,19 +354,19 @@ drgev=: 1 : 0
   'e1e2 V'=. y
   n=. # V
   if. 0 = n do. 0 return. end.
-  banorm=. |. FP_SFMIN >. 1 {:: x                         NB. 2-vector, float
-  alfbetmax=. (% FP_SFMIN) % 1 >. banorm                  NB. 2-vector, float
-  abs1ab=. sorim"1 e1e2                                   NB. 2×n-matrix, float
-  abmax=. >./ abs1ab                                      NB. n-vector, float
-  cond=. +./ (abs1ab > alfbetmax) , 1 > abmax             NB. n-vector, boolean
-  e1e2=. e1e2 %"1 cond} 1 ,: FP_SFMIN >. abmax            NB. 2×n-matrix
-  abcoeff=. (|. e1e2) %"1 >./ FP_SFMIN , abs1ab * banorm  NB. 2×n-matrix
-  Err=. -/ abcoeff vmul (0 {:: x) mmul V                  NB. n×n-matrix
-  errnrm=. (norma Err) % FP_PREC >. norma V               NB. scalar, float
-  result1=. errnrm % FP_PREC                              NB. scalar, float
-  enrmer=. normir <: normb V                              NB. scalar, float
-  result2=. enrmer % FP_PREC * n                          NB. scalar, float
-  result1 >. result2                                      NB. scalar, float
+  banorm=. |. FP_SFMIN >. 1 {:: x                             NB. 2-vector, float
+  alfbetmax=. (% FP_SFMIN) % 1 >. banorm                      NB. 2-vector, float
+  abs1ab=. sorim"1 e1e2                                       NB. 2×n-matrix, float
+  abmax=. (>./) abs1ab                                        NB. n-vector, float
+  cond=. (+./) (abs1ab > alfbetmax) , 1 > abmax               NB. n-vector, boolean
+  e1e2=. e1e2 (%"1) cond} 1 ,: FP_SFMIN >. abmax              NB. 2×n-matrix
+  abcoeff=. (|. e1e2) (%"1) (>./) FP_SFMIN , abs1ab * banorm  NB. 2×n-matrix
+  Err=. -/ abcoeff vmul (0 {:: x) mmul V                      NB. n×n-matrix
+  errnrm=. (norma Err) % FP_PREC >. norma V                   NB. scalar, float
+  result1=. errnrm % FP_PREC                                  NB. scalar, float
+  enrmer=. normir <: normb V                                  NB. scalar, float
+  result2=. enrmer % FP_PREC * n                              NB. scalar, float
+  result1 >. result2                                          NB. scalar, float
 )
 
 NB. ---------------------------------------------------------

@@ -191,7 +191,7 @@ tmonad=: 2 : 0
   try.
     ybak=. memu argy=. vgety y
     try.
-      't s'=. , (5 1 # i. 2) <./`]/. (5 1 # timex`(7!:2))`:0 'ret=. ' , m , ' argy'
+      't s'=. , ((5 1 # i. 2)) (<./`]/.) (5 1 # timex`(7!:2))`:0 'ret=. ' , m , ' argy'
       if. -. argy -: ybak do. m=. m , ' NB. error: y changed' end.
       try.
         out=. vgeto ret
@@ -220,7 +220,7 @@ tdyad=: 2 : 0
     xbak=. memu argx=. vgetx y
     ybak=. memu argy=. vgety y
     try.
-      't s'=. , (5 1 # i. 2) <./`]/. (5 1 # timex`(7!:2))`:0 'ret=. argx ' , m , ' argy'
+      't s'=. , ((5 1 # i. 2)) (<./`]/.) (5 1 # timex`(7!:2))`:0 'ret=. argx ' , m , ' argy'
       select. #. (argx -: xbak) , argy -: ybak
         case. 2 do. m=. m , ' NB. error: y was changed'
         case. 1 do. m=. m , ' NB. error: x was changed'

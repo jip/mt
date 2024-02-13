@@ -286,15 +286,15 @@ lahefpl=: (3 : 0)^:(TRFNB<.#@(0&{::))
   'ip A lt t0 t1'=. y
   w=. lt ((-~&# { ]) ((}.~ #) - ({.~ #) mp ]) ((-~,-@[)&# {. ])) A
   A=. (w,:lt) ((0 lisoE),:(0 lisoS))&c} A
-  w=. 9&o.&.(0&{) w - lt (({.@[ * +@((_1 lisoS)&# ({,) ])) :: 0) A
+  w=. (9&o.&.(0&{)) w - lt ((({.@[) * +@((_1 lisoS)&# ({,) ])) :: 0) A
   lt=. lt (+@}.@] - ((* }.)~ {.)) w
   dip=. (liofmax (-@] <@, -) #) lt
-  ip=. dip C. :: ] ip
+  ip=. dip (C. :: ]) ip
   A=. dip fp :: ] A
-  lt=. dip C. :: ] lt
-  lt=. 0 ({`[`(] % {))} :: ] lt
+  lt=. dip (C. :: ]) lt
+  lt=. 0 (({`[`(] % {))} :: ]) lt
   t0=. t0 , {. w
-  t1=. t1 , 0 { :: ] lt
+  t1=. t1 , 0 ({ :: ]) lt
   ip ; A ; lt ; t0 ; t1
 )
 
@@ -529,15 +529,15 @@ lahefpu=: (3 : 0)^:(TRFNB<.#@(0&{::))
   'ip A ut t0 t1'=. y
   w=. ut ((<:@-&# { ]) (({.~ c) - (}.~ c) mp ]) ((-,[)&# {. ])) A
   A=. (ut,:w) ((0 lisoN),:(0 lisoW))&c} A
-  w=. 9&o.&.(_1&{) w - ut (({:@[ * +@((1 lisoN)&# ({,) ])) :: 0) A
+  w=. (9&o.&.(_1&{)) w - ut ((({:@[) * +@((1 lisoN)&# ({,) ])) :: 0) A
   ut=. ut (+@}:@] - ((* }:)~ {:)) w
-  dip=. (<:@(1>.#) <@, liolmax) ut
-  ip=. dip C. :: ] ip
+  dip=. ((<:@(1>.#)) (<@,) liolmax) ut
+  ip=. dip (C. :: ]) ip
   A=. dip fp :: ] A
-  ut=. dip C. :: ] ut
-  ut=. _1 ({`[`(] % {))} :: ] ut
+  ut=. dip (C. :: ]) ut
+  ut=. _1 (({`[`(] % {))} :: ]) ut
   t0=. ({: w) , t0
-  t1=. (_1 { :: ] ut) , t1
+  t1=. (_1 ({ :: ]) ut) , t1
   ip ; A ; ut ; t0 ; t1
 )
 
@@ -686,17 +686,17 @@ getrflu1p=: 3 : 0
     (i. n) ; y
   elseif. 1 = m do.
     dip=. < 0 , liofmax {. y
-    ip=. dip C. :: ] i. n
-    y=. ((] 0:} %) 0&({,)) dip C."1 :: ] y
+    ip=. dip (C. :: ]) i. n
+    y=. ((] 0:} %) 0&({,)) dip (C."1 :: ]) y
     ip ; y
   else.
     k=. n (<. >.@-:) m
     'ip LaaU1a'=. getrflu1p k {. y
-    y=. ip C."1 k }. y
+    y=. ip (C."1) k }. y
     Lba=. LaaU1a trsmrunu&(k&({."1)) y
     'ipb LbbU1bb'=. getrflu1p y (- Lba&mp)&(k&(}."1)) LaaU1a
     dipb=. (i. k) , (k + ipb)
-    (dipb C. ip) ; (dipb C."1 LaaU1a) , (Lba ,. LbbU1bb)
+    (dipb C. ip) ; (dipb (C."1) LaaU1a) , (Lba ,. LbbU1bb)
   end.
 )
 
@@ -846,12 +846,12 @@ getrfpl1u=: 3 : 0
   elseif. 1 = n do.
     dip=. < 0 , liofmax y
     ip=. dip C. :: ] i. m
-    y=. ((] 0:} %) 0&({,)) dip C. :: ] y
+    y=. ((] 0:} %) 0&({,)) dip (C. :: ]) y
     ip ; y
   else.
     k=. m (<. >.@-:) n
-    'pi L1aUaa'=. getrfpl1u k {."1 y
-    y=. pi C. k }."1 y
+    'pi L1aUaa'=. getrfpl1u k ({."1) y
+    y=. pi C. k (}."1) y
     Uab=. L1aUaa trsmllnu&(k&{.) y
     'ipb L1bbUbb'=. getrfpl1u y (- mp&Uab)&(k&}.) L1aUaa
     dipb=. (i. k) , (k + ipb)
@@ -1001,13 +1001,13 @@ getrfpu1l=: 3 : 0
     (i. m) ; y
   elseif. 1 = n do.
     dip=. < _1 , liolmax y
-    ip=. dip C. :: ] i. m
-    y=. ((] _1:} %) _1&({,)) dip C. :: ] y
+    ip=. dip (C. :: ]) i. m
+    y=. ((] _1:} %) _1&({,)) dip (C. :: ]) y
     ip ; y
   else.
     k=. m (<. >.@-:) n
-    'ip U1bLbb'=. getrfpu1l (-k) {."1 y
-    y=. ip C. (-k) }."1 y
+    'ip U1bLbb'=. getrfpu1l (-k) ({."1) y
+    y=. ip C. (-k) (}."1) y
     Lab=. U1bLbb trsmlunu&((-k)&{.) y
     'ipa U1aaLaa'=. getrfpu1l y (- mp&Lab)&((-k)&}.) U1bLbb
     dipa=. ipa , ((m-k) + i. k)
@@ -1157,8 +1157,8 @@ getrful1p=: 3 : 0
     (i. n) ; y
   elseif. 1 = m do.
     dip=. < _1 , liolmax {. y
-    ip=. dip C. :: ] i. n
-    y=. ((] _1:} %) _1&({,)) dip C."1 :: ] y
+    ip=. dip (C. :: ]) i. n
+    y=. ((] _1:} %) _1&({,)) dip (C."1 :: ]) y
     ip ; y
   else.
     k=. n (<. >.@-:) m
@@ -1167,7 +1167,7 @@ getrful1p=: 3 : 0
     Uab=. UbbL1b trsmrlnu&((-k)&({."1)) y
     'ipa UaaL1aa'=. getrful1p y (- Uab&mp)&((-k)&(}."1)) UbbL1b
     dipa=. ipa , ((n-k) + i. k)
-    (dipa C."1 ip) ; (UaaL1aa ,. Uab) , (dipa C."1 UbbL1b)
+    (dipa C."1 ip) ; (UaaL1aa ,. Uab) , (dipa (C."1) UbbL1b)
   end.
 )
 
@@ -1264,7 +1264,7 @@ NB. - T would be sparse
 hetrfpl=: 3 : 0
   n=. # y
   ip=. i. n
-  L1=. 0 {."1 y
+  L1=. 0 ({."1) y
   lt=. n # 0
   t0=. t1=. i. 0
   i=. 0
@@ -1274,7 +1274,7 @@ hetrfpl=: 3 : 0
     ip=. dip C. ip
     subL1=. trl1 (_,TRFNB) rt y
     L1=. (dip C. L1) stitchb subL1
-    y=. ((2 # TRFNB) }. y) - (((TRFNB }. subL1) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 { :: ] lt) * (1 (0}) :: ] lt)) */ + (lt ((_1 lisoS)&# ({,) ]) y))
+    y=. ((2 # TRFNB) }. y) - (((TRFNB }. subL1) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 ({ :: ]) lt) * (1 (0} :: ]) lt)) */ + (lt ((_1 lisoS)&# ({,) ]) y))
     i=. TRFNB + i
   end.
   T=. t1 (((setdiag~ ;&_1) (setdiag~ + ; 1:) ])~ diagmat) t0
@@ -1371,7 +1371,7 @@ NB. - T would be sparse
 hetrfpu=: 3 : 0
   n=. # y
   ip=. i. n
-  U1=. 0 {."1 y
+  U1=. 0 ({."1) y
   ut=. n # 0
   t0=. t1=. i. 0
   i=. _1
@@ -1381,7 +1381,7 @@ hetrfpu=: 3 : 0
     ip=. dip C. ip
     subU1=. (tru1~ -~/@$) (_,-TRFNB) rt y
     U1=. subU1 stitcht (dip C. U1)
-    y=. ((2 # -TRFNB) }. y) - ((((-TRFNB) }. subU1) mp ((-TRFNB) ((((0>.+)#),[) }. ]) y)) + ((_1 { :: ] ut) * (1 (_1}) :: ] ut)) */ + (ut ((1 lisoN)&# ({,) ]) y))
+    y=. ((2 # -TRFNB) }. y) - ((((-TRFNB) }. subU1) mp ((-TRFNB) ((((0>.+)#),[) }. ]) y)) + ((_1 ({ :: ]) ut) * (1 (_1} :: ]) ut)) */ + (ut ((1 lisoN)&# ({,) ]) y))
     i=. i - TRFNB
   end.
   T=. t1 (((setdiag~ ;&1) (setdiag~ + ; _1:) ])~ diagmat) t0

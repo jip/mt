@@ -88,7 +88,7 @@ NB.            otherwise
 gemmcore=: 4 : 0
   y=. memu&.>&.(_1&{) y  NB. unalias C
   objs=. obja L: 0 y     NB. allocate BLIS objects bonded to J nouns
-  x obj_set_conjtrans"1 0 (1 ,: 2) {:: objs
+  x obj_set_conjtrans"1 0 ((1 ,: 2)) {:: objs
     NB. transpose A and/or B optionally
   gemm_cd <"0 objs       NB. call bli_gemm() with each param marked as object address
   objf L: 0 objs         NB. free BLIS objects
@@ -162,7 +162,7 @@ NB.            otherwise
 gemmtcore=: (4 : 0) ([ assert@basiccr4)
   y=. memu&.>&.(_1&{) y  NB. unalias C
   objs=. obja L: 0 y     NB. allocate BLIS objects bonded to J nouns
-  x (2 1 # obj_set_conjtrans`obj_set_uplo)"1 0 (,. 1 2 4) {:: objs
+  x (2 1 # obj_set_conjtrans`obj_set_uplo)"1 0 ((,. 1 2 4)) {:: objs
     NB. select C part, transpose A and/or B optionally
   gemmt_cd <"0 objs      NB. call bli_gemmt() with each param marked as object address
   objf L: 0 objs         NB. free BLIS objects
@@ -237,7 +237,7 @@ NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 symmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   y=. memu&.>&.(_1&{) y               NB. unalias C
   objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
-  (SYMMETRIC 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 (,. 1 1 1 2) {:: objs
+  (SYMMETRIC 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 ((,. 1 1 1 2)) {:: objs
     NB. set A structure, select A part, conjugate A optionally, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
@@ -249,7 +249,7 @@ symmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
 hemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   y=. memu&.>&.(_1&{) y               NB. unalias C
   objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
-  (HERMITIAN 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 (,. 1 1 1 2) {:: objs
+  (HERMITIAN 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 ((,. 1 1 1 2)) {:: objs
     NB. set A structure, select A part, conjugate A optionally, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
@@ -416,7 +416,7 @@ NB.            otherwise
 trmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
   y=. memu&.>&.(_1&{) y                NB. unalias C
   objs=. obja L: 0 y                   NB. allocate BLIS objects bonded to J nouns
-  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag`obj_set_conjtrans"1 0 (,. 4 1 # 1 2) {:: objs
+  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag`obj_set_conjtrans"1 0 ((,. 4 1 # 1 2)) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here

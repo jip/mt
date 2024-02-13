@@ -198,11 +198,11 @@ NB. - laic12 models LAPACK's xLAIC1(2) and computes smallest
 NB.   singular value
 
 laic11=: 3 : 0
-  'absest absga'=. | L: 0 'sest ga'=. y
+  'absest absga'=. (|L:0) 'sest ga'=. y
   'absg absa'=. absga
   NB. special cases
   if. 0 = sest do.
-    if. >./ absga do.
+    if. (>./) absga do.
       stardot ga
     else.
       0 ; 1 0
@@ -215,7 +215,7 @@ laic11=: 3 : 0
     else.
       absg ; 1 0
     end.
-  elseif. +./ absest <: FP_EPS * absga do.
+  elseif. (+./) absest <: FP_EPS * absga do.
     stardot ga
   else.
     NB. normal case
@@ -235,7 +235,7 @@ laic12=: 3 : 0
   'absa absg'=. absag=. | ag=. |. ga
   NB. special cases
   if. 0 = sest do.
-    if. >./ absag do.
+    if. (>./) absag do.
       0 ; qnsign qnconij ag
     else.
       0 ; 0 1
@@ -248,8 +248,8 @@ laic12=: 3 : 0
     else.
       absest ; 0 1
     end.
-  elseif. +./ absest <: FP_EPS * absag do.
-    scl=. >:&.*: tmp=. %/ 'm M'=. absa (<. , >.) absg
+  elseif. (+./) absest <: FP_EPS * absag do.
+    scl=. (>:&.*:) tmp=. %/ 'm M'=. absa (<. , >.) absg
     cs=. scl %~ M %~ qnconij ag
     if. absg > absa do.
       (absest % scl) ; cs
@@ -259,7 +259,7 @@ laic12=: 3 : 0
   else.
     NB. normal case
     norma=. (>:@(+/)@(* {.) >. +/@(* {:)) zeta=. absag % absest
-    if. 0 <: >: +: (- * +)/ zeta do.
+    if. 0 <: >: +: ((- * +)/) zeta do.
       b=. -: >: +/ 't c'=. *: zeta
       t=. c % b + %: | (*: b) - c
       (absest * %: t + 4 * norma * *: FP_EPS) ; qnsign (ga % absest) % (, >:) -t

@@ -107,15 +107,14 @@ NB. - if L diagonal's non-negativity is required, then
 NB.   larfgfc would be replaced by larfpfc
 
 gelq2=: 3 : 0
-  pfx=. 0 {."1 y
-  sfxT=. 0 {. y
-  while. -. 0 e. 0 _1 + $ y do.
+  'pfx sfxT'=. 0 ({."1 ; {.) y
+  while. -. (0 e. 0 _1 + $) y do.
     z=. larfgfc {. y
     sfxT=. sfxT , z
     y=. ((1) 0} z) larfrnfr }. y
-    pfx=. pfx ,. sfxT ,&:({."1) y
-    sfxT=. }."1 sfxT
-    y=. }."1 y
+    pfx=. pfx ,. sfxT (,&:({."1)) y
+    sfxT=. (}."1) sfxT
+    y=. (}."1) y
   end.
   pfx stitcht sfxT
 )
@@ -176,13 +175,12 @@ NB. - if L diagonal's non-negativity is required, then larfgb
 NB.   would be replaced by larfpb
 
 geql2=: 3 : 0
-  pfxR=. 0 {."1 y
-  sfx=. 0 {. y
-  while. -. 0 e. _1 0 + $ y do.
-    z=. larfgb {:"1 y
+  'pfxR sfx'=. 0 ({."1 ; {.) y
+  while. -. (0 e. _1 0 + $) y do.
+    z=. larfgb ({:"1) y
     pfxR=. z ,. pfxR
-    y=. ((1) _1} z) larflcbc }:"1 y
-    sfx=. sfx ,~ y ,&{: pfxR
+    y=. ((1) _1} z) larflcbc (}:"1) y
+    sfx=. sfx ,~ y (,&{:) pfxR
     y=. }: y
     pfxR=. }: pfxR
   end.
@@ -245,13 +243,12 @@ NB. - if R diagonal's non-negativity is required, then larfgf
 NB.   would be replaced by larfpf
 
 geqr2=: 3 : 0
-  pfx=. 0 {. y
-  sfxL=. 0 {."1 y
-  while. -. 0 e. _1 0 + $ y do.
-    z=. larfgf {."1 y
+  'pfx sfxL'=. 0 ({. ; {."1) y
+  while. -. (0 e. _1 0 + $) y do.
+    z=. larfgf ({."1) y
     sfxL=. sfxL ,. z
     y=. ((1) 0} z) larflcfc }."1 y
-    pfx=. pfx , sfxL ,&{. y
+    pfx=. pfx , sfxL (,&{.) y
     sfxL=. }. sfxL
     y=. }. y
   end.
@@ -317,15 +314,14 @@ NB. - if R diagonal's non-negativity is required, then
 NB.   larfgbc would be replaced by larfpbc
 
 gerq2=: 3 : 0
-  pfxB=. 0 {. y
-  sfx=. 0 {."1 y
-  while. -. 0 e. 0 _1 + $ y do.
+  'pfxB sfx'=. 0 ({. ; {."1) y
+  while. -. (0 e. 0 _1 + $) y do.
     z=. larfgbc {: y
     pfxB=. z , pfxB
     y=. ((1) _1} z) larfrnbr }: y
-    sfx=. sfx ,.~ y ,&:({:"1) pfxB
-    y=. }:"1 y
-    pfxB=. }:"1 pfxB
+    sfx=. sfx ,.~ y (,&:({:"1)) pfxB
+    y=. (}:"1) y
+    pfxB=. (}:"1) pfxB
   end.
   pfxB stitchb sfx
 )
@@ -398,11 +394,10 @@ NB.   0s and 1 are absent and u(i) is empty when n=0
 latlz=: 4 : 0
   iso=. < < < (liso4dhs 0 , x) , _1
   m=. # y
-  sfxR=. (- m) {."1 y
-  y=. (- m) }."1 y
+  'sfxR y'=. (- m) ({."1 ; }."1) y
   pfx=. 0 {. y
   while. # y do.
-    y=. y ,. {."1 sfxR
+    y=. y (,. {."1) sfxR
     sfxR=. 1 1 }. sfxR
     z=. {. y
     bak=. iso { z
@@ -477,16 +472,15 @@ NB.   0s and 1 are absent and u(i) is empty when n=0
 latzl=: 4 : 0
   iso=. < < < 0 , liso4dhs _1 , x
   n=. c y
-  pfxT=. n {. y
-  y=. n }. y
-  sfx=. 0 {."1 y
+  'pfxT y'=. n ({. ; }.) y
+  sfx=. 0 ({."1) y
   while. c y do.
     y=. ({: pfxT) , y
     pfxT=. _1 _1 }. pfxT
-    z=. {:"1 y
+    z=. ({:"1) y
     bak=. iso { z
     z=. larfgf 0 iso} z
-    y=. ((1) 0} z) larzlcbc }:"1 y
+    y=. ((1) 0} z) larzlcbc (}:"1) y
     sfx=. (bak iso} z) ,. 0 , sfx
   end.
   sfx
@@ -555,16 +549,15 @@ NB.   0s and 1 are absent and u(i) is empty when n=0
 latzr=: 4 : 0
   iso=. < < < (liso4dhs 0 , x) , _1
   n=. c y
-  sfxB=. (- n) {. y
-  y=. (- n) }. y
-  pfx=. 0 {."1 y
+  'sfxB y'=. (- n) ({. ; }.) y
+  pfx=. 0 ({."1) y
   while. c y do.
     y=. y , {. sfxB
     sfxB=. 1 1 }. sfxB
-    z=. {."1 y
+    z=. ({."1) y
     bak=. iso { z
     z=. larfgb 0 iso} z
-    y=. ((1) _1} z) larzlcfc }."1 y
+    y=. ((1) _1} z) larzlcfc (}."1) y
     pfx=. (pfx , 0) ,. bak iso} z
   end.
   pfx
@@ -642,11 +635,10 @@ NB.   0s and 1 are absent and u(i) is empty when n=0
 latrz=: 4 : 0
   iso=. < < < 0 , liso4dhs _1 , x
   m=. # y
-  pfxL=. m {."1 y
-  y=. m }."1 y
+  'pfxL y'=. m ({."1 ; }."1) y
   sfx=. 0 {. y
   while. # y do.
-    y=. ({:"1 pfxL) ,. y
+    y=. (({:"1) pfxL) ,. y
     pfxL=. _1 _1 }. pfxL
     z=. {: y
     bak=. iso { z
@@ -713,16 +705,15 @@ NB. - gelq2 and gelqf are topologic equivalents
 
 gelqf=: 3 : 0
   y=. y ,. 0
-  pfx=. 0 {."1 y
-  sfxT=. 0 {. y
-  while. -. 0 e. QFNX < 0 _1 + $ y do.
-    nb=. <./ QFNB , 0 _1 + $ y
+  'pfx sfxT'=. 0 ({."1 ; {.) y
+  while. -. 0 e. QFNX (< 0 _1 + $) y do.
+    nb=. (<./) QFNB (, 0 _1 + $) y
     Z=. gelq2 nb {. y
     sfxT=. sfxT , Z
     y=. (tru1 Z) larfbrnfr nb }. y
     pfx=. pfx ,. sfxT ,&(nb&({."1)) y
-    sfxT=. nb }."1 sfxT
-    y=. nb }."1 y
+    sfxT=. nb (}."1) sfxT
+    y=. nb (}."1) y
   end.
   pfx ,. sfxT , gelq2 y
 )
@@ -777,13 +768,12 @@ NB. - geql2 and geqlf are topologic equivalents
 
 geqlf=: 3 : 0
   y=. 0 , y
-  pfxR=. 0 {."1 y
-  sfx=. 0 {. y
-  while. -. 0 e. QFNX < _1 0 + $ y do.
-    nb=. - <./ QFNB , _1 0 + $ y
-    Z=. geql2 nb {."1 y
+  'pfxR sfx'=. 0 ({."1 ; {.) y
+  while. -. 0 e. QFNX (< _1 0 + $) y do.
+    nb=. - (<./) QFNB (, _1 0 + $) y
+    Z=. geql2 nb ({."1) y
     pfxR=. Z ,. pfxR
-    y=. ((tru1~ -~/@$) Z) larfblcbc nb }."1 y
+    y=. ((tru1~ -~/@$) Z) larfblcbc nb (}."1) y
     sfx=. sfx ,~ y ,.&(nb&{.) pfxR
     y=. nb }. y
     pfxR=. nb }. pfxR
@@ -841,13 +831,12 @@ NB. - geqr2 and geqrf are topologic equivalents
 
 geqrf=: 3 : 0
   y=. y , 0
-  pfx=. 0 {. y
-  sfxL=. 0 {."1 y
-  while. -. 0 e. QFNX < _1 0 + $ y do.
-    nb=. <./ QFNB , _1 0 + $ y
-    Z=. geqr2 nb {."1 y
+  'pfx sfxL'=. 0 ({. ; {."1) y
+  while. -. 0 e. QFNX (< _1 0 + $) y do.
+    nb=. (<./) QFNB , (_1 0 + $) y
+    Z=. geqr2 nb ({."1) y
     sfxL=. sfxL ,. Z
-    y=. (trl1 Z) larfblcfc nb }."1 y
+    y=. (trl1 Z) larfblcfc nb (}."1) y
     pfx=. pfx , sfxL ,.&(nb&{.) y
     sfxL=. nb }. sfxL
     y=. nb }. y
@@ -908,16 +897,15 @@ NB. - gerq2 and gerqf are topologic equivalents
 
 gerqf=: 3 : 0
   y=. 0 ,. y
-  pfxB=. 0 {. y
-  sfx=. 0 {."1 y
-  while. -. 0 e. QFNX < 0 _1 + $ y do.
-    nb=. - <./ QFNB , 0 _1 + $ y
+  'pfxB sfx'=. 0 ({. ; {."1) y
+  while. -. 0 e. QFNX (< 0 _1 + $) y do.
+    nb=. - (<./) QFNB (, 0 _1 + $) y
     Z=. gerq2 nb {. y
     pfxB=. Z , pfxB
     y=. ((trl1~ -~/@$) Z) larfbrnbr nb }. y
     sfx=. sfx ,.~ y ,&(nb&({."1)) pfxB
-    y=. nb }."1 y
-    pfxB=. nb }."1 pfxB
+    y=. nb (}."1) y
+    pfxB=. nb (}."1) pfxB
   end.
   sfx ,.~ pfxB ,~ gerq2 y
 )
@@ -989,18 +977,17 @@ NB. - strict upper triangle of iL is ignored
 
 tzlzf=: 3 : 0
   y=. 0 ,. y
-  l=. -~/ 'm n1'=. $ y
-  sfxR=. (- m) {."1 y
-  y=. (- m) }."1 y
+  l=. (-~/) 'm n1'=. $ y
+  'sfxR y'=. (- m) ({."1 ; }."1) y
   pfx=. 0 {. y
   nb=. QFNB <. # y
   I=. idmat nb
   O=. (2 # nb) $ 0
   while. QFNX < # y do.
-    y=. y ,. nb {."1 sfxR
+    y=. y ,. nb ({."1) sfxR
     sfxR=. (2 # nb) }. sfxR
     Z=. l latlz nb {. y
-    y=. (I ,.~ l {."1 Z) larzbrnfr nb }. y
+    y=. (I ,.~ l ({."1) Z) larzbrnfr nb }. y
     I=. O ,. I
     pfx=. pfx appendl Z
   end.
@@ -1069,17 +1056,16 @@ NB. - strict upper triangle of iL is ignored
 tzzlf=: 3 : 0
   y=. y , 0
   l=. -/ 'm1 n'=. $ y
-  pfxT=. n {. y
-  y=. n }. y
-  sfx=. 0 {."1 y
+  'pfxT y'=. n ({. ; }.) y
+  sfx=. 0 ({."1) y
   nb=. - QFNB <. c y
   I=. idmat - nb
   O=. (2 # - nb) $ 0
   while. QFNX < c y do.
     y=. (nb {. pfxT) , y
     pfxT=. (2 # nb) }. pfxT
-    Z=. l latzl nb {."1 y
-    y=. (I , (- l) {. Z) larzblcbc nb }."1 y
+    Z=. l latzl nb ({."1) y
+    y=. (I , (- l) {. Z) larzblcbc nb (}."1) y
     I=. I , O
     sfx=. Z stitchb sfx
   end.
@@ -1148,17 +1134,16 @@ NB. - strict lower triangle of iR is ignored
 tzzrf=: 3 : 0
   y=. 0 , y
   l=. -/ 'm1 n'=. $ y
-  sfxB=. (- n) {. y
-  y=. (- n) }. y
-  pfx=. 0 {."1 y
+  'sfxB y'=. (- n) ({. ; }.) y
+  pfx=. 0 ({."1) y
   nb=. QFNB <. c y
   I=. idmat nb
   O=. (2 # nb) $ 0
   while. QFNX < c y do.
     y=. y , nb {. sfxB
     sfxB=. (2 # nb) }. sfxB
-    Z=. l latzr nb {."1 y
-    y=. (I ,~ l {. Z) larzblcfc nb }."1 y
+    Z=. l latzr nb ({."1) y
+    y=. (I ,~ l {. Z) larzblcfc nb (}."1) y
     I=. O , I
     pfx=. pfx stitcht Z
   end.
@@ -1236,17 +1221,16 @@ NB. - strict lower triangle of iR is ignored
 tzrzf=: 3 : 0
   y=. y ,. 0
   l=. -/ 'm n1'=. $ y
-  pfxL=. m {."1 y
-  y=. m }."1 y
+  'pfxL y'=. m ({."1 ; }."1) y
   sfx=. 0 {. y
   nb=. - QFNB <. # y
   I=. idmat - nb
   O=. (2 # - nb) $ 0
   while. QFNX < # y do.
-    y=. (nb {."1 pfxL) ,. y
+    y=. (nb ({."1) pfxL) ,. y
     pfxL=. (2 # nb) }. pfxL
     Z=. (- l) latrz nb {. y
-    y=. (I ,. l {."1 Z) larzbrnbr nb }. y
+    y=. (I ,. l ({."1) Z) larzbrnbr nb }. y
     I=. I ,. O
     sfx=. Z appendr sfx
   end.

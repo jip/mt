@@ -105,7 +105,7 @@ getrilu1pstep=: 3 : 0
   'pfx sfx'=. y
   'j n'=. $ pfx
   j=. j - TRINB
-  U0i=. (,.~ j , TRINB) ];.0 pfx
+  U0i=. (,.~ j , TRINB) (];.0) pfx
   U1i=. (- TRINB , # sfx) {. pfx
   Ri=. (-TRINB) {. pfx
   Ri=. ((i. TRINB) </ (i. n) - j)} Ri ,: 0  NB. spec code
@@ -175,13 +175,13 @@ getripl1ustep=: 3 : 0
   'pfx sfx'=. y
   'n j'=. $ pfx
   j=. j - TRINB
-  L0i=. (,.~ j , TRINB) ];.0 pfx
+  L0i=. (,.~ j , TRINB) (];.0) pfx
   L1i=. (- (c sfx),TRINB) {. pfx
-  Ci=. (-TRINB) {."1 pfx
+  Ci=. (-TRINB) ({."1) pfx
   Ci=. (((i. n) - j) >/ i. TRINB)} Ci ,: 0  NB. spec code
   Ci=. Ci - sfx mp L1i
   Ci=. L0i trsmrlnu Ci
-  ((-TRINB) }."1 pfx) ; Ci ,. sfx
+  ((-TRINB) (}."1) pfx) ; Ci ,. sfx
 )
 
 NB. ---------------------------------------------------------
@@ -240,13 +240,13 @@ NB.      5.3) link sfx(i+1) to pfx(i+1)
 getripu1lstep=: 3 : 0
   'pfx sfx'=. y
   'n j'=. $ pfx
-  U0i=. ((j , 0) ,: 2 # TRINB) ];.0 sfx
+  U0i=. ((j , 0) ,: 2 # TRINB) (];.0) sfx
   U1i=. (j , TRINB) {. sfx
-  Ci=. TRINB {."1 sfx
+  Ci=. TRINB ({."1) sfx
   Ci=. (((i. n) - j) </ i. TRINB)} Ci ,: 0  NB. spec code
   Ci=. Ci - pfx mp U1i
   Ci=. U0i trsmrunu Ci
-  (pfx ,. Ci) ; TRINB }."1 sfx
+  (pfx ,. Ci) ; TRINB (}."1) sfx
 )
 
 NB. ---------------------------------------------------------
@@ -306,7 +306,7 @@ NB.      5.3) link sfx(i+1) to pfx(i+1)
 getriul1pstep=: 3 : 0
   'pfx sfx'=. y
   'j n'=. $ pfx
-  L0i=. ((0 , j) ,: 2 # TRINB) ];.0 sfx
+  L0i=. ((0 , j) ,: 2 # TRINB) (];.0) sfx
   L1i=. (TRINB , j) {. sfx
   Ri=. TRINB {. sfx
   Ri=. ((i. TRINB) >/ (i. n) - j)} Ri ,: 0  NB. spec code
@@ -521,7 +521,7 @@ getripl1u=: 3 : 0
   y=. trtriu tru L1U
   y=. y uxsly L1U
   I=. <. n % TRINB
-  ip (C.^:_1"1) 1 {:: getripl1ustep^:I (TRINB * I) ({."1 ; (-@[ (trl1 trsmrlnu tru) }."1)) y
+  ip (C.^:_1"1) 1 {:: getripl1ustep^:I (TRINB * I) (({."1) ; ((-@[) (trl1 trsmrlnu tru) (}."1))) y
 )
 
 NB. ---------------------------------------------------------
@@ -586,7 +586,7 @@ getripu1l=: 3 : 0
   y=. trtril trl U1L
   y=. y lxsuy U1L
   I=. <. n % TRINB
-  ip (C.^:_1"1) 0 {:: getripu1lstep^:I (TRINB | n) ((((2 # [) {. ]) trsmrunu trl@:({."1)) ; }."1) y
+  ip (C.^:_1"1) 0 {:: getripu1lstep^:I (TRINB | n) ((((2 # [) {. ]) trsmrunu trl@:({."1)) ; (}."1)) y
 )
 
 NB. ---------------------------------------------------------
@@ -804,7 +804,7 @@ NB. - A would be sparse
 pttril=: ($:~ pttrfl) : ((4 : 0)^:(((0:`(+@])`(_1&diag)`,.`((-@,. 1&(|.!.0))~ }.)`diag fork3)@])`(0>.<:@#@])`(empty`,.@.(0<#)@(]`-"0@(*/\)&.|.)@(((, %@(_1&{ :: ]))~ +)~&>/)@:(_1&diag&.>`(diag&.>)"0)@[)))
   io=. -c y
   pi=. io { x
-  ((>:&.(io&{) +/!.0"1 (}. pi) *"1 (2 {."1 y)) % {. pi) ,. y
+  (((>:&.(io&{)) (+/!.0"1) (}. pi) (*"1) (2 ({."1) y)) % {. pi) ,. y
 )
 
 NB. =========================================================

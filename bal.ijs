@@ -141,8 +141,8 @@ gebalxp1d=: 1 : 0
   do.
     nza=. (zi { p) (0:`[`(0 ~: getv))} x
     nst=. < (h mkt s) , zi
-    p=. nst C. :: ] p
-    nz=. (nst C. :: ] nz) - p { nza
+    p=. nst (C. :: ]) p
+    nz=. (nst (C. :: ]) nz) - p { nza
     'h s'=. dhs h , s
   end.
   p ; (h , s)
@@ -426,7 +426,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
       'r c'=. norms L: 0 rc
       if. x do.
         NB. act as TB01ID
-        if. r *.&(0&=) c do.
+        if. r (*.&(0&=)) c do.
           continue.
         end.
         if. 0 = c do.
@@ -443,7 +443,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
         end.
       else.
         NB. act as xGEBAL
-        if. r +.&(0&=) c do.
+        if. r (+.&(0&=)) c do.
           continue.
         end.
       end.
@@ -460,10 +460,10 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
       r=. r * fdn
       if. (r + c) < GEBALFACTOR * sum do.
         di=. i { d
-        if. f *.&(<&1) di do.
+        if. f (*.&(<&1)) di do.
           if. GEBALSFMIN1 >: f * di do. continue. end.
         end.
-        if. f *.&(>&1) di do.
+        if. f (*.&(>&1)) di do.
           if. di >: GEBALSFMAX1 % f do. continue. end.
         end.
         d=. (di * f) i} d
@@ -591,17 +591,17 @@ ggballp=: 3 : 0
   if. 1 < n do.
     j=. h + s - 1
     while. j >: h do.
-      v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
+      v=. (0 2 ,. (h , s) ,. j , 1) (,@(+./)@:(0&~:);.0) y
       liso=. I. 0 ~: v
       select. # liso
         fcase. 1 do.
           nst=. < j , h + s - 1
-          pr=. nst C. :: ] pr
-          y=. nst C."1 :: ] y
+          pr=. nst (C. :: ]) pr
+          y=. nst (C."1 :: ]) y
         case. 0 do.
           nst=. < (h + {. liso) , h + s - 1
-          pl=. nst C. :: ] pl
-          y=. nst C."2 :: ] y
+          pl=. nst (C. :: ]) pl
+          y=. nst (C."2 :: ]) y
           s=. <: s
           j=. h + s - 1
         case. do.
@@ -610,17 +610,17 @@ ggballp=: 3 : 0
     end.
     i=. h
     while. i < h + s do.
-      v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
+      v=. (0 2 ,. (i , 1) ,. h , s) (,@(+./)@:(0&~:);.0) y
       liso=. I. 0 ~: v
       select. # liso
         fcase. 1 do.
           nst=. < i , h
-          pl=. nst C. :: ] pl
-          y=. nst C."2 :: ] y
+          pl=. nst (C. :: ]) pl
+          y=. nst (C."2 :: ]) y
         case. 0 do.
           nst=. < (h + {. liso) , h
-          pr=. nst C. :: ] pr
-          y=. nst C."1 :: ] y
+          pr=. nst (C. :: ]) pr
+          y=. nst (C."1 :: ]) y
           i=. h=. >: h
           s=. <: s
         case. do.
@@ -638,17 +638,17 @@ ggbalup=: 3 : 0
   if. 1 < n do.
     i=. h + s - 1
     while. i >: h do.
-      v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
+      v=. (0 2 ,. (i , 1) ,. h , s) (,@(+./)@:(0&~:);.0) y
       liso=. I. 0 ~: v
       select. # liso
         fcase. 1 do.
           nst=. < i , h + s - 1
-          pl=. nst C. :: ] pl
-          y=. nst C."2 :: ] y
+          pl=. nst (C. :: ]) pl
+          y=. nst (C."2 :: ]) y
         case. 0 do.
           nst=. < (h + {. liso) , h + s - 1
-          pr=. nst C. :: ] pr
-          y=. nst C."1 :: ] y
+          pr=. nst (C. :: ]) pr
+          y=. nst (C."1 :: ]) y
           s=. <: s
           i=. h + s - 1
         case. do.
@@ -657,17 +657,17 @@ ggbalup=: 3 : 0
     end.
     j=. h
     while. j < h + s do.
-      v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
+      v=. (0 2 ,. (h , s) ,. j , 1) (,@(+./)@:(0&~:);.0) y
       liso=. I. 0 ~: v
       select. # liso
         fcase. 1 do.
           nst=. < j , h
-          pr=. nst C. :: ] pr
-          y=. nst C."1 :: ] y
+          pr=. nst (C. :: ]) pr
+          y=. nst (C."1 :: ]) y
         case. 0 do.
           nst=. < (h + {. liso) , h
-          pl=. nst C. :: ] pl
-          y=. nst C."2 :: ] y
+          pl=. nst (C. :: ]) pl
+          y=. nst (C."2 :: ]) y
           j=. h=. >: h
           s=. <: s
         case. do.
@@ -732,11 +732,11 @@ NB. - embed SLICOT's TG01AD, like SLICOT's TB01ID embedded in
 NB.   gebals
 
 ggbals=: 3 : 0
-  m3x=. - 3&*
+  m3x=. (- 3&*)
   mix=. ((* +/@:(+/"1))~ {.) + ((+/@:(+/@#"1)) {:)
 
   'CD plr hs'=. y
-  nzCDcut=. 0 ~: CDcut=. (0 2 ,. ,.~ hs) ];.0 CD
+  nzCDcut=. 0 ~: CDcut=. (0 2 ,. ,.~ hs) (];.0) CD
   'h s'=. hs
   w10=. w23=. dlr=. (2 , s) $ 0
 
@@ -748,12 +748,12 @@ ggbals=: 3 : 0
   while. k < s + 2 do.
     gamma=. +&(mp~)/ w45
     ewewc=. +/"1 w45
-    gamma=. (coef , - coef2 , coef5) mp gamma , (+&*: , *:@-)/ ewewc
+    gamma=. (coef , - coef2 , coef5) mp gamma , ((+&*: , *:@-)/) ewewc
     if. gamma = 0 do. break. end.
     if. k ~: 0 do. beta=. gamma % pgamma end.
     w10=. (beta * w10) + (coef * w45) + coef5 * (m3x~ , m3x)/ ewewc
     NB. apply matrix to vector
-    w23=. nzCDcut (mix ,: ((mix~ |:"2)~ |.)) w10
+    w23=. nzCDcut (mix ,: ((mix~ (|:"2))~ |.)) w10
     alpha=. gamma % +/ w10 mp"1 w23
     NB. determine correction to current iteration
     aw10=. alpha * w10
@@ -768,13 +768,13 @@ ggbals=: 3 : 0
   lsfmax=. <.    GGBALSCLFAC ^. % FP_SFMIN
   irab=. h + (0 2 ,. hs ,. h , _) liofmax"1;.0 CD
   icab=. (0 2 ,. (0 , h + s) ,. hs) liofmax"1@:(|:"2);.0 CD
-  rab=. normi (< irab ,.~"1 liso4dhs hs) {"1 2 CD
-  cab=. normi (< icab ,. "1 liso4dhs hs) {"1 2 CD
-  lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab , cab
+  rab=. normi (;/ irab (,.~"1) liso4dhs hs) ({"0 2) CD
+  cab=. normi (;/ icab (,. "1) liso4dhs hs) ({"0 2) CD
+  lxab=. (>.`<.@.(0&<:)"0) >: GGBALSCLFAC ^. FP_SFMIN + rab , cab
   dlr=. GGBALSCLFAC ^ lsfmax <. (lsfmax - lxab) <. lsfmin >. <. 0.5 + dlr
-  dlr=. (-h) |."1 (c CD) {.!.1"1 dlr  NB. adjust dlr's shape
-  CD=. ({. dlr) *"1 2 CD              NB. row scaling of matrices C and D
-  CD=. ({: dlr) *"1 1 CD              NB. column scaling of matrices C and D
+  dlr=. (-h) (|."1) (c CD) ({.!.1"1) dlr  NB. adjust dlr's shape
+  CD=. ({. dlr) (*"1 2) CD                NB. row scaling of matrices C and D
+  CD=. ({: dlr) (*"1 1) CD                NB. column scaling of matrices C and D
   CD ; plr ; hs ; dlr
 )
 

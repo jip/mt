@@ -198,7 +198,7 @@ NB. - mxnm is updated only when offset = 0
 gelpc=: 3 : 0
   'A10 A11 dsrd rcond p v svlues mxnm'=. y
   n=. <: n1=. A10 +&c A11
-  'm offset'=. +/\. $ A10
+  'm offset'=. (+/\.) $ A10
   k=. m <. n
   dLQf=. (0,n1)$0
   if. offset do.
@@ -220,19 +220,19 @@ gelpc=: 3 : 0
       rnorms=. dip C."1 rnorms
       p=. ((# dLQf)&+&.:> dip) C. p
     end.
-    rnorms=. }."1 rnorms
+    rnorms=. (}."1) rnorms
     w=. {. A10
     NB. Generate elementary reflector H(i)
     gamma=. {. z=. larfgfc {. A11
     NB. Apply elementary reflector H(I) to the corresponding
     NB. block of matrix A
-    y=. (< (<0) ; 0) { A11=. (1 (0)} z) larfrnfr A11
+    y=. ((< (<0) ; 0)) { A11=. (1 (0)} z) larfrnfr A11
     NB. Update partial row norms
     if. i < lasti do.
-      'temp temp2'=. 2 %/\ (| y) , rnorms
+      'temp temp2'=. 2 (%/\) (| y) , rnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
-      rnorms2=. }. normsr }:"1 A11
+      rnorms2=. }. normsr (}:"1) A11
       rnorms3=. temp (((* %:)~ {.) 0} ]) rnorms
       rnorms2=. (,:~ 1 = temp2)} rnorms3 ,: rnorms2
       rnorms=. (,:~ 0 = {. rnorms)} rnorms2 ,: rnorms
@@ -243,7 +243,7 @@ gelpc=: 3 : 0
       v=. 1
       if. 0 = mxnm do.
         svlues=. smin 2} svlues
-        A11=. z (< 0 ; <<0)} A11
+        A11=. z ((< 0 ; <<0))} A11
         break.
       end.
     else.
@@ -269,9 +269,9 @@ gelpc=: 3 : 0
     svlues=. smin 2 3} svlues
   else.
     NB. All remaining rows rejected
-    if. <./ $ A11 do.
+    if. (<./) $ A11 do.
       NB. Factor remaining columns
-      A11=. gelqf }:"1 A11   NB. FIXME TWICE excessive re-shaping
+      A11=. gelqf (}:"1) A11   NB. FIXME TWICE excessive re-shaping
     end.
     eAsfx=. A10 ,. A11
     NB. Use incremental condition estimation to get an
@@ -379,8 +379,8 @@ NB. - mxnm is updated only when offset = 0
 
 geprc=: 3 : 0
   'A01 A11 dsrd rcond p v svlues mxnm'=. y
-  m=. <: m1=. A01 +&# A11
-  'offset n'=. +/\ $ A01
+  m=. <: m1=. A01 (+&#) A11
+  'offset n'=. (+/\) $ A01
   k=. m <. n
   dQfR=. (m1,0)$0
   if. offset do.
@@ -397,21 +397,21 @@ geprc=: 3 : 0
     io=. liofmax {. cnorms
     if. io do.
       dip=. < 0 , io
-      A01=. dip C."1 A01
-      A11=. dip C."1 A11
-      cnorms=. dip C."1 cnorms
+      A01=. dip (C."1) A01
+      A11=. dip (C."1) A11
+      cnorms=. dip (C."1) cnorms
       p=. ((c dQfR)&+&.:> dip) C. p
     end.
-    cnorms=. }."1 cnorms
-    w=. {."1 A01
+    cnorms=. (}."1) cnorms
+    w=. ({."1) A01
     NB. Generate elementary reflector H(i)
-    gamma=. {. z=. larfgf {."1 A11
+    gamma=. {. z=. larfgf ({."1) A11
     NB. Apply elementary reflector H(I) to the corresponding
     NB. block of matrix A
-    y=. (< 0 ; <<0) { A11=. (1 (0)} z) larflcfc A11
+    y=. ((< 0 ; <<0)) { A11=. (1 (0)} z) larflcfc A11
     NB. Update partial column norms
     if. i < lasti do.
-      'temp temp2'=. 2 %/\ (| y) , cnorms
+      'temp temp2'=. 2 (%/\) (| y) , cnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
       cnorms2=. }. normsc }: A11
@@ -425,7 +425,7 @@ geprc=: 3 : 0
       v=. 1
       if. 0 = mxnm do.
         svlues=. smin 2} svlues
-        A11=. z (< (<0) ; 0)} A11
+        A11=. z ((< (<0) ; 0))} A11
         break.
       end.
     else.
@@ -433,7 +433,7 @@ geprc=: 3 : 0
       out=. lauc1f smin ; v ; w ; gamma ; smaxpr * rcond
       if. 0 = L. out do.
         NB. Column rejected
-        A11=. z (< a: ; 0)} A11
+        A11=. z ((< a: ; 0))} A11
         break.
       end.
       NB. Column accepted
@@ -441,7 +441,7 @@ geprc=: 3 : 0
       smax=. smaxpr
     end.
     dQfR=. dQfR ,. w , z
-    A01=. (}."1 A01) , y
+    A01=. ((}."1) A01) , y
     A11=. 1 1 }. A11
     i=. >: i
   end.
@@ -451,7 +451,7 @@ geprc=: 3 : 0
     svlues=. smin 2 3} svlues
   else.
     NB. All remaining columns rejected
-    if. <./ $ A11 do.
+    if. (<./) $ A11 do.
       NB. Factor remaining columns
       A11=. geqrf }: A11   NB. FIXME TWICE excessive re-shaping
     end.
@@ -578,7 +578,7 @@ gelpw=: 3 : 0
   NB. Initialize partial row norms (stored in the first item
   NB. of rnorms) and exact row norms (stored in the second
   NB. item of rnorms) for the first batch of rows
-  rnorms=. ,:~ normsr }:"1 A11
+  rnorms=. ,:~ normsr (}:"1) A11
   NB. Main loop
   lastk=. <: (n - offset) <. # p
   while. nb > # dLQf do.
@@ -588,7 +588,7 @@ gelpw=: 3 : 0
       dip=. < 0 , io
       A10=. dip C. A10
       A11=. dip C. A11
-      rnorms=. dip C."1 rnorms
+      rnorms=. dip (C."1) rnorms
       p=. ((# dLQf)&+&.:> dip) C. p
     end.
     NB. Determine (offset+lacptd)st diagonal element gamma
@@ -596,7 +596,7 @@ gelpw=: 3 : 0
     gamma=. rnorms (negpos~ 9&o.) & (0&({,)) A11
     NB. Update estimate for largest singular value
     smax=. mxnm * 3 %: >: c A10
-    u=. {."1 A11
+    u=. ({."1) A11
     w=. {. A10
     NB. Is candidate pivot row acceptable ?
     out=. lauc1f smin ; v ; w ; gamma ; smax * rcond
@@ -607,16 +607,16 @@ gelpw=: 3 : 0
     z=. larfgfc {. A11
     dLQf=. dLQf , w , z
     NB. Apply Householder reflection to A11
-    y=. (< (<0) ; 0) { A11=. (1 (0)} z) larfrnfr A11
+    y=. ((< (<0) ; 0)) { A11=. (1 (0)} z) larfrnfr A11
     A10=. (}. A10) ,. y
     A11=. 1 1 }. A11
-    rnorms=. }."1 rnorms
+    rnorms=. (}."1) rnorms
     NB. Update partial column norms
     if. lastk > # dLQf do.
-      'temp temp2'=. 2 %/\ (| y) , rnorms
+      'temp temp2'=. 2 (%/\) (| y) , rnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
-      rnorms2=. }. normsr }:"1 A11
+      rnorms2=. }. normsr (}:"1) A11
       rnorms3=. temp (((* %:)~ {.) 0} ]) rnorms
       rnorms2=. (,:~ 1 = temp2)} rnorms3 ,: rnorms2
       rnorms=. (,:~ 0 = {. rnorms)} rnorms2 ,: rnorms
@@ -741,9 +741,9 @@ geprw=: 3 : 0
     io=. liofmax {. cnorms
     if. io do.
       dip=. < 0 , io
-      A01=. dip C."1 A01
-      A11=. dip C."1 A11
-      cnorms=. dip C."1 cnorms
+      A01=. dip (C."1) A01
+      A11=. dip (C."1) A11
+      cnorms=. dip (C."1) cnorms
       p=. ((c dQfR)&+&.:> dip) C. p
     end.
     NB. Determine (offset+lacptd)st diagonal element gamma
@@ -751,24 +751,24 @@ geprw=: 3 : 0
     gamma=. cnorms (negpos~ 9&o.) & (0&({,)) A11
     NB. Update estimate for largest singular value
     smax=. mxnm * 3 %: >: # A01
-    u=. {. A11
-    w=. {."1 A01
+    u=.  {.    A11
+    w=. ({."1) A01
     NB. Is candidate pivot column acceptable ?
     out=. lauc1f smin ; v ; w ; gamma ; smax * rcond
     if. 0 = L. out do. break. end.
     NB. Pivot candidate was accepted
     'smin v'=. out
     NB. Generate Householder vector
-    z=. larfgf {."1 A11
+    z=. larfgf ({."1) A11
     dQfR=. dQfR ,. w , z
     NB. Apply Householder reflection to A11
-    y=. (< 0 ; <<0) { A11=. (1 (0)} z) larflcfc A11
-    A01=. (}."1 A01) , y
+    y=. ((< 0 ; <<0)) { A11=. (1 (0)} z) larflcfc A11
+    A01=. ((}."1) A01) , y
     A11=. 1 1 }. A11
-    cnorms=. }."1 cnorms
+    cnorms=. (}."1) cnorms
     NB. Update partial column norms
     if. lastk > c dQfR do.
-      'temp temp2'=. 2 %/\ (| y) , cnorms
+      'temp temp2'=. 2 (%/\) (| y) , cnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
       cnorms2=. }. normsc }: A11
@@ -828,21 +828,21 @@ gelpb=: 4 : 0
   k=. <./ 'm n'=. $ y
   p=. i. m
   if. 0 = k do.
-    p ; ((m,0)$0) ; ((2#n)$0) ; 0 ; 0 ; 4$0
+    p ; ((m,0)$0) ; ((2#n)$0) ; ((0 ; 0 ; 4$0))
     return.
   end.
   y=. y ,. 0
   NB. Move row with largest residual norm left front
-  'y A10 A11 p v svlues mxnm'=. gelpc ((m,0)$0);y;1;x;p;(i.0);(4$_.);_.
+  'y A10 A11 p v svlues mxnm'=. gelpc ((m,0)$0);y;1;x;p;(((i.0);(4$_.);_.))
   if. # y do.
     if. 1 = k do.
-      p ; (trl }:"1 y) ; (n unglq y) ; (%/ 1 0 { svlues) ; 1 ; svlues
+      p ; (trl (}:"1) y) ; (n unglq y) ; (%/ 1 0 { svlues) ; 1 ; svlues
       return.
     else.
       smin=. 1 { svlues
     end.
   else.
-    p ; (trl }:"1 A11) ; (n unglq A11) ; 0 ; 0 ; 4$0
+    p ; (trl (}:"1) A11) ; (n unglq A11) ; ((0 ; 0 ; 4$0))
     return.
   end.
   NB. Factor remaining rows using blocked code with
@@ -873,21 +873,21 @@ gelpb=: 4 : 0
     end.
     NB. Move rejected rows to the end if there is space
     if. kb > # dLQf do.
-      kklwsz=. y +&# A01
+      kklwsz=. y (+&#) A01
       if. norej > kklwsz do.
         'ppfx psfx'=. (# y) ({. ; }.) p
         p=. ppfx , (# A01) |. psfx
-        A10=. (A10 ,. (# dLQf) {."1 A11) , A00
-        A11=. ((# dLQf) }."1 A11) , A01
+        A10=. (A10 ,. (# dLQf) ({."1) A11) , A00
+        A11=. ((# dLQf) (}."1) A11) , A01
         norej=. norej - # A01
       else.
-        A10=. A00 , A10 ,. (# dLQf) {."1 A11
-        A11=. A01 , (# dLQf) }."1 A11
+        A10=. A00 , A10 ,. (# dLQf) ({."1) A11
+        A11=. A01 , (# dLQf) (}."1) A11
         break.
       end.
     else.
-      A10=. A00 , A10 ,. (# dLQf) {."1 A11
-      A11=. A01 , (# dLQf) }."1 A11
+      A10=. A00 , A10 ,. (# dLQf) ({."1) A11
+      A11=. A01 , (# dLQf) (}."1) A11
     end.
   end.
   svlues=. (smin , mxnm * 3 %: # y) 1 0} svlues
@@ -902,7 +902,7 @@ gelpb=: 4 : 0
   end.
   rank=. # y
   y=. y , A10 ,. A11
-  p ; (trl }:"1 y) ; (n unglq y) ; (%/ 1 0 { svlues) ; rank ; svlues
+  p ; (trl (}:"1) y) ; (n unglq y) ; (%/ 1 0 { svlues) ; rank ; svlues
 )
 
 NB. ---------------------------------------------------------
@@ -962,12 +962,12 @@ geprb=: 4 : 0
   k=. <./ 'm n'=. $ y
   p=. i. n
   if. 0 = k do.
-    ((2#m)$0) ; ((0,n)$0) ; p ; 0 ; 0 ; 4$0
+    ((2#m)$0) ; ((0,n)$0) ; p ; ((0 ; 0 ; 4$0))
     return.
   end.
   y=. y , 0
   NB. Move column with largest residual norm up front
-  'y A01 A11 p v svlues mxnm'=. geprc ((0,n)$0);y;1;x;p;(i.0);(4$_.);_.
+  'y A01 A11 p v svlues mxnm'=. geprc ((0,n)$0);y;1;x;p;(((i.0);(4$_.);_.))
   if. c y do.
     if. 1 = k do.
       (m ungqr y) ; (tru }: y) ; p ; (%/ 1 0 { svlues) ; 1 ; svlues
@@ -976,7 +976,7 @@ geprb=: 4 : 0
       smin=. 1 { svlues
     end.
   else.
-    (m ungqr A11) ; (tru }: A11) ; p ; 0 ; 0 ; 4$0
+    (m ungqr A11) ; (tru }: A11) ; p ; ((0 ; 0 ; 4$0))
     return.
   end.
   NB. Factor remaining columns using blocked code with
@@ -1139,7 +1139,7 @@ NB.     x x x x
 
 gelpg3=: 3 : 0
   'm k'=. $ y
-  dQ=. 0 4$0
+  dQ=. ((0 4$0))
   if. (1 < k) *. 0 < m do.
     NB. Compute Givens rotations needed to nullify the first
     NB. row of matrix A, apply to A, accumulate rotations
@@ -1191,7 +1191,7 @@ NB.   - block algorithm only
 
 geprg3=: 3 : 0
   'k n'=. $ y
-  dQ=. 0 4$0
+  dQ=. ((0 4$0))
   if. (1 < k) *. 0 < n do.
     NB. Compute Givens rotations needed to nullify the first
     NB. column of matrix A, apply to A, accumulate rotations
@@ -1199,7 +1199,7 @@ geprg3=: 3 : 0
     i=. <: k
     liso=. i. n
     while. i do.
-      'y cs'=. rot&.|: rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
+      'y cs'=. rot&.|: rotga y ; (< (i - 1 0) ; liso) ; ((< < a: ; 0))
       dQ=. dQ , (+ cs) , i - 1 0
       i=. <: i
     end.
@@ -1225,7 +1225,7 @@ NB.          c , s , iof , iog
 
 hslph3=: 3 : 0
   'm k'=. $ y
-  dQ=. 0 4$0
+  dQ=. ((0 4$0))
   if. (1 < k) *. 0 < m do.
     NB. Compute Givens rotations needed to reduce lower
     NB. Hessenberg matrix H to lower triangular form L,
@@ -1270,7 +1270,7 @@ NB.   - block algorithm only
 
 hsprh3=: 3 : 0
   'k n'=. $ y
-  dQ=. 0 4$0
+  dQ=. ((0 4$0))
   if. (1 < k) *. 0 < n do.
     NB. Compute Givens rotations needed to reduce upper
     NB. Hessenberg matrix H to upper triangular form R,
@@ -1278,7 +1278,7 @@ hsprh3=: 3 : 0
     i=. 1
     liso=. i. n
     while. i < k do.
-      'y cs'=. rot&.|: rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
+      'y cs'=. rot&.|: rotga y ; (< (i - 1 0) ; liso) ; ((< < a: ; 0))
       liso=. }. liso
       dQ=. dQ , (+ cs) , i - 1 0
       i=. >: i
@@ -1341,7 +1341,7 @@ trlpc=: 3 : 0
   'p L rank'=. y
   'm k'=. $ L
   k1=. <: k
-  dQ=. 0 4 $ 0
+  dQ=. ((0 4 $ 0))
   if. 0 = k do.
     svlues=. 4 $ isovrn=. rcnr=. rcnrp1=. rank=. 0
   elseif. rank = k do.
@@ -1618,7 +1618,7 @@ trprc=: 3 : 0
   'R p rank'=. y
   'k n'=. $ R
   k1=. <: k
-  dQ=. 0 4 $ 0
+  dQ=. ((0 4 $ 0))
   if. 0 = k do.
     svlues=. 4 $ isovrn=. rcnr=. rcnrp1=. rank=. 0
   elseif. rank = k do.
@@ -1629,8 +1629,8 @@ trprc=: 3 : 0
     io=. liofmax (< n (] ; liso4th) k1) { R
     if. io do.
       dip=. < k1 ([ , +) io
-      R=. dip C."1 R
-      p=. dip C. p
+      R=. dip (C."1) R
+      p=. dip  C.    p
     end.
     NB. Estimate the largest singular value, the smallest
     NB. singular value, and its corresponding left singular
@@ -1662,8 +1662,8 @@ trprc=: 3 : 0
         NB. io->rank-1, io+1->io, io+2->io+1,...,
         NB. rank-1->rank-2
         dip=. < 1 |. rank liso4th io
-        R=. dip C."1 R
-        p=. dip C. p
+        R=. dip (C."1) R
+        p=. dip  C.    p
         NB. Retriangularize matrix A after the permutation
         'dQi R'=. hsprh3 R
         dQ=. dQ , dQi
@@ -1728,8 +1728,8 @@ trprc=: 3 : 0
         NB. rank->rank+1, rank+1->rank+2,...,ii-1->ii,
         NB. ii->rank
         dip=. < |. (>: ii) liso4th rank
-        R=. dip C."1 R
-        p=. dip C. p
+        R=. dip (C."1) R
+        p=. dip  C.    p
         cnorms=. dip C. cnorms
         NB. Retriangularize matrix A after the permutation,
         NB. adjust Q accordingly
@@ -1756,8 +1756,8 @@ trprc=: 3 : 0
             NB. is, io->rank,io+1->io,io+2->io+1,...,
             NB. rank->rank-1
             dip=. < 1 |. (>: rank) liso4th io
-            R=. dip C."1 R
-            p=. dip C. p
+            R=. dip (C."1) R
+            p=. dip  C.    p
             cnorms=. dip C. cnorms
             NB. Retriangularize matrix A after the
             NB. permutation
@@ -1796,8 +1796,8 @@ trprc=: 3 : 0
       NB. rank->rank+1, rank+1->rank+2,...,io-1->io,
       NB. io->rank
       dip=. < |. (>: io) liso4th rank
-      R=. dip C."1 R
-      p=. dip C. p
+      R=. dip (C."1) R
+      p=. dip  C.    p
       NB. Retriangularize matrix A after permutation
       'dQi R'=. geprg3 R
       dQ=. dQ , dQi
@@ -1893,7 +1893,7 @@ NB.            rank  n-rank               rank+1  n-rank-1
 trlpy=: 4 : 0
   'p L Q'=. 3 {. y
   k=. c L
-  dQ=. 0 4 $ 0
+  dQ=. ((0 4 $ 0))
   if. k do.
     NB. Compute the initial estimate for the rank
     rank=. x trlpr L
@@ -2001,7 +2001,7 @@ NB.     variable gets value NaN (_.)
 trpry=: 4 : 0
   'Q R p'=. 3 {. y
   k=. # R
-  dQ=. 0 4 $ 0
+  dQ=. ((0 4 $ 0))
   if. k do.
     NB. Compute the initial estimate for the rank
     rank=. x trprr R

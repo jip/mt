@@ -1258,7 +1258,7 @@ NB.   A   - m×n-matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgeqf=: 3 : 0
-  load        :: ] 'numeric'
+  require     :: ] 'numeric'
   load_mttmp_ :: ] 'math/misc/mathutil'
   load_mttmp_ :: ] 'math/misc/makemat'
   load_mttmp_ :: ] 'math/misc/matutil'

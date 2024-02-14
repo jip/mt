@@ -128,22 +128,6 @@ ishmt=:    (-: 0&|:) or (3 > #@$) and (   + -: _2&|:)
 NB. predicate to check is array skew-Hermitian
 isskwhmt=: (-: 0&|:) or (3 > #@$) and (-@:+ -: _2&|:)
 
-NB. ---------------------------------------------------------
-NB. adv. to fix an order of gerund elements by key's nub for
-NB. Key (/.) (deterministic key)
-NB. result=. keys gerund dkey args
-NB. is useful when there is a strong relation between verbs
-NB. in gerund, on the one hand, and keys, on the other
-NB. e.g.
-NB.   keys gerund/.    y  NB. apply verb (gerund@.i) to collection of y with key (i { ~.  x)
-NB.   keys gerund dkey y  NB. apply verb (gerund@.i) to collection of y with key (i        )
-NB. notes: (~. key) must be a permutation
-
-dkey=: 1 : 0
-:
-  x ((~. x) { m)/. y
-)
-
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -707,8 +691,8 @@ NB.   fexti  - string, either 'mm' or 'ijs'
 NB.   probed ≥ 0, assertions probed counter
 NB.   failed ≥ 0, assertions failed counter
 
-verifymmround0=: 1 : '(#    ,    +/)@(u S: 0)'
-verifymmround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ i:&''.'') L: 0)'
+verifymmround0=: 1 : '(#    ,    +/)@(u S: 0)                      @]'
+verifymmround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ i:&''.'') L: 0)@]'
 
 NB. ---------------------------------------------------------
 NB. verifymmdir
@@ -727,8 +711,8 @@ NB.   failedDir ≥ 0, assertions failed counter for (mm    )
 NB.   probedInv ≥ 0, assertions probed counter for (mm^:_1)
 NB.   failedInv ≥ 0, assertions failed counter for (mm^:_1)
 
-verifymmdir=: (+/)@((verifymm0dir verifymmround0)`(verifymm1dir verifymmround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (MM_VFY_DATA_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
-verifymminv=: (+/)@((verifymm0inv verifymmround0)`(verifymm1inv verifymmround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (MM_VFY_DATA_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
+verifymmdir=: (+/)@((verifymm0dir verifymmround0)`(verifymm1dir verifymmround1)@.[/..~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (MM_VFY_DATA_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
+verifymminv=: (+/)@((verifymm0inv verifymmround0)`(verifymm1inv verifymmround1)@.[/..~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (MM_VFY_DATA_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
 
 NB. ---------------------------------------------------------
 NB. verifymm_mt_

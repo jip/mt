@@ -88,9 +88,9 @@ NB.            otherwise
 gemmcore=: 4 : 0
   y=. memu&.>&.(_1&{) y  NB. unalias C
   objs=. obja L: 0 y     NB. allocate BLIS objects bonded to J nouns
-  x obj_set_conjtrans"1 0 ((1 ,: 2)) {:: objs
+  x obj_set_conjtrans"1 0 (((;"0&1) 1 2)) {:: objs
     NB. transpose A and/or B optionally
-  gemm_cd <"0 objs       NB. call bli_gemm() with each param marked as object address
+  gemm_cd <@{:L:0 objs   NB. call bli_gemm() with each param marked as object address
   objf L: 0 objs         NB. free BLIS objects
   _1 {:: y               NB. return changed copy of C
 )
@@ -162,9 +162,9 @@ NB.            otherwise
 gemmtcore=: (4 : 0) ([ assert@basiccr4)
   y=. memu&.>&.(_1&{) y  NB. unalias C
   objs=. obja L: 0 y     NB. allocate BLIS objects bonded to J nouns
-  x (2 1 # obj_set_conjtrans`obj_set_uplo)"1 0 ((,. 1 2 4)) {:: objs
-    NB. select C part, transpose A and/or B optionally
-  gemmt_cd <"0 objs      NB. call bli_gemmt() with each param marked as object address
+  x (2 1 # obj_set_conjtrans`obj_set_uplo)"1 0 (((;"0&1) 1 2 4)) {:: objs
+    NB. transpose A and/or B optionally, select C part
+  gemmt_cd <@{:L:0 objs  NB. call bli_gemmt() with each param marked as object address
   objf L: 0 objs         NB. free BLIS objects
   _1 {:: y               NB. return changed copy of C
 )
@@ -235,27 +235,27 @@ NB.            size of A and AA when (sideA != LEFT)
 NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 
 symmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y               NB. unalias C
-  objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
-  (SYMMETRIC 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 ((,. 1 1 1 2)) {:: objs
+  y=. memu&.>&.(_1&{) y                   NB. unalias C
+  objs=. obja L: 0 y                      NB. allocate BLIS objects bonded to J nouns
+  (SYMMETRIC 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 (((;"0&1) 1 1 1 2)) {:: objs
     NB. set A structure, select A part, conjugate A optionally, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  symm_cd ({. _2 ic {. x) ; <"0 objs  NB. call bli_symm() with all but head params marked as object address
-  objf L: 0 objs                      NB. free BLIS objects
-  _1 {:: y                            NB. return changed copy of C
+  symm_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_symm() with all but head params marked as object address
+  objf L: 0 objs                          NB. free BLIS objects
+  _1 {:: y                                NB. return changed copy of C
 )
 
 hemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y               NB. unalias C
-  objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
-  (HERMITIAN 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 ((,. 1 1 1 2)) {:: objs
+  y=. memu&.>&.(_1&{) y                   NB. unalias C
+  objs=. obja L: 0 y                      NB. allocate BLIS objects bonded to J nouns
+  (HERMITIAN 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 (((;"0&1) 1 1 1 2)) {:: objs
     NB. set A structure, select A part, conjugate A optionally, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  hemm_cd ({. _2 ic {. x) ; <"0 objs  NB. call bli_hemm() with all but head params marked as object address
-  objf L: 0 objs                      NB. free BLIS objects
-  _1 {:: y                            NB. return changed copy of C
+  hemm_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_hemm() with all but head params marked as object address
+  objf L: 0 objs                          NB. free BLIS objects
+  _1 {:: y                                NB. return changed copy of C
 )
 
 dsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
@@ -328,15 +328,15 @@ NB.            size of A and AA when (sideA != LEFT)
 NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 
 trmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
-  y=. memu&.>&.(_1&{) y               NB. unalias B
-  objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
-  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"1 0 (1) {:: objs
+  y=. memu&.>&.(_1&{) y                   NB. unalias B
+  objs=. obja L: 0 y                      NB. allocate BLIS objects bonded to J nouns
+  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"1 0 (1;1) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  trmm_cd ({. _2 ic {. x) ; <"0 objs  NB. call bli_trmm() with all but head params marked as object address
-  objf L: 0 objs                      NB. free BLIS objects
-  _1 {:: y                            NB. return changed copy of B
+  trmm_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_trmm() with all but head params marked as object address
+  objf L: 0 objs                          NB. free BLIS objects
+  _1 {:: y                                NB. return changed copy of B
 )
 
 dtrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
@@ -414,15 +414,15 @@ NB.   nb     = n if (op1(B) is either B or conj(B)) or nb = m
 NB.            otherwise
 
 trmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y                NB. unalias C
-  objs=. obja L: 0 y                   NB. allocate BLIS objects bonded to J nouns
-  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag`obj_set_conjtrans"1 0 ((,. 4 1 # 1 2)) {:: objs
+  y=. memu&.>&.(_1&{) y                    NB. unalias C
+  objs=. obja L: 0 y                       NB. allocate BLIS objects bonded to J nouns
+  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag`obj_set_conjtrans"1 0 (((;"0&1) 4 1 # 1 2)) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  trmm3_cd ({. _2 ic {. x) ; <"0 objs  NB. call bli_trmm() with all but head params marked as object address
-  objf L: 0 objs                       NB. free BLIS objects
-  _1 {:: y                             NB. return changed copy of C
+  trmm3_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_trmm() with all but head params marked as object address
+  objf L: 0 objs                           NB. free BLIS objects
+  _1 {:: y                                 NB. return changed copy of C
 )
 
 dtrmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))

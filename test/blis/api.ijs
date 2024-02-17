@@ -50,21 +50,6 @@ or=:  (2b010111 b.)&.(a.&i.)
 not=: (2b011010 b.)&.(a.&i.)
 sft=: (2b100001 b.)&.(a.&i.)  NB. unsigned bitwise shift
 
-NB. NB. conj. to make bivalent verb to read bytes from memory y,
-NB. NB.   decode by v, process by u [with left argument x],
-NB. NB.   encode back by inv(v), write back to y
-NB. NB. note: a (bivalent) conj. from
-NB. NB.   addons/misc/miscutils/langexten.ijs is used here
-NB. NB.   inlined
-NB. updmem=: 2 : 'u&.v^:(1:`(] memr)) memw ]'
-
-NB. adv. to make bivalent verb to read bytes from memory y,
-NB.   process by u [with left argument x], write back to y
-NB. note: a (bivalent) conj. from
-NB.   addons/misc/miscutils/langexten.ijs is used here
-NB.   inlined
-updmem=: 1 : 'u^:(1:`(] memr)) memw ]'
-
 NB. =========================================================
 NB. Interface
 
@@ -1703,7 +1688,7 @@ NB.        NB. so use out-of-boolean-domain value ASCII 255 here
 NB.        NB. exploiting the fact JB01 and JINT datatypes use
 NB.        NB. the same amount of bytes for scalar data
 NB.      bscdat=. symdat < 'bsc'      NB. pointer to scalar's value
-NB.      EMPTY [ eqsc_cd_mtbli_ <"0 objs , < bscdat
+NB.      EMPTY [ eqsc_cd_mtbli_ <"0 ({:L:0 objs) , < bscdat
 NB.        NB. call bli_eqsc with arguments - pointers to data
 NB.      a. i. bsc                    NB. cast the result to integer
 NB.   1                               NB. value is changed to some value within boolean domain

@@ -1,7 +1,10 @@
 NB. Utilities
 NB.
+NB. symhdr             Get address of header for named value
+NB. updmem             Adv. to make bivalent verb to update
+NB.                    memory
 NB. obja               Allocate BLIS object for noun
-NB. objf               Free BLIS object
+NB. objf               Free BLIS object related with noun
 NB. int_type_size_str  Query a string with the size of gint_t
 NB.                    signed integer
 NB. arch               Query a string that contains the name
@@ -36,13 +39,31 @@ NB. Configuration
 coclass 'mtbli'
 
 NB. =========================================================
+NB. Local definitions
+
+NB. =========================================================
 NB. Interface
+
+symhdr=: 15!:12  NB. get address of header for named value
+
+NB. ---------------------------------------------------------
+NB. NB. conj. to make bivalent verb to read bytes from memory y,
+NB. NB.   decode by v, process by u [with left argument x],
+NB. NB.   encode back by inv(v), write back to y
+NB. NB. note: a (bivalent) conj. from
+NB. NB.   addons/misc/miscutils/langexten.ijs is used here
+NB. NB.   inlined
+NB. updmem=: 2 : 'u&.v^:(1:`(] memr)) memw ]'
+
+NB. adv. to make bivalent verb to read bytes from memory y,
+NB.   process by u [with left argument x], write back to y
+NB. note: a (bivalent) conj. from
+NB.   addons/misc/miscutils/langexten.ijs is used here
+NB.   inlined
+updmem=: 1 : 'u^:(1:`(] memr)) memw ]'
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. OAPI functions
-
-NB. free BLIS object by address given
-objf=: memf
 
 NB. ---------------------------------------------------------
 NB. obja
@@ -51,23 +72,36 @@ NB. Description:
 NB.   Allocate BLIS object for noun
 NB.
 NB. Syntax:
-NB.   obj=. obja noun
+NB.   'hdr obj'=. obja noun
 NB. where
 NB.   noun - any noun
+NB.   hdr  - integer, pointer to an enveloping noun's header
 NB.   obj  - integer, pointer to an allocated memory
 NB.
-NB. Notes:
-NB. - obj's lifespan must not exceed the noun's one
+NB. Storage layout:
+NB.          J symbol table
+NB.   sym -> (name,hdr)                  NB. result of symget
+NB.
+NB.          J symbol headers
+NB.   hdr -> (offset,...,len,...)        NB. result of symhdr
+NB.
+NB.          J symbol data
+NB.   dat -> data_of_length_len          NB. result of symdat
+NB.   dat = (hdr+offset)
+NB.
+NB.          J heap
+NB.   obj -> BLISobject(...,buffer,...)  NB. result of obja
+NB.   buffer := dat
 NB.
 NB. Application:
 NB. - allocate BLIS objects in a batch:
-NB.     'obj0 obj1'=. obja L: 0 (noun0 ; noun1)
+NB.     'obj0 obj1'=. obja S: 0 (noun0 ; noun1)
 NB.
-NB. TODO:
-NB. - increment noun's refcount since it's data will be
-NB.   referred in obj, and decrement it back in objf
+NB. Notes:
+NB. - side effect: (refcount++) in enveloping noun
 
 obja=: 3 : 0
+  yhdr=. symhdr < 'y'
   ydat=. symdat < 'y'
   yobj=. mema SIZEOF_OBJ_T
   ytyp=. (4 8 16 i. (3!:0) y) { :: (('obja: datatype ' , (datatype y) , ' isn''t supported yet')&dbsig@11) _2 ic ((INT , DOUBLE , DCOMPLEX))
@@ -83,8 +117,31 @@ obja=: 3 : 0
     case.   do.
       ('obja: rank ' , (": # $ y) , ' isn''t supported') dbsig 11
   end.
-  yobj
+  >: updmem yhdr , (((4 * SZI) , 1 , JINT))  NB. refcount++
+  yhdr , yobj
 )
+
+NB. ---------------------------------------------------------
+NB. objf
+NB.
+NB. Description:
+NB.   Procedure to free BLIS object related with noun
+NB.
+NB. Syntax:
+NB.   trash=. objf (hdr , obj)
+NB. where
+NB.   hdr - integer, pointer to an enveloping noun's header
+NB.   obj - integer, pointer to an allocated memory
+NB.
+NB.
+NB. Application:
+NB. - free BLIS objects in a batch:
+NB.     trash=. objf"1 (obj0 ,: obj1)
+NB.
+NB. Notes:
+NB. - side effect: (refcount--) in enveloping noun
+
+objf=: EMPTY [ (<: updmem)@(,&(((4 * SZI) , 1 , JINT)))`memf"0
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. Service functions

@@ -81,15 +81,15 @@ NB.   n     ≥ 0, the number of columns in B and X
 NB.   k     = m for (1) or k = n for (2)
 
 trsmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
-  y=. memu&.>&.(_1&{) y               NB. unalias B
-  objs=. obja L: 0 y                  NB. allocate BLIS objects bonded to J nouns
-  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"1 0 (1) {:: objs
+  y=. memu&.>&.(_1&{) y                   NB. unalias B
+  objs=. obja L: 0 y                      NB. allocate BLIS objects bonded to J nouns
+  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"1 0 (1;1) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  trsm_cd ({. _2 ic {. x) ; <"0 objs  NB. call bli_trsm() with all but head params marked as object address
-  objf L: 0 objs                      NB. free BLIS objects
-  _1 {:: y                            NB. return changed copy of B
+  trsm_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_trsm() with all but head params marked as object address
+  objf L: 0 objs                          NB. free BLIS objects
+  _1 {:: y                                NB. return changed copy of B
 )
 
 dtrsmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))

@@ -148,12 +148,10 @@ NB. larfp
 NB.
 NB. Description:
 NB.   Generate an elementary reflector H of order n such that
-NB.     H^H * (α,x) = (β,0),
-NB.   where
-NB.     H = I - (1,v) * τ * (1,v)^H,
-NB.     H^H * H = I.
-NB.   H is represented in factored form by n-vector (1,v) and
-NB.   scalar τ.
+NB.     H^H * (α,x) = (β,0)
+NB. where
+NB.   H - represented in factored form by n-vector (1,v) and
+NB.       scalar τ
 NB.
 NB. Syntax:
 NB.   z=. iso larfg y
@@ -172,6 +170,9 @@ NB.         iot, and vector v ∊ ℂ^(n-1) in the rest elements,
 NB.         reflected vector is:
 NB.           beta ioa} n $ 0
 NB.
+NB. Formula:
+NB.   H = I - (1,v) * τ * (1,v)^H
+NB.
 NB. Application:
 NB. - reflect vector (α,x) by larfg and store τ at tail:
 NB.     z=. 0 _1 larfg (alpha , x , _.)
@@ -183,8 +184,8 @@ NB.     v=. (<<<_1 0) { z
 NB.     'beta tau'=. _1 0 { z
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.    (n {. beta) -: H (mp~ ct)~ }: y
-NB.    I           -:   (mp~ ct)~ H
+NB.    (n {. beta) -: H (mp~ ct)~ }: y  NB. H^H * (α,x) = (β,0)
+NB.    I           -:   (mp~ ct)~ H     NB. H^H * H = I
 NB. where
 NB.   x     - (n-1)-vector
 NB.   alpha - scalar
@@ -297,8 +298,9 @@ NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(k-1) * ... * H(1) * H(0) = I - V * Τ * V' ,
-NB.   where Τ is lower triangular.
+NB.     H = H(k-1) * ... * H(1) * H(0) = I - V * Τ * V'
+NB. where
+NB.   Τ - lower triangular
 NB.
 NB. Syntax:
 NB.   T=. larxtbc VTau
@@ -323,8 +325,9 @@ NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(k-1) * ... * H(1) * H(0) = I - V' * Τ * V ,
-NB.   where Τ is lower triangular.
+NB.     H = H(k-1) * ... * H(1) * H(0) = I - V' * Τ * V
+NB. where
+NB.   Τ - lower triangular
 NB.
 NB. Syntax:
 NB.   T=. larxtbr VTau
@@ -349,8 +352,9 @@ NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(0) * H(1) * ... * H(k-1) = I - V * Τ * V' ,
-NB.   where Τ is upper triangular.
+NB.     H = H(0) * H(1) * ... * H(k-1) = I - V * Τ * V'
+NB. where
+NB.   Τ - upper triangular
 NB.
 NB. Syntax:
 NB.   T=. larxtfc VTau
@@ -375,8 +379,9 @@ NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(0) * H(1) * ... * H(k-1) = I - V' * Τ * V ,
-NB.   where Τ is upper triangular.
+NB.     H = H(0) * H(1) * ... * H(k-1) = I - V' * Τ * V
+NB. where
+NB.   Τ - upper triangular
 NB.
 NB. Syntax:
 NB.   T=. larxtfr VTau

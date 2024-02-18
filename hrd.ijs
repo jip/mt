@@ -582,21 +582,21 @@ NB.     Q1     := dQ0 * Q0
 NB.     Z1     := dZ0 * Z0
 NB.   then gghrdlxx reduces (1) to (2)
 NB. where
-NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
-NB.          defines submatrices A11 and B11 to be reduced
-NB.          position in matrices A and B, respectively, see
-NB.          geballp and gehrdl
-NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, the lower triangular
-NB.   H    - n×n-matrix, the lower Hessenberg inside the
-NB.          submatrix H[h:h+s-1,h:h+s-1], and lower
-NB.          triangular outside
-NB.   T    - n×n-matrix, the lower triangular
-NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
-NB.          from the LQ factorization of B
-NB.   Q1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z0   - n×n-matrix, the unitary (orthogonal)
-NB.   Z1   - n×n-matrix, the unitary (orthogonal)
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrices A11 and B11 to be reduced
+NB.        position in matrices A and B, respectively, see
+NB.        geballp and gehrdl
+NB.   A  - n×n-matrix, general
+NB.   B  - n×n-matrix, the lower triangular
+NB.   H  - n×n-matrix, the lower Hessenberg inside the
+NB.        submatrix H[h:h+s-1,h:h+s-1], and lower triangular
+NB.        outside
+NB.   T  - n×n-matrix, the lower triangular
+NB.   Q0 - n×n-matrix, the unitary (orthogonal), typically
+NB.        from the LQ factorization of B
+NB.   Q1 - n×n-matrix, the unitary (orthogonal)
+NB.   Z0 - n×n-matrix, the unitary (orthogonal)
+NB.   Z1 - n×n-matrix, the unitary (orthogonal)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   Q1       -: dQ0
@@ -653,21 +653,21 @@ NB.     Q1     := Q0 * dQ0
 NB.     Z1     := Z0 * dZ0
 NB.   then gghrduxx reduces (1) to (2)
 NB. where
-NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
-NB.          defines submatrices A11 and B11 to be reduced
-NB.          position in matrices A and B, respectively, see
-NB.          gebalup and gehrdu
-NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, the upper triangular
-NB.   H    - n×n-matrix, the upper Hessenberg inside the
-NB.          submatrix H[h:h+s-1,h:h+s-1], and upper
-NB.          triangular outside
-NB.   T    - n×n-matrix, the upper triangular
-NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
-NB.          from the QR factorization of B
-NB.   Q1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z0   - n×n-matrix, the unitary (orthogonal)
-NB.   Z1   - n×n-matrix, the unitary (orthogonal)
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrices A11 and B11 to be reduced
+NB.        position in matrices A and B, respectively, see
+NB.        gebalup and gehrdu
+NB.   A  - n×n-matrix, general
+NB.   B  - n×n-matrix, the upper triangular
+NB.   H  - n×n-matrix, the upper Hessenberg inside the
+NB.        submatrix H[h:h+s-1,h:h+s-1], and upper triangular
+NB.        outside
+NB.   T  - n×n-matrix, the upper triangular
+NB.   Q0 - n×n-matrix, the unitary (orthogonal), typically
+NB.        from the QR factorization of B
+NB.   Q1 - n×n-matrix, the unitary (orthogonal)
+NB.   Z0 - n×n-matrix, the unitary (orthogonal)
+NB.   Z1 - n×n-matrix, the unitary (orthogonal)
 NB.
 NB. Notes:
 NB. - gghrdunn models LAPACK's xGGHRD('N','N')

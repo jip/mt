@@ -563,7 +563,8 @@ NB.
 NB. Description:
 NB.   Solve the linear monomial matrix equation:
 NB.     op(A) * X = B
-NB.   where A is triangular and non-singular
+NB. where
+NB.   A - triangular and non-singular
 NB.
 NB. Syntax:
 NB.   X=. B trtrsxxx A

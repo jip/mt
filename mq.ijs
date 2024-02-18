@@ -357,7 +357,6 @@ NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Q, which is
 NB.   represented in factored form RQf as returned by gerqf
-NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   RQf - l×(m+1)-matrix (ln,lc cases) or l×(n+1)-matrix
@@ -398,7 +397,6 @@ NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Z, which is
 NB.   represented in factored form LZf as returned by tzlzf
-NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   LZf - k×(m+1)-matrix (ln,lc cases) or k×(n+1)-matrix
@@ -451,7 +449,6 @@ NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Z, which is
 NB.   represented in factored form ZfL as returned by tzzlf
-NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   ZfL - (m+1)×k-matrix (ln,lc cases) or (n+1)×k-matrix
@@ -506,7 +503,6 @@ NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Z, which is
 NB.   represented in factored form ZfR as returned by tzzrf
-NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   ZfR - (m+1)×k-matrix (ln,lc cases) or (n+1)×k-matrix
@@ -561,7 +557,6 @@ NB.
 NB. Description:
 NB.   Multiply a general matrix C by matrix Z, which is
 NB.   represented in factored form RZf as returned by tzrzf
-NB.
 NB. where
 NB.   B,C - m×n-matrices
 NB.   RZf - k×(m+1)-matrix (ln,lc cases) or k×(n+1)-matrix

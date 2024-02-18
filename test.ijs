@@ -1219,7 +1219,7 @@ NB.
 NB. Description:
 NB.   Checks whether X is in the row space of op(A)
 NB. where
-NB.   op(A) is A or A^T or A^H
+NB.   op(A) - either A or A^T or A^H
 NB.
 NB. Syntax:
 NB.   errX=. (A ; B ; trash ; normA) qrt14 Xapprox
@@ -1331,8 +1331,8 @@ NB.   Adv. to make dyad to compute the ratio:
 NB.     || R' * op(A) || / ( ||A|| * ||B|| * max(m,n,nrhs) * FP_EPS )
 NB.   for zero-residual problem
 NB. where
-NB.   R = B - op(A) * Xapprox
-NB.   op(A) is A or A^T or A^H
+NB.   R     = B - op(A) * Xapprox
+NB.   op(A) - either A or A^T or A^H
 NB.
 NB. Syntax:
 NB.   ratio=. (A ; B ; trash ; normA) (calcB qrt171) Xapprox

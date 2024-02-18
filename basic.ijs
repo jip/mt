@@ -238,7 +238,8 @@ NB.
 NB. Description:
 NB.   Adv. to make monad to perform the rank 1 operation:
 NB.     A := alpha * x * op(y) + A
-NB.   where op(y) is either y^T or y^H
+NB. where
+NB.   op(y) - either y^T or y^H
 NB.
 NB. Syntax:
 NB.   Aupd=. (mul ger) alpha ; x ; incx ; y ; incy ; A
@@ -265,7 +266,8 @@ NB.
 NB. Description:
 NB.   Performs the rank 1 operation:
 NB.     A := alpha * x * op(y) + A
-NB.   where op(y) is either y^T or y^H
+NB. where
+NB.   op(y) - either y^T or y^H
 NB.
 NB. Syntax:
 NB.   Aupd=. gerx alpha ; x ; incx ; y ; incy ; A
@@ -295,8 +297,9 @@ NB. Description:
 NB.   Conj. to make monad to perform the hermitian
 NB.   (symmetric) rank 1 operation:
 NB.     A := alpha * x * op(x) + A
-NB.   where A is Hermitian (symmetric), and op(x) is either
-NB.   x^T or x^H
+NB. where
+NB.   A     - Hermitian (symmetric)
+NB.   op(x) - either x^T or x^H
 NB.
 NB. Syntax:
 NB.   AAupd=. (ref her mul) alpha ; x ; incx ; AA
@@ -324,7 +327,8 @@ NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 1 operation:
 NB.     A := alpha * x * op(x) + A
-NB.   where A is Hermitian (symmetric)
+NB. where
+NB.   A - Hermitian (symmetric)
 NB.
 NB. Syntax:
 NB.   AAupd=. xxrx alpha ; x ; incx ; AA
@@ -361,8 +365,10 @@ NB. Description:
 NB.   Conj. to make monad to perform the hermitian
 NB.   (symmetric) rank 2 operation:
 NB.     A := alpha * x * op1(y) + op2(alpha) * y * op1(x) + A
-NB.   where A is Hermitian (symmetric), op1(x) is either x^T
-NB.   or x^H, and op2(alpha) is either alpha or conj(alpha)
+NB. where
+NB.   A          - Hermitian (symmetric)
+NB.   op1(x)     - either x^T or x^H
+NB.   op2(alpha) - either alpha or conj(alpha)
 NB.
 NB. Syntax:
 NB.   AAupd=. (ref her2 trans) alpha ; x ; incx ; y ; incy ; AA
@@ -392,7 +398,8 @@ NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2 operation:
 NB.     A := alpha * x * op1(y) + op2(alpha) * y * op1(x) + A
-NB.   where A is Hermitian (symmetric)
+NB. where
+NB.   A - Hermitian (symmetric)
 NB.
 NB. Syntax:
 NB.   AAupd=. xxr2x alpha ; x ; incx ; y ; incy ; AA
@@ -433,8 +440,9 @@ NB.   (symmetric) rank k operation:
 NB.     C := alpha * A * op(A) + beta * C
 NB.   or
 NB.     C := alpha * op(A) * A + beta * C
-NB.   where C is Hermitian (symmetric), and op(A) is either
-NB.   A^T or A^H
+NB. where
+NB.   C     - Hermitian (symmetric)
+NB.   op(A) - either A^T or A^H
 NB.
 NB. Syntax:
 NB.   CCupd=. (ctp herk mul) alpha ; A ; beta ; CC
@@ -463,7 +471,8 @@ NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank k operation:
 NB.     C := alpha * op1(A) * op2(A) + beta * C
-NB.   where C is Hermitian (symmetric)
+NB. where
+NB.   C - Hermitian (symmetric)
 NB.
 NB. Syntax:
 NB.   CCupd=. xxrkxx alpha ; A ; beta ; CC
@@ -513,8 +522,10 @@ NB.   (symmetric) rank 2k operation:
 NB.     C := alpha * A * op1(B) + op2(alpha) * B * op1(A) + beta * C  (1)
 NB.   or
 NB.     C := alpha * op1(A) * B + op2(alpha) * op1(B) * A + beta * C  (2)
-NB.   where C is Hermitian (symmetric), op1(M) is either M^T
-NB.   or M^H and op2(alpha) is either alpha or conj(alpha)
+NB. where
+NB.   C          - Hermitian (symmetric)
+NB.   op1(M)     - either M^T or M^H
+NB.   op2(alpha) - either alpha or conj(alpha)
 NB.
 NB. Syntax:
 NB.   CCupd=. (ctp`trans her2k kind) alpha ; A ; B ; beta ; CC
@@ -554,7 +565,8 @@ NB.
 NB. Description:
 NB.   Performs the hermitian (symmetric) rank 2k operation:
 NB.     C := alpha * op1(A) * op2(B) + op3(alpha) * op1(B) * op2(A) + beta * C
-NB.   where C is Hermitian (symmetric)
+NB. where
+NB.   C - Hermitian (symmetric)
 NB.
 NB. Syntax:
 NB.   CCupd=. xxr2kxx alpha ; A ; B ; beta ; CC
@@ -664,7 +676,8 @@ NB. Description:
 NB.   Adv. to make monad to perform the matrix-vector
 NB.   operation:
 NB.     y := alpha * A * x + beta * y
-NB.   where A is Hermitian (symmetric)
+NB. where
+NB.   A - Hermitian (symmetric)
 NB.
 NB. Syntax:
 NB.   yupd=. (ref hemv) alpha ; AA ; x ; incx ; beta ; y ; incy
@@ -688,7 +701,8 @@ NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
 NB.     y := alpha * A * x + beta * y
-NB.   where A is Hermitian (symmetric)
+NB. where
+NB.   A - Hermitian (symmetric)
 NB.
 NB. Syntax:
 NB.   yupd=. xxmvx alpha ; AA ; x ; incx ; beta ; y ; incy
@@ -727,7 +741,8 @@ NB. Description:
 NB.   Adv. to make monad to perform the matrix-vector
 NB.   operation:
 NB.     x := op(A) * x
-NB.   where A is triangular
+NB. where
+NB.   A - triangular
 NB.
 NB. Syntax:
 NB.   xupd=. ((mp_mt_~ trans@ref) trmv) AA ; x ; incx
@@ -768,7 +783,8 @@ NB.
 NB. Description:
 NB.   Performs the matrix-vector operation:
 NB.     x := op(A) * x
-NB.   where A is triangular
+NB. where
+NB.   A - triangular
 NB.
 NB. Syntax:
 NB.   xupd=. trmvxxx AA ; x ; incx
@@ -817,7 +833,8 @@ NB. Description:
 NB.   Adv. to make monad to perform the matrix-matrix
 NB.   operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C
-NB.   where opX(M) is either M, M^T, conj(M) or M^H
+NB. where
+NB.   opX(M) - either M, M^T, conj(M) or M^H
 NB.
 NB. Syntax:
 NB.   Cupd=. (mul gemm) alpha ; A ; B ; beta ; C
@@ -911,8 +928,10 @@ NB.   operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C  (1)
 NB.   or
 NB.     C := alpha * op2(B) * op1(A) + beta * C  (2)
-NB.   where A is Hermitian (symmetric), op1(A) is either A or
-NB.   conj(A), and op2(B) is either B, B^T, conj(B) or B^H
+NB. where
+NB.   A      - Hermitian (symmetric)
+NB.   op1(A) - either A or conj(A)
+NB.   op2(B) - either B, B^T, conj(B) or B^H
 NB.
 NB. Syntax:
 NB.   Cupd=. (mul hemm) alpha ; AA ; B ; beta ; C
@@ -996,8 +1015,10 @@ NB.   Performs the matrix-matrix operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C  (1)
 NB.   or
 NB.     C := alpha * op2(B) * op1(A) + beta * C  (2)
-NB.   where A is Hermitian (symmetric), op1(A) is either A or
-NB.   conj(A), and op2(B) is either B, B^T, conj(B) or B^H
+NB. where
+NB.   A      - Hermitian (symmetric)
+NB.   op1(A) - either A or conj(A)
+NB.   op2(B) - either B, B^T, conj(B) or B^H
 NB.
 NB. Syntax:
 NB.   Cupd=. xxmmxxxx alpha ; AA ; B ; beta ; C
@@ -1115,8 +1136,9 @@ NB.   operation:
 NB.     B := alpha * op(A) * B  (1)
 NB.   or
 NB.     B := alpha * B * op(A)  (2)
-NB.   where A is triangular, and op(A) is either A, A^T,
-NB.   conj(A) or A^H
+NB. where
+NB.   A     - triangular
+NB.   op(A) - either A, A^T, conj(A) or A^H
 NB.
 NB. Syntax:
 NB.   Bupd=. ((mul trans@ref) trmm) alpha ; AA ; B
@@ -1181,8 +1203,9 @@ NB.   Performs the matrix-matrix operation:
 NB.     B := alpha * op(A) * B  (1)
 NB.   or
 NB.     B := alpha * B * op(A)  (2)
-NB.   where A is triangular, and op(A) is either A, A^T,
-NB.   conj(A) or A^H
+NB. where
+NB.   A     - triangular
+NB.   op(A) - either A, A^T, conj(A) or A^H
 NB.
 NB. Syntax:
 NB.   Bupd=. trmmxxxx alpha ; AA ; B
@@ -1270,8 +1293,9 @@ NB.   operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C  (1)
 NB.   or
 NB.     C := alpha * op2(B) * op1(A) + beta * C  (2)
-NB.   where A is triangular, and opX(M) is either M, M^T,
-NB.   conj(M) or M^H
+NB. where
+NB.   A      - triangular
+NB.   opX(M) - either M, M^T, conj(M) or M^H
 NB.
 NB. Syntax:
 NB.   Cupd=. (mul trmm3) alpha ; AA ; B ; beta ; C
@@ -1419,8 +1443,9 @@ NB.   Performs the matrix-matrix operation:
 NB.     C := alpha * op1(A) * op2(B) + beta * C  (1)
 NB.   or
 NB.     C := alpha * op2(B) * op1(A) + beta * C  (2)
-NB.   where A is triangular, and opX(M) is either M, M^T,
-NB.   conj(M) or M^H
+NB. where
+NB.   A      - triangular
+NB.   opX(M) - either M, M^T, conj(M) or M^H
 NB.
 NB. Syntax:
 NB.   Cupd=. trmmxxxxx alpha ; AA ; B ; beta ; C
@@ -1613,7 +1638,8 @@ NB.
 NB. Description:
 NB.   Conj. to make monad to solve the equation:
 NB.     op(A) * x = b
-NB.   where A is triangular
+NB. where
+NB.   A - triangular
 NB.
 NB. Syntax:
 NB.   x=. (sol trsv) AA ; b ; incb
@@ -1655,7 +1681,8 @@ NB.
 NB. Description:
 NB.   Solves the equation:
 NB.     op(A) * x = b
-NB.   where A is triangular
+NB. where
+NB.   A - triangular
 NB.
 NB. Syntax:
 NB.   x=. trsvxxx AA ; b ; incb
@@ -1706,7 +1733,8 @@ NB.   monomial matrix equation:
 NB.     op(A) * X = alpha * B
 NB.   or
 NB.     X * op(A) = alpha * B
-NB.   where A is triangular
+NB. where
+NB.   A - triangular
 NB.
 NB. Syntax:
 NB.   X=.    (mdiv trsm) alpha ; AA ; B  (1)
@@ -1763,8 +1791,9 @@ NB.   equation:
 NB.     op(A) * X = alpha * B  (1)
 NB.   or
 NB.     X * op(A) = alpha * B  (2)
-NB.   where A is triangular, and op(A) is either A, A^T,
-NB.   conj(A) or A^H
+NB. where
+NB.   A     - triangular
+NB.   op(A) - either A, A^T, conj(A) or A^H
 NB.
 NB. Syntax:
 NB.   X=.    trsmxxxx alpha ; AA ; B

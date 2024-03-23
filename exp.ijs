@@ -326,7 +326,7 @@ NB. where
 NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testgeexp=: 'geexp' tmonad (]`]`geconi`(_."_)`(_."_))
+testgeexp=: 'geexp' tmonad (]`]`geconi`nan`nan)
 
 NB. ---------------------------------------------------------
 NB. testdiexp
@@ -355,7 +355,7 @@ testdiexp=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  ('diexp' tmonad (]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
+  ('diexp' tmonad (]`]`geconi`nan`nan)) (ct R) ; v ; iRh
 )
 
 NB. ---------------------------------------------------------
@@ -382,7 +382,7 @@ testheexp=: 3 : 0
     v=. R=. _.
   end.
 
-  ('heexp' tmonad (]`]`heconi`(_."_)`(_."_))) v ; ct R
+  ('heexp' tmonad (]`]`heconi`nan`nan)) v ; ct R
 )
 
 NB. ---------------------------------------------------------

@@ -889,16 +889,16 @@ testgebal=: 3 : 0
   vscale2=: 0&{:: (%"1 * ]) 3&{::
   vdenom2=: (FP_EPS * 1:^:(0&=)@norm1 * #)@[
 
-  log=.          ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=.          ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`nan      `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
   log=. log lcat ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
   log=. log lcat ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
 
-  log=. log lcat ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`nan      `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
   log=. log lcat ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
   log=. log lcat ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
 
-  log=. log lcat ('geballp'             tmonad (]                 `]`(rcondl"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
-  log=. log lcat ('gebalup'             tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('geballp'             tmonad (]                 `]`(rcondl"_)`nan      `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('gebalup'             tmonad (]                 `]`(rcondu"_)`nan      `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
 
   log=. log lcat ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcondl"_)`vferr2   `(norm1@(-                      vscale2        ) % vdenom2))) y
   log=. log lcat ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcondl"_)`(4 {:: ])`(norm1@(-                      vscale2        ) % vdenom2))) y

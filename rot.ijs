@@ -122,7 +122,7 @@ NB.     cs := sgn(cd1st(cd1st(fg))) * sgn(cd1st(fg)) * sgn(qnconik(fg))
 NB.   To achieve this, use modified definition:
 NB.     lartg=: ((*&sgnc 9&o.)@{. * sgnq@:+)"1
 
-lartg=: 9&o.&.(0&{)@(sgnc@{. * sgnq@:+)`(_.j_. _.j_."_)@.(isnan@<)"1 : [:
+lartg=: 9&o.&.(0&{)@(sgnc@{. * sgnq@:+)`(2 # nan)@.(isnan@<)"1 : [:
 
 NB. ---------------------------------------------------------
 NB. rot
@@ -168,7 +168,7 @@ NB. Notes:
 NB. - implements BLAS's DROT and LAPACK's ZROT and xLARTV
 NB. - resembles qnmul
 
-rot=: [: : (,.~@:(+./"1)@isnan`(,:&_.j_.)}@(mp"2 1~ (,:"1 (+@:-@:({:"1) ,. {."1)))~)
+rot=: [: : (,.~@:(+./"1)@isnan`(,: nan)}@(mp"2 1~ (,:"1 (+@:-@:({:"1) ,. {."1)))~)
 
 NB. ---------------------------------------------------------
 NB. rotga

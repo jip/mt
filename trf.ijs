@@ -1656,21 +1656,21 @@ testgetrf=: 3 : 0
   load_mttmp_ :: ] 'math/misc/matfacto'
   load_mttmp_      'math/mt/test/lapack2/getrf'
 
-  'rcondl rcondu'=. (_. _."_)`(geconi , gecon1)@.(=/@$) y  NB. meaninigful for square matrices only
+  'rcondl rcondu'=. (2 # nan)`(geconi , gecon1)@.(=/@$) y  NB. meaninigful for square matrices only
 
   'norml normu'=. (normi , norm1) y
 
-  log=.          ('128!:10'       tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  log=.          ('128!:10'       tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
 
-  log=. log lcat ('lud_mttmp_'    tmonad ((0&{::)`(P4ip^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  log=. log lcat ('lud_mttmp_'    tmonad ((0&{::)`(P4ip^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
 
-  log=. log lcat ('dgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
-  log=. log lcat ('zgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  log=. log lcat ('dgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
+  log=. log lcat ('zgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
 
-  log=. log lcat ('getrflu1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))`(rcondl"_)`(_."_)`(normi get01 #))) y ; norml
-  log=. log lcat ('getrfpl1u'     tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
-  log=. log lcat ('getrfpu1l'     tmonad ((0&{::)`(0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
-  log=. log lcat ('getrful1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))`(rcondl"_)`(_."_)`(normi get01 #))) y ; norml
+  log=. log lcat ('getrflu1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))`(rcondl"_)`nan`(normi get01 #))) y ; norml
+  log=. log lcat ('getrfpl1u'     tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
+  log=. log lcat ('getrfpu1l'     tmonad ((0&{::)`(0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
+  log=. log lcat ('getrful1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))`(rcondl"_)`nan`(normi get01 #))) y ; norml
 
   coerase < 'mttmp'
 
@@ -1716,18 +1716,18 @@ testhetrf=: 3 : 0
   NB. Aapprox=. calcA (ip ; T1 ; T)  NB. where T1 is L1 or U1
   calcA=: 0&{:: fp^:_1 (mp mp ct@[)&>/@}.
 
-  log=.          ('''l''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
-  log=. log lcat ('''u''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
-  log=. log lcat ('''l''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
-  log=. log lcat ('''u''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+  log=.          ('''l''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`nan`nan  )) y
+  log=. log lcat ('''u''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`nan`nan  )) y
+  log=. log lcat ('''l''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`nan`nan  )) y
+  log=. log lcat ('''u''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`nan`nan  )) y
 
-  log=. log lcat ('''l''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdl`(rcond"_)`(_."_)`het01 )) y ; norm
-  log=. log lcat ('''u''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdu`(rcond"_)`(_."_)`het01 )) y ; norm
-  log=. log lcat ('''l''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzl`(rcond"_)`(_."_)`het01 )) y ; norm
-  log=. log lcat ('''u''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzu`(rcond"_)`(_."_)`het01 )) y ; norm
+  log=. log lcat ('''l''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdl`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''u''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdu`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''l''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzl`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''u''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzu`(rcond"_)`nan`het01)) y ; norm
 
-  log=. log lcat ('hetrfpl'                tmonad ((0&{::)`calcA  `(rcond"_)`(_."_)`het01 )) y ; norm
-  log=. log lcat ('hetrfpu'                tmonad ((0&{::)`calcA  `(rcond"_)`(_."_)`het01 )) y ; norm
+  log=. log lcat ('hetrfpl'                tmonad ((0&{::)`calcA  `(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('hetrfpu'                tmonad ((0&{::)`calcA  `(rcond"_)`nan`het01)) y ; norm
 
   coerase < 'mttmp'
   erase 'calcAdl calcAdu calcAzl calcAzu calcA calcA'
@@ -1765,15 +1765,15 @@ testpotrf=: 3 : 0
 
   norm=. normi y
 
-  log=.          ('choleski_mttmp_'     tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
+  log=.          ('choleski_mttmp_'     tmonad ((0&{::)`( mp  ct     )`(rcond"_)`nan`het01)) y ; norm
 
-  log=. log lcat ('''l''&dpotrf_mttmp_' tmonad ((0&{::)`((mp  |:)@trl)`(rcond"_)`(_."_)`het01)) y ; norm
-  log=. log lcat ('''u''&dpotrf_mttmp_' tmonad ((0&{::)`((mp~ |:)@tru)`(rcond"_)`(_."_)`het01)) y ; norm
-  log=. log lcat ('''l''&zpotrf_mttmp_' tmonad ((0&{::)`((mp  ct)@trl)`(rcond"_)`(_."_)`het01)) y ; norm
-  log=. log lcat ('''u''&zpotrf_mttmp_' tmonad ((0&{::)`((mp~ ct)@tru)`(rcond"_)`(_."_)`het01)) y ; norm
+  log=. log lcat ('''l''&dpotrf_mttmp_' tmonad ((0&{::)`((mp  |:)@trl)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''u''&dpotrf_mttmp_' tmonad ((0&{::)`((mp~ |:)@tru)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''l''&zpotrf_mttmp_' tmonad ((0&{::)`((mp  ct)@trl)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''u''&zpotrf_mttmp_' tmonad ((0&{::)`((mp~ ct)@tru)`(rcond"_)`nan`het01)) y ; norm
 
-  log=. log lcat ('potrfl'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
-  log=. log lcat ('potrfu'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
+  log=. log lcat ('potrfl'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('potrfu'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`nan`het01)) y ; norm
 
   coerase < 'mttmp'
 
@@ -1813,11 +1813,11 @@ testpttrf=: 3 : 0
   calcAdl=: ((setdiag~ ;&_1)~ idmat@#)~ (mp mp |:@[) diagmat@[
   calcAzl=: ((setdiag~ ;&_1)~ idmat@#)~ calcAm       diagmat@[
 
-  log=.          ('dpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAdl&>/)`(rcond"_)`(_."_)`het01)) y ; norm
-  log=. log lcat ('zpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAzl&>/)`(rcond"_)`(_."_)`het01)) y ; norm
+  log=.          ('dpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAdl&>/)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('zpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAzl&>/)`(rcond"_)`nan`het01)) y ; norm
 
-  log=. log lcat ('pttrfl'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`(_."_)`het01)) y ; norm
-  log=. log lcat ('pttrfu'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`(_."_)`het01)) y ; norm
+  log=. log lcat ('pttrfl'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('pttrfu'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`nan`het01)) y ; norm
 
   coerase < 'mttmp'
   erase 'calcAdl calcAzl calcAm'

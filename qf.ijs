@@ -1269,29 +1269,29 @@ testgeqf=: 3 : 0
   load_mttmp_      'math/mt/test/lapack2/geqrf'
   load_mttmp_      'math/mt/test/lapack2/gerqf'
 
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   norm=. norm1 y
 
   args=. y ; norm
 
-  log=.          ('128!:0'        tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
-  log=. log lcat ('qrd_mttmp_'    tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
+  log=.          ('128!:0'        tmonad ((0&{::)`]                                                     `(rcond"_)`nan`qrt01)) args
+  log=. log lcat ('qrd_mttmp_'    tmonad ((0&{::)`]                                                     `(rcond"_)`nan`qrt01)) args
 
-  log=. log lcat ('dgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
-  log=. log lcat ('dgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
-  log=. log lcat ('dgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
-  log=. log lcat ('dgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('dgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`nan`lqt01)) args
+  log=. log lcat ('dgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`nan`qlt01)) args
+  log=. log lcat ('dgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`nan`qrt01)) args
+  log=. log lcat ('dgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`nan`rqt01)) args
 
-  log=. log lcat ('zgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
-  log=. log lcat ('zgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
-  log=. log lcat ('zgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
-  log=. log lcat ('zgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('zgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`nan`lqt01)) args
+  log=. log lcat ('zgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`nan`qlt01)) args
+  log=. log lcat ('zgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`nan`qrt01)) args
+  log=. log lcat ('zgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`nan`rqt01)) args
 
-  log=. log lcat ('gelqf'         tmonad ((0&{::)`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`(_."_)`lqt01)) args
-  log=. log lcat ('geqlf'         tmonad ((0&{::)`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`(_."_)`qlt01)) args
-  log=. log lcat ('geqrf'         tmonad ((0&{::)`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`(_."_)`qrt01)) args
-  log=. log lcat ('gerqf'         tmonad ((0&{::)`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('gelqf'         tmonad ((0&{::)`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`nan`lqt01)) args
+  log=. log lcat ('geqlf'         tmonad ((0&{::)`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`nan`qlt01)) args
+  log=. log lcat ('geqrf'         tmonad ((0&{::)`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`nan`qrt01)) args
+  log=. log lcat ('gerqf'         tmonad ((0&{::)`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`nan`rqt01)) args
 
   coerase < 'mttmp'
 
@@ -1319,7 +1319,7 @@ NB. - add xQRT12 test
 testtzqf=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/tzrzf'
 
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   normw=. norm1 Awide=. |:^:(>/@$) y
   normt=. normi Atall=. |:^:(</@$) y
@@ -1327,13 +1327,13 @@ testtzqf=: 3 : 0
   NB. LAPACK doesn't clean strict lower triangle in R, so we need a rzt01 variant
   rzt01a=: ((1 {:: [) %~^:(0 < [) (norm1 % FP_EPS * 1 >. c)@((- trupick@(0&{::))~ (unmrzrn ((1 -~ c) {."1 trupick@({."1~ #)))))`0:@.(0 e. $@]) >. (norm1 % FP_EPS * 1 >. c)@(<: upddiag)@(unmrzrc ungrz)`0:@.(0 e. $)@]
 
-  log=.          ('dtzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
-  log=. log lcat ('ztzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
+  log=.          ('dtzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`nan`rzt01a )) Awide ; normw
+  log=. log lcat ('ztzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`nan`rzt01a )) Awide ; normw
 
-  log=. log lcat ('tzlzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`lzt01  )) Awide ; normw
-  log=. log lcat ('tzzlf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zlt01  )) Atall ; normt
-  log=. log lcat ('tzzrf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zrt01  )) Atall ; normt
-  log=. log lcat ('tzrzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`rzt01  )) Awide ; normw
+  log=. log lcat ('tzlzf'         tmonad ((0&{::)`]                `(rcond"_)`nan`lzt01  )) Awide ; normw
+  log=. log lcat ('tzzlf'         tmonad ((0&{::)`]                `(rcond"_)`nan`zlt01  )) Atall ; normt
+  log=. log lcat ('tzzrf'         tmonad ((0&{::)`]                `(rcond"_)`nan`zrt01  )) Atall ; normt
+  log=. log lcat ('tzrzf'         tmonad ((0&{::)`]                `(rcond"_)`nan`rzt01  )) Awide ; normw
 
   coerase < 'mttmp'
   erase 'rzt01a'

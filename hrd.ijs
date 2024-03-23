@@ -756,11 +756,11 @@ testgehrd=: 3 : 0
   unt01l=: (normi unt01 (mp  ct))@(1 {:: ])
   unt01u=: (norm1 unt01 (mp~ ct))@(1 {:: ])
 
-  log=.          ('dgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
-  log=. log lcat ('zgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  log=.          ('dgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu
+  log=. log lcat ('zgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu
 
-  log=. log lcat ('gehrdl'        tdyad  ((0 , #@(0&{::))`(0&{::)`(( 1 trlpick }:"1)  ; unghrl  )`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml
-  log=. log lcat ('gehrdu'        tdyad  ((0 , #@(0&{::))`(0&{::)`((_1 trupick }:  )  ; unghru  )`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  log=. log lcat ('gehrdl'        tdyad  ((0 , #@(0&{::))`(0&{::)`(( 1 trlpick }:"1)  ; unghrl  )`(rcondl"_)`nan`(hst01l >. unt01l))) y ; norml
+  log=. log lcat ('gehrdu'        tdyad  ((0 , #@(0&{::))`(0&{::)`((_1 trupick }:  )  ; unghru  )`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu
 
   coerase < 'mttmp'
   erase 'hst01l hst01u unt01l unt01u'
@@ -818,39 +818,39 @@ testgghrd=: 3 : 0
   t513l23=:  (2 {   ]) >.&t513l  3 {   ]
   t513u23=:  (2 {   ]) >.&t513u  3 {   ]
 
-  log=.          ('''nn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
-  log=. log lcat ('''ni''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
-  log=. log lcat ('''nv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  log=.          ('''nn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`nan                    )) argslapack
+  log=. log lcat ('''ni''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u3b ))) argslapack
+  log=. log lcat ('''nv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u3b ))) argslapack
 
-  log=. log lcat ('''in''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  log=. log lcat ('''ii''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  log=. log lcat ('''iv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''in''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u2b ))) argslapack
+  log=. log lcat ('''ii''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''iv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
 
-  log=. log lcat ('''vn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  log=. log lcat ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  log=. log lcat ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u2b ))) argslapack
+  log=. log lcat ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
 
-  log=. log lcat ('''nn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
-  log=. log lcat ('''ni''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
-  log=. log lcat ('''nv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  log=. log lcat ('''nn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`nan                    )) argslapack
+  log=. log lcat ('''ni''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u3b ))) argslapack
+  log=. log lcat ('''nv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u3b ))) argslapack
 
-  log=. log lcat ('''in''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  log=. log lcat ('''ii''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  log=. log lcat ('''iv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''in''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u2b ))) argslapack
+  log=. log lcat ('''ii''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''iv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
 
-  log=. log lcat ('''vn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  log=. log lcat ('''vi''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  log=. log lcat ('''vv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u2b ))) argslapack
+  log=. log lcat ('''vi''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
 
-  log=. log lcat ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                 ))) argsmtl
-  log=. log lcat ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
-  log=. log lcat ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
-  log=. log lcat ('gghrdlvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23 ))) argsmtvvl
+  log=. log lcat ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`nan                    )) argsmtl
+  log=. log lcat ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l2  ))) argsmtvl
+  log=. log lcat ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l2  ))) argsmtvl
+  log=. log lcat ('gghrdlvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(t511l2 >./@, t513l23 ))) argsmtvvl
 
-  log=. log lcat ('gghrdunn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                 ))) argsmtu
-  log=. log lcat ('gghrdunv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
-  log=. log lcat ('gghrduvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
-  log=. log lcat ('gghrduvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23 ))) argsmtvvu
+  log=. log lcat ('gghrdunn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`nan                    )) argsmtu
+  log=. log lcat ('gghrdunv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u2  ))) argsmtvu
+  log=. log lcat ('gghrduvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u2  ))) argsmtvu
+  log=. log lcat ('gghrduvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(t511u2 >./@, t513u23 ))) argsmtvvu
 
   coerase < 'mttmp'
   erase 't511u1 t511l2 t511u2 t513u2b t513u3b t513u23b t513l2 t513u2 t513l23 t513u23'

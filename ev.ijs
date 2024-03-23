@@ -415,15 +415,15 @@ testgeev=: 3 : 0
 
   'norml normr'=. (normi , norm1) y
 
-  log=.          ('''nn''&dgeev_mttmp_' tmonad (]      `]`(rcondu"_)`(_."_)`(_."_                            ))) y
-  log=. log lcat ('''nv''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(                  t22r >. drvevr))) y ; _.    ; normr
-  log=. log lcat ('''vn''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(t22l >. drvevl                  ))) y ; norml
-  log=. log lcat ('''vv''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(t22l >. drvevl >. t22r >. drvevr))) y ; norml ; normr
+  log=.          ('''nn''&dgeev_mttmp_' tmonad (]      `]`(rcondu"_)`nan`nan                               )) y
+  log=. log lcat ('''nv''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(                  t22r >. drvevr))) y ; _.    ; normr
+  log=. log lcat ('''vn''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(t22l >. drvevl                  ))) y ; norml
+  log=. log lcat ('''vv''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(t22l >. drvevl >. t22r >. drvevr))) y ; norml ; normr
 
-  log=. log lcat ('''nn''&zgeev_mttmp_' tmonad (]      `]`(rcondu"_)`(_."_)`(_."_                            ))) y
-  log=. log lcat ('''nv''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(                  t22r >. drvevr))) y ; _.    ; normr
-  log=. log lcat ('''vn''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(t22l >. drvevl                  ))) y ; norml
-  log=. log lcat ('''vv''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(t22l >. drvevl >. t22r >. drvevr))) y ; norml ; normr
+  log=. log lcat ('''nn''&zgeev_mttmp_' tmonad (]      `]`(rcondu"_)`nan`nan                               )) y
+  log=. log lcat ('''nv''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(                  t22r >. drvevr))) y ; _.    ; normr
+  log=. log lcat ('''vn''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(t22l >. drvevl                  ))) y ; norml
+  log=. log lcat ('''vv''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(t22l >. drvevl >. t22r >. drvevr))) y ; norml ; normr
 
   coerase < 'mttmp'
 
@@ -451,15 +451,15 @@ testheev=: 3 : 0
 
   norml=. normi y
 
-  log=.          ('''nl''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`(_."_))) y ; norml
-  log=. log lcat ('''nu''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`(_."_))) y ; norml
-  log=. log lcat ('''vl''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`t211  )) y ; norml
-  log=. log lcat ('''vu''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`t211  )) y ; norml
+  log=.          ('''nl''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`nan )) y ; norml
+  log=. log lcat ('''nu''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`nan )) y ; norml
+  log=. log lcat ('''vl''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`t211)) y ; norml
+  log=. log lcat ('''vu''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`t211)) y ; norml
 
-  log=. log lcat ('''nl''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`(_."_))) y ; norml
-  log=. log lcat ('''nu''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`(_."_))) y ; norml
-  log=. log lcat ('''vl''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`t211  )) y ; norml
-  log=. log lcat ('''vu''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`t211  )) y ; norml
+  log=. log lcat ('''nl''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`nan )) y ; norml
+  log=. log lcat ('''nu''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`nan )) y ; norml
+  log=. log lcat ('''vl''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`t211)) y ; norml
+  log=. log lcat ('''vu''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`t211)) y ; norml
 
   coerase < 'mttmp'
 
@@ -493,25 +493,25 @@ testggev=: 3 : 0
   vberruL=: (mp~ ct)"2` *   `norm1`normitc drgev
   vberruR=:  mp     "2`(*"1)`norm1`normitc drgev
 
-  log=.          ('''nn''&dggev_mttmp_' tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`(_."_                           ))) y ; normu
-  log=. log lcat ('''nv''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ;         3&{:: )`(rcondu"_)`(_."_)`                  vberruR        )) y ; normu
-  log=. log lcat ('''vn''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{::         )`(rcondu"_)`(_."_)`  vberruL                        )) y ; normu
-  log=. log lcat ('''vv''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcondu"_)`(_."_)`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
+  log=.          ('''nn''&dggev_mttmp_' tmonad ((0&{::)`]                                  `(rcondu"_)`nan`nan                              )) y ; normu
+  log=. log lcat ('''nv''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ;         3&{:: )`(rcondu"_)`nan`                  vberruR        )) y ; normu
+  log=. log lcat ('''vn''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{::         )`(rcondu"_)`nan`  vberruL                        )) y ; normu
+  log=. log lcat ('''vv''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcondu"_)`nan`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
 
-  log=. log lcat ('''nn''&zggev_mttmp_' tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`(_."_                           ))) y ; normu
-  log=. log lcat ('''nv''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ;         3&{:: )`(rcondu"_)`(_."_)`                  vberruR        )) y ; normu
-  log=. log lcat ('''vn''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{::         )`(rcondu"_)`(_."_)`  vberruL                        )) y ; normu
-  log=. log lcat ('''vv''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcondu"_)`(_."_)`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
+  log=. log lcat ('''nn''&zggev_mttmp_' tmonad ((0&{::)`]                                  `(rcondu"_)`nan`nan                              )) y ; normu
+  log=. log lcat ('''nv''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ;         3&{:: )`(rcondu"_)`nan`                  vberruR        )) y ; normu
+  log=. log lcat ('''vn''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{::         )`(rcondu"_)`nan`  vberruL                        )) y ; normu
+  log=. log lcat ('''vv''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcondu"_)`nan`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
 
-  log=. log lcat ('ggevlnn'             tmonad ((0&{::)`]                                  `(rcondl"_)`(_."_)`(_."_                           ))) y ; norml
-  log=. log lcat ('ggevlnv'             tmonad ((0&{::)`]                                  `(rcondl"_)`(_."_)`                  vberrlR        )) y ; norml
-  log=. log lcat ('ggevlvn'             tmonad ((0&{::)`]                                  `(rcondl"_)`(_."_)`  vberrlL                        )) y ; norml
-  log=. log lcat ('ggevlvv'             tmonad ((0&{::)`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcondl"_)`(_."_)`((vberrlL }:) >. (vberrlR 0 2&{)))) y ; norml
+  log=. log lcat ('ggevlnn'             tmonad ((0&{::)`]                                  `(rcondl"_)`nan`nan                              )) y ; norml
+  log=. log lcat ('ggevlnv'             tmonad ((0&{::)`]                                  `(rcondl"_)`nan`                  vberrlR        )) y ; norml
+  log=. log lcat ('ggevlvn'             tmonad ((0&{::)`]                                  `(rcondl"_)`nan`  vberrlL                        )) y ; norml
+  log=. log lcat ('ggevlvv'             tmonad ((0&{::)`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcondl"_)`nan`((vberrlL }:) >. (vberrlR 0 2&{)))) y ; norml
 
-  log=. log lcat ('ggevunn'             tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`(_."_                           ))) y ; normu
-  log=. log lcat ('ggevunv'             tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`                  vberruR        )) y ; normu
-  log=. log lcat ('ggevuvn'             tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`  vberruL                        )) y ; normu
-  log=. log lcat ('ggevuvv'             tmonad ((0&{::)`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcondu"_)`(_."_)`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
+  log=. log lcat ('ggevunn'             tmonad ((0&{::)`]                                  `(rcondu"_)`nan`nan                              )) y ; normu
+  log=. log lcat ('ggevunv'             tmonad ((0&{::)`]                                  `(rcondu"_)`nan`                  vberruR        )) y ; normu
+  log=. log lcat ('ggevuvn'             tmonad ((0&{::)`]                                  `(rcondu"_)`nan`  vberruL                        )) y ; normu
+  log=. log lcat ('ggevuvv'             tmonad ((0&{::)`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcondu"_)`nan`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
 
   coerase < 'mttmp'
   erase 'vberrlL vberrlR vberruL vberruR'

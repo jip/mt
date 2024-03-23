@@ -524,7 +524,7 @@ testungq=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/zungqr'
   load_mttmp_ 'math/mt/test/lapack2/zungrq'
 
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ks=. ~. 0 1 , (,~ <.@-:) <./ 'm n'=. $ y
 
@@ -542,25 +542,25 @@ testungq=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('dorglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('dorglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`nan`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('dorgql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('dorgql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`nan`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('dorgqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('dorgqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`nan`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('dorgrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('dorgrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`nan`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
 
@@ -568,25 +568,25 @@ testungq=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('zunglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('zunglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`nan`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('zungql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('zungql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`nan`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('zungqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('zungqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`nan`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('zungrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('zungrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`nan`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
 
@@ -594,31 +594,31 @@ testungq=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('unglq' tdyad ((#@(0&{::))`(   3&{::  {.    2&{:: )`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('unglq' tdyad ((#@(0&{::))`(   3&{::  {.    2&{:: )`]`(rcond"_)`nan`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
-  log=. log lcat ('unglq' tmonad ((2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; m
+  log=. log lcat ('unglq' tmonad ((2&{::)`]`(rcond"_)`nan`lqt02)) Awide ; normw ; LQf ; m
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('ungql' tdyad ((c@(0&{::))`(-@(3&{::) {."1 (2&{::))`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('ungql' tdyad ((c@(0&{::))`(-@(3&{::) {."1 (2&{::))`]`(rcond"_)`nan`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
-  log=. log lcat ('ungql' tmonad ((2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; n
+  log=. log lcat ('ungql' tmonad ((2&{::)`]`(rcond"_)`nan`qlt02)) Atall ; normt ; QfL ; n
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('ungqr' tdyad ((c@(0&{::))`(   3&{::  {."1 (2&{::))`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('ungqr' tdyad ((c@(0&{::))`(   3&{::  {."1 (2&{::))`]`(rcond"_)`nan`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
-  log=. log lcat ('ungqr' tmonad ((2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; n
+  log=. log lcat ('ungqr' tmonad ((2&{::)`]`(rcond"_)`nan`qrt02)) Atall ; normt ; QfR ; n
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('ungrq' tdyad ((#@(0&{::))`(-@(3&{::) {.    2&{:: )`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('ungrq' tdyad ((#@(0&{::))`(-@(3&{::) {.    2&{:: )`]`(rcond"_)`nan`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
-  log=. log lcat ('ungrq' tmonad ((2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; m
+  log=. log lcat ('ungrq' tmonad ((2&{::)`]`(rcond"_)`nan`rqt02)) Awide ; normw ; RQf ; m
 
   coerase < 'mttmp'
 
@@ -638,7 +638,7 @@ NB.   A   - m×n-matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testungz=: 3 : 0
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ks=. ~. 0 1 , (,~ <.@-:) <./ 'm n'=. $ y
 
@@ -654,31 +654,31 @@ testungz=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('unglz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`(_."_)`lzt02)) Awide ; normw ; LZf ; ik { ks
+    log=. log lcat ('unglz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`nan`lzt02)) Awide ; normw ; LZf ; ik { ks
     ik=. >: ik
   end.
-  log=. log lcat ('unglz' tmonad ((2&{::)`]`(rcond"_)`(_."_)`lzt02)) Awide ; normw ; LZf ; m
+  log=. log lcat ('unglz' tmonad ((2&{::)`]`(rcond"_)`nan`lzt02)) Awide ; normw ; LZf ; m
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('ungzl' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`(_."_)`zlt02)) Atall ; normt ; ZfL ; ik { ks
+    log=. log lcat ('ungzl' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`nan`zlt02)) Atall ; normt ; ZfL ; ik { ks
     ik=. >: ik
   end.
-  log=. log lcat ('ungzl' tmonad ((2&{::)`]`(rcond"_)`(_."_)`zlt02)) Atall ; normt ; ZfL ; n
+  log=. log lcat ('ungzl' tmonad ((2&{::)`]`(rcond"_)`nan`zlt02)) Atall ; normt ; ZfL ; n
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('ungzr' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`(_."_)`zrt02)) Atall ; normt ; ZfR ; ik { ks
+    log=. log lcat ('ungzr' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`nan`zrt02)) Atall ; normt ; ZfR ; ik { ks
     ik=. >: ik
   end.
-  log=. log lcat ('ungzr' tmonad ((2&{::)`]`(rcond"_)`(_."_)`zrt02)) Atall ; normt ; ZfR ; n
+  log=. log lcat ('ungzr' tmonad ((2&{::)`]`(rcond"_)`nan`zrt02)) Atall ; normt ; ZfR ; n
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('ungrz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`(_."_)`rzt02)) Awide ; normw ; RZf ; ik { ks
+    log=. log lcat ('ungrz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`nan`rzt02)) Awide ; normw ; RZf ; ik { ks
     ik=. >: ik
   end.
-  log=. log lcat ('ungrz' tmonad ((2&{::)`]`(rcond"_)`(_."_)`rzt02)) Awide ; normw ; RZf ; m
+  log=. log lcat ('ungrz' tmonad ((2&{::)`]`(rcond"_)`nan`rzt02)) Awide ; normw ; RZf ; m
 )
 
 NB. ---------------------------------------------------------
@@ -713,11 +713,11 @@ testunghr=: 3 : 0
   unt01l=: (normi unt01 (mp  ct))@]
   unt01u=: (norm1 unt01 (mp~ ct))@]
 
-  log=.          ('dorghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
-  log=. log lcat ('zunghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=.          ('dorghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=. log lcat ('zunghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu ; HuQf
 
-  log=. log lcat ('unghrl'        tmonad ((                      2&{:: )`]`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml ; HlQf
-  log=. log lcat ('unghru'        tmonad ((                      2&{:: )`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=. log lcat ('unghrl'        tmonad ((                      2&{:: )`]`(rcondl"_)`nan`(hst01l >. unt01l))) y ; norml ; HlQf
+  log=. log lcat ('unghru'        tmonad ((                      2&{:: )`]`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu ; HuQf
 
   coerase < 'mttmp'
   erase 'hst01l hst01u unt01l unt01u'

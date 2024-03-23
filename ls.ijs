@@ -278,7 +278,7 @@ NB.   log - 6-vector of boxes, test log, see test.ijs
 testgels1=: 3 : 0
   'A x'=. y
 
-  rcondA=. (_."_)`gecon1@.(=/@$) A  NB. meaninigful for square matrices only
+  rcondA=. nan`gecon1@.(=/@$) A  NB. meaninigful for square matrices only
   'norm1A normiA'=. (norm1 , normi) A
   'm n'=. $ A
   if. m = # x do.
@@ -289,8 +289,8 @@ testgels1=: 3 : 0
     xc=. m {. xn=. x
   end.
 
-  log=.          ('gelsax'  tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(( mp~     qrt16v) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; (    A  mp xn) ; rcondA ; norm1A
-  log=. log lcat ('gelsacx' tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(((mp~ ct) qrt16v) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; ((ct A) mp xc) ; rcondA ; normiA
+  log=.          ('gelsax'  tdyad ((0&{::)`(1&{::)`]`(2&{::)`nan`(( mp~     qrt16v) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; (    A  mp xn) ; rcondA ; norm1A
+  log=. log lcat ('gelsacx' tdyad ((0&{::)`(1&{::)`]`(2&{::)`nan`(((mp~ ct) qrt16v) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; ((ct A) mp xc) ; rcondA ; normiA
 )
 
 NB. ---------------------------------------------------------
@@ -314,7 +314,7 @@ testgels3=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/gels'
 
   'A X'=. y
-  rcondA=. (_."_)`gecon1@.(=/@$) A  NB. meaninigful for square matrices only
+  rcondA=. nan`gecon1@.(=/@$) A  NB. meaninigful for square matrices only
   'norm1A normiA'=. (norm1 , normi) A
   'm n'=. $ A
   if. m = # X do.
@@ -327,13 +327,13 @@ testgels3=: 3 : 0
   Bax=.      A  mp Xn
   Bacx=. (ct A) mp Xc
 
-  log=.          ('dgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  log=. log lcat ('dgels_mttmp_' tdyad (('t'"_)`(2&{. )`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
-  log=. log lcat ('zgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  log=. log lcat ('zgels_mttmp_' tdyad (('c'"_)`(2&{. )`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  log=.          ('dgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`nan`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  log=. log lcat ('dgels_mttmp_' tdyad (('t'"_)`(2&{. )`]`(2&{::)`nan`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  log=. log lcat ('zgels_mttmp_' tdyad (('n'"_)`(2&{. )`]`(2&{::)`nan`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  log=. log lcat ('zgels_mttmp_' tdyad (('c'"_)`(2&{. )`]`(2&{::)`nan`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
 
-  log=. log lcat ('gelsax'       tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
-  log=. log lcat ('gelsacx'      tdyad ((0&{::)`(1&{::)`]`(2&{::)`(_."_)`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
+  log=. log lcat ('gelsax'       tdyad ((0&{::)`(1&{::)`]`(2&{::)`nan`(( mp~     qrt16m) >. ( mp~     qrt171)`qrt14@.(</@$@(0 {:: [))))) A ; Bax  ; rcondA ; norm1A
+  log=. log lcat ('gelsacx'      tdyad ((0&{::)`(1&{::)`]`(2&{::)`nan`(((mp~ ct) qrt16m) >. qrt14`((mp~ ct) qrt171)@.(</@$@(0 {:: [))))) A ; Bacx ; rcondA ; normiA
 
   coerase < 'mttmp'
 

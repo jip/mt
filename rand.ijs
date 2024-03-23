@@ -790,15 +790,15 @@ NB.         (n,any_number)
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testtrmat=: 3 : 0
-  log=.          (' randu           trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat (' randu           trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat (' randu           tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat (' randu           trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           trl1mat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat (' randu           trlmat ' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat (' randu           tru1mat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat (' randu           trumat ' tmonad (]`]`nan`nan`nan)) y
 
-  log=. log lcat ('(randu j. randu) trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(randu j. randu) trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(randu j. randu) tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(randu j. randu) trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(randu j. randu) trl1mat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) trlmat ' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) tru1mat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) trumat ' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -814,7 +814,7 @@ NB.   sh  - vector of non-negative integers, the shape of
 NB.         matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testgemat=: 'gemat' tmonad (]`]`(_."_)`(_."_)`(_."_))
+testgemat=: 'gemat' tmonad (]`]`nan`nan`nan)
 
 NB. ---------------------------------------------------------
 NB. testdimat
@@ -829,11 +829,11 @@ NB.   sz  - size or shape, which is either n or (n,n)
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testdimat=: 3 : 0
-  log=.          (' gemat           dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat (' gemat           dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' gemat           dimat (randnr unmat)' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat (' gemat           dimat (randnc unmat)' tmonad (]`]`nan`nan`nan)) y
 
-  log=. log lcat ('(gemat j. gemat) dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat ('(gemat j. gemat) dimat (randnr unmat)' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -850,8 +850,8 @@ NB.         (n,any_number)
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhemat=: 3 : 0
-  log=.          (' randu           hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(randu j. randu) hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           hemat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) hemat' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -868,8 +868,8 @@ NB.         (n,any_number)
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testpomat=: 3 : 0
-  log=.          (' randu           pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(randu j. randu) pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           pomat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) pomat' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -886,11 +886,11 @@ NB.         (n,any_number)
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testptmat=: 3 : 0
-  log=.          (' randu           ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(randu j. randu) ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           ptmat ' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) ptmat ' tmonad (]`]`nan`nan`nan)) y
 
-  log=. log lcat (' randu           ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(randu j. randu) ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat (' randu           ptmat2' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) ptmat2' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -907,8 +907,8 @@ NB.         matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testspmat=: 3 : 0
-  log=.          (' randu           spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  log=. log lcat ('(randu j. randu) spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           spmat 0.25' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) spmat 0.25' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------

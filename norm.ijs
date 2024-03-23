@@ -178,15 +178,15 @@ NB.   DLANST('m'), xLANGB('m'), xLANGT('m'), xLANHS('m'),
 NB.   xLANTB('m'), xLANTR('m'), ZLANHB('m'), ZLANHT('m'),-
 NB.   extraneous values in matrix must be zeroed
 
-norm1=:   >./  @(+/!.0   )@:|    `(_."_   )@.(isnan@<)` 0:     @.(0 e. $) : [:  NB. 1-norm of vector (matrix)
-norm1c=:         +/!.0    @:|    `(_. #~ c)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. 1-norm of vector (matrix columns)
-norm1r=:         +/!.0" 1 @:|    `(_. #~ #)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. 1-norm of vector (matrix rows)
+norm1=:   >./  @(+/!.0   )@:|    `     nan @.(isnan@<)` 0:     @.(0 e. $) : [:  NB. 1-norm of vector (matrix)
+norm1c=:         +/!.0    @:|    `(c # nan)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. 1-norm of vector (matrix columns)
+norm1r=:         +/!.0" 1 @:|    `(# # nan)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. 1-norm of vector (matrix rows)
 
-normi=:   >./  @(+/!.0"_1)@:|    `(_."_   )@.(isnan@<)` 0:     @.(0 e. $) : [:  NB. ∞-norm of vector (matrix)
-normic=:  >./             @:|    `(_. #~ c)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. ∞-norm of vector (matrix columns)
-normir=:  >./"1           @:|    `(_. #~ #)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. ∞-norm of vector (matrix rows)
+normi=:   >./  @(+/!.0"_1)@:|    `     nan @.(isnan@<)` 0:     @.(0 e. $) : [:  NB. ∞-norm of vector (matrix)
+normic=:  >./             @:|    `(c # nan)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. ∞-norm of vector (matrix columns)
+normir=:  >./"1           @:|    `(# # nan)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. ∞-norm of vector (matrix rows)
 
-normm=:   >./  @,         @:|    `(_."_   )@.(isnan@<)` 0:     @.(0 e. $) : [:  NB. max of modules of elements of vector (matrix)
+normm=:   >./  @,         @:|    `     nan @.(isnan@<)` 0:     @.(0 e. $) : [:  NB. max of modules of elements of vector (matrix)
 
 NB. ---------------------------------------------------------
 NB. norm1t
@@ -285,15 +285,15 @@ NB.
 NB. Notes:
 NB. - norm1t implements BLAS' DASUM, DZASUM
 
-norm1t=:  >./  @(+/!.0   )@:sorim`(_."_   )@.(isnan@<)` 0:     @.(0 e. $) : [:  NB. 1-norm of vector (matrix)
-norm1tc=:        +/!.0    @:sorim`(_. #~ c)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. 1-norm of vector (matrix columns)
-norm1tr=:        +/!.0" 1 @:sorim`(_. #~ #)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. 1-norm of vector (matrix rows)
+norm1t=:  >./  @(+/!.0   )@:sorim`     nan @.(isnan@<)` 0:     @.(0 e. $) : [:  NB. 1-norm of vector (matrix)
+norm1tc=:        +/!.0    @:sorim`(c # nan)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. 1-norm of vector (matrix columns)
+norm1tr=:        +/!.0" 1 @:sorim`(# # nan)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. 1-norm of vector (matrix rows)
 
-normit=:  >./  @(+/!.0"_1)@:sorim`(_."_   )@.(isnan@<)` 0:     @.(0 e. $) : [:  NB. ∞-norm of vector (matrix)
-normitc=: >./             @:sorim`(_. #~ c)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. ∞-norm of vector (matrix columns)
-normitr=: >./"1           @:sorim`(_. #~ #)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. ∞-norm of vector (matrix rows)
+normit=:  >./  @(+/!.0"_1)@:sorim`     nan @.(isnan@<)` 0:     @.(0 e. $) : [:  NB. ∞-norm of vector (matrix)
+normitc=: >./             @:sorim`(c # nan)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. ∞-norm of vector (matrix columns)
+normitr=: >./"1           @:sorim`(# # nan)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. ∞-norm of vector (matrix rows)
 
-normmt=:  >./  @,         @:sorim`(_."_   )@.(isnan@<)` 0:     @.(0 e. $) : [:  NB. max of modules of elements of vector (matrix)
+normmt=:  >./  @,         @:sorim`     nan @.(isnan@<)` 0:     @.(0 e. $) : [:  NB. max of modules of elements of vector (matrix)
 
 NB. ---------------------------------------------------------
 NB. norms
@@ -350,9 +350,9 @@ NB.   DLANST('f'), xLANGB('f'), xLANGT('f'), xLANHS('f'),
 NB.   xLANTB('f'), xLANTR('f'), ZLANHB('f'), ZLANHT('f'),-
 NB.   extraneous values in matrix must be zeroed
 
-norms=:  ((+/!.0&.:*:  @: (% :: 1:  )    * ]) >./  )@,@:|@(+.            ^:(JCMPX = 3!:0))`(_."_   )@.(isnan@<)                    : [:  NB. E-norm of vector (F-norm of matrix)
-normsc=: ((+/!.0&.:*:  @:((% :: 1:"0)"1) * ]) >./  )  @:|@((9&o. , 11&o.)^:(JCMPX = 3!:0))`(_. #~ c)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. E-norm of matrix columns
-normsr=: ((+/!.0&.:*:"1@: (% :: 1:"0)    * ]) >./"1)  @:|@((,"2@:+.     )^:(JCMPX = 3!:0))`(_. #~ #)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. E-norm of matrix rows
+norms=:  ((+/!.0&.:*:  @: (% :: 1:  )    * ]) >./  )@,@:|@(+.            ^:(JCMPX = 3!:0))`     nan @.(isnan@<)                    : [:  NB. E-norm of vector (F-norm of matrix)
+normsc=: ((+/!.0&.:*:  @:((% :: 1:"0)"1) * ]) >./  )  @:|@((9&o. , 11&o.)^:(JCMPX = 3!:0))`(c # nan)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. E-norm of matrix columns
+normsr=: ((+/!.0&.:*:"1@: (% :: 1:"0)    * ]) >./"1)  @:|@((,"2@:+.     )^:(JCMPX = 3!:0))`(# # nan)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. E-norm of matrix rows
 
 NB. =========================================================
 NB. Verification suite

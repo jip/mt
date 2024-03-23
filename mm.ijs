@@ -602,8 +602,8 @@ NB. - berr shows boolean 'is matched exactly'
 testmm=: 3 : 0
   rcondA=. gecon1 y
 
-  log=.          ('mm_mtmm_'     tmonad (]       `(mm_mtmm_^:_1)`(rcondA"_)`(_."_)`-:)) y
-  log=. log lcat ('mm_mtmm_^:_1' tmonad (mm_mtmm_`]             `(rcondA"_)`(_."_)`-:)) y
+  log=.          ('mm_mtmm_'     tmonad (]       `(mm_mtmm_^:_1)`(rcondA"_)`nan`-:)) y
+  log=. log lcat ('mm_mtmm_^:_1' tmonad (mm_mtmm_`]             `(rcondA"_)`nan`-:)) y
 )
 
 NB. ---------------------------------------------------------

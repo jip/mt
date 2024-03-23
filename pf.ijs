@@ -2229,7 +2229,7 @@ NB. - add xQRT12 test
 testgepf=: 3 : 0
   load_mttmp_ 'math/mt/test/lapack2/geqp3'
 
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   norm=. norm1 y
 
@@ -2251,15 +2251,15 @@ testgepf=: 3 : 0
   qrt11a=: (norm1@(<: upddiag)@(mp~ ct) % FP_EPS * #)@(0 {:: ])
   rqt11a=: (normi@(<: upddiag)@(mp  ct) % FP_EPS * #)@(2 {:: ])
 
-  log=.          ('dgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  log=. log lcat ('dgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  log=. log lcat ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  log=. log lcat ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  log=.          ('dgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`nan`(prt01  >. qrt11 ))) args
+  log=. log lcat ('dgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`nan`(prt01  >. qrt11 ))) args
+  log=. log lcat ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`nan`(prt01  >. qrt11 ))) args
+  log=. log lcat ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`nan`(prt01  >. qrt11 ))) args
 
-  log=. log lcat ('gelpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(lpt01a >. lqt11a))) args
-  log=. log lcat ('geplf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(plt01a >. qlt11a))) args
-  log=. log lcat ('geprf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(prt01a >. qrt11a))) args
-  log=. log lcat ('gerpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`(_."_)`(rpt01a >. rqt11a))) args
+  log=. log lcat ('gelpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`nan`(lpt01a >. lqt11a))) args
+  log=. log lcat ('geplf'         tmonad ((            0&{:: )`]                           `(rcond"_)`nan`(plt01a >. qlt11a))) args
+  log=. log lcat ('geprf'         tmonad ((            0&{:: )`]                           `(rcond"_)`nan`(prt01a >. qrt11a))) args
+  log=. log lcat ('gerpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`nan`(rpt01a >. rqt11a))) args
 
   coerase < 'mttmp'
   erase 'lpt01a plt01a prt01a rpt01a lqt11a qlt11a qrt11a'

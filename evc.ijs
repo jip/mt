@@ -524,18 +524,18 @@ testtgevc=: 3 : 0
   rcondl=. <./ trlconi"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
   rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ 0&,)~ ((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
 
-  log=.          ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`t52ll)) SPl
-  log=. log lcat ('tgevclr'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lr)) SPl
-  log=. log lcat ('tgevclb'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lb)) SPl
-  log=. log lcat ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`(_."_)`t52ll)) SPQZHTl
-  log=. log lcat ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`(_."_)`t52lr)) SPQZHTl
-  log=. log lcat ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`(_."_)`t52lb)) SPQZHTl
-  log=. log lcat ('tgevcul'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ul)) SPu
-  log=. log lcat ('tgevcur'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ur)) SPu
-  log=. log lcat ('tgevcub'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ub)) SPu
-  log=. log lcat ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`(_."_)`t52ul)) SPQZHTu
-  log=. log lcat ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`(_."_)`t52ur)) SPQZHTu
-  log=. log lcat ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`(_."_)`t52ub)) SPQZHTu
+  log=.          ('tgevcll'  tmonad (]          `]`(rcondl"_)`nan`t52ll)) SPl
+  log=. log lcat ('tgevclr'  tmonad (]          `]`(rcondl"_)`nan`t52lr)) SPl
+  log=. log lcat ('tgevclb'  tmonad (]          `]`(rcondl"_)`nan`t52lb)) SPl
+  log=. log lcat ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`nan`t52ll)) SPQZHTl
+  log=. log lcat ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`nan`t52lr)) SPQZHTl
+  log=. log lcat ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`nan`t52lb)) SPQZHTl
+  log=. log lcat ('tgevcul'  tmonad (]          `]`(rcondu"_)`nan`t52ul)) SPu
+  log=. log lcat ('tgevcur'  tmonad (]          `]`(rcondu"_)`nan`t52ur)) SPu
+  log=. log lcat ('tgevcub'  tmonad (]          `]`(rcondu"_)`nan`t52ub)) SPu
+  log=. log lcat ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`nan`t52ul)) SPQZHTu
+  log=. log lcat ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`nan`t52ur)) SPQZHTu
+  log=. log lcat ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`nan`t52ub)) SPQZHTu
 )
 
 NB. ---------------------------------------------------------

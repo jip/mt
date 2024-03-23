@@ -151,10 +151,10 @@ NB.   log - 6-vector of boxes, test log, see test.ijs
 testgebak=: 3 : 0
   'rcondl rcondu'=. (geconi , gecon1) y
 
-  log=.          ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
-  log=. log lcat ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
-  log=. log lcat ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
-  log=. log lcat ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
+  log=.          ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`nan`nan)) y
+  log=. log lcat ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`nan`nan)) y
+  log=. log lcat ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`nan`nan)) y
+  log=. log lcat ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------

@@ -1,6 +1,7 @@
 NB. Utilities
 NB.
 NB. isnan       Mark NaN values
+NB. nan         Produce NaN of input datatype
 NB. max         Max-of, 0 for empty list
 NB. negneg      Conditional negate
 NB. negpos      Conditional negate
@@ -49,7 +50,8 @@ NB. =========================================================
 NB. Local definitions
 
 NB. Format log string
-fmtlog=: ;@:(40 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))
+NB. note: fix (8!:2) for complex [NaN] input
+fmtlog=: ;@:(40 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2 :: (,: 'n/a'))))&.>))
 
 NB. mark...
 ispos0=:  _ =!.0 %  NB. ... +0  values in y
@@ -61,13 +63,14 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-isnan=: 128!:5  NB. mark NaN values in y
+isnan=: 128!:5                          NB. mark NaN values in y
+nan=:   _."_`(_.j_."_)@.(JCMPX = 3!:0)  NB. produce NaN of input datatype
 
 max=: >./`0:@.(0 = #)  NB. max-of, 0 for empty list
 
-negneg=:   ($@] $    (isneg0 +. 0&>)@{.`((,:  -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x<0 then - y  else  y  endif
-negpos=:   ($@] $    (isneg0 +: 0&>)@{.`((,:  -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x≥0 then - y  else  y  endif
-copysign=: ($@] $ =/&(isneg0 +. 0&>)   `((,:~ -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x<0 then -|y| else |y| endif
+negneg=:   ($@] $    (isneg0 +. 0&>)@{.`((,:  -)@{:)}@,:)`(($ $ nan)@])@.(+.&(isnan@<))  NB. if x<0 then - y  else  y  endif
+negpos=:   ($@] $    (isneg0 +: 0&>)@{.`((,:  -)@{:)}@,:)`(($ $ nan)@])@.(+.&(isnan@<))  NB. if x≥0 then - y  else  y  endif
+copysign=: ($@] $ =/&(isneg0 +. 0&>)   `((,:~ -)@{:)}@,:)`(($ $ nan)@])@.(+.&(isnan@<))  NB. if x<0 then -|y| else |y| endif
 
 sorim=: | `(+/!.0"1@:| @:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
 soris=: *:`(+/!.0"1@:*:@:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
@@ -153,15 +156,15 @@ NB.
 NB. Application:
 NB. - to test geqrf:
 NB.     NB. to estimate rcond in 1-norm
-NB.     vrcond=. (_."_)`gecon1@.(=/@$)
+NB.     vrcond=. nan`gecon1@.(=/@$)
 NB.     NB. to calc. berr, assuming:
 NB.     NB.   berr := ||A - realA||_1 / (FP_EPS * ||A||_1 * m)
 NB.     vberr=. ((- %&norm1 [) % FP_EPS * (norm1 * #)@[) unmqr
 NB.     NB. do the job
-NB.     'sent rcond ferr berr time space'=. ('geqrf' tmonad ]`]`vrcond`(_."_)`vberr) A
+NB.     'sent rcond ferr berr time space'=. ('geqrf' tmonad ]`]`vrcond`nan`vberr) A
 NB. - to test getrs:
 NB.     NB. to estimate rcond in ∞-norm
-NB.     vrcond=. (_."_)`geconi@.(=/@$)@(0&{::)
+NB.     vrcond=. nan`geconi@.(=/@$)@(0&{::)
 NB.     NB. to calc. ferr, assuming:
 NB.     NB.   ferr := ||x - realx||_inf / ||realx||_inf
 NB.     vferr=. ((- %&normi [) 1&{::)~

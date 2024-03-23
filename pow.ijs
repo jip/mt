@@ -253,7 +253,7 @@ NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
 
-testgepow=: 'gepow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))
+testgepow=: 'gepow' tdyad ((5 7"_)`]`]`geconi`nan`nan)
 
 NB. ---------------------------------------------------------
 NB. testdipow
@@ -283,7 +283,7 @@ testdipow=: 3 : 0
     R=. v=. iRh=. _.
   end.
 
-  log=. ('dipow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
+  log=. ('dipow' tdyad ((5 7"_)`]`]`geconi`nan`nan)) (ct R) ; v ; iRh
 )
 
 NB. ---------------------------------------------------------
@@ -308,7 +308,7 @@ testhepow=: 3 : 0
     v=. R=. _.
   end.
 
-  log=. ('hepow' tdyad ((5 7"_)`]`]`heconi`(_."_)`(_."_))) v ; ct R
+  log=. ('hepow' tdyad ((5 7"_)`]`]`heconi`nan`nan)) v ; ct R
 )
 
 NB. ---------------------------------------------------------

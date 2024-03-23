@@ -99,7 +99,7 @@ NB.               arguments to check the result correctness
 NB.
 NB. Notation:
 NB.   ∞          is       ±∞ i.e. either -∞ or +∞
-NB.   a,b = ∞    means    a,b ∊ {-∞,+∞}, not a = b = ±∞
+NB.   a,b = ∞    means    a,b ∈ {-∞,+∞}, not a = b = ±∞
 NB.
 NB. Conventions:
 NB. 1) a result returned from a test actor is an inverted

@@ -1428,7 +1428,7 @@ NB.   P - n×n-matrix, the Hermitian (symmetric) positive
 NB.       definite
 NB.
 NB. Examples:
-NB.    NB. G ∊ M_3(ℝ)
+NB.    NB. G ∈ M_3(ℝ)
 NB.    ] G=. 3 3 $ _5 _4 9 _5 _7 1 _7 _4 _4
 NB. _5 _4  9
 NB. _5 _7  1
@@ -1447,7 +1447,7 @@ NB.    NB. is P positive definite (does Cholesky factor exists)?
 NB.    1:@potrfl :: 0 P
 NB. 1
 NB.
-NB.    NB. G ∊ M_3(ℂ)
+NB.    NB. G ∈ M_3(ℂ)
 NB.    ] G=. 3 3 $ 5j8 _6j_3 _9j8 _6j_7 0j_1 _5j7 _2j_4 8j7 _6j_8
 NB.   5j8 _6j_3  _9j8
 NB. _6j_7  0j_1  _5j7

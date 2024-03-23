@@ -801,7 +801,7 @@ NB.     berr0 := 0
 NB.   endif
 NB.   berr1 := (||F2||_1 / max(1, size)) / FP_EPS
 NB. where
-NB.   k ∊ {0, 1, min(m,n)/2, min(m,n)}
+NB.   k ∈ {0, 1, min(m,n)/2, min(m,n)}
 NB.   for unglq: F1 := L(0  :k-1,0  :m-1) - A(0  :k-1,0:n-1)   * Qapprox         ^H, F2 := Qapprox   * Qapprox^H - I, size := n, Qapprox := H(k-1)' * ... * H(0  )'
 NB.   for ungql: F1 := L(0  :n-1,n-k:n-1) - Qapprox         ^H * A(0:m-1,n-k:n-1)  , F2 := Qapprox^H * Qapprox   - I, size := m, Qapprox := H(k-1)  * ... * H(0  )
 NB.   for ungqr: F1 := R(0  :n-1,0  :k-1) - Qapprox         ^H * A(0:m-1,0  :k-1)  , F2 := Qapprox^H * Qapprox   - I, size := m, Qapprox := H(0  )  * ... * H(k-1)
@@ -857,7 +857,7 @@ NB.     berr0 := 0
 NB.   endif
 NB.   berr1 := (||F2||_1 / max(1, size)) / FP_EPS
 NB. where
-NB.   k ∊ {0, 1, min(m,n)/2, min(m,n)}
+NB.   k ∈ {0, 1, min(m,n)/2, min(m,n)}
 NB.   for unglz: F1 := A(m-k-1:m-1,n-k-1:n-1) - L(m-k-1:m-1,m-k-1:m-1) *  Zapprox(m-k-1:m-1,n-k-1:n-1), F2 := Zapprox   * Zapprox^H - I, size := n, Zapprox := H(k-1)' * ... * H(0  )'
 NB.   for ungzl: F1 := A(0    :k-1,0    :k-1) - L(0    :k-1,0    :k-1) *~ Zapprox(0    :k-1,0    :k-1), F2 := Zapprox^H * Zapprox   - I, size := m, Zapprox := H(k-1)  * ... * H(0  )
 NB.   for ungzr: F1 := A(m-k-1:m-1,n-k-1:n-1) - R(n-k-1:n-1,n-k-1:n-1) *~ Zapprox(m-k-1:m-1,n-k-1:n-1), F2 := Zapprox^H * Zapprox   - I, size := m, Zapprox := H(0  )  * ... * H(k-1)
@@ -968,7 +968,7 @@ NB.   else
 NB.     berrP := ||F1||_1 / (max(1, n) *           FP_EPS)
 NB.   endif
 NB. where
-NB.   k ∊ {0, 1, min(m,n)/2, min(m,n)}
+NB.   k ∈ {0, 1, min(m,n)/2, min(m,n)}
 NB.   F1 := Papprox - C compP Q(k)
 NB.   for unmlqxx: Q(k) := H(k-1)' * ... * H(0  )'
 NB.   for unmqlxx: Q(k) := H(k-1)  * ... * H(0  )
@@ -1060,7 +1060,7 @@ NB.   else
 NB.     berrP := ||F1||_1 / (max(1, n) *           FP_EPS)
 NB.   endif
 NB. where
-NB.   k ∊ {0, 1, min(m,n)/2, min(m,n)}
+NB.   k ∈ {0, 1, min(m,n)/2, min(m,n)}
 NB.   F1 := Papprox - C compP Z(k)
 NB.   for unmlzxx: Z(k) := H(k-1)' * ... * H(0  )'
 NB.   for unmzlxx: Z(k) := H(k-1)  * ... * H(0  )

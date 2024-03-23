@@ -188,7 +188,7 @@ NB.   shape  -:(rank # length)  NB. an array's shape
 NB.   arriso - shape-array, ISO, skew-symmetric
 NB.   iso    - (rank ! length)-vector, ISO nub
 NB.            from ravelled skew-symmetric array
-NB.   rank   ∊ [2, length], integer, an array's rank
+NB.   rank   ∈ [2, length], integer, an array's rank
 NB.
 NB. Assertion:
 NB.      nub -: iso ({ ,) $.^:_1 arr

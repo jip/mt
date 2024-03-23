@@ -112,7 +112,7 @@ NB.                 subH=. subL1 mp subT
 NB.   subT      - (n-i)×(n-i)-matrix, the Hermitian
 NB.               (symmetric) tridiagonal, being bottom right
 NB.               part of T
-NB.   i         ∊ {(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's 1st row
+NB.   i         ∈ {(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's 1st row
 NB.               and column within A
 NB.   A         - n×n-matrix, the Hermitian (symmetric)
 NB.   L1        - n×n-matrix, the unit lower triangular (unit
@@ -359,7 +359,7 @@ NB.                 subH=. subU1 mp subT
 NB.   subT      - (n+i+1)×(n+i+1)-matrix, the Hermitian
 NB.               (symmetric) tridiagonal, being top left
 NB.               part of T
-NB.   i         ∊ {_1-(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's last
+NB.   i         ∈ {_1-(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's last
 NB.               row and column within A
 NB.   A         - n×n-matrix, the Hermitian (symmetric)
 NB.   U1        - n×n-matrix, the unit upper triangular (unit

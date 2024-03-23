@@ -160,13 +160,13 @@ NB. where
 NB.   iso - 2-vector of integers (ioa,iot)
 NB.   ioa - lIO α in y
 NB.   iot - lIO pre-allocated scalar in y
-NB.   y   - (n+1)-vector having scalar α ∊ ℂ at index ioa,
-NB.         any scalar at index iot, and vector x ∊ ℂ^(n-1)
+NB.   y   - (n+1)-vector having scalar α ∈ ℂ at index ioa,
+NB.         any scalar at index iot, and vector x ∈ ℂ^(n-1)
 NB.         in the rest elements, vector to reflect is:
 NB.           (<<< iot) { y
-NB.   z   - (n+1)-vector having scalar β ∊ ℝ (larfp [1]
-NB.         provides β≥0) at index ioa, scalar τ ∊ ℂ at index
-NB.         iot, and vector v ∊ ℂ^(n-1) in the rest elements,
+NB.   z   - (n+1)-vector having scalar β ∈ ℝ (larfp [1]
+NB.         provides β≥0) at index ioa, scalar τ ∈ ℂ at index
+NB.         iot, and vector v ∈ ℂ^(n-1) in the rest elements,
 NB.         reflected vector is:
 NB.           beta ioa} n $ 0
 NB.
@@ -218,12 +218,12 @@ larfg=: 4 : 0
   alpha=. ioa { y
   y=. 0 iot} y                            NB. τ := 0
   ynorm=. norms y
-  if. ynorm (=!.0) | 9 o. alpha do.       NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ ?
+  if. ynorm (=!.0) | 9 o. alpha do.       NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∈ ℝ ?
     y                                     NB. (α,0,0) i.e. H==I, τ==0, β==α, v==0
   else.
     if. REFSAFMIN > ynorm do.             NB. xnorm, β may be inaccurate; scale x and recompute them
       y=. y % REFSAFMIN                   NB. (α_scaled,x_scaled,0)
-      beta=. (9 o. alpha) negpos norms y  NB. use Re(α) instead Re(α_ascaled) since sign(Re(α)) == sign(Re(α_scaled)); |β_scaled| ∊ [REFSAFMIN,1)
+      beta=. (9 o. alpha) negpos norms y  NB. use Re(α) instead Re(α_ascaled) since sign(Re(α)) == sign(Re(α_scaled)); |β_scaled| ∈ [REFSAFMIN,1)
       dzeta=. beta - ioa { y              NB. ζ := β_scaled-α_scaled
       tau=. dzeta % beta                  NB. τ := ζ/β_scaled
       beta=. REFSAFMIN * beta             NB. unscale β; if α is subnormal, it may lose relative accuracy
@@ -268,10 +268,10 @@ larfp=: 4 : 0
 
 NB. ---------------------------------------------------------
 NB. Verb       Input             Output                  β
-NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∊ ℝ
-NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∊ ℝ
-NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∊ ℝ
-NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ∊ ℝ
+NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∈ ℝ
+NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∈ ℝ
+NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∈ ℝ
+NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ∈ ℝ
 NB. larfpf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ≥ 0
 NB. larfpfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ≥ 0
 NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ≥ 0

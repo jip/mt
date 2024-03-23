@@ -71,7 +71,7 @@ NB.   VH    - HRDNB×(n-i)-matrix, represents reduced rows
 NB.           of subeA, lower triangles of VH and H are
 NB.           match, strict upper triangles of VH and V are
 NB.           match
-NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.   i     ∈ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
 NB.   n     ≥ 0, integer, the size of A
 NB.
@@ -124,7 +124,7 @@ NB.   VH    - (n-i)×HRDNB-matrix, represents reduced columns
 NB.           of subeA, upper triangles of VH and H are
 NB.           match, strict lower triangles of VH and V are
 NB.           match
-NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.   i     ∈ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
 NB.   n     ≥ 0, integer, size of A
 NB.

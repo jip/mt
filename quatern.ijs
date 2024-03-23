@@ -42,12 +42,12 @@ NB. Concepts
 NB.
 NB. Notation:
 NB.   ℝ  ≡ [-∞,+∞]
-NB.   a,b,c,d ∊ ℝ       Basis elements multiplication table:
+NB.   a,b,c,d ∈ ℝ       Basis elements multiplication table:
 NB.   ℂi ≡ ℝ  + ℝ *i          i   j   k
 NB.   ℂj ≡ ℝ  + ℝ *j      i  _1   k  -j
 NB.   ℂk ≡ ℝ  + ℝ *k      j  -k  _1   i
 NB.   ℍ  ≡ ℂi + ℂi*j      k   j  -i  _1
-NB.   q  = a + b*i + c*j + d*k ∊ ℍ
+NB.   q  = a + b*i + c*j + d*k ∈ ℍ
 NB.   q∞ - quaternion infinity
 NB.
 NB. Terms:
@@ -64,13 +64,13 @@ NB.     - has multiple components which are = ∞
 NB.
 NB. Conventions:
 NB.   Math:                     J:
-NB.     x = a + b*i ∊ ℂi          x -: a j. b
-NB.     y = c + d*i ∊ ℂi          y -: c j. d
-NB.     z = a + c*j ∊ ℂj          z -: a j. c
-NB.     w = a + d*k ∊ ℂk          w -: a j. d
-NB.     u = b + c*k ∊ ℂk          u -: b j. c
-NB.     v = b + d*j ∊ ℂj          v -: b j. d
-NB.     s = c + b*k ∊ ℂk          s -: c j. b
+NB.     x = a + b*i ∈ ℂi          x -: a j. b
+NB.     y = c + d*i ∈ ℂi          y -: c j. d
+NB.     z = a + c*j ∈ ℂj          z -: a j. c
+NB.     w = a + d*k ∈ ℂk          w -: a j. d
+NB.     u = b + c*k ∈ ℂk          u -: b j. c
+NB.     v = b + d*j ∈ ℂj          v -: b j. d
+NB.     s = c + b*k ∈ ℂk          s -: c j. b
 NB.     q = x + y*j               q -: x , y
 NB.       = w + j*s
 NB.       = w + u*i
@@ -282,8 +282,8 @@ NB.
 NB. Formula [1]:
 NB.   f(q) = Re(f(λ)) + sgn(q-a) * Im(f(λ))
 NB. where
-NB.   q = a + b*i + c*j + d*k ∊ ℍ
-NB.   λ = a + |q-a|*i         ∊ ℂ
+NB.   q = a + b*i + c*j + d*k ∈ ℍ
+NB.   λ = a + |q-a|*i         ∈ ℂ
 NB.   sgn(q) = q/|q|,     if q ≠ 0
 NB.          = undefined, if q = 0
 NB.

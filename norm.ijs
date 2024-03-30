@@ -25,6 +25,13 @@ NB.             vector (matrix)
 NB. normsc      Square-based Euclidean norm of matrix columns
 NB. normsr      Square-based Euclidean norm of matrix rows
 NB.
+NB. testnormm   Test magnitude-based norm computing verbs
+NB. testnormt   Test taxicab-based norm computing verbs
+NB. testnorms   Test square-based norm computing verbs
+NB. testnorm    Adv. to make verb to test norm computing
+NB.             algorithms by matrix of generator and shape
+NB.             given
+NB.
 NB. verifynorm  Verify norm verbs
 NB.
 NB. Version: 0.13.1 2021-06-06
@@ -353,6 +360,114 @@ NB.   extraneous values in matrix must be zeroed
 norms=:  ((+/!.0&.:*:  @: (% :: 1:  )    * ]) >./  )@,@:|@(+.            ^:(JCMPX = 3!:0))`     nan @.(isnan@<)                    : [:  NB. E-norm of vector (F-norm of matrix)
 normsc=: ((+/!.0&.:*:  @:((% :: 1:"0)"1) * ]) >./  )  @:|@((9&o. , 11&o.)^:(JCMPX = 3!:0))`(c # nan)@.(isnan@<)`(0 #~ c)@.(0 e. $) : [:  NB. E-norm of matrix columns
 normsr=: ((+/!.0&.:*:"1@: (% :: 1:"0)    * ]) >./"1)  @:|@((,"2@:+.     )^:(JCMPX = 3!:0))`(# # nan)@.(isnan@<)`(0 #~ #)@.(0 e. $) : [:  NB. E-norm of matrix rows
+
+NB. =========================================================
+NB. Test suite
+
+NB. ---------------------------------------------------------
+NB. testnormm
+NB.
+NB. Description:
+NB.   Test magnitude-based norm computing verbs:
+NB.   - norm1x (math/mt addon)
+NB.   - normix (math/mt addon)
+NB.   - normm (math/mt addon)
+NB.   by m×n-matrix
+NB.
+NB. Syntax:
+NB.   log=. testnormm A
+NB. where
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testnormm=: 3 : 0
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+
+  log=.          ('norm1'  tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('norm1c' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('norm1r' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normi'  tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normic' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normir' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normm'  tmonad (]`]`(rcond"_)`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testnormt
+NB.
+NB. Description:
+NB.   Test taxicab-based norm computing verbs:
+NB.   - norm1tx (math/mt addon)
+NB.   - normitx (math/mt addon)
+NB.   - normmt (math/mt addon)
+NB.   by m×n-matrix
+NB.
+NB. Syntax:
+NB.   log=. testnormt A
+NB. where
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testnormt=: 3 : 0
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+
+  log=.          ('norm1t'  tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('norm1tc' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('norm1tr' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normit'  tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normitc' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normitr' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normmt'  tmonad (]`]`(rcond"_)`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testnorms
+NB.
+NB. Description:
+NB.   Test square-based norm computing verbs:
+NB.   - normsx (math/mt addon)
+NB.   by m×n-matrix
+NB.
+NB. Syntax:
+NB.   log=. testnorms A
+NB. where
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testnorms=: 3 : 0
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+
+  log=.          ('norms'  tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normsc' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('normsr' tmonad (]`]`(rcond"_)`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testnorm
+NB.
+NB. Description:
+NB.   Adv. to make verb to test norm computing algorithms by
+NB.   matrix of generator and shape given
+NB.
+NB. Syntax:
+NB.   log=. (mkmat testnorm) (m,n)
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.             mat=. mkmat (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.
+NB. Application:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     log=. ?@$&0 testnorm_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testnorm_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     log=. (gemat_mt_ j. gemat_mt_) testnorm_mt_ 150 200
+
+testnorm=: 1 : '(testnorms_mt_ ,&.>~ testnormt_mt_ ,&.>~ testnormm_mt_)@u'
 
 NB. =========================================================
 NB. Verification suite

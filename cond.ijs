@@ -1,11 +1,31 @@
 NB. Condition number
 NB.
-NB. con     Conj. to make monad estimating the reciprocal of
-NB.         the condition number of a matrix in a given norm
-NB. xxconx  Calculate reciprocal of the condition number of a
-NB.         matrix in a given norm
-NB. laic1x  Apply one step of incremental condition
-NB.         estimation
+NB. con        Conj. to make monad estimating the reciprocal
+NB.            of the condition number of a matrix in a given
+NB.            norm
+NB. xxconx     Calculate reciprocal of the condition number
+NB.            of a matrix in a given norm
+NB. laic1x     Apply one step of incremental condition
+NB.            estimation
+NB.
+NB. testcontr  Test reciprocal of the condition number
+NB.            computing verbs by triangular matrix
+NB. testconge  Test reciprocal of the condition number
+NB.            computing verbs by general square matrix
+NB. testconhe  Test reciprocal of the condition number
+NB.            computing verbs by Hermitian (symmetric)
+NB.            matrix
+NB. testconpo  Test reciprocal of the condition number
+NB.            computing verbs by Hermitian (symmetric)
+NB.            positive definite matrix
+NB. testconpt  Test reciprocal of the condition number
+NB.            computing verbs by Hermitian (symmetric)
+NB.            positive definite tridiagonal matrix
+NB. testconun  Test reciprocal of the condition number
+NB.            computing verbs by unitary (orthogonal) matrix
+NB. testcon    Adv. to make verb to test reciprocal of the
+NB.            condition number computing algorithms by
+NB.            matrix of generator and shape given
 NB.
 NB. Version: 0.11.0 2021-01-17
 NB.
@@ -274,3 +294,185 @@ laic12=: 3 : 0
     end.
   end.
 )
+
+NB. =========================================================
+NB. Test suite
+
+NB. ---------------------------------------------------------
+NB. testcontr
+NB.
+NB. Description:
+NB.   Test reciprocal of the condition number computing
+NB.   verbs:
+NB.   - trl1con1 (math/mt addon)
+NB.   - trl1coni (math/mt addon)
+NB.   - trlcon1 (math/mt addon)
+NB.   - trlconi (math/mt addon)
+NB.   - tru1con1 (math/mt addon)
+NB.   - tru1coni (math/mt addon)
+NB.   - trucon1 (math/mt addon)
+NB.   - truconi (math/mt addon)
+NB.   by triangular matrix
+NB.
+NB. Syntax:
+NB.   log=. testcontr G
+NB. where
+NB.   G   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testcontr=: 3 : 0
+  log=.          ('trl1con1' tmonad (trl1pick`]`(trl1con1@trl1pick)`nan`nan)) y
+  log=. log lcat ('trl1coni' tmonad (trl1pick`]`(trl1coni@trl1pick)`nan`nan)) y
+  log=. log lcat ('trlcon1'  tmonad (trlpick `]`(trlcon1 @trlpick )`nan`nan)) y
+  log=. log lcat ('trlconi'  tmonad (trlpick `]`(trlconi @trlpick )`nan`nan)) y
+  log=. log lcat ('tru1con1' tmonad (tru1pick`]`(tru1con1@tru1pick)`nan`nan)) y
+  log=. log lcat ('tru1coni' tmonad (tru1pick`]`(tru1coni@tru1pick)`nan`nan)) y
+  log=. log lcat ('trucon1'  tmonad (trupick `]`(trucon1 @trupick )`nan`nan)) y
+  log=. log lcat ('truconi'  tmonad (trupick `]`(truconi @trupick )`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testconge
+NB.
+NB. Description:
+NB.   Test reciprocal of the condition number computing
+NB.   verbs:
+NB.   - gecon1 (math/mt addon)
+NB.   - geconi (math/mt addon)
+NB.   by general square matrix
+NB.
+NB. Syntax:
+NB.   log=. testconge G
+NB. where
+NB.   G   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testconge=: 3 : 0
+  rcond=. geconi y
+
+  log=.          ('gecon1' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('geconi' tmonad (]`]`(rcond"_)`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testconhe
+NB.
+NB. Description:
+NB.   Test reciprocal of the condition number computing
+NB.   verbs:
+NB.   - hecon1 (math/mt addon)
+NB.   - heconi (math/mt addon)
+NB.   by Hermitian (symmetric) matrix
+NB.
+NB. Syntax:
+NB.   log=. testconhe H
+NB. where
+NB.   H   - n×n-matrix, Hermitian (symmetric)
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testconhe=: 3 : 0
+  rcond=. heconi y
+
+  log=.          ('hecon1' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('heconi' tmonad (]`]`(rcond"_)`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testconpo
+NB.
+NB. Description:
+NB.   Test reciprocal of the condition number computing
+NB.   verbs:
+NB.   - pocon1 (math/mt addon)
+NB.   - poconi (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite matrix
+NB.
+NB. Syntax:
+NB.   log=. testconpo P
+NB. where
+NB.   P   - n×n-matrix, Hermitian (symmetric) positive
+NB.         definite
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testconpo=: 3 : 0
+  rcond=. poconi y
+
+  log=.          ('pocon1' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('poconi' tmonad (]`]`(rcond"_)`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testconpt
+NB.
+NB. Description:
+NB.   Test reciprocal of the condition number computing
+NB.   verbs:
+NB.   - ptcon1 (math/mt addon)
+NB.   - ptconi (math/mt addon)
+NB.   by Hermitian (symmetric) positive definite tridiagonal
+NB.   matrix
+NB.
+NB. Syntax:
+NB.   log=. testconpt T
+NB. where
+NB.   T   - n×n-matrix, Hermitian (symmetric) positive
+NB.         definite tridiagonal
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testconpt=: 3 : 0
+  rcond=. ptconi y
+
+  log=.          ('ptcon1' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('ptconi' tmonad (]`]`(rcond"_)`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testconun
+NB.
+NB. Description:
+NB.   Test reciprocal of the condition number computing
+NB.   verbs:
+NB.   - ptcon1 (math/mt addon)
+NB.   - ptconi (math/mt addon)
+NB.   by unitary (orthogonal) matrix
+NB.
+NB. Syntax:
+NB.   log=. testconun Q
+NB. where
+NB.   Q   - n×n-matrix, unitary (orthogonal)
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testconun=: 3 : 0
+  rcond=. unconi y
+
+  log=.          ('uncon1' tmonad (]`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('unconi' tmonad (]`]`(rcond"_)`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testcon
+NB.
+NB. Description:
+NB.   Adv. to make verb to test reciprocal of the condition
+NB.   number computing algorithms by matrix of generator and
+NB.   shape given
+NB.
+NB. Syntax:
+NB.   log=. (mkmat testcon) (m,n)
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.             mat=. mkmat (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.
+NB. Application:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     log=. ?@$&0 testcon_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testcon_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     log=. (gemat_mt_ j. gemat_mt_) testcon_mt_ 150 200
+
+testcon=: 1 : 'nolog_mt_`(testconun_mt_@((randnr_mt_ unmat_mt_)`(randnc_mt_ unmat_mt_)@.(JCMPX = (3!:0)@u@1:)) ,&.>~ testconpt_mt_@(u ptmat2_mt_) ,&.>~ testconpo_mt_@(u pomat_mt_) ,&.>~ testconhe_mt_@(u hemat_mt_) ,&.>~ (testconge_mt_ ,&.>~ testcontr_mt_)@u)@.(=/)'

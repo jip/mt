@@ -11,6 +11,13 @@ NB. qndivl         Divide (left quotient)
 NB. qndivr         Divide (right quotient)
 NB. qnf            Adv. to quaternificate verb
 NB.
+NB. testqn1        Test verbs receiving the only quaternion
+NB. testqn2        Test verbs receiving a couple of
+NB.                quaternions
+NB. testqnf        Test qnf adverb
+NB. testquatern    Adv. to make verb to test quaternion
+NB.                algorithms by 2-vectors of generator given
+NB.
 NB. verifyquatern  Verify quatern verbs
 NB.
 NB. Version: 0.11.0 2021-01-17
@@ -324,6 +331,156 @@ NB.     Quaternions. 2010 (Л. Г. Байрак. Интегральная фор
 NB.     Коши для кватернионов. 2010).
 
 qnf=: 1 : 'qn1_mt_ (u@(j. qn1_mt_) ((9 o. [) qn1_mt_ (* 11&o.)~) (% qn1_mt_)@]) qnlen_mt_@qnmarkijk_mt_ qn1_mt_ ]'
+
+NB. =========================================================
+NB. Test suite
+
+NB. ---------------------------------------------------------
+NB. testqn1
+NB.
+NB. Description:
+NB.   Test verbs receiving the only quaternion:
+NB.   - qnxx (math/mt addon)
+NB.   - qnmarkxxx (math/mt addon)
+NB.   - qnconxx (math/mt addon)
+NB.   - qnlen (math/mt addon)
+NB.   - qnsign (math/mt addon)
+NB.   - qninv (math/mt addon)
+NB.   by 2-vectors
+NB.
+NB. Syntax:
+NB.   log=. testqn1 Qn
+NB. where
+NB.   Qn  - m×4-matrix of m 3-tuples (q,a,b)
+NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   q   - 2-vector, quaternion
+NB.   a,b - any scalars
+
+testqn1=: 3 : 0
+  'Q A B'=. 2 ({."1 ; ({."1 ; {:"1)@(9 o. }."1)) y
+
+  log=.          ('qn1"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qni"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnj"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnk"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qn1i"1' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qn1j"1' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qn1k"1' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnij"1' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnik"1' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnjk"1' tmonad (]`]`nan`0:`0:)) Q
+
+  log=. log lcat ('qn1"0 1'  tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A
+  log=. log lcat ('qni"0 1'  tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A
+  log=. log lcat ('qnj"0 1'  tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A
+  log=. log lcat ('qnk"0 1'  tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A
+  log=. log lcat ('qn1i"0 1' tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A j. B
+  log=. log lcat ('qn1j"0 1' tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A j. B
+  log=. log lcat ('qn1k"0 1' tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A j. B
+  log=. log lcat ('qnij"0 1' tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A j. B
+  log=. log lcat ('qnik"0 1' tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A j. B
+  log=. log lcat ('qnjk"0 1' tdyad (1&{::`(0&{::)`]`nan`0:`0:)) Q ; A j. B
+
+  log=. log lcat ('qnmark1"1'   tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmarki"1'   tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmarkj"1'   tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmarkk"1'   tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmark1i"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmark1j"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmark1k"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmarkij"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmarkik"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmarkjk"1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmark1ij"1' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmark1ik"1' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmark1jk"1' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnmarkijk"1' tmonad (]`]`nan`0:`0:)) Q
+
+  log=. log lcat ('qncon1'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnconi'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnconj'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnconk'  tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnconij' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnconjk' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnconik' tmonad (]`]`nan`0:`0:)) Q
+  log=. log lcat ('qnconv'  tmonad (]`]`nan`0:`0:)) Q
+
+  log=. log lcat ('qnlen' tmonad (]`]`nan`nan`nan)) Q
+
+  log=. log lcat ('qnsign' tmonad (]`]`nan`nan`nan)) Q
+
+  log=. log lcat ('qninv' tmonad (]`]`nan`nan`nan)) Q
+)
+
+NB. ---------------------------------------------------------
+NB. testqn2
+NB.
+NB. Description:
+NB.   Test verbs receiving a couple of quaternions:
+NB.   - qnmul (math/mt addon)
+NB.   - qndinl qndivr (math/mt addon)
+NB.   by 2-vectors
+NB.
+NB. Syntax:
+NB.   log=. testqn2 Q1Q2
+NB. where
+NB.   Q1Q2  - m×4-matrix of m quaternion pairs (q1,q2)
+NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   q1,q2 - 2-vector, any quaternions
+
+testqn2=: 3 : 0
+  log=.          ('qnmul'  tdyad (2&({."1)`(2&(}."1))`]`nan`nan`nan)) y
+  log=. log lcat ('qndivl' tdyad (2&({."1)`(2&(}."1))`]`nan`nan`nan)) y
+  log=. log lcat ('qndivr' tdyad (2&({."1)`(2&(}."1))`]`nan`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testqnf
+NB.
+NB. Description:
+NB.   Test quaternificate adverb:
+NB.   - qnf (math/mt addon)
+NB.   by 2-vectors
+NB.
+NB. Syntax:
+NB.   log=. testqnf Q
+NB. where
+NB.   Q   - m×2-matrix of m quaternions
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testqnf=: 3 : 0
+  log=.          ('*: qnf"1' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('%: qnf"1' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('^  qnf"1' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('^. qnf"1' tmonad (]`]`nan`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
+NB. testquatern
+NB.
+NB. Description:
+NB.   Adv. to make verb to test quaternion algorithms by
+NB.   matrix of generator and shape given
+NB.
+NB. Syntax:
+NB.   log=. (mkmat testquatern) (m,n)
+NB. where
+NB.   mkmat - monad to generate a matrix; is called as:
+NB.             mat=. mkmat (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.
+NB. Application:
+NB. - test by random rectangular real matrix with elements
+NB.   distributed uniformly with support (0,1):
+NB.     log=. ?@$&0 testquatern_mt_ 200 150
+NB. - test by random square real matrix with elements with
+NB.   limited value's amplitude:
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testquatern_mt_ 200 200
+NB. - test by random rectangular complex matrix:
+NB.     log=. (gemat_mt_ j. gemat_mt_) testquatern_mt_ 150 200
+
+testquatern=: 1 : 'testqnf_mt_@u@(2&(1})) ,&.>~ (testqn2_mt_ ,&.>~ testqn1_mt_)@u@(4&(1}))'
 
 NB. =========================================================
 NB. Verification suite

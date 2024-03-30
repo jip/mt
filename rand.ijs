@@ -25,6 +25,7 @@ NB. testdimat  Test dimat by matrix size given
 NB. testhemat  Test hemat by matrix size given
 NB. testpomat  Test pomat by matrix size given
 NB. testptmat  Test ptmatx by matrix size given
+NB. testunmat  Test unmat by matrix size given
 NB. testspmat  Test spmat by matrix shape given
 NB. testrand   Test xxxxmatx by matrix shape given
 NB.
@@ -894,6 +895,24 @@ testptmat=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
+NB. testunmat
+NB.
+NB. Description:
+NB.   Test unmat by matrix size given
+NB.
+NB. Syntax:
+NB.   log=. testunmat sz
+NB. where
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testunmat=: 3 : 0
+  log=.          ('randnr unmat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('randnc unmat' tmonad (]`]`nan`nan`nan)) y
+)
+
+NB. ---------------------------------------------------------
 NB. testspmat
 NB.
 NB. Description:
@@ -924,4 +943,4 @@ NB.   sh  - vector of non-negative integers, the shape of
 NB.         matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testrand=: testspmat ,&.>~ testptmat ,&.>~ testpomat ,&.>~ testhemat ,&.>~ nolog_mt_`testdimat@.(=/) ,&.>~ testgemat ,&.>~ testtrmat
+testrand=: testspmat ,&.>~ nolog_mt_`testunmat@.(=/) ,&.>~ testptmat ,&.>~ testpomat ,&.>~ testhemat ,&.>~ nolog_mt_`testdimat@.(=/) ,&.>~ testgemat ,&.>~ testtrmat

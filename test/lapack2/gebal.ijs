@@ -1,7 +1,7 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Balance a general square matrix
+NB.   Balance a square matrix
 NB.
 NB. Syntax:
 NB.   'Abal ilo ihi scale'=. job xgebal A

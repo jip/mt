@@ -1,8 +1,8 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Reduce a general square matrix to upper Hessenberg form
-NB.   by an unitary (orthogonal) similarity transformation
+NB.   Reduce a square matrix to upper Hessenberg form by an
+NB.   unitary (orthogonal) similarity transformation
 NB.
 NB. Syntax:
 NB.   'HQf tau'=. xgehrd ilo ; ihi ; A

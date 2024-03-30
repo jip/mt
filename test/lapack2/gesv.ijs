@@ -1,8 +1,8 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Solve a system of linear equations with a general
-NB.   square matrix, and factor the last one
+NB.   Solve a system of linear equations with a square
+NB.   matrix, and factor the last one
 NB.
 NB. Syntax:
 NB.   'L1U ipiv X'=. xgesv A ; B

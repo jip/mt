@@ -601,7 +601,7 @@ NB.   randx - monad to make A; is called as:
 NB.             A=. randx y
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
-NB.   A     - n×n-matrix, random general square invertible
+NB.   A     - n×n-matrix, random square invertible
 NB.   P     - n×n-matrix, random Hermitian (symmetric)
 NB.           positive definite; is defined as:
 NB.             P := A * A^H

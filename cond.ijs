@@ -11,7 +11,7 @@ NB.
 NB. testcontr  Test reciprocal of the condition number
 NB.            computing verbs by triangular matrix
 NB. testconge  Test reciprocal of the condition number
-NB.            computing verbs by general square matrix
+NB.            computing verbs by square matrix
 NB. testconhe  Test reciprocal of the condition number
 NB.            computing verbs by Hermitian (symmetric)
 NB.            matrix
@@ -339,7 +339,7 @@ NB.   Test reciprocal of the condition number computing
 NB.   verbs:
 NB.   - gecon1 (math/mt addon)
 NB.   - geconi (math/mt addon)
-NB.   by general square matrix
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   log=. testconge G

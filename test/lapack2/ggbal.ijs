@@ -1,7 +1,7 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Balance a pair of general square matrices
+NB.   Balance a pair of square matrices
 NB.
 NB. Syntax:
 NB.   'Abal Bbal ilo ihi lscale rscale'=. job xggbal A ;  B

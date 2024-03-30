@@ -51,14 +51,13 @@ NB. tru0          Extract strictly upper trapezoidal matrix
 NB. trl1          Extract unit lower trapezoidal matrix
 NB. tru1          Extract unit upper trapezoidal matrix
 NB. xx4gex        Compose structured matrix from SLT (SUT)
-NB.               part and diagonal of general square matrix
+NB.               part and diagonal of square matrix
 NB. xxxxxy        Compose matrix from triangular parts of
 NB.               general matrices
 NB. sxxsxy        Adv. to make dyad to compose matrix from
 NB.               strict triangular parts of general matrices
 NB. po            Make Hermitian (symmetric) positive
-NB.               definite matrix from general square
-NB.               invertible one
+NB.               definite matrix from square invertible one
 NB.
 NB. verifystruct  Verify struct verbs
 NB.
@@ -1275,7 +1274,7 @@ NB. sh4geu    SUT       LT           zeroize         skew-Hermitian
 NB.
 NB. Description:
 NB.   Compose structured matrix from SLT (SUT) part and
-NB.   diagonal of general square matrix
+NB.   diagonal of square matrix
 NB.
 NB. Syntax:
 NB.   S=. xx4gex G
@@ -1418,7 +1417,7 @@ NB. po
 NB.
 NB. Description:
 NB.   Make Hermitian (symmetric) positive definite matrix
-NB.   from general square invertible one
+NB.   from square invertible one
 NB.
 NB. Syntax:
 NB.   P=. po G

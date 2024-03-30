@@ -1,9 +1,8 @@
 require 'math/lapack2'
 
 NB. Description:
-NB.   Solve a system of linear equations with a general
-NB.   square matrix using the factorization computed by
-NB.   xGETRF
+NB.   Solve a system of linear equations with a square
+NB.   matrix using the factorization computed by xGETRF
 NB.
 NB. Syntax:
 NB.   X=. trans xgetrs L1U ; ipiv ; B

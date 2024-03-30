@@ -2,12 +2,12 @@ NB. Solve linear monomial equation by triangular
 NB. factorization
 NB.
 NB. getrsxxxxxx  Solve equation (op(A) * X = B) or
-NB.              (X * op(A) = B), where A is a general square
-NB.              matrix, represented in factored form; op(A)
-NB.              is either A itself, or A^T (the
-NB.              transposition of A), or A^H (the conjugate
-NB.              transposition of A); B is known right-hand
-NB.              sides (RHS), X is unknown solutions
+NB.              (X * op(A) = B), where A is a square matrix,
+NB.              represented in factored form; op(A) is
+NB.              either A itself, or A^T (the transposition
+NB.              of A), or A^H (the conjugate transposition
+NB.              of A); B is known right-hand sides (RHS), X
+NB.              is unknown solutions
 NB. hetrsxxxx    Solve equation (op(A) * X = B) or
 NB.              (X * op(A) = B), where A is a Hermitian
 NB.              (symmetric) matrix, represented in factored
@@ -36,7 +36,7 @@ NB.              the transposition of A, or A^H, the conjugate
 NB.              transposition of A; B is known right-hand
 NB.              sides (RHS), X is unknown solutions
 NB.
-NB. testgetrs    Test getrsxxxxxx by general square matrix
+NB. testgetrs    Test getrsxxxxxx by square matrix
 NB. testhetrs    Test hetrsxxxx by Hermitian (symmetric)
 NB.              matrix
 NB. testpotrs    Test potrsxxx by Hermitian (symmetric)
@@ -87,8 +87,8 @@ NB. getrsxlu1pc    X * A^H = B    Xh=. LU1p getrsxlu1pc Bh
 NB. getrsxlu1pt    X * A^T = B    Xh=. LU1p getrsxlu1pt Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with general square
-NB.   matrix A, represented in factored form:
+NB.   Solve linear monomial equation with square matrix A,
+NB.   represented in factored form:
 NB.     L * U1 * P = A
 NB. where
 NB.   A    - n×n-matrix
@@ -129,8 +129,8 @@ NB. getrsxpl1uc    X * A^H = B    Xh=. pL1U getrsxpl1uc Bh
 NB. getrsxpl1ut    X * A^T = B    Xh=. pL1U getrsxpl1ut Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with general square
-NB.   matrix A, represented in factored form:
+NB.   Solve linear monomial equation with square matrix A,
+NB.   represented in factored form:
 NB.     P * L1 * U = A
 NB. where
 NB.   A    - n×n-matrix
@@ -174,8 +174,8 @@ NB. getrsxpu1lc    X * A^H = B    Xh=. pU1L getrsxpu1lc Bh
 NB. getrsxpu1lt    X * A^T = B    Xh=. pU1L getrsxpu1lt Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with general square
-NB.   matrix A, represented in factored form:
+NB.   Solve linear monomial equation with square matrix A,
+NB.   represented in factored form:
 NB.     P * U1 * L = A
 NB. where
 NB.   A    - n×n-matrix
@@ -216,8 +216,8 @@ NB. getrsxul1pc    X * A^H = B    Xh=. UL1p getrsxul1pc Bh
 NB. getrsxul1pt    X * A^T = B    Xh=. UL1p getrsxul1pt Bh
 NB.
 NB. Description:
-NB.   Solve linear monomial equation with general square
-NB.   matrix A, represented in factored form:
+NB.   Solve linear monomial equation with square matrix A,
+NB.   represented in factored form:
 NB.     U * L1 * P = A
 NB. where
 NB.   A    - n×n-matrix
@@ -602,7 +602,7 @@ NB. Description:
 NB.   Test:
 NB.   - xGETRS (math/lapack2 addon)
 NB.   - getrsxxxxxx (math/mt addon)
-NB.   by general square matrix
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   log=. testgetrs (X ; A)

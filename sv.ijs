@@ -1,8 +1,8 @@
 NB. Solve linear monomial equation
 NB.
 NB. gesvxxx   Solve the equation (op(A) * X = B) or
-NB.           (X * op(A) = B), where A is a general square
-NB.           matrix; op(A) is either A itself, or A^T (the
+NB.           (X * op(A) = B), where A is a square matrix;
+NB.           op(A) is either A itself, or A^T (the
 NB.           transposition of A), or A^H (the conjugate
 NB.           transposition of A); B is known right-hand
 NB.           sides (RHS), X is unknown solutions
@@ -30,7 +30,7 @@ NB.           matrix; op(A) is either A itself, or A^T (the
 NB.           transposition of A); B is known right-hand
 NB.           sides (RHS), X is unknown solutions
 NB.
-NB. testgesv  Test gesvxxx by general square matrix
+NB. testgesv  Test gesvxxx by square matrix
 NB. testgtsv  Test gtsvxxx by tridiagonal matrix
 NB. testhesv  Test hesvxxx by Hermitian (symmetric) matrix
 NB. testposv  Test posvxxx by Hermitian (symmetric) positive
@@ -158,8 +158,8 @@ NB. gesvxac    X * A^H = B    Xh=. A gesvxac Bh
 NB. gesvxat    X * A^T = B    Xh=. A gesvxat Bh
 NB.
 NB. Description:
-NB.   Solve the linear monomial equation with general square
-NB.   matrix A via triangular factorization:
+NB.   Solve the linear monomial equation with square matrix A
+NB.   via triangular factorization:
 NB.     P * L1 * U = A
 NB. where
 NB.   A    - n×n-matrix
@@ -363,7 +363,7 @@ NB.   Test:
 NB.   - %. (built-in)
 NB.   - xGESV (math/lapack2 addon)
 NB.   - gesvxxx (math/mt addon)
-NB.   by general square matrix
+NB.   by square matrix
 NB.
 NB. Syntax:
 NB.   log=. testgesv (X ; A)

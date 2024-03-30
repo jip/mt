@@ -1,15 +1,15 @@
 NB. Balance a matrix or pair of matrices
 NB.
-NB. gebalxp    Isolate eigenvalues of a general square matrix
-NB. gebals     Make the rows and columns of a general square
-NB.            matrix as close in 1-norm as possible
-NB. gebalx     Balance a general square matrix
+NB. gebalxp    Isolate eigenvalues of a square matrix
+NB. gebals     Make the rows and columns of a square matrix
+NB.            as close in 1-norm as possible
+NB. gebalx     Balance a square matrix
 NB.
-NB. ggbalxp    Isolate eigenvalues in a pair of general
-NB.            square matrices
-NB. ggbals     Make the rows and columns in a pair of general
-NB.            square matrices as close in 1-norm as possible
-NB. ggbalx     Balance a pair of general square matrices
+NB. ggbalxp    Isolate eigenvalues in a pair of square
+NB.            matrices
+NB. ggbals     Make the rows and columns in a pair of square
+NB.            matrices as close in 1-norm as possible
+NB. ggbalx     Balance a pair of square matrices
 NB.
 NB. testgebal  Test gebalx by square matrix
 NB. testggbal  Test ggbalx by pair of square matrices
@@ -248,7 +248,7 @@ NB. geballp
 NB. gebalup
 NB.
 NB. Description:
-NB.   Permute a general square matrix A by a similarity
+NB.   Permute a square matrix A by a similarity
 NB.   transformation to isolate eigenvalues:
 NB.     B = P * A * P
 NB.
@@ -485,8 +485,8 @@ NB. geball
 NB. gebalu
 NB.
 NB. Description:
-NB.   Balance a general square matrix A. This involves,
-NB.   first, isolating eigenvalues (see gebalxp):
+NB.   Balance a square matrix A. This involves, first,
+NB.   isolating eigenvalues (see gebalxp):
 NB.     B = P * A * P
 NB.   and second, making the rows and columns of B11 as close
 NB.   in 1-norm as possible (see gebals):
@@ -541,7 +541,7 @@ NB. ggballp
 NB. ggbalup
 NB.
 NB. Description:
-NB.   Permute general square matrices A and B by a similarity
+NB.   Permute square matrices A and B by a similarity
 NB.   transformation to isolate eigenvalues:
 NB.     C = Pl * A * Pr
 NB.     D = Pl * B * Pr
@@ -783,8 +783,8 @@ NB. ggball
 NB. ggbalu
 NB.
 NB. Description:
-NB.   Balance a general square matrices A abd B. This
-NB.   involves, first, isolating eigenvalues (see ggbalxp):
+NB.   Balance a square matrices A abd B. This involves,
+NB.   first, isolating eigenvalues (see ggbalxp):
 NB.     C = Pl * A * Pr
 NB.     D = Pl * B * Pr
 NB.   and second, making the rows and columns of E11 (F11) as

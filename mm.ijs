@@ -710,8 +710,8 @@ NB.              'probed failed'=. u1test (fname0 ; fname1 ; ...)
 NB.   fnamei - string, a test file's full name with path and
 NB.            without extension
 NB.   fexti  - string, either 'mm' or 'ijs'
-NB.   probed ≥ 0, tests probed counter
-NB.   failed ≥ 0, tests failed counter
+NB.   probed ≥ 0, assertions probed counter
+NB.   failed ≥ 0, assertions failed counter
 
 testround0=: 1 : '(#    ,    +/)@(u S: 0)'
 testround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ i:&''.'') L: 0)'
@@ -728,10 +728,10 @@ NB. Syntax:
 NB.   'probedDir failedDir'=. testdir ''
 NB.   'probedInv failedInv'=. testinv ''
 NB. where
-NB.   probedDir ≥ 0, tests probed counter for (mm    )
-NB.   failedDir ≥ 0, tests failed counter for (mm    )
-NB.   probedInv ≥ 0, tests probed counter for (mm^:_1)
-NB.   failedInv ≥ 0, tests failed counter for (mm^:_1)
+NB.   probedDir ≥ 0, assertions probed counter for (mm    )
+NB.   failedDir ≥ 0, assertions failed counter for (mm    )
+NB.   probedInv ≥ 0, assertions probed counter for (mm^:_1)
+NB.   failedInv ≥ 0, assertions failed counter for (mm^:_1)
 
 testdir=: (+/)@((test0dir testround0)`(test1dir testround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (TEST_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
 testinv=: (+/)@((test0inv testround0)`(test1inv testround1) dkey~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (TEST_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
@@ -746,7 +746,7 @@ NB.
 NB. Syntax:
 NB.   'probed failed'=. verifymm_mt_ ''
 NB. where
-NB.   probed ≥ 0, tests probed counter
-NB.   failed ≥ 0, tests failed counter
+NB.   probed ≥ 0, assertions probed counter
+NB.   failed ≥ 0, assertions failed counter
 
 verifymm_mt_=: (] [ echo@('module: mm, tests probed: ' , ":@{. , ', failed: ' , ":@{:))@(+/)@:(testdir_mtmm_`testinv_mtmm_`:0)

@@ -296,7 +296,7 @@ NB. - (h,s) pair defines raveled rISO solid part of
 NB.   diagonal
 
 diagliso=: 0 0 _&$: :(4 : 0)
-  'd h s'=. x=. ((i. 3) < (# x))} 0 0 _ ,: x  NB. in-place op
+  'd h s'=. x=. ((i. 3) < (# x))} 0 0 _ ,: x
   'm n'=. y=. 2 $ y
   H=. n (-@*^:(0 > ])) d
   S=. 0 >. <./ y , <. -: (n + m - | n - m + +: d)
@@ -466,11 +466,14 @@ NB. 0 0 0 0 0 0         0 0 0 0 0 0 0         0 0 0 0 0 0 0
 NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
 NB. 0 0 1 1 1 1         1 1 1 1 0 0 0         0 0 0 1 1 1 1
-NB.       _1 _2 e0 3 4 $ 'abcdefghijkl'
 NB.
-NB.   abcd
-NB.   efgh
-NB.   ijkl
+NB.    ((stitcht ' '&,.)&(":@<) _1 _2&e0) 3 4 $ 'abcdefghijkl'
+NB. +----+ +------+
+NB. |abcd| |      |
+NB. |efgh| |  abcd|
+NB. |ijkl| |  efgh|
+NB. +----+ |  ijkl|
+NB.        +------+
 
 e0=: ([ + (negneg"0 $)) {. ]
 
@@ -647,6 +650,28 @@ NB.   A    - m×n-matrix to update
 NB.   Aupd - A with solid part of d-th diagonal updated by
 NB.          monad u
 NB.   S    ≥ 0, the length of d-th diagonal
+NB.
+NB. Examples:
+NB.    +&0j1 upddiag i. 5 5           0 +&0j1 upddiag i. 5 5
+NB. 0j1   1    2    3    4         0j1   1    2    3    4
+NB.   5 6j1    7    8    9           5 6j1    7    8    9
+NB.  10  11 12j1   13   14          10  11 12j1   13   14
+NB.  15  16   17 18j1   19          15  16   17 18j1   19
+NB.  20  21   22   23 24j1          20  21   22   23 24j1
+NB.
+NB.    0 1 +&0j1 upddiag i. 5 5       0 1 3 +&0j1 upddiag i. 5 5
+NB.  0   1    2    3    4           0   1    2    3  4
+NB.  5 6j1    7    8    9           5 6j1    7    8  9
+NB. 10  11 12j1   13   14          10  11 12j1   13 14
+NB. 15  16   17 18j1   19          15  16   17 18j1 19
+NB. 20  21   22   23 24j1          20  21   22   23 24
+NB.
+NB.    1 +&0j1 upddiag i. 5 5         _1 +&0j1 upddiag i. 5 5
+NB.  0 1j1   2    3    4             0    1    2    3  4
+NB.  5   6 7j1    8    9           5j1    6    7    8  9
+NB. 10  11  12 13j1   14            10 11j1   12   13 14
+NB. 15  16  17   18 19j1            15   16 17j1   18 19
+NB. 20  21  22   23   24            20   21   22 23j1 24
 
 upddiag=: 1 : 'diagliso_mt_^:(1:`(] $)) (u {{(u x ({,) y) (x"_)} y}}) ]'
 
@@ -662,6 +687,13 @@ NB.   B=. bdlpick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, the lower bidiagonal
+NB.
+NB. Examples:
+NB.    bdlpick 4 5 $ 1       bdlpick 5 4 $ 1       bdlpick 5 5 $ 1
+NB. 1 0 0 0 0             1 0 0 0               1 0 0 0 0
+NB. 1 1 0 0 0             1 1 0 0               1 1 0 0 0
+NB. 0 1 1 0 0             0 1 1 0               0 1 1 0 0
+NB. 0 0 1 1 0             0 0 1 1               0 0 1 1 0
 NB.
 NB. TODO:
 NB. - B would be sparse
@@ -681,6 +713,14 @@ NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, the upper bidiagonal
 NB.
+NB. Examples:
+NB.    bdupick 4 5 $ 1       bdupick 5 4 $ 1       bdupick 5 5 $ 1
+NB. 1 1 0 0 0             1 1 0 0               1 1 0 0 0
+NB. 0 1 1 0 0             0 1 1 0               0 1 1 0 0
+NB. 0 0 1 1 0             0 0 1 1               0 0 1 1 0
+NB. 0 0 0 1 1             0 0 0 1               0 0 0 1 1
+NB.                       0 0 0 0               0 0 0 0 1
+NB.
 NB. TODO:
 NB. - B would be sparse
 
@@ -698,6 +738,14 @@ NB.   B=. hslpick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, the lower Hessenberg
+NB.
+NB. Examples:
+NB.    hslpick 4 5 $ 1       hslpick 5 4 $ 1       hslpick 5 5 $ 1
+NB. 1 1 0 0 0             1 1 0 0               1 1 0 0 0
+NB. 1 1 1 0 0             1 1 1 0               1 1 1 0 0
+NB. 1 1 1 1 0             1 1 1 1               1 1 1 1 0
+NB. 1 1 1 1 1             1 1 1 1               1 1 1 1 1
+NB.                       1 1 1 1               1 1 1 1 1
 
 hslpick=: __ 1&mbstencil`(0&,:)}
 
@@ -713,6 +761,14 @@ NB.   B=. hsupick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, the upper Hessenberg
+NB.
+NB. Examples:
+NB.    hsupick 4 5 $ 1       hsupick 5 4 $ 1       hsupick 5 5 $ 1
+NB. 1 1 1 1 1             1 1 1 1               1 1 1 1 1
+NB. 1 1 1 1 1             1 1 1 1               1 1 1 1 1
+NB. 0 1 1 1 1             0 1 1 1               0 1 1 1 1
+NB. 0 0 1 1 1             0 0 1 1               0 0 1 1 1
+NB.                       0 0 0 1               0 0 0 1 1
 
 hsupick=: _1 _&mbstencil`(0&,:)}
 
@@ -727,6 +783,14 @@ NB.   B=. gtpick A
 NB. where
 NB.   A - m×n-matrix, contains B
 NB.   B - m×n-matrix, tridiagonal
+NB.
+NB. Examples:
+NB.    gtpick 4 5 $ 1       gtpick 5 4 $ 1       gtpick 5 5 $ 1
+NB. 1 1 0 0 0            1 1 0 0              1 1 0 0 0
+NB. 1 1 1 0 0            1 1 1 0              1 1 1 0 0
+NB. 0 1 1 1 0            0 1 1 1              0 1 1 1 0
+NB. 0 0 1 1 1            0 0 1 1              0 0 1 1 1
+NB.                      0 0 0 1              0 0 0 1 1
 NB.
 NB. TODO:
 NB. - B would be sparse
@@ -747,6 +811,35 @@ NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, the lower trapezoidal
+NB.
+NB. Examples:
+NB.    trlpick 4 5 $ 1          trlpick 5 4 $ 1          trlpick 5 5 $ 1
+NB. 1 0 0 0 0                1 0 0 0                  1 0 0 0 0
+NB. 1 1 0 0 0                1 1 0 0                  1 1 0 0 0
+NB. 1 1 1 0 0                1 1 1 0                  1 1 1 0 0
+NB. 1 1 1 1 0                1 1 1 1                  1 1 1 1 0
+NB.                          1 1 1 1                  1 1 1 1 1
+NB.
+NB.    0 trlpick 4 5 $ 1        0 trlpick 5 4 $ 1        0 trlpick 5 5 $ 1
+NB. 1 0 0 0 0                1 0 0 0                  1 0 0 0 0
+NB. 1 1 0 0 0                1 1 0 0                  1 1 0 0 0
+NB. 1 1 1 0 0                1 1 1 0                  1 1 1 0 0
+NB. 1 1 1 1 0                1 1 1 1                  1 1 1 1 0
+NB.                          1 1 1 1                  1 1 1 1 1
+NB.
+NB.    1 trlpick 4 5 $ 1        1 trlpick 5 4 $ 1        1 trlpick 5 5 $ 1
+NB. 1 1 0 0 0                1 1 0 0                  1 1 0 0 0
+NB. 1 1 1 0 0                1 1 1 0                  1 1 1 0 0
+NB. 1 1 1 1 0                1 1 1 1                  1 1 1 1 0
+NB. 1 1 1 1 1                1 1 1 1                  1 1 1 1 1
+NB.                          1 1 1 1                  1 1 1 1 1
+NB.
+NB.    _1 trlpick 4 5 $ 1       _1 trlpick 5 4 $ 1       _1 trlpick 5 5 $ 1
+NB. 0 0 0 0 0                0 0 0 0                  0 0 0 0 0
+NB. 1 0 0 0 0                1 0 0 0                  1 0 0 0 0
+NB. 1 1 0 0 0                1 1 0 0                  1 1 0 0 0
+NB. 1 1 1 0 0                1 1 1 0                  1 1 1 0 0
+NB.                          1 1 1 1                  1 1 1 1 0
 
 trlpick=: (>: ft4lisoa)`(0&,:)} :(4 : '((__ , x) mbstencil ])`(0 ,: ])} y')
 
@@ -764,6 +857,35 @@ NB.   A - m×n-matrix, contains B
 NB.   d - integer in range [-∞,+∞], lIO first non-zero
 NB.       diagonal, default is 0
 NB.   B - m×n-matrix, the upper trapezoidal
+NB.
+NB. Examples:
+NB.    trupick 4 5 $ 1          trupick 5 4 $ 1          trupick 5 5 $ 1
+NB. 1 1 1 1 1                1 1 1 1                  1 1 1 1 1
+NB. 0 1 1 1 1                0 1 1 1                  0 1 1 1 1
+NB. 0 0 1 1 1                0 0 1 1                  0 0 1 1 1
+NB. 0 0 0 1 1                0 0 0 1                  0 0 0 1 1
+NB.                          0 0 0 0                  0 0 0 0 1
+NB.
+NB.    0 trupick 4 5 $ 1        0 trupick 5 4 $ 1        0 trupick 5 5 $ 1
+NB. 1 1 1 1 1                1 1 1 1                  1 1 1 1 1
+NB. 0 1 1 1 1                0 1 1 1                  0 1 1 1 1
+NB. 0 0 1 1 1                0 0 1 1                  0 0 1 1 1
+NB. 0 0 0 1 1                0 0 0 1                  0 0 0 1 1
+NB.                          0 0 0 0                  0 0 0 0 1
+NB.
+NB.    1 trupick 4 5 $ 1        1 trupick 5 4 $ 1        1 trupick 5 5 $ 1
+NB. 0 1 1 1 1                0 1 1 1                  0 1 1 1 1
+NB. 0 0 1 1 1                0 0 1 1                  0 0 1 1 1
+NB. 0 0 0 1 1                0 0 0 1                  0 0 0 1 1
+NB. 0 0 0 0 1                0 0 0 0                  0 0 0 0 1
+NB.                          0 0 0 0                  0 0 0 0 0
+NB.
+NB.    _1 trupick 4 5 $ 1       _1 trupick 5 4 $ 1       _1 trupick 5 5 $ 1
+NB. 1 1 1 1 1                1 1 1 1                  1 1 1 1 1
+NB. 1 1 1 1 1                1 1 1 1                  1 1 1 1 1
+NB. 0 1 1 1 1                0 1 1 1                  0 1 1 1 1
+NB. 0 0 1 1 1                0 0 1 1                  0 0 1 1 1
+NB.                          0 0 0 1                  0 0 0 1 1
 
 trupick=: (<: ft4lisoa)`(0&,:)} :(4 : '((x , _) mbstencil ])`(0 ,: ])} y')
 
@@ -782,6 +904,35 @@ NB.   d - integer in range [-∞,+∞], optional lIO last
 NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, the lower trapezoidal with unit on
 NB.       diagonal d
+NB.
+NB. Examples:
+NB.    trl1pick 4 5 $ 1          trl1pick 5 4 $ 1          trl1pick 5 5 $ 1
+NB. 1 0 0 0 0                 1 0 0 0                   1 0 0 0 0
+NB. 1 1 0 0 0                 1 1 0 0                   1 1 0 0 0
+NB. 1 1 1 0 0                 1 1 1 0                   1 1 1 0 0
+NB. 1 1 1 1 0                 1 1 1 1                   1 1 1 1 0
+NB.                           1 1 1 1                   1 1 1 1 1
+NB.
+NB.    0 trl1pick 4 5 $ 1        0 trl1pick 5 4 $ 1        0 trl1pick 5 5 $ 1
+NB. 1 0 0 0 0                 1 0 0 0                   1 0 0 0 0
+NB. 1 1 0 0 0                 1 1 0 0                   1 1 0 0 0
+NB. 1 1 1 0 0                 1 1 1 0                   1 1 1 0 0
+NB. 1 1 1 1 0                 1 1 1 1                   1 1 1 1 0
+NB.                           1 1 1 1                   1 1 1 1 1
+NB.
+NB.    1 trl1pick 4 5 $ 1        1 trl1pick 5 4 $ 1        1 trl1pick 5 5 $ 1
+NB. 1 1 0 0 0                 1 1 0 0                   1 1 0 0 0
+NB. 1 1 1 0 0                 1 1 1 0                   1 1 1 0 0
+NB. 1 1 1 1 0                 1 1 1 1                   1 1 1 1 0
+NB. 1 1 1 1 1                 1 1 1 1                   1 1 1 1 1
+NB.                           1 1 1 1                   1 1 1 1 1
+NB.
+NB.    _1 trl1pick 4 5 $ 1       _1 trl1pick 5 4 $ 1       _1 trl1pick 5 5 $ 1
+NB. 0 0 0 0 0                 0 0 0 0                   0 0 0 0 0
+NB. 1 0 0 0 0                 1 0 0 0                   1 0 0 0 0
+NB. 1 1 0 0 0                 1 1 0 0                   1 1 0 0 0
+NB. 1 1 1 0 0                 1 1 1 0                   1 1 1 0 0
+NB.                           1 1 1 1                   1 1 1 1 0
 
 trl1pick=: 0&$: :((1 ; [) setdiag trlpick)
 
@@ -800,6 +951,35 @@ NB.   d - integer in range [-∞,+∞], optional lIO first
 NB.       non-zero diagonal, default is 0
 NB.   B - m×n-matrix, the upper trapezoidal with unit on
 NB.       diagonal d
+NB.
+NB. Examples:
+NB.    tru1pick 4 5 $ 1          tru1pick 5 4 $ 1          tru1pick 5 5 $ 1
+NB. 1 1 1 1 1                 1 1 1 1                   1 1 1 1 1
+NB. 0 1 1 1 1                 0 1 1 1                   0 1 1 1 1
+NB. 0 0 1 1 1                 0 0 1 1                   0 0 1 1 1
+NB. 0 0 0 1 1                 0 0 0 1                   0 0 0 1 1
+NB.                           0 0 0 0                   0 0 0 0 1
+NB.
+NB.    0 tru1pick 4 5 $ 1        0 tru1pick 5 4 $ 1        0 tru1pick 5 5 $ 1
+NB. 1 1 1 1 1                 1 1 1 1                   1 1 1 1 1
+NB. 0 1 1 1 1                 0 1 1 1                   0 1 1 1 1
+NB. 0 0 1 1 1                 0 0 1 1                   0 0 1 1 1
+NB. 0 0 0 1 1                 0 0 0 1                   0 0 0 1 1
+NB.                           0 0 0 0                   0 0 0 0 1
+NB.
+NB.    1 tru1pick 4 5 $ 1        1 tru1pick 5 4 $ 1        1 tru1pick 5 5 $ 1
+NB. 0 1 1 1 1                 0 1 1 1                   0 1 1 1 1
+NB. 0 0 1 1 1                 0 0 1 1                   0 0 1 1 1
+NB. 0 0 0 1 1                 0 0 0 1                   0 0 0 1 1
+NB. 0 0 0 0 1                 0 0 0 0                   0 0 0 0 1
+NB.                           0 0 0 0                   0 0 0 0 0
+NB.
+NB.    _1 tru1pick 4 5 $ 1       _1 tru1pick 5 4 $ 1       _1 tru1pick 5 5 $ 1
+NB. 1 1 1 1 1                 1 1 1 1                   1 1 1 1 1
+NB. 1 1 1 1 1                 1 1 1 1                   1 1 1 1 1
+NB. 0 1 1 1 1                 0 1 1 1                   0 1 1 1 1
+NB. 0 0 1 1 1                 0 0 1 1                   0 0 1 1 1
+NB.                           0 0 0 1                   0 0 0 1 1
 
 tru1pick=: 0&$: :((1 ; [) setdiag trupick)
 
@@ -911,6 +1091,16 @@ NB. Description:
 NB.   Extract lower trapezoidal matrix with optional
 NB.   shrinking
 NB.
+NB. Syntax:
+NB.   T=. [d] trl A
+NB. where
+NB.   A - m×n-matrix
+NB.   d - integer in range [-m,n], optional lIO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   T - p×q-matrix with zeros above min(0,d)-th diagonal
+NB.   p = if(d<0) then (m+d) else m
+NB.   q = min(m+d,n)
+NB.
 NB. Examples:
 NB.    trl >: i. 3 4         0 trl >: i. 3 4
 NB. 1  0  0               1  0  0
@@ -937,6 +1127,16 @@ NB. Description:
 NB.   Extract upper trapezoidal matrix with optional
 NB.   shrinking
 NB.
+NB. Syntax:
+NB.   T=. [d] tru A
+NB. where
+NB.   A - m×n-matrix
+NB.   d - integer in range [-m,n], optional lIO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   T - p×q-matrix with zeros below max(0,d)-th diagonal
+NB.   p = min(m,n-d)
+NB.   q = if(d<0) then n else (n-d)
+NB.
 NB. Examples:
 NB.    tru >: i. 3 4         0 tru >: i. 3 4
 NB. 1 2  3  4             1 2  3  4
@@ -962,6 +1162,17 @@ NB.
 NB. Description:
 NB.   Extract strictly lower trapezoidal matrix with optional
 NB.   shrinking
+NB.
+NB. Syntax:
+NB.   T=. [d] trl0 A
+NB. where
+NB.   A - m×n-matrix
+NB.   d - integer in range [-m,n], optional lIO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   T - p×q-matrix with zeros on and above min(0,d)-th
+NB.       diagonal
+NB.   p = if(d<0) then (m+d) else m
+NB.   q = min(m+d,n)
 NB.
 NB. Examples:
 NB.    trl0 >: i. 4 3         0 trl0 >: i. 4 3
@@ -990,6 +1201,17 @@ NB. Description:
 NB.   Extract strictly upper trapezoidal matrix with optional
 NB.   shrinking
 NB.
+NB. Syntax:
+NB.   T=. [d] tru0 A
+NB. where
+NB.   A - m×n-matrix
+NB.   d - integer in range [-m,n], optional lIO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   T - p×q-matrix with zeros on and below max(0,d)-th
+NB.       diagonal
+NB.   p = min(m,n-d)
+NB.   q = if(d<0) then n else (n-d)
+NB.
 NB. Examples:
 NB.    tru0 >: i. 3 4         0 tru0 >: i. 3 4
 NB. 0 2 3  4               0 2 3  4
@@ -1015,6 +1237,17 @@ NB.
 NB. Description:
 NB.   Extract unit lower trapezoidal matrix with optional
 NB.   shrinking
+NB.
+NB. Syntax:
+NB.   T=. [d] trl1 A
+NB. where
+NB.   A - m×n-matrix
+NB.   d - integer in range [-m,n], optional lIO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   T - p×q-matrix with units on min(0,d)-th diagonal and
+NB.       zeros above it
+NB.   p = if(d<0) then (m+d) else m
+NB.   q = min(m+d,n)
 NB.
 NB. Examples:
 NB.    trl1 >: i. 4 3         0 trl1 >: i. 4 3
@@ -1042,6 +1275,17 @@ NB.
 NB. Description:
 NB.   Extract unit upper trapezoidal matrix with optional
 NB.   shrinking
+NB.
+NB. Syntax:
+NB.   T=. [d] tru1 A
+NB. where
+NB.   A - m×n-matrix
+NB.   d - integer in range [-m,n], optional lIO diagonal,
+NB.       default is 0 (main diagonal)
+NB.   T - p×q-matrix with units on max(0,d)-th diagonal and
+NB.       zeros below it
+NB.   p = min(m,n-d)
+NB.   q = if(d<0) then n else (n-d)
 NB.
 NB. Examples:
 NB.    tru1 >: i. 3 4         0 tru1 >: i. 3 4
@@ -1082,6 +1326,52 @@ NB.   S=. xx4gex G
 NB. where
 NB.   G - n×n-matrix
 NB.   S - the same shape as G, structured
+NB.
+NB. Examples:
+NB.    ] ai33=. i. 3 3       ] ac33=. j./ i. 2 3 3
+NB. 0 1 2                  0j9 1j10 2j11
+NB. 3 4 5                 3j12 4j13 5j14
+NB. 6 7 8                 6j15 7j16 8j17
+NB.
+NB.    sy4gel ai33           sy4gel ac33
+NB. 0 3 6                  0j9 3j12 6j15
+NB. 3 4 7                 3j12 4j13 7j16
+NB. 6 7 8                 6j15 7j16 8j17
+NB.
+NB.    sy4geu ai33           sy4geu ac33
+NB. 0 1 2                  0j9 1j10 2j11
+NB. 1 4 5                 1j10 4j13 5j14
+NB. 2 5 8                 2j11 5j14 8j17
+NB.
+NB.    he4gel ai33           he4gel ac33
+NB. 0 3 6                    0 3j_12 6j_15
+NB. 3 4 7                 3j12     4 7j_16
+NB. 6 7 8                 6j15  7j16     8
+NB.
+NB.    he4geu ai33           he4geu ac33
+NB. 0 1 2                     0  1j10 2j11
+NB. 1 4 5                 1j_10     4 5j14
+NB. 2 5 8                 2j_11 5j_14    8
+NB.
+NB.    ss4gel ai33           ss4gel ac33
+NB. 0 _3 _6                  0 _3j_12 _6j_15
+NB. 3  0 _7               3j12      0 _7j_16
+NB. 6  7  0               6j15   7j16      0
+NB.
+NB.    ss4geu ai33           ss4geu ac33
+NB.  0  1 2                    0   1j10 2j11
+NB. _1  0 5               _1j_10      0 5j14
+NB. _2 _5 0               _2j_11 _5j_14    0
+NB.
+NB.    sh4gel ai33           sh4gel ac33
+NB. 0 _3 _6                  0 _3j12 _6j15
+NB. 3  0 _7               3j12     0 _7j16
+NB. 6  7  0               6j15  7j16     0
+NB.
+NB.    sh4geu ai33           sh4geu ac33
+NB.  0  1 2                   0  1j10 2j11
+NB. _1  0 5               _1j10     0 5j14
+NB. _2 _5 0               _2j11 _5j14    0
 
 sy4gel=:                  (</~@i.@#)`(,:   |:)}
 sy4geu=:                  (>/~@i.@#)`(,:   |:)}
@@ -1178,6 +1468,46 @@ NB. Syntax:
 NB.   P=. po G
 NB. where
 NB.   G - n×n-matrix, invertible
-NB.   H - n×n-matrix, the Hermitian (symmetric)
+NB.   P - n×n-matrix, the Hermitian (symmetric) positive
+NB.       definite
+NB.
+NB. Examples:
+NB.    NB. G ∊ M_3(ℝ)
+NB.    ] G=. 3 3 $ _5 _4 9 _5 _7 1 _7 _4 _4
+NB. _5 _4  9
+NB. _5 _7  1
+NB. _7 _4 _4
+NB.    NB. is G invertible (determinant is non-zero)?
+NB.    0 ~: -/ .* G
+NB. 1
+NB.    ] P=. po G
+NB. 122 62 15
+NB.  62 75 59
+NB.  15 59 81
+NB.    NB. is P symmetric?
+NB.    (-: |:) P
+NB. 1
+NB.    NB. is P positive definite (does Cholesky factor exists)?
+NB.    1:@potrfl :: 0 P
+NB. 1
+NB.
+NB.    NB. G ∊ M_3(ℂ)
+NB.    ] G=. 3 3 $ 5j8 _6j_3 _9j8 _6j_7 0j_1 _5j7 _2j_4 8j7 _6j_8
+NB.   5j8 _6j_3  _9j8
+NB. _6j_7  0j_1  _5j7
+NB. _2j_4   8j7 _6j_8
+NB.    NB. is G invertible (determinant is non-zero)?
+NB.    0 ~: -/ .* G
+NB. 1
+NB.    ] P=. po G
+NB.     279  18j4 _121j_98
+NB.   18j_4   160   7j_100
+NB. _121j98 7j100      233
+NB.    NB. is P Hermitian?
+NB.    (-: ct) P
+NB. 1
+NB.    NB. is P positive definite (does Cholesky factor exists)?
+NB.    1:@potrfl :: 0 P
+NB. 1
 
 po=: mp ct

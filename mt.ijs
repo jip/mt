@@ -251,7 +251,7 @@ NB.
 NB. Syntax:
 NB.   'probed failed'=. verify ''
 NB. where
-NB.   probed ≥ 0, tests probed counter
-NB.   failed ≥ 0, tests failed counter
+NB.   probed ≥ 0, assertions probed counter
+NB.   failed ≥ 0, assertions failed counter
 
 verify=: verifymm

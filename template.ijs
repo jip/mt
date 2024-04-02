@@ -1,14 +1,19 @@
 NB. <this file purpose; brief description>
 NB.
-NB. <name>        <brief description>
+NB. <name>          <brief description>
 NB. ...
-NB. <name>        <brief description>
+NB. <name>          <brief description>
 NB.
-NB. <testxxname>  Test <name> by <matrix of type xx>
+NB. <testxxname>    Test <name> by <matrix of type xx>
 NB. ...
-NB. <testxxname>  Test <name> by <matrix of type xx>
-NB. <testname>    Adv. to make verb to test <names> by
-NB.               matrix of generator and shape given
+NB. <testyyname>    Test <name> by <matrix of type yy>
+NB. <testname>      Adv. to make verb to test <names> by
+NB.                 matrix of generator and shape given
+NB.
+NB. <verifyxxname>  Verify <xxname>
+NB. ...
+NB. <verifyyyname>  Verify <yyname>
+NB. <verifyname>    Verify <names>
 NB.
 NB. Version: <n.n.n> <yyyy-mm-dd>
 NB.
@@ -34,6 +39,27 @@ NB. <http://www.gnu.org/licenses/>.
 
 coclass 'mt'
 
+<possible section delimiters list>
+
+NB. delimiter                                                  levels
+
+NB. #########################################################   0  0  0
+NB. #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#   1
+NB. # # # # # # # # # # # # # # # # # # # # # # # # # # # # #   2  1
+NB. =========================================================   3  2  1  0  0  0
+NB. =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=   4
+NB. = = = = = = = = = = = = = = = = = = = = = = = = = = = = =   5  3
+NB. *********************************************************   6  4  2  1
+NB. *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*   7
+NB. * * * * * * * * * * * * * * * * * * * * * * * * * * * * *   8  5
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++   9  6  3  2  1
+NB. +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  10
+NB. + + + + + + + + + + + + + + + + + + + + + + + + + + + + +  11  7
+NB. ---------------------------------------------------------  12  8  4  3  2  1
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  13  9
+
+<end of possible section delimiters list>
+
 NB. =========================================================
 NB. Concepts <optional section>
 NB.
@@ -46,6 +72,9 @@ NB.
 NB. Conventions: <optional section>
 NB.   <Any text>
 NB.
+NB. Assertions: <optional section>
+NB.   <Any text>
+NB.
 NB. Examples: <optional section>
 NB.   <Any text>
 NB.
@@ -56,7 +85,9 @@ NB. TODO: <optional section>
 NB.   <Any text>
 NB.
 NB. References: <optional section>
-NB.   <Any text>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
 NB. =========================================================
 NB. Local definitions <optional section>
@@ -119,6 +150,10 @@ NB. <LocalAdverb>
 NB.
 NB. Description: <optional section>
 NB.   Adv. to make verb to <description>
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
 NB.
 NB. Syntax: <optional section>
 NB.   <o>=. [<x>] (<u> <LocalAdverb>) <y>
@@ -138,7 +173,7 @@ NB.     <formula>
 NB.
 NB. Storage layout: <optional section>
 NB.   <layout>
-NB. where
+NB. where <optional section>
 NB.   <description>
 NB.
 NB. Algorithm: <optional section>
@@ -152,7 +187,7 @@ NB. Assertions (with appropriate comparison tolerance): <optional section>
 NB.   <assertion>
 NB.   ...
 NB.   <assertion>
-NB. where
+NB. where <optional section>
 NB.   <copula>
 NB.   ...
 NB.   <copula>
@@ -176,15 +211,15 @@ NB. - <text>
 NB. ...
 NB. - <text>
 NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-NB.
 NB. TODO: <optional section>
 NB. - <text>
 NB. ...
 NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
 <LocalAdverb>=: <definition>
 
@@ -193,6 +228,10 @@ NB. <LocalConjunction>
 NB.
 NB. Description: <optional section>
 NB.   Conj. to make verb to <description>
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
 NB.
 NB. Syntax: <optional section>
 NB.   <o>=. [<x>] (<u> <LocalConjunction> <v>) <y>
@@ -214,7 +253,7 @@ NB.     <formula>
 NB.
 NB. Storage layout: <optional section>
 NB.   <layout>
-NB. where
+NB. where <optional section>
 NB.   <description>
 NB.
 NB. Algorithm: <optional section>
@@ -228,7 +267,7 @@ NB. Assertions (with appropriate comparison tolerance): <optional section>
 NB.   <assertion>
 NB.   ...
 NB.   <assertion>
-NB. where
+NB. where <optional section>
 NB.   <copula>
 NB.   ...
 NB.   <copula>
@@ -252,15 +291,15 @@ NB. - <text>
 NB. ...
 NB. - <text>
 NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-NB.
 NB. TODO: <optional section>
 NB. - <text>
 NB. ...
 NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
 <LocalConjunction>=: <definition>
 
@@ -269,10 +308,14 @@ NB. <LocalVerb>
 NB.
 NB. Description:
 NB.   <description>
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
 NB.
 NB. Syntax:
 NB.   <o>=. [<x>] <LocalVerb> <y>
-NB. where
+NB. where <optional section>
 NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.   <x> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.   <o> - scalar/n-vector/m×n-matrix/sh-array <description>
@@ -286,7 +329,7 @@ NB.     <formula>
 NB.
 NB. Storage layout: <optional section>
 NB.   <layout>
-NB. where
+NB. where <optional section>
 NB.   <description>
 NB.
 NB. Algorithm: <optional section>
@@ -300,7 +343,7 @@ NB. Assertions (with appropriate comparison tolerance): <optional section>
 NB.   <assertion>
 NB.   ...
 NB.   <assertion>
-NB. where
+NB. where <optional section>
 NB.   <copula>
 NB.   ...
 NB.   <copula>
@@ -324,15 +367,15 @@ NB. - <text>
 NB. ...
 NB. - <text>
 NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-NB.
 NB. TODO: <optional section>
 NB. - <text>
 NB. ...
 NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
 <LocalVerb>=: <definition>
 
@@ -397,6 +440,10 @@ NB. <Adverb>
 NB.
 NB. Description: <optional section>
 NB.   Adv. to make verb to <description>
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
 NB.
 NB. Syntax: <optional section>
 NB.   <o>=. [<x>] (<u> <Adverb>) <y>
@@ -416,7 +463,7 @@ NB.     <formula>
 NB.
 NB. Storage layout: <optional section>
 NB.   <layout>
-NB. where
+NB. where <optional section>
 NB.   <description>
 NB.
 NB. Algorithm: <optional section>
@@ -430,7 +477,7 @@ NB. Assertions (with appropriate comparison tolerance): <optional section>
 NB.   <assertion>
 NB.   ...
 NB.   <assertion>
-NB. where
+NB. where <optional section>
 NB.   <copula>
 NB.   ...
 NB.   <copula>
@@ -454,15 +501,15 @@ NB. - <text>
 NB. ...
 NB. - <text>
 NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-NB.
 NB. TODO: <optional section>
 NB. - <text>
 NB. ...
 NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
 <Adverb>=: <definition>
 
@@ -471,6 +518,10 @@ NB. <Conjunction>
 NB.
 NB. Description: <optional section>
 NB.   Conj. to make verb to <description>
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
 NB.
 NB. Syntax: <optional section>
 NB.   <o>=. [<x>] (<u> <Conjunction> <v>) <y>
@@ -492,7 +543,7 @@ NB.     <formula>
 NB.
 NB. Storage layout: <optional section>
 NB.   <layout>
-NB. where
+NB. where <optional section>
 NB.   <description>
 NB.
 NB. Algorithm: <optional section>
@@ -506,7 +557,7 @@ NB. Assertions (with appropriate comparison tolerance): <optional section>
 NB.   <assertion>
 NB.   ...
 NB.   <assertion>
-NB. where
+NB. where <optional section>
 NB.   <copula>
 NB.   ...
 NB.   <copula>
@@ -530,15 +581,15 @@ NB. - <text>
 NB. ...
 NB. - <text>
 NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-NB.
 NB. TODO: <optional section>
 NB. - <text>
 NB. ...
 NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
 <Conjunction>=: <definition>
 
@@ -547,10 +598,14 @@ NB. <Verb>
 NB.
 NB. Description:
 NB.   <description>
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
 NB.
 NB. Syntax:
 NB.   <o>=. [<x>] <Verb> <y>
-NB. where
+NB. where <optional section>
 NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.   <x> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.   <o> - scalar/n-vector/m×n-matrix/sh-array <description>
@@ -564,7 +619,7 @@ NB.     <formula>
 NB.
 NB. Storage layout: <optional section>
 NB.   <layout>
-NB. where
+NB. where <optional section>
 NB.   <description>
 NB.
 NB. Algorithm: <optional section>
@@ -578,7 +633,7 @@ NB. Assertions (with appropriate comparison tolerance): <optional section>
 NB.   <assertion>
 NB.   ...
 NB.   <assertion>
-NB. where
+NB. where <optional section>
 NB.   <copula>
 NB.   ...
 NB.   <copula>
@@ -602,15 +657,15 @@ NB. - <text>
 NB. ...
 NB. - <text>
 NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-NB.
 NB. TODO: <optional section>
 NB. - <text>
 NB. ...
 NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
 <Verb>=: <definition>
 
@@ -622,10 +677,14 @@ NB. <testxxname>
 NB.
 NB. Description:
 NB.   Test <description> by <matrix of type xx>
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
 NB.
 NB. Syntax:
 NB.   <testxxname> <y>
-NB. where
+NB. where <optional section>
 NB.   <y> - scalar/n-vector/m×n-matrix/sh-array <description>
 NB.
 NB. Formula: <optional section>
@@ -637,7 +696,7 @@ NB.     <formula>
 NB.
 NB. Storage layout: <optional section>
 NB.   <layout>
-NB. where
+NB. where <optional section>
 NB.   <description>
 NB.
 NB. Algorithm: <optional section>
@@ -651,7 +710,7 @@ NB. Assertions (with appropriate comparison tolerance): <optional section>
 NB.   <assertion>
 NB.   ...
 NB.   <assertion>
-NB. where
+NB. where <optional section>
 NB.   <copula>
 NB.   ...
 NB.   <copula>
@@ -675,15 +734,15 @@ NB. - <text>
 NB. ...
 NB. - <text>
 NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-NB.
 NB. TODO: <optional section>
 NB. - <text>
 NB. ...
 NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
 <testxxname>=: <definition>
 
@@ -693,6 +752,10 @@ NB.
 NB. Description:
 NB.   Adv. to make verb to test <names> by matrix of
 NB.   generator and shape given
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
 NB.
 NB. Syntax:
 NB.   log=. (mkmat <testname>) (m,n)
@@ -711,7 +774,7 @@ NB.     <formula>
 NB.
 NB. Storage layout: <optional section>
 NB.   <layout>
-NB. where
+NB. where <optional section>
 NB.   <description>
 NB.
 NB. Algorithm: <optional section>
@@ -725,7 +788,7 @@ NB. Assertions (with appropriate comparison tolerance): <optional section>
 NB.   <assertion>
 NB.   ...
 NB.   <assertion>
-NB. where
+NB. where <optional section>
 NB.   <copula>
 NB.   ...
 NB.   <copula>
@@ -749,14 +812,131 @@ NB. - <text>
 NB. ...
 NB. - <text>
 NB.
+NB. TODO: <optional section>
+NB. - <text>
+NB. ...
+NB. - <text>
+NB.
 NB. References: <optional section>
 NB. [1] <reference>
 NB. ...
 NB. [x] <reference>
+
+<testname>=: 1 : 'EMPTY [ <definition>'
+
+NB. =========================================================
+NB. Verification suite
+
+NB. ---------------------------------------------------------
+NB. <verifyxxname>
+NB.
+NB. Description:
+NB.   Nilad to verify <xxname>, output result to console and
+NB.   return it
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
+NB.
+NB. Syntax:
+NB.   'probed failed'=. <verifyxxname> ''
+NB. where <optional section>
+NB.   probed ≥ 0, assertions probed counter
+NB.   failed ≥ 0, assertions failed counter
+NB.
+NB. Formula: <optional section>
+NB. - <description>:
+NB.     <formula>
+NB. ...
+NB. - <description>:
+NB.     <formula>
+NB.
+NB. Algorithm: <optional section>
+NB.   In: <input nouns; comma-separated list>
+NB.   Out: <output nouns; comma-separated list>
+NB.   1) <1st step description>
+NB.   ...
+NB.   x) <last step description>
+NB.
+NB. Assertions (with appropriate comparison tolerance): <optional section>
+NB.   <assertion>
+NB.   ...
+NB.   <assertion>
+NB. where <optional section>
+NB.   <copula>
+NB.   ...
+NB.   <copula>
+NB.
+NB. Notes: <optional section>
+NB. - <text>
+NB. ...
+NB. - <text>
 NB.
 NB. TODO: <optional section>
 NB. - <text>
 NB. ...
 NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
 
-<testname>=: 1 : 'EMPTY [ <definition>'
+<verifyxxname>=: <definition>
+
+NB. ---------------------------------------------------------
+NB. <verifyname>
+NB.
+NB. Description:
+NB.   Nilad to verify <names>, output result to console and
+NB.   return it
+NB. where <optional section>
+NB.   <item 1> - <description>
+NB.   <item 2> - <description>
+NB.   ...
+NB.
+NB. Syntax:
+NB.   'probed failed'=. <verifyname> ''
+NB. where
+NB.   probed ≥ 0, assertions probed counter
+NB.   failed ≥ 0, assertions failed counter
+NB.
+NB. Formula: <optional section>
+NB. - <description>:
+NB.     <formula>
+NB. ...
+NB. - <description>:
+NB.     <formula>
+NB.
+NB. Algorithm: <optional section>
+NB.   In: <input nouns; comma-separated list>
+NB.   Out: <output nouns; comma-separated list>
+NB.   1) <1st step description>
+NB.   ...
+NB.   x) <last step description>
+NB.
+NB. Assertions (with appropriate comparison tolerance): <optional section>
+NB.   <assertion>
+NB.   ...
+NB.   <assertion>
+NB. where <optional section>
+NB.   <copula>
+NB.   ...
+NB.   <copula>
+NB.
+NB. Notes: <optional section>
+NB. - <text>
+NB. ...
+NB. - <text>
+NB.
+NB. TODO: <optional section>
+NB. - <text>
+NB. ...
+NB. - <text>
+NB.
+NB. References: <optional section>
+NB. [1] <reference>
+NB. ...
+NB. [x] <reference>
+
+<verifyname>=: <definition>

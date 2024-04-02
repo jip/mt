@@ -278,13 +278,13 @@ gghrdl=: 4 : 0
     while. j > >: i do.                        NB. (h+s-i-2)-vector (desc) h+s-1:i+2
       liso=. j - 1 0
       NB. step 1: rotate columns liso to kill A[i,j]
-      'y cs'=. rot&.|: rotga y ; (< 0 ; lisor1a ; liso) ; 0
-      y=. (< 1 ; lisor1b ; liso) cs&(rot&.|:) upd y
+      'y cs'=. rot rotga y ; (< 0 ; lisor1a ; liso) ; 0
+      y=. (< 1 ; lisor1b ; liso) cs&rot upd y
       dZ0=. dZ0 , cs , liso
       liso=. j - 0 1
       NB. step 2: rotate rows liso to kill B[j-1,j]
-      'y cs'=. rot rotga y ; (< 1 ; liso ; lisoc2b) ; < < a: ; _1
-      y=. (< 0 ; liso ; lisoc2a) cs&rot upd y
+      'y cs'=. rot&.|: rotga y ; (< 1 ; liso ; lisoc2b) ; < < a: ; _1
+      y=. (< 0 ; liso ; lisoc2a) cs&(rot&.|:) upd y
       dQ0=. dQ0 , cs , liso
       NB. step 3: update ISO
       lisor1b=. (j - 2) , lisor1b
@@ -352,13 +352,13 @@ gghrdu=: 4 : 0
     while. i > >: j do.                        NB. (h+s-j-2)-vector (desc) h+s-1:j+2
       liso=. i - 1 0
       NB. step 1: rotate rows liso to kill A[i,j]
-      'y cs'=. rot rotga y ; (< 0 ; liso ; lisoc1a) ; < < a: ; 0
-      y=. (< 1 ; liso ; lisoc1b) cs&rot upd y
+      'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc1a) ; < < a: ; 0
+      y=. (< 1 ; liso ; lisoc1b) cs&(rot&.|:) upd y
       dQ0=. dQ0 , cs , liso
       liso=. i - 0 1
       NB. step 2: rotate columns liso to kill B[i,i-1]
-      'y cs'=. rot&.|: rotga y ; (< 1 ; lisor2b ; liso) ; _1
-      y=. (< 0 ; lisor2a ; liso) cs&(rot&.|:) upd y
+      'y cs'=. rot rotga y ; (< 1 ; lisor2b ; liso) ; _1
+      y=. (< 0 ; lisor2a ; liso) cs&rot upd y
       dZ0=. dZ0 , cs , liso
       NB. step 3: update ISO
       lisoc1b=. (i - 2) , lisoc1b

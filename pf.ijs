@@ -1147,7 +1147,7 @@ gelpg3=: 3 : 0
     i=. <: k
     liso=. i. m
     while. i do.
-      'y cs'=. rot&.|: rotga y ; (< liso ; i - 1 0) ; 0
+      'y cs'=. rot rotga y ; (< liso ; i - 1 0) ; 0
       dQ=. dQ , (+ cs) , i - 1 0
       i=. <: i
     end.
@@ -1199,7 +1199,7 @@ geprg3=: 3 : 0
     i=. <: k
     liso=. i. n
     while. i do.
-      'y cs'=. rot rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
+      'y cs'=. rot&.|: rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
       dQ=. dQ , (+ cs) , i - 1 0
       i=. <: i
     end.
@@ -1233,7 +1233,7 @@ hslph3=: 3 : 0
     i=. 1
     liso=. i. m
     while. i < k do.
-      'y cs'=. rot&.|: rotga y ; (< liso ; i - 1 0) ; 0
+      'y cs'=. rot rotga y ; (< liso ; i - 1 0) ; 0
       liso=. }. liso
       dQ=. dQ , (+ cs) , i - 1 0
       i=. >: i
@@ -1278,7 +1278,7 @@ hsprh3=: 3 : 0
     i=. 1
     liso=. i. n
     while. i < k do.
-      'y cs'=. rot rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
+      'y cs'=. rot&.|: rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
       liso=. }. liso
       dQ=. dQ , (+ cs) , i - 1 0
       i=. >: i

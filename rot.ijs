@@ -35,10 +35,40 @@ NB. <http://www.gnu.org/licenses/>.
 coclass 'mt'
 
 NB. =========================================================
+NB. Concepts
+NB.
+NB. References:
+NB. [1] David S. Bindel, James W. Demmel, W. Kahan, Osni A.
+NB.     Marques. On Computing Givens rotations reliably and
+NB.     efficiently. UT-CS-00-449, October 2000. LAPACK
+NB.     Working Note 148
+NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB. [2] Edward Anderson. Discontinuous Plane Rotations and
+NB.     the Symmetric Eigenvalue Problem. University of
+NB.     Tennessee, UT-CS-00-454, December 4, 2000.
+NB.     LAPACK Working Note 150
+NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB. [3] Edward Anderson. 2017. Algorithm 978: Safe scaling in
+NB.     the level 1 BLAS. ACM Trans. Math. Softw. 44, 1
+NB.     (July 2017).
+NB.     https://doi.org/10.1145/3061665
+NB. [4] Weslley da Silva Pereira, Ali Lotfi, Julien Langou.
+NB.     2022. Numerical analysis of Givens rotation. arXiv
+NB.     https://doi.org/10.48550/arXiv.2211.04010
+
+NB. =========================================================
 NB. Local definitions
 
-NB. Signum of real/complex/quaternion, monad, sgn(0)=1
-sgn=: (1:^:(0&(=!.0))@(*!.0))`(1 0"_^:(0 0&(-:!.0))@qnsign)@.(2=#)
+NB. ---------------------------------------------------------
+NB. Signum, monad, sgn(0)=1
+
+NB. y is real or complex
+sgnc=: *!.0`1:@.(0&(=!.0))
+
+NB. y is quaternion
+NB. throws NaN error for y containing either quaternion
+NB. infinity or directed infinity with both atoms non-zero
+sgnq=: qnsign`(1 0"_)@.(0 0&(-:!.0))@(dbsig@33^:(-.@(0&(e.!.0)) *. (_&e. > (, _) -: -.!.0&0)@:|@(,@:+.^:(JCMPX = 3!:0))))
 
 NB. =========================================================
 NB. Interface
@@ -84,84 +114,59 @@ NB.   'c s'=. lartg (f,g)
 NB.   r=. (c,s) mp (f,g)
 NB.
 NB. Notes:
-NB. - simulates LAPACK's xLARTG with the following difference:
-NB.   for f=0, g≠0:
-NB.   - mt's lartg and LAPACK's ZLARTG follows [1]:
-NB.       (c,s)=(0,sign(conj(g))), r=abs(g)
-NB.     to keep c, s and r continuous
-NB.   - LAPACK's DLARTG for g∊ℝ works differently:
-NB.       (c,s)=(0,1), r=g
-NB.     to eliminate FLOPS
+NB. - simulates LAPACK's xLARTG
 NB. - [G]SEP requires plane rotation to be continuous [2]:
 NB.     cs := sgn(cd1st(cd1st(fg))) * sgn(cd1st(fg)) * sgn(qnconik(fg))
 NB.   To achieve this, use modified definition:
-NB.     lartg=: {. (sgn@(9 o. [) * *&sgn) +
-NB.
-NB. References:
-NB. [1] David S. Bindel and James W. Demmel and W. Kahan and
-NB.     Osni A. Marques. On Computing Givens rotations
-NB.     reliably and efficiently. UT-CS-00-449, October 2000.
-NB.     LAPACK Working Note 148
-NB.     http://www.netlib.org/lapack/lawns/downloads/
-NB. [2] Edward Anderson. Discontinuous Plane Rotations and
-NB.     the Symmetric Eigenvalue Problem. University of
-NB.     Tennessee, UT-CS-00-454, December 4, 2000.
-NB.     LAPACK Working Note 150
-NB.     http://www.netlib.org/lapack/lawns/downloads/
+NB.     lartg=: ((*&sgnc 9&o.)@{. * sgnq@:+)"1
 
-lartg=: ({. *&sgn +)"1
+lartg=: 9&o.&.(0&{)@(sgnc@{. * sgnq@:+)`(_.j_. _.j_."_)@.(128!:5@<)"1 : [:
 
 NB. ---------------------------------------------------------
 NB. rot
 NB.
 NB. Description:
-NB.   Applies a plane rotation cs to ixy:
-NB.     oxy[i] := cs * ixy[i] for i=0:n-1
+NB.   Applies plane rotation(s) cs to pair(s) ixy, anyone of:
+NB.     oxy    := cs    * ixy
+NB.   or
+NB.     oxy[i] := cs[i] * ixy
+NB.   or
+NB.     oxy[i] := cs    * ixy[i]
+NB.   or
+NB.     oxy[i] := cs[i] * ixy[i]
+NB.   for i=0:n-1
 NB.
 NB. Syntax:
 NB.     oxy=. cs rot ixy
 NB. where
 NB.   ixy - 2-vector of Cayley-Dickson halves (ix,iy) or
-NB.         2×n-matrix of stitched Cayley-Dickson halves
-NB.         (ix[i],iy[i]), defines number(s) to rotate
+NB.         n×2-matrix of laminated Cayley-Dickson halves
+NB.         (ix[i],iy[i]), defines pair(s) to rotate
 NB.         (complex or quaternion)
-NB.   cs  - 2-vector of Cayley-Dickson halves (c,s), defines
-NB.         rotating number (complex or quaternion)
-NB.   oxy - the same shape as ixy, the rotated number(s)
+NB.   cs  - 2-vector of Cayley-Dickson halves (c,s) or
+NB.         n×2-matrix of laminated Cayley-Dickson halves
+NB.         (c[i],s[i]), defines rotator(s) (complex or
+NB.         quaternion)
+NB.   oxy - has the shape of either ixy or cs which has
+NB.         greater rank, the rotated pair(s)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   cs (rot -: (qnmul qnconj)~) ixy
 NB.
-NB. Notes:
-NB. - implements LAPACK's xROT
-
-rot=: (mp~ (,: (-@{: ,. {.)@:+))~
-
-NB. ---------------------------------------------------------
-NB. lartv
-NB.
-NB. Description:
-NB.   Applies a plane rotations cs[i] to ixy:
-NB.     oxy[i] := cs[i] * ixy[i] for i=0:n-1
-NB.
-NB. Syntax:
-NB.   oxy=. cs lartv ixy
-NB. where
-NB.   ixy - 2-vector of Cayley-Dickson halves (ix,iy) or
-NB.         n×2-matrix of laminated Cayley-Dickson halves
-NB.         (ix[i],iy[i]), defines number(s) to rotate
-NB.         (complex or quaternion)
-NB.   cs  - the same shape as ixy, 2-vector of Cayley-Dickson
-NB.         halves (c,s) or n×2-matrix of laminated
-NB.         Cayley-Dickson halves (c[i],s[i]), defines
-NB.         rotating number(s) (complex or quaternion)
-NB.   oxy - array of the same shape as ixy, the rotated
-NB.         number(s)
+NB. Application:
+NB. - with 2-rank ixy:
+NB.     sentence    rank(cs)    implements BLAS's/LAPACK's
+NB.     --------    --------    --------------------------
+NB.     rot         1           xROT   with INCX=INCY     =1  (goes along columns)
+NB.     rot&.|:     1           xROT   with INCX=INCY     =LD (goes along rows   )
+NB.     rot         2           xLARTV with INCX=INCY=INCC=1  (goes along columns)
+NB.     rot&.|:     2           xLARTV with INCX=INCY=INCC=LD (goes along rows   )
 NB.
 NB. Notes:
-NB. - implements LAPACK's xLARTV
+NB. - implements BLAS's DROT and LAPACK's ZROT and xLARTV
+NB. - resembles qnmul
 
-lartv=: (mp"2 1~ (,:"1 (-@:({:"1) ,. {."1)@:+))~
+rot=: [: : (,.~@:(+./"1)@(128!:5)`(,:&_.j_.)}@(mp"2 1~ (,:"1 (+@:-@:({:"1) ,. {."1)))~)
 
 NB. ---------------------------------------------------------
 NB. rotga
@@ -232,15 +237,15 @@ NB.   them simultaneously
 
 rotscll=: 4 : 0
   i=. 0
-  while. i < # y do.         NB. traverse dA rows down
+  while. i < # y do.               NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y
     if. 0 0 -: iofg do.
       if. -. 0 0 -: cs do.
         'm io'=. cs
-        x=. io m&* upd x     NB. do scale
+        x=. io m&* upd x           NB. do scale
       end.
     else.
-      x=. iofg cs&rot upd x  NB. do rotation
+      x=. iofg cs&(rot&.|:) upd x  NB. do rotation
     end.
     i=. >: i
   end.
@@ -249,15 +254,15 @@ rotscll=: 4 : 0
 
 rotsclu=: 4 : 0
   i=. 0
-  while. i < # y do.                        NB. traverse dA rows down
+  while. i < # y do.                  NB. traverse dA rows down
     'cs iofg'=. _2 ]\ i { y
     if. 0 0 -: iofg do.
       if. -. 0 0 -: cs do.
         'm io'=. cs
-        x=. (< a: ; io) m&* upd x           NB. do scale
+        x=. (< a: ; io) m&* upd x     NB. do scale
       end.
     else.
-      x=. (< a: ; iofg) cs&(rot&.|:) upd x  NB. do rotation
+      x=. (< a: ; iofg) cs&rot upd x  NB. do rotation
     end.
     i=. >: i
   end.
@@ -312,13 +317,6 @@ NB.   8) exclude +∞ from vector BErr:
 NB.        BErr=. xeInf BErr
 NB.   9) find backward error:
 NB.        maxberr = max(BErr[:])
-NB.
-NB. References:
-NB. [1] D. Bindel, J. Demmel, W. Kahan, O. Marques. On
-NB.     Computing Givens rotations reliably and efficiently.
-NB.     University of Tennessee, UT-CS-00-449, January 31,
-NB.     2001. LAPACK Working Note 148
-NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 testlartg=: 3 : 0
   NB. implement Algorithm 1 [1]

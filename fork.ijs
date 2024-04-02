@@ -30,6 +30,19 @@ NB. <http://www.gnu.org/licenses/>.
 coclass 'mt'
 
 NB. =========================================================
+NB. Concepts
+NB.
+NB. Notation:
+NB.   n-fork - generalized fork of n layers
+NB.
+NB. Notes:
+NB. - n-fork is a trellis automata
+NB.
+NB. References:
+NB. [1] JWiki :: User:Igor Zhuravlov/Extended forks
+NB.     https://code.jsoftware.com/wiki/User:Igor_Zhuravlov/Extended_forks
+
+NB. =========================================================
 NB. Local definitions
 
 NB. =========================================================

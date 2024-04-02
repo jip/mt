@@ -38,7 +38,7 @@ NB. ---------------------------------------------------------
 NB. stardot
 NB. Extend monad *. for quaternions
 
-stardot=: ;/@*.`((] ; %) qnmod)@.(2 = #)
+stardot=: ;/@*.`(qnlen ; qnsign)@.(2 = #)
 
 NB. =========================================================
 NB. Interface
@@ -65,14 +65,6 @@ NB. - implement more practical norm-estimation approach
 con=: 2 : '*&(%@u) v'
 
 NB. ---------------------------------------------------------
-NB. gecon1
-NB. geconi
-NB. hecon1
-NB. heconi
-NB. pocon1
-NB. poconi
-NB. ptcon1
-NB. ptconi
 NB. trl1con1
 NB. trl1coni
 NB. trlcon1
@@ -81,6 +73,14 @@ NB. tru1con1
 NB. tru1coni
 NB. trucon1
 NB. truconi
+NB. gecon1
+NB. geconi
+NB. hecon1
+NB. heconi
+NB. pocon1
+NB. poconi
+NB. ptcon1
+NB. ptconi
 NB. uncon1
 NB. unconi
 NB.
@@ -89,13 +89,15 @@ NB.   Calculate reciprocal of the condition number of a
 NB.   matrix in a given norm
 NB.
 NB. Syntax:
+NB.   rcondR=. trxxconx R
 NB.   rcondG=. geconx G
 NB.   rcondH=. heconx H
 NB.   rcondP=. poconx P
 NB.   rcondT=. ptconx T
-NB.   rcondR=. trxxconx R
 NB.   rcondQ=. unconx Q
 NB. where
+NB.   R      - n×n-matrix of type: triangular
+NB.   rcondR ≥ 0, reciprocal of the condition number of R
 NB.   G      - n×n-matrix of type: general, band,
 NB.            tridiagonal, triangular or triangular band
 NB.   rcondG ≥ 0, reciprocal of the condition number of G
@@ -107,8 +109,6 @@ NB.   rcondP ≥ 0, reciprocal of the condition number of P
 NB.   T      - n×n-matrix of type: Hermitian (symmetric)
 NB.            positive definite tridiagonal
 NB.   rcondT ≥ 0, reciprocal of the condition number of T
-NB.   R      - n×n-matrix of type: triangular
-NB.   rcondR ≥ 0, reciprocal of the condition number of R
 NB.   Q      - n×n-matrix, the unitary (orthogonal)
 NB.   rcondQ ≥ 0, reciprocal of the condition number of Q in
 NB.            1-norm
@@ -116,6 +116,14 @@ NB.
 NB. Notes:
 NB. - extraneous values in band, tridiagonal, triangular and
 NB.   triangular band matrices must be zeroed
+NB. - trl1con1 simulates LAPACK's xTRCON('1','L','U')
+NB. - trl1coni simulates LAPACK's xTRCON('i','L','U')
+NB. - trlcon1 simulates LAPACK's xTRCON('1','L','N')
+NB. - trlconi simulates LAPACK's xTRCON('i','L','N')
+NB. - tru1con1 simulates LAPACK's xTRCON('1','U','U')
+NB. - tru1coni simulates LAPACK's xTRCON('i','U','U')
+NB. - trucon1 simulates LAPACK's xTRCON('1','U','N')
+NB. - truconi simulates LAPACK's xTRCON('i','U','N')
 NB. - gecon1 simulates LAPACK's xGECON('1'), xGBCON('1'),
 NB.   xGTCON('1'), xTBCON('1')
 NB. - geconi simulates LAPACK's xGECON('i'), xGBCON('i'),
@@ -126,14 +134,15 @@ NB. - pocon1 simulates LAPACK's xPBCON('1'), xPOCON('1')
 NB. - poconi simulates LAPACK's xPBCON('i'), xPOCON('i')
 NB. - ptcon1 simulates LAPACK's xPTCON('1')
 NB. - ptconi simulates LAPACK's xPTCON('i')
-NB. - trl1con1 simulates LAPACK's xTRCON('1','L','U')
-NB. - trl1coni simulates LAPACK's xTRCON('i','L','U')
-NB. - trlcon1 simulates LAPACK's xTRCON('1','L','N')
-NB. - trlconi simulates LAPACK's xTRCON('i','L','N')
-NB. - tru1con1 simulates LAPACK's xTRCON('1','U','U')
-NB. - tru1coni simulates LAPACK's xTRCON('i','U','U')
-NB. - trucon1 simulates LAPACK's xTRCON('1','U','N')
-NB. - truconi simulates LAPACK's xTRCON('i','U','N')
+
+trl1con1=: 1:`(norm1 con trtril1 :: 0)@.(*@#)
+trl1coni=: 1:`(normi con trtril1 :: 0)@.(*@#)
+trlcon1=:  1:`(norm1 con trtril  :: 0)@.(*@#)
+trlconi=:  1:`(normi con trtril  :: 0)@.(*@#)
+tru1con1=: 1:`(norm1 con trtriu1 :: 0)@.(*@#)
+tru1coni=: 1:`(normi con trtriu1 :: 0)@.(*@#)
+trucon1=:  1:`(norm1 con trtriu  :: 0)@.(*@#)
+truconi=:  1:`(normi con trtriu  :: 0)@.(*@#)
 
 gecon1=: 1:`(norm1 con (getrilu1p@getrflu1p) :: 0)@.(*@#)
 geconi=: 1:`(normi con (getrilu1p@getrflu1p) :: 0)@.(*@#)
@@ -146,15 +155,6 @@ poconi=: 1:`(normi con (potril@potrfl) :: 0)@.(*@#)
 
 ptcon1=: 1:`(norm1 con pttril :: 0)@.(*@#)
 ptconi=: 1:`(normi con pttril :: 0)@.(*@#)
-
-trl1con1=: 1:`(norm1 con trtril1 :: 0)@.(*@#)
-trl1coni=: 1:`(normi con trtril1 :: 0)@.(*@#)
-trlcon1=:  1:`(norm1 con trtril  :: 0)@.(*@#)
-trlconi=:  1:`(normi con trtril  :: 0)@.(*@#)
-tru1con1=: 1:`(norm1 con trtriu1 :: 0)@.(*@#)
-tru1coni=: 1:`(normi con trtriu1 :: 0)@.(*@#)
-trucon1=:  1:`(norm1 con trtriu  :: 0)@.(*@#)
-truconi=:  1:`(normi con trtriu  :: 0)@.(*@#)
 
 uncon1=: 1:`(norm1 con ct :: 0)@.(*@#)
 unconi=: 1:`(normi con ct :: 0)@.(*@#)

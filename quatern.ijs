@@ -3,12 +3,12 @@ NB.
 NB. qnxx       Get/set component(s)
 NB. qnmarkxxx  Mark component(s)
 NB. qnconxx    Conjugate component(s)
+NB. qnlen      Length
+NB. qnsign     Signum
+NB. qninv      Inverse
 NB. qnmul      Multiply
-NB. qnrec      Reciprocal
 NB. qndivl     Divide (left quotient)
 NB. qndivr     Divide (right quotient)
-NB. qnmod      Magnitude
-NB. qnsign     Signum
 NB. qnf        Adv. to quaternificate verb
 NB.
 NB. Version: 0.11.0 2021-01-17
@@ -38,19 +38,43 @@ coclass 'mt'
 NB. =========================================================
 NB. Concepts
 NB.
-NB. Let:
+NB. Notation:
+NB.   ℝ  ≡ [-∞,+∞]
 NB.   a,b,c,d ∊ ℝ       Basis elements multiplication table:
 NB.   ℂi ≡ ℝ  + ℝ *i          i   j   k
 NB.   ℂj ≡ ℝ  + ℝ *j      i  _1   k  -j
 NB.   ℂk ≡ ℝ  + ℝ *k      j  -k  _1   i
 NB.   ℍ  ≡ ℂi + ℂi*j      k   j  -i  _1
+NB.   q  = a + b*i + c*j + d*k ∊ ℍ
+NB.   q∞ - quaternion infinity
 NB.
-NB. J:                  Math:
-NB.  x -: a j. b          x = a + b*i ∊ ℂi
-NB.  y -: c j. d          y = c + d*i ∊ ℂi
-NB.  z -: a j. c          z = a + c*j ∊ ℂj
-NB.  w -: a j. d          w = a + d*k ∊ ℂk
-NB.  q -: x , y           q = x + y*j = a + b*i + c*j + d*k ∊ ℍ
+NB. Terms:
+NB.   real infinity
+NB.     - has a = ∞ and b,c,d = 0
+NB.   imaginary infinity
+NB.     - has only one from b,c,d = ∞ and "others together
+NB.       with a" = 0
+NB.   directed infinity
+NB.     - is (q * ∞) where all q components a,b,c,d ≠ ∞
+NB.     - or it has only one component = ∞ and others ≠ ∞
+NB.   quaternion infinity
+NB.     - has multiple components which are = ∞
+NB.
+NB. Conventions:
+NB.   Math:                     J:
+NB.     x = a + b*i ∊ ℂi          x -: a j. b
+NB.     y = c + d*i ∊ ℂi          y -: c j. d
+NB.     z = a + c*j ∊ ℂj          z -: a j. c
+NB.     w = a + d*k ∊ ℂk          w -: a j. d
+NB.     u = b + c*k ∊ ℂk          u -: b j. c
+NB.     v = b + d*j ∊ ℂj          v -: b j. d
+NB.     s = c + b*k ∊ ℂk          s -: c j. b
+NB.     q = x + y*j               q -: x , y
+NB.       = w + j*s
+NB.       = w + u*i
+NB.       = z + i*v
+NB.     sgn(q * ∞) = sgn(q)       (qnsign q)
+NB.     sgn(q∞) is undefined      throws NaN error
 NB.
 NB. Notes:
 NB. - elements from ℝ, ℂi, ℂj, ℂk must not be mixed with each
@@ -73,6 +97,8 @@ NB. qnk     d=. qnk  q        qd=. d qnk  q
 NB. qn1i    x=. qn1i q        qx=. x qn1i q
 NB. qn1j    z=. qn1j q        qz=. z qn1j q
 NB. qn1k    w=. qn1k q        qw=. w qn1k q
+NB. qnij    u=. qnij q        qu=. u qnij q
+NB. qnik    v=. qnik q        qv=. v qnik q
 NB. qnjk    y=. qnjk q        qy=. y qnjk q
 
 qn1=: ( 9 o. {.) : ((j.  qni) 0} ])
@@ -83,7 +109,9 @@ qnk=: (11 o. {:) : ((j.~ qnj) 1} ])
 qn1i=: {.            : (0})
 qnjk=: {:            : (1})
 qn1j=: j./@(9   &o.) : ((j.~ +.)~ 11&o.)
+qnik=: j./@(  11&o.) : ((j.  +.)~  9&o.)
 qn1k=: j./@(9 11&o.) : ((< 2 2 2 $ 0 0 2 0 1 1 0 1) j./@:{ ,&:+.)
+qnij=: j./@(11 9&o.) : ((< 2 2 2 $ 1 0 0 1 0 0 2 1) j./@:{ ,&:+.)
 
 NB. ---------------------------------------------------------
 NB. Mark component(s)
@@ -140,37 +168,108 @@ NB.     Volzhskiy, 2002 (Е. А. Каратаев. Внутреннее
 NB.     сопряжение кватернионов. Волжский, 2002).
 
 NB. inner single conjugation
-qncon1=: -@+@{. ,     {:  NB. by 1
-qnconi=:   +@{. ,     {:  NB. by i
-qnconj=:     {. , -@+@{:  NB. by j
-qnconk=:     {. ,   +@{:  NB. by k
+qncon1=: -@+`]    "0"1 : [:  NB. by 1
+qnconi=:   +`]    "0"1 : [:  NB. by i
+qnconj=:   ]`(-@+)"0"1 : [:  NB. by j
+qnconk=:   ]`   + "0"1 : [:  NB. by k
 
 NB. inner double conjugation
-qnconik=: +                NB. by i,k
-qnconjk=: {. , -@{:        NB. by j,k
-qnconij=: qnconik@qnconjk  NB. by i,j
+qnconik=: +                : [:  NB. by i,k
+qnconjk=: ]`-"0"1          : [:  NB. by j,k
+qnconij=: qnconik@:qnconjk : [:  NB. by i,j
 
 NB. vector conjugation
-qnconv=:  +@{. , -@{:
+qnconv=:  +`-"0"1          : [:  NB. by i,j,k
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. Other operators
 
-NB. Product
-qnmul=: mp (,: (-@{: ,. {.)@:+)
+NB. ---------------------------------------------------------
+NB. qnlen
+NB.
+NB. Description:
+NB.   Length
+NB.
+NB. Syntax:
+NB.   len=. qnlen q
+NB. where
+NB.   q   - a single quaternion or laminated quatertions
+NB.   len - a scalar or (# q)-vector of non-negative numbers
+NB.
+NB. Assertions:
+NB.   0 *./@:<: qnlen q
 
-NB. Reciprocal
-qnrec=: qnconv % +/@:*:@,@:+.
+qnlen=: norms"1
 
-NB. Divide
-qndivl=: qnmul  qnrec  NB. via left quotient
-qndivr=: qnmul~ qnrec  NB. via right quotient
+NB. ---------------------------------------------------------
+NB. qnsign
+NB.
+NB. Description:
+NB.   Signum
+NB.
+NB. Syntax:
+NB.   qsgn=. qnsign q
+NB. where
+NB.   q,qsgn - a single quaternion or laminated quatertions
+NB.
+NB. Assertions:
+NB.   1 *./@:= qnlen qnsign q
+NB.
+NB. Notes:
+NB. - throws NaN error for q∞
 
-NB. Magnitude
-qnmod=: norms
+qnsign=: (      (;  (% +/&.:*:)&>/@(% :: (*@[)"0 L: 0)      >./@(dbsig@33^:(1 < _ +/@:= ]))) |@(,@:+.^:(JCMPX = 3!:0)))@(dbsig@33^:(0 0&(-:!.0)))`(_.j_. _.j_."_)@.(isnan@<)"1 : [:
 
-NB. Signum
-qnsign=: % qnmod
+NB. ---------------------------------------------------------
+NB. qninv
+NB.
+NB. Description:
+NB.   Inverse
+NB.
+NB. Syntax:
+NB.   qi=. qninv q
+NB. where
+NB.   q,qi - a single quaternion or laminated quatertions
+NB.
+NB. Assertions (with appropriate comparison tolerance):
+NB.   q -: qninv qninv q
+NB.   1 0 *./@:(-:"1) q qnmul qninv q
+NB.
+NB. Notes:
+NB. - throws NaN error for q∞
+
+qninv=: (qnconv (; ((% +/@: *:)&>/@(% :: (*@[)"0 L: 0) % ]) >./@(dbsig@33^:(1 < _ +/@:= ]))) |@,@(+.^:(JCMPX = 3!:0)))@(dbsig@33^:(0 0&(-:!.0)))`(_.j_. _.j_."_)@.(isnan@<)"1 : [:
+
+NB. ---------------------------------------------------------
+NB. qnmul
+NB.
+NB. Description:
+NB.   Product
+NB.
+NB. Syntax:
+NB.   qp=. qx qnmul qy
+NB. where
+NB.   qx,qy,qp - a single quaternion or laminated quatertions
+
+qnmul=: [: : (,.~@:(+./"1)@isnan`(,:&_.j_.)}@(mp"1 2 (,:"1 (-@:({:"1) ,. {."1)@:+)))
+
+NB. ---------------------------------------------------------
+NB. qndivl
+NB. qndivr
+NB.
+NB. Description:
+NB.   Divide
+NB.
+NB. Syntax:
+NB.   qq=. qn qndivx qd
+NB. where
+NB.   qn,qd,qq - a single quaternion or laminated quatertions
+NB.
+NB. Notes:
+NB. - throws NaN error for qn = q∞ or qd = q∞ or qd = 0
+
+qndivl=: [: : (qnmul  qninv)  NB. via left quotient
+qndivr=: [: : (qnmul~ qninv)  NB. via right quotient
 
 NB. ---------------------------------------------------------
 NB. qnf
@@ -196,6 +295,7 @@ NB.   y - quaternion argument
 NB.   o - quaternion function value of y
 NB.
 NB. Examples:
+NB.    NB. e^1
 NB.    ^ 1
 NB. 2.71828
 NB.    NB. quaternificated e^y of real y has b=c=d=0
@@ -221,4 +321,4 @@ NB. [1] L. G. Bairak. Integral Formula of Cauchy for
 NB.     Quaternions. 2010 (Л. Г. Байрак. Интегральная формула
 NB.     Коши для кватернионов. 2010).
 
-qnf=: 1 : 'qn1_mt_ (u@(j. qn1_mt_) ((9 o. [) qn1_mt_ (* 11&o.)~) (% qn1_mt_)@]) qnmod_mt_@qnmarkijk_mt_ qn1_mt_ ]'
+qnf=: 1 : 'qn1_mt_ (u@(j. qn1_mt_) ((9 o. [) qn1_mt_ (* 11&o.)~) (% qn1_mt_)@]) qnlen_mt_@qnmarkijk_mt_ qn1_mt_ ]'

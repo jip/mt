@@ -175,13 +175,13 @@ NB. Miscellaneous
 
 NB. conj. to extract matrix circumscribing the trapezoidal
 NB. matrix starting from diagonal number x in the matrix y
-trcut=: 2 : '((m&*)@:(<./"1)@v $) {. ]'
+trcut=: 2 : '(u@(0 >. <./"1)@v $) {. ]'
 
 NB. extract upper trapezoidal matrix
-trucut=: 1 _1 trcut (] ,. (-~ {:))
+trucut=: ]`-"0 trcut (] ,. (-~ {:))
 
 NB. extract lower trapezoidal matrix
-trlcut=: _1 1 trcut ((+ {.) ,. ])
+trlcut=: -`]"0 trcut ((+ {.) ,. ])
 
 NB. conj. to extract trapezoidal matrix starting from
 NB. diagonal number x in the circumscribing matrix y
@@ -647,22 +647,8 @@ NB.   A    - m×n-matrix to update
 NB.   Aupd - A with solid part of d-th diagonal updated by
 NB.          monad u
 NB.   S    ≥ 0, the length of d-th diagonal
-NB.
-NB. TODO:
-NB. - Henry Rich. [Jgeneral] duce/fold in J as an adverb or
-NB.   conjuction.
-NB.   2007-11-25 14:07:46 HKT.
-NB.   http://www.jsoftware.com/pipermail/general/2007-November/031233.html
 
-upddiag=: 1 : 0
-  liso=. diagliso_mt_ $ y
-  e=. liso ({,) y
-  (u e) (liso"_)} y
-:
-  liso=. x diagliso_mt_ $ y
-  e=. liso ({,) y
-  (u e) (liso"_)} y
-)
+upddiag=: 1 : 'diagliso_mt_^:(1:`(] $)) (u {{(u x ({,) y) (x"_)} y}}) ]'
 
 NB. ---------------------------------------------------------
 NB. bdlpick

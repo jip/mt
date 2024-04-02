@@ -1,5 +1,6 @@
 NB. Utilities
 NB.
+NB. isnan     Mark NaN values
 NB. max       Max-of, 0 for empty list
 NB. maxc      Max-of, '' for empty list
 NB. negneg    Conditional negate
@@ -48,22 +49,27 @@ NB. Local definitions
 NB. Format log string
 fmtlog=: ;@:(40 17 17 17 17 _16&(({.{.@('d<n/a>'&(8!:2)))&.>))
 
+NB. mark...
+ispos0=:  _ =!.0 %  NB. ... +0  values in y
+isneg0=: __ =!.0 %  NB. ... -0  values in y
+
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Miscellaneous
 
-max=:  >./`      0: @.(0 = #)                                   NB. max-of, 0 for empty list
-maxc=: >./`(c {. 0:)@.(0 = #)                                   NB. max-of, '' for empty list
+isnan=: 128!:5  NB. mark NaN values in y
 
-negneg=: -@]^:(0>[)                                             NB. if x<0 then -y else y endif
-negpos=: -@]^:(0<:[)                                            NB. if x≥0 then -y else y endif
+max=:  >./`      0: @.(0 = #)  NB. max-of, 0 for empty list
+maxc=: >./`(c {. 0:)@.(0 = #)  NB. max-of, '' for empty list
 
-copysign=: (=/&:*`((,:~ -)@{:))}@,:                             NB. if x<0 then -|y| else |y| endif
+negneg=:   ($@] $    (isneg0 +. 0&>)@{.`((,:  -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x<0 then - y  else  y  endif
+negpos=:   ($@] $    (isneg0 +: 0&>)@{.`((,:  -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x≥0 then - y  else  y  endif
+copysign=: ($@] $ =/&(isneg0 +. 0&>)   `((,:~ -)@{:)}@,:)`(_."0@])@.(+.&(isnan@<))  NB. if x<0 then -|y| else |y| endif
 
-sorim=: | `(+/"1@:| @:+.)@.(JCMPX = 3!:0)                       NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
-soris=: *:`(+/"1@:*:@:+.)@.(JCMPX = 3!:0)                       NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
+sorim=: | `(+/"1@:| @:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary parts' modules, |Re(y)| + |Im(y)|
+soris=: *:`(+/"1@:*:@:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary parts' squares, Re(y)^2 + Im(y)^2
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. test suite utilities

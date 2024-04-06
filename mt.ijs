@@ -25,8 +25,8 @@ NB.            algorithms by matrix of generator and shape
 NB.            given
 NB. test       Adv. to make verb to test algorithms by matrix
 NB.            of generator and shape given
-NB. verify     Nilad to verify mt, output result to console
-NB.            and return it
+NB.
+NB. verify     Ambivalent predicate to verify mt addon
 NB.
 NB. Version: 0.13.3 2021-06-29
 NB.
@@ -107,6 +107,16 @@ NB. =========================================================
 NB. Configuration
 
 coclass 'mt'
+
+NB. =========================================================
+NB. Local definitions
+
+NB. invertible ambivalent identity to erase names
+NB. syntax:
+NB.   out=. [x] f&.erasen y
+NB. to erase global names created while f was executed
+
+erasen=: ([ 4!:5@1) :. ([ (4!:5@0)@erase@(4!:5@1))
 
 NB. =========================================================
 NB. Interface
@@ -252,13 +262,23 @@ NB. ---------------------------------------------------------
 NB. verify
 NB.
 NB. Description:
-NB.   Nilad to verify mt, output result to console and return
-NB.   it
+NB.   Ambivalent predicate to verify mt addon and to stop at
+NB.   1st failed
 NB.
 NB. Syntax:
-NB.   'probed failed'=. verify ''
+NB.   isSucceed=. [isVerbose] verify ''
 NB. where
-NB.   probed ≥ 0, assertions probed counter
-NB.   failed ≥ 0, assertions failed counter
+NB.   isVerbose - boolean to display assertions probed with
+NB.               the result of its execution, optional,
+NB.               default is 0 to run silently
+NB.   isSucceed - boolean, verification result
+NB.
+NB. Application:
+NB. - if verification is failed then re-run in verbose mode
+NB.   to see the 1st assertion failed:
+NB.      verify_mt_ ''    NB. run silently
+NB.   0                   NB. some assertions are failed
+NB.      1 verify_mt_ ''  NB. run verbosely to display each
+NB.   ...                 NB.   assertion's result
 
-verify=: ('total' reportv)@(+/)@:(verifyutil`verifyiso`verifymm`verifynorm`verifyquatern`verifyrot`verifystruct`:0)
+verify=: 0&$: :(4 : '*./ 0!:(x { 3 2)&.erasen 1 dir ''~addons/math/mt/verify/*.ijs''')

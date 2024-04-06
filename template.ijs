@@ -1,19 +1,14 @@
 NB. <this file purpose; brief description>
 NB.
-NB. <name>          <brief description>
+NB. <name>        <brief description>
 NB. ...
-NB. <name>          <brief description>
+NB. <name>        <brief description>
 NB.
-NB. <testxxname>    Test <name> by <matrix of type xx>
+NB. <testxxname>  Test <name> by <matrix of type xx>
 NB. ...
-NB. <testyyname>    Test <name> by <matrix of type yy>
-NB. <testname>      Adv. to make verb to test <names> by
-NB.                 matrix of generator and shape given
-NB.
-NB. <verifyxxname>  Verify <xxname>
-NB. ...
-NB. <verifyyyname>  Verify <yyname>
-NB. <verifyname>    Verify <names>
+NB. <testyyname>  Test <name> by <matrix of type yy>
+NB. <testname>    Adv. to make verb to test <names> by
+NB.               matrix of generator and shape given
 NB.
 NB. Version: <n.n.n> <yyyy-mm-dd>
 NB.
@@ -91,6 +86,7 @@ NB. =========================================================
 NB. Configuration
 
 coclass 'mt'
+<code (optional)>
 
 NB. =========================================================
 NB. Local definitions <optional section>
@@ -828,118 +824,6 @@ NB. [x] <reference>
 <testname>=: 1 : 'EMPTY [ <definition>'
 
 NB. =========================================================
-NB. Verification suite
+NB. Clean-up <optional section>
 
-NB. ---------------------------------------------------------
-NB. <verifyxxname>
-NB.
-NB. Description:
-NB.   Nilad to verify <xxname>, output result to console and
-NB.   return it
-NB. where <optional section>
-NB.   <item 1> - <description>
-NB.   <item 2> - <description>
-NB.   ...
-NB.
-NB. Syntax:
-NB.   'probed failed'=. <verifyxxname> ''
-NB. where <optional section>
-NB.   probed ≥ 0, assertions probed counter
-NB.   failed ≥ 0, assertions failed counter
-NB.
-NB. Formula: <optional section>
-NB. - <description>:
-NB.     <formula>
-NB. ...
-NB. - <description>:
-NB.     <formula>
-NB.
-NB. Algorithm: <optional section>
-NB.   In: <input nouns; comma-separated list>
-NB.   Out: <output nouns; comma-separated list>
-NB.   1) <1st step description>
-NB.   ...
-NB.   x) <last step description>
-NB.
-NB. Assertions (with appropriate comparison tolerance): <optional section>
-NB.   <assertion>
-NB.   ...
-NB.   <assertion>
-NB. where <optional section>
-NB.   <copula>
-NB.   ...
-NB.   <copula>
-NB.
-NB. Notes: <optional section>
-NB. - <text>
-NB. ...
-NB. - <text>
-NB.
-NB. TODO: <optional section>
-NB. - <text>
-NB. ...
-NB. - <text>
-NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-
-<verifyxxname>=: <definition>
-
-NB. ---------------------------------------------------------
-NB. <verifyname>
-NB.
-NB. Description:
-NB.   Nilad to verify <names>, output result to console and
-NB.   return it
-NB. where <optional section>
-NB.   <item 1> - <description>
-NB.   <item 2> - <description>
-NB.   ...
-NB.
-NB. Syntax:
-NB.   'probed failed'=. <verifyname> ''
-NB. where
-NB.   probed ≥ 0, assertions probed counter
-NB.   failed ≥ 0, assertions failed counter
-NB.
-NB. Formula: <optional section>
-NB. - <description>:
-NB.     <formula>
-NB. ...
-NB. - <description>:
-NB.     <formula>
-NB.
-NB. Algorithm: <optional section>
-NB.   In: <input nouns; comma-separated list>
-NB.   Out: <output nouns; comma-separated list>
-NB.   1) <1st step description>
-NB.   ...
-NB.   x) <last step description>
-NB.
-NB. Assertions (with appropriate comparison tolerance): <optional section>
-NB.   <assertion>
-NB.   ...
-NB.   <assertion>
-NB. where <optional section>
-NB.   <copula>
-NB.   ...
-NB.   <copula>
-NB.
-NB. Notes: <optional section>
-NB. - <text>
-NB. ...
-NB. - <text>
-NB.
-NB. TODO: <optional section>
-NB. - <text>
-NB. ...
-NB. - <text>
-NB.
-NB. References: <optional section>
-NB. [1] <reference>
-NB. ...
-NB. [x] <reference>
-
-<verifyname>=: <definition>
+<code>

@@ -1,11 +1,9 @@
 NB. Matrix Market exchange formats converter
 NB.
-NB. mm        Convert J numeric array to/from suitable Matrix
-NB.           Market exchange format string
+NB. mm      Convert J numeric array to/from suitable Matrix
+NB.         Market exchange format string
 NB.
-NB. testmm    Test mm verb
-NB.
-NB. verifymm  Verify mm verb
+NB. testmm  Test mm verb
 NB.
 NB. Version: 0.13.3 2021-06-29
 NB.
@@ -127,6 +125,78 @@ ishmt=:    (-: 0&|:) or (3 > #@$) and (   + -: _2&|:)
 
 NB. predicate to check is array skew-Hermitian
 isskwhmt=: (-: 0&|:) or (3 > #@$) and (-@:+ -: _2&|:)
+
+NB. ---------------------------------------------------------
+NB. assert
+NB.
+NB. Description:
+NB.   Advanced version of the (assert.) control
+NB.
+NB. Syntax:
+NB.   trash=. [msg] assert chk
+NB. where
+NB.   msg - string, optional, will be shown if assertion is
+NB.         failed
+NB.   chk - numeric vector
+NB.
+NB. Examples:
+NB. - when asserts are enabled:
+NB.      9!:34 ''  NB. check asserts are enabled
+NB.   1
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0
+NB.   |assertion failure: assert_mtmm_     |assertion failure: assert_z_
+NB.   |       assert_mtmm_ 1 1 0           |       assert_z_ 1 1 0
+NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
+NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2          NB. no failure occured - it's a bug #1
+NB.   |assertion failure: assert_mtmm_
+NB.   |       assert_mtmm_ 1 1 2
+NB.
+NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0
+NB.   |Oops!: assert_mtmm_                 |Oops!: assert_z_
+NB.   |   'Oops!'    assert_mtmm_ 1 1 0    |   'Oops!'    assert_z_ 1 1 0
+NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
+NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2  NB. no failure occured - it's a bug #1
+NB.   |Oops!: assert_mtmm_
+NB.   |   'Oops!'    assert_mtmm_ 1 1 2
+NB.
+NB. - when asserts are disabled:
+NB.      9!:35 [ 0  NB. disable asserts
+NB.      9!:34 ''   NB. check asserts are disabled
+NB.   0
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
+NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2
+NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0          NB. failure occured - it's a bug #2
+NB.                                        |assertion failure: assert_z_
+NB.                                        |       assert_z_ 1 1 0
+NB.
+NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
+NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2
+NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0  NB. failure occured - it's a bug #2
+NB.                                        |Oops!: assert_z_
+NB.                                        |   'Oops!'    assert_z_ 1 1 0
+NB.      9!:35 [ 1  NB. restore default setting
+NB.      9!:34 ''   NB. check asserts are enabled
+NB.   1
+NB.
+NB. Notes:
+NB. - ambivalent procedure
+NB. - fixes system's (assert_z_) to match (assert.) control
+NB. - depends on 9!:34 (Enable assert.) setting
+NB. - values of rank>1 are supported accidentally, too:
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 ,: 1 0              assert_z_ 1 1 ,: 1 0  NB. no failure occured
+NB.   |assertion failure: assert_mtmm_
+NB.   |       assert_mtmm_ 1 1,:1 0
+NB.
+NB. References:
+NB. [1] Igor Zhuravlov. [Jprogramming] assert verb from
+NB.     stdlib mismatches assert. control
+NB.     2019-12-30 00:43:46 UTC.
+NB.     http://www.jsoftware.com/pipermail/programming/2019-December/054693.html
+
+assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')
 
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -516,30 +586,30 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
   y=. CRLF cutl_mt_ y  NB. cut by spans of CR and LF
-  'line longer than 1024 bytes was detected' assert_mt_ ((1024 >: #)S:0) y
+  'line longer than 1024 bytes was detected' assert_mtmm_ ((1024 >: #)S:0) y
   header=. cut_mt_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
   y=. (#~ ('%' ~: {.) S: 0) y  NB. remove header and comments
   y=. (#~ a:&~:) dltb L: 0 y   NB. remove empty lines
-  'not a Matrix Market exchange format' assert_mt_ 5 = # header
-  ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mt_ BANNER_mtmm_ -: 0 {:: header
-  ('object '''   , (1 {:: header) , ''' is not recognized') assert_mt_ OBJECT_mtmm_ -: 1 {:: header
+  'not a Matrix Market exchange format' assert_mtmm_ 5 = # header
+  ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mtmm_ BANNER_mtmm_ -: 0 {:: header
+  ('object '''   , (1 {:: header) , ''' is not recognized') assert_mtmm_ OBJECT_mtmm_ -: 1 {:: header
   ioFormat=.   FORMATS_mtmm_    i. 2 { header
   ioField=.    FIELDS_mtmm_     i. 3 { header
   ioSymmetry=. SYMMETRIES_mtmm_ i. 4 { header
-  ('format '''   , (2 {:: header) , ''' is not recognized') assert_mt_ ioFormat   < # FORMATS_mtmm_
-  ('field '''    , (3 {:: header) , ''' is not recognized') assert_mt_ ioField    < # FIELDS_mtmm_
-  ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mt_ ioSymmetry < # SYMMETRIES_mtmm_
+  ('format '''   , (2 {:: header) , ''' is not recognized') assert_mtmm_ ioFormat   < # FORMATS_mtmm_
+  ('field '''    , (3 {:: header) , ''' is not recognized') assert_mtmm_ ioField    < # FIELDS_mtmm_
+  ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mtmm_ ioSymmetry < # SYMMETRIES_mtmm_
   size=. ". 0 {:: y
-  ('size values ''' , (": size) , ''' must be integer') assert_mt_ (3!:0 size) e. JB01 , JINT
+  ('size values ''' , (": size) , ''' must be integer') assert_mtmm_ (3!:0 size) e. JB01 , JINT
   y=. }. y
   if. ioFormat do.  NB. coordinate
-    ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mt_ 2 < # size
-    ('''coordinate'' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mt_ (0 < ioField) +. (ioSymmetry e. 0 1) *. (0 = ioField)
+    ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mtmm_ 2 < # size
+    ('''coordinate'' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mtmm_ (0 < ioField) +. (ioSymmetry e. 0 1) *. (0 = ioField)
     'shape le'=. (}: ; {:) size  NB. shape, quantity expected
     y=. (le ; shape ; ioField ; ioSymmetry) mmic_mtmm_ y
   else.  NB. array
-    ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mt_ 1 < # size
-    ('''array'' and ''pattern'' qualifiers are incompatible') assert_mt_ 0 < ioField
+    ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mtmm_ 1 < # size
+    ('''array'' and ''pattern'' qualifiers are incompatible') assert_mtmm_ 0 < ioField
     y=. (size ; ioField ; ioSymmetry) mmia_mtmm_ y
   end.
   y
@@ -632,99 +702,3 @@ NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testmm_mt_ 10 10
 
 testmm_mt_=: 1 : '(nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@(u spmat_mt_ 0.25) ,&.>~ (nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@u'
-
-NB. =========================================================
-NB. Verification suite
-
-NB. test files directory
-MM_VFY_DATA_DIR=: '~addons/math/mt/test/mm/'
-
-NB. ---------------------------------------------------------
-NB. verifymm0dir
-NB. verifymm0inv
-NB. verifymm1dir
-NB. verifymm1inv
-NB.
-NB. Description:
-NB.   Predicate to verify for direct (mm) or inverse (mm^:_1)
-NB.   conversion which must fail (0) or succeed (1)
-NB.
-NB. Syntax:
-NB.   isFailed=.  verifymm0dir (fname , 'ijs')
-NB.   isFailed=.  verifymm0inv (fname , 'mm' )
-NB.   isSucceed=. verifymm1dir  fname
-NB.   isSucceed=. verifymm1inv  fname
-NB. where
-NB.   fname - string, a verify file's full name with path and
-NB.           without extension
-
-NB. verifymm0dir=: (1 [ mm    ) :: 0@fread2
-NB. verifymm0inv=: (1 [ mm^:_1) :: 0@fread2
-verifymm0dir=: ((((1: echo) 'verifymm0dir_mtmm_ failed with '&,))~ mm    ) :: 0 fread2
-verifymm0inv=: ((((1: echo) 'verifymm0inv_mtmm_ failed with '&,))~ mm^:_1) :: 0 fread2
-
-NB. verifymm1dir=: ,&'mm' ((-: mm    ) :: 0  ".)&fread2 ,&'ijs'
-NB. verifymm1inv=: ,&'mm' ((-: mm^:_1) :: 0~ ".)&fread2 ,&'ijs'
-verifymm1dir=: ,&'.mm' ([:`1:@.(-: mm    )  ".)&fread2 ::  ((0: echo) 'verifymm1dir_mtmm_ failed with '&,)   ,&'.ijs'
-verifymm1inv=: ,&'.mm' ([:`1:@.(-: mm^:_1)~ ".)&fread2 :: (((0: echo) 'verifymm1inv_mtmm_ failed with '&,)~) ,&'.ijs'
-
-NB. ---------------------------------------------------------
-NB. verifymmround0
-NB. verifymmround1
-NB.
-NB. Description:
-NB.   Adv. to count assertions failures
-NB.
-NB. Syntax:
-NB.   'probed failed'=. (u0 verifymmround0) ((fname0 , fexti) ; (fname1 fexti) ; ...)
-NB.   'probed failed'=. (u1 verifymmround1) ( fname0          ;  fname1        ; ...)
-NB. where
-NB.   u0     - predicate monad to verify which would fail,
-NB.            is called as:
-NB.              isFailed=. u0 (fnamei , fexti)
-NB.   u1     - predicate monad to verify which would succeed,
-NB.            is called as:
-NB.              isSucceed=. u1 fnamei
-NB.   fnamei - string, an assertion file's full name with
-NB.            path and without extension
-NB.   fexti  - string, either 'mm' or 'ijs'
-NB.   probed ≥ 0, assertions probed counter
-NB.   failed ≥ 0, assertions failed counter
-
-verifymmround0=: 1 : '(#    ,    +/)@(u S: 0)                      @]'
-verifymmround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(({.~ i:&''.'') L: 0)@]'
-
-NB. ---------------------------------------------------------
-NB. verifymmdir
-NB. verifymminv
-NB.
-NB. Description:
-NB.   Nilad to verify for direct (mm) or inverse (mm^:_1) and
-NB.   return a result
-NB.
-NB. Syntax:
-NB.   'probedDir failedDir'=. verifymmdir ''
-NB.   'probedInv failedInv'=. verifymminv ''
-NB. where
-NB.   probedDir ≥ 0, assertions probed counter for (mm    )
-NB.   failedDir ≥ 0, assertions failed counter for (mm    )
-NB.   probedInv ≥ 0, assertions probed counter for (mm^:_1)
-NB.   failedInv ≥ 0, assertions failed counter for (mm^:_1)
-
-verifymmdir=: (+/)@((verifymm0dir verifymmround0)`(verifymm1dir verifymmround1)@.[/..~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (MM_VFY_DATA_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
-verifymminv=: (+/)@((verifymm0inv verifymmround0)`(verifymm1inv verifymmround1)@.[/..~ ('_' e. (}.~ i:&'/')) S: 0)@(1 dir (MM_VFY_DATA_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
-
-NB. ---------------------------------------------------------
-NB. verifymm_mt_
-NB.
-NB. Description:
-NB.   Nilad to verify MM converter, output result to console
-NB.   and return it
-NB.
-NB. Syntax:
-NB.   'probed failed'=. verifymm_mt_ ''
-NB. where
-NB.   probed ≥ 0, assertions probed counter
-NB.   failed ≥ 0, assertions failed counter
-
-verifymm_mt_=: ('mm' reportv)@(verifymmdir_mtmm_ + verifymminv_mtmm_)

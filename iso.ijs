@@ -12,8 +12,6 @@ NB. liso4riso  Convert rISO to lISO
 NB. lisoX      Adv. to make dyad to compute lISO vector
 NB.            laying between diagonal and matrix edge
 NB.
-NB. verifyiso  Verify iso verbs
-NB.
 NB. Version: 0.11.0 2021-01-17
 NB.
 NB. Copyright 2010-2021 Igor Zhuravlov
@@ -264,73 +262,3 @@ lisoW=: 1 : 'liso4dhs_mt_@(((     0 <. m) -~ (* ((<: | m)&+))~) , [)'
 
 lisoN=: 1 : '] liso4dhs_mt_ (((-~ ((<: | m)&+))~ (*&(0 <. m))) , [)'
 lisoS=: 1 : '] liso4dhs_mt_ (((-~ ((-  | m)&-))~ (*&(0 >. m))) , [)'
-
-NB. =========================================================
-NB. Verification suite
-
-NB. ---------------------------------------------------------
-NB. verifyiso
-NB.
-NB. Description:
-NB.   Nilad to verify iso actors, output result to console
-NB.   and return it
-NB.
-NB. Syntax:
-NB.   'probed failed'=. verifyiso ''
-NB. where
-NB.   probed ≥ 0, assertions probed counter
-NB.   failed ≥ 0, assertions failed counter
-
-verifyiso=: 3 : 0
-  NB. liso4th
-  res=.       fassert ''    -: 3 liso4th 3
-  res=. res , fassert (, 3) -: 4 liso4th 3
-  res=. res , fassert 3 4   -: 5 liso4th 3
-
-  NB. liso4dhs
-  res=. res , fassert  4  5  6 -:   liso4dhs  4  3
-  res=. res , fassert  4  5  6 -: 1 liso4dhs  4  3
-  res=. res , fassert  4  6  8 -: 2 liso4dhs  4  3
-  res=. res , fassert _6 _5 _4 -:   liso4dhs _4  3
-  res=. res , fassert _6 _5 _4 -: 1 liso4dhs _4  3
-  res=. res , fassert _8 _6 _4 -: 2 liso4dhs _4  3
-  res=. res , fassert  6  5  4 -:   liso4dhs  4 _3
-  res=. res , fassert  6  5  4 -: 1 liso4dhs  4 _3
-  res=. res , fassert  8  6  4 -: 2 liso4dhs  4 _3
-  res=. res , fassert _4 _5 _6 -:   liso4dhs _4 _3
-  res=. res , fassert _4 _5 _6 -: 1 liso4dhs _4 _3
-  res=. res , fassert _4 _6 _8 -: 2 liso4dhs _4 _3
-
-  NB. iso4riso
-  riso=. 0 9 3 5 _6 _2 ,: 0 1 2 _3 4 _5
-  iso=. < '' ; (, 9) ; 3 4 ; 7 6 5 ; _9 _8 _7 _6 ; _2 _3 _4 _5 _6
-  res=. res , fassert iso  -: iso4riso     riso
-  res=. res , fassert riso -: iso4riso^:_1 iso
-
-  NB. liso4riso
-  sh=. 4 # 10
-  arr=. i. sh
-  riso=. 3 5 _6 _2 ,: 2 _3 4 _5
-  iso=. iso4riso riso
-  liso=. sh liso4riso riso
-  res=. res , fassert (riso ];.0 arr) -: ( iso  {   arr)
-  res=. res , fassert (riso ,;.0 arr) -: (liso ({,) arr)
-
-  NB. lisoX
-  arr=. i. 5 6
-  vec=. _1 _2 _3
-  res=. res , fassert vec -: (< 2 ; 3 4 5) { vec ((( 0 lisoE)&c)}) arr
-  res=. res , fassert vec -: (< 1 ; 2 3 4) { vec ((( 1 lisoE)&c)}) arr
-  res=. res , fassert vec -: (< 1 ; 3 4 5) { vec (((_1 lisoE)&c)}) arr
-  res=. res , fassert vec -: (< 2 ; 0 1 2) { vec ((( 0 lisoW)&c)}) arr
-  res=. res , fassert vec -: (< 3 ; 0 1 2) { vec ((( 1 lisoW)&c)}) arr
-  res=. res , fassert vec -: (< 3 ; 1 2 3) { vec (((_1 lisoW)&c)}) arr
-  res=. res , fassert vec -: (< 0 1 2 ; 2) { vec ((( 0 lisoN)&c)}) arr
-  res=. res , fassert vec -: (< 0 1 2 ; 3) { vec ((( 1 lisoN)&c)}) arr
-  res=. res , fassert vec -: (< 1 2 3 ; 3) { vec (((_1 lisoN)&c)}) arr
-  res=. res , fassert vec -: (< 2 3 4 ; 3) { vec ((( 0 lisoS)&c)}) arr
-  res=. res , fassert vec -: (< 1 2 3 ; 2) { vec ((( 1 lisoS)&c)}) arr
-  res=. res , fassert vec -: (< 2 3 4 ; 2) { vec (((_1 lisoS)&c)}) arr
-
-  'iso' reportv (# ([ , -) +/) res
-)

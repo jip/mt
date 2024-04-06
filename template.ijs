@@ -37,8 +37,6 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 <possible section delimiters list>
 
 NB. delimiter                                                  levels
@@ -88,6 +86,11 @@ NB. References: <optional section>
 NB. [1] <reference>
 NB. ...
 NB. [x] <reference>
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions <optional section>

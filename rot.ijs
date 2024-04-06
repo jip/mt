@@ -36,8 +36,6 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 NB. =========================================================
 NB. Concepts
 NB.
@@ -59,6 +57,11 @@ NB.     https://doi.org/10.1145/3061665
 NB. [4] Weslley da Silva Pereira, Ali Lotfi, Julien Langou.
 NB.     2022. Numerical analysis of Givens rotation. arXiv
 NB.     https://doi.org/10.48550/arXiv.2211.04010
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions

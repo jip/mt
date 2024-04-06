@@ -50,8 +50,6 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 NB. =========================================================
 NB. Concepts
 NB.
@@ -104,6 +102,11 @@ NB.
 NB. Conventions:
 NB. 1) a result returned from a test actor is an inverted
 NB.    table whose format is specified in test.ijs
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Interface

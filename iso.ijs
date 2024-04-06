@@ -36,8 +36,6 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 NB. =========================================================
 NB. Concepts
 NB.
@@ -61,6 +59,11 @@ NB.   arr=. i. sh                            NB. some array of shape sh is stori
 NB.   riso=. 3 5 _6 _2 ,: 2 _3 4 _5          NB. some rISO within arr
 NB.   iso=. iso4riso riso                    NB. ISO representation of riso
 NB.   liso=. sh liso4riso riso               NB. lISO representation of riso
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions

@@ -31,14 +31,17 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 NB. =========================================================
 NB. Concepts
 NB.
 NB. I have a dream (2010-11-02):
 NB.   ggev=: gizmo @ tgevc @ hgeqz @ gghrd @ qr &. bal &. scl
 NB. Is it possible?
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions

@@ -27,8 +27,6 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 NB. =========================================================
 NB. Concepts
 NB.
@@ -41,6 +39,11 @@ NB.
 NB. References:
 NB. [1] JWiki :: User:Igor Zhuravlov/Extended forks
 NB.     https://code.jsoftware.com/wiki/User:Igor_Zhuravlov/Extended_forks
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions

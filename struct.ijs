@@ -83,8 +83,6 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 NB. =========================================================
 NB. Concepts
 NB.
@@ -130,6 +128,11 @@ NB.
 NB. Notes:
 NB. - unit diagonal in L1 and U1 is usually neither stored
 NB.   nor referenced
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions

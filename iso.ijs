@@ -12,9 +12,8 @@ NB. liso4riso  Convert rISO to lISO
 NB. lisoX      Adv. to make dyad to compute lISO vector
 NB.            laying between diagonal and matrix edge
 NB.
-NB. Version: 0.11.0 2021-01-17
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

@@ -2,9 +2,8 @@ NB. API definitions
 NB.
 NB. xxxxxcd  Cover verbs to call BLIS subroutine or function
 NB.
-NB. Version: 0.14.0 2023-07-04
-NB.
-NB. Copyright 2023 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

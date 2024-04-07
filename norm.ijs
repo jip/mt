@@ -30,9 +30,8 @@ NB. testnorm   Adv. to make verb to test norm computing
 NB.            algorithms by matrix of generator and shape
 NB.            given
 NB.
-NB. Version: 0.13.1 2021-06-06
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

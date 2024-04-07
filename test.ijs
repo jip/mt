@@ -84,9 +84,8 @@ NB. chk6r2   Conj. to make dyad to compute the relative
 NB.          backward error for the basic hermitian
 NB.          (symmetric) rank 2 operation
 NB.
-NB. Version: 0.13.2 2021-06-24
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

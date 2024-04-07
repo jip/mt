@@ -10,8 +10,6 @@ NB. <testyyname>  Test <name> by <matrix of type yy>
 NB. <testname>    Adv. to make verb to test <names> by
 NB.               matrix of generator and shape given
 NB.
-NB. Version: <n.n.n> <yyyy-mm-dd>
-NB.
 NB. Copyright <yyyy> <full name>
 NB.
 NB. This file is part of mt

@@ -28,9 +28,8 @@ NB.            of generator and shape given
 NB.
 NB. verify     Ambivalent predicate to verify mt addon
 NB.
-NB. Version: 0.13.3 2021-06-29
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

@@ -379,7 +379,7 @@ NB.     repx=. steps (min,max,50"_) rey
 NB.     plot repx ([ ; }:@histogram) rey              NB. https://code.jsoftware.com/wiki/Essays/Histogram
 
 testlartg=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/lartg'
+  load_mttmp_ 'math/mt/external/lapack2/lartg'
 
   NB. exclude items containing NaN or ∞ from vector or matrix
   xicni=: #~ -.@(+./)"1@(__&= ,. _&= ,. isnan)
@@ -421,9 +421,9 @@ NB.   (F ,. G) - m×2-matrix, m (f,g) pairs to make rotators
 NB.   log      - 6-vector of boxes, test log, see test.ijs
 
 testlartv=: 3 : 0
-  load        'math/mt/test/blas/drot'
-  load_mttmp_ 'math/mt/test/lapack2/lartv'
-  load_mttmp_ 'math/mt/test/lapack2/zrot'
+  load        'math/mt/external/blas/drot'
+  load_mttmp_ 'math/mt/external/lapack2/lartv'
+  load_mttmp_ 'math/mt/external/lapack2/zrot'
 
   xycs=. ;/ |: y=. 2 ({."1 ,. lartg@:(}."1)) y
 

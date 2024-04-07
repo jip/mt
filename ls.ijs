@@ -310,7 +310,7 @@ NB.         values
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgels3=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/gels'
+  load_mttmp_ 'math/mt/external/lapack2/gels'
 
   'A X'=. y
   rcondA=. nan`gecon1@.(=/@$) A  NB. meaninigful for square matrices only

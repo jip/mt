@@ -1,4 +1,4 @@
-NB. Interface to BLAS
+NB. Interface to BLIS
 NB.
 NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
 NB.           Igor Zhuravlov
@@ -24,13 +24,13 @@ NB. <http://www.gnu.org/licenses/>.
 NB. =========================================================
 NB. Configuration
 
-coclass 'mtbla'
+coclass 'mtbli'
 coinsert 'mttst mt'
 
 NB. =========================================================
 NB. Includes
 
-require                 'math/mt/test/util'       NB. Tests' utilities
-require                 'math/mt/test/blas/init'  NB. Init LIB_mtbla_
-require^:(*@#@".@'LIB') 'math/mt/test/blas/util'  NB. BLAS Utilities
-require^:(*@#@".@'LIB') 'math/mt/test/blas/api'   NB. API definitions
+require                 'math/mt/external/util'       NB. Utilities
+require                 'math/mt/external/blis/init'  NB. Init LIB_mtbli_
+require^:(*@#@".@'LIB') 'math/mt/external/blis/util'  NB. BLIS Utilities
+require^:(*@#@".@'LIB') 'math/mt/external/blis/api'   NB. API definitions

@@ -411,7 +411,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgeev=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/geev'
+  load_mttmp_ 'math/mt/external/lapack2/geev'
 
   rcondu=. gecon1 y
 
@@ -446,8 +446,8 @@ NB.   A   - n×n-matrix, the Hermitian (symmetric)
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testheev=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/dsyev'
-  load_mttmp_ 'math/mt/test/lapack2/zheev'
+  load_mttmp_ 'math/mt/external/lapack2/dsyev'
+  load_mttmp_ 'math/mt/external/lapack2/zheev'
 
   rcondl=. heconi y
 
@@ -484,7 +484,7 @@ NB.   AB  - 2×n×n-brick
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testggev=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/ggev'
+  load_mttmp_ 'math/mt/external/lapack2/ggev'
 
   'rcondl rcondu'=. <./ (geconi , gecon1)"2 y
 

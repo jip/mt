@@ -829,7 +829,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testtrtri=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/trtri'
+  load_mttmp_ 'math/mt/external/lapack2/trtri'
 
   rcondL=.  trlcon1  L=.           trlpick y
   rcondU=.  trucon1  U=.           trupick y
@@ -879,8 +879,8 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgetri=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/getrf'
-  load_mttmp_ 'math/mt/test/lapack2/getri'
+  load_mttmp_ 'math/mt/external/lapack2/getrf'
+  load_mttmp_ 'math/mt/external/lapack2/getri'
 
   'rcondl rcondu'=. (geconi , gecon1) y
 
@@ -917,10 +917,10 @@ NB.   A   - n×n-matrix, the Hermitian (symmetric)
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhetri=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/dsytrf'
-  load_mttmp_ 'math/mt/test/lapack2/dsytri2'
-  load_mttmp_ 'math/mt/test/lapack2/zhetrf'
-  load_mttmp_ 'math/mt/test/lapack2/zhetri2'
+  load_mttmp_ 'math/mt/external/lapack2/dsytrf'
+  load_mttmp_ 'math/mt/external/lapack2/dsytri2'
+  load_mttmp_ 'math/mt/external/lapack2/zhetrf'
+  load_mttmp_ 'math/mt/external/lapack2/zhetri2'
 
   rcond=. heconi y
 
@@ -956,8 +956,8 @@ NB.         definite
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testpotri=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/potrf'
-  load_mttmp_ 'math/mt/test/lapack2/potri'
+  load_mttmp_ 'math/mt/external/lapack2/potrf'
+  load_mttmp_ 'math/mt/external/lapack2/potri'
 
   rcond=. pocon1 y
 

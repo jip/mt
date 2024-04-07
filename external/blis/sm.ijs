@@ -31,7 +31,7 @@ coclass 'mtbli'
 NB. =========================================================
 NB. Includes
 
-require 'math/mt/test/blis/blis'
+require 'math/mt/external/blis/blis'
 
 NB. =========================================================
 NB. Local definitions

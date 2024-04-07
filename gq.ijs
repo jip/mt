@@ -517,14 +517,14 @@ NB.   A   - m×n-matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testungq=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/dorglq'
-  load_mttmp_ 'math/mt/test/lapack2/dorgql'
-  load_mttmp_ 'math/mt/test/lapack2/dorgqr'
-  load_mttmp_ 'math/mt/test/lapack2/dorgrq'
-  load_mttmp_ 'math/mt/test/lapack2/zunglq'
-  load_mttmp_ 'math/mt/test/lapack2/zungql'
-  load_mttmp_ 'math/mt/test/lapack2/zungqr'
-  load_mttmp_ 'math/mt/test/lapack2/zungrq'
+  load_mttmp_ 'math/mt/external/lapack2/dorglq'
+  load_mttmp_ 'math/mt/external/lapack2/dorgql'
+  load_mttmp_ 'math/mt/external/lapack2/dorgqr'
+  load_mttmp_ 'math/mt/external/lapack2/dorgrq'
+  load_mttmp_ 'math/mt/external/lapack2/zunglq'
+  load_mttmp_ 'math/mt/external/lapack2/zungql'
+  load_mttmp_ 'math/mt/external/lapack2/zungqr'
+  load_mttmp_ 'math/mt/external/lapack2/zungrq'
 
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
@@ -699,8 +699,8 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testunghr=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/dorghr'
-  load_mttmp_ 'math/mt/test/lapack2/zunghr'
+  load_mttmp_ 'math/mt/external/lapack2/dorghr'
+  load_mttmp_ 'math/mt/external/lapack2/zunghr'
 
   'rcondl rcondu'=. (geconi , gecon1) y
 

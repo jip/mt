@@ -379,7 +379,7 @@ NB. Notes:
 NB. - models LAPACK's xDRVGE
 
 testgesv=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/gesv'
+  load_mttmp_ 'math/mt/external/lapack2/gesv'
 
   'X A'=. y
   'm n'=. $ X
@@ -465,7 +465,7 @@ NB. Notes:
 NB. - models LAPACK's xDRVGT
 
 testgtsv=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/gtsv'
+  load_mttmp_ 'math/mt/external/lapack2/gtsv'
 
   'X A'=. y
   'm n'=. $ X
@@ -547,10 +547,10 @@ NB.   - no berrA calc for LAPACK's DSYSV and ZHESV yet since
 NB.     its output is intricate
 
 testhesv=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/dsysv'
-  load_mttmp_ 'math/mt/test/lapack2/dsysv_aa'
-  load_mttmp_ 'math/mt/test/lapack2/zhesv'
-  load_mttmp_ 'math/mt/test/lapack2/zhesv_aa'
+  load_mttmp_ 'math/mt/external/lapack2/dsysv'
+  load_mttmp_ 'math/mt/external/lapack2/dsysv_aa'
+  load_mttmp_ 'math/mt/external/lapack2/zhesv'
+  load_mttmp_ 'math/mt/external/lapack2/zhesv_aa'
 
   'X A'=. y
   'm n'=. $ X
@@ -637,7 +637,7 @@ NB. Notes:
 NB. - models LAPACK's xDRVPO
 
 testposv=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/posv'
+  load_mttmp_ 'math/mt/external/lapack2/posv'
 
   'X A'=. y
   'm n'=. $ X
@@ -720,7 +720,7 @@ NB. Notes:
 NB. - models LAPACK's xDRVPT
 
 testptsv=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/ptsv'
+  load_mttmp_ 'math/mt/external/lapack2/ptsv'
 
   'X A'=. y
   'm n'=. $ X

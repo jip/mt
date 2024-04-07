@@ -32,7 +32,7 @@ coclass 'mtbla'
 NB. =========================================================
 NB. Includes
 
-require 'math/mt/test/blas/blas'
+require 'math/mt/external/blas/blas'
 
 NB. =========================================================
 NB. Local definitions

@@ -2229,7 +2229,7 @@ NB. TODO:
 NB. - add xQRT12 test
 
 testgepf=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/geqp3'
+  load_mttmp_ 'math/mt/external/lapack2/geqp3'
 
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 

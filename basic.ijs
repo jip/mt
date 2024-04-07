@@ -1970,7 +1970,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicr_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicr_mt_ 150 200
 
-testbasicr=: 1 : 'nolog_mt_`(testbasicher_mt_@(u@{. ; (9&o. upddiag_mt_)@u))@.(=/) ,&.>~ testbasicger_mt_@(u@{. ; u@{: ; u) [ require@''math/mt/test/blas/r'''
+testbasicr=: 1 : 'nolog_mt_`(testbasicher_mt_@(u@{. ; (9&o. upddiag_mt_)@u))@.(=/) ,&.>~ testbasicger_mt_@(u@{. ; u@{: ; u) [ require@''math/mt/external/blas/r'''
 
 NB. ---------------------------------------------------------
 NB. testbasicher2
@@ -2027,7 +2027,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicr2_mt_ 200 200
 NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicr2_mt_ 250 250
 
-testbasicr2=: 1 : 'testbasicher2_mt_@(u@{. ; u@{: ; (9&o. upddiag_mt_)@u) [ require@''math/mt/test/blas/r2'''
+testbasicr2=: 1 : 'testbasicher2_mt_@(u@{. ; u@{: ; (9&o. upddiag_mt_)@u) [ require@''math/mt/external/blas/r2'''
 
 NB. ---------------------------------------------------------
 NB. testbasicsyrk
@@ -2122,7 +2122,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicrk_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicrk_mt_ 150 200
 
-testbasicrk=: 1 : 'testbasicherk_mt_@(u ; (9&o. upddiag_mt_)@u@(2 # >./)) ,&.>~ testbasicsyrk_mt_@(u ; u@(2 # >./)) [ require@''math/mt/test/blas/rk'''
+testbasicrk=: 1 : 'testbasicherk_mt_@(u ; (9&o. upddiag_mt_)@u@(2 # >./)) ,&.>~ testbasicsyrk_mt_@(u ; u@(2 # >./)) [ require@''math/mt/external/blas/rk'''
 
 NB. ---------------------------------------------------------
 NB. testbasicsyr2k
@@ -2220,7 +2220,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicrk_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicrk_mt_ 150 200
 
-testbasicr2k=: 1 : 'testbasicher2k_mt_@(u ; u ; (9&o. upddiag_mt_)@u@(2 # >./)) ,&.>~ testbasicsyr2k_mt_@(u ; u ; u@(2 # >./)) [ require@''math/mt/test/blas/r2k'''
+testbasicr2k=: 1 : 'testbasicher2k_mt_@(u ; u ; (9&o. upddiag_mt_)@u@(2 # >./)) ,&.>~ testbasicsyr2k_mt_@(u ; u ; u@(2 # >./)) [ require@''math/mt/external/blas/r2k'''
 
 NB. ---------------------------------------------------------
 NB. testbasicgemv
@@ -2362,7 +2362,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicmv_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicmv_mt_ 150 200
 
-testbasicmv=: 1 : 'nolog_mt_`(testbasictrmv_mt_@(u ; u@{.) ,&.>~ testbasichemv_mt_@((9&o. upddiag_mt_)@u ; (u ; u)@{.))@.(=/) ,&.>~ testbasicgemv_mt_@(u ; (u ; u)@(>./)) [ require@''math/mt/test/blas/mv'''
+testbasicmv=: 1 : 'nolog_mt_`(testbasictrmv_mt_@(u ; u@{.) ,&.>~ testbasichemv_mt_@((9&o. upddiag_mt_)@u ; (u ; u)@{.))@.(=/) ,&.>~ testbasicgemv_mt_@(u ; (u ; u)@(>./)) [ require@''math/mt/external/blas/mv'''
 
 NB. ---------------------------------------------------------
 NB. testbasicgemm
@@ -3344,7 +3344,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicmm_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicmm_mt_ 150 200
 
-testbasicmm=: 1 : 'testbasictrmm_mt_@(u@(2 # >./) ; u ; u) ,&.>~ testbasichemm_mt_@((9&o. upddiag_mt_)@u@(2 # >./) ; u ; u) ,&.>~ testbasicsymm_mt_@(u@(2 # >./) ; u ; u) ,&.>~ testbasicgemmt_mt_@(u@(+/\) ; u@|.@(+/\) ; u@(2 # {.)) ,&.>~ testbasicgemm_mt_@(u@(+/\) ; u@(+/\.) ; u) [ require@''math/mt/test/blis/mm'' [ require@''math/mt/test/blas/mm'''
+testbasicmm=: 1 : 'testbasictrmm_mt_@(u@(2 # >./) ; u ; u) ,&.>~ testbasichemm_mt_@((9&o. upddiag_mt_)@u@(2 # >./) ; u ; u) ,&.>~ testbasicsymm_mt_@(u@(2 # >./) ; u ; u) ,&.>~ testbasicgemmt_mt_@(u@(+/\) ; u@|.@(+/\) ; u@(2 # {.)) ,&.>~ testbasicgemm_mt_@(u@(+/\) ; u@(+/\.) ; u) [ require@''math/mt/external/blis/mm'' [ require@''math/mt/external/blas/mm'''
 
 NB. ---------------------------------------------------------
 NB. testbasictrsv
@@ -3413,7 +3413,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicsv_mt_ 200 200
 NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicsv_mt_ 250 250
 
-testbasicsv=: 1 : 'testbasictrsv_mt_@(u ; u@{.) [ require@''math/mt/test/blas/sv'''
+testbasicsv=: 1 : 'testbasictrsv_mt_@(u ; u@{.) [ require@''math/mt/external/blas/sv'''
 
 NB. ---------------------------------------------------------
 NB. testbasictrsm
@@ -3778,7 +3778,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicsm_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicsm_mt_ 150 200
 
-testbasicsm=: 1 : 'testbasictrsm_mt_@(u@(2 # >./) ; u) [ require@''math/mt/test/blis/sm'' [ require@''math/mt/test/blas/sm'''
+testbasicsm=: 1 : 'testbasictrsm_mt_@(u@(2 # >./) ; u) [ require@''math/mt/external/blis/sm'' [ require@''math/mt/external/blas/sm'''
 
 NB. ---------------------------------------------------------
 NB. testbasic

@@ -723,14 +723,14 @@ NB. - LAPACK's DORMxQ and ZUNMxQ requires A to have at least
 NB.   1 row, so Head ({.) is used when (# A) equals 0
 
 testunmq=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/dormlq'
-  load_mttmp_ 'math/mt/test/lapack2/dormql'
-  load_mttmp_ 'math/mt/test/lapack2/dormqr'
-  load_mttmp_ 'math/mt/test/lapack2/dormrq'
-  load_mttmp_ 'math/mt/test/lapack2/zunmlq'
-  load_mttmp_ 'math/mt/test/lapack2/zunmql'
-  load_mttmp_ 'math/mt/test/lapack2/zunmqr'
-  load_mttmp_ 'math/mt/test/lapack2/zunmrq'
+  load_mttmp_ 'math/mt/external/lapack2/dormlq'
+  load_mttmp_ 'math/mt/external/lapack2/dormql'
+  load_mttmp_ 'math/mt/external/lapack2/dormqr'
+  load_mttmp_ 'math/mt/external/lapack2/dormrq'
+  load_mttmp_ 'math/mt/external/lapack2/zunmlq'
+  load_mttmp_ 'math/mt/external/lapack2/zunmql'
+  load_mttmp_ 'math/mt/external/lapack2/zunmqr'
+  load_mttmp_ 'math/mt/external/lapack2/zunmrq'
 
   'A C'=. y
 
@@ -1071,9 +1071,9 @@ NB. - LAPACK's DORMRZ and ZUNMRZ requires A to have at least
 NB.   1 row, so Head ({.) is used when (# A) equals 0
 
 testunmz=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/tzrzf'
-  load_mttmp_ 'math/mt/test/lapack2/dormrz'
-  load_mttmp_ 'math/mt/test/lapack2/zunmrz'
+  load_mttmp_ 'math/mt/external/lapack2/tzrzf'
+  load_mttmp_ 'math/mt/external/lapack2/dormrz'
+  load_mttmp_ 'math/mt/external/lapack2/zunmrz'
 
   'A C'=. y
 
@@ -1294,11 +1294,11 @@ NB. - LAPACK's DORMHR and ZUNMHR requires A to have at least
 NB.   1 row, so Head ({.) is used when (# A) equals 0
 
 testunmhr=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/gehrd'
-  load_mttmp_ 'math/mt/test/lapack2/dorghr'
-  load_mttmp_ 'math/mt/test/lapack2/zunghr'
-  load_mttmp_ 'math/mt/test/lapack2/dormhr'
-  load_mttmp_ 'math/mt/test/lapack2/zunmhr'
+  load_mttmp_ 'math/mt/external/lapack2/gehrd'
+  load_mttmp_ 'math/mt/external/lapack2/dorghr'
+  load_mttmp_ 'math/mt/external/lapack2/zunghr'
+  load_mttmp_ 'math/mt/external/lapack2/dormhr'
+  load_mttmp_ 'math/mt/external/lapack2/zunmhr'
 
   'A C'=. y
 

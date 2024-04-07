@@ -618,8 +618,8 @@ NB. Notes:
 NB. - models LAPACK's xCHKGE
 
 testgetrs=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/getrf'
-  load_mttmp_ 'math/mt/test/lapack2/getrs'
+  load_mttmp_ 'math/mt/external/lapack2/getrf'
+  load_mttmp_ 'math/mt/external/lapack2/getrs'
 
   'X A'=. y
   'm n'=. $ X
@@ -775,14 +775,14 @@ NB.   difference:
 NB.   - ferr is computed, too by call to t04x
 
 testhetrs=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/dsytrf'
-  load_mttmp_ 'math/mt/test/lapack2/dsytrf_aa'
-  load_mttmp_ 'math/mt/test/lapack2/zhetrf'
-  load_mttmp_ 'math/mt/test/lapack2/zhetrf_aa'
-  load_mttmp_ 'math/mt/test/lapack2/dsytrs'
-  load_mttmp_ 'math/mt/test/lapack2/dsytrs_aa'
-  load_mttmp_ 'math/mt/test/lapack2/zhetrs'
-  load_mttmp_ 'math/mt/test/lapack2/zhetrs_aa'
+  load_mttmp_ 'math/mt/external/lapack2/dsytrf'
+  load_mttmp_ 'math/mt/external/lapack2/dsytrf_aa'
+  load_mttmp_ 'math/mt/external/lapack2/zhetrf'
+  load_mttmp_ 'math/mt/external/lapack2/zhetrf_aa'
+  load_mttmp_ 'math/mt/external/lapack2/dsytrs'
+  load_mttmp_ 'math/mt/external/lapack2/dsytrs_aa'
+  load_mttmp_ 'math/mt/external/lapack2/zhetrs'
+  load_mttmp_ 'math/mt/external/lapack2/zhetrs_aa'
 
   'X A'=. y
   'm n'=. $ X
@@ -894,8 +894,8 @@ NB. Notes:
 NB. - models LAPACK's xCHKPO
 
 testpotrs=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/potrf'
-  load_mttmp_ 'math/mt/test/lapack2/potrs'
+  load_mttmp_ 'math/mt/external/lapack2/potrf'
+  load_mttmp_ 'math/mt/external/lapack2/potrs'
 
   'X A'=. y
   'm n'=. $ X
@@ -1006,8 +1006,8 @@ NB. TODO:
 NB. - A would be sparse
 
 testpttrs=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/pttrf'
-  load_mttmp_ 'math/mt/test/lapack2/pttrs'
+  load_mttmp_ 'math/mt/external/lapack2/pttrf'
+  load_mttmp_ 'math/mt/external/lapack2/pttrs'
 
   'X A'=. y
   'm n'=. $ X
@@ -1110,7 +1110,7 @@ NB. Notes:
 NB. - models LAPACK's xCHKTR
 
 testtrtrs=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/trtrs'
+  load_mttmp_ 'math/mt/external/lapack2/trtrs'
 
   'X A'=. y
 

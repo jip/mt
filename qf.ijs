@@ -1266,10 +1266,10 @@ testgeqf=: 3 : 0
   load_mttmp_ :: ] 'math/misc/matutil'
   load_mttmp_ :: ] 'math/misc/linear'
   load_mttmp_ :: ] 'math/misc/matfacto'
-  load_mttmp_      'math/mt/test/lapack2/gelqf'
-  load_mttmp_      'math/mt/test/lapack2/geqlf'
-  load_mttmp_      'math/mt/test/lapack2/geqrf'
-  load_mttmp_      'math/mt/test/lapack2/gerqf'
+  load_mttmp_      'math/mt/external/lapack2/gelqf'
+  load_mttmp_      'math/mt/external/lapack2/geqlf'
+  load_mttmp_      'math/mt/external/lapack2/geqrf'
+  load_mttmp_      'math/mt/external/lapack2/gerqf'
 
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
@@ -1319,7 +1319,7 @@ NB. TODO:
 NB. - add xQRT12 test
 
 testtzqf=: 3 : 0
-  load_mttmp_ 'math/mt/test/lapack2/tzrzf'
+  load_mttmp_ 'math/mt/external/lapack2/tzrzf'
 
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 

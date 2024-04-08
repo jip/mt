@@ -14,11 +14,14 @@ NB. lcat      Concatenate logs
 NB. nolog     Nilad to generate neutral for test actors
 NB. tmonad    Conj. to make monad to test computational monad
 NB. tdyad     Conj. to make monad to test computational dyad
+NB. mrg       Adv. to merge arguments interleaving their
+NB.           items as determined by a list
 NB. cut3      Split list by delimiter taken from its tail
 NB. cut2      Split list by delimiter
 NB. cut       Split list by delimiter
 NB. cutl2     Split list by any delimiter
 NB. cutl      Split list by any delimiter
+NB. env       Show environment
 NB.
 NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
 NB.           Igor Zhuravlov
@@ -256,6 +259,25 @@ NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. flt staff
 
 NB. ---------------------------------------------------------
+NB. mrg
+NB.
+NB. Description:
+NB.   Adv. to merge x and y by interleaving their items as
+NB.   determined by a list m of shape x +&# y
+NB.
+NB. Examples:
+NB.    'ABC' 0 1 1 0 1 0 mrg '012'
+NB. A01B2C
+NB.    2 0 1 2 2 1 0 1 0 mrg 'ABC' , '012' , 'xyz'
+NB. xA0yz1B2C
+NB.
+NB. References:
+NB. [1] JPhrases 3B. Merge & Amend
+NB.     https://code.jsoftware.com/wiki/JPhrases/MergeAmend
+
+mrg=: 1 : '/:@/:@(m"_) { ,'
+
+NB. ---------------------------------------------------------
 NB. Notes:
 NB. - the following definitions are assumed in the examples
 NB.   below:
@@ -378,3 +400,139 @@ cutl=: -.&a:@cutl2
 
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NB. ---------------------------------------------------------
+NB. env
+NB.
+NB. Description:
+NB.   Nilad to return environment
+NB.
+NB. Syntax:
+NB.   e=. [t] env ''
+NB. where
+NB.   t - boolean, e type, optional, default is 1:
+NB.         0 = return e as a vector of boxes with data
+NB.         1 = return e as a string
+NB.   e - string or 22-vector of boxes:
+NB.          0 {:: e  - string, architecture
+NB.          1 {:: e  > 0, integer, cores
+NB.          2 {:: e  > 0, integer, maxthreads
+NB.          3 {:: e  > 0, integer, worker threads
+NB.          4..11    - 3-vector of integers >=0, threads in
+NB.                     pool#0..7:
+NB.                       (#idle,#unfinished,#threads)
+NB.         12 {:: e  ≥ 0, integer, executing thread# (0
+NB.                     means master thread)
+NB.         13..15    ≥ -1, integer, thresholds to switch
+NB.                     (+/ .*) to GEMM (built-in BLAS
+NB.                     implementation) for datatypes:
+NB.                       13 {:: e  - integer
+NB.                       14 {:: e  - floating
+NB.                       15 {:: e  - complex
+NB.         16..17    - strings about LAPACK interface:
+NB.                       16 {:: e  - library [path]file name
+NB.                       17 {:: e  - version string
+NB.         18..19    - strings about BLAS interface:
+NB.                       18 {:: e  - library [path]file name
+NB.                       19 {:: e  - version string
+NB.         20..21    - strings about BLIS interface:
+NB.                       20 {:: e  - library [path]file name
+NB.                       21 {:: e  - version string
+NB.
+NB. Application:
+NB. - create 2 threads in pool#0:
+NB.     {{0 T.0}}^:2 ''
+NB. - in pool#0 create thread for every free core:
+NB.     {{0 T.0}}^:] <: {. 8 T. ''
+NB. - destroy 2 threads in pool#0:
+NB.     {{55 T.0}}^:2 ''
+NB. - in pool#0 destroy thread for every free core:
+NB.     {{55 T.''}}^:] <: {. 8 T. ''
+NB. - set threshold for floating matrices of size 1024×1024
+NB.   or larger:
+NB.     (<. 1024^3) (9!:58) 1
+NB. - always use BLAS for any complex matrices:
+NB.     0 (9!:58) 2
+NB. - never use BLAS for any integer matrices:
+NB.     _1 (9!:58) 0
+NB. - try to load LAPACK interfaces if presented in system:
+NB.     load 'math/lapack2'
+NB. - try to load BLAS interfaces if presented in system:
+NB.     load 'math/mt/external/blas/blas'
+NB. - try to load BLIS interfaces if presented in system:
+NB.     load 'math/mt/external/blis/blis'
+NB.
+NB. Notes:
+NB. - see [1,2] about 9!:58 foreign
+NB.
+NB. References:
+NB. [1] Bill Lam. [Jprogramming] J902 beta program started
+NB.     2020-05-14 23:23:13 UTC
+NB.     https://www.jsoftware.com/pipermail/programming/2020-May/055784.html
+NB. [2] Bill Lam. [Jprogramming] J902 beta program started
+NB.     2020-05-15 00:36:53 UTC
+NB.     https://www.jsoftware.com/pipermail/programming/2020-May/055787.html
+
+env=: 1&$: :(4 : 0)
+  e=.     < 9!:56 'cpu'
+  e=. e , < 9!:56 'cores'
+  e=. e , < {: 8 T. ''
+  e=. e , < 1 T. ''
+  e=. e , < 2 T. 0
+  e=. e , < 2 T. 1
+  e=. e , < 2 T. 2
+  e=. e , < 2 T. 3
+  e=. e , < 2 T. 4
+  e=. e , < 2 T. 5
+  e=. e , < 2 T. 6
+  e=. e , < 2 T. 7
+  e=. e , < 3 T. ''
+  e=. e , < (9!:58) 0
+  e=. e , < (9!:58) 1
+  e=. e , < (9!:58) 2
+  e=. e , < (3 : 'liblapack_jlapack2_')`('n/a'"_)@.(nc@<@'liblapack_jlapack2_') ''
+  e=. e , < ver_jlapack2_ :: 'n/a' ''
+  e=. e , < (3 : 'LIB_mtbla_')`('n/a'"_)@.(nc@<@'LIB_mtbla_') ''
+  e=. e , < ver_mtbla_ :: 'n/a' ''
+  e=. e , < (3 : 'LIB_mtbli_')`('n/a'"_)@.(nc@<@'LIB_mtbli_') ''
+  e=. e , < ver_mtbli_ :: 'n/a' ''
+  if. x do.
+    tpl1=. cut3 {{)n
+Hardware
+Thresholds to switch (+/ .*) to GEMM (built-in BLAS implementation)
+(switches if threshold <= m*n*p, _1 = switch never)
+  for datatypes:
+Interfaces to external libraries (optional)
+  LAPACK
+  BLAS
+  BLIS
+}}
+    tpl2=. cut3 {{)n
+  architecture:
+  cores:
+  maxthreads:
+  worker threads:
+    #0:
+    #1:
+    #2:
+    #3:
+    #4:
+    #5:
+    #6:
+    #7:
+  executing thread# (0 means master thread):
+    integer :
+    floating:
+    complex :
+    library:
+    version:
+    library:
+    version:
+    library:
+    version:
+}}
+    e=. tpl2 (, ' ' , ":) L: 0 e          NB. merge pairs (title,value)
+    e=. tpl1 (_30 {. #: 536812763) mrg e  NB. interleave with value-less titles
+    e=. LF joinstring e                   NB. raze with LF interleaved
+  end.
+)

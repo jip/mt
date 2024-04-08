@@ -27,9 +27,8 @@ NB. testunghr  Test unghrx by square matrix
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -48,6 +47,9 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -108,7 +110,7 @@ NB. - monadic case implements LAPACK's DORGLQ, ZUNGLQ
 NB. - straightforward O(k*n^3) code:
 NB.     Q=.   k  {.   mp/ (idmat n) -"2 |. (+ {:"1 Qf) * (* +)~"0/~"1    }:"1   k  {.   Qf
 
-unglq=: ($:~ 0 _1 <./@:+ $) :(}:"1@(([ (({."1~ -@c) larfbrcfr ])  idmat      @(((] ,  +) #)~ c) appendr  ])&:>/)@([ (   (<;.1~      (0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@( idmat      @((- {.) ,  -~/@]) $))  tru1pick        @((   <./ @, 0 _1 + $) {.   ]))`((0  idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
+unglq=: ($:~ 0 _1 <./@:+ $) :(}:"1@(([ (({."1~ -@c) larfbrcfr ])  idmat      @(((] ,  +) #)~ c) appendr  ])&:>/)@([ (   (<;.1~      (0 1:`(GQNB liso4dhs  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@( idmat      @((- {.) ,  -~/@]) $))  tru1pick        @((   <./ @, 0 _1 + $) {.   ]))`((0  idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
 NB. ---------------------------------------------------------
 NB. ungql
@@ -156,7 +158,7 @@ NB. - monadic case implements LAPACK's DORGQL, ZUNGQL
 NB. - straightforward O(k*m^3) code:
 NB.     Q=. (-k) {."1 mp/ (idmat m) -"2 |. (  {.   Qf) * (* +) "0/~"1 |: }.   (-k) {."1 Qf
 
-ungql=: ($:~ _1 0 <./@:+ $) :(}.  @(([ (({.  ~   #) larfblnbc ]) (idmat~ -~/)@(((] ,~ +) c)~ #) stitcht~ ])&:>/)@([ (|.@(<;.2~ '' ; (0 1:`(GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@((idmat~ -~/)@((- {:) ,~ - /@]) $)) (tru1pick~ -~/@$)@((-@(<./)@, _1 0 + $) {."1 ]))`((-  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
+ungql=: ($:~ _1 0 <./@:+ $) :(}.  @(([ (({.  ~   #) larfblnbc ]) (idmat~ -~/)@(((] ,~ +) c)~ #) stitcht~ ])&:>/)@([ (|.@(<;.2~ '' ; (0 1:`(GQNB liso4dhs _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@((idmat~ -~/)@((- {:) ,~ - /@]) $)) (tru1pick~ -~/@$)@((-@(<./)@, _1 0 + $) {."1 ]))`((-  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
 NB. ---------------------------------------------------------
 NB. ungqr
@@ -204,7 +206,7 @@ NB. - monadic case implements LAPACK's DORGQR, ZUNGQR
 NB. - straightforward O(k*m^3) code:
 NB.     Q=.   k  {."1 mp/ (idmat m) -"2    (  {:   Qf) * (* +) "0/~"1 |: }:     k  {."1 Qf
 
-ungqr=: ($:~ _1 0 <./@:+ $) :(}:  @(([ (({.  ~ -@#) larfblnfc ])  idmat      @(((] ,~ +) c)~ #) stitchb  ])&:>/)@([ (   (<;.1~ '' ; (0 1:`(GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@( idmat      @((- {:) ,~ - /@]) $))  trl1pick        @((   <./ @, _1 0 + $) {."1 ]))`((0  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
+ungqr=: ($:~ _1 0 <./@:+ $) :(}:  @(([ (({.  ~ -@#) larfblnfc ])  idmat      @(((] ,~ +) c)~ #) stitchb  ])&:>/)@([ (   (<;.1~ '' ; (0 1:`(GQNB liso4dhs  0 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} c@]))@] , <@( idmat      @((- {:) ,~ - /@]) $))  trl1pick        @((   <./ @, _1 0 + $) {."1 ]))`((0  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
 NB. ---------------------------------------------------------
 NB. ungrq
@@ -251,7 +253,7 @@ NB. - monadic case implements LAPACK's DORGRQ, ZUNGRQ
 NB. - straightforward O(k*n^3) code:
 NB.     Q=. (-k) {.   mp/ (idmat n) -"2    (+ {."1 Qf) * (* +)~"0/~"1    }."1 (-k) {.   Qf
 
-ungrq=: ($:~ 0 _1 <./@:+ $) :(}."1@(([ (({."1~   c) larfbrcbr ]) (idmat~ -~/)@(((] ,  +) #)~ c) appendl~ ])&:>/)@([ (|.@(<;.2~      (0 1:`(GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@((idmat~ -~/)@((- {.) ,  -~/@]) $)) (trl1pick~ -~/@$)@((-@(<./)@, 0 _1 + $) {.   ]))`((-~ idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
+ungrq=: ($:~ 0 _1 <./@:+ $) :(}."1@(([ (({."1~   c) larfbrcbr ]) (idmat~ -~/)@(((] ,  +) #)~ c) appendl~ ])&:>/)@([ (|.@(<;.2~      (0 1:`(GQNB liso4dhs _1 , >:@(>. GQNB >.@%~ -&GQNX))`($~)} #@]))@] , <@((idmat~ -~/)@((- {.) ,  -~/@]) $)) (trl1pick~ -~/@$)@((-@(<./)@, 0 _1 + $) {.   ]))`((-~ idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
 NB. ---------------------------------------------------------
 NB. unglz
@@ -293,7 +295,7 @@ NB. Notes:
 NB. - straightforward O(k*n^3) code:
 NB.     Z=. (-k) {.   mp/ (idmat n) -"2 |. (+ {."1 Zf) * (* +)~"0/~"1    }."1 (-k) {.   Zf
 
-unglz=: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (<;.1~      0 1:`( GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX)                        )`($~)} #@])@] , <@(idmat~ -~/)@(,  c)) ((-@(<. #) ,  -~/@$@]) {. ]) ,.  (((0 >. -~) idmat <. ,  ]) #))`((-~ idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
+unglz=: ($:~ #) :(}."1@(larzbrcfr&:>/)@([ (   (<;.1~      0 1:`( GQNB liso4dhs  0 , >:@(>. GQNB >.@%~ -&GQNX)                        )`($~)} #@])@] , <@(idmat~ -~/)@(,  c)) ((-@(<. #) ,  -~/@$@]) {. ]) ,.  (((0 >. -~) idmat <. ,  ]) #))`((-~ idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
 NB. ---------------------------------------------------------
 NB. ungzl
@@ -340,7 +342,7 @@ NB. Notes:
 NB. - straightforward O(k*m^3) code:
 NB.     Z=.   k  {."1 mp/ (idmat m) -"2 |. (  {:   Zf) * (* +) "0/~"1 |: }:     k  {."1 Zf
 
-ungzl=: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(<;.2~ '' ; 0 1:`((GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`((1 0 $ 0)"_)@.(0 = ]))`($~)} c@])@] , <@ idmat      @(,~ #)) ((  (<. c) ,~ -~/@$@]) {. ]) , ~ (( 0        idmat <. ,~ ]) c))`((0  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
+ungzl=: ($:~ c) :(}:  @(larzblnbc&:>/)@([ (|.@(<;.2~ '' ; 0 1:`((GQNB liso4dhs _1 , >:@(>. GQNB >.@%~ -&GQNX))`((1 0 $ 0)"_)@.(0 = ]))`($~)} c@])@] , <@ idmat      @(,~ #)) ((  (<. c) ,~ -~/@$@]) {. ]) , ~ (( 0        idmat <. ,~ ]) c))`((0  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
 NB. ---------------------------------------------------------
 NB. ungzr
@@ -387,7 +389,7 @@ NB. Notes:
 NB. - straightforward O(k*m^3) code:
 NB.     Z=. (-k) {."1 mp/ (idmat m) -"2    (  {.   Zf) * (* +) "0/~"1 |: }.   (-k) {."1 Zf
 
-ungzr=: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (<;.1~ '' ; 0 1:`((GQNB dhs2liso  0 , >:@(>. GQNB >.@%~ -&GQNX))`((1 0 $ 0)"_)@.(0 = ]))`($~)} c@])@] , <@(idmat~ -~/)@(,~ #)) ((-@(<. c) ,~ - /@$@]) {. ]) ,   (((0 <. - ) idmat <. ,~ ]) c))`((-  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
+ungzr=: ($:~ c) :(}.  @(larzblnfc&:>/)@([ (   (<;.1~ '' ; 0 1:`((GQNB liso4dhs  0 , >:@(>. GQNB >.@%~ -&GQNX))`((1 0 $ 0)"_)@.(0 = ]))`($~)} c@])@] , <@(idmat~ -~/)@(,~ #)) ((-@(<. c) ,~ - /@$@]) {. ]) ,   (((0 <. - ) idmat <. ,~ ]) c))`((-  idmat ,~) <:@#)@.(0 e. (, _1 0 + $)))
 
 NB. ---------------------------------------------------------
 NB. ungrz
@@ -429,7 +431,7 @@ NB. Notes:
 NB. - straightforward O(k*n^3) code:
 NB.     Z=.   k  {.   mp/ (idmat n) -"2    (+ {:"1 Zf) * (* +)~"0/~"1    }:"1   k  {.   Zf
 
-ungrz=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(<;.2~      0 1:`((GQNB dhs2liso _1 , >:@(>. GQNB >.@%~ -&GQNX))`((0 1 $ 0)"_)@.(0 = ]))`($~)} #@])@] , <@ idmat      @(,  c)) ((  (<. #) ,  - /@$@]) {. ]) ,.~ (( 0        idmat <. ,  ]) #))`((0  idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
+ungrz=: ($:~ #) :(}:"1@(larzbrcbr&:>/)@([ (|.@(<;.2~      0 1:`((GQNB liso4dhs _1 , >:@(>. GQNB >.@%~ -&GQNX))`((0 1 $ 0)"_)@.(0 = ]))`($~)} #@])@] , <@ idmat      @(,  c)) ((  (<. #) ,  - /@$@]) {. ]) ,.~ (( 0        idmat <. ,  ]) #))`((0  idmat , ) <:@c)@.(0 e. (, 0 _1 + $)))
 
 NB. ---------------------------------------------------------
 NB. unghrl
@@ -453,7 +455,7 @@ NB.   NB. I = Q * Q^H
 NB.   (idmat@# -: clean@(mp  ct))@unghrl HQf
 NB.
 NB. Notes:
-NB. - instead of using h and s parameters, the following
+NB. - instead of using h and s arguments, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i)',i=n-1:0} ,
 NB.   where
@@ -486,7 +488,7 @@ NB.   (idmat@# -: clean@(mp~ ct))@unghru HQf
 NB.
 NB. Notes:
 NB. - models LAPACK's DORGHR, ZUNGHR
-NB. - instead of using h and s parameters, the following
+NB. - instead of using h and s arguments, the following
 NB.   product is really calculating:
 NB.     Q = Π{H(i),i=0:n-1} ,
 NB.   where
@@ -503,24 +505,28 @@ NB. ---------------------------------------------------------
 NB. testungq
 NB.
 NB. Description:
-NB.   Test ungxx by general matrix
+NB.   Test:
+NB.   - DORGxx ZUNGxx (math/lapack2 addon)
+NB.   - ungxx (math/mt addon)
+NB.   by general matrix
 NB.
 NB. Syntax:
-NB.   testungq A
+NB.   log=. testungq A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testungq=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorglq'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorgql'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorgqr'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorgrq'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zunglq'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zungql'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zungqr'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zungrq'
+  load_mttmp_ 'math/mt/external/lapack2/dorglq'
+  load_mttmp_ 'math/mt/external/lapack2/dorgql'
+  load_mttmp_ 'math/mt/external/lapack2/dorgqr'
+  load_mttmp_ 'math/mt/external/lapack2/dorgrq'
+  load_mttmp_ 'math/mt/external/lapack2/zunglq'
+  load_mttmp_ 'math/mt/external/lapack2/zungql'
+  load_mttmp_ 'math/mt/external/lapack2/zungqr'
+  load_mttmp_ 'math/mt/external/lapack2/zungrq'
 
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ks=. ~. 0 1 , (,~ <.@-:) <./ 'm n'=. $ y
 
@@ -532,29 +538,31 @@ testungq=: 3 : 0
   QfR=. geqrf Atall
   RQf=. gerqf Awide
 
+  log=. nolog ''
+
   NB. LAPACK, real datatype
 
   ik=. 0
   while. ik < # ks do.
-    ('dorglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('dorglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`nan`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('dorgql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('dorgql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`nan`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('dorgqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('dorgqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`nan`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('dorgrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('dorgrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`nan`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
 
@@ -562,25 +570,25 @@ testungq=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    ('zunglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('zunglq_mttmp_' tmonad ((   3&{::  (}:"1@] ; ({. {:"1)) 2&{::)`]`(rcond"_)`nan`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('zungql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('zungql_mttmp_' tmonad ((-@(3&{::) (}.  @] ; ({. {.  )) 2&{::)`]`(rcond"_)`nan`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('zungqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('zungqr_mttmp_' tmonad ((   3&{::  (}:  @] ; ({. {:  )) 2&{::)`]`(rcond"_)`nan`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
 
   ik=. 0
   while. ik < # ks do.
-    ('zungrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('zungrq_mttmp_' tmonad ((-@(3&{::) (}."1@] ; ({. {."1)) 2&{::)`]`(rcond"_)`nan`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
 
@@ -588,35 +596,35 @@ testungq=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    ('unglq' tdyad ((#@(0&{::))`(   3&{::  {.    2&{:: )`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; ik { ks
+    log=. log lcat ('unglq' tdyad ((#@(0&{::))`(   3&{::  {.    2&{:: )`]`(rcond"_)`nan`lqt02)) Awide ; normw ; LQf ; ik { ks
     ik=. >: ik
   end.
-  ('unglq' tmonad ((2&{::)`]`(rcond"_)`(_."_)`lqt02)) Awide ; normw ; LQf ; m
+  log=. log lcat ('unglq' tmonad ((2&{::)`]`(rcond"_)`nan`lqt02)) Awide ; normw ; LQf ; m
 
   ik=. 0
   while. ik < # ks do.
-    ('ungql' tdyad ((c@(0&{::))`(-@(3&{::) {."1 (2&{::))`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; ik { ks
+    log=. log lcat ('ungql' tdyad ((c@(0&{::))`(-@(3&{::) {."1 (2&{::))`]`(rcond"_)`nan`qlt02)) Atall ; normt ; QfL ; ik { ks
     ik=. >: ik
   end.
-  ('ungql' tmonad ((2&{::)`]`(rcond"_)`(_."_)`qlt02)) Atall ; normt ; QfL ; n
+  log=. log lcat ('ungql' tmonad ((2&{::)`]`(rcond"_)`nan`qlt02)) Atall ; normt ; QfL ; n
 
   ik=. 0
   while. ik < # ks do.
-    ('ungqr' tdyad ((c@(0&{::))`(   3&{::  {."1 (2&{::))`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; ik { ks
+    log=. log lcat ('ungqr' tdyad ((c@(0&{::))`(   3&{::  {."1 (2&{::))`]`(rcond"_)`nan`qrt02)) Atall ; normt ; QfR ; ik { ks
     ik=. >: ik
   end.
-  ('ungqr' tmonad ((2&{::)`]`(rcond"_)`(_."_)`qrt02)) Atall ; normt ; QfR ; n
+  log=. log lcat ('ungqr' tmonad ((2&{::)`]`(rcond"_)`nan`qrt02)) Atall ; normt ; QfR ; n
 
   ik=. 0
   while. ik < # ks do.
-    ('ungrq' tdyad ((#@(0&{::))`(-@(3&{::) {.    2&{:: )`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; ik { ks
+    log=. log lcat ('ungrq' tdyad ((#@(0&{::))`(-@(3&{::) {.    2&{:: )`]`(rcond"_)`nan`rqt02)) Awide ; normw ; RQf ; ik { ks
     ik=. >: ik
   end.
-  ('ungrq' tmonad ((2&{::)`]`(rcond"_)`(_."_)`rqt02)) Awide ; normw ; RQf ; m
+  log=. log lcat ('ungrq' tmonad ((2&{::)`]`(rcond"_)`nan`rqt02)) Awide ; normw ; RQf ; m
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -626,12 +634,13 @@ NB. Description:
 NB.   Test ungxx by trapezoidal matrix
 NB.
 NB. Syntax:
-NB.   testungz A
+NB.   log=. testungz A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testungz=: 3 : 0
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   ks=. ~. 0 1 , (,~ <.@-:) <./ 'm n'=. $ y
 
@@ -643,51 +652,55 @@ testungz=: 3 : 0
   ZfR=. tzzrf Atall
   RZf=. tzrzf Awide
 
-  ik=. 0
-  while. ik < # ks do.
-    ('unglz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`(_."_)`lzt02)) Awide ; normw ; LZf ; ik { ks
-    ik=. >: ik
-  end.
-  ('unglz' tmonad ((2&{::)`]`(rcond"_)`(_."_)`lzt02)) Awide ; normw ; LZf ; m
+  log=. nolog ''
 
   ik=. 0
   while. ik < # ks do.
-    ('ungzl' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`(_."_)`zlt02)) Atall ; normt ; ZfL ; ik { ks
+    log=. log lcat ('unglz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`nan`lzt02)) Awide ; normw ; LZf ; ik { ks
     ik=. >: ik
   end.
-  ('ungzl' tmonad ((2&{::)`]`(rcond"_)`(_."_)`zlt02)) Atall ; normt ; ZfL ; n
+  log=. log lcat ('unglz' tmonad ((2&{::)`]`(rcond"_)`nan`lzt02)) Awide ; normw ; LZf ; m
 
   ik=. 0
   while. ik < # ks do.
-    ('ungzr' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`(_."_)`zrt02)) Atall ; normt ; ZfR ; ik { ks
+    log=. log lcat ('ungzl' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`nan`zlt02)) Atall ; normt ; ZfL ; ik { ks
     ik=. >: ik
   end.
-  ('ungzr' tmonad ((2&{::)`]`(rcond"_)`(_."_)`zrt02)) Atall ; normt ; ZfR ; n
+  log=. log lcat ('ungzl' tmonad ((2&{::)`]`(rcond"_)`nan`zlt02)) Atall ; normt ; ZfL ; n
 
   ik=. 0
   while. ik < # ks do.
-    ('ungrz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`(_."_)`rzt02)) Awide ; normw ; RZf ; ik { ks
+    log=. log lcat ('ungzr' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`nan`zrt02)) Atall ; normt ; ZfR ; ik { ks
     ik=. >: ik
   end.
-  ('ungrz' tmonad ((2&{::)`]`(rcond"_)`(_."_)`rzt02)) Awide ; normw ; RZf ; m
+  log=. log lcat ('ungzr' tmonad ((2&{::)`]`(rcond"_)`nan`zrt02)) Atall ; normt ; ZfR ; n
 
-  EMPTY
+  ik=. 0
+  while. ik < # ks do.
+    log=. log lcat ('ungrz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`nan`rzt02)) Awide ; normw ; RZf ; ik { ks
+    ik=. >: ik
+  end.
+  log=. log lcat ('ungrz' tmonad ((2&{::)`]`(rcond"_)`nan`rzt02)) Awide ; normw ; RZf ; m
 )
 
 NB. ---------------------------------------------------------
 NB. testunghr
 NB.
 NB. Description:
-NB.   Test unghrx by square matrix
+NB.   Test:
+NB.   - DORGHR ZUNGHR (math/lapack2 addon)
+NB.   - unghrx (math/mt addon)
+NB.   by square matrix
 NB.
 NB. Syntax:
-NB.   testunghr A
+NB.   log=. testunghr A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testunghr=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dorghr'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zunghr'
+  load_mttmp_ 'math/mt/external/lapack2/dorghr'
+  load_mttmp_ 'math/mt/external/lapack2/zunghr'
 
   'rcondl rcondu'=. (geconi , gecon1) y
 
@@ -702,16 +715,16 @@ testunghr=: 3 : 0
   unt01l=: (normi unt01 (mp  ct))@]
   unt01u=: (norm1 unt01 (mp~ ct))@]
 
-  ('dorghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
-  ('zunghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=.          ('dorghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=. log lcat ('zunghr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::))`]`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu ; HuQf
 
-  ('unghrl'        tmonad ((                      2&{:: )`]`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml ; HlQf
-  ('unghru'        tmonad ((                      2&{:: )`]`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu ; HuQf
+  log=. log lcat ('unghrl'        tmonad ((                      2&{:: )`]`(rcondl"_)`nan`(hst01l >. unt01l))) y ; norml ; HlQf
+  log=. log lcat ('unghru'        tmonad ((                      2&{:: )`]`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu ; HuQf
 
   coerase < 'mttmp'
   erase 'hst01l hst01u unt01l unt01u'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -722,23 +735,21 @@ NB.   Adv. to make verb to test ungxxx by matrix of generator
 NB.   and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testgq
+NB.   log=. (mkmat testgq) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testgq_mt_ 200 150
+NB.     log=. ?@$&0 testgq_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testgq_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testgq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testgq_mt_ 150 200
 
-testgq=: 1 : 'EMPTY [ (testunghr_mt_^:(=/@$) [ testungz_mt_ [ testungq_mt_)@u'
+testgq=: 1 : '(nolog_mt_`testunghr_mt_@.(=/@$) ,&.>~ testungz_mt_ ,&.>~ testungq_mt_)@u'

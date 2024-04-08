@@ -19,9 +19,8 @@ NB.            definite tridiagonal matrix
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.12.0 2021-02-01
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -40,6 +39,9 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -70,7 +72,7 @@ NB.               Hermitian (symmetric), the bottom right
 NB.               part of A
 NB.   lti       - (n-i)-vector, which is defined as:
 NB.                 lti=. ti 0} li
-NB.   t0i       - i-vector, float, leading elements of main
+NB.   t0i       - i-vector, real, leading elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i,n-1))-vector, leading elements
 NB.               of subdiagonal of T
@@ -82,7 +84,7 @@ NB.               strict upper triangle of subH00^H, and
 NB.               subA11upd (see layout 1 below)
 NB.   lto       - max(0,n-i-TRFNB)-vector, aimed to be lti at
 NB.               the next call from hetrfpl
-NB.   t0o       - min(n,i+TRFNB)-vector, float, leading
+NB.   t0o       - min(n,i+TRFNB)-vector, real, leading
 NB.               elements of main diagonal of T
 NB.   t1o       - min(n-1,i+TRFNB)-vector, leading elements
 NB.               of subdiagonal of T
@@ -112,10 +114,11 @@ NB.                 subH=. subL1 mp subT
 NB.   subT      - (n-i)×(n-i)-matrix, the Hermitian
 NB.               (symmetric) tridiagonal, being bottom right
 NB.               part of T
-NB.   i         ∊ {(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's 1st row
+NB.   i         ∈ {(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's 1st row
 NB.               and column within A
 NB.   A         - n×n-matrix, the Hermitian (symmetric)
-NB.   L1        - n×n-matrix, the unit lower triangular
+NB.   L1        - n×n-matrix, the unit lower triangular (unit
+NB.               diagonal is not stored)
 NB.   T         - n×n-matrix, the Hermitian (symmetric)
 NB.               tridiagonal
 NB.
@@ -285,15 +288,15 @@ lahefpl=: (3 : 0)^:(TRFNB<.#@(0&{::))
   'ip A lt t0 t1'=. y
   w=. lt ((-~&# { ]) ((}.~ #) - ({.~ #) mp ]) ((-~,-@[)&# {. ])) A
   A=. (w,:lt) ((0 lisoE),:(0 lisoS))&c} A
-  w=. 0 (9&o.) upd w - lt (({.@[ * +@((_1 lisoS)&# ({,) ])) :: 0:) A
+  w=. (9&o.&.(0&{)) w - lt ((({.@[) * +@((_1 lisoS)&# ({,) ])) :: 0) A
   lt=. lt (+@}.@] - ((* }.)~ {.)) w
   dip=. (liofmax (-@] <@, -) #) lt
-  ip=. dip C. :: ] ip
+  ip=. dip (C. :: ]) ip
   A=. dip fp :: ] A
-  lt=. dip C. :: ] lt
-  lt=. 0 ({`[`(] % {))} :: ] lt
+  lt=. dip (C. :: ]) lt
+  lt=. 0 (({`[`(] % {))} :: ]) lt
   t0=. t0 , {. w
-  t1=. t1 , 0 { :: ] lt
+  t1=. t1 , 0 ({ :: ]) lt
   ip ; A ; lt ; t0 ; t1
 )
 
@@ -316,7 +319,7 @@ NB.               Hermitian (symmetric), the top left part of
 NB.               A
 NB.   uti       - (n+i+1)-vector, which is defined as:
 NB.                 uti=. ti _1} ui
-NB.   t0i       - (i+1)-vector, float, tail elements of main
+NB.   t0i       - (i+1)-vector, real, tail elements of main
 NB.               diagonal of T
 NB.   t1i       - max(0,min(i+1,n-1))-vector, tail elements
 NB.               of superdiagonal of T
@@ -328,7 +331,7 @@ NB.               strict lower triangle of subH11^H, and
 NB.               subA00upd (see layout 1 below)
 NB.   uto       - max(0,n+i+1-TRFNB)-vector, aimed to be uti
 NB.               at the next call from hetrfpu
-NB.   t0o       - min(n,i+1+TRFNB)-vector, float, tail
+NB.   t0o       - min(n,i+1+TRFNB)-vector, real, tail
 NB.               elements of main diagonal of T
 NB.   t1o       - min(n-1,i+1+TRFNB)-vector, tail elements of
 NB.               superdiagonal of T
@@ -358,10 +361,11 @@ NB.                 subH=. subU1 mp subT
 NB.   subT      - (n+i+1)×(n+i+1)-matrix, the Hermitian
 NB.               (symmetric) tridiagonal, being top left
 NB.               part of T
-NB.   i         ∊ {_1-(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's last
+NB.   i         ∈ {_1-(0:⌈n/TRFNB⌉)*TRFNB}, lIO subA's last
 NB.               row and column within A
 NB.   A         - n×n-matrix, the Hermitian (symmetric)
-NB.   U1        - n×n-matrix, the unit upper triangular
+NB.   U1        - n×n-matrix, the unit upper triangular (unit
+NB.               diagonal is not stored)
 NB.   T         - n×n-matrix, the Hermitian (symmetric)
 NB.               tridiagonal
 NB.
@@ -527,15 +531,15 @@ lahefpu=: (3 : 0)^:(TRFNB<.#@(0&{::))
   'ip A ut t0 t1'=. y
   w=. ut ((<:@-&# { ]) (({.~ c) - (}.~ c) mp ]) ((-,[)&# {. ])) A
   A=. (ut,:w) ((0 lisoN),:(0 lisoW))&c} A
-  w=. _1 (9&o.) upd w - ut (({:@[ * +@((1 lisoN)&# ({,) ])) :: 0:) A
+  w=. (9&o.&.(_1&{)) w - ut ((({:@[) * +@((1 lisoN)&# ({,) ])) :: 0) A
   ut=. ut (+@}:@] - ((* }:)~ {:)) w
-  dip=. (<:@(1>.#) <@, liolmax) ut
-  ip=. dip C. :: ] ip
+  dip=. ((<:@(1>.#)) (<@,) liolmax) ut
+  ip=. dip (C. :: ]) ip
   A=. dip fp :: ] A
-  ut=. dip C. :: ] ut
-  ut=. _1 ({`[`(] % {))} :: ] ut
+  ut=. dip (C. :: ]) ut
+  ut=. _1 (({`[`(] % {))} :: ]) ut
   t0=. ({: w) , t0
-  t1=. (_1 { :: ] ut) , t1
+  t1=. (_1 ({ :: ]) ut) , t1
   ip ; A ; ut ; t0 ; t1
 )
 
@@ -561,6 +565,7 @@ NB.         unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
 NB.   L   - m×min(m,n)-matrix, the lower trapezoidal
 NB.   U1  - min(m,n)×n-matrix, the unit upper trapezoidal
+NB.         (unit diagonal is not stored)
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                       L's partitioning:
@@ -573,9 +578,9 @@ NB.     m-k (      U1bb )    ( U1b )            m-k ( Lba     LbbU1bb )
 NB.           k    n-k         n                      k       n-k
 NB. where
 NB.   LaaU1aa - Laa and U1aa combined, U1aa's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.   LbbU1bb - Lbb and U1bb combined, U1bb's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -664,7 +669,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: clean p {"1 L mp U1
 NB.   A -: clean p C."1 L mp U1
 NB.   A -: clean ip C.^:_1"1 L mp U1
@@ -672,8 +677,8 @@ NB.   A -: clean L mp U1 mp iP         NB. apply p to columns
 NB. where
 NB.   'ip LU1'=. getrflu1p A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   L=. trl LU1
 NB.   U1=. tru1 LU1
 
@@ -683,17 +688,17 @@ getrflu1p=: 3 : 0
     (i. n) ; y
   elseif. 1 = m do.
     dip=. < 0 , liofmax {. y
-    ip=. dip C. :: ] i. n
-    y=. ((] 0:} %) 0&({,)) dip C."1 :: ] y
+    ip=. dip (C. :: ]) i. n
+    y=. ((] 0:} %) 0&({,)) dip (C."1 :: ]) y
     ip ; y
   else.
     k=. n (<. >.@-:) m
     'ip LaaU1a'=. getrflu1p k {. y
-    y=. ip C."1 k }. y
+    y=. ip (C."1) k }. y
     Lba=. LaaU1a trsmrunu&(k&({."1)) y
     'ipb LbbU1bb'=. getrflu1p y (- Lba&mp)&(k&(}."1)) LaaU1a
     dipb=. (i. k) , (k + ipb)
-    (dipb C. ip) ; (dipb C."1 LaaU1a) , (Lba ,. LbbU1bb)
+    (dipb C. ip) ; (dipb (C."1) LaaU1a) , (Lba ,. LbbU1bb)
   end.
 )
 
@@ -715,6 +720,7 @@ NB.         the strict lower triangle contains L1 without
 NB.         unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
 NB.   L1  - m×min(m,n)-matrix, the unit lower trapezoidal
+NB.         (unit diagonal is not stored)
 NB.   U   - min(m,n)×n-matrix, the upper trapezoidal
 NB.
 NB. Storage layout:
@@ -728,9 +734,9 @@ NB.     m-k ( L1ab L1bb )                           m-k ( L1ab    L1bbUbb )
 NB.           k    n-k         k   n-k                    k       n-k
 NB. where
 NB.   L1aaUaa - L1aa and Uaa combined, L1aa's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.   L1bbUbb - L1bb and Ubb combined, L1bb's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -819,7 +825,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: clean p { L1 mp U
 NB.   A -: clean p C. L1 mp U
 NB.   A -: clean ip C.^:_1 L1 mp U
@@ -827,8 +833,8 @@ NB.   A -: clean P mp L1 mp U
 NB. where
 NB.   'ip L1U'=. getrfpl1u A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   L1=. trl1 L1U
 NB.   U=. tru L1U
 NB.
@@ -842,12 +848,12 @@ getrfpl1u=: 3 : 0
   elseif. 1 = n do.
     dip=. < 0 , liofmax y
     ip=. dip C. :: ] i. m
-    y=. ((] 0:} %) 0&({,)) dip C. :: ] y
+    y=. ((] 0:} %) 0&({,)) dip (C. :: ]) y
     ip ; y
   else.
     k=. m (<. >.@-:) n
-    'pi L1aUaa'=. getrfpl1u k {."1 y
-    y=. pi C. k }."1 y
+    'pi L1aUaa'=. getrfpl1u k ({."1) y
+    y=. pi C. k (}."1) y
     Uab=. L1aUaa trsmllnu&(k&{.) y
     'ipb L1bbUbb'=. getrfpl1u y (- mp&Uab)&(k&}.) L1aUaa
     dipb=. (i. k) , (k + ipb)
@@ -874,6 +880,7 @@ NB.         unit diagonal
 NB.   P   - n×n-matrix, rows permutation of A
 NB.   L   - m×min(m,n)-matrix, the lower trapezoidal
 NB.   U1  - min(m,n)×n-matrix, the unit upper trapezoidal
+NB.         (unit diagonal is not stored)
 NB.
 NB. Storage layout:
 NB.   A's partitioning:                           L's partitioning:
@@ -886,9 +893,9 @@ NB.     k   (      U1bb )                           k   ( Lab     U1bbLbb )
 NB.           n-k  k           n-k k                      n-k       k
 NB. where
 NB.   U1aaLaa - U1aa and Laa combined, U1aa's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.   U1bbLbb - U1bb and Lbb combined, U1bb's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -977,7 +984,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: clean p { U1 mp L
 NB.   A -: clean p C. U1 mp L
 NB.   A -: clean ip C.^:_1 U1 mp L
@@ -985,8 +992,8 @@ NB.   A -: clean P mp U1 mp L
 NB. where
 NB.   'ip U1L'=. getrfpu1l A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   U1=. (tru1~ -~/@$) U1L
 NB.   L=. (trl~ -~/@$) U1L
 
@@ -996,13 +1003,13 @@ getrfpu1l=: 3 : 0
     (i. m) ; y
   elseif. 1 = n do.
     dip=. < _1 , liolmax y
-    ip=. dip C. :: ] i. m
-    y=. ((] _1:} %) _1&({,)) dip C. :: ] y
+    ip=. dip (C. :: ]) i. m
+    y=. ((] _1:} %) _1&({,)) dip (C. :: ]) y
     ip ; y
   else.
     k=. m (<. >.@-:) n
-    'ip U1bLbb'=. getrfpu1l (-k) {."1 y
-    y=. ip C. (-k) }."1 y
+    'ip U1bLbb'=. getrfpu1l (-k) ({."1) y
+    y=. ip C. (-k) (}."1) y
     Lab=. U1bLbb trsmlunu&((-k)&{.) y
     'ipa U1aaLaa'=. getrfpu1l y (- mp&Lab)&((-k)&}.) U1bLbb
     dipa=. ipa , ((m-k) + i. k)
@@ -1028,6 +1035,7 @@ NB.         the strict lower triangle contains L1 without
 NB.         unit diagonal
 NB.   P   - n×n-matrix, columns permutation of A
 NB.   L1  - m×min(m,n)-matrix, the unit lower trapezoidal
+NB.         (unit diagonal is not stored)
 NB.   U   - min(m,n)×n-matrix, the upper trapezoidal
 NB.
 NB. Storage layout:
@@ -1041,9 +1049,9 @@ NB.     k   ( L1ba L1bb )    ( L1b )            k   ( L1ba    UbbL1bb )
 NB.           n-k  k           n                      n-k     k
 NB. where
 NB.   UaaL1aa - Uaa and L1aa combined, L1aa's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.   UbbL1bb - Ubb and L1bb combined, L1bb's unit diagonal
-NB.             not stored
+NB.             is not stored
 NB.
 NB. Algorithm:
 NB.   In: A
@@ -1132,7 +1140,7 @@ NB.
 NB. Assertions:
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: clean p {"1 U mp L1
 NB.   A -: clean p C."1 U mp L1
 NB.   A -: clean ip C.^:_1"1 U mp L1
@@ -1140,8 +1148,8 @@ NB.   A -: clean U mp L1 mp iP         NB. apply p to columns
 NB. where
 NB.   'ip UL1'=. getrful1p A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   U=. (tru~ -~/@$) UL1
 NB.   L1=. (trl1~ -~/@$) UL1
 
@@ -1151,8 +1159,8 @@ getrful1p=: 3 : 0
     (i. n) ; y
   elseif. 1 = m do.
     dip=. < _1 , liolmax {. y
-    ip=. dip C. :: ] i. n
-    y=. ((] _1:} %) _1&({,)) dip C."1 :: ] y
+    ip=. dip (C. :: ]) i. n
+    y=. ((] _1:} %) _1&({,)) dip (C."1 :: ]) y
     ip ; y
   else.
     k=. n (<. >.@-:) m
@@ -1161,7 +1169,7 @@ getrful1p=: 3 : 0
     Uab=. UbbL1b trsmrlnu&((-k)&({."1)) y
     'ipa UaaL1aa'=. getrful1p y (- Uab&mp)&((-k)&(}."1)) UbbL1b
     dipa=. ipa , ((n-k) + i. k)
-    (dipa C."1 ip) ; (UaaL1aa ,. Uab) , (dipa C."1 UbbL1b)
+    (dipa C."1 ip) ; (UaaL1aa ,. Uab) , (dipa (C."1) UbbL1b)
   end.
 )
 
@@ -1181,7 +1189,8 @@ NB. where
 NB.   A  - n×n-matrix, the Hermitian (symmetric)
 NB.   ip - n-vector of integers, the full inversed
 NB.        permutation of A
-NB.   L1 - n×n-matrix, the unit lower triangular
+NB.   L1 - n×n-matrix, the unit lower triangular (unit
+NB.        diagonal is not stored)
 NB.   T  - n×n-matrix, the Hermitian (symmetric) tridiagonal
 NB.   P  - n×n-matrix, the full permutation of A
 NB.
@@ -1239,8 +1248,8 @@ NB.   A -: clean ip fp^:_1 L1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) L1 (mp mp ct@[) T
 NB. where
 NB.   'ip L1 T'=. hetrfpl A
-NB.   iP=. p2P ip
-NB.   P=. ip2P ip
+NB.   iP=. P4p ip
+NB.   P=. P4ip ip
 NB.
 NB. Notes:
 NB. - models LAPACK's DSYTRF_AA('L') and ZHETRF_AA('L')
@@ -1257,7 +1266,7 @@ NB. - T would be sparse
 hetrfpl=: 3 : 0
   n=. # y
   ip=. i. n
-  L1=. 0 {."1 y
+  L1=. 0 ({."1) y
   lt=. n # 0
   t0=. t1=. i. 0
   i=. 0
@@ -1267,7 +1276,7 @@ hetrfpl=: 3 : 0
     ip=. dip C. ip
     subL1=. trl1 (_,TRFNB) rt y
     L1=. (dip C. L1) stitchb subL1
-    y=. ((2 # TRFNB) }. y) - (((TRFNB }. subL1) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 { :: ] lt) * (1 (0}) :: ] lt)) */ + (lt ((_1 lisoS)&# ({,) ]) y))
+    y=. ((2 # TRFNB) }. y) - (((TRFNB }. subL1) mp (TRFNB ((((0<.-)#),[) }. ]) y)) + ((0 ({ :: ]) lt) * (1 (0} :: ]) lt)) */ + (lt ((_1 lisoS)&# ({,) ]) y))
     i=. TRFNB + i
   end.
   T=. t1 (((setdiag~ ;&_1) (setdiag~ + ; 1:) ])~ diagmat) t0
@@ -1290,7 +1299,8 @@ NB. where
 NB.   A  - n×n-matrix, the Hermitian (symmetric)
 NB.   ip - n-vector of integers, the full inversed
 NB.        permutation of A
-NB.   U1 - n×n-matrix, the unit upper triangular
+NB.   U1 - n×n-matrix, the unit upper triangular (unit
+NB.        diagonal is not stored)
 NB.   T  - n×n-matrix, the Hermitian (symmetric) tridiagonal
 NB.   P  - n×n-matrix, the full permutation of A
 NB.
@@ -1348,8 +1358,8 @@ NB.   A -: clean ip fp^:_1 U1 (mp mp ct@[) T
 NB.   A -: clean P (mp mp |:@[) U1 (mp mp ct@[) T
 NB. where
 NB.   'ip U1 T'=. hetrfpu A
-NB.   iP=. p2P ip
-NB.   P=. ip2P ip
+NB.   iP=. P4p ip
+NB.   P=. P4ip ip
 NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
@@ -1363,7 +1373,7 @@ NB. - T would be sparse
 hetrfpu=: 3 : 0
   n=. # y
   ip=. i. n
-  U1=. 0 {."1 y
+  U1=. 0 ({."1) y
   ut=. n # 0
   t0=. t1=. i. 0
   i=. _1
@@ -1373,7 +1383,7 @@ hetrfpu=: 3 : 0
     ip=. dip C. ip
     subU1=. (tru1~ -~/@$) (_,-TRFNB) rt y
     U1=. subU1 stitcht (dip C. U1)
-    y=. ((2 # -TRFNB) }. y) - ((((-TRFNB) }. subU1) mp ((-TRFNB) ((((0>.+)#),[) }. ]) y)) + ((_1 { :: ] ut) * (1 (_1}) :: ] ut)) */ + (ut ((1 lisoN)&# ({,) ]) y))
+    y=. ((2 # -TRFNB) }. y) - ((((-TRFNB) }. subU1) mp ((-TRFNB) ((((0>.+)#),[) }. ]) y)) + ((_1 ({ :: ]) ut) * (1 (_1} :: ]) ut)) */ + (ut ((1 lisoN)&# ({,) ]) y))
     i=. i - TRFNB
   end.
   T=. t1 (((setdiag~ ;&1) (setdiag~ + ; _1:) ])~ diagmat) t0
@@ -1627,42 +1637,46 @@ NB. testgetrf
 NB.
 NB. Description:
 NB.   Test:
+NB.   - 128!:10 (built-in)
 NB.   - lud (math/misc addon)
 NB.   - xGETRF (math/lapack2 addon)
 NB.   - getrfxxxx (math/mt addon)
 NB.   by general matrix
 NB.
 NB. Syntax:
-NB.   testgetrf A
+NB.   log=. testgetrf A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgetrf=: 3 : 0
-  load        :: ] 'numeric'
+  require     :: ] 'numeric'
   load_mttmp_ :: ] 'math/misc/mathutil'
   load_mttmp_ :: ] 'math/misc/makemat'
   load_mttmp_ :: ] 'math/misc/matutil'
   load_mttmp_ :: ] 'math/misc/linear'
   load_mttmp_ :: ] 'math/misc/matfacto'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/getrf'
+  load_mttmp_      'math/mt/external/lapack2/getrf'
 
-  'rcondl rcondu'=. (_. _."_)`(geconi , gecon1)@.(=/@$) y  NB. meaninigful for square matrices only
+  'rcondl rcondu'=. (2 # nan)`(geconi , gecon1)@.(=/@$) y  NB. meaninigful for square matrices only
 
   'norml normu'=. (normi , norm1) y
 
-  ('lud_mttmp_'    tmonad ((0&{::)`(ip2P^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  log=.          ('128!:10'       tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
 
-  ('dgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
-  ('zgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
+  log=. log lcat ('lud_mttmp_'    tmonad ((0&{::)`(P4ip^:_1@(2&{::) C. 0&{:: mp 1&{::                     )`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
 
-  ('getrflu1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))`(rcondl"_)`(_."_)`(normi get01 #))) y ; norml
-  ('getrfpl1u'     tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
-  ('getrfpu1l'     tmonad ((0&{::)`(0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))`(rcondu"_)`(_."_)`(norm1 get01 c))) y ; normu
-  ('getrful1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))`(rcondl"_)`(_."_)`(normi get01 #))) y ; norml
+  log=. log lcat ('dgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
+  log=. log lcat ('zgetrf_mttmp_' tmonad ((0&{::)`(((C.~ makeper_jlapack2_)~ trl1 mp tru)~&>/             )`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
+
+  log=. log lcat ('getrflu1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ( trl          mp  tru1        )@(1&{::))`(rcondl"_)`nan`(normi get01 #))) y ; norml
+  log=. log lcat ('getrfpl1u'     tmonad ((0&{::)`(0&{:: C.^:_1   ( trl1         mp  tru         )@(1&{::))`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
+  log=. log lcat ('getrfpu1l'     tmonad ((0&{::)`(0&{:: C.^:_1   ((tru1~ -~/@$) mp (trl ~ -~/@$))@(1&{::))`(rcondu"_)`nan`(norm1 get01 c))) y ; normu
+  log=. log lcat ('getrful1p'     tmonad ((0&{::)`(0&{:: C.^:_1"1 ((tru ~ -~/@$) mp (trl1~ -~/@$))@(1&{::))`(rcondl"_)`nan`(normi get01 #))) y ; norml
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1676,19 +1690,20 @@ NB.   - hetrfpx (math/mt addon)
 NB.   by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testhetrf A
+NB.   log=. testhetrf A
 NB. where
-NB.   A - n×n-matrix, the Hermitian
+NB.   A   - n×n-matrix, the Hermitian
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Notes:
 NB. - no berrA calc for LAPACK's DSYTRF and ZHETRF yet since
 NB.   its output is intricate
 
 testhetrf=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsytrf_aa'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zhetrf_aa'
+  load_mttmp_ 'math/mt/external/lapack2/dsytrf'
+  load_mttmp_ 'math/mt/external/lapack2/dsytrf_aa'
+  load_mttmp_ 'math/mt/external/lapack2/zhetrf'
+  load_mttmp_ 'math/mt/external/lapack2/zhetrf_aa'
 
   rcond=. heconi y
 
@@ -1703,23 +1718,23 @@ testhetrf=: 3 : 0
   NB. Aapprox=. calcA (ip ; T1 ; T)  NB. where T1 is L1 or U1
   calcA=: 0&{:: fp^:_1 (mp mp ct@[)&>/@}.
 
-  ('''l''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
-  ('''u''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
-  ('''l''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
-  ('''u''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`(_."_)`(_."_))) y
+  log=.          ('''l''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`nan`nan  )) y
+  log=. log lcat ('''u''&dsytrf_mttmp_'    tmonad (]      `]      `(rcond"_)`nan`nan  )) y
+  log=. log lcat ('''l''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`nan`nan  )) y
+  log=. log lcat ('''u''&zhetrf_mttmp_'    tmonad (]      `]      `(rcond"_)`nan`nan  )) y
 
-  ('''l''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdl`(rcond"_)`(_."_)`het01 )) y ; norm
-  ('''u''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdu`(rcond"_)`(_."_)`het01 )) y ; norm
-  ('''l''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzl`(rcond"_)`(_."_)`het01 )) y ; norm
-  ('''u''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzu`(rcond"_)`(_."_)`het01 )) y ; norm
+  log=. log lcat ('''l''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdl`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''u''&dsytrf_aa_mttmp_' tmonad ((0&{::)`calcAdu`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''l''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzl`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''u''&zhetrf_aa_mttmp_' tmonad ((0&{::)`calcAzu`(rcond"_)`nan`het01)) y ; norm
 
-  ('hetrfpl'                tmonad ((0&{::)`calcA  `(rcond"_)`(_."_)`het01 )) y ; norm
-  ('hetrfpu'                tmonad ((0&{::)`calcA  `(rcond"_)`(_."_)`het01 )) y ; norm
+  log=. log lcat ('hetrfpl'                tmonad ((0&{::)`calcA  `(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('hetrfpu'                tmonad ((0&{::)`calcA  `(rcond"_)`nan`het01)) y ; norm
 
   coerase < 'mttmp'
   erase 'calcAdl calcAdu calcAzl calcAzu calcA calcA'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1733,37 +1748,38 @@ NB.   - potrfx (math/mt addon)
 NB.   by Hermitian (symmetric) positive definite matrix
 NB.
 NB. Syntax:
-NB.   testpotrf A
+NB.   log=. testpotrf A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric) positive
-NB.       definite
+NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
+NB.         definite
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testpotrf=: 3 : 0
-  load        :: ] 'numeric'
+  require     :: ] 'numeric'
   load_mttmp_ :: ] 'math/misc/mathutil'
   load_mttmp_ :: ] 'math/misc/makemat'
   load_mttmp_ :: ] 'math/misc/matutil'
   load_mttmp_ :: ] 'math/misc/linear'
   load_mttmp_ :: ] 'math/misc/matfacto'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/potrf'
+  load_mttmp_      'math/mt/external/lapack2/potrf'
 
   rcond=. poconi y
 
   norm=. normi y
 
-  ('choleski_mttmp_'     tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
+  log=.          ('choleski_mttmp_'     tmonad ((0&{::)`( mp  ct     )`(rcond"_)`nan`het01)) y ; norm
 
-  ('''l''&dpotrf_mttmp_' tmonad ((0&{::)`((mp  |:)@trl)`(rcond"_)`(_."_)`het01)) y ; norm
-  ('''u''&dpotrf_mttmp_' tmonad ((0&{::)`((mp~ |:)@tru)`(rcond"_)`(_."_)`het01)) y ; norm
-  ('''l''&zpotrf_mttmp_' tmonad ((0&{::)`((mp  ct)@trl)`(rcond"_)`(_."_)`het01)) y ; norm
-  ('''u''&zpotrf_mttmp_' tmonad ((0&{::)`((mp~ ct)@tru)`(rcond"_)`(_."_)`het01)) y ; norm
+  log=. log lcat ('''l''&dpotrf_mttmp_' tmonad ((0&{::)`((mp  |:)@trl)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''u''&dpotrf_mttmp_' tmonad ((0&{::)`((mp~ |:)@tru)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''l''&zpotrf_mttmp_' tmonad ((0&{::)`((mp  ct)@trl)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('''u''&zpotrf_mttmp_' tmonad ((0&{::)`((mp~ ct)@tru)`(rcond"_)`nan`het01)) y ; norm
 
-  ('potrfl'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
-  ('potrfu'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`(_."_)`het01)) y ; norm
+  log=. log lcat ('potrfl'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('potrfu'              tmonad ((0&{::)`( mp  ct     )`(rcond"_)`nan`het01)) y ; norm
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1777,16 +1793,17 @@ NB.   by Hermitian (symmetric) positive definite tridiagonal
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   testpttrf A
+NB.   log=. testpttrf A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric) positive
-NB.       definite tridiagonal
+NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
+NB.         definite tridiagonal
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. TODO:
 NB. - A would be sparse
 
 testpttrf=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/pttrf'
+  load_mttmp_ 'math/mt/external/lapack2/pttrf'
 
   rcond=. ptconi y
 
@@ -1798,16 +1815,16 @@ testpttrf=: 3 : 0
   calcAdl=: ((setdiag~ ;&_1)~ idmat@#)~ (mp mp |:@[) diagmat@[
   calcAzl=: ((setdiag~ ;&_1)~ idmat@#)~ calcAm       diagmat@[
 
-  ('dpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAdl&>/)`(rcond"_)`(_."_)`het01)) y ; norm
-  ('zpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAzl&>/)`(rcond"_)`(_."_)`het01)) y ; norm
+  log=.          ('dpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAdl&>/)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('zpttrf_mttmp_' tmonad (((diag ; _1&diag)@(0&{::))`(calcAzl&>/)`(rcond"_)`nan`het01)) y ; norm
 
-  ('pttrfl'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`(_."_)`het01)) y ; norm
-  ('pttrfu'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`(_."_)`het01)) y ; norm
+  log=. log lcat ('pttrfl'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`nan`het01)) y ; norm
+  log=. log lcat ('pttrfu'        tmonad (                  (0&{::) `(calcAm &>/)`(rcond"_)`nan`het01)) y ; norm
 
   coerase < 'mttmp'
   erase 'calcAdl calcAzl calcAm'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1818,23 +1835,22 @@ NB.   Adv. to make verb to test xxtrfxxxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testtrf
+NB.   log=. (mkmat testtrf) (m,n)
 NB. where
-NB.   mkmat - monad to generate a matrix; is called as:
-NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
+NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
-NB.             vtest (m,n)
-NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.             mat=. mkmat (m,n)
+NB.   (m,n) - 2-vector of integers, the shape of mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testtrf_mt_ 200 150
+NB.     log=. ?@$&0 testtrf_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testtrf_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testtrf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 
-testtrf=: 1 : 'EMPTY [ (testpttrf_mt_@(u ptmat2_mt_) [ testpotrf_mt_@(u pomat_mt_) [ testhetrf_mt_@(u hemat_mt_))^:(=/) [ testgetrf_mt_@u'
+testtrf=: 1 : 'nolog_mt_`(testpttrf_mt_@(u ptmat2_mt_) ,&.>~ testpotrf_mt_@(u pomat_mt_) ,&.>~ testhetrf_mt_@(u hemat_mt_))@.(=/) ,&.>~ testgetrf_mt_@u'

@@ -10,9 +10,8 @@ NB. testgghrd  Test gghrdx by pair of square matrices
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -31,6 +30,9 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -62,8 +64,8 @@ NB.   V     - HRDNB×(n-i)-matrix, the unit upper trapezoidal,
 NB.           the last column contains τ[i:i+HRDNB-1]
 NB.   T     - HRDNB×HRDNB-matrix, the lower triangular
 NB.   H     - HRDNB×HRDNB-matrix, the lower triangular
-NB.   eA    - n×(n+1)-matrix, being A with stitched trash
-NB.           column
+NB.   eA    - n×(n+1)-matrix, being A with trash column
+NB.           stitched
 NB.   A     - n×n-matrix to reduce
 NB.   Q     - (n-i)×(n-i)-matrix, the block reflector,
 NB.             Q = I - V'*T*V
@@ -71,21 +73,21 @@ NB.   VH    - HRDNB×(n-i)-matrix, represents reduced rows
 NB.           of subeA, lower triangles of VH and H are
 NB.           match, strict upper triangles of VH and V are
 NB.           match
-NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.   i     ∈ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
-NB.   n     ≥ 0, integer, size of matrix A
+NB.   n     ≥ 0, integer, the size of A
 NB.
 NB. Notes:
 NB. - v[i]'s direction is forward, but T is lower triangular
 
 lahr2l=: 3 : 0
   V=. 0 {. y
-  T=. H=. 0 0 $ 0
+  T=. H=. EMPTY
   j=. 0
   while. j < HRDNB do.
-    b=. (j { y) - (+ (<: j) {"1 V) mp j {. y
+    b=. (j { y) - (+ (<: j) ({"1) V) mp j {. y
     b=. b - ((((0) _1} b) mp ct V) mp ct T) mp V  NB. matrix-by-vector ops only
-    z1=. 1 j} z=. _1 + upd (j , _1) larfg (0 (i. j)} b)
+    z1=. 1 j} z=. (+&.(_1&{)) (j , _1) larfg (0 (i. j)} b)
     u=. (* +@{:) z1
     w=. V +@mp + - (0) _1} u
     T=. T appendl (w mp T) , + {: z1
@@ -116,7 +118,7 @@ NB.   V     - (n-i)×HRDNB-matrix, the unit lower trapezoidal,
 NB.           the last row contains τ[i:i+HRDNB-1]
 NB.   T     - HRDNB×HRDNB-matrix, the upper triangular
 NB.   H     - HRDNB×HRDNB-matrix, the upper triangular
-NB.   eA    - (n+1)×n-matrix, being A with appended trash row
+NB.   eA    - (n+1)×n-matrix, being A with trash row appended
 NB.   A     - n×n-matrix to reduce
 NB.   Q     - (n-i)×(n-i)-matrix, the block reflector,
 NB.             Q = I - V*T*V'
@@ -124,9 +126,9 @@ NB.   VH    - (n-i)×HRDNB-matrix, represents reduced columns
 NB.           of subeA, upper triangles of VH and H are
 NB.           match, strict lower triangles of VH and V are
 NB.           match
-NB.   i     ∊ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
+NB.   i     ∈ {h+j*HRDNB, j=0:I-1, I=max(0,1+⌊(s-2-HRDNX)/HRDNB⌋)},
 NB.           defines subeA position in eA
-NB.   n     ≥ 0, integer, size of matrix A
+NB.   n     ≥ 0, integer, size of A
 NB.
 NB. Notes:
 NB. - implements LAPACK's xLAHR2 with following differences:
@@ -136,10 +138,10 @@ NB.   - V is formed explicitely
 
 lahr2u=: 3 : 0
   V=. _ 0 {. y
-  T=. H=. 0 0 $ 0
+  T=. H=. EMPTY
   j=. 0
   while. j < HRDNB do.
-    b=. (j {"1 y) - (j {."1 y) mp + (<: j) { V
+    b=. (j {"1 y) - (j ({."1) y) mp + (<: j) { V
     b=. b - V mp (ct T) mp (ct V) mp (0) _1} b  NB. matrix-by-vector ops only
     z1=. 1 j} z=. (j , _1) larfg 0 (i. j)} b
     u=. (* {:) z1
@@ -174,19 +176,18 @@ NB.         matrix A, see gehrdl
 NB.   HQf - (n+1)×(n+1)-matrix, H and Qf combined, see gehrdl
 
 gehd2l=: 4 : 0
-  A=. ({. x) {. y                              NB. skip ...
-  y=. ({. x) }. y                              NB. ...reduced rows
-  'j jlimit'=. 1 0 + +/\ x                     NB. 'j jlimit'=. (h+1),(h+s)
+  'A y'=. ({. x) ({. ; }.) y                   NB. skip reduced rows
+  'j jlimit'=. 1 0 + (+/\) x                   NB. 'j jlimit'=. (h+1),(h+s)
   while. j < jlimit do.                        NB. (s-1)-vector: h+1,h+2,...,h+s-1
     r=. {. y
     z1=. (1) 0} z=. larfgfc j }. r
     eL=. z1 larflcfr }. y                      NB. L := H' * L
-    eR=. z1 larfrnfr j }."1 eL                 NB. R := R * H
+    eR=. z1 larfrnfr j (}."1) eL               NB. R := R * H
     A=. A , (j {. r) , z
-    y=. (j {."1 eL) ,. eR
+    y=. (j ({."1) eL) ,. eR
     j=. >: j
   end.
-  0 (< ((c y) th2liso&<: jlimit) ; _1)} A , y  NB. clear τ[h+s-1:n-1]
+  0 (< ((c y) liso4th&<: jlimit) ; _1)} A , y  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -213,9 +214,8 @@ NB. Notes:
 NB. - implements LAPACK's xGEHD2 up to storage layout
 
 gehd2u=: 4 : 0
-  A=. ({. x) {."1 y                           NB. skip ...
-  y=. ({. x) }."1 y                           NB. ...reduced columns
-  'j jlimit'=. 1 0 + +/\ x                    NB. 'j jlimit'=. (h+1),(h+s)
+  'A y'=. ({. x) ({."1 ; }."1) y              NB. skip reduced columns
+  'j jlimit'=. 1 0 + (+/\) x                  NB. 'j jlimit'=. (h+1),(h+s)
   while. j < jlimit do.                       NB. (s-1)-vector: h+1,h+2,...,h+s-1
     c=. {."1 y
     z1=. (1) 0} z=. larfgf j }. c
@@ -225,7 +225,7 @@ gehd2u=: 4 : 0
     y=. (j {. eR) , eL
     j=. >: j
   end.
-  0 (< _1 ; (# y) th2liso&<: jlimit)} A ,. y  NB. clear τ[h+s-1:n-1]
+  0 (< _1 ; (# y) liso4th&<: jlimit)} A ,. y  NB. clear τ[h+s-1:n-1]
 )
 
 NB. ---------------------------------------------------------
@@ -267,24 +267,24 @@ gghrdl=: 4 : 0
   'h s'=. x
   t=. h + s - 1
   n=. c y
-  dQ0=. dZ0=. 0 4 $ 0
+  dQ0=. dZ0=. ((0 4 $ 0))
   i=. h
-  lisor1a=. n th2liso i                        NB. (n-h)-vector h:n-1
+  lisor1a=. n liso4th i                        NB. (n-h)-vector h:n-1
   lisoc2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
   while. i < <: t do.                          NB. (s-2)-vector: h:h+s-3
     j=. t
-    lisor1b=. n th2liso <: j                   NB. (n-h-s+2)-vector h+s-2:n-1
+    lisor1b=. n liso4th <: j                   NB. (n-h-s+2)-vector h+s-2:n-1
     lisoc2b=. i. >: j                          NB. (j+1)-vector 0:h+s-1
     while. j > >: i do.                        NB. (h+s-i-2)-vector (desc) h+s-1:i+2
       liso=. j - 1 0
       NB. step 1: rotate columns liso to kill A[i,j]
-      'y cs'=. rot&.|: rotga y ; (< 0 ; lisor1a ; liso) ; 0
-      y=. (< 1 ; lisor1b ; liso) cs&(rot&.|:) upd y
+      'y cs'=. rot rotga y ; (< 0 ; lisor1a ; liso) ; 0
+      y=. cs&rot&.((< 1 ; lisor1b ; liso)&{) y
       dZ0=. dZ0 , cs , liso
       liso=. j - 0 1
       NB. step 2: rotate rows liso to kill B[j-1,j]
-      'y cs'=. rot rotga y ; (< 1 ; liso ; lisoc2b) ; < < a: ; _1
-      y=. (< 0 ; liso ; lisoc2a) cs&rot upd y
+      'y cs'=. rot&.|: rotga y ; (< 1 ; liso ; lisoc2b) ; ((< < a: ; _1))
+      y=. cs&(rot&.|:)&.((< 0 ; liso ; lisoc2a)&{) y
       dQ0=. dQ0 , cs , liso
       NB. step 3: update ISO
       lisor1b=. (j - 2) , lisor1b
@@ -341,24 +341,24 @@ gghrdu=: 4 : 0
   'h s'=. x
   t=. h + s - 1
   n=. c y
-  dQ0=. dZ0=. 0 4 $ 0
+  dQ0=. dZ0=. ((0 4 $ 0))
   j=. h
-  lisoc1a=. n th2liso j                        NB. (n-h)-vector h:n-1
+  lisoc1a=. n liso4th j                        NB. (n-h)-vector h:n-1
   lisor2a=. i. h + s                           NB. (h+s)-vector 0:h+s-1
   while. j < <: t do.                          NB. (s-2)-vector h:h+s-3
     i=. t
-    lisoc1b=. n th2liso <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
+    lisoc1b=. n liso4th <: i                   NB. (n-h-s+2)-vector h+s-2:n-1
     lisor2b=. i. >: i                          NB. (i+1)-vector 0:h+s-1
     while. i > >: j do.                        NB. (h+s-j-2)-vector (desc) h+s-1:j+2
       liso=. i - 1 0
       NB. step 1: rotate rows liso to kill A[i,j]
-      'y cs'=. rot rotga y ; (< 0 ; liso ; lisoc1a) ; < < a: ; 0
-      y=. (< 1 ; liso ; lisoc1b) cs&rot upd y
+      'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc1a) ; ((< < a: ; 0))
+      y=. cs&(rot&.|:)&.((< 1 ; liso ; lisoc1b)&{) y
       dQ0=. dQ0 , cs , liso
       liso=. i - 0 1
       NB. step 2: rotate columns liso to kill B[i,i-1]
-      'y cs'=. rot&.|: rotga y ; (< 1 ; lisor2b ; liso) ; _1
-      y=. (< 0 ; lisor2a ; liso) cs&(rot&.|:) upd y
+      'y cs'=. rot rotga y ; (< 1 ; lisor2b ; liso) ; _1
+      y=. cs&rot&.((< 0 ; lisor2a ; liso)&{) y
       dZ0=. dZ0 , cs , liso
       NB. step 3: update ISO
       lisoc1b=. (i - 2) , lisoc1b
@@ -394,7 +394,7 @@ NB.   H   - n×n-matrix, it has zeros behind 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros behind
 NB.         1st superdiagonal
 NB.   Qf  - (s-1)×(n-h)-matrix, the unit upper trapezoidal
-NB.         (unit diagonal not stored), represents Q in
+NB.         (unit diagonal is not stored), represents Q in
 NB.         factored form:
 NB.           Q = Π{H(i)',i=h+s-2:h}
 NB.           H(i) = I - v[i]' * τ[i] * v[i]
@@ -430,7 +430,7 @@ NB.   (  a  a  a  a  a  a     )    (  h  h  h  h  h  h        )
 NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a     )
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   ((idmat@#) -: po) Q
+NB.   (idmat@# -: po) Q
 NB.   H -: A (mp~ mp ct@]) Q
 NB. where
 NB.   HQf=. (gehrdl~ 0 , #) A
@@ -446,16 +446,16 @@ gehrdl=: 4 : 0
   y=. (h + 0 1) }. y
   I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB      NB. how many panels will be reduced
   'i ilimit'=. h + (0 , HRDNB) * I                 NB. 'i ilimit'=. h,(h+HRDNB*I)
-  while. i < ilimit do.                            NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2liso (h,I))
+  while. i < ilimit do.                            NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB liso4dhs (h,I))
     'Y V H T'=. lahr2l y                           NB. use (n-i)×(n-i)-matrix A[i:n-1,i+1:n]
-    eV0=. 0 ,. (0) _1}"1 V                         NB. prepend by zero column, replace τs by zeros
+    eV0=. 0 ,. 0 (_1}"1) V                         NB. prepend by zero column, replace τs by zeros
     Aleft=. Aleft - (ct eV0) mp T mp eV0 mp Aleft  NB. update (n-i)×(i+1)-matrix A[i:n-1,0:i]
-    y=. (HRDNB }. y) - (ct HRDNB }."1 eV0) mp Y    NB. apply reflector from the left
-    y=. y - (y mp ct T mp (0) _1}"1 V) mp V        NB. apply reflector from the right
+    y=. (HRDNB }. y) - (ct HRDNB (}."1) eV0) mp Y  NB. apply reflector from the left
+    y=. y - (y mp ct T mp 0 (_1}"1) V) mp V        NB. apply reflector from the right
     V=. ((i. HRDNB) </ i. n - i)} H ,: V           NB. write H into V's lower triangle in-place
     Atop=. Atop , (HRDNB {. Aleft) ,. V
-    Aleft=. (HRDNB }. Aleft) ,. HRDNB {."1 y
-    y=. HRDNB }."1 y
+    Aleft=. (HRDNB }. Aleft) ,. HRDNB ({."1) y
+    y=. HRDNB (}."1) y
     i=. HRDNB + i
   end.
   _1 0 }. (x + 1 _1 * HRDNB * I) gehd2l Atop , Aleft ,. y
@@ -481,7 +481,7 @@ NB.   H   - n×n-matrix, it has zeros under 0-th diagonal
 NB.         elements [0:h-1] and [h+s:n-1], and zeros below
 NB.         1st subdiagonal
 NB.   Qf  - (n-h)×(s-1)-matrix, the unit lower trapezoidal
-NB.         (unit diagonal not stored), represents Q in
+NB.         (unit diagonal is not stored), represents Q in
 NB.         factored form:
 NB.           Q = Π{H(i),i=h:h+s-2}
 NB.           H(i) = I - v[i] * τ[i] * v[i]'
@@ -518,7 +518,7 @@ NB.   (                    a  )    (                    a  )
 NB.                                (     τ1 τ2 τ3 τ4       )
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.   ((idmat@#) -: (mp~ ct)) Q
+NB.   (idmat@# -: (mp~ ct)) Q
 NB.   H -: A (ct@] mp mp) Q
 NB. where
 NB.   HQf=. (gehrdu~ 0, #) A
@@ -532,20 +532,20 @@ gehrdu=: 4 : 0
   'h s'=. x
   n1=. >: n=. # y
   y=. (2 $ n1) {. y
-  Aleft=. h {."1 y
+  Aleft=. h ({."1) y
   Atop=. (h - _1 , n1) {. y
   y=. (h + 1 0) }. y
   I=. 0 >. <. (s - 2 + HRDNX - HRDNB) % HRDNB     NB. how many panels will be reduced
   'i ilimit'=. h + (0 , HRDNB) * I                NB. 'i ilimit'=. h,(h+HRDNB*I)
-  while. i < ilimit do.                           NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB dhs2liso (h,I))
+  while. i < ilimit do.                           NB. reduce i-th panel, i = {h,h+HRDNB,...,h+(I-1)*HRDNB} or (HRDNB liso4dhs (h,I))
     'Y V H T'=. lahr2u y                          NB. use (n-i)×(n-i)-matrix A[i+1:n,i:n-1]
-    eV0=. 0 , (0) _1} V                           NB. prepend by zero row, replace τs by zeros
+    eV0=. 0 , 0 (_1}) V                           NB. prepend by zero row, replace τs by zeros
     Atop=. Atop - ((Atop mp eV0) mp T) mp ct eV0  NB. update (i+1)×(n-i)-matrix A[0:i,i:n-1]
-    y=. (HRDNB }."1 y) - Y mp ct HRDNB }. eV0     NB. apply reflector from the right
-    y=. y - V mp (ct ((0) _1} V) mp T) mp y       NB. apply reflector from the left
+    y=. (HRDNB (}."1) y) - Y mp ct HRDNB }. eV0   NB. apply reflector from the right
+    y=. y - V mp (ct (0 (_1}) V) mp T) mp y       NB. apply reflector from the left
     V=. ((i. n - i) >/ i. HRDNB)} H ,: V          NB. write H into V's upper triangle in-place
-    Aleft=. Aleft ,. (HRDNB {."1 Atop) , V
-    Atop=. (HRDNB }."1 Atop) , HRDNB {. y
+    Aleft=. Aleft ,. (HRDNB ({."1) Atop) , V
+    Atop=. (HRDNB (}."1) Atop) , HRDNB {. y
     y=. HRDNB }. y
     i=. HRDNB + i
   end.
@@ -553,7 +553,7 @@ gehrdu=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Verb:       Syntax:
+NB. Verb        Syntax
 NB. gghrdlnn    'H T'=.       hs gghrdlnn A ,: B
 NB. gghrdlnv    'H T Z1'=.    hs gghrdlnv A ,  B ,: Z0
 NB. gghrdlvn    'H T Q1'=.    hs gghrdlvn A ,  B ,: Q0
@@ -584,21 +584,21 @@ NB.     Q1     := dQ0 * Q0
 NB.     Z1     := dZ0 * Z0
 NB.   then gghrdlxx reduces (1) to (2)
 NB. where
-NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
-NB.          defines submatrices A11 and B11 to be reduced
-NB.          position in matrices A and B, respectively, see
-NB.          geballp and gehrdl
-NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, the lower triangular
-NB.   H    - n×n-matrix, the lower Hessenberg inside the
-NB.          submatrix H[h:h+s-1,h:h+s-1], and lower
-NB.          triangular outside
-NB.   T    - n×n-matrix, the lower triangular
-NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
-NB.          from the LQ factorization of B
-NB.   Q1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z0   - n×n-matrix, the unitary (orthogonal)
-NB.   Z1   - n×n-matrix, the unitary (orthogonal)
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrices A11 and B11 to be reduced
+NB.        position in matrices A and B, respectively, see
+NB.        geballp and gehrdl
+NB.   A  - n×n-matrix, general
+NB.   B  - n×n-matrix, the lower triangular
+NB.   H  - n×n-matrix, the lower Hessenberg inside the
+NB.        submatrix H[h:h+s-1,h:h+s-1], and lower triangular
+NB.        outside
+NB.   T  - n×n-matrix, the lower triangular
+NB.   Q0 - n×n-matrix, the unitary (orthogonal), typically
+NB.        from the LQ factorization of B
+NB.   Q1 - n×n-matrix, the unitary (orthogonal)
+NB.   Z0 - n×n-matrix, the unitary (orthogonal)
+NB.   Z1 - n×n-matrix, the unitary (orthogonal)
 NB.
 NB. Assertions (with appropriate comparison tolerance):
 NB.   Q1       -: dQ0
@@ -624,7 +624,7 @@ gghrdlvn=:    {:@]  ((0 {:: ]) , (rotscll 1 {:: ]  )) (gghrdl   }:)
 gghrdlvv=: (2 }. ]) ((0 {:: ]) , (rotscll&:>"2 0 }.)) (gghrdl 2&{.)
 
 NB. ---------------------------------------------------------
-NB. Verb:       Syntax:
+NB. Verb        Syntax
 NB. gghrdunn    'H T'=.       hs gghrdunn A ,: B
 NB. gghrdunv    'H T Z1'=.    hs gghrdunv A ,  B ,: Z0
 NB. gghrduvn    'H T Q1'=.    hs gghrduvn A ,  B ,: Q0
@@ -655,21 +655,21 @@ NB.     Q1     := Q0 * dQ0
 NB.     Z1     := Z0 * dZ0
 NB.   then gghrduxx reduces (1) to (2)
 NB. where
-NB.   hs   - 2-vector of integers (h,s) 'head' and 'size',
-NB.          defines submatrices A11 and B11 to be reduced
-NB.          position in matrices A and B, respectively, see
-NB.          gebalup and gehrdu
-NB.   A    - n×n-matrix, general
-NB.   B    - n×n-matrix, the upper triangular
-NB.   H    - n×n-matrix, the upper Hessenberg inside the
-NB.          submatrix H[h:h+s-1,h:h+s-1], and upper
-NB.          triangular outside
-NB.   T    - n×n-matrix, the upper triangular
-NB.   Q0   - n×n-matrix, the unitary (orthogonal), typically
-NB.          from the QR factorization of B
-NB.   Q1   - n×n-matrix, the unitary (orthogonal)
-NB.   Z0   - n×n-matrix, the unitary (orthogonal)
-NB.   Z1   - n×n-matrix, the unitary (orthogonal)
+NB.   hs - 2-vector of integers (h,s) 'head' and 'size',
+NB.        defines submatrices A11 and B11 to be reduced
+NB.        position in matrices A and B, respectively, see
+NB.        gebalup and gehrdu
+NB.   A  - n×n-matrix, general
+NB.   B  - n×n-matrix, the upper triangular
+NB.   H  - n×n-matrix, the upper Hessenberg inside the
+NB.        submatrix H[h:h+s-1,h:h+s-1], and upper triangular
+NB.        outside
+NB.   T  - n×n-matrix, the upper triangular
+NB.   Q0 - n×n-matrix, the unitary (orthogonal), typically
+NB.        from the QR factorization of B
+NB.   Q1 - n×n-matrix, the unitary (orthogonal)
+NB.   Z0 - n×n-matrix, the unitary (orthogonal)
+NB.   Z1 - n×n-matrix, the unitary (orthogonal)
 NB.
 NB. Notes:
 NB. - gghrdunn models LAPACK's xGGHRD('N','N')
@@ -740,12 +740,13 @@ NB.   - gehrdx (math/mt addon)
 NB.   by square matrix
 NB.
 NB. Syntax:
-NB.   testgehrd A
+NB.   log=. testgehrd A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgehrd=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gehrd'
+  load_mttmp_ 'math/mt/external/lapack2/gehrd'
 
   'rcondl rcondu'=. (geconi , gecon1) y
 
@@ -757,16 +758,16 @@ testgehrd=: 3 : 0
   unt01l=: (normi unt01 (mp  ct))@(1 {:: ])
   unt01u=: (norm1 unt01 (mp~ ct))@(1 {:: ])
 
-  ('dgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
-  ('zgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  log=.          ('dgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu
+  log=. log lcat ('zgehrd_mttmp_' tmonad (((1 ; # ; ])@(0&{::))  `(_1&trupick@(0&{::) ; unghru@;)`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu
 
-  ('gehrdl'        tdyad  ((0 , #@(0&{::))`(0&{::)`(( 1 trlpick }:"1)  ; unghrl  )`(rcondl"_)`(_."_)`(hst01l >. unt01l))) y ; norml
-  ('gehrdu'        tdyad  ((0 , #@(0&{::))`(0&{::)`((_1 trupick }:  )  ; unghru  )`(rcondu"_)`(_."_)`(hst01u >. unt01u))) y ; normu
+  log=. log lcat ('gehrdl'        tdyad  ((0 , #@(0&{::))`(0&{::)`(( 1 trlpick }:"1)  ; unghrl  )`(rcondl"_)`nan`(hst01l >. unt01l))) y ; norml
+  log=. log lcat ('gehrdu'        tdyad  ((0 , #@(0&{::))`(0&{::)`((_1 trupick }:  )  ; unghru  )`(rcondu"_)`nan`(hst01u >. unt01u))) y ; normu
 
   coerase < 'mttmp'
   erase 'hst01l hst01u unt01l unt01u'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -779,12 +780,13 @@ NB.   - gghrdx (math/mt addon)
 NB.   by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testgghrd AB
+NB.   log=. testgghrd AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgghrd=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gghrd'
+  load_mttmp_ 'math/mt/external/lapack2/gghrd'
 
   I=. idmat c y
 
@@ -818,32 +820,44 @@ testgghrd=: 3 : 0
   t513l23=:  (2 {   ]) >.&t513l  3 {   ]
   t513u23=:  (2 {   ]) >.&t513u  3 {   ]
 
-  ('''nn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                 ))) argslapack
-  ('''ni''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
-  ('''nv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u3b ))) argslapack
+  log=.          ('''nn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`nan                    )) argslapack
+  log=. log lcat ('''ni''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u3b ))) argslapack
+  log=. log lcat ('''nv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u3b ))) argslapack
 
-  ('''in''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  ('''ii''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  ('''iv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''in''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u2b ))) argslapack
+  log=. log lcat ('''ii''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''iv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
 
-  ('''vn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u2b ))) argslapack
-  ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
-  ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vn''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u2b ))) argslapack
+  log=. log lcat ('''vi''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vv''&dgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
 
-  ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                 ))) argsmtl
-  ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
-  ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2  ))) argsmtvl
-  ('gghrdlvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23 ))) argsmtvvl
+  log=. log lcat ('''nn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`nan                    )) argslapack
+  log=. log lcat ('''ni''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u3b ))) argslapack
+  log=. log lcat ('''nv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u3b ))) argslapack
 
-  ('gghrdunn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                 ))) argsmtu
-  ('gghrdunv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
-  ('gghrduvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2  ))) argsmtvu
-  ('gghrduvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23 ))) argsmtvvu
+  log=. log lcat ('''in''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u2b ))) argslapack
+  log=. log lcat ('''ii''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''iv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+
+  log=. log lcat ('''vn''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u2b ))) argslapack
+  log=. log lcat ('''vi''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+  log=. log lcat ('''vv''&zgghrd_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u23b))) argslapack
+
+  log=. log lcat ('gghrdlnn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`nan                    )) argsmtl
+  log=. log lcat ('gghrdlnv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l2  ))) argsmtvl
+  log=. log lcat ('gghrdlvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l2  ))) argsmtvl
+  log=. log lcat ('gghrdlvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(t511l2 >./@, t513l23 ))) argsmtvvl
+
+  log=. log lcat ('gghrdunn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`nan                    )) argsmtu
+  log=. log lcat ('gghrdunv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u2  ))) argsmtvu
+  log=. log lcat ('gghrduvn'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u2  ))) argsmtvu
+  log=. log lcat ('gghrduvv'             tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(t511u2 >./@, t513u23 ))) argsmtvvu
 
   coerase < 'mttmp'
   erase 't511u1 t511l2 t511u2 t513u2b t513u3b t513u23b t513l2 t513u2 t513l23 t513u23'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -854,23 +868,21 @@ NB.   Adv. to make verb to test gxhrdxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testhrd
+NB.   log=. (mkmat testhrd) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrices with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testhrd_mt_ 150 150
+NB.     log=. ?@$&0 testhrd_mt_ 150 150
 NB. - test by random square real matrices with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testhrd_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhrd_mt_ 150 150
 NB. - test by random square complex matrices:
-NB.     (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
 
-testhrd=: 1 : 'EMPTY [ (testgghrd_mt_@u@(2&,) [ testgehrd_mt_@u)^:(=/)'
+testhrd=: 1 : 'nolog_mt_`(testgghrd_mt_@u@(2&,) ,&.>~ testgehrd_mt_@u)@.(=/)'

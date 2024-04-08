@@ -1,24 +1,23 @@
 NB. Balance a matrix or pair of matrices
 NB.
-NB. gebalxp    Isolate eigenvalues of a general square matrix
-NB. gebals     Make the rows and columns of a general square
-NB.            matrix as close in 1-norm as possible
-NB. gebalx     Balance a general square matrix
+NB. gebalxp    Isolate eigenvalues of a square matrix
+NB. gebals     Make the rows and columns of a square matrix
+NB.            as close in 1-norm as possible
+NB. gebalx     Balance a square matrix
 NB.
-NB. ggbalxp    Isolate eigenvalues in a pair of general
-NB.            square matrices
-NB. ggbals     Make the rows and columns in a pair of general
-NB.            square matrices as close in 1-norm as possible
-NB. ggbalx     Balance a pair of general square matrices
+NB. ggbalxp    Isolate eigenvalues in a pair of square
+NB.            matrices
+NB. ggbals     Make the rows and columns in a pair of square
+NB.            matrices as close in 1-norm as possible
+NB. ggbalx     Balance a pair of square matrices
 NB.
 NB. testgebal  Test gebalx by square matrix
 NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Version: 0.12.0 2021-02-01
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -37,6 +36,9 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -77,11 +79,11 @@ NB. ---------------------------------------------------------
 NB. gebalxp1d
 NB.
 NB. Description:
-NB.   Adv. to make verb to traverse single direction
+NB.   Adv. to make dyad to traverse single direction
 NB.   (rowwise or columnwise) within gebalxp process
 NB.
 NB. Syntax:
-NB.   vapp=. ioz`getv`mkt`dhs gebalxp1d
+NB.   'p hs'=. A (ioz`getv`mkt`dhs gebalxp1d) (p ; hs ; nz)
 NB. where
 NB.   ioz  - dyad to scan vector, either (i.) or (i:), is
 NB.          called as:
@@ -97,9 +99,6 @@ NB.          and column which are intersecting in the element
 NB.          with IO either (<0 0) or (<_1 _1), is either
 NB.          (+&0 _1) or (+&1 _1), is called as:
 NB.            hs=. dhs hs
-NB.   vapp - dyad to traverse single direction, is
-NB.          called as:
-NB.            'p hs'=. A vapp (p ; hs ; nz)
 NB.   nz   - n-vector of non-negative integers, count of
 NB.          non-zero elements in rows (columns) of A
 NB.   A    - n×n-matrix
@@ -144,8 +143,8 @@ gebalxp1d=: 1 : 0
   do.
     nza=. (zi { p) (0:`[`(0 ~: getv))} x
     nst=. < (h mkt s) , zi
-    p=. nst C. :: ] p
-    nz=. (nst C. :: ] nz) - p { nza
+    p=. nst (C. :: ]) p
+    nz=. (nst (C. :: ]) nz) - p { nza
     'h s'=. dhs h , s
   end.
   p ; (h , s)
@@ -155,11 +154,11 @@ NB. ---------------------------------------------------------
 NB. gebalxp2d
 NB.
 NB. Description:
-NB.   Adv. to make verb to traverse both directions (rowwise
+NB.   Adv. to make dyad to traverse both directions (rowwise
 NB.   and columnwise) within gebalxp process
 NB.
 NB. Syntax:
-NB.   vapp=. getv0`getv1 gebalxp2d
+NB.   'p hs'=. A (getv0`getv1 gebalxp2d) (nz0 ,: nz1)
 NB. where
 NB.   getv0 - dyad to extract vector (either row or column)
 NB.           from matrix, is either ({) or ({"1), is called
@@ -169,8 +168,6 @@ NB.   getv1 - dyad to extract vector (either column or row)
 NB.           from matrix, of direction opposite to getv0, is
 NB.           either ({"1) or ({), is called as:
 NB.             vector=. iovector getv matrix
-NB.   vapp  - dyad to traverse both directions, is called as:
-NB.             'p hs'=. A vapp (nz0 ,: nz1)
 NB.   nz0   - n-vector of non-negative integers, count of
 NB.           non-zero elements in either rows or columns
 NB.           excluding diagonal
@@ -253,7 +250,7 @@ NB. geballp
 NB. gebalup
 NB.
 NB. Description:
-NB.   Permute a general square matrix A by a similarity
+NB.   Permute a square matrix A by a similarity
 NB.   transformation to isolate eigenvalues:
 NB.     B = P * A * P
 NB.
@@ -303,7 +300,7 @@ NB.   A -: p fp^:_1 B
 NB.   B11 -: (,.~ hs) ];.0 B
 NB. where
 NB.   'B p hs'=. gebalxp A
-NB.   P=. p2P p
+NB.   P=. P4p p
 NB.   iP=. %. P
 NB.
 NB. Notes:
@@ -337,11 +334,11 @@ NB.   'Sscl trash trash1 d omaxred'=. imaxred gebals S ; (i. n) ; 0 _
 NB. where
 NB.   A       - n×n-matrix with isolated eigenvalues, the
 NB.             output of gebalxp
-NB.   p       - n-vector, some not changing parameter, the
+NB.   p       - n-vector, some not changing argument, the
 NB.             output of gebalxp
 NB.   hs      - 2-vector of integers (h,s) 'head' and 'size',
 NB.             defines submatrix A11 position in A, the
-NB.             output of gebalxp, s=∞ is allowed and means
+NB.             output of gebalxp, s=+∞ is allowed and means
 NB.             'all elements from h-th to the last one'
 NB.   S       - the input for TB01ID, any of:
 NB.               n×n-matrix:          A
@@ -431,7 +428,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
       'r c'=. norms L: 0 rc
       if. x do.
         NB. act as TB01ID
-        if. r *.&(0&=) c do.
+        if. r (*.&(0&=)) c do.
           continue.
         end.
         if. 0 = c do.
@@ -448,7 +445,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
         end.
       else.
         NB. act as xGEBAL
-        if. r +.&(0&=) c do.
+        if. r (+.&(0&=)) c do.
           continue.
         end.
       end.
@@ -465,15 +462,15 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
       r=. r * fdn
       if. (r + c) < GEBALFACTOR * sum do.
         di=. i { d
-        if. f *.&(<&1) di do.
+        if. f (*.&(<&1)) di do.
           if. GEBALSFMIN1 >: f * di do. continue. end.
         end.
-        if. f *.&(>&1) di do.
+        if. f (*.&(>&1)) di do.
           if. di >: GEBALSFMAX1 % f do. continue. end.
         end.
         d=. (di * f) i} d
-        S=.         i  %&f upd S
-        S=. (< a: ; i) *&f upd S
+        S=. %&f&.(        i &{) S
+        S=. *&f&.((< a: ; i)&{) S
         noconv=. 1
       end.
     end.
@@ -490,8 +487,8 @@ NB. geball
 NB. gebalu
 NB.
 NB. Description:
-NB.   Balance a general square matrix A. This involves,
-NB.   first, isolating eigenvalues (see gebalxp):
+NB.   Balance a square matrix A. This involves, first,
+NB.   isolating eigenvalues (see gebalxp):
 NB.     B = P * A * P
 NB.   and second, making the rows and columns of B11 as close
 NB.   in 1-norm as possible (see gebals):
@@ -526,7 +523,7 @@ NB.   C11 -: (,.~ hs) ];.0 C
 NB. where
 NB.   'B pp hsp'=. gebalxp A
 NB.   'C p hs d'=. gebalx A
-NB.   P=. p2P p
+NB.   P=. P4p p
 NB.   iP=. %. P
 NB.   D=. diagmat d
 NB.   iD=. %. D
@@ -546,7 +543,7 @@ NB. ggballp
 NB. ggbalup
 NB.
 NB. Description:
-NB.   Permute general square matrices A and B by a similarity
+NB.   Permute square matrices A and B by a similarity
 NB.   transformation to isolate eigenvalues:
 NB.     C = Pl * A * Pr
 NB.     D = Pl * B * Pr
@@ -577,7 +574,7 @@ NB.   AB -: CD ((C.^:_1"2~ {.) (C.^:_1"1~ {:) ]) plr
 NB.   CD11 -: (0 2 ,. ,.~ hs) ];.0 CD
 NB. where
 NB.   'CD plr hs'=. ggbalxp AB
-NB.   'Pl Pr'=. p2P"1 plr
+NB.   'Pl Pr'=. P4p"1 plr
 NB.   iPl=. %. Pl
 NB.   iPr=. %. Pr
 NB.
@@ -596,17 +593,17 @@ ggballp=: 3 : 0
   if. 1 < n do.
     j=. h + s - 1
     while. j >: h do.
-      v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
+      v=. (0 2 ,. (h , s) ,. j , 1) (,@(+./)@:(0&~:);.0) y
       liso=. I. 0 ~: v
       select. # liso
         fcase. 1 do.
           nst=. < j , h + s - 1
-          pr=. nst C. :: ] pr
-          y=. nst C."1 :: ] y
+          pr=. nst (C. :: ]) pr
+          y=. nst (C."1 :: ]) y
         case. 0 do.
           nst=. < (h + {. liso) , h + s - 1
-          pl=. nst C. :: ] pl
-          y=. nst C."2 :: ] y
+          pl=. nst (C. :: ]) pl
+          y=. nst (C."2 :: ]) y
           s=. <: s
           j=. h + s - 1
         case. do.
@@ -615,17 +612,17 @@ ggballp=: 3 : 0
     end.
     i=. h
     while. i < h + s do.
-      v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
+      v=. (0 2 ,. (i , 1) ,. h , s) (,@(+./)@:(0&~:);.0) y
       liso=. I. 0 ~: v
       select. # liso
         fcase. 1 do.
           nst=. < i , h
-          pl=. nst C. :: ] pl
-          y=. nst C."2 :: ] y
+          pl=. nst (C. :: ]) pl
+          y=. nst (C."2 :: ]) y
         case. 0 do.
           nst=. < (h + {. liso) , h
-          pr=. nst C. :: ] pr
-          y=. nst C."1 :: ] y
+          pr=. nst (C. :: ]) pr
+          y=. nst (C."1 :: ]) y
           i=. h=. >: h
           s=. <: s
         case. do.
@@ -643,17 +640,17 @@ ggbalup=: 3 : 0
   if. 1 < n do.
     i=. h + s - 1
     while. i >: h do.
-      v=. (0 2 ,. (i , 1) ,. h , s) ,@(+./)@:(0&~:);.0 y
+      v=. (0 2 ,. (i , 1) ,. h , s) (,@(+./)@:(0&~:);.0) y
       liso=. I. 0 ~: v
       select. # liso
         fcase. 1 do.
           nst=. < i , h + s - 1
-          pl=. nst C. :: ] pl
-          y=. nst C."2 :: ] y
+          pl=. nst (C. :: ]) pl
+          y=. nst (C."2 :: ]) y
         case. 0 do.
           nst=. < (h + {. liso) , h + s - 1
-          pr=. nst C. :: ] pr
-          y=. nst C."1 :: ] y
+          pr=. nst (C. :: ]) pr
+          y=. nst (C."1 :: ]) y
           s=. <: s
           i=. h + s - 1
         case. do.
@@ -662,17 +659,17 @@ ggbalup=: 3 : 0
     end.
     j=. h
     while. j < h + s do.
-      v=. (0 2 ,. (h , s) ,. j , 1) ,@(+./)@:(0&~:);.0 y
+      v=. (0 2 ,. (h , s) ,. j , 1) (,@(+./)@:(0&~:);.0) y
       liso=. I. 0 ~: v
       select. # liso
         fcase. 1 do.
           nst=. < j , h
-          pr=. nst C. :: ] pr
-          y=. nst C."1 :: ] y
+          pr=. nst (C. :: ]) pr
+          y=. nst (C."1 :: ]) y
         case. 0 do.
           nst=. < (h + {. liso) , h
-          pl=. nst C. :: ] pl
-          y=. nst C."2 :: ] y
+          pl=. nst (C. :: ]) pl
+          y=. nst (C."2 :: ]) y
           j=. h=. >: h
           s=. <: s
         case. do.
@@ -699,7 +696,7 @@ NB. where
 NB.   CD  -:C ,: D
 NB.   C,D - n×n-matrices with isolated eigenvalues, the
 NB.         output of ggbalxp
-NB.   plr - some not changing parameter, the output of
+NB.   plr - some not changing argument, the output of
 NB.         ggbalxp
 NB.   hs  - 2-vector of integers (h,s) 'head' and 'size',
 NB.         defines submatrices E11 and F11 position in E and
@@ -737,11 +734,11 @@ NB. - embed SLICOT's TG01AD, like SLICOT's TB01ID embedded in
 NB.   gebals
 
 ggbals=: 3 : 0
-  m3x=. - 3&*
+  m3x=. (- 3&*)
   mix=. ((* +/@:(+/"1))~ {.) + ((+/@:(+/@#"1)) {:)
 
   'CD plr hs'=. y
-  nzCDcut=. 0 ~: CDcut=. (0 2 ,. ,.~ hs) ];.0 CD
+  nzCDcut=. 0 ~: CDcut=. (0 2 ,. ,.~ hs) (];.0) CD
   'h s'=. hs
   w10=. w23=. dlr=. (2 , s) $ 0
 
@@ -753,12 +750,12 @@ ggbals=: 3 : 0
   while. k < s + 2 do.
     gamma=. +&(mp~)/ w45
     ewewc=. +/"1 w45
-    gamma=. (coef , - coef2 , coef5) mp gamma , (+&*: , *:@-)/ ewewc
+    gamma=. (coef , - coef2 , coef5) mp gamma , ((+&*: , *:@-)/) ewewc
     if. gamma = 0 do. break. end.
     if. k ~: 0 do. beta=. gamma % pgamma end.
     w10=. (beta * w10) + (coef * w45) + coef5 * (m3x~ , m3x)/ ewewc
     NB. apply matrix to vector
-    w23=. nzCDcut (mix ,: ((mix~ |:"2)~ |.)) w10
+    w23=. nzCDcut (mix ,: ((mix~ (|:"2))~ |.)) w10
     alpha=. gamma % +/ w10 mp"1 w23
     NB. determine correction to current iteration
     aw10=. alpha * w10
@@ -773,13 +770,13 @@ ggbals=: 3 : 0
   lsfmax=. <.    GGBALSCLFAC ^. % FP_SFMIN
   irab=. h + (0 2 ,. hs ,. h , _) liofmax"1;.0 CD
   icab=. (0 2 ,. (0 , h + s) ,. hs) liofmax"1@:(|:"2);.0 CD
-  rab=. normi (<"1 irab ,.~"1 dhs2liso hs) {"1 2 CD
-  cab=. normi (<"1 icab ,. "1 dhs2liso hs) {"1 2 CD
-  lxab=. >.`<.@.(0&<:)"0 >: GGBALSCLFAC ^. FP_SFMIN + rab , cab
+  rab=. normi (;/ irab (,.~"1) liso4dhs hs) ({"0 2) CD
+  cab=. normi (;/ icab (,. "1) liso4dhs hs) ({"0 2) CD
+  lxab=. (>.`<.@.(0&<:)"0) >: GGBALSCLFAC ^. FP_SFMIN + rab , cab
   dlr=. GGBALSCLFAC ^ lsfmax <. (lsfmax - lxab) <. lsfmin >. <. 0.5 + dlr
-  dlr=. (-h) |."1 (c CD) {.!.1"1 dlr  NB. adjust dlr's shape
-  CD=. ({. dlr) *"1 2 CD              NB. row scaling of matrices C and D
-  CD=. ({: dlr) *"1 1 CD              NB. column scaling of matrices C and D
+  dlr=. (-h) (|."1) (c CD) ({.!.1"1) dlr  NB. adjust dlr's shape
+  CD=. ({. dlr) (*"1 2) CD                NB. row scaling of matrices C and D
+  CD=. ({: dlr) (*"1 1) CD                NB. column scaling of matrices C and D
   CD ; plr ; hs ; dlr
 )
 
@@ -788,8 +785,8 @@ NB. ggball
 NB. ggbalu
 NB.
 NB. Description:
-NB.   Balance a general square matrices A abd B. This
-NB.   involves, first, isolating eigenvalues (see ggbalxp):
+NB.   Balance a square matrices A abd B. This involves,
+NB.   first, isolating eigenvalues (see ggbalxp):
 NB.     C = Pl * A * Pr
 NB.     D = Pl * B * Pr
 NB.   and second, making the rows and columns of E11 (F11) as
@@ -835,7 +832,7 @@ NB.   EF11 -: (0 2 ,. ,.~ hs) ];.0 EF
 NB. where
 NB.   'CD plrp hsp'=. ggbalxp AB
 NB.   'EF plr hs dlr'=. ggbalx AB
-NB.   'Pl Pr'=. p2P"1 plr
+NB.   'Pl Pr'=. P4p"1 plr
 NB.   iPl=. %. Pl
 NB.   iPr=. %. Pr
 NB.   'Dl Dr'=. diagmat"1 dlr
@@ -865,9 +862,10 @@ NB.   - gebalx (math/mt addon)
 NB.   by square matrix
 NB.
 NB. Syntax:
-NB.   testgebal A
+NB.   log=. testgebal A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Formula:
 NB.   err0 := ||Abal||_1 / ||A||_1                                           if not a permute only
@@ -883,7 +881,7 @@ NB. - err0 is outputted in ferr column
 NB. - err1 is outputted in berr column
 
 testgebal=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gebal'
+  load_mttmp_ 'math/mt/external/lapack2/gebal'
 
   'rcondl rcondu'=. (geconi , gecon1) y
 
@@ -893,27 +891,27 @@ testgebal=: 3 : 0
   vscale2=: 0&{:: (%"1 * ]) 3&{::
   vdenom2=: (FP_EPS * 1:^:(0&=)@norm1 * #)@[
 
-  ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
-  ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
-  ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
+  log=.          ('''p''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`nan      `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('''s''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
+  log=. log lcat ('''b''&dgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
 
-  ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
-  ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
-  ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
+  log=. log lcat ('''p''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`nan      `(norm1@(- vp2   (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('''s''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(-                0&{:: (%"1 * ]) 3&{::) % vdenom2))) y
+  log=. log lcat ('''b''&zgebal_mttmp_' tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- vp2   (fp^:_1) 0&{:: (%"1 * ]) vd2  ) % vdenom2))) y
 
-  ('geballp'             tmonad (]                 `]`(rcondl"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
-  ('gebalup'             tmonad (]                 `]`(rcondu"_)`(_."_)   `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('geballp'             tmonad (]                 `]`(rcondl"_)`nan      `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
+  log=. log lcat ('gebalup'             tmonad (]                 `]`(rcondu"_)`nan      `(norm1@(- 1&{:: (fp^:_1) 0&{::                ) % vdenom2))) y
 
-  ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcondl"_)`vferr2   `(norm1@(-                      vscale2        ) % vdenom2))) y
-  ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcondl"_)`(4 {:: ])`(norm1@(-                      vscale2        ) % vdenom2))) y
+  log=. log lcat ('gebals'              tmonad (((; i.   ; 0&,) #)`]`(rcondl"_)`vferr2   `(norm1@(-                      vscale2        ) % vdenom2))) y
+  log=. log lcat ('10&gebals'           tmonad (( ; i.@# ; 0 , _:)`]`(rcondl"_)`(4 {:: ])`(norm1@(-                      vscale2        ) % vdenom2))) y
 
-  ('geball'              tmonad (]                 `]`(rcondl"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
-  ('gebalu'              tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
+  log=. log lcat ('geball'              tmonad (]                 `]`(rcondl"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
+  log=. log lcat ('gebalu'              tmonad (]                 `]`(rcondu"_)`vferr2   `(norm1@(- 1&{:: (fp^:_1)       vscale2        ) % vdenom2))) y
 
   coerase < 'mttmp'
   erase 'vferr2 vp2 vd2 vscale2 vdenom2'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -926,9 +924,10 @@ NB.   - ggbalx (math/mt addon)
 NB.   by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testggbal AB
+NB.   log=. testggbal AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Formula:
 NB.   err0X := ||Xbal||_1 / ||X||_1                                           if not a permute only
@@ -947,7 +946,7 @@ NB. - err0 is outputted in ferr column
 NB. - err1 is outputted in berr column
 
 testggbal=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/ggbal'
+  load_mttmp_ 'math/mt/external/lapack2/ggbal'
 
   'rcondl rcondu'=. <./ (geconi , gecon1)"2 y
 
@@ -960,27 +959,27 @@ testggbal=: 3 : 0
   vscale03=: 0&{:: vscale2 3&{::
   vdenom2=:  (FP_EPS * 1:^:(0&=)@norm1"2 * c)@[
 
-  ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
-  ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
-  ('''b''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
+  log=.          ('''p''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
+  log=. log lcat ('''s''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
+  log=. log lcat ('''b''&dggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
 
-  ('''p''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
-  ('''s''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
-  ('''b''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
+  log=. log lcat ('''p''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 vp2  ) >./@:% vdenom2))) y
+  log=. log lcat ('''s''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(-  0&{:: vscale2 2&{::             ) >./@:% vdenom2))) y
+  log=. log lcat ('''b''&zggbal_mttmp_' tmonad (]                     `vgeto2`(rcondu"_)`vferr2`(norm1"2@(- (0&{:: vscale2 vd2)  vperm2 vp2  ) >./@:% vdenom2))) y
 
-  ('ggballp'             tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
-  ('ggbalup'             tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
+  log=. log lcat ('ggballp'             tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
+  log=. log lcat ('ggbalup'             tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-  0&{::               vperm2 1&{::) >./@:% vdenom2))) y
 
-  ('ggbals'              tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
-  ('(2^_44)&ggbals'      tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
+  log=. log lcat ('ggbals'              tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
+  log=. log lcat ('(2^_44)&ggbals'      tmonad (((; ,:~@i.   ; 0&,) c)`]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03                  ) >./@:% vdenom2))) y
 
-  ('ggball'              tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
-  ('ggbalu'              tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
+  log=. log lcat ('ggball'              tmonad (]                     `]     `(rcondl"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
+  log=. log lcat ('ggbalu'              tmonad (]                     `]     `(rcondu"_)`vferr2`(norm1"2@(-        vscale03      vperm2 1&{::) >./@:% vdenom2))) y
 
   coerase < 'mttmp'
   erase 'vgeto2 vferr2 vp2 vd2 vperm2 vscale2 vscale03 vdenom2'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -991,23 +990,21 @@ NB.   Adv. to make verb to test gxbalx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testbal
+NB.   log=. (mkmat testbal) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testbal_mt_ 150 150
+NB.     log=. ?@$&0 testbal_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testbal_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbal_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 150
 
-testbal=: 1 : 'EMPTY [ (testggbal_mt_@(u spmat_mt_ 0.25)@(2&,) [ testgebal_mt_@(u spmat_mt_ 0.25))^:(=/)'
+testbal=: 1 : 'nolog_mt_`(testggbal_mt_@(u spmat_mt_ 0.25)@(2&,) ,&.>~ testgebal_mt_@(u spmat_mt_ 0.25))@.(=/)'

@@ -1,40 +1,35 @@
 NB. 'Matrix toolbox' addon's entry point
 NB.
-NB. TESTLOGFILE  a: to switch logging off or boxed logfile
-NB.              name
-NB. TESTLOG      Literal array, being formatted test log
-NB. DEBUG        Debug level
-NB. FP_BASE      Floating point base
-NB. FP_ELEN      Exponent field length (bits)
-NB. FP_FLEN      Fraction field length (bits)
-NB. FP_IGUNFL    Is gradual underflow? (boolean)
-NB. FP_EBIAS     Exponent bias for normalized numbers
-NB. FP_EPS       Machine epsilon
-NB. FP_PREC      Machine precision
-NB. FP_EMIN      Min exponent for normalized numbers
-NB. FP_UNFL      Min normalized positive number
-NB. FP_EMAX      Max exponent for normalized numbers
-NB. FP_OVFL      Max normalized positive number
-NB. FP_SFMIN     Safe min, such that 1/FP_SFMIN does not
-NB.              overflow
+NB. DEBUG      Debug level
+NB. FP_BASE    Floating point base
+NB. FP_ELEN    Exponent field length (bits)
+NB. FP_FLEN    Fraction field length (bits)
+NB. FP_IGUNFL  Is gradual underflow? (boolean)
+NB. FP_EBIAS   Exponent bias for normalized numbers
+NB. FP_EPS     Machine epsilon
+NB. FP_PREC    Machine precision
+NB. FP_EMIN    Min exponent for normalized numbers
+NB. FP_UNFL    Min normalized positive number
+NB. FP_EMAX    Max exponent for normalized numbers
+NB. FP_OVFL    Max normalized positive number
+NB. FP_SFMIN   Safe min, such that 1/FP_SFMIN does not
+NB.            overflow
 NB.
-NB. testlow      Adv. to make verb to test low-level
-NB.              algorithms by matrix of generator and shape
-NB.              given
-NB. testmid      Adv. to make verb to test mid-level
-NB.              algorithms by matrix of generator and shape
-NB.              given
-NB. testhigh     Adv. to make verb to test high-level
-NB.              algorithms by matrix of generator and shape
-NB.              given
-NB. test         Adv. to make verb to test algorithms by
-NB.              matrix of generator and shape given
-NB. verify       Nilad to verify mt, output result to console
-NB.              and return it
+NB. testlow    Adv. to make verb to test low-level
+NB.            algorithms by matrix of generator and shape
+NB.            given
+NB. testmid    Adv. to make verb to test mid-level algorithms
+NB.            by matrix of generator and shape given
+NB. testhigh   Adv. to make verb to test high-level
+NB.            algorithms by matrix of generator and shape
+NB.            given
+NB. test       Adv. to make verb to test algorithms by matrix
+NB.            of generator and shape given
 NB.
-NB. Version: 0.13.3 2021-06-29
+NB. verify     Ambivalent predicate to verify mt addon
 NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -54,7 +49,73 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
+NB. =========================================================
+NB. Concepts
+NB.
+NB. Terms:
+NB.   modifier  - either adverb or conjunction
+NB.   actor     - either verb or modifier
+NB.   function  - a type of verb which returns useful result,
+NB.               usually is called as:
+NB.                 result=. function args
+NB.   procedure - a type of verb which returns useless
+NB.               result, is opposite to function, usually is
+NB.               called as anyone of:
+NB.                 procedure args
+NB.                 trash=. procedure args
+NB.                 EMPTY [ procedure args
+NB.   predicate - function returning boolean
+NB.   semipredicate
+NB.             - function returning either boolean or NULL
+NB.   identity  - a verb returning its argument[s]
+NB.   arity     - the number of arguments taken by a verb
+NB.   nilad, niladic verb
+NB.             - 0-ary verb, usually is called as:
+NB.                 out=. nilad ''
+NB.   monad, monadic verb
+NB.             - 1-ary verb
+NB.   dyad, dyadic verb
+NB.             - 2-ary verb
+NB.   ambivalent
+NB.             - either monadic or dyadic
+NB.   debug     - execute a verb and show debug info obtained
+NB.   test      - execute a verb with random arguments
+NB.               supplied, it's aimed to:
+NB.               - check whether the verb execution was
+NB.                 succeed
+NB.               - estimate a reciprocal of condition number
+NB.                 of input if it was a square non-singular
+NB.                 matrix
+NB.               - measure a relative forward error if verb
+NB.                 is a solver
+NB.               - measure a relative backward error
+NB.               - benchmark a time and space required for
+NB.                 execution
+NB.   verify    - execute a verb with thoroughly selected
+NB.               arguments to check the result correctness
+NB.
+NB. Notation:
+NB.   ∞          is       ±∞ i.e. either -∞ or +∞
+NB.   a,b = ∞    means    a,b ∈ {-∞,+∞}, not a = b = ±∞
+NB.
+NB. Conventions:
+NB. 1) a result returned from a test actor is an inverted
+NB.    table whose format is specified in test.ijs
+
+NB. =========================================================
+NB. Configuration
+
 coclass 'mt'
+
+NB. =========================================================
+NB. Local definitions
+
+NB. invertible ambivalent identity to erase names
+NB. syntax:
+NB.   out=. [x] f&.erasen y
+NB. to erase global names created while f was executed
+
+erasen=: ([ 4!:5@1) :. ([ (4!:5@0)@erase@(4!:5@1))
 
 NB. =========================================================
 NB. Interface
@@ -62,13 +123,6 @@ NB. Interface
 NB. ---------------------------------------------------------
 NB. User config
 
-NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NB. Tests logging
-
-TESTLOGFILE=: < jpath '~temp/mt.log'  NB. assign a: to switch off file logging
-TESTLOG=: ''                          NB. literal array, being formatted test log
-
-NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Debug level used by dbg conj., the atom:
 NB.   0 - execute debuging verb transparently and silently
 NB.   1 - show for debuging verb its rank and valency,
@@ -81,8 +135,8 @@ NB. ---------------------------------------------------------
 NB. System config
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NB. IEEE 754-1985 double-precision 64 bit floating point
-NB. constants
+NB. IEEE 754-1985 floating point constants for single
+NB. (32-bit) and double (64-bit) precision
 
 NB. basic values
 FP_BASE=: 2                                              NB. floating point base
@@ -124,9 +178,9 @@ require 'math/mt/quatern'      NB. Quaternions
 require 'math/mt/struct'       NB. Structure handlers
 require 'math/mt/rand'         NB. Random arrays
 require 'math/mt/test'         NB. Test
-require 'math/mt/benchmark'    NB. Benchmark
 
 NB. low-level
+require 'math/mt/basic'        NB. Basic linear algebra operations
 require 'math/mt/bak'          NB. Restore original eigenvectors
 require 'math/mt/bal'          NB. Balance
 require 'math/mt/cond'         NB. Condition number
@@ -135,7 +189,6 @@ require 'math/mt/rot'          NB. Rotation
 require 'math/mt/gq'           NB. Generate Q from its factored form
 require 'math/mt/mq'           NB. Multiply by Q represented in factored form
 require 'math/mt/scl'          NB. Scale
-require 'math/mt/sm'           NB. Solve linear monomial equation with triangular matrix
 
 NB. mid-level
 require 'math/mt/eq'           NB. Eigenvalues and Schur form
@@ -151,7 +204,7 @@ NB. high-level
 require 'math/mt/ev'           NB. Eigenvalues and eigenvectors
 require 'math/mt/exp'          NB. Matrix exponential
 require 'math/mt/ls'           NB. Solve overdetermined or underdetermined linear monomial equation
-require 'math/mt/pow'          NB. Raise matrix to integer power[s]
+require 'math/mt/pow'          NB. Raise matrix to integer power(s)
 require 'math/mt/sv'           NB. Solve linear monomial equation
 
 NB. =========================================================
@@ -168,78 +221,38 @@ NB.   Adv. to make verb to test algorithms either all or not,
 NB.   by matrix of generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkge testxxxx
+NB.   log=. (mkge testxxxx) (m,n)
 NB. where
+NB.   mkge  - monad to generate random non-singular general
+NB.           y-matrix (shape is taken from y)
 NB.   (m,n) - 2-vector of integers, shape of random matrices
 NB.           to test algorithms; only algorithms which
 NB.           accept m and n given will be tested
-NB.   mkge  - monad to generate random non-singular general
-NB.           y-matrix (shape is taken from y)
-NB.   vtest - verb to test algorithms; is called as:
-NB.             vtest (m,n)
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test low-level algorithms by random square integer
 NB.   matrix with elements distributed uniformly with support
 NB.   [0,100):
-NB.    ?@$&100 testlow_mt_ 10 10
+NB.     log=. ?@$&100 testlow_mt_ 10 10
 NB. - test mid-level algorithms by random rectangular real
 NB.   matrix with elements distributed uniformly with support
 NB.   (0,1):
-NB.     ?@$&0 testmid_mt_ 200 150
+NB.     log=. ?@$&0 testmid_mt_ 200 150
 NB. - test high-level algorithms by random square real matrix
 NB.   with elements with limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
 NB. - test all algorithms by random rectangular complex
 NB.   matrix:
-NB.     (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
-testlow=: 1 : 0
-     testrand_mt_  y
-  (u testbak_mt_ ) y  NB. square matrices only
-  (u testbal_mt_ ) y  NB. square matrices only
-  (u testref_mt_ ) y  NB. matrices with min dimention ≤ 200 only
-  (u testrot_mt_ ) y  NB. matrix of shape (2 1:} y) is used
-  (u testgq_mt_  ) y
-  (u testmq_mt_  ) y
-  (u testsm_mt_  ) y  NB. square matrices with size ≤ 500 only
+testlow=: 1 : '(u testmq_mt_) ,&.>~ (u testgq_mt_) ,&.>~ (u testrot_mt_) ,&.>~ (u testref_mt_) ,&.>~ (u testquatern_mt_) ,&.>~ (u testnorm_mt_) ,&.>~ (u testcon_mt_) ,&.>~ (u testbal_mt_) ,&.>~ (u testbak_mt_) ,&.>~ (u testbasic_mt_) ,&.>~ testrand_mt_'
 
-  EMPTY
-)
+testmid=: 1 : '(u testtrs_mt_) ,&.>~ (u testtri_mt_) ,&.>~ (u testtrf_mt_) ,&.>~ (u testqf_mt_) ,&.>~ (u testpf_mt_) ,&.>~ (u testhrd_mt_) ,&.>~ (u testevc_mt_) ,&.>~ (u testeq_mt_)'
 
-testmid=: 1 : 0
-  (u testeq_mt_  ) y  NB. square matrices only
-  (u testevc_mt_ ) y  NB. square matrices only
-  (u testhrd_mt_ ) y  NB. square matrices only
-  (u testpf_mt_  ) y
-  (u testqf_mt_  ) y
-  (u testtrf_mt_ ) y
-  (u testtri_mt_ ) y  NB. square matrices only
-  (u testtrs_mt_ ) y  NB. square matrices only
+testhigh=: 1 : '(u testmm_mt_) ,&.>~ (u testls_mt_) ,&.>~ (u testsv_mt_) ,&.>~ (u testpow_mt_) ,&.>~ (u testexp_mt_) ,&.>~ (u testev_mt_)'
 
-  EMPTY
-)
-
-testhigh=: 1 : 0
-  (u testev_mt_  ) y  NB. square matrices only
-  (u testexp_mt_ ) y  NB. square matrices only
-  (u testpow_mt_ ) y  NB. square matrices only
-  (u testsv_mt_  ) y  NB. square matrices only
-  (u testls_mt_  ) y
-  (u testmm_mt_  ) y
-
-  EMPTY
-)
-
-test=: 1 : 0
-  echo fmtlog_mt_ 'sentence';'rcond';'rel fwd err';'rel bwd err';'time, sec.';'space, bytes'
-
-  (u testlow_mt_ ) y  NB. low-level algorithms
-  (u testmid_mt_ ) y  NB. mid-level algorithms
-  (u testhigh_mt_) y  NB. high-level algorithms
-
-  EMPTY
-)
+test=: 1 : '(u testhigh_mt_) ,&.>~ (u testmid_mt_) ,&.>~ (u testlow_mt_)'
 
 NB. =========================================================
 NB. Verification suite
@@ -248,13 +261,23 @@ NB. ---------------------------------------------------------
 NB. verify
 NB.
 NB. Description:
-NB.   Nilad to verify mt, output result to console and return
-NB.   it
+NB.   Ambivalent predicate to verify mt addon and to stop at
+NB.   1st failed
 NB.
 NB. Syntax:
-NB.   'probed failed'=. verify_mt_ ''
+NB.   isSucceed=. [isVerbose] verify ''
 NB. where
-NB.   probed ≥ 0, tests probed counter
-NB.   failed ≥ 0, tests failed counter
+NB.   isVerbose - boolean to display assertions probed with
+NB.               the result of its execution, optional,
+NB.               default is 0 to run silently
+NB.   isSucceed - boolean, verification result
+NB.
+NB. Application:
+NB. - if verification is failed then re-run in verbose mode
+NB.   to see the 1st assertion failed:
+NB.      verify_mt_ ''    NB. run silently
+NB.   0                   NB. some assertions are failed
+NB.      1 verify_mt_ ''  NB. run verbosely to display each
+NB.   ...                 NB.   assertion's result
 
-verify=: verifymm
+verify=: 0&$: :(4 : '*./ 0!:(x { 3 2)&.erasen 1 dir ''~addons/math/mt/verify/*.ijs''')

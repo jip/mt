@@ -5,9 +5,8 @@ NB. fork4  Generalized fork with 4-depth execution graph
 NB. fork5  Generalized fork with 5-depth execution graph
 NB. fork6  Generalized fork with 6-depth execution graph
 NB.
-NB. Version: 0.7.0 2011-08-06
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -26,6 +25,22 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Concepts
+NB.
+NB. Notation:
+NB.   n-fork - generalized fork of n layers
+NB.
+NB. Notes:
+NB. - n-fork is a trellis automata
+NB.
+NB. References:
+NB. [1] JWiki :: User:Igor Zhuravlov/Extended forks
+NB.     https://code.jsoftware.com/wiki/User:Igor_Zhuravlov/Extended_forks
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 

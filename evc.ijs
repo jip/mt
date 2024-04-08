@@ -9,9 +9,8 @@ NB. testtgevc   Test tgevcxxx by square matrices
 NB. testevc     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
-NB.
-NB. Copyright 2011-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -31,6 +30,9 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
+NB. =========================================================
+NB. Configuration
+
 coclass 'mt'
 
 NB. =========================================================
@@ -40,7 +42,7 @@ NB. ---------------------------------------------------------
 NB. tgevci
 NB.
 NB. Description:
-NB.   Calculate initial parameters for tgevcly and tgevclx
+NB.   Calculate initial arguments for tgevcly and tgevclx
 NB.
 NB. Syntax:
 NB.   'bignum d2 abrwork cond1 cond2 abcoeff abcoeffa d'=. iso tgevci SP
@@ -63,25 +65,25 @@ NB.   d        - k×n-matrix
 tgevci=: 4 : 0
   bignum=. % FP_SFMIN * c y
   small=. % FP_PREC * bignum
-  d0=. diag"2 y                                                         NB. 2×n-matrix
-  d1=. ]`(9&o.)"1 d0                                                    NB. 2×n-matrix
+  d0=. diag"2 y                                                           NB. 2×n-matrix
+  d1=. ]`(9&o.)"1 d0                                                      NB. 2×n-matrix
   d2=. sorim`|"1 d1
-  temp=. norm1tr"2 y                                                    NB. 2×n-matrix
-  abnorm=. >./"1 temp                                                   NB. 2-vector
+  temp=. norm1tr"2 y                                                      NB. 2×n-matrix
+  abnorm=. (>./"1) temp                                                   NB. 2-vector
   abrwork=. temp - sorim d0
-  abscale=. % FP_SFMIN >. abnorm                                        NB. 2-vector
-  temp=. % (>./) FP_SFMIN , abscale * d2                                NB. n-vector
-  sba=. |. abscale * temp *"1 d1                                        NB. 2×n-matrix
-  abcoeff=. abscale * sba                                               NB. 2×n-matrix
+  abscale=. % FP_SFMIN >. abnorm                                          NB. 2-vector
+  temp=. % (>./) FP_SFMIN , abscale * d2                                  NB. n-vector
+  sba=. |. abscale * temp (*"1) d1                                        NB. 2×n-matrix
+  abcoeff=. abscale * sba                                                 NB. 2×n-matrix
   NB. scale to avoid underflow
-  lsab=. *./ >:&FP_SFMIN`(<&small)"2 |`sorim"1"2 sba ,: abcoeff         NB. 2×n-matrix
-  scale=. >./ lsab} 1 ,: ((% small) <. abnorm) * small % |`sorim"1 sba  NB. n-vector
-  scale=. (+./ lsab)} scale ,: scale <. % FP_SFMIN * >./ 1 , |`sorim"1 abcoeff
-  abcoeff=. lsab} (abcoeff *"1 scale) ,: (abscale * scale *"1 sba)
+  lsab=. (*./) >:&FP_SFMIN`(<&small)"2 |`sorim"1"2 sba ,: abcoeff         NB. 2×n-matrix
+  scale=. (>./) lsab} 1 ,: ((% small) <. abnorm) * small % |`sorim"1 sba  NB. n-vector
+  scale=. ((+./) lsab)} scale ,: scale <. % FP_SFMIN * (>./) 1 , |`sorim"1 abcoeff
+  abcoeff=. lsab} (abcoeff (*"1) scale) ,: (abscale * scale (*"1) sba)
   abcoeffa=. |`sorim"1 abcoeff
-  cond1=. +/ abcoeffa * abrwork
-  dmin=. (# x) # ,: >./ FP_SFMIN , FP_PREC * abnorm * abcoeffa          NB. k×n-matrix
-  d=. (x { |: abcoeff) mp ]`-"1 d0
+  cond1=. (+/!.0) abcoeffa * abrwork
+  dmin=. (# x) # ,: (>./) FP_SFMIN , FP_PREC * abnorm * abcoeffa          NB. k×n-matrix
+  d=. (x { |: abcoeff) mp (]`-"1) d0
   d=. (dmin < sorim d)} dmin ,: d
   cond2=. bignum (((1 > ]) ,. *) sorim) d
 
@@ -120,7 +122,7 @@ tgevcly=: 4 : 0
       NB.   y * (a*A - b*B) = 0  (rowwise)
       NB. work[0:j-1] contains sums w
       NB. work[j+1:je] contains y
-      work=. 1 ,~ -/ ((je { iso) { abcoeff) * (((0 , ] , 0:) ,: 2 1 , ]) je { iso) {.@(1 0 2&|:);.0 y
+      work=. 1 ,~ -/ ((je { iso) { abcoeff) * (0 (([ ,~ ,) ,: 2 1 , ]) je { iso) ({.@(1 0 2&|:);.0) y
       di=. je { d
       j=. <: je { iso
       while. j >: 0 do.
@@ -128,18 +130,18 @@ tgevcly=: 4 : 0
         NB.   y[j] = - w[j] / di
         NB. with scaling and perturbation of the denominator
         abs1wj=. sorim j { work
-        if. *.`<:/ (j { cond2) , abs1wj do.
+        if. (*.`<:/) (j { cond2) , abs1wj do.
           work=. work % abs1wj
         end.
-        work=. j -@(%&(j{di)) upd work
+        work=. -@(%&(j{di))&.(j&{) work
         abs1wj=. sorim j { work
         if. j > 0 do.
           NB. w = w + y[j] * (a*S[:,j] - b*P[:,j]) with scaling
           if. ((abcoeffa mp&(j&{) abrwork) >: (bignum % abs1wj)) *. (1 < abs1wj) do.
             work=. work % abs1wj
           end.
-          workadd=. (((je { iso) { abcoeff) * j { work) * (((0 , ] , 0:) ,: 2 1 , ]) j) {.@(1 0 2&|:);.0 y
-          work=. (i. j) +`-/@(,&workadd) upd work
+          workadd=. (((je { iso) { abcoeff) * j { work) * (0 (([ ,~ ,) ,: 2 1 , ]) j) ({.@(1 0 2&|:);.0) y
+          work=. +`-/@(,&workadd)&.((i. j)&{) work
         end.
         j=. <: j
       end.
@@ -175,7 +177,7 @@ tgevclx=: 4 : 0
   W=. (0,n) $ 0
   je=. 0
   while. je < k do.
-    if. *./ FP_SFMIN >: (je { iso) { d2 do.
+    if. (*./) FP_SFMIN >: (je { iso) { d2 do.
       NB. singular matrix pencil - return unit eigenvector
       work=. 1 je} n $ 0
     else.
@@ -197,12 +199,12 @@ tgevclx=: 4 : 0
           work=. work % xmax
           xmax=. 1
         end.
-        sum=. -/ (]`+"0 (je { iso) { abcoeff) * work mp (j ((0 , ,) ,: (2 1 , -)) je { iso) +@{.@(0&|:);.0 y
+        sum=. -/ ((]`+"0) (je { iso) { abcoeff) * work mp (j ((0 , ,) ,: (2 1 , -)) je { iso) (+@{.@(0&|:);.0) y
         NB. form:
         NB.   x[j] = - sum / conjg(a*S[j,j] - b*P[j,j])
         NB. with scaling and perturbation of the denominator
         abs1sum=. sorim sum
-        if. *.`<:/ (j { cond2) , abs1sum do.
+        if. (*.`<:/) (j { cond2) , abs1sum do.
           work=. work % abs1sum
           xmax=. xmax % abs1sum
           sum=. sum % abs1sum
@@ -235,7 +237,7 @@ NB.   V - k×n-matrix, scaled W
 
 tgevcs=: 3 : 0
   norm=. normitr y
-  iso=. (#y) #"0 FP_SFMIN < norm
+  iso=. (#y) (#"0) FP_SFMIN < norm
   y=. y % norm
   y=. iso} 0 ,: y
 )
@@ -515,28 +517,27 @@ NB. Description:
 NB.   Test tgevcxxx by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testtgevc AB
+NB.   log=. testtgevc AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testtgevc=: 3 : 0
   rcondl=. <./ trlconi"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
   rcondu=. <./ trucon1"2 SPu=. 2 {. SPQZHTu=. (([ (((0,[) hgeqzsvv (, ,:~@idmat)~) , ]) ((gghrdunn~ 0&,)~ ((unmqrlc~ ,: tru@  }:   @]) geqrf)/))~ c) y
 
-  ('tgevcll'  tmonad (]          `]`(rcondl"_)`(_."_)`t52ll)) SPl
-  ('tgevclr'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lr)) SPl
-  ('tgevclb'  tmonad (]          `]`(rcondl"_)`(_."_)`t52lb)) SPl
-  ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`(_."_)`t52ll)) SPQZHTl
-  ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`(_."_)`t52lr)) SPQZHTl
-  ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`(_."_)`t52lb)) SPQZHTl
-  ('tgevcul'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ul)) SPu
-  ('tgevcur'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ur)) SPu
-  ('tgevcub'  tmonad (]          `]`(rcondu"_)`(_."_)`t52ub)) SPu
-  ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`(_."_)`t52ul)) SPQZHTu
-  ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`(_."_)`t52ur)) SPQZHTu
-  ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`(_."_)`t52ub)) SPQZHTu
-
-  EMPTY
+  log=.          ('tgevcll'  tmonad (]          `]`(rcondl"_)`nan`t52ll)) SPl
+  log=. log lcat ('tgevclr'  tmonad (]          `]`(rcondl"_)`nan`t52lr)) SPl
+  log=. log lcat ('tgevclb'  tmonad (]          `]`(rcondl"_)`nan`t52lb)) SPl
+  log=. log lcat ('tgevcllb' tmonad ((0 1 2  &{)`]`(rcondl"_)`nan`t52ll)) SPQZHTl
+  log=. log lcat ('tgevclrb' tmonad ((0 1   3&{)`]`(rcondl"_)`nan`t52lr)) SPQZHTl
+  log=. log lcat ('tgevclbb' tmonad ((0 1 2 3&{)`]`(rcondl"_)`nan`t52lb)) SPQZHTl
+  log=. log lcat ('tgevcul'  tmonad (]          `]`(rcondu"_)`nan`t52ul)) SPu
+  log=. log lcat ('tgevcur'  tmonad (]          `]`(rcondu"_)`nan`t52ur)) SPu
+  log=. log lcat ('tgevcub'  tmonad (]          `]`(rcondu"_)`nan`t52ub)) SPu
+  log=. log lcat ('tgevculb' tmonad ((0 1 2  &{)`]`(rcondu"_)`nan`t52ul)) SPQZHTu
+  log=. log lcat ('tgevcurb' tmonad ((0 1   3&{)`]`(rcondu"_)`nan`t52ur)) SPQZHTu
+  log=. log lcat ('tgevcubb' tmonad ((0 1 2 3&{)`]`(rcondu"_)`nan`t52ub)) SPQZHTu
 )
 
 NB. ---------------------------------------------------------
@@ -547,23 +548,21 @@ NB.   Adv. to make verb to test tgevcxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testevc
+NB.   log=. (mkmat testevc) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testevc_mt_ 150 150
+NB.     log=. ?@$&0 testevc_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testevc_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testevc_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testevc_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testevc_mt_ 150 150
 
-testevc=: 1 : 'EMPTY [ testtgevc_mt_@u@(2&,)^:(=/)'
+testevc=: 1 : 'nolog_mt_`(testtgevc_mt_@u@(2&,))@.(=/)'

@@ -5,7 +5,7 @@ NB. path defaults to project directory.
 
 bak.ijs
 bal.ijs
-benchmark.ijs
+basic.ijs
 cond.ijs
 dbg.ijs
 eq.ijs
@@ -16,6 +16,8 @@ fork.ijs
 gq.ijs
 hrd.ijs
 iso.ijs
+ls.ijs
+mm.ijs
 mq.ijs
 mt.ijs
 norm.ijs
@@ -27,7 +29,6 @@ rand.ijs
 ref.ijs
 rot.ijs
 scl.ijs
-sm.ijs
 struct.ijs
 sv.ijs
 test.ijs

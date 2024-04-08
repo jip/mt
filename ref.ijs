@@ -10,7 +10,8 @@ NB.            the right
 NB. larxbxxxx  Dyads to build and apply a block reflector or
 NB.            its transpose to a matrix from either the left
 NB.            or the right
-NB. refga      Conj. to make verb to get and apply reflection
+NB. refga      Conj. to make monad to generate and apply
+NB.            reflector
 NB.
 NB. testlarfg  Test larfx by general vector
 NB. testlarf   Test larfxxxx by general matrix
@@ -22,9 +23,8 @@ NB. testlarzb  Test larzbxxxx by general matrix
 NB. testref    Adv. to make verb to test larxxxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -44,6 +44,9 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
+NB. =========================================================
+NB. Configuration
+
 coclass 'mt'
 
 NB. =========================================================
@@ -59,18 +62,16 @@ NB. ---------------------------------------------------------
 NB. larxtx
 NB.
 NB. Description:
-NB.   Conj. to make monads to form the triangular factor Τ of
+NB.   Conj. to make monad to form the triangular factor Τ of
 NB.   a block reflector
 NB.
 NB. Syntax:
-NB.   vapp=. ioTau larxtx mprod
+NB.   T=. (ioTau larxtx mprod) VTau
 NB. where
 NB.   ioTau - IOs Tau in VTau:
 NB.             Tau -: ioTau { VTau
 NB.   mprod - dyad to multiply matrices, is called as:
 NB.             M3=. M1 mprod M2
-NB.   vapp  - monad to calculate Τ, is called as:
-NB.             T=. vapp VTau
 NB.   VTau  - (m+1)×k- or k×(n+1)-matrix, V and Tau combined
 NB.   T     - k×k-matrix, triangular
 NB.   V     - m×k- or k×n-matrix, the unit trapezoidal
@@ -83,21 +84,18 @@ NB. ---------------------------------------------------------
 NB. larxxxxx
 NB.
 NB. Description:
-NB.   Adv. to make dyads to apply an elementary reflector H
+NB.   Adv. to make dyad to apply an elementary reflector H
 NB.   or its transpose H' to a matrix, from either the left
 NB.   or the right. H is defined by pair (v,τ).
 NB.
 NB. Syntax:
-NB.   vapp=. iotau larxxxxx
+NB.   eCupd=. Vtau (iotau larxxxxx) eC
 NB. where
 NB.   iotau - IO tau in Vtau:
 NB.             tau -: iotau { Vtau
-NB.   vapp  - dyad to calculate Τ, is called as:
-NB.             eCupd=. Vtau larxxxxx eC
 NB.   Vtau  - vector V augmented by scalar τ
-NB.   eC    - matrix C to update, augmented by trash vector
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eC    - matrix C augmented by trash vector
+NB.   eCupd - an updated eC
 
 larxlcxc=: 1 : '] - [ */ (mp~ +@(0&(m}) * m&{))~'  NB. C - v * ((v * τ)' * C)
 larxlcxr=: 1 : '] - +@(* m&{)@[ */ (0 m} [) mp ]'  NB. C - (τ * v)' * (v * C)
@@ -115,24 +113,21 @@ NB. ---------------------------------------------------------
 NB. larxbxxxx
 NB.
 NB. Description:
-NB.   Conj. to make dyads to apply an elementary reflector H
+NB.   Conj. to make dyad to apply an elementary reflector H
 NB.   or its transpose H' to a matrix, from either the left
 NB.   or the right. H is defined by pair (V,Τ).
 NB.
 NB. Syntax:
-NB.   vapp=. ioTau larxbxxxx makeT
+NB.   eCupd=. VTau (ioTau larxbxxxx makeT) eC
 NB. where
 NB.   ioTau - IO tau in VTau:
 NB.             Tau -: ioTau { VTau
 NB.   makeT - monad to make Τ, usually one of larxtxx, is
 NB.           called as:
 NB.             T=. makeT VTau
-NB.   vapp  - dyad to calculate Τ, is called as:
-NB.             eCupd=. VTau larxbxxxx eC
 NB.   VTau  - matrix V augmented by vector τ
-NB.   eC    - matrix C to update, augmented by trash vector
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eC    - matrix C augmented by trash vector
+NB.   eCupd - an updated eC
 
 larxblcxc=: 2 : '] - [ mp (mp~ ct@(0&(m}) mp v))~'   NB. C - V * ((V * Τ)' * C)
 larxblcxr=: 2 : '] - ct@(mp~ v)@[ mp (0 m} [) mp ]'  NB. C - (Τ * V)' * (V * C)
@@ -155,12 +150,10 @@ NB. larfp
 NB.
 NB. Description:
 NB.   Generate an elementary reflector H of order n such that
-NB.     H^H * (α,x) = (β,0),
-NB.   where
-NB.     H = I - (1,v) * τ * (1,v)^H,
-NB.     H^H * H = I.
-NB.   H is represented in factored form by n-vector (1,v) and
-NB.   scalar τ.
+NB.     H^H * (α,x) = (β,0)
+NB. where
+NB.   H - represented in factored form by n-vector (1,v) and
+NB.       scalar τ
 NB.
 NB. Syntax:
 NB.   z=. iso larfg y
@@ -169,15 +162,18 @@ NB. where
 NB.   iso - 2-vector of integers (ioa,iot)
 NB.   ioa - lIO α in y
 NB.   iot - lIO pre-allocated scalar in y
-NB.   y   - (n+1)-vector having scalar α ∊ ℂ at index ioa,
-NB.         any scalar at index iot, and vector x ∊ ℂ^(n-1)
+NB.   y   - (n+1)-vector having scalar α ∈ ℂ at index ioa,
+NB.         any scalar at index iot, and vector x ∈ ℂ^(n-1)
 NB.         in the rest elements, vector to reflect is:
 NB.           (<<< iot) { y
-NB.   z   - (n+1)-vector having scalar β ∊ ℝ (larfp [1]
-NB.         provides β≥0) at index ioa, scalar τ ∊ ℂ at index
-NB.         iot, and vector v ∊ ℂ^(n-1) in the rest elements,
+NB.   z   - (n+1)-vector having scalar β ∈ ℝ (larfp [1]
+NB.         provides β≥0) at index ioa, scalar τ ∈ ℂ at index
+NB.         iot, and vector v ∈ ℂ^(n-1) in the rest elements,
 NB.         reflected vector is:
 NB.           beta ioa} n $ 0
+NB.
+NB. Formula:
+NB.   H = I - (1,v) * τ * (1,v)^H
 NB.
 NB. Application:
 NB. - reflect vector (α,x) by larfg and store τ at tail:
@@ -190,8 +186,8 @@ NB.     v=. (<<<_1 0) { z
 NB.     'beta tau'=. _1 0 { z
 NB.
 NB. Assertions (with appropriate comparison tolerance):
-NB.    (n {. beta) -: H (mp~ ct)~ }: y
-NB.    I           -:   (mp~ ct)~ H
+NB.    (n {. beta) -: H (mp~ ct)~ }: y  NB. H^H * (α,x) = (β,0)
+NB.    I           -:   (mp~ ct)~ H     NB. H^H * H = I
 NB. where
 NB.   x     - (n-1)-vector
 NB.   alpha - scalar
@@ -224,12 +220,12 @@ larfg=: 4 : 0
   alpha=. ioa { y
   y=. 0 iot} y                            NB. τ := 0
   ynorm=. norms y
-  if. ynorm =!.0 | 9 o. alpha do.         NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∊ ℝ ?
+  if. ynorm (=!.0) | 9 o. alpha do.       NB. ||y|| == ||(α,x,0)|| == ||α|| and α ∈ ℝ ?
     y                                     NB. (α,0,0) i.e. H==I, τ==0, β==α, v==0
   else.
     if. REFSAFMIN > ynorm do.             NB. xnorm, β may be inaccurate; scale x and recompute them
       y=. y % REFSAFMIN                   NB. (α_scaled,x_scaled,0)
-      beta=. (9 o. alpha) negpos norms y  NB. use Re(α) instead Re(α_ascaled) since sign(Re(α)) == sign(Re(α_scaled)); |β_scaled| ∊ [REFSAFMIN,1)
+      beta=. (9 o. alpha) negpos norms y  NB. use Re(α) instead Re(α_ascaled) since sign(Re(α)) == sign(Re(α_scaled)); |β_scaled| ∈ [REFSAFMIN,1)
       dzeta=. beta - ioa { y              NB. ζ := β_scaled-α_scaled
       tau=. dzeta % beta                  NB. τ := ζ/β_scaled
       beta=. REFSAFMIN * beta             NB. unscale β; if α is subnormal, it may lose relative accuracy
@@ -246,56 +242,56 @@ larfg=: 4 : 0
 larfp=: 4 : 0
   'ioa iot'=. x
   alpha=. ioa { y
-  xnorm=. norms 0 x} y                                NB. ||x||
+  xnorm=. norms 0 x} y                                    NB. ||x||
   if. 0 = xnorm do.
-    y=. ((| , 1 - *) alpha) x} y                      NB. replace in-place α by |β| and τ by (1-α/|α|)
+    y=. ((| , 1 - *) alpha) x} y                          NB. replace α by |β| and τ by (1-α/|α|)
   else.
-    beta=. (9 o. alpha) negpos norms alpha , xnorm    NB. β := -copysign(||y||,Re(α))
-    y=. (| beta) iot} y                               NB. write in-place |β|
+    beta=. (9 o. alpha) negpos norms alpha , xnorm        NB. β := -copysign(||y||,Re(α))
+    y=. (| beta) iot} y
     if. FP_SFMIN > | beta do.
-      y=. y % FP_SFMIN                                NB. scale (α,x[1],...,x[n-1],|β|)
+      y=. y % FP_SFMIN                                    NB. scale (α,x[1],...,x[n-1],|β|)
       xnorm=. xnorm % FP_SFMIN
     end.
     if. 0 <: beta do.
-      dzeta=. -/ x { y                                NB. ζ := α_scaled-|β_scaled|
-      tau=. - dzeta % iot { y                         NB. τ := -ζ/|β_scaled|
+      dzeta=. -/ x { y                                    NB. ζ := α_scaled-|β_scaled|
+      tau=. - dzeta % iot { y                             NB. τ := -ζ/|β_scaled|
     else.
-      beta=. - beta                                   NB. |β_unscaled|
-      'realpha imalpha'=. +. ioa { y                  NB. Re(α_scaled) , Im(α_scaled)
-      gamma=. realpha + iot { y                       NB. γ := Re(α_scaled)+|β_scaled|
-      delta=. (imalpha , xnorm) -@(+/)@([ * %) gamma  NB. δ := -(Im(α_scaled)*(Im(α_scaled)/γ)+||x||*(||x||/γ))
-      dzeta=. delta j. imalpha                        NB. ζ := δ+i*Im(α_scaled)
-      tau=. - dzeta % iot { y                         NB. τ := -ζ/|β_scaled|
+      beta=. - beta                                       NB. |β_unscaled|
+      'realpha imalpha'=. +. ioa { y                      NB. Re(α_scaled) , Im(α_scaled)
+      gamma=. realpha + iot { y                           NB. γ := Re(α_scaled)+|β_scaled|
+      delta=. - (imalpha , xnorm) ([ +/@:*"1!.0 %) gamma  NB. δ := -(Im(α_scaled)*(Im(α_scaled)/γ)+||x||*(||x||/γ))
+      dzeta=. delta j. imalpha                            NB. ζ := δ+i*Im(α_scaled)
+      tau=. - dzeta % iot { y                             NB. τ := -ζ/|β_scaled|
     end.
     y=. y % dzeta
-    y=. (beta , tau) x} y                             NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
+    y=. (beta , tau) x} y                                 NB. replace α_scaled by |β_unscaled| and |β_scaled| by τ
   end.
 )
 
 NB. ---------------------------------------------------------
-NB. Verb:      Input:            Output:                 β:
-NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∊ℝ
-NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∊ℝ
-NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∊ℝ
-NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ∊ℝ
-NB. larfpf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ≥0
-NB. larfpfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ≥0
-NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ≥0
-NB. larfpbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ≥0
+NB. Verb       Input             Output                  β
+NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∈ ℝ
+NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∈ ℝ
+NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∈ ℝ
+NB. larfgbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ∈ ℝ
+NB. larfpf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ≥ 0
+NB. larfpfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ≥ 0
+NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ≥ 0
+NB. larfpbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ≥ 0
 NB.
 NB. Description:
 NB.   Monads to generate an elementary reflector, see larfg,
 NB.   larfp for details.
 
-larfgf=: 0 _1&larfg
-larfgfc=: _1 +upd larfgf
-larfgb=: _1 0&larfg
-larfgbc=: 0 +upd larfgb
+larfgf=:  0 _1&larfg
+larfgb=: _1  0&larfg
+larfpf=:  0 _1&larfp
+larfpb=: _1  0&larfp
 
-larfpf=: 0 _1&larfp
-larfpfc=: _1 +upd larfpf
-larfpb=: _1 0&larfp
-larfpbc=: 0 +upd larfpb
+larfgfc=: +&.(_1&{)@larfgf
+larfgbc=: +&.( 0&{)@larfgb
+larfpfc=: +&.(_1&{)@larfpf
+larfpbc=: +&.( 0&{)@larfpb
 
 NB. ---------------------------------------------------------
 NB. larftbc
@@ -304,8 +300,9 @@ NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(k-1) * ... * H(1) * H(0) = I - V * Τ * V' ,
-NB.   where Τ is lower triangular.
+NB.     H = H(k-1) * ... * H(1) * H(0) = I - V * Τ * V'
+NB. where
+NB.   Τ - lower triangular
 NB.
 NB. Syntax:
 NB.   T=. larxtbc VTau
@@ -330,8 +327,9 @@ NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(k-1) * ... * H(1) * H(0) = I - V' * Τ * V ,
-NB.   where Τ is lower triangular.
+NB.     H = H(k-1) * ... * H(1) * H(0) = I - V' * Τ * V
+NB. where
+NB.   Τ - lower triangular
 NB.
 NB. Syntax:
 NB.   T=. larxtbr VTau
@@ -356,8 +354,9 @@ NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(0) * H(1) * ... * H(k-1) = I - V * Τ * V' ,
-NB.   where Τ is upper triangular.
+NB.     H = H(0) * H(1) * ... * H(k-1) = I - V * Τ * V'
+NB. where
+NB.   Τ - upper triangular
 NB.
 NB. Syntax:
 NB.   T=. larxtfc VTau
@@ -382,8 +381,9 @@ NB.
 NB. Description:
 NB.   Monad to form the triangular factor Τ of a block
 NB.   reflector H:
-NB.     H = H(0) * H(1) * ... * H(k-1) = I - V' * Τ * V ,
-NB.   where Τ is upper triangular.
+NB.     H = H(0) * H(1) * ... * H(k-1) = I - V' * Τ * V
+NB. where
+NB.   Τ - upper triangular
 NB.
 NB. Syntax:
 NB.   T=. larxtfr VTau
@@ -402,23 +402,23 @@ larftfr=: (< a: ; _1) larxtf mp
 larztfr=: (< a: ;  0) larxtf mp
 
 NB. ---------------------------------------------------------
-NB. Verb:       Action:    Side:    Tran:    Dir:    Layout:       eC:
-NB. larflcbc    H' * C     left     ct       bwd     columnwise    0, C
-NB. larflcbr    H' * C     left     ct       bwd     rowwise       0, C
-NB. larflcfc    H' * C     left     ct       fwd     columnwise    C, 0
-NB. larflcfr    H' * C     left     ct       fwd     rowwise       C, 0
-NB. larflnbc    H  * C     left     none     bwd     columnwise    0, C
-NB. larflnbr    H  * C     left     none     bwd     rowwise       0, C
-NB. larflnfc    H  * C     left     none     fwd     columnwise    C, 0
-NB. larflnfr    H  * C     left     none     fwd     rowwise       C, 0
-NB. larfrcbc    C  * H'    right    ct       bwd     columnwise    0,.C
-NB. larfrcbr    C  * H'    right    ct       bwd     rowwise       0,.C
-NB. larfrcfc    C  * H'    right    ct       fwd     columnwise    C,.0
-NB. larfrcfr    C  * H'    right    ct       fwd     rowwise       C,.0
-NB. larfrnbc    C  * H     right    none     bwd     columnwise    0,.C
-NB. larfrnbr    C  * H     right    none     bwd     rowwise       0,.C
-NB. larfrnfc    C  * H     right    none     fwd     columnwise    C,.0
-NB. larfrnfr    C  * H     right    none     fwd     rowwise       C,.0
+NB. Verb        Action     Side     Tran    Dir    Layout        eC
+NB. larflcbc    H' * C     left     ct      bwd    columnwise    0, C
+NB. larflcbr    H' * C     left     ct      bwd    rowwise       0, C
+NB. larflcfc    H' * C     left     ct      fwd    columnwise    C, 0
+NB. larflcfr    H' * C     left     ct      fwd    rowwise       C, 0
+NB. larflnbc    H  * C     left     none    bwd    columnwise    0, C
+NB. larflnbr    H  * C     left     none    bwd    rowwise       0, C
+NB. larflnfc    H  * C     left     none    fwd    columnwise    C, 0
+NB. larflnfr    H  * C     left     none    fwd    rowwise       C, 0
+NB. larfrcbc    C  * H'    right    ct      bwd    columnwise    0,.C
+NB. larfrcbr    C  * H'    right    ct      bwd    rowwise       0,.C
+NB. larfrcfc    C  * H'    right    ct      fwd    columnwise    C,.0
+NB. larfrcfr    C  * H'    right    ct      fwd    rowwise       C,.0
+NB. larfrnbc    C  * H     right    none    bwd    columnwise    0,.C
+NB. larfrnbr    C  * H     right    none    bwd    rowwise       0,.C
+NB. larfrnfc    C  * H     right    none    fwd    columnwise    C,.0
+NB. larfrnfr    C  * H     right    none    fwd    rowwise       C,.0
 NB.
 NB. Description:
 NB.   Dyads to apply an elementary reflector H or its
@@ -428,10 +428,9 @@ NB.
 NB. Syntax:
 NB.   eCupd=. vtau larfxxxx eC
 NB. where
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   vtau  - vector v augmented by scalar τ
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 NB.   v     - vector with 1 at head (forward direction) or
 NB.           tail (backward direction)
 NB.
@@ -462,23 +461,23 @@ larfrnfc=: _1 larxrnxc
 larfrnfr=: _1 larxrnxr
 
 NB. ---------------------------------------------------------
-NB. Verb:       Action:    Side:    Tran:    Dir:    Layout:       eC:
-NB. larzlcbc    H' * C     left     ct       bwd     columnwise    C, 0
-NB. larzlcbr    H' * C     left     ct       bwd     rowwise       C, 0
-NB. larzlcfc    H' * C     left     ct       fwd     columnwise    0, C
-NB. larzlcfr    H' * C     left     ct       fwd     rowwise       0, C
-NB. larzlnbc    H  * C     left     none     bwd     columnwise    C, 0
-NB. larzlnbr    H  * C     left     none     bwd     rowwise       C, 0
-NB. larzlnfc    H  * C     left     none     fwd     columnwise    0, C
-NB. larzlnfr    H  * C     left     none     fwd     rowwise       0, C
-NB. larzrcbc    C  * H'    right    ct       bwd     columnwise    C,.0
-NB. larzrcbr    C  * H'    right    ct       bwd     rowwise       C,.0
-NB. larzrcfc    C  * H'    right    ct       fwd     columnwise    0,.C
-NB. larzrcfr    C  * H'    right    ct       fwd     rowwise       0,.C
-NB. larzrnbc    C  * H     right    none     bwd     columnwise    C,.0
-NB. larzrnbr    C  * H     right    none     bwd     rowwise       C,.0
-NB. larzrnfc    C  * H     right    none     fwd     columnwise    0,.C
-NB. larzrnfr    C  * H     right    none     fwd     rowwise       0,.C
+NB. Verb        Action     Side     Tran    Dir    Layout        eC
+NB. larzlcbc    H' * C     left     ct      bwd    columnwise    C, 0
+NB. larzlcbr    H' * C     left     ct      bwd    rowwise       C, 0
+NB. larzlcfc    H' * C     left     ct      fwd    columnwise    0, C
+NB. larzlcfr    H' * C     left     ct      fwd    rowwise       0, C
+NB. larzlnbc    H  * C     left     none    bwd    columnwise    C, 0
+NB. larzlnbr    H  * C     left     none    bwd    rowwise       C, 0
+NB. larzlnfc    H  * C     left     none    fwd    columnwise    0, C
+NB. larzlnfr    H  * C     left     none    fwd    rowwise       0, C
+NB. larzrcbc    C  * H'    right    ct      bwd    columnwise    C,.0
+NB. larzrcbr    C  * H'    right    ct      bwd    rowwise       C,.0
+NB. larzrcfc    C  * H'    right    ct      fwd    columnwise    0,.C
+NB. larzrcfr    C  * H'    right    ct      fwd    rowwise       0,.C
+NB. larzrnbc    C  * H     right    none    bwd    columnwise    C,.0
+NB. larzrnbr    C  * H     right    none    bwd    rowwise       C,.0
+NB. larzrnfc    C  * H     right    none    fwd    columnwise    0,.C
+NB. larzrnfr    C  * H     right    none    fwd    rowwise       0,.C
 NB.
 NB. Description:
 NB.   Dyads to apply an elementary reflector H or its
@@ -488,10 +487,9 @@ NB.
 NB. Syntax:
 NB.   eCupd=. vtau larzxxxx eC
 NB. where
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   vtau  - vector v augmented by scalar τ
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 NB.   v     - vector with 1 at head (backward direction) or
 NB.           tail (forward direction), and 0s in atoms to be
 NB.           ignored
@@ -523,23 +521,23 @@ larzrnfc=:  0 larxrnxc
 larzrnfr=:  0 larxrnxr
 
 NB. ---------------------------------------------------------
-NB. Verb:        Action:    Side:    Tran:    Dir:    Layout:       eC:
-NB. larfblcbc    H' * C     left     ct       bwd     columnwise    0, C
-NB. larfblcbr    H' * C     left     ct       bwd     rowwise       0, C
-NB. larfblcfc    H' * C     left     ct       fwd     columnwise    C, 0
-NB. larfblcfr    H' * C     left     ct       fwd     rowwise       C, 0
-NB. larfblnbc    H  * C     left     none     bwd     columnwise    0, C
-NB. larfblnbr    H  * C     left     none     bwd     rowwise       0, C
-NB. larfblnfc    H  * C     left     none     fwd     columnwise    C, 0
-NB. larfblnfr    H  * C     left     none     fwd     rowwise       C, 0
-NB. larfbrcbc    C  * H'    right    ct       bwd     columnwise    0,.C
-NB. larfbrcbr    C  * H'    right    ct       bwd     rowwise       0,.C
-NB. larfbrcfc    C  * H'    right    ct       fwd     columnwise    C,.0
-NB. larfbrcfr    C  * H'    right    ct       fwd     rowwise       C,.0
-NB. larfbrnbc    C  * H     right    none     bwd     columnwise    0,.C
-NB. larfbrnbr    C  * H     right    none     bwd     rowwise       0,.C
-NB. larfbrnfc    C  * H     right    none     fwd     columnwise    C,.0
-NB. larfbrnfr    C  * H     right    none     fwd     rowwise       C,.0
+NB. Verb         Action     Side     Tran    Dir    Layout        eC
+NB. larfblcbc    H' * C     left     ct      bwd    columnwise    0, C
+NB. larfblcbr    H' * C     left     ct      bwd    rowwise       0, C
+NB. larfblcfc    H' * C     left     ct      fwd    columnwise    C, 0
+NB. larfblcfr    H' * C     left     ct      fwd    rowwise       C, 0
+NB. larfblnbc    H  * C     left     none    bwd    columnwise    0, C
+NB. larfblnbr    H  * C     left     none    bwd    rowwise       0, C
+NB. larfblnfc    H  * C     left     none    fwd    columnwise    C, 0
+NB. larfblnfr    H  * C     left     none    fwd    rowwise       C, 0
+NB. larfbrcbc    C  * H'    right    ct      bwd    columnwise    0,.C
+NB. larfbrcbr    C  * H'    right    ct      bwd    rowwise       0,.C
+NB. larfbrcfc    C  * H'    right    ct      fwd    columnwise    C,.0
+NB. larfbrcfr    C  * H'    right    ct      fwd    rowwise       C,.0
+NB. larfbrnbc    C  * H     right    none    bwd    columnwise    0,.C
+NB. larfbrnbr    C  * H     right    none    bwd    rowwise       0,.C
+NB. larfbrnfc    C  * H     right    none    fwd    columnwise    C,.0
+NB. larfbrnfr    C  * H     right    none    fwd    rowwise       C,.0
 NB.
 NB. Description:
 NB.   Dyads to build and apply a block reflector H or its
@@ -550,10 +548,9 @@ NB.
 NB. Syntax:
 NB.   eCupd=. VTau larfbxxxx eC
 NB. where
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 NB.   V     - unit trapezoidal matrix
 NB.   Tau   - k-vector τ[0:k-1] corresp. to V
 NB.
@@ -585,23 +582,23 @@ larfbrnfc=:         _1  larxbrnxc larftfc
 larfbrnfr=: (< a: ; _1) larxbrnxr larftfr
 
 NB. ---------------------------------------------------------
-NB. Verb:        Action:    Side:    Tran:    Dir:    Layout:       eC:
-NB. larzblcbc    H' * C     left     ct       bwd     columnwise    C, 0
-NB. larzblcbr    H' * C     left     ct       bwd     rowwise       C, 0
-NB. larzblcfc    H' * C     left     ct       fwd     columnwise    0, C
-NB. larzblcfr    H' * C     left     ct       fwd     rowwise       0, C
-NB. larzblnbc    H  * C     left     none     bwd     columnwise    C, 0
-NB. larzblnbr    H  * C     left     none     bwd     rowwise       C, 0
-NB. larzblnfc    H  * C     left     none     fwd     columnwise    0, C
-NB. larzblnfr    H  * C     left     none     fwd     rowwise       0, C
-NB. larzbrcbc    C  * H'    right    ct       bwd     columnwise    C,.0
-NB. larzbrcbr    C  * H'    right    ct       bwd     rowwise       C,.0
-NB. larzbrcfc    C  * H'    right    ct       fwd     columnwise    0,.C
-NB. larzbrcfr    C  * H'    right    ct       fwd     rowwise       0,.C
-NB. larzbrnbc    C  * H     right    none     bwd     columnwise    C,.0
-NB. larzbrnbr    C  * H     right    none     bwd     rowwise       C,.0
-NB. larzbrnfc    C  * H     right    none     fwd     columnwise    0,.C
-NB. larzbrnfr    C  * H     right    none     fwd     rowwise       0,.C
+NB. Verb         Action     Side     Tran    Dir    Layout        eC
+NB. larzblcbc    H' * C     left     ct      bwd    columnwise    C, 0
+NB. larzblcbr    H' * C     left     ct      bwd    rowwise       C, 0
+NB. larzblcfc    H' * C     left     ct      fwd    columnwise    0, C
+NB. larzblcfr    H' * C     left     ct      fwd    rowwise       0, C
+NB. larzblnbc    H  * C     left     none    bwd    columnwise    C, 0
+NB. larzblnbr    H  * C     left     none    bwd    rowwise       C, 0
+NB. larzblnfc    H  * C     left     none    fwd    columnwise    0, C
+NB. larzblnfr    H  * C     left     none    fwd    rowwise       0, C
+NB. larzbrcbc    C  * H'    right    ct      bwd    columnwise    C,.0
+NB. larzbrcbr    C  * H'    right    ct      bwd    rowwise       C,.0
+NB. larzbrcfc    C  * H'    right    ct      fwd    columnwise    0,.C
+NB. larzbrcfr    C  * H'    right    ct      fwd    rowwise       0,.C
+NB. larzbrnbc    C  * H     right    none    bwd    columnwise    C,.0
+NB. larzbrnbr    C  * H     right    none    bwd    rowwise       C,.0
+NB. larzbrnfc    C  * H     right    none    fwd    columnwise    0,.C
+NB. larzbrnfr    C  * H     right    none    fwd    rowwise       0,.C
 NB.
 NB. Description:
 NB.   Dyads to build and apply a block reflector H or its
@@ -612,10 +609,9 @@ NB.
 NB. Syntax:
 NB.   eCupd=. VTau larzbxxxx eC
 NB. where
-NB.   eC    - matrix C to update, augmented by trash vector
+NB.   eC    - matrix C augmented by trash vector
 NB.   VTau  - matrix V augmented by vector Tau
-NB.   eCupd - being updated matrix C, augmented by modified
-NB.           trash vector
+NB.   eCupd - an updated eC
 NB.   V     - unit trapezoidal matrix, with 0s in atoms to be
 NB.           ignored
 NB.   Tau   - k-vector τ[0:k-1] corresp. to V
@@ -651,26 +647,21 @@ NB. ---------------------------------------------------------
 NB. refga
 NB.
 NB. Description:
-NB.   Conj. to make verb to get and apply reflection
+NB.   Conj. to make monad to generate and apply reflector
 NB.
 NB. Syntax:
-NB.   vapp=. larfxxx refga larfxxxx
+NB.   'Aupd vtau'=. (larfxxx refga larfxxxx) A ; isosubA ; isoy ; isoa
 NB. where
 NB.   larfxxx  - monad to generate a reflector; is called as:
 NB.                z=. iso larfxxx y
 NB.   larfxxxx - dyad to apply a reflector; is called as:
 NB.                subAupd=. vtau larfxxxx subA
-NB.   vapp     - monad to generate and apply a reflector; is
-NB.              called as:
-NB.                'Aupd vtau'=. vapp A ; isosubA ; isoy ; isoa
 NB.   z        - vector, source to produce vector vtau
 NB.   A        - m×n-matrix to update, is augmented by trash
 NB.              vector according to larfxxxx
-NB.   Aupd     - m×n-matrix, updated A, being A with subA
-NB.              replaced by subAupd
+NB.   Aupd     - A with subA replaced by subAupd
 NB.   subA     - submatrix of A to apply reflection
-NB.   subAupd  - submatrix of the same shape as subA, the
-NB.              reflected subA
+NB.   subAupd  - subA reflected
 NB.   isosubA  - ISO subA (subAupd) within A (Aupd)
 NB.   isoy     - ISO within subA of vector y which  defines
 NB.              reflector
@@ -695,17 +686,16 @@ NB. Description:
 NB.   Test larfx by general vector
 NB.
 NB. Syntax:
-NB.   testlarfg ey
+NB.   log=. testlarfg ey
 NB. where
-NB.   ey - (n+1)-vector
+NB.   ey  - (n+1)-vector
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarfg=: 3 : 0
   iso=. (2 ?@$ <:@#) y
 
-  ('larfg' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) iso ; y
-  ('larfp' tdyad ((0&{::)`(1&{::)`]`(_."_)`(_."_)`(_."_))) iso ; y
-
-  EMPTY
+  log=.          ('larfg' tdyad ((0&{::)`(1&{::)`]`nan`nan`nan)) iso ; y
+  log=. log lcat ('larfp' tdyad ((0&{::)`(1&{::)`]`nan`nan`nan)) iso ; y
 )
 
 NB. ---------------------------------------------------------
@@ -715,36 +705,35 @@ NB. Description:
 NB.   Test larfxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarf (trash;C)
+NB.   log=. testlarf (trash ; C)
 NB. where
-NB.   C - m×n-matrix, is used as multiplier, the 1st row or
-NB.       column is used to form reflector
+NB.   C   - m×n-matrix, is used as multiplier, the 1st row or
+NB.         column is used to form reflector
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarf=: 3 : 0
   y=. 1 {:: y
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
-  ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
-  ('larflcfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
-  ('larflcfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
+  log=.          ('larflcbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan))     y  , ~ 0
+  log=. log lcat ('larflcbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan)) (ct y) , ~ 0
+  log=. log lcat ('larflcfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan))     y  ,   0
+  log=. log lcat ('larflcfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan)) (ct y) ,   0
 
-  ('larflnbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
-  ('larflnbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
-  ('larflnfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
-  ('larflnfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
+  log=. log lcat ('larflnbc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan))     y  , ~ 0
+  log=. log lcat ('larflnbr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan)) (ct y) , ~ 0
+  log=. log lcat ('larflnfc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan))     y  ,   0
+  log=. log lcat ('larflnfr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan)) (ct y) ,   0
 
-  ('larfrcbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
-  ('larfrcbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
-  ('larfrcfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
-  ('larfrcfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
+  log=. log lcat ('larfrcbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan)) (ct y) ,.~ 0
+  log=. log lcat ('larfrcbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan))     y  ,.~ 0
+  log=. log lcat ('larfrcfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan)) (ct y) ,.  0
+  log=. log lcat ('larfrcfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan))     y  ,.  0
 
-  ('larfrnbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
-  ('larfrnbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
-  ('larfrnfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
-  ('larfrnfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
-
-  EMPTY
+  log=. log lcat ('larfrnbc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan)) (ct y) ,.~ 0
+  log=. log lcat ('larfrnbr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan))     y  ,.~ 0
+  log=. log lcat ('larfrnfc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan)) (ct y) ,.  0
+  log=. log lcat ('larfrnfr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan))     y  ,.  0
 )
 
 NB. ---------------------------------------------------------
@@ -754,36 +743,35 @@ NB. Description:
 NB.   Test larzxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarz (trash;C)
+NB.   log=. testlarz (trash ; C)
 NB. where
-NB.   C - m×n-matrix, is used as multiplier, the 1st row or
-NB.       column is used to form reflector
+NB.   C   - m×n-matrix, is used as multiplier, the 1st row or
+NB.         column is used to form reflector
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarz=: 3 : 0
   y=. 1 {:: y
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
-  ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
-  ('larzlcfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
-  ('larzlcfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
+  log=.          ('larzlcbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan))     y  ,   0
+  log=. log lcat ('larzlcbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan)) (ct y) ,   0
+  log=. log lcat ('larzlcfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan))     y  , ~ 0
+  log=. log lcat ('larzlcfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan)) (ct y) , ~ 0
 
-  ('larzlnbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,   0
-  ('larzlnbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,   0
-  ('larzlnfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_)))     y  , ~ 0
-  ('larzlnfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) , ~ 0
+  log=. log lcat ('larzlnbc' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan))     y  ,   0
+  log=. log lcat ('larzlnbr' tdyad ((1&( 0})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan)) (ct y) ,   0
+  log=. log lcat ('larzlnfc' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan))     y  , ~ 0
+  log=. log lcat ('larzlnfr' tdyad ((1&(_1})^:(1 < #)@:({."1))`]`]`(rcond"_)`nan`nan)) (ct y) , ~ 0
 
-  ('larzrcbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
-  ('larzrcbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
-  ('larzrcfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
-  ('larzrcfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
+  log=. log lcat ('larzrcbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan)) (ct y) ,.  0
+  log=. log lcat ('larzrcbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan))     y  ,.  0
+  log=. log lcat ('larzrcfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan)) (ct y) ,.~ 0
+  log=. log lcat ('larzrcfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan))     y  ,.~ 0
 
-  ('larzrnbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.  0
-  ('larzrnbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.  0
-  ('larzrnfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_))) (ct y) ,.~ 0
-  ('larzrnfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`(_."_)`(_."_)))     y  ,.~ 0
-
-  EMPTY
+  log=. log lcat ('larzrnbc' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan)) (ct y) ,.  0
+  log=. log lcat ('larzrnbr' tdyad ((1&( 0})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan))     y  ,.  0
+  log=. log lcat ('larzrnfc' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan)) (ct y) ,.~ 0
+  log=. log lcat ('larzrnfr' tdyad ((1&(_1})^:(1 < #)@  {.   )`]`]`(rcond"_)`nan`nan))     y  ,.~ 0
 )
 
 NB. ---------------------------------------------------------
@@ -793,20 +781,19 @@ NB. Description:
 NB.   Test larftxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarft (A;trash)
+NB.   log=. testlarft (A ; trash)
 NB. where
-NB.   A - m×n-matrix, is used to form Qf
+NB.   A   - m×n-matrix, is used to form Qf
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarft=: 3 : 0
   y=. 0 {:: y
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larftbc' tmonad (((tru1~ -~/@$)@geqlf)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftbr' tmonad (((trl1~ -~/@$)@gerqf)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfc' tmonad (( trl1        @geqrf)`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larftfr' tmonad (( tru1        @gelqf)`]`(rcond"_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=.          ('larftbc' tmonad (((tru1~ -~/@$)@geqlf)`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('larftbr' tmonad (((trl1~ -~/@$)@gerqf)`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('larftfc' tmonad (( trl1        @geqrf)`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('larftfr' tmonad (( tru1        @gelqf)`]`(rcond"_)`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -816,20 +803,19 @@ NB. Description:
 NB.   Test larztxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarzt (A;trash)
+NB.   log=. testlarzt (A ; trash)
 NB. where
-NB.   A - m×n-matrix, is used to form Qf
+NB.   A   - m×n-matrix, is used to form Qf
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarzt=: 3 : 0
   y=. 0 {:: y
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ('larztbc' tmonad ((((idmat@]`(           i. @])`[)} c)@tzzlf@ trl        )`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larztbr' tmonad ((((idmat@]`(a: <@;     i. @])`[)} #)@tzrzf@ tru        )`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larztfc' tmonad ((((idmat@]`(       (-~ i.)@])`[)} c)@tzzrf@(tru~ -~/@$))`]`(rcond"_)`(_."_)`(_."_))) y
-  ('larztfr' tmonad ((((idmat@]`(a: <@; (-~ i.)@])`[)} #)@tzlzf@(trl~ -~/@$))`]`(rcond"_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=.          ('larztbc' tmonad ((((idmat@]`(           i. @])`[)} c)@tzzlf@ trl        )`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('larztbr' tmonad ((((idmat@]`(a: <@;     i. @])`[)} #)@tzrzf@ tru        )`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('larztfc' tmonad ((((idmat@]`(       (-~ i.)@])`[)} c)@tzzrf@(tru~ -~/@$))`]`(rcond"_)`nan`nan)) y
+  log=. log lcat ('larztfr' tmonad ((((idmat@]`(a: <@; (-~ i.)@])`[)} #)@tzlzf@(trl~ -~/@$))`]`(rcond"_)`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -839,41 +825,40 @@ NB. Description:
 NB.   Test larfbxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarfb (A;C)
+NB.   log=. testlarfb (A ; C)
 NB. where
-NB.   A - m×n-matrix, is used to form Qf
-NB.   C - m×n-matrix, is used as multiplier
+NB.   A   - m×n-matrix, is used to form Qf
+NB.   C   - m×n-matrix, is used as multiplier
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarfb=: 3 : 0
   'A C'=. y
-  rcond=. (_."_)`geconi@.(=/@$) C  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) C  NB. meaninigful for square matrices only
 
   Qfbc=. (tru1~ -~/@$) geqlf A
   Qfbr=. (trl1~ -~/@$) gerqf A
   Qffc=.  trl1         geqrf A
   Qffr=.  tru1         gelqf A
 
-  ('larfblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  , ~ 0
-  ('larfblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) , ~ 0
-  ('larfblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  ,   0
-  ('larfblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) ,   0
+  log=.          ('larfblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbc ;     C  , ~ 0
+  log=. log lcat ('larfblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbr ; (ct C) , ~ 0
+  log=. log lcat ('larfblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffc ;     C  ,   0
+  log=. log lcat ('larfblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffr ; (ct C) ,   0
 
-  ('larfblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  , ~ 0
-  ('larfblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) , ~ 0
-  ('larfblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  ,   0
-  ('larfblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) ,   0
+  log=. log lcat ('larfblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbc ;     C  , ~ 0
+  log=. log lcat ('larfblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbr ; (ct C) , ~ 0
+  log=. log lcat ('larfblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffc ;     C  ,   0
+  log=. log lcat ('larfblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffr ; (ct C) ,   0
 
-  ('larfbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.~ 0
-  ('larfbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.~ 0
-  ('larfbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.  0
-  ('larfbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.  0
+  log=. log lcat ('larfbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbc ; (ct C) ,.~ 0
+  log=. log lcat ('larfbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbr ;     C  ,.~ 0
+  log=. log lcat ('larfbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffc ; (ct C) ,.  0
+  log=. log lcat ('larfbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffr ;     C  ,.  0
 
-  ('larfbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.~ 0
-  ('larfbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.~ 0
-  ('larfbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.  0
-  ('larfbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.  0
-
-  EMPTY
+  log=. log lcat ('larfbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbc ; (ct C) ,.~ 0
+  log=. log lcat ('larfbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbr ;     C  ,.~ 0
+  log=. log lcat ('larfbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffc ; (ct C) ,.  0
+  log=. log lcat ('larfbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffr ;     C  ,.  0
 )
 
 NB. ---------------------------------------------------------
@@ -883,14 +868,15 @@ NB. Description:
 NB.   Test larzbxxxx by general matrix
 NB.
 NB. Syntax:
-NB.   testlarzb (A;C)
+NB.   log=. testlarzb (A ; C)
 NB. where
-NB.   A - m×n-matrix, is used to form Qf
-NB.   C - m×n-matrix, is used as multiplier
+NB.   A   - m×n-matrix, is used to form Qf
+NB.   C   - m×n-matrix, is used as multiplier
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testlarzb=: 3 : 0
   'A C'=. y
-  rcond=. (_."_)`geconi@.(=/@$) C  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) C  NB. meaninigful for square matrices only
 
   I=. idmat k=. <./ $ A
   Qfbc=. I (           i.  k)} tzzlf  trl         A
@@ -898,27 +884,25 @@ testlarzb=: 3 : 0
   Qffc=. I (       (-~ i.) k)} tzzrf (tru~ -~/@$) A
   Qffr=. I (< a: ; (-~ i.) k)} tzlzf (trl~ -~/@$) A
 
-  ('larzblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  ,   0
-  ('larzblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) ,   0
-  ('larzblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  , ~ 0
-  ('larzblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) , ~ 0
+  log=.          ('larzblcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbc ;     C  ,   0
+  log=. log lcat ('larzblcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbr ; (ct C) ,   0
+  log=. log lcat ('larzblcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffc ;     C  , ~ 0
+  log=. log lcat ('larzblcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffr ; (ct C) , ~ 0
 
-  ('larzblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ;     C  ,   0
-  ('larzblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ; (ct C) ,   0
-  ('larzblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ;     C  , ~ 0
-  ('larzblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ; (ct C) , ~ 0
+  log=. log lcat ('larzblnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbc ;     C  ,   0
+  log=. log lcat ('larzblnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbr ; (ct C) ,   0
+  log=. log lcat ('larzblnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffc ;     C  , ~ 0
+  log=. log lcat ('larzblnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffr ; (ct C) , ~ 0
 
-  ('larzbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.  0
-  ('larzbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.  0
-  ('larzbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.~ 0
-  ('larzbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.~ 0
+  log=. log lcat ('larzbrcbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbc ; (ct C) ,.  0
+  log=. log lcat ('larzbrcbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbr ;     C  ,.  0
+  log=. log lcat ('larzbrcfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffc ; (ct C) ,.~ 0
+  log=. log lcat ('larzbrcfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffr ;     C  ,.~ 0
 
-  ('larzbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbc ; (ct C) ,.  0
-  ('larzbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qfbr ;     C  ,.  0
-  ('larzbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffc ; (ct C) ,.~ 0
-  ('larzbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`(_."_)`(_."_))) Qffr ;     C  ,.~ 0
-
-  EMPTY
+  log=. log lcat ('larzbrnbc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbc ; (ct C) ,.  0
+  log=. log lcat ('larzbrnbr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qfbr ;     C  ,.  0
+  log=. log lcat ('larzbrnfc' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffc ; (ct C) ,.~ 0
+  log=. log lcat ('larzbrnfr' tdyad ((0&{::)`(1&{::)`]`(rcond"_)`nan`nan)) Qffr ;     C  ,.~ 0
 )
 
 NB. ---------------------------------------------------------
@@ -929,24 +913,22 @@ NB.   Adv. to make verb to test larfxxxxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testref
+NB.   log=. (mkmat testref) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testref_mt_ 200 150
+NB.     log=. ?@$&0 testref_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testref_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testref_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testref_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testref_mt_ 150 200
 NB.
 NB. Notes:
 NB. - non-blocked larfxxxx algos are tested implicitly in
@@ -954,4 +936,4 @@ NB.   testgq, testmq, testqf
 NB. - larxtxx and larxbxxxx are impractical for large
 NB.   matrices
 
-testref=: 1 : 'EMPTY [ (testlarzb_mt_ [ testlarfb_mt_ [ testlarzt_mt_ [ testlarft_mt_ [ testlarz_mt_ [ testlarf_mt_)@(u ; u)^:(200 >: <./) [ testlarfg_mt_@u@>:@{.'
+testref=: 1 : 'nolog_mt_`((testlarzb_mt_ ,&.>~ testlarfb_mt_ ,&.>~ testlarzt_mt_ ,&.>~ testlarft_mt_ ,&.>~ testlarz_mt_ ,&.>~ testlarf_mt_)@(u ; u))@.(200 >: <./) ,&.>~ testlarfg_mt_@u@>:@{.'

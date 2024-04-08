@@ -9,9 +9,8 @@ NB. testgebak  Test gebakxx by square matrix
 NB. testbak    Adv. to make verb to test gebakxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -30,6 +29,9 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -52,7 +54,7 @@ NB. Syntax:
 NB.   'B p'=. gebakxsx A ; p ; d
 NB. where
 NB.   A    - n×n-matrix, eigenvectors to be transformed
-NB.   p    - some parameter, transmitted immutably
+NB.   p    - some argument, transmitted immutably
 NB.   d    - n-vector, diagonal of scaling matrix D
 NB.   B    - n×n-matrix, transformed eigenvectors
 NB.
@@ -98,7 +100,7 @@ gebaklp=: C."1~&>/
 gebakup=: C."2~&>/
 
 NB. ---------------------------------------------------------
-NB. Verb:      Balancer used:    Eigenvectors to form:
+NB. Verb       Balancer used     Eigenvectors to form
 NB. gebakll    geball (lower)    left
 NB. gebaklr    geball (lower)    right
 NB. gebakul    gebalu (upper)    left
@@ -143,19 +145,18 @@ NB. Description:
 NB.   Test gebakxx by square matrix
 NB.
 NB. Syntax:
-NB.   testgebak A
+NB.   log=. testgebak A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgebak=: 3 : 0
   'rcondl rcondu'=. (geconi , gecon1) y
 
-  ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
-  ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`(_."_)`(_."_))) y
-  ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
-  ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=.          ('gebakll' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`nan`nan)) y
+  log=. log lcat ('gebaklr' tmonad ((] ; (i. ; $&1)@#)`]`(rcondl"_)`nan`nan)) y
+  log=. log lcat ('gebakul' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`nan`nan)) y
+  log=. log lcat ('gebakur' tmonad ((] ; (i. ; $&1)@#)`]`(rcondu"_)`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -166,23 +167,21 @@ NB.   Adv. to make verb to test gebakxx by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testbak
+NB.   log=. (mkmat testbak) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testbak_mt_ 150 150
+NB.     log=. ?@$&0 testbak_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testbak_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbak_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testbak_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testbak_mt_ 150 150
 
-testbak=: 1 : 'EMPTY [ testgebak_mt_@u^:(=/)'
+testbak=: 1 : 'nolog_mt_`(testgebak_mt_@u)@.(=/)'

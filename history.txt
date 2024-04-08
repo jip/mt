@@ -22,130 +22,140 @@ math/mt - change history
  * initial release
 
 == 0.6.1 ==
- * little refactoring: inlined randu is used now in tests; little fix: square-only input for square-only tests
+ * use inlined randu in tests
+ * fix to call square-only tests only for square-only input
 
 == 0.6.2 ==
- * manifest: fixed
+ * manifest: fix
 
 == 0.6.3 ==
- * cond: renamed from con to fit in Windows environment
+ * cond: rename file from con (to fit in Windows environment)
 
 == 0.6.4 ==
  * made tolerant to math/lapack and math/misc addons absence case
 
 == 0.6.5 ==
- * minor fixes in comments
+ * fix comments
 
 == 0.6.6 ==
- * bal:      minor fixes in comments
- * eqr:      comment fixed
+ * bal:      fixes in comments
+ * eqr:      fix comment
  + template: skeleton for developers
 
 == 0.6.7 ==
- Minor fixes in comments
+ minor fixes in comments
  * bal: minor fix in code
- * exp: error fixed
+ * exp: fix error
 
 == 0.7.0 ==
  J7-compatible, GNEP solver added
- * bak:    appnotes for generalized case
- * bal:    new interfaces and test for generalized case
- + eq:     new interfaces and test for generalized case
- - eqr:    merged with eq
- + ev:     new interfaces and test for generalized case
- + evc:    new interfaces and test for generalized case
- * exp:    interfaces extended
- * hrd:    new interfaces and test for generalized case
- * mt:     compatibility with J7 added, test adverb refactored
- * norm:   new interfaces, better code refactoring
- * pow:    interfaces extended
- * qf:     larfp replaced by larfg (synced with LAPACK version 3.2.2)
- * rand:   dimat and unmat fixed
- * ref:    larfg and larfp optimized
- * rot:    lartg: continuous plane rotation support dropped, new utilities added
- * sm:     testtrsm enhanced
- * struct: ct changed to support inversion, cp refactored
- * sv:     tests enhanced
- * trs:    tests enhanced
- * util:   condneg renamed to negneg and variated in negpos, fmtlog reworked
+ * bak:    add appnotes for generalized case
+ * bal:    add interfaces and test for generalized case
+ + eq:     add interfaces and test for generalized case
+ - eqr:    merge with eq
+ + ev:     add interfaces and test for generalized case
+ + evc:    add interfaces and test for generalized case
+ * exp:    extend interfaces
+ * hrd:    add interfaces and test for generalized case
+ * mt:     provide compatibility with J7, refactor test adverb
+ * norm:   add interfaces, better code refactoring
+ * pow:    extend interfaces
+ * qf:     replace larfp by larfg (to sync with LAPACK version 3.2.2)
+ * rand:   fix dimat and unmat
+ * ref:    optimize larfg and larfp
+ * rot:    - lartg: drop continuous plane rotation support
+           - add new utilities
+ * sm:     enhance testtrsm
+ * struct: - change ct to support inversion
+           - refactor cp
+ * sv:     enhance tests
+ * trs:    enhance tests
+ * util:   - rename condneg to negneg
+           - add interface negpos based on negneg
+           - rework fmtlog
 
 == 0.8.0 ==
- * eq:      rot evoking updated according to interface change
- * ev:      rot evoking updated according to interface change
- * evc:     rot evoking updated according to interface change
- * hrd:     rot evoking updated according to interface change
- + pf:      new interfaces for rank-revealing orthogonal factorization with pivoting, initial draft: gelpf geprf
- + quatern: new interfaces for quaternions
- * rot:     reworked to rely on quaternions
+ * eq:      update according to rot interface changnig
+ * ev:      update according to rot interface changnig
+ * evc:     update according to rot interface changnig
+ * hrd:     update according to rot interface changnig
+ + pf:      add interfaces for rank-revealing orthogonal factorization with pivoting, initial draft: gelpf geprf
+ + quatern: add interfaces for quaternions
+ * rot:     rework to rely on quaternions
 
 == 0.8.1 ==
- Unicode 'minus sign' replaced by '-'
+ replace Unicode 'minus sign' by '-'
 
 == 0.8.2 ==
- Code and comments cleaned-up
- + cond: new interfaces: laic11 laic12
- * ev:   normsc normsr are used now
- * gq:   unghrlx changed from monad to ambivalent
- * hrd:  gghrdxxx changed from dyad to ambivalent
- + norm: new interfaces: normsc normsr
- + pf:   new interfaces: gelpf geprf
- * pow:  normsr is used now
- * sm:   trsmxxxx replaced by previous iterative version since it has lesser bw error
- * test: J6/J7 console's [CR]LF problem fixed
+ clean-up code and comments
+ + cond: add interfaces: laic11 laic12
+ * ev:   modify to use normsc normsr
+ * gq:   change interfaces unghrlx from monad to ambivalent
+ * hrd:  change interfaces gghrdxxx from dyad to ambivalent
+ + norm: add interfaces: normsc normsr
+ + pf:   add interfaces: gelpf geprf
+ * pow:  modify to use normsr
+ * sm:   replace trsmxxxx by previous iterative version since it has lesser bw error
+ * test: fix J6/J7 console's [CR]LF problem
 
 == 0.8.3/4 ==
- * chg: updated for j801
+ * chg: update for j801
 
 == 0.9.0 ==
- Code and comments cleaned-up
- * ev:     normsc normsr are used now
- + gq:     unghr{l,u} changed from monad to ambivalent, ung{lq,ql,qr,rq} improved,
-           new interfaces with test suite: ung{lz,zl,zr,rz}
- * hrd:    gghrdxxx changed from dyad to ambivalent
- + mq:     new interfaces with test suite: unm{lz,zl,zr,rz}xx
- + pf:     test suite added
- * pow:    normsr is used now
- + qf:     gelqf fixed, ge{lq,ql,qr,rq}f reworked, new interfaces with test suite: tz{lz,zl,zr,rz}f
- + ref:    better code factorization, new interfaces with test suite: larztxx larzxxxx larzbxxxx
- * sm:     trsmxxxx names synced with LAPACK (INTERFACE RENAMED!)
- + struct: new interfaces: e0 trl1pick tru1pick
+ clean-up code and comments
+ * ev:     modify to use normsc normsr
+ + gq:     - change unghr{l,u} from monad to ambivalent
+           - improve ung{lq,ql,qr,rq}
+           - add interfaces with test suite: ung{lz,zl,zr,rz}
+ * hrd:    change gghrdxxx from dyad to ambivalent
+ + mq:     add interfaces with test suite: unm{lz,zl,zr,rz}xx
+ + pf:     add test suite
+ * pow:    modify to use normsr
+ + qf:     - fix gelqf
+           - rework ge{lq,ql,qr,rq}f
+           - add interfaces with test suite: tz{lz,zl,zr,rz}f
+ + ref:    - optimize code
+           - add interfaces with test suite: larztxx larzxxxx larzbxxxx
+ * sm:     sync trsmxxxx names with LAPACK (INTERFACE RENAMED!)
+ + struct: add interfaces: e0 trl1pick tru1pick
 
 == 0.9.1 ==
- Drop J6 support
- * rot:    J6 support dropped in xrNaN
- * sm:     syncing sm interface names with LAPACK (s/trsmu1x/trsmlunu/) completed
- + struct: new interface: ds
- * test:   J6 support dropped in tmonad tdyad
+ drop J6 support
+ * rot:    drop J6 support in xrNaN
+ * sm:     sync sm interface names with LAPACK (s/trsmu1x/trsmlunu/) is completed
+ + struct: add interface: ds
+ * test:   drop J6 support in tmonad tdyad
 
 == 0.9.2 ==
- * bal:      gebals extended by dyadic case which models SLICOT's TB01ID
- * manifest: release upgraded to j802
+ * bal:      extend gebals by dyadic case which models SLICOT's TB01ID
+ * manifest: upgrade release to j802
 
 == 0.9.3 ==
- * manifest: platform upgraded
+ * manifest: upgrade platform
 
 == 0.9.4 ==
- * manifest: release upgraded to j802 j803
+ * manifest: upgrade release to j802 j803
 
 == 0.9.5 ==
- * manifest: release upgraded to j802 j803 j804
+ * manifest: upgrade release to j802 j803 j804
 
 == 0.9.6 ==
- * eq: typo fixed
+ * eq: fix typo
 
 == 0.9.7 ==
- Point to new J Wiki
- * manifest: release upgraded to j802 j803 j804 j805
+ point to new J Wiki
+ * manifest: upgrade release to j802 j803 j804 j805
 
 == 0.9.8 ==
- * manifest: release upgraded to j802 j803 j804 j805 j806
+ * manifest: upgrade release to j802 j803 j804 j805 j806
 
 == 0.10.0 ==
- * bal:       gebals fixed, comments improved
- + benchmark: new interface
- * cond:      protected against singular input matrices (SEMANTICS CHANGED!)
- * dbg:       current locale is showing now, too
- * exp:       minor error fixed
+ * bal:       - fix gebals
+              - improve comments
+ + benchmark: add interface
+ * cond:      protect against singular input matrices (SEMANTICS CHANGED!)
+ * dbg:       modify to display current locale, too
+ * exp:       fix minor error
  * gq:        minor refactoring
  - mq:        garbage code removed
  * mt:        J6 specifics dropped, some includes added, minor changes
@@ -183,9 +193,9 @@ math/mt - change history
 
 == 0.11.0 ==
  J9+ compatible
- Most algorithms implemented are synced with LAPACK 3.9.0
- Refs shortened to addon's stuff and external addons
- Code and comments cleaned-up, fixed and unified
+ most algorithms implemented are synced with LAPACK 3.9.0
+ refs shortened to addon's stuff and external addons
+ code and comments cleaned-up, fixed and unified
  Test suites - improved and extended
              - lapack addon replaced by lapack2
  * bal:      gxbalxp fixed for case n=0
@@ -199,7 +209,7 @@ math/mt - change history
              - normsx get particular code branch for non-complex data types
              - new interface: normm
  * struct:   - obverse added for interfaces: fp p2P ip2P
-             - interface he splitted on hel and heu (NAMES CHANGED!)
+             - interface (he) splitted on hel and heu (NAMES CHANGED!)
  * sv:       - gesvxxx names synced with LAPACK (INTERFACE RENAMED!)
              - new interfaces for tridiagonal system solvers: gtsvax gtsvacx gtsvatx gtsvxa gtsvxac gtsvxat
  * test:     - verb calls in tmonad and tdyad are wrapped by try/catch to avoid unintended termination
@@ -232,3 +242,48 @@ math/mt - change history
 
 == 0.13.3 ==
  minor improvements in comments
+
+== 0.14.0 ==
+ J9.6+ compatible
+ clean-up, fix, unify and improve code and comments
+ refactor, improve and extend test suites
+ add verification suites
+ rename interfaces named xxx2yyy to yyy4xxx
+ + basic:      improve interfaces trsmxxxx, add test suite
+ - benchmark:  simplify and move to util
+ * iso:        - disable monadic case: liso4th
+               - extend to support inversion: iso4riso
+ * ls:         switch testgels from private to public
+ + norm:       - new interface: normmt
+               - detect NaN, empty dimension
+               - disable dyadic case: normxxx
+ * quatern:    - rename qnmod to qnlen (INTERFACE RENAMED!)
+               - rename qnrec to qninv (INTERFACE RENAMED!)
+               - vectorize: qnmul
+               - disable monadic case: qnmul qndivx
+               - disable dyadic case: qnconxx qnlen qnsign qninv
+ - rot:        - drop: lartv
+               - revert rot to accept ixy transposed (INTERFACE CHANGED!)
+               - extend rot to support multiple cs (implement
+                 lartv)
+               - disable monadic case: rot
+               - disable dyadic case: lartg
+ - sm:         move to basic
+ * struct:     - drop interfaces: hel heu tr2he upd
+               - new interfaces: sy4gel sy4geu he4gel he4geu ss4gel ss4geu sh4gel sh4geu
+               - new interfaces: lxsuy slxuy suxly uxsly slxmsuy suxmsly
+               - changed to avoid Times (*) FLOP: tr{l,u}[[{0,1}]pick] tr[{l,u}]cut
+ * template:   update
+ + test:       - new interfaces: chk1mv chk1mm chk2mv chk2mm chk3mv chk3mm chk3sv chk3sm chk4r chk4rk chk5r chk5r2k chk6r2
+ + test/blas:  BLAS cd interfaces
+ + test/blis:  BLIS cd interfaces
+ + test/flame: libFLAME cd interfaces
+ + test/util:  new interfaces: issquare basicxxx initnoun dlsym
+ + trs:        - new interfaces: trtrsxxx
+               - refactor test suite
+ * util:       - new interfaces: ispos0 isneg0 isnan nan lcat nolog mrg env
+               - new interfaces (moved from mm's privates): cut3 cut2 cut cutl2 cutl
+               - vectorize: negneg negpos
+               - detect NaN, (+0.0) and (-0.0): negneg negpos copysign
+               - moved from test: tmonad tdyad
+               - drop: benchmark maxc

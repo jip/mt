@@ -1,10 +1,10 @@
-NB. Raise matrix to an integer power[s]
+NB. Raise matrix to an integer power(s)
 NB.
-NB. gepow      Raise a general matrix to integer power[s]
+NB. gepow      Raise a general matrix to integer power(s)
 NB. dipow      Raise a diagonalizable matrix to integer
-NB.            power[s]
+NB.            power(s)
 NB. hepow      Raise a Hermitian (symmetric) matrix to
-NB.            integer power[s]
+NB.            integer power(s)
 NB.
 NB. testgepow  Test gepow by square matrix
 NB. testdipow  Test dipow by diagonalizable matrix
@@ -12,9 +12,8 @@ NB. testhepow  Test hepow by Hermitian (symmetric) matrix
 NB. testpow    Adv. to make verb to test xxpow by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.13.2 2021-06-24
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -34,6 +33,9 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
+NB. =========================================================
+NB. Configuration
+
 coclass 'mt'
 
 NB. =========================================================
@@ -46,14 +48,14 @@ NB. ---------------------------------------------------------
 NB. gepow
 NB.
 NB. Description:
-NB.   Raise a general matrix A to integer power[s]
+NB.   Raise a general matrix A to integer power(s)
 NB.
 NB. Syntax:
 NB.   P=. p gepow A
 NB. where
 NB.   A  - n×n-matrix, a general matrix
-NB.   p  - sh-array of non-negative integers, power[s]
-NB.   P  - sh×n×n-array if r>0, the matrix A in power[s] p
+NB.   p  - sh-array of non-negative integers, power(s)
+NB.   P  - sh×n×n-array if r>0, the matrix A in power(s) p
 NB.        n×n-array    if r=0, the matrix A in power p
 NB.   sh - r-vector of non-negative integers, the shape of p
 NB.   r  ≥ 0, the rank of p
@@ -69,7 +71,7 @@ gepow=: 4 : 0
 
   pl=. i. >: <. 2 ^. >./ , x  NB. powers list: 2^i
   pc=. mp~^:pl y              NB. powers cache: A^2^i
-  pb=. <@I.@|."1@#: x         NB. pl bits boxed array of shape sh
+  pb=. (<@I.@|."1@#:) x       NB. pl bits boxed array of shape sh
 
   pc mpi3@({~ >)"3 0 pb       NB. extract and mp A's powers for each pl atom
 )
@@ -78,7 +80,7 @@ NB. ---------------------------------------------------------
 NB. dipow
 NB.
 NB. Description:
-NB.   Raise a diagonalizable matrix to integer power[s]
+NB.   Raise a diagonalizable matrix to integer power(s)
 NB.
 NB. Syntax:
 NB.   P=. p dipow iLl ; vl ; Ll
@@ -100,9 +102,9 @@ NB.   iLl -:%. Ll
 NB.   iLu -:%. Lu
 NB.   iRl -:%. Rl
 NB.   iRu -:%. Ru
-NB.   p   - sh-array of positive integers, power[s]
+NB.   p   - sh-array of positive integers, power(s)
 NB.   P   - sh×n×n-array if r>0,
-NB.         n×n-array    if r=0, a matrix A in power[s] p
+NB.         n×n-array    if r=0, a matrix A in power(s) p
 NB.   sh  - r-vector of non-negative integers, the shape of p
 NB.   r   ≥ 0, the rank of p
 NB.
@@ -178,7 +180,7 @@ NB. hepow
 NB.
 NB. Description:
 NB.   Raise a Hermitian (symmetric) matrix to integer
-NB.   power[s]
+NB.   power(s)
 NB.
 NB. Syntax:
 NB.   P=. p hepow vl ; iRl
@@ -191,9 +193,9 @@ NB.         of heevuv
 NB.   vl  - n-vector, eigenvalues of A, output of heevlx
 NB.   vu  - n-vector, eigenvalues of A, output of heevux
 NB.   iRl -:%. Rl
-NB.   p   - sh-array of positive integers, power[s]
+NB.   p   - sh-array of positive integers, power(s)
 NB.   P   - sh×n×n-array if r>0,
-NB.         n×n-array    if r=0, a matrix A in power[s] p
+NB.         n×n-array    if r=0, a matrix A in power(s) p
 NB.   sh  - r-vector of non-negative integers, the shape of p
 NB.   r   ≥ 0, the rank of p
 NB.
@@ -245,18 +247,15 @@ NB. Description:
 NB.   Test gepow by square matrix
 NB.
 NB. Syntax:
-NB.   testgepow A
+NB.   log=. testgepow A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
 
-testgepow=: 3 : 0
-  ('gepow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))) y
-
-  EMPTY
-)
+testgepow=: 'gepow' tdyad ((5 7"_)`]`]`geconi`nan`nan)
 
 NB. ---------------------------------------------------------
 NB. testdipow
@@ -265,9 +264,10 @@ NB. Description:
 NB.   Test dipow by diagonalizable matrix
 NB.
 NB. Syntax:
-NB.   testdipow A
+NB.   log=. testdipow A
 NB. where
-NB.   A - n×n-matrix, the diagonalizable
+NB.   A   - n×n-matrix, the diagonalizable
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
@@ -277,17 +277,15 @@ testdipow=: 3 : 0
   geevlvv=. {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1 ])) % normsr)"2&.>)"0@ggevlvv@(,: idmat@c)
 
   try.
-    'v LR'=. geevlvv y               NB. eigendecomposition
+    'v LR'=. geevlvv y                NB. eigendecomposition
     'L R'=. LR
-    assert ((-: ~.) v) +. (-: ct) y  NB. A must be normal (diagonalizable)
-    iRh=. L ([ % (mp"1 +)) R         NB. reconstruct R^_1^H , see [1] in dipow
+    assert. ((-: ~.) v) +. (-: ct) y  NB. A must be normal (diagonalizable)
+    iRh=. L ([ % (mp"1 +)) R          NB. reconstruct R^_1^H , see [1] in dipow
   catch.
     R=. v=. iRh=. _.
   end.
 
-  ('dipow' tdyad ((5 7"_)`]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
-
-  EMPTY
+  log=. ('dipow' tdyad ((5 7"_)`]`]`geconi`nan`nan)) (ct R) ; v ; iRh
 )
 
 NB. ---------------------------------------------------------
@@ -297,9 +295,10 @@ NB. Description:
 NB.   Test hepow by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testhepow A
+NB.   log=. testhepow A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   A   - n×n-matrix, the Hermitian (symmetric)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhepow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -311,9 +310,7 @@ testhepow=: 3 : 0
     v=. R=. _.
   end.
 
-  ('hepow' tdyad ((5 7"_)`]`]`heconi`(_."_)`(_."_))) v ; ct R
-
-  EMPTY
+  log=. ('hepow' tdyad ((5 7"_)`]`]`heconi`nan`nan)) v ; ct R
 )
 
 NB. ---------------------------------------------------------
@@ -324,23 +321,21 @@ NB.   Adv. to make verb to test xxpow by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testpow
+NB.   log=. (mkmat testpow) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testpow_mt_ 150 150
+NB.     log=. ?@$&0 testpow_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testpow_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testpow_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testpow_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testpow_mt_ 150 150
 
-testpow=: 1 : 'EMPTY [ (testhepow_mt_@(u hemat_mt_) [ testdipow_mt_@(u dimat_mt_ u) [ testgepow_mt_@u)^:(=/)'
+testpow=: 1 : 'nolog_mt_`(testhepow_mt_@(u hemat_mt_) ,&.>~ testdipow_mt_@(u dimat_mt_ u) ,&.>~ testgepow_mt_@u)@.(=/)'

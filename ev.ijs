@@ -9,9 +9,8 @@ NB. testggev  Test ggevxxx by pair of square matrices
 NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
-NB.
-NB. Copyright 2011-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -31,14 +30,17 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 NB. =========================================================
 NB. Concepts
 NB.
 NB. I have a dream (2010-11-02):
 NB.   ggev=: gizmo @ tgevc @ hgeqz @ gghrd @ qr &. bal &. scl
 NB. Is it possible?
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
@@ -56,25 +58,23 @@ NB. ---------------------------------------------------------
 NB. ggevi
 NB.
 NB. Description:
-NB.   Adv. to make verb to calculate initial parameters for
+NB.   Adv. to make monad to calculate initial arguments for
 NB.   ggevxxx
 NB.
 NB. Syntax:
-NB.   vapp=. ggbalp ggevi
+NB.   'abnrmio ABupd plr hs'=. (ggbalp ggevi) AB
 NB. where
 NB.   ggbalp  - monad to permute matrix pair (A,B) to isolate
 NB.             eigenvalues, is either ggballp or ggbalup, is
 NB.             called as:
 NB.               'CD plr hs'=. ggbalp AB
-NB.   vapp    - monad to calculate initial parameters for
-NB.             ggevxxx, is called as:
-NB.               'abnrmio ABupd plr hs'=. vapp AB
 NB.   AB      - 2×n×n-matrix, matrix pair (A,B)
 NB.   abnrmio -:abnrm ,. abio
 NB.   abnrm   - 2-vector, norms of A and B
 NB.   abio    - 2-vector of integers, defines both necessity
 NB.             and value of scaling for A and B
-NB.   ABupd   - 2×n×n-matrix, scaled and permuted A and B
+NB.   ABupd   - an updated AB, contains scaled and permuted A
+NB.             and B
 NB.   plr     - 2×n-matrix of integers, permutations of A and
 NB.             B, produced by ggbalp
 NB.   hs      - 2-vector of integers, defines submatrices
@@ -177,18 +177,19 @@ NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevlnn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (<0 1;;~dhs2liso hs) ([ ((gghrdlnn~0,c) upd) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`]}) y
+  iso=. < 0 1 ; ;~ liso4dhs hs
+  y=. (gghrdlnn~ 0 , c)&.(iso&{) ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/&.(iso&{) y
   e1e2=. hs hgezqenn y
   e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
 
 ggevlnv=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (0 1;(<i.{.hs);dhs2liso hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
+  y=. (0 1;(<i.{.hs);liso4dhs hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`(((<0 1 2))<@(0})[)`((, idmat@c)@])} y
   y=. (gghrdlnv~0,c) y
   y=. hs hgezqsnv y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ 2 #c y
   else.
@@ -202,11 +203,12 @@ ggevlnv=: 3 : 0
 
 ggevlvn=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (<0 1;(<i.{.hs);dhs2liso hs) ((unmlqrc~,:trl@:(}:"1)@])gelqf)/@{`[`]} y
+  iso=. < 0 1 ; (< i. {. hs) ; liso4dhs hs
+  y=. ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/&.(iso&{) y
   y=. (((0,]) gghrdlvn (,idmat)) c) y
   y=. hs hgezqsvn y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ 2 #c y
   else.
@@ -220,11 +222,11 @@ ggevlvn=: 3 : 0
 
 ggevlvv=: 3 : 0
   'abnrmio y plr hs'=. ggballp ggevi y
-  y=. (0 1;(<i.{.hs);dhs2liso hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`((<0 1 3)<@(0})[)`((, ,:~@idmat@c)@])} y
+  y=. (0 1;(<i.{.hs);liso4dhs hs) ((unmlqrc~,(trl@:(}:"1),:unglq)@])gelqf)/@({~<)~`(((<0 1 3))<@(0})[)`((, ,:~@idmat@c)@])} y
   y=. (gghrdlvv~0,c) y
   y=. hs hgezqsvv y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ $ y
   else.
@@ -332,18 +334,19 @@ NB. - eigenvectors from LAPACK's xHEEV are orthonormal
 
 ggevunn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (<0 1;;~dhs2liso hs) ([ ((gghrdunn~0,c) upd) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`]}) y
+  iso=. < 0 1 ; ;~ liso4dhs hs
+  y=. (gghrdunn~ 0 , c)&.(iso&{) ((unmqrlc~ ,: tru@}:@]) geqrf)/&.(iso&{) y
   e1e2=. hs hgeqzenn y
   e1e2=. abnrmio scl^:((,~{&EVSCL)/@[`({&0 1 0 1@{:@[)`])"1 1 e1e2
 )
 
 ggevuvn=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (0 1;(dhs2liso hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, idmat@c)@])} y
+  y=. (0 1;(liso4dhs hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`(((<0 1 2))<@(0})[)`((, idmat@c)@])} y
   y=. (gghrduvn~0,c) y
   y=. hs hgeqzsvn y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ 2 #c y
   else.
@@ -357,11 +360,12 @@ ggevuvn=: 3 : 0
 
 ggevunv=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (<0 1;(dhs2liso hs);<<i.{.hs) ((unmqrlc~,:tru@}:@])geqrf)/@{`[`]} y
+  iso=. < 0 1 ; (liso4dhs hs) ; < < i. {. hs
+  y=. ((unmqrlc~ ,: tru@}:@]) geqrf)/&.(iso&{) y
   y=. (((0,]) gghrdunv (,idmat)) c) y
   y=. hs hgeqzsnv y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ 2 #c y
   else.
@@ -375,11 +379,11 @@ ggevunv=: 3 : 0
 
 ggevuvv=: 3 : 0
   'abnrmio y plr hs'=. ggbalup ggevi y
-  y=. (0 1;(dhs2liso hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`((<0 1 2)<@(0})[)`((, ,:~@idmat@c)@])} y
+  y=. (0 1;(liso4dhs hs);<<i.{.hs) ((unmqrlc~,(tru@}:,:ungqr)@])geqrf)/@({~<)~`(((<0 1 2))<@(0})[)`((, ,:~@idmat@c)@])} y
   y=. (gghrduvv~0,c) y
   y=. hs hgeqzsvv y
   e1e2=. 2 {. diag"2 y
-  if. 128!:5 < e1e2 do.
+  if. isnan < e1e2 do.
     NB. non-converged
     y=. _. $~ $ y
   else.
@@ -401,30 +405,31 @@ NB. Description:
 NB.   Test xGEEV (math/lapack2 addon) by square matrix
 NB.
 NB. Syntax:
-NB.   testgeev A
+NB.   log=. testgeev A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgeev=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/geev'
+  load_mttmp_ 'math/mt/external/lapack2/geev'
 
   rcondu=. gecon1 y
 
   'norml normr'=. (normi , norm1) y
 
-  ('''nn''&dgeev_mttmp_' tmonad (]      `]`(rcondu"_)`(_."_)`(_."_                            ))) y
-  ('''nv''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(                  t22r >. drvevr))) y ; _.    ; normr
-  ('''vn''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(t22l >. drvevl                  ))) y ; norml
-  ('''vv''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(t22l >. drvevl >. t22r >. drvevr))) y ; norml ; normr
+  log=.          ('''nn''&dgeev_mttmp_' tmonad (]      `]`(rcondu"_)`nan`nan                               )) y
+  log=. log lcat ('''nv''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(                  t22r >. drvevr))) y ; _.    ; normr
+  log=. log lcat ('''vn''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(t22l >. drvevl                  ))) y ; norml
+  log=. log lcat ('''vv''&dgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(t22l >. drvevl >. t22r >. drvevr))) y ; norml ; normr
 
-  ('''nn''&zgeev_mttmp_' tmonad (]      `]`(rcondu"_)`(_."_)`(_."_                            ))) y
-  ('''nv''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(                  t22r >. drvevr))) y ; _.    ; normr
-  ('''vn''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(t22l >. drvevl                  ))) y ; norml
-  ('''vv''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`(_."_)`(t22l >. drvevl >. t22r >. drvevr))) y ; norml ; normr
+  log=. log lcat ('''nn''&zgeev_mttmp_' tmonad (]      `]`(rcondu"_)`nan`nan                               )) y
+  log=. log lcat ('''nv''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(                  t22r >. drvevr))) y ; _.    ; normr
+  log=. log lcat ('''vn''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(t22l >. drvevl                  ))) y ; norml
+  log=. log lcat ('''vv''&zgeev_mttmp_' tmonad ((0&{::)`]`(rcondu"_)`nan`(t22l >. drvevl >. t22r >. drvevr))) y ; norml ; normr
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -435,31 +440,32 @@ NB.   Test DSYEV and ZHEEV (math/lapack2 addon) by Hermitian
 NB.   (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testheev A
+NB.   log=. testheev A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   A   - n×n-matrix, the Hermitian (symmetric)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testheev=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/dsyev'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/zheev'
+  load_mttmp_ 'math/mt/external/lapack2/dsyev'
+  load_mttmp_ 'math/mt/external/lapack2/zheev'
 
   rcondl=. heconi y
 
   norml=. normi y
 
-  ('''nl''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`(_."_))) y ; norml
-  ('''nu''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`(_."_))) y ; norml
-  ('''vl''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`t211  )) y ; norml
-  ('''vu''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`t211  )) y ; norml
+  log=.          ('''nl''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`nan )) y ; norml
+  log=. log lcat ('''nu''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`nan )) y ; norml
+  log=. log lcat ('''vl''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`t211)) y ; norml
+  log=. log lcat ('''vu''&dsyev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`t211)) y ; norml
 
-  ('''nl''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`(_."_))) y ; norml
-  ('''nu''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`(_."_))) y ; norml
-  ('''vl''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`t211  )) y ; norml
-  ('''vu''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`(_."_)`t211  )) y ; norml
+  log=. log lcat ('''nl''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`nan )) y ; norml
+  log=. log lcat ('''nu''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`nan )) y ; norml
+  log=. log lcat ('''vl''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`t211)) y ; norml
+  log=. log lcat ('''vu''&zheev_mttmp_' tmonad ((0&{::)`]`(rcondl"_)`nan`t211)) y ; norml
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -472,12 +478,13 @@ NB.   - ggevxxx (math/mt addon)
 NB.   by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testggev AB
+NB.   log=. testggev AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testggev=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/ggev'
+  load_mttmp_ 'math/mt/external/lapack2/ggev'
 
   'rcondl rcondu'=. <./ (geconi , gecon1)"2 y
 
@@ -488,30 +495,30 @@ testggev=: 3 : 0
   vberruL=: (mp~ ct)"2` *   `norm1`normitc drgev
   vberruR=:  mp     "2`(*"1)`norm1`normitc drgev
 
-  ('''nn''&dggev_mttmp_' tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`(_."_                           ))) y ; normu
-  ('''nv''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ;         3&{:: )`(rcondu"_)`(_."_)`                  vberruR        )) y ; normu
-  ('''vn''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{::         )`(rcondu"_)`(_."_)`  vberruL                        )) y ; normu
-  ('''vv''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcondu"_)`(_."_)`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
+  log=.          ('''nn''&dggev_mttmp_' tmonad ((0&{::)`]                                  `(rcondu"_)`nan`nan                              )) y ; normu
+  log=. log lcat ('''nv''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ;         3&{:: )`(rcondu"_)`nan`                  vberruR        )) y ; normu
+  log=. log lcat ('''vn''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{::         )`(rcondu"_)`nan`  vberruL                        )) y ; normu
+  log=. log lcat ('''vv''&dggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcondu"_)`nan`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
 
-  ('''nn''&zggev_mttmp_' tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`(_."_                           ))) y ; normu
-  ('''nv''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ;         3&{:: )`(rcondu"_)`(_."_)`                  vberruR        )) y ; normu
-  ('''vn''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{::         )`(rcondu"_)`(_."_)`  vberruL                        )) y ; normu
-  ('''vv''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcondu"_)`(_."_)`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
+  log=. log lcat ('''nn''&zggev_mttmp_' tmonad ((0&{::)`]                                  `(rcondu"_)`nan`nan                              )) y ; normu
+  log=. log lcat ('''nv''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ;         3&{:: )`(rcondu"_)`nan`                  vberruR        )) y ; normu
+  log=. log lcat ('''vn''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{::         )`(rcondu"_)`nan`  vberruL                        )) y ; normu
+  log=. log lcat ('''vv''&zggev_mttmp_' tmonad ((0&{::)`((0&{:: ,: 1&{::) ; 2&{:: ; 3&{:: )`(rcondu"_)`nan`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
 
-  ('ggevlnn'             tmonad ((0&{::)`]                                  `(rcondl"_)`(_."_)`(_."_                           ))) y ; norml
-  ('ggevlnv'             tmonad ((0&{::)`]                                  `(rcondl"_)`(_."_)`                  vberrlR        )) y ; norml
-  ('ggevlvn'             tmonad ((0&{::)`]                                  `(rcondl"_)`(_."_)`  vberrlL                        )) y ; norml
-  ('ggevlvv'             tmonad ((0&{::)`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcondl"_)`(_."_)`((vberrlL }:) >. (vberrlR 0 2&{)))) y ; norml
+  log=. log lcat ('ggevlnn'             tmonad ((0&{::)`]                                  `(rcondl"_)`nan`nan                              )) y ; norml
+  log=. log lcat ('ggevlnv'             tmonad ((0&{::)`]                                  `(rcondl"_)`nan`                  vberrlR        )) y ; norml
+  log=. log lcat ('ggevlvn'             tmonad ((0&{::)`]                                  `(rcondl"_)`nan`  vberrlL                        )) y ; norml
+  log=. log lcat ('ggevlvv'             tmonad ((0&{::)`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcondl"_)`nan`((vberrlL }:) >. (vberrlR 0 2&{)))) y ; norml
 
-  ('ggevunn'             tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`(_."_                           ))) y ; normu
-  ('ggevunv'             tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`                  vberruR        )) y ; normu
-  ('ggevuvn'             tmonad ((0&{::)`]                                  `(rcondu"_)`(_."_)`  vberruL                        )) y ; normu
-  ('ggevuvv'             tmonad ((0&{::)`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcondu"_)`(_."_)`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
+  log=. log lcat ('ggevunn'             tmonad ((0&{::)`]                                  `(rcondu"_)`nan`nan                              )) y ; normu
+  log=. log lcat ('ggevunv'             tmonad ((0&{::)`]                                  `(rcondu"_)`nan`                  vberruR        )) y ; normu
+  log=. log lcat ('ggevuvn'             tmonad ((0&{::)`]                                  `(rcondu"_)`nan`  vberruL                        )) y ; normu
+  log=. log lcat ('ggevuvv'             tmonad ((0&{::)`(0&{:: ; (1 ; 0)&{:: ; (1 ; 1)&{::)`(rcondu"_)`nan`((vberruL }:) >. (vberruR 0 2&{)))) y ; normu
 
   coerase < 'mttmp'
   erase 'vberrlL vberrlR vberruL vberruR'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -522,23 +529,21 @@ NB.   Adv. to make verb to test ggevxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testev
+NB.   log=. (mkmat testev) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testev_mt_ 150 150
+NB.     log=. ?@$&0 testev_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testev_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testev_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testev_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testev_mt_ 150 150
 
-testev=: 1 : 'EMPTY [ (testggev_mt_@u@(2&,) [ testheev_mt_@(u hemat_mt_) [ testgeev_mt_@u)^:(=/)'
+testev=: 1 : 'nolog_mt_`(testggev_mt_@u@(2&,) ,&.>~ testheev_mt_@(u hemat_mt_) ,&.>~ testgeev_mt_@u)@.(=/)'

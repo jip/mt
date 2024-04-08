@@ -1,14 +1,12 @@
 NB. Matrix Market exchange formats converter
 NB.
-NB. mm        Convert J numeric array to/from suitable Matrix
-NB.           Market exchange format string
+NB. mm      Convert J numeric array to/from suitable Matrix
+NB.         Market exchange format string
 NB.
-NB. testmm    Test mm
-NB. verifymm  Verify mm
+NB. testmm  Test mm verb
 NB.
-NB. Version: 0.13.3 2021-06-29
-NB.
-NB. Copyright 2020-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -41,11 +39,7 @@ NB. 2) MM matrix object may have any rank>1, this extends an
 NB.    original specification
 NB. 3) MM matrix object may have skew-Hermitian symmetry,
 NB.    this extends an original specification
-NB. 4) the following definitions are assumed in the examples
-NB.    below:
-NB.      delimiters=. LF , ' '
-NB.      string=. 'foo bar  baz' , LF , 'qux' , LF2 , 'quux' , LF , ' corge ' , LF , 'flob'
-NB. 5) ±inf and nan aren't still supported in exporting J
+NB. 4) ±inf and nan aren't still supported in exporting J
 NB.    array to MM matrix object, this reduces an original
 NB.    specification
 NB.
@@ -116,9 +110,6 @@ notOr=:  2 : '-.@u `    1:@.v'  NB. (not u)             or      v     notuorv=. 
 NB. like fread, but may throw 'file name' error
 fread2=: (1!:1)@fboxname@boxopen@jpath
 
-NB. fix system's (assert) to match (assert.) control
-assert=: 0 0 $ dbsig@12^:(1 +./@:~: ])^:(9!:34@'')
-
 NB. predicate to check is array symmetric
 NB. based on:
 NB.   https://code.jsoftware.com/wiki/Essays/Symmetric_Array
@@ -135,136 +126,76 @@ NB. predicate to check is array skew-Hermitian
 isskwhmt=: (-: 0&|:) or (3 > #@$) and (-@:+ -: _2&|:)
 
 NB. ---------------------------------------------------------
-NB. adv. to fix an order of gerund elements by key's nub for
-NB. Key (/.) (deterministic key)
-NB. result=. keys gerund dkey args
-NB. is useful when there is a strong relation between verbs
-NB. in gerund, on the one hand, and keys, on the other
-NB. e.g.
-NB.   keys gerund/.    y  NB. apply verb (gerund@.i) to collection of y with key (i { ~.  x)
-NB.   keys gerund dkey y  NB. apply verb (gerund@.i) to collection of y with key (i        )
-NB. notes: (~. key) must be a permutation
-
-dkey=: 1 : 0
-:
-  x ((~. x) { m)/. y
-)
-
-NB. ---------------------------------------------------------
-NB. cut3
+NB. assert
 NB.
 NB. Description:
-NB.   Split string by delimiter character from its tail.
+NB.   Advanced version of the (assert.) control
 NB.
 NB. Syntax:
-NB.   splitted_string=. cut3 string
+NB.   trash=. [msg] assert chk
+NB. where
+NB.   msg - string, optional, will be shown if assertion is
+NB.         failed
+NB.   chk - numeric vector
 NB.
 NB. Examples:
-NB.    cut3 string
-NB. +----+----+------------------------+
-NB. |foo |ar  |az qux  quux  corge  flo|
-NB. +----+----+------------------------+
-
-cut3=: <;._2
-
-NB. ---------------------------------------------------------
-NB. cut2
+NB. - when asserts are enabled:
+NB.      9!:34 ''  NB. check asserts are enabled
+NB.   1
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0
+NB.   |assertion failure: assert_mtmm_     |assertion failure: assert_z_
+NB.   |       assert_mtmm_ 1 1 0           |       assert_z_ 1 1 0
+NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
+NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2          NB. no failure occured - it's a bug #1
+NB.   |assertion failure: assert_mtmm_
+NB.   |       assert_mtmm_ 1 1 2
 NB.
-NB. Description:
-NB.   Split string by delimiter character.
+NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0
+NB.   |Oops!: assert_mtmm_                 |Oops!: assert_z_
+NB.   |   'Oops!'    assert_mtmm_ 1 1 0    |   'Oops!'    assert_z_ 1 1 0
+NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
+NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2  NB. no failure occured - it's a bug #1
+NB.   |Oops!: assert_mtmm_
+NB.   |   'Oops!'    assert_mtmm_ 1 1 2
 NB.
-NB. Syntax:
-NB.   splitted_string=.           cut2 string
-NB.   splitted_string=. delimiter cut2 string
+NB. - when asserts are disabled:
+NB.      9!:35 [ 0  NB. disable asserts
+NB.      9!:34 ''   NB. check asserts are disabled
+NB.   0
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
+NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2
+NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0          NB. failure occured - it's a bug #2
+NB.                                        |assertion failure: assert_z_
+NB.                                        |       assert_z_ 1 1 0
+NB.
+NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
+NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2
+NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0  NB. failure occured - it's a bug #2
+NB.                                        |Oops!: assert_z_
+NB.                                        |   'Oops!'    assert_z_ 1 1 0
+NB.      9!:35 [ 1  NB. restore default setting
+NB.      9!:34 ''   NB. check asserts are enabled
+NB.   1
 NB.
 NB. Notes:
-NB. - default delimiter is ' '
-NB. - doesn't drop repeating delimiters
-NB. - monad (cut2) is an inverse of (' '&joinby)
-NB. - dyad (cut2) is an inverse of (joinby)
+NB. - ambivalent procedure
+NB. - fixes system's (assert_z_) to match (assert.) control
+NB. - depends on 9!:34 (Enable assert.) setting
+NB. - values of rank>1 are supported accidentally, too:
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 ,: 1 0              assert_z_ 1 1 ,: 1 0  NB. no failure occured
+NB.   |assertion failure: assert_mtmm_
+NB.   |       assert_mtmm_ 1 1,:1 0
 NB.
-NB. Examples:
-NB.    cut2 string
-NB. +---+---++--------------+-----+-----+
-NB. |foo|bar||baz qux  quux |corge| flob|
-NB. +---+---++--------------+-----+-----+
-NB.    LF cut2 string
-NB. +------------+---++----+-------+----+
-NB. |foo bar  baz|qux||quux| corge |flob|
-NB. +------------+---++----+-------+----+
+NB. References:
+NB. [1] Igor Zhuravlov. [Jprogramming] assert verb from
+NB.     stdlib mismatches assert. control
+NB.     2019-12-30 00:43:46 UTC.
+NB.     http://www.jsoftware.com/pipermail/programming/2019-December/054693.html
 
-cut2=: ' '&$: : (cut3@,~)
-
-NB. ---------------------------------------------------------
-NB. cut
-NB.
-NB. Description:
-NB.   Split string by delimiter character.
-NB.
-NB. Syntax:
-NB.   splitted_string=.           cut string
-NB.   splitted_string=. delimiter cut string
-NB.
-NB. Notes:
-NB. - default delimiter is ' '
-NB. - drops repeating delimiters
-NB. - identic to (cut) verb from the Standard Library
-NB.
-NB. Examples:
-NB.    cut string
-NB. +---+---+--------------+-----+-----+
-NB. |foo|bar|baz qux  quux |corge| flob|
-NB. +---+---+--------------+-----+-----+
-NB.    LF cut string
-NB. +------------+---+----+-------+----+
-NB. |foo bar  baz|qux|quux| corge |flob|
-NB. +------------+---+----+-------+----+
-
-cut=: -.&a:@cut2
-
-NB. ---------------------------------------------------------
-NB. cutl2
-NB.
-NB. Description:
-NB.   Split string by any delimiter character.
-NB.
-NB. Syntax:
-NB.   splitted_string=. delimiters cutl2 string
-NB.
-NB. Notes:
-NB. - like (cut2) verb, but delimiter can be any character
-NB.   from (delimiters) argument
-NB. - like (cutl) verb, but doesn't drop repeating delimiters
-NB.
-NB. Examples:
-NB.    delimiters cutl2 string
-NB. +---+---++---+---++----++-----++----+
-NB. |foo|bar||baz|qux||quux||corge||flob|
-NB. +---+---++---+---++----++-----++----+
-
-cutl2=: ((, {.) (e. cut3 [) ])~
-
-NB. ---------------------------------------------------------
-NB. cutl
-NB.
-NB. Description:
-NB.   Split string by any delimiter character.
-NB.
-NB. Syntax:
-NB.   splitted_string=. delimiters cutl string
-NB.
-NB. Notes:
-NB. - like (cut) verb, but delimiter can be any character
-NB.   from (delimiters) argument
-NB. - drops repeating delimiters
-NB.
-NB. Examples:
-NB.    delimiters cutl string
-NB. +---+---+---+---+----+-----+----+
-NB. |foo|bar|baz|qux|quux|corge|flob|
-NB. +---+---+---+---+----+-----+----+
-
-cutl=: -.&a:@cutl2
+assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')
 
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -308,7 +239,7 @@ isosym=: (3 : 0) :. (#. _2&C.&.|:@(# combrep {.))
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
   vals=. (# S: 0 # i.@#) iso               NB. replicate value for each ISO
   iso=. ; iso
-  vals (<"1 iso)} y $ 0
+  vals iso} y $ 0
 )
 
 NB. ---------------------------------------------------------
@@ -326,7 +257,7 @@ NB.   shape  -:(rank # length)  NB. an array's shape
 NB.   arriso - shape-array, ISO, skew-symmetric
 NB.   iso    - (rank ! length)-vector, ISO nub
 NB.            from ravelled skew-symmetric array
-NB.   rank   ∊ [2, length], integer, an array's rank
+NB.   rank   ∈ [2, length], integer, an array's rank
 NB.
 NB. Assertion:
 NB.      nub -: iso ({ ,) $.^:_1 arr
@@ -355,9 +286,9 @@ isoskw=: (3 : 0) :. (#. _2&C.&.|:@(# comb {.))
                                            NB. groups of equal size (! rank)
   vals=. (# (!@[ # #\@i.@!) {.) y          NB. assign a natural number to each ISO group,
                                            NB. each ISO within group will have the same value
-  par=. C.!.2 /:"1 iso                     NB. parity (is valid since there is no diagonals here)
+  par=. (C.!.2) (/:"1) iso                 NB. parity (is valid since there is no diagonals here)
   vals=. (          1 = par)} (,: -) vals  NB. negate evenly permuted values
-  vals (<"1 iso)} 1 $. y ; (i. # y) ; 00
+  vals iso} 1 $. y ; (i. # y) ; 00
 )
 
 NB. ---------------------------------------------------------
@@ -403,10 +334,10 @@ isohmt=: (3 : 0) :. (isosym^:_1)
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
   vals=. (# S: 0 #    i.@#) iso            NB. replicate value for each ISO
   iso=. ; iso
-  ndmask=. (# y) = #@~."1 iso              NB. ISO for non-diagonals mask
-  par=. C.!.2 /:"1 iso                     NB. parity (is valid only for non-diagonals)
+  ndmask=. (# y) = (#@~."1) iso            NB. ISO for non-diagonals mask
+  par=. (C.!.2) (/:"1) iso                 NB. parity (is valid only for non-diagonals)
   vals=. (ndmask *. 1 = par)} (,: -) vals  NB. negate evenly permuted non-diagonal values
-  vals (<"1 iso)} y $ 0
+  vals iso} y $ 0
 )
 
 NB. ---------------------------------------------------------
@@ -451,8 +382,8 @@ mmic=: 4 : 0
   end.
   ('not more than ' , (": lemax) , ' elements was expected, but ' , (": lp) , ' data rows found') assert lemax >: lp  NB. some elements may be omitted
   NB. convert strings with data lines to J array
-  'rp cp'=. 2 {.!.1 $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
-  'there are not recognized values' assert -. 128!:5 < y
+  'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
+  'there are not recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' data rows found (2)') assert le = rp  NB. how is this possible to violate?
   fret=. ''  NB. makes sense for complex field only
   NB. check columns quantity
@@ -473,7 +404,7 @@ mmic=: 4 : 0
   iso=. <. iso  NB. convert to integer type
   'indices must be 1-based' assert 0 (< ,) iso
   iso=. <: iso  NB. translate MM's 1-based ISO to J's 0-based ones
-  'index exceeding dimension is detected' assert *./ iso <"1 shape
+  'index exceeding dimension is detected' assert iso <"1 shape
   if. ioField e. 1 2 do.  NB. integer or real
     'integer data type was expected but real data type is detected' assert (JFL = 3!:0 dat) *: 1 = ioField
       NB. don't check a reverse situation since the following is possible: (42 -: ". '42.0')
@@ -485,9 +416,9 @@ mmic=: 4 : 0
   select. ioSymmetry
     case. 1 ; 3 ; 4 do.  NB. symmetric, Hermitian or skew-Hermitian
       if. 3 = ioSymmetry do.  NB. Hermitian
-        'diagonal values must be real' assert 0 = 11 o. (rank ~: #@~."1 iso) # dat
+        'diagonal values must be real' assert 0 = 11 o. (rank ~: (#@~."1) iso) # dat
       elseif. 4 = ioSymmetry do.  NB. skew-Hermitian
-        'diagonal values must be imaginary' assert 0 = 9 o. (rank ~: #@~."1 iso) # dat
+        'diagonal values must be imaginary' assert 0 = 9 o. (rank ~: (#@~."1) iso) # dat
       end.
       NB. elements presented must have ISO satisfying:
       NB.   ISO[0] <= ISO[1] <= ... <= ISO[R-4] <= ISO[R-3] <= ISO[R-1] <= ISO[R-2]
@@ -518,7 +449,7 @@ mmic=: 4 : 0
       NB. - generate the set of permutations for each ISO
       NB.   - its cardinality are the same
       NB. - merge sets (no reshaping)
-      iso=. ,/ (i. count) A."_ 1 iso
+      iso=. ,/ (i. count) (A."_ 1) iso
   end.
   NB. restore values omitted
   NB. - replicate for each set
@@ -531,21 +462,21 @@ mmic=: 4 : 0
       NB. - negate values from strict upper triangle i.e. if
       NB.   the corresponding ISO is derived from (/:~ ISO)
       NB.   by even permutation
-      dat=. (1 = C.!.2 /:"1 iso)} (,:    -) count  # dat
+      dat=. (1 = (C.!.2) (/:"1) iso)} (,:    -) count  # dat
     case. 3 do.  NB. Hermitian
       NB. - conjugate values from strict upper triangle i.e.
       NB.   if the corresponding ISO is derived from
       NB.   (/:~ ISO) by even permutation
-      dat=. (1 = C.!.2 /:"1 iso)} (,: +   ) counts # dat
+      dat=. (1 = (C.!.2) (/:"1) iso)} (,: +   ) counts # dat
     case. 4 do.  NB. skew-Hermitian
       NB. - conjugate and negate values from strict upper
       NB.   triangle i.e. if the corresponding ISO is derived
       NB.   from (/:~ ISO) by even permutation
-      dat=. (1 = C.!.2 /:"1 iso)} (,: +@:-) counts # dat
+      dat=. (1 = (C.!.2) (/:"1) iso)} (,: +@:-) counts # dat
   end.
   NB. place values at ISO positions in sparse array
-  se=. ioField {:: 0 ; 00 ; 0.0 ; 0j0
-  y=. dat (<"1 iso)} 1 $. shape ; (i. rank) ; se
+  se=. ioField {:: ((0 ; 00 ; 0.0 ; 0j0))
+  y=. dat iso} 1 $. shape ; (i. rank) ; se
 )
 
 NB. ---------------------------------------------------------
@@ -564,7 +495,7 @@ mmia=: 4 : 0
   rank=. # shape
   NB. check max columns quantity presented
   if. 3 = ioField do.  NB. complex
-    'each data row must contain a real and imaginary part of single matrix entry (1)' assert ' '&e. S: 0 y
+    'each data row must contain a real and imaginary part of single matrix entry (1)' assert (' '&e.S:0) y
   end.
   NB. check elements quantity depending on symmetry
   lp=. # y
@@ -581,13 +512,13 @@ mmia=: 4 : 0
   end.
   ((": le) , ' elements was expected, but ' , (": lp) , ' data rows found') assert le = lp  NB. all elements must be presented
   NB. convert strings with data lines to J array
-  'rp cp'=. 2 {.!.1 $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
-  'there are not recognized values' assert -. 128!:5 < y
+  'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
+  'there are not recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' elements found') assert le = rp  NB. how is this possible to violate?
   NB. check columns quantity
   if. 3 = ioField do.  NB. complex
     'each data row must contain a real and imaginary part of single matrix entry (2)' assert 2 = cp
-    y=. j./"1 y
+    y=. (j./"1) y
   else.  NB. integer or real (since mmia isn't called for pattern)
     'each data row must contain just a single matrix entry' assert 1 = cp
     'integer data type was expected but real data type is detected' assert (JFL = 3!:0 y) *: 1 = ioField
@@ -596,7 +527,7 @@ mmia=: 4 : 0
   NB. restore elements known due to symmetry
   select. ioSymmetry
     case. 0 do.  NB. general
-      y=. |:"2 (_2 C. shape) ($ ,) y
+      y=. (|:"2) (_2 C. shape) ($ ,) y
     case. 1 do.  NB. symmetric
       iso=. isosym shape
       y=. iso { y
@@ -605,13 +536,13 @@ mmia=: 4 : 0
       y=. iso { 0 , (, -@|.) y
     case. 3 do.  NB. Hermitian
       ('''' , (ioField {:: FIELDS) , ''' and ''Hermitian'' qualifiers are incompatible') assert 3 = ioField
-      mask=. rank > (#@~."1) _2&C.&.|: (# combrep {.) shape
+      mask=. rank > (#@~."1) (_2&C.&.|:) (# combrep {.) shape
       'diagonal values must be real' assert 0 = 11 o. mask # y
       iso=. isohmt shape
       y=. iso { (, +@|.@}.) y
     case. 4 do.  NB. skew-Hermitian
       ('''' , (ioField {:: FIELDS) , ''' and ''skew-Hermitian'' qualifiers are incompatible') assert 3 = ioField
-      mask=. rank > (#@~."1) _2&C.&.|: (# combrep {.) shape
+      mask=. rank > (#@~."1) (_2&C.&.|:) (# combrep {.) shape
       'diagonal values must be imaginary' assert 0 = 9 o. mask # y
       iso=. isohmt shape
       y=. iso { (, -@:+@|.@}.) y
@@ -653,11 +584,11 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
-  y=. CRLF cutl_mtmm_ y  NB. cut by spans of CR and LF
-  'line longer than 1024 characters was detected' assert_mtmm_ (1024 >: #) S: 0 y
-  header=. cut_mtmm_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
-  y=. (#~ ('%' ~: {.) S: 0) y   NB. remove header and comments
-  y=. (#~ a:&~:) dltb L: 0 y    NB. remove empty lines
+  y=. CRLF cutl_mt_ y  NB. cut by spans of CR and LF
+  'line longer than 1024 bytes was detected' assert_mtmm_ ((1024 >: #)S:0) y
+  header=. cut_mt_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
+  y=. (#~ ('%' ~: {.) S: 0) y  NB. remove header and comments
+  y=. (#~ a:&~:) dltb L: 0 y   NB. remove empty lines
   'not a Matrix Market exchange format' assert_mtmm_ 5 = # header
   ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mtmm_ BANNER_mtmm_ -: 0 {:: header
   ('object '''   , (1 {:: header) , ''' is not recognized') assert_mtmm_ OBJECT_mtmm_ -: 1 {:: header
@@ -698,8 +629,9 @@ mm=: (3 : 0) :. (3 : 0)
     y=. y [`(#~ trlmask)`(#~ trl0mask)`(#~ trlmask)`(#~ trlmask)@.ioSymmetry iso
   else.
     NB. array
+    if. 0 = ioField do. ioField=. 1 end.  NB. represent boolean array as integer since 'array' and 'pattern' qualifiers are incompatible
     NB. compose data
-    y=. +.^:(3 = ioField) , |:"2^:(0 = ioSymmetry) y
+    y=. +.^:(3 = ioField) , (|:"2)^:(0 = ioSymmetry) y
     NB. filter out repeating elements known due to symmetry
     y=. y [`({~ isosym^:_1)`({~ isoskw^:_1)`({~ isohmt^:_1)`({~ isohmt^:_1)@.ioSymmetry shape
   end.
@@ -707,19 +639,11 @@ mm=: (3 : 0) :. (3 : 0)
   format=.   ioFormat   {:: FORMATS
   field=.    ioField    {:: FIELDS
   symmetry=. ioSymmetry {:: SYMMETRIES
-  str=. BANNER , ' ' , OBJECT , ' ' , format , ' ' , field , ' ' , symmetry , LF , size , LF , , ((=&'_')`(,:&'-')} ":!.(IF64 { 9 17) ,. y) ,. LF
+  str=. BANNER , ' ' , OBJECT , ' ' , format , ' ' , field , ' ' , symmetry , LF , size , LF , , (((=&'_')`(,:&'-')}) ":!.(IF64 { 9 17) ,. y) ,. LF
 )
 
 NB. =========================================================
 NB. Test suite
-
-NB. make structured matrix from general one
-NB. syntax: strmat=. xx4ge mat
-
-sy4ge=: (</~@i.@#)`(,:      |:)}       NB. symmetric
-ss4ge=: (</~@i.@#)`(,:    -@|:)}@trl0  NB. skew-symmetric
-he4ge=: tr2he                   @trl   NB. Hermitian
-sh4ge=: (</~@i.@#)`(,: +@:-@|:)}@trl0  NB. skew-Hermitian
 
 NB. ---------------------------------------------------------
 NB. testmm
@@ -736,9 +660,10 @@ NB.   - dense (non sparse)
 NB.   - sparse
 NB.
 NB. Syntax:
-NB.   testmm A
+NB.   log=. testmm A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - array of any rank > 1
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Notes:
 NB. - berr shows boolean 'is matched exactly'
@@ -746,10 +671,8 @@ NB. - berr shows boolean 'is matched exactly'
 testmm=: 3 : 0
   rcondA=. gecon1 y
 
-  ('mm_mtmm_'     tmonad (]       `(mm_mtmm_^:_1)`(rcondA"_)`(_."_)`-:)) y
-  ('mm_mtmm_^:_1' tmonad (mm_mtmm_`]             `(rcondA"_)`(_."_)`-:)) y
-
-  EMPTY
+  log=.          ('mm_mtmm_'     tmonad (]       `(mm_mtmm_^:_1)`(rcondA"_)`nan`-:)) y
+  log=. log lcat ('mm_mtmm_^:_1' tmonad (mm_mtmm_`]             `(rcondA"_)`nan`-:)) y
 )
 
 NB. ---------------------------------------------------------
@@ -760,125 +683,21 @@ NB.   Adv. to make verb to test mm by matrices of generator
 NB.   and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testmm_mt_
+NB.   log=. (mkmat testmm_mt_) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square boolean matrix:
-NB.     ?@$&2 testmm_mt_ 15 15
+NB.     log=. ?@$&2 testmm_mt_ 15 15
 NB. - test by random integer matrix:
-NB.     ?@$&100 testmm_mt_ 10 15
+NB.     log=. ?@$&100 testmm_mt_ 10 15
 NB. - test by random real matrix:
-NB.     ?@$&0 testmm_mt_ 15 10
+NB.     log=. ?@$&0 testmm_mt_ 15 10
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testmm_mt_ 10 10
+NB.     log=. (gemat_mt_ j. gemat_mt_) testmm_mt_ 10 10
 
-testmm_mt_=: 1 : 'EMPTY [ ((testmm_mtmm_@sh4ge_mtmm_ [ testmm_mtmm_@he4ge_mtmm_ [ testmm_mtmm_@ss4ge_mtmm_ [ testmm_mtmm_@sy4ge_mtmm_)^:(=/@$) [ testmm_mtmm_)@(u spmat_mt_ 0.25) [ ((testmm_mtmm_@sh4ge_mtmm_ [ testmm_mtmm_@he4ge_mtmm_ [ testmm_mtmm_@ss4ge_mtmm_ [ testmm_mtmm_@sy4ge_mtmm_)^:(=/@$) [ testmm_mtmm_)@u'
-
-NB. =========================================================
-NB. Verification suite
-
-NB. test files directory
-TEST_DIR=: '~addons/math/mt/test/mm/'
-
-NB. ---------------------------------------------------------
-NB. test0dir
-NB. test0inv
-NB. test1dir
-NB. test1inv
-NB.
-NB. Description:
-NB.   Predicate to test for direct (mm) or inverse (mm^:_1)
-NB.   conversion which must fail (0) or succeed (1)
-NB.
-NB. Syntax:
-NB.   isFailed=.  test0dir (fname , 'ijs')
-NB.   isFailed=.  test0inv (fname , 'mm' )
-NB.   isSucceed=. test1dir  fname
-NB.   isSucceed=. test1inv  fname
-NB. where
-NB.   fname - string, a test file's full name with path and
-NB.           without extension
-
-NB. test0dir=: (1 [ mm    ) :: 0@fread2
-NB. test0inv=: (1 [ mm^:_1) :: 0@fread2
-test0dir=: ((((1: echo) 'test0dir_mtmm_ failed with '&,))~ mm    ) :: 0 fread2
-test0inv=: ((((1: echo) 'test0inv_mtmm_ failed with '&,))~ mm^:_1) :: 0 fread2
-
-NB. test1dir=: ,&'mm' ((-: mm    ) :: 0  ".)&fread2 ,&'ijs'
-NB. test1inv=: ,&'mm' ((-: mm^:_1) :: 0~ ".)&fread2 ,&'ijs'
-test1dir=: ,&'mm' ([:`1:@.(-: mm    )  ".)&fread2 ::  ((0: echo) 'test1dir_mtmm_ failed with '&,)   ,&'ijs'
-test1inv=: ,&'mm' ([:`1:@.(-: mm^:_1)~ ".)&fread2 :: (((0: echo) 'test1inv_mtmm_ failed with '&,)~) ,&'ijs'
-
-NB. ---------------------------------------------------------
-NB. testround0
-NB. testround1
-NB.
-NB. Description:
-NB.   Adv. to count failures for tests
-NB.
-NB. Syntax:
-NB.   u0test=. u0 testround0
-NB.   u1test=. u1 testround1
-NB. where
-NB.   u0     - predicate monad to test which would fail,
-NB.            is evoked as:
-NB.              isFailed=. u0 (fnamei , fexti)
-NB.   u1     - predicate monad to test which would succeed,
-NB.            is evoked as:
-NB.              isSucceed=. u1 fnamei
-NB.   u0test - verb to test files which would fail, is
-NB.            evoked as:
-NB.              'probed failed'=. u0test ((fname0 , fexti) ; (fname1 fexti) ; ...)
-NB.   u1test - verb to test files which would succeed, is
-NB.            evoked as:
-NB.              'probed failed'=. u1test (fname0 ; fname1 ; ...)
-NB.   fnamei - string, a test file's full name with path and
-NB.            without extension
-NB.   fexti  - string, either 'mm' or 'ijs'
-NB.   probed ≥ 0, tests probed counter
-NB.   failed ≥ 0, tests failed counter
-
-testround0=: 1 : '(#    ,    +/)@(u S: 0)'
-testround1=: 1 : '(# ([ , -) +/)@(u S: 0)@(''.''&dropafter L: 0)'
-
-NB. ---------------------------------------------------------
-NB. testdir
-NB. testinv
-NB.
-NB. Description:
-NB.   Nilad to test for direct (mm) or inverse (mm^:_1) and
-NB.   return a result
-NB.
-NB. Syntax:
-NB.   'probedDir failedDir'=. testdir ''
-NB.   'probedInv failedInv'=. testinv ''
-NB. where
-NB.   probedDir ≥ 0, tests probed counter for (mm    )
-NB.   failedDir ≥ 0, tests failed counter for (mm    )
-NB.   probedInv ≥ 0, tests probed counter for (mm^:_1)
-NB.   failedInv ≥ 0, tests failed counter for (mm^:_1)
-
-testdir=: (+/)@((test0dir testround0)`(test1dir testround1) dkey~ '_'&e. S: 0)@(1 dir (TEST_DIR , '*.ijs')"_)  NB. ...direct  (mm    ) for J->MM
-testinv=: (+/)@((test0inv testround0)`(test1inv testround1) dkey~ '_'&e. S: 0)@(1 dir (TEST_DIR , '*.mm' )"_)  NB. ...inverse (mm^:_1) for J<-MM
-
-NB. ---------------------------------------------------------
-NB. verify
-NB.
-NB. Description:
-NB.   Nilad to verify MM converter, output result to console
-NB.   and return it
-NB.
-NB. Syntax:
-NB.   'probed failed'=. verifymm_mt_ ''
-NB. where
-NB.   probed ≥ 0, tests probed counter
-NB.   failed ≥ 0, tests failed counter
-
-verifymm_mt_=: (] [ echo@('module: mm, tests probed: ' , ":@{. , ', failed: ' , ":@{:))@(+/)@:(testdir_mtmm_`testinv_mtmm_`:0)
+testmm_mt_=: 1 : '(nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@(u spmat_mt_ 0.25) ,&.>~ (nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@u'

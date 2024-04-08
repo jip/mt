@@ -5,18 +5,19 @@ NB.            triangular matrix
 NB. kmsmat     Adv. to make monad to make random
 NB.            Kac-Murdock-Szego (KMS) matrix
 NB. gemat      Make random real array
-NB. dimat      Conj. to make verb to make random
+NB. dimat      Conj. to make monad to make random
 NB.            diagonalizable matrix
-NB. hemat      Adv. to make verb to make random Hermitian
+NB. hemat      Adv. to make monad to make random Hermitian
 NB.            (symmetric) matrix
-NB. pomat      Adv. to make verb to make random Hermitian
+NB. pomat      Adv. to make monad to make random Hermitian
 NB.            (symmetric) positive definite matrix
-NB. ptmatx     Adv. to make verb to make random Hermitian
+NB. ptmatx     Adv. to make monad to make random Hermitian
 NB.            (symmetric) positive definite tridiagonal
 NB.            matrix
-NB. unmat      Adv. to make verb to make random unitary
+NB. unmat      Adv. to make monad to make random unitary
 NB.            (orthogonal) matrix
-NB. spmat      Conj. to make verb to make random sparse array
+NB. spmat      Conj. to make monad to make random sparse
+NB.            array
 NB.
 NB. testtrmat  Test trxxmat by matrix size given
 NB. testgemat  Test gemat by matrix shape given
@@ -24,12 +25,12 @@ NB. testdimat  Test dimat by matrix size given
 NB. testhemat  Test hemat by matrix size given
 NB. testpomat  Test pomat by matrix size given
 NB. testptmat  Test ptmatx by matrix size given
+NB. testunmat  Test unmat by matrix size given
 NB. testspmat  Test spmat by matrix shape given
 NB. testrand   Test xxxxmatx by matrix shape given
 NB.
-NB. Version: 0.13.2 2021-06-24
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -48,6 +49,9 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -102,8 +106,8 @@ NB. Notes:
 NB. - for rnk=1 models LAPACK's DLARNV(1)
 NB.
 NB. References:
-NB. [1] Non-Uniform Random Variate Generation. Luc Devroye, 2003.
-NB.     School of Computer Science, McGill University.
+NB. [1] Non-Uniform Random Variate Generation. Luc Devroye,
+NB.     2003. School of Computer Science, McGill University.
 NB.     http://luc.devroye.org/rnbookindex.html
 
 randu=: (?@$&0) :((p.~ -~/\)~ $:)
@@ -280,16 +284,14 @@ NB. ---------------------------------------------------------
 NB. kmsmatrho
 NB.
 NB. Description:
-NB.   Adv. to make nilad to produce rho parameter for
+NB.   Adv. to make nilad to generate rho parameter for
 NB.   rho-parametrized KMS matrix K(rho)
 NB.
 NB. Syntax:
-NB.   vapp=. randx kmsmatrho
+NB.   rho=. (randx kmsmatrho) any_noun
 NB. where
 NB.   randx - monad to generate random numbers; is called as:
 NB.             A=. randx sh
-NB.   vapp  - nilad to generate rho; is called as:
-NB.             rho=. vapp any_noun
 NB.   sh    - size or shape of A
 NB.
 NB. Notes:
@@ -303,27 +305,24 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb:      Syntax:                 Is called as:
-NB. trl1mat    vapp=. randx trl1mat    L1=. vapp sh
-NB. trlmat     vapp=. randx trlmat     L=.  vapp sh
-NB. tru1mat    vapp=. randx tru1mat    U1=. vapp sh
-NB. trumat     vapp=. randx trumat     U=.  vapp sh
+NB. Verb       Syntax
+NB. trl1mat    L1=. (randx trl1mat) sh
+NB. trlmat     L=.  (randx trlmat ) sh
+NB. tru1mat    U1=. (randx tru1mat) sh
+NB. trumat     U=.  (randx trumat ) sh
 NB.
 NB. Description:
-NB.   Adv. to make verb to make random square triangular
+NB.   Adv. to make monad to make random square triangular
 NB.   matrix
 NB. where
 NB.   randx - monad to make random y-array; is called as:
 NB.             A=. randx y
-NB.   vapp  - monad to make triangular n×n-matrix T; is
-NB.           called as:
-NB.             T=. vapp sh
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
 NB.   L1    - n×n-matrix, random unit lower triangular
-NB.   L     - n×n-matrix, random lower triangular
+NB.   L     - n×n-matrix, random      lower triangular
 NB.   U1    - n×n-matrix, random unit upper triangular
-NB.   U     - n×n-matrix, random upper triangular
+NB.   U     - n×n-matrix, random      upper triangular
 NB.
 NB. Algorithm for basic adverb trlmat:
 NB.   In: n randx
@@ -363,7 +362,7 @@ NB.     exponent(Re(l)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(l)) ~ U(-1,1)
 NB.     exponent(Im(l)) ~ TN(0,3^2,-6,4)
 NB.   :
-NB.     L=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) trlmat 4
+NB.     L=. ((0 1 0 1 , FP_EMIN , FP_EMAX)&gemat j. _1 1 0 3 _6 4&gemat) trlmat 4
 NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
@@ -384,12 +383,10 @@ NB.   Adv. to make monad to make random Kac-Murdock-Szego
 NB.   (KMS) matrix [1].
 NB.
 NB. Syntax:
-NB.   vapp=. randx kmsmat
+NB.   K=. (randx kmsmat) sh
 NB. where
 NB.   randx - nilad to make rho; is called as:
 NB.             rho=. randx any_noun
-NB.   vapp  - monad to make KMS; is called as:
-NB.             K=. vapp sh
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
 NB.   rho   - scalar number, the KMS matrix parameter
@@ -438,7 +435,7 @@ NB. [1] W.F. Trench, "Numerical solution of the eigenvalue
 NB.     problem for Hermitian Toeplitz matrices", SIAM J.
 NB.     Matrix Analysis and Appl., 10 (1989), pp. 135-146.
 
-kmsmat=: 1 : 'hel_mt_@(+@u ^ -/~@i.@{.)'
+kmsmat=: 1 : 'he4gel_mt_@(+@u ^ -/~@i.@{.)'
 
 NB. ---------------------------------------------------------
 NB. gemat
@@ -480,14 +477,14 @@ NB.     exponent(Re(g)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(g)) ~ U(-1,1)
 NB.     exponent(Im(g)) ~ TN(0,3^2,-6,4)
 NB.   :
-NB.     G=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) 4 4
+NB.     G=. ((0 1 0 1 , FP_EMIN , FP_EMAX)&gemat j. _1 1 0 3 _6 4&gemat) 4 4
 NB.
 NB. Notes:
 NB. - default par provides about 95% of g numbers falls into
 NB.   the range [-1/FP_EPS,-FP_EPS]U[FP_EPS,1/FP_EPS]
 NB.   ("68-95-99.7 rule")
 
-gemat=: (_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX)&$: :(((randu~ 2&{.) (* 2&^) (randtnr~ 2&}.))~)
+gemat=: (_1 1 0 , (-: FP_FLEN) , FP_EMIN , FP_EMAX)&$: :(((randu~ 2&{.) * 2 ^ (randtnr~ 2&}.))~)
 
 NB. ---------------------------------------------------------
 NB. dimat
@@ -497,14 +494,12 @@ NB.   Conj. to make verb to make random diagonalizable
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   vapp=. randx dimat randq
+NB.   A=. (randx dimat randq) sh
 NB. where
 NB.   randq - monad to make Q; is called as:
 NB.             Q=. randq sh
 NB.   randx - monad to make d; is called as:
 NB.             d=. randx n
-NB.   vapp  - monad to make A; is called as:
-NB.             A=. vapp sh
 NB.   sh    - size or shape, which is either n or (n,n)
 NB.   Q     - n×n-matrix, random unitary (orthogonal):
 NB.             I = Q^H * Q
@@ -554,12 +549,10 @@ NB.   Adv. to make verb to make random Hermitian (symmetric)
 NB.   matrix
 NB.
 NB. Syntax:
-NB.   vapp=. randx hemat
+NB.   H=. (randx hemat) sh
 NB. where
 NB.   randx - monad to make random y-array; is called as:
 NB.             A=. randx y
-NB.   vapp  - monad to make H; is called as:
-NB.             H=. vapp sh
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
 NB.   H     - n×n-matrix, random Hermitian (symmetric)
@@ -589,12 +582,12 @@ NB.     exponent(Re(h)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(h)) ~ U(-1,1)
 NB.     exponent(Im(h)) ~ TN(0,3^2,-6,4)
 NB.   :
-NB.     H=. (0 1 0 1 __ _&gemat j. _1 1 0 3 _6 4&gemat) hemat 4
+NB.     H=. ((0 1 0 1 , FP_EMIN , FP_EMAX)&gemat j. _1 1 0 3 _6 4&gemat) hemat 4
 NB.
 NB. Notes:
 NB. - only n*(n+1)/2 numbers from RNG are requested
 
-hemat=: 1 : 'tr2he_mt_@(u trlmat_mt_)@(2&$)'
+hemat=: 1 : 'he4gel_mt_@(u trlmat_mt_)@(2&$)'
 
 NB. ---------------------------------------------------------
 NB. pomat
@@ -604,15 +597,13 @@ NB.   Adv. to make verb to make random Hermitian (symmetric)
 NB.   positive definite matrix
 NB.
 NB. Syntax:
-NB.   vapp=. randx pomat
+NB.   P=. (randx pomat) sh
 NB. where
 NB.   randx - monad to make A; is called as:
 NB.             A=. randx y
-NB.   vapp  - monad to make P; is called as:
-NB.             P=. vapp sh
 NB.   sh    - size or shape, which is either n or
 NB.           (n,any_number)
-NB.   A     - n×n-matrix, random general square invertible
+NB.   A     - n×n-matrix, random square invertible
 NB.   P     - n×n-matrix, random Hermitian (symmetric)
 NB.           positive definite; is defined as:
 NB.             P := A * A^H
@@ -637,7 +628,7 @@ NB.     exponent(Re(p)) ~ TN(0,1,-∞,+∞)
 NB.     mantissa(Im(p)) ~ U(1,3)
 NB.     exponent(Im(p)) ~ TN(0,4^2,-5,6)
 NB.   :
-NB.     P=. (1 2 0 1 __ _&gemat j. 1 3 0 4 _5 6&gemat) pomat 4
+NB.     P=. ((1 2 0 1 , FP_EMIN , FP_EMAX)&gemat j. 1 3 0 4 _5 6&gemat) pomat 4
 NB. - make real symmetric negative definite 4×4-matrix P
 NB.   with elements p having:
 NB.     mantissa(p) ~ U(1,3)
@@ -652,19 +643,15 @@ NB. ptmat
 NB. ptmat2
 NB.
 NB. Description:
-NB.   Adv. to make verb to make random Hermitian (symmetric)
+NB.   Adv. to make monad to make random Hermitian (symmetric)
 NB.   positive definite tridiagonal matrix
 NB.
 NB. Syntax:
-NB.   vapp=.  randx ptmat
-NB.   vapp2=. randx ptmat2
+NB.   T=.  (randx ptmat ) sh
+NB.   T2=. (randx ptmat2) sh
 NB. where
 NB.   randx - monad to make random y-array A; is called as:
 NB.             A=. randx y
-NB.   vapp  - monad to make T; is called as:
-NB.             T=. vapp sh
-NB.   vapp2 - monad to make T2; is called as:
-NB.             T2=. vapp2 sh
 NB.   T     - n×n-matrix, random Hermitian (symmetric)
 NB.           positive definite tridiagonal, which is defined
 NB.           as:
@@ -673,7 +660,8 @@ NB.   T2    - n×n-matrix, random Hermitian (symmetric)
 NB.           positive definite tridiagonal, which is defined
 NB.           as:
 NB.             T := K^_1
-NB.   sh    - size or shape, which is either n or (n,n)
+NB.   sh    - size or shape, which is either n or
+NB.           (n,any_number)
 NB.   L     - n×n-matrix, random lower bidiagonal with
 NB.           positive diagonal entries
 NB.   K     - n×n-matrix, random K(rho) generated from rho
@@ -710,23 +698,21 @@ NB. TODO:
 NB. - T would be sparse
 
 ptmat=: 1 : 'po_mt_@(>:@| upddiag_mt_)@(((setdiag_mt_ diagmat_mt_)~ (}: ; _1:))/)@:u@(2,{.)'
-ptmat2=: 1 : '(9&o. upddiag_mt_)@gtpick_mt_@%.@(u kmsmatrho_mt_ kmsmat_mt_)'
+ptmat2=: 1 : '(9&o. upddiag_mt_)@gtpick_mt_@potril_mt_@potrfl_mt_@(u kmsmatrho_mt_ kmsmat_mt_)'
 
 NB. ---------------------------------------------------------
 NB. unmat
 NB.
 NB. Description:
-NB.   Adv. to make verb to make random unitary (orthogonal)
+NB.   Adv. to make monad to make random unitary (orthogonal)
 NB.   matrix with distribution given by Haar measure
 NB.
 NB. Syntax:
-NB.   vapp=. randnx unmat
+NB.   Q=. (randnx unmat) sh
 NB. where
 NB.   randnx - monad to make A, it is either randnr or
 NB.            randnc; is called as:
 NB.              A=. randnx y
-NB.   vapp   - monad to make Q; is called as:
-NB.              Q=. vapp sh
 NB.   sh     - size or shape, which is either n or (n,n)
 NB.   A      - n×n-matrix, non-singular, with elements
 NB.            distributed as N(0,1)
@@ -768,17 +754,15 @@ NB. ---------------------------------------------------------
 NB. spmat
 NB.
 NB. Description:
-NB.   Conj. to make verb to make random sparse array
+NB.   Conj. to make monad to make random sparse array
 NB.
 NB. Syntax:
-NB.   vapp=. randx spmat ratio
+NB.   S=. (randx spmat ratio) sh
 NB. where
 NB.   randx - monad to make random y-array A; is called as:
 NB.             A=. randx y
 NB.   ratio - scalar in range [0,1], specifies desired
 NB.           portion of non-zero elements
-NB.   vapp  - monad to create S; is called as:
-NB.             S=. vapp sh
 NB.   S     - sh-array, sparsed randomly, being is zero
 NB.           sh-array inhabited with values from A
 NB.   sh    - vector of non-negative integers, the shape of S
@@ -802,25 +786,22 @@ NB. Description:
 NB.   Test trxxmat by matrix size given
 NB.
 NB. Syntax:
-NB.   testtrmat sz
+NB.   log=. testtrmat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,any_number)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testtrmat=: 3 : 0
-  (' randu           trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  (' randu           trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  (' randu           tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  (' randu           trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           trl1mat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat (' randu           trlmat ' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat (' randu           tru1mat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat (' randu           trumat ' tmonad (]`]`nan`nan`nan)) y
 
-  ('(randu j. randu) trl1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) trlmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) tru1mat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) trumat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=. log lcat ('(randu j. randu) trl1mat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) trlmat ' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) tru1mat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) trumat ' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -830,18 +811,13 @@ NB. Description:
 NB.   Test gemat by matrix shape given
 NB.
 NB. Syntax:
-NB.   testgemat sh
+NB.   log=. testgemat sh
 NB. where
 NB.   sh  - vector of non-negative integers, the shape of
 NB.         matrix
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testgemat=: 3 : 0
-  ('gemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  EMPTY
-)
+testgemat=: 'gemat' tmonad (]`]`nan`nan`nan)
 
 NB. ---------------------------------------------------------
 NB. testdimat
@@ -850,21 +826,17 @@ NB. Description:
 NB.   Test dimat by matrix size given
 NB.
 NB. Syntax:
-NB.   testdimat sz
+NB.   log=. testdimat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,n)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
+NB.   sz  - size or shape, which is either n or (n,n)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testdimat=: 3 : 0
-  (' gemat           dimat (randnr unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  (' gemat           dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' gemat           dimat (randnr unmat)' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat (' gemat           dimat (randnc unmat)' tmonad (]`]`nan`nan`nan)) y
 
-  ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-
-  EMPTY
+  log=. log lcat ('(gemat j. gemat) dimat (randnr unmat)' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(gemat j. gemat) dimat (randnc unmat)' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -874,17 +846,15 @@ NB. Description:
 NB.   Test hemat by matrix size given
 NB.
 NB. Syntax:
-NB.   testhemat sz
+NB.   log=. testhemat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,any_number)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhemat=: 3 : 0
-  (' randu           hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) hemat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  EMPTY
+  log=.          (' randu           hemat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) hemat' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -894,17 +864,15 @@ NB. Description:
 NB.   Test pomat by matrix size given
 NB.
 NB. Syntax:
-NB.   testpomat sz
+NB.   log=. testpomat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,any_number)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testpomat=: 3 : 0
-  (' randu           pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) pomat' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  EMPTY
+  log=.          (' randu           pomat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) pomat' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -914,21 +882,36 @@ NB. Description:
 NB.   Test ptmatx by matrix size given
 NB.
 NB. Syntax:
-NB.   testptmat sz
+NB.   log=. testptmat sz
 NB. where
-NB.   sz - size or shape, which is either n or (n,any_number)
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testptmat=: 3 : 0
-  (' randu           ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) ptmat ' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=.          (' randu           ptmat ' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) ptmat ' tmonad (]`]`nan`nan`nan)) y
 
-  (' randu           ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) ptmat2' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
+  log=. log lcat (' randu           ptmat2' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) ptmat2' tmonad (]`]`nan`nan`nan)) y
+)
 
-  EMPTY
+NB. ---------------------------------------------------------
+NB. testunmat
+NB.
+NB. Description:
+NB.   Test unmat by matrix size given
+NB.
+NB. Syntax:
+NB.   log=. testunmat sz
+NB. where
+NB.   sz  - size or shape, which is either n or
+NB.         (n,any_number)
+NB.   log - 6-vector of boxes, test log, see test.ijs
+
+testunmat=: 3 : 0
+  log=.          ('randnr unmat' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('randnc unmat' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -938,18 +921,15 @@ NB. Description:
 NB.   Test spmat by matrix shape given
 NB.
 NB. Syntax:
-NB.   testspmat sh
+NB.   log=. testspmat sh
 NB. where
-NB.   sh - vector of non-negative integers, the shape of
-NB.        matrix
-NB.
-NB. Notes:
-NB. - result is not taken into account by benchmark
+NB.   sh  - vector of non-negative integers, the shape of
+NB.         matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testspmat=: 3 : 0
-  (' randu           spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  ('(randu j. randu) spmat 0.25' tmonad (]`]`(_."_)`(_."_)`(_."_))) y
-  EMPTY
+  log=.          (' randu           spmat 0.25' tmonad (]`]`nan`nan`nan)) y
+  log=. log lcat ('(randu j. randu) spmat 0.25' tmonad (]`]`nan`nan`nan)) y
 )
 
 NB. ---------------------------------------------------------
@@ -959,9 +939,10 @@ NB. Description:
 NB.   Test xxxxmatx by matrix shape given
 NB.
 NB. Syntax:
-NB.   testrand sh
+NB.   log=. testrand sh
 NB. where
-NB.   sh - vector of non-negative integers, the shape of
-NB.        matrix
+NB.   sh  - vector of non-negative integers, the shape of
+NB.         matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testrand=: EMPTY [ testspmat [ testptmat [ testpomat [ testhemat [ testdimat^:(=/) [ testgemat [ testtrmat
+testrand=: testspmat ,&.>~ nolog_mt_`testunmat@.(=/) ,&.>~ testptmat ,&.>~ testpomat ,&.>~ testhemat ,&.>~ nolog_mt_`testdimat@.(=/) ,&.>~ testgemat ,&.>~ testtrmat

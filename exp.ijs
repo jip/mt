@@ -11,9 +11,8 @@ NB. testheexp  Test heexp by Hermitian (symmetric) matrix
 NB. testexp    Adv. to make verb to test xxexp by matrix of
 NB.            generator and shape given
 NB.
-NB. Version: 0.13.2 2021-06-24
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -33,6 +32,9 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
+NB. =========================================================
+NB. Configuration
+
 coclass 'mt'
 
 NB. =========================================================
@@ -49,7 +51,7 @@ NB. Syntax:
 NB.   B=. s sdiag A
 NB. where
 NB.   A - n×n-matrix or m×n×n-brick
-NB.   s - scalar or m-vector, the shift of diagonal[s] in A
+NB.   s - scalar or m-vector, the shift of diagonal(s) in A
 NB.   B - array of the same shape as A, the shifted A:
 NB.         B -: A + s (*"0 2) idmat n
 NB.
@@ -72,8 +74,8 @@ NB.   m ≥ 0, integer, approximant's degree
 NB.   r - n×n-matrix, r_m(A)
 
 geexpm2r=: 4 : 0
-  rbyvs=. +/@:*"3 1       NB. multiply brick x by each row of x, then sum bricks
-  b0b1=. (0 0 ; 1 0)&{@]  NB. extract (b[0] , b[1]) from y
+  rbyvs=. (+/@:*"3 1)         NB. multiply brick x by each row of x, then sum bricks
+  b0b1=. (((0 0 ; 1 0)) { ])  NB. extract (b[0] , b[1]) from y
 
   NB. b[i] coeffcients of degree 13 Padé approximant for V (1st row) and U (2nd row)
   bc=. _2 (|:@(]\)) (>: x) {. 64764752532480000x 32382376266240000x 7771770303897600x 1187353796428800x 129060195264000x 10559470521600x 670442572800x 33522128640x 1323241920x 40840800x 960960x 16380x 182x 1x
@@ -99,7 +101,7 @@ geexpm2r=: 4 : 0
 
     NB. V=.      V + b[6]*A6+b[4]*A4+b[2]*A2+b[0]*I
     NB. U=. A * (U + b[7]*A6+b[5]*A4+b[3]*A2+b[1]*I)
-    'V U'=. VU + pA (b0b1 sdiag (rbyvs (0 1 ,: 2 3)&(];.0))) bc
+    'V U'=. VU + pA (b0b1 sdiag (rbyvs ((0 1 ,: 2 3))&(];.0))) bc
   end.
   U=. y mp U
 
@@ -321,15 +323,12 @@ NB. Description:
 NB.   Test geexp by square matrix
 NB.
 NB. Syntax:
-NB.   testgeexp A
+NB.   log=. testgeexp A
 NB. where
-NB.   A - n×n-matrix
+NB.   A   - n×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testgeexp=: 3 : 0
-  ('geexp' tmonad (]`]`geconi`(_."_)`(_."_))) y
-
-  EMPTY
-)
+testgeexp=: 'geexp' tmonad (]`]`geconi`nan`nan)
 
 NB. ---------------------------------------------------------
 NB. testdiexp
@@ -338,28 +337,27 @@ NB. Description:
 NB.   Test diexp by diagonalizable matrix
 NB.
 NB. Syntax:
-NB.   testdiexp A
+NB.   log=. testdiexp A
 NB. where
-NB.   A - n×n-matrix, the diagonalizable
+NB.   A   - n×n-matrix, the diagonalizable
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testdiexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
   geevlvv=. {.&.>`(((* *@+@((i. >./)"1@sorim{"0 1])) % normsr)"2&.>)"0@ggevlvv@(,: idmat@c)
 
   try.
-    'v LR'=. geevlvv y                 NB. eigendecomposition
+    'v LR'=. geevlvv y                  NB. eigendecomposition
     'L R'=. LR
-    v=. j./ (*"1 -@*@{.) |: +. v       NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
-                                       NB. A to be negative definite, this will avoid NaN error in diexp
-    assert ((-: ~.) v) +. ((-: ct) y)  NB. A must be normal (diagonalizable)
-    iRh=. L ([ % (mp"1 +)) R           NB. reconstruct R^_1^H , see [1] in diexp
+    v=. j./ (*"1 -@*@{.) |: +. v        NB. for each v[i] in v, flip sign of v[i] if Re(v[i])>0, to force
+                                        NB. A to be negative definite, this will avoid NaN error in diexp
+    assert. ((-: ~.) v) +. ((-: ct) y)  NB. A must be normal (diagonalizable)
+    iRh=. L ([ % (mp"1 +)) R            NB. reconstruct R^_1^H , see [1] in diexp
   catch.
     R=. v=. iRh=. _.
   end.
 
-  ('diexp' tmonad (]`]`geconi`(_."_)`(_."_))) (ct R) ; v ; iRh
-
-  EMPTY
+  ('diexp' tmonad (]`]`geconi`nan`nan)) (ct R) ; v ; iRh
 )
 
 NB. ---------------------------------------------------------
@@ -369,9 +367,10 @@ NB. Description:
 NB.   Test heexp by Hermitian (symmetric) matrix
 NB.
 NB. Syntax:
-NB.   testheexp A
+NB.   log=. testheexp A
 NB. where
-NB.   A - n×n-matrix, the Hermitian (symmetric)
+NB.   A   - n×n-matrix, the Hermitian (symmetric)
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testheexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -385,9 +384,7 @@ testheexp=: 3 : 0
     v=. R=. _.
   end.
 
-  ('heexp' tmonad (]`]`heconi`(_."_)`(_."_))) v ; ct R
-
-  EMPTY
+  ('heexp' tmonad (]`]`heconi`nan`nan)) v ; ct R
 )
 
 NB. ---------------------------------------------------------
@@ -398,23 +395,21 @@ NB.   Adv. to make verb to test xxexp by matrix of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testexp
+NB.   log=. (mkmat testexp) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testexp_mt_ 150 150
+NB.     log=. ?@$&0 testexp_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testexp_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testexp_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testexp_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testexp_mt_ 150 150
 
-testexp=: 1 : 'EMPTY [ (testheexp_mt_@(u hemat_mt_) [ testdiexp_mt_@(u dimat_mt_ u) [ testgeexp_mt_@u)^:(=/)'
+testexp=: 1 : 'nolog_mt_`(testheexp_mt_@(u hemat_mt_) ,&.>~ testdiexp_mt_@(u dimat_mt_ u) ,&.>~ testgeexp_mt_@u)@.(=/)'

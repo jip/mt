@@ -2,9 +2,8 @@ NB. Debug
 NB.
 NB. dbg  Conj. to force verb to show debug info
 NB.
-NB. Version: 0.13.0 2021-05-21
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -24,6 +23,9 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
+NB. =========================================================
+NB. Configuration
+
 coclass 'mt'
 
 NB. =========================================================
@@ -36,12 +38,12 @@ NB. failure handler
 dbgfailed=: 1 : '(dbsig@dberr [ echo@(m ; ''FAILED'' ; coname))@'''''
 
 NB. success handlers
-dbgsucceed1=: 1 : '[ echo@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_    )'
-dbgsucceed2=: 1 : '[ echo@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_ ; <)'
+dbgsucceed1=: 1 : '[ echo@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_       )'
+dbgsucceed2=: 1 : '[ echo@(m ; ''SUCCEED'' ; coname@'''' , ''result'' ; dbgshape_mt_ ; <@":)'  NB. use (":) to avoid nonce error in (;) when result is sparsed
 
-NB. argument[s] handlers
-dbgarg1=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_     ) : ((''x'' ; ''y'') ,@,. ,:& dbgshape_mt_     ))'
-dbgarg2=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_ ; < ) : ((''x'' ; ''y'') ,@,. ,:&(dbgshape_mt_ ; <)))'
+NB. argument(s) handlers
+dbgarg1=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_       ) : ((''x'' ; ''y'') ,@,. ,:& dbgshape_mt_        ))'
+dbgarg2=: 2 : '] [ echo@(n ; ''MONAD''"_ : (''DYAD''"_) ; m ; coname@'''' , (''y'' ; dbgshape_mt_ ; <@":) : ((''x'' ; ''y'') ,@,. ,:&(dbgshape_mt_ ; <@":)))'  NB. use (":) to avoid nonce error in (;) when result is sparsed
 
 NB. ---------------------------------------------------------
 NB. dbg1
@@ -54,7 +56,7 @@ NB. Syntax:
 NB.   vdbg1=. v dbg1 title
 NB.   vdbg2=. v dbg2 title
 NB. where
-NB.   title - any literal to name v
+NB.   title - any string to name v
 NB.   v     - verb to switch to debug mode
 NB.   vdbg1 - being verb v equipped by output of its rank
 NB.           and valency, input's and output's shapes
@@ -78,12 +80,12 @@ NB.
 NB. Syntax:
 NB.   vdbg=. v dbg title
 NB. where
-NB.   title - any literal to name v
+NB.   title - any string to name v
 NB.   v     - verb to switch to debug mode
 NB.   vdbg  - being verb v equipped by output of debug info
 NB.
 NB. Application:
-NB. - to debug verb '*' in verb (+/ .*) try:
-NB.     C=. A (+/ .(* dbg_mt_ '*')) B
+NB. - to debug verb '+/' in verb (+/ .*) try:
+NB.     C=. A ((+/ dbg_mt_ '+/') .*) B
 
 dbg=: 2 : 'u`(u dbg1_mt_ n)`(u dbg2_mt_ n)@.(''DEBUG_mt_''~)'

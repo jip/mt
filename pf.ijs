@@ -13,9 +13,8 @@ NB. testgepf  Test gexxf by general matrix
 NB. testpf    Adv. to make verb to test gexxf by matrix of
 NB.           generator and shape given
 NB.
-NB. Version: 0.12.0 2021-02-01
-NB.
-NB. Copyright 2011-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -35,9 +34,9 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
-coclass 'mt'
-
 NB. =========================================================
+NB. Concepts
+NB.
 NB. References:
 NB. [1] C. H. Bischof, G. Quintana-Ortí. Computing Rank-
 NB.     Revealing QR Factorizations of Dense Matrices. ACM
@@ -51,6 +50,11 @@ NB.
 NB. TODO:
 NB. - geplf: Q * L * P = A
 NB. - gerpf: P * R * Q = A
+
+NB. =========================================================
+NB. Configuration
+
+coclass 'mt'
 
 NB. =========================================================
 NB. Local definitions
@@ -196,7 +200,7 @@ NB. - mxnm is updated only when offset = 0
 gelpc=: 3 : 0
   'A10 A11 dsrd rcond p v svlues mxnm'=. y
   n=. <: n1=. A10 +&c A11
-  'm offset'=. +/\. $ A10
+  'm offset'=. (+/\.) $ A10
   k=. m <. n
   dLQf=. (0,n1)$0
   if. offset do.
@@ -218,19 +222,19 @@ gelpc=: 3 : 0
       rnorms=. dip C."1 rnorms
       p=. ((# dLQf)&+&.:> dip) C. p
     end.
-    rnorms=. }."1 rnorms
+    rnorms=. (}."1) rnorms
     w=. {. A10
     NB. Generate elementary reflector H(i)
     gamma=. {. z=. larfgfc {. A11
     NB. Apply elementary reflector H(I) to the corresponding
     NB. block of matrix A
-    y=. (< (<0) ; 0) { A11=. (1 (0)} z) larfrnfr A11
+    y=. ((< (<0) ; 0)) { A11=. (1 (0)} z) larfrnfr A11
     NB. Update partial row norms
     if. i < lasti do.
-      'temp temp2'=. 2 %/\ (| y) , rnorms
+      'temp temp2'=. 2 (%/\) (| y) , rnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
-      rnorms2=. }. normsr }:"1 A11
+      rnorms2=. }. normsr (}:"1) A11
       rnorms3=. temp (((* %:)~ {.) 0} ]) rnorms
       rnorms2=. (,:~ 1 = temp2)} rnorms3 ,: rnorms2
       rnorms=. (,:~ 0 = {. rnorms)} rnorms2 ,: rnorms
@@ -241,7 +245,7 @@ gelpc=: 3 : 0
       v=. 1
       if. 0 = mxnm do.
         svlues=. smin 2} svlues
-        A11=. z (< 0 ; <<0)} A11
+        A11=. z ((< 0 ; <<0))} A11
         break.
       end.
     else.
@@ -267,9 +271,9 @@ gelpc=: 3 : 0
     svlues=. smin 2 3} svlues
   else.
     NB. All remaining rows rejected
-    if. <./ $ A11 do.
+    if. (<./) $ A11 do.
       NB. Factor remaining columns
-      A11=. gelqf }:"1 A11   NB. FIXME TWICE excessive re-shaping
+      A11=. gelqf (}:"1) A11   NB. FIXME TWICE excessive re-shaping
     end.
     eAsfx=. A10 ,. A11
     NB. Use incremental condition estimation to get an
@@ -377,8 +381,8 @@ NB. - mxnm is updated only when offset = 0
 
 geprc=: 3 : 0
   'A01 A11 dsrd rcond p v svlues mxnm'=. y
-  m=. <: m1=. A01 +&# A11
-  'offset n'=. +/\ $ A01
+  m=. <: m1=. A01 (+&#) A11
+  'offset n'=. (+/\) $ A01
   k=. m <. n
   dQfR=. (m1,0)$0
   if. offset do.
@@ -395,21 +399,21 @@ geprc=: 3 : 0
     io=. liofmax {. cnorms
     if. io do.
       dip=. < 0 , io
-      A01=. dip C."1 A01
-      A11=. dip C."1 A11
-      cnorms=. dip C."1 cnorms
+      A01=. dip (C."1) A01
+      A11=. dip (C."1) A11
+      cnorms=. dip (C."1) cnorms
       p=. ((c dQfR)&+&.:> dip) C. p
     end.
-    cnorms=. }."1 cnorms
-    w=. {."1 A01
+    cnorms=. (}."1) cnorms
+    w=. ({."1) A01
     NB. Generate elementary reflector H(i)
-    gamma=. {. z=. larfgf {."1 A11
+    gamma=. {. z=. larfgf ({."1) A11
     NB. Apply elementary reflector H(I) to the corresponding
     NB. block of matrix A
-    y=. (< 0 ; <<0) { A11=. (1 (0)} z) larflcfc A11
+    y=. ((< 0 ; <<0)) { A11=. (1 (0)} z) larflcfc A11
     NB. Update partial column norms
     if. i < lasti do.
-      'temp temp2'=. 2 %/\ (| y) , cnorms
+      'temp temp2'=. 2 (%/\) (| y) , cnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
       cnorms2=. }. normsc }: A11
@@ -423,7 +427,7 @@ geprc=: 3 : 0
       v=. 1
       if. 0 = mxnm do.
         svlues=. smin 2} svlues
-        A11=. z (< (<0) ; 0)} A11
+        A11=. z ((< (<0) ; 0))} A11
         break.
       end.
     else.
@@ -431,7 +435,7 @@ geprc=: 3 : 0
       out=. lauc1f smin ; v ; w ; gamma ; smaxpr * rcond
       if. 0 = L. out do.
         NB. Column rejected
-        A11=. z (< a: ; 0)} A11
+        A11=. z ((< a: ; 0))} A11
         break.
       end.
       NB. Column accepted
@@ -439,7 +443,7 @@ geprc=: 3 : 0
       smax=. smaxpr
     end.
     dQfR=. dQfR ,. w , z
-    A01=. (}."1 A01) , y
+    A01=. ((}."1) A01) , y
     A11=. 1 1 }. A11
     i=. >: i
   end.
@@ -449,7 +453,7 @@ geprc=: 3 : 0
     svlues=. smin 2 3} svlues
   else.
     NB. All remaining columns rejected
-    if. <./ $ A11 do.
+    if. (<./) $ A11 do.
       NB. Factor remaining columns
       A11=. geqrf }: A11   NB. FIXME TWICE excessive re-shaping
     end.
@@ -557,8 +561,8 @@ NB.            rows, which is defined as the product of
 NB.            (offset+lacptd) elementary reflectors
 NB.   lacptd ≤ nb
 NB.   lwsize ≤ n-offset, the size of pivot window
-NB.   eA     - m×(n+1)-matrix, being A, augmented by zero
-NB.            vector
+NB.   eA     - m×(n+1)-matrix, being A augmented by zero
+NB.            vector:
 NB.              eA -: A ,. 0
 NB.
 NB. Storage layout:
@@ -576,7 +580,7 @@ gelpw=: 3 : 0
   NB. Initialize partial row norms (stored in the first item
   NB. of rnorms) and exact row norms (stored in the second
   NB. item of rnorms) for the first batch of rows
-  rnorms=. ,:~ normsr }:"1 A11
+  rnorms=. ,:~ normsr (}:"1) A11
   NB. Main loop
   lastk=. <: (n - offset) <. # p
   while. nb > # dLQf do.
@@ -586,7 +590,7 @@ gelpw=: 3 : 0
       dip=. < 0 , io
       A10=. dip C. A10
       A11=. dip C. A11
-      rnorms=. dip C."1 rnorms
+      rnorms=. dip (C."1) rnorms
       p=. ((# dLQf)&+&.:> dip) C. p
     end.
     NB. Determine (offset+lacptd)st diagonal element gamma
@@ -594,7 +598,7 @@ gelpw=: 3 : 0
     gamma=. rnorms (negpos~ 9&o.) & (0&({,)) A11
     NB. Update estimate for largest singular value
     smax=. mxnm * 3 %: >: c A10
-    u=. {."1 A11
+    u=. ({."1) A11
     w=. {. A10
     NB. Is candidate pivot row acceptable ?
     out=. lauc1f smin ; v ; w ; gamma ; smax * rcond
@@ -605,16 +609,16 @@ gelpw=: 3 : 0
     z=. larfgfc {. A11
     dLQf=. dLQf , w , z
     NB. Apply Householder reflection to A11
-    y=. (< (<0) ; 0) { A11=. (1 (0)} z) larfrnfr A11
+    y=. ((< (<0) ; 0)) { A11=. (1 (0)} z) larfrnfr A11
     A10=. (}. A10) ,. y
     A11=. 1 1 }. A11
-    rnorms=. }."1 rnorms
+    rnorms=. (}."1) rnorms
     NB. Update partial column norms
     if. lastk > # dLQf do.
-      'temp temp2'=. 2 %/\ (| y) , rnorms
+      'temp temp2'=. 2 (%/\) (| y) , rnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
-      rnorms2=. }. normsr }:"1 A11
+      rnorms2=. }. normsr (}:"1) A11
       rnorms3=. temp (((* %:)~ {.) 0} ]) rnorms
       rnorms2=. (,:~ 1 = temp2)} rnorms3 ,: rnorms2
       rnorms=. (,:~ 0 = {. rnorms)} rnorms2 ,: rnorms
@@ -710,8 +714,8 @@ NB.   iR      -:tru (2 # offset) {. QfR
 NB.   oR      -:tru (2 # offset+lacptd) {. QfR ,. dQfR
 NB.   lacptd ≤ nb
 NB.   lwsize ≤ n-offset, the size of pivot window
-NB.   eA     - (m+1)×n-matrix, being A, augmented by zero
-NB.            vector
+NB.   eA     - (m+1)×n-matrix, being A augmented by zero
+NB.            vector:
 NB.              eA -: A , 0
 NB.
 NB. Storage layout:
@@ -739,9 +743,9 @@ geprw=: 3 : 0
     io=. liofmax {. cnorms
     if. io do.
       dip=. < 0 , io
-      A01=. dip C."1 A01
-      A11=. dip C."1 A11
-      cnorms=. dip C."1 cnorms
+      A01=. dip (C."1) A01
+      A11=. dip (C."1) A11
+      cnorms=. dip (C."1) cnorms
       p=. ((c dQfR)&+&.:> dip) C. p
     end.
     NB. Determine (offset+lacptd)st diagonal element gamma
@@ -749,24 +753,24 @@ geprw=: 3 : 0
     gamma=. cnorms (negpos~ 9&o.) & (0&({,)) A11
     NB. Update estimate for largest singular value
     smax=. mxnm * 3 %: >: # A01
-    u=. {. A11
-    w=. {."1 A01
+    u=.  {.    A11
+    w=. ({."1) A01
     NB. Is candidate pivot column acceptable ?
     out=. lauc1f smin ; v ; w ; gamma ; smax * rcond
     if. 0 = L. out do. break. end.
     NB. Pivot candidate was accepted
     'smin v'=. out
     NB. Generate Householder vector
-    z=. larfgf {."1 A11
+    z=. larfgf ({."1) A11
     dQfR=. dQfR ,. w , z
     NB. Apply Householder reflection to A11
-    y=. (< 0 ; <<0) { A11=. (1 (0)} z) larflcfc A11
-    A01=. (}."1 A01) , y
+    y=. ((< 0 ; <<0)) { A11=. (1 (0)} z) larflcfc A11
+    A01=. ((}."1) A01) , y
     A11=. 1 1 }. A11
-    cnorms=. }."1 cnorms
+    cnorms=. (}."1) cnorms
     NB. Update partial column norms
     if. lastk > c dQfR do.
-      'temp temp2'=. 2 %/\ (| y) , cnorms
+      'temp temp2'=. 2 (%/\) (| y) , cnorms
       temp=. 0 >. 1 - *: temp
       temp2=. >: 20 %~ temp * *: temp2
       cnorms2=. }. normsc }: A11
@@ -826,21 +830,21 @@ gelpb=: 4 : 0
   k=. <./ 'm n'=. $ y
   p=. i. m
   if. 0 = k do.
-    p ; ((m,0)$0) ; ((2#n)$0) ; 0 ; 0 ; 4$0
+    p ; ((m,0)$0) ; ((2#n)$0) ; ((0 ; 0 ; 4$0))
     return.
   end.
   y=. y ,. 0
   NB. Move row with largest residual norm left front
-  'y A10 A11 p v svlues mxnm'=. gelpc ((m,0)$0);y;1;x;p;(i.0);(4$_.);_.
+  'y A10 A11 p v svlues mxnm'=. gelpc ((m,0)$0);y;1;x;p;(((i.0);(4$_.);_.))
   if. # y do.
     if. 1 = k do.
-      p ; (trl }:"1 y) ; (n unglq y) ; (%/ 1 0 { svlues) ; 1 ; svlues
+      p ; (trl (}:"1) y) ; (n unglq y) ; (%/ 1 0 { svlues) ; 1 ; svlues
       return.
     else.
       smin=. 1 { svlues
     end.
   else.
-    p ; (trl }:"1 A11) ; (n unglq A11) ; 0 ; 0 ; 4$0
+    p ; (trl (}:"1) A11) ; (n unglq A11) ; ((0 ; 0 ; 4$0))
     return.
   end.
   NB. Factor remaining rows using blocked code with
@@ -871,21 +875,21 @@ gelpb=: 4 : 0
     end.
     NB. Move rejected rows to the end if there is space
     if. kb > # dLQf do.
-      kklwsz=. y +&# A01
+      kklwsz=. y (+&#) A01
       if. norej > kklwsz do.
         'ppfx psfx'=. (# y) ({. ; }.) p
         p=. ppfx , (# A01) |. psfx
-        A10=. (A10 ,. (# dLQf) {."1 A11) , A00
-        A11=. ((# dLQf) }."1 A11) , A01
+        A10=. (A10 ,. (# dLQf) ({."1) A11) , A00
+        A11=. ((# dLQf) (}."1) A11) , A01
         norej=. norej - # A01
       else.
-        A10=. A00 , A10 ,. (# dLQf) {."1 A11
-        A11=. A01 , (# dLQf) }."1 A11
+        A10=. A00 , A10 ,. (# dLQf) ({."1) A11
+        A11=. A01 , (# dLQf) (}."1) A11
         break.
       end.
     else.
-      A10=. A00 , A10 ,. (# dLQf) {."1 A11
-      A11=. A01 , (# dLQf) }."1 A11
+      A10=. A00 , A10 ,. (# dLQf) ({."1) A11
+      A11=. A01 , (# dLQf) (}."1) A11
     end.
   end.
   svlues=. (smin , mxnm * 3 %: # y) 1 0} svlues
@@ -900,7 +904,7 @@ gelpb=: 4 : 0
   end.
   rank=. # y
   y=. y , A10 ,. A11
-  p ; (trl }:"1 y) ; (n unglq y) ; (%/ 1 0 { svlues) ; rank ; svlues
+  p ; (trl (}:"1) y) ; (n unglq y) ; (%/ 1 0 { svlues) ; rank ; svlues
 )
 
 NB. ---------------------------------------------------------
@@ -960,12 +964,12 @@ geprb=: 4 : 0
   k=. <./ 'm n'=. $ y
   p=. i. n
   if. 0 = k do.
-    ((2#m)$0) ; ((0,n)$0) ; p ; 0 ; 0 ; 4$0
+    ((2#m)$0) ; ((0,n)$0) ; p ; ((0 ; 0 ; 4$0))
     return.
   end.
   y=. y , 0
   NB. Move column with largest residual norm up front
-  'y A01 A11 p v svlues mxnm'=. geprc ((0,n)$0);y;1;x;p;(i.0);(4$_.);_.
+  'y A01 A11 p v svlues mxnm'=. geprc ((0,n)$0);y;1;x;p;(((i.0);(4$_.);_.))
   if. c y do.
     if. 1 = k do.
       (m ungqr y) ; (tru }: y) ; p ; (%/ 1 0 { svlues) ; 1 ; svlues
@@ -974,7 +978,7 @@ geprb=: 4 : 0
       smin=. 1 { svlues
     end.
   else.
-    (m ungqr A11) ; (tru }: A11) ; p ; 0 ; 0 ; 4$0
+    (m ungqr A11) ; (tru }: A11) ; p ; ((0 ; 0 ; 4$0))
     return.
   end.
   NB. Factor remaining columns using blocked code with
@@ -1137,7 +1141,7 @@ NB.     x x x x
 
 gelpg3=: 3 : 0
   'm k'=. $ y
-  dQ=. 0 4$0
+  dQ=. ((0 4$0))
   if. (1 < k) *. 0 < m do.
     NB. Compute Givens rotations needed to nullify the first
     NB. row of matrix A, apply to A, accumulate rotations
@@ -1145,7 +1149,7 @@ gelpg3=: 3 : 0
     i=. <: k
     liso=. i. m
     while. i do.
-      'y cs'=. rot&.|: rotga y ; (< liso ; i - 1 0) ; 0
+      'y cs'=. rot rotga y ; (< liso ; i - 1 0) ; 0
       dQ=. dQ , (+ cs) , i - 1 0
       i=. <: i
     end.
@@ -1189,7 +1193,7 @@ NB.   - block algorithm only
 
 geprg3=: 3 : 0
   'k n'=. $ y
-  dQ=. 0 4$0
+  dQ=. ((0 4$0))
   if. (1 < k) *. 0 < n do.
     NB. Compute Givens rotations needed to nullify the first
     NB. column of matrix A, apply to A, accumulate rotations
@@ -1197,7 +1201,7 @@ geprg3=: 3 : 0
     i=. <: k
     liso=. i. n
     while. i do.
-      'y cs'=. rot rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
+      'y cs'=. rot&.|: rotga y ; (< (i - 1 0) ; liso) ; ((< < a: ; 0))
       dQ=. dQ , (+ cs) , i - 1 0
       i=. <: i
     end.
@@ -1223,7 +1227,7 @@ NB.          c , s , iof , iog
 
 hslph3=: 3 : 0
   'm k'=. $ y
-  dQ=. 0 4$0
+  dQ=. ((0 4$0))
   if. (1 < k) *. 0 < m do.
     NB. Compute Givens rotations needed to reduce lower
     NB. Hessenberg matrix H to lower triangular form L,
@@ -1231,7 +1235,7 @@ hslph3=: 3 : 0
     i=. 1
     liso=. i. m
     while. i < k do.
-      'y cs'=. rot&.|: rotga y ; (< liso ; i - 1 0) ; 0
+      'y cs'=. rot rotga y ; (< liso ; i - 1 0) ; 0
       liso=. }. liso
       dQ=. dQ , (+ cs) , i - 1 0
       i=. >: i
@@ -1268,7 +1272,7 @@ NB.   - block algorithm only
 
 hsprh3=: 3 : 0
   'k n'=. $ y
-  dQ=. 0 4$0
+  dQ=. ((0 4$0))
   if. (1 < k) *. 0 < n do.
     NB. Compute Givens rotations needed to reduce upper
     NB. Hessenberg matrix H to upper triangular form R,
@@ -1276,7 +1280,7 @@ hsprh3=: 3 : 0
     i=. 1
     liso=. i. n
     while. i < k do.
-      'y cs'=. rot rotga y ; (< (i - 1 0) ; liso) ; < < a: ; 0
+      'y cs'=. rot&.|: rotga y ; (< (i - 1 0) ; liso) ; ((< < a: ; 0))
       liso=. }. liso
       dQ=. dQ , (+ cs) , i - 1 0
       i=. >: i
@@ -1339,7 +1343,7 @@ trlpc=: 3 : 0
   'p L rank'=. y
   'm k'=. $ L
   k1=. <: k
-  dQ=. 0 4 $ 0
+  dQ=. ((0 4 $ 0))
   if. 0 = k do.
     svlues=. 4 $ isovrn=. rcnr=. rcnrp1=. rank=. 0
   elseif. rank = k do.
@@ -1347,7 +1351,7 @@ trlpc=: 3 : 0
     f=. PFFP
     NB. Move the best row of A(k1:m-1,0:n-1) to (k-1)-th
     NB. position
-    io=. liofmax (< m (th2liso ; ]) k1) { L
+    io=. liofmax (< m (liso4th ; ]) k1) { L
     if. io do.
       dip=. < k1 ([ , +) io
       L=. dip C. L
@@ -1382,7 +1386,7 @@ trlpc=: 3 : 0
         NB. rows/elements between io and rank-1, that is:
         NB. io->rank-1, io+1->io, io+2->io+1,...,
         NB. rank-1->rank-2
-        dip=. < 1 |. rank th2liso io
+        dip=. < 1 |. rank liso4th io
         L=. dip C. L
         p=. dip C. p
         NB. Retriangularize matrix A after the permutation
@@ -1447,7 +1451,7 @@ trlpc=: 3 : 0
         NB. rows/elements between rank and ii, that is,
         NB. rank->rank+1, rank+1->rank+2,...,ii-1->ii,
         NB. ii->rank
-        dip=. < |. (>: ii) th2liso rank
+        dip=. < |. (>: ii) liso4th rank
         L=. dip C. L
         p=. dip C. p
         rnorms=. dip C. rnorms
@@ -1475,7 +1479,7 @@ trlpc=: 3 : 0
             NB. rows/elements between io and rank, that
             NB. is, io->rank,io+1->io,io+2->io+1,...,
             NB. rank->rank-1
-            dip=. < 1 |. (>: rank) th2liso io
+            dip=. < 1 |. (>: rank) liso4th io
             L=. dip C. L
             p=. dip C. p
             rnorms=. dip C. rnorms
@@ -1515,7 +1519,7 @@ trlpc=: 3 : 0
       NB. rows/elements between rank and ii, that is,
       NB. rank->rank+1, rank+1->rank+2,...,io-1->io,
       NB. io->rank
-      dip=. < |. (>: io) th2liso rank
+      dip=. < |. (>: io) liso4th rank
       L=. dip C. L
       p=. dip C. p
       NB. Retriangularize matrix A after permutation
@@ -1616,7 +1620,7 @@ trprc=: 3 : 0
   'R p rank'=. y
   'k n'=. $ R
   k1=. <: k
-  dQ=. 0 4 $ 0
+  dQ=. ((0 4 $ 0))
   if. 0 = k do.
     svlues=. 4 $ isovrn=. rcnr=. rcnrp1=. rank=. 0
   elseif. rank = k do.
@@ -1624,11 +1628,11 @@ trprc=: 3 : 0
     f=. PFFP
     NB. Move the best column of A(0:m-1,k1:n-1) to (k-1)-th
     NB. position
-    io=. liofmax (< n (] ; th2liso) k1) { R
+    io=. liofmax (< n (] ; liso4th) k1) { R
     if. io do.
       dip=. < k1 ([ , +) io
-      R=. dip C."1 R
-      p=. dip C. p
+      R=. dip (C."1) R
+      p=. dip  C.    p
     end.
     NB. Estimate the largest singular value, the smallest
     NB. singular value, and its corresponding left singular
@@ -1659,9 +1663,9 @@ trprc=: 3 : 0
         NB. columns/elements between io and rank-1, that is:
         NB. io->rank-1, io+1->io, io+2->io+1,...,
         NB. rank-1->rank-2
-        dip=. < 1 |. rank th2liso io
-        R=. dip C."1 R
-        p=. dip C. p
+        dip=. < 1 |. rank liso4th io
+        R=. dip (C."1) R
+        p=. dip  C.    p
         NB. Retriangularize matrix A after the permutation
         'dQi R'=. hsprh3 R
         dQ=. dQ , dQi
@@ -1703,7 +1707,7 @@ trprc=: 3 : 0
       diag=. (< ij , ii) { R
       i=. <: ij
       while. i >: rank do.
-        diag=. (mp~ lartg) ((< i , ii ) { R) , diag
+        diag=. (mp~ lartg) ((< i , ii) { R) , diag
         i=. <: i
       end.
       'mnrp1 cs'=. laic12 smin ; diag , ((< (i. rank) ; ii) { R) mp + x1
@@ -1725,9 +1729,9 @@ trprc=: 3 : 0
         NB. columns/elements between rank and ii, that is,
         NB. rank->rank+1, rank+1->rank+2,...,ii-1->ii,
         NB. ii->rank
-        dip=. < |. (>: ii) th2liso rank
-        R=. dip C."1 R
-        p=. dip C. p
+        dip=. < |. (>: ii) liso4th rank
+        R=. dip (C."1) R
+        p=. dip  C.    p
         cnorms=. dip C. cnorms
         NB. Retriangularize matrix A after the permutation,
         NB. adjust Q accordingly
@@ -1753,9 +1757,9 @@ trprc=: 3 : 0
             NB. columns/elements between io and rank, that
             NB. is, io->rank,io+1->io,io+2->io+1,...,
             NB. rank->rank-1
-            dip=. < 1 |. (>: rank) th2liso io
-            R=. dip C."1 R
-            p=. dip C. p
+            dip=. < 1 |. (>: rank) liso4th io
+            R=. dip (C."1) R
+            p=. dip  C.    p
             cnorms=. dip C. cnorms
             NB. Retriangularize matrix A after the
             NB. permutation
@@ -1793,9 +1797,9 @@ trprc=: 3 : 0
       NB. columns/elements between rank and ii, that is,
       NB. rank->rank+1, rank+1->rank+2,...,io-1->io,
       NB. io->rank
-      dip=. < |. (>: io) th2liso rank
-      R=. dip C."1 R
-      p=. dip C. p
+      dip=. < |. (>: io) liso4th rank
+      R=. dip (C."1) R
+      p=. dip  C.    p
       NB. Retriangularize matrix A after permutation
       'dQi R'=. geprg3 R
       dQ=. dQ , dQi
@@ -1891,7 +1895,7 @@ NB.            rank  n-rank               rank+1  n-rank-1
 trlpy=: 4 : 0
   'p L Q'=. 3 {. y
   k=. c L
-  dQ=. 0 4 $ 0
+  dQ=. ((0 4 $ 0))
   if. k do.
     NB. Compute the initial estimate for the rank
     rank=. x trlpr L
@@ -1999,7 +2003,7 @@ NB.     variable gets value NaN (_.)
 trpry=: 4 : 0
   'Q R p'=. 3 {. y
   k=. # R
-  dQ=. 0 4 $ 0
+  dQ=. ((0 4 $ 0))
   if. k do.
     NB. Compute the initial estimate for the rank
     rank=. x trprr R
@@ -2104,7 +2108,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   _. ~: rank
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: p { L mp Q
 NB.   A -: p C. L mp Q
 NB.   A -: ip C.^:_1 L mp Q
@@ -2113,8 +2117,8 @@ NB.   (idmat c L) -: clean (mp ct) Q
 NB. where
 NB.   'ip L Qn rcond rank svlues'=. gelpf A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   Q=. (c L) {. Qn
 
 gelpf=: FP_EPS&$: :([ ]`trlpy@.(0 < 3 {:: ]) gelpb)
@@ -2177,7 +2181,7 @@ NB. Assertions (with appropriate comparison tolerance):
 NB.   _. ~: rank
 NB.   P -: %. iP
 NB.   P -: |: iP
-NB.   P -: ip2P ip
+NB.   P -: P4ip ip
 NB.   A -: p {"1 Q mp R
 NB.   A -: p C."1 Q mp R
 NB.   A -: ip C.^:_1"1 Q mp R
@@ -2186,8 +2190,8 @@ NB.   (idmat # R) -: clean (mp~ ct) Q
 NB. where
 NB.   'Qm R ip rcond rank svlues'=. geprf A
 NB.   p=. /: ip
-NB.   iP=. p2P ip
-NB.   P=. p2P p
+NB.   iP=. P4p ip
+NB.   P=. P4p p
 NB.   Q=. (# R) {."1 Qm
 NB.
 NB. Notes:
@@ -2210,20 +2214,24 @@ NB. ---------------------------------------------------------
 NB. testgepf
 NB.
 NB. Description:
-NB.   Test gexxf by general matrix
+NB.   Test:
+NB.   - xGEQP3 (math/lapack2 addon)
+NB.   - gexxf (math/mt addon)
+NB.   by general matrix
 NB.
 NB. Syntax:
-NB.   testgepf A
+NB.   log=. testgepf A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. TODO:
 NB. - add xQRT12 test
 
 testgepf=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/geqp3'
+  load_mttmp_ 'math/mt/external/lapack2/geqp3'
 
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   norm=. norm1 y
 
@@ -2245,20 +2253,20 @@ testgepf=: 3 : 0
   qrt11a=: (norm1@(<: upddiag)@(mp~ ct) % FP_EPS * #)@(0 {:: ])
   rqt11a=: (normi@(<: upddiag)@(mp  ct) % FP_EPS * #)@(2 {:: ])
 
-  ('dgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  ('dgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
-  ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`(_."_)`(prt01  >. qrt11 ))) args
+  log=.          ('dgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`nan`(prt01  >. qrt11 ))) args
+  log=. log lcat ('dgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`nan`(prt01  >. qrt11 ))) args
+  log=. log lcat ('zgeqp3_mttmp_' tmonad (((; 0 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`nan`(prt01  >. qrt11 ))) args
+  log=. log lcat ('zgeqp3_mttmp_' tmonad (((; 1 #~ c)@(0&{::))`(<:@(1&{::) ; 0&{:: , 2&{::)`(rcond"_)`nan`(prt01  >. qrt11 ))) args
 
-  ('gelpf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(lpt01a >. lqt11a))) args
-  ('geplf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(plt01a >. qlt11a))) args
-  ('geprf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(prt01a >. qrt11a))) args
-  ('gerpf'         tmonad ((            0&{:: )`]                      `(rcond"_)`(_."_)`(rpt01a >. rqt11a))) args
+  log=. log lcat ('gelpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`nan`(lpt01a >. lqt11a))) args
+  log=. log lcat ('geplf'         tmonad ((            0&{:: )`]                           `(rcond"_)`nan`(plt01a >. qlt11a))) args
+  log=. log lcat ('geprf'         tmonad ((            0&{:: )`]                           `(rcond"_)`nan`(prt01a >. qrt11a))) args
+  log=. log lcat ('gerpf'         tmonad ((            0&{:: )`]                           `(rcond"_)`nan`(rpt01a >. rqt11a))) args
 
   coerase < 'mttmp'
   erase 'lpt01a plt01a prt01a rpt01a lqt11a qlt11a qrt11a'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -2269,23 +2277,21 @@ NB.   Adv. to make verb to test gexxx by matrix of generator
 NB.   and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testpf
+NB.   log=. (mkmat testpf) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testpf_mt_ 200 150
+NB.     log=. ?@$&0 testpf_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testpf_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testpf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testpf_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testpf_mt_ 150 200
 
-testpf=: 1 : 'EMPTY [ testgepf_mt_@u'
+testpf=: testgepf_mt_@

@@ -15,9 +15,8 @@ NB. testtzqf  Test tzxxf by trapezoidal matrix
 NB. testqf    Adv. to make verb to test gexxf and tzxxf by
 NB.           matrix of generator and shape given
 NB.
-NB. Version: 0.12.0 2021-02-01
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -36,6 +35,9 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -66,8 +68,8 @@ NB.   Trash - m-vector, will be replaced by Tau
 NB.   LQf   - m×(n+1)-matrix, L and Qf combined
 NB.   L     - m×k-matrix, the lower trapezoidal
 NB.   Qf    - k×(n+1)-matrix, the unit upper trapezoidal
-NB.           (unit diagonal not stored), represents the Q in
-NB.           factored form
+NB.           (unit diagonal is not stored), represents the Q
+NB.           in factored form
 NB.   Q     - n×n-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of k elementary
 NB.           reflectors H(i) of order n:
@@ -107,15 +109,14 @@ NB. - if L diagonal's non-negativity is required, then
 NB.   larfgfc would be replaced by larfpfc
 
 gelq2=: 3 : 0
-  pfx=. 0 {."1 y
-  sfxT=. 0 {. y
-  while. -. 0 e. 0 _1 + $ y do.
+  'pfx sfxT'=. 0 ({."1 ; {.) y
+  while. -. (0 e. 0 _1 + $) y do.
     z=. larfgfc {. y
     sfxT=. sfxT , z
     y=. ((1) 0} z) larfrnfr }. y
-    pfx=. pfx ,. sfxT ,&:({."1) y
-    sfxT=. }."1 sfxT
-    y=. }."1 y
+    pfx=. pfx ,. sfxT (,&:({."1)) y
+    sfxT=. (}."1) sfxT
+    y=. (}."1) y
   end.
   pfx stitcht sfxT
 )
@@ -137,8 +138,8 @@ NB.   Trash - n-vector, will be replaced by Tau
 NB.   A     - m×n-matrix, the input to factorize
 NB.   QfL   - (m+1)×n-matrix, Qf and L combined
 NB.   Qf    - (m+1)×k-matrix, the unit upper trapezoidal
-NB.           (unit diagonal not stored), represents the Q in
-NB.           factored form
+NB.           (unit diagonal is not stored), represents the Q
+NB.           in factored form
 NB.   L     - k×n-matrix, the lower trapezoidal
 NB.   Q     - m×m-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of k elementary
@@ -176,13 +177,12 @@ NB. - if L diagonal's non-negativity is required, then larfgb
 NB.   would be replaced by larfpb
 
 geql2=: 3 : 0
-  pfxR=. 0 {."1 y
-  sfx=. 0 {. y
-  while. -. 0 e. _1 0 + $ y do.
-    z=. larfgb {:"1 y
+  'pfxR sfx'=. 0 ({."1 ; {.) y
+  while. -. (0 e. _1 0 + $) y do.
+    z=. larfgb ({:"1) y
     pfxR=. z ,. pfxR
-    y=. ((1) _1} z) larflcbc }:"1 y
-    sfx=. sfx ,~ y ,&{: pfxR
+    y=. ((1) _1} z) larflcbc (}:"1) y
+    sfx=. sfx ,~ y (,&{:) pfxR
     y=. }: y
     pfxR=. }: pfxR
   end.
@@ -206,8 +206,8 @@ NB.   A     - m×n-matrix, the input to factorize
 NB.   Trash - n-vector, will be replaced by Tau
 NB.   QfR   - (m+1)×n-matrix, Qf and R combined
 NB.   Qf    - (m+1)×k-matrix, the unit lower trapezoidal
-NB.           (unit diagonal not stored), represents the Q in
-NB.           factored form
+NB.           (unit diagonal is not stored), represents the Q
+NB.           in factored form
 NB.   R     - k×n-matrix, the upper trapezoidal
 NB.   Q     - m×m-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of k elementary
@@ -245,13 +245,12 @@ NB. - if R diagonal's non-negativity is required, then larfgf
 NB.   would be replaced by larfpf
 
 geqr2=: 3 : 0
-  pfx=. 0 {. y
-  sfxL=. 0 {."1 y
-  while. -. 0 e. _1 0 + $ y do.
-    z=. larfgf {."1 y
+  'pfx sfxL'=. 0 ({. ; {."1) y
+  while. -. (0 e. _1 0 + $) y do.
+    z=. larfgf ({."1) y
     sfxL=. sfxL ,. z
     y=. ((1) 0} z) larflcfc }."1 y
-    pfx=. pfx , sfxL ,&{. y
+    pfx=. pfx , sfxL (,&{.) y
     sfxL=. }. sfxL
     y=. }. y
   end.
@@ -276,8 +275,8 @@ NB.   A     - m×n-matrix, the input to factorize
 NB.   RQf   - m×(n+1)-matrix, R and Qf combined
 NB.   R     - m×k-matrix, the upper trapezoidal
 NB.   Qf    - k×(n+1)-matrix, the unit lower trapezoidal
-NB.           (unit diagonal not stored), represents the Q in
-NB.           factored form
+NB.           (unit diagonal is not stored), represents the Q
+NB.           in factored form
 NB.   Q     - n×n-matrix, the unitary (orthogonal), which is
 NB.           defined as the product of k elementary
 NB.           reflectors H(i) of order n:
@@ -317,15 +316,14 @@ NB. - if R diagonal's non-negativity is required, then
 NB.   larfgbc would be replaced by larfpbc
 
 gerq2=: 3 : 0
-  pfxB=. 0 {. y
-  sfx=. 0 {."1 y
-  while. -. 0 e. 0 _1 + $ y do.
+  'pfxB sfx'=. 0 ({. ; {."1) y
+  while. -. (0 e. 0 _1 + $) y do.
     z=. larfgbc {: y
     pfxB=. z , pfxB
     y=. ((1) _1} z) larfrnbr }: y
-    sfx=. sfx ,.~ y ,&:({:"1) pfxB
-    y=. }:"1 y
-    pfxB=. }:"1 pfxB
+    sfx=. sfx ,.~ y (,&:({:"1)) pfxB
+    y=. (}:"1) y
+    pfxB=. (}:"1) pfxB
   end.
   pfxB stitchb sfx
 )
@@ -396,13 +394,12 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latlz=: 4 : 0
-  iso=. < < < (dhs2liso 0 , x) , _1
+  iso=. < < < (liso4dhs 0 , x) , _1
   m=. # y
-  sfxR=. (- m) {."1 y
-  y=. (- m) }."1 y
+  'sfxR y'=. (- m) ({."1 ; }."1) y
   pfx=. 0 {. y
   while. # y do.
-    y=. y ,. {."1 sfxR
+    y=. y (,. {."1) sfxR
     sfxR=. 1 1 }. sfxR
     z=. {. y
     bak=. iso { z
@@ -475,18 +472,17 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latzl=: 4 : 0
-  iso=. < < < 0 , dhs2liso _1 , x
+  iso=. < < < 0 , liso4dhs _1 , x
   n=. c y
-  pfxT=. n {. y
-  y=. n }. y
-  sfx=. 0 {."1 y
+  'pfxT y'=. n ({. ; }.) y
+  sfx=. 0 ({."1) y
   while. c y do.
     y=. ({: pfxT) , y
     pfxT=. _1 _1 }. pfxT
-    z=. {:"1 y
+    z=. ({:"1) y
     bak=. iso { z
     z=. larfgf 0 iso} z
-    y=. ((1) 0} z) larzlcbc }:"1 y
+    y=. ((1) 0} z) larzlcbc (}:"1) y
     sfx=. (bak iso} z) ,. 0 , sfx
   end.
   sfx
@@ -553,18 +549,17 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latzr=: 4 : 0
-  iso=. < < < (dhs2liso 0 , x) , _1
+  iso=. < < < (liso4dhs 0 , x) , _1
   n=. c y
-  sfxB=. (- n) {. y
-  y=. (- n) }. y
-  pfx=. 0 {."1 y
+  'sfxB y'=. (- n) ({. ; }.) y
+  pfx=. 0 ({."1) y
   while. c y do.
     y=. y , {. sfxB
     sfxB=. 1 1 }. sfxB
-    z=. {."1 y
+    z=. ({."1) y
     bak=. iso { z
     z=. larfgb 0 iso} z
-    y=. ((1) _1} z) larzlcfc }."1 y
+    y=. ((1) _1} z) larzlcfc (}."1) y
     pfx=. (pfx , 0) ,. bak iso} z
   end.
   pfx
@@ -640,13 +635,12 @@ NB. - in u(i) 0s and 1 are not stored, v(i) is empty for l=0,
 NB.   0s and 1 are absent and u(i) is empty when n=0
 
 latrz=: 4 : 0
-  iso=. < < < 0 , dhs2liso _1 , x
+  iso=. < < < 0 , liso4dhs _1 , x
   m=. # y
-  pfxL=. m {."1 y
-  y=. m }."1 y
+  'pfxL y'=. m ({."1 ; }."1) y
   sfx=. 0 {. y
   while. # y do.
-    y=. ({:"1 pfxL) ,. y
+    y=. (({:"1) pfxL) ,. y
     pfxL=. _1 _1 }. pfxL
     z=. {: y
     bak=. iso { z
@@ -673,7 +667,7 @@ NB.   A   - m×n-matrix, the input to factorize
 NB.   LQf - m×(n+1)-matrix, L and Qf combined
 NB.   L   - m×k-matrix, the lower trapezoidal
 NB.   Qf  - k×(n+1)-matrix, the unit upper trapezoidal (unit
-NB.         diagonal not stored), represents the Q in
+NB.         diagonal is not stored), represents the Q in
 NB.         factored form
 NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
 NB.         defined as the product of k elementary
@@ -713,16 +707,15 @@ NB. - gelq2 and gelqf are topologic equivalents
 
 gelqf=: 3 : 0
   y=. y ,. 0
-  pfx=. 0 {."1 y
-  sfxT=. 0 {. y
-  while. -. 0 e. QFNX < 0 _1 + $ y do.
-    nb=. <./ QFNB , 0 _1 + $ y
+  'pfx sfxT'=. 0 ({."1 ; {.) y
+  while. -. 0 e. QFNX (< 0 _1 + $) y do.
+    nb=. (<./) QFNB (, 0 _1 + $) y
     Z=. gelq2 nb {. y
     sfxT=. sfxT , Z
     y=. (tru1 Z) larfbrnfr nb }. y
     pfx=. pfx ,. sfxT ,&(nb&({."1)) y
-    sfxT=. nb }."1 sfxT
-    y=. nb }."1 y
+    sfxT=. nb (}."1) sfxT
+    y=. nb (}."1) y
   end.
   pfx ,. sfxT , gelq2 y
 )
@@ -739,7 +732,7 @@ NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   QfL - (m+1)×n-matrix, Qf and L combined
 NB.   Qf  - (m+1)×k-matrix, the unit upper trapezoidal (unit
-NB.         diagonal not stored), represents the Q in
+NB.         diagonal is not stored), represents the Q in
 NB.         factored form
 NB.   L   - k×n-matrix, the lower trapezoidal
 NB.   Q   - m×m-matrix, the unitary (orthogonal), which is
@@ -777,13 +770,12 @@ NB. - geql2 and geqlf are topologic equivalents
 
 geqlf=: 3 : 0
   y=. 0 , y
-  pfxR=. 0 {."1 y
-  sfx=. 0 {. y
-  while. -. 0 e. QFNX < _1 0 + $ y do.
-    nb=. - <./ QFNB , _1 0 + $ y
-    Z=. geql2 nb {."1 y
+  'pfxR sfx'=. 0 ({."1 ; {.) y
+  while. -. 0 e. QFNX (< _1 0 + $) y do.
+    nb=. - (<./) QFNB (, _1 0 + $) y
+    Z=. geql2 nb ({."1) y
     pfxR=. Z ,. pfxR
-    y=. ((tru1~ -~/@$) Z) larfblcbc nb }."1 y
+    y=. ((tru1~ -~/@$) Z) larfblcbc nb (}."1) y
     sfx=. sfx ,~ y ,.&(nb&{.) pfxR
     y=. nb }. y
     pfxR=. nb }. pfxR
@@ -803,7 +795,7 @@ NB. where
 NB.   A   - m×n-matrix, the input to factorize
 NB.   QfR - (m+1)×n-matrix, Qf and R combined
 NB.   Qf  - (m+1)×k-matrix, the unit lower trapezoidal (unit
-NB.         diagonal not stored), represents the Q in
+NB.         diagonal is not stored), represents the Q in
 NB.         factored form
 NB.   R   - k×n-matrix, the upper trapezoidal
 NB.   Q   - m×m-matrix, the unitary (orthogonal), which is
@@ -841,13 +833,12 @@ NB. - geqr2 and geqrf are topologic equivalents
 
 geqrf=: 3 : 0
   y=. y , 0
-  pfx=. 0 {. y
-  sfxL=. 0 {."1 y
-  while. -. 0 e. QFNX < _1 0 + $ y do.
-    nb=. <./ QFNB , _1 0 + $ y
-    Z=. geqr2 nb {."1 y
+  'pfx sfxL'=. 0 ({. ; {."1) y
+  while. -. 0 e. QFNX (< _1 0 + $) y do.
+    nb=. (<./) QFNB , (_1 0 + $) y
+    Z=. geqr2 nb ({."1) y
     sfxL=. sfxL ,. Z
-    y=. (trl1 Z) larfblcfc nb }."1 y
+    y=. (trl1 Z) larfblcfc nb (}."1) y
     pfx=. pfx , sfxL ,.&(nb&{.) y
     sfxL=. nb }. sfxL
     y=. nb }. y
@@ -868,7 +859,7 @@ NB.   A   - m×n-matrix, the input to factorize
 NB.   RQf - m×(n+1)-matrix, R and Qf combined
 NB.   R   - m×k-matrix, the upper trapezoidal
 NB.   Qf  - k×(n+1)-matrix, the unit lower trapezoidal (unit
-NB.         diagonal not stored), represents the Q in
+NB.         diagonal is not stored), represents the Q in
 NB.         factored form
 NB.   Q   - n×n-matrix, the unitary (orthogonal), which is
 NB.         defined as the product of k elementary reflectors
@@ -908,16 +899,15 @@ NB. - gerq2 and gerqf are topologic equivalents
 
 gerqf=: 3 : 0
   y=. 0 ,. y
-  pfxB=. 0 {. y
-  sfx=. 0 {."1 y
-  while. -. 0 e. QFNX < 0 _1 + $ y do.
-    nb=. - <./ QFNB , 0 _1 + $ y
+  'pfxB sfx'=. 0 ({. ; {."1) y
+  while. -. 0 e. QFNX (< 0 _1 + $) y do.
+    nb=. - (<./) QFNB (, 0 _1 + $) y
     Z=. gerq2 nb {. y
     pfxB=. Z , pfxB
     y=. ((trl1~ -~/@$) Z) larfbrnbr nb }. y
     sfx=. sfx ,.~ y ,&(nb&({."1)) pfxB
-    y=. nb }."1 y
-    pfxB=. nb }."1 pfxB
+    y=. nb (}."1) y
+    pfxB=. nb (}."1) pfxB
   end.
   sfx ,.~ pfxB ,~ gerq2 y
 )
@@ -989,18 +979,17 @@ NB. - strict upper triangle of iL is ignored
 
 tzlzf=: 3 : 0
   y=. 0 ,. y
-  l=. -~/ 'm n1'=. $ y
-  sfxR=. (- m) {."1 y
-  y=. (- m) }."1 y
+  l=. (-~/) 'm n1'=. $ y
+  'sfxR y'=. (- m) ({."1 ; }."1) y
   pfx=. 0 {. y
   nb=. QFNB <. # y
   I=. idmat nb
   O=. (2 # nb) $ 0
   while. QFNX < # y do.
-    y=. y ,. nb {."1 sfxR
+    y=. y ,. nb ({."1) sfxR
     sfxR=. (2 # nb) }. sfxR
     Z=. l latlz nb {. y
-    y=. (I ,.~ l {."1 Z) larzbrnfr nb }. y
+    y=. (I ,.~ l ({."1) Z) larzbrnfr nb }. y
     I=. O ,. I
     pfx=. pfx appendl Z
   end.
@@ -1069,17 +1058,16 @@ NB. - strict upper triangle of iL is ignored
 tzzlf=: 3 : 0
   y=. y , 0
   l=. -/ 'm1 n'=. $ y
-  pfxT=. n {. y
-  y=. n }. y
-  sfx=. 0 {."1 y
+  'pfxT y'=. n ({. ; }.) y
+  sfx=. 0 ({."1) y
   nb=. - QFNB <. c y
   I=. idmat - nb
   O=. (2 # - nb) $ 0
   while. QFNX < c y do.
     y=. (nb {. pfxT) , y
     pfxT=. (2 # nb) }. pfxT
-    Z=. l latzl nb {."1 y
-    y=. (I , (- l) {. Z) larzblcbc nb }."1 y
+    Z=. l latzl nb ({."1) y
+    y=. (I , (- l) {. Z) larzblcbc nb (}."1) y
     I=. I , O
     sfx=. Z stitchb sfx
   end.
@@ -1148,17 +1136,16 @@ NB. - strict lower triangle of iR is ignored
 tzzrf=: 3 : 0
   y=. 0 , y
   l=. -/ 'm1 n'=. $ y
-  sfxB=. (- n) {. y
-  y=. (- n) }. y
-  pfx=. 0 {."1 y
+  'sfxB y'=. (- n) ({. ; }.) y
+  pfx=. 0 ({."1) y
   nb=. QFNB <. c y
   I=. idmat nb
   O=. (2 # nb) $ 0
   while. QFNX < c y do.
     y=. y , nb {. sfxB
     sfxB=. (2 # nb) }. sfxB
-    Z=. l latzr nb {."1 y
-    y=. (I ,~ l {. Z) larzblcfc nb }."1 y
+    Z=. l latzr nb ({."1) y
+    y=. (I ,~ l {. Z) larzblcfc nb (}."1) y
     I=. O , I
     pfx=. pfx stitcht Z
   end.
@@ -1236,17 +1223,16 @@ NB. - strict lower triangle of iR is ignored
 tzrzf=: 3 : 0
   y=. y ,. 0
   l=. -/ 'm n1'=. $ y
-  pfxL=. m {."1 y
-  y=. m }."1 y
+  'pfxL y'=. m ({."1 ; }."1) y
   sfx=. 0 {. y
   nb=. - QFNB <. # y
   I=. idmat - nb
   O=. (2 # - nb) $ 0
   while. QFNX < # y do.
-    y=. (nb {."1 pfxL) ,. y
+    y=. (nb ({."1) pfxL) ,. y
     pfxL=. (2 # nb) }. pfxL
     Z=. (- l) latrz nb {. y
-    y=. (I ,. l {."1 Z) larzbrnbr nb }. y
+    y=. (I ,. l ({."1) Z) larzbrnbr nb }. y
     I=. I ,. O
     sfx=. Z appendr sfx
   end.
@@ -1264,53 +1250,54 @@ NB.   Test:
 NB.   - 128!:0 (built-in)
 NB.   - qrd (math/misc addon)
 NB.   - xGELQF xGEQLF xGEQRF xGERQF (math/lapack2 addon)
-NB.   - gelqf geqlf geqrf gerqf (math/mt addon)
+NB.   - gexxf (math/mt addon)
 NB.   by general matrix
 NB.
 NB. Syntax:
-NB.   testgeqf A
+NB.   log=. testgeqf A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testgeqf=: 3 : 0
-  load        :: ] 'numeric'
+  require     :: ] 'numeric'
   load_mttmp_ :: ] 'math/misc/mathutil'
   load_mttmp_ :: ] 'math/misc/makemat'
   load_mttmp_ :: ] 'math/misc/matutil'
   load_mttmp_ :: ] 'math/misc/linear'
   load_mttmp_ :: ] 'math/misc/matfacto'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gelqf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/geqlf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/geqrf'
-  load_mttmp_ :: ] 'math/mt/test/lapack2/gerqf'
+  load_mttmp_      'math/mt/external/lapack2/gelqf'
+  load_mttmp_      'math/mt/external/lapack2/geqlf'
+  load_mttmp_      'math/mt/external/lapack2/geqrf'
+  load_mttmp_      'math/mt/external/lapack2/gerqf'
 
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   norm=. norm1 y
 
   args=. y ; norm
 
-  ('128!:0'        tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
-  ('qrd_mttmp_'    tmonad ((0&{::)`]                                                     `(rcond"_)`(_."_)`qrt01)) args
+  log=.          ('128!:0'        tmonad ((0&{::)`]                                                     `(rcond"_)`nan`qrt01)) args
+  log=. log lcat ('qrd_mttmp_'    tmonad ((0&{::)`]                                                     `(rcond"_)`nan`qrt01)) args
 
-  ('dgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
-  ('dgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
-  ('dgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
-  ('dgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('dgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`nan`lqt01)) args
+  log=. log lcat ('dgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`nan`qlt01)) args
+  log=. log lcat ('dgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`nan`qrt01)) args
+  log=. log lcat ('dgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`nan`rqt01)) args
 
-  ('zgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`(_."_)`lqt01)) args
-  ('zgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`(_."_)`qlt01)) args
-  ('zgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`(_."_)`qrt01)) args
-  ('zgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('zgelqf_mttmp_' tmonad ((0&{::)`( trl        @(0&{::) ;  unglq@(0&{:: stitcht  1&{::))`(rcond"_)`nan`lqt01)) args
+  log=. log lcat ('zgeqlf_mttmp_' tmonad ((0&{::)`((trl~ -~/@$)@(0&{::) ;~ ungql@(0&{:: appendr~ 1&{::))`(rcond"_)`nan`qlt01)) args
+  log=. log lcat ('zgeqrf_mttmp_' tmonad ((0&{::)`( tru        @(0&{::) ;~ ungqr@       ;              )`(rcond"_)`nan`qrt01)) args
+  log=. log lcat ('zgerqf_mttmp_' tmonad ((0&{::)`((tru~ -~/@$)@(0&{::) ;  ungrq@(0&{:: stitchb~ 1&{::))`(rcond"_)`nan`rqt01)) args
 
-  ('gelqf'         tmonad ((0&{::)`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`(_."_)`lqt01)) args
-  ('geqlf'         tmonad ((0&{::)`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`(_."_)`qlt01)) args
-  ('geqrf'         tmonad ((0&{::)`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`(_."_)`qrt01)) args
-  ('gerqf'         tmonad ((0&{::)`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`(_."_)`rqt01)) args
+  log=. log lcat ('gelqf'         tmonad ((0&{::)`( trl        @:(}:"1) ;  unglq                       )`(rcond"_)`nan`lqt01)) args
+  log=. log lcat ('geqlf'         tmonad ((0&{::)`((trl~ -~/@$)@  }.    ;~ ungql                       )`(rcond"_)`nan`qlt01)) args
+  log=. log lcat ('geqrf'         tmonad ((0&{::)`( tru        @  }:    ;~ ungqr                       )`(rcond"_)`nan`qrt01)) args
+  log=. log lcat ('gerqf'         tmonad ((0&{::)`((tru~ -~/@$)@:(}."1) ;  ungrq                       )`(rcond"_)`nan`rqt01)) args
 
   coerase < 'mttmp'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1319,21 +1306,22 @@ NB.
 NB. Description:
 NB.   Test:
 NB.   - xTZRZF (math/lapack2 addon)
-NB.   - tzlzf tzzlf tzzrf tzrzf (math/mt addon)
+NB.   - tzxxf (math/mt addon)
 NB.   by trapezoidal matrix
 NB.
 NB. Syntax:
-NB.   testtzqf A
+NB.   log=. testtzqf A
 NB. where
-NB.   A - m×n-matrix
+NB.   A   - m×n-matrix
+NB.   log - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. TODO:
 NB. - add xQRT12 test
 
 testtzqf=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/tzrzf'
+  load_mttmp_ 'math/mt/external/lapack2/tzrzf'
 
-  rcond=. (_."_)`geconi@.(=/@$) y  NB. meaninigful for square matrices only
+  rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
   normw=. norm1 Awide=. |:^:(>/@$) y
   normt=. normi Atall=. |:^:(</@$) y
@@ -1341,18 +1329,18 @@ testtzqf=: 3 : 0
   NB. LAPACK doesn't clean strict lower triangle in R, so we need a rzt01 variant
   rzt01a=: ((1 {:: [) %~^:(0 < [) (norm1 % FP_EPS * 1 >. c)@((- trupick@(0&{::))~ (unmrzrn ((1 -~ c) {."1 trupick@({."1~ #)))))`0:@.(0 e. $@]) >. (norm1 % FP_EPS * 1 >. c)@(<: upddiag)@(unmrzrc ungrz)`0:@.(0 e. $)@]
 
-  ('dtzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
-  ('ztzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`(_."_)`rzt01a )) Awide ; normw
+  log=.          ('dtzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`nan`rzt01a )) Awide ; normw
+  log=. log lcat ('ztzrzf_mttmp_' tmonad ((0&{::)`(0&{:: ,.  1&{::)`(rcond"_)`nan`rzt01a )) Awide ; normw
 
-  ('tzlzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`lzt01  )) Awide ; normw
-  ('tzzlf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zlt01  )) Atall ; normt
-  ('tzzrf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`zrt01  )) Atall ; normt
-  ('tzrzf'         tmonad ((0&{::)`]                `(rcond"_)`(_."_)`rzt01  )) Awide ; normw
+  log=. log lcat ('tzlzf'         tmonad ((0&{::)`]                `(rcond"_)`nan`lzt01  )) Awide ; normw
+  log=. log lcat ('tzzlf'         tmonad ((0&{::)`]                `(rcond"_)`nan`zlt01  )) Atall ; normt
+  log=. log lcat ('tzzrf'         tmonad ((0&{::)`]                `(rcond"_)`nan`zrt01  )) Atall ; normt
+  log=. log lcat ('tzrzf'         tmonad ((0&{::)`]                `(rcond"_)`nan`rzt01  )) Awide ; normw
 
   coerase < 'mttmp'
   erase 'rzt01a'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1363,23 +1351,21 @@ NB.   Adv. to make verb to test gexxf by matrix of generator
 NB.   and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testqf
+NB.   log=. (mkmat testqf) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testqf_mt_ 200 150
+NB.     log=. ?@$&0 testqf_mt_ 200 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testqf_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testqf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testqf_mt_ 150 200
+NB.     log=. (gemat_mt_ j. gemat_mt_) testqf_mt_ 150 200
 
-testqf=: 1 : 'EMPTY [ (testtzqf_mt_ [ testgeqf_mt_)@u'
+testqf=: (testtzqf_mt_ ,&.>~ testgeqf_mt_)@

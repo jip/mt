@@ -2,9 +2,8 @@ NB. Scale
 NB.
 NB. scl  Try to scale without overflow or underflow
 NB.
-NB. Version: 0.13.0 2021-05-21
-NB.
-NB. Copyright 2010-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -23,6 +22,9 @@ NB.
 NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
+
+NB. =========================================================
+NB. Configuration
 
 coclass 'mt'
 
@@ -97,7 +99,7 @@ NB. - models LAPACK's xDRSCL, when A is a vector and t=1
 NB. - reverse x to get obverse (scl^:_1)
 
 scl=: (4 : 0) :. ((scl_mt_~ |.)~)
-  ioft=. ((FP_SFMIN |:@:(*^:2 1) |.) I."1 0 ]) | x
+  ioft=. ((FP_SFMIN (|:@:(*^:2 1)) |.) (I."1 0) ]) | x
   io=. -/ ioft
   (%~/ (ioft { (1 1 , FP_SFMIN)) *^:(| io) x) * (FP_SFMIN&*^:io y)
 )

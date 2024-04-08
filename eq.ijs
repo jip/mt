@@ -8,9 +8,8 @@ NB. testhgeq  Test hgexxxxx by square matrices
 NB. testeq    Adv. to make verb to test hgexxxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Version: 0.11.0 2021-01-17
-NB.
-NB. Copyright 2011-2021 Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
+NB.           Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -30,6 +29,9 @@ NB. You should have received a copy of the GNU Lesser General
 NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
+NB. =========================================================
+NB. Configuration
+
 coclass 'mt'
 
 NB. =========================================================
@@ -45,7 +47,7 @@ NB. Notes: implements LAPACK's xLAQR1
 
 laqr1=: 4 : 0
   's1 s2'=. x
-  ((-&s1 upddiag ]) (mp (% norm1t)) ((-&s2 updl 0) {."1 ])) y
+  ((-&s1 upddiag ]) (mp (% norm1t)) ((-&s2 updl 0) ({."1) ])) y
 )
 
 NB. ---------------------------------------------------------
@@ -59,15 +61,15 @@ NB.   'HTupd signbc'=. hs hgexxeo H ,: T
 NB. where
 NB.   hs     - 2-vector of integers (h,s) 'head' and 'size',
 NB.            defines eigenvalues range
-NB.   H      - n×n-matrix, either lower or upper Hessenberg
-NB.            inside the submatrix H[h:h+s-1,h:h+s-1], and
-NB.            lower or upper triangular outside
-NB.   T      - n×n-matrix, either lower or upper triangular
+NB.   H      - n×n-matrix, either HSL or HSU inside the
+NB.            submatrix H[h:h+s-1,h:h+s-1], and L or U
+NB.            outside
+NB.   T      - n×n-matrix, either L or U
 NB.   HTupd  -:Hupd ,: Tupd
-NB.   Hupd   - n×n-matrix, being H with hs-segment of
-NB.            diagonal replaced by alpha (see hgexx)
-NB.   Tupd   - n×n-matrix, being T with hs-segment of
-NB.            diagonal replaced by beta (see hgexx)
+NB.   Hupd   - H with hs-segment of diagonal replaced by
+NB.            alpha (see hgexx)
+NB.   Tupd   - T with hs-segment of diagonal replaced by
+NB.            beta (see hgexx)
 NB.   signbc - s-vector, scaling factors to form Q,Z later
 
 hgexxeo=: 4 : 0
@@ -98,26 +100,24 @@ NB.            upper (hgeqzso) triangular outside
 NB.   T      - n×n-matrix, either lower (hgezqso) or upper
 NB.            (hgeqzso) triangular
 NB.   HTupd  -:Hupd ,: Tupd
-NB.   Hupd   - n×n-matrix, being H with rows (hgezqso) or
-NB.            columns (hgeqzso) from hs-segment transformed
-NB.            to Shur form
-NB.   Tupd   - n×n-matrix, being T with rows (hgezqso) or
-NB.            columns (hgeqzso) from hs-segment transformed
-NB.            to Shur form
+NB.   Hupd   - H with rows (hgezqso) or columns (hgeqzso)
+NB.            from hs-segment transformed to Shur form
+NB.   Tupd   - T with rows (hgezqso) or columns (hgeqzso)
+NB.            from hs-segment transformed to Shur form
 NB.   signbc - s-vector, scaling factors to form Q,Z later
 
 hgezqso=: 4 : 0
-  liso=. dhs2liso x
+  liso=. liso4dhs x
   'y signbc'=. x hgexxeo y
-  subHT=. liso {"2 y
-  (((,:~ liso >/ (i. c y))} subHT ,: subHT *"2 signbc) liso}"2 y) ; signbc
+  subHT=. liso ({"2) y
+  ((((,:~) liso >/ (i. c y))} subHT ,: subHT (*"2) signbc) liso}"2 y) ; signbc
 )
 
 hgeqzso=: 4 : 0
-  liso=. dhs2liso x
+  liso=. liso4dhs x
   'y signbc'=. x hgexxeo y
-  subHT=. liso {"1 y
-  (((,:~ (i. c y) </ liso)} subHT ,: subHT *"1 signbc) liso}"1 y) ; signbc
+  subHT=. liso ({"1) y
+  ((((,:~) (i. c y) </ liso)} subHT ,: subHT (*"1) signbc) liso}"1 y) ; signbc
 )
 
 NB. ---------------------------------------------------------
@@ -125,13 +125,13 @@ NB. hgezq
 NB. hgeqz
 NB.
 NB. Description:
-NB.   Adv. to make verbs to find eigenvalues of either lower
+NB.   Adv. to make dyad to find eigenvalues of either lower
 NB.   (hgezq) or upper (hgeqz) Hessenberg-triangular pair
 NB.   (H,T) and, optionally, to reduce this pair to
 NB.   generalized Schur form
 NB.
 NB. Syntax:
-NB.   vapp=. hgexxxo`init`reset`step hgexx
+NB.   'HTupd dQ1 dZ1'=. hs (hgexxxo`init`reset`step hgexx) HT
 NB. where
 NB.   hgexxxo - monad to compute generalized eigenvalues of
 NB.             hs-segment and, optionally, to reduce
@@ -147,26 +147,21 @@ NB.               'ifrstm ilastm'=. (h , ilast) reset (ifrstm , ilastm)
 NB.   step    - monad to change counter optionally, is
 NB.             called as:
 NB.               ifrstm=. ifirst step ifrstm
-NB.   vapp    - dyad to find eigenvalues of lower (upper)
-NB.             Hessenberg-triangular pair (H,T) and,
-NB.             optionally, to reduce this pair to
-NB.             generalized Schur form, is called as:
-NB.               'HTupd dQ1 dZ1'=. hs vapp HT
-NB.             see hgeqzxxxx
 NB.
 NB. Notes:
+NB. - refer to hgeqzxxxx below for parameters description
 NB. - non-converged eigenvalues are set to NaN
 
 hgezq=: 1 : 0
 :
   '`hgezqxo init reset step'=. m
   e=. +/ 'h s'=. x
-  dQ1=. dZ1=. 0 4 $ 0
+  dQ1=. dZ1=. ((0 4 $ 0))
   abnorm=. (0 2 ,. ,.~ x) norms"2;.0 y
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgezqxo y  NB. process eigenvalues (columns) h+s:n-1
-  dZ1=. dZ1 , 4 {."1 signbc ,. (c y) th2liso e
+  dZ1=. dZ1 , 4 ({."1) signbc ,. (c y) liso4th e
 
   NB. Eigenvalues h+s:n-1 have been found.
 
@@ -214,7 +209,7 @@ hgezq=: 1 : 0
               NB. superdiagonals in H
               ilazr2=. 0
               if. -. ilazro do.
-                'Hj1j Hjj1 Hjj'=. sorim ((<"1) 0 ,. (_1 0,0 1,:0 0) + j) { y
+                'Hj1j Hjj1 Hjj'=. sorim (< 0 ,. ((_1 0,0 1,:0 0)) + j) { y
                 if. 0 >: (Hj1j , Hjj) mp (ascale * (Hjj1 , -atol)) do.
                   ilazr2=. 1
                 end.
@@ -228,14 +223,14 @@ hgezq=: 1 : 0
               NB. done repeatedly.
               if. ilazro +. ilazr2 do.
                 jch=. j
-                liso=. (>: ilastm) th2liso j
+                liso=. (>: ilastm) liso4th j
                 while. jch < ilast do.
-                  'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; (jch + 0 1)) ; 0
+                  'y cs'=. rot rotga y ; (< 0 ; liso ; (jch + 0 1)) ; 0
                   liso=. }. liso
-                  y=. (< 1 ; liso ; (jch + 0 1)) cs&(rot&.|:) upd y
+                  y=. cs&rot&.((< 1 ; liso ; (jch + 0 1))&{) y
                   dZ1=. dZ1 , (+ cs) , jch + 0 1
                   if. ilazr2 do.
-                    y=. (< 0 , jch - 1 0) *&({. cs) upd y
+                    y=. *&({. cs)&.((< 0 , jch - 1 0)&{) y
                     ilazr2=. 0
                   end.
                   if. btol <: sorim (< 1 , jch + 1 1) { y do.
@@ -253,14 +248,14 @@ hgezq=: 1 : 0
                 NB. T[ilast,ilast], then process as in the
                 NB. case T[ilast,ilast]=0
                 jch=. j
-                lisor=. (>: ilastm) th2liso <: j
-                lisoc=. (2 + j) th2liso ifrstm
+                lisor=. (>: ilastm) liso4th <: j
+                lisoc=. (2 + j) liso4th ifrstm
                 while. jch < ilast do.
-                  'y cs'=. rot&.|: rotga y ; (< 1 ; (2 }. lisor) ; (jch + 0 1)) ; 0
-                  y=. (< 0 ; lisor ; (jch + 0 1)) cs&(rot&.|:) upd y
+                  'y cs'=. rot rotga y ; (< 1 ; (2 }. lisor) ; (jch + 0 1)) ; 0
+                  y=. cs&rot&.((< 0 ; lisor ; (jch + 0 1))&{) y
                   dZ1=. dZ1 , (+ cs) , jch + 0 1
-                  'y cs'=. rot rotga y ; (< 0 ; (jch - 0 1) ; lisoc) ; < < a: ; _1
-                  y=. (< 1 ; (jch - 0 1) ; (_2 }. lisoc)) cs&rot upd y
+                  'y cs'=. rot&.|: rotga y ; (< 0 ; (jch - 0 1) ; lisoc) ; ((< < a: ; _1))
+                  y=. cs&(rot&.|:)&.((< 1 ; (jch - 0 1) ; (_2 }. lisoc))&{) y
                   dQ1=. dQ1 , cs , jch - 0 1
                   lisor=. }. lisor
                   lisoc=. lisoc , 2 + jch
@@ -276,7 +271,7 @@ hgezq=: 1 : 0
             j=. <: j
           end.
           NB. drop-through is impossible
-          ((< _.) setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
+          ((_. ; '') setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
           return.
         else.
           y=. 0 (< 1 , ,~ ilast)} y
@@ -284,9 +279,9 @@ hgezq=: 1 : 0
         label_l50.
         NB. T[ilast,ilast]=0 - clear H[ilast-1,ilast] to
         NB. split off a 1x1 block
-        liso=. (>: ilast) th2liso ifrstm
-        'y cs'=. rot rotga y ; (< 0 ; (ilast - 0 1) ; liso) ; < < a: ; _1
-        y=. (< 1 ; (ilast - 0 1) ; (}: liso)) cs&rot upd y
+        liso=. (>: ilast) liso4th ifrstm
+        'y cs'=. rot&.|: rotga y ; (< 0 ; (ilast - 0 1) ; liso) ; ((< < a: ; _1))
+        y=. cs&(rot&.|:)&.((< 1 ; (ilast - 0 1) ; (}: liso))&{) y
         dQ1=. dQ1 , cs , ilast - 0 1
       else.
         y=. 0 (< 0 , ilast - 1 0)} y
@@ -297,13 +292,13 @@ hgezq=: 1 : 0
       NB. H[ilast-1,ilast]=0 - standartize B, set alpha and
       NB. beta
       'y signbc'=. (ilast , 1) hgezqxo y  NB. process ilast-th eigenvalue (column)
-      dQ1=. dQ1 , 4 {."1 signbc ,. ilast
+      dQ1=. dQ1 , 4 ({."1) signbc ,. ilast
       NB. goto next block - exit if finished
       ilast=. <: ilast
       if. ilast < h do.
         NB. normal exit
         'y signbc'=. (0 , 0 >. <: h) hgezqxo y  NB. process eigenvalues (columns) 0:h-1
-        dQ1=. dQ1 , 4 {."1 signbc ,. i. 0 >. <: h
+        dQ1=. dQ1 , 4 ({."1) signbc ,. i. 0 >. <: h
         y ; dQ1 ; dZ1
         return.
       end.
@@ -328,50 +323,50 @@ hgezq=: 1 : 0
         NB. to the bottom-right element.
         NB. We factor T as D*L, where L is unit lower
         NB. triangular, and compute L^_1*(D^_1*H)
-        'L21 DA11 DA12 DA21 DA22'=. %/ (6 0 1 2 3 ,: 7 4 4 7 7) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
+        'L21 DA11 DA12 DA21 DA22'=. %/ ((6 0 1 2 3 ,: 7 4 4 7 7)) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
         IBA22=. DA22 - L21 * DA12
         t1=. -: DA11 + IBA22
         rtdisc=. %: (t1 , DA21 , -DA11) mp (t1 , DA12 , DA22)
-        temp=. +/ (*/) +. rtdisc , t1 - IBA22
+        temp=. +/!.0 */ +. rtdisc , t1 - IBA22
         shift=. t1 - temp negneg rtdisc
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason
-        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (0 _1 ,: _1 _1) + ilast) { y
+        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. ((0 _1 ,: _1 _1)) + ilast) { y
         shift=. eshift
       end.
       NB. now check for two consecutive small subdiagonals
-      HTd=. (0 1 ,"0 1 ilast (] , -) ifirst) diag"1 2/ y
+      HTd=. (0 1 (,"0 1) ilast (] , -) ifirst) diag"1 2/ y
       ctemp=. (- (shift&*))/ abscale * {. HTd
-      temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
+      temp=. (sorim }."1 ctemp) ,: ascale * sorim ((< 1 ; 0 ; <<0)) { HTd
       tempr=. >./ temp
       temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr)} 1 , tempr ,: 1
-      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
+      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim ((< 1 ; 0 ; <<_1)) { HTd) i: 1
       NB. do an implicit-shift ZQ sweep
       NB. initial Z
       cs=. lartg ctemp , ascale * (< 0 , istart + 0 1) { y
       NB. sweep
       j=. istart
-      lisor=. (>: ilastm) th2liso j
-      lisoc=. (j + 2) th2liso ifrstm
+      lisor=. (>: ilastm) liso4th j
+      lisoc=. (j + 2) liso4th ifrstm
       while. j < ilast do.
         liso=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          y=. (< a: ; lisor ; liso) cs&(rot&.|:)"2 upd y
+          y=. cs&rot"2&.((< a: ; lisor ; liso)&{) y
         else.
-          'y cs'=. rot&.|: rotga y ; (< 0 ; lisor ; liso) ; 0
+          'y cs'=. rot rotga y ; (< 0 ; lisor ; liso) ; 0
           lisor=. }. lisor
-          y=. (< 1 ; lisor ; liso) cs&(rot&.|:) upd y
+          y=. cs&rot&.((< 1 ; lisor ; liso)&{) y
         end.
         dZ1=. dZ1 , (+ cs) , liso
         liso=. j + 1 0
-        'y cs'=. rot rotga y ; (< 1 ; liso ; lisoc) ; < < a: ; _1
+        'y cs'=. rot&.|: rotga y ; (< 1 ; liso ; lisoc) ; ((< < a: ; _1))
         NB. isn't a last iteration?
         if. j < <: ilast do.
           lisoc=. lisoc , j + 2
         end.
-        y=. (< 0 ; liso ; lisoc) cs&rot upd y
+        y=. cs&(rot&.|:)&.((< 0 ; liso ; lisoc)&{) y
         dQ1=. dQ1 , cs , liso
         j=. >: j
       end.
@@ -386,12 +381,12 @@ hgeqz=: 1 : 0
 :
   '`hgeqzxo init reset step'=. m
   e=. +/ 'h s'=. x
-  dQ1=. dZ1=. 0 4 $ 0
+  dQ1=. dZ1=. ((0 4 $ 0))
   abnorm=. (0 2 ,. ,.~ x) norms"2;.0 y
   'atol btol'=. abtol=. FP_SFMIN >. FP_PREC * abnorm
   'ascale bscale'=. abscale=. % FP_SFMIN >. abnorm
   'y signbc'=. ((c y) (] , -) e) hgeqzxo y  NB. process eigenvalues (columns) h+s:n-1
-  dZ1=. dZ1 , 4 {."1 signbc ,. (c y) th2liso e
+  dZ1=. dZ1 , 4 ({."1) signbc ,. (c y) liso4th e
 
   NB. Eigenvalues h+s:n-1 have been found.
 
@@ -438,7 +433,7 @@ hgeqz=: 1 : 0
               NB. subdiagonals in H
               ilazr2=. 0
               if. -. ilazro do.
-                'Hjj1 Hj1j Hjj'=. sorim ((<"1) 0 ,. (0 _1,1 0,:0 0) + j) { y
+                'Hjj1 Hj1j Hjj'=. sorim (< 0 ,. ((0 _1,1 0,:0 0)) + j) { y
                 if. 0 >: (Hjj1 , Hjj) mp (ascale * (Hj1j , -atol)) do.
                   ilazr2=. 1
                 end.
@@ -452,14 +447,14 @@ hgeqz=: 1 : 0
               NB. done repeatedly.
               if. ilazro +. ilazr2 do.
                 jch=. j
-                liso=. (>: ilastm) th2liso j
+                liso=. (>: ilastm) liso4th j
                 while. jch < ilast do.
-                  'y cs'=. rot rotga y ; (< 0 ; (jch + 0 1) ; liso) ; < < a: ; 0
+                  'y cs'=. rot&.|: rotga y ; (< 0 ; (jch + 0 1) ; liso) ; ((< < a: ; 0))
                   liso=. }. liso
-                  y=. (< 1 ; (jch + 0 1) ; liso) cs&rot upd y
+                  y=. cs&(rot&.|:)&.((< 1 ; (jch + 0 1) ; liso)&{) y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
                   if. ilazr2 do.
-                    y=. (< 0 , jch - 0 1) *&({. cs) upd y
+                    y=. *&({. cs)&.((< 0 , jch - 0 1)&{) y
                     ilazr2=. 0
                   end.
                   if. btol <: sorim (< 1 , jch + 1 1) { y do.
@@ -477,14 +472,14 @@ hgeqz=: 1 : 0
                 NB. T[ilast,ilast], then process as in the
                 NB. case T[ilast,ilast]=0
                 jch=. j
-                lisoc=. (>: ilastm) th2liso <: j
-                lisor=. (2 + j) th2liso ifrstm
+                lisoc=. (>: ilastm) liso4th <: j
+                lisor=. (2 + j) liso4th ifrstm
                 while. jch < ilast do.
-                  'y cs'=. rot rotga y ; (< 1 ; (jch + 0 1) ; (2 }. lisoc)) ; < < a: ; 0
-                  y=. (< 0 ; (jch + 0 1) ; lisoc) cs&rot upd y
+                  'y cs'=. rot&.|: rotga y ; (< 1 ; (jch + 0 1) ; (2 }. lisoc)) ; ((< < a: ; 0))
+                  y=. cs&(rot&.|:)&.((< 0 ; (jch + 0 1) ; lisoc)&{) y
                   dQ1=. dQ1 , (+ cs) , jch + 0 1
-                  'y cs'=. rot&.|: rotga y ; (< 0 ; lisor ; (jch - 0 1)) ; _1
-                  y=. (< 1 ; (_2 }. lisor) ; (jch - 0 1)) cs&(rot&.|:) upd y
+                  'y cs'=. rot rotga y ; (< 0 ; lisor ; (jch - 0 1)) ; _1
+                  y=. cs&rot&.((< 1 ; (_2 }. lisor) ; (jch - 0 1))&{) y
                   dZ1=. dZ1 , cs , jch - 0 1
                   lisoc=. }. lisoc
                   lisor=. lisor , 2 + jch
@@ -500,7 +495,7 @@ hgeqz=: 1 : 0
             j=. <: j
           end.
           NB. drop-through is impossible
-          ((< _.) setdiag"2 y) ; ,~ a:  NB. set all eigenvalues to NaN
+          (((_. ; '')) setdiag"2 y) ; ((,~ a:))  NB. set all eigenvalues to NaN
           return.
         else.
           y=. 0 (< 1 , ,~ ilast)} y
@@ -508,9 +503,9 @@ hgeqz=: 1 : 0
         label_u50.
         NB. T[ilast,ilast]=0 - clear H[ilast,ilast-1] to
         NB. split off a 1x1 block
-        liso=. (>: ilast) th2liso ifrstm
-        'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; (ilast - 0 1)) ; _1
-        y=. (< 1 ; (}: liso) ; (ilast - 0 1)) cs&(rot&.|:) upd y
+        liso=. (>: ilast) liso4th ifrstm
+        'y cs'=. rot rotga y ; (< 0 ; liso ; (ilast - 0 1)) ; _1
+        y=. cs&rot&.((< 1 ; (}: liso) ; (ilast - 0 1))&{) y
         dZ1=. dZ1 , cs , ilast - 0 1
       else.
         y=. 0 (< 0 , ilast - 0 1)} y
@@ -521,13 +516,13 @@ hgeqz=: 1 : 0
       NB. H[ilast,ilast-1]=0 - standartize B, set alpha and
       NB. beta
       'y signbc'=. (ilast , 1) hgeqzxo y  NB. process ilast-th eigenvalue (column)
-      dZ1=. dZ1 , 4 {."1 signbc ,. ilast
+      dZ1=. dZ1 , 4 ({."1) signbc ,. ilast
       NB. goto next block - exit if finished
       ilast=. <: ilast
       if. ilast < h do.
         NB. normal exit
         'y signbc'=. (0 , 0 >. <: h) hgeqzxo y  NB. process eigenvalues (columns) 0:h-1
-        dZ1=. dZ1 , 4 {."1 signbc ,. i. 0 >. <: h
+        dZ1=. dZ1 , 4 ({."1) signbc ,. i. 0 >. <: h
         y ; dQ1 ; dZ1
         return.
       end.
@@ -552,50 +547,50 @@ hgeqz=: 1 : 0
         NB. to the bottom-right element.
         NB. We factor T as U*D, where U is unit upper
         NB. triangular, and compute (H*D^_1)*U^_1
-        'U12 AD11 AD21 AD12 AD22'=. %/ (5 0 2 1 3 ,: 7 4 4 7 7) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
+        'U12 AD11 AD21 AD12 AD22'=. %/ ((5 0 2 1 3 ,: 7 4 4 7 7)) ({,) abscale * ((< a: ; ;~ ilast - 1 0) { y)
         ABI22=. AD22 - U12 * AD21
         t1=. -: AD11 + ABI22
         rtdisc=. %: (t1 , AD12 , -AD11) mp (t1 , AD21 , AD22)
-        temp=. +/ (*/) +. rtdisc , t1 - ABI22
+        temp=. (+/!.0) */ +. rtdisc , t1 - ABI22
         shift=. t1 - temp negneg rtdisc
       else.
         NB. Exceptional shift. Chosen for no paticularly good
         NB. reason
-        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. (_1 0 ,: _1 _1) + ilast) { y
+        eshift=. eshift + + %/ abscale * (;/ 0 1 ,. ((_1 0 ,: _1 _1)) + ilast) { y
         shift=. eshift
       end.
       NB. now check for two consecutive small subdiagonals
-      HTd=. (0 _1 ,"0 1 ilast (] , -) ifirst) diag"1 2/ y
+      HTd=. (0 _1 (,"0 1) ilast (] , -) ifirst) diag"1 2/ y
       ctemp=. (- (shift&*))/ abscale * {. HTd
-      temp=. (sorim }."1 ctemp) ,: ascale * sorim (< 1 ; 0 ; <<0) { HTd
-      tempr=. >./ temp
+      temp=. (sorim }."1 ctemp) ,: ascale * sorim ((< 1 ; 0 ; <<0)) { HTd
+      tempr=. (>./) temp
       temp=. temp %"1 ((0 , 1 - FP_EPS) I. tempr)} 1 , tempr ,: 1
-      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim (< 1 ; 0 ; <<_1) { HTd) i: 1
+      'istart ctemp'=. (+&ifirst , {&ctemp) (ilast - ifirst) | >: (>:/ temp * atol ,: sorim ((< 1 ; 0 ; <<_1)) { HTd) i: 1
       NB. do an implicit-shift QZ sweep
       NB. initial Q
       cs=. lartg ctemp , ascale * (< 0 , istart + 1 0) { y
       NB. sweep
       j=. istart
-      lisoc=. (>: ilastm) th2liso j
-      lisor=. (j + 2) th2liso ifrstm
+      lisoc=. (>: ilastm) liso4th j
+      lisor=. (j + 2) liso4th ifrstm
       while. j < ilast do.
         liso=. j + 0 1
         NB. is a first iteration?
         if. j = istart do.
-          y=. (< a: ; liso ; lisoc) cs&rot"2 upd y
+          y=. cs&(rot&.|:)"2&.((< a: ; liso ; lisoc)&{) y
         else.
-          'y cs'=. rot rotga y ; (< 0 ; liso ; lisoc) ; < < a: ; 0
+          'y cs'=. rot&.|: rotga y ; (< 0 ; liso ; lisoc) ; ((< < a: ; 0))
           lisoc=. }. lisoc
-          y=. (< 1 ; liso ; lisoc) cs&rot upd y
+          y=. cs&(rot&.|:)&.((< 1 ; liso ; lisoc)&{) y
         end.
         dQ1=. dQ1 , (+ cs) , liso
         liso=. j + 1 0
-        'y cs'=. rot&.|: rotga y ; (< 1 ; lisor ; liso) ; _1
+        'y cs'=. rot rotga y ; (< 1 ; lisor ; liso) ; _1
         NB. isn't a last iteration?
         if. j < <: ilast do.
           lisor=. lisor , j + 2
         end.
-        y=. (< 0 ; lisor ; liso) cs&(rot&.|:) upd y
+        y=. cs&rot&.((< 0 ; lisor ; liso)&{) y
         dZ1=. dZ1 , cs , liso
         j=. >: j
       end.
@@ -732,9 +727,9 @@ NB.
 NB. Application:
 NB. - detect case of non-convergence (0=converged,
 NB.   1=non-converged), any of:
-NB.     128!:5 < e1e2
-NB.     128!:5 < S,:P         NB. too expensive, use the next
-NB.     128!:5 < diag"2 S,:P
+NB.     isnan < e1e2
+NB.     isnan < S,:P         NB. too expensive, use the next
+NB.     isnan < diag"2 S,:P
 
 hgezqenn=:            diag"2@(0 {::                            hgezqe     )
 hgezqenv=: (2 {  ]) ((diag"2@(0 {:: ])) ; (rotscll  2&{::  )) (hgezqe 2&{.)
@@ -889,9 +884,9 @@ NB.     NB. 'S P Q2 dZ1'=. hs hgeqzsvi H , T ,: Q1
 NB.     hgeqzsvi=: hgeqzsvv (, idmat@c)
 NB. - detect case of non-convergence (0=converged,
 NB.   1=non-converged), any of:
-NB.     128!:5 < e1e2
-NB.     128!:5 < S,:P         NB. too expensive, use the next
-NB.     128!:5 < diag"2 S,:P
+NB.     isnan < e1e2
+NB.     isnan < S,:P         NB. too expensive, use the next
+NB.     isnan < diag"2 S,:P
 NB.
 NB. References:
 NB. [1] C. B. Moler, G. W. Stewart. An Algorithm for
@@ -921,12 +916,13 @@ NB.   - hgexxxxx (math/mt addon)
 NB.   by pair of square matrices
 NB.
 NB. Syntax:
-NB.   testhgeq AB
+NB.   log=. testhgeq AB
 NB. where
-NB.   AB - 2×n×n-brick
+NB.   AB  - 2×n×n-brick
+NB.   log - 6-vector of boxes, test log, see test.ijs
 
 testhgeq=: 3 : 0
-  load_mttmp_ :: ] 'math/mt/test/lapack2/hgeqz'
+  load_mttmp_ 'math/mt/external/lapack2/hgeqz'
 
   n=. c y
   hs=. 0 , n
@@ -966,68 +962,68 @@ testhgeq=: 3 : 0
   t513l23=: (2     {   ]) >.&t513l  3     {   ]
   t513u23=: (2     {   ]) >.&t513u  3     {   ]
 
-  ('''enn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
-  ('''eni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''env''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''ein''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''eii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''eiv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''evn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''evi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''evv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=.          ('''enn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`nan                   )) argslapack
+  log=. log lcat ('''eni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u5 ))) argslapack
+  log=. log lcat ('''env''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u5 ))) argslapack
+  log=. log lcat ('''ein''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u4 ))) argslapack
+  log=. log lcat ('''eii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u45))) argslapack
+  log=. log lcat ('''eiv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u45))) argslapack
+  log=. log lcat ('''evn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u4 ))) argslapack
+  log=. log lcat ('''evi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u45))) argslapack
+  log=. log lcat ('''evv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u45))) argslapack
 
-  ('''snn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
-  ('''sni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''snv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''sin''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''sii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''siv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''svn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''svi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''svv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''snn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`nan                   )) argslapack
+  log=. log lcat ('''sni''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u5 ))) argslapack
+  log=. log lcat ('''snv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u5 ))) argslapack
+  log=. log lcat ('''sin''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u4 ))) argslapack
+  log=. log lcat ('''sii''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''siv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''svn''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u4 ))) argslapack
+  log=. log lcat ('''svi''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''svv''&dhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u45))) argslapack
 
-  ('''enn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
-  ('''eni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''env''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''ein''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''eii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''eiv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''evn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''evi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
-  ('''evv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u45))) argslapack
+  log=. log lcat ('''enn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`nan                   )) argslapack
+  log=. log lcat ('''eni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u5 ))) argslapack
+  log=. log lcat ('''env''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u5 ))) argslapack
+  log=. log lcat ('''ein''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u4 ))) argslapack
+  log=. log lcat ('''eii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u45))) argslapack
+  log=. log lcat ('''eiv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u45))) argslapack
+  log=. log lcat ('''evn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u4 ))) argslapack
+  log=. log lcat ('''evi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u45))) argslapack
+  log=. log lcat ('''evv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u45))) argslapack
 
-  ('''snn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(_."_                ))) argslapack
-  ('''sni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''snv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u5 ))) argslapack
-  ('''sin''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''sii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''siv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''svn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(             t513u4 ))) argslapack
-  ('''svi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
-  ('''svv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`(_."_)`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''snn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`nan                   )) argslapack
+  log=. log lcat ('''sni''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u5 ))) argslapack
+  log=. log lcat ('''snv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u5 ))) argslapack
+  log=. log lcat ('''sin''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u4 ))) argslapack
+  log=. log lcat ('''sii''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''siv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''svn''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(             t513u4 ))) argslapack
+  log=. log lcat ('''svi''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u45))) argslapack
+  log=. log lcat ('''svv''&zhgeqz_mttmp_' tmonad ((0 1}~ 1 ; #@(2&{::))  `]`(rcondu"_)`nan`(t511u1 >./@, t513u45))) argslapack
 
-  ('hgezqenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
-  ('hgezqenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
-  ('hgezqevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l1 ))) argsmtvl
-  ('hgezqevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l01))) argsmtvvl
-  ('hgezqsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(_."_                ))) argsmtl
-  ('hgezqsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
-  ('hgezqsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(             t513l2 ))) argsmtvl
-  ('hgezqsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`(_."_)`(t511l2 >./@, t513l23))) argsmtvvl
+  log=. log lcat ('hgezqenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`nan                   )) argsmtl
+  log=. log lcat ('hgezqenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l1 ))) argsmtvl
+  log=. log lcat ('hgezqevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l1 ))) argsmtvl
+  log=. log lcat ('hgezqevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l01))) argsmtvvl
+  log=. log lcat ('hgezqsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`nan                   )) argsmtl
+  log=. log lcat ('hgezqsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l2 ))) argsmtvl
+  log=. log lcat ('hgezqsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(             t513l2 ))) argsmtvl
+  log=. log lcat ('hgezqsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondl"_)`nan`(t511l2 >./@, t513l23))) argsmtvvl
 
-  ('hgeqzenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
-  ('hgeqzenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
-  ('hgeqzevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u1 ))) argsmtvu
-  ('hgeqzevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u01))) argsmtvvu
-  ('hgeqzsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(_."_                ))) argsmtu
-  ('hgeqzsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
-  ('hgeqzsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(             t513u2 ))) argsmtvu
-  ('hgeqzsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`(_."_)`(t511u2 >./@, t513u23))) argsmtvvu
+  log=. log lcat ('hgeqzenn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`nan                   )) argsmtu
+  log=. log lcat ('hgeqzenv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u1 ))) argsmtvu
+  log=. log lcat ('hgeqzevn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u1 ))) argsmtvu
+  log=. log lcat ('hgeqzevv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u01))) argsmtvvu
+  log=. log lcat ('hgeqzsnn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`nan                   )) argsmtu
+  log=. log lcat ('hgeqzsnv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u2 ))) argsmtvu
+  log=. log lcat ('hgeqzsvn'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(             t513u2 ))) argsmtvu
+  log=. log lcat ('hgeqzsvv'              tdyad  ((0 , c@(2&{::))`(2&{::)`]`(rcondu"_)`nan`(t511u2 >./@, t513u23))) argsmtvvu
 
   coerase < 'mttmp'
   erase 't511u1 t511l2 t511u2 t513u4 t513u5 t513u45 t513l1 t513u1 t513l2 t513u2 t513l01 t513u01 t513l23 t513u23'
 
-  EMPTY
+  log
 )
 
 NB. ---------------------------------------------------------
@@ -1038,23 +1034,21 @@ NB.   Adv. to make verb to test hgexxxxx by matrices of
 NB.   generator and shape given
 NB.
 NB. Syntax:
-NB.   vtest=. mkmat testeq
+NB.   log=. (mkmat testeq) (m,n)
 NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
-NB.   vtest - monad to test algorithms by matrix mat; is
-NB.           called as:
-NB.             vtest (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
+NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
 NB.   distributed uniformly with support (0,1):
-NB.     ?@$&0 testeq_mt_ 150 150
+NB.     log=. ?@$&0 testeq_mt_ 150 150
 NB. - test by random square real matrix with elements with
 NB.   limited value's amplitude:
-NB.     _1 1 0 4 _6 4&gemat_mt_ testeq_mt_ 150 150
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testeq_mt_ 150 150
 NB. - test by random square complex matrix:
-NB.     (gemat_mt_ j. gemat_mt_) testeq_mt_ 150 150
+NB.     log=. (gemat_mt_ j. gemat_mt_) testeq_mt_ 150 150
 
-testeq=: 1 : 'EMPTY [ testhgeq_mt_@u@(2&,)^:(=/)'
+testeq=: 1 : 'nolog_mt_`(testhgeq_mt_@u@(2&,))@.(=/)'

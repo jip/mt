@@ -287,3 +287,6 @@ math/mt - change history
                - detect NaN, (+0.0) and (-0.0): negneg negpos copysign
                - moved from test: tmonad tdyad
                - drop: benchmark maxc
+
+== 0.14.1 ==
+ * util: fix env

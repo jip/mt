@@ -10,9 +10,9 @@ number estimating. Is based mostly on LAPACK algorithms, but
 doesn't require LAPACK.
 )
 
-VERSION=: '0.13.3'
+VERSION=: '0.14.0'
 
-RELEASE=: 'j903'
+RELEASE=: 'j9.6'
 
 FOLDER=: 'math/mt'
 
@@ -33,6 +33,7 @@ eq.ijs
 ev.ijs
 evc.ijs
 exp.ijs
+external/
 fork.ijs
 gq.ijs
 history.txt
@@ -55,11 +56,11 @@ struct.ijs
 sv.ijs
 template.ijs
 test.ijs
-test/
 trf.ijs
 tri.ijs
 trs.ijs
 util.ijs
+verify/
 )
 
 DEPENDS=: 0 : 0

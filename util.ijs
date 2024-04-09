@@ -96,8 +96,8 @@ NB.   emptylog - an empty log which could be joined with
 NB.              another log
 NB.
 NB. Assertions:
-NB.   log -: log      ,&.> emptylog
-NB.   log -: emptylog ,&.> log
+NB.   log -: log      lcat emptylog
+NB.   log -: emptylog lcat log
 NB. where
 NB.   log - some another log
 NB.
@@ -418,8 +418,8 @@ NB.          0 {:: e  - string, architecture
 NB.          1 {:: e  > 0, integer, cores
 NB.          2 {:: e  > 0, integer, maxthreads
 NB.          3 {:: e  > 0, integer, worker threads
-NB.          4..11    - 3-vector of integers >=0, threads in
-NB.                     pool#0..7:
+NB.          4..11    - 3-vector of non-negative integers,
+NB.                     threads in threadpools 0..7:
 NB.                       (#idle,#unfinished,#threads)
 NB.         12 {:: e  ≥ 0, integer, executing thread# (0
 NB.                     means master thread)

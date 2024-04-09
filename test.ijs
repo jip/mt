@@ -110,7 +110,8 @@ NB. Concepts
 NB.
 NB. Storage layout:
 NB.   test log is a noun represented as inverted table:
-NB.   - column     :  sentence  rcond   fwd.err   bwd.err   time     space
+NB.   - column#    :  0         1       2         3         4        5
+NB.   - column name:  sentence  rcond   fwd.err   bwd.err   time     space
 NB.   - column type:  string    float   float     float     float    integer
 NB.   - rank       :  2         1       1         1         1        1
 NB.   - unit       :  J code    %cond   relative  relative  seconds  bytes

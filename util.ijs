@@ -492,10 +492,10 @@ env=: 1&$: :(4 : 0)
   e=. e , < (9!:58) 2
   e=. e , < (3 : 'liblapack_jlapack2_')`('n/a'"_)@.(nc@<@'liblapack_jlapack2_') ''
   e=. e , < ver_jlapack2_ :: 'n/a' ''
-  e=. e , < (3 : 'LIB_mtbla_')`('n/a'"_)@.(nc@<@'LIB_mtbla_') ''
-  e=. e , < ver_mtbla_ :: 'n/a' ''
-  e=. e , < (3 : 'LIB_mtbli_')`('n/a'"_)@.(nc@<@'LIB_mtbli_') ''
-  e=. e , < ver_mtbli_ :: 'n/a' ''
+  e=. e , < (3 : 'LIB_mtbla_'         )`('n/a'"_)@.(nc@<@'LIB_mtbla_'         ) ''
+  e=. e , < ver_mtbla_    :: 'n/a' ''
+  e=. e , < (3 : 'LIB_mtbli_'         )`('n/a'"_)@.(nc@<@'LIB_mtbli_'         ) ''
+  e=. e , < ver_mtbli_    :: 'n/a' ''
   if. x do.
     tpl1=. cut3 {{)n
 Hardware

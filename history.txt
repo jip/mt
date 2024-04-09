@@ -264,8 +264,7 @@ math/mt - change history
                - disable dyadic case: qnconxx qnlen qnsign qninv
  - rot:        - drop: lartv
                - revert rot to accept ixy transposed (INTERFACE CHANGED!)
-               - extend rot to support multiple cs (implement
-                 lartv)
+               - extend rot to support multiple cs (implement lartv)
                - disable monadic case: rot
                - disable dyadic case: lartg
  - sm:         move to basic

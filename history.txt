@@ -277,7 +277,6 @@ math/mt - change history
  + test:       - new interfaces: chk1mv chk1mm chk2mv chk2mm chk3mv chk3mm chk3sv chk3sm chk4r chk4rk chk5r chk5r2k chk6r2
  + test/blas:  BLAS cd interfaces
  + test/blis:  BLIS cd interfaces
- + test/flame: libFLAME cd interfaces
  + test/util:  new interfaces: issquare basicxxx initnoun dlsym
  + trs:        - new interfaces: trtrsxxx
                - refactor test suite

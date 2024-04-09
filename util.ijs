@@ -440,20 +440,20 @@ NB.                       20 {:: e  - library [path]file name
 NB.                       21 {:: e  - version string
 NB.
 NB. Application:
-NB. - create 2 threads in pool#0:
-NB.     {{0 T.0}}^:2 ''
-NB. - in pool#0 create thread for every free core:
+NB. - create 2 threads:
+NB.     {{0 T.''}}^:2 ''
+NB. - create (#cores - 1) threads in threadpool 0:
 NB.     {{0 T.0}}^:] <: {. 8 T. ''
-NB. - destroy 2 threads in pool#0:
-NB.     {{55 T.0}}^:2 ''
-NB. - in pool#0 destroy thread for every free core:
-NB.     {{55 T.''}}^:] <: {. 8 T. ''
+NB. - destroy 2 threads:
+NB.     {{55 T.''}}^:2 ''
+NB. - destroy (#cores - 1) threads in threadpool 0:
+NB.     {{55 T.0}}^:] <: {. 8 T. ''
 NB. - set threshold for floating matrices of size 1024×1024
 NB.   or larger:
 NB.     (<. 1024^3) (9!:58) 1
-NB. - always use BLAS for any complex matrices:
+NB. - always use BLAS for any complex matrix:
 NB.     0 (9!:58) 2
-NB. - never use BLAS for any integer matrices:
+NB. - never use BLAS for any integer matrix:
 NB.     _1 (9!:58) 0
 NB. - try to load LAPACK interfaces if presented in system:
 NB.     load 'math/lapack2'

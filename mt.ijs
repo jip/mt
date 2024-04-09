@@ -231,17 +231,17 @@ NB.           accept m and n given will be tested
 NB.   log   - 6-vector of boxes, test log, see test.ijs
 NB.
 NB. Application:
-NB. - test low-level algorithms by random square integer
+NB. - test low-level algorithms by random square real matrix
+NB.   with elements distributed uniformly with support
+NB.   (0,1):
+NB.     log=. ?@$&0 testlow_mt_ 10 10
+NB. - test mid-level algorithms by random rectangular integer
 NB.   matrix with elements distributed uniformly with support
 NB.   [0,100):
-NB.     log=. ?@$&100 testlow_mt_ 10 10
-NB. - test mid-level algorithms by random rectangular real
-NB.   matrix with elements distributed uniformly with support
-NB.   (0,1):
-NB.     log=. ?@$&0 testmid_mt_ 200 150
+NB.     log=. ?@$&100 testmid_mt_ 200 150
 NB. - test high-level algorithms by random square real matrix
 NB.   with elements with limited value's amplitude:
-NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 150 150
 NB. - test all algorithms by random rectangular complex
 NB.   matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) test_mt_ 150 200

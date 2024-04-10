@@ -514,7 +514,7 @@ NB. Syntax:
 NB.   log=. testungq A
 NB. where
 NB.   A   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testungq=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/dorglq'
@@ -637,7 +637,7 @@ NB. Syntax:
 NB.   log=. testungz A
 NB. where
 NB.   A   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testungz=: 3 : 0
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
@@ -696,7 +696,7 @@ NB. Syntax:
 NB.   log=. testunghr A
 NB. where
 NB.   A   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testunghr=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/dorghr'
@@ -740,7 +740,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements

@@ -98,9 +98,13 @@ NB. Notation:
 NB.   ∞          is       ±∞ i.e. either -∞ or +∞
 NB.   a,b = ∞    means    a,b ∈ {-∞,+∞}, not a = b = ±∞
 NB.
-NB. Conventions:
-NB. 1) a result returned from a test actor is an inverted
-NB.    table whose format is specified in test.ijs
+NB. Storage layout:
+NB. - a test log is being an inverted table:
+NB.   - column#    :  0         1       2         3         4        5
+NB.   - column name:  sentence  rcond   fwd.err   bwd.err   time     space
+NB.   - column type:  string    float   float     float     float    integer
+NB.   - rank       :  2         1       1         1         1        1
+NB.   - unit       :  J code    %cond   relative  relative  seconds  bytes
 
 NB. =========================================================
 NB. Configuration
@@ -228,7 +232,7 @@ NB.           y-matrix (shape is taken from y)
 NB.   (m,n) - 2-vector of integers, shape of random matrices
 NB.           to test algorithms; only algorithms which
 NB.           accept m and n given will be tested
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test low-level algorithms by random square real matrix

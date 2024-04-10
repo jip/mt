@@ -663,7 +663,7 @@ NB. Syntax:
 NB.   log=. testmm A
 NB. where
 NB.   A   - array of any rank > 1
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - berr shows boolean 'is matched exactly'
@@ -688,7 +688,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square boolean matrix:

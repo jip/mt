@@ -919,7 +919,7 @@ NB. Syntax:
 NB.   log=. testhgeq AB
 NB. where
 NB.   AB  - 2×n×n-brick
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testhgeq=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/hgeqz'
@@ -1039,7 +1039,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements

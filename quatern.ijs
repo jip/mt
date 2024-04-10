@@ -351,7 +351,7 @@ NB. Syntax:
 NB.   log=. testqn1 Qn
 NB. where
 NB.   Qn  - m×4-matrix of m 3-tuples (q,a,b)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   q   - 2-vector, quaternion
 NB.   a,b - any scalars
 
@@ -424,7 +424,7 @@ NB. Syntax:
 NB.   log=. testqn2 Q1Q2
 NB. where
 NB.   Q1Q2  - m×4-matrix of m quaternion pairs (q1,q2)
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.   q1,q2 - 2-vector, any quaternions
 
 testqn2=: 3 : 0
@@ -445,7 +445,7 @@ NB. Syntax:
 NB.   log=. testqnf Q
 NB. where
 NB.   Q   - m×2-matrix of m quaternions
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testqnf=: 3 : 0
   log=.          ('*: qnf"1' tmonad (]`]`nan`nan`nan)) y
@@ -467,7 +467,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements

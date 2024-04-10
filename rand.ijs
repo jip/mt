@@ -790,7 +790,7 @@ NB.   log=. testtrmat sz
 NB. where
 NB.   sz  - size or shape, which is either n or
 NB.         (n,any_number)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testtrmat=: 3 : 0
   log=.          (' randu           trl1mat' tmonad (]`]`nan`nan`nan)) y
@@ -815,7 +815,7 @@ NB.   log=. testgemat sh
 NB. where
 NB.   sh  - vector of non-negative integers, the shape of
 NB.         matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgemat=: 'gemat' tmonad (]`]`nan`nan`nan)
 
@@ -829,7 +829,7 @@ NB. Syntax:
 NB.   log=. testdimat sz
 NB. where
 NB.   sz  - size or shape, which is either n or (n,n)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testdimat=: 3 : 0
   log=.          (' gemat           dimat (randnr unmat)' tmonad (]`]`nan`nan`nan)) y
@@ -850,7 +850,7 @@ NB.   log=. testhemat sz
 NB. where
 NB.   sz  - size or shape, which is either n or
 NB.         (n,any_number)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testhemat=: 3 : 0
   log=.          (' randu           hemat' tmonad (]`]`nan`nan`nan)) y
@@ -868,7 +868,7 @@ NB.   log=. testpomat sz
 NB. where
 NB.   sz  - size or shape, which is either n or
 NB.         (n,any_number)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testpomat=: 3 : 0
   log=.          (' randu           pomat' tmonad (]`]`nan`nan`nan)) y
@@ -886,7 +886,7 @@ NB.   log=. testptmat sz
 NB. where
 NB.   sz  - size or shape, which is either n or
 NB.         (n,any_number)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testptmat=: 3 : 0
   log=.          (' randu           ptmat ' tmonad (]`]`nan`nan`nan)) y
@@ -907,7 +907,7 @@ NB.   log=. testunmat sz
 NB. where
 NB.   sz  - size or shape, which is either n or
 NB.         (n,any_number)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testunmat=: 3 : 0
   log=.          ('randnr unmat' tmonad (]`]`nan`nan`nan)) y
@@ -925,7 +925,7 @@ NB.   log=. testspmat sh
 NB. where
 NB.   sh  - vector of non-negative integers, the shape of
 NB.         matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testspmat=: 3 : 0
   log=.          (' randu           spmat 0.25' tmonad (]`]`nan`nan`nan)) y
@@ -943,6 +943,6 @@ NB.   log=. testrand sh
 NB. where
 NB.   sh  - vector of non-negative integers, the shape of
 NB.         matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testrand=: lcat@(testtrmat`testgemat`(nolog_mt_`(lcat@(testdimat`testunmat`:0))@.(=/))`testhemat`testpomat`testptmat`testspmat`:0)

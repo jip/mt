@@ -611,7 +611,7 @@ NB.   log=. testgetrs (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -766,7 +766,7 @@ NB.   log=. testhetrs (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -887,7 +887,7 @@ NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric) positive
 NB.         definite
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -996,7 +996,7 @@ NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric) positive
 NB.         definite tridiagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -1104,7 +1104,7 @@ NB.   log=. testtrtrs (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - m×m-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - models LAPACK's xCHKTR
@@ -1235,7 +1235,7 @@ NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random real matrices with elements distributed

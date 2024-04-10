@@ -272,7 +272,7 @@ NB. where
 NB.   A   - m×n-matrix
 NB.   x   - max(m,n)-vector, a material for the exact
 NB.         solution values
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgels1=: 3 : 0
   'A x'=. y
@@ -307,7 +307,7 @@ NB. where
 NB.   A   - m×n-matrix
 NB.   X   - max(m,n)×3-matrix, a material for exact solutions
 NB.         values
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgels3=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/gels'
@@ -353,7 +353,7 @@ NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of non-negative integers, the shape of
 NB.           matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 
 testgels=: 1 : '(testgels3_mt_@; lcat_mt_~ testgels1_mt_@(; {:"1))~ u'
 
@@ -372,7 +372,7 @@ NB.             dat=. mkmat 1
 NB.           and is used to detect dat datatype only
 NB.   (m,n) - 2-vector of integers, the shape of matrix to
 NB.           generate
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random real wide matrices:

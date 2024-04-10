@@ -1902,7 +1902,7 @@ NB. where
 NB.   x   - m-vector
 NB.   y   - n-vector
 NB.   A   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testbasicger=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
@@ -1931,7 +1931,7 @@ NB.   log=. testbasicher x ; AA
 NB. where
 NB.   x   - n-vector
 NB.   AA  - n×n-matrix, A material with real diagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testbasicher=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
@@ -1958,7 +1958,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -1986,7 +1986,7 @@ NB. where
 NB.   x   - n-vector
 NB.   y   - n-vector
 NB.   AA  - n×n-matrix, A material with real diagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testbasicher2=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
@@ -2015,7 +2015,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (n,n)
 NB.   (n,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
@@ -2042,7 +2042,7 @@ NB.   log=. testbasicsyrk A ; CC
 NB. where
 NB.   A   - m×n-matrix
 NB.   CC  - k×k-matrix, C material
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 
 testbasicsyrk=: 3 : 0
@@ -2080,7 +2080,7 @@ NB.   log=. testbasicherk A ; CC
 NB. where
 NB.   A   - m×n-matrix
 NB.   CC  - k×k-matrix, C material with real diagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 
 testbasicherk=: 3 : 0
@@ -2110,7 +2110,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -2138,7 +2138,7 @@ NB. where
 NB.   A   - m×n-matrix
 NB.   B   - m×n-matrix
 NB.   CC  - k×k-matrix, C material
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 
 testbasicsyr2k=: 3 : 0
@@ -2177,7 +2177,7 @@ NB. where
 NB.   A   - m×n-matrix
 NB.   B   - m×n-matrix
 NB.   CC  - k×k-matrix, C material with real diagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 
 testbasicher2k=: 3 : 0
@@ -2208,7 +2208,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -2238,7 +2238,7 @@ NB. where
 NB.   A   - m×n-matrix
 NB.   x   - k-vector
 NB.   y   - k-vector
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 
 testbasicgemv=: 3 : 0
@@ -2278,7 +2278,7 @@ NB. where
 NB.   AA  - n×n-matrix, A material with real diagonal
 NB.   x   - n-vector
 NB.   y   - n-vector
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testbasichemv=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
@@ -2308,7 +2308,7 @@ NB.   log=. testbasictrmv AA ; x
 NB. where
 NB.   AA  - n×n-matrix, A material
 NB.   x   - n-vector
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testbasictrmv=: 3 : 0
   inc=. 1 2 _1 _2
@@ -2350,7 +2350,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -2381,7 +2381,7 @@ NB. where
 NB.   As  - m×(m+n)-matrix, A material
 NB.   Bs  - (m+n)×n-matrix, B material
 NB.   C   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - For real matrices and complex coefficients bli_xgemm
@@ -2501,7 +2501,7 @@ NB. where
 NB.   As  - m×(m+n)-matrix, A material
 NB.   Bs  - (m+n)×m-matrix, B material
 NB.   C   - m×m-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - bli_xgemmt requres A,B,C to be of the same datatype.
@@ -2646,7 +2646,7 @@ NB. where
 NB.   AA  - k×k-matrix, A material
 NB.   B   - m×n-matrix
 NB.   C   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -2773,7 +2773,7 @@ NB. where
 NB.   AA  - k×k-matrix, A material with real diagonal
 NB.   B   - m×n-matrix
 NB.   C   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -2884,7 +2884,7 @@ NB. where
 NB.   AA  - k×k-matrix, A material
 NB.   B   - m×n-matrix
 NB.   C   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -3332,7 +3332,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -3359,7 +3359,7 @@ NB.   log=. testbasictrsv AA ; b
 NB. where
 NB.   AA  - n×n-matrix, A material
 NB.   x   - n-vector, the RHS
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testbasictrsv=: 3 : 0
   inc=. 1 2 _1 _2
@@ -3401,7 +3401,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (n,n)
 NB.   (n,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
@@ -3430,7 +3430,7 @@ NB.   log=. testbasictrsm AA ; B
 NB. where
 NB.   AA  - k×k-matrix, A material
 NB.   B   - m×n-matrix, RHS
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -3766,7 +3766,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -3792,7 +3792,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements

@@ -408,7 +408,7 @@ NB. Syntax:
 NB.   log=. testgeev A
 NB. where
 NB.   A   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgeev=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/geev'
@@ -443,7 +443,7 @@ NB. Syntax:
 NB.   log=. testheev A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian (symmetric)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testheev=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/dsyev'
@@ -481,7 +481,7 @@ NB. Syntax:
 NB.   log=. testggev AB
 NB. where
 NB.   AB  - 2×n×n-brick
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testggev=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/ggev'
@@ -534,7 +534,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements

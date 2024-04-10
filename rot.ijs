@@ -289,7 +289,7 @@ NB. Syntax:
 NB.   log=. testlartg FG
 NB. where
 NB.   FG  - m×2-matrix, m (f,g) pairs to test
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Formula:
 NB.   relative error in the singular value:
@@ -418,7 +418,7 @@ NB.   log=. testlartv (X ,. Y ,. F ,. G)
 NB. where
 NB.   (X ,. Y) - m×2-matrix, m (x,y) pairs to be rotated
 NB.   (F ,. G) - m×2-matrix, m (f,g) pairs to make rotators
-NB.   log      - 6-vector of boxes, test log, see test.ijs
+NB.   log      - 6-vector of boxes, test log
 
 testlartv=: 3 : 0
   load        'math/mt/external/blas/drot'
@@ -456,7 +456,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements

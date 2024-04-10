@@ -326,7 +326,7 @@ NB. Syntax:
 NB.   log=. testgeexp A
 NB. where
 NB.   A   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgeexp=: 'geexp' tmonad (]`]`geconi`nan`nan)
 
@@ -340,7 +340,7 @@ NB. Syntax:
 NB.   log=. testdiexp A
 NB. where
 NB.   A   - n×n-matrix, the diagonalizable
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testdiexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -370,7 +370,7 @@ NB. Syntax:
 NB.   log=. testheexp A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian (symmetric)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testheexp=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -400,7 +400,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements

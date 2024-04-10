@@ -826,7 +826,7 @@ NB. Syntax:
 NB.   log=. testtrtri A
 NB. where
 NB.   A   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testtrtri=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/trtri'
@@ -876,7 +876,7 @@ NB. Syntax:
 NB.   log=. testgetri A
 NB. where
 NB.   A   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgetri=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/getrf'
@@ -914,7 +914,7 @@ NB. Syntax:
 NB.   log=. testhetri A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian (symmetric)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testhetri=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/dsytrf'
@@ -953,7 +953,7 @@ NB.   log=. testpotri A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
 NB.         definite
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testpotri=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/potrf'
@@ -989,7 +989,7 @@ NB.   log=. testpttri A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
 NB.         definite tridiagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testpttri=: 3 : 0
   rcond=. ptcon1 y
@@ -1014,7 +1014,7 @@ NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements

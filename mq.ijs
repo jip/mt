@@ -716,7 +716,7 @@ NB.   log=. testunmq (A ; C)
 NB. where
 NB.   A   - m×n-matrix, is used to produce Qf
 NB.   C   - m×n-matrix, is used as multiplier
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - LAPACK's DORMxQ and ZUNMxQ requires A to have at least
@@ -1064,7 +1064,7 @@ NB.   log=. testunmz (A ; C)
 NB. where
 NB.   A   - m×n-matrix, is used to produce Zf
 NB.   C   - m×n-matrix, is used as multiplier
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - LAPACK's DORMRZ and ZUNMRZ requires A to have at least
@@ -1287,7 +1287,7 @@ NB.   log=. testunmhr (A ; C)
 NB. where
 NB.   A   - n×n-matrix, is used to produce Qf
 NB.   C   - n×n-matrix, is used as multiplier
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - LAPACK's DORMHR and ZUNMHR requires A to have at least
@@ -1371,7 +1371,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements

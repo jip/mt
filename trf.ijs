@@ -1853,4 +1853,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testtrf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 
-testtrf=: 1 : 'nolog_mt_`(testpttrf_mt_@(u ptmat2_mt_) ,&.>~ testpotrf_mt_@(u pomat_mt_) ,&.>~ testhetrf_mt_@(u hemat_mt_))@.(=/) ,&.>~ testgetrf_mt_@u'
+testtrf=: 1 : 'nolog_mt_`(lcat_mt_@(testhetrf_mt_@(u hemat_mt_)`(testpotrf_mt_@(u pomat_mt_))`(testpttrf_mt_@(u ptmat2_mt_))`:0))@.(=/) lcat_mt_~ testgetrf_mt_@u'

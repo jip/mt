@@ -246,13 +246,13 @@ NB. - test all algorithms by random rectangular complex
 NB.   matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
-testlow=: 1 : '(u testmq_mt_) ,&.>~ (u testgq_mt_) ,&.>~ (u testrot_mt_) ,&.>~ (u testref_mt_) ,&.>~ (u testquatern_mt_) ,&.>~ (u testnorm_mt_) ,&.>~ (u testcon_mt_) ,&.>~ (u testbal_mt_) ,&.>~ (u testbak_mt_) ,&.>~ (u testbasic_mt_) ,&.>~ testrand_mt_'
+testlow=: 1 : 'lcat_mt_@(testrand_mt_`(u testbasic_mt_)`(u testbak_mt_)`(u testbal_mt_)`(u testcon_mt_)`(u testnorm_mt_)`(u testquatern_mt_)`(u testref_mt_)`(u testrot_mt_)`(u testgq_mt_)`(u testmq_mt_)`:0)'
 
-testmid=: 1 : '(u testtrs_mt_) ,&.>~ (u testtri_mt_) ,&.>~ (u testtrf_mt_) ,&.>~ (u testqf_mt_) ,&.>~ (u testpf_mt_) ,&.>~ (u testhrd_mt_) ,&.>~ (u testevc_mt_) ,&.>~ (u testeq_mt_)'
+testmid=: 1 : 'lcat_mt_@((u testeq_mt_)`(u testevc_mt_)`(u testhrd_mt_)`(u testpf_mt_)`(u testqf_mt_)`(u testtrf_mt_)`(u testtri_mt_)`(u testtrs_mt_)`:0)'
 
-testhigh=: 1 : '(u testmm_mt_) ,&.>~ (u testls_mt_) ,&.>~ (u testsv_mt_) ,&.>~ (u testpow_mt_) ,&.>~ (u testexp_mt_) ,&.>~ (u testev_mt_)'
+testhigh=: 1 : 'lcat_mt_@((u testev_mt_)`(u testexp_mt_)`(u testpow_mt_)`(u testsv_mt_)`(u testls_mt_)`(u testmm_mt_)`:0)'
 
-test=: 1 : '(u testhigh_mt_) ,&.>~ (u testmid_mt_) ,&.>~ (u testlow_mt_)'
+test=: 1 : 'lcat_mt_@((u testlow_mt_)`(u testmid_mt_)`(u testhigh_mt_)`:0)'
 
 NB. =========================================================
 NB. Verification suite

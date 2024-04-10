@@ -1913,7 +1913,7 @@ testbasicger=: 3 : 0
   argsz=. { (<"0 zcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < A
 
   NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; expanded_y_i ; incy_i ; A) to tmonad
-  log=.          ('dger_mtbla_'  tmonad (]`]`nan`nan`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 argsd
+  log=.     lcat ('dger_mtbla_'  tmonad (]`]`nan`nan`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 argsd
   log=. log lcat ('zgeru_mtbla_' tmonad (]`]`nan`nan`(geru chk4r)))@(3 expand 4)@(1 expand 2)@>"0 argsz
   log=. log lcat ('zgerc_mtbla_' tmonad (]`]`nan`nan`(gerc chk4r)))@(3 expand 4)@(1 expand 2)@>"0 argsz
 )
@@ -1940,7 +1940,7 @@ testbasicher=: 3 : 0
   args=. { (<"0 dcoeff) ; (< x) ; (<"0 inc) ; < < AA
 
   NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; AA) to tmonad
-  log=.          ('dsyrl_mtbla_' tmonad (]`]`nan`nan`(syrl chk5r trlpick)))@(1 expand 2)@>"0 args
+  log=.     lcat ('dsyrl_mtbla_' tmonad (]`]`nan`nan`(syrl chk5r trlpick)))@(1 expand 2)@>"0 args
   log=. log lcat ('dsyru_mtbla_' tmonad (]`]`nan`nan`(syru chk5r trupick)))@(1 expand 2)@>"0 args
   log=. log lcat ('zherl_mtbla_' tmonad (]`]`nan`nan`(herl chk5r trlpick)))@(1 expand 2)@>"0 args
   log=. log lcat ('zheru_mtbla_' tmonad (]`]`nan`nan`(heru chk5r trupick)))@(1 expand 2)@>"0 args
@@ -1970,7 +1970,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicr_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicr_mt_ 150 200
 
-testbasicr=: 1 : 'nolog_mt_`(testbasicher_mt_@(u@{. ; (9&o. upddiag_mt_)@u))@.(=/) ,&.>~ testbasicger_mt_@(u@{. ; u@{: ; u) [ require@''math/mt/external/blas/r'''
+testbasicr=: 1 : 'nolog_mt_`(testbasicher_mt_@(u@{. ; (9&o. upddiag_mt_)@u))@.(=/) lcat_mt_~ testbasicger_mt_@(u@{. ; u@{: ; u) [ require@''math/mt/external/blas/r'''
 
 NB. ---------------------------------------------------------
 NB. testbasicher2
@@ -1997,7 +1997,7 @@ testbasicher2=: 3 : 0
   argsz=. { (<"0 zcoeff) ; (< x) ; (<"0 inc) ; (< y) ; (<"0 inc) ; < < AA
 
   NB. for every i feed the tuple (alpha_i ; expanded_x_i ; incx_i ; expanded_y_i ; incy_i ; AA) to tmonad
-  log=.          ('dsyr2l_mtbla_' tmonad (]`]`nan`nan`(syr2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 argsd
+  log=.     lcat ('dsyr2l_mtbla_' tmonad (]`]`nan`nan`(syr2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 argsd
   log=. log lcat ('dsyr2u_mtbla_' tmonad (]`]`nan`nan`(syr2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 argsd
   log=. log lcat ('zher2l_mtbla_' tmonad (]`]`nan`nan`(her2l chk6r2 trlpick)))@(3 expand 4)@(1 expand 2)@>"0 argsz
   log=. log lcat ('zher2u_mtbla_' tmonad (]`]`nan`nan`(her2u chk6r2 trupick)))@(3 expand 4)@(1 expand 2)@>"0 argsz
@@ -2057,7 +2057,7 @@ testbasicsyrk=: 3 : 0
   argszg=. { (<"0 zcoeff) ; (< A) ; (<"0 zcoeff) ; < < CCmn [^:(m > n) CC
 
   NB. for every i feed the tuple (alpha_i ; A ; beta_i ; CC) to tmonad
-  log=.          ('dsyrkln_mtbla_' tmonad (]`]`nan`nan`(syrkln chk4rk trlpick)))@>"0 argsdl
+  log=.     lcat ('dsyrkln_mtbla_' tmonad (]`]`nan`nan`(syrkln chk4rk trlpick)))@>"0 argsdl
   log=. log lcat ('dsyrklt_mtbla_' tmonad (]`]`nan`nan`(syrklt chk4rk trlpick)))@>"0 argsdg
   log=. log lcat ('dsyrkun_mtbla_' tmonad (]`]`nan`nan`(syrkun chk4rk trupick)))@>"0 argsdl
   log=. log lcat ('dsyrkut_mtbla_' tmonad (]`]`nan`nan`(syrkut chk4rk trupick)))@>"0 argsdg
@@ -2092,7 +2092,7 @@ testbasicherk=: 3 : 0
   argsg=. { (<"0 dcoeff) ; (< A) ; (<"0 dcoeff) ; < < CCmn [^:(m > n) CC
 
   NB. for every i feed the tuple (alpha_i ; A ; beta_i ; CC) to tmonad
-  log=.          ('zherkln_mtbla_' tmonad (]`]`nan`nan`(herkln chk4rk trlpick)))@>"0 argsl
+  log=.     lcat ('zherkln_mtbla_' tmonad (]`]`nan`nan`(herkln chk4rk trlpick)))@>"0 argsl
   log=. log lcat ('zherklc_mtbla_' tmonad (]`]`nan`nan`(herklc chk4rk trlpick)))@>"0 argsg
   log=. log lcat ('zherkun_mtbla_' tmonad (]`]`nan`nan`(herkun chk4rk trupick)))@>"0 argsl
   log=. log lcat ('zherkuc_mtbla_' tmonad (]`]`nan`nan`(herkuc chk4rk trupick)))@>"0 argsg
@@ -2122,7 +2122,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicrk_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicrk_mt_ 150 200
 
-testbasicrk=: 1 : 'testbasicherk_mt_@(u ; (9&o. upddiag_mt_)@u@(2 # >./)) ,&.>~ testbasicsyrk_mt_@(u ; u@(2 # >./)) [ require@''math/mt/external/blas/rk'''
+testbasicrk=: 1 : 'testbasicherk_mt_@(u ; (9&o. upddiag_mt_)@u@(2 # >./)) lcat_mt_~ testbasicsyrk_mt_@(u ; u@(2 # >./)) [ require@''math/mt/external/blas/rk'''
 
 NB. ---------------------------------------------------------
 NB. testbasicsyr2k
@@ -2153,7 +2153,7 @@ testbasicsyr2k=: 3 : 0
   argszg=. { (<"0 zcoeff) ; (< A) ; (< B) ; (<"0 zcoeff) ; < < CCmn [^:(m > n) CC
 
   NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; CC) to tmonad
-  log=.          ('dsyr2kln_mtbla_' tmonad (]`]`nan`nan`(syr2kln chk5r2k trlpick)))@>"0 argsdl
+  log=.     lcat ('dsyr2kln_mtbla_' tmonad (]`]`nan`nan`(syr2kln chk5r2k trlpick)))@>"0 argsdl
   log=. log lcat ('dsyr2klt_mtbla_' tmonad (]`]`nan`nan`(syr2klt chk5r2k trlpick)))@>"0 argsdg
   log=. log lcat ('dsyr2kun_mtbla_' tmonad (]`]`nan`nan`(syr2kun chk5r2k trupick)))@>"0 argsdl
   log=. log lcat ('dsyr2kut_mtbla_' tmonad (]`]`nan`nan`(syr2kut chk5r2k trupick)))@>"0 argsdg
@@ -2190,7 +2190,7 @@ testbasicher2k=: 3 : 0
   argsg=. { (<"0 zcoeff) ; (< A) ; (< B) ; (<"0 dcoeff) ; < < CCmn [^:(m > n) CC
 
   NB. for every i feed the tuple (alpha_i ; A ; B ; beta_i ; CC) to tmonad
-  log=.          ('zher2kln_mtbla_' tmonad (]`]`nan`nan`(her2kln chk5r2k trlpick)))@>"0 argsl
+  log=.     lcat ('zher2kln_mtbla_' tmonad (]`]`nan`nan`(her2kln chk5r2k trlpick)))@>"0 argsl
   log=. log lcat ('zher2klc_mtbla_' tmonad (]`]`nan`nan`(her2klc chk5r2k trlpick)))@>"0 argsg
   log=. log lcat ('zher2kun_mtbla_' tmonad (]`]`nan`nan`(her2kun chk5r2k trupick)))@>"0 argsl
   log=. log lcat ('zher2kuc_mtbla_' tmonad (]`]`nan`nan`(her2kuc chk5r2k trupick)))@>"0 argsg
@@ -2220,7 +2220,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicrk_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicrk_mt_ 150 200
 
-testbasicr2k=: 1 : 'testbasicher2k_mt_@(u ; u ; (9&o. upddiag_mt_)@u@(2 # >./)) ,&.>~ testbasicsyr2k_mt_@(u ; u ; u@(2 # >./)) [ require@''math/mt/external/blas/r2k'''
+testbasicr2k=: 1 : 'testbasicher2k_mt_@(u ; u ; (9&o. upddiag_mt_)@u@(2 # >./)) lcat_mt_~ testbasicsyr2k_mt_@(u ; u ; u@(2 # >./)) [ require@''math/mt/external/blas/r2k'''
 
 NB. ---------------------------------------------------------
 NB. testbasicgemv
@@ -2289,7 +2289,7 @@ testbasichemv=: 3 : 0
   argsz=. { (<"0 zcoeff) ; (< AA) ; (< x) ; (<"0 inc) ; (<"0 zcoeff) ; (< y) ; < <"0 inc
 
   NB. for every i feed the tuple (alpha_i ; AA ; expanded_x_i ; incx_i ; beta_i ; expanded_y_i ; incy_i) to tmonad
-  log=.          ('dsymvl_mtbla_' tmonad (]`]`nan`nan`(symvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsd
+  log=.     lcat ('dsymvl_mtbla_' tmonad (]`]`nan`nan`(symvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsd
   log=. log lcat ('dsymvu_mtbla_' tmonad (]`]`nan`nan`(symvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsd
   log=. log lcat ('zhemvl_mtbla_' tmonad (]`]`nan`nan`(hemvl chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsz
   log=. log lcat ('zhemvu_mtbla_' tmonad (]`]`nan`nan`(hemvu chk2mv)))@(5 expand 6)@(2 expand 3)@>"0 argsz
@@ -2316,7 +2316,7 @@ testbasictrmv=: 3 : 0
   args=. { (< AA) ; (< y) ; < <"0 inc
 
   NB. for every i feed the tuple (AA ; expanded_x_i ; incx_i) to tmonad
-  log=.          ('dtrmvlnn_mtbla_' tmonad (]`]`nan`nan`(trmvlnn chk3mv)))@(1 expand 2)@>"0 args
+  log=.     lcat ('dtrmvlnn_mtbla_' tmonad (]`]`nan`nan`(trmvlnn chk3mv)))@(1 expand 2)@>"0 args
   log=. log lcat ('dtrmvlnu_mtbla_' tmonad (]`]`nan`nan`(trmvlnu chk3mv)))@(1 expand 2)@>"0 args
   log=. log lcat ('dtrmvltn_mtbla_' tmonad (]`]`nan`nan`(trmvltn chk3mv)))@(1 expand 2)@>"0 args
   log=. log lcat ('dtrmvltu_mtbla_' tmonad (]`]`nan`nan`(trmvltu chk3mv)))@(1 expand 2)@>"0 args
@@ -2362,7 +2362,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicmv_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicmv_mt_ 150 200
 
-testbasicmv=: 1 : 'nolog_mt_`(testbasictrmv_mt_@(u ; u@{.) ,&.>~ testbasichemv_mt_@((9&o. upddiag_mt_)@u ; (u ; u)@{.))@.(=/) ,&.>~ testbasicgemv_mt_@(u ; (u ; u)@(>./)) [ require@''math/mt/external/blas/mv'''
+testbasicmv=: 1 : 'nolog_mt_`(testbasictrmv_mt_@(u ; u@{.) lcat_mt_~ testbasichemv_mt_@((9&o. upddiag_mt_)@u ; (u ; u)@{.))@.(=/) lcat_mt_~ testbasicgemv_mt_@(u ; (u ; u)@(>./)) [ require@''math/mt/external/blas/mv'''
 
 NB. ---------------------------------------------------------
 NB. testbasicgemm
@@ -2427,7 +2427,7 @@ testbasicgemm=: 3 : 0
   NB.       suitable before call to tmonad
 
   NB. test for the case: ('alpha beta'=. 1.0 0.0) and (op(A) = A)
-  log=.          ('(+/ .*)'         tdyad  ((0&{::)`(1&{::)`0:`nan`nan`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
+  log=.     lcat ('(+/ .*)'         tdyad  ((0&{::)`(1&{::)`0:`nan`nan`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
   log=. log lcat ('mp'              tdyad  ((0&{::)`(1&{::)`0:`nan`nan`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
 
   NB. for every i feed the tuple (alpha_i ; A_i ; B_i ; beta_i ; C) to tmonad
@@ -2555,7 +2555,7 @@ testbasicgemmt=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; A_i ; B_i ; beta_i ; C) to tmonad
 
-  log=.          ('gemmlnn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
+  log=.     lcat ('gemmlnn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
   log=. log lcat ('gemmlnt_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
   log=. log lcat ('gemmlnj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
   log=. log lcat ('gemmlnc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
@@ -2672,7 +2672,7 @@ testbasicsymm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
 
-  log=.          ('dsymmll_mtbla_'   tmonad (]`]`nan`nan`(symmllnn chk2mm)))@>"0 argsdm
+  log=.     lcat ('dsymmll_mtbla_'   tmonad (]`]`nan`nan`(symmllnn chk2mm)))@>"0 argsdm
   log=. log lcat ('dsymmlu_mtbla_'   tmonad (]`]`nan`nan`(symmlunn chk2mm)))@>"0 argsdm
   log=. log lcat ('dsymmrl_mtbla_'   tmonad (]`]`nan`nan`(symmrlnn chk2mm)))@>"0 argsdn
   log=. log lcat ('dsymmru_mtbla_'   tmonad (]`]`nan`nan`(symmrunn chk2mm)))@>"0 argsdn
@@ -2797,7 +2797,7 @@ testbasichemm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; Ax ; B ; beta_i ; C) to tmonad
 
-  log=.          ('zhemmll_mtbla_'   tmonad (]`]`nan`nan`(hemmllnn chk2mm)))@>"0 argszm
+  log=.     lcat ('zhemmll_mtbla_'   tmonad (]`]`nan`nan`(hemmllnn chk2mm)))@>"0 argszm
   log=. log lcat ('zhemmlu_mtbla_'   tmonad (]`]`nan`nan`(hemmlunn chk2mm)))@>"0 argszm
   log=. log lcat ('zhemmrl_mtbla_'   tmonad (]`]`nan`nan`(hemmrlnn chk2mm)))@>"0 argszn
   log=. log lcat ('zhemmru_mtbla_'   tmonad (]`]`nan`nan`(hemmrunn chk2mm)))@>"0 argszn
@@ -2924,7 +2924,7 @@ testbasictrmm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; Ax ; B) to tmonad
 
-  log=.          ('dtrmmllnn_mtbla_'  tmonad (]`]`nan`nan`(trmmllnn  chk3mm)))@>"0 argsdm
+  log=.     lcat ('dtrmmllnn_mtbla_'  tmonad (]`]`nan`nan`(trmmllnn  chk3mm)))@>"0 argsdm
   log=. log lcat ('dtrmmllnu_mtbla_'  tmonad (]`]`nan`nan`(trmmllnu  chk3mm)))@>"0 argsdm
   log=. log lcat ('dtrmmlltn_mtbla_'  tmonad (]`]`nan`nan`(trmmlltn  chk3mm)))@>"0 argsdm
   log=. log lcat ('dtrmmlltu_mtbla_'  tmonad (]`]`nan`nan`(trmmlltu  chk3mm)))@>"0 argsdm
@@ -3344,7 +3344,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicmm_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicmm_mt_ 150 200
 
-testbasicmm=: 1 : 'testbasictrmm_mt_@(u@(2 # >./) ; u ; u) ,&.>~ testbasichemm_mt_@((9&o. upddiag_mt_)@u@(2 # >./) ; u ; u) ,&.>~ testbasicsymm_mt_@(u@(2 # >./) ; u ; u) ,&.>~ testbasicgemmt_mt_@(u@(+/\) ; u@|.@(+/\) ; u@(2 # {.)) ,&.>~ testbasicgemm_mt_@(u@(+/\) ; u@(+/\.) ; u) [ require@''math/mt/external/blis/mm'' [ require@''math/mt/external/blas/mm'''
+testbasicmm=: 1 : 'lcat_mt_@(testbasicgemm_mt_@(u@(+/\) ; u@(+/\.) ; u)`(testbasicgemmt_mt_@(u@(+/\) ; u@|.@(+/\) ; u@(2 # {.)))`(testbasicsymm_mt_@(u@(2 # >./) ; u ; u))`(testbasichemm_mt_@((9&o. upddiag_mt_)@u@(2 # >./) ; u ; u))`(testbasictrmm_mt_@(u@(2 # >./) ; u ; u))`:0) [ require@(''math/mt/external/blas/mm'' ; ''math/mt/external/blis/mm'')'
 
 NB. ---------------------------------------------------------
 NB. testbasictrsv
@@ -3461,7 +3461,7 @@ testbasictrsm=: 3 : 0
 
   NB. BLAS' staff
 
-  log=.          ('dtrsmllnn_mtbla_' tmonad (]`]`nan`nan`(trmmllnn chk3sm)))@>"0 argsdm
+  log=.     lcat ('dtrsmllnn_mtbla_' tmonad (]`]`nan`nan`(trmmllnn chk3sm)))@>"0 argsdm
   log=. log lcat ('dtrsmllnu_mtbla_' tmonad (]`]`nan`nan`(trmmllnu chk3sm)))@>"0 argsdm
   log=. log lcat ('dtrsmlltn_mtbla_' tmonad (]`]`nan`nan`(trmmlltn chk3sm)))@>"0 argsdm
   log=. log lcat ('dtrsmlltu_mtbla_' tmonad (]`]`nan`nan`(trmmlltu chk3sm)))@>"0 argsdm
@@ -3778,7 +3778,7 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasicsm_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasicsm_mt_ 150 200
 
-testbasicsm=: 1 : 'testbasictrsm_mt_@(u@(2 # >./) ; u) [ require@''math/mt/external/blis/sm'' [ require@''math/mt/external/blas/sm'''
+testbasicsm=: 1 : 'testbasictrsm_mt_@(u@(2 # >./) ; u) [ require@(''math/mt/external/blas/sm'' ; ''math/mt/external/blis/sm'')'
 
 NB. ---------------------------------------------------------
 NB. testbasic
@@ -3804,4 +3804,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbasic_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbasic_mt_ 150 200
 
-testbasic=: 1 : '(u testbasicsm_mt_) ,&.>~ nolog_mt_`(u testbasicsv_mt_)@.(=/) ,&.>~ (u testbasicmm_mt_) ,&.>~ (u testbasicmv_mt_) ,&.>~ (u testbasicr2k_mt_) ,&.>~ (u testbasicrk_mt_) ,&.>~ nolog_mt_`(u testbasicr2_mt_)@.(=/) ,&.>~ (u testbasicr_mt_)'
+testbasic=: 1 : 'lcat_mt_@((u testbasicr_mt_)`(nolog_mt_`(u testbasicr2_mt_)@.(=/))`(u testbasicrk_mt_)`(u testbasicr2k_mt_)`(u testbasicmv_mt_)`(u testbasicmm_mt_)`(nolog_mt_`(u testbasicsv_mt_)@.(=/))`(u testbasicsm_mt_)`:0)'

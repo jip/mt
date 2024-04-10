@@ -807,4 +807,4 @@ NB.   200×200-matrix or 150×150-matrix and RHS is either
 NB.   200-vector or 150-vector or 200×150-matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testsv_mt_ 200 150
 
-testsv=: 1 : '(testptsv_mt_@(u@{. ; (u ptmat2_mt_)@{:) ,&.>~ testposv_mt_@(u@{. ; (u pomat_mt_)@{:) ,&.>~ testhesv_mt_@(u@{. ; (u hemat_mt_)@{:) ,&.>~ testgtsv_mt_@(u@{. ; gtpick_mt_@u@{:) ,&.>~ testgesv_mt_@:(<@u"1))@(,: >./)'
+testsv=: 1 : 'lcat_mt_@(testgesv_mt_@:(<@u"1)`(testgtsv_mt_@(u@{. ; gtpick_mt_@u@{:))`(testhesv_mt_@(u@{. ; (u hemat_mt_)@{:))`(testposv_mt_@(u@{. ; (u pomat_mt_)@{:))`(testptsv_mt_@(u@{. ; (u ptmat2_mt_)@{:))`:0)@(,: >./)'

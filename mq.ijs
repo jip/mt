@@ -1383,4 +1383,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testmq_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testmq_mt_ 150 200
 
-testmq=: 1 : '(nolog_mt_`testunmhr_mt_@.(=/@$@(0&{::)) ,&.>~ testunmz_mt_ ,&.>~ testunmq_mt_)@(u ; u)'
+testmq=: 1 : 'lcat_mt_@(testunmq_mt_`testunmz_mt_`(nolog_mt_`testunmhr_mt_@.(=/@$@(0&{::)))`:0)@(u ; u)'

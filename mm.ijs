@@ -700,4 +700,4 @@ NB.     log=. ?@$&0 testmm_mt_ 15 10
 NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testmm_mt_ 10 10
 
-testmm_mt_=: 1 : '(nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@(u spmat_mt_ 0.25) ,&.>~ (nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@u'
+testmm_mt_=: 1 : 'lcat_mt_@((nolog_mt_`(lcat_mt_@(testmm_mtmm_@sy4gel_mt_`(testmm_mtmm_@ss4gel_mt_)`(testmm_mtmm_@he4gel_mt_)`(testmm_mtmm_@sh4gel_mt_)`:0))@.(=/@$) ,:~ testmm_mtmm_)@(u spmat_mt_ 0.25) ,~ (nolog_mt_`(lcat_mt_@(testmm_mtmm_@sy4gel_mt_`(testmm_mtmm_@ss4gel_mt_)`(testmm_mtmm_@he4gel_mt_)`(testmm_mtmm_@sh4gel_mt_)`:0))@.(=/@$) ,:~ testmm_mtmm_)@u)'

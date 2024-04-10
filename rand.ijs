@@ -945,4 +945,4 @@ NB.   sh  - vector of non-negative integers, the shape of
 NB.         matrix
 NB.   log - 6-vector of boxes, test log, see test.ijs
 
-testrand=: testspmat ,&.>~ nolog_mt_`testunmat@.(=/) ,&.>~ testptmat ,&.>~ testpomat ,&.>~ testhemat ,&.>~ nolog_mt_`testdimat@.(=/) ,&.>~ testgemat ,&.>~ testtrmat
+testrand=: lcat@(testtrmat`testgemat`(nolog_mt_`(lcat@(testdimat`testunmat`:0))@.(=/))`testhemat`testpomat`testptmat`testspmat`:0)

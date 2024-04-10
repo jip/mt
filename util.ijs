@@ -81,7 +81,24 @@ soris=: *:`(+/!.0"1@:*:@:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary part
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. test suite utilities
 
-lcat=: ,&.>&:(,&.>/"2^:(<:@#@$))
+NB. ---------------------------------------------------------
+NB. lcat
+NB.
+NB. Description:
+NB.   Concatenate logs
+NB.
+NB. Syntax:
+NB.   logz=.      lcat logs
+NB.   logz=. logx lcat logy
+NB. where
+NB.   logs      - matrix of boxes, each row is a test log
+NB.   logx,logy - 6-vector of boxes, test log to concatenate
+NB.   logz      - 6-vector of boxes, concatenated test log
+NB.
+NB. Notes:
+NB. - see test log format in test.ijs
+
+lcat=: $:/ : (,&.>&:(,&.>/"2^:(<:@#@$)))
 
 NB. ---------------------------------------------------------
 NB. nolog

@@ -477,4 +477,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testcon_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testcon_mt_ 150 200
 
-testcon=: 1 : 'nolog_mt_`(testconun_mt_@((randnr_mt_ unmat_mt_)`(randnc_mt_ unmat_mt_)@.(JCMPX = (3!:0)@u@1:)) ,&.>~ testconpt_mt_@(u ptmat2_mt_) ,&.>~ testconpo_mt_@(u pomat_mt_) ,&.>~ testconhe_mt_@(u hemat_mt_) ,&.>~ (testconge_mt_ ,&.>~ testcontr_mt_)@u)@.(=/)'
+testcon=: 1 : 'nolog_mt_`(lcat_mt_@(testcontr_mt_@u`(testconge_mt_@u)`(testconhe_mt_@(u hemat_mt_))`(testconpo_mt_@(u pomat_mt_))`(testconpt_mt_@(u ptmat2_mt_))`(testconun_mt_@((randnr_mt_ unmat_mt_)`(randnc_mt_ unmat_mt_)@.(JCMPX = (3!:0)@u@1:)))`:0))@.(=/)'

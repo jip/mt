@@ -479,4 +479,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testquatern_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testquatern_mt_ 150 200
 
-testquatern=: 1 : 'testqnf_mt_@u@(2&(1})) ,&.>~ (testqn2_mt_ ,&.>~ testqn1_mt_)@u@(4&(1}))'
+testquatern=: 1 : 'lcat_mt_@(testqnf_mt_@u@(2&(1})) ,~ (testqn2_mt_ ,:~ testqn1_mt_)@u@(4&(1})))'

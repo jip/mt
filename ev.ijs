@@ -546,4 +546,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testev_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testev_mt_ 150 150
 
-testev=: 1 : 'nolog_mt_`(testggev_mt_@u@(2&,) ,&.>~ testheev_mt_@(u hemat_mt_) ,&.>~ testgeev_mt_@u)@.(=/)'
+testev=: 1 : 'nolog_mt_`(lcat_mt_@(testgeev_mt_@u`(testheev_mt_@(u hemat_mt_))`(testggev_mt_@u@(2&,))`:0))@.(=/)'

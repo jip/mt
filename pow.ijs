@@ -338,4 +338,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testpow_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testpow_mt_ 150 150
 
-testpow=: 1 : 'nolog_mt_`(testhepow_mt_@(u hemat_mt_) ,&.>~ testdipow_mt_@(u dimat_mt_ u) ,&.>~ testgepow_mt_@u)@.(=/)'
+testpow=: 1 : 'nolog_mt_`(lcat_mt_@(testgepow_mt_@u`(testdipow_mt_@(u dimat_mt_ u))`(testhepow_mt_@(u hemat_mt_))`:0))@.(=/)'

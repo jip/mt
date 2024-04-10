@@ -10,7 +10,7 @@ number estimating. Is based mostly on LAPACK algorithms, but
 doesn't require LAPACK.
 )
 
-VERSION=: '0.14.1'
+VERSION=: '0.14.2'
 
 RELEASE=: 'j9.6'
 

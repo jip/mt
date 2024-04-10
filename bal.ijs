@@ -865,7 +865,7 @@ NB. Syntax:
 NB.   log=. testgebal A
 NB. where
 NB.   A   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Formula:
 NB.   err0 := ||Abal||_1 / ||A||_1                                           if not a permute only
@@ -927,7 +927,7 @@ NB. Syntax:
 NB.   log=. testggbal AB
 NB. where
 NB.   AB  - 2×n×n-brick
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Formula:
 NB.   err0X := ||Xbal||_1 / ||X||_1                                           if not a permute only
@@ -995,7 +995,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
@@ -1007,4 +1007,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testbal_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testbal_mt_ 150 150
 
-testbal=: 1 : 'nolog_mt_`(testggbal_mt_@(u spmat_mt_ 0.25)@(2&,) ,&.>~ testgebal_mt_@(u spmat_mt_ 0.25))@.(=/)'
+testbal=: 1 : 'nolog_mt_`(testggbal_mt_@(u spmat_mt_ 0.25)@(2&,) lcat_mt_~ testgebal_mt_@(u spmat_mt_ 0.25))@.(=/)'

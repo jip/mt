@@ -663,7 +663,7 @@ NB. Syntax:
 NB.   log=. testmm A
 NB. where
 NB.   A   - array of any rank > 1
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - berr shows boolean 'is matched exactly'
@@ -688,7 +688,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square boolean matrix:
@@ -700,4 +700,4 @@ NB.     log=. ?@$&0 testmm_mt_ 15 10
 NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testmm_mt_ 10 10
 
-testmm_mt_=: 1 : '(nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@(u spmat_mt_ 0.25) ,&.>~ (nolog_mt_`(testmm_mtmm_@sh4gel_mt_ ,&.>~ testmm_mtmm_@he4gel_mt_ ,&.>~ testmm_mtmm_@ss4gel_mt_ ,&.>~ testmm_mtmm_@sy4gel_mt_)@.(=/@$) ,&.>~ testmm_mtmm_)@u'
+testmm_mt_=: 1 : 'lcat_mt_@((nolog_mt_`(lcat_mt_@(testmm_mtmm_@sy4gel_mt_`(testmm_mtmm_@ss4gel_mt_)`(testmm_mtmm_@he4gel_mt_)`(testmm_mtmm_@sh4gel_mt_)`:0))@.(=/@$) ,:~ testmm_mtmm_)@(u spmat_mt_ 0.25) ,~ (nolog_mt_`(lcat_mt_@(testmm_mtmm_@sy4gel_mt_`(testmm_mtmm_@ss4gel_mt_)`(testmm_mtmm_@he4gel_mt_)`(testmm_mtmm_@sh4gel_mt_)`:0))@.(=/@$) ,:~ testmm_mtmm_)@u)'

@@ -264,8 +264,7 @@ math/mt - change history
                - disable dyadic case: qnconxx qnlen qnsign qninv
  - rot:        - drop: lartv
                - revert rot to accept ixy transposed (INTERFACE CHANGED!)
-               - extend rot to support multiple cs (implement
-                 lartv)
+               - extend rot to support multiple cs (implement lartv)
                - disable monadic case: rot
                - disable dyadic case: lartg
  - sm:         move to basic
@@ -277,7 +276,6 @@ math/mt - change history
  + test:       - new interfaces: chk1mv chk1mm chk2mv chk2mm chk3mv chk3mm chk3sv chk3sm chk4r chk4rk chk5r chk5r2k chk6r2
  + test/blas:  BLAS cd interfaces
  + test/blis:  BLIS cd interfaces
- + test/flame: libFLAME cd interfaces
  + test/util:  new interfaces: issquare basicxxx initnoun dlsym
  + trs:        - new interfaces: trtrsxxx
                - refactor test suite
@@ -290,3 +288,8 @@ math/mt - change history
 
 == 0.14.1 ==
  * util: fix env
+
+ == 0.14.2 ==
+ fix minor typos
+ improve test log processing
+ * util: extend lcat from monad to ambivalent

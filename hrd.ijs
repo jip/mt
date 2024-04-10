@@ -743,7 +743,7 @@ NB. Syntax:
 NB.   log=. testgehrd A
 NB. where
 NB.   A   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgehrd=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/gehrd'
@@ -783,7 +783,7 @@ NB. Syntax:
 NB.   log=. testgghrd AB
 NB. where
 NB.   AB  - 2×n×n-brick
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgghrd=: 3 : 0
   load_mttmp_ 'math/mt/external/lapack2/gghrd'
@@ -873,7 +873,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrices with elements
@@ -885,4 +885,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhrd_mt_ 150 150
 NB. - test by random square complex matrices:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testhrd_mt_ 150 150
 
-testhrd=: 1 : 'nolog_mt_`(testgghrd_mt_@u@(2&,) ,&.>~ testgehrd_mt_@u)@.(=/)'
+testhrd=: 1 : 'nolog_mt_`(testgghrd_mt_@u@(2&,) lcat_mt_~ testgehrd_mt_@u)@.(=/)'

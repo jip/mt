@@ -376,7 +376,7 @@ NB. Syntax:
 NB.   log=. testnormm A
 NB. where
 NB.   A   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testnormm=: 3 : 0
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
@@ -404,7 +404,7 @@ NB. Syntax:
 NB.   log=. testnormt A
 NB. where
 NB.   A   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testnormt=: 3 : 0
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
@@ -430,7 +430,7 @@ NB. Syntax:
 NB.   log=. testnorms A
 NB. where
 NB.   A   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testnorms=: 3 : 0
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
@@ -453,7 +453,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -465,4 +465,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testnorm_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testnorm_mt_ 150 200
 
-testnorm=: 1 : '(testnorms_mt_ ,&.>~ testnormt_mt_ ,&.>~ testnormm_mt_)@u'
+testnorm=: 1 : 'lcat_mt_@(testnormm_mt_`testnormt_mt_`testnorms_mt_`:0)@u'

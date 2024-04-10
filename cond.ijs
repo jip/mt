@@ -320,7 +320,7 @@ NB. Syntax:
 NB.   log=. testcontr G
 NB. where
 NB.   G   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testcontr=: 3 : 0
   log=.          ('trl1con1' tmonad (trl1pick`]`(trl1con1@trl1pick)`nan`nan)) y
@@ -347,7 +347,7 @@ NB. Syntax:
 NB.   log=. testconge G
 NB. where
 NB.   G   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testconge=: 3 : 0
   rcond=. geconi y
@@ -370,7 +370,7 @@ NB. Syntax:
 NB.   log=. testconhe H
 NB. where
 NB.   H   - n×n-matrix, Hermitian (symmetric)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testconhe=: 3 : 0
   rcond=. heconi y
@@ -394,7 +394,7 @@ NB.   log=. testconpo P
 NB. where
 NB.   P   - n×n-matrix, Hermitian (symmetric) positive
 NB.         definite
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testconpo=: 3 : 0
   rcond=. poconi y
@@ -419,7 +419,7 @@ NB.   log=. testconpt T
 NB. where
 NB.   T   - n×n-matrix, Hermitian (symmetric) positive
 NB.         definite tridiagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testconpt=: 3 : 0
   rcond=. ptconi y
@@ -442,7 +442,7 @@ NB. Syntax:
 NB.   log=. testconun Q
 NB. where
 NB.   Q   - n×n-matrix, unitary (orthogonal)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testconun=: 3 : 0
   rcond=. unconi y
@@ -465,7 +465,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -477,4 +477,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testcon_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testcon_mt_ 150 200
 
-testcon=: 1 : 'nolog_mt_`(testconun_mt_@((randnr_mt_ unmat_mt_)`(randnc_mt_ unmat_mt_)@.(JCMPX = (3!:0)@u@1:)) ,&.>~ testconpt_mt_@(u ptmat2_mt_) ,&.>~ testconpo_mt_@(u pomat_mt_) ,&.>~ testconhe_mt_@(u hemat_mt_) ,&.>~ (testconge_mt_ ,&.>~ testcontr_mt_)@u)@.(=/)'
+testcon=: 1 : 'nolog_mt_`(lcat_mt_@(testcontr_mt_@u`(testconge_mt_@u)`(testconhe_mt_@(u hemat_mt_))`(testconpo_mt_@(u pomat_mt_))`(testconpt_mt_@(u ptmat2_mt_))`(testconun_mt_@((randnr_mt_ unmat_mt_)`(randnc_mt_ unmat_mt_)@.(JCMPX = (3!:0)@u@1:)))`:0))@.(=/)'

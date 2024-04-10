@@ -689,7 +689,7 @@ NB. Syntax:
 NB.   log=. testlarfg ey
 NB. where
 NB.   ey  - (n+1)-vector
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testlarfg=: 3 : 0
   iso=. (2 ?@$ <:@#) y
@@ -709,7 +709,7 @@ NB.   log=. testlarf (trash ; C)
 NB. where
 NB.   C   - m×n-matrix, is used as multiplier, the 1st row or
 NB.         column is used to form reflector
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testlarf=: 3 : 0
   y=. 1 {:: y
@@ -747,7 +747,7 @@ NB.   log=. testlarz (trash ; C)
 NB. where
 NB.   C   - m×n-matrix, is used as multiplier, the 1st row or
 NB.         column is used to form reflector
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testlarz=: 3 : 0
   y=. 1 {:: y
@@ -784,7 +784,7 @@ NB. Syntax:
 NB.   log=. testlarft (A ; trash)
 NB. where
 NB.   A   - m×n-matrix, is used to form Qf
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testlarft=: 3 : 0
   y=. 0 {:: y
@@ -806,7 +806,7 @@ NB. Syntax:
 NB.   log=. testlarzt (A ; trash)
 NB. where
 NB.   A   - m×n-matrix, is used to form Qf
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testlarzt=: 3 : 0
   y=. 0 {:: y
@@ -829,7 +829,7 @@ NB.   log=. testlarfb (A ; C)
 NB. where
 NB.   A   - m×n-matrix, is used to form Qf
 NB.   C   - m×n-matrix, is used as multiplier
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testlarfb=: 3 : 0
   'A C'=. y
@@ -872,7 +872,7 @@ NB.   log=. testlarzb (A ; C)
 NB. where
 NB.   A   - m×n-matrix, is used to form Qf
 NB.   C   - m×n-matrix, is used as multiplier
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testlarzb=: 3 : 0
   'A C'=. y
@@ -918,7 +918,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -936,4 +936,4 @@ NB.   testgq, testmq, testqf
 NB. - larxtxx and larxbxxxx are impractical for large
 NB.   matrices
 
-testref=: 1 : 'nolog_mt_`((testlarzb_mt_ ,&.>~ testlarfb_mt_ ,&.>~ testlarzt_mt_ ,&.>~ testlarft_mt_ ,&.>~ testlarz_mt_ ,&.>~ testlarf_mt_)@(u ; u))@.(200 >: <./) ,&.>~ testlarfg_mt_@u@>:@{.'
+testref=: 1 : 'lcat_mt_@(testlarfg_mt_@u@>:@{.`(nolog_mt_`((lcat_mt_@(testlarf_mt_`testlarz_mt_`testlarft_mt_`testlarzt_mt_`testlarfb_mt_`testlarzb_mt_`:0))@(u ; u))@.(200 >: <./))`:0)'

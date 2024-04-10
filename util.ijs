@@ -80,8 +80,25 @@ soris=: *:`(+/!.0"1@:*:@:+.)@.(JCMPX = 3!:0)  NB. sum of real and imaginary part
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. test suite utilities
+NB.
+NB. Notes:
+NB. - see test log format in mt.ijs
 
-lcat=: ,&.>&:(,&.>/"2^:(<:@#@$))
+NB. ---------------------------------------------------------
+NB. lcat
+NB.
+NB. Description:
+NB.   Concatenate logs
+NB.
+NB. Syntax:
+NB.   logz=.      lcat logs
+NB.   logz=. logx lcat logy
+NB. where
+NB.   logs      - matrix of boxes, each row is a test log
+NB.   logx,logy - 6-vector of boxes, test log to concatenate
+NB.   logz      - 6-vector of boxes, concatenated test log
+
+lcat=: $:/ : (,&.>&:(,&.>/"2^:(<:@#@$)))
 
 NB. ---------------------------------------------------------
 NB. nolog
@@ -96,8 +113,8 @@ NB.   emptylog - an empty log which could be joined with
 NB.              another log
 NB.
 NB. Assertions:
-NB.   log -: log      ,&.> emptylog
-NB.   log -: emptylog ,&.> log
+NB.   log -: log      lcat emptylog
+NB.   log -: emptylog lcat log
 NB. where
 NB.   log - some another log
 NB.
@@ -418,8 +435,8 @@ NB.          0 {:: e  - string, architecture
 NB.          1 {:: e  > 0, integer, cores
 NB.          2 {:: e  > 0, integer, maxthreads
 NB.          3 {:: e  > 0, integer, worker threads
-NB.          4..11    - 3-vector of integers >=0, threads in
-NB.                     pool#0..7:
+NB.          4..11    - 3-vector of non-negative integers,
+NB.                     threads in threadpools 0..7:
 NB.                       (#idle,#unfinished,#threads)
 NB.         12 {:: e  ≥ 0, integer, executing thread# (0
 NB.                     means master thread)
@@ -440,20 +457,20 @@ NB.                       20 {:: e  - library [path]file name
 NB.                       21 {:: e  - version string
 NB.
 NB. Application:
-NB. - create 2 threads in pool#0:
-NB.     {{0 T.0}}^:2 ''
-NB. - in pool#0 create thread for every free core:
+NB. - create 2 threads:
+NB.     {{0 T.''}}^:2 ''
+NB. - create (#cores - 1) threads in threadpool 0:
 NB.     {{0 T.0}}^:] <: {. 8 T. ''
-NB. - destroy 2 threads in pool#0:
-NB.     {{55 T.0}}^:2 ''
-NB. - in pool#0 destroy thread for every free core:
-NB.     {{55 T.''}}^:] <: {. 8 T. ''
+NB. - destroy 2 threads:
+NB.     {{55 T.''}}^:2 ''
+NB. - destroy (#cores - 1) threads in threadpool 0:
+NB.     {{55 T.0}}^:] <: {. 8 T. ''
 NB. - set threshold for floating matrices of size 1024×1024
 NB.   or larger:
 NB.     (<. 1024^3) (9!:58) 1
-NB. - always use BLAS for any complex matrices:
+NB. - always use BLAS for any complex matrix:
 NB.     0 (9!:58) 2
-NB. - never use BLAS for any integer matrices:
+NB. - never use BLAS for any integer matrix:
 NB.     _1 (9!:58) 0
 NB. - try to load LAPACK interfaces if presented in system:
 NB.     load 'math/lapack2'
@@ -492,10 +509,10 @@ env=: 1&$: :(4 : 0)
   e=. e , < (9!:58) 2
   e=. e , < (3 : 'liblapack_jlapack2_')`('n/a'"_)@.(nc@<@'liblapack_jlapack2_') ''
   e=. e , < ver_jlapack2_ :: 'n/a' ''
-  e=. e , < (3 : 'LIB_mtbla_')`('n/a'"_)@.(nc@<@'LIB_mtbla_') ''
-  e=. e , < ver_mtbla_ :: 'n/a' ''
-  e=. e , < (3 : 'LIB_mtbli_')`('n/a'"_)@.(nc@<@'LIB_mtbli_') ''
-  e=. e , < ver_mtbli_ :: 'n/a' ''
+  e=. e , < (3 : 'LIB_mtbla_'         )`('n/a'"_)@.(nc@<@'LIB_mtbla_'         ) ''
+  e=. e , < ver_mtbla_    :: 'n/a' ''
+  e=. e , < (3 : 'LIB_mtbli_'         )`('n/a'"_)@.(nc@<@'LIB_mtbli_'         ) ''
+  e=. e , < ver_mtbli_    :: 'n/a' ''
   if. x do.
     tpl1=. cut3 {{)n
 Hardware

@@ -520,7 +520,7 @@ NB. Syntax:
 NB.   log=. testtgevc AB
 NB. where
 NB.   AB  - 2×n×n-brick
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testtgevc=: 3 : 0
   rcondl=. <./ trlconi"2 SPl=. 2 {. SPQZHTl=. (([ (((0,[) hgezqsvv (, ,:~@idmat)~) , ]) ((gghrdlnn~ 0&,)~ ((unmlqrc~ ,: trl@:(}:"1)@]) gelqf)/))~ c) y
@@ -553,7 +553,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements

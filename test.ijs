@@ -106,19 +106,6 @@ NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
 NB. =========================================================
-NB. Concepts
-NB.
-NB. Storage layout:
-NB.   test log is a noun represented as inverted table:
-NB.   - column     :  sentence  rcond   fwd.err   bwd.err   time     space
-NB.   - column type:  string    float   float     float     float    integer
-NB.   - rank       :  2         1       1         1         1        1
-NB.   - unit       :  J code    %cond   relative  relative  seconds  bytes
-NB.
-NB. Notes:
-NB. - see tmonad and tdyad in util.ijs
-
-NB. =========================================================
 NB. Configuration
 
 coclass 'mt'

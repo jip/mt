@@ -98,9 +98,13 @@ NB. Notation:
 NB.   ∞          is       ±∞ i.e. either -∞ or +∞
 NB.   a,b = ∞    means    a,b ∈ {-∞,+∞}, not a = b = ±∞
 NB.
-NB. Conventions:
-NB. 1) a result returned from a test actor is an inverted
-NB.    table whose format is specified in test.ijs
+NB. Storage layout:
+NB. - a test log is being an inverted table:
+NB.   - column#    :  0         1       2         3         4        5
+NB.   - column name:  sentence  rcond   fwd.err   bwd.err   time     space
+NB.   - column type:  string    float   float     float     float    integer
+NB.   - rank       :  2         1       1         1         1        1
+NB.   - unit       :  J code    %cond   relative  relative  seconds  bytes
 
 NB. =========================================================
 NB. Configuration
@@ -228,31 +232,31 @@ NB.           y-matrix (shape is taken from y)
 NB.   (m,n) - 2-vector of integers, shape of random matrices
 NB.           to test algorithms; only algorithms which
 NB.           accept m and n given will be tested
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
-NB. - test low-level algorithms by random square integer
+NB. - test low-level algorithms by random square real matrix
+NB.   with elements distributed uniformly with support
+NB.   (0,1):
+NB.     log=. ?@$&0 testlow_mt_ 10 10
+NB. - test mid-level algorithms by random rectangular integer
 NB.   matrix with elements distributed uniformly with support
 NB.   [0,100):
-NB.     log=. ?@$&100 testlow_mt_ 10 10
-NB. - test mid-level algorithms by random rectangular real
-NB.   matrix with elements distributed uniformly with support
-NB.   (0,1):
-NB.     log=. ?@$&0 testmid_mt_ 200 150
+NB.     log=. ?@$&100 testmid_mt_ 200 150
 NB. - test high-level algorithms by random square real matrix
 NB.   with elements with limited value's amplitude:
-NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 200 200
+NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testhigh_mt_ 150 150
 NB. - test all algorithms by random rectangular complex
 NB.   matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) test_mt_ 150 200
 
-testlow=: 1 : '(u testmq_mt_) ,&.>~ (u testgq_mt_) ,&.>~ (u testrot_mt_) ,&.>~ (u testref_mt_) ,&.>~ (u testquatern_mt_) ,&.>~ (u testnorm_mt_) ,&.>~ (u testcon_mt_) ,&.>~ (u testbal_mt_) ,&.>~ (u testbak_mt_) ,&.>~ (u testbasic_mt_) ,&.>~ testrand_mt_'
+testlow=: 1 : 'lcat_mt_@(testrand_mt_`(u testbasic_mt_)`(u testbak_mt_)`(u testbal_mt_)`(u testcon_mt_)`(u testnorm_mt_)`(u testquatern_mt_)`(u testref_mt_)`(u testrot_mt_)`(u testgq_mt_)`(u testmq_mt_)`:0)'
 
-testmid=: 1 : '(u testtrs_mt_) ,&.>~ (u testtri_mt_) ,&.>~ (u testtrf_mt_) ,&.>~ (u testqf_mt_) ,&.>~ (u testpf_mt_) ,&.>~ (u testhrd_mt_) ,&.>~ (u testevc_mt_) ,&.>~ (u testeq_mt_)'
+testmid=: 1 : 'lcat_mt_@((u testeq_mt_)`(u testevc_mt_)`(u testhrd_mt_)`(u testpf_mt_)`(u testqf_mt_)`(u testtrf_mt_)`(u testtri_mt_)`(u testtrs_mt_)`:0)'
 
-testhigh=: 1 : '(u testmm_mt_) ,&.>~ (u testls_mt_) ,&.>~ (u testsv_mt_) ,&.>~ (u testpow_mt_) ,&.>~ (u testexp_mt_) ,&.>~ (u testev_mt_)'
+testhigh=: 1 : 'lcat_mt_@((u testev_mt_)`(u testexp_mt_)`(u testpow_mt_)`(u testsv_mt_)`(u testls_mt_)`(u testmm_mt_)`:0)'
 
-test=: 1 : '(u testhigh_mt_) ,&.>~ (u testmid_mt_) ,&.>~ (u testlow_mt_)'
+test=: 1 : 'lcat_mt_@((u testlow_mt_)`(u testmid_mt_)`(u testhigh_mt_)`:0)'
 
 NB. =========================================================
 NB. Verification suite

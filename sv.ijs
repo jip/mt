@@ -372,7 +372,7 @@ NB.   log=. testgesv (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -458,7 +458,7 @@ NB.   log=. testgtsv (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the tridiagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -537,7 +537,7 @@ NB.   log=. testhesv (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -630,7 +630,7 @@ NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric) positive
 NB.         definite
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -713,7 +713,7 @@ NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric) positive
 NB.         definite tridiagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -790,7 +790,7 @@ NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random real matrices with elements distributed
@@ -807,4 +807,4 @@ NB.   200×200-matrix or 150×150-matrix and RHS is either
 NB.   200-vector or 150-vector or 200×150-matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testsv_mt_ 200 150
 
-testsv=: 1 : '(testptsv_mt_@(u@{. ; (u ptmat2_mt_)@{:) ,&.>~ testposv_mt_@(u@{. ; (u pomat_mt_)@{:) ,&.>~ testhesv_mt_@(u@{. ; (u hemat_mt_)@{:) ,&.>~ testgtsv_mt_@(u@{. ; gtpick_mt_@u@{:) ,&.>~ testgesv_mt_@:(<@u"1))@(,: >./)'
+testsv=: 1 : 'lcat_mt_@(testgesv_mt_@:(<@u"1)`(testgtsv_mt_@(u@{. ; gtpick_mt_@u@{:))`(testhesv_mt_@(u@{. ; (u hemat_mt_)@{:))`(testposv_mt_@(u@{. ; (u pomat_mt_)@{:))`(testptsv_mt_@(u@{. ; (u ptmat2_mt_)@{:))`:0)@(,: >./)'

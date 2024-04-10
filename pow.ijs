@@ -250,7 +250,7 @@ NB. Syntax:
 NB.   log=. testgepow A
 NB. where
 NB.   A   - n×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
@@ -267,7 +267,7 @@ NB. Syntax:
 NB.   log=. testdipow A
 NB. where
 NB.   A   - n×n-matrix, the diagonalizable
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - fixed powers vector (p -: 5 7) is used
@@ -298,7 +298,7 @@ NB. Syntax:
 NB.   log=. testhepow A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian (symmetric)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testhepow=: 3 : 0
   NB. use for a while the definition from ggevlxx application notes
@@ -326,7 +326,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random square real matrix with elements
@@ -338,4 +338,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testpow_mt_ 150 150
 NB. - test by random square complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testpow_mt_ 150 150
 
-testpow=: 1 : 'nolog_mt_`(testhepow_mt_@(u hemat_mt_) ,&.>~ testdipow_mt_@(u dimat_mt_ u) ,&.>~ testgepow_mt_@u)@.(=/)'
+testpow=: 1 : 'nolog_mt_`(lcat_mt_@(testgepow_mt_@u`(testdipow_mt_@(u dimat_mt_ u))`(testhepow_mt_@(u hemat_mt_))`:0))@.(=/)'

@@ -1647,7 +1647,7 @@ NB. Syntax:
 NB.   log=. testgetrf A
 NB. where
 NB.   A   - m×n-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testgetrf=: 3 : 0
   require     :: ] 'numeric'
@@ -1693,7 +1693,7 @@ NB. Syntax:
 NB.   log=. testhetrf A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - no berrA calc for LAPACK's DSYTRF and ZHETRF yet since
@@ -1752,7 +1752,7 @@ NB.   log=. testpotrf A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
 NB.         definite
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 
 testpotrf=: 3 : 0
   require     :: ] 'numeric'
@@ -1797,7 +1797,7 @@ NB.   log=. testpttrf A
 NB. where
 NB.   A   - n×n-matrix, the Hermitian (symmetric) positive
 NB.         definite tridiagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. TODO:
 NB. - A would be sparse
@@ -1841,7 +1841,7 @@ NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -1853,4 +1853,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testtrf_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testtrf_mt_ 150 200
 
-testtrf=: 1 : 'nolog_mt_`(testpttrf_mt_@(u ptmat2_mt_) ,&.>~ testpotrf_mt_@(u pomat_mt_) ,&.>~ testhetrf_mt_@(u hemat_mt_))@.(=/) ,&.>~ testgetrf_mt_@u'
+testtrf=: 1 : 'nolog_mt_`(lcat_mt_@(testhetrf_mt_@(u hemat_mt_)`(testpotrf_mt_@(u pomat_mt_))`(testpttrf_mt_@(u ptmat2_mt_))`:0))@.(=/) lcat_mt_~ testgetrf_mt_@u'

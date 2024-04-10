@@ -289,7 +289,7 @@ NB. Syntax:
 NB.   log=. testlartg FG
 NB. where
 NB.   FG  - m×2-matrix, m (f,g) pairs to test
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Formula:
 NB.   relative error in the singular value:
@@ -418,7 +418,7 @@ NB.   log=. testlartv (X ,. Y ,. F ,. G)
 NB. where
 NB.   (X ,. Y) - m×2-matrix, m (x,y) pairs to be rotated
 NB.   (F ,. G) - m×2-matrix, m (f,g) pairs to make rotators
-NB.   log      - 6-vector of boxes, test log, see test.ijs
+NB.   log      - 6-vector of boxes, test log
 
 testlartv=: 3 : 0
   load        'math/mt/external/blas/drot'
@@ -456,7 +456,7 @@ NB. where
 NB.   mkmat - monad to generate a matrix; is called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of matrix mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random rectangular real matrix with elements
@@ -468,4 +468,4 @@ NB.     log=. _1 1 0 4 _6 4&gemat_mt_ testrot_mt_ 200 200
 NB. - test by random rectangular complex matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testrot_mt_ 150 200
 
-testrot=: 1 : 'testlartv_mt_@u@(4&(1})) ,&.>~ testlartg_mt_@u@(2&(1}))'
+testrot=: 1 : 'testlartv_mt_@u@(4&(1})) lcat_mt_~ testlartg_mt_@u@(2&(1}))'

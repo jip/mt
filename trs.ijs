@@ -611,7 +611,7 @@ NB.   log=. testgetrs (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -766,7 +766,7 @@ NB.   log=. testhetrs (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric)
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -887,7 +887,7 @@ NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric) positive
 NB.         definite
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -996,7 +996,7 @@ NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - k×k-matrix, the Hermitian (symmetric) positive
 NB.         definite tridiagonal
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.   k   = max(m,n)
 NB.
 NB. Notes:
@@ -1104,7 +1104,7 @@ NB.   log=. testtrtrs (X ; A)
 NB. where
 NB.   X   - m×n-matrix, exact solutions
 NB.   A   - m×m-matrix
-NB.   log - 6-vector of boxes, test log, see test.ijs
+NB.   log - 6-vector of boxes, test log
 NB.
 NB. Notes:
 NB. - models LAPACK's xCHKTR
@@ -1235,7 +1235,7 @@ NB.   mkmat - monad to generate a material for matrix; is
 NB.           called as:
 NB.             mat=. mkmat (m,n)
 NB.   (m,n) - 2-vector of integers, the shape of mat
-NB.   log   - 6-vector of boxes, test log, see test.ijs
+NB.   log   - 6-vector of boxes, test log
 NB.
 NB. Application:
 NB. - test by random real matrices with elements distributed
@@ -1252,4 +1252,4 @@ NB.   200×200-matrix or 150×150-matrix and RHS is either
 NB.   200-vector or 150-vector or 200×150-matrix:
 NB.     log=. (gemat_mt_ j. gemat_mt_) testtrs_mt_ 200 150
 
-testtrs=: 1 : 'testtrtrs_mt_@(u ; u@(2 # {.)) ,&.>~ (testpttrs_mt_@(u@{. ; (u ptmat2_mt_)@{:) ,&.>~ testpotrs_mt_@(u@{. ; (u pomat_mt_)@{:) ,&.>~ testhetrs_mt_@(u@{. ; (u hemat_mt_)@{:) ,&.>~ testgetrs_mt_@:(<@u"1))@(,: >./)'
+testtrs=: 1 : 'lcat_mt_@(testtrtrs_mt_@(u ; u@(2 # {.)) ,~ testgetrs_mt_@:(<@u"1)`(testhetrs_mt_@(u@{. ; (u hemat_mt_)@{:))`(testpotrs_mt_@(u@{. ; (u pomat_mt_)@{:))`(testpttrs_mt_@(u@{. ; (u ptmat2_mt_)@{:))`:0@(,: >./))'

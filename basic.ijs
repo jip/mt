@@ -2511,14 +2511,6 @@ NB.   will be lost. That is why it's sufficient to test
 NB.   bli_xgemmt by arguments of the same datatype only.
 
 testbasicgemmt=: 3 : 0
-  NB. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  NB. bli_gemmt fails with message:
-  NB.   libblis: frame/base/bli_prune.c (line 130):
-  NB.   libblis: Requested functionality not yet implemented.
-  NB.   libblis: Aborting.
-  NB. when is executed under JE
-  nolog '' return.
-  NB. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   'As Bs C'=. y
   dcoeff=. 0.0 1.0 0.7

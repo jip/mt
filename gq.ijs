@@ -656,7 +656,7 @@ testungz=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('unglz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`nan`lzt02)) Awide ; normw ; LZf ; ik { ks
+    log=. log lcat ('unglz' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`nan`lzt02)) Awide ; normw ; LZf ; ik { ks
     ik=. >: ik
   end.
   log=. log lcat ('unglz' tmonad ((2&{::)`]`(rcond"_)`nan`lzt02)) Awide ; normw ; LZf ; m
@@ -677,7 +677,7 @@ testungz=: 3 : 0
 
   ik=. 0
   while. ik < # ks do.
-    log=. log lcat ('ungrz' tdyad ((3&{::)`(2&{:: )`]`(rcond"_)`nan`rzt02)) Awide ; normw ; RZf ; ik { ks
+    log=. log lcat ('ungrz' tdyad ((3&{::)`(2&{::)`]`(rcond"_)`nan`rzt02)) Awide ; normw ; RZf ; ik { ks
     ik=. >: ik
   end.
   log=. log lcat ('ungrz' tmonad ((2&{::)`]`(rcond"_)`nan`rzt02)) Awide ; normw ; RZf ; m

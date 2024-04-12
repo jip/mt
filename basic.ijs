@@ -2253,15 +2253,15 @@ testbasicgemv=: 3 : 0
   yn=. n {. y
 
   NB. test for the case: ('alpha beta inc'=. 1 0 1) and (op(A) = A)
-  log=.          ('(+/ .*)'        tdyad  ((0&{::)`(1&{::)`0:`nan`nan`0:            ))                                                   A  ;    xn
-  log=. log lcat ('mp'             tdyad  ((0&{::)`(1&{::)`0:`nan`nan`0:            ))                                                   A  ;    xn
+  log=.          ('(+/ .*)' tdyad ((0&{::)`(1&{::)`0:`nan`nan`0:)) A ; xn
+  log=. log lcat ('mp'      tdyad ((0&{::)`(1&{::)`0:`nan`nan`0:)) A ; xn
 
   NB. for every i feed the tuple (alpha_i ; A ; expanded_x_i ; incx_i ; beta_i ; expanded_y_i ; incy_i) to tmonad
-  log=. log lcat ('dgemvn_mtbla_' tmonad (         ]      `] `nan`nan`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 dcoeff) ; (< A) ; (< xn) ; (<"0 inc) ; (<"0 dcoeff) ; (< ym) ; < <"0 inc
-  log=. log lcat ('dgemvt_mtbla_' tmonad (         ]      `] `nan`nan`(gemvt chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 dcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 dcoeff) ; (< yn) ; < <"0 inc
-  log=. log lcat ('zgemvn_mtbla_' tmonad (         ]      `] `nan`nan`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xn) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
-  log=. log lcat ('zgemvt_mtbla_' tmonad (         ]      `] `nan`nan`(gemvt chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
-  log=. log lcat ('zgemvc_mtbla_' tmonad (         ]      `] `nan`nan`(gemvc chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
+  log=. log lcat ('dgemvn_mtbla_' tmonad (]`] `nan`nan`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 dcoeff) ; (< A) ; (< xn) ; (<"0 inc) ; (<"0 dcoeff) ; (< ym) ; < <"0 inc
+  log=. log lcat ('dgemvt_mtbla_' tmonad (]`] `nan`nan`(gemvt chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 dcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 dcoeff) ; (< yn) ; < <"0 inc
+  log=. log lcat ('zgemvn_mtbla_' tmonad (]`] `nan`nan`(gemvn chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xn) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
+  log=. log lcat ('zgemvt_mtbla_' tmonad (]`] `nan`nan`(gemvt chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
+  log=. log lcat ('zgemvc_mtbla_' tmonad (]`] `nan`nan`(gemvc chk1mv)))@(5 expand 6)@(2 expand 3)@>"0 { (<"0 zcoeff) ; (< A) ; (< xm) ; (<"0 inc) ; (<"0 zcoeff) ; (< ym) ; < <"0 inc
 )
 
 NB. ---------------------------------------------------------
@@ -2397,10 +2397,10 @@ testbasicgemm=: 3 : 0
   'm n'=. $ C
   ks=. /:~ ~. m (0 1 , (, >.@-:)@(, , +)) n  NB. 0,1,⌈m/2⌉,⌈n/2⌉,⌈(m+n)/2⌉,m,n,m+n
   As=. ks <@:({."0 1)"0 _ As                 NB. As[i] is m×k[i]-matrix
-  argsdnn=. { (<"0 dcoeff) ;         As  ; (<    Bs) ; (<"0 dcoeff) ; < < C
-  argsdnt=. { (<"0 dcoeff) ;         As  ; (< |: Bs) ; (<"0 dcoeff) ; < < C
-  argsdtn=. { (<"0 dcoeff) ; (|: L:0 As) ; (<    Bs) ; (<"0 dcoeff) ; < < C
-  argsdtt=. { (<"0 dcoeff) ; (|: L:0 As) ; (< |: Bs) ; (<"0 dcoeff) ; < < C
+  argsdnn=. { (<"0 dcoeff) ;        As  ; (<    Bs) ; (<"0 dcoeff) ; < < C
+  argsdnt=. { (<"0 dcoeff) ;        As  ; (< |: Bs) ; (<"0 dcoeff) ; < < C
+  argsdtn=. { (<"0 dcoeff) ; (|:L:0 As) ; (<    Bs) ; (<"0 dcoeff) ; < < C
+  argsdtt=. { (<"0 dcoeff) ; (|:L:0 As) ; (< |: Bs) ; (<"0 dcoeff) ; < < C
 
   NB. note: A_i and B_i shapes are related; to get them to
   NB.       match, a full fixed Bs was feeded to Catalogue
@@ -2408,25 +2408,25 @@ testbasicgemm=: 3 : 0
   NB.       suitable before call to tmonad
 
   NB. test for the case: ('alpha beta'=. 1.0 0.0) and (op(A) = A)
-  log=.     lcat ('(+/ .*)'         tdyad  ((0&{::)`(1&{::)`0:`nan`nan`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
-  log=. log lcat ('mp'              tdyad  ((0&{::)`(1&{::)`0:`nan`nan`0:                           ))@(c (0 shrink 1)  {.   )@>"0 {                        As  ;  < <  Bs
+  log=.     lcat ('(+/ .*)' tdyad ((0&{::)`(1&{::)`0:`nan`nan`0:))@(c (0 shrink 1) {.)@>"0 { As ; < < Bs
+  log=. log lcat ('mp'      tdyad ((0&{::)`(1&{::)`0:`nan`nan`0:))@(c (0 shrink 1) {.)@>"0 { As ; < < Bs
 
   NB. for every i feed the tuple (alpha_i ; A_i ; B_i ; beta_i ; C) to tmonad
 
-  log=. log lcat ('dgemmnn_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmnn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsdnn
-  log=. log lcat ('dgemmnt_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmnt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsdnt
-  log=. log lcat ('dgemmtn_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmtn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsdtn
-  log=. log lcat ('dgemmtt_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmtt  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsdtt
+  log=. log lcat ('dgemmnn_mtbla_' tmonad (]`] `nan`nan`(gemmnn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsdnn
+  log=. log lcat ('dgemmnt_mtbla_' tmonad (]`] `nan`nan`(gemmnt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsdnt
+  log=. log lcat ('dgemmtn_mtbla_' tmonad (]`] `nan`nan`(gemmtn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsdtn
+  log=. log lcat ('dgemmtt_mtbla_' tmonad (]`] `nan`nan`(gemmtt  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsdtt
 
-  log=. log lcat ('zgemmnn_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmnn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ;         As  ; (<    Bs) ; (<"0 zcoeff) ; < < C
-  log=. log lcat ('zgemmnt_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmnt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< |: Bs) ; (<"0 zcoeff) ; < < C
-  log=. log lcat ('zgemmnc_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmnc  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< ct Bs) ; (<"0 zcoeff) ; < < C
-  log=. log lcat ('zgemmtn_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmtn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (<    Bs) ; (<"0 zcoeff) ; < < C
-  log=. log lcat ('zgemmtt_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmtt  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< |: Bs) ; (<"0 zcoeff) ; < < C
-  log=. log lcat ('zgemmtc_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmtc  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< ct Bs) ; (<"0 zcoeff) ; < < C
-  log=. log lcat ('zgemmcn_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmcn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (<    Bs) ; (<"0 zcoeff) ; < < C
-  log=. log lcat ('zgemmct_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmct  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< |: Bs) ; (<"0 zcoeff) ; < < C
-  log=. log lcat ('zgemmcc_mtbla_'  tmonad (        ]      `] `nan`nan`(             gemmcc  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< ct Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmnn_mtbla_' tmonad (]`] `nan`nan`(gemmnn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ;         As  ; (<    Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmnt_mtbla_' tmonad (]`] `nan`nan`(gemmnt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< |: Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmnc_mtbla_' tmonad (]`] `nan`nan`(gemmnc  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ;         As  ; (< ct Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmtn_mtbla_' tmonad (]`] `nan`nan`(gemmtn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (<    Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmtt_mtbla_' tmonad (]`] `nan`nan`(gemmtt  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< |: Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmtc_mtbla_' tmonad (]`] `nan`nan`(gemmtc  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (|: L:0 As) ; (< ct Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmcn_mtbla_' tmonad (]`] `nan`nan`(gemmcn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (<    Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmct_mtbla_' tmonad (]`] `nan`nan`(gemmct  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< |: Bs) ; (<"0 zcoeff) ; < < C
+  log=. log lcat ('zgemmcc_mtbla_' tmonad (]`] `nan`nan`(gemmcc  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 { (<"0 zcoeff) ; (ct L:0 As) ; (< ct Bs) ; (<"0 zcoeff) ; < < C
 
   NB. BLIS xgemm supports float and complex datatypes only
   if. '' -: (3!:0 S: 0 y) -. JFL , JCMPX do.
@@ -2450,44 +2450,44 @@ testbasicgemm=: 3 : 0
     argsacj=. { (<"0 dcoeff) ; (ct L:0 As) ; (< +  Bs) ; (<"0 acoeff) ; < < C
     argsacc=. { (<"0 dcoeff) ; (ct L:0 As) ; (< ct Bs) ; (<"0 acoeff) ; < < C
 
-    log=. log lcat ('gemmnn_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmnn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
-    log=. log lcat ('gemmnt_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmnt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
-    log=. log lcat ('gemmnj_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmnj  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
-    log=. log lcat ('gemmnc_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmnc  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
-    log=. log lcat ('gemmtn_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmtn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
-    log=. log lcat ('gemmtt_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmtt  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
-    log=. log lcat ('gemmtj_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmtj  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
-    log=. log lcat ('gemmtc_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmtc  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
-    log=. log lcat ('gemmjn_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmjn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
-    log=. log lcat ('gemmjt_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmjt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
-    log=. log lcat ('gemmjj_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmjj  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
-    log=. log lcat ('gemmjc_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmjc  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
-    log=. log lcat ('gemmcn_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmcn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
-    log=. log lcat ('gemmct_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmct  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
-    log=. log lcat ('gemmcj_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmcj  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
-    log=. log lcat ('gemmcc_mtbli_'   tmonad (        ]      `] `nan`nan`(             gemmcc  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
+    log=. log lcat ('gemmnn_mtbli_'  tmonad (]`] `nan`nan`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
+    log=. log lcat ('gemmnt_mtbli_'  tmonad (]`] `nan`nan`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
+    log=. log lcat ('gemmnj_mtbli_'  tmonad (]`] `nan`nan`(gemmnj chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
+    log=. log lcat ('gemmnc_mtbli_'  tmonad (]`] `nan`nan`(gemmnc chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
+    log=. log lcat ('gemmtn_mtbli_'  tmonad (]`] `nan`nan`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
+    log=. log lcat ('gemmtt_mtbli_'  tmonad (]`] `nan`nan`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
+    log=. log lcat ('gemmtj_mtbli_'  tmonad (]`] `nan`nan`(gemmtj chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
+    log=. log lcat ('gemmtc_mtbli_'  tmonad (]`] `nan`nan`(gemmtc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
+    log=. log lcat ('gemmjn_mtbli_'  tmonad (]`] `nan`nan`(gemmjn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
+    log=. log lcat ('gemmjt_mtbli_'  tmonad (]`] `nan`nan`(gemmjt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
+    log=. log lcat ('gemmjj_mtbli_'  tmonad (]`] `nan`nan`(gemmjj chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
+    log=. log lcat ('gemmjc_mtbli_'  tmonad (]`] `nan`nan`(gemmjc chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
+    log=. log lcat ('gemmcn_mtbli_'  tmonad (]`] `nan`nan`(gemmcn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
+    log=. log lcat ('gemmct_mtbli_'  tmonad (]`] `nan`nan`(gemmct chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
+    log=. log lcat ('gemmcj_mtbli_'  tmonad (]`] `nan`nan`(gemmcj chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
+    log=. log lcat ('gemmcc_mtbli_'  tmonad (]`] `nan`nan`(gemmcc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
 
-    log=. log lcat ('dgemmnn_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmnn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsdnn
-    log=. log lcat ('dgemmnt_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmnt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsdnt
-    log=. log lcat ('dgemmtn_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmtn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsdtn
-    log=. log lcat ('dgemmtt_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmtt  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsdtt
+    log=. log lcat ('dgemmnn_mtbli_' tmonad (]`] `nan`nan`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsdnn
+    log=. log lcat ('dgemmnt_mtbli_' tmonad (]`] `nan`nan`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsdnt
+    log=. log lcat ('dgemmtn_mtbli_' tmonad (]`] `nan`nan`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsdtn
+    log=. log lcat ('dgemmtt_mtbli_' tmonad (]`] `nan`nan`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsdtt
 
-    log=. log lcat ('zgemmnn_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmnn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
-    log=. log lcat ('zgemmnt_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmnt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
-    log=. log lcat ('zgemmnj_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmnj  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
-    log=. log lcat ('zgemmnc_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmnc  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
-    log=. log lcat ('zgemmtn_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmtn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
-    log=. log lcat ('zgemmtt_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmtt  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
-    log=. log lcat ('zgemmtj_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmtj  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
-    log=. log lcat ('zgemmtc_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmtc  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
-    log=. log lcat ('zgemmjn_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmjn  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
-    log=. log lcat ('zgemmjt_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmjt  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
-    log=. log lcat ('zgemmjj_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmjj  chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
-    log=. log lcat ('zgemmjc_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmjc  chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
-    log=. log lcat ('zgemmcn_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmcn  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
-    log=. log lcat ('zgemmct_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmct  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
-    log=. log lcat ('zgemmcj_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmcj  chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
-    log=. log lcat ('zgemmcc_mtbli_'  tmonad (        ]      `] `nan`nan`(             gemmcc  chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
+    log=. log lcat ('zgemmnn_mtbli_' tmonad (]`] `nan`nan`(gemmnn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
+    log=. log lcat ('zgemmnt_mtbli_' tmonad (]`] `nan`nan`(gemmnt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
+    log=. log lcat ('zgemmnj_mtbli_' tmonad (]`] `nan`nan`(gemmnj chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
+    log=. log lcat ('zgemmnc_mtbli_' tmonad (]`] `nan`nan`(gemmnc chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
+    log=. log lcat ('zgemmtn_mtbli_' tmonad (]`] `nan`nan`(gemmtn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
+    log=. log lcat ('zgemmtt_mtbli_' tmonad (]`] `nan`nan`(gemmtt chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
+    log=. log lcat ('zgemmtj_mtbli_' tmonad (]`] `nan`nan`(gemmtj chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
+    log=. log lcat ('zgemmtc_mtbli_' tmonad (]`] `nan`nan`(gemmtc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
+    log=. log lcat ('zgemmjn_mtbli_' tmonad (]`] `nan`nan`(gemmjn chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
+    log=. log lcat ('zgemmjt_mtbli_' tmonad (]`] `nan`nan`(gemmjt chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
+    log=. log lcat ('zgemmjj_mtbli_' tmonad (]`] `nan`nan`(gemmjj chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
+    log=. log lcat ('zgemmjc_mtbli_' tmonad (]`] `nan`nan`(gemmjc chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
+    log=. log lcat ('zgemmcn_mtbli_' tmonad (]`] `nan`nan`(gemmcn chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
+    log=. log lcat ('zgemmct_mtbli_' tmonad (]`] `nan`nan`(gemmct chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
+    log=. log lcat ('zgemmcj_mtbli_' tmonad (]`] `nan`nan`(gemmcj chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
+    log=. log lcat ('zgemmcc_mtbli_' tmonad (]`] `nan`nan`(gemmcc chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
   end.
 )
 
@@ -2552,80 +2552,80 @@ testbasicgemmt=: 3 : 0
 
     NB. for every i feed the tuple (alpha_i ; A_i ; B_i ; beta_i ; C) to tmonad
 
-    log=.     lcat ('gemmlnn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
-    log=. log lcat ('gemmlnt_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
-    log=. log lcat ('gemmlnj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
-    log=. log lcat ('gemmlnc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
-    log=. log lcat ('gemmltn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
-    log=. log lcat ('gemmltt_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
-    log=. log lcat ('gemmltj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
-    log=. log lcat ('gemmltc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
-    log=. log lcat ('gemmljn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmjn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
-    log=. log lcat ('gemmljt_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmjt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
-    log=. log lcat ('gemmljj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmjj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
-    log=. log lcat ('gemmljc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmjc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
-    log=. log lcat ('gemmlcn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmcn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
-    log=. log lcat ('gemmlct_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmct) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
-    log=. log lcat ('gemmlcj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmcj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
-    log=. log lcat ('gemmlcc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmcc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
-    log=. log lcat ('gemmunn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
-    log=. log lcat ('gemmunt_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
-    log=. log lcat ('gemmunj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
-    log=. log lcat ('gemmunc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
-    log=. log lcat ('gemmutn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
-    log=. log lcat ('gemmutt_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
-    log=. log lcat ('gemmutj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
-    log=. log lcat ('gemmutc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
-    log=. log lcat ('gemmujn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmjn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
-    log=. log lcat ('gemmujt_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmjt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
-    log=. log lcat ('gemmujj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmjj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
-    log=. log lcat ('gemmujc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmjc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
-    log=. log lcat ('gemmucn_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmcn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
-    log=. log lcat ('gemmuct_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmct) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
-    log=. log lcat ('gemmucj_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmcj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
-    log=. log lcat ('gemmucc_mtbli_'  tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmcc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
+    log=.     lcat ('gemmlnn_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
+    log=. log lcat ('gemmlnt_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
+    log=. log lcat ('gemmlnj_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
+    log=. log lcat ('gemmlnc_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
+    log=. log lcat ('gemmltn_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
+    log=. log lcat ('gemmltt_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
+    log=. log lcat ('gemmltj_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmtj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
+    log=. log lcat ('gemmltc_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmtc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
+    log=. log lcat ('gemmljn_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmjn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
+    log=. log lcat ('gemmljt_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmjt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
+    log=. log lcat ('gemmljj_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmjj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
+    log=. log lcat ('gemmljc_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmjc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
+    log=. log lcat ('gemmlcn_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmcn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
+    log=. log lcat ('gemmlct_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmct) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
+    log=. log lcat ('gemmlcj_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmcj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
+    log=. log lcat ('gemmlcc_mtbli_'  tmonad (]`] `nan`nan`((4&{:: suxly gemmcc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
+    log=. log lcat ('gemmunn_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
+    log=. log lcat ('gemmunt_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
+    log=. log lcat ('gemmunj_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
+    log=. log lcat ('gemmunc_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
+    log=. log lcat ('gemmutn_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
+    log=. log lcat ('gemmutt_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
+    log=. log lcat ('gemmutj_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmtj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
+    log=. log lcat ('gemmutc_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmtc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
+    log=. log lcat ('gemmujn_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmjn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
+    log=. log lcat ('gemmujt_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmjt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
+    log=. log lcat ('gemmujj_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmjj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
+    log=. log lcat ('gemmujc_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmjc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
+    log=. log lcat ('gemmucn_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmcn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
+    log=. log lcat ('gemmuct_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmct) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
+    log=. log lcat ('gemmucj_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmcj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
+    log=. log lcat ('gemmucc_mtbli_'  tmonad (]`] `nan`nan`((4&{:: slxuy gemmcc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
 
-    log=. log lcat ('dgemmlnn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsdnn
-    log=. log lcat ('dgemmlnt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsdnt
-    log=. log lcat ('dgemmltn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsdtn
-    log=. log lcat ('dgemmltt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsdtt
-    log=. log lcat ('dgemmunn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsdnn
-    log=. log lcat ('dgemmunt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsdnt
-    log=. log lcat ('dgemmutn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsdtn
-    log=. log lcat ('dgemmutt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsdtt
+    log=. log lcat ('dgemmlnn_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsdnn
+    log=. log lcat ('dgemmlnt_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsdnt
+    log=. log lcat ('dgemmltn_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsdtn
+    log=. log lcat ('dgemmltt_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsdtt
+    log=. log lcat ('dgemmunn_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsdnn
+    log=. log lcat ('dgemmunt_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsdnt
+    log=. log lcat ('dgemmutn_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsdtn
+    log=. log lcat ('dgemmutt_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsdtt
 
-    log=. log lcat ('zgemmlnn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
-    log=. log lcat ('zgemmlnt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
-    log=. log lcat ('zgemmlnj_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
-    log=. log lcat ('zgemmlnc_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
-    log=. log lcat ('zgemmltn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
-    log=. log lcat ('zgemmltt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
-    log=. log lcat ('zgemmltj_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
-    log=. log lcat ('zgemmltc_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmtc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
-    log=. log lcat ('zgemmljn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmjn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
-    log=. log lcat ('zgemmljt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmjt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
-    log=. log lcat ('zgemmljj_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmjj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
-    log=. log lcat ('zgemmljc_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmjc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
-    log=. log lcat ('zgemmlcn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmcn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
-    log=. log lcat ('zgemmlct_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmct) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
-    log=. log lcat ('zgemmlcj_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmcj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
-    log=. log lcat ('zgemmlcc_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: suxly gemmcc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
-    log=. log lcat ('zgemmunn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
-    log=. log lcat ('zgemmunt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
-    log=. log lcat ('zgemmunj_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
-    log=. log lcat ('zgemmunc_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
-    log=. log lcat ('zgemmutn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
-    log=. log lcat ('zgemmutt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
-    log=. log lcat ('zgemmutj_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
-    log=. log lcat ('zgemmutc_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmtc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
-    log=. log lcat ('zgemmujn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmjn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
-    log=. log lcat ('zgemmujt_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmjt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
-    log=. log lcat ('zgemmujj_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmjj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
-    log=. log lcat ('zgemmujc_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmjc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
-    log=. log lcat ('zgemmucn_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmcn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
-    log=. log lcat ('zgemmuct_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmct) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
-    log=. log lcat ('zgemmucj_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmcj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
-    log=. log lcat ('zgemmucc_mtbli_' tmonad (        ]      `] `nan`nan`((4&{:: slxuy gemmcc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
+    log=. log lcat ('zgemmlnn_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
+    log=. log lcat ('zgemmlnt_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
+    log=. log lcat ('zgemmlnj_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
+    log=. log lcat ('zgemmlnc_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
+    log=. log lcat ('zgemmltn_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
+    log=. log lcat ('zgemmltt_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
+    log=. log lcat ('zgemmltj_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmtj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
+    log=. log lcat ('zgemmltc_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmtc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
+    log=. log lcat ('zgemmljn_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmjn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
+    log=. log lcat ('zgemmljt_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmjt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
+    log=. log lcat ('zgemmljj_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmjj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
+    log=. log lcat ('zgemmljc_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmjc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
+    log=. log lcat ('zgemmlcn_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmcn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
+    log=. log lcat ('zgemmlct_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmct) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
+    log=. log lcat ('zgemmlcj_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmcj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
+    log=. log lcat ('zgemmlcc_mtbli_' tmonad (]`] `nan`nan`((4&{:: suxly gemmcc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
+    log=. log lcat ('zgemmunn_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmnn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsann
+    log=. log lcat ('zgemmunt_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmnt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsant
+    log=. log lcat ('zgemmunj_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmnj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsanj
+    log=. log lcat ('zgemmunc_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmnc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsanc
+    log=. log lcat ('zgemmutn_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmtn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatn
+    log=. log lcat ('zgemmutt_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmtt) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatt
+    log=. log lcat ('zgemmutj_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmtj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsatj
+    log=. log lcat ('zgemmutc_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmtc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsatc
+    log=. log lcat ('zgemmujn_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmjn) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajn
+    log=. log lcat ('zgemmujt_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmjt) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajt
+    log=. log lcat ('zgemmujj_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmjj) chk1mm)))@(c (1 shrink 2)  {.   )@>"0 argsajj
+    log=. log lcat ('zgemmujc_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmjc) chk1mm)))@(c (1 shrink 2) ({."1))@>"0 argsajc
+    log=. log lcat ('zgemmucn_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmcn) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacn
+    log=. log lcat ('zgemmuct_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmct) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsact
+    log=. log lcat ('zgemmucj_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmcj) chk1mm)))@(# (1 shrink 2)  {.   )@>"0 argsacj
+    log=. log lcat ('zgemmucc_mtbli_' tmonad (]`] `nan`nan`((4&{:: slxuy gemmcc) chk1mm)))@(# (1 shrink 2) ({."1))@>"0 argsacc
   else.
     nolog ''
   end.
@@ -2670,15 +2670,15 @@ testbasicsymm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; AA ; B ; beta_i ; C) to tmonad
 
-  log=.     lcat ('dsymmll_mtbla_'   tmonad (]`]`nan`nan`(symmllnn chk2mm)))@>"0 argsdm
-  log=. log lcat ('dsymmlu_mtbla_'   tmonad (]`]`nan`nan`(symmlunn chk2mm)))@>"0 argsdm
-  log=. log lcat ('dsymmrl_mtbla_'   tmonad (]`]`nan`nan`(symmrlnn chk2mm)))@>"0 argsdn
-  log=. log lcat ('dsymmru_mtbla_'   tmonad (]`]`nan`nan`(symmrunn chk2mm)))@>"0 argsdn
+  log=.     lcat ('dsymmll_mtbla_' tmonad (]`]`nan`nan`(symmllnn chk2mm)))@>"0 argsdm
+  log=. log lcat ('dsymmlu_mtbla_' tmonad (]`]`nan`nan`(symmlunn chk2mm)))@>"0 argsdm
+  log=. log lcat ('dsymmrl_mtbla_' tmonad (]`]`nan`nan`(symmrlnn chk2mm)))@>"0 argsdn
+  log=. log lcat ('dsymmru_mtbla_' tmonad (]`]`nan`nan`(symmrunn chk2mm)))@>"0 argsdn
 
-  log=. log lcat ('zsymmll_mtbla_'   tmonad (]`]`nan`nan`(symmllnn chk2mm)))@>"0 argszm
-  log=. log lcat ('zsymmlu_mtbla_'   tmonad (]`]`nan`nan`(symmlunn chk2mm)))@>"0 argszm
-  log=. log lcat ('zsymmrl_mtbla_'   tmonad (]`]`nan`nan`(symmrlnn chk2mm)))@>"0 argszn
-  log=. log lcat ('zsymmru_mtbla_'   tmonad (]`]`nan`nan`(symmrunn chk2mm)))@>"0 argszn
+  log=. log lcat ('zsymmll_mtbla_' tmonad (]`]`nan`nan`(symmllnn chk2mm)))@>"0 argszm
+  log=. log lcat ('zsymmlu_mtbla_' tmonad (]`]`nan`nan`(symmlunn chk2mm)))@>"0 argszm
+  log=. log lcat ('zsymmrl_mtbla_' tmonad (]`]`nan`nan`(symmrlnn chk2mm)))@>"0 argszn
+  log=. log lcat ('zsymmru_mtbla_' tmonad (]`]`nan`nan`(symmrunn chk2mm)))@>"0 argszn
 
   NB. BLIS xsymm supports float and complex datatypes only
   if. '' -: (3!:0 S: 0 y) -. JFL , JCMPX do.
@@ -2799,10 +2799,10 @@ testbasichemm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; Ax ; B ; beta_i ; C) to tmonad
 
-  log=.     lcat ('zhemmll_mtbla_'   tmonad (]`]`nan`nan`(hemmllnn chk2mm)))@>"0 argszm
-  log=. log lcat ('zhemmlu_mtbla_'   tmonad (]`]`nan`nan`(hemmlunn chk2mm)))@>"0 argszm
-  log=. log lcat ('zhemmrl_mtbla_'   tmonad (]`]`nan`nan`(hemmrlnn chk2mm)))@>"0 argszn
-  log=. log lcat ('zhemmru_mtbla_'   tmonad (]`]`nan`nan`(hemmrunn chk2mm)))@>"0 argszn
+  log=.     lcat ('zhemmll_mtbla_' tmonad (]`]`nan`nan`(hemmllnn chk2mm)))@>"0 argszm
+  log=. log lcat ('zhemmlu_mtbla_' tmonad (]`]`nan`nan`(hemmlunn chk2mm)))@>"0 argszm
+  log=. log lcat ('zhemmrl_mtbla_' tmonad (]`]`nan`nan`(hemmrlnn chk2mm)))@>"0 argszn
+  log=. log lcat ('zhemmru_mtbla_' tmonad (]`]`nan`nan`(hemmrunn chk2mm)))@>"0 argszn
 
   NB. BLIS xhemm supports float and complex datatypes only
   if. '' -: (3!:0 S: 0 y) -. JFL , JCMPX do.
@@ -2918,47 +2918,47 @@ testbasictrmm=: 3 : 0
 
   NB. for every i feed the tuple (alpha_i ; Ax ; B) to tmonad
 
-  log=.     lcat ('dtrmmllnn_mtbla_'  tmonad (]`]`nan`nan`(trmmllnn  chk3mm)))@>"0 argsdm
-  log=. log lcat ('dtrmmllnu_mtbla_'  tmonad (]`]`nan`nan`(trmmllnu  chk3mm)))@>"0 argsdm
-  log=. log lcat ('dtrmmlltn_mtbla_'  tmonad (]`]`nan`nan`(trmmlltn  chk3mm)))@>"0 argsdm
-  log=. log lcat ('dtrmmlltu_mtbla_'  tmonad (]`]`nan`nan`(trmmlltu  chk3mm)))@>"0 argsdm
-  log=. log lcat ('dtrmmlunn_mtbla_'  tmonad (]`]`nan`nan`(trmmlunn  chk3mm)))@>"0 argsdm
-  log=. log lcat ('dtrmmlunu_mtbla_'  tmonad (]`]`nan`nan`(trmmlunu  chk3mm)))@>"0 argsdm
-  log=. log lcat ('dtrmmlutn_mtbla_'  tmonad (]`]`nan`nan`(trmmlutn  chk3mm)))@>"0 argsdm
-  log=. log lcat ('dtrmmlutu_mtbla_'  tmonad (]`]`nan`nan`(trmmlutu  chk3mm)))@>"0 argsdm
-  log=. log lcat ('dtrmmrlnn_mtbla_'  tmonad (]`]`nan`nan`(trmmrlnn  chk3mm)))@>"0 argsdn
-  log=. log lcat ('dtrmmrlnu_mtbla_'  tmonad (]`]`nan`nan`(trmmrlnu  chk3mm)))@>"0 argsdn
-  log=. log lcat ('dtrmmrltn_mtbla_'  tmonad (]`]`nan`nan`(trmmrltn  chk3mm)))@>"0 argsdn
-  log=. log lcat ('dtrmmrltu_mtbla_'  tmonad (]`]`nan`nan`(trmmrltu  chk3mm)))@>"0 argsdn
-  log=. log lcat ('dtrmmrunn_mtbla_'  tmonad (]`]`nan`nan`(trmmrunn  chk3mm)))@>"0 argsdn
-  log=. log lcat ('dtrmmrunu_mtbla_'  tmonad (]`]`nan`nan`(trmmrunu  chk3mm)))@>"0 argsdn
-  log=. log lcat ('dtrmmrutn_mtbla_'  tmonad (]`]`nan`nan`(trmmrutn  chk3mm)))@>"0 argsdn
-  log=. log lcat ('dtrmmrutu_mtbla_'  tmonad (]`]`nan`nan`(trmmrutu  chk3mm)))@>"0 argsdn
+  log=.     lcat ('dtrmmllnn_mtbla_' tmonad (]`]`nan`nan`(trmmllnn chk3mm)))@>"0 argsdm
+  log=. log lcat ('dtrmmllnu_mtbla_' tmonad (]`]`nan`nan`(trmmllnu chk3mm)))@>"0 argsdm
+  log=. log lcat ('dtrmmlltn_mtbla_' tmonad (]`]`nan`nan`(trmmlltn chk3mm)))@>"0 argsdm
+  log=. log lcat ('dtrmmlltu_mtbla_' tmonad (]`]`nan`nan`(trmmlltu chk3mm)))@>"0 argsdm
+  log=. log lcat ('dtrmmlunn_mtbla_' tmonad (]`]`nan`nan`(trmmlunn chk3mm)))@>"0 argsdm
+  log=. log lcat ('dtrmmlunu_mtbla_' tmonad (]`]`nan`nan`(trmmlunu chk3mm)))@>"0 argsdm
+  log=. log lcat ('dtrmmlutn_mtbla_' tmonad (]`]`nan`nan`(trmmlutn chk3mm)))@>"0 argsdm
+  log=. log lcat ('dtrmmlutu_mtbla_' tmonad (]`]`nan`nan`(trmmlutu chk3mm)))@>"0 argsdm
+  log=. log lcat ('dtrmmrlnn_mtbla_' tmonad (]`]`nan`nan`(trmmrlnn chk3mm)))@>"0 argsdn
+  log=. log lcat ('dtrmmrlnu_mtbla_' tmonad (]`]`nan`nan`(trmmrlnu chk3mm)))@>"0 argsdn
+  log=. log lcat ('dtrmmrltn_mtbla_' tmonad (]`]`nan`nan`(trmmrltn chk3mm)))@>"0 argsdn
+  log=. log lcat ('dtrmmrltu_mtbla_' tmonad (]`]`nan`nan`(trmmrltu chk3mm)))@>"0 argsdn
+  log=. log lcat ('dtrmmrunn_mtbla_' tmonad (]`]`nan`nan`(trmmrunn chk3mm)))@>"0 argsdn
+  log=. log lcat ('dtrmmrunu_mtbla_' tmonad (]`]`nan`nan`(trmmrunu chk3mm)))@>"0 argsdn
+  log=. log lcat ('dtrmmrutn_mtbla_' tmonad (]`]`nan`nan`(trmmrutn chk3mm)))@>"0 argsdn
+  log=. log lcat ('dtrmmrutu_mtbla_' tmonad (]`]`nan`nan`(trmmrutu chk3mm)))@>"0 argsdn
 
-  log=. log lcat ('ztrmmllnn_mtbla_'  tmonad (]`]`nan`nan`(trmmllnn  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmllnu_mtbla_'  tmonad (]`]`nan`nan`(trmmllnu  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmlltn_mtbla_'  tmonad (]`]`nan`nan`(trmmlltn  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmlltu_mtbla_'  tmonad (]`]`nan`nan`(trmmlltu  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmllcn_mtbla_'  tmonad (]`]`nan`nan`(trmmllcn  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmllcu_mtbla_'  tmonad (]`]`nan`nan`(trmmllcu  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmlunn_mtbla_'  tmonad (]`]`nan`nan`(trmmlunn  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmlunu_mtbla_'  tmonad (]`]`nan`nan`(trmmlunu  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmlutn_mtbla_'  tmonad (]`]`nan`nan`(trmmlutn  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmlutu_mtbla_'  tmonad (]`]`nan`nan`(trmmlutu  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmlucn_mtbla_'  tmonad (]`]`nan`nan`(trmmlucn  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmlucu_mtbla_'  tmonad (]`]`nan`nan`(trmmlucu  chk3mm)))@>"0 argszm
-  log=. log lcat ('ztrmmrlnn_mtbla_'  tmonad (]`]`nan`nan`(trmmrlnn  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrlnu_mtbla_'  tmonad (]`]`nan`nan`(trmmrlnu  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrltn_mtbla_'  tmonad (]`]`nan`nan`(trmmrltn  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrltu_mtbla_'  tmonad (]`]`nan`nan`(trmmrltu  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrlcn_mtbla_'  tmonad (]`]`nan`nan`(trmmrlcn  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrlcu_mtbla_'  tmonad (]`]`nan`nan`(trmmrlcu  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrunn_mtbla_'  tmonad (]`]`nan`nan`(trmmrunn  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrunu_mtbla_'  tmonad (]`]`nan`nan`(trmmrunu  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrutn_mtbla_'  tmonad (]`]`nan`nan`(trmmrutn  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrutu_mtbla_'  tmonad (]`]`nan`nan`(trmmrutu  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrucn_mtbla_'  tmonad (]`]`nan`nan`(trmmrucn  chk3mm)))@>"0 argszn
-  log=. log lcat ('ztrmmrucu_mtbla_'  tmonad (]`]`nan`nan`(trmmrucu  chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmllnn_mtbla_' tmonad (]`]`nan`nan`(trmmllnn chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmllnu_mtbla_' tmonad (]`]`nan`nan`(trmmllnu chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmlltn_mtbla_' tmonad (]`]`nan`nan`(trmmlltn chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmlltu_mtbla_' tmonad (]`]`nan`nan`(trmmlltu chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmllcn_mtbla_' tmonad (]`]`nan`nan`(trmmllcn chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmllcu_mtbla_' tmonad (]`]`nan`nan`(trmmllcu chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmlunn_mtbla_' tmonad (]`]`nan`nan`(trmmlunn chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmlunu_mtbla_' tmonad (]`]`nan`nan`(trmmlunu chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmlutn_mtbla_' tmonad (]`]`nan`nan`(trmmlutn chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmlutu_mtbla_' tmonad (]`]`nan`nan`(trmmlutu chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmlucn_mtbla_' tmonad (]`]`nan`nan`(trmmlucn chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmlucu_mtbla_' tmonad (]`]`nan`nan`(trmmlucu chk3mm)))@>"0 argszm
+  log=. log lcat ('ztrmmrlnn_mtbla_' tmonad (]`]`nan`nan`(trmmrlnn chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrlnu_mtbla_' tmonad (]`]`nan`nan`(trmmrlnu chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrltn_mtbla_' tmonad (]`]`nan`nan`(trmmrltn chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrltu_mtbla_' tmonad (]`]`nan`nan`(trmmrltu chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrlcn_mtbla_' tmonad (]`]`nan`nan`(trmmrlcn chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrlcu_mtbla_' tmonad (]`]`nan`nan`(trmmrlcu chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrunn_mtbla_' tmonad (]`]`nan`nan`(trmmrunn chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrunu_mtbla_' tmonad (]`]`nan`nan`(trmmrunu chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrutn_mtbla_' tmonad (]`]`nan`nan`(trmmrutn chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrutu_mtbla_' tmonad (]`]`nan`nan`(trmmrutu chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrucn_mtbla_' tmonad (]`]`nan`nan`(trmmrucn chk3mm)))@>"0 argszn
+  log=. log lcat ('ztrmmrucu_mtbla_' tmonad (]`]`nan`nan`(trmmrucu chk3mm)))@>"0 argszn
 
   NB. BLIS xtrmm supports float and complex datatypes only
   if. '' -: (3!:0 S: 0 y) -. JFL , JCMPX do.
@@ -3606,72 +3606,72 @@ testbasictrsm=: 3 : 0
   NB. mt staff
 
   NB. monadic trsmxxxx, 1-rank b and x
-  log=. log lcat ('trsmllnn'         tmonad (]`]`nan`nan`(trmmllnn chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmllnu'         tmonad (]`]`nan`nan`(trmmllnu chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlltn'         tmonad (]`]`nan`nan`(trmmlltn chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlltu'         tmonad (]`]`nan`nan`(trmmlltu chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlljn'         tmonad (]`]`nan`nan`(trmmlljn chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmllju'         tmonad (]`]`nan`nan`(trmmllju chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmllcn'         tmonad (]`]`nan`nan`(trmmllcn chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmllcu'         tmonad (]`]`nan`nan`(trmmllcu chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlunn'         tmonad (]`]`nan`nan`(trmmlunn chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlunu'         tmonad (]`]`nan`nan`(trmmlunu chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlutn'         tmonad (]`]`nan`nan`(trmmlutn chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlutu'         tmonad (]`]`nan`nan`(trmmlutu chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlujn'         tmonad (]`]`nan`nan`(trmmlujn chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmluju'         tmonad (]`]`nan`nan`(trmmluju chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlucn'         tmonad (]`]`nan`nan`(trmmlucn chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmlucu'         tmonad (]`]`nan`nan`(trmmlucu chk3sm)))@>"0 argsbm
-  log=. log lcat ('trsmrlnn'         tmonad (]`]`nan`nan`(trmmrlnn chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrlnu'         tmonad (]`]`nan`nan`(trmmrlnu chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrltn'         tmonad (]`]`nan`nan`(trmmrltn chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrltu'         tmonad (]`]`nan`nan`(trmmrltu chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrljn'         tmonad (]`]`nan`nan`(trmmrljn chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrlju'         tmonad (]`]`nan`nan`(trmmrlju chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrlcn'         tmonad (]`]`nan`nan`(trmmrlcn chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrlcu'         tmonad (]`]`nan`nan`(trmmrlcu chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrunn'         tmonad (]`]`nan`nan`(trmmrunn chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrunu'         tmonad (]`]`nan`nan`(trmmrunu chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrutn'         tmonad (]`]`nan`nan`(trmmrutn chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrutu'         tmonad (]`]`nan`nan`(trmmrutu chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrujn'         tmonad (]`]`nan`nan`(trmmrujn chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmruju'         tmonad (]`]`nan`nan`(trmmruju chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrucn'         tmonad (]`]`nan`nan`(trmmrucn chk3sm)))@>"0 argsbn
-  log=. log lcat ('trsmrucu'         tmonad (]`]`nan`nan`(trmmrucu chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmllnn' tmonad (]`]`nan`nan`(trmmllnn chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmllnu' tmonad (]`]`nan`nan`(trmmllnu chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlltn' tmonad (]`]`nan`nan`(trmmlltn chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlltu' tmonad (]`]`nan`nan`(trmmlltu chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlljn' tmonad (]`]`nan`nan`(trmmlljn chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmllju' tmonad (]`]`nan`nan`(trmmllju chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmllcn' tmonad (]`]`nan`nan`(trmmllcn chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmllcu' tmonad (]`]`nan`nan`(trmmllcu chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlunn' tmonad (]`]`nan`nan`(trmmlunn chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlunu' tmonad (]`]`nan`nan`(trmmlunu chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlutn' tmonad (]`]`nan`nan`(trmmlutn chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlutu' tmonad (]`]`nan`nan`(trmmlutu chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlujn' tmonad (]`]`nan`nan`(trmmlujn chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmluju' tmonad (]`]`nan`nan`(trmmluju chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlucn' tmonad (]`]`nan`nan`(trmmlucn chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmlucu' tmonad (]`]`nan`nan`(trmmlucu chk3sm)))@>"0 argsbm
+  log=. log lcat ('trsmrlnn' tmonad (]`]`nan`nan`(trmmrlnn chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrlnu' tmonad (]`]`nan`nan`(trmmrlnu chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrltn' tmonad (]`]`nan`nan`(trmmrltn chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrltu' tmonad (]`]`nan`nan`(trmmrltu chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrljn' tmonad (]`]`nan`nan`(trmmrljn chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrlju' tmonad (]`]`nan`nan`(trmmrlju chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrlcn' tmonad (]`]`nan`nan`(trmmrlcn chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrlcu' tmonad (]`]`nan`nan`(trmmrlcu chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrunn' tmonad (]`]`nan`nan`(trmmrunn chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrunu' tmonad (]`]`nan`nan`(trmmrunu chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrutn' tmonad (]`]`nan`nan`(trmmrutn chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrutu' tmonad (]`]`nan`nan`(trmmrutu chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrujn' tmonad (]`]`nan`nan`(trmmrujn chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmruju' tmonad (]`]`nan`nan`(trmmruju chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrucn' tmonad (]`]`nan`nan`(trmmrucn chk3sm)))@>"0 argsbn
+  log=. log lcat ('trsmrucu' tmonad (]`]`nan`nan`(trmmrucu chk3sm)))@>"0 argsbn
 
   NB. monadic trsmxxxx, 2-rank B and X
-  log=. log lcat ('trsmllnn'         tmonad (]`]`nan`nan`(trmmllnn chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmllnu'         tmonad (]`]`nan`nan`(trmmllnu chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlltn'         tmonad (]`]`nan`nan`(trmmlltn chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlltu'         tmonad (]`]`nan`nan`(trmmlltu chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlljn'         tmonad (]`]`nan`nan`(trmmlljn chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmllju'         tmonad (]`]`nan`nan`(trmmllju chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmllcn'         tmonad (]`]`nan`nan`(trmmllcn chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmllcu'         tmonad (]`]`nan`nan`(trmmllcu chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlunn'         tmonad (]`]`nan`nan`(trmmlunn chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlunu'         tmonad (]`]`nan`nan`(trmmlunu chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlutn'         tmonad (]`]`nan`nan`(trmmlutn chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlutu'         tmonad (]`]`nan`nan`(trmmlutu chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlujn'         tmonad (]`]`nan`nan`(trmmlujn chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmluju'         tmonad (]`]`nan`nan`(trmmluju chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlucn'         tmonad (]`]`nan`nan`(trmmlucn chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmlucu'         tmonad (]`]`nan`nan`(trmmlucu chk3sm)))@>"0 argsam
-  log=. log lcat ('trsmrlnn'         tmonad (]`]`nan`nan`(trmmrlnn chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrlnu'         tmonad (]`]`nan`nan`(trmmrlnu chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrltn'         tmonad (]`]`nan`nan`(trmmrltn chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrltu'         tmonad (]`]`nan`nan`(trmmrltu chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrljn'         tmonad (]`]`nan`nan`(trmmrljn chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrlju'         tmonad (]`]`nan`nan`(trmmrlju chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrlcn'         tmonad (]`]`nan`nan`(trmmrlcn chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrlcu'         tmonad (]`]`nan`nan`(trmmrlcu chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrunn'         tmonad (]`]`nan`nan`(trmmrunn chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrunu'         tmonad (]`]`nan`nan`(trmmrunu chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrutn'         tmonad (]`]`nan`nan`(trmmrutn chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrutu'         tmonad (]`]`nan`nan`(trmmrutu chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrujn'         tmonad (]`]`nan`nan`(trmmrujn chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmruju'         tmonad (]`]`nan`nan`(trmmruju chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrucn'         tmonad (]`]`nan`nan`(trmmrucn chk3sm)))@>"0 argsan
-  log=. log lcat ('trsmrucu'         tmonad (]`]`nan`nan`(trmmrucu chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmllnn' tmonad (]`]`nan`nan`(trmmllnn chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmllnu' tmonad (]`]`nan`nan`(trmmllnu chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlltn' tmonad (]`]`nan`nan`(trmmlltn chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlltu' tmonad (]`]`nan`nan`(trmmlltu chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlljn' tmonad (]`]`nan`nan`(trmmlljn chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmllju' tmonad (]`]`nan`nan`(trmmllju chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmllcn' tmonad (]`]`nan`nan`(trmmllcn chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmllcu' tmonad (]`]`nan`nan`(trmmllcu chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlunn' tmonad (]`]`nan`nan`(trmmlunn chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlunu' tmonad (]`]`nan`nan`(trmmlunu chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlutn' tmonad (]`]`nan`nan`(trmmlutn chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlutu' tmonad (]`]`nan`nan`(trmmlutu chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlujn' tmonad (]`]`nan`nan`(trmmlujn chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmluju' tmonad (]`]`nan`nan`(trmmluju chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlucn' tmonad (]`]`nan`nan`(trmmlucn chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmlucu' tmonad (]`]`nan`nan`(trmmlucu chk3sm)))@>"0 argsam
+  log=. log lcat ('trsmrlnn' tmonad (]`]`nan`nan`(trmmrlnn chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrlnu' tmonad (]`]`nan`nan`(trmmrlnu chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrltn' tmonad (]`]`nan`nan`(trmmrltn chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrltu' tmonad (]`]`nan`nan`(trmmrltu chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrljn' tmonad (]`]`nan`nan`(trmmrljn chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrlju' tmonad (]`]`nan`nan`(trmmrlju chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrlcn' tmonad (]`]`nan`nan`(trmmrlcn chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrlcu' tmonad (]`]`nan`nan`(trmmrlcu chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrunn' tmonad (]`]`nan`nan`(trmmrunn chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrunu' tmonad (]`]`nan`nan`(trmmrunu chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrutn' tmonad (]`]`nan`nan`(trmmrutn chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrutu' tmonad (]`]`nan`nan`(trmmrutu chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrujn' tmonad (]`]`nan`nan`(trmmrujn chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmruju' tmonad (]`]`nan`nan`(trmmruju chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrucn' tmonad (]`]`nan`nan`(trmmrucn chk3sm)))@>"0 argsan
+  log=. log lcat ('trsmrucu' tmonad (]`]`nan`nan`(trmmrucu chk3sm)))@>"0 argsan
 
   NB. dyadic trsmxxxx
   NB. note:
@@ -3697,76 +3697,76 @@ testbasictrsm=: 3 : 0
   NB. - we use RHS vectors bm and bn here as solution vectors
   NB.   xm and xn for (2{::x), RHS is computed explicitely
   NB.   and is supplied in (1{::x)
-  log=. log lcat ('trsmllnn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~    trlpick ) t02v))) Lm  ; (Lm   mp       bm ) ; bm ; Am ; norm1Lm
-  log=. log lcat ('trsmllnu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~    trl1pick) t02v))) L1m ; (L1m  mp       bm ) ; bm ; Am ; norm1L1m
-  log=. log lcat ('trsmlltn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trlpick ) t02v))) Lm  ; (Lm  (mp~ ct)~ bm ) ; bm ; Am ; normiLm
-  log=. log lcat ('trsmlltu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trl1pick) t02v))) L1m ; (L1m (mp~ ct)~ bm ) ; bm ; Am ; normiL1m
-  log=. log lcat ('trsmlljn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trlpick ) t02v))) Lm  ; (Lm  (mp~ + )~ bm ) ; bm ; Am ; normiLm
-  log=. log lcat ('trsmllju'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trl1pick) t02v))) L1m ; (L1m (mp~ + )~ bm ) ; bm ; Am ; normiL1m
-  log=. log lcat ('trsmllcn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trlpick ) t02v))) Lm  ; (Lm  (mp~ |:)~ bm ) ; bm ; Am ; normiLm
-  log=. log lcat ('trsmllcu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trl1pick) t02v))) L1m ; (L1m (mp~ |:)~ bm ) ; bm ; Am ; normiL1m
-  log=. log lcat ('trsmlunn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~    trupick ) t02v))) Um  ; (Um   mp       bm ) ; bm ; Am ; norm1Um
-  log=. log lcat ('trsmlunu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~    tru1pick) t02v))) U1m ; (U1m  mp       bm ) ; bm ; Am ; norm1U1m
-  log=. log lcat ('trsmlutn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trupick ) t02v))) Um  ; (Um  (mp~ ct)~ bm ) ; bm ; Am ; normiUm
-  log=. log lcat ('trsmlutu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@tru1pick) t02v))) U1m ; (U1m (mp~ ct)~ bm ) ; bm ; Am ; normiU1m
-  log=. log lcat ('trsmlujn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trupick ) t02v))) Um  ; (Um  (mp~ + )~ bm ) ; bm ; Am ; normiUm
-  log=. log lcat ('trsmluju'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @tru1pick) t02v))) U1m ; (U1m (mp~ + )~ bm ) ; bm ; Am ; normiU1m
-  log=. log lcat ('trsmlucn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trupick ) t02v))) Um  ; (Um  (mp~ |:)~ bm ) ; bm ; Am ; normiUm
-  log=. log lcat ('trsmlucu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@tru1pick) t02v))) U1m ; (U1m (mp~ |:)~ bm ) ; bm ; Am ; normiU1m
-  log=. log lcat ('trsmrlnn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp     trlpick ) t02v))) Ln  ; (bn   mp       Ln ) ; bn ; An ; normiLn
-  log=. log lcat ('trsmrlnu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp     trl1pick) t02v))) L1n ; (bn   mp       L1n) ; bn ; An ; normiL1n
-  log=. log lcat ('trsmrltn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trlpick ) t02v))) Ln  ; (bn  (mp  ct)  Ln ) ; bn ; An ; norm1Ln
-  log=. log lcat ('trsmrltu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trl1pick) t02v))) L1n ; (bn  (mp  ct)  L1n) ; bn ; An ; norm1L1n
-  log=. log lcat ('trsmrljn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trlpick ) t02v))) Ln  ; (bn  (mp  + )  Ln ) ; bn ; An ; norm1Ln
-  log=. log lcat ('trsmrlju'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trl1pick) t02v))) L1n ; (bn  (mp  + )  L1n) ; bn ; An ; norm1L1n
-  log=. log lcat ('trsmrlcn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trlpick ) t02v))) Ln  ; (bn  (mp  |:)  Ln ) ; bn ; An ; norm1Ln
-  log=. log lcat ('trsmrlcu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trl1pick) t02v))) L1n ; (bn  (mp  |:)  L1n) ; bn ; An ; norm1L1n
-  log=. log lcat ('trsmrunn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp     trupick ) t02v))) Un  ; (bn   mp       Un ) ; bn ; An ; normiUn
-  log=. log lcat ('trsmrunu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp     tru1pick) t02v))) U1n ; (bn   mp       U1n) ; bn ; An ; normiU1n
-  log=. log lcat ('trsmrutn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trupick ) t02v))) Un  ; (bn  (mp  ct)  Un ) ; bn ; An ; norm1Un
-  log=. log lcat ('trsmrutu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@tru1pick) t02v))) U1n ; (bn  (mp  ct)  U1n) ; bn ; An ; norm1U1n
-  log=. log lcat ('trsmrujn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trupick ) t02v))) Un  ; (bn  (mp  + )  Un ) ; bn ; An ; norm1Un
-  log=. log lcat ('trsmruju'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  + @tru1pick) t02v))) U1n ; (bn  (mp  + )  U1n) ; bn ; An ; norm1U1n
-  log=. log lcat ('trsmrucn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trupick ) t02v))) Un  ; (bn  (mp  |:)  Un ) ; bn ; An ; norm1Un
-  log=. log lcat ('trsmrucu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@tru1pick) t02v))) U1n ; (bn  (mp  |:)  U1n) ; bn ; An ; norm1U1n
+  log=. log lcat ('trsmllnn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~    trlpick ) t02v))) Lm  ; (Lm   mp       bm ) ; bm ; Am ; norm1Lm
+  log=. log lcat ('trsmllnu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~    trl1pick) t02v))) L1m ; (L1m  mp       bm ) ; bm ; Am ; norm1L1m
+  log=. log lcat ('trsmlltn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trlpick ) t02v))) Lm  ; (Lm  (mp~ ct)~ bm ) ; bm ; Am ; normiLm
+  log=. log lcat ('trsmlltu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trl1pick) t02v))) L1m ; (L1m (mp~ ct)~ bm ) ; bm ; Am ; normiL1m
+  log=. log lcat ('trsmlljn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trlpick ) t02v))) Lm  ; (Lm  (mp~ + )~ bm ) ; bm ; Am ; normiLm
+  log=. log lcat ('trsmllju' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trl1pick) t02v))) L1m ; (L1m (mp~ + )~ bm ) ; bm ; Am ; normiL1m
+  log=. log lcat ('trsmllcn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trlpick ) t02v))) Lm  ; (Lm  (mp~ |:)~ bm ) ; bm ; Am ; normiLm
+  log=. log lcat ('trsmllcu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trl1pick) t02v))) L1m ; (L1m (mp~ |:)~ bm ) ; bm ; Am ; normiL1m
+  log=. log lcat ('trsmlunn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~    trupick ) t02v))) Um  ; (Um   mp       bm ) ; bm ; Am ; norm1Um
+  log=. log lcat ('trsmlunu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~    tru1pick) t02v))) U1m ; (U1m  mp       bm ) ; bm ; Am ; norm1U1m
+  log=. log lcat ('trsmlutn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trupick ) t02v))) Um  ; (Um  (mp~ ct)~ bm ) ; bm ; Am ; normiUm
+  log=. log lcat ('trsmlutu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@tru1pick) t02v))) U1m ; (U1m (mp~ ct)~ bm ) ; bm ; Am ; normiU1m
+  log=. log lcat ('trsmlujn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trupick ) t02v))) Um  ; (Um  (mp~ + )~ bm ) ; bm ; Am ; normiUm
+  log=. log lcat ('trsmluju' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @tru1pick) t02v))) U1m ; (U1m (mp~ + )~ bm ) ; bm ; Am ; normiU1m
+  log=. log lcat ('trsmlucn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trupick ) t02v))) Um  ; (Um  (mp~ |:)~ bm ) ; bm ; Am ; normiUm
+  log=. log lcat ('trsmlucu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@tru1pick) t02v))) U1m ; (U1m (mp~ |:)~ bm ) ; bm ; Am ; normiU1m
+  log=. log lcat ('trsmrlnn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp     trlpick ) t02v))) Ln  ; (bn   mp       Ln ) ; bn ; An ; normiLn
+  log=. log lcat ('trsmrlnu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp     trl1pick) t02v))) L1n ; (bn   mp       L1n) ; bn ; An ; normiL1n
+  log=. log lcat ('trsmrltn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trlpick ) t02v))) Ln  ; (bn  (mp  ct)  Ln ) ; bn ; An ; norm1Ln
+  log=. log lcat ('trsmrltu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trl1pick) t02v))) L1n ; (bn  (mp  ct)  L1n) ; bn ; An ; norm1L1n
+  log=. log lcat ('trsmrljn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trlpick ) t02v))) Ln  ; (bn  (mp  + )  Ln ) ; bn ; An ; norm1Ln
+  log=. log lcat ('trsmrlju' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trl1pick) t02v))) L1n ; (bn  (mp  + )  L1n) ; bn ; An ; norm1L1n
+  log=. log lcat ('trsmrlcn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trlpick ) t02v))) Ln  ; (bn  (mp  |:)  Ln ) ; bn ; An ; norm1Ln
+  log=. log lcat ('trsmrlcu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trl1pick) t02v))) L1n ; (bn  (mp  |:)  L1n) ; bn ; An ; norm1L1n
+  log=. log lcat ('trsmrunn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp     trupick ) t02v))) Un  ; (bn   mp       Un ) ; bn ; An ; normiUn
+  log=. log lcat ('trsmrunu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp     tru1pick) t02v))) U1n ; (bn   mp       U1n) ; bn ; An ; normiU1n
+  log=. log lcat ('trsmrutn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trupick ) t02v))) Un  ; (bn  (mp  ct)  Un ) ; bn ; An ; norm1Un
+  log=. log lcat ('trsmrutu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@tru1pick) t02v))) U1n ; (bn  (mp  ct)  U1n) ; bn ; An ; norm1U1n
+  log=. log lcat ('trsmrujn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trupick ) t02v))) Un  ; (bn  (mp  + )  Un ) ; bn ; An ; norm1Un
+  log=. log lcat ('trsmruju' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  + @tru1pick) t02v))) U1n ; (bn  (mp  + )  U1n) ; bn ; An ; norm1U1n
+  log=. log lcat ('trsmrucn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trupick ) t02v))) Un  ; (bn  (mp  |:)  Un ) ; bn ; An ; norm1Un
+  log=. log lcat ('trsmrucu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@tru1pick) t02v))) U1n ; (bn  (mp  |:)  U1n) ; bn ; An ; norm1U1n
 
   NB. dyadic trsmxxxx, 2-rank B and X
   NB. notes:
   NB. - we use RHS matrix B here as solution vector X for
   NB.   (2{::x), RHS is computed explicitely and is supplied
   NB.   in (1{::x)
-  log=. log lcat ('trsmllnn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~    trlpick ) t02m norm1tc))) Lm  ; (Lm   mp       B ) ; B  ; Am ; norm1Lm
-  log=. log lcat ('trsmllnu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~    trl1pick) t02m norm1tc))) L1m ; (L1m  mp       B ) ; B  ; Am ; norm1L1m
-  log=. log lcat ('trsmlltn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ ct)~ B ) ; B  ; Am ; normiLm
-  log=. log lcat ('trsmlltu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ ct)~ B ) ; B  ; Am ; normiL1m
-  log=. log lcat ('trsmlljn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ + )~ B ) ; B  ; Am ; normiLm
-  log=. log lcat ('trsmllju'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ + )~ B ) ; B  ; Am ; normiL1m
-  log=. log lcat ('trsmllcn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ |:)~ B ) ; B  ; Am ; normiLm
-  log=. log lcat ('trsmllcu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ |:)~ B ) ; B  ; Am ; normiL1m
-  log=. log lcat ('trsmlunn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~    trupick ) t02m norm1tc))) Um  ; (Um   mp       B ) ; B  ; Am ; norm1Um
-  log=. log lcat ('trsmlunu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~    tru1pick) t02m norm1tc))) U1m ; (U1m  mp       B ) ; B  ; Am ; norm1U1m
-  log=. log lcat ('trsmlutn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ ct)~ B ) ; B  ; Am ; normiUm
-  log=. log lcat ('trsmlutu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ ct)~ B ) ; B  ; Am ; normiU1m
-  log=. log lcat ('trsmlujn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trupick ) t02m norm1tc))) Um  ; (Um  (mp~ + )~ B ) ; B  ; Am ; normiUm
-  log=. log lcat ('trsmluju'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ + )~ B ) ; B  ; Am ; normiU1m
-  log=. log lcat ('trsmlucn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ |:)~ B ) ; B  ; Am ; normiUm
-  log=. log lcat ('trsmlucu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ |:)~ B ) ; B  ; Am ; normiU1m
-  log=. log lcat ('trsmrlnn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp     trlpick ) t02m normitc))) Ln  ; (B   mp       Ln ) ; B  ; An ; normiLn
-  log=. log lcat ('trsmrlnu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp     trl1pick) t02m normitc))) L1n ; (B   mp       L1n) ; B  ; An ; normiL1n
-  log=. log lcat ('trsmrltn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trlpick ) t02m normitc))) Ln  ; (B  (mp  ct)  Ln ) ; B  ; An ; norm1Ln
-  log=. log lcat ('trsmrltu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trl1pick) t02m normitc))) L1n ; (B  (mp  ct)  L1n) ; B  ; An ; norm1L1n
-  log=. log lcat ('trsmrljn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trlpick ) t02m normitc))) Ln  ; (B  (mp  + )  Ln ) ; B  ; An ; norm1Ln
-  log=. log lcat ('trsmrlju'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trl1pick) t02m normitc))) L1n ; (B  (mp  + )  L1n) ; B  ; An ; norm1L1n
-  log=. log lcat ('trsmrlcn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trlpick ) t02m normitc))) Ln  ; (B  (mp  |:)  Ln ) ; B  ; An ; norm1Ln
-  log=. log lcat ('trsmrlcu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trl1pick) t02m normitc))) L1n ; (B  (mp  |:)  L1n) ; B  ; An ; norm1L1n
-  log=. log lcat ('trsmrunn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp     trupick ) t02m normitc))) Un  ; (B   mp       Un ) ; B  ; An ; normiUn
-  log=. log lcat ('trsmrunu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp     tru1pick) t02m normitc))) U1n ; (B   mp       U1n) ; B  ; An ; normiU1n
-  log=. log lcat ('trsmrutn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trupick ) t02m normitc))) Un  ; (B  (mp  ct)  Un ) ; B  ; An ; norm1Un
-  log=. log lcat ('trsmrutu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@tru1pick) t02m normitc))) U1n ; (B  (mp  ct)  U1n) ; B  ; An ; norm1U1n
-  log=. log lcat ('trsmrujn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trupick ) t02m normitc))) Un  ; (B  (mp  + )  Un ) ; B  ; An ; norm1Un
-  log=. log lcat ('trsmruju'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  + @tru1pick) t02m normitc))) U1n ; (B  (mp  + )  U1n) ; B  ; An ; norm1U1n
-  log=. log lcat ('trsmrucn'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trupick ) t02m normitc))) Un  ; (B  (mp  |:)  Un ) ; B  ; An ; norm1Un
-  log=. log lcat ('trsmrucu'         tdyad  ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@tru1pick) t02m normitc))) U1n ; (B  (mp  |:)  U1n) ; B  ; An ; norm1U1n
+  log=. log lcat ('trsmllnn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~    trlpick ) t02m norm1tc))) Lm  ; (Lm   mp       B ) ; B  ; Am ; norm1Lm
+  log=. log lcat ('trsmllnu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~    trl1pick) t02m norm1tc))) L1m ; (L1m  mp       B ) ; B  ; Am ; norm1L1m
+  log=. log lcat ('trsmlltn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ ct)~ B ) ; B  ; Am ; normiLm
+  log=. log lcat ('trsmlltu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ ct)~ B ) ; B  ; Am ; normiL1m
+  log=. log lcat ('trsmlljn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ + )~ B ) ; B  ; Am ; normiLm
+  log=. log lcat ('trsmllju' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ + )~ B ) ; B  ; Am ; normiL1m
+  log=. log lcat ('trsmllcn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trlpick ) t02m norm1tc))) Lm  ; (Lm  (mp~ |:)~ B ) ; B  ; Am ; normiLm
+  log=. log lcat ('trsmllcu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trl1pick) t02m norm1tc))) L1m ; (L1m (mp~ |:)~ B ) ; B  ; Am ; normiL1m
+  log=. log lcat ('trsmlunn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~    trupick ) t02m norm1tc))) Um  ; (Um   mp       B ) ; B  ; Am ; norm1Um
+  log=. log lcat ('trsmlunu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~    tru1pick) t02m norm1tc))) U1m ; (U1m  mp       B ) ; B  ; Am ; norm1U1m
+  log=. log lcat ('trsmlutn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ ct)~ B ) ; B  ; Am ; normiUm
+  log=. log lcat ('trsmlutu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ |:@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ ct)~ B ) ; B  ; Am ; normiU1m
+  log=. log lcat ('trsmlujn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @trupick ) t02m norm1tc))) Um  ; (Um  (mp~ + )~ B ) ; B  ; Am ; normiUm
+  log=. log lcat ('trsmluju' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ + @tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ + )~ B ) ; B  ; Am ; normiU1m
+  log=. log lcat ('trsmlucn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@trupick ) t02m norm1tc))) Um  ; (Um  (mp~ |:)~ B ) ; B  ; Am ; normiUm
+  log=. log lcat ('trsmlucu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp~ ct@tru1pick) t02m norm1tc))) U1m ; (U1m (mp~ |:)~ B ) ; B  ; Am ; normiU1m
+  log=. log lcat ('trsmrlnn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp     trlpick ) t02m normitc))) Ln  ; (B   mp       Ln ) ; B  ; An ; normiLn
+  log=. log lcat ('trsmrlnu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp     trl1pick) t02m normitc))) L1n ; (B   mp       L1n) ; B  ; An ; normiL1n
+  log=. log lcat ('trsmrltn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trlpick ) t02m normitc))) Ln  ; (B  (mp  ct)  Ln ) ; B  ; An ; norm1Ln
+  log=. log lcat ('trsmrltu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trl1pick) t02m normitc))) L1n ; (B  (mp  ct)  L1n) ; B  ; An ; norm1L1n
+  log=. log lcat ('trsmrljn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trlpick ) t02m normitc))) Ln  ; (B  (mp  + )  Ln ) ; B  ; An ; norm1Ln
+  log=. log lcat ('trsmrlju' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trl1pick) t02m normitc))) L1n ; (B  (mp  + )  L1n) ; B  ; An ; norm1L1n
+  log=. log lcat ('trsmrlcn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trlpick ) t02m normitc))) Ln  ; (B  (mp  |:)  Ln ) ; B  ; An ; norm1Ln
+  log=. log lcat ('trsmrlcu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trl1pick) t02m normitc))) L1n ; (B  (mp  |:)  L1n) ; B  ; An ; norm1L1n
+  log=. log lcat ('trsmrunn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp     trupick ) t02m normitc))) Un  ; (B   mp       Un ) ; B  ; An ; normiUn
+  log=. log lcat ('trsmrunu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp     tru1pick) t02m normitc))) U1n ; (B   mp       U1n) ; B  ; An ; normiU1n
+  log=. log lcat ('trsmrutn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@trupick ) t02m normitc))) Un  ; (B  (mp  ct)  Un ) ; B  ; An ; norm1Un
+  log=. log lcat ('trsmrutu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  |:@tru1pick) t02m normitc))) U1n ; (B  (mp  ct)  U1n) ; B  ; An ; norm1U1n
+  log=. log lcat ('trsmrujn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  + @trupick ) t02m normitc))) Un  ; (B  (mp  + )  Un ) ; B  ; An ; norm1Un
+  log=. log lcat ('trsmruju' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  + @tru1pick) t02m normitc))) U1n ; (B  (mp  + )  U1n) ; B  ; An ; norm1U1n
+  log=. log lcat ('trsmrucn' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@trupick ) t02m normitc))) Un  ; (B  (mp  |:)  Un ) ; B  ; An ; norm1Un
+  log=. log lcat ('trsmrucu' tdyad ((3&{::)`(1&{::)`]`nan`nan`((mp  ct@tru1pick) t02m normitc))) U1n ; (B  (mp  |:)  U1n) ; B  ; An ; norm1U1n
 )
 
 NB. ---------------------------------------------------------

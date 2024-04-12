@@ -332,7 +332,7 @@ NB.   0 4 8 12 5 9 13 10 14 15
 
 isohmt=: (3 : 0) :. (isosym^:_1)
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
-  vals=. (# S: 0 #    i.@#) iso            NB. replicate value for each ISO
+  vals=. (# S: 0 # i.@#) iso               NB. replicate value for each ISO
   iso=. ; iso
   ndmask=. (# y) = (#@~."1) iso            NB. ISO for non-diagonals mask
   par=. (C.!.2) (/:"1) iso                 NB. parity (is valid only for non-diagonals)

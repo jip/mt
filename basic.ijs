@@ -2500,7 +2500,7 @@ NB.   - bli_xgemmt (BLIS)
 NB.   by general matrices
 NB.
 NB. Syntax:
-NB.   testbasicgemmt As ; Bs ; C
+NB.   log=. testbasicgemmt As ; Bs ; C
 NB. where
 NB.   As  - m×(m+n)-matrix, A material
 NB.   Bs  - (m+n)×m-matrix, B material

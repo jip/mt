@@ -2524,7 +2524,7 @@ testbasicgemmt=: 3 : 0
   dcoeff=. 0.0 1.0 0.7
   zcoeff=. 0j0 1j0 0.7j_0.9
   acoeff=. /:~ ~. zcoeff ,^:(JCMPX = 3!:0 C) dcoeff
-  'n m'=. (-/ , ]) $ Bs
+  'n m'=. (-/ , {:) $ Bs
   ks=. /:~ ~. m (0 1 , (, >.@-:)@(, , +)) n  NB. 0,1,⌈m/2⌉,⌈n/2⌉,⌈(m+n)/2⌉,m,n,m+n
   As=. ks <@:({."0 1)"0 _ As                 NB. As[i] is m×k[i]-matrix
   argsdnn=. { (<"0 dcoeff) ;         As  ; (<    Bs) ; (<"0 dcoeff) ; < < C

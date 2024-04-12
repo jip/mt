@@ -22,6 +22,7 @@ NB. cut       Split list by delimiter
 NB. cutl2     Split list by any delimiter
 NB. cutl      Split list by any delimiter
 NB. env       Show environment
+NB. erasen    Erase global names created between invocations
 NB.
 NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
 NB.           Igor Zhuravlov
@@ -554,3 +555,20 @@ Interfaces to external libraries (optional)
     e=. LF joinstring e                    NB. raze with LF interleaved
   end.
 )
+
+NB. ---------------------------------------------------------
+NB. erasen
+NB.
+NB. Description:
+NB.   Erase global names created between invocations
+NB.
+NB. Syntax:
+NB.   out=. [x] f&.erasen y
+NB. where
+NB.   out -: [x] f y
+NB.
+NB. Notes:
+NB. - is an invertible ambivalent identity
+NB. - erases names created while f was executed
+
+erasen=: ([ 4!:5@1) :. ([ (4!:5@0)@erase@(4!:5@1))

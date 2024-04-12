@@ -114,13 +114,6 @@ coclass 'mt'
 NB. =========================================================
 NB. Local definitions
 
-NB. invertible ambivalent identity to erase names
-NB. syntax:
-NB.   out=. [x] f&.erasen y
-NB. to erase global names created while f was executed
-
-erasen=: ([ 4!:5@1) :. ([ (4!:5@0)@erase@(4!:5@1))
-
 NB. =========================================================
 NB. Interface
 

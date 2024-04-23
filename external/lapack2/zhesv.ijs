@@ -49,6 +49,6 @@ zhesv=: 4 : 0
   nb=. 1:^:(('uU' e.~ {. x) *. 64 > n) 64
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * nb  NB. optimal
-  (|: L: 0) 4 6 7 { zhesv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; (lwork $ 0j0) ; lwork ; , _1
+  (|:L:0) 4 6 7 { zhesv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; (lwork $ 0j0) ; lwork ; , _1
     NB. (|:) doesn't affect to ipiv
 )

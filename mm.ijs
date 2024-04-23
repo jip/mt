@@ -169,7 +169,7 @@ NB.   0 4 8 12 5 9 13 10 14 15
 
 isosym=: (3 : 0) :. (#. _2&C.&.|:@(# combrep {.))
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
-  vals=. (# S: 0 # i.@#) iso               NB. replicate value for each ISO
+  vals=. (#S:0 # i.@#) iso                 NB. replicate value for each ISO
   iso=. ; iso
   vals iso} y $ 0
 )
@@ -264,7 +264,7 @@ NB.   0 4 8 12 5 9 13 10 14 15
 
 isohmt=: (3 : 0) :. (isosym^:_1)
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
-  vals=. (# S: 0 # i.@#) iso               NB. replicate value for each ISO
+  vals=. (#S:0 # i.@#) iso                 NB. replicate value for each ISO
   iso=. ; iso
   ndmask=. (# y) = (#@~."1) iso            NB. ISO for non-diagonals mask
   par=. (C.!.2) (/:"1) iso                 NB. parity (is valid only for non-diagonals)
@@ -310,11 +310,11 @@ mmic=: 4 : 0
   if. lp do.
     select. ioField
       case. 0 do.  NB. pattern
-        ('each data row must contain just ' , (": rank) , ' ISO (1)') assert ((<: rank) = cspans) S: 0 y  NB. count SPACE spans
+        ('each data row must contain just ' , (": rank) , ' ISO (1)') assert ((<: rank) = cspans)S:0 y  NB. count SPACE spans
       case. 1 ; 2 do.  NB. integer or real
-        ('each data row must contain just ' , (": rank) , ' ISO and a single matrix entry (1)') assert (rank = cspans) S: 0 y  NB. count SPACE spans
+        ('each data row must contain just ' , (": rank) , ' ISO and a single matrix entry (1)') assert (rank = cspans)S:0 y  NB. count SPACE spans
       case. 3 do.  NB. complex
-        ('each data row must contain just ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (1)') assert ((>: rank) = cspans) S: 0 y  NB. count SPACE spans
+        ('each data row must contain just ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (1)') assert ((>: rank) = cspans)S:0 y  NB. count SPACE spans
     end.
   end.
   NB. check elements quantity depending on symmetry
@@ -400,7 +400,7 @@ mmic=: 4 : 0
       NB.   - its cardinality are different
       NB. - box sets to avoid reshaping later
       iso=. (i. count) <@~.@:A."_ 1 iso
-      counts=. # S: 0^:(*@#) iso  NB. see [1]
+      counts=. #S:0^:(*@#) iso  NB. see [1]
       iso=. ; iso
     case. 2 do.  NB. skew-symmetric
       NB. elements presented must have ISO satisfying:
@@ -572,10 +572,10 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
   y=. CRLF cutl_mt_ y  NB. cut by spans of CR and LF
-  'line longer than 1024 bytes was detected' assert_mt_ ((1024 >: #) S: 0) y
+  'line longer than 1024 bytes was detected' assert_mt_ ((1024 >: #)S:0) y
   header=. cut_mt_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
-  y=. (#~ ('%' ~: {.) S: 0) y  NB. remove header and comments
-  y=. (#~ a:&~:) dltb L: 0 y   NB. remove empty lines
+  y=. (#~ ('%' ~: {.)S:0) y   NB. remove header and comments
+  y=. (#~ a:&~:) dltb L: 0 y  NB. remove empty lines
   'not a Matrix Market exchange format' assert_mt_ 5 = # header
   ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mt_ BANNER_mtmm_ -: 0 {:: header
   ('object '''   , (1 {:: header) , ''' is not recognized') assert_mt_ OBJECT_mtmm_ -: 1 {:: header

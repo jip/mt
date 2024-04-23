@@ -25,13 +25,13 @@ NB. - verbs below are loaded into the current locale
 dgetrf=: 3 : 0
   k=. <./ 'm n'=. $ y
   assert. ismatrix_jlapack2_ y
-  (|: L: 0) 3 5 { dgetrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 00) ; , _1
+  (|:L:0) 3 5 { dgetrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 00) ; , _1
     NB. (|:) doesn't affect to ipiv
 )
 
 zgetrf=: 3 : 0
   k=. <./ 'm n'=. $ y
   assert. ismatrix_jlapack2_ y
-  (|: L: 0) 3 5 { zgetrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 00) ; , _1
+  (|:L:0) 3 5 { zgetrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 00) ; , _1
     NB. (|:) doesn't affect to ipiv
 )

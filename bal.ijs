@@ -449,7 +449,7 @@ gebals=: (}:@($:~ 0:)) : (4 : 0)
           continue.
         end.
       end.
-      'ra ca'=. (|@{~ liofmax) L: 0 rc
+      'ra ca'=. (|@{~ liofmax)L:0 rc
       sum=. r + c
       g=. r % GEBALSCLFAC
       fup=. gebalsf c , 1 , g , (1 >. c >. ca) , ra <. g

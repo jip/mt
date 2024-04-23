@@ -18,13 +18,13 @@ NB. Notes:
 NB. - verbs below are loaded into the current locale
 
 dlartv=: 3 : 0
-  assert. ({. = }.) # S: 0 y
+  assert. ({. = }.) (#S:0) y
   'x y c s'=. y
   2 4 { dlartv_jlapack2_ (, # x) ; (, x) ; (, 1) ; (, y) ; (, 1) ; (, c) ; (, s) ; (,1)
 )
 
 zlartv=: 3 : 0
-  assert. ({. = }.) # S: 0 y
+  assert. ({. = }.) (#S:0) y
   'x y c s'=. y
   2 4 { zlartv_jlapack2_ (, # x) ; (, x) ; (, 1) ; (, y) ; (, 1) ; (, c) ; (, s) ; (,1)
 )

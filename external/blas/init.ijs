@@ -74,7 +74,7 @@ findlib=: 3 : 0
       ('UNAME ' , UNAME , ' isn''t recognized'   ) dbsig 11
   end.
   paths=. termsep_j_ L: 0 (#~ fexist S: 0) paths
-  fqfns=. (#~ (0 ~: 0 {:: dlsym@(;&'caxpy_')) S: 0) , |: ;L:_1 { paths ,&< names
+  fqfns=. (#~ (0 ~: 0 {:: dlsym@(;&'caxpy_'))S:0) , |: ;L:_1 { paths ,&< names
   fqfn=. 0 ({:: :: '') fqfns
 )
 

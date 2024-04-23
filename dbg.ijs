@@ -32,7 +32,7 @@ NB. =========================================================
 NB. Local definitions
 
 NB. get shape
-dbgshape=: $`($ (; <) $ L: 0)@.(0 < L.)
+dbgshape=: $`($ (; <) $L:0)@.(0 < L.)
 
 NB. failure handler
 dbgfailed=: 1 : '(dbsig@dberr [ echo@(m ; ''FAILED'' ; coname))@'''''

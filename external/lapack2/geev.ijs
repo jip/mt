@@ -37,7 +37,7 @@ dgeev=: 4 : 0
   Vr=. (0 0 [^:('nN' e.~ {. jobVr) $ y) $ 0.0
   NB. lwork=. , 1 >. n * 4 [^:(x +./@e. 'vV') 3  NB. minimal
   lwork=. , 1 >. n * 130 [^:(x +./@e. 'vV') 34  NB. optimal
-  'wr wi Vl Vr'=. (|: L: 0) 6 7 8 10 { dgeev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0.0) ; (n $ 0.0) ; Vl ; (, 1 >. # Vl) ; Vr ; (, 1 >. # Vr) ; (lwork $ 0.0) ; lwork ; , _1
+  'wr wi Vl Vr'=. (|:L:0) 6 7 8 10 { dgeev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0.0) ; (n $ 0.0) ; Vl ; (, 1 >. # Vl) ; Vr ; (, 1 >. # Vr) ; (lwork $ 0.0) ; lwork ; , _1
     NB. (|:) doesn't affect to wr and wi
   w=. wr j. wi
   if. # cx=. I. wi ~: 0 do.
@@ -55,6 +55,6 @@ zgeev=: 4 : 0
   Vr=. (0 0 [^:('nN' e.~ {. jobVr) $ y) $ 0j0
   NB. , lwork=. , 1 >. +: n  NB. minimal
   lwork=. , 1 >. n * 130 [^:(x +./@e. 'vV') 33  NB. optimal
-  (|: L: 0) 6 7 9 { zgeev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0j0) ; Vl ; (, 1 >. # Vl) ; Vr ; (, 1 >. # Vr) ; (lwork $ 0j0) ; lwork ; ((+: n) $ 0.0) ; , _1
+  (|:L:0) 6 7 9 { zgeev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 0j0) ; Vl ; (, 1 >. # Vl) ; Vr ; (, 1 >. # Vr) ; (lwork $ 0j0) ; lwork ; ((+: n) $ 0.0) ; , _1
     NB. (|:) doesn't affect to w
 )

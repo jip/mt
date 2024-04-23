@@ -47,6 +47,6 @@ dsysv=: 4 : 0
   ld=. , 1 >. n
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. n * 64  NB. optimal
-  (|: L: 0) 4 6 7 { dsysv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: AA) ; ld ; (n $ 00) ; (|: B) ; ld ; (lwork $ 0.0) ; lwork ; , _1
+  (|:L:0) 4 6 7 { dsysv_jlapack2_ (, x) ; (, n) ; (, nrhs) ; (|: AA) ; ld ; (n $ 00) ; (|: B) ; ld ; (lwork $ 0.0) ; lwork ; , _1
     NB. (|:) doesn't affect to ipiv
 )

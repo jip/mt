@@ -41,7 +41,7 @@ ver=: 3 : 0
     memr 0 _1 2 ,~ ('"',LIB,'" openblas_get_config >',ifw,' x') cd ''
   elseif. 0 {:: dlsym LIB ; 'ilaver_' do.
     NB. LAPACK
-    3 }. ; ('.' , ":) L: 0 ('"',LIB,'" ilaver_ ',ifw,' n *i *i *i') cd ((3 # < , 0))
+    3 }. ; (('.' , ":)L:0) ('"',LIB,'" ilaver_ ',ifw,' n *i *i *i') cd ((3 # < , 0))
   else.
     NB. the reference BLAS has no version identifier
     'unknown'

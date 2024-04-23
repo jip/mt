@@ -46,7 +46,7 @@ dggev=: 4 : 0
   ldAB=. , 1 >. n
   NB. lwork=. , 1 >. 8 * n  NB. minimal
   lwork=. , 1 >. n * 39  NB. optimal
-  'alphar alphai beta Vl Vr'=. (|: L: 0) 8 9 10 11 13 { dggev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: A) ; ldAB ; (|: B) ; ldAB ; (n $ 0.0) ; (n $ 0.0) ; (n $ 0.0) ; Vl ; (, 1 >. # Vl) ; Vr ; (, 1 >. # Vr) ; (lwork $ 0.0) ; lwork ; , _1
+  'alphar alphai beta Vl Vr'=. (|:L:0) 8 9 10 11 13 { dggev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: A) ; ldAB ; (|: B) ; ldAB ; (n $ 0.0) ; (n $ 0.0) ; (n $ 0.0) ; Vl ; (, 1 >. # Vl) ; Vr ; (, 1 >. # Vr) ; (lwork $ 0.0) ; lwork ; , _1
     NB. (|:) doesn't affect to alphar, alphai and beta
   alpha=. alphar j. alphai
   if. # cx=. I. alphai ~: 0 do.
@@ -67,6 +67,6 @@ zggev=: 4 : 0
   ldAB=. , 1 >. n
   NB. lwork=. , 1 >. 2 * n  NB. minimal
   lwork=. , 1 >. n * 33  NB. optimal
-  (|: L: 0) 8 9 10 12 { zggev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: A) ; ldAB ; (|: B) ; ldAB ; (n $ 0j0) ; (n $ 0j0) ; Vl ; (, 1 >. # Vl) ; Vr ; (, 1 >. # Vr) ; (lwork $ 0j0) ; lwork ; ((8 * n) $ 0.0) ; , _1
+  (|:L:0) 8 9 10 12 { zggev_jlapack2_ (, jobVl) ; (, jobVr) ; (, n) ; (|: A) ; ldAB ; (|: B) ; ldAB ; (n $ 0j0) ; (n $ 0j0) ; Vl ; (, 1 >. # Vl) ; Vr ; (, 1 >. # Vr) ; (lwork $ 0j0) ; lwork ; ((8 * n) $ 0.0) ; , _1
     NB. (|:) doesn't affect to alpha and beta
 )

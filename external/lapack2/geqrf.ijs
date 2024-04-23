@@ -32,7 +32,7 @@ dgeqrf=: 3 : 0
   assert. ismatrix_jlapack2_ y
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. 32&*^:(k>128) n  NB. optimal
-  (|: L: 0) 3 5 { dgeqrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
+  (|:L:0) 3 5 { dgeqrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0.0) ; lwork ; , _1
     NB. (|:) doesn't affect to tau
 )
 
@@ -41,6 +41,6 @@ zgeqrf=: 3 : 0
   assert. ismatrix_jlapack2_ y
   NB. lwork=. , 1 >. n  NB. minimal
   lwork=. , 1 >. 32&*^:(k>128) n  NB. optimal
-  (|: L: 0) 3 5 { zgeqrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1
+  (|:L:0) 3 5 { zgeqrf_jlapack2_ (, m) ; (, n) ; (|: y) ; (, 1 >. m) ; (k $ 0.0) ; (lwork $ 0j0) ; lwork ; , _1
     NB. (|:) doesn't affect to tau
 )

@@ -192,19 +192,19 @@ NB.            from ravelled skew-symmetric array
 NB.   rank   ∈ [2, length], integer, an array's rank
 NB.
 NB. Assertions:
-NB.      nub -: iso ({ ,) $.^:_1 arr
+NB.      nub -: iso ({ ,) arr
 NB. where
 NB.      'rank length'=. 2 4
 NB.      shape=. rank # length
 NB.      nub=. 21 31 41 32 42 43
 NB.      ] nubx=. 0 , (, -@|.) nub
 NB.   0 21 31 41 32 42 43 _43 _42 _32 _41 _31 _21
-NB.      $.^:_1 arriso=. isoskw shape
+NB.      ] arriso=. isoskw shape
 NB.   0 _1 _2 _3
 NB.   1  0 _4 _5
 NB.   2  4  0 _6
 NB.   3  5  6  0
-NB.      $.^:_1 arr=. arriso { nubx
+NB.      ] arr=. arriso { nubx
 NB.    0 _21 _31 _41
 NB.   21   0 _32 _42
 NB.   31  32   0 _43
@@ -220,7 +220,7 @@ isoskw=: (3 : 0) :. (#. _2&C.&.|:@(# comb {.))
                                            NB. each ISO within group will have the same value
   par=. (C.!.2) (/:"1) iso                 NB. parity (is valid since there is no diagonals here)
   vals=. (          1 = par)} (,: -) vals  NB. negate evenly permuted values
-  vals iso} 1 $. y ; (i. # y) ; 00
+  vals iso} y $ 00
 )
 
 NB. ---------------------------------------------------------
@@ -269,7 +269,7 @@ isohmt=: (3 : 0) :. (isosym^:_1)
   ndmask=. (# y) = (#@~."1) iso            NB. ISO for non-diagonals mask
   par=. (C.!.2) (/:"1) iso                 NB. parity (is valid only for non-diagonals)
   vals=. (ndmask *. 1 = par)} (,: -) vals  NB. negate evenly permuted non-diagonal values
-  vals iso} y $ 0
+  vals iso} y $ 00
 )
 
 NB. ---------------------------------------------------------
@@ -295,6 +295,10 @@ NB. [1] Henry Rich. [Jbeta] S: results seems inconsistent,
 NB.     also is L:
 NB.     2022-12-28 03:58:23 UTC
 NB.     https://www.jsoftware.com/pipermail/beta/2022-December/010685.html
+NB. [2] Github / Jsoftware / jsource / issues / 194
+NB.     Amend gives length error for sparse array
+NB.     Igor Zhuravlov, 2024-04-22 07:02 UTC
+NB.     https://github.com/jsoftware/jsource/issues/194
 
 mmic=: 4 : 0
   'le shape ioField ioSymmetry'=. x
@@ -329,7 +333,7 @@ mmic=: 4 : 0
   ('not more than ' , (": lemax) , ' elements was expected, but ' , (": lp) , ' data rows found') assert lemax >: lp  NB. some elements may be omitted
   NB. convert strings with data lines to J array
   'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, fill is required when y is empty
-  'there are not recognized values' assert -. isnan < y
+  'there are non-recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' data rows found (2)') assert le = rp  NB. how is this possible to violate?
   fret=. ''  NB. makes sense for complex field only
   se=. ioField {:: ((0 ; 00 ; 0.0 ; 0j0))  NB. sparse element
@@ -372,7 +376,6 @@ mmic=: 4 : 0
     case. do.
   end.
   NB. restore elements known due to symmetry
-  ('''' , (ioField {:: FIELDS) , ''' and ''' , (ioSymmetry {:: SYMMETRIES) , ''' qualifiers are incompatible') assert ioSymmetry (3 4 e.~ [) notOr (3 = ]) ioField
   NB. restore ISO omitted
   count=. ! rank
   select. ioSymmetry
@@ -437,7 +440,10 @@ mmic=: 4 : 0
       dat=. (1 = (C.!.2) (/:"1) iso)} (,: +@:-) counts # dat
   end.
   NB. place values at ISO positions in sparse array
-  y=. dat iso} 1 $. shape ; (i. rank) ; se
+  y=. 1 $. shape ; (i. rank) ; se
+  if. # dat do.  NB. work-around [2]
+    y=. dat iso} y
+  end.
 )
 
 NB. ---------------------------------------------------------
@@ -480,7 +486,7 @@ mmia=: 4 : 0
   ((": le) , ' elements was expected, but ' , (": lp) , ' data rows found') assert le = lp  NB. all elements must be presented
   NB. convert strings with data lines to J array
   'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
-  'there are not recognized values' assert -. isnan < y
+  'there are non-recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' elements found') assert le = rp  NB. how is this possible to violate?
   NB. check columns quantity
   if. 3 = ioField do.  NB. complex
@@ -518,13 +524,11 @@ mmia=: 4 : 0
       iso=. isoskw shape
       y=. iso { 0 , (, -@|.) y
     case. 3 do.  NB. Hermitian
-      ('''' , (ioField {:: FIELDS) , ''' and ''Hermitian'' qualifiers are incompatible') assert 3 = ioField
       mask=. rank > (#@~."1) (_2&C.&.|:) (# combrep {.) shape
       'diagonal values must be real' assert 0 = 11 o. mask # y
       iso=. isohmt shape
       y=. iso { (, +@|.@}.) y
     case. 4 do.  NB. skew-Hermitian
-      ('''' , (ioField {:: FIELDS) , ''' and ''skew-Hermitian'' qualifiers are incompatible') assert 3 = ioField
       mask=. rank > (#@~."1) (_2&C.&.|:) (# combrep {.) shape
       'diagonal values must be imaginary' assert 0 = 9 o. mask # y
       iso=. isohmt shape
@@ -581,12 +585,12 @@ mm=: (3 : 0) :. (3 : 0)
   ('format '''   , (2 {:: header) , ''' is not recognized') assert_mt_ ioFormat   < # FORMATS_mtmm_
   ('field '''    , (3 {:: header) , ''' is not recognized') assert_mt_ ioField    < # FIELDS_mtmm_
   ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mt_ ioSymmetry < # SYMMETRIES_mtmm_
+  ('''' , (ioField {:: FIELDS_mtmm_) , ''' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mt_ ioSymmetry <: 1 2 4 {~ 0 2 I. ioField
   size=. ". 0 {:: y
   ('size values ''' , (": size) , ''' must be integer') assert_mt_ (3!:0 size) e. JB01 , JINT
   y=. }. y
   if. ioFormat do.  NB. coordinate
     ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mt_ 2 < # size
-    ('''coordinate'' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mt_ (0 < ioField) +. (ioSymmetry e. 0 1) *. (0 = ioField)
     'shape le'=. (}: ; {:) size  NB. shape, quantity expected
     y=. (le ; shape ; ioField ; ioSymmetry) mmic_mtmm_ y
   else.  NB. array

@@ -400,7 +400,7 @@ mmic=: 4 : 0
       NB.   - its cardinality are different
       NB. - box sets to avoid reshaping later
       iso=. (i. count) <@~.@:A."_ 1 iso
-      counts=. #S:0^:(*@#) iso  NB. see [1]
+      counts=. (#S:0^:(*@#)) iso  NB. see [1]
       iso=. ; iso
     case. 2 do.  NB. skew-symmetric
       NB. elements presented must have ISO satisfying:

@@ -623,9 +623,9 @@ Interfaces to external libraries (optional)
     library:
     version:
 }}
-    e=. tpl2 (, ' ' , ":)L:0 e             NB. merge pairs (title,value)
-    e=. tpl1 (_31 {. #: 1040129243) mrg e  NB. interleave with value-less titles
-    e=. LF joinstring e                    NB. raze with LF interleaved
+    e=. tpl2 ((, ' ' , ":)L:0) e             NB. merge pairs (title,value)
+    e=. tpl1 ((_31 {. #: 1040129243)) mrg e  NB. interleave with value-less titles
+    e=. LF joinstring e                      NB. raze with LF interleaved
   end.
 )
 

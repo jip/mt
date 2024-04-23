@@ -46,7 +46,7 @@ NB.
 NB. TODO:
 NB. - replace Format (":) by Format (8!:n) in arr->str
 NB.   conversion when and if (8!:n) will be extended to
-NB.   support ±inf and ±nan
+NB.   support ±inf and nan
 NB. - add datatypes: extended, rational, quaternion,
 NB.   octonion
 NB.
@@ -216,7 +216,7 @@ NB.   iso    - (rank ([ ! <:@+) length)-vector, ISO nub
 NB.            from ravelled symmetric array
 NB.   rank   > 1, integer, an array's rank
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.      nub -: iso ({ ,) arr
 NB. where
 NB.      'rank length'=. 2 4
@@ -259,7 +259,7 @@ NB.   iso    - (rank ! length)-vector, ISO nub
 NB.            from ravelled skew-symmetric array
 NB.   rank   ∈ [2, length], integer, an array's rank
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.      nub -: iso ({ ,) $.^:_1 arr
 NB. where
 NB.      'rank length'=. 2 4
@@ -309,7 +309,7 @@ NB.            from ravelled Hermitian or skew-Hermitian
 NB.            array
 NB.   rank   > 1, integer, an array's rank
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.      nub -: iso ({ ,) arr
 NB. where
 NB.      'rank length'=. 2 4
@@ -382,7 +382,7 @@ mmic=: 4 : 0
   end.
   ('not more than ' , (": lemax) , ' elements was expected, but ' , (": lp) , ' data rows found') assert lemax >: lp  NB. some elements may be omitted
   NB. convert strings with data lines to J array
-  'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
+  'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, fill is required when y is empty
   'there are not recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' data rows found (2)') assert le = rp  NB. how is this possible to violate?
   fret=. ''  NB. makes sense for complex field only

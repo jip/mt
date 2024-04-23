@@ -54,7 +54,7 @@ NB. - verb below is loaded into the current locale
 
 drot=: 3 : 0
   'x y c s'=. y
-  assert. x =/&# y
-  assert. c , &# s
+  assert x =/&# y
+  assert c , &# s
   2 4 { drot_cd_mtbla_ (, # x) ; (, x) ; (, 1) ; (, y) ; (, 1) ; (, c) ; (, s)
 )

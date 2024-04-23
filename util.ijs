@@ -14,6 +14,7 @@ NB. lcat      Concatenate logs
 NB. nolog     Nilad to generate neutral for test actors
 NB. tmonad    Conj. to make monad to test computational monad
 NB. tdyad     Conj. to make monad to test computational dyad
+NB. assert    Advanced version of the (assert.) control
 NB. mrg       Adv. to merge arguments interleaving their
 NB.           items as determined by a list
 NB. cut3      Split list by delimiter taken from its tail
@@ -275,6 +276,78 @@ NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. flt staff
+
+NB. ---------------------------------------------------------
+NB. assert
+NB.
+NB. Description:
+NB.   Advanced version of the (assert.) control
+NB.
+NB. Syntax:
+NB.   trash=. [msg] assert chk
+NB. where
+NB.   msg - string, optional, will be shown if assertion is
+NB.         failed
+NB.   chk - numeric vector
+NB.
+NB. Examples:
+NB. - when asserts are enabled:
+NB.      9!:34 ''  NB. check asserts are enabled
+NB.   1
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0
+NB.   |assertion failure: assert_mtmm_     |assertion failure: assert_z_
+NB.   |       assert_mtmm_ 1 1 0           |       assert_z_ 1 1 0
+NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
+NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2          NB. no failure occured - it's a bug #1
+NB.   |assertion failure: assert_mtmm_
+NB.   |       assert_mtmm_ 1 1 2
+NB.
+NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0
+NB.   |Oops!: assert_mtmm_                 |Oops!: assert_z_
+NB.   |   'Oops!'    assert_mtmm_ 1 1 0    |   'Oops!'    assert_z_ 1 1 0
+NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
+NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2  NB. no failure occured - it's a bug #1
+NB.   |Oops!: assert_mtmm_
+NB.   |   'Oops!'    assert_mtmm_ 1 1 2
+NB.
+NB. - when asserts are disabled:
+NB.      9!:35 [ 0  NB. disable asserts
+NB.      9!:34 ''   NB. check asserts are disabled
+NB.   0
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
+NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2
+NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0          NB. failure occured - it's a bug #2
+NB.                                        |assertion failure: assert_z_
+NB.                                        |       assert_z_ 1 1 0
+NB.
+NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
+NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2
+NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0  NB. failure occured - it's a bug #2
+NB.                                        |Oops!: assert_z_
+NB.                                        |   'Oops!'    assert_z_ 1 1 0
+NB.      9!:35 [ 1  NB. restore default setting
+NB.      9!:34 ''   NB. check asserts are enabled
+NB.   1
+NB.
+NB. Notes:
+NB. - ambivalent procedure
+NB. - fixes system's (assert_z_) to match (assert.) control
+NB. - depends on 9!:34 (Enable assert.) setting
+NB. - values of rank>1 are supported accidentally, too:
+NB.      NB. mt                               NB. stdlib
+NB.      assert_mtmm_ 1 1 ,: 1 0              assert_z_ 1 1 ,: 1 0  NB. no failure occured
+NB.   |assertion failure: assert_mtmm_
+NB.   |       assert_mtmm_ 1 1,:1 0
+NB.
+NB. References:
+NB. [1] Igor Zhuravlov. [Jprogramming] assert verb from
+NB.     stdlib mismatches assert. control
+NB.     2019-12-30 00:43:46 UTC
+NB.     http://www.jsoftware.com/pipermail/programming/2019-December/054693.html
+
+assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')
 
 NB. ---------------------------------------------------------
 NB. mrg

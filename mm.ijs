@@ -129,78 +129,6 @@ ishmt=:    (-: 0&|:) or (3 > #@$) and (   + -: _2&|:)
 NB. predicate to check is array skew-Hermitian
 isskwhmt=: (-: 0&|:) or (3 > #@$) and (-@:+ -: _2&|:)
 
-NB. ---------------------------------------------------------
-NB. assert
-NB.
-NB. Description:
-NB.   Advanced version of the (assert.) control
-NB.
-NB. Syntax:
-NB.   trash=. [msg] assert chk
-NB. where
-NB.   msg - string, optional, will be shown if assertion is
-NB.         failed
-NB.   chk - numeric vector
-NB.
-NB. Examples:
-NB. - when asserts are enabled:
-NB.      9!:34 ''  NB. check asserts are enabled
-NB.   1
-NB.      NB. mt                               NB. stdlib
-NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0
-NB.   |assertion failure: assert_mtmm_     |assertion failure: assert_z_
-NB.   |       assert_mtmm_ 1 1 0           |       assert_z_ 1 1 0
-NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
-NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2          NB. no failure occured - it's a bug #1
-NB.   |assertion failure: assert_mtmm_
-NB.   |       assert_mtmm_ 1 1 2
-NB.
-NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0
-NB.   |Oops!: assert_mtmm_                 |Oops!: assert_z_
-NB.   |   'Oops!'    assert_mtmm_ 1 1 0    |   'Oops!'    assert_z_ 1 1 0
-NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
-NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2  NB. no failure occured - it's a bug #1
-NB.   |Oops!: assert_mtmm_
-NB.   |   'Oops!'    assert_mtmm_ 1 1 2
-NB.
-NB. - when asserts are disabled:
-NB.      9!:35 [ 0  NB. disable asserts
-NB.      9!:34 ''   NB. check asserts are disabled
-NB.   0
-NB.      NB. mt                               NB. stdlib
-NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
-NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2
-NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0          NB. failure occured - it's a bug #2
-NB.                                        |assertion failure: assert_z_
-NB.                                        |       assert_z_ 1 1 0
-NB.
-NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
-NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2
-NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0  NB. failure occured - it's a bug #2
-NB.                                        |Oops!: assert_z_
-NB.                                        |   'Oops!'    assert_z_ 1 1 0
-NB.      9!:35 [ 1  NB. restore default setting
-NB.      9!:34 ''   NB. check asserts are enabled
-NB.   1
-NB.
-NB. Notes:
-NB. - ambivalent procedure
-NB. - fixes system's (assert_z_) to match (assert.) control
-NB. - depends on 9!:34 (Enable assert.) setting
-NB. - values of rank>1 are supported accidentally, too:
-NB.      NB. mt                               NB. stdlib
-NB.      assert_mtmm_ 1 1 ,: 1 0              assert_z_ 1 1 ,: 1 0  NB. no failure occured
-NB.   |assertion failure: assert_mtmm_
-NB.   |       assert_mtmm_ 1 1,:1 0
-NB.
-NB. References:
-NB. [1] Igor Zhuravlov. [Jprogramming] assert verb from
-NB.     stdlib mismatches assert. control
-NB.     2019-12-30 00:43:46 UTC.
-NB.     http://www.jsoftware.com/pipermail/programming/2019-December/054693.html
-
-assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')
-
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -599,29 +527,29 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
   y=. CRLF cutl_mt_ y  NB. cut by spans of CR and LF
-  'line longer than 1024 bytes was detected' assert_mtmm_ ((1024 >: #)S:0) y
+  'line longer than 1024 bytes was detected' assert_mt_ ((1024 >: #) S: 0) y
   header=. cut_mt_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
   y=. (#~ ('%' ~: {.) S: 0) y  NB. remove header and comments
   y=. (#~ a:&~:) dltb L: 0 y   NB. remove empty lines
-  'not a Matrix Market exchange format' assert_mtmm_ 5 = # header
-  ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mtmm_ BANNER_mtmm_ -: 0 {:: header
-  ('object '''   , (1 {:: header) , ''' is not recognized') assert_mtmm_ OBJECT_mtmm_ -: 1 {:: header
+  'not a Matrix Market exchange format' assert_mt_ 5 = # header
+  ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mt_ BANNER_mtmm_ -: 0 {:: header
+  ('object '''   , (1 {:: header) , ''' is not recognized') assert_mt_ OBJECT_mtmm_ -: 1 {:: header
   ioFormat=.   FORMATS_mtmm_    i. 2 { header
   ioField=.    FIELDS_mtmm_     i. 3 { header
   ioSymmetry=. SYMMETRIES_mtmm_ i. 4 { header
-  ('format '''   , (2 {:: header) , ''' is not recognized') assert_mtmm_ ioFormat   < # FORMATS_mtmm_
-  ('field '''    , (3 {:: header) , ''' is not recognized') assert_mtmm_ ioField    < # FIELDS_mtmm_
-  ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mtmm_ ioSymmetry < # SYMMETRIES_mtmm_
+  ('format '''   , (2 {:: header) , ''' is not recognized') assert_mt_ ioFormat   < # FORMATS_mtmm_
+  ('field '''    , (3 {:: header) , ''' is not recognized') assert_mt_ ioField    < # FIELDS_mtmm_
+  ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mt_ ioSymmetry < # SYMMETRIES_mtmm_
   size=. ". 0 {:: y
-  ('size values ''' , (": size) , ''' must be integer') assert_mtmm_ (3!:0 size) e. JB01 , JINT
+  ('size values ''' , (": size) , ''' must be integer') assert_mt_ (3!:0 size) e. JB01 , JINT
   y=. }. y
   if. ioFormat do.  NB. coordinate
-    ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mtmm_ 2 < # size
-    ('''coordinate'' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mtmm_ (0 < ioField) +. (ioSymmetry e. 0 1) *. (0 = ioField)
+    ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mt_ 2 < # size
+    ('''coordinate'' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mt_ (0 < ioField) +. (ioSymmetry e. 0 1) *. (0 = ioField)
     'shape le'=. (}: ; {:) size  NB. shape, quantity expected
     y=. (le ; shape ; ioField ; ioSymmetry) mmic_mtmm_ y
   else.  NB. array
-    ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mtmm_ 1 < # size
+    ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mt_ 1 < # size
     ('''array'' and ''pattern'' qualifiers are incompatible') assert_mtmm_ 0 < ioField
     y=. (size ; ioField ; ioSymmetry) mmia_mtmm_ y
   end.

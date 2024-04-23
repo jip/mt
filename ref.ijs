@@ -171,6 +171,7 @@ NB.         provides β≥0) at index ioa, scalar τ ∈ ℂ at index
 NB.         iot, and vector v ∈ ℂ^(n-1) in the rest elements,
 NB.         reflected vector is:
 NB.           beta ioa} n $ 0
+NB.   n   > 0, the length of α and x combined
 NB.
 NB. Formula:
 NB.   H = I - (1,v) * τ * (1,v)^H

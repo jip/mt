@@ -31,17 +31,21 @@ NB. Concepts
 NB.
 NB. Notation:
 NB.   MM - Matrix Market exchange formats
+NB.   mm - a MM facility implemented by this module
 NB.
 NB. Conventions:
 NB. 1) MM allows the 0 only as a sparse element in sparse
-NB.    matrices
-NB. 2) MM matrix object may have any rank>1, this extends an
-NB.    original specification
-NB. 3) MM matrix object may have skew-Hermitian symmetry,
-NB.    this extends an original specification
-NB. 4) ±inf and nan aren't still supported in exporting J
-NB.    array to MM matrix object, this reduces an original
-NB.    specification
+NB.    matrices, this reduces an amount of exportable J arrays
+NB. 2) mm supports arrays of any rank>1, this extends MM
+NB.    limited by rank=2 only
+NB. 3) mm supports arrays with skew-Hermitian symmetry, this
+NB.    extends MM
+NB. 4) mm supports 'array pattern' qualifiers combination,
+NB.    this extends MM
+NB. 5) arrays of shape (rank # n) where n<2 are always
+NB.    considered as general i.e. without any symmetry
+NB. 6) ±inf and nan aren't still supported in exporting J
+NB.    array to MM format, this reduces MM
 NB.
 NB. TODO:
 NB. - replace Format (":) by Format (8!:n) in arr->str
@@ -341,8 +345,13 @@ isohmt=: (3 : 0) :. (isosym^:_1)
 )
 
 NB. ---------------------------------------------------------
-NB. mm import coordinate
-NB. 'riso rdat'=. (le ; shape ; ioField ; ioSymmetry) mmic bdat
+NB. mmic
+NB.
+NB. Description:
+NB.   Import MM coordinate object
+NB.
+NB. Syntax:
+NB.   'riso rdat'=. (le ; shape ; ioField ; ioSymmetry) mmic bdat
 NB. where
 NB.   le         ≥ 0, quantity of elements expected
 NB.   shape      - r-vector, object's shape
@@ -480,8 +489,13 @@ mmic=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. mm import array
-NB. rdat=. (shape ; ioField ; ioSymmetry) mmia bdat
+NB. mmia
+NB.
+NB. Description:
+NB.   Import MM array object
+NB.
+NB. Syntax:
+NB.   rdat=. (shape ; ioField ; ioSymmetry) mmia bdat
 NB. where
 NB.   shape      - r-vector, object's shape
 NB.   ioField    ≥ 0, IO(field) in FIELDS
@@ -567,8 +581,8 @@ NB.   str - string, arr in MM
 NB.   arr - r-rank array, numeric
 NB.   r   > 1, array's rank
 NB.
-NB. Assertion:
-NB.   (-: ]&.mm) arr
+NB. Assertions:
+NB.   ((-: *. -:&(3!:0)) ]&.mm) arr
 NB.
 NB. Application:
 NB.   str=. mm_mtmm_ arr

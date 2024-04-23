@@ -4174,6 +4174,7 @@ NB. - input without edge cases
 ( 1j_1 _1    % 3) -: qninv  1j1   1
 ( 1j_1 _1j_1 % 4) -: qninv  1j1   1j1
 (1r2j_1r2 _1r2j_1r2 ,: 2j_2 _2j_2) -: qninv q3 ,: q4
+NB. (-: qninv) i. 0 2  NB. this fails until https://github.com/jsoftware/jsource/issues/192 has been fixed
 
 NB. qnmul
 NB. - input contains NaN
@@ -5104,6 +5105,7 @@ q1 -: _60j12 30j24 qndivl q2
 (1 0 ,: q1) -:  q1        qndivl q1  ,: 1 0
 (q1  ,: q2) -: (q1 ,: q2) qndivl 1 0
 (1 0 ,: q2) -: (q1 ,: q2) qndivl q1  ,: 1 0
+(-: qndivl~) i. 0 2
 
 NB. qndivr
 NB. - input contains NaN
@@ -5930,6 +5932,7 @@ q1 -: _60j20 14j32 qndivr q2
 (1 0 ,: q1) -:  q1        qndivr q1  ,: 1 0
 (q1  ,: q2) -: (q1 ,: q2) qndivr 1 0
 (1 0 ,: q2) -: (q1 ,: q2) qndivr q1  ,: 1 0
+NB. (-: qndivr~) i. 0 2  NB. this fails until https://github.com/jsoftware/jsource/issues/192 has been fixed
 
 NB. qnf
  1x1                                       0                                        -: ^ qnf qnmark1  q1

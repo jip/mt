@@ -54,7 +54,7 @@ dormhr=: 4 : 0
   s=. # A
   assert. s = sh {~ 'rR' e.~ {. side
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
-  assert. (isvector_jlapack2_ , (<: s) = #        ) tau
+  assert. (isvector_jlapack2_ , (0 >. <: s) = #   ) tau
   assert.  ismatrix_jlapack2_                       C
   NB. lwork=. , 1 >. sh {~ 'lL' e.~ {. side  NB. minimal
   lwork=. , 32 * 1 >. sh {~ 'lL' e.~ {. side  NB. optimal

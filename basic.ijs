@@ -155,7 +155,7 @@ NB. - filler must be non-zero to avoid problems in chkxxx
 NB.   which replace 0 by 1 before comparison and division
 NB. - negative inc is used by caller to reverse vec
 
-expand=: 2 : '<@((1 j. <:@|@(n&{::)) ((#!.(?0) }:) , {:@]) m&{::) m} ]'
+expand=: 2 : '<@((1 j. <:@|@(n&{::)) ((#!.(?0) }:) , _1 { :: ($0) ]) m&{::) m} ]'
 
 NB. ---------------------------------------------------------
 NB. shrink
@@ -2395,8 +2395,8 @@ testbasicgemm=: 3 : 0
   zcoeff=. 0j0 1j0 0.7j_0.9
   acoeff=. /:~ ~. zcoeff ,^:(JCMPX = 3!:0 C) dcoeff
   'm n'=. $ C
-  ks=. /:~ ~. m (0 1 , (, >.@-:)@(, , +)) n  NB. 0,1,⌈m/2⌉,⌈n/2⌉,⌈(m+n)/2⌉,m,n,m+n
-  As=. ks <@:({."0 1)"0 _ As                 NB. As[i] is m×k[i]-matrix
+  ks=. /:~ ~. (, *@(>./)) 0 , (, >.@-:) m (, , +) n  NB. 0,1,⌈m/2⌉,⌈n/2⌉,⌈(m+n)/2⌉,m,n,m+n
+  As=. ks <@:({."0 1)"0 _ As                         NB. As[i] is m×k[i]-matrix
   argsdnn=. { (<"0 dcoeff) ;        As  ; (<    Bs) ; (<"0 dcoeff) ; < < C
   argsdnt=. { (<"0 dcoeff) ;        As  ; (< |: Bs) ; (<"0 dcoeff) ; < < C
   argsdtn=. { (<"0 dcoeff) ; (|:L:0 As) ; (<    Bs) ; (<"0 dcoeff) ; < < C
@@ -2522,8 +2522,8 @@ testbasicgemmt=: 3 : 0
     zcoeff=. 0j0 1j0 0.7j_0.9
     acoeff=. /:~ ~. zcoeff ,^:(JCMPX = 3!:0 C) dcoeff
     'n m'=. (-/ , {:) $ Bs
-    ks=. /:~ ~. m (0 1 , (, >.@-:)@(, , +)) n  NB. 0,1,⌈m/2⌉,⌈n/2⌉,⌈(m+n)/2⌉,m,n,m+n
-    As=. ks <@:({."0 1)"0 _ As                 NB. As[i] is m×k[i]-matrix
+    ks=. /:~ ~. (, *@(>./)) 0 , (, >.@-:) m (, , +) n  NB. 0,1,⌈m/2⌉,⌈n/2⌉,⌈(m+n)/2⌉,m,n,m+n
+    As=. ks <@:({."0 1)"0 _ As                         NB. As[i] is m×k[i]-matrix
     argsdnn=. { (<"0 dcoeff) ;         As  ; (<    Bs) ; (<"0 dcoeff) ; < < C
     argsdnt=. { (<"0 dcoeff) ;         As  ; (< |: Bs) ; (<"0 dcoeff) ; < < C
     argsdtn=. { (<"0 dcoeff) ; (|: L:0 As) ; (<    Bs) ; (<"0 dcoeff) ; < < C

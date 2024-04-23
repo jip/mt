@@ -937,4 +937,4 @@ NB.   testgq, testmq, testqf
 NB. - larxtxx and larxbxxxx are impractical for large
 NB.   matrices
 
-testref=: 1 : 'lcat_mt_@(testlarfg_mt_@u@>:@{.`(nolog_mt_`((lcat_mt_@(testlarf_mt_`testlarz_mt_`testlarft_mt_`testlarzt_mt_`testlarfb_mt_`testlarzb_mt_`:0))@(u ; u))@.(200 >: <./))`:0)'
+testref=: 1 : 'lcat_mt_@(testlarfg_mt_@u@(2 + {.)`(nolog_mt_`((lcat_mt_@(testlarf_mt_`testlarz_mt_`testlarft_mt_`testlarzt_mt_`testlarfb_mt_`testlarzb_mt_`:0))@(u ; u))@.(200 >: <./))`:0)'

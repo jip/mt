@@ -736,7 +736,7 @@ testunmq=: 3 : 0
 
   rcond=. nan`geconi@.(=/@$) C  NB. meaninigful for square matrices only
 
-  ks=. ~. 0 1 , (,~ <.@-:) <./ 'm n'=. $ A
+  ks=. /:~ ~. (, *@(>./)) 0 , (,~ <.@-:) <./ 'm n'=. $ A  NB. 0,1,⌊min(m,n)/2⌋,⌊min(m,n)⌋
 
   Awide=. |:^:(>/@$) A
   Atall=. |:^:(</@$) A
@@ -1079,7 +1079,7 @@ testunmz=: 3 : 0
 
   rcond=. nan`geconi@.(=/@$) C  NB. meaninigful for square matrices only
 
-  ks=. ~. 0 1 , (,~ <.@-:) <./ 'm n'=. $ A
+  ks=. /:~ ~. (, *@(>./)) 0 , (,~ <.@-:) <./ 'm n'=. $ A  NB. 0,1,⌊min(m,n)/2⌋,⌊min(m,n)⌋
 
   Awide=. |:^:(>/@$) A
   Atall=. |:^:(</@$) A
@@ -1311,32 +1311,32 @@ testunmhr=: 3 : 0
   NB. LAPACK stores HQf differently, so we need a HQf variant
   try.
     HuQf=. (0&{:: , 1&{::) 'HuQf2 tau2'=. dgehrd_mttmp_ (1 ; # ; ]) A
-    Qu=. dorghr_mttmp_ 1 ; ((# ; 1&{.^:(0 = #)) HuQf2) , < tau2
+    Qu=. dorghr_mttmp_ 1 ; (# HuQf2) ; HuQf2 ; tau2
   catch.
     HuQf=. _.
     Qu=. _.
   end.
 
-  log=.          ('''ln''&dormhr_mttmp_' tmonad (((1 ; c ; 1&{.^:(0 = #)@:}: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp~    Qu
-  log=. log lcat ('''lt''&dormhr_mttmp_' tmonad (((1 ; c ; 1&{.^:(0 = #)@:}: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp~ |: Qu
-  log=. log lcat ('''rn''&dormhr_mttmp_' tmonad (((1 ; c ; 1&{.^:(0 = #)@:}: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp     Qu
-  log=. log lcat ('''rt''&dormhr_mttmp_' tmonad (((1 ; c ; 1&{.^:(0 = #)@:}: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp  |: Qu
+  log=.          ('''ln''&dormhr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp~    Qu
+  log=. log lcat ('''lt''&dormhr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp~ |: Qu
+  log=. log lcat ('''rn''&dormhr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp     Qu
+  log=. log lcat ('''rt''&dormhr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp  |: Qu
 
   NB. LAPACK, complex datatype
 
   NB. LAPACK stores HQf differently, so we need a HQf variant
   try.
     HuQf=. (0&{:: , 1&{::) 'HuQf2 tau2'=. zgehrd_mttmp_ (1 ; # ; ]) A
-    Qu=. zunghr_mttmp_ 1 ; ((# ; 1&{.^:(0 = #)) HuQf2) , < tau2
+    Qu=. zunghr_mttmp_ 1 ; (# HuQf2) ; HuQf2 ; tau2
   catch.
     HuQf=. _.
     Qu=. _.
   end.
 
-  log=. log lcat ('''ln''&zunmhr_mttmp_' tmonad (((1 ; c ; 1&{.^:(0 = #)@:}: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp~    Qu
-  log=. log lcat ('''lc''&zunmhr_mttmp_' tmonad (((1 ; c ; 1&{.^:(0 = #)@:}: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp~ ct Qu
-  log=. log lcat ('''rn''&zunmhr_mttmp_' tmonad (((1 ; c ; 1&{.^:(0 = #)@:}: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp     Qu
-  log=. log lcat ('''rc''&zunmhr_mttmp_' tmonad (((1 ; c ; 1&{.^:(0 = #)@:}: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp  ct Qu
+  log=. log lcat ('''ln''&zunmhr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp~    Qu
+  log=. log lcat ('''lc''&zunmhr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp~ ct Qu
+  log=. log lcat ('''rn''&zunmhr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp     Qu
+  log=. log lcat ('''rc''&zunmhr_mttmp_' tmonad (((1 ; c ; }: ; }:@{:)@(2&{::) , {.)`]`(rcond"_)`nan`hst03u)) C ; normC ; HuQf ; C mp  ct Qu
 
   NB. mt, any datatype
 

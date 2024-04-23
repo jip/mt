@@ -1,3 +1,0 @@
-rank: 2 (matrix)
-shape: 2 3
-this boolean J matrix must be stored as 'array integer' not 'array pattern' since the latter combination is composed from incompatible qualifiers

@@ -40,17 +40,17 @@ NB. - no check for positive definiteness
 dpttrs=: 3 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ , (<: n) = #) e
-  assert.  ismatrix_jlapack2_               B
+  assert. (isvector_jlapack2_ ,          n  = #) d
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) e
+  assert.  ismatrix_jlapack2_                    B
   |: 5 {:: dpttrs_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
 )
 
 zpttrs=: 4 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ , (<: n) = #) e
-  assert.  ismatrix_jlapack2_               B
+  assert. (isvector_jlapack2_ ,          n  = #) d
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) e
+  assert.  ismatrix_jlapack2_                    B
   |: 6 {:: zpttrs_jlapack2_ (, x) ; (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
 )

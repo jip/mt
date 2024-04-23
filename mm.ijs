@@ -289,6 +289,12 @@ NB.   bdat       - boxed strings, data lines
 NB.   riso       - raw ISO
 NB.   rdat       - raw data for object
 NB.   r          > 1, object's rank
+NB.
+NB. References:
+NB. [1] Henry Rich. [Jbeta] S: results seems inconsistent,
+NB.     also is L:
+NB.     2022-12-28 03:58:23 UTC
+NB.     https://www.jsoftware.com/pipermail/beta/2022-December/010685.html
 
 mmic=: 4 : 0
   'le shape ioField ioSymmetry'=. x
@@ -296,26 +302,29 @@ mmic=: 4 : 0
   NB. check elements quantity presented
   lp=. # y
   ((": le) , ' elements was expected, but ' , (": lp) , ' data rows found (1)') assert le = lp
-  NB. check max columns quantity presented
-  select. ioField
-    case. 0 do.  NB. pattern
-      ('each data row must contain just ' , (": rank) , ' ISO (1)') assert ((<: rank) = cspans) S: 0 y  NB. count SPACE spans
-    case. 1 ; 2 do.  NB. integer or real
-      ('each data row must contain just ' , (": rank) , ' ISO and a single matrix entry (1)') assert (rank = cspans) S: 0 y  NB. count SPACE spans
-    case. 3 do.  NB. complex
-      ('each data row must contain just ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (1)') assert ((>: rank) = cspans) S: 0 y  NB. count SPACE spans
+  NB. check max columns quantity presented for non-empty objects
+  if. lp do.
+    select. ioField
+      case. 0 do.  NB. pattern
+        ('each data row must contain just ' , (": rank) , ' ISO (1)') assert ((<: rank) = cspans) S: 0 y  NB. count SPACE spans
+      case. 1 ; 2 do.  NB. integer or real
+        ('each data row must contain just ' , (": rank) , ' ISO and a single matrix entry (1)') assert (rank = cspans) S: 0 y  NB. count SPACE spans
+      case. 3 do.  NB. complex
+        ('each data row must contain just ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (1)') assert ((>: rank) = cspans) S: 0 y  NB. count SPACE spans
+    end.
   end.
   NB. check elements quantity depending on symmetry
-  select. ioSymmetry
-    case. 0 do.  NB. general
-      lemax=. */ shape
-    case. do.  NB. symmetric, skew-symmetric, Hermitian or skew-Hermitian
-      ('''' , (ioSymmetry {:: SYMMETRIES) , ''' matrix must have all dimensions the same') assert ({. = }.) shape
-      if. 2 = ioSymmetry do.  NB. skew-symmetric
-        lemax=. rank    !       {. shape
-      else.  NB. symmetric, Hermitian or skew-Hermitian
-        lemax=. rank ([ ! <:@+) {. shape
-      end.
+  if. ioSymmetry do.
+    NB. symmetry of any kind
+    ('''' , (ioSymmetry {:: SYMMETRIES) , ''' matrix must have all dimensions the same') assert ({. = }.) shape
+    if. 2 = ioSymmetry do.  NB. skew-symmetric
+      lemax=. rank    !       {. shape
+    else.  NB. symmetric, Hermitian or skew-Hermitian
+      lemax=. rank ([ ! <:@+) {. shape
+    end.
+  else.
+    NB. no symmetry
+    lemax=. */ shape
   end.
   ('not more than ' , (": lemax) , ' elements was expected, but ' , (": lp) , ' data rows found') assert lemax >: lp  NB. some elements may be omitted
   NB. convert strings with data lines to J array
@@ -323,28 +332,44 @@ mmic=: 4 : 0
   'there are not recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' data rows found (2)') assert le = rp  NB. how is this possible to violate?
   fret=. ''  NB. makes sense for complex field only
-  NB. check columns quantity
-  select. ioField
-    case. 0 do.  NB. pattern
-      ('each data row must contain ' , (": rank) , ' ISO (2)') assert cp = rank
-    case. 1 ; 2 do.  NB. integer or real
-      ('each data row must contain ' , (": rank) , ' ISO and a single matrix entry (2)') assert cp = >: rank
-    case. 3 do.  NB. complex
-      ('each data row must contain ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (2)') assert cp = 2 + rank
-      fret=. '' ; ((1 j. <: rank) , 1j1) # 1 1  NB. to separate ISO from values
+  se=. ioField {:: ((0 ; 00 ; 0.0 ; 0j0))  NB. sparse element
+  NB. check columns quantity for non-empty objects
+  if. rp do.
+    select. ioField
+      case. 0 do.  NB. pattern
+        ('each data row must contain ' , (": rank) , ' ISO (2)') assert cp = rank
+      case. 1 ; 2 do.  NB. integer or real
+        ('each data row must contain ' , (": rank) , ' ISO and a single matrix entry (2)') assert cp = >: rank
+      case. 3 do.  NB. complex
+        ('each data row must contain ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (2)') assert cp = 2 + rank
+        fret=. '' ; ((1 j. <: rank) , 1j1) # 1 1  NB. to separate ISO from values
+    end.
+    NB. extract ISO and values:
+    NB. - pattern: iso_vector
+    NB. - integer, real: iso_vector value_scalar
+    NB. - complex: iso_vector re_of_value_scalar im_of_value_scalar
+    'iso dat'=. (;&1)`(}:"1 ; {:"1)`(}:"1 ; {:"1)`(fret&(<`(<@:(j./"1));.1))@.ioField y
+    iso=. JINT c. iso  NB. convert to integer type
+    'indices must be 1-based' assert 0 (< ,) iso
+    iso=. <: iso  NB. translate MM's 1-based ISO to J's 0-based ones
+    'index exceeding dimension is detected' assert iso <"1 shape
+  else.
+    iso=. i. 0 , rank
+    dat=. 0 {. se
   end.
-  NB. extract ISO and values:
-  NB. - pattern: iso_vector
-  NB. - integer, real: iso_vector value_scalar
-  NB. - complex: iso_vector re_of_value_scalar im_of_value_scalar
-  'iso dat'=. (;&1)`(}:"1 ; {:"1)`(}:"1 ; {:"1)`(fret&(<`(<@:(j./"1));.1))@.ioField y
-  iso=. <. iso  NB. convert to integer type
-  'indices must be 1-based' assert 0 (< ,) iso
-  iso=. <: iso  NB. translate MM's 1-based ISO to J's 0-based ones
-  'index exceeding dimension is detected' assert iso <"1 shape
-  if. ioField e. 1 2 do.  NB. integer or real
-    'integer data type was expected but real data type is detected' assert (JFL = 3!:0 dat) *: 1 = ioField
-      NB. don't check a reverse situation since the following is possible: (42 -: ". '42.0')
+  NB. simplify datatype if mismatches with ioField
+  select. ioField
+    case. 1 do.  NB. integer
+      if. JINT ~: 3!:0 dat do.
+        'non-integer values detected' assert (-: <.) dat
+        dat=. JINT c. dat
+      end.
+    case. 2 do.  NB. real
+      if. JFL ~: 3!:0 dat do.
+        'non-real values detected' assert (-: +) dat
+        dat=. JFL c. dat
+      end.
+    case. do.
   end.
   NB. restore elements known due to symmetry
   ('''' , (ioField {:: FIELDS) , ''' and ''' , (ioSymmetry {:: SYMMETRIES) , ''' qualifiers are incompatible') assert ioSymmetry (3 4 e.~ [) notOr (3 = ]) ioField
@@ -372,7 +397,7 @@ mmic=: 4 : 0
       NB.   - its cardinality are different
       NB. - box sets to avoid reshaping later
       iso=. (i. count) <@~.@:A."_ 1 iso
-      counts=. # S: 0 iso
+      counts=. # S: 0^:(*@#) iso  NB. see [1]
       iso=. ; iso
     case. 2 do.  NB. skew-symmetric
       NB. elements presented must have ISO satisfying:
@@ -412,7 +437,6 @@ mmic=: 4 : 0
       dat=. (1 = (C.!.2) (/:"1) iso)} (,: +@:-) counts # dat
   end.
   NB. place values at ISO positions in sparse array
-  se=. ioField {:: ((0 ; 00 ; 0.0 ; 0j0))
   y=. dat iso} 1 $. shape ; (i. rank) ; se
 )
 
@@ -435,22 +459,23 @@ NB.   r          > 1, object's rank
 mmia=: 4 : 0
   'shape ioField ioSymmetry'=. x
   rank=. # shape
+  lp=. # y
   NB. check max columns quantity presented
-  if. 3 = ioField do.  NB. complex
+  if. (3 = ioField) *. 0 < lp do.  NB. complex
     'each data row must contain a real and imaginary part of single matrix entry (1)' assert (' '&e.S:0) y
   end.
   NB. check elements quantity depending on symmetry
-  lp=. # y
-  select. ioSymmetry
-    case. 0 do.  NB. general
-      le=. */ shape
-    case. do.  NB. symmetric, skew-symmetric, Hermitian or skew-Hermitian
-      ('''' , (ioSymmetry {:: SYMMETRIES) , ''' matrix must have all dimensions the same') assert ({. = }.) shape
-      if. 2 = ioSymmetry do.  NB. skew-symmetric
-        le=. rank    !       {. shape
-      else.  NB. symmetric, Hermitian or skew-Hermitian
-        le=. rank ([ ! <:@+) {. shape
-      end.
+  if. ioSymmetry do.
+    NB. symmetry of any kind
+    ('''' , (ioSymmetry {:: SYMMETRIES) , ''' matrix must have all dimensions the same') assert ({. = }.) shape
+    if. 2 = ioSymmetry do.  NB. skew-symmetric
+      le=. rank    !       {. shape
+    else.  NB. symmetric, Hermitian or skew-Hermitian
+      le=. rank ([ ! <:@+) {. shape
+    end.
+  else.
+    NB. no symmetry
+    le=. */ shape
   end.
   ((": le) , ' elements was expected, but ' , (": lp) , ' data rows found') assert le = lp  NB. all elements must be presented
   NB. convert strings with data lines to J array
@@ -459,12 +484,28 @@ mmia=: 4 : 0
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' elements found') assert le = rp  NB. how is this possible to violate?
   NB. check columns quantity
   if. 3 = ioField do.  NB. complex
-    'each data row must contain a real and imaginary part of single matrix entry (2)' assert 2 = cp
-    y=. (j./"1) y
-  else.  NB. integer or real (since mmia isn't called for pattern)
+    'each data row must contain a real and imaginary part of single matrix entry (2)' assert (2 = cp) +. (, 0) -: $ y
+    y=. JCMPX c. j./"1 y  NB. if y was a 0×0-matrix then (j./"1 y) will have datatype boolean so explicit conversion may be needed
+  else.  NB. pattern or integer or real
     'each data row must contain just a single matrix entry' assert 1 = cp
-    'integer data type was expected but real data type is detected' assert (JFL = 3!:0 y) *: 1 = ioField
-      NB. don't check a reverse situation since the following is possible: (42 -: ". '42.0')
+    NB. simplify datatype if mismatches with ioField
+    select. ioField
+      case. 0 do.  NB. pattern
+        if. JB01 ~: 3!:0 y do.
+          'non-pattern values detected' assert (-: 1&=) y
+          y=. JB01 c. y
+        end.
+      case. 1 do.  NB. integer
+        if. JINT ~: 3!:0 y do.
+          'non-integer values detected' assert (-: <.) y
+          y=. JINT c. y
+        end.
+      case. 2 do.  NB. real
+        if. JFL ~: 3!:0 y do.
+          'non-real values detected' assert (-: +) y
+          y=. JFL c. y
+        end.
+    end.
   end.
   NB. restore elements known due to symmetry
   select. ioSymmetry
@@ -550,7 +591,6 @@ mm=: (3 : 0) :. (3 : 0)
     y=. (le ; shape ; ioField ; ioSymmetry) mmic_mtmm_ y
   else.  NB. array
     ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mt_ 1 < # size
-    ('''array'' and ''pattern'' qualifiers are incompatible') assert_mtmm_ 0 < ioField
     y=. (size ; ioField ; ioSymmetry) mmia_mtmm_ y
   end.
   y
@@ -559,7 +599,7 @@ mm=: (3 : 0) :. (3 : 0)
   rank=. # shape=. $ y  NB. rank and shape presented
   ((": rank) , '-rank arrays aren''t supported') assert 1 < rank
   'ioFormat ioField'=. 2 4 #: (JB01 , JINT , JFL , JCMPX , 1024 4096 8192 16384) i. 3!:0 y
-  ioSymmetry=. shape issym`(issym`2:@.isskw)`(((issym`2:@.isskw)`3:@.ishmt)`4:@.isskwhmt)@.(0 2 I. ioField)@]`0:@.(({. +./@:~: }.)@[) y
+  ioSymmetry=. shape 0:`((0:`((0 4 {~ isskwhmt)`3:@.ishmt)@.(3 = ioField))`2:@.isskw)@.(*@ioField)`1:@.issym@]`0:@.(({. +./@:~: or (2 > [) }.)@[) y
   if. ioFormat do.
     NB. coordinate
     'Matrix Market exchange formats support the 0 only as a sparse element' assert 0 = 3 $. y
@@ -571,7 +611,6 @@ mm=: (3 : 0) :. (3 : 0)
     y=. y [`(#~ trlmask)`(#~ trl0mask)`(#~ trlmask)`(#~ trlmask)@.ioSymmetry iso
   else.
     NB. array
-    if. 0 = ioField do. ioField=. 1 end.  NB. represent boolean array as integer since 'array' and 'pattern' qualifiers are incompatible
     NB. compose data
     y=. +.^:(3 = ioField) , (|:"2)^:(0 = ioSymmetry) y
     NB. filter out repeating elements known due to symmetry

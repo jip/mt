@@ -31,15 +31,15 @@ NB. - no check for positive definiteness
 dpttrf=: 3 : 0
   'd e'=. y
   n=. # d
-  assert.  isvector_jlapack2_               d
-  assert. (isvector_jlapack2_ , (<: n) = #) e
+  assert.  isvector_jlapack2_                    d
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) e
   2 3 { dpttrf_jlapack2_ (, n) ; d ; e ; , _1
 )
 
 zpttrf=: 3 : 0
   'd e'=. y
   n=. # d
-  assert.  isvector_jlapack2_               d
-  assert. (isvector_jlapack2_ , (<: n) = #) e
+  assert.  isvector_jlapack2_                    d
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) e
   2 3 { zpttrf_jlapack2_ (, n) ; d ; e ; , _1
 )

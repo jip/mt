@@ -30,7 +30,7 @@ zunghr=: 3 : 0
   'ilo ihi A tau'=. y
   n=. # A
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_) A
-  assert. (isvector_jlapack2_ , (<: n) = #        ) tau
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #   ) tau
   NB. lwork=. , 1 >. ihi-ilo  NB. minimal
   lwork=. , 1 >. 32 * ihi - ilo  NB. optimal
   |: 4 {:: zunghr_jlapack2_ (, n) ; (, ilo) ; (, ihi) ; (|: A) ; (, 1 >. n) ; tau ; (lwork $ 0j0) ; lwork ; , _1

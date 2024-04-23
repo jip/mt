@@ -528,7 +528,7 @@ testungq=: 3 : 0
 
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ks=. ~. 0 1 , (,~ <.@-:) <./ 'm n'=. $ y
+  ks=. /:~ ~. (, *@(>./)) 0 , (,~ <.@-:) <./ 'm n'=. $ y  NB. 0,1,⌊min(m,n)/2⌋,⌊min(m,n)⌋
 
   normw=. norm1 Awide=. |:^:(>/@$) y
   normt=. norm1 Atall=. |:^:(</@$) y
@@ -642,7 +642,7 @@ NB.   log - 6-vector of boxes, test log
 testungz=: 3 : 0
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only
 
-  ks=. ~. 0 1 , (,~ <.@-:) <./ 'm n'=. $ y
+  ks=. /:~ ~. (, *@(>./)) 0 , (,~ <.@-:) <./ 'm n'=. $ y  NB. 0,1,⌊min(m,n)/2⌋,⌊min(m,n)⌋
 
   normw=. norm1 Awide=. |:^:(>/@$) y
   normt=. norm1 Atall=. |:^:(</@$) y

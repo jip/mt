@@ -171,7 +171,7 @@ isosym=: (3 : 0) :. (#. _2&C.&.|:@(# combrep {.))
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
   vals=. (#S:0 # i.@#) iso                 NB. replicate value for each ISO
   iso=. ; iso
-  vals iso} y $ 0
+  vals iso} y $ 00
 )
 
 NB. ---------------------------------------------------------

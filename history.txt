@@ -293,3 +293,13 @@ math/mt - change history
  fix minor typos
  improve test log processing
  * util: extend lcat from monad to ambivalent
+
+ == 0.14.3 ==
+ bugfix release
+ fix and improve test suites
+ * basic:            call BLIS interfaces with arguments of proper datatypes only
+ * external/blis/mm: fix xgemmtxxx
+ * mm:               - improve verification suite
+                     - get rid of external files in verification suite
+ + util:             - switch erasen from private to public
+                     - switch assert from private to public (and transfer from mm)

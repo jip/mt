@@ -1,2 +1,0 @@
-error: 'symmetric' matrix must have all dimensions the same
-reason: size row is invalid (matrix dimensions must be the same)

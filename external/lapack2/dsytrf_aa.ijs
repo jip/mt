@@ -37,6 +37,6 @@ dsytrf_aa=: 4 : 0
   n=. # y
   NB. lwork=. , 1 >. +: n  NB. minimal
   lwork=. , 1 >. n * >: 64  NB. optimal
-  (|: L: 0) 3 5 { dsytrf_aa_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 00) ; (lwork $ 0.0) ; lwork ; , _1
+  (|:L:0) 3 5 { dsytrf_aa_jlapack2_ (, x) ; (, n) ; (|: y) ; (, 1 >. n) ; (n $ 00) ; (lwork $ 0.0) ; lwork ; , _1
     NB. (|:) doesn't affect to ipiv
 )

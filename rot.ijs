@@ -433,10 +433,10 @@ testlartv=: 3 : 0
   log=. log lcat ('dlartv_mttmp_' tmonad (]`]`nan`nan`nan)) xycs
   log=. log lcat ('zlartv_mttmp_' tmonad (]`]`nan`nan`nan)) xycs
 
-  log=. log lcat ('rot' tdyad ((< 0  ; 2 3)&{`((< 0  ; 0 1)&{)`]`nan`nan`nan)) y
-  log=. log lcat ('rot' tdyad ((< 0  ; 2 3)&{`((< a: ; 0 1)&{)`]`nan`nan`nan)) y
-  log=. log lcat ('rot' tdyad ((< a: ; 2 3)&{`((< 0  ; 0 1)&{)`]`nan`nan`nan)) y
-  log=. log lcat ('rot' tdyad ((< a: ; 2 3)&{`((< a: ; 0 1)&{)`]`nan`nan`nan)) y
+  log=. log lcat ('rot' tdyad (2&(}."1)`(2&({."1))`]`nan`nan`nan)) y
+  log=. log lcat ('rot' tdyad (2&(}."1)`(2&({."1))`]`nan`nan`nan)) y
+  log=. log lcat ('rot' tdyad (2&(}."1)`(2&({."1))`]`nan`nan`nan)) y
+  log=. log lcat ('rot' tdyad (2&(}."1)`(2&({."1))`]`nan`nan`nan)) y
 
   coerase < 'mttmp'
 

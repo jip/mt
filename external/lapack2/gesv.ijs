@@ -30,7 +30,7 @@ dgesv=: 3 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  (|: L: 0) 3 5 6 { dgesv_jlapack2_ (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; , _1
+  (|:L:0) 3 5 6 { dgesv_jlapack2_ (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; , _1
     NB. (|:) doesn't affect to ipiv
 )
 
@@ -40,6 +40,6 @@ zgesv=: 3 : 0
   assert. (ismatrix_jlapack2_ , issquare_jlapack2_ , n = #) A
   assert.  ismatrix_jlapack2_                               B
   ld=. , 1 >. n
-  (|: L: 0) 3 5 6 { zgesv_jlapack2_ (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; , _1
+  (|:L:0) 3 5 6 { zgesv_jlapack2_ (, n) ; (, nrhs) ; (|: A) ; ld ; (n $ 00) ; (|: B) ; ld ; , _1
     NB. (|:) doesn't affect to ipiv
 )

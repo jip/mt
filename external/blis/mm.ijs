@@ -121,12 +121,8 @@ NB.   updating C in triangular part, where C is square,
 NB.   opX(M) is either M, M^T, conj(M) or M^H
 NB.
 NB. Syntax:
-NB.   Cupd=. (uploC , transA ,: transB) xgemmtcore alpha ; A ; B ; beta ; C
+NB.   Cupd=. (transA , transB ,: uploC) xgemmtcore alpha ; A ; B ; beta ; C
 NB. where
-NB.   uploC  - 4-vector of chars, uplo_t as bitstring,
-NB.            defines the part of C to be updated:
-NB.              LOWER              NB. LT
-NB.              UPPER              NB. UT
 NB.   transA - 4-vector of chars, trans_t as bitstring,
 NB.            defines the form of op1(A):
 NB.              NO_TRANSPOSE       NB. op1(A) := A        (no transpose)
@@ -139,6 +135,10 @@ NB.              NO_TRANSPOSE       NB. op1(B) := B        (no transpose)
 NB.              TRANSPOSE          NB. op1(B) := B^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op1(B) := conj(B)  (conjugate)
 NB.              CONJ_TRANSPOSE     NB. op1(B) := B^H      (conjugate and transpose)
+NB.   uploC  - 4-vector of chars, uplo_t as bitstring,
+NB.            defines the part of C to be updated:
+NB.              LOWER              NB. LT
+NB.              UPPER              NB. UT
 NB.   alpha  - scalar
 NB.   A      - ma×ka-matrix
 NB.   B      - kb×mb-matrix
@@ -169,16 +169,16 @@ gemmtcore=: (4 : 0) ([ assert@basiccr4)
 )
 
 dgemmtcore=: (4 : 0) ([ assert@basiccr4)
-  'uploC transA transB'=. _2 ic , x
+  'transA transB uploC'=. _2 ic , x
   'ka mb m'=. 1 2 4 { c S: 0 'alpha A B beta C'=. y
-  k=. ((1 { x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
+  k=. (({. x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
   14 {:: dgemmt_cd uploC ; transA ; transB ; m ; k ; (, alpha) ; A ; ka ; 1 ; B ; mb ; 1 ; (, beta) ; C ; m ; 1
 )
 
 zgemmtcore=: (4 : 0) ([ assert@basiccr4)
-  'uploC transA transB'=. _2 ic , x
+  'transA transB uploC'=. _2 ic , x
   'ka mb m'=. 1 2 4 { c S: 0 'alpha A B beta C'=. y
-  k=. ((1 { x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
+  k=. (({. x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
   14 {:: zgemmt_cd uploC ; transA ; transB ; m ; k ; (, alpha) ; A ; ka ; 1 ; B ; mb ; 1 ; (, beta) ; C ; m ; 1
 )
 
@@ -668,80 +668,80 @@ NB.   gemmxxx     bli_gemmt (...)
 NB.   dgemmxxx    bli_dgemmt(...)
 NB.   zgemmxxx    bli_zgemmt(...)
 
-gemmlnn=:  (LOWER ,      NO_TRANSPOSE ,:      NO_TRANSPOSE)& gemmtcore
-gemmlnt=:  (LOWER ,      NO_TRANSPOSE ,:         TRANSPOSE)& gemmtcore
-gemmlnj=:  (LOWER ,      NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmtcore
-gemmlnc=:  (LOWER ,      NO_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmtcore
-gemmltn=:  (LOWER ,         TRANSPOSE ,:      NO_TRANSPOSE)& gemmtcore
-gemmltt=:  (LOWER ,         TRANSPOSE ,:         TRANSPOSE)& gemmtcore
-gemmltj=:  (LOWER ,         TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmtcore
-gemmltc=:  (LOWER ,         TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmtcore
-gemmljn=:  (LOWER , CONJ_NO_TRANSPOSE ,:      NO_TRANSPOSE)& gemmtcore
-gemmljt=:  (LOWER , CONJ_NO_TRANSPOSE ,:         TRANSPOSE)& gemmtcore
-gemmljj=:  (LOWER , CONJ_NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmtcore
-gemmljc=:  (LOWER , CONJ_NO_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmtcore
-gemmlcn=:  (LOWER ,    CONJ_TRANSPOSE ,:      NO_TRANSPOSE)& gemmtcore
-gemmlct=:  (LOWER ,    CONJ_TRANSPOSE ,:         TRANSPOSE)& gemmtcore
-gemmlcj=:  (LOWER ,    CONJ_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmtcore
-gemmlcc=:  (LOWER ,    CONJ_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmtcore
-gemmunn=:  (UPPER ,      NO_TRANSPOSE ,:      NO_TRANSPOSE)& gemmtcore
-gemmunt=:  (UPPER ,      NO_TRANSPOSE ,:         TRANSPOSE)& gemmtcore
-gemmunj=:  (UPPER ,      NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmtcore
-gemmunc=:  (UPPER ,      NO_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmtcore
-gemmutn=:  (UPPER ,         TRANSPOSE ,:      NO_TRANSPOSE)& gemmtcore
-gemmutt=:  (UPPER ,         TRANSPOSE ,:         TRANSPOSE)& gemmtcore
-gemmutj=:  (UPPER ,         TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmtcore
-gemmutc=:  (UPPER ,         TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmtcore
-gemmujn=:  (UPPER , CONJ_NO_TRANSPOSE ,:      NO_TRANSPOSE)& gemmtcore
-gemmujt=:  (UPPER , CONJ_NO_TRANSPOSE ,:         TRANSPOSE)& gemmtcore
-gemmujj=:  (UPPER , CONJ_NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmtcore
-gemmujc=:  (UPPER , CONJ_NO_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmtcore
-gemmucn=:  (UPPER ,    CONJ_TRANSPOSE ,:      NO_TRANSPOSE)& gemmtcore
-gemmuct=:  (UPPER ,    CONJ_TRANSPOSE ,:         TRANSPOSE)& gemmtcore
-gemmucj=:  (UPPER ,    CONJ_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmtcore
-gemmucc=:  (UPPER ,    CONJ_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmtcore
+gemmlnn=:  (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)& gemmtcore
+gemmlnt=:  (     NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)& gemmtcore
+gemmlnj=:  (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)& gemmtcore
+gemmlnc=:  (     NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)& gemmtcore
+gemmltn=:  (        TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)& gemmtcore
+gemmltt=:  (        TRANSPOSE ,         TRANSPOSE ,: LOWER)& gemmtcore
+gemmltj=:  (        TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)& gemmtcore
+gemmltc=:  (        TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)& gemmtcore
+gemmljn=:  (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)& gemmtcore
+gemmljt=:  (CONJ_NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)& gemmtcore
+gemmljj=:  (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)& gemmtcore
+gemmljc=:  (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)& gemmtcore
+gemmlcn=:  (   CONJ_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)& gemmtcore
+gemmlct=:  (   CONJ_TRANSPOSE ,         TRANSPOSE ,: LOWER)& gemmtcore
+gemmlcj=:  (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)& gemmtcore
+gemmlcc=:  (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)& gemmtcore
+gemmunn=:  (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)& gemmtcore
+gemmunt=:  (     NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)& gemmtcore
+gemmunj=:  (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)& gemmtcore
+gemmunc=:  (     NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)& gemmtcore
+gemmutn=:  (        TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)& gemmtcore
+gemmutt=:  (        TRANSPOSE ,         TRANSPOSE ,: UPPER)& gemmtcore
+gemmutj=:  (        TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)& gemmtcore
+gemmutc=:  (        TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)& gemmtcore
+gemmujn=:  (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)& gemmtcore
+gemmujt=:  (CONJ_NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)& gemmtcore
+gemmujj=:  (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)& gemmtcore
+gemmujc=:  (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)& gemmtcore
+gemmucn=:  (   CONJ_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)& gemmtcore
+gemmuct=:  (   CONJ_TRANSPOSE ,         TRANSPOSE ,: UPPER)& gemmtcore
+gemmucj=:  (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)& gemmtcore
+gemmucc=:  (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)& gemmtcore
 
-dgemmlnn=: (LOWER ,      NO_TRANSPOSE ,:      NO_TRANSPOSE)&dgemmtcore
-dgemmlnt=: (LOWER ,      NO_TRANSPOSE ,:         TRANSPOSE)&dgemmtcore
-dgemmltn=: (LOWER ,         TRANSPOSE ,:      NO_TRANSPOSE)&dgemmtcore
-dgemmltt=: (LOWER ,         TRANSPOSE ,:         TRANSPOSE)&dgemmtcore
-dgemmunn=: (UPPER ,      NO_TRANSPOSE ,:      NO_TRANSPOSE)&dgemmtcore
-dgemmunt=: (UPPER ,      NO_TRANSPOSE ,:         TRANSPOSE)&dgemmtcore
-dgemmutn=: (UPPER ,         TRANSPOSE ,:      NO_TRANSPOSE)&dgemmtcore
-dgemmutt=: (UPPER ,         TRANSPOSE ,:         TRANSPOSE)&dgemmtcore
+dgemmlnn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&dgemmtcore
+dgemmlnt=: (     NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)&dgemmtcore
+dgemmltn=: (        TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&dgemmtcore
+dgemmltt=: (        TRANSPOSE ,         TRANSPOSE ,: LOWER)&dgemmtcore
+dgemmunn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&dgemmtcore
+dgemmunt=: (     NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)&dgemmtcore
+dgemmutn=: (        TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&dgemmtcore
+dgemmutt=: (        TRANSPOSE ,         TRANSPOSE ,: UPPER)&dgemmtcore
 
-zgemmlnn=: (LOWER ,      NO_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmtcore
-zgemmlnt=: (LOWER ,      NO_TRANSPOSE ,:         TRANSPOSE)&zgemmtcore
-zgemmlnj=: (LOWER ,      NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmtcore
-zgemmlnc=: (LOWER ,      NO_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmtcore
-zgemmltn=: (LOWER ,         TRANSPOSE ,:      NO_TRANSPOSE)&zgemmtcore
-zgemmltt=: (LOWER ,         TRANSPOSE ,:         TRANSPOSE)&zgemmtcore
-zgemmltj=: (LOWER ,         TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmtcore
-zgemmltc=: (LOWER ,         TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmtcore
-zgemmljn=: (LOWER , CONJ_NO_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmtcore
-zgemmljt=: (LOWER , CONJ_NO_TRANSPOSE ,:         TRANSPOSE)&zgemmtcore
-zgemmljj=: (LOWER , CONJ_NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmtcore
-zgemmljc=: (LOWER , CONJ_NO_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmtcore
-zgemmlcn=: (LOWER ,    CONJ_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmtcore
-zgemmlct=: (LOWER ,    CONJ_TRANSPOSE ,:         TRANSPOSE)&zgemmtcore
-zgemmlcj=: (LOWER ,    CONJ_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmtcore
-zgemmlcc=: (LOWER ,    CONJ_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmtcore
-zgemmunn=: (UPPER ,      NO_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmtcore
-zgemmunt=: (UPPER ,      NO_TRANSPOSE ,:         TRANSPOSE)&zgemmtcore
-zgemmunj=: (UPPER ,      NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmtcore
-zgemmunc=: (UPPER ,      NO_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmtcore
-zgemmutn=: (UPPER ,         TRANSPOSE ,:      NO_TRANSPOSE)&zgemmtcore
-zgemmutt=: (UPPER ,         TRANSPOSE ,:         TRANSPOSE)&zgemmtcore
-zgemmutj=: (UPPER ,         TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmtcore
-zgemmutc=: (UPPER ,         TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmtcore
-zgemmujn=: (UPPER , CONJ_NO_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmtcore
-zgemmujt=: (UPPER , CONJ_NO_TRANSPOSE ,:         TRANSPOSE)&zgemmtcore
-zgemmujj=: (UPPER , CONJ_NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmtcore
-zgemmujc=: (UPPER , CONJ_NO_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmtcore
-zgemmucn=: (UPPER ,    CONJ_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmtcore
-zgemmuct=: (UPPER ,    CONJ_TRANSPOSE ,:         TRANSPOSE)&zgemmtcore
-zgemmucj=: (UPPER ,    CONJ_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmtcore
-zgemmucc=: (UPPER ,    CONJ_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmtcore
+zgemmlnn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmlnt=: (     NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmlnj=: (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmlnc=: (     NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmltn=: (        TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmltt=: (        TRANSPOSE ,         TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmltj=: (        TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmltc=: (        TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmljn=: (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmljt=: (CONJ_NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmljj=: (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmljc=: (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmlcn=: (   CONJ_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmlct=: (   CONJ_TRANSPOSE ,         TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmlcj=: (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmlcc=: (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)&zgemmtcore
+zgemmunn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmunt=: (     NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmunj=: (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmunc=: (     NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmutn=: (        TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmutt=: (        TRANSPOSE ,         TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmutj=: (        TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmutc=: (        TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmujn=: (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmujt=: (CONJ_NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmujj=: (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmujc=: (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmucn=: (   CONJ_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmuct=: (   CONJ_TRANSPOSE ,         TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmucj=: (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmucc=: (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)&zgemmtcore
 
 NB. ---------------------------------------------------------
 NB. Monad        API       Domain     A     Side    Reads in A    op1(A)     op2(B)

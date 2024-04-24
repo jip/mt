@@ -24,19 +24,19 @@ NB. - verbs below are loaded into the current locale
 dgtsv=: 3 : 0
   'dl d du B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ , (<: n) = #) dl
-  assert. (isvector_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ , (<: n) = #) du
-  assert.  ismatrix_jlapack2_               B
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) dl
+  assert. (isvector_jlapack2_ ,          n  = #) d
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) du
+  assert.  ismatrix_jlapack2_                    B
   |: 6 {:: dgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
 )
 
 zgtsv=: 3 : 0
   'dl d du B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ , (<: n) = #) dl
-  assert. (isvector_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ , (<: n) = #) du
-  assert.  ismatrix_jlapack2_               B
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) dl
+  assert. (isvector_jlapack2_ ,          n  = #) d
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) du
+  assert.  ismatrix_jlapack2_                    B
   |: 6 {:: zgtsv_jlapack2_ (, n) ; (, nrhs) ; dl ; d ; du ; (|: B) ; (, 1 >. n) ; , _1
 )

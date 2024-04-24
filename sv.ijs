@@ -100,7 +100,7 @@ NB. - gtsv implements LAPACK's xGTSV
 gtsv=: 4 : 0
   v=. ,`,:@.(1 < # $ y)
   'n n1 n2 n3'=. (# x) - 1 2 3 4
-  k=. {. kk1=. 0 1  NB. (k,k1)
+  dk1=. k=. {. kk1=. 0 1  NB. (k,k1)
   while. k < n1 do.
     'dk duk dlk dk1 duk1 dlk1'=. , kk1 { x
     if. 0 = dlk do.
@@ -229,12 +229,12 @@ NB.
 NB. Notes:
 NB. - gtsvax models LAPACK's xGTSV
 
-gtsvax=:  (gtsv~     0  1 _1&({"1) @(($,)~ >:@$))~
-gtsvacx=: (gtsv~ +@:(0 _1  1&({"1))@(($,)~ >:@$))~
-gtsvatx=: (gtsv~     0 _1  1&({"1) @(($,)~ >:@$))~
+gtsvax=:  (gtsv~     0  1 _1&({"1) @(($,)~ >:@$))~^:(*@#@])
+gtsvacx=: (gtsv~ +@:(0 _1  1&({"1))@(($,)~ >:@$))~^:(*@#@])
+gtsvatx=: (gtsv~     0 _1  1&({"1) @(($,)~ >:@$))~^:(*@#@])
 
 gtsvxa=:  gtsvatx                                 &.(a:`|:)
-gtsvxac=: (gtsv~ +@:(0  1 _1&({"1))@(($,)~ >:@$))~&.(a:`|:)
+gtsvxac=: (gtsv~ +@:(0  1 _1&({"1))@(($,)~ >:@$))~&.(a:`|:)^:(*@#@])
 gtsvxat=: gtsvax                                  &.(a:`|:)
 
 NB. ---------------------------------------------------------

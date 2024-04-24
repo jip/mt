@@ -33,19 +33,19 @@ NB. - no check for positive definiteness
 dptsv=: 3 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ , (<: n) = #) e
-  assert.  ismatrix_jlapack2_               B
-  (|: L: 0) 3 4 5 { dptsv_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
+  assert. (isvector_jlapack2_ ,          n  = #) d
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) e
+  assert.  ismatrix_jlapack2_                    B
+  (|:L:0) 3 4 5 { dptsv_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
     NB. (|:) doesn't affect to d and e
 )
 
 zptsv=: 3 : 0
   'd e B'=. y
   'n nrhs'=. $ B
-  assert. (isvector_jlapack2_ ,     n  = #) d
-  assert. (isvector_jlapack2_ , (<: n) = #) e
-  assert.  ismatrix_jlapack2_               B
-  (|: L: 0) 3 4 5 { zptsv_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
+  assert. (isvector_jlapack2_ ,          n  = #) d
+  assert. (isvector_jlapack2_ , (0 >. <: n) = #) e
+  assert.  ismatrix_jlapack2_                    B
+  (|:L:0) 3 4 5 { zptsv_jlapack2_ (, n) ; (, nrhs) ; d ; e ; (|: B) ; (, 1 >. n) ; , _1
     NB. (|:) doesn't affect to d and e
 )

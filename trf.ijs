@@ -1732,7 +1732,7 @@ testhetrf=: 3 : 0
   log=. log lcat ('hetrfpu'                tmonad ((0&{::)`calcA  `(rcond"_)`nan`het01)) y ; norm
 
   coerase < 'mttmp'
-  erase 'calcAdl calcAdu calcAzl calcAzu calcA calcA'
+  erase 'calcAdl calcAdu calcAzl calcAzu calcA'
 
   log
 )

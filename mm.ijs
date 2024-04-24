@@ -31,28 +31,34 @@ NB. Concepts
 NB.
 NB. Notation:
 NB.   MM - Matrix Market exchange formats
+NB.   mm - a MM facility implemented by this module
 NB.
 NB. Conventions:
 NB. 1) MM allows the 0 only as a sparse element in sparse
-NB.    matrices
-NB. 2) MM matrix object may have any rank>1, this extends an
-NB.    original specification
-NB. 3) MM matrix object may have skew-Hermitian symmetry,
-NB.    this extends an original specification
-NB. 4) ±inf and nan aren't still supported in exporting J
-NB.    array to MM matrix object, this reduces an original
-NB.    specification
+NB.    matrices, this reduces an amount of exportable J arrays
+NB. 2) mm supports arrays of any rank>1, this extends MM
+NB.    limited by rank=2 only
+NB. 3) mm supports arrays with skew-Hermitian symmetry, this
+NB.    extends MM
+NB. 4) mm supports 'array pattern' qualifiers combination,
+NB.    this extends MM
+NB. 5) arrays of shape (rank # n) where n<2 are always
+NB.    considered as general i.e. without any symmetry
+NB. 6) ±inf and nan aren't still supported in exporting J
+NB.    array to MM format, this reduces MM
 NB.
 NB. TODO:
 NB. - replace Format (":) by Format (8!:n) in arr->str
 NB.   conversion when and if (8!:n) will be extended to
-NB.   support ±inf and ±nan
+NB.   support ±inf and nan
 NB. - add datatypes: extended, rational, quaternion,
 NB.   octonion
 NB.
 NB. References:
 NB. [1] Text File Formats
 NB.     https://math.nist.gov/MatrixMarket/formats.html
+NB. [2] The SuiteSparse Matrix Collection
+NB.     https://sparse.tamu.edu
 
 NB. =========================================================
 NB. Configuration
@@ -125,78 +131,6 @@ ishmt=:    (-: 0&|:) or (3 > #@$) and (   + -: _2&|:)
 NB. predicate to check is array skew-Hermitian
 isskwhmt=: (-: 0&|:) or (3 > #@$) and (-@:+ -: _2&|:)
 
-NB. ---------------------------------------------------------
-NB. assert
-NB.
-NB. Description:
-NB.   Advanced version of the (assert.) control
-NB.
-NB. Syntax:
-NB.   trash=. [msg] assert chk
-NB. where
-NB.   msg - string, optional, will be shown if assertion is
-NB.         failed
-NB.   chk - numeric vector
-NB.
-NB. Examples:
-NB. - when asserts are enabled:
-NB.      9!:34 ''  NB. check asserts are enabled
-NB.   1
-NB.      NB. mt                               NB. stdlib
-NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0
-NB.   |assertion failure: assert_mtmm_     |assertion failure: assert_z_
-NB.   |       assert_mtmm_ 1 1 0           |       assert_z_ 1 1 0
-NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
-NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2          NB. no failure occured - it's a bug #1
-NB.   |assertion failure: assert_mtmm_
-NB.   |       assert_mtmm_ 1 1 2
-NB.
-NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0
-NB.   |Oops!: assert_mtmm_                 |Oops!: assert_z_
-NB.   |   'Oops!'    assert_mtmm_ 1 1 0    |   'Oops!'    assert_z_ 1 1 0
-NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
-NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2  NB. no failure occured - it's a bug #1
-NB.   |Oops!: assert_mtmm_
-NB.   |   'Oops!'    assert_mtmm_ 1 1 2
-NB.
-NB. - when asserts are disabled:
-NB.      9!:35 [ 0  NB. disable asserts
-NB.      9!:34 ''   NB. check asserts are disabled
-NB.   0
-NB.      NB. mt                               NB. stdlib
-NB.      assert_mtmm_ 1 1 1                   assert_z_ 1 1 1
-NB.      assert_mtmm_ 1 1 2                   assert_z_ 1 1 2
-NB.      assert_mtmm_ 1 1 0                   assert_z_ 1 1 0          NB. failure occured - it's a bug #2
-NB.                                        |assertion failure: assert_z_
-NB.                                        |       assert_z_ 1 1 0
-NB.
-NB.      'Oops!' assert_mtmm_ 1 1 1           'Oops!' assert_z_ 1 1 1
-NB.      'Oops!' assert_mtmm_ 1 1 2           'Oops!' assert_z_ 1 1 2
-NB.      'Oops!' assert_mtmm_ 1 1 0           'Oops!' assert_z_ 1 1 0  NB. failure occured - it's a bug #2
-NB.                                        |Oops!: assert_z_
-NB.                                        |   'Oops!'    assert_z_ 1 1 0
-NB.      9!:35 [ 1  NB. restore default setting
-NB.      9!:34 ''   NB. check asserts are enabled
-NB.   1
-NB.
-NB. Notes:
-NB. - ambivalent procedure
-NB. - fixes system's (assert_z_) to match (assert.) control
-NB. - depends on 9!:34 (Enable assert.) setting
-NB. - values of rank>1 are supported accidentally, too:
-NB.      NB. mt                               NB. stdlib
-NB.      assert_mtmm_ 1 1 ,: 1 0              assert_z_ 1 1 ,: 1 0  NB. no failure occured
-NB.   |assertion failure: assert_mtmm_
-NB.   |       assert_mtmm_ 1 1,:1 0
-NB.
-NB. References:
-NB. [1] Igor Zhuravlov. [Jprogramming] assert verb from
-NB.     stdlib mismatches assert. control
-NB.     2019-12-30 00:43:46 UTC.
-NB.     http://www.jsoftware.com/pipermail/programming/2019-December/054693.html
-
-assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')
-
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -216,7 +150,7 @@ NB.   iso    - (rank ([ ! <:@+) length)-vector, ISO nub
 NB.            from ravelled symmetric array
 NB.   rank   > 1, integer, an array's rank
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.      nub -: iso ({ ,) arr
 NB. where
 NB.      'rank length'=. 2 4
@@ -237,9 +171,9 @@ NB.   0 4 8 12 5 9 13 10 14 15
 
 isosym=: (3 : 0) :. (#. _2&C.&.|:@(# combrep {.))
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
-  vals=. (# S: 0 # i.@#) iso               NB. replicate value for each ISO
+  vals=. (#S:0 # i.@#) iso                 NB. replicate value for each ISO
   iso=. ; iso
-  vals iso} y $ 0
+  vals iso} y $ 00
 )
 
 NB. ---------------------------------------------------------
@@ -259,20 +193,20 @@ NB.   iso    - (rank ! length)-vector, ISO nub
 NB.            from ravelled skew-symmetric array
 NB.   rank   ∈ [2, length], integer, an array's rank
 NB.
-NB. Assertion:
-NB.      nub -: iso ({ ,) $.^:_1 arr
+NB. Assertions:
+NB.      nub -: iso ({ ,) arr
 NB. where
 NB.      'rank length'=. 2 4
 NB.      shape=. rank # length
 NB.      nub=. 21 31 41 32 42 43
 NB.      ] nubx=. 0 , (, -@|.) nub
 NB.   0 21 31 41 32 42 43 _43 _42 _32 _41 _31 _21
-NB.      $.^:_1 arriso=. isoskw shape
+NB.      ] arriso=. isoskw shape
 NB.   0 _1 _2 _3
 NB.   1  0 _4 _5
 NB.   2  4  0 _6
 NB.   3  5  6  0
-NB.      $.^:_1 arr=. arriso { nubx
+NB.      ] arr=. arriso { nubx
 NB.    0 _21 _31 _41
 NB.   21   0 _32 _42
 NB.   31  32   0 _43
@@ -288,7 +222,7 @@ isoskw=: (3 : 0) :. (#. _2&C.&.|:@(# comb {.))
                                            NB. each ISO within group will have the same value
   par=. (C.!.2) (/:"1) iso                 NB. parity (is valid since there is no diagonals here)
   vals=. (          1 = par)} (,: -) vals  NB. negate evenly permuted values
-  vals iso} 1 $. y ; (i. # y) ; 00
+  vals iso} y $ 00
 )
 
 NB. ---------------------------------------------------------
@@ -309,7 +243,7 @@ NB.            from ravelled Hermitian or skew-Hermitian
 NB.            array
 NB.   rank   > 1, integer, an array's rank
 NB.
-NB. Assertion:
+NB. Assertions:
 NB.      nub -: iso ({ ,) arr
 NB. where
 NB.      'rank length'=. 2 4
@@ -332,17 +266,22 @@ NB.   0 4 8 12 5 9 13 10 14 15
 
 isohmt=: (3 : 0) :. (isosym^:_1)
   iso=. (</.~ /:~"1) odometer y            NB. ISO for all elements, grouped by sorted ISO
-  vals=. (# S: 0 #    i.@#) iso            NB. replicate value for each ISO
+  vals=. (#S:0 # i.@#) iso                 NB. replicate value for each ISO
   iso=. ; iso
   ndmask=. (# y) = (#@~."1) iso            NB. ISO for non-diagonals mask
   par=. (C.!.2) (/:"1) iso                 NB. parity (is valid only for non-diagonals)
   vals=. (ndmask *. 1 = par)} (,: -) vals  NB. negate evenly permuted non-diagonal values
-  vals iso} y $ 0
+  vals iso} y $ 00
 )
 
 NB. ---------------------------------------------------------
-NB. mm import coordinate
-NB. 'riso rdat'=. (le ; shape ; ioField ; ioSymmetry) mmic bdat
+NB. mmic
+NB.
+NB. Description:
+NB.   Import MM coordinate object
+NB.
+NB. Syntax:
+NB.   'riso rdat'=. (le ; shape ; ioField ; ioSymmetry) mmic bdat
 NB. where
 NB.   le         ≥ 0, quantity of elements expected
 NB.   shape      - r-vector, object's shape
@@ -352,6 +291,16 @@ NB.   bdat       - boxed strings, data lines
 NB.   riso       - raw ISO
 NB.   rdat       - raw data for object
 NB.   r          > 1, object's rank
+NB.
+NB. References:
+NB. [1] Henry Rich. [Jbeta] S: results seems inconsistent,
+NB.     also is L:
+NB.     2022-12-28 03:58:23 UTC
+NB.     https://www.jsoftware.com/pipermail/beta/2022-December/010685.html
+NB. [2] Github / Jsoftware / jsource / issues / 194
+NB.     Amend gives length error for sparse array
+NB.     Igor Zhuravlov, 2024-04-22 07:02 UTC
+NB.     https://github.com/jsoftware/jsource/issues/194
 
 mmic=: 4 : 0
   'le shape ioField ioSymmetry'=. x
@@ -359,58 +308,76 @@ mmic=: 4 : 0
   NB. check elements quantity presented
   lp=. # y
   ((": le) , ' elements was expected, but ' , (": lp) , ' data rows found (1)') assert le = lp
-  NB. check max columns quantity presented
-  select. ioField
-    case. 0 do.  NB. pattern
-      ('each data row must contain just ' , (": rank) , ' ISO (1)') assert ((<: rank) = cspans) S: 0 y  NB. count SPACE spans
-    case. 1 ; 2 do.  NB. integer or real
-      ('each data row must contain just ' , (": rank) , ' ISO and a single matrix entry (1)') assert (rank = cspans) S: 0 y  NB. count SPACE spans
-    case. 3 do.  NB. complex
-      ('each data row must contain just ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (1)') assert ((>: rank) = cspans) S: 0 y  NB. count SPACE spans
+  NB. check max columns quantity presented for non-empty objects
+  if. lp do.
+    select. ioField
+      case. 0 do.  NB. pattern
+        ('each data row must contain just ' , (": rank) , ' ISO (1)') assert ((<: rank) = cspans)S:0 y  NB. count SPACE spans
+      case. 1 ; 2 do.  NB. integer or real
+        ('each data row must contain just ' , (": rank) , ' ISO and a single matrix entry (1)') assert (rank = cspans)S:0 y  NB. count SPACE spans
+      case. 3 do.  NB. complex
+        ('each data row must contain just ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (1)') assert ((>: rank) = cspans)S:0 y  NB. count SPACE spans
+    end.
   end.
   NB. check elements quantity depending on symmetry
-  select. ioSymmetry
-    case. 0 do.  NB. general
-      lemax=. */ shape
-    case. do.  NB. symmetric, skew-symmetric, Hermitian or skew-Hermitian
-      ('''' , (ioSymmetry {:: SYMMETRIES) , ''' matrix must have all dimensions the same') assert ({. = }.) shape
-      if. 2 = ioSymmetry do.  NB. skew-symmetric
-        lemax=. rank    !       {. shape
-      else.  NB. symmetric, Hermitian or skew-Hermitian
-        lemax=. rank ([ ! <:@+) {. shape
-      end.
+  if. ioSymmetry do.
+    NB. symmetry of any kind
+    ('''' , (ioSymmetry {:: SYMMETRIES) , ''' matrix must have all dimensions the same') assert ({. = }.) shape
+    if. 2 = ioSymmetry do.  NB. skew-symmetric
+      lemax=. rank    !       {. shape
+    else.  NB. symmetric, Hermitian or skew-Hermitian
+      lemax=. rank ([ ! <:@+) {. shape
+    end.
+  else.
+    NB. no symmetry
+    lemax=. */ shape
   end.
   ('not more than ' , (": lemax) , ' elements was expected, but ' , (": lp) , ' data rows found') assert lemax >: lp  NB. some elements may be omitted
   NB. convert strings with data lines to J array
-  'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
-  'there are not recognized values' assert -. isnan < y
+  'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, fill is required when y is empty
+  'there are non-recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' data rows found (2)') assert le = rp  NB. how is this possible to violate?
   fret=. ''  NB. makes sense for complex field only
-  NB. check columns quantity
-  select. ioField
-    case. 0 do.  NB. pattern
-      ('each data row must contain ' , (": rank) , ' ISO (2)') assert cp = rank
-    case. 1 ; 2 do.  NB. integer or real
-      ('each data row must contain ' , (": rank) , ' ISO and a single matrix entry (2)') assert cp = >: rank
-    case. 3 do.  NB. complex
-      ('each data row must contain ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (2)') assert cp = 2 + rank
-      fret=. '' ; ((1 j. <: rank) , 1j1) # 1 1  NB. to separate ISO from values
+  se=. ioField {:: ((0 ; 00 ; 0.0 ; 0j0))  NB. sparse element
+  NB. check columns quantity for non-empty objects
+  if. rp do.
+    select. ioField
+      case. 0 do.  NB. pattern
+        ('each data row must contain ' , (": rank) , ' ISO (2)') assert cp = rank
+      case. 1 ; 2 do.  NB. integer or real
+        ('each data row must contain ' , (": rank) , ' ISO and a single matrix entry (2)') assert cp = >: rank
+      case. 3 do.  NB. complex
+        ('each data row must contain ' , (": rank) , ' ISO and a real and imaginary part of single matrix entry (2)') assert cp = 2 + rank
+        fret=. '' ; ((1 j. <: rank) , 1j1) # 1 1  NB. to separate ISO from values
+    end.
+    NB. extract ISO and values:
+    NB. - pattern: iso_vector
+    NB. - integer, real: iso_vector value_scalar
+    NB. - complex: iso_vector re_of_value_scalar im_of_value_scalar
+    'iso dat'=. (;&1)`(}:"1 ; {:"1)`(}:"1 ; {:"1)`(fret&(<`(<@:(j./"1));.1))@.ioField y
+    iso=. JINT c. iso  NB. convert to integer type
+    'indices must be 1-based' assert 0 (< ,) iso
+    iso=. <: iso  NB. translate MM's 1-based ISO to J's 0-based ones
+    'index exceeding dimension is detected' assert iso <"1 shape
+  else.
+    iso=. i. 0 , rank
+    dat=. 0 {. se
   end.
-  NB. extract ISO and values:
-  NB. - pattern: iso_vector
-  NB. - integer, real: iso_vector value_scalar
-  NB. - complex: iso_vector re_of_value_scalar im_of_value_scalar
-  'iso dat'=. (;&1)`(}:"1 ; {:"1)`(}:"1 ; {:"1)`(fret&(<`(<@:(j./"1));.1))@.ioField y
-  iso=. <. iso  NB. convert to integer type
-  'indices must be 1-based' assert 0 (< ,) iso
-  iso=. <: iso  NB. translate MM's 1-based ISO to J's 0-based ones
-  'index exceeding dimension is detected' assert iso <"1 shape
-  if. ioField e. 1 2 do.  NB. integer or real
-    'integer data type was expected but real data type is detected' assert (JFL = 3!:0 dat) *: 1 = ioField
-      NB. don't check a reverse situation since the following is possible: (42 -: ". '42.0')
+  NB. simplify datatype if mismatches with ioField
+  select. ioField
+    case. 1 do.  NB. integer
+      if. JINT ~: 3!:0 dat do.
+        'non-integer values detected' assert (-: <.) dat
+        dat=. JINT c. dat
+      end.
+    case. 2 do.  NB. real
+      if. JFL ~: 3!:0 dat do.
+        'non-real values detected' assert (-: +) dat
+        dat=. JFL c. dat
+      end.
+    case. do.
   end.
   NB. restore elements known due to symmetry
-  ('''' , (ioField {:: FIELDS) , ''' and ''' , (ioSymmetry {:: SYMMETRIES) , ''' qualifiers are incompatible') assert ioSymmetry (3 4 e.~ [) notOr (3 = ]) ioField
   NB. restore ISO omitted
   count=. ! rank
   select. ioSymmetry
@@ -435,7 +402,7 @@ mmic=: 4 : 0
       NB.   - its cardinality are different
       NB. - box sets to avoid reshaping later
       iso=. (i. count) <@~.@:A."_ 1 iso
-      counts=. # S: 0 iso
+      counts=. (#S:0^:(*@#)) iso  NB. see [1]
       iso=. ; iso
     case. 2 do.  NB. skew-symmetric
       NB. elements presented must have ISO satisfying:
@@ -475,13 +442,20 @@ mmic=: 4 : 0
       dat=. (1 = (C.!.2) (/:"1) iso)} (,: +@:-) counts # dat
   end.
   NB. place values at ISO positions in sparse array
-  se=. ioField {:: ((0 ; 00 ; 0.0 ; 0j0))
-  y=. dat iso} 1 $. shape ; (i. rank) ; se
+  y=. 1 $. shape ; (i. rank) ; se
+  if. # dat do.  NB. work-around [2]
+    y=. dat iso} y
+  end.
 )
 
 NB. ---------------------------------------------------------
-NB. mm import array
-NB. rdat=. (shape ; ioField ; ioSymmetry) mmia bdat
+NB. mmia
+NB.
+NB. Description:
+NB.   Import MM array object
+NB.
+NB. Syntax:
+NB.   rdat=. (shape ; ioField ; ioSymmetry) mmia bdat
 NB. where
 NB.   shape      - r-vector, object's shape
 NB.   ioField    ≥ 0, IO(field) in FIELDS
@@ -493,36 +467,53 @@ NB.   r          > 1, object's rank
 mmia=: 4 : 0
   'shape ioField ioSymmetry'=. x
   rank=. # shape
+  lp=. # y
   NB. check max columns quantity presented
-  if. 3 = ioField do.  NB. complex
+  if. (3 = ioField) *. 0 < lp do.  NB. complex
     'each data row must contain a real and imaginary part of single matrix entry (1)' assert (' '&e.S:0) y
   end.
   NB. check elements quantity depending on symmetry
-  lp=. # y
-  select. ioSymmetry
-    case. 0 do.  NB. general
-      le=. */ shape
-    case. do.  NB. symmetric, skew-symmetric, Hermitian or skew-Hermitian
-      ('''' , (ioSymmetry {:: SYMMETRIES) , ''' matrix must have all dimensions the same') assert ({. = }.) shape
-      if. 2 = ioSymmetry do.  NB. skew-symmetric
-        le=. rank    !       {. shape
-      else.  NB. symmetric, Hermitian or skew-Hermitian
-        le=. rank ([ ! <:@+) {. shape
-      end.
+  if. ioSymmetry do.
+    NB. symmetry of any kind
+    ('''' , (ioSymmetry {:: SYMMETRIES) , ''' matrix must have all dimensions the same') assert ({. = }.) shape
+    if. 2 = ioSymmetry do.  NB. skew-symmetric
+      le=. rank    !       {. shape
+    else.  NB. symmetric, Hermitian or skew-Hermitian
+      le=. rank ([ ! <:@+) {. shape
+    end.
+  else.
+    NB. no symmetry
+    le=. */ shape
   end.
   ((": le) , ' elements was expected, but ' , (": lp) , ' data rows found') assert le = lp  NB. all elements must be presented
   NB. convert strings with data lines to J array
   'rp cp'=. 2 ({.!.1) $ y=. _. ". > y  NB. rows and columns presented, cp is 2 for complex field and 1 otherwise
-  'there are not recognized values' assert -. isnan < y
+  'there are non-recognized values' assert -. isnan < y
   NB. ((": le) , ' elements was expected, but ' , (": rp) , ' elements found') assert le = rp  NB. how is this possible to violate?
   NB. check columns quantity
   if. 3 = ioField do.  NB. complex
-    'each data row must contain a real and imaginary part of single matrix entry (2)' assert 2 = cp
-    y=. (j./"1) y
-  else.  NB. integer or real (since mmia isn't called for pattern)
+    'each data row must contain a real and imaginary part of single matrix entry (2)' assert (2 = cp) +. (, 0) -: $ y
+    y=. JCMPX c. j./"1 y  NB. if y was a 0×0-matrix then (j./"1 y) will have datatype boolean so explicit conversion may be needed
+  else.  NB. pattern or integer or real
     'each data row must contain just a single matrix entry' assert 1 = cp
-    'integer data type was expected but real data type is detected' assert (JFL = 3!:0 y) *: 1 = ioField
-      NB. don't check a reverse situation since the following is possible: (42 -: ". '42.0')
+    NB. simplify datatype if mismatches with ioField
+    select. ioField
+      case. 0 do.  NB. pattern
+        if. JB01 ~: 3!:0 y do.
+          'non-pattern values detected' assert (-: 1&=) y
+          y=. JB01 c. y
+        end.
+      case. 1 do.  NB. integer
+        if. JINT ~: 3!:0 y do.
+          'non-integer values detected' assert (-: <.) y
+          y=. JINT c. y
+        end.
+      case. 2 do.  NB. real
+        if. JFL ~: 3!:0 y do.
+          'non-real values detected' assert (-: +) y
+          y=. JFL c. y
+        end.
+    end.
   end.
   NB. restore elements known due to symmetry
   select. ioSymmetry
@@ -535,13 +526,11 @@ mmia=: 4 : 0
       iso=. isoskw shape
       y=. iso { 0 , (, -@|.) y
     case. 3 do.  NB. Hermitian
-      ('''' , (ioField {:: FIELDS) , ''' and ''Hermitian'' qualifiers are incompatible') assert 3 = ioField
       mask=. rank > (#@~."1) (_2&C.&.|:) (# combrep {.) shape
       'diagonal values must be real' assert 0 = 11 o. mask # y
       iso=. isohmt shape
       y=. iso { (, +@|.@}.) y
     case. 4 do.  NB. skew-Hermitian
-      ('''' , (ioField {:: FIELDS) , ''' and ''skew-Hermitian'' qualifiers are incompatible') assert 3 = ioField
       mask=. rank > (#@~."1) (_2&C.&.|:) (# combrep {.) shape
       'diagonal values must be imaginary' assert 0 = 9 o. mask # y
       iso=. isohmt shape
@@ -567,8 +556,8 @@ NB.   str - string, arr in MM
 NB.   arr - r-rank array, numeric
 NB.   r   > 1, array's rank
 NB.
-NB. Assertion:
-NB.   (-: ]&.mm) arr
+NB. Assertions:
+NB.   ((-: *. -:&(3!:0)) ]&.mm) arr
 NB.
 NB. Application:
 NB.   str=. mm_mtmm_ arr
@@ -585,30 +574,29 @@ NB. [1] https://code.jsoftware.com/wiki/System/Interpreter/Bugs/Errors#Obverse_i
 mm=: (3 : 0) :. (3 : 0)
   NB. str->arr
   y=. CRLF cutl_mt_ y  NB. cut by spans of CR and LF
-  'line longer than 1024 bytes was detected' assert_mtmm_ ((1024 >: #)S:0) y
+  'line longer than 1024 bytes was detected' assert_mt_ ((1024 >: #)S:0) y
   header=. cut_mt_ tolower 0 {:: y  NB. to lower case, then cut by SPACE spans
-  y=. (#~ ('%' ~: {.) S: 0) y  NB. remove header and comments
-  y=. (#~ a:&~:) dltb L: 0 y   NB. remove empty lines
-  'not a Matrix Market exchange format' assert_mtmm_ 5 = # header
-  ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mtmm_ BANNER_mtmm_ -: 0 {:: header
-  ('object '''   , (1 {:: header) , ''' is not recognized') assert_mtmm_ OBJECT_mtmm_ -: 1 {:: header
+  y=. (#~ ('%' ~: {.)S:0) y   NB. remove header and comments
+  y=. (#~ a:&~:) dltb L: 0 y  NB. remove empty lines
+  'not a Matrix Market exchange format' assert_mt_ 5 = # header
+  ('banner '''   , (0 {:: header) , ''' is not recognized') assert_mt_ BANNER_mtmm_ -: 0 {:: header
+  ('object '''   , (1 {:: header) , ''' is not recognized') assert_mt_ OBJECT_mtmm_ -: 1 {:: header
   ioFormat=.   FORMATS_mtmm_    i. 2 { header
   ioField=.    FIELDS_mtmm_     i. 3 { header
   ioSymmetry=. SYMMETRIES_mtmm_ i. 4 { header
-  ('format '''   , (2 {:: header) , ''' is not recognized') assert_mtmm_ ioFormat   < # FORMATS_mtmm_
-  ('field '''    , (3 {:: header) , ''' is not recognized') assert_mtmm_ ioField    < # FIELDS_mtmm_
-  ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mtmm_ ioSymmetry < # SYMMETRIES_mtmm_
+  ('format '''   , (2 {:: header) , ''' is not recognized') assert_mt_ ioFormat   < # FORMATS_mtmm_
+  ('field '''    , (3 {:: header) , ''' is not recognized') assert_mt_ ioField    < # FIELDS_mtmm_
+  ('symmetry ''' , (4 {:: header) , ''' is not recognized') assert_mt_ ioSymmetry < # SYMMETRIES_mtmm_
+  ('''' , (ioField {:: FIELDS_mtmm_) , ''' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mt_ ioSymmetry <: 1 2 4 {~ 0 2 I. ioField
   size=. ". 0 {:: y
-  ('size values ''' , (": size) , ''' must be integer') assert_mtmm_ (3!:0 size) e. JB01 , JINT
+  ('size values ''' , (": size) , ''' must be integer') assert_mt_ (3!:0 size) e. JB01 , JINT
   y=. }. y
   if. ioFormat do.  NB. coordinate
-    ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mtmm_ 2 < # size
-    ('''coordinate'' and ''' , (ioSymmetry {:: SYMMETRIES_mtmm_) , ''' qualifiers are incompatible') assert_mtmm_ (0 < ioField) +. (ioSymmetry e. 0 1) *. (0 = ioField)
+    ('size format is Dim1 ... DimN Len but ''' , (": size) , ''' found') assert_mt_ 2 < # size
     'shape le'=. (}: ; {:) size  NB. shape, quantity expected
     y=. (le ; shape ; ioField ; ioSymmetry) mmic_mtmm_ y
   else.  NB. array
-    ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mtmm_ 1 < # size
-    ('''array'' and ''pattern'' qualifiers are incompatible') assert_mtmm_ 0 < ioField
+    ('size format is Dim1 ... DimN but ''' , (": size) , ''' found') assert_mt_ 1 < # size
     y=. (size ; ioField ; ioSymmetry) mmia_mtmm_ y
   end.
   y
@@ -617,7 +605,7 @@ mm=: (3 : 0) :. (3 : 0)
   rank=. # shape=. $ y  NB. rank and shape presented
   ((": rank) , '-rank arrays aren''t supported') assert 1 < rank
   'ioFormat ioField'=. 2 4 #: (JB01 , JINT , JFL , JCMPX , 1024 4096 8192 16384) i. 3!:0 y
-  ioSymmetry=. shape issym`(issym`2:@.isskw)`(((issym`2:@.isskw)`3:@.ishmt)`4:@.isskwhmt)@.(0 2 I. ioField)@]`0:@.(({. +./@:~: }.)@[) y
+  ioSymmetry=. shape 0:`((0:`((0 4 {~ isskwhmt)`3:@.ishmt)@.(3 = ioField))`2:@.isskw)@.(*@ioField)`1:@.issym@]`0:@.(({. +./@:~: or (2 > [) }.)@[) y
   if. ioFormat do.
     NB. coordinate
     'Matrix Market exchange formats support the 0 only as a sparse element' assert 0 = 3 $. y
@@ -629,7 +617,6 @@ mm=: (3 : 0) :. (3 : 0)
     y=. y [`(#~ trlmask)`(#~ trl0mask)`(#~ trlmask)`(#~ trlmask)@.ioSymmetry iso
   else.
     NB. array
-    if. 0 = ioField do. ioField=. 1 end.  NB. represent boolean array as integer since 'array' and 'pattern' qualifiers are incompatible
     NB. compose data
     y=. +.^:(3 = ioField) , (|:"2)^:(0 = ioSymmetry) y
     NB. filter out repeating elements known due to symmetry

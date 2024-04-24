@@ -1,3 +1,0 @@
-error: diagonal values must be real
-reason: last data row contains value for diagonal element of Hermitian matrix which has non-zero imaginary part
-based on id#037

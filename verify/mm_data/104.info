@@ -1,2 +1,0 @@
-error: 1-rank arrays aren't supported
-reason: J sentence creates a vector which has rank<2

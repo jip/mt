@@ -1,2 +1,0 @@
-error: not a MatrixMarket format
-reason: 1st field in header row is not '%%MatrixMarket'

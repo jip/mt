@@ -1,3 +1,0 @@
-error: MatrixMarket format supports the 0 only as a sparse element
-reason: J sentence creates a sparse array with sparse element not equal to 0
-based on id#042

@@ -1,2 +1,0 @@
-error: each data row must contain a real and imaginary part of single matrix entry (1)
-reason: last data row contains insufficient data (imagimary part omitted)

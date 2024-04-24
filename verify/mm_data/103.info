@@ -1,2 +1,0 @@
-error: 0-rank arrays aren't supported
-reason: J sentence creates a scalar which has rank<2

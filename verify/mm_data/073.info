@@ -1,3 +1,0 @@
-error: each data row must contain just a single matrix entry
-reason: last data row contains excessive number delimited by TABs span, which is considered as not a delimiter in MatrixMarket format, but a delimiter in J
-based on id#027

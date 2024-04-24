@@ -57,6 +57,8 @@ NB.
 NB. References:
 NB. [1] Text File Formats
 NB.     https://math.nist.gov/MatrixMarket/formats.html
+NB. [2] The SuiteSparse Matrix Collection
+NB.     https://sparse.tamu.edu
 
 NB. =========================================================
 NB. Configuration

@@ -303,3 +303,9 @@ math/mt - change history
                      - get rid of external files in verification suite
  + util:             - switch erasen from private to public
                      - switch assert from private to public (and transfer from mm)
+
+ == 0.14.4 ==
+ bugfix release
+ * mm: - fix bugs
+       - improve code
+       - improve verification suite

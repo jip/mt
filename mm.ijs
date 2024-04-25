@@ -355,7 +355,10 @@ mmic=: 4 : 0
     NB. - integer, real: iso_vector value_scalar
     NB. - complex: iso_vector re_of_value_scalar im_of_value_scalar
     'iso dat'=. (;&1)`(}:"1 ; {:"1)`(}:"1 ; {:"1)`(fret&(<`(<@:(j./"1));.1))@.ioField y
-    iso=. JINT c. iso  NB. convert to integer type
+    if. JINT ~: 3!:0 iso do.
+      'non-integer indices detected' assert (-: <.) iso
+      iso=. JINT c. iso  NB. convert to integer type
+    end.
     'indices must be 1-based' assert 0 (< ,) iso
     iso=. <: iso  NB. translate MM's 1-based ISO to J's 0-based ones
     'index exceeding dimension is detected' assert iso <"1 shape
@@ -468,9 +471,13 @@ mmia=: 4 : 0
   'shape ioField ioSymmetry'=. x
   rank=. # shape
   lp=. # y
-  NB. check max columns quantity presented
-  if. (3 = ioField) *. 0 < lp do.  NB. complex
-    'each data row must contain a real and imaginary part of single matrix entry (1)' assert (' '&e.S:0) y
+  NB. check max columns quantity presented for non-empty objects
+  if. lp do.
+    if. 3 = ioField do.  NB. complex
+      'each data row must contain a real and imaginary part of single matrix entry (1)' assert (' '&e.S:0) y
+    else.  NB. pattern or integer or real
+      'each data row must contain just a single matrix entry (1)' assert -. (' ' e. dltb)S:0 y
+    end.
   end.
   NB. check elements quantity depending on symmetry
   if. ioSymmetry do.
@@ -495,7 +502,7 @@ mmia=: 4 : 0
     'each data row must contain a real and imaginary part of single matrix entry (2)' assert (2 = cp) +. (, 0) -: $ y
     y=. JCMPX c. j./"1 y  NB. if y was a 0×0-matrix then (j./"1 y) will have datatype boolean so explicit conversion may be needed
   else.  NB. pattern or integer or real
-    'each data row must contain just a single matrix entry' assert 1 = cp
+    'each data row must contain just a single matrix entry (2)' assert 1 = cp
     NB. simplify datatype if mismatches with ioField
     select. ioField
       case. 0 do.  NB. pattern

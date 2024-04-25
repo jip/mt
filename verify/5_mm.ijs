@@ -621,7 +621,7 @@ inv0 {{)n
 NB. error: 'skew-hermitian' matrix must have all dimensions the same
 NB. reason: size row is invalid (matrix dimensions must be the same)
 inv0 {{)n
-%%matrixmarket matrix coordinate complex skew-hermitian
+%%matrixmarket matrix array complex skew-hermitian
 2 3
    0 0.11
 21.1 0.21

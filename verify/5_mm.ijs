@@ -402,6 +402,46 @@ inv0 {{)n
 2 2 22
 }}
 
+NB. error: 'symmetric' matrix must have all dimensions the same
+NB. reason: size row is invalid (matrix dimensions must be the same)
+inv0 {{)n
+%%matrixmarket matrix coordinate real symmetric
+2 3 3
+1 1 11.1
+2 1 21.2
+2 2 22.3
+}}
+
+NB. error: 'skew-symmetric' matrix must have all dimensions the same
+NB. reason: size row is invalid (matrix dimensions must be the same)
+inv0 {{)n
+%%matrixmarket matrix coordinate real skew-symmetric
+2 3 3
+1 1    0
+2 1 21.2
+2 2    0
+}}
+
+NB. error: 'symmetric' matrix must have all dimensions the same
+NB. reason: size row is invalid (matrix dimensions must be the same)
+inv0 {{)n
+%%matrixmarket matrix coordinate complex symmetric
+2 3 3
+1 1 11.1    0
+2 1 21.2 0.21
+2 2 22.3    0
+}}
+
+NB. error: 'skew-symmetric' matrix must have all dimensions the same
+NB. reason: size row is invalid (matrix dimensions must be the same)
+inv0 {{)n
+%%matrixmarket matrix coordinate complex skew-symmetric
+2 3 3
+1 1    0 0.11
+2 1 21.2 0.21
+2 2    0 0.22
+}}
+
 NB. error: 'hermitian' matrix must have all dimensions the same
 NB. reason: size row is invalid (matrix dimensions must be the same)
 inv0 {{)n
@@ -444,8 +484,12 @@ inv0 {{)n
 2 2 ab
 }}
 
-NB. error: each data row must contain 2 ISO (2)
-NB. reason: last data row contains excessive number delimited by TABs span, which is considered as not a delimiter in Matrix Market exchange formats, but a delimiter in J
+NB. error: there are non-recognized values
+NB. reason: last data row contains excessive number delimited
+NB.   by TABs span, which is considered as not a delimiter in
+NB.   Matrix Market exchange formats, but a delimiter in J;
+NB.   so J forms 3-column matrix with NaN values in last
+NB.   column in all but last rows
 inv0 {{)n
 %%matrixmarket matrix coordinate pattern general
 2 2 4
@@ -455,8 +499,12 @@ inv0 {{)n
 2 2	3
 }}
 
-NB. error: each data row must contain 2 ISO and a single matrix entry (2)
-NB. reason: last data row contains excessive number delimited by TABs span, which is considered as not a delimiter in Matrix Market exchange formats, but a delimiter in J
+NB. error: there are non-recognized values
+NB. reason: last data row contains excessive number delimited
+NB.   by TABs span, which is considered as not a delimiter in
+NB.   Matrix Market exchange formats, but a delimiter in J;
+NB.   so J forms 4-column matrix with NaN values in last
+NB.   column in all but last rows
 inv0 {{)n
 %%matrixmarket matrix coordinate integer general
 2 2 4
@@ -466,8 +514,12 @@ inv0 {{)n
 2 2 22	222
 }}
 
-NB. error: each data row must contain 2 ISO and a single matrix entry (2)
-NB. reason: last data row contains excessive number delimited by TABs span, which is considered as not a delimiter in Matrix Market exchange formats, but a delimiter in J
+NB. error: there are non-recognized values
+NB. reason: last data row contains excessive number delimited
+NB.   by TABs span, which is considered as not a delimiter in
+NB.   Matrix Market exchange formats, but a delimiter in J;
+NB.   so J forms 4-column matrix with NaN values in last
+NB.   column in all but last rows
 inv0 {{)n
 %%matrixmarket matrix coordinate real general
 2 2 4
@@ -477,8 +529,12 @@ inv0 {{)n
 2 2 22.4	0.22
 }}
 
-NB. error: each data row must contain 2 ISO and a real and imaginary part of single matrix entry (2)
-NB. reason: last data row contains excessive number delimited by TABs span, which is considered as not a delimiter in Matrix Market exchange formats, but a delimiter in J
+NB. error: there are non-recognized values
+NB. reason: last data row contains excessive number delimited
+NB.   by TABs span, which is considered as not a delimiter in
+NB.   Matrix Market exchange formats, but a delimiter in J;
+NB.   so J forms 5-column matrix with NaN values in last
+NB.   column in all but last rows
 inv0 {{)n
 %%matrixmarket matrix coordinate complex general
 2 2 4
@@ -486,6 +542,69 @@ inv0 {{)n
 1 2 12.2 0.12
 2 1 21.3 0.21
 2 2 22.4 0.22	0.222
+}}
+
+NB. error: each data row must contain 2 ISO (2)
+NB. reason: there is an excessive number in last column of
+NB.   data rows delimited by TABs span, which is considered
+NB.   as not a delimiter in Matrix Market exchange formats,
+NB.   but a delimiter in J; so J forms 3-column matrix
+inv0 {{)n
+%%matrixmarket matrix coordinate pattern general
+2 2 3
+1 1	1
+1 2	1
+2 2	1
+}}
+
+NB. error: each data row must contain 2 ISO and a single matrix entry (2)
+NB. reason: there is an excessive number in last column of
+NB.   data rows delimited by TABs span, which is considered
+NB.   as not a delimiter in Matrix Market exchange formats,
+NB.   but a delimiter in J; so J forms 3-column matrix
+inv0 {{)n
+%%matrixmarket matrix coordinate integer general
+2 2 3
+1 1 11	111
+1 2 12	112
+2 2 22	122
+}}
+
+NB. error: each data row must contain 2 ISO and a single matrix entry (2)
+NB. reason: there is an excessive number in last column of
+NB.   data rows delimited by TABs span, which is considered
+NB.   as not a delimiter in Matrix Market exchange formats,
+NB.   but a delimiter in J; so J forms 3-column matrix
+inv0 {{)n
+%%matrixmarket matrix coordinate real general
+2 2 3
+1 1 11.1	111.2
+1 2 12.3	112.4
+2 2 22.5	122.6
+}}
+
+NB. error: each data row must contain 2 ISO and a real and imaginary part of single matrix entry (2)
+NB. reason: there is an excessive number in last column of
+NB.   data rows delimited by TABs span, which is considered
+NB.   as not a delimiter in Matrix Market exchange formats,
+NB.   but a delimiter in J; so J forms 3-column matrix
+inv0 {{)n
+%%matrixmarket matrix coordinate complex general
+2 2 3
+1 1 11.1 0.11	111.4
+1 2 12.2 0.12	112.5
+2 2 22.3 0.22	122.6
+}}
+
+NB. error: non-integer indices detected
+NB. reason: last data row contains 2nd index non-integer (3.4)
+inv0 {{)n
+%%matrixmarket matrix coordinate pattern general
+2 3 4
+1 1
+1 2
+2 1
+2 3.4
 }}
 
 NB. error: indices must be 1-based
@@ -521,7 +640,7 @@ inv0 {{)n
 2 4
 }}
 
-NB. error: integer data type was expected but real data type is detected
+NB. error: non-integer values detected
 NB. reason: last data row contains real not integer value
 inv0 {{)n
 %%matrixmarket matrix coordinate integer general
@@ -530,6 +649,16 @@ inv0 {{)n
 1 2 12
 2 1 21
 2 2 22.1
+}}
+
+NB. error: non-real values detected
+NB. reason: last data row contains J complex not MM real value
+inv0 {{)n
+%%matrixmarket matrix coordinate real general
+2 2 3
+1 1 11.1
+1 2 12.2
+2 2 22.3j0.22
 }}
 
 NB. error: diagonal values must be real
@@ -588,6 +717,14 @@ inv0 {{)n
 22.3
 }}
 
+NB. error: each data row must contain just a single matrix entry (1)
+NB. reason: a data row contains excessive data
+inv0 {{)n
+%%matrixmarket matrix array real general
+1 1
+11.1 0.11
+}}
+
 NB. error: 'symmetric' matrix must have all dimensions the same
 NB. reason: size row is invalid (matrix dimensions must be the same)
 inv0 {{)n
@@ -608,6 +745,46 @@ inv0 {{)n
 32
 }}
 
+NB. error: 'symmetric' matrix must have all dimensions the same
+NB. reason: size row is invalid (matrix dimensions must be the same)
+inv0 {{)n
+%%matrixmarket matrix array real symmetric
+2 3
+11.1
+21.2
+22.3
+}}
+
+NB. error: 'skew-symmetric' matrix must have all dimensions the same
+NB. reason: size row is invalid (matrix dimensions must be the same)
+inv0 {{)n
+%%matrixmarket matrix array real skew-symmetric
+2 3
+-21.1
+0
+32.2
+}}
+
+NB. error: 'symmetric' matrix must have all dimensions the same
+NB. reason: size row is invalid (matrix dimensions must be the same)
+inv0 {{)n
+%%matrixmarket matrix array complex symmetric
+2 3
+11.1    0
+21.2 0.21
+22.3    0
+}}
+
+NB. error: 'skew-symmetric' matrix must have all dimensions the same
+NB. reason: size row is invalid (matrix dimensions must be the same)
+inv0 {{)n
+%%matrixmarket matrix array complex skew-symmetric
+2 3
+   0 0.11
+21.1 0.21
+   0 0.22
+}}
+
 NB. error: 'hermitian' matrix must have all dimensions the same
 NB. reason: size row is invalid (matrix dimensions must be the same)
 inv0 {{)n
@@ -615,7 +792,7 @@ inv0 {{)n
 2 3
 11.1    0
 21.2 0.21
-22.3 0
+22.3    0
 }}
 
 NB. error: 'skew-hermitian' matrix must have all dimensions the same
@@ -649,19 +826,42 @@ inv0 {{)n
 ab
 }}
 
-NB. error: each data row must contain a real and imaginary part of single matrix entry (2)
-NB. reason: last data row contains excessive number delimited by TABs span, which is considered as not a delimiter in Matrix Market exchange formats, but a delimiter in J
+NB. error: there are non-recognized values
+NB. reason: last data row contains excessive number delimited
+NB.   by TABs span, which is considered as not a delimiter in
+NB.   Matrix Market exchange formats, but a delimiter in J;
+NB.   so J forms 2-column matrix with NaN values in last
+NB.   column in all but last rows
 inv0 {{)n
-%%matrixmarket matrix array complex general
+%%matrixmarket matrix array pattern general
 2 2
-11.1 0.11
-12.2 0.12
-21.3 0.21
-22.4 0.22	0.222
+1
+0
+1
+1	1
 }}
 
-NB. error: each data row must contain just a single matrix entry
-NB. reason: last data row contains excessive number delimited by TABs span, which is considered as not a delimiter in Matrix Market exchange formats, but a delimiter in J
+NB. error: there are non-recognized values
+NB. reason: last data row contains excessive number delimited
+NB.   by TABs span, which is considered as not a delimiter in
+NB.   Matrix Market exchange formats, but a delimiter in J;
+NB.   so J forms 2-column matrix with NaN values in last
+NB.   column in all but last rows
+inv0 {{)n
+%%matrixmarket matrix array integer general
+2 2
+11
+12
+21
+22	222
+}}
+
+NB. error: there are non-recognized values
+NB. reason: last data row contains excessive number delimited
+NB.   by TABs span, which is considered as not a delimiter in
+NB.   Matrix Market exchange formats, but a delimiter in J;
+NB.   so J forms 2-column matrix with NaN values in last
+NB.   column in all but last rows
 inv0 {{)n
 %%matrixmarket matrix array real general
 2 2
@@ -671,7 +871,74 @@ inv0 {{)n
 22.4	0.22
 }}
 
-NB. error: integer data type was expected but real data type is detected
+NB. error: each data row must contain a real and imaginary part of single matrix entry (2)
+NB. reason: there is an excessive number in last column of
+NB.   data rows delimited by TABs span, which is considered
+NB.   as not a delimiter in Matrix Market exchange formats,
+NB.   but a delimiter in J; so J forms 3-column matrix
+inv0 {{)n
+%%matrixmarket matrix array complex general
+2 2
+11.1 0.11	111.2
+12.2 0.12	112.4
+21.3 0.21	121.6
+22.4 0.22	222.8
+}}
+
+NB. error: each data row must contain just a single matrix entry (2)
+NB. reason: there is an excessive number in last column of
+NB.   data rows delimited by TABs span, which is considered
+NB.   as not a delimiter in Matrix Market exchange formats,
+NB.   but a delimiter in J; so J forms 2-column matrix
+inv0 {{)n
+%%matrixmarket matrix array pattern general
+2 2
+1	1
+0	1
+1	0
+1	1
+}}
+
+NB. error: each data row must contain just a single matrix entry (2)
+NB. reason: there is an excessive number in last column of
+NB.   data rows delimited by TABs span, which is considered
+NB.   as not a delimiter in Matrix Market exchange formats,
+NB.   but a delimiter in J; so J forms 2-column matrix
+inv0 {{)n
+%%matrixmarket matrix array integer general
+2 2
+11	111
+12	112
+21	121
+22	122
+}}
+
+NB. error: each data row must contain just a single matrix entry (2)
+NB. reason: there is an excessive number in last column of
+NB.   data rows delimited by TABs span, which is considered
+NB.   as not a delimiter in Matrix Market exchange formats,
+NB.   but a delimiter in J; so J forms 2-column matrix
+inv0 {{)n
+%%matrixmarket matrix array real general
+2 2
+11.1	0.11
+12.2	0.12
+21.3	0.21
+22.4	0.22
+}}
+
+NB. error: non-pattern values detected
+NB. reason: last data row contains integer not pattern value
+inv0 {{)n
+%%matrixmarket matrix array pattern general
+2 2
+1
+0
+1
+2
+}}
+
+NB. error: non-integer values detected
 NB. reason: last data row contains real not integer value
 inv0 {{)n
 %%matrixmarket matrix array integer general
@@ -680,6 +947,17 @@ inv0 {{)n
 12
 21
 22.1
+}}
+
+NB. error: non-real values detected
+NB. reason: last data row contains J complex not MM real value
+inv0 {{)n
+%%matrixmarket matrix array real general
+2 2
+11.1
+12.2
+21.3
+22.4j0.22
 }}
 
 NB. error: diagonal values must be real

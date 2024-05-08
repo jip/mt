@@ -22,7 +22,7 @@ NB. cut2      Split list by delimiter
 NB. cut       Split list by delimiter
 NB. cutl2     Split list by any delimiter
 NB. cutl      Split list by any delimiter
-NB. env       Show environment
+NB. env       Get environment
 NB. erasen    Erase global names created between invocations
 NB.
 NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
@@ -496,7 +496,7 @@ NB. ---------------------------------------------------------
 NB. env
 NB.
 NB. Description:
-NB.   Nilad to return environment
+NB.   Nilad to get environment
 NB.
 NB. Syntax:
 NB.   e=. [t] env ''
@@ -507,7 +507,7 @@ NB.         1 = return e as a string
 NB.   e - string or 22-vector of boxes:
 NB.          0 {:: e  - string, architecture
 NB.          1 {:: e  > 0, integer, cores
-NB.          2 {:: e  > 0, integer, maxthreads
+NB.          2 {:: e  > 0, integer, max threads
 NB.          3 {:: e  > 0, integer, worker threads
 NB.          4..11    - 3-vector of non-negative integers,
 NB.                     threads in threadpools 0..7:

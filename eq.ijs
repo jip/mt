@@ -38,12 +38,21 @@ NB. =========================================================
 NB. Local definitions
 
 NB. ---------------------------------------------------------
-NB. Name: laqr1
-NB. Description: 1st column of (H-s1*I)*(H-s2*I)
-NB. Syntax: vK=. (s1,s2) laqr1 H
-NB. where   H - 2×2-matrix or 3×3-matrix
-NB. TODO: tacit
-NB. Notes: implements LAPACK's xLAQR1
+NB. laqr1
+NB.
+NB. Description:
+NB.   1st column of (H-s1*I)*(H-s2*I)
+NB.
+NB. Syntax:
+NB.   vK=. (s1,s2) laqr1 H
+NB. where
+NB.   H - 2×2-matrix or 3×3-matrix
+NB.
+NB. TODO:
+NB. - tacit
+NB.
+NB. Notes:
+NB. - implements LAPACK's xLAQR1
 
 laqr1=: 4 : 0
   's1 s2'=. x

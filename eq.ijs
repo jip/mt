@@ -48,11 +48,11 @@ NB.   vK=. (s1,s2) laqr1 H
 NB. where
 NB.   H - 2×2-matrix or 3×3-matrix
 NB.
-NB. TODO:
-NB. - tacit
-NB.
 NB. Notes:
 NB. - implements LAPACK's xLAQR1
+NB.
+NB. TODO:
+NB. - tacit
 
 laqr1=: 4 : 0
   's1 s2'=. x

@@ -352,13 +352,13 @@ NB. where
 NB.   A    - some array
 NB.   fret - some fret
 NB.
+NB. TODO:
+NB. - fret would be sparse
+NB.
 NB. References:
 NB. [1] Roger Hui. JWiki/Essays/Block Matrix Inverse.
 NB.     2005-11-24 03:53:19.
 NB.     http://code.jsoftware.com/wiki/Essays/Block%20Matrix%20Inverse
-NB.
-NB. TODO:
-NB. - fret would be sparse
 
 icut=: [: > 3 : ',"(#$y)&.>/y'^:(#@$)
 

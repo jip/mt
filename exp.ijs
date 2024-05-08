@@ -124,6 +124,9 @@ NB. where
 NB.   A - n×n-matrix
 NB.   E - n×n-matrix, matrix exponential e^A
 NB.
+NB. TODO:
+NB. - implement [2]
+NB.
 NB. References:
 NB. [1] Nicholas J. Higham. The scaling and squaring method
 NB.     for the matrix exponential revisited. SIAM J. Matrix
@@ -133,9 +136,6 @@ NB. [2] Awad H. Al-Mohy, Nicholas J. Higham. A New Scaling
 NB.     and Squaring Algorithm for the Matrix Exponential.
 NB.     SIAM J. Matrix Analysis Applications, Vol. 31, No. 3,
 NB.     pp. 970-989, 2009.
-NB.
-NB. TODO:
-NB. - implement [2]
 
 geexp=: 3 : 0
   vm=. 3 5 7 9 13                            NB. Padé approximant degrees m

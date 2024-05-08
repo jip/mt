@@ -196,6 +196,12 @@ NB.     vberr=. (mp&>/@[ |@- (0 {:: [) mp ]) >./@% (((0 {:: [) mp&| ]) + |@mp&>/
 NB.     NB. do the job
 NB.     'sent rcond ferr berr time space'=. ('getrs' tdyad (0&{::)`(mp&>/)`]`vrcond`vferr`vberr) (A;x)
 NB.
+NB. Notes:
+NB. 1) recommended observations count to provide standard
+NB.    deviation <= 1% for CPU run-time estimator minimum on
+NB.    systems with load ≤ 80 is equal to 5 [1]
+NB. 2) side effect: the result is sent to the console
+NB.
 NB. References:
 NB. [1] Magne Haveraaen, Hogne Hundvebakke. Some Statistical
 NB.     Performance Estimation Techniques for Dynamic
@@ -203,12 +209,6 @@ NB.     Machines. Appeared in Weihai Yu & al. (eds.): Norsk
 NB.     Informatikk-konferanse 2001, Tapir, Trondheim Norway
 NB.     2001, pp. 176-185.
 NB.     https://www.ii.uib.no/saga/papers/perfor-5d.pdf
-NB.
-NB. Notes:
-NB. 1) recommended observations count to provide standard
-NB.    deviation <= 1% for CPU run-time estimator minimum on
-NB.    systems with load ≤ 80 is equal to 5 [1]
-NB. 2) side effect: the result is sent to the console
 
 tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n

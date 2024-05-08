@@ -37,6 +37,10 @@ NB. <http://www.gnu.org/licenses/>.
 NB. =========================================================
 NB. Concepts
 NB.
+NB. TODO:
+NB. - geplf: Q * L * P = A
+NB. - gerpf: P * R * Q = A
+NB.
 NB. References:
 NB. [1] C. H. Bischof, G. Quintana-Ortí. Computing Rank-
 NB.     Revealing QR Factorizations of Dense Matrices. ACM
@@ -46,10 +50,6 @@ NB. [2] C. H. Bischof, G. Quintana-Ortí. Algorithm 782: Codes
 NB.     for Rank-Revealing QR Factorizations of Dense
 NB.     Matrices. ACM Transactions on Mathematical Software,
 NB.     June 1998, Vol. 24, No. 2, pp. 254-257.
-NB.
-NB. TODO:
-NB. - geplf: Q * L * P = A
-NB. - gerpf: P * R * Q = A
 
 NB. =========================================================
 NB. Configuration

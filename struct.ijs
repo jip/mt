@@ -287,7 +287,7 @@ NB.   liso - min(S,|s|)-vector of integers, lISO solid
 NB.          part of diagonal
 NB.   S    ≥ 0, the length of diagonal
 NB.
-NB. Formulae:
+NB. Formula:
 NB. - the whole diagonal's lIO extreme element:
 NB.     H := (d ≥ 0) ? d : (-n*d)
 NB. - the whole diagonal's size:

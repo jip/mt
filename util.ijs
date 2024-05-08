@@ -22,7 +22,8 @@ NB. cut2      Split list by delimiter
 NB. cut       Split list by delimiter
 NB. cutl2     Split list by any delimiter
 NB. cutl      Split list by any delimiter
-NB. env       Show environment
+NB. info      Get information about mt interace name
+NB. env       Get environment
 NB. erasen    Erase global names created between invocations
 NB.
 NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
@@ -196,6 +197,12 @@ NB.     vberr=. (mp&>/@[ |@- (0 {:: [) mp ]) >./@% (((0 {:: [) mp&| ]) + |@mp&>/
 NB.     NB. do the job
 NB.     'sent rcond ferr berr time space'=. ('getrs' tdyad (0&{::)`(mp&>/)`]`vrcond`vferr`vberr) (A;x)
 NB.
+NB. Notes:
+NB. 1) recommended observations count to provide standard
+NB.    deviation <= 1% for CPU run-time estimator minimum on
+NB.    systems with load ≤ 80 is equal to 5 [1]
+NB. 2) side effect: the result is sent to the console
+NB.
 NB. References:
 NB. [1] Magne Haveraaen, Hogne Hundvebakke. Some Statistical
 NB.     Performance Estimation Techniques for Dynamic
@@ -203,12 +210,6 @@ NB.     Machines. Appeared in Weihai Yu & al. (eds.): Norsk
 NB.     Informatikk-konferanse 2001, Tapir, Trondheim Norway
 NB.     2001, pp. 176-185.
 NB.     https://www.ii.uib.no/saga/papers/perfor-5d.pdf
-NB.
-NB. Notes:
-NB. 1) recommended observations count to provide standard
-NB.    deviation <= 1% for CPU run-time estimator minimum on
-NB.    systems with load ≤ 80 is equal to 5 [1]
-NB. 2) side effect: the result is sent to the console
 
 tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n
@@ -493,10 +494,64 @@ NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 NB. ---------------------------------------------------------
+NB. info
+NB.
+NB. Description:
+NB.   Get information about mt interace name
+NB.
+NB. Syntax:
+NB.   i=. [s] info n
+NB. where
+NB.   s - string, optional, where every character specifies
+NB.       which section must be included:
+NB.         'd' - description
+NB.         's' - syntax
+NB.         'f' - formula
+NB.         'l' - storage layout
+NB.         'g' - algorithm
+NB.         'a' - assertions
+NB.         'e' - examples
+NB.         'p' - application
+NB.         'n' - notes
+NB.         't' - TODO
+NB.         'r' - references
+NB.       default is '' (all sections)
+NB.   n - string, an interface name
+NB.   i - string, an information about name
+NB.
+NB. Examples:
+NB.   NB. get info about 'trsmllnu_mt_' name
+NB.   info_mt_ 'trsmllnu_mt_'
+NB.   NB. the same as above
+NB.   info_mt_ 'trsmllnu'
+NB.   NB. get syntax and notes info about 'trsmllnu_mtbli_'
+NB.   'sn' info_mt_ 'trsmllnu_mtbli_'
+NB.
+NB. Notes:
+NB. - if (n) argument is a simple name not explicit locative
+NB.   then it's searched in mt locale
+
+info=: ''&$: : (4 : 0)
+  ('section ''' , x , ''' is not recognized') assert '' -: x -. 'dsflgaepntr'
+  i=. 4!:4 < y
+  ('name ''' , y , ''' isn''t from script') assert * i
+  content=. 1!:1 i { 4!:3 ''
+  el=. '((_[[:alpha:]][[:alnum:]]*)+|_)_'       NB. pattern for explicit [chained] locale[s]
+  nm=. '[[:alpha:]][[:alnum:]_]*(' , el , ')?'  NB. pattern for name
+  ga=. '(' , nm , '=: .+\n)'                    NB. pattern for global assignment sentence
+  y=. ((el , '$') ; '(' , el , ')?') rxrplc y   NB. replace locale name[s] by its pattern
+  specs=. ('^(NB\..*\n)+(?=((\n' , ga , '+)*\n)?' , ga , '*' , y , '=: )') rxfirst content
+  if. # x do.
+    specs=. ; (<"0 x) (('^NB\. ' , '.*\n(NB\. .+\n)+?(NB\.\n|$)' ,~ (('Description' ; 'Syntax' ; 'Formula' ; 'Storage layout' ; 'Algorithm' ; 'Assertions' ; 'Examples' ; 'Application' ; 'Notes' ; 'TODO' ; 'References') {::~ 'dsflgaepntr' i. [)) rxfirst ])L:0 < specs
+  end.
+  }:^:(LF2 -: _2&{.) ('(?<=^|\n)NB\. ?';'') rxrplc specs
+)
+
+NB. ---------------------------------------------------------
 NB. env
 NB.
 NB. Description:
-NB.   Nilad to return environment
+NB.   Nilad to get environment
 NB.
 NB. Syntax:
 NB.   e=. [t] env ''
@@ -507,7 +562,7 @@ NB.         1 = return e as a string
 NB.   e - string or 22-vector of boxes:
 NB.          0 {:: e  - string, architecture
 NB.          1 {:: e  > 0, integer, cores
-NB.          2 {:: e  > 0, integer, maxthreads
+NB.          2 {:: e  > 0, integer, max threads
 NB.          3 {:: e  > 0, integer, worker threads
 NB.          4..11    - 3-vector of non-negative integers,
 NB.                     threads in threadpools 0..7:
@@ -515,7 +570,7 @@ NB.                       (#idle,#unfinished,#threads)
 NB.         12 {:: e  ≥ 0, integer, executing thread# (0
 NB.                     means master thread)
 NB.         13..15    ≥ -1, integer, thresholds to switch
-NB.                     (+/ .*) to GEMM (built-in BLAS
+NB.                     (+/ .*) to GEMM (built-in BLIS
 NB.                     implementation) for datatypes:
 NB.                       13 {:: e  - integer
 NB.                       14 {:: e  - floating
@@ -542,9 +597,9 @@ NB.     {{55 T.0}}^:] <: {. 8 T. ''
 NB. - set threshold for floating matrices of size 1024×1024
 NB.   or larger:
 NB.     (<. 1024^3) (9!:58) 1
-NB. - always use BLAS for any complex matrix:
+NB. - always use BLIS for any complex matrix:
 NB.     0 (9!:58) 2
-NB. - never use BLAS for any integer matrix:
+NB. - never use BLIS for any integer matrix:
 NB.     _1 (9!:58) 0
 NB. - try to load LAPACK interfaces if presented in system:
 NB.     load 'math/lapack2'

@@ -309,3 +309,7 @@ math/mt - change history
  * mm: - fix bugs
        - improve code
        - improve verification suite
+
+ == 0.14.5 ==
+ minor improvements
+ + util: new interface: info

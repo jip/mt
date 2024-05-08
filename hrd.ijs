@@ -419,6 +419,7 @@ NB.   A00     - h×h-matrix, the lower triangular
 NB.   A11     - s×s-matrix to be reduced
 NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, the lower triangular
 NB.   A10,A21 - matrices to be updated
+NB.
 NB. Example for h=1, s=5, n=7:
 NB.   input  A                     output HQf
 NB.   (  a                    )    (  a                       )
@@ -506,6 +507,7 @@ NB.   A00     - h×h-matrix, the upper triangular
 NB.   A11     - s×s-matrix to be reduced
 NB.   A22     - (n-(h+s))×(n-(h+s))-matrix, the upper triangular
 NB.   A01,A12 - matrices to be updated
+NB.
 NB. Example for h=1, s=5, n=7:
 NB.   input  A                     output HQf
 NB.   (  a  a  a  a  a  a  a  )    (  a  a  h  h  h  h  a  )
@@ -709,6 +711,9 @@ NB. - models LAPACK's xGGHRD('V','I'):
 NB.     NB. 'H T Q1 dZ0'=. hs gghrduvi A , B ,: Q0
 NB.     gghrduvi=: gghrduvv (, idmat@c)
 NB.
+NB. TODO:
+NB. - implement blocked version [2]
+NB.
 NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
@@ -718,9 +723,6 @@ NB.     Ortí, Gregorio Quintana-Ortí. Blocked Algorithms for
 NB.     the Reduction to Hessenberg-Triangular Form
 NB.     Revisited. February 2008. LAPACK Working Note 198.
 NB.     http://www.netlib.org/lapack/lawns/downloads/
-NB.
-NB. TODO:
-NB. - implement blocked version [2]
 
 gghrdunn=: 0 {:: gghrdu
 gghrdunv=:    {:@]  ((0 {:: ]) , (rotsclu 2 {:: ]  )) (gghrdu }:  )

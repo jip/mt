@@ -1254,14 +1254,14 @@ NB.
 NB. Notes:
 NB. - models LAPACK's DSYTRF_AA('L') and ZHETRF_AA('L')
 NB.
+NB. TODO:
+NB. - T would be sparse
+NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
 NB.     Partitioned triangular tridiagonalization.
 NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
-NB.
-NB. TODO:
-NB. - T would be sparse
 
 hetrfpl=: 3 : 0
   n=. # y
@@ -1361,14 +1361,14 @@ NB.   'ip U1 T'=. hetrfpu A
 NB.   iP=. P4p ip
 NB.   P=. P4ip ip
 NB.
+NB. TODO:
+NB. - T would be sparse
+NB.
 NB. References:
 NB. [1] Miroslav Rozloznik, Gil Shklarski, Sivan Toledo.
 NB.     Partitioned triangular tridiagonalization.
 NB.     26 September 2007.
 NB.     http://www.cs.cas.cz/miro/rst08.pdf
-NB.
-NB. TODO:
-NB. - T would be sparse
 
 hetrfpu=: 3 : 0
   n=. # y
@@ -1561,13 +1561,13 @@ NB.
 NB. Notes:
 NB. - models LAPACK's xPTTRF
 NB.
+NB. TODO:
+NB. - L1 and D would be sparse
+NB.
 NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157.
-NB.
-NB. TODO:
-NB. - L1 and D would be sparse
 
 pttrfl=: ({."1 (((setdiag idmat@#)~ ;&_1) ; diagmat@[) }.@(1&({"1)))@(({.@] ((- {:) , {.@]) ((%  {.)~ }.))~/\.^:(0<#)&.|.)@(diag (stitchb (,. soris)) _1&diag)
 
@@ -1619,13 +1619,13 @@ NB. Notes:
 NB. - if A is indefinite then factors may have unacceptably
 NB.   large elements
 NB.
+NB. TODO:
+NB. - U1 and D would be sparse
+NB.
 NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157.
-NB.
-NB. TODO:
-NB. - U1 and D would be sparse
 
 pttrfu=: ({."1 (((setdiag idmat@#)~ ;& 1) ; diagmat@[) }:@(1&({"1)))@(({.@[ ((- {:) , {.@]) ((%~ }.)~ {.)) /\.^:(0<#)    )@(diag (stitcht (,. soris))  1&diag)
 

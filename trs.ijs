@@ -463,13 +463,13 @@ NB. - implements LAPACK's xPTTS2(0)
 NB. - if A is singular then solution Xx will be wrong
 NB. - if A is indefinite then solution Xx may be wrong
 NB.
+NB. TODO:
+NB. - L1 and D would be sparse
+NB.
 NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157.
-NB.
-NB. TODO:
-NB. - L1 and D would be sparse
 
 pttrslx=:  $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitcht +)`(_1   diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.&.|.)@stitchb~)`] fork3)
 pttrsltx=: $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitcht +)`(_1 +@diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.&.|.)@stitchb~)`] fork3)
@@ -534,13 +534,13 @@ NB. Notes:
 NB. - if A is singular then solution Xx will be wrong
 NB. - if A is indefinite then solution Xx may be wrong
 NB.
+NB. TODO:
+NB. - U1 and D would be sparse
+NB.
 NB. References:
 NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157.
-NB.
-NB. TODO:
-NB. - U1 and D would be sparse
 
 pttrsux=:  $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1   diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.&.|.@(c@] ({.@] % ({,))` 0:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.    )@stitcht~)`] fork3)
 pttrsutx=: $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1 +@diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.&.|.@(c@] ({.@] % ({,))` 0:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.    )@stitcht~)`] fork3)

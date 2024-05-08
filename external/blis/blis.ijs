@@ -22,6 +22,14 @@ NB. Public License along with mt. If not, see
 NB. <http://www.gnu.org/licenses/>.
 
 NB. =========================================================
+NB. Concepts
+NB.
+NB. Application
+NB. - to switch to another version library:
+NB.     LIB_mtbli_=: 'full_path_file_name'
+NB.     load 'math/mt/external/blis/api'
+
+NB. =========================================================
 NB. Configuration
 
 coclass 'mtbli'

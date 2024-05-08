@@ -789,6 +789,10 @@ NB.   iA=. pttril A
 NB.   or
 NB.   iA=. pttriu A
 NB.
+NB. TODO:
+NB. - pttriu
+NB. - A would be sparse
+NB.
 NB. References:
 NB. [1] Moawwad El-Mikkawy, El-Desouky Rahmo. A new recursive
 NB.     algorithm for inverting general tridiagonal and
@@ -799,10 +803,6 @@ NB. [2] Igor Zhuravlov. [Jprogramming] ravel items (,.) of
 NB.     empty list (i.0)
 NB.     2010-06-05 10:08:56 HKT
 NB.     http://jsoftware.com/pipermail/programming/2010-June/019617.html
-NB.
-NB. TODO:
-NB. - pttriu
-NB. - A would be sparse
 
 pttril=: ($:~ pttrfl) : ((4 : 0)^:(((0:`(+@])`(_1&diag)`,.`((-@,. 1&(|.!.0))~ }.)`diag fork3)@])`(0>.<:@#@])`(empty`,.@.(0<#)@(]`-"0@(*/\)&.|.)@(((, %@(_1&{ :: ]))~ +)~&>/)@:(_1&diag&.>`(diag&.>)"0)@[)))
   io=. -c y

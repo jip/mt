@@ -199,14 +199,6 @@ NB.   'beta tau'=. 0 _1 { z
 NB.   I=. idmat n
 NB.   H=. I - tau (] */ (* +)) (1,v)
 NB.
-NB. References:
-NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, E. Jason
-NB.     Riedy. Non-Negative Diagonals and High Performance on
-NB.     Low-Profile Matrices from Householder QR.
-NB.     UCB/EECS-2008-76, May 30, 2008.
-NB.     LAPACK Working Note 203
-NB.     http://www.netlib.org/lapack/lawns/downloads/
-NB.
 NB. Notes:
 NB. - IEEE floating point configuration is encoded implicitly
 NB. - larfg models LAPACK's xLARFG
@@ -215,6 +207,14 @@ NB. - larfp provides τ=2 ↔ ||x|| ≈ 0
 NB. - not zeroing v in larfp in case τ=2 relies on fact:
 NB.   'comparison tolerance tol>0'; otherwise (tol=0) x
 NB.   would be filled by zeros
+NB.
+NB. References:
+NB. [1] James W. Demmel, Mark Hoemmen, Yozo Hida, E. Jason
+NB.     Riedy. Non-Negative Diagonals and High Performance on
+NB.     Low-Profile Matrices from Householder QR.
+NB.     UCB/EECS-2008-76, May 30, 2008.
+NB.     LAPACK Working Note 203
+NB.     http://www.netlib.org/lapack/lawns/downloads/
 
 larfg=: 4 : 0
   'ioa iot'=. x

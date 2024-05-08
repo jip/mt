@@ -22,6 +22,7 @@ NB. cut2      Split list by delimiter
 NB. cut       Split list by delimiter
 NB. cutl2     Split list by any delimiter
 NB. cutl      Split list by any delimiter
+NB. info      Get information about mt interace name
 NB. env       Get environment
 NB. erasen    Erase global names created between invocations
 NB.
@@ -491,6 +492,60 @@ cutl=: -.&a:@cutl2
 
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NB. ---------------------------------------------------------
+NB. info
+NB.
+NB. Description:
+NB.   Get information about mt interace name
+NB.
+NB. Syntax:
+NB.   i=. [s] info n
+NB. where
+NB.   s - string, optional, where every character specifies
+NB.       which section must be included:
+NB.         'd' - description
+NB.         's' - syntax
+NB.         'f' - formula
+NB.         'l' - storage layout
+NB.         'g' - algorithm
+NB.         'a' - assertions
+NB.         'e' - examples
+NB.         'p' - application
+NB.         'n' - notes
+NB.         't' - TODO
+NB.         'r' - references
+NB.       default is '' (all sections)
+NB.   n - string, an interface name
+NB.   i - string, an information about name
+NB.
+NB. Examples:
+NB.   NB. get info about 'trsmllnu_mt_' name
+NB.   info_mt_ 'trsmllnu_mt_'
+NB.   NB. the same as above
+NB.   info_mt_ 'trsmllnu'
+NB.   NB. get syntax and notes info about 'trsmllnu_mtbli_'
+NB.   'sn' info_mt_ 'trsmllnu_mtbli_'
+NB.
+NB. Notes:
+NB. - if (n) argument is a simple name not explicit locative
+NB.   then it's searched in mt locale
+
+info=: ''&$: : (4 : 0)
+  ('section ''' , x , ''' is not recognized') assert '' -: x -. 'dsflgaepntr'
+  i=. 4!:4 < y
+  ('name ''' , y , ''' isn''t from script') assert * i
+  content=. 1!:1 i { 4!:3 ''
+  el=. '((_[[:alpha:]][[:alnum:]]*)+|_)_'       NB. pattern for explicit [chained] locale[s]
+  nm=. '[[:alpha:]][[:alnum:]_]*(' , el , ')?'  NB. pattern for name
+  ga=. '(' , nm , '=: .+\n)'                    NB. pattern for global assignment sentence
+  y=. ((el , '$') ; '(' , el , ')?') rxrplc y   NB. replace locale name[s] by its pattern
+  specs=. ('^(NB\..*\n)+(?=((\n' , ga , '+)*\n)?' , ga , '*' , y , '=: )') rxfirst content
+  if. # x do.
+    specs=. ; (<"0 x) (('^NB\. ' , '.*\n(NB\. .+\n)+?(NB\.\n|$)' ,~ (('Description' ; 'Syntax' ; 'Formula' ; 'Storage layout' ; 'Algorithm' ; 'Assertions' ; 'Examples' ; 'Application' ; 'Notes' ; 'TODO' ; 'References') {::~ 'dsflgaepntr' i. [)) rxfirst ])L:0 < specs
+  end.
+  }:^:(LF2 -: _2&{.) ('(?<=^|\n)NB\. ?';'') rxrplc specs
+)
 
 NB. ---------------------------------------------------------
 NB. env

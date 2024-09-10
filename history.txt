@@ -313,3 +313,8 @@ math/mt - change history
  == 0.14.5 ==
  minor improvements
  + util: new interface: info
+
+ == 0.14.6 ==
+ improve and fix code and comments
+ * dbg:               fix again to obey DEBUG noun value dynamic changes
+ * external/blis/api: new interfaces: thread_get_num_threads_cd thread_set_num_threads_cd

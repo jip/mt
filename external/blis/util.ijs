@@ -94,7 +94,7 @@ NB.   buffer := dat
 NB.
 NB. Application:
 NB. - allocate BLIS objects in a batch:
-NB.     'obj0 obj1'=. obja S: 0 (noun0 ; noun1)
+NB.     'obj0 obj1'=. obja_mtbli_ S: 0 (noun0 ; noun1)
 NB.
 NB. Notes:
 NB. - side effect: (refcount++) in enveloping noun
@@ -135,7 +135,7 @@ NB.
 NB.
 NB. Application:
 NB. - free BLIS objects in a batch:
-NB.     trash=. objf"1 (obj0 ,: obj1)
+NB.     trash=. objf_mtbli_"1 (obj0 ,: obj1)
 NB.
 NB. Notes:
 NB. - side effect: (refcount--) in enveloping noun

@@ -297,10 +297,6 @@ NB. [1] Henry Rich. [Jbeta] S: results seems inconsistent,
 NB.     also is L:
 NB.     2022-12-28 03:58:23 UTC
 NB.     https://www.jsoftware.com/pipermail/beta/2022-December/010685.html
-NB. [2] Github / Jsoftware / jsource / issues / 194
-NB.     Amend gives length error for sparse array
-NB.     Igor Zhuravlov, 2024-04-22 07:02 UTC
-NB.     https://github.com/jsoftware/jsource/issues/194
 
 mmic=: 4 : 0
   'le shape ioField ioSymmetry'=. x
@@ -404,9 +400,9 @@ mmic=: 4 : 0
       NB.   - get nub since ISO may repeat e.g. 0 2 2
       NB.   - its cardinality are different
       NB. - box sets to avoid reshaping later
-      iso=. (i. count) <@~.@:A."_ 1 iso
+      iso=. (i. count) <@~.@:A."_ 1^:(*@#@]) iso
       counts=. (#S:0^:(*@#)) iso  NB. see [1]
-      iso=. ; iso
+      iso=. ;^:(*@#) iso
     case. 2 do.  NB. skew-symmetric
       NB. elements presented must have ISO satisfying:
       NB.   ISO[0] < ISO[1] < ... < ISO[R-4] < ISO[R-3] < ISO[R-1] < ISO[R-2]
@@ -445,10 +441,7 @@ mmic=: 4 : 0
       dat=. (1 = (C.!.2) (/:"1) iso)} (,: +@:-) counts # dat
   end.
   NB. place values at ISO positions in sparse array
-  y=. 1 $. shape ; (i. rank) ; se
-  if. # dat do.  NB. work-around [2]
-    y=. dat iso} y
-  end.
+  y=. dat iso} 1 $. shape ; (i. rank) ; se
 )
 
 NB. ---------------------------------------------------------

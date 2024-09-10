@@ -241,7 +241,7 @@ NB. cntx_t* bli_gks_query_cntx( void );
 NB.
 NB. Application:
 NB. - JE: j9.5.0-beta3/j64avx2/linux
-NB.       cntx_addr=. gksquerycntxcd ''
+NB.       cntx_addr=. gks_query_cntx_cd_mtbli_ ''
 NB.       blkszs=. 22 2 4 $ memr cntx_addr , 0 , 176 , JINT
 NB.       bmults_raw=. memr cntx_addr , 1408 , 88 , JCHAR
 NB.       $ bmults=. _2 (3!:4) bmults_raw
@@ -284,7 +284,7 @@ NB.
 NB. Application:
 NB. - JE: j9.5.0-beta3/j64avx2/linux
 NB.       rntm_l=. mema SIZEOF_RNTM_T_mtbli_
-NB.       EMPTY [ rntm_init_from_global_cd < < rntm_l
+NB.       EMPTY [ rntm_init_from_global_cd_mtbli_ < < rntm_l
 NB.       a. i. memr rntm_l , 0 , 72 , JCHAR
 NB.    1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
 NB.       _8 ]\ a. i. memr rntm_l , 0 , 72 , JCHAR
@@ -1691,7 +1691,7 @@ NB.      EMPTY [ eqsc_cd_mtbli_ <"0 ({:L:0 objs) , < bscdat
 NB.        NB. call bli_eqsc with arguments - pointers to data
 NB.      a. i. bsc                    NB. cast the result to integer
 NB.   1                               NB. value is changed to some value within boolean domain
-NB.      objf L: 0 objs               NB. destroy allocated objects
+NB.      objf_mtbli_ L: 0 objs        NB. destroy allocated objects
 NB.      ({: a.) memw bscdat , 0 1    NB. reset to prepare to re-use in another comparison, optionally
 
 eqsc_cd=: (lib,' bli_eqsc ',ifw,' n & & *b')&cd
@@ -3124,6 +3124,15 @@ info_get_trmm3_impl_string_cd=: (lib,' bli_info_get_trmm3_impl_string > ',ifw,' 
 
 NB. char* bli_info_get_trsm_impl_string( num_t dt );
 info_get_trsm_impl_string_cd=:  (lib,' bli_info_get_trsm_impl_string > ' ,ifw,' x x')&cd
+
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NB. Multi-threading function reference
+
+NB. dim_t bli_thread_get_num_threads( void );
+thread_get_num_threads_cd=: (lib,' bli_thread_get_num_threads > ',ifw,' x')&cd
+
+NB. void bli_thread_set_num_threads( dim_t n_threads );
+thread_set_num_threads_cd=: (lib,' bli_thread_set_num_threads ',ifw,' n x')&cd
 
 NB. =========================================================
 NB. Clean-up

@@ -318,3 +318,7 @@ math/mt - change history
  improve and fix code and comments
  * dbg:               fix again to obey DEBUG noun value dynamic changes
  * external/blis/api: new interfaces: thread_get_num_threads_cd thread_set_num_threads_cd
+
+ == 0.14.7 ==
+ bugfix release
+ * dbg: fix to avoid valence error

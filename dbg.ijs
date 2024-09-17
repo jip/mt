@@ -88,4 +88,4 @@ NB. Application:
 NB. - to debug verb '+/' in verb (+/ .*) try:
 NB.     C=. A ((+/ dbg_mt_ '+/') .*) B
 
-dbg=: 2 : 'u`(u dbg1_mt_ n)`(u dbg2_mt_ n)@.(3 : ''DEBUG_mt_'')'
+dbg=: 2 : 'u`(u dbg1_mt_ n)`(u dbg2_mt_ n)@.(3 : (''DEBUG_mt_'' ; '':'' ; ''DEBUG_mt_''))'

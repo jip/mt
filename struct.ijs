@@ -1443,7 +1443,7 @@ NB.  15 59 81
 NB.    NB. is P symmetric?
 NB.    (-: |:) P
 NB. 1
-NB.    NB. is P positive definite (does Cholesky factor exists)?
+NB.    NB. is P positive definite (does Cholesky factor exist)?
 NB.    1:@potrfl :: 0 P
 NB. 1
 NB.
@@ -1452,7 +1452,7 @@ NB.    ] G=. 3 3 $ 5j8 _6j_3 _9j8 _6j_7 0j_1 _5j7 _2j_4 8j7 _6j_8
 NB.   5j8 _6j_3  _9j8
 NB. _6j_7  0j_1  _5j7
 NB. _2j_4   8j7 _6j_8
-NB.    NB. is G invertible (determinant is non-zero)?
+NB.    NB. is G invertible (is determinant non-zero)?
 NB.    0 ~: -/ .* G
 NB. 1
 NB.    ] P=. po G
@@ -1462,7 +1462,7 @@ NB. _121j98 7j100      233
 NB.    NB. is P Hermitian?
 NB.    (-: ct) P
 NB. 1
-NB.    NB. is P positive definite (does Cholesky factor exists)?
+NB.    NB. is P positive definite (does Cholesky factor exist)?
 NB.    1:@potrfl :: 0 P
 NB. 1
 

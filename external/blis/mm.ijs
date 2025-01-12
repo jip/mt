@@ -51,16 +51,14 @@ NB.     C := alpha * op1(A) * op2(B) + beta * C
 NB.   where opX(M) is either M, M^T, conj(M) or M^H
 NB.
 NB. Syntax:
-NB.   Cupd=. (transA ,: transB) xgemmcore alpha ; A ; B ; beta ; C
+NB.   Cupd=. (transA , transB) xgemmcore alpha ; A ; B ; beta ; C
 NB. where
-NB.   transA - 4-vector of chars, trans_t as bitstring,
-NB.            defines the form of op1(A):
+NB.   transA - trans_t scalar, defines the form of op1(A):
 NB.              NO_TRANSPOSE       NB. op1(A) := A        (no transpose)
 NB.              TRANSPOSE          NB. op1(A) := A^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op1(A) := conj(A)  (conjugate)
 NB.              CONJ_TRANSPOSE     NB. op1(A) := A^H      (conjugate and transpose)
-NB.   transB - 4-vector of chars, trans_t as bitstring,
-NB.            defines the form of op2(B):
+NB.   transB - trans_t scalar, defines the form of op2(B):
 NB.              NO_TRANSPOSE       NB. op1(B) := B        (no transpose)
 NB.              TRANSPOSE          NB. op1(B) := B^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op1(B) := conj(B)  (conjugate)
@@ -87,7 +85,7 @@ NB.            otherwise
 gemmcore=: 4 : 0
   y=. memu&.>&.(_1&{) y  NB. unalias C
   objs=. obja L: 0 y     NB. allocate BLIS objects bonded to J nouns
-  x obj_set_conjtrans"1 0 (((;"0&1) 1 2)) {:: objs
+  x obj_set_conjtrans"0 (((;"0&1) 1 2)) {:: objs
     NB. transpose A and/or B optionally
   gemm_cd <@{:L:0 objs   NB. call bli_gemm() with each param marked as object address
   objf L: 0 objs         NB. free BLIS objects
@@ -95,16 +93,16 @@ gemmcore=: 4 : 0
 )
 
 dgemmcore=: 4 : 0
-  'transA transB'=. _2 ic , x
+  'transA transB'=. x
   'ka nb n'=. 1 2 4 { c S: 0 'alpha A B beta C'=. y
-  k=. (({. x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
+  k=. (transA e. NO_TRANSPOSE , CONJ_NO_TRANSPOSE) { $ A
   14 {:: dgemm_cd transA ; transB ; (# C) ; n ; k ; (, alpha) ; A ; ka ; 1 ; B ; nb ; 1 ; (, beta) ; C ; n ; 1
 )
 
 zgemmcore=: 4 : 0
-  'transA transB'=. _2 ic , x
+  'transA transB'=. x
   'ka nb n'=. 1 2 4 { c S: 0 'alpha A B beta C'=. y
-  k=. (({. x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
+  k=. (transA e. NO_TRANSPOSE , CONJ_NO_TRANSPOSE) { $ A
   14 {:: zgemm_cd transA ; transB ; (# C) ; n ; k ; (, alpha) ; A ; ka ; 1 ; B ; nb ; 1 ; (, beta) ; C ; n ; 1
 )
 
@@ -121,22 +119,20 @@ NB.   updating C in triangular part, where C is square,
 NB.   opX(M) is either M, M^T, conj(M) or M^H
 NB.
 NB. Syntax:
-NB.   Cupd=. (transA , transB ,: uploC) xgemmtcore alpha ; A ; B ; beta ; C
+NB.   Cupd=. (transA , transB , uploC) xgemmtcore alpha ; A ; B ; beta ; C
 NB. where
-NB.   transA - 4-vector of chars, trans_t as bitstring,
-NB.            defines the form of op1(A):
+NB.   transA - trans_t scalar, defines the form of op1(A):
 NB.              NO_TRANSPOSE       NB. op1(A) := A        (no transpose)
 NB.              TRANSPOSE          NB. op1(A) := A^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op1(A) := conj(A)  (conjugate)
 NB.              CONJ_TRANSPOSE     NB. op1(A) := A^H      (conjugate and transpose)
-NB.   transB - 4-vector of chars, trans_t as bitstring,
-NB.            defines the form of op2(B):
+NB.   transB - trans_t scalar, defines the form of op2(B):
 NB.              NO_TRANSPOSE       NB. op1(B) := B        (no transpose)
 NB.              TRANSPOSE          NB. op1(B) := B^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op1(B) := conj(B)  (conjugate)
 NB.              CONJ_TRANSPOSE     NB. op1(B) := B^H      (conjugate and transpose)
-NB.   uploC  - 4-vector of chars, uplo_t as bitstring,
-NB.            defines the part of C to be updated:
+NB.   uploC  - uplo_t scalar, defines the part of C to be
+NB.            updated:
 NB.              LOWER              NB. LT
 NB.              UPPER              NB. UT
 NB.   alpha  - scalar
@@ -161,7 +157,7 @@ NB.            otherwise
 gemmtcore=: (4 : 0) ([ assert@basiccr4)
   y=. memu&.>&.(_1&{) y  NB. unalias C
   objs=. obja L: 0 y     NB. allocate BLIS objects bonded to J nouns
-  x (2 1 # obj_set_conjtrans`obj_set_uplo)"1 0 (((;"0&1) 1 2 4)) {:: objs
+  x (2 1 # obj_set_conjtrans`obj_set_uplo)"0 (((;"0&1) 1 2 4)) {:: objs
     NB. transpose A and/or B optionally, select C part
   gemmt_cd <@{:L:0 objs  NB. call bli_gemmt() with each param marked as object address
   objf L: 0 objs         NB. free BLIS objects
@@ -169,16 +165,16 @@ gemmtcore=: (4 : 0) ([ assert@basiccr4)
 )
 
 dgemmtcore=: (4 : 0) ([ assert@basiccr4)
-  'transA transB uploC'=. _2 ic , x
+  'transA transB uploC'=. x
   'ka mb m'=. 1 2 4 { c S: 0 'alpha A B beta C'=. y
-  k=. (({. x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
+  k=. (transA e. NO_TRANSPOSE , CONJ_NO_TRANSPOSE) { $ A
   14 {:: dgemmt_cd uploC ; transA ; transB ; m ; k ; (, alpha) ; A ; ka ; 1 ; B ; mb ; 1 ; (, beta) ; C ; m ; 1
 )
 
 zgemmtcore=: (4 : 0) ([ assert@basiccr4)
-  'transA transB uploC'=. _2 ic , x
+  'transA transB uploC'=. x
   'ka mb m'=. 1 2 4 { c S: 0 'alpha A B beta C'=. y
-  k=. (({. x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ A
+  k=. (transA e. NO_TRANSPOSE , CONJ_NO_TRANSPOSE) { $ A
   14 {:: zgemmt_cd uploC ; transA ; transB ; m ; k ; (, alpha) ; A ; ka ; 1 ; B ; mb ; 1 ; (, beta) ; C ; m ; 1
 )
 
@@ -199,22 +195,19 @@ NB.   where A is Hermitian (symmetric), op1(A) is either A or
 NB.   conj(A), and op2(B) is either B, B^T, conj(B) or B^H
 NB.
 NB. Syntax:
-NB.   Cupd=. (sideA , uploA , conjA ,: transB) xxxmmcore alpha ; AA ; B ; beta ; C
+NB.   Cupd=. (sideA , uploA , conjA , transB) xxxmmcore alpha ; AA ; B ; beta ; C
 NB. where
-NB.   sideA  - 4-vector of chars, side_t as bitstring,
-NB.            defines the side of A:
+NB.   sideA  - side_t scalar, defines the side of A:
 NB.              LEFT               NB. to perform (1) (A on the left)
 NB.              RIGHT              NB. to perform (2) (A on the right)
-NB.   uploA  - 4-vector of chars, uplo_t as bitstring,
-NB.            defines the part of A to be read:
+NB.   uploA  - uplo_t scalar, defines the part of A to be
+NB.            read:
 NB.              LOWER              NB. LT
 NB.              UPPER              NB. UT
-NB.   conjA  - 4-vector of chars, conj_t as bitstring,
-NB.            defines the form of op1(A):
+NB.   conjA  - conj_t scalar, defines the form of op1(A):
 NB.              NO_CONJUGATE       NB. op1(A) := A        (no conjugate)
 NB.              CONJUGATE          NB. op1(A) := conj(A)  (conjugate)
-NB.   transB - 4-vector of chars, trans_t as bitstring,
-NB.            defines the form of op2(B):
+NB.   transB - trans_t scalar, defines the form of op2(B):
 NB.              NO_TRANSPOSE       NB. op1(B) := B        (no transpose)
 NB.              TRANSPOSE          NB. op1(B) := B^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op1(B) := conj(B)  (conjugate)
@@ -234,47 +227,47 @@ NB.            size of A and AA when (sideA != LEFT)
 NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 
 symmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y                   NB. unalias C
-  objs=. obja L: 0 y                      NB. allocate BLIS objects bonded to J nouns
-  (SYMMETRIC 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 (((;"0&1) 1 1 1 2)) {:: objs
+  y=. memu&.>&.(_1&{) y          NB. unalias C
+  objs=. obja L: 0 y             NB. allocate BLIS objects bonded to J nouns
+  (SYMMETRIC 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"0 (((;"0&1) 1 1 1 2)) {:: objs
     NB. set A structure, select A part, conjugate A optionally, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  symm_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_symm() with all but head params marked as object address
-  objf L: 0 objs                          NB. free BLIS objects
-  _1 {:: y                                NB. return changed copy of C
+  symm_cd ({. x) ; <@{:L:0 objs  NB. call bli_symm() with all but head params marked as object address
+  objf L: 0 objs                 NB. free BLIS objects
+  _1 {:: y                       NB. return changed copy of C
 )
 
 hemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y                   NB. unalias C
-  objs=. obja L: 0 y                      NB. allocate BLIS objects bonded to J nouns
-  (HERMITIAN 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"1 0 (((;"0&1) 1 1 1 2)) {:: objs
+  y=. memu&.>&.(_1&{) y          NB. unalias C
+  objs=. obja L: 0 y             NB. allocate BLIS objects bonded to J nouns
+  (HERMITIAN 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"0 (((;"0&1) 1 1 1 2)) {:: objs
     NB. set A structure, select A part, conjugate A optionally, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  hemm_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_hemm() with all but head params marked as object address
-  objf L: 0 objs                          NB. free BLIS objects
-  _1 {:: y                                NB. return changed copy of C
+  hemm_cd ({. x) ; <@{:L:0 objs  NB. call bli_hemm() with all but head params marked as object address
+  objf L: 0 objs                 NB. free BLIS objects
+  _1 {:: y                       NB. return changed copy of C
 )
 
 dsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  'sideA uploA conjA transB'=. _2 ic , x
+  'sideA uploA conjA transB'=. x
   'alpha AA B beta C'=. y
-  mn=. (RIGHT -: {. x) { 'm n'=. $ C
+  mn=. (RIGHT = sideA) { 'm n'=. $ C
   15 {:: dsymm_cd sideA ; uploA ; conjA ; transB ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1 ; (, beta) ; C ; n ; 1
 )
 
 zsymmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  'sideA uploA conjA transB'=. _2 ic , x
+  'sideA uploA conjA transB'=. x
   'alpha AA B beta C'=. y
-  mn=. (RIGHT -: {. x) { 'm n'=. $ C
+  mn=. (RIGHT = sideA) { 'm n'=. $ C
   15 {:: zsymm_cd sideA ; uploA ; conjA ; transB ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1 ; (, beta) ; C ; n ; 1
 )
 
 zhemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  'sideA uploA conjA transB'=. _2 ic , x
+  'sideA uploA conjA transB'=. x
   'alpha AA B beta C'=. y
-  mn=. (RIGHT -: {. x) { 'm n'=. $ C
+  mn=. (RIGHT = sideA) { 'm n'=. $ C
   15 {:: zhemm_cd sideA ; uploA ; conjA ; transB ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1 ; (, beta) ; C ; n ; 1
 )
 
@@ -293,24 +286,21 @@ NB.   where A is triangular, and op(A) is either A, A^T,
 NB.   conj(A) or A^H
 NB.
 NB. Syntax:
-NB.   Bupd=. (sideA , uploA , transA ,: diagA) xtrmmcore alpha ; AA ; B
+NB.   Bupd=. (sideA , uploA , transA , diagA) xtrmmcore alpha ; AA ; B
 NB. where
-NB.   sideA  - 4-vector of chars, side_t as bitstring,
-NB.            defines the side of A:
+NB.   sideA  - side_t scalar, defines the side of A:
 NB.              LEFT               NB. to perform (1) (A on the left)
 NB.              RIGHT              NB. to perform (2) (A on the right)
-NB.   uploA  - 4-vector of chars, uplo_t as bitstring,
-NB.            defines the part of A to be read:
+NB.   uploA  - uplo_t scalar, defines the part of A to be
+NB.            read:
 NB.              LOWER              NB. LT
 NB.              UPPER              NB. UT
-NB.   transA - 4-vector of chars, trans_t as bitstring,
-NB.            defines the form of op(A):
+NB.   transA - trans_t scalar, defines the form of op(A):
 NB.              NO_TRANSPOSE       NB. op(A) := A        (no transpose)
 NB.              TRANSPOSE          NB. op(A) := A^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op(A) := conj(A)  (conjugate)
 NB.              CONJ_TRANSPOSE     NB. op(A) := A^H      (conjugate and transpose)
-NB.   diagA  - 4-vector of chars, diag_t as bitstring,
-NB.            defines the form of A:
+NB.   diagA  - diag_t scalar, defines the form of A:
 NB.              NONUNIT_DIAG       NB. A is either L or U
 NB.              UNIT_DIAG          NB. A is either L1 or U1, diagonal
 NB.                                 NB.   elements of A are not referenced
@@ -327,28 +317,28 @@ NB.            size of A and AA when (sideA != LEFT)
 NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 
 trmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
-  y=. memu&.>&.(_1&{) y                   NB. unalias B
-  objs=. obja L: 0 y                      NB. allocate BLIS objects bonded to J nouns
-  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"1 0 (1;1) {:: objs
+  y=. memu&.>&.(_1&{) y          NB. unalias B
+  objs=. obja L: 0 y             NB. allocate BLIS objects bonded to J nouns
+  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"0 (1;1) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  trmm_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_trmm() with all but head params marked as object address
-  objf L: 0 objs                          NB. free BLIS objects
-  _1 {:: y                                NB. return changed copy of B
+  trmm_cd ({. x) ; <@{:L:0 objs  NB. call bli_trmm() with all but head params marked as object address
+  objf L: 0 objs                 NB. free BLIS objects
+  _1 {:: y                       NB. return changed copy of B
 )
 
 dtrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
-  'sideA uploA transA diagA'=. _2 ic , x
+  'sideA uploA transA diagA'=. x
   'alpha AA B'=. y
-  mn=. (RIGHT -: {. x) { 'm n'=. $ B
+  mn=. (RIGHT = sideA) { 'm n'=. $ B
   11 {:: dtrmm_cd sideA ; uploA ; transA ; diagA ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1
 )
 
 ztrmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
-  'sideA uploA transA diagA'=. _2 ic , x
+  'sideA uploA transA diagA'=. x
   'alpha AA B'=. y
-  mn=. (RIGHT -: {. x) { 'm n'=. $ B
+  mn=. (RIGHT = sideA) { 'm n'=. $ B
   11 {:: ztrmm_cd sideA ; uploA ; transA ; diagA ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; n ; 1
 )
 
@@ -367,29 +357,24 @@ NB.   where A is triangular, and opX(M) is either M, M^T,
 NB.   conj(M) or M^H
 NB.
 NB. Syntax:
-NB.   Cupd=. (sideA , uploA , transA , diagA ,: transB) xtrmm3core alpha ; AA ; B ; beta ; C
+NB.   Cupd=. (sideA , uploA , transA , diagA , transB) xtrmm3core alpha ; AA ; B ; beta ; C
 NB. where
-NB.   sideA  - 4-vector of chars, side_t as bitstring,
-NB.            defines the side of A:
+NB.   sideA  - side_t scalar, defines the side of A:
 NB.              LEFT               NB. to perform (1) (A on the left)
 NB.              RIGHT              NB. to perform (2) (A on the right)
-NB.   uploA  - 4-vector of chars, uplo_t as bitstring,
-NB.            defines the part of A to be read:
+NB.   uploA  - uplo_t scalar, defines the part of A to be read:
 NB.              LOWER              NB. LT
 NB.              UPPER              NB. UT
-NB.   transA - 4-vector of chars, trans_t as bitstring,
-NB.            defines the form of op1(A):
+NB.   transA - trans_t scalar, defines the form of op1(A):
 NB.              NO_TRANSPOSE       NB. op1(A) := A        (no transpose)
 NB.              TRANSPOSE          NB. op1(A) := A^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op1(A) := conj(A)  (conjugate)
 NB.              CONJ_TRANSPOSE     NB. op1(A) := A^H      (conjugate and transpose)
-NB.   diagA  - 4-vector of chars, diag_t as bitstring,
-NB.            defines the form of A:
+NB.   diagA  - diag_t scalar, defines the form of A:
 NB.              NONUNIT_DIAG       NB. A is either L or U
 NB.              UNIT_DIAG          NB. A is either L1 or U1, diagonal
 NB.                                 NB.   elements of A are not referenced
-NB.   transB - 4-vector of chars, trans_t as bitstring,
-NB.            defines the form of op2(B):
+NB.   transB - trans_t scalar, defines the form of op2(B):
 NB.              NO_TRANSPOSE       NB. op2(B) := B        (no transpose)
 NB.              TRANSPOSE          NB. op2(B) := B^T      (transpose)
 NB.              CONJ_NO_TRANSPOSE  NB. op2(B) := conj(B)  (conjugate)
@@ -413,30 +398,30 @@ NB.   nb     = n if (op1(B) is either B or conj(B)) or nb = m
 NB.            otherwise
 
 trmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y                    NB. unalias C
-  objs=. obja L: 0 y                       NB. allocate BLIS objects bonded to J nouns
-  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag`obj_set_conjtrans"1 0 (((;"0&1) 4 1 # 1 2)) {:: objs
+  y=. memu&.>&.(_1&{) y           NB. unalias C
+  objs=. obja L: 0 y              NB. allocate BLIS objects bonded to J nouns
+  (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag`obj_set_conjtrans"0 (((;"0&1) 4 1 # 1 2)) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type, transpose B optionally
     NB. note: changing the object is being the op with side-effect so
     NB.       it is possible to do it in parallel as here
-  trmm3_cd ({. _2 ic {. x) ; <@{:L:0 objs  NB. call bli_trmm() with all but head params marked as object address
-  objf L: 0 objs                           NB. free BLIS objects
-  _1 {:: y                                 NB. return changed copy of C
+  trmm3_cd ({. x) ; <@{:L:0 objs  NB. call bli_trmm() with all but head params marked as object address
+  objf L: 0 objs                  NB. free BLIS objects
+  _1 {:: y                        NB. return changed copy of C
 )
 
 dtrmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  'sideA uploA transA diagA transB'=. _2 ic , x
+  'sideA uploA transA diagA transB'=. x
   'alpha AA B beta C'=. y
-  mn=. (RIGHT -: {. x) { 'm n'=. $ C
-  nb=. (({: x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ B
+  mn=. (RIGHT = sideA) { 'm n'=. $ C
+  nb=. (transB e. NO_TRANSPOSE , CONJ_NO_TRANSPOSE) { $ B
   16 {:: dtrmm3_cd sideA ; uploA ; transA ; diagA ; transB ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; nb ; 1 ; (, beta) ; C ; n ; 1
 )
 
 ztrmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  'sideA uploA transA diagA transB'=. _2 ic , x
+  'sideA uploA transA diagA transB'=. x
   'alpha AA B beta C'=. y
-  mn=. (RIGHT -: {. x) { 'm n'=. $ C
-  nb=. (({: x) e. NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE) { $ B
+  mn=. (RIGHT = sideA) { 'm n'=. $ C
+  nb=. (transB e. NO_TRANSPOSE , CONJ_NO_TRANSPOSE) { $ B
   16 {:: ztrmm3_cd sideA ; uploA ; transA ; diagA ; transB ; m ; n ; (, alpha) ; AA ; mn ; 1 ; B ; nb ; 1 ; (, beta) ; C ; n ; 1
 )
 
@@ -517,44 +502,44 @@ NB.   gemmxx     bli_gemm (...)
 NB.   dgemmxx    bli_dgemm(...)
 NB.   zgemmnt    bli_zgemm(...)
 
-gemmnn=:  (     NO_TRANSPOSE ,:      NO_TRANSPOSE)& gemmcore
-gemmnt=:  (     NO_TRANSPOSE ,:         TRANSPOSE)& gemmcore
-gemmnj=:  (     NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmcore
-gemmnc=:  (     NO_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmcore
-gemmtn=:  (        TRANSPOSE ,:      NO_TRANSPOSE)& gemmcore
-gemmtt=:  (        TRANSPOSE ,:         TRANSPOSE)& gemmcore
-gemmtj=:  (        TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmcore
-gemmtc=:  (        TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmcore
-gemmjn=:  (CONJ_NO_TRANSPOSE ,:      NO_TRANSPOSE)& gemmcore
-gemmjt=:  (CONJ_NO_TRANSPOSE ,:         TRANSPOSE)& gemmcore
-gemmjj=:  (CONJ_NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmcore
-gemmjc=:  (CONJ_NO_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmcore
-gemmcn=:  (   CONJ_TRANSPOSE ,:      NO_TRANSPOSE)& gemmcore
-gemmct=:  (   CONJ_TRANSPOSE ,:         TRANSPOSE)& gemmcore
-gemmcj=:  (   CONJ_TRANSPOSE ,: CONJ_NO_TRANSPOSE)& gemmcore
-gemmcc=:  (   CONJ_TRANSPOSE ,:    CONJ_TRANSPOSE)& gemmcore
+gemmnn=:  (     NO_TRANSPOSE ,      NO_TRANSPOSE)& gemmcore
+gemmnt=:  (     NO_TRANSPOSE ,         TRANSPOSE)& gemmcore
+gemmnj=:  (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE)& gemmcore
+gemmnc=:  (     NO_TRANSPOSE ,    CONJ_TRANSPOSE)& gemmcore
+gemmtn=:  (        TRANSPOSE ,      NO_TRANSPOSE)& gemmcore
+gemmtt=:  (        TRANSPOSE ,         TRANSPOSE)& gemmcore
+gemmtj=:  (        TRANSPOSE , CONJ_NO_TRANSPOSE)& gemmcore
+gemmtc=:  (        TRANSPOSE ,    CONJ_TRANSPOSE)& gemmcore
+gemmjn=:  (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE)& gemmcore
+gemmjt=:  (CONJ_NO_TRANSPOSE ,         TRANSPOSE)& gemmcore
+gemmjj=:  (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE)& gemmcore
+gemmjc=:  (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE)& gemmcore
+gemmcn=:  (   CONJ_TRANSPOSE ,      NO_TRANSPOSE)& gemmcore
+gemmct=:  (   CONJ_TRANSPOSE ,         TRANSPOSE)& gemmcore
+gemmcj=:  (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE)& gemmcore
+gemmcc=:  (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE)& gemmcore
 
-dgemmnn=: (     NO_TRANSPOSE ,:      NO_TRANSPOSE)&dgemmcore
-dgemmnt=: (     NO_TRANSPOSE ,:         TRANSPOSE)&dgemmcore
-dgemmtn=: (        TRANSPOSE ,:      NO_TRANSPOSE)&dgemmcore
-dgemmtt=: (        TRANSPOSE ,:         TRANSPOSE)&dgemmcore
+dgemmnn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE)&dgemmcore
+dgemmnt=: (     NO_TRANSPOSE ,         TRANSPOSE)&dgemmcore
+dgemmtn=: (        TRANSPOSE ,      NO_TRANSPOSE)&dgemmcore
+dgemmtt=: (        TRANSPOSE ,         TRANSPOSE)&dgemmcore
 
-zgemmnn=: (     NO_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmcore
-zgemmnt=: (     NO_TRANSPOSE ,:         TRANSPOSE)&zgemmcore
-zgemmnj=: (     NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmcore
-zgemmnc=: (     NO_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmcore
-zgemmtn=: (        TRANSPOSE ,:      NO_TRANSPOSE)&zgemmcore
-zgemmtt=: (        TRANSPOSE ,:         TRANSPOSE)&zgemmcore
-zgemmtj=: (        TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmcore
-zgemmtc=: (        TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmcore
-zgemmjn=: (CONJ_NO_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmcore
-zgemmjt=: (CONJ_NO_TRANSPOSE ,:         TRANSPOSE)&zgemmcore
-zgemmjj=: (CONJ_NO_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmcore
-zgemmjc=: (CONJ_NO_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmcore
-zgemmcn=: (   CONJ_TRANSPOSE ,:      NO_TRANSPOSE)&zgemmcore
-zgemmct=: (   CONJ_TRANSPOSE ,:         TRANSPOSE)&zgemmcore
-zgemmcj=: (   CONJ_TRANSPOSE ,: CONJ_NO_TRANSPOSE)&zgemmcore
-zgemmcc=: (   CONJ_TRANSPOSE ,:    CONJ_TRANSPOSE)&zgemmcore
+zgemmnn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE)&zgemmcore
+zgemmnt=: (     NO_TRANSPOSE ,         TRANSPOSE)&zgemmcore
+zgemmnj=: (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE)&zgemmcore
+zgemmnc=: (     NO_TRANSPOSE ,    CONJ_TRANSPOSE)&zgemmcore
+zgemmtn=: (        TRANSPOSE ,      NO_TRANSPOSE)&zgemmcore
+zgemmtt=: (        TRANSPOSE ,         TRANSPOSE)&zgemmcore
+zgemmtj=: (        TRANSPOSE , CONJ_NO_TRANSPOSE)&zgemmcore
+zgemmtc=: (        TRANSPOSE ,    CONJ_TRANSPOSE)&zgemmcore
+zgemmjn=: (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE)&zgemmcore
+zgemmjt=: (CONJ_NO_TRANSPOSE ,         TRANSPOSE)&zgemmcore
+zgemmjj=: (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE)&zgemmcore
+zgemmjc=: (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE)&zgemmcore
+zgemmcn=: (   CONJ_TRANSPOSE ,      NO_TRANSPOSE)&zgemmcore
+zgemmct=: (   CONJ_TRANSPOSE ,         TRANSPOSE)&zgemmcore
+zgemmcj=: (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE)&zgemmcore
+zgemmcc=: (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE)&zgemmcore
 
 NB. ---------------------------------------------------------
 NB. Monad       API       Domain     R/W in C    op1(A)     op2(B)
@@ -668,80 +653,80 @@ NB.   gemmxxx     bli_gemmt (...)
 NB.   dgemmxxx    bli_dgemmt(...)
 NB.   zgemmxxx    bli_zgemmt(...)
 
-gemmlnn=:  (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)& gemmtcore
-gemmlnt=:  (     NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)& gemmtcore
-gemmlnj=:  (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)& gemmtcore
-gemmlnc=:  (     NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)& gemmtcore
-gemmltn=:  (        TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)& gemmtcore
-gemmltt=:  (        TRANSPOSE ,         TRANSPOSE ,: LOWER)& gemmtcore
-gemmltj=:  (        TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)& gemmtcore
-gemmltc=:  (        TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)& gemmtcore
-gemmljn=:  (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)& gemmtcore
-gemmljt=:  (CONJ_NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)& gemmtcore
-gemmljj=:  (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)& gemmtcore
-gemmljc=:  (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)& gemmtcore
-gemmlcn=:  (   CONJ_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)& gemmtcore
-gemmlct=:  (   CONJ_TRANSPOSE ,         TRANSPOSE ,: LOWER)& gemmtcore
-gemmlcj=:  (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)& gemmtcore
-gemmlcc=:  (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)& gemmtcore
-gemmunn=:  (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)& gemmtcore
-gemmunt=:  (     NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)& gemmtcore
-gemmunj=:  (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)& gemmtcore
-gemmunc=:  (     NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)& gemmtcore
-gemmutn=:  (        TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)& gemmtcore
-gemmutt=:  (        TRANSPOSE ,         TRANSPOSE ,: UPPER)& gemmtcore
-gemmutj=:  (        TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)& gemmtcore
-gemmutc=:  (        TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)& gemmtcore
-gemmujn=:  (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)& gemmtcore
-gemmujt=:  (CONJ_NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)& gemmtcore
-gemmujj=:  (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)& gemmtcore
-gemmujc=:  (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)& gemmtcore
-gemmucn=:  (   CONJ_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)& gemmtcore
-gemmuct=:  (   CONJ_TRANSPOSE ,         TRANSPOSE ,: UPPER)& gemmtcore
-gemmucj=:  (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)& gemmtcore
-gemmucc=:  (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)& gemmtcore
+gemmlnn=:  (     NO_TRANSPOSE ,      NO_TRANSPOSE , LOWER)& gemmtcore
+gemmlnt=:  (     NO_TRANSPOSE ,         TRANSPOSE , LOWER)& gemmtcore
+gemmlnj=:  (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE , LOWER)& gemmtcore
+gemmlnc=:  (     NO_TRANSPOSE ,    CONJ_TRANSPOSE , LOWER)& gemmtcore
+gemmltn=:  (        TRANSPOSE ,      NO_TRANSPOSE , LOWER)& gemmtcore
+gemmltt=:  (        TRANSPOSE ,         TRANSPOSE , LOWER)& gemmtcore
+gemmltj=:  (        TRANSPOSE , CONJ_NO_TRANSPOSE , LOWER)& gemmtcore
+gemmltc=:  (        TRANSPOSE ,    CONJ_TRANSPOSE , LOWER)& gemmtcore
+gemmljn=:  (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE , LOWER)& gemmtcore
+gemmljt=:  (CONJ_NO_TRANSPOSE ,         TRANSPOSE , LOWER)& gemmtcore
+gemmljj=:  (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE , LOWER)& gemmtcore
+gemmljc=:  (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE , LOWER)& gemmtcore
+gemmlcn=:  (   CONJ_TRANSPOSE ,      NO_TRANSPOSE , LOWER)& gemmtcore
+gemmlct=:  (   CONJ_TRANSPOSE ,         TRANSPOSE , LOWER)& gemmtcore
+gemmlcj=:  (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE , LOWER)& gemmtcore
+gemmlcc=:  (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE , LOWER)& gemmtcore
+gemmunn=:  (     NO_TRANSPOSE ,      NO_TRANSPOSE , UPPER)& gemmtcore
+gemmunt=:  (     NO_TRANSPOSE ,         TRANSPOSE , UPPER)& gemmtcore
+gemmunj=:  (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE , UPPER)& gemmtcore
+gemmunc=:  (     NO_TRANSPOSE ,    CONJ_TRANSPOSE , UPPER)& gemmtcore
+gemmutn=:  (        TRANSPOSE ,      NO_TRANSPOSE , UPPER)& gemmtcore
+gemmutt=:  (        TRANSPOSE ,         TRANSPOSE , UPPER)& gemmtcore
+gemmutj=:  (        TRANSPOSE , CONJ_NO_TRANSPOSE , UPPER)& gemmtcore
+gemmutc=:  (        TRANSPOSE ,    CONJ_TRANSPOSE , UPPER)& gemmtcore
+gemmujn=:  (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE , UPPER)& gemmtcore
+gemmujt=:  (CONJ_NO_TRANSPOSE ,         TRANSPOSE , UPPER)& gemmtcore
+gemmujj=:  (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE , UPPER)& gemmtcore
+gemmujc=:  (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE , UPPER)& gemmtcore
+gemmucn=:  (   CONJ_TRANSPOSE ,      NO_TRANSPOSE , UPPER)& gemmtcore
+gemmuct=:  (   CONJ_TRANSPOSE ,         TRANSPOSE , UPPER)& gemmtcore
+gemmucj=:  (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE , UPPER)& gemmtcore
+gemmucc=:  (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE , UPPER)& gemmtcore
 
-dgemmlnn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&dgemmtcore
-dgemmlnt=: (     NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)&dgemmtcore
-dgemmltn=: (        TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&dgemmtcore
-dgemmltt=: (        TRANSPOSE ,         TRANSPOSE ,: LOWER)&dgemmtcore
-dgemmunn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&dgemmtcore
-dgemmunt=: (     NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)&dgemmtcore
-dgemmutn=: (        TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&dgemmtcore
-dgemmutt=: (        TRANSPOSE ,         TRANSPOSE ,: UPPER)&dgemmtcore
+dgemmlnn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE , LOWER)&dgemmtcore
+dgemmlnt=: (     NO_TRANSPOSE ,         TRANSPOSE , LOWER)&dgemmtcore
+dgemmltn=: (        TRANSPOSE ,      NO_TRANSPOSE , LOWER)&dgemmtcore
+dgemmltt=: (        TRANSPOSE ,         TRANSPOSE , LOWER)&dgemmtcore
+dgemmunn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE , UPPER)&dgemmtcore
+dgemmunt=: (     NO_TRANSPOSE ,         TRANSPOSE , UPPER)&dgemmtcore
+dgemmutn=: (        TRANSPOSE ,      NO_TRANSPOSE , UPPER)&dgemmtcore
+dgemmutt=: (        TRANSPOSE ,         TRANSPOSE , UPPER)&dgemmtcore
 
-zgemmlnn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmlnt=: (     NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmlnj=: (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmlnc=: (     NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmltn=: (        TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmltt=: (        TRANSPOSE ,         TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmltj=: (        TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmltc=: (        TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmljn=: (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmljt=: (CONJ_NO_TRANSPOSE ,         TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmljj=: (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmljc=: (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmlcn=: (   CONJ_TRANSPOSE ,      NO_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmlct=: (   CONJ_TRANSPOSE ,         TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmlcj=: (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmlcc=: (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE ,: LOWER)&zgemmtcore
-zgemmunn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmunt=: (     NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmunj=: (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmunc=: (     NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmutn=: (        TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmutt=: (        TRANSPOSE ,         TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmutj=: (        TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmutc=: (        TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmujn=: (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmujt=: (CONJ_NO_TRANSPOSE ,         TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmujj=: (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmujc=: (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmucn=: (   CONJ_TRANSPOSE ,      NO_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmuct=: (   CONJ_TRANSPOSE ,         TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmucj=: (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE ,: UPPER)&zgemmtcore
-zgemmucc=: (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE ,: UPPER)&zgemmtcore
+zgemmlnn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE , LOWER)&zgemmtcore
+zgemmlnt=: (     NO_TRANSPOSE ,         TRANSPOSE , LOWER)&zgemmtcore
+zgemmlnj=: (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE , LOWER)&zgemmtcore
+zgemmlnc=: (     NO_TRANSPOSE ,    CONJ_TRANSPOSE , LOWER)&zgemmtcore
+zgemmltn=: (        TRANSPOSE ,      NO_TRANSPOSE , LOWER)&zgemmtcore
+zgemmltt=: (        TRANSPOSE ,         TRANSPOSE , LOWER)&zgemmtcore
+zgemmltj=: (        TRANSPOSE , CONJ_NO_TRANSPOSE , LOWER)&zgemmtcore
+zgemmltc=: (        TRANSPOSE ,    CONJ_TRANSPOSE , LOWER)&zgemmtcore
+zgemmljn=: (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE , LOWER)&zgemmtcore
+zgemmljt=: (CONJ_NO_TRANSPOSE ,         TRANSPOSE , LOWER)&zgemmtcore
+zgemmljj=: (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE , LOWER)&zgemmtcore
+zgemmljc=: (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE , LOWER)&zgemmtcore
+zgemmlcn=: (   CONJ_TRANSPOSE ,      NO_TRANSPOSE , LOWER)&zgemmtcore
+zgemmlct=: (   CONJ_TRANSPOSE ,         TRANSPOSE , LOWER)&zgemmtcore
+zgemmlcj=: (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE , LOWER)&zgemmtcore
+zgemmlcc=: (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE , LOWER)&zgemmtcore
+zgemmunn=: (     NO_TRANSPOSE ,      NO_TRANSPOSE , UPPER)&zgemmtcore
+zgemmunt=: (     NO_TRANSPOSE ,         TRANSPOSE , UPPER)&zgemmtcore
+zgemmunj=: (     NO_TRANSPOSE , CONJ_NO_TRANSPOSE , UPPER)&zgemmtcore
+zgemmunc=: (     NO_TRANSPOSE ,    CONJ_TRANSPOSE , UPPER)&zgemmtcore
+zgemmutn=: (        TRANSPOSE ,      NO_TRANSPOSE , UPPER)&zgemmtcore
+zgemmutt=: (        TRANSPOSE ,         TRANSPOSE , UPPER)&zgemmtcore
+zgemmutj=: (        TRANSPOSE , CONJ_NO_TRANSPOSE , UPPER)&zgemmtcore
+zgemmutc=: (        TRANSPOSE ,    CONJ_TRANSPOSE , UPPER)&zgemmtcore
+zgemmujn=: (CONJ_NO_TRANSPOSE ,      NO_TRANSPOSE , UPPER)&zgemmtcore
+zgemmujt=: (CONJ_NO_TRANSPOSE ,         TRANSPOSE , UPPER)&zgemmtcore
+zgemmujj=: (CONJ_NO_TRANSPOSE , CONJ_NO_TRANSPOSE , UPPER)&zgemmtcore
+zgemmujc=: (CONJ_NO_TRANSPOSE ,    CONJ_TRANSPOSE , UPPER)&zgemmtcore
+zgemmucn=: (   CONJ_TRANSPOSE ,      NO_TRANSPOSE , UPPER)&zgemmtcore
+zgemmuct=: (   CONJ_TRANSPOSE ,         TRANSPOSE , UPPER)&zgemmtcore
+zgemmucj=: (   CONJ_TRANSPOSE , CONJ_NO_TRANSPOSE , UPPER)&zgemmtcore
+zgemmucc=: (   CONJ_TRANSPOSE ,    CONJ_TRANSPOSE , UPPER)&zgemmtcore
 
 NB. ---------------------------------------------------------
 NB. Monad        API       Domain     A     Side    Reads in A    op1(A)     op2(B)
@@ -915,146 +900,146 @@ NB.   zsymmxxx    bli_zsymm(...)
 NB.   hemmxxxx    bli_hemm (...)
 NB.   zhemmxxx    bli_zhemm(...)
 
-symmllnn=:  (LEFT  , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)& symmcore
-symmllnt=:  (LEFT  , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)& symmcore
-symmllnj=:  (LEFT  , LOWER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)& symmcore
-symmllnc=:  (LEFT  , LOWER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)& symmcore
-symmlljn=:  (LEFT  , LOWER ,         CONJUGATE ,:      NO_TRANSPOSE)& symmcore
-symmlljt=:  (LEFT  , LOWER ,         CONJUGATE ,:         TRANSPOSE)& symmcore
-symmlljj=:  (LEFT  , LOWER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)& symmcore
-symmlljc=:  (LEFT  , LOWER ,         CONJUGATE ,:    CONJ_TRANSPOSE)& symmcore
-symmlunn=:  (LEFT  , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)& symmcore
-symmlunt=:  (LEFT  , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)& symmcore
-symmlunj=:  (LEFT  , UPPER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)& symmcore
-symmlunc=:  (LEFT  , UPPER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)& symmcore
-symmlujn=:  (LEFT  , UPPER ,         CONJUGATE ,:      NO_TRANSPOSE)& symmcore
-symmlujt=:  (LEFT  , UPPER ,         CONJUGATE ,:         TRANSPOSE)& symmcore
-symmlujj=:  (LEFT  , UPPER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)& symmcore
-symmlujc=:  (LEFT  , UPPER ,         CONJUGATE ,:    CONJ_TRANSPOSE)& symmcore
-symmrlnn=:  (RIGHT , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)& symmcore
-symmrlnt=:  (RIGHT , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)& symmcore
-symmrlnj=:  (RIGHT , LOWER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)& symmcore
-symmrlnc=:  (RIGHT , LOWER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)& symmcore
-symmrljn=:  (RIGHT , LOWER ,         CONJUGATE ,:      NO_TRANSPOSE)& symmcore
-symmrljt=:  (RIGHT , LOWER ,         CONJUGATE ,:         TRANSPOSE)& symmcore
-symmrljj=:  (RIGHT , LOWER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)& symmcore
-symmrljc=:  (RIGHT , LOWER ,         CONJUGATE ,:    CONJ_TRANSPOSE)& symmcore
-symmrunn=:  (RIGHT , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)& symmcore
-symmrunt=:  (RIGHT , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)& symmcore
-symmrunj=:  (RIGHT , UPPER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)& symmcore
-symmrunc=:  (RIGHT , UPPER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)& symmcore
-symmrujn=:  (RIGHT , UPPER ,         CONJUGATE ,:      NO_TRANSPOSE)& symmcore
-symmrujt=:  (RIGHT , UPPER ,         CONJUGATE ,:         TRANSPOSE)& symmcore
-symmrujj=:  (RIGHT , UPPER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)& symmcore
-symmrujc=:  (RIGHT , UPPER ,         CONJUGATE ,:    CONJ_TRANSPOSE)& symmcore
+symmllnn=:  (LEFT  , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)& symmcore
+symmllnt=:  (LEFT  , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)& symmcore
+symmllnj=:  (LEFT  , LOWER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)& symmcore
+symmllnc=:  (LEFT  , LOWER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)& symmcore
+symmlljn=:  (LEFT  , LOWER ,         CONJUGATE ,      NO_TRANSPOSE)& symmcore
+symmlljt=:  (LEFT  , LOWER ,         CONJUGATE ,         TRANSPOSE)& symmcore
+symmlljj=:  (LEFT  , LOWER ,         CONJUGATE , CONJ_NO_TRANSPOSE)& symmcore
+symmlljc=:  (LEFT  , LOWER ,         CONJUGATE ,    CONJ_TRANSPOSE)& symmcore
+symmlunn=:  (LEFT  , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)& symmcore
+symmlunt=:  (LEFT  , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)& symmcore
+symmlunj=:  (LEFT  , UPPER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)& symmcore
+symmlunc=:  (LEFT  , UPPER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)& symmcore
+symmlujn=:  (LEFT  , UPPER ,         CONJUGATE ,      NO_TRANSPOSE)& symmcore
+symmlujt=:  (LEFT  , UPPER ,         CONJUGATE ,         TRANSPOSE)& symmcore
+symmlujj=:  (LEFT  , UPPER ,         CONJUGATE , CONJ_NO_TRANSPOSE)& symmcore
+symmlujc=:  (LEFT  , UPPER ,         CONJUGATE ,    CONJ_TRANSPOSE)& symmcore
+symmrlnn=:  (RIGHT , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)& symmcore
+symmrlnt=:  (RIGHT , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)& symmcore
+symmrlnj=:  (RIGHT , LOWER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)& symmcore
+symmrlnc=:  (RIGHT , LOWER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)& symmcore
+symmrljn=:  (RIGHT , LOWER ,         CONJUGATE ,      NO_TRANSPOSE)& symmcore
+symmrljt=:  (RIGHT , LOWER ,         CONJUGATE ,         TRANSPOSE)& symmcore
+symmrljj=:  (RIGHT , LOWER ,         CONJUGATE , CONJ_NO_TRANSPOSE)& symmcore
+symmrljc=:  (RIGHT , LOWER ,         CONJUGATE ,    CONJ_TRANSPOSE)& symmcore
+symmrunn=:  (RIGHT , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)& symmcore
+symmrunt=:  (RIGHT , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)& symmcore
+symmrunj=:  (RIGHT , UPPER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)& symmcore
+symmrunc=:  (RIGHT , UPPER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)& symmcore
+symmrujn=:  (RIGHT , UPPER ,         CONJUGATE ,      NO_TRANSPOSE)& symmcore
+symmrujt=:  (RIGHT , UPPER ,         CONJUGATE ,         TRANSPOSE)& symmcore
+symmrujj=:  (RIGHT , UPPER ,         CONJUGATE , CONJ_NO_TRANSPOSE)& symmcore
+symmrujc=:  (RIGHT , UPPER ,         CONJUGATE ,    CONJ_TRANSPOSE)& symmcore
 
-dsymmllnn=: (LEFT  , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&dsymmcore
-dsymmllnt=: (LEFT  , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)&dsymmcore
-dsymmlunn=: (LEFT  , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&dsymmcore
-dsymmlunt=: (LEFT  , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)&dsymmcore
-dsymmrlnn=: (RIGHT , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&dsymmcore
-dsymmrlnt=: (RIGHT , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)&dsymmcore
-dsymmrunn=: (RIGHT , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&dsymmcore
-dsymmrunt=: (RIGHT , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)&dsymmcore
+dsymmllnn=: (LEFT  , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&dsymmcore
+dsymmllnt=: (LEFT  , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)&dsymmcore
+dsymmlunn=: (LEFT  , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&dsymmcore
+dsymmlunt=: (LEFT  , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)&dsymmcore
+dsymmrlnn=: (RIGHT , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&dsymmcore
+dsymmrlnt=: (RIGHT , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)&dsymmcore
+dsymmrunn=: (RIGHT , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&dsymmcore
+dsymmrunt=: (RIGHT , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)&dsymmcore
 
-zsymmllnn=: (LEFT  , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&zsymmcore
-zsymmllnt=: (LEFT  , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)&zsymmcore
-zsymmllnj=: (LEFT  , LOWER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)&zsymmcore
-zsymmllnc=: (LEFT  , LOWER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)&zsymmcore
-zsymmlljn=: (LEFT  , LOWER ,         CONJUGATE ,:      NO_TRANSPOSE)&zsymmcore
-zsymmlljt=: (LEFT  , LOWER ,         CONJUGATE ,:         TRANSPOSE)&zsymmcore
-zsymmlljj=: (LEFT  , LOWER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)&zsymmcore
-zsymmlljc=: (LEFT  , LOWER ,         CONJUGATE ,:    CONJ_TRANSPOSE)&zsymmcore
-zsymmlunn=: (LEFT  , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&zsymmcore
-zsymmlunt=: (LEFT  , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)&zsymmcore
-zsymmlunj=: (LEFT  , UPPER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)&zsymmcore
-zsymmlunc=: (LEFT  , UPPER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)&zsymmcore
-zsymmlujn=: (LEFT  , UPPER ,         CONJUGATE ,:      NO_TRANSPOSE)&zsymmcore
-zsymmlujt=: (LEFT  , UPPER ,         CONJUGATE ,:         TRANSPOSE)&zsymmcore
-zsymmlujj=: (LEFT  , UPPER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)&zsymmcore
-zsymmlujc=: (LEFT  , UPPER ,         CONJUGATE ,:    CONJ_TRANSPOSE)&zsymmcore
-zsymmrlnn=: (RIGHT , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&zsymmcore
-zsymmrlnt=: (RIGHT , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)&zsymmcore
-zsymmrlnj=: (RIGHT , LOWER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)&zsymmcore
-zsymmrlnc=: (RIGHT , LOWER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)&zsymmcore
-zsymmrljn=: (RIGHT , LOWER ,         CONJUGATE ,:      NO_TRANSPOSE)&zsymmcore
-zsymmrljt=: (RIGHT , LOWER ,         CONJUGATE ,:         TRANSPOSE)&zsymmcore
-zsymmrljj=: (RIGHT , LOWER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)&zsymmcore
-zsymmrljc=: (RIGHT , LOWER ,         CONJUGATE ,:    CONJ_TRANSPOSE)&zsymmcore
-zsymmrunn=: (RIGHT , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&zsymmcore
-zsymmrunt=: (RIGHT , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)&zsymmcore
-zsymmrunj=: (RIGHT , UPPER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)&zsymmcore
-zsymmrunc=: (RIGHT , UPPER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)&zsymmcore
-zsymmrujn=: (RIGHT , UPPER ,         CONJUGATE ,:      NO_TRANSPOSE)&zsymmcore
-zsymmrujt=: (RIGHT , UPPER ,         CONJUGATE ,:         TRANSPOSE)&zsymmcore
-zsymmrujj=: (RIGHT , UPPER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)&zsymmcore
-zsymmrujc=: (RIGHT , UPPER ,         CONJUGATE ,:    CONJ_TRANSPOSE)&zsymmcore
+zsymmllnn=: (LEFT  , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&zsymmcore
+zsymmllnt=: (LEFT  , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)&zsymmcore
+zsymmllnj=: (LEFT  , LOWER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)&zsymmcore
+zsymmllnc=: (LEFT  , LOWER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)&zsymmcore
+zsymmlljn=: (LEFT  , LOWER ,         CONJUGATE ,      NO_TRANSPOSE)&zsymmcore
+zsymmlljt=: (LEFT  , LOWER ,         CONJUGATE ,         TRANSPOSE)&zsymmcore
+zsymmlljj=: (LEFT  , LOWER ,         CONJUGATE , CONJ_NO_TRANSPOSE)&zsymmcore
+zsymmlljc=: (LEFT  , LOWER ,         CONJUGATE ,    CONJ_TRANSPOSE)&zsymmcore
+zsymmlunn=: (LEFT  , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&zsymmcore
+zsymmlunt=: (LEFT  , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)&zsymmcore
+zsymmlunj=: (LEFT  , UPPER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)&zsymmcore
+zsymmlunc=: (LEFT  , UPPER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)&zsymmcore
+zsymmlujn=: (LEFT  , UPPER ,         CONJUGATE ,      NO_TRANSPOSE)&zsymmcore
+zsymmlujt=: (LEFT  , UPPER ,         CONJUGATE ,         TRANSPOSE)&zsymmcore
+zsymmlujj=: (LEFT  , UPPER ,         CONJUGATE , CONJ_NO_TRANSPOSE)&zsymmcore
+zsymmlujc=: (LEFT  , UPPER ,         CONJUGATE ,    CONJ_TRANSPOSE)&zsymmcore
+zsymmrlnn=: (RIGHT , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&zsymmcore
+zsymmrlnt=: (RIGHT , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)&zsymmcore
+zsymmrlnj=: (RIGHT , LOWER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)&zsymmcore
+zsymmrlnc=: (RIGHT , LOWER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)&zsymmcore
+zsymmrljn=: (RIGHT , LOWER ,         CONJUGATE ,      NO_TRANSPOSE)&zsymmcore
+zsymmrljt=: (RIGHT , LOWER ,         CONJUGATE ,         TRANSPOSE)&zsymmcore
+zsymmrljj=: (RIGHT , LOWER ,         CONJUGATE , CONJ_NO_TRANSPOSE)&zsymmcore
+zsymmrljc=: (RIGHT , LOWER ,         CONJUGATE ,    CONJ_TRANSPOSE)&zsymmcore
+zsymmrunn=: (RIGHT , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&zsymmcore
+zsymmrunt=: (RIGHT , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)&zsymmcore
+zsymmrunj=: (RIGHT , UPPER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)&zsymmcore
+zsymmrunc=: (RIGHT , UPPER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)&zsymmcore
+zsymmrujn=: (RIGHT , UPPER ,         CONJUGATE ,      NO_TRANSPOSE)&zsymmcore
+zsymmrujt=: (RIGHT , UPPER ,         CONJUGATE ,         TRANSPOSE)&zsymmcore
+zsymmrujj=: (RIGHT , UPPER ,         CONJUGATE , CONJ_NO_TRANSPOSE)&zsymmcore
+zsymmrujc=: (RIGHT , UPPER ,         CONJUGATE ,    CONJ_TRANSPOSE)&zsymmcore
 
-hemmllnn=:  (LEFT  , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)& hemmcore
-hemmllnt=:  (LEFT  , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)& hemmcore
-hemmllnj=:  (LEFT  , LOWER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)& hemmcore
-hemmllnc=:  (LEFT  , LOWER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)& hemmcore
-hemmlljn=:  (LEFT  , LOWER ,         CONJUGATE ,:      NO_TRANSPOSE)& hemmcore
-hemmlljt=:  (LEFT  , LOWER ,         CONJUGATE ,:         TRANSPOSE)& hemmcore
-hemmlljj=:  (LEFT  , LOWER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)& hemmcore
-hemmlljc=:  (LEFT  , LOWER ,         CONJUGATE ,:    CONJ_TRANSPOSE)& hemmcore
-hemmlunn=:  (LEFT  , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)& hemmcore
-hemmlunt=:  (LEFT  , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)& hemmcore
-hemmlunj=:  (LEFT  , UPPER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)& hemmcore
-hemmlunc=:  (LEFT  , UPPER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)& hemmcore
-hemmlujn=:  (LEFT  , UPPER ,         CONJUGATE ,:      NO_TRANSPOSE)& hemmcore
-hemmlujt=:  (LEFT  , UPPER ,         CONJUGATE ,:         TRANSPOSE)& hemmcore
-hemmlujj=:  (LEFT  , UPPER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)& hemmcore
-hemmlujc=:  (LEFT  , UPPER ,         CONJUGATE ,:    CONJ_TRANSPOSE)& hemmcore
-hemmrlnn=:  (RIGHT , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)& hemmcore
-hemmrlnt=:  (RIGHT , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)& hemmcore
-hemmrlnj=:  (RIGHT , LOWER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)& hemmcore
-hemmrlnc=:  (RIGHT , LOWER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)& hemmcore
-hemmrljn=:  (RIGHT , LOWER ,         CONJUGATE ,:      NO_TRANSPOSE)& hemmcore
-hemmrljt=:  (RIGHT , LOWER ,         CONJUGATE ,:         TRANSPOSE)& hemmcore
-hemmrljj=:  (RIGHT , LOWER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)& hemmcore
-hemmrljc=:  (RIGHT , LOWER ,         CONJUGATE ,:    CONJ_TRANSPOSE)& hemmcore
-hemmrunn=:  (RIGHT , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)& hemmcore
-hemmrunt=:  (RIGHT , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)& hemmcore
-hemmrunj=:  (RIGHT , UPPER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)& hemmcore
-hemmrunc=:  (RIGHT , UPPER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)& hemmcore
-hemmrujn=:  (RIGHT , UPPER ,         CONJUGATE ,:      NO_TRANSPOSE)& hemmcore
-hemmrujt=:  (RIGHT , UPPER ,         CONJUGATE ,:         TRANSPOSE)& hemmcore
-hemmrujj=:  (RIGHT , UPPER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)& hemmcore
-hemmrujc=:  (RIGHT , UPPER ,         CONJUGATE ,:    CONJ_TRANSPOSE)& hemmcore
+hemmllnn=:  (LEFT  , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)& hemmcore
+hemmllnt=:  (LEFT  , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)& hemmcore
+hemmllnj=:  (LEFT  , LOWER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)& hemmcore
+hemmllnc=:  (LEFT  , LOWER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)& hemmcore
+hemmlljn=:  (LEFT  , LOWER ,         CONJUGATE ,      NO_TRANSPOSE)& hemmcore
+hemmlljt=:  (LEFT  , LOWER ,         CONJUGATE ,         TRANSPOSE)& hemmcore
+hemmlljj=:  (LEFT  , LOWER ,         CONJUGATE , CONJ_NO_TRANSPOSE)& hemmcore
+hemmlljc=:  (LEFT  , LOWER ,         CONJUGATE ,    CONJ_TRANSPOSE)& hemmcore
+hemmlunn=:  (LEFT  , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)& hemmcore
+hemmlunt=:  (LEFT  , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)& hemmcore
+hemmlunj=:  (LEFT  , UPPER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)& hemmcore
+hemmlunc=:  (LEFT  , UPPER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)& hemmcore
+hemmlujn=:  (LEFT  , UPPER ,         CONJUGATE ,      NO_TRANSPOSE)& hemmcore
+hemmlujt=:  (LEFT  , UPPER ,         CONJUGATE ,         TRANSPOSE)& hemmcore
+hemmlujj=:  (LEFT  , UPPER ,         CONJUGATE , CONJ_NO_TRANSPOSE)& hemmcore
+hemmlujc=:  (LEFT  , UPPER ,         CONJUGATE ,    CONJ_TRANSPOSE)& hemmcore
+hemmrlnn=:  (RIGHT , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)& hemmcore
+hemmrlnt=:  (RIGHT , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)& hemmcore
+hemmrlnj=:  (RIGHT , LOWER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)& hemmcore
+hemmrlnc=:  (RIGHT , LOWER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)& hemmcore
+hemmrljn=:  (RIGHT , LOWER ,         CONJUGATE ,      NO_TRANSPOSE)& hemmcore
+hemmrljt=:  (RIGHT , LOWER ,         CONJUGATE ,         TRANSPOSE)& hemmcore
+hemmrljj=:  (RIGHT , LOWER ,         CONJUGATE , CONJ_NO_TRANSPOSE)& hemmcore
+hemmrljc=:  (RIGHT , LOWER ,         CONJUGATE ,    CONJ_TRANSPOSE)& hemmcore
+hemmrunn=:  (RIGHT , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)& hemmcore
+hemmrunt=:  (RIGHT , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)& hemmcore
+hemmrunj=:  (RIGHT , UPPER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)& hemmcore
+hemmrunc=:  (RIGHT , UPPER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)& hemmcore
+hemmrujn=:  (RIGHT , UPPER ,         CONJUGATE ,      NO_TRANSPOSE)& hemmcore
+hemmrujt=:  (RIGHT , UPPER ,         CONJUGATE ,         TRANSPOSE)& hemmcore
+hemmrujj=:  (RIGHT , UPPER ,         CONJUGATE , CONJ_NO_TRANSPOSE)& hemmcore
+hemmrujc=:  (RIGHT , UPPER ,         CONJUGATE ,    CONJ_TRANSPOSE)& hemmcore
 
-zhemmllnn=: (LEFT  , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&zhemmcore
-zhemmllnt=: (LEFT  , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)&zhemmcore
-zhemmllnj=: (LEFT  , LOWER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)&zhemmcore
-zhemmllnc=: (LEFT  , LOWER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)&zhemmcore
-zhemmlljn=: (LEFT  , LOWER ,         CONJUGATE ,:      NO_TRANSPOSE)&zhemmcore
-zhemmlljt=: (LEFT  , LOWER ,         CONJUGATE ,:         TRANSPOSE)&zhemmcore
-zhemmlljj=: (LEFT  , LOWER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)&zhemmcore
-zhemmlljc=: (LEFT  , LOWER ,         CONJUGATE ,:    CONJ_TRANSPOSE)&zhemmcore
-zhemmlunn=: (LEFT  , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&zhemmcore
-zhemmlunt=: (LEFT  , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)&zhemmcore
-zhemmlunj=: (LEFT  , UPPER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)&zhemmcore
-zhemmlunc=: (LEFT  , UPPER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)&zhemmcore
-zhemmlujn=: (LEFT  , UPPER ,         CONJUGATE ,:      NO_TRANSPOSE)&zhemmcore
-zhemmlujt=: (LEFT  , UPPER ,         CONJUGATE ,:         TRANSPOSE)&zhemmcore
-zhemmlujj=: (LEFT  , UPPER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)&zhemmcore
-zhemmlujc=: (LEFT  , UPPER ,         CONJUGATE ,:    CONJ_TRANSPOSE)&zhemmcore
-zhemmrlnn=: (RIGHT , LOWER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&zhemmcore
-zhemmrlnt=: (RIGHT , LOWER ,      NO_CONJUGATE ,:         TRANSPOSE)&zhemmcore
-zhemmrlnj=: (RIGHT , LOWER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)&zhemmcore
-zhemmrlnc=: (RIGHT , LOWER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)&zhemmcore
-zhemmrljn=: (RIGHT , LOWER ,         CONJUGATE ,:      NO_TRANSPOSE)&zhemmcore
-zhemmrljt=: (RIGHT , LOWER ,         CONJUGATE ,:         TRANSPOSE)&zhemmcore
-zhemmrljj=: (RIGHT , LOWER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)&zhemmcore
-zhemmrljc=: (RIGHT , LOWER ,         CONJUGATE ,:    CONJ_TRANSPOSE)&zhemmcore
-zhemmrunn=: (RIGHT , UPPER ,      NO_CONJUGATE ,:      NO_TRANSPOSE)&zhemmcore
-zhemmrunt=: (RIGHT , UPPER ,      NO_CONJUGATE ,:         TRANSPOSE)&zhemmcore
-zhemmrunj=: (RIGHT , UPPER ,      NO_CONJUGATE ,: CONJ_NO_TRANSPOSE)&zhemmcore
-zhemmrunc=: (RIGHT , UPPER ,      NO_CONJUGATE ,:    CONJ_TRANSPOSE)&zhemmcore
-zhemmrujn=: (RIGHT , UPPER ,         CONJUGATE ,:      NO_TRANSPOSE)&zhemmcore
-zhemmrujt=: (RIGHT , UPPER ,         CONJUGATE ,:         TRANSPOSE)&zhemmcore
-zhemmrujj=: (RIGHT , UPPER ,         CONJUGATE ,: CONJ_NO_TRANSPOSE)&zhemmcore
-zhemmrujc=: (RIGHT , UPPER ,         CONJUGATE ,:    CONJ_TRANSPOSE)&zhemmcore
+zhemmllnn=: (LEFT  , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&zhemmcore
+zhemmllnt=: (LEFT  , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)&zhemmcore
+zhemmllnj=: (LEFT  , LOWER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)&zhemmcore
+zhemmllnc=: (LEFT  , LOWER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)&zhemmcore
+zhemmlljn=: (LEFT  , LOWER ,         CONJUGATE ,      NO_TRANSPOSE)&zhemmcore
+zhemmlljt=: (LEFT  , LOWER ,         CONJUGATE ,         TRANSPOSE)&zhemmcore
+zhemmlljj=: (LEFT  , LOWER ,         CONJUGATE , CONJ_NO_TRANSPOSE)&zhemmcore
+zhemmlljc=: (LEFT  , LOWER ,         CONJUGATE ,    CONJ_TRANSPOSE)&zhemmcore
+zhemmlunn=: (LEFT  , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&zhemmcore
+zhemmlunt=: (LEFT  , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)&zhemmcore
+zhemmlunj=: (LEFT  , UPPER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)&zhemmcore
+zhemmlunc=: (LEFT  , UPPER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)&zhemmcore
+zhemmlujn=: (LEFT  , UPPER ,         CONJUGATE ,      NO_TRANSPOSE)&zhemmcore
+zhemmlujt=: (LEFT  , UPPER ,         CONJUGATE ,         TRANSPOSE)&zhemmcore
+zhemmlujj=: (LEFT  , UPPER ,         CONJUGATE , CONJ_NO_TRANSPOSE)&zhemmcore
+zhemmlujc=: (LEFT  , UPPER ,         CONJUGATE ,    CONJ_TRANSPOSE)&zhemmcore
+zhemmrlnn=: (RIGHT , LOWER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&zhemmcore
+zhemmrlnt=: (RIGHT , LOWER ,      NO_CONJUGATE ,         TRANSPOSE)&zhemmcore
+zhemmrlnj=: (RIGHT , LOWER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)&zhemmcore
+zhemmrlnc=: (RIGHT , LOWER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)&zhemmcore
+zhemmrljn=: (RIGHT , LOWER ,         CONJUGATE ,      NO_TRANSPOSE)&zhemmcore
+zhemmrljt=: (RIGHT , LOWER ,         CONJUGATE ,         TRANSPOSE)&zhemmcore
+zhemmrljj=: (RIGHT , LOWER ,         CONJUGATE , CONJ_NO_TRANSPOSE)&zhemmcore
+zhemmrljc=: (RIGHT , LOWER ,         CONJUGATE ,    CONJ_TRANSPOSE)&zhemmcore
+zhemmrunn=: (RIGHT , UPPER ,      NO_CONJUGATE ,      NO_TRANSPOSE)&zhemmcore
+zhemmrunt=: (RIGHT , UPPER ,      NO_CONJUGATE ,         TRANSPOSE)&zhemmcore
+zhemmrunj=: (RIGHT , UPPER ,      NO_CONJUGATE , CONJ_NO_TRANSPOSE)&zhemmcore
+zhemmrunc=: (RIGHT , UPPER ,      NO_CONJUGATE ,    CONJ_TRANSPOSE)&zhemmcore
+zhemmrujn=: (RIGHT , UPPER ,         CONJUGATE ,      NO_TRANSPOSE)&zhemmcore
+zhemmrujt=: (RIGHT , UPPER ,         CONJUGATE ,         TRANSPOSE)&zhemmcore
+zhemmrujj=: (RIGHT , UPPER ,         CONJUGATE , CONJ_NO_TRANSPOSE)&zhemmcore
+zhemmrujc=: (RIGHT , UPPER ,         CONJUGATE ,    CONJ_TRANSPOSE)&zhemmcore
 
 NB. ---------------------------------------------------------
 NB. Monad        API       Domain     Side    A     Reads in A    op(A)
@@ -1166,88 +1151,88 @@ NB.   trmmxxxx     bli_trmm (...)
 NB.   dtrmmxxxx    bli_dtrmm(...)
 NB.   ztrmmxxxx    bli_ztrmm(...)
 
-trmmllnn=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmllnu=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmlltn=:  (LEFT  , LOWER ,         TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmlltu=:  (LEFT  , LOWER ,         TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmlljn=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmllju=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmllcn=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmllcu=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmlunn=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmlunu=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmlutn=:  (LEFT  , UPPER ,         TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmlutu=:  (LEFT  , UPPER ,         TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmlujn=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmluju=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmlucn=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmlucu=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmrlnn=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmrlnu=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmrltn=:  (RIGHT , LOWER ,         TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmrltu=:  (RIGHT , LOWER ,         TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmrljn=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmrlju=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmrlcn=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmrlcu=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmrunn=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmrunu=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmrutn=:  (RIGHT , UPPER ,         TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmrutu=:  (RIGHT , UPPER ,         TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmrujn=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmruju=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
-trmmrucn=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,: NONUNIT_DIAG)& trmmcore
-trmmrucu=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,:    UNIT_DIAG)& trmmcore
+trmmllnn=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmllnu=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmlltn=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmlltu=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmlljn=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmllju=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmllcn=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmllcu=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmlunn=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmlunu=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmlutn=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmlutu=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmlujn=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmluju=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmlucn=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmlucu=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmrlnn=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmrlnu=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmrltn=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmrltu=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmrljn=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmrlju=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmrlcn=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmrlcu=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmrunn=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmrunu=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmrutn=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmrutu=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmrujn=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmruju=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG)& trmmcore
+trmmrucn=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG)& trmmcore
+trmmrucu=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG)& trmmcore
 
-dtrmmllnn=: (LEFT  , LOWER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)&dtrmmcore
-dtrmmllnu=: (LEFT  , LOWER ,      NO_TRANSPOSE ,:    UNIT_DIAG)&dtrmmcore
-dtrmmlltn=: (LEFT  , LOWER ,         TRANSPOSE ,: NONUNIT_DIAG)&dtrmmcore
-dtrmmlltu=: (LEFT  , LOWER ,         TRANSPOSE ,:    UNIT_DIAG)&dtrmmcore
-dtrmmlunn=: (LEFT  , UPPER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)&dtrmmcore
-dtrmmlunu=: (LEFT  , UPPER ,      NO_TRANSPOSE ,:    UNIT_DIAG)&dtrmmcore
-dtrmmlutn=: (LEFT  , UPPER ,         TRANSPOSE ,: NONUNIT_DIAG)&dtrmmcore
-dtrmmlutu=: (LEFT  , UPPER ,         TRANSPOSE ,:    UNIT_DIAG)&dtrmmcore
-dtrmmrlnn=: (RIGHT , LOWER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)&dtrmmcore
-dtrmmrlnu=: (RIGHT , LOWER ,      NO_TRANSPOSE ,:    UNIT_DIAG)&dtrmmcore
-dtrmmrltn=: (RIGHT , LOWER ,         TRANSPOSE ,: NONUNIT_DIAG)&dtrmmcore
-dtrmmrltu=: (RIGHT , LOWER ,         TRANSPOSE ,:    UNIT_DIAG)&dtrmmcore
-dtrmmrunn=: (RIGHT , UPPER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)&dtrmmcore
-dtrmmrunu=: (RIGHT , UPPER ,      NO_TRANSPOSE ,:    UNIT_DIAG)&dtrmmcore
-dtrmmrutn=: (RIGHT , UPPER ,         TRANSPOSE ,: NONUNIT_DIAG)&dtrmmcore
-dtrmmrutu=: (RIGHT , UPPER ,         TRANSPOSE ,:    UNIT_DIAG)&dtrmmcore
+dtrmmllnn=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG)&dtrmmcore
+dtrmmllnu=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG)&dtrmmcore
+dtrmmlltn=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG)&dtrmmcore
+dtrmmlltu=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG)&dtrmmcore
+dtrmmlunn=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG)&dtrmmcore
+dtrmmlunu=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG)&dtrmmcore
+dtrmmlutn=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG)&dtrmmcore
+dtrmmlutu=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG)&dtrmmcore
+dtrmmrlnn=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG)&dtrmmcore
+dtrmmrlnu=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG)&dtrmmcore
+dtrmmrltn=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG)&dtrmmcore
+dtrmmrltu=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG)&dtrmmcore
+dtrmmrunn=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG)&dtrmmcore
+dtrmmrunu=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG)&dtrmmcore
+dtrmmrutn=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG)&dtrmmcore
+dtrmmrutu=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG)&dtrmmcore
 
-ztrmmllnn=: (LEFT  , LOWER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmllnu=: (LEFT  , LOWER ,      NO_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmlltn=: (LEFT  , LOWER ,         TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmlltu=: (LEFT  , LOWER ,         TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmlljn=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmllju=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmllcn=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmllcu=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmlunn=: (LEFT  , UPPER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmlunu=: (LEFT  , UPPER ,      NO_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmlutn=: (LEFT  , UPPER ,         TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmlutu=: (LEFT  , UPPER ,         TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmlujn=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmluju=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmlucn=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmlucu=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmrlnn=: (RIGHT , LOWER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmrlnu=: (RIGHT , LOWER ,      NO_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmrltn=: (RIGHT , LOWER ,         TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmrltu=: (RIGHT , LOWER ,         TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmrljn=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmrlju=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmrlcn=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmrlcu=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmrunn=: (RIGHT , UPPER ,      NO_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmrunu=: (RIGHT , UPPER ,      NO_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmrutn=: (RIGHT , UPPER ,         TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmrutu=: (RIGHT , UPPER ,         TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmrujn=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmruju=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
-ztrmmrucn=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,: NONUNIT_DIAG)&ztrmmcore
-ztrmmrucu=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,:    UNIT_DIAG)&ztrmmcore
+ztrmmllnn=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmllnu=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmlltn=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmlltu=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmlljn=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmllju=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmllcn=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmllcu=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmlunn=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmlunu=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmlutn=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmlutu=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmlujn=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmluju=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmlucn=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmlucu=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmrlnn=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmrlnu=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmrltn=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmrltu=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmrljn=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmrlju=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmrlcn=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmrlcu=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmrunn=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmrunu=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmrutn=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmrutu=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmrujn=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmruju=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
+ztrmmrucn=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG)&ztrmmcore
+ztrmmrucu=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG)&ztrmmcore
 
 NB. ---------------------------------------------------------
 NB. Monad         API       Domain     Side    A     Reads in A    op1(A)      op2(B)
@@ -1575,293 +1560,293 @@ NB.   trmmxxxxx     bli_trmm3 (...)
 NB.   dtrmmxxxxx    bli_dtrmm3(...)
 NB.   ztrmmxxxxx    bli_ztrmm3(...)
 
-trmmllnnn=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmllnnt=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmllnnj=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmllnnc=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmllnun=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmllnut=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmllnuj=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmllnuc=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlltnn=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlltnt=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlltnj=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlltnc=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlltun=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlltut=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlltuj=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlltuc=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlljnn=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlljnt=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlljnj=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlljnc=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlljun=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlljut=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlljuj=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlljuc=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmllcnn=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmllcnt=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmllcnj=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmllcnc=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmllcun=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmllcut=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmllcuj=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmllcuc=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlunnn=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlunnt=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlunnj=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlunnc=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlunun=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlunut=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlunuj=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlunuc=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlutnn=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlutnt=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlutnj=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlutnc=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlutun=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlutut=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlutuj=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlutuc=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlujnn=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlujnt=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlujnj=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlujnc=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlujun=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlujut=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlujuj=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlujuc=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlucnn=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlucnt=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlucnj=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlucnc=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmlucun=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmlucut=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmlucuj=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmlucuc=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrlnnn=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrlnnt=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrlnnj=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrlnnc=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrlnun=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrlnut=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrlnuj=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrlnuc=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrltnn=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrltnt=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrltnj=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrltnc=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrltun=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrltut=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrltuj=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrltuc=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrljnn=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrljnt=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrljnj=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrljnc=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrljun=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrljut=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrljuj=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrljuc=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrlcnn=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrlcnt=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrlcnj=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrlcnc=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrlcun=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrlcut=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrlcuj=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrlcuc=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrunnn=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrunnt=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrunnj=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrunnc=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrunun=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrunut=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrunuj=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrunuc=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrutnn=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrutnt=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrutnj=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrutnc=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrutun=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrutut=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrutuj=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrutuc=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrujnn=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrujnt=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrujnj=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrujnc=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrujun=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrujut=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrujuj=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrujuc=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrucnn=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrucnt=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrucnj=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrucnc=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
-trmmrucun=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)& trmm3core
-trmmrucut=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)& trmm3core
-trmmrucuj=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)& trmm3core
-trmmrucuc=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)& trmm3core
+trmmllnnn=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmllnnt=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmllnnj=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmllnnc=:  (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmllnun=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmllnut=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmllnuj=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmllnuc=:  (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlltnn=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlltnt=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlltnj=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlltnc=:  (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlltun=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlltut=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlltuj=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlltuc=:  (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlljnn=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlljnt=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlljnj=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlljnc=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlljun=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlljut=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlljuj=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlljuc=:  (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmllcnn=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmllcnt=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmllcnj=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmllcnc=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmllcun=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmllcut=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmllcuj=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmllcuc=:  (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlunnn=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlunnt=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlunnj=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlunnc=:  (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlunun=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlunut=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlunuj=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlunuc=:  (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlutnn=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlutnt=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlutnj=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlutnc=:  (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlutun=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlutut=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlutuj=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlutuc=:  (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlujnn=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlujnt=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlujnj=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlujnc=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlujun=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlujut=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlujuj=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlujuc=:  (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlucnn=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlucnt=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlucnj=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlucnc=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmlucun=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmlucut=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmlucuj=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmlucuc=:  (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrlnnn=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrlnnt=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrlnnj=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrlnnc=:  (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrlnun=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrlnut=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrlnuj=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrlnuc=:  (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrltnn=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrltnt=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrltnj=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrltnc=:  (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrltun=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrltut=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrltuj=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrltuc=:  (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrljnn=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrljnt=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrljnj=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrljnc=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrljun=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrljut=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrljuj=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrljuc=:  (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrlcnn=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrlcnt=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrlcnj=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrlcnc=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrlcun=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrlcut=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrlcuj=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrlcuc=:  (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrunnn=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrunnt=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrunnj=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrunnc=:  (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrunun=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrunut=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrunuj=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrunuc=:  (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrutnn=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrutnt=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrutnj=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrutnc=:  (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrutun=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrutut=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrutuj=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrutuc=:  (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrujnn=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrujnt=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrujnj=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrujnc=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrujun=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrujut=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrujuj=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrujuc=:  (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrucnn=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrucnt=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrucnj=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrucnc=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
+trmmrucun=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)& trmm3core
+trmmrucut=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)& trmm3core
+trmmrucuj=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)& trmm3core
+trmmrucuc=:  (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)& trmm3core
 
-dtrmmllnnn=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmllnnt=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmllnun=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmllnut=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmlltnn=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmlltnt=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmlltun=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmlltut=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmlunnn=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmlunnt=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmlunun=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmlunut=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmlutnn=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmlutnt=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmlutun=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmlutut=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmrlnnn=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmrlnnt=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmrlnun=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmrlnut=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmrltnn=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmrltnt=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmrltun=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmrltut=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmrunnn=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmrunnt=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmrunun=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmrunut=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmrutnn=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmrutnt=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
-dtrmmrutun=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&dtrmm3core
-dtrmmrutut=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&dtrmm3core
+dtrmmllnnn=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmllnnt=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmllnun=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmllnut=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmlltnn=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmlltnt=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmlltun=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmlltut=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmlunnn=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmlunnt=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmlunun=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmlunut=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmlutnn=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmlutnt=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmlutun=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmlutut=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmrlnnn=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmrlnnt=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmrlnun=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmrlnut=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmrltnn=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmrltnt=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmrltun=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmrltut=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmrunnn=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmrunnt=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmrunun=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmrunut=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmrutnn=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmrutnt=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&dtrmm3core
+dtrmmrutun=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&dtrmm3core
+dtrmmrutut=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&dtrmm3core
 
-ztrmmllnnn=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmllnnt=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmllnnj=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmllnnc=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmllnun=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmllnut=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmllnuj=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmllnuc=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlltnn=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlltnt=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlltnj=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlltnc=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlltun=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlltut=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlltuj=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlltuc=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlljnn=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlljnt=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlljnj=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlljnc=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlljun=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlljut=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlljuj=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlljuc=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmllcnn=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmllcnt=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmllcnj=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmllcnc=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmllcun=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmllcut=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmllcuj=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmllcuc=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlunnn=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlunnt=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlunnj=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlunnc=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlunun=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlunut=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlunuj=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlunuc=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlutnn=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlutnt=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlutnj=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlutnc=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlutun=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlutut=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlutuj=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlutuc=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlujnn=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlujnt=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlujnj=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlujnc=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlujun=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlujut=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlujuj=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlujuc=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlucnn=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlucnt=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlucnj=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlucnc=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmlucun=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmlucut=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmlucuj=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmlucuc=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrlnnn=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrlnnt=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrlnnj=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrlnnc=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrlnun=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrlnut=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrlnuj=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrlnuc=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrltnn=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrltnt=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrltnj=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrltnc=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrltun=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrltut=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrltuj=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrltuc=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrljnn=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrljnt=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrljnj=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrljnc=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrljun=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrljut=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrljuj=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrljuc=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrlcnn=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrlcnt=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrlcnj=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrlcnc=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrlcun=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrlcut=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrlcuj=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrlcuc=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrunnn=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrunnt=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrunnj=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrunnc=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrunun=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrunut=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrunuj=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrunuc=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrutnn=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrutnt=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrutnj=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrutnc=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrutun=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrutut=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrutuj=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrutuc=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrujnn=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrujnt=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrujnj=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrujnc=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrujun=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrujut=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrujuj=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrujuc=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrucnn=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrucnt=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrucnj=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrucnc=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
-ztrmmrucun=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:      NO_TRANSPOSE)&ztrmm3core
-ztrmmrucut=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:         TRANSPOSE)&ztrmm3core
-ztrmmrucuj=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,: CONJ_NO_TRANSPOSE)&ztrmm3core
-ztrmmrucuc=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,:    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmllnnn=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmllnnt=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmllnnj=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmllnnc=: (LEFT  , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmllnun=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmllnut=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmllnuj=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmllnuc=: (LEFT  , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlltnn=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlltnt=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlltnj=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlltnc=: (LEFT  , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlltun=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlltut=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlltuj=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlltuc=: (LEFT  , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlljnn=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlljnt=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlljnj=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlljnc=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlljun=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlljut=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlljuj=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlljuc=: (LEFT  , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmllcnn=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmllcnt=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmllcnj=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmllcnc=: (LEFT  , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmllcun=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmllcut=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmllcuj=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmllcuc=: (LEFT  , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlunnn=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlunnt=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlunnj=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlunnc=: (LEFT  , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlunun=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlunut=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlunuj=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlunuc=: (LEFT  , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlutnn=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlutnt=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlutnj=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlutnc=: (LEFT  , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlutun=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlutut=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlutuj=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlutuc=: (LEFT  , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlujnn=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlujnt=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlujnj=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlujnc=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlujun=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlujut=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlujuj=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlujuc=: (LEFT  , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlucnn=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlucnt=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlucnj=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlucnc=: (LEFT  , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmlucun=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmlucut=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmlucuj=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmlucuc=: (LEFT  , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrlnnn=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrlnnt=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrlnnj=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrlnnc=: (RIGHT , LOWER ,      NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrlnun=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrlnut=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrlnuj=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrlnuc=: (RIGHT , LOWER ,      NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrltnn=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrltnt=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrltnj=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrltnc=: (RIGHT , LOWER ,         TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrltun=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrltut=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrltuj=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrltuc=: (RIGHT , LOWER ,         TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrljnn=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrljnt=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrljnj=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrljnc=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrljun=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrljut=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrljuj=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrljuc=: (RIGHT , LOWER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrlcnn=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrlcnt=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrlcnj=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrlcnc=: (RIGHT , LOWER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrlcun=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrlcut=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrlcuj=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrlcuc=: (RIGHT , LOWER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrunnn=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrunnt=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrunnj=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrunnc=: (RIGHT , UPPER ,      NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrunun=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrunut=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrunuj=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrunuc=: (RIGHT , UPPER ,      NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrutnn=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrutnt=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrutnj=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrutnc=: (RIGHT , UPPER ,         TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrutun=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrutut=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrutuj=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrutuc=: (RIGHT , UPPER ,         TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrujnn=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrujnt=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrujnj=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrujnc=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrujun=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrujut=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrujuj=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrujuc=: (RIGHT , UPPER , CONJ_NO_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrucnn=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrucnt=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrucnj=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrucnc=: (RIGHT , UPPER ,    CONJ_TRANSPOSE , NONUNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core
+ztrmmrucun=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,      NO_TRANSPOSE)&ztrmm3core
+ztrmmrucut=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,         TRANSPOSE)&ztrmm3core
+ztrmmrucuj=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG , CONJ_NO_TRANSPOSE)&ztrmm3core
+ztrmmrucuc=: (RIGHT , UPPER ,    CONJ_TRANSPOSE ,    UNIT_DIAG ,    CONJ_TRANSPOSE)&ztrmm3core

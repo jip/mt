@@ -276,7 +276,7 @@ randtnr=: 0 1 __ _&$: :(4 : 0)
   'mu sigma a b'=. x
   mrandnr=. (mu,sigma)&randnr
   NB. replace out-bounded elements recursively
-  rober=. I.@(a&> +. b&<) $:@mrandnr@#@[`[`]}^:(0 < #@[) ]
+  rober=. I.@(a&> +. b&<) $:@mrandnr@#@[`[}^:(0 < #@[) ]
   ($ rober@mrandnr@(*/)) y
 )
 

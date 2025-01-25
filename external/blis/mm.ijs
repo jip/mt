@@ -83,13 +83,13 @@ NB.   nb     = n if (op1(B) is either B or conj(B)) or nb = k
 NB.            otherwise
 
 gemmcore=: 4 : 0
-  y=. memu&.>&.(_1&{) y  NB. unalias C
-  objs=. obja L: 0 y     NB. allocate BLIS objects bonded to J nouns
+  y=. 1&memu&.>&.(_1&{) y  NB. unalias C
+  objs=. obja L: 0 y       NB. allocate BLIS objects bonded to J nouns
   x obj_set_conjtrans"0 (((;"0&1) 1 2)) {:: objs
     NB. transpose A and/or B optionally
-  gemm_cd <@{:L:0 objs   NB. call bli_gemm() with each param marked as object address
-  objf L: 0 objs         NB. free BLIS objects
-  _1 {:: y               NB. return changed copy of C
+  gemm_cd <@{:L:0 objs     NB. call bli_gemm() with each param marked as object address
+  objf L: 0 objs           NB. free BLIS objects
+  _1 {:: y                 NB. return changed copy of C
 )
 
 dgemmcore=: 4 : 0
@@ -155,13 +155,13 @@ NB.   mb     = m if (op1(B) is either B or conj(B)) or mb = k
 NB.            otherwise
 
 gemmtcore=: (4 : 0) ([ assert@basiccr4)
-  y=. memu&.>&.(_1&{) y  NB. unalias C
-  objs=. obja L: 0 y     NB. allocate BLIS objects bonded to J nouns
+  y=. 1&memu&.>&.(_1&{) y  NB. unalias C
+  objs=. obja L: 0 y       NB. allocate BLIS objects bonded to J nouns
   x (2 1 # obj_set_conjtrans`obj_set_uplo)"0 (((;"0&1) 1 2 4)) {:: objs
     NB. transpose A and/or B optionally, select C part
-  gemmt_cd <@{:L:0 objs  NB. call bli_gemmt() with each param marked as object address
-  objf L: 0 objs         NB. free BLIS objects
-  _1 {:: y               NB. return changed copy of C
+  gemmt_cd <@{:L:0 objs    NB. call bli_gemmt() with each param marked as object address
+  objf L: 0 objs           NB. free BLIS objects
+  _1 {:: y                 NB. return changed copy of C
 )
 
 dgemmtcore=: (4 : 0) ([ assert@basiccr4)
@@ -227,7 +227,7 @@ NB.            size of A and AA when (sideA != LEFT)
 NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 
 symmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y          NB. unalias C
+  y=. 1&memu&.>&.(_1&{) y        NB. unalias C
   objs=. obja L: 0 y             NB. allocate BLIS objects bonded to J nouns
   (SYMMETRIC 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"0 (((;"0&1) 1 1 1 2)) {:: objs
     NB. set A structure, select A part, conjugate A optionally, transpose B optionally
@@ -239,7 +239,7 @@ symmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
 )
 
 hemmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y          NB. unalias C
+  y=. 1&memu&.>&.(_1&{) y        NB. unalias C
   objs=. obja L: 0 y             NB. allocate BLIS objects bonded to J nouns
   (HERMITIAN 0} x) obj_set_struc`obj_set_uplo`obj_set_conj`obj_set_conjtrans"0 (((;"0&1) 1 1 1 2)) {:: objs
     NB. set A structure, select A part, conjugate A optionally, transpose B optionally
@@ -317,7 +317,7 @@ NB.            size of A and AA when (sideA != LEFT)
 NB.   mn     = m if (sideA == LEFT) or mn = n otherwise
 
 trmmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
-  y=. memu&.>&.(_1&{) y          NB. unalias B
+  y=. 1&memu&.>&.(_1&{) y        NB. unalias B
   objs=. obja L: 0 y             NB. allocate BLIS objects bonded to J nouns
   (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"0 (1;1) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type
@@ -398,7 +398,7 @@ NB.   nb     = n if (op1(B) is either B or conj(B)) or nb = m
 NB.            otherwise
 
 trmm3core=: (4 : 0) ([ assert@(basiccs1 , basiccr4))
-  y=. memu&.>&.(_1&{) y           NB. unalias C
+  y=. 1&memu&.>&.(_1&{) y         NB. unalias C
   objs=. obja L: 0 y              NB. allocate BLIS objects bonded to J nouns
   (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag`obj_set_conjtrans"0 (((;"0&1) 4 1 # 1 2)) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type, transpose B optionally

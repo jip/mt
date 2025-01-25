@@ -80,7 +80,7 @@ NB.   n     ≥ 0, the number of columns in B and X
 NB.   k     = m for (1) or k = n for (2)
 
 trsmcore=: (4 : 0) ([ assert@(basiccs1 , basiccr0))
-  y=. memu&.>&.(_1&{) y          NB. unalias B
+  y=. 1&memu&.>&.(_1&{) y        NB. unalias B
   objs=. obja L: 0 y             NB. allocate BLIS objects bonded to J nouns
   (TRIANGULAR 0} x) obj_set_struc`obj_set_uplo`obj_set_conjtrans`obj_set_diag"0 (1;1) {:: objs
     NB. set A structure, select A part, transpose A optionally, set A diag type

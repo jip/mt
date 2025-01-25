@@ -32,7 +32,7 @@ NB. =========================================================
 NB. Interface
 
 NB. Get version string
-NB. strVer=. ver_mtbla_ ''
+NB. str=. ver ''
 
 ver=: 3 : 0
   ifw=. IFWIN # '+'

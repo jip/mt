@@ -3,8 +3,8 @@ NB.
 NB. dsyr2x  Rank 2 operation with symmetric matrix
 NB. zher2x  Rank 2 operation with Hermitian matrix
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

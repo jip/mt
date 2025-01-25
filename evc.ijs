@@ -9,8 +9,8 @@ NB. testtgevc   Test tgevcxxx by square matrices
 NB. testevc     Adv. to make verb to test tgevcxxx by
 NB.             matrices of generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

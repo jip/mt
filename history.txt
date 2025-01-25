@@ -326,3 +326,6 @@ math/mt - change history
  == 0.14.8 ==
  maintanance release
  * external/blis: sync with BLIS version 2.0
+
+ == 0.14.9 ==
+ bugfix release

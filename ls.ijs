@@ -310,6 +310,7 @@ NB.         values
 NB.   log - 6-vector of boxes, test log
 
 testgels3=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gels'
 
   'A X'=. y

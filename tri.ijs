@@ -830,6 +830,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testtrtri=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/trtri'
 
   rcondL=.  trlcon1  L=.           trlpick y
@@ -880,6 +881,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testgetri=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/getrf'
   load_mttmp_ 'math/mt/external/lapack2/getri'
 
@@ -918,6 +920,7 @@ NB.   A   - n×n-matrix, the Hermitian (symmetric)
 NB.   log - 6-vector of boxes, test log
 
 testhetri=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dsytrf'
   load_mttmp_ 'math/mt/external/lapack2/dsytri2'
   load_mttmp_ 'math/mt/external/lapack2/zhetrf'
@@ -957,6 +960,7 @@ NB.         definite
 NB.   log - 6-vector of boxes, test log
 
 testpotri=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/potrf'
   load_mttmp_ 'math/mt/external/lapack2/potri'
 

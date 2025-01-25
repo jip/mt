@@ -618,6 +618,7 @@ NB. Notes:
 NB. - models LAPACK's xCHKGE
 
 testgetrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/getrf'
   load_mttmp_ 'math/mt/external/lapack2/getrs'
 
@@ -775,6 +776,7 @@ NB.   difference:
 NB.   - ferr is computed, too by call to t04x
 
 testhetrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dsytrf'
   load_mttmp_ 'math/mt/external/lapack2/dsytrf_aa'
   load_mttmp_ 'math/mt/external/lapack2/zhetrf'
@@ -894,6 +896,7 @@ NB. Notes:
 NB. - models LAPACK's xCHKPO
 
 testpotrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/potrf'
   load_mttmp_ 'math/mt/external/lapack2/potrs'
 
@@ -1006,6 +1009,7 @@ NB. TODO:
 NB. - A would be sparse
 
 testpttrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/pttrf'
   load_mttmp_ 'math/mt/external/lapack2/pttrs'
 
@@ -1110,6 +1114,7 @@ NB. Notes:
 NB. - models LAPACK's xCHKTR
 
 testtrtrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/trtrs'
 
   'X A'=. y

@@ -517,6 +517,7 @@ NB.   A   - m×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testungq=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dorglq'
   load_mttmp_ 'math/mt/external/lapack2/dorgql'
   load_mttmp_ 'math/mt/external/lapack2/dorgqr'
@@ -626,6 +627,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testunghr=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dorghr'
   load_mttmp_ 'math/mt/external/lapack2/zunghr'
 

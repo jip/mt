@@ -748,6 +748,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testgehrd=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gehrd'
 
   'rcondl rcondu'=. (geconi , gecon1) y
@@ -788,6 +789,7 @@ NB.   AB  - 2×n×n-brick
 NB.   log - 6-vector of boxes, test log
 
 testgghrd=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gghrd'
 
   I=. idmat c y

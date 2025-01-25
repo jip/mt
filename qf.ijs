@@ -1260,6 +1260,7 @@ NB.   A   - m×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testgeqf=: 3 : 0
+  _1 cocreate < 'mttmp'
   require     :: ] 'numeric'
   load_mttmp_ :: ] 'math/misc/mathutil'
   load_mttmp_ :: ] 'math/misc/makemat'
@@ -1319,6 +1320,7 @@ NB. TODO:
 NB. - add xQRT12 test
 
 testtzqf=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/tzrzf'
 
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only

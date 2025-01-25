@@ -881,6 +881,7 @@ NB. - err0 is outputted in ferr column
 NB. - err1 is outputted in berr column
 
 testgebal=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gebal'
 
   'rcondl rcondu'=. (geconi , gecon1) y
@@ -946,6 +947,7 @@ NB. - err0 is outputted in ferr column
 NB. - err1 is outputted in berr column
 
 testggbal=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/ggbal'
 
   'rcondl rcondu'=. <./ (geconi , gecon1)"2 y

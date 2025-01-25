@@ -8,8 +8,8 @@ NB. testhgeq  Test hgexxxxx by square matrices
 NB. testeq    Adv. to make verb to test hgexxxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -931,6 +931,7 @@ NB.   AB  - 2×n×n-brick
 NB.   log - 6-vector of boxes, test log
 
 testhgeq=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/hgeqz'
 
   n=. c y

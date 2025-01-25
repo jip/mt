@@ -47,8 +47,8 @@ NB. testtrtrs    Test trtrsxxx by triangular matrix
 NB. testtrs      Adv. to make verb to test xxtrsxxxxxx by
 NB.              matrix of generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -471,8 +471,8 @@ NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157.
 
-pttrslx=:  $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitcht +)`(_1   diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.&.|.)@stitchb~)`] fork3)
-pttrsltx=: $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitcht +)`(_1 +@diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.    @(_2  ({:@] % ({,))`_1:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.&.|.)@stitchb~)`] fork3)
+pttrslx=:  $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitcht +)`(_1   diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.    @(_2  ({:@] % ({,))`_1:} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.&.|.)@stitchb~)`] fork3)
+pttrsltx=: $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitcht +)`(_1 +@diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.    @(_2  ({:@] % ({,))`_1:} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.&.|.)@stitchb~)`] fork3)
 pttrsxl=:  pttrsltx&.(a:`|:)
 pttrsxlt=: pttrslx &.(a:`|:)
 
@@ -542,8 +542,8 @@ NB. [1] G. H. Golub, C. F. Van Loan. Matrix Computations.
 NB.     Johns Hopkins University Press, Baltimore, Md, USA,
 NB.     3rd edition, 1996, p. 157.
 
-pttrsux=:  $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1   diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.&.|.@(c@] ({.@] % ({,))` 0:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.    )@stitcht~)`] fork3)
-pttrsutx=: $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1 +@diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.&.|.@(c@] ({.@] % ({,))` 0:`]} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.    )@stitcht~)`] fork3)
+pttrsux=:  $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1   diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.&.|.@(c@] ({.@] % ({,))` 0:} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.    )@stitcht~)`] fork3)
+pttrsutx=: $@] ($,) _2 }."1 ((diag@(1 {:: [))`(stitchb +)`( 1 +@diag (0 {:: [))`((((_2 (}. % {) [) (- , 0 0"_) ((* {:)~ _2&}.))/\.&.|.@(c@] ({.@] % ({,))` 0:} ,.~))^:(0 < #@]))`(}:"1@((}:@[ (- , 0:) ((* {:)~ }:))/\.    )@stitcht~)`] fork3)
 pttrsxu=:  pttrsutx&.(a:`|:)
 pttrsxut=: pttrsux &.(a:`|:)
 
@@ -618,6 +618,7 @@ NB. Notes:
 NB. - models LAPACK's xCHKGE
 
 testgetrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/getrf'
   load_mttmp_ 'math/mt/external/lapack2/getrs'
 
@@ -775,6 +776,7 @@ NB.   difference:
 NB.   - ferr is computed, too by call to t04x
 
 testhetrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dsytrf'
   load_mttmp_ 'math/mt/external/lapack2/dsytrf_aa'
   load_mttmp_ 'math/mt/external/lapack2/zhetrf'
@@ -894,6 +896,7 @@ NB. Notes:
 NB. - models LAPACK's xCHKPO
 
 testpotrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/potrf'
   load_mttmp_ 'math/mt/external/lapack2/potrs'
 
@@ -1006,6 +1009,7 @@ NB. TODO:
 NB. - A would be sparse
 
 testpttrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/pttrf'
   load_mttmp_ 'math/mt/external/lapack2/pttrs'
 
@@ -1110,6 +1114,7 @@ NB. Notes:
 NB. - models LAPACK's xCHKTR
 
 testtrtrs=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/trtrs'
 
   'X A'=. y

@@ -1,18 +1,24 @@
 NB. Utilities
 NB.
-NB. symhdr             Get address of header for named value
-NB. updmem             Adv. to make bivalent verb to update
-NB.                    memory
-NB. obja               Allocate BLIS object for noun
-NB. objf               Free BLIS object related with noun
-NB. int_type_size_str  Query a string with the size of gint_t
-NB.                    signed integer
-NB. arch               Query a string that contains the name
-NB.                    of the configuration
-NB. ver                Get version string
+NB. JINT2        integer2 datatype ID
+NB. JINT4        integer4 datatype ID
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. symhdr       Get address of header for named value
+NB. memr         Advanced version of the (memr_z_) verb
+NB. memw         Advanced version of the (memw_z_) verb
+NB. meme         Adv. to make bivalent verb to edit memory
+NB. obja         Allocate BLIS object for noun
+NB. objf         Free BLIS object related with noun
+NB. ver          Get version string
+NB. arch         Get a string that contains the name of the
+NB.              configuration
+NB. *_get_*_str  Get a general configuration string
+NB. info_get_*_impl_string
+NB.              Get a string with implementation type for an
+NB.              operation given
+NB.
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -43,7 +49,98 @@ NB. Local definitions
 NB. =========================================================
 NB. Interface
 
+NB. Datatype IDs
+JINT2=: 6  NB. integer2
+JINT4=: 7  NB. integer4
+
+NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NB. Memory management
+
 symhdr=: 15!:12  NB. get address of header for named value
+
+NB. ---------------------------------------------------------
+NB. memr
+NB.
+NB. Description:
+NB.   Advanced version of the (memr_z_) verb
+NB.
+NB. Syntax:
+NB.   data=. memr address , byte_offset , count [, type]
+NB. where
+NB.   type - scalar, optional, any of the following:
+NB.                 1 or JB01          NB. boolean
+NB.                 2 or JCHAR         NB. literal, default
+NB.                 4 or JINT or JPTR  NB. integer
+NB.                 5                  NB. integer1
+NB.                 6 or JINT2         NB. integer2
+NB.                 7 or JINT4         NB. integer4
+NB.                 8 or JFL           NB. floating
+NB.                 9                  NB. floating2
+NB.                10                  NB. floating4
+NB.                11                  NB. floating16
+NB.                16 or JCMPX         NB. complex
+NB.            131072 or JCHAR2        NB. unicode
+NB.            262144 or JCHAR4        NB. unicode4
+NB.
+NB. Notes:
+NB. - extends system's (memr_z_) to match (datatype_z_) verb
+
+memr=: 3 : 0
+  typ=. 3&{ :: (JCHAR"_) y
+  select. typ
+    case. JINT2 do.
+      dat=. JINT2 c. _1 ic memr_z_ (JCHAR ,~ +:@ {.)&.(2 3&{) y  NB. sizeof(JINT2) == 2*sizeof(JCHAR)
+    case. JINT4 do.
+      dat=. JINT4 c. _2 ic memr_z_ (JCHAR ,~ 4 * {.)&.(2 3&{) y  NB. sizeof(JINT4) == 4*sizeof(JCHAR)
+    NB. case. 5 ; 9 ; 10 ; 11 do.
+    NB.   ('memr_mtbli_: datatype ' , (":typ) , ' isn''t supported yet') dbsig 11
+    case. do.
+      dat=. memr_z_ y
+  end.
+  dat
+)
+
+NB. ---------------------------------------------------------
+NB. memw
+NB.
+NB. Description:
+NB.   Advanced version of the (memw_z_) verb
+NB.
+NB. Syntax:
+NB.   trash=. data memw address , byte_offset , count [, type]
+NB. where
+NB.   type - scalar, optional, any of the following:
+NB.                 1 or JB01          NB. boolean
+NB.                 2 or JCHAR         NB. literal, default
+NB.                 4 or JINT or JPTR  NB. integer
+NB.                 5                  NB. integer1
+NB.                 6 or JINT2         NB. integer2
+NB.                 7 or JINT4         NB. integer4
+NB.                 8 or JFL           NB. floating
+NB.                 9                  NB. floating2
+NB.                10                  NB. floating4
+NB.                11                  NB. floating16
+NB.                16 or JCMPX         NB. complex
+NB.            131072 or JCHAR2        NB. unicode
+NB.            262144 or JCHAR4        NB. unicode4
+NB.
+NB. Notes:
+NB. - extends system's (memw_z_) to match (datatype_z_) verb
+
+memw=: 4 : 0
+  typ=. 3&{ :: (JCHAR"_) y
+  select. typ
+    case. JINT2 do.
+      (1 ic x) memw_z_ (JCHAR ,~ +:@ {.)&.(2 3&{) y  NB. sizeof(JINT2) == 2*sizeof(JCHAR)
+    case. JINT4 do.
+      (2 ic x) memw_z_ (JCHAR ,~ 4 * {.)&.(2 3&{) y  NB. sizeof(JINT4) == 4*sizeof(JCHAR)
+    NB. case. 5 ; 9 ; 10 ; 11 do.
+    NB.   ('memw_mtbli_: datatype ' , (":typ) , ' isn''t supported yet') dbsig 11
+    case. do.
+      x memw_z_ y
+  end.
+  EMPTY
+)
 
 NB. ---------------------------------------------------------
 NB. NB. conj. to make bivalent verb to read bytes from memory y,
@@ -52,14 +149,14 @@ NB. NB.   encode back by inv(v), write back to y
 NB. NB. note: a (bivalent) conj. from
 NB. NB.   addons/misc/miscutils/langexten.ijs is used here
 NB. NB.   inlined
-NB. updmem=: 2 : 'u&.v^:(1:`(] memr)) memw ]'
+NB. meme=: 2 : 'u&.v^:(1:`(] memr_mtbli_)) memw_mtbli_ ]'
 
 NB. adv. to make bivalent verb to read bytes from memory y,
 NB.   process by u [with left argument x], write back to y
 NB. note: a (bivalent) conj. from
 NB.   addons/misc/miscutils/langexten.ijs is used here
 NB.   inlined
-updmem=: 1 : 'u^:(1:`(] memr)) memw ]'
+meme=: 1 : 'u^:(1:`(] memr_mtbli_)) memw_mtbli_ ]'
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. OAPI functions
@@ -102,8 +199,8 @@ NB. - side effect: (refcount++) in enveloping noun
 obja=: 3 : 0
   yhdr=. symhdr < 'y'
   ydat=. symdat < 'y'
-  yobj=. mema SIZEOF_OBJ_T
-  ytyp=. (4 8 16 i. (3!:0) y) { :: (('obja: datatype ' , (datatype y) , ' isn''t supported yet')&dbsig@11) _2 ic ((INT , DOUBLE , DCOMPLEX))
+  yobj=. mema OBJ_T_SIZE
+  ytyp=. (4 5 6 7 8 16 i. (3!:0) y) { :: (('obja: datatype ' , (datatype y) , ' isn''t supported yet')&dbsig@11) INT , INT , INT , INT , DOUBLE , DCOMPLEX
   select. # $ y
     case. 2 do.
       'm n'=. $ y
@@ -116,7 +213,7 @@ obja=: 3 : 0
     case.   do.
       ('obja: rank ' , (": # $ y) , ' isn''t supported') dbsig 11
   end.
-  >: updmem yhdr , (((4 * SZI) , 1 , JINT))  NB. refcount++
+  >: meme yhdr , (4 * SZI) , 1 , JINT  NB. refcount++
   yhdr , yobj
 )
 
@@ -140,20 +237,89 @@ NB.
 NB. Notes:
 NB. - side effect: (refcount--) in enveloping noun
 
-objf=: EMPTY [ (<: updmem)@(,&(((4 * SZI) , 1 , JINT)))`memf"0
+objf=: EMPTY [ (<: meme)@(,&((4 * SZI) , 1 , JINT))`memf"0
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. Service functions
 
-NB. query a string with the size of gint_t signed integer
-NB. strSize=. int_type_size_str_mtbli_ ''
-int_type_size_str=: (0 , JSTR) memr@,~ info_get_int_type_size_str_cd
-
-NB. query a string that contains the name of the
-NB.   configuration
-NB. strArch=. arch_mtbli_ ''
-arch=: (0 , JSTR) memr@,~ arch_string_cd@arch_query_id_cd
+NB. ---------------------------------------------------------
+NB. General library information
 
 NB. Get version string
-NB. strVer=. ver_mtbli_ ''
+NB. str=. ver ''
 ver=: (0 , JSTR) memr@,~ info_get_version_str_cd
+
+NB. ---------------------------------------------------------
+NB. Specific configuration
+
+NB. Get a string that contains the name of the configuration
+NB. str=. arch ''
+arch=: (0 , JSTR) memr@,~ arch_string_cd@arch_query_id_cd
+
+NB. ---------------------------------------------------------
+NB. General configuration
+
+NB. Get a string with the size of gint_t signed integer
+NB. str=. info_get_int_type_size_str ''
+info_get_int_type_size_str=: (0 , JSTR) memr@,~ info_get_int_type_size_str_cd
+
+NB. Get a string with the thread implementation method
+NB. str=. thread_get_thread_impl_str ''
+thread_get_thread_impl_str=: (0 , JSTR) memr@,~ thread_get_thread_impl_str_cd@thread_get_thread_impl_cd
+
+NB. ---------------------------------------------------------
+NB. Kernel information
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. Micro-kernel implementation type query
+
+NB. str=. info_get_gemm_ukr_impl_string method ; dt
+info_get_gemm_ukr_impl_string=:       (0 , JSTR) memr@,~ info_get_gemm_ukr_impl_string_cd
+
+NB. str=. info_get_gemmtrsm_l_ukr_impl_string method ; dt
+info_get_gemmtrsm_l_ukr_impl_string=: (0 , JSTR) memr@,~ info_get_gemmtrsm_l_ukr_impl_string_cd
+
+NB. str=. info_get_gemmtrsm_u_ukr_impl_string method ; dt
+info_get_gemmtrsm_u_ukr_impl_string=: (0 , JSTR) memr@,~ info_get_gemmtrsm_u_ukr_impl_string_cd
+
+NB. str=. info_get_trsm_l_ukr_impl_string method ; dt
+info_get_trsm_l_ukr_impl_string=:     (0 , JSTR) memr@,~ info_get_trsm_l_ukr_impl_string_cd
+
+NB. str=. info_get_trsm_u_ukr_impl_string method ; dt
+info_get_trsm_u_ukr_impl_string=:     (0 , JSTR) memr@,~ info_get_trsm_u_ukr_impl_string_cd
+
+NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NB. Operation implementation type query
+
+NB. str=. info_get_gemm_impl_string dt
+info_get_gemm_impl_string=:  (0 , JSTR) memr@,~ info_get_gemm_impl_string_cd
+
+NB. str=. info_get_gemmt_impl_string dt
+info_get_gemmt_impl_string=: (0 , JSTR) memr@,~ info_get_gemmt_impl_string_cd
+
+NB. str=. info_get_hemm_impl_string dt
+info_get_hemm_impl_string=:  (0 , JSTR) memr@,~ info_get_hemm_impl_string_cd
+
+NB. str=. info_get_herk_impl_string dt
+info_get_herk_impl_string=:  (0 , JSTR) memr@,~ info_get_herk_impl_string_cd
+
+NB. str=. info_get_her2k_impl_string dt
+info_get_her2k_impl_string=: (0 , JSTR) memr@,~ info_get_her2k_impl_string_cd
+
+NB. str=. info_get_symm_impl_string dt
+info_get_symm_impl_string=:  (0 , JSTR) memr@,~ info_get_symm_impl_string_cd
+
+NB. str=. info_get_syrk_impl_string dt
+info_get_syrk_impl_string=:  (0 , JSTR) memr@,~ info_get_syrk_impl_string_cd
+
+NB. str=. info_get_syr2k_impl_string dt
+info_get_syr2k_impl_string=: (0 , JSTR) memr@,~ info_get_syr2k_impl_string_cd
+
+NB. str=. info_get_trmm_impl_string dt
+info_get_trmm_impl_string=:  (0 , JSTR) memr@,~ info_get_trmm_impl_string_cd
+
+NB. str=. info_get_trmm3_impl_string dt
+info_get_trmm3_impl_string=: (0 , JSTR) memr@,~ info_get_trmm3_impl_string_cd
+
+NB. str=. info_get_trsm_impl_string dt
+info_get_trsm_impl_string=:  (0 , JSTR) memr@,~ info_get_trsm_impl_string_cd

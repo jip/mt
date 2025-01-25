@@ -9,8 +9,8 @@ NB. testggev  Test ggevxxx by pair of square matrices
 NB. testev    Adv. to make verb to test xxevxxx by matrices
 NB.           of generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -411,6 +411,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testgeev=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/geev'
 
   rcondu=. gecon1 y
@@ -446,6 +447,7 @@ NB.   A   - n×n-matrix, the Hermitian (symmetric)
 NB.   log - 6-vector of boxes, test log
 
 testheev=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dsyev'
   load_mttmp_ 'math/mt/external/lapack2/zheev'
 
@@ -484,6 +486,7 @@ NB.   AB  - 2×n×n-brick
 NB.   log - 6-vector of boxes, test log
 
 testggev=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/ggev'
 
   'rcondl rcondu'=. <./ (geconi , gecon1)"2 y

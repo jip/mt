@@ -322,3 +322,7 @@ math/mt - change history
  == 0.14.7 ==
  bugfix release
  * dbg: fix to avoid valence error
+
+ == 0.14.8 ==
+ maintanance release
+ * external/blis: sync with BLIS version 2.0

@@ -27,8 +27,8 @@ NB. testunghr  Test unghrx by square matrix
 NB. testgq     Adv. to make verb to test ungxxx by matrix of
 NB.            generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -517,6 +517,7 @@ NB.   A   - m×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testungq=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dorglq'
   load_mttmp_ 'math/mt/external/lapack2/dorgql'
   load_mttmp_ 'math/mt/external/lapack2/dorgqr'
@@ -626,6 +627,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testunghr=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dorghr'
   load_mttmp_ 'math/mt/external/lapack2/zunghr'
 

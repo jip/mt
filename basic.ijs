@@ -35,6 +35,9 @@ NB. testbasicmv     Test matrix-vector operations
 NB.
 NB. testbasicgemm   Test matrix-matrix operations with
 NB.                 general matrix
+NB. testbasicgemmt  Test matrix-matrix operations which
+NB.                 update result in triangular part only, by
+NB.                 general matrices
 NB. testbasicsymm   Test matrix-matrix operations with
 NB.                 symmetric matrix
 NB. testbasichemm   Test matrix-matrix operations with
@@ -54,8 +57,8 @@ NB.
 NB. testbasic       Adv. to make verb to test basic
 NB.                 operations all levels
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -2497,7 +2500,8 @@ NB.
 NB. Description:
 NB.   Test matrix-matrix operations:
 NB.   - bli_xgemmt (BLIS)
-NB.   by general matrices
+NB.   which update result in triangular part only, by general
+NB.   matrices
 NB.
 NB. Syntax:
 NB.   log=. testbasicgemmt As ; Bs ; C

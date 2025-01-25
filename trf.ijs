@@ -19,8 +19,8 @@ NB.            definite tridiagonal matrix
 NB. testtrf    Adv. to make verb to test xxtrfxxxx by matrix
 NB.            of generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -1650,6 +1650,7 @@ NB.   A   - m×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testgetrf=: 3 : 0
+  _1 cocreate < 'mttmp'
   require     :: ] 'numeric'
   load_mttmp_ :: ] 'math/misc/mathutil'
   load_mttmp_ :: ] 'math/misc/makemat'
@@ -1700,6 +1701,7 @@ NB. - no berrA calc for LAPACK's DSYTRF and ZHETRF yet since
 NB.   its output is intricate
 
 testhetrf=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dsytrf'
   load_mttmp_ 'math/mt/external/lapack2/dsytrf_aa'
   load_mttmp_ 'math/mt/external/lapack2/zhetrf'
@@ -1755,6 +1757,7 @@ NB.         definite
 NB.   log - 6-vector of boxes, test log
 
 testpotrf=: 3 : 0
+  _1 cocreate < 'mttmp'
   require     :: ] 'numeric'
   load_mttmp_ :: ] 'math/misc/mathutil'
   load_mttmp_ :: ] 'math/misc/makemat'
@@ -1803,6 +1806,7 @@ NB. TODO:
 NB. - A would be sparse
 
 testpttrf=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/pttrf'
 
   rcond=. ptconi y

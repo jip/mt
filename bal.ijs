@@ -16,8 +16,8 @@ NB. testggbal  Test ggbalx by pair of square matrices
 NB. testbal    Adv. to make verb to test gxbalx by
 NB.            matrix(-ces) of generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -881,6 +881,7 @@ NB. - err0 is outputted in ferr column
 NB. - err1 is outputted in berr column
 
 testgebal=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gebal'
 
   'rcondl rcondu'=. (geconi , gecon1) y
@@ -946,6 +947,7 @@ NB. - err0 is outputted in ferr column
 NB. - err1 is outputted in berr column
 
 testggbal=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/ggbal'
 
   'rcondl rcondu'=. <./ (geconi , gecon1)"2 y

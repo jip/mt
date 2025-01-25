@@ -15,8 +15,8 @@ NB. testtzqf  Test tzxxf by trapezoidal matrix
 NB. testqf    Adv. to make verb to test gexxf and tzxxf by
 NB.           matrix of generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -1260,6 +1260,7 @@ NB.   A   - m×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testgeqf=: 3 : 0
+  _1 cocreate < 'mttmp'
   require     :: ] 'numeric'
   load_mttmp_ :: ] 'math/misc/mathutil'
   load_mttmp_ :: ] 'math/misc/makemat'
@@ -1319,6 +1320,7 @@ NB. TODO:
 NB. - add xQRT12 test
 
 testtzqf=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/tzrzf'
 
   rcond=. nan`geconi@.(=/@$) y  NB. meaninigful for square matrices only

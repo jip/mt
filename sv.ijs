@@ -40,8 +40,8 @@ NB.           definite tridiagonal matrix
 NB. testsv    Adv. to make verb to test xxsvxxx by matrix of
 NB.           generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -379,6 +379,7 @@ NB. Notes:
 NB. - models LAPACK's xDRVGE
 
 testgesv=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gesv'
 
   'X A'=. y
@@ -465,6 +466,7 @@ NB. Notes:
 NB. - models LAPACK's xDRVGT
 
 testgtsv=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gtsv'
 
   'X A'=. y
@@ -547,6 +549,7 @@ NB.   - no berrA calc for LAPACK's DSYSV and ZHESV yet since
 NB.     its output is intricate
 
 testhesv=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/dsysv'
   load_mttmp_ 'math/mt/external/lapack2/dsysv_aa'
   load_mttmp_ 'math/mt/external/lapack2/zhesv'
@@ -637,6 +640,7 @@ NB. Notes:
 NB. - models LAPACK's xDRVPO
 
 testposv=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/posv'
 
   'X A'=. y
@@ -720,6 +724,7 @@ NB. Notes:
 NB. - models LAPACK's xDRVPT
 
 testptsv=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/ptsv'
 
   'X A'=. y

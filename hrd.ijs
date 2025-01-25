@@ -10,8 +10,8 @@ NB. testgghrd  Test gghrdx by pair of square matrices
 NB. testhrd    Adv. to make verb to test gxhrdxxx by matrices
 NB.            of generator and shape given
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -748,6 +748,7 @@ NB.   A   - n×n-matrix
 NB.   log - 6-vector of boxes, test log
 
 testgehrd=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gehrd'
 
   'rcondl rcondu'=. (geconi , gecon1) y
@@ -788,6 +789,7 @@ NB.   AB  - 2×n×n-brick
 NB.   log - 6-vector of boxes, test log
 
 testgghrd=: 3 : 0
+  _1 cocreate < 'mttmp'
   load_mttmp_ 'math/mt/external/lapack2/gghrd'
 
   I=. idmat c y

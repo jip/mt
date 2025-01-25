@@ -26,8 +26,8 @@ NB. info      Get information about mt interace name
 NB. env       Get environment
 NB. erasen    Erase global names created between invocations
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.
@@ -215,7 +215,7 @@ tmonad=: 2 : 0
   '`vgety vgeto vrcond vferr vberr'=. n
   try. rcond=. vrcond y catch. rcond=. _ end.
   try.
-    ybak=. memu argy=. vgety y
+    ybak=. 1 memu argy=. vgety y
     try.
       't s'=. , ((5 1 # i. 2)) (<./`]/.) (5 1 # timex`(7!:2))`:0 'ret=. ' , m , ' argy'
       if. -. argy -: ybak do. m=. m , ' NB. error: y changed' end.
@@ -243,8 +243,8 @@ tdyad=: 2 : 0
   '`vgetx vgety vgeto vrcond vferr vberr'=. n
   try. rcond=. vrcond y catch. rcond=. _ end.
   try.
-    xbak=. memu argx=. vgetx y
-    ybak=. memu argy=. vgety y
+    xbak=. 1 memu argx=. vgetx y
+    ybak=. 1 memu argy=. vgety y
     try.
       't s'=. , ((5 1 # i. 2)) (<./`]/.) (5 1 # timex`(7!:2))`:0 'ret=. argx ' , m , ' argy'
       select. #. (argx -: xbak) , argy -: ybak

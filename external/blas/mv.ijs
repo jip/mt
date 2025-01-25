@@ -5,8 +5,8 @@ NB. dsymvx    Matrix-vector operation with symmetric matrix
 NB. zhemvx    Matrix-vector operation with Hermitian matrix
 NB. xtrmvxxx  Matrix-vector operation with triangular matrix
 NB.
-NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024
-NB.           Igor Zhuravlov
+NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
+NB.           2025 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

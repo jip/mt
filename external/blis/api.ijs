@@ -1168,13 +1168,14 @@ NB.
 NB. void bli_dotaxpyv
 NB.      (
 NB.        obj_t*  alpha,
+NB.        obj_t*  xt,
 NB.        obj_t*  x,
 NB.        obj_t*  y,
 NB.        obj_t*  rho,
 NB.        obj_t*  z
 NB.      );
 
-dotaxpyv_cd=: (lib,' bli_dotaxpyv ',ifw,' n & & & * *')&cd
+dotaxpyv_cd=: (lib,' bli_dotaxpyv ',ifw,' n & & & & * *')&cd
 
 NB. y := y + alpha * conja(A) * conjx(x)
 NB.
@@ -1207,6 +1208,7 @@ NB.
 NB. void bli_dotxaxpyf
 NB.      (
 NB.        obj_t*  alpha,
+NB.        obj_t*  at,
 NB.        obj_t*  a,
 NB.        obj_t*  w,
 NB.        obj_t*  x,
@@ -1215,7 +1217,7 @@ NB.        obj_t*  y,
 NB.        obj_t*  z
 NB.      );
 
-dotxaxpyf_cd=: (lib,' bli_dotxaxpyf ',ifw,' n & & & & & * *')&cd
+dotxaxpyf_cd=: (lib,' bli_dotxaxpyf ',ifw,' n & & & & & & * *')&cd
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Level-2 operations
@@ -1730,8 +1732,8 @@ NB.        ctype*  x, inc_t incx,
 NB.        ctype*  y, inc_t incy
 NB.      );
 
-daddv_cd=: (lib,' bli_daddv ',ifw,' n x x &d x *d')&cd
-zaddv_cd=: (lib,' bli_zaddv ',ifw,' n x x &j x *j')&cd
+daddv_cd=: (lib,' bli_daddv ',ifw,' n x x &d x *d x')&cd
+zaddv_cd=: (lib,' bli_zaddv ',ifw,' n x x &j x *j x')&cd
 
 NB. mimic BLAS routines i?amax()
 NB.
@@ -2391,7 +2393,7 @@ NB.        ctype*  a, inc_t rsa, inc_t csa
 NB.      );
 
 dher_cd=: (lib,' bli_dher ',ifw,' n x x x &d &d x *d x x')&cd
-zher_cd=: (lib,' bli_zher ',ifw,' n x x x &j &j x *j x x')&cd
+zher_cd=: (lib,' bli_zher ',ifw,' n x x x &d &j x *j x x')&cd
 
 NB. A := A + alpha * conjx(x) * conjy(y)^H + conj(alpha) * conjy(y) * conjx(x)^H
 NB.
@@ -2570,6 +2572,7 @@ NB.        ctype*   beta,
 NB.        ctype*   c, inc_t rsc, inc_t csc
 NB.      );
 
+dhemm_cd=: (lib,' bli_dhemm ',ifw,' n x x x x x x &d &d x x &d x x &d *d x x')&cd
 zhemm_cd=: (lib,' bli_zhemm ',ifw,' n x x x x x x &j &j x x &j x x &j *j x x')&cd
 
 NB. C := beta * C + alpha * transa(A) * transa(A)^H
@@ -2586,7 +2589,8 @@ NB.        rtype*   beta,
 NB.        ctype*   c, inc_t rsc, inc_t csc
 NB.      );
 
-zherk_cd=: (lib,' bli_zherk ',ifw,' n x x x x &j &j x x &j *j x x')&cd
+dherk_cd=: (lib,' bli_dherk ',ifw,' n x x x x &d &d x x &d *d x x')&cd
+zherk_cd=: (lib,' bli_zherk ',ifw,' n x x x x &d &j x x &d *j x x')&cd
 
 NB. C := beta * C + alpha * transa(A) * transb(B)^H + conj(alpha) * transb(B) * transa(A)^H
 NB.
@@ -2604,6 +2608,7 @@ NB.        rtype*   beta,
 NB.        ctype*   c, inc_t rsc, inc_t csc
 NB.      );
 
+dher2k_cd=: (lib,' bli_dher2k ',ifw,' n x x x x x &d &d x x &d x x &d *d x x')&cd
 zher2k_cd=: (lib,' bli_zher2k ',ifw,' n x x x x x &j &j x x &j x x &d *j x x')&cd
 
 NB. C := beta * C + alpha * conja(A) * transb(B)  if sidea is BLIS_LEFT, or
@@ -2778,6 +2783,7 @@ NB.        dim_t   m,
 NB.        ctype*  a, inc_t rs_a, inc_t cs_a
 NB.      );
 
+dmkherm_cd=: (lib,' bli_dmkherm ',ifw,' n x x *d x x')&cd
 zmkherm_cd=: (lib,' bli_zmkherm ',ifw,' n x x *j x x')&cd
 
 NB. void bli_?mksymm

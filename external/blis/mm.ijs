@@ -51,7 +51,7 @@ NB.     C := alpha * op1(A) * op2(B) + beta * C
 NB.   where opX(M) is either M, M^T, conj(M) or M^H
 NB.
 NB. Syntax:
-NB.   Cupd=. (transA ,: transB) xgemmcore  alpha ; A ; B ; beta ; C
+NB.   Cupd=. (transA ,: transB) xgemmcore alpha ; A ; B ; beta ; C
 NB. where
 NB.   transA - 4-vector of chars, trans_t as bitstring,
 NB.            defines the form of op1(A):

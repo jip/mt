@@ -1620,23 +1620,23 @@ NB.      );
 getsc_cd=: (lib,' bli_getsc ',ifw,' n & * *')&cd
 
 NB. err_t bli_getijv
-NB.       (
-NB.         dim_t    i,
-NB.         obj_t*   x,
-NB.         double*  ar,
-NB.         double*  ai
-NB.       );
+NB.      (
+NB.        dim_t    i,
+NB.        obj_t*   x,
+NB.        double*  ar,
+NB.        double*  ai
+NB.      );
 
 getijv_cd=: (lib,' bli_getijv ',ifw,' x x & *d *d')&cd
 
 NB. err_t bli_getijm
-NB.       (
-NB.         dim_t    i,
-NB.         dim_t    j,
-NB.         obj_t*   b,
-NB.         double*  ar,
-NB.         double*  ai
-NB.       );
+NB.      (
+NB.        dim_t    i,
+NB.        dim_t    j,
+NB.        obj_t*   b,
+NB.        double*  ar,
+NB.        double*  ai
+NB.      );
 
 getijm_cd=: (lib,' bli_getijm ',ifw,' x x x & *d *d')&cd
 

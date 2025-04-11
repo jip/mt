@@ -346,7 +346,7 @@ NB. References:
 NB. [1] Igor Zhuravlov. [Jprogramming] assert verb from
 NB.     stdlib mismatches assert. control
 NB.     2019-12-30 00:43:46 UTC
-NB.     http://www.jsoftware.com/pipermail/programming/2019-December/054693.html
+NB.     https://www.jsoftware.com/pipermail/programming/2019-December/054693.html
 
 assert=: 0 0 $ dbsig^:((1 +./@:~: ])`(12"_))^:(9!:34@'')
 

@@ -1,8 +1,8 @@
 Authorship of mt addon code belongs to various authors. All the authors are listed below:
 
 Name:    File:         Orignial name:   Author:           Published:             Link:
-icut     struct.ijs    bcut1            Roger Hui         2005-11-22 02:11       http://code.jsoftware.com/wiki/Essays/Block%20Matrix%20Inverse
-issym    mm.ijs        sym              Roger Hui         2003-08-08 00:46:00    http://www.jsoftware.com/pipermail/general/2003-August/015542.html
+icut     struct.ijs    bcut1            Roger Hui         2005-11-22 02:11       https://code.jsoftware.com/wiki/Essays/Block%20Matrix%20Inverse
+issym    mm.ijs        sym              Roger Hui         2003-08-08 00:46:00    https://www.jsoftware.com/pipermail/general/2003-August/015542.html
                                                                                  also https://code.jsoftware.com/wiki/Essays/Symmetric_Array
 
 All the rest code was written by Igor Zhuravlov <zhuravlov.ip@ya.ru>

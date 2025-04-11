@@ -102,7 +102,7 @@ dlsym=: 3 : 0
       sig=. ' GetProcAddress x x *c'
       h=. 0 {:: (dl , ' LoadLibrary * *c') cd < lib
     case. 'Linux' ; 'OpenBSD' ; 'FreeBSD' do.
-      dl=. '/usr/lib' , (IF64 {:: '' ; '64') , '/libdl.so'
+      dl=. 'libdl.so.2' [^:(UNAME -: 'Linux') unxlib 'c'
       sig=. ' dlsym x x *c'
       h=. 0 {:: (dl , ' dlopen * *c i') cd lib ; 1  NB. lazy binding
     case. 'Android' ; 'Darwin' ; 'Unknown' ; 'Wasm' do.

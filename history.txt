@@ -329,3 +329,7 @@ math/mt - change history
 
  == 0.14.9 ==
  bugfix release
+
+ == 0.14.10 ==
+ bugfix release
+ * external/util: fix dlsym

@@ -217,6 +217,7 @@ DENSE=:              BITVAL_DENSE          NB. ...is stored as a full matrix (ie
 
 NB. side_t
 NB. Semantic meaning: Corresponding matrix operand...
+
 LEFT=:               JINT4 c. 0            NB. ...appears on the left.
 RIGHT=:              JINT4 c. 1            NB. ...appears on the right.
 
@@ -441,10 +442,17 @@ NB. Functions
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NB. Context
 
-NB. cntx_t* bli_gks_query_cntx( void );
+NB. C: cntx_t* bli_gks_query_cntx( void );
+NB. J: cntx_addr=. gks_query_cntx_cd_mtbli_ ''
 gks_query_cntx_cd=: (lib,' bli_gks_query_cntx > ',ifw,' ',BIC)&cd
 
-NB. void bli_cntx_print( const cntx_t* cntx );
+NB. C: void bli_cntx_print( const cntx_t* cntx );
+NB. J: trash=. cntx_print_cd < < cntx_addr
+NB.
+NB. Application:
+NB.      cntx_addr=. gks_query_cntx_cd_mtbli_ ''
+NB.      EMPTY [ cntx_print_cd < < cntx_addr  NB. outputs to stdout
+
 cntx_print_cd=: (lib,' bli_cntx_print ',ifw,' n &')&cd
 
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -509,13 +517,13 @@ NB. Globally at runtime: the automatic way
 NB. dim_t bli_thread_get_num_threads( void );
 thread_get_num_threads_cd=: (lib,' bli_thread_get_num_threads > ',ifw,' ',BIC)&cd
 
-NB. void  bli_thread_set_num_threads( dim_t n_threads );
+NB. void bli_thread_set_num_threads( dim_t n_threads );
 thread_set_num_threads_cd=: (lib,' bli_thread_set_num_threads ',ifw,' n ',BIC)&cd
 
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Globally at runtime: the manual way
 
-NB. void  bli_thread_set_ways( dim_t jc, dim_t pc, dim_t ic, dim_t jr, dim_t ir );
+NB. void bli_thread_set_ways( dim_t jc, dim_t pc, dim_t ic, dim_t jr, dim_t ir );
 thread_set_ways_cd=:  (lib,' bli_thread_set_ways ',ifw,' n ',BIC,' ',BIC,' ',BIC,' ',BIC,' ',BIC  )&cd
 
 NB. dim_t bli_thread_get_jc_nt( void );
@@ -536,10 +544,10 @@ thread_get_ir_nt_cd=: (lib,' bli_thread_get_ir_nt > ',ifw,' ',BIC)&cd
 NB. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NB. Globally at runtime: overriding the default threading implementation
 
-NB. void        bli_thread_set_thread_impl( timpl_t ti );
+NB. void bli_thread_set_thread_impl( timpl_t ti );
 thread_set_thread_impl_cd=: (lib,' bli_thread_set_thread_impl ',ifw,' n i')&cd
 
-NB. timpl_t     bli_thread_get_thread_impl( void );
+NB. timpl_t bli_thread_get_thread_impl( void );
 thread_get_thread_impl_cd=: (lib,' bli_thread_get_thread_impl > ',ifw,' i')&cd
 
 NB. const char* bli_thread_get_thread_impl_str( timpl_t ti );

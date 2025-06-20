@@ -336,4 +336,4 @@ math/mt - change history
 
  == 0.14.11 ==
  maintanance release
- * external/blis/api: sync with BLIS current version
+ * external/blis/api: sync with current BLIS version

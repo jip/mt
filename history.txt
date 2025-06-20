@@ -333,3 +333,7 @@ math/mt - change history
  == 0.14.10 ==
  bugfix release
  * external/util: fix dlsym
+
+ == 0.14.11 ==
+ maintanance release
+ * external/blis/api: sync with current BLIS version

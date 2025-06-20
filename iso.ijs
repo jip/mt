@@ -76,10 +76,10 @@ NB. Miscellaneous
 
 NB. lIO 1st element e with max(|Re(e)|+|Im(e)|) from list y
 NB. implements BLAS' IxAMAX
-liofmax=: (i.>./)@sorim
+liofmax=: (i. >./)@sorim
 
 NB. lIO last element e with max(|Re(e)|+|Im(e)|) from list y
-liolmax=: (i:>./)@sorim
+liolmax=: (i: >./)@sorim
 
 NB. ---------------------------------------------------------
 NB. liso4th

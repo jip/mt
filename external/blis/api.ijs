@@ -1326,8 +1326,8 @@ obj_imag_part=: 4 : 0
     y obj_set_strides~ +: (obj_row_stride , obj_col_stride) x
 
     NB. Update the buffer.
-    is_c=. obj_imag_stride   x
-    p=.    obj_buffer_at_off x
+    is_c=. obj_imag_stride x
+    p=.    obj_buffer      x
     (p + is_c * -: es_c) obj_set_buffer y
   end.
 )

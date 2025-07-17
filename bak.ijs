@@ -100,7 +100,7 @@ gebaklp=: C."1~&>/
 gebakup=: C."2~&>/
 
 NB. ---------------------------------------------------------
-NB. Verb       Balancer used     Eigenvectors to form
+NB. Monad      Balancer used     Eigenvectors to form
 NB. gebakll    geball (lower)    left
 NB. gebaklr    geball (lower)    right
 NB. gebakul    gebalu (upper)    left

@@ -1,8 +1,8 @@
 NB. Test
 NB.
-NB. drvev    Dyad to compute the normalization error of
-NB.          eigenvectors produced by nonsymmetric eigenvalue
-NB.          problem solver
+NB. drvev    Compute the normalization error of eigenvectors
+NB.          produced by nonsymmetric eigenvalue problem
+NB.          solver
 NB. drgev    Adv. to make dyad to compute the relative
 NB.          backward error of eigenvectors produced by
 NB.          generalized nonsymmetric eigenvalue problem
@@ -12,19 +12,18 @@ NB.          for the matrix reconstructed from gexxf,tzxxf
 NB.          output
 NB. t02x     Modifiers to make dyad to compute the relative
 NB.          backward error for the solution(s) computed
-NB. xxt02    Dyads to compute the relative backward error for
-NB.          the matrix reconstructed partially from ungxx
-NB.          output
-NB. t03      Dyad to compute the relative backward error for
-NB.          the matrix times its inverse reconstructed
+NB. xxt02    Compute the relative backward error for the
+NB.          matrix reconstructed partially from ungxx output
+NB. t03      Compute the relative backward error for the
+NB.          matrix times its inverse reconstructed
 NB. xxt03    Actors to compute the relative backward error
 NB.          for the matrix [partial] multiplication by
 NB.          unmxxxx
 NB. t04x     Actors to compute the relative forward error for
 NB.          the solution(s) computed
-NB. xxt11    Dyads to compute the relative backward error for
-NB.          the unitary (orthogonal) matrix reconstructed
-NB.          from gexpf gepxf output
+NB. xxt11    Compute the relative backward error for the
+NB.          unitary (orthogonal) matrix reconstructed from
+NB.          gexpf gepxf output
 NB. qrt14    Checks whether X is in the row space of op(A)
 NB. qrt16x   Adv. to make dyad to compute the residual for a
 NB.          solution(s) computed of an overdetermined or
@@ -32,19 +31,16 @@ NB.          underdetermined system involving a matrix of
 NB.          full rank, or its [conjugate-]transpose
 NB. qrt171   Adv. to make dyad to compute the ratio for
 NB.          zero-residual problem
-NB. t211     Dyad to compute the relative backward error of
+NB. t211     Compute the relative backward error of
 NB.          eigenvectors produced by symmetric eigenvalue
 NB.          problem solver
-NB. t22x     Dyads to compute the error of eigenvectors
-NB.          produced by nonsymmetric eigenvalue problem
-NB.          solver
-NB. t511x    Dyads to compute the relative backward error of
+NB. t22x     Compute the error of eigenvectors produced by
+NB.          nonsymmetric eigenvalue problem solver
+NB. t511x    Compute the relative backward error of
 NB.          generalized Schur form produced by hgexxsxx
-NB. t513x    Monads to compute the normalization error of
-NB.          Schur vectors
+NB. t513x    Compute the normalization error of Schur vectors
 NB.          produced by hgexxsxx
-NB. t52xx    Dyads to compute the normalization error of
-NB.          Schur vectors
+NB. t52xx    Compute the normalization error of Schur vectors
 NB.          produced by tgevcxxx
 NB. chk1mv   Adv. to make dyad to compute the relative
 NB.          backward error for the basic matrix-vector
@@ -119,9 +115,8 @@ NB. ---------------------------------------------------------
 NB. drvev
 NB.
 NB. Description:
-NB.   Monad to compute the normalization error of
-NB.   eigenvectors produced by nonsymmetric eigenvalue
-NB.   problem solver
+NB.   Compute the normalization error of eigenvectors
+NB.   produced by nonsymmetric eigenvalue problem solver
 NB.
 NB. Syntax:
 NB.   nerrV=. drvev V
@@ -226,9 +221,8 @@ NB. drvevl
 NB. drvevr
 NB.
 NB. Description:
-NB.   Dyads to compute the normalization error of
-NB.   eigenvectors produced by nonsymmetric eigenvalue
-NB.   problem solver
+NB.   Compute the normalization error of eigenvectors
+NB.   produced by nonsymmetric eigenvalue problem solver
 NB.
 NB. Syntax:
 NB.   errL=. trash drgevl (trash ; L     ; trash)
@@ -404,9 +398,8 @@ NB. ---------------------------------------------------------
 NB. het01
 NB.
 NB. Description:
-NB.   Dyad to compute the relative backward error for the
-NB.   matrix reconstructed from hexxxxx, poxxxxx and ptxxxxx
-NB.   output
+NB.   Compute the relative backward error for the matrix
+NB.   reconstructed from hexxxxx, poxxxxx and ptxxxxx output
 NB.
 NB. Syntax:
 NB.   berrH=. (H ; normH) het01 Happrox
@@ -494,8 +487,8 @@ NB. qrt01
 NB. rqt01
 NB.
 NB. Description:
-NB.   Dyads to compute the relative backward error for the
-NB.   matrix reconstructed from gexqf geqxf output
+NB.   Compute the relative backward error for the matrix
+NB.   reconstructed from gexqf geqxf output
 NB.
 NB. Syntax:
 NB.   berrA=. (A ; normA) lqt01 (Lapprox ; Qapprox)
@@ -544,8 +537,8 @@ NB. prt01
 NB. rpt01
 NB.
 NB. Description:
-NB.   Dyads to compute the relative backward error for the
-NB.   matrix reconstructed from gexpf gepxf output
+NB.   Compute the relative backward error for the matrix
+NB.   reconstructed from gexpf gepxf output
 NB.
 NB. Syntax:
 NB.   berrA=. (A ; normA) lpt01 (ip ; LQf)
@@ -593,8 +586,8 @@ NB. zrt01
 NB. rzt01
 NB.
 NB. Description:
-NB.   Dyads to compute the relative backward error for the
-NB.   matrix reconstructed from tzxxf output
+NB.   Compute the relative backward error for the matrix
+NB.   reconstructed from tzxxf output
 NB.
 NB. Syntax:
 NB.   berrA=. (A ; normA) lzt01 LZf
@@ -758,8 +751,8 @@ NB. qrt02
 NB. rqt02
 NB.
 NB. Description:
-NB.   Dyads to compute the relative backward error for the
-NB.   matrix reconstructed partially from ungxq,ungqx output
+NB.   Compute the relative backward error for the matrix
+NB.   reconstructed partially from ungxq,ungqx output
 NB.
 NB. Syntax:
 NB.   berrQ=. (A ; normA ; LQf ; k) lqt02 Qapprox
@@ -814,8 +807,8 @@ NB. zrt02
 NB. rzt02
 NB.
 NB. Description:
-NB.   Dyads to compute the relative backward error for the
-NB.   matrix reconstructed partially from ungxz,ungzx output
+NB.   Compute the relative backward error for the matrix
+NB.   reconstructed partially from ungxz,ungzx output
 NB.
 NB. Syntax:
 NB.   berrZ=. (A ; normA ; LZf ; k) lzt02 Zapprox
@@ -866,8 +859,8 @@ NB. ---------------------------------------------------------
 NB. t03
 NB.
 NB. Description:
-NB.   Dyad to compute the relative backward error for the
-NB.   matrix times its inverse reconstructed
+NB.   Compute the relative backward error for the matrix
+NB.   times its inverse reconstructed
 NB.
 NB. Syntax:
 NB.   berriA=. (A ; rcondA ; normA) t03 iAapprox
@@ -1069,8 +1062,8 @@ NB. hst03l
 NB. hst03u
 NB.
 NB. Description:
-NB.   Dyads to compute the relative backward error for the
-NB.   matrix multiplication by unmhrxxx
+NB.   Compute the relative backward error for the matrix
+NB.   multiplication by unmhrxxx
 NB.
 NB. Syntax:
 NB.   berrP=. (C ; normC ; HlQf ; P) hst03l Papprox
@@ -1168,9 +1161,9 @@ NB. qrt11
 NB. rqt11
 NB.
 NB. Description:
-NB.   Dyad to compute the relative backward error for the
-NB.   unitary (orthogonal) matrix reconstructed from gexpf
-NB.   gepxf output
+NB.   Compute the relative backward error for the unitary
+NB.   (orthogonal) matrix reconstructed from gexpf gepxf
+NB.   output
 NB.
 NB. Syntax:
 NB.   berrQ=. trash0 lqt11 (trash1 ; LQf)
@@ -1383,9 +1376,8 @@ NB. ---------------------------------------------------------
 NB. t211
 NB.
 NB. Description:
-NB.   Dyad to compute the relative backward error of
-NB.   eigenvectors produced by symmetric eigenvalue problem
-NB.   solver
+NB.   Compute the relative backward error of eigenvectors
+NB.   produced by symmetric eigenvalue problem solver
 NB.
 NB. Syntax:
 NB.   berr=. (H ; normH) t211 (w ; V)
@@ -1417,7 +1409,7 @@ NB. t22l
 NB. t22r
 NB.
 NB. Description:
-NB.   Dyads to compute the error of eigenvectors produced by
+NB.   Compute the error of eigenvectors produced by
 NB.   nonsymmetric eigenvalue problem solver
 NB.
 NB. Syntax:
@@ -1443,6 +1435,9 @@ NB.   W          := diagmat(w)
 NB.
 NB. Notes:
 NB. - models LAPACK's xGET22
+NB.
+NB. TODO:
+NB. - add normalization error computing
 
 t22l=: FP_PREC %~ 1 <. ((((mp~ ct@(0&{::))~ 1&{::) - (1 {:: ]) *"1 +@(0 {:: ])) (% FP_PREC&>.)&normi 1 {:: ]) % FP_SFMIN >. 1 {:: [
 t22r=: FP_PREC %~ 1 <. ((((mp~     0&{:: )~ 2&{::) - (2 {:: ]) *"1   (0 {:: ])) (% FP_PREC&>.)&norm1 2 {:: ]) % FP_SFMIN >. 2 {:: [
@@ -1452,8 +1447,8 @@ NB. t511l
 NB. t511u
 NB.
 NB. Description:
-NB.   Dyads to compute the relative backward error of
-NB.   generalized Schur form produced by hgexxsxx
+NB.   Compute the relative backward error of generalized
+NB.   Schur form produced by hgexxsxx
 NB.
 NB. Syntax:
 NB.   errl=. (Al ; normA) t511l (Bl ; Ql ; Zl)
@@ -1506,8 +1501,8 @@ NB. t513l
 NB. t513u
 NB.
 NB. Description:
-NB.   Monads to compute the normalization error of Schur
-NB.   vectors produced by hgexxsxx
+NB.   Compute the normalization error of Schur vectors
+NB.   produced by hgexxsxx
 NB.
 NB. Syntax:
 NB.   errl=. t513l Vl
@@ -1550,8 +1545,8 @@ NB. t52ur
 NB. t52ub
 NB.
 NB. Description:
-NB.   Dyads to compute the normalization error of Schur
-NB.   vectors produced by tgevcxxx
+NB.   Compute the normalization error of Schur vectors
+NB.   produced by tgevcxxx
 NB.
 NB. Syntax:
 NB.   errl=. SPl     t52ll Yapprox       NB. to test tgevcll

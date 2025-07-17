@@ -321,7 +321,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb       Syntax
+NB. Monad      Syntax
 NB. trtril     iL=.  trtril  L
 NB. trtril1    iL1=. trtril1 L1
 NB. trtriu     iU=.  trtriu  U
@@ -657,7 +657,7 @@ getriul1p=: 3 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Verb       Factorization used             Syntax
+NB. Monad      Factorization used             Syntax
 NB. hetripl    P * L1 * T * L1^H * P^H = A    iA=. hetripl pL1T
 NB. hetripu    P * U1 * T * U1^H * P^H = A    iA=. hetripu pU1T
 NB.
@@ -687,7 +687,7 @@ hetripl=: 0&{:: fp^:_1 (gtsvax idmat@#)@(2&{::) (ct@] mp mp) trtril1@(1&{::)
 hetripu=: 0&{:: fp^:_1 (gtsvax idmat@#)@(2&{::) (ct@] mp mp) trtriu1@(1&{::)
 
 NB. ---------------------------------------------------------
-NB. Verb      Factorization used    Syntax
+NB. Monad     Factorization used    Syntax
 NB. potril    L * L^H = A           iA=. potril L
 NB. potriu    U * U^H = A           iA=. potriu U
 NB.

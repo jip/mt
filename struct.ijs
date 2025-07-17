@@ -1263,7 +1263,7 @@ NB.                        0 0 1
 tru1=: 0&$: :([ tru (1 ; [) setdiag ])
 
 NB. ---------------------------------------------------------
-NB. Verb      Reads    Overwrites    Diagonal        Composes matrix
+NB. Monad     Reads    Overwrites    Diagonal        Composes matrix
 NB. sy4gel    SLT      SUT           leave as is     SY
 NB. sy4geu    SUT      SLT           leave as is     SY
 NB. he4gel    SLT       UT           reificate       HE

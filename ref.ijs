@@ -1,15 +1,14 @@
 NB. Reflection
 NB.
-NB. larfx      Dyads to generate an elementary reflector
-NB. larfxxx    Monads to generate an elementary reflector
-NB. larxtxx    Monads to form the triangular factor of a
-NB.            block reflector
-NB. larxxxxx   Dyads to apply an elementary reflector or its
+NB. larfx      Generate an elementary reflector
+NB. larfxxx    Generate an elementary reflector
+NB. larxtxx    Form the triangular factor of a block
+NB.            reflector
+NB. larxxxxx   Apply an elementary reflector or its transpose
+NB.            to a matrix from either the left or the right
+NB. larxbxxxx  Build and apply a block reflector or its
 NB.            transpose to a matrix from either the left or
 NB.            the right
-NB. larxbxxxx  Dyads to build and apply a block reflector or
-NB.            its transpose to a matrix from either the left
-NB.            or the right
 NB. refga      Conj. to make monad to generate and apply
 NB.            reflector
 NB.
@@ -270,7 +269,7 @@ larfp=: 4 : 0
 )
 
 NB. ---------------------------------------------------------
-NB. Verb       Input             Output                  β
+NB. Monad      Input             Output                  β
 NB. larfgf     (α x[1:n-1] 0)    (β v[1:n-1] τ)          ∈ ℝ
 NB. larfgfc    (α x[1:n-1] 0)    (β v[1:n-1] conj(τ))    ∈ ℝ
 NB. larfgb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ∈ ℝ
@@ -281,8 +280,8 @@ NB. larfpb     (0 x[1:n-1] α)    (τ v[1:n-1] β)          ≥ 0
 NB. larfpbc    (0 x[1:n-1] α)    (conj(τ) v[1:n-1] β)    ≥ 0
 NB.
 NB. Description:
-NB.   Monads to generate an elementary reflector, see larfg,
-NB.   larfp for details.
+NB.   Generate an elementary reflector, see larfg, larfp for
+NB.   details.
 
 larfgf=:  0 _1&larfg
 larfgb=: _1  0&larfg
@@ -299,8 +298,7 @@ NB. larftbc
 NB. larztbc
 NB.
 NB. Description:
-NB.   Monad to form the triangular factor Τ of a block
-NB.   reflector H:
+NB.   Form the triangular factor Τ of a block reflector H:
 NB.     H = H(k-1) * ... * H(1) * H(0) = I - V * Τ * V'
 NB. where
 NB.   Τ - lower triangular
@@ -326,8 +324,7 @@ NB. larftbr
 NB. larztbr
 NB.
 NB. Description:
-NB.   Monad to form the triangular factor Τ of a block
-NB.   reflector H:
+NB.   Form the triangular factor Τ of a block reflector H:
 NB.     H = H(k-1) * ... * H(1) * H(0) = I - V' * Τ * V
 NB. where
 NB.   Τ - lower triangular
@@ -353,8 +350,7 @@ NB. larftfc
 NB. larztfc
 NB.
 NB. Description:
-NB.   Monad to form the triangular factor Τ of a block
-NB.   reflector H:
+NB.   Form the triangular factor Τ of a block reflector H:
 NB.     H = H(0) * H(1) * ... * H(k-1) = I - V * Τ * V'
 NB. where
 NB.   Τ - upper triangular
@@ -380,8 +376,7 @@ NB. larftfr
 NB. larztfr
 NB.
 NB. Description:
-NB.   Monad to form the triangular factor Τ of a block
-NB.   reflector H:
+NB.   Form the triangular factor Τ of a block reflector H:
 NB.     H = H(0) * H(1) * ... * H(k-1) = I - V' * Τ * V
 NB. where
 NB.   Τ - upper triangular
@@ -403,7 +398,7 @@ larftfr=: (< a: ; _1) larxtf mp
 larztfr=: (< a: ;  0) larxtf mp
 
 NB. ---------------------------------------------------------
-NB. Verb        Action     Side     Tran    Dir    Layout        eC
+NB. Dyad        Action     Side     Tran    Dir    Layout        eC
 NB. larflcbc    H' * C     left     ct      bwd    columnwise    0, C
 NB. larflcbr    H' * C     left     ct      bwd    rowwise       0, C
 NB. larflcfc    H' * C     left     ct      fwd    columnwise    C, 0
@@ -422,9 +417,9 @@ NB. larfrnfc    C  * H     right    none    fwd    columnwise    C,.0
 NB. larfrnfr    C  * H     right    none    fwd    rowwise       C,.0
 NB.
 NB. Description:
-NB.   Dyads to apply an elementary reflector H or its
-NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (v,τ).
+NB.   Apply an elementary reflector H or its transpose H' to
+NB.   a matrix, from either the left or the right. H is
+NB.   defined by pair (v,τ).
 NB.
 NB. Syntax:
 NB.   eCupd=. vtau larfxxxx eC
@@ -462,7 +457,7 @@ larfrnfc=: _1 larxrnxc
 larfrnfr=: _1 larxrnxr
 
 NB. ---------------------------------------------------------
-NB. Verb        Action     Side     Tran    Dir    Layout        eC
+NB. Dyad        Action     Side     Tran    Dir    Layout        eC
 NB. larzlcbc    H' * C     left     ct      bwd    columnwise    C, 0
 NB. larzlcbr    H' * C     left     ct      bwd    rowwise       C, 0
 NB. larzlcfc    H' * C     left     ct      fwd    columnwise    0, C
@@ -481,9 +476,9 @@ NB. larzrnfc    C  * H     right    none    fwd    columnwise    0,.C
 NB. larzrnfr    C  * H     right    none    fwd    rowwise       0,.C
 NB.
 NB. Description:
-NB.   Dyads to apply an elementary reflector H or its
-NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (v,τ).
+NB.   Apply an elementary reflector H or its transpose H' to
+NB.   a matrix, from either the left or the right. H is
+NB.   defined by pair (v,τ).
 NB.
 NB. Syntax:
 NB.   eCupd=. vtau larzxxxx eC
@@ -522,7 +517,7 @@ larzrnfc=:  0 larxrnxc
 larzrnfr=:  0 larxrnxr
 
 NB. ---------------------------------------------------------
-NB. Verb         Action     Side     Tran    Dir    Layout        eC
+NB. Dyad         Action     Side     Tran    Dir    Layout        eC
 NB. larfblcbc    H' * C     left     ct      bwd    columnwise    0, C
 NB. larfblcbr    H' * C     left     ct      bwd    rowwise       0, C
 NB. larfblcfc    H' * C     left     ct      fwd    columnwise    C, 0
@@ -541,10 +536,10 @@ NB. larfbrnfc    C  * H     right    none    fwd    columnwise    C,.0
 NB. larfbrnfr    C  * H     right    none    fwd    rowwise       C,.0
 NB.
 NB. Description:
-NB.   Dyads to build and apply a block reflector H or its
-NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (V,Τ), where Τ is the
-NB.   triangular factor produced from pair (V,Τ) by larftxx.
+NB.   Build and apply a block reflector H or its transpose H'
+NB.   to a matrix, from either the left or the right. H is
+NB.   defined by pair (V,Τ), where Τ is the triangular factor
+NB.   produced from pair (V,Τ) by larftxx.
 NB.
 NB. Syntax:
 NB.   eCupd=. VTau larfbxxxx eC
@@ -583,7 +578,7 @@ larfbrnfc=:         _1  larxbrnxc larftfc
 larfbrnfr=: (< a: ; _1) larxbrnxr larftfr
 
 NB. ---------------------------------------------------------
-NB. Verb         Action     Side     Tran    Dir    Layout        eC
+NB. Dyad         Action     Side     Tran    Dir    Layout        eC
 NB. larzblcbc    H' * C     left     ct      bwd    columnwise    C, 0
 NB. larzblcbr    H' * C     left     ct      bwd    rowwise       C, 0
 NB. larzblcfc    H' * C     left     ct      fwd    columnwise    0, C
@@ -602,10 +597,10 @@ NB. larzbrnfc    C  * H     right    none    fwd    columnwise    0,.C
 NB. larzbrnfr    C  * H     right    none    fwd    rowwise       0,.C
 NB.
 NB. Description:
-NB.   Dyads to build and apply a block reflector H or its
-NB.   transpose H' to a matrix, from either the left or the
-NB.   right. H is defined by pair (V,Τ), where Τ is the
-NB.   triangular factor produced from pair (V,Τ) by larztxx.
+NB.   Build and apply a block reflector H or its transpose H'
+NB.   to a matrix, from either the left or the right. H is
+NB.   defined by pair (V,Τ), where Τ is the triangular factor
+NB.   produced from pair (V,Τ) by larztxx.
 NB.
 NB. Syntax:
 NB.   eCupd=. VTau larzbxxxx eC

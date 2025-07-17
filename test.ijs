@@ -1,6 +1,6 @@
 NB. Test
 NB.
-NB. drvevx   Dyads to compute the normalization error of
+NB. drvev    Dyad to compute the normalization error of
 NB.          eigenvectors produced by nonsymmetric eigenvalue
 NB.          problem solver
 NB. drgev    Adv. to make dyad to compute the relative
@@ -38,11 +38,13 @@ NB.          problem solver
 NB. t22x     Dyads to compute the error of eigenvectors
 NB.          produced by nonsymmetric eigenvalue problem
 NB.          solver
-NB. t511x    Dyads to compute the error of generalized Schur
-NB.          form produced by hgexxsxx
-NB. t513x    Monads to compute the error of Schur vectors
+NB. t511x    Dyads to compute the relative backward error of
+NB.          generalized Schur form produced by hgexxsxx
+NB. t513x    Monads to compute the normalization error of
+NB.          Schur vectors
 NB.          produced by hgexxsxx
-NB. t52xx    Dyads to compute the error of Schur vectors
+NB. t52xx    Dyads to compute the normalization error of
+NB.          Schur vectors
 NB.          produced by tgevcxxx
 NB. chk1mv   Adv. to make dyad to compute the relative
 NB.          backward error for the basic matrix-vector
@@ -1450,8 +1452,8 @@ NB. t511l
 NB. t511u
 NB.
 NB. Description:
-NB.   Dyads to compute the error of generalized Schur form
-NB.   produced by hgexxsxx
+NB.   Dyads to compute the relative backward error of
+NB.   generalized Schur form produced by hgexxsxx
 NB.
 NB. Syntax:
 NB.   errl=. (Al ; normA) t511l (Bl ; Ql ; Zl)
@@ -1504,8 +1506,8 @@ NB. t513l
 NB. t513u
 NB.
 NB. Description:
-NB.   Monads to compute the error of Schur vectors produced
-NB.   by hgexxsxx
+NB.   Monads to compute the normalization error of Schur
+NB.   vectors produced by hgexxsxx
 NB.
 NB. Syntax:
 NB.   errl=. t513l Vl
@@ -1548,8 +1550,8 @@ NB. t52ur
 NB. t52ub
 NB.
 NB. Description:
-NB.   Dyads to compute the error of Schur vectors produced
-NB.   by tgevcxxx
+NB.   Dyads to compute the normalization error of Schur
+NB.   vectors produced by tgevcxxx
 NB.
 NB. Syntax:
 NB.   errl=. SPl     t52ll Yapprox       NB. to test tgevcll

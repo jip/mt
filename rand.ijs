@@ -305,7 +305,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb       Syntax
+NB. Adverb     Syntax
 NB. trl1mat    L1=. (randx trl1mat) sh
 NB. trlmat     L=.  (randx trlmat ) sh
 NB. tru1mat    U1=. (randx tru1mat) sh

@@ -347,6 +347,9 @@ NB. - row- and and column-wise norms are related
 (normit"1    -: normitr) (gemat j. gemat) 100 100
 
 NB. square-based norms
+NB. tests for norms are inspired by
+NB. https://doi.org/10.48550/arXiv.2207.09281, see
+NB. https://github.com/Reference-LAPACK/lapack/pull/925
 NB. - input is an empty vector
 0  -: norms  ''
 '' -: normsc ''

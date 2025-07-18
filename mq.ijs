@@ -70,7 +70,7 @@ NB. Blocked code constants
 MQNB=: 32  NB. block size limit
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unml2ln    Q   * C    left     none    eCprod=. Qf unml2ln (C, 0)
 NB. unml2lc    Q^H * C    left     ct      eCprod=. Qf unml2lc (C, 0)
 NB. unml2rn    C * Q      right    none    eCprod=. Qf unml2rn (C,.0)
@@ -150,7 +150,7 @@ unmr2rn=: ((larfrcbr&:>/@,~ (-@c <\ ,)@|.   )~ <)^:(0 < #@[)
 unmr2rc=: ((larfrnbr&:>/@,~ (-@c <\ ,)      )~ <)^:(0 < #@[)
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unml3ln    Z   * C    left     none    eCprod=. Zf unml3ln (0, C)
 NB. unml3lc    Z^H * C    left     ct      eCprod=. Zf unml3lc (0, C)
 NB. unml3rn    C * Z      right    none    eCprod=. Zf unml3rn (0,.C)
@@ -230,7 +230,7 @@ NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unmlqln    Q   * C    left     none    B=. LQf unmlqln C
 NB. unmlqlc    Q^H * C    left     ct      B=. LQf unmlqlc C
 NB. unmlqrn    C * Q      right    none    B=. LQf unmlqrn C
@@ -270,7 +270,7 @@ unmlqrn=: }:"1@(((unml2rn`((larfbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))
 unmlqrc=: }:"1@(((unml2rc`((larfbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~  tru1        @({.  ~  0 _1    <./ @:+ $))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unmqlln    Q   * C    left     none    B=. QfL unmqlln C
 NB. unmqllc    Q^H * C    left     ct      B=. QfL unmqllc C
 NB. unmqlrn    C * Q      right    none    B=. QfL unmqlrn C
@@ -310,7 +310,7 @@ unmqlrn=: }."1@(((unm2lrn`((larfbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))
 unmqlrc=: }."1@(((unm2lrc`((larfbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (tru1~ -~/@$)@({."1~ _1  0 -@(<./)@:+ $))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unmqrln    Q   * C    left     none    B=. QfR unmqrln C
 NB. unmqrlc    Q^H * C    left     ct      B=. QfR unmqrlc C
 NB. unmqrrn    C * Q      right    none    B=. QfR unmqrrn C
@@ -350,7 +350,7 @@ unmqrrn=: }:"1@(((unm2rrn`((larfbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))
 unmqrrc=: }:"1@(((unm2rrc`((larfbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~  trl1        @({."1~ _1  0    <./ @:+ $))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unmrqln    Q   * C    left     none    B=. RQf unmrqln C
 NB. unmrqlc    Q^H * C    left     ct      B=. RQf unmrqlc C
 NB. unmrqrn    C * Q      right    none    B=. RQf unmrqrn C
@@ -390,7 +390,7 @@ unmrqrn=: }."1@(((unmr2rn`((larfbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))
 unmrqrc=: }."1@(((unmr2rc`((larfbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (trl1~ -~/@$)@({.  ~  0 _1 -@(<./)@:+ $))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unmlzln    Z   * C    left     none    B=. LZf unmlzln C
 NB. unmlzlc    Z^H * C    left     ct      B=. LZf unmlzlc C
 NB. unmlzrn    C * Z      right    none    B=. LZf unmlzrn C
@@ -442,7 +442,7 @@ unmlzrn=: }."1@(((unml3rn`((larzbrcfr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))
 unmlzrc=: }."1@(((unml3rc`((larzbrnfr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; liso4dhs@(_1 , [))}~ #))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unmzlln    Z   * C    left     none    B=. ZfL unmzlln C
 NB. unmzllc    Z^H * C    left     ct      B=. ZfL unmzllc C
 NB. unmzlrn    C * Z      right    none    B=. ZfL unmzlrn C
@@ -496,7 +496,7 @@ unmzlrn=: }:"1@(((unm3lrn`((larzbrnbc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))
 unmzlrc=: }:"1@(((unm3lrc`((larzbrcbc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       liso4dhs@( 0 , [))}~ c))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unmzrln    Z   * C    left     none    B=. ZfR unmzrln C
 NB. unmzrlc    Z^H * C    left     ct      B=. ZfR unmzrlc C
 NB. unmzrrn    C * Z      right    none    B=. ZfR unmzrrn C
@@ -550,7 +550,7 @@ unmzrrn=: }."1@(((unm3rrn`((larzbrnfc&:>/@,~ |.@  {.   @(<;.3~ ,:~@(MQNB ,~ #)))
 unmzrrc=: }."1@(((unm3rrc`((larzbrcfc&:>/@,~      {.   @(<;.3~ ,:~@(MQNB ,~ #)))~ <)@.(MQNB < c@[))~ (idmat@[`(       liso4dhs@(_1 , [))}~ c))~ ,.~&0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb       Action     Side     Tran    Syntax
+NB. Dyad       Action     Side     Tran    Syntax
 NB. unmrzln    Z   * C    left     none    B=. RZf unmrzln C
 NB. unmrzlc    Z^H * C    left     ct      B=. RZf unmrzlc C
 NB. unmrzrn    C * Z      right    none    B=. RZf unmrzrn C
@@ -603,7 +603,7 @@ unmrzrn=: }:"1@(((unmr3rn`((larzbrcbr&:>/@,~ |.@:({."1)@(<;.3~ ,:~@(MQNB ,  c)))
 unmrzrc=: }:"1@(((unmr3rc`((larzbrnbr&:>/@,~      {."1 @(<;.3~ ,:~@(MQNB ,  c)))~ <)@.(MQNB < #@[))~ (idmat@[`(a: <@; liso4dhs@( 0 , [))}~ #))~ ,. &0)`(i.@$@])@.(0 e. $@])
 
 NB. ---------------------------------------------------------
-NB. Verb        Action     Side     Tran    Syntax
+NB. Dyad        Action     Side     Tran    Syntax
 NB. unmhrlln    Q   * C    left     none    B=. HQf unmhrlln C
 NB. unmhrllc    Q^H * C    left     ct      B=. HQf unmhrllc C
 NB. unmhrlrn    C * Q      right    none    B=. HQf unmhrlrn C
@@ -651,7 +651,7 @@ unmhrlrn=: (unmlqrn~ |.!.0)~
 unmhrlrc=: (unmlqrc~ |.!.0)~
 
 NB. ---------------------------------------------------------
-NB. Verb        Action     Side     Tran    Syntax
+NB. Dyad        Action     Side     Tran    Syntax
 NB. unmhruln    Q   * C    left     none    B=. HQf unmhruln C
 NB. unmhrulc    Q^H * C    left     ct      B=. HQf unmhrulc C
 NB. unmhrurn    C * Q      right    none    B=. HQf unmhrurn C

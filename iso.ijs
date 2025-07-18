@@ -68,18 +68,72 @@ NB. Local definitions
 NB. convert rISO to opened (non-boxed) ISO
 oiso4riso=: <@liso4dhs"1@:|:
 
+NB. ---------------------------------------------------------
+NB. lioxmax
+NB.
+NB. Description:
+NB.   Conj. to make monad to locate extreme element e with
+NB.   max(|Re(e)|+|Im(e)|) in numeric vector
+NB.
+NB. Syntax:
+NB.   io=. (iof lioxmax xtr) vec
+NB. where
+NB.   iof - a monad to locate y in x, is either (i.) to
+NB.         locate 1st element or (i:) to locate last one
+NB.   xtr - a dyad to choose extreme element from x and y, is
+NB.         either (<.) or (>.), is determined by iof
+NB.   vec - a numeric vector
+NB.   io  - a lIO of extreme element
+
+lioxmax=: 2 : 0
+  i=. (isnan y) u 1
+  if. i < # y do.
+    i return.
+  end.
+  if. JCMPX = 3!:0 y do.
+    c=. |: | +. y
+    i=. v/ c (u"1) _
+    if. i < # y do.
+      i return.
+    end.
+    s=. +/ c
+    i=. s u _
+    if. i < # y do.
+      s=. +/ c % 4
+    end.
+  else.
+    s=. | y
+    i=. s u _
+    if. i < # y do.
+      i return.
+    end.
+  end.
+  i=. (u >./) s
+)
+
 NB. =========================================================
 NB. Interface
 
 NB. ---------------------------------------------------------
-NB. Miscellaneous
+NB. Monad      Locates lIO
+NB. liofmax    1st element
+NB. liolmax    last element
+NB.
+NB. Description:
+NB.   Locate extreme element e with
+NB.   max(|Re(e)|+|Im(e)|) in numeric vector
+NB.
+NB. Syntax:
+NB.   io=. lioxmax vec
+NB.
+NB. Assertions:
+NB.   (liofmax -: <:@# - liolmax@|.) vec
+NB.
+NB. Notes:
+NB. - liofmax implements BLAS' IxAMAX
 
-NB. lIO 1st element e with max(|Re(e)|+|Im(e)|) from list y
-NB. implements BLAS' IxAMAX
-liofmax=: (i. >./)@sorim
-
-NB. lIO last element e with max(|Re(e)|+|Im(e)|) from list y
-liolmax=: (i: >./)@sorim
+liofmax=: i. lioxmax <.
+liolmax=: i: lioxmax >.
 
 NB. ---------------------------------------------------------
 NB. liso4th

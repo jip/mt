@@ -337,3 +337,7 @@ math/mt - change history
  == 0.14.11 ==
  maintanance release
  * external/blis/api: sync with current BLIS version
+
+ == 0.14.12 ==
+ * iso: - sync lioxmax with current LAPACK version
+        - improve verification suite

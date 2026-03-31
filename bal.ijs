@@ -239,6 +239,7 @@ NB.   or:
 NB.     o=. ((1 - FP_EPS) * x) I. y
 NB.   and provides:
 NB.     y < o { x
+NB.   this implements Idotr dyad from stats/base addon
 
 gebalsf=: GEBALPOWMAX {~ (GEBALPOWMAX i. 1 { (GEBALSCLFAC ^ 1 1 _1)&((*^:(({. < {:)@])^:_) 3&{.)) <. (GEBALESFMAX1 - GEBALPOWMAX I. (1 + FP_PREC) * 3 { ]) <. GEBALPOWMIN I. 4 { ]
 

@@ -393,12 +393,13 @@ NB.   rho   - scalar number, the KMS matrix parameter
 NB.   K     - n×n-matrix, random KMS matrix
 NB.
 NB. Notes:
-NB. - KMS matrix is defined as:
-NB.     K ≡ K(rho,i,j) := {      rho ^(j-i), i ≤ j
-NB.                       { conj(rho)^(i-j), i > j
-NB. - KMS matrix is Toeplitz
-NB.   KMS matrix is symmetric for real rho and is Hermitian
-NB.   for complex rho
+NB. - KMS matrix:
+NB.   - is defined as:
+NB.       K ≡ K(rho,i,j) := {      rho ^(j-i), i ≤ j
+NB.                         { conj(rho)^(i-j), i > j
+NB.   - is Toeplitz
+NB.   - is symmetric for real rho
+NB.   - is Hermitian for complex rho
 NB. - a factorization:
 NB.     L1 * D * L1^H = K
 NB.   exists for KMS matrix, where

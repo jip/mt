@@ -541,11 +541,13 @@ NB.   info_mt_ 'trsmllnu_mt_'
 NB.   NB. the same as above
 NB.   info_mt_ 'trsmllnu'
 NB.   NB. get syntax and notes info about 'trsmllnu_mtbli_'
+NB.   load 'math/mt/external/blis/blis'  NB. if not done yet
 NB.   'sn' info_mt_ 'trsmllnu_mtbli_'
 NB.
 NB. Notes:
 NB. - if (n) argument is a simple name not explicit locative
 NB.   then it's searched in mt locale
+NB. - works for any properly documented definitions
 
 info=: ''&$: : (4 : 0)
   ('section ''' , x , ''' is not recognized') assert '' -: x -. 'dsflgaepntr'

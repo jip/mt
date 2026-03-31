@@ -267,7 +267,7 @@ NB. ---------------------------------------------------------
 NB. diagliso
 NB.
 NB. Description:
-NB.   Return lISO solid part of diagonal of matrix
+NB.   Return lISO solid part of matrix diagonal
 NB.
 NB. Syntax:
 NB.   liso=. [(d[,h[,s]])] diagliso [m,]n
@@ -351,6 +351,24 @@ NB.   A -: icut fret <;.1 A
 NB. where
 NB.   A    - some array
 NB.   fret - some fret
+NB.
+NB. Examples:
+NB.      ] X=. (((= { (; |.))@(+ i.)) $L:0 <"0@('ABCD' $~ #~)) 2
+NB.   +---+---+
+NB.   |AA |BBB|
+NB.   |AA |BBB|
+NB.   |AA |   |
+NB.   +---+---+
+NB.   |CCC|DD |
+NB.   |CCC|DD |
+NB.   |   |DD |
+NB.   +---+---+
+NB.      icut X
+NB.   AA BBB
+NB.   AA BBB
+NB.   AA DD 
+NB.   CCCDD 
+NB.   CCCDD 
 NB.
 NB. TODO:
 NB. - fret would be sparse
@@ -512,7 +530,7 @@ NB. ---------------------------------------------------------
 NB. diag
 NB.
 NB. Description:
-NB.   Return a solid part of diagonal of matrix
+NB.   Return a solid part of matrix diagonal
 NB.
 NB. Syntax:
 NB.   e=. [(d[,h[,s]])] diag A
@@ -536,7 +554,7 @@ NB. ---------------------------------------------------------
 NB. setdiag
 NB.
 NB. Description:
-NB.   Assign value(s) to a solid part of diagonal
+NB.   Assign value(s) to a solid part of matrix diagonal
 NB.
 NB. Syntax:
 NB.   Aupd=. (e;[d[,h[,s]]]) setdiag A

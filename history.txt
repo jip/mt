@@ -347,3 +347,6 @@ math/mt - change history
  * quatern:       process empty argument properly: qnsign qninv
  * struct:        extend domain to sparse matrices: diag setdiag upddiag xx4gex
  + util:          new interfaces: issparse ver
+
+ == 0.14.14 ==
+ maintanance release

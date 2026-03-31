@@ -225,8 +225,10 @@ NB.   1 *./@:= qnlen qnsign q
 NB.
 NB. Notes:
 NB. - throws NaN error for q∞
+NB. - stiff rank: a monad is applied to non-empty vectors
+NB.   only
 
-qnsign=: (      (;  (% +/!.0&.:*:)&>/@(% :: (*@[)"0 L: 0)      >./@(dbsig@33^:(1 < _ +/@:= ]))) |@(,@:+.^:(JCMPX = 3!:0)))@(dbsig@33^:(0 0&(-:!.0)))`(2 # nan)@.(isnan@<)"1 : [:
+qnsign=: (      (;  (% +/!.0&.:*:)&>/@(% :: (*@[)"0 L: 0)      >./@(dbsig@33^:(1 < _ +/@:= ]))) |@(,@:+.^:(JCMPX = 3!:0)))@(dbsig@33^:(0 0&(-:!.0)))`(2 # nan)@.(isnan@<)"1^:(*@#) : [:
 
 NB. ---------------------------------------------------------
 NB. qninv
@@ -245,8 +247,10 @@ NB.   1 0 *./@:(-:"1) q qnmul qninv q
 NB.
 NB. Notes:
 NB. - throws NaN error for q∞
+NB. - stiff rank: a monad is applied to non-empty vectors
+NB.   only
 
-qninv=: (qnconv (; ((% +/!.0@: *:)&>/@(% :: (*@[)"0 L: 0) % ]) >./@(dbsig@33^:(1 < _ +/@:= ]))) |@,@(+.^:(JCMPX = 3!:0)))@(dbsig@33^:(0 0&(-:!.0)))`(2 # nan)@.(isnan@<)"1 : [:
+qninv=: (qnconv (; ((% +/!.0@: *:)&>/@(% :: (*@[)"0 L: 0) % ]) >./@(dbsig@33^:(1 < _ +/@:= ]))) |@,@(+.^:(JCMPX = 3!:0)))@(dbsig@33^:(0 0&(-:!.0)))`(2 # nan)@.(isnan@<)"1^:(*@#) : [:
 
 NB. ---------------------------------------------------------
 NB. qnmul

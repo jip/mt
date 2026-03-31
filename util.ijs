@@ -1,5 +1,6 @@
 NB. Utilities
 NB.
+NB. issparse  Check is noun sparse
 NB. ispos0    Mark +0 values
 NB. isneg0    Mark -0 values
 NB. isnan     Mark NaN values
@@ -22,6 +23,7 @@ NB. cut2      Split list by delimiter
 NB. cut       Split list by delimiter
 NB. cutl2     Split list by any delimiter
 NB. cutl      Split list by any delimiter
+NB. ver       Get version
 NB. info      Get information about mt interace name
 NB. env       Get environment
 NB. erasen    Erase global names created between invocations
@@ -64,6 +66,9 @@ NB. Interface
 
 NB. ---------------------------------------------------------
 NB. Miscellaneous
+
+NB. check is noun sparse
+issparse=: 1024 2048 4096 8192 16384 32768 e.~ 3!:0
 
 NB. mark...
 ispos0=:  _ =!.0 %  NB. ... +0  values in y
@@ -492,6 +497,17 @@ cutl=: -.&a:@cutl2
 
 NB. end of flt staff
 NB. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NB. ---------------------------------------------------------
+NB. ver
+NB.
+NB. Description:
+NB.   Nilad to get version string
+NB.
+NB. Syntax:
+NB.   str=. ver ''
+
+ver=: '0.14.13'"_
 
 NB. ---------------------------------------------------------
 NB. info

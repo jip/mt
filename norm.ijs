@@ -31,7 +31,7 @@ NB.            algorithms by matrix of generator and shape
 NB.            given
 NB.
 NB. Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
-NB.           2025 Igor Zhuravlov
+NB.           2025,2026 Igor Zhuravlov
 NB.
 NB. This file is part of mt
 NB.

@@ -341,3 +341,9 @@ math/mt - change history
  == 0.14.12 ==
  * iso: - sync lioxmax with current LAPACK version
         - improve verification suite
+
+ == 0.14.13 ==
+ * external/util: fix dlsym
+ * quatern:       process empty argument properly: qnsign qninv
+ * struct:        extend domain to sparse matrices: diag setdiag upddiag xx4gex
+ + util:          new interfaces: issparse ver

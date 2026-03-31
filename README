@@ -4,7 +4,7 @@ Copyright 2010,2011,2013,2017,2018,2020,2021,2023,2024,
 See the accompanying file COPYING.LESSER, version 2007-Jun-29
 or later for terms of use. If, for some reason it is missing,
 the mt license also may be found at:
-<http://www.gnu.org/licenses/>
+<https://www.gnu.org/licenses/>
 
 'Matrix toolbox' addon for J language
 
@@ -15,7 +15,7 @@ condition number estimating. Its algorithms are based on
 those from LAPACK [1], RRQR [2, 3] and SLICOT [4] libraries.
 
 Project homepage:
-http://code.jsoftware.com/wiki/Addons/math/mt
+https://code.jsoftware.com/wiki/Addons/math/mt
 
 Authors:
 see AUTHORS file
@@ -30,7 +30,7 @@ References:
     Sorensen, D. (1999). LAPACK Users' Guide. (3rd).
     Philadelphia, PA: Society for Industrial and Applied
     Mathematics.
-    http://www.netlib.org/lapack
+    https://www.netlib.org/lapack
 [2] C. H. Bischof, G. Quintana-Ortí. Computing Rank-Revealing
     QR Factorizations of Dense Matrices. ACM Transactions on
     Mathematical Software, June 1998, Vol. 24, No. 2, pp.
@@ -40,7 +40,7 @@ References:
     Rank-Revealing QR Factorizations of Dense Matrices. ACM
     Transactions on Mathematical Software, June 1998, Vol.
     24, No. 2, pp. 254-257.
-    http://www.netlib.org/toms/782
+    https://www.netlib.org/toms/782
 [4] Benner, P., Mehrmann, V., Sima, V., Van Huffel, S., and
     A. Varga: "SLICOT - A Subroutine Library in Systems and
     Control Theory", June 1997, NICONET Report 97-3; also
@@ -48,4 +48,4 @@ References:
     Circuits" (Biswa N. Datta, Ed.), Birkauser, vol. 1, ch.
     10, pp. 499-539, 1999, ISBN 0-8176-3954-2,
     3-7643-3954-3, ISSN 1522-8363.
-    http://www.slicot.org/
+    https://www.slicot.org/

@@ -267,7 +267,7 @@ NB. ---------------------------------------------------------
 NB. diagliso
 NB.
 NB. Description:
-NB.   Return lISO solid part of diagonal of matrix
+NB.   Return lISO solid part of matrix diagonal
 NB.
 NB. Syntax:
 NB.   liso=. [(d[,h[,s]])] diagliso [m,]n
@@ -351,6 +351,24 @@ NB.   A -: icut fret <;.1 A
 NB. where
 NB.   A    - some array
 NB.   fret - some fret
+NB.
+NB. Examples:
+NB.      ] X=. (((= { (; |.))@(+ i.)) $L:0 <"0@('ABCD' $~ #~)) 2
+NB.   +---+---+
+NB.   |AA |BBB|
+NB.   |AA |BBB|
+NB.   |AA |   |
+NB.   +---+---+
+NB.   |CCC|DD |
+NB.   |CCC|DD |
+NB.   |   |DD |
+NB.   +---+---+
+NB.      icut X
+NB.   AA BBB
+NB.   AA BBB
+NB.   AA DD 
+NB.   CCCDD 
+NB.   CCCDD 
 NB.
 NB. TODO:
 NB. - fret would be sparse
@@ -512,7 +530,7 @@ NB. ---------------------------------------------------------
 NB. diag
 NB.
 NB. Description:
-NB.   Return a solid part of diagonal of matrix
+NB.   Return a solid part of matrix diagonal
 NB.
 NB. Syntax:
 NB.   e=. [(d[,h[,s]])] diag A
@@ -530,13 +548,13 @@ NB.   e - min(S,|s|)-vector, elements from the solid part of
 NB.       diagonal
 NB.   S ≥ 0, the length of diagonal
 
-diag=: ((<0 1)&|:) :((diagliso $) ({,) ])
+diag=: ((<0 1)&|:`(0 $. {."1@(($ ,)~ 0 1 + $))@.issparse) :((diagliso $) ({,) ])
 
 NB. ---------------------------------------------------------
 NB. setdiag
 NB.
 NB. Description:
-NB.   Assign value(s) to a solid part of diagonal
+NB.   Assign value(s) to a solid part of matrix diagonal
 NB.
 NB. Syntax:
 NB.   Aupd=. (e;[d[,h[,s]]]) setdiag A
@@ -580,7 +598,7 @@ setdiag=: 4 : 0
   'e dhs'=. x
   dhs=. ((i. 3) < (# dhs))} 0 0 _ ,: dhs  NB. assign defaults, in-place op
   liso=. dhs diagliso $ y
-  e (liso"_)} y
+  e&(liso})&., y
 )
 
 NB. ---------------------------------------------------------
@@ -629,7 +647,7 @@ NB. 10  11  12 13j1   14            10 11j1   12   13 14
 NB. 15  16  17   18 19j1            15   16 17j1   18 19
 NB. 20  21  22   23   24            20   21   22 23j1 24
 
-upddiag=: 1 : 'diagliso_mt_^:(1:`(] $)) (u {{(u x ({,) y) (x"_)} y}}) ]'
+upddiag=: 1 : 'diagliso_mt_^:(1:`(] $)) (u {{u&.(x&{)&., y}}) ]'
 
 NB. ---------------------------------------------------------
 NB. bdlpick
@@ -1328,15 +1346,23 @@ NB.    sh4geu ai33           sh4geu ac33
 NB.  0  1 2                   0  1j10 2j11
 NB. _1  0 5               _1j10     0 5j14
 NB. _2 _5 0               _2j11 _5j14    0
+NB.
+NB. Notes:
+NB. - process sparse G separately to workaround nonce error
+NB. - a phrase (m} y) is equivalent to (m {"(0 1) 0 |: y) [1]
+NB.
+NB. References:
+NB. [1] JVocabulary entry for (})
+NB.     https://code.jsoftware.com/wiki/Vocabulary/curlyrt
 
-sy4gel=:                  (</~@i.@#)`(,:   |:)}
-sy4geu=:                  (>/~@i.@#)`(,:   |:)}
-he4gel=: 0 (9&o. upddiag) (</~@i.@#)`(,:   ct)}
-he4geu=: 0 (9&o. upddiag) (>/~@i.@#)`(,:   ct)}
-ss4gel=: (0 ; a:) setdiag (</~@i.@#)`(,: -@|:)}
-ss4geu=: (0 ; a:) setdiag (>/~@i.@#)`(,: -@|:)}
-sh4gel=: (0 ; a:) setdiag (</~@i.@#)`(,: -@ct)}
-sh4geu=: (0 ; a:) setdiag (>/~@i.@#)`(,: -@ct)}
+sy4gel=:                  (</~@i.@#)`(,:   |:)}`(</~@i.@# {"(0 1) 0 |: (,:   |:))@.issparse
+sy4geu=:                  (>/~@i.@#)`(,:   |:)}`(>/~@i.@# {"(0 1) 0 |: (,:   |:))@.issparse
+he4gel=: 0 (9&o. upddiag) (</~@i.@#)`(,:   ct)}`(</~@i.@# {"(0 1) 0 |: (,:   ct))@.issparse
+he4geu=: 0 (9&o. upddiag) (>/~@i.@#)`(,:   ct)}`(>/~@i.@# {"(0 1) 0 |: (,:   ct))@.issparse
+ss4gel=: (0 ; a:) setdiag (</~@i.@#)`(,: -@|:)}`(</~@i.@# {"(0 1) 0 |: (,: -@|:))@.issparse
+ss4geu=: (0 ; a:) setdiag (>/~@i.@#)`(,: -@|:)}`(>/~@i.@# {"(0 1) 0 |: (,: -@|:))@.issparse
+sh4gel=: (0 ; a:) setdiag (</~@i.@#)`(,: -@ct)}`(</~@i.@# {"(0 1) 0 |: (,: -@ct))@.issparse
+sh4geu=: (0 ; a:) setdiag (>/~@i.@#)`(,: -@ct)}`(>/~@i.@# {"(0 1) 0 |: (,: -@ct))@.issparse
 
 NB. ---------------------------------------------------------
 NB. Actor     P.o.S.     x arg goes to    y arg goes to    Diagonal comes from
